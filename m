@@ -2,109 +2,137 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E085C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064B3C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2524F22387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:23:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n9v9I85D"
+	by mail.kernel.org (Postfix) with ESMTP id DBD5D21BF6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbfGXMXo (ORCPT
+        id S1726526AbfGXM1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 08:23:44 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35785 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728320AbfGXMXn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 08:23:43 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s1so14851675pgr.2;
-        Wed, 24 Jul 2019 05:23:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0Bq95a2dWVmqz5wpwfPumDSp43fWJu9vdyxhDDJqOMY=;
-        b=n9v9I85DopyF8lDXxoXj54Nrffh0NnCfFwcRCDSRJZFktQzwj+hq3miAABZLmwKWpI
-         l4h6g4weiqFPGT/1cDC9ct5bM+mOuur/6fxrHakB3ZB0HB8yb/Ncs0kCpaB97DM0TEUu
-         enCrZCAOlZY8e5GCoArIjd/vl1Lel1/UM4Nz4tIcvsnPEyL88BhyA0bQTIH1CLu7TPgw
-         ThvP07sN5OF+iNlDCU/6ooRT8SOnUGbTPSqbXu7Ob0P6h9Uh64gPSY60+I2+tMoTPfmq
-         0d6dI3qSVLPcBiPOYfLE+U/XMh8jG81AqTLJWCYIZyRa87/jo5LlylBABzW4kLrfJ9Sq
-         ZBng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0Bq95a2dWVmqz5wpwfPumDSp43fWJu9vdyxhDDJqOMY=;
-        b=rgUWRNtw6bOE6SEosqm2xpXR6x/eXuSS5uLUlVlcFwJc9AoMtQUzGFYN24fjl3FswV
-         0lIkpwSklclXCM7MrI2EvkesoqtG7y5zUMMJTcwnO1qYHoqgoTsdCBN2rQu1OIyv/kp8
-         i6BkT1k+AAutCjxUVTmKEpsgsbM+2ubzd0VEjw6YnNK0KlJpCtwH83HmXRBCenXG0pMW
-         /HQARXBYpT/7liA5bP9iCTrYhd4TksJSDNlOQZ4T62o7jHocgYbTxtN/Lr8l4YWKdl3G
-         Mi39ij6Y004PtnFnqyoRs0pgr2LqnGzdR/wYekMuamwLAHJ7LM8j4Wxlp2+Dg/3pYDYn
-         RYrQ==
-X-Gm-Message-State: APjAAAXHPCVqJfYpB9c0yKCxhkGzEmNSqfmT+otjAZV/CUD69a7sGrrQ
-        yNfsY6Dw1x6LrALNKH+/yhxeaj+YY4s=
-X-Google-Smtp-Source: APXvYqzu0fGYSv0LhgIKNSwmtMHib3axd4F73YkpMilFBpe1KUQUST21hwYTOIOUA1cNdcuwTWW39Q==
-X-Received: by 2002:a63:9e56:: with SMTP id r22mr24339698pgo.221.1563971022888;
-        Wed, 24 Jul 2019 05:23:42 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id a3sm48233918pfo.49.2019.07.24.05.23.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 05:23:42 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] thermal: intel: Use dev_get_drvdata
-Date:   Wed, 24 Jul 2019 20:23:37 +0800
-Message-Id: <20190724122337.21910-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 24 Jul 2019 08:27:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58928 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725851AbfGXM1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 08:27:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 296BDAFE1;
+        Wed, 24 Jul 2019 12:27:12 +0000 (UTC)
+Date:   Wed, 24 Jul 2019 14:27:11 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Konstantin Khlebnikov <koct9i@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        John Ogness <john.ogness@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] printk/panic: Access the main printk log in panic()
+ only when safe
+Message-ID: <20190724122711.qquevkcuge24bhdd@pathway.suse.cz>
+References: <20190716072805.22445-1-pmladek@suse.com>
+ <20190716072805.22445-2-pmladek@suse.com>
+ <20190717095615.GD3664@jagdpanzerIV>
+ <20190718083629.nso3vwbvmankqgks@pathway.suse.cz>
+ <20190718094934.GA10041@jagdpanzerIV>
+ <20190719125753.miniwfq4nhicy76n@pathway.suse.cz>
+ <20190723031340.GA19463@jagdpanzerIV>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723031340.GA19463@jagdpanzerIV>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using to_pci_dev + pci_get_drvdata,
-use dev_get_drvdata to make code simpler.
+On Tue 2019-07-23 12:13:40, Sergey Senozhatsky wrote:
+> On (07/19/19 14:57), Petr Mladek wrote:
+> > But there is one more scenario 3:
+> 
+> Yes!
+> 
+> >   - we have CPUB which loops or is deadlocked in IRQ context
+> > 
+> >   - we have CPUA which panic()-s the system, but can't bring CPUB down,
+> >     so logbuf_lock might be takes and release from time to time
+> >     by CPUB
+> 
+> Great!
+> 
+> This is the only case when we actually need to pay attention to
+> num_online_cpus(), because there is an active logbuf_lock owner;
+> in any other case we can unconditionally re-init printk() locks.
+> 
+> But there is more to it.
+> 
+> Note, that the problem in scenario 3 is bigger than just logbuf_lock.
+> Regardless of logbuf implementation we will not be able to panic()
+> the system.
+> 
+> If we have a never ending source of printk() messages, coming from
+> misbehaving CPU which stuck in printing loop in IRQ context, then
+> flush_on_panic() will never end or kmsg dump will never stop, etc.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/thermal/intel/intel_pch_thermal.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Yes.
 
-diff --git a/drivers/thermal/intel/intel_pch_thermal.c b/drivers/thermal/intel/intel_pch_thermal.c
-index 99f8b2540f18..4f0bb8f502e1 100644
---- a/drivers/thermal/intel/intel_pch_thermal.c
-+++ b/drivers/thermal/intel/intel_pch_thermal.c
-@@ -371,16 +371,14 @@ static void intel_pch_thermal_remove(struct pci_dev *pdev)
- 
- static int intel_pch_thermal_suspend(struct device *device)
- {
--	struct pci_dev *pdev = to_pci_dev(device);
--	struct pch_thermal_device *ptd = pci_get_drvdata(pdev);
-+	struct pch_thermal_device *ptd = dev_get_drvdata(device);
- 
- 	return ptd->ops->suspend(ptd);
- }
- 
- static int intel_pch_thermal_resume(struct device *device)
- {
--	struct pci_dev *pdev = to_pci_dev(device);
--	struct pch_thermal_device *ptd = pci_get_drvdata(pdev);
-+	struct pch_thermal_device *ptd = dev_get_drvdata(device);
- 
- 	return ptd->ops->resume(ptd);
- }
--- 
-2.20.1
+> We need to cut off misbehaving CPUs. Panic CPU waits (for up to 1
+> second?) in smp_send_stop() for secondary CPUs to die, if some
+> secondary CPUs are still chatty after that then most likely those
+> CPUs don't have anything good to say, just a pointless flood of same
+> messages over and over again; which, however, will not let panic
+> CPU to proceed.
 
+Makes sense.
+
+> And this is where the idea of "disconnecting" those CPUs from main
+> logbuf come from.
+> 
+> So what we can do:
+> - smp_send_stop()
+> - disconnect all-but-self from logbuf (via printk-safe)
+
+printk_safe is not really necessary. As you wrote, nobody
+is interested into messages from CPUs that are supposed
+to be stopped.
+
+It might be enough to set some global variable, for example,
+with the CPU number that is calling panic() and is the only
+one allowed to print messages from this point on.
+
+It might even be used to force console lock owner to leave
+the cycle immediately.
+
+> - wait for 1 or 2 more extra seconds for secondary CPUs to leave
+>   console_unlock() and to redirect printks to per-CPU buffers
+> - after that we are sort of good-to-go: re-init printk locks
+>   and do kmsg_dump, flush_on_panic().
+
+Sounds good.
+
+> Note, misbehaving CPUs will write to per-CPU buffers, they are not
+> expected to be able to flush per-CPU buffers to the main logbuf. That
+> will require enabled IRQs, which should deliver stop IPI. But we can
+> do even more - just disable print_safe irq work on disconnect CPUs.
+>
+> So, shall we try one more time with the "disconnect" misbehaving CPUs
+> approach? I can send an RFC patch.
+
+IMHO, it will be acceptable only when it is reasonably simple and
+straightforward. The panic() code is full of special hacks and
+it is already complicated to follow all the twists.
+
+Especially because this scenario came up from a theoretical
+discussion. Note that my original, real bug report, was
+with logbuf_lock NMI, enabled kdump notifiers, ...
+
+Best Regards,
+Petr
