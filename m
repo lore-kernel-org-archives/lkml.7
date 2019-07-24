@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FA3C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C7CC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A6322BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E5922BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033334;
-	bh=I3Wqt9c23mGhj+9OrE5ctJWyRvD3B+593rBHj/RbxA0=;
+	s=default; t=1564033338;
+	bh=37X1Wmkz2niaasL0mxqxDwuAND03i84ksVWBL6nOflA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WNdMgv+vKxKoza1kc5oaVBSwy5hfvuLpR1u35ER87HTCMcC3i69JxtjT5AWTLJaQP
-	 l6kzVdEz+gDKHy/eoCNEB1UcTn+wS9pFShHouw5cuPRCv45DBXXM8o4yONJrJK4//A
-	 9X+Dx0bzIQeVQWuN8ekxZIKHRuBdIxMEnRDO7vno=
+	b=sQubNljVurBfI9DVdc5uC+w8cVW+87GYrhbSIcMEDBv4K3xNWuU3zqqce7YMWG4mK
+	 j1BlAxPGvgam+3V16EKlIzzT19nA8gadPqaoGGlq9MrkXXw6C5HggoTPMTdkOx/rzh
+	 5xT4BfTYht41Ud3n1N6mTa8miOsWLzprfIztZgFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404847AbfGYFmM (ORCPT
+        id S2390803AbfGYFmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:42:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57082 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:42:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404830AbfGYFmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:42:10 -0400
+        id S2404830AbfGYFmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:42:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33DB621850;
-        Thu, 25 Jul 2019 05:42:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89CBC21880;
+        Thu, 25 Jul 2019 05:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033329;
-        bh=I3Wqt9c23mGhj+9OrE5ctJWyRvD3B+593rBHj/RbxA0=;
+        s=default; t=1564033334;
+        bh=37X1Wmkz2niaasL0mxqxDwuAND03i84ksVWBL6nOflA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nzVqv3egRW1yQsrFtgjW4ZMDtbLkmoE/xrW2t0qrKczQleoOH52dEpcQbIeI05l4d
-         9IDJ2QskZAEsPiFBVjP4cIFRwREftKdM7Dmfab56oo4DclULPCe9erDSFiNEYiL6z2
-         QVq7VtlotV+CS6eRYB68Amd5JjCATF59LeOkd7VU=
+        b=GO7tqOHlf5VovJxQ170mg0ZZUFYQ0Nm3kTIEyeeVYt8f3oVhKkKfNsUpvRerfOTqe
+         M9rV2poTCPhtbc24wT7moH9BT/0hlWWlG20d/MwBK/isAESK5cqm+N4ZkFNALQlvIo
+         tRy4vaEBbiiB7CHnB2shxJfO3wz8ay3Xj97Z93CE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        stable@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>,
         Peng Li <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 129/271] net: hns3: fix a -Wformat-nonliteral compile warning
-Date:   Wed, 24 Jul 2019 21:19:58 +0200
-Message-Id: <20190724191706.299913954@linuxfoundation.org>
+Subject: [PATCH 4.19 130/271] net: hns3: add some error checking in hclge_tm module
+Date:   Wed, 24 Jul 2019 21:19:59 +0200
+Message-Id: <20190724191706.375089488@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -62,42 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 18d219b783da61a6cc77581f55fc4af2fa16bc36 ]
+[ Upstream commit 04f25edb48c441fc278ecc154c270f16966cbb90 ]
 
-When setting -Wformat=2, there is a compiler warning like this:
+When hdev->tx_sch_mode is HCLGE_FLAG_VNET_BASE_SCH_MODE, the
+hclge_tm_schd_mode_vnet_base_cfg calls hclge_tm_pri_schd_mode_cfg
+with vport->vport_id as pri_id, which is used as index for
+hdev->tm_info.tc_info, it will cause out of bound access issue
+if vport_id is equal to or larger than HNAE3_MAX_TC.
 
-hclge_main.c:xxx:x: warning: format not a string literal and no
-format arguments [-Wformat-nonliteral]
-strs[i].desc);
-^~~~
+Also hardware only support maximum speed of HCLGE_ETHER_MAX_RATE.
 
-This patch adds missing format parameter "%s" to snprintf() to
-fix it.
+So this patch adds two checks for above cases.
 
-Fixes: 46a3df9f9718 ("Add HNS3 Acceleration Engine & Compatibility Layer Support")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Fixes: 848440544b41 ("net: hns3: Add support of TX Scheduler & Shaper to HNS3 driver")
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 4648c6a9d9e8..89ca69fa2b97 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -663,8 +663,7 @@ static u8 *hclge_comm_get_strings(u32 stringset,
- 		return buff;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+index 48235dc2dd56..11e9259ca040 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+@@ -54,7 +54,8 @@ static int hclge_shaper_para_calc(u32 ir, u8 shaper_level,
+ 	u32 tick;
  
- 	for (i = 0; i < size; i++) {
--		snprintf(buff, ETH_GSTRING_LEN,
--			 strs[i].desc);
-+		snprintf(buff, ETH_GSTRING_LEN, "%s", strs[i].desc);
- 		buff = buff + ETH_GSTRING_LEN;
- 	}
+ 	/* Calc tick */
+-	if (shaper_level >= HCLGE_SHAPER_LVL_CNT)
++	if (shaper_level >= HCLGE_SHAPER_LVL_CNT ||
++	    ir > HCLGE_ETHER_MAX_RATE)
+ 		return -EINVAL;
  
+ 	tick = tick_array[shaper_level];
+@@ -1057,6 +1058,9 @@ static int hclge_tm_schd_mode_vnet_base_cfg(struct hclge_vport *vport)
+ 	int ret;
+ 	u8 i;
+ 
++	if (vport->vport_id >= HNAE3_MAX_TC)
++		return -EINVAL;
++
+ 	ret = hclge_tm_pri_schd_mode_cfg(hdev, vport->vport_id);
+ 	if (ret)
+ 		return ret;
 -- 
 2.20.1
 
