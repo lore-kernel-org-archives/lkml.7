@@ -2,105 +2,93 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D9BC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB1FC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C012189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:04:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TogNfouA"
+	by mail.kernel.org (Postfix) with ESMTP id 2C7A22189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfGXJEe (ORCPT
+        id S1726847AbfGXJFB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 05:04:34 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36573 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfGXJEe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 05:04:34 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r7so20616440pfl.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 02:04:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=DPEJMwzbJAL7mef7lqRPjDu2obAzxcY1YJinZ/gcTbM=;
-        b=TogNfouA4B2x0/Q3sDRcUS1SKIYDBejwr2Wfalf2jw00n6TspIVeFzrQJYFU1r9rT8
-         Di3gId0w+N3KIdd3rLbjOQbDNxtV0orotUsGAlEOOEr9KYTRFeQ6Be4QxPxhnudqT/kV
-         Zr01MltnXcHentZnqMjuUwAJpe2U9G2Jc3RH2Uyu3Ksytf0wU40gx1YuHmNvpuioY0cD
-         EQHd2lthZ2jcXTAghIlqbX8lD/rKQtIGei2n4srIQa7Wbe3oOVE0E4wNFlu14/PpJumJ
-         tgB4nngrSHLAQA+ZDJUvTqOTt6VQ95t4czFd45Kn2lrdOzoPA/UKALZfOJE3kDT0Ha2A
-         NMOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DPEJMwzbJAL7mef7lqRPjDu2obAzxcY1YJinZ/gcTbM=;
-        b=lxxNIt3GrGWNput2sDGkWi1BxRSFewZLXDaP2HCGljL6vEHp500wdL0PO99sU1aSZF
-         rEdK5+Gssgyxory6+om+6OChicla04NWf5jT1P3pt5fHvLTsFBs0Qcx6TcVmxkyaDmTa
-         7baHjyJXotxUUmIdasqhIFwXF+mE0YOQCkvk4E/MvybuaxlcMcQDPJuRefZfrKs7Zkws
-         +rKms9AMe28lVNWPaIzAPBpjTPsVCz17w5+Rf6upDG+qikBENZ+P2fZLfqmvlKy2p6dU
-         AP2J/j+tJ1BDyMBNwu+/lADOuYVWTsx+GkfkXOOpXubjn80ZWMs9G/ENPSyG1f+DyZZv
-         /lUg==
-X-Gm-Message-State: APjAAAWkIrcugdNYZ3SLqkA0GPiEbInPlTva8A46PxHKxSdNObsfk9V4
-        q/d5VnNgv6f8MIzE8Q7IDZYTa6T1Bdw=
-X-Google-Smtp-Source: APXvYqwB/cPZeqqgk5/HQe9sK+9YFBCH26NX8jJAdLkIgtkkTfxYO0Rlm9/Va5VURS9e/3L8vyw/Yw==
-X-Received: by 2002:a63:10a:: with SMTP id 10mr81416955pgb.281.1563959073546;
-        Wed, 24 Jul 2019 02:04:33 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id r6sm36362680pgl.74.2019.07.24.02.04.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 02:04:33 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     sudipm.mukherjee@gmail.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] char: ppdev: Fix a possible null-pointer dereference in pp_release()
-Date:   Wed, 24 Jul 2019 17:04:26 +0800
-Message-Id: <20190724090426.1401-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Wed, 24 Jul 2019 05:05:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55676 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726766AbfGXJFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 05:05:00 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9442830C75C0;
+        Wed, 24 Jul 2019 09:05:00 +0000 (UTC)
+Received: from fogou.chygwyn.com (unknown [10.33.36.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D2F4D1001B28;
+        Wed, 24 Jul 2019 09:04:56 +0000 (UTC)
+Subject: Re: [Cluster-devel] [BUG] fs: gfs2: possible null-pointer
+ dereferences in gfs2_rgrp_bh_get()
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>, rpeterso@redhat.com,
+        agruenba@redhat.com
+Cc:     cluster-devel@redhat.com, linux-kernel@vger.kernel.org
+References: <8d270882-54da-365e-1be7-a291a5178b1e@gmail.com>
+From:   Steven Whitehouse <swhiteho@redhat.com>
+Message-ID: <cd7c0bb4-53d2-8a67-0719-c26d043a31fc@redhat.com>
+Date:   Wed, 24 Jul 2019 10:04:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <8d270882-54da-365e-1be7-a291a5178b1e@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 24 Jul 2019 09:05:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In pp_release(), there is an if statement on line 730 to check whether
-pp->pdev is NULL:
-    else if ((pp->flags & PP_CLAIMED) && pp->pdev && ...)
+Hi,
 
-When pp->pdev is NULL, it is used on line 743:
-    info = &pp->pdev->port->ieee1284;
-and on line 748:
-    parport_release(pp->pdev);
+On 24/07/2019 09:50, Jia-Ju Bai wrote:
+> In gfs2_rgrp_bh_get, there is an if statement on line 1191 to check 
+> whether "rgd->rd_bits[0].bi_bh" is NULL.
 
-Thus, a possible null-pointer dereference may occur.
+That is how we detect whether the rgrp has already been read in, so the 
+function is skipped in the case that we've already read in the rgrp.
 
-To fix this bug, pp->pdev is checked on line 740.
 
-This bug is found by a static analysis tool STCheck written by us.
+> When "rgd->rd_bits[0].bi_bh" is NULL, it is used on line 1216:
+>     gfs2_rgrp_in(rgd, (rgd->rd_bits[0].bi_bh)->b_data);
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/char/ppdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No it isn't. See line 1196 where bi_bh is set, and where we also bail 
+out (line 1198) in case it has not been set.
 
-diff --git a/drivers/char/ppdev.c b/drivers/char/ppdev.c
-index f0a8adca1eee..c86f18aa8985 100644
---- a/drivers/char/ppdev.c
-+++ b/drivers/char/ppdev.c
-@@ -737,7 +737,7 @@ static int pp_release(struct inode *inode, struct file *file)
- 			"negotiated back to compatibility mode because user-space forgot\n");
- 	}
- 
--	if (pp->flags & PP_CLAIMED) {
-+	if ((pp->flags & PP_CLAIMED) && pp->pdev) {
- 		struct ieee1284_info *info;
- 
- 		info = &pp->pdev->port->ieee1284;
--- 
-2.17.0
+
+> and on line 1225:
+>     gfs2_rgrp_ondisk2lvb(..., rgd->rd_bits[0].bi_bh->b_data);
+> and on line 1228:
+>     if (!gfs2_rgrp_lvb_valid(rgd))
+>
+> Note that in gfs2_rgrp_lvb_valid(rgd), there is a statement on line 1114:
+>     struct gfs2_rgrp *str = (struct gfs2_rgrp 
+> *)rgd->rd_bits[0].bi_bh->b_data;
+>
+> Thus, possible null-pointer dereferences may occur.
+>
+> These bugs are found by a static analysis tool STCheck written by us.
+> I do not know how to correctly fix these bugs, so I only report bugs.
+>
+>
+> Best wishes,
+> Jia-Ju Bai
+>
+So I'm not seeing how there can be a NULL deref in those later lines. I 
+think this is another false positive,
+
+Steve.
+
+
 
