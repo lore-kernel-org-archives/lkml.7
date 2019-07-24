@@ -2,112 +2,80 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B543C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C20F9C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D46D21951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:33:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="aP58wc/2"
+	by mail.kernel.org (Postfix) with ESMTP id 9CD8C229FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbfGXIdL (ORCPT
+        id S1726516AbfGXIdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:33:11 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41259 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfGXIdL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:33:11 -0400
-Received: by mail-pf1-f193.google.com with SMTP id m30so20576967pff.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 01:33:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=3mpFcJm52vqDHrD294AKdjpEOxw1VpKoEQduQjdZ2L0=;
-        b=aP58wc/2YXAfkX+FuNWDMlnhsNNEHFzP+2c9ml9eyP9dsH8O2zrW8VgKkX0U27kQok
-         5PZkqjYKRV4mtv49n+YdTe545LnKECNwSbDAHqSKQjj+suwiYOvHIOjiJWoxPWoX5n7u
-         Y34+2axR8FY2IfI4L4AAFMlxsdd3ah+OaExm0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3mpFcJm52vqDHrD294AKdjpEOxw1VpKoEQduQjdZ2L0=;
-        b=IPzezY8epFt/NE1W+hUgDwpuuILmd/eSRfrvE9q/4+u60nfJ7EJnWwlctH7qHVgM50
-         KfAFuEU+XUjqfkhO3hHSbZcu7mBPcEz1NFQpxdFWTudrtXQlHepA6MOcZ/jn2yKEZQk1
-         tSoLsHA64nKq4nGotPg46vudkiFPgx6VIgDhxUw6DXtdApF8zAvGuArcKV+XpcPbt2Wu
-         FjQyyonDqBbSGRVT7NhWBBIqyCzbRCzwdWATk8qNDZi/3cwXwFajCM949zqNP15AkLXP
-         Vwm6Hh+gNbqLWPzfSP9srHr2RpZk8XclSV4eXgBc2HxclA2vAxnSZjienXII/bY23vcW
-         0aMA==
-X-Gm-Message-State: APjAAAUjtXDXvyOotUfS5NMz3b+ANp+5/CbWHoEHq3P/kfNhW9rWEvz2
-        uDyM3Lth4jgFG4Qwsnf0wnx+QQ==
-X-Google-Smtp-Source: APXvYqxs7n3SvBSpEfhTxVDDL+ugCuHHYVOhhtmhsxZtMi/aqCqQ5OTABjBfpafmHW8kNT3gZ4b7jQ==
-X-Received: by 2002:a63:4f58:: with SMTP id p24mr16283806pgl.50.1563957190508;
-        Wed, 24 Jul 2019 01:33:10 -0700 (PDT)
-Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id u128sm52437425pfu.48.2019.07.24.01.33.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 24 Jul 2019 01:33:09 -0700 (PDT)
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-To:     Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Ray Jui <ray.jui@broadcom.com>,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v1 1/1] i2c: iproc: Fix i2c master read more than 63 bytes
-Date:   Wed, 24 Jul 2019 13:58:27 +0530
-Message-Id: <1563956907-21255-1-git-send-email-rayagonda.kokatanur@broadcom.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 24 Jul 2019 04:33:21 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:54244 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725870AbfGXIdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 04:33:20 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D5579585EAE5EF849C02;
+        Wed, 24 Jul 2019 16:33:18 +0800 (CST)
+Received: from [127.0.0.1] (10.177.223.23) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
+ 16:33:16 +0800
+Subject: Re: [PATCH v12 2/2] mm: page_alloc: reduce unnecessary binary search
+ in memblock_next_valid_pfn
+To:     Mike Rapoport <rppt@linux.ibm.com>
+CC:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        Jia He <hejianet@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1563861073-47071-1-git-send-email-guohanjun@huawei.com>
+ <1563861073-47071-3-git-send-email-guohanjun@huawei.com>
+ <20190723083353.GC4896@rapoport-lnx>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <868f90c7-a728-9eb3-7529-f5a8a501a76a@huawei.com>
+Date:   Wed, 24 Jul 2019 16:33:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.0
+MIME-Version: 1.0
+In-Reply-To: <20190723083353.GC4896@rapoport-lnx>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.223.23]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use SMBUS_MASTER_DATA_READ.MASTER_RD_STATUS bit to check for RX
-FIFO empty condition because SMBUS_MASTER_FIFO_CONTROL.MASTER_RX_PKT_COUNT
-is not updated for read >= 64 bytes. This fixes the issue when trying to
-read from the I2C slave more than 63 bytes.
+On 2019/7/23 16:33, Mike Rapoport wrote:
+> On Tue, Jul 23, 2019 at 01:51:13PM +0800, Hanjun Guo wrote:
+>> From: Jia He <hejianet@gmail.com>
+>>
+>> After skipping some invalid pfns in memmap_init_zone(), there is still
+>> some room for improvement.
+>>
+>> E.g. if pfn and pfn+1 are in the same memblock region, we can simply pfn++
+>> instead of doing the binary search in memblock_next_valid_pfn.
+>>
+>> Furthermore, if the pfn is in a gap of two memory region, skip to next
+>> region directly to speedup the binary search.
+> How much speed up do you see with this improvements relatively to simple
+> binary search in memblock_next_valid_pfn()?
 
-Fixes: c24b8d574b7c ("i2c: iproc: Extend I2C read up to 255 bytes")
+The major speedup on my platform is the previous patch in this patch set,
+not this one, I think it's related to sparse memory mode for different
+platforms.
 
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
----
- drivers/i2c/busses/i2c-bcm-iproc.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Thanks
+Hanjun
 
-diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-index 2c7f145..d7fd76b 100644
---- a/drivers/i2c/busses/i2c-bcm-iproc.c
-+++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-@@ -392,16 +392,18 @@ static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev *iproc_i2c,
- static void bcm_iproc_i2c_read_valid_bytes(struct bcm_iproc_i2c_dev *iproc_i2c)
- {
- 	struct i2c_msg *msg = iproc_i2c->msg;
-+	uint32_t val;
- 
- 	/* Read valid data from RX FIFO */
- 	while (iproc_i2c->rx_bytes < msg->len) {
--		if (!((iproc_i2c_rd_reg(iproc_i2c, M_FIFO_CTRL_OFFSET) >> M_FIFO_RX_CNT_SHIFT)
--		      & M_FIFO_RX_CNT_MASK))
-+		val = iproc_i2c_rd_reg(iproc_i2c, M_RX_OFFSET);
-+
-+		/* rx fifo empty */
-+		if (!((val >> M_RX_STATUS_SHIFT) & M_RX_STATUS_MASK))
- 			break;
- 
- 		msg->buf[iproc_i2c->rx_bytes] =
--			(iproc_i2c_rd_reg(iproc_i2c, M_RX_OFFSET) >>
--			M_RX_DATA_SHIFT) & M_RX_DATA_MASK;
-+			(val >> M_RX_DATA_SHIFT) & M_RX_DATA_MASK;
- 		iproc_i2c->rx_bytes++;
- 	}
- }
--- 
-1.9.1
+>   
 
