@@ -2,151 +2,98 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC07C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E169BC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E47A20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:28:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8Kx6mdN"
+	by mail.kernel.org (Postfix) with ESMTP id AB015229F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:29:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563960553;
+	bh=di95QMpzOVnd1w0M+lrR15A6sABXPrhp6Jm9zb+E5CE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Emgu+mM6sCJMORi5ocgSry/yIj86WYp4nZ0p6TY6wMpB3xEMSTkxbRHHHhORsB4ns
+	 rmPnVyAEh8QspEpK+SltAddmuj42ik6oW0dJBMLSEMlkWEexGGKMU2vGTMn804XeL6
+	 LuyRHha7I2dW2Qr6sbdhu13OVzD9Rch5WyjrH9CY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfGXJ17 (ORCPT
+        id S1726819AbfGXJ3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 05:27:59 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33363 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfGXJ16 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 05:27:58 -0400
-Received: by mail-lf1-f66.google.com with SMTP id x3so31553700lfc.0;
-        Wed, 24 Jul 2019 02:27:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/lxoFTV2NP07iGG4lrW/6fB0F5OOcDNXPeCFzJNVz7Q=;
-        b=L8Kx6mdNwCiNdks/Ub1/XRaxPlBWUyUA6Z7rOLPfTJv3ob+28AWMKZOeaulfXRDStb
-         580dKVEKg5WA3d9k9xXFv8ksCo5tm5FPTFpkinNvmJA0h7++UKQt8gvTdQ5Wn95V6tDC
-         PTt0au5EZ3nPeVlKH49pqPWLytt9k5oW4RWTBE/FdITkrhEsenT6ApGSeO8efK8RU0uf
-         tBbI9QEL7Ie8n3bkSGLVIfVOknRxHYkaOQ0KSPjT2hEgQn2tgXfKEMeCx90myDYuGTLg
-         l6UP5Qv+b3VvSwj5lB1Uq9XhDBQN6xLkLKlg0eEWr0Wx7kol8EOTOCYwnEXMp6qOO5Dy
-         13ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/lxoFTV2NP07iGG4lrW/6fB0F5OOcDNXPeCFzJNVz7Q=;
-        b=r+qKAEKTePxh4nDY/v05i1Rg7tdXW7ylFSwusiV+KtBz7Hu66qb30EdBfRqRWPm7RP
-         w2bs2PSmDEV/ZEX9fm8tpX0279wQ7+6rjacQ2HdcZVw8TZMqjrLWtHIY2sFVkOVA6fvy
-         dRwe80o8OGUureCq4vS/U3lzXrq3aBcB5Sug/CLRuvJCZhUxqCZiz8uvyY61+iMhHrY/
-         u1bN80Vbysy+BGI63BU9PibELtI3I5q4UhtLQz06wfTDP5SiR7fpwdRT5X4KUIkjl4ly
-         p6bwG4kmloKHOOiVX77pdqZfURBQ/zXC0wTK4ZmaeshXiH4TiS4Xfm46PughzXjdV+/W
-         kJjQ==
-X-Gm-Message-State: APjAAAVjrr0QbHtGrKeK510qoaSWmSj5/vCTkav0EB87SOuYbOxVD5lv
-        1cC5zz4K5uy1hdCKQKIRXGJ0oFO1
-X-Google-Smtp-Source: APXvYqxkdfUPCviiU+7pkuJRFja9wGYPlnRqvkcXlLqCZbpgvZrsXKxAar2CS3a4ltu5Twt5BsrlMA==
-X-Received: by 2002:ac2:5dfb:: with SMTP id z27mr37827658lfq.128.1563960475646;
-        Wed, 24 Jul 2019 02:27:55 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id z22sm8561005ljz.20.2019.07.24.02.27.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 02:27:54 -0700 (PDT)
-Subject: Re: [PATCH v3] drm/tegra: sor: Enable HDA interrupts at plug-in
-To:     Viswanath L <viswanathl@nvidia.com>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com
-Cc:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <1563885610-27198-1-git-send-email-viswanathl@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <0ba35efb-44ec-d56c-b559-59f1daa3e6e4@gmail.com>
-Date:   Wed, 24 Jul 2019 12:27:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 24 Jul 2019 05:29:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726539AbfGXJ3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 05:29:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4856920651;
+        Wed, 24 Jul 2019 09:29:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563960551;
+        bh=di95QMpzOVnd1w0M+lrR15A6sABXPrhp6Jm9zb+E5CE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zdSovAqyKbrcXVdq5u7+OIG8/jJqg2Ma0XQhIbhOUkogwkF/f/ZAVSvW/36muO+WT
+         LTHJtvhtsrNaSHfy3V31S9yOHTZXUdvuaT40uiiG93fKica3ZQj/VtX8i6C3J9oOYH
+         SRTb83L2yv+1sfkGq+OvYZNqjTpvHKFgIBU6nGvU=
+Date:   Wed, 24 Jul 2019 11:29:09 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, stillcompiling@gmail.com,
+        atull@kernel.org, linux-kernel@vger.kernel.org,
+        linux-fpga@vger.kernel.org
+Subject: Re: [PATCH] fpga-manager: altera-ps-spi: Fix build error
+Message-ID: <20190724092909.GA15423@kroah.com>
+References: <20190708071356.50928-1-yuehaibing@huawei.com>
+ <20190709000527.GA1587@archbook>
 MIME-Version: 1.0
-In-Reply-To: <1563885610-27198-1-git-send-email-viswanathl@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190709000527.GA1587@archbook>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-23.07.2019 15:40, Viswanath L пишет:
-> HDMI plugout calls runtime suspend, which clears interrupt registers
-> and causes audio functionality to break on subsequent plug-in; setting
-> interrupt registers in sor_audio_prepare() solves the issue.
-> 
-> Signed-off-by: Viswanath L <viswanathl@nvidia.com>
+On Mon, Jul 08, 2019 at 05:05:27PM -0700, Moritz Fischer wrote:
+> On Mon, Jul 08, 2019 at 03:13:56PM +0800, YueHaibing wrote:
+> > If BITREVERSE is m and FPGA_MGR_ALTERA_PS_SPI is y,
+> > build fails:
+> > 
+> > drivers/fpga/altera-ps-spi.o: In function `altera_ps_write':
+> > altera-ps-spi.c:(.text+0x4ec): undefined reference to `byte_rev_table'
+> > 
+> > Select BITREVERSE to fix this.
+> > 
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Fixes: fcfe18f885f6 ("fpga-manager: altera-ps-spi: use bitrev8x4")
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > ---
+> >  drivers/fpga/Kconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+> > index 474f304..cdd4f73 100644
+> > --- a/drivers/fpga/Kconfig
+> > +++ b/drivers/fpga/Kconfig
+> > @@ -40,6 +40,7 @@ config ALTERA_PR_IP_CORE_PLAT
+> >  config FPGA_MGR_ALTERA_PS_SPI
+> >  	tristate "Altera FPGA Passive Serial over SPI"
+> >  	depends on SPI
+> > +	select BITREVERSE
+> >  	help
+> >  	  FPGA manager driver support for Altera Arria/Cyclone/Stratix
+> >  	  using the passive serial interface over SPI.
+> > -- 
+> > 2.7.4
+> > 
+> > 
+> Acked-by: Moritz Fischer <mdf@kernel.org>
 
-Yours signed-off-by always should be the last line of the commit's
-message because the text below it belongs to a person who applies this
-patch, Thierry in this case. This is not a big deal at all and Thierry
-could make a fixup while applying the patch if will deem that as necessary.
+I've queued this up directly now, thanks.
 
-Secondly, there is no need to add "stable@vger.kernel.org" to the
-email's recipients because the patch will flow into stable kernel
-versions from the mainline once it will get applied. That happens based
-on the stable tag presence, hence it's enough to add the 'Cc' tag to the
-commit's message in order to get patch backported.
-
-Lastly, next time please add everyone to the email's recipients whom
-you're expecting to get a reply. Otherwise there is a chance that patch
-will be left unnoticed.
-
-Everything else looks good to me, thanks!
-
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-
-> Fixes: 8e2988a76c26 ("drm/tegra: sor: Support for audio over HDMI")
-> Cc: <stable@vger.kernel.org>
-> ---
->  drivers/gpu/drm/tegra/sor.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/tegra/sor.c b/drivers/gpu/drm/tegra/sor.c
-> index 5be5a08..0470cfe 100644
-> --- a/drivers/gpu/drm/tegra/sor.c
-> +++ b/drivers/gpu/drm/tegra/sor.c
-> @@ -2164,6 +2164,15 @@ static void tegra_sor_audio_prepare(struct tegra_sor *sor)
->  
->  	value = SOR_AUDIO_HDA_PRESENSE_ELDV | SOR_AUDIO_HDA_PRESENSE_PD;
->  	tegra_sor_writel(sor, value, SOR_AUDIO_HDA_PRESENSE);
-> +
-> +	/*
-> +	 * Enable and unmask the HDA codec SCRATCH0 register interrupt. This
-> +	 * is used for interoperability between the HDA codec driver and the
-> +	 * HDMI/DP driver.
-> +	 */
-> +	value = SOR_INT_CODEC_SCRATCH1 | SOR_INT_CODEC_SCRATCH0;
-> +	tegra_sor_writel(sor, value, SOR_INT_ENABLE);
-> +	tegra_sor_writel(sor, value, SOR_INT_MASK);
->  }
->  
->  static void tegra_sor_audio_unprepare(struct tegra_sor *sor)
-> @@ -2913,15 +2922,6 @@ static int tegra_sor_init(struct host1x_client *client)
->  	if (err < 0)
->  		return err;
->  
-> -	/*
-> -	 * Enable and unmask the HDA codec SCRATCH0 register interrupt. This
-> -	 * is used for interoperability between the HDA codec driver and the
-> -	 * HDMI/DP driver.
-> -	 */
-> -	value = SOR_INT_CODEC_SCRATCH1 | SOR_INT_CODEC_SCRATCH0;
-> -	tegra_sor_writel(sor, value, SOR_INT_ENABLE);
-> -	tegra_sor_writel(sor, value, SOR_INT_MASK);
-> -
->  	return 0;
->  }
->  
-> 
-
+greg k-h
