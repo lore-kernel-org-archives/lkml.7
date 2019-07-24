@@ -2,184 +2,150 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF817C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3609AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 929F52083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:11:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999119;
-	bh=Q9ILO/D091rKnyjvBUocEpW/ZTIH9aUPJHu9nA4RPUg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tA2HbFQAHXXa8TqOW0XTV3PCqTrvHjmF+t0xNRp81d93fD87lYxVOOOsuQlTnJ3Y9
-	 46VCJmZDxLzz2CJyPOObJTIPK8Yt/5+aXvURB+5p7jxIGH29VVHoc0QwmsDLf2VKPY
-	 jjnwt6B0fPrEpSSWmRuKOBvPtxez+xbq8T+CpqBI=
+	by mail.kernel.org (Postfix) with ESMTP id 0B3E420665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:12:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="nMkbt/qr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392245AbfGXUL6 (ORCPT
+        id S2392831AbfGXUMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:11:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392007AbfGXT5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:57:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4796020665;
-        Wed, 24 Jul 2019 19:57:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998250;
-        bh=Q9ILO/D091rKnyjvBUocEpW/ZTIH9aUPJHu9nA4RPUg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=up2iabAXhO9xysRYtaHv7A6e8aY6mvTdLQknoo8fF7UwtYemApquNxJ0E9JCgTCsL
-         C8DVTTzuS/DoZ/yPSMV3hZSlEEvqqNSckf+zofsr8xGgWDJucRvPyzXYMrYYiEtQGR
-         whG2wqxgGSRp87m9kOc/sy5W/Plb6AO+QU0Xwd50=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Tang Junhui <tang.junhui.linux@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.1 257/371] bcache: Revert "bcache: fix high CPU occupancy during journal"
-Date:   Wed, 24 Jul 2019 21:20:09 +0200
-Message-Id: <20190724191743.890667838@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
-References: <20190724191724.382593077@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 16:12:07 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42628 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388645AbfGXUMF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:12:05 -0400
+Received: by mail-ot1-f66.google.com with SMTP id l15so49179861otn.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 13:12:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+PNL04KYvInZXteiwuvvVomp7psYL1Kl+T8ycx6EmRk=;
+        b=nMkbt/qriVy9O40AoW5FYNfDVr8RyGGaYJ40joGq40jdmhquOlREtNDZ/xeGpk9EHD
+         gXIrt4W1XVVNC6/Rd2cAvNqLFpGVzBldC5FrJdtpyV4dVO8ZxSE8mfwUvBpjKm1jzl17
+         krrSZj+MzqvjS3VrNAzKy8wM81/5FUxqLeDnL3zJG6EW31/OdglL16Ms8Uggn9Qz2FUQ
+         y4aYlFANRwJZE2ZsU9dZEqXS7iUWtbd/J+qYJcO23brfsDmTeNV2Rw9ByujWw5xbW40z
+         0ldixykjhsbNKz/35tArF46weN+pr4TRfpajnHEBiwS7hXFUaIYfGGIyG3ZPouMGNZhX
+         vamQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+PNL04KYvInZXteiwuvvVomp7psYL1Kl+T8ycx6EmRk=;
+        b=sECSvh1FwyZuee+JIm7ja9MpsECaRjvjcLoMqHb249N4R9PInje++CxaRrzJ6chDTv
+         kx5NE50zng1WRVCtzHJ+jKgWlJaQU+PiYzaT4NvmyL/YFIGcjbOmDHrBY6VZ4Tl4imT5
+         yyw4b/tAy9+wC8dtsjLaTi4/inD3Av/YKkrnolCZgY7Mejrd8+t5dm+a+sxOc3sEsd7q
+         SEb7yL5isAsR6dKaKLkp9eS6sWTKsjuQzbvfq2b8l7ZEqiOb2E8uj8t95XFkgb40rxse
+         65EQOdGfkZxHFqtffMkKMdoQDTxGJK4pgKpa7GINdXdUubq1kG5ZscdsFZQAVSiJT15c
+         Z5wg==
+X-Gm-Message-State: APjAAAXuNJ2UPWuLRd+j6+/T+0V9/vCj0TAi/R3OXq6nmHMglpv1wchE
+        kBhD2/ueFc5vnkd1gcVjxFtR5jy108c74NkDEzKbcQ==
+X-Google-Smtp-Source: APXvYqyVnJ52FSRiRxNb5fXzbbBT2vQjm4rcB9LwDsWmIAgcWVuBgRfFtQALre7fkjgKI2r2zo6w17KkSkKZppNPmvs=
+X-Received: by 2002:a9d:7b48:: with SMTP id f8mr36294684oto.207.1563999124513;
+ Wed, 24 Jul 2019 13:12:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190625075227.15193-1-osalvador@suse.de> <20190625075227.15193-3-osalvador@suse.de>
+In-Reply-To: <20190625075227.15193-3-osalvador@suse.de>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 24 Jul 2019 13:11:52 -0700
+Message-ID: <CAPcyv4hvu+wp4tJJNW70jp2G_rNabyvzGMvDTS3PzkDCAFztYg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] mm,memory_hotplug: Introduce MHP_VMEMMAP_FLAGS
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        David Hildenbrand <david@redhat.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+On Tue, Jun 25, 2019 at 12:53 AM Oscar Salvador <osalvador@suse.de> wrote:
+>
+> This patch introduces MHP_MEMMAP_DEVICE and MHP_MEMMAP_MEMBLOCK flags,
+> and prepares the callers that add memory to take a "flags" parameter.
+> This "flags" parameter will be evaluated later on in Patch#3
+> to init mhp_restrictions struct.
+>
+> The callers are:
+>
+> add_memory
+> __add_memory
+> add_memory_resource
+>
+> Unfortunately, we do not have a single entry point to add memory, as depending
+> on the requisites of the caller, they want to hook up in different places,
+> (e.g: Xen reserve_additional_memory()), so we have to spread the parameter
+> in the three callers.
+>
+> The flags are either MHP_MEMMAP_DEVICE or MHP_MEMMAP_MEMBLOCK, and only differ
+> in the way they allocate vmemmap pages within the memory blocks.
+>
+> MHP_MEMMAP_MEMBLOCK:
+>         - With this flag, we will allocate vmemmap pages in each memory block.
+>           This means that if we hot-add a range that spans multiple memory blocks,
+>           we will use the beginning of each memory block for the vmemmap pages.
+>           This strategy is good for cases where the caller wants the flexiblity
+>           to hot-remove memory in a different granularity than when it was added.
+>
+>           E.g:
+>                 We allocate a range (x,y], that spans 3 memory blocks, and given
+>                 memory block size = 128MB.
+>                 [memblock#0  ]
+>                 [0 - 511 pfns      ] - vmemmaps for section#0
+>                 [512 - 32767 pfns  ] - normal memory
+>
+>                 [memblock#1 ]
+>                 [32768 - 33279 pfns] - vmemmaps for section#1
+>                 [33280 - 65535 pfns] - normal memory
+>
+>                 [memblock#2 ]
+>                 [65536 - 66047 pfns] - vmemmap for section#2
+>                 [66048 - 98304 pfns] - normal memory
+>
+> MHP_MEMMAP_DEVICE:
+>         - With this flag, we will store all vmemmap pages at the beginning of
+>           hot-added memory.
+>
+>           E.g:
+>                 We allocate a range (x,y], that spans 3 memory blocks, and given
+>                 memory block size = 128MB.
+>                 [memblock #0 ]
+>                 [0 - 1533 pfns    ] - vmemmap for section#{0-2}
+>                 [1534 - 98304 pfns] - normal memory
+>
+> When using larger memory blocks (1GB or 2GB), the principle is the same.
+>
+> Of course, MHP_MEMMAP_DEVICE is nicer when it comes to have a large contigous
+> area, while MHP_MEMMAP_MEMBLOCK allows us to have flexibility when removing the
+> memory.
 
-commit 249a5f6da57c28a903c75d81505d58ec8c10030d upstream.
+Concept and patch looks good to me, but I don't quite like the
+proliferation of the _DEVICE naming, in theory it need not necessarily
+be ZONE_DEVICE that is the only user of that flag. I also think it
+might be useful to assign a flag for the default 'allocate from RAM'
+case, just so the code is explicit. So, how about:
 
-This reverts commit c4dc2497d50d9c6fb16aa0d07b6a14f3b2adb1e0.
+MHP_MEMMAP_PAGE_ALLOC
+MHP_MEMMAP_MEMBLOCK
+MHP_MEMMAP_RESERVED
 
-This patch enlarges a race between normal btree flush code path and
-flush_btree_write(), which causes deadlock when journal space is
-exhausted. Reverts this patch makes the race window from 128 btree
-nodes to only 1 btree nodes.
+...for the 3 cases?
 
-Fixes: c4dc2497d50d ("bcache: fix high CPU occupancy during journal")
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: stable@vger.kernel.org
-Cc: Tang Junhui <tang.junhui.linux@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Other than that, feel free to add:
 
----
- drivers/md/bcache/bcache.h  |    2 -
- drivers/md/bcache/journal.c |   47 ++++++++++++++------------------------------
- drivers/md/bcache/util.h    |    2 -
- 3 files changed, 15 insertions(+), 36 deletions(-)
-
---- a/drivers/md/bcache/bcache.h
-+++ b/drivers/md/bcache/bcache.h
-@@ -726,8 +726,6 @@ struct cache_set {
- 
- #define BUCKET_HASH_BITS	12
- 	struct hlist_head	bucket_hash[1 << BUCKET_HASH_BITS];
--
--	DECLARE_HEAP(struct btree *, flush_btree);
- };
- 
- struct bbio {
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -390,12 +390,6 @@ err:
- }
- 
- /* Journalling */
--#define journal_max_cmp(l, r) \
--	(fifo_idx(&c->journal.pin, btree_current_write(l)->journal) < \
--	 fifo_idx(&(c)->journal.pin, btree_current_write(r)->journal))
--#define journal_min_cmp(l, r) \
--	(fifo_idx(&c->journal.pin, btree_current_write(l)->journal) > \
--	 fifo_idx(&(c)->journal.pin, btree_current_write(r)->journal))
- 
- static void btree_flush_write(struct cache_set *c)
- {
-@@ -403,35 +397,25 @@ static void btree_flush_write(struct cac
- 	 * Try to find the btree node with that references the oldest journal
- 	 * entry, best is our current candidate and is locked if non NULL:
- 	 */
--	struct btree *b;
--	int i;
-+	struct btree *b, *best;
-+	unsigned int i;
- 
- 	atomic_long_inc(&c->flush_write);
--
- retry:
--	spin_lock(&c->journal.lock);
--	if (heap_empty(&c->flush_btree)) {
--		for_each_cached_btree(b, c, i)
--			if (btree_current_write(b)->journal) {
--				if (!heap_full(&c->flush_btree))
--					heap_add(&c->flush_btree, b,
--						 journal_max_cmp);
--				else if (journal_max_cmp(b,
--					 heap_peek(&c->flush_btree))) {
--					c->flush_btree.data[0] = b;
--					heap_sift(&c->flush_btree, 0,
--						  journal_max_cmp);
--				}
--			}
--
--		for (i = c->flush_btree.used / 2 - 1; i >= 0; --i)
--			heap_sift(&c->flush_btree, i, journal_min_cmp);
--	}
-+	best = NULL;
- 
--	b = NULL;
--	heap_pop(&c->flush_btree, b, journal_min_cmp);
--	spin_unlock(&c->journal.lock);
-+	for_each_cached_btree(b, c, i)
-+		if (btree_current_write(b)->journal) {
-+			if (!best)
-+				best = b;
-+			else if (journal_pin_cmp(c,
-+					btree_current_write(best)->journal,
-+					btree_current_write(b)->journal)) {
-+				best = b;
-+			}
-+		}
- 
-+	b = best;
- 	if (b) {
- 		mutex_lock(&b->write_lock);
- 		if (!btree_current_write(b)->journal) {
-@@ -873,8 +857,7 @@ int bch_journal_alloc(struct cache_set *
- 	j->w[0].c = c;
- 	j->w[1].c = c;
- 
--	if (!(init_heap(&c->flush_btree, 128, GFP_KERNEL)) ||
--	    !(init_fifo(&j->pin, JOURNAL_PIN, GFP_KERNEL)) ||
-+	if (!(init_fifo(&j->pin, JOURNAL_PIN, GFP_KERNEL)) ||
- 	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)) ||
- 	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)))
- 		return -ENOMEM;
---- a/drivers/md/bcache/util.h
-+++ b/drivers/md/bcache/util.h
-@@ -113,8 +113,6 @@ do {									\
- 
- #define heap_full(h)	((h)->used == (h)->size)
- 
--#define heap_empty(h)	((h)->used == 0)
--
- #define DECLARE_FIFO(type, name)					\
- 	struct {							\
- 		size_t front, back, size, mask;				\
-
-
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
