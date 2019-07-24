@@ -2,53 +2,53 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27514C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF207C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84DB205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90EFD2147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998058;
-	bh=SbdTHK3meOVFUmsflZsRBWejHKQ0ASuVLXkuo+G9eV4=;
+	s=default; t=1563998061;
+	bh=jm7lTZQ3XOFpAE3QuyPcxasLsOKLerZUFhgL1v3gfqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mDF01fgO3RAsjIi+BuOZtrPuHuoz52xzARwoMWfCO/svS81G3UqzZqU6bS5xwOJWH
-	 LNpiHKHzg8UO/S+JQEZRhWa/QJc5gS3JAaSZ1lV2eS9dTQ7LGJ+mRRIRqqjXfIXnEw
-	 1v+rudrehGTDHpf6zycFtQlFGIJ9dl0BnFikexlY=
+	b=Gbpqf1Y9H947ztx/O7dYrLl2FV2dFr9nGmjs5+jFiBwLpb3+mKy3DZ9J4YVh1lpBB
+	 dzp1CPbzPSniuXWRy2QDIcp+kD8legzSr7T0JufIdCU3I75zDiiVj2FJVRjWxydcTt
+	 uIMMHmZzNXHkD7Y2nesIzp0e0eFJRP4avKVWQoO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404130AbfGXTyQ (ORCPT
+        id S2404322AbfGXTyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:54:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36866 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:54:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404288AbfGXTyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:54:07 -0400
+        id S2403997AbfGXTyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:54:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1CC8214AF;
-        Wed, 24 Jul 2019 19:54:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DB0620665;
+        Wed, 24 Jul 2019 19:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998046;
-        bh=SbdTHK3meOVFUmsflZsRBWejHKQ0ASuVLXkuo+G9eV4=;
+        s=default; t=1563998051;
+        bh=jm7lTZQ3XOFpAE3QuyPcxasLsOKLerZUFhgL1v3gfqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JCuxMu3M9Z4KlpLOYm+Yrp77xlMSYSC5y6NG39t35knLuxkAO/OM3VTqsdZy1p1Wi
-         CD0Tb2mTgAwxkb0985+OqHt1ohM28TsPSZvUdx9zjB/+BxZPd/AQ1Mr7zhLoaT/goz
-         gZHBKro9vZ3SWWIABi4mGuRFljvb01jAsh2Rjiqg=
+        b=IHEuDf+dkD3neaeCeGL1+hcbBi0Cb243MtFCnq/SmS79g9IsrZ2NG98M9UfRYU0JY
+         bILu2ayWio+G2kuvqZaEVEB2QYx/faHb5xeAuKykdSv8QzbpKLXLOLoy3Y9o6o8QWE
+         Okr4t/sJNbusaQzZ1vFSdcgXAtlR8xLviK/r0Rsk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Efremov <efremov@ispras.ru>,
-        Willy Tarreau <w@1wt.eu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 227/371] floppy: fix out-of-bounds read in copy_buffer
-Date:   Wed, 24 Jul 2019 21:19:39 +0200
-Message-Id: <20190724191741.556323032@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Stan Johnson <userm57@yahoo.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.1 229/371] scsi: NCR5380: Always re-enable reselection interrupt
+Date:   Wed, 24 Jul 2019 21:19:41 +0200
+Message-Id: <20190724191741.667269406@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,52 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit da99466ac243f15fbba65bd261bfc75ffa1532b6 ]
+From: Finn Thain <fthain@telegraphics.com.au>
 
-This fixes a global out-of-bounds read access in the copy_buffer
-function of the floppy driver.
+commit 57f31326518e98ee4cabf9a04efe00ed57c54147 upstream.
 
-The FDDEFPRM ioctl allows one to set the geometry of a disk.  The sect
-and head fields (unsigned int) of the floppy_drive structure are used to
-compute the max_sector (int) in the make_raw_rw_request function.  It is
-possible to overflow the max_sector.  Next, max_sector is passed to the
-copy_buffer function and used in one of the memcpy calls.
+The reselection interrupt gets disabled during selection and must be
+re-enabled when hostdata->connected becomes NULL. If it isn't re-enabled a
+disconnected command may time-out or the target may wedge the bus while
+trying to reselect the host. This can happen after a command is aborted.
 
-An unprivileged user could trigger the bug if the device is accessible,
-but requires a floppy disk to be inserted.
+Fix this by enabling the reselection interrupt in NCR5380_main() after
+calls to NCR5380_select() and NCR5380_information_transfer() return.
 
-The patch adds the check for the .sect * .head multiplication for not
-overflowing in the set_geometry function.
+Cc: Michael Schmitz <schmitzmic@gmail.com>
+Cc: stable@vger.kernel.org # v4.9+
+Fixes: 8b00c3d5d40d ("ncr5380: Implement new eh_abort_handler")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-The bug was found by syzkaller.
-
-Signed-off-by: Denis Efremov <efremov@ispras.ru>
-Tested-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/floppy.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/scsi/NCR5380.c |   12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 8b443ee1d005..38e5811a045e 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -3232,8 +3232,10 @@ static int set_geometry(unsigned int cmd, struct floppy_struct *g,
- 	int cnt;
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -710,6 +710,8 @@ static void NCR5380_main(struct work_str
+ 			NCR5380_information_transfer(instance);
+ 			done = 0;
+ 		}
++		if (!hostdata->connected)
++			NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+ 		spin_unlock_irq(&hostdata->lock);
+ 		if (!done)
+ 			cond_resched();
+@@ -1111,8 +1113,6 @@ static bool NCR5380_select(struct Scsi_H
+ 		spin_lock_irq(&hostdata->lock);
+ 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+ 		NCR5380_reselect(instance);
+-		if (!hostdata->connected)
+-			NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+ 		shost_printk(KERN_ERR, instance, "reselection after won arbitration?\n");
+ 		goto out;
+ 	}
+@@ -1120,7 +1120,6 @@ static bool NCR5380_select(struct Scsi_H
+ 	if (err < 0) {
+ 		spin_lock_irq(&hostdata->lock);
+ 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+-		NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
  
- 	/* sanity checking for parameters. */
--	if (g->sect <= 0 ||
--	    g->head <= 0 ||
-+	if ((int)g->sect <= 0 ||
-+	    (int)g->head <= 0 ||
-+	    /* check for overflow in max_sector */
-+	    (int)(g->sect * g->head) <= 0 ||
- 	    /* check for zero in F_SECT_PER_TRACK */
- 	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
- 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
--- 
-2.20.1
-
+ 		/* Can't touch cmd if it has been reclaimed by the scsi ML */
+ 		if (!hostdata->selecting)
+@@ -1158,7 +1157,6 @@ static bool NCR5380_select(struct Scsi_H
+ 	if (err < 0) {
+ 		shost_printk(KERN_ERR, instance, "select: REQ timeout\n");
+ 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+-		NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+ 		goto out;
+ 	}
+ 	if (!hostdata->selecting) {
+@@ -1827,9 +1825,6 @@ static void NCR5380_information_transfer
+ 					 */
+ 					NCR5380_write(TARGET_COMMAND_REG, 0);
+ 
+-					/* Enable reselect interrupts */
+-					NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+-
+ 					maybe_release_dma_irq(instance);
+ 					return;
+ 				case MESSAGE_REJECT:
+@@ -1861,8 +1856,6 @@ static void NCR5380_information_transfer
+ 					 */
+ 					NCR5380_write(TARGET_COMMAND_REG, 0);
+ 
+-					/* Enable reselect interrupts */
+-					NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+ #ifdef SUN3_SCSI_VME
+ 					dregs->csr |= CSR_DMA_ENABLE;
+ #endif
+@@ -1965,7 +1958,6 @@ static void NCR5380_information_transfer
+ 					cmd->result = DID_ERROR << 16;
+ 					complete_cmd(instance, cmd);
+ 					maybe_release_dma_irq(instance);
+-					NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+ 					return;
+ 				}
+ 				msgout = NOP;
 
 
