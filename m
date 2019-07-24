@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE57BC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FB4C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8759821951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F07C220659
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996962;
-	bh=3qMwmjDkCoCfgkdAGp/mueibKfxoUb9z1llMH7RJw2s=;
+	s=default; t=1563996965;
+	bh=jKLAJo9aJTG1ktqV/QZjLsO/1QBD2+lXkS+wx8rR9k0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gwnkZc4Iq61rkhTQQo8Mr2hZM05o1ocvGZljyYC3vWOsGJzsC4M1YGfF71cZUhySG
-	 lqBazsZqgyO/A/w0B9laIt3YO1jEAylTFXccmk29GQXqeJAmxIIFlISwMOK/ZAN+wf
-	 sBWxLk7r4x/OwfrjTaCY5Jk6sTekwgnSyYGNNO3M=
+	b=11hZ+rAvEwQJ16pKFF0qBV0zFPkD7MqoxyiWR4Vc0h9ZN7E9n1gnLWQguOea5zssM
+	 9dGhiUO95aet9gQiPHNTPqxncFWE0ozD0I7xdcRcJg3xNNeSBqhug3kFYtE5LClZfV
+	 aco+OeOIA0b/+H0uoloV+T5FOjntbtlZHccVpDfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388975AbfGXTgB (ORCPT
+        id S2388831AbfGXTgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:36:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34766 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:36:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388951AbfGXTf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:35:57 -0400
+        id S2388970AbfGXTgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:36:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57CC320659;
-        Wed, 24 Jul 2019 19:35:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A7BE2238C;
+        Wed, 24 Jul 2019 19:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996956;
-        bh=3qMwmjDkCoCfgkdAGp/mueibKfxoUb9z1llMH7RJw2s=;
+        s=default; t=1563996960;
+        bh=jKLAJo9aJTG1ktqV/QZjLsO/1QBD2+lXkS+wx8rR9k0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kBbX38I9QQdZD8FCmSNlHtcXS72h3WMPSTAbmk7uYKu4SkbGrsAwED2wbKn9slbN/
-         aPFoHBeqOeFwGvUEW+wb9431RNgOkh+d5hqsN+8JSvwwQbPbJCTiGE2W36kLUMv6X1
-         Hcp5MFGRCSJbapwSETs976Kvihspj5pWHPh2Oc0w=
+        b=HJz/dATwbsXNZNlyubpj+6Je0uPmdajtBVwezKSIXXhwrpArDxrg0/eaKp37csEbX
+         WM0gDk0gPq4aqPeeO45sWgE8ehK4maEPSTg1JZjLxTHoy+fsscMNp7FfQRpVPtzL1j
+         7sr/eb/pP7K/MTLTKIFv9g1d5CNOmy3UVjFZH+Hw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        linux-crypto@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.2 274/413] crypto: crypto4xx - fix a potential double free in ppc4xx_trng_probe
-Date:   Wed, 24 Jul 2019 21:19:25 +0200
-Message-Id: <20190724191755.858461201@linuxfoundation.org>
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.2 275/413] cifs: always add credits back for unsolicited PDUs
+Date:   Wed, 24 Jul 2019 21:19:26 +0200
+Message-Id: <20190724191755.948619129@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -65,52 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-commit 95566aa75cd6b3b404502c06f66956b5481194b3 upstream.
+commit 3e2725796cbdfe4efc7eb7b27cacaeac2ddad1a5 upstream.
 
-There is a possible double free issue in ppc4xx_trng_probe():
+not just if CONFIG_CIFS_DEBUG2 is enabled.
 
-85:	dev->trng_base = of_iomap(trng, 0);
-86:	of_node_put(trng);          ---> released here
-87:	if (!dev->trng_base)
-88:		goto err_out;
-...
-110:	ierr_out:
-111:		of_node_put(trng);  ---> double released here
-...
-
-This issue was detected by using the Coccinelle software.
-We fix it by removing the unnecessary of_node_put().
-
-Fixes: 5343e674f32f ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: <stable@vger.kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Armijn Hemel <armijn@tjaldur.nl>
-Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Julia Lawall <julia.lawall@lip6.fr>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/amcc/crypto4xx_trng.c |    1 -
- 1 file changed, 1 deletion(-)
+ fs/cifs/connect.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/crypto/amcc/crypto4xx_trng.c
-+++ b/drivers/crypto/amcc/crypto4xx_trng.c
-@@ -108,7 +108,6 @@ void ppc4xx_trng_probe(struct crypto4xx_
- 	return;
- 
- err_out:
--	of_node_put(trng);
- 	iounmap(dev->trng_base);
- 	kfree(rng);
- 	dev->trng_base = NULL;
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -1223,11 +1223,11 @@ next_pdu:
+ 					 atomic_read(&midCount));
+ 				cifs_dump_mem("Received Data is: ", bufs[i],
+ 					      HEADER_SIZE(server));
++				smb2_add_credits_from_hdr(bufs[i], server);
+ #ifdef CONFIG_CIFS_DEBUG2
+ 				if (server->ops->dump_detail)
+ 					server->ops->dump_detail(bufs[i],
+ 								 server);
+-				smb2_add_credits_from_hdr(bufs[i], server);
+ 				cifs_dump_mids(server);
+ #endif /* CIFS_DEBUG2 */
+ 			}
 
 
