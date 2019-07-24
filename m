@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C96C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD3AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04D19214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8100205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998403;
-	bh=rX1DHMvAoWXwOIi8d75uDBTkFbXucALJxOBfyN3Ut1U=;
+	s=default; t=1563998407;
+	bh=GG9bwFfGR5VftcAMGv5fNl1yA+l5GCq3VkjmvqXOPIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ZGitRigqp/iPf3jcD/IYFXZpAKRKcsF4DpjSeIsA5eeXxbxYNBp2bdLN0T5XO9S1
-	 sankBGhSbzHJ5KfPfqhRFcICmLBtMF8mwnjAOR5TCN4hfGeI4Qwd9pkBTNBoovCr+H
-	 G0zUsCeh1LLaFkec9qdPnlowq7YT4Hz3vrxGCV1g=
+	b=Meur3t3s2HRsgg9cYRwwLg4xgSy1R21enFiZo3TUnoEG/CQwaHWOBg1Yu9HpeXggU
+	 XV3hm4bVcfm9AS3goGkRVNDjRaJdahHYaHREtBr89KGl5mpKiAZyv6kuA8DEeK1t9L
+	 l8jis/rWKn7B0lTxTNOOZ1QIVzbLlwZOONreOTig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392276AbfGXUAC (ORCPT
+        id S2404392AbfGXUAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:00:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47600 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:00:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392144AbfGXT77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:59:59 -0400
+        id S2392283AbfGXUAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:00:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F1F9205C9;
-        Wed, 24 Jul 2019 19:59:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7407922ADA;
+        Wed, 24 Jul 2019 20:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998397;
-        bh=rX1DHMvAoWXwOIi8d75uDBTkFbXucALJxOBfyN3Ut1U=;
+        s=default; t=1563998403;
+        bh=GG9bwFfGR5VftcAMGv5fNl1yA+l5GCq3VkjmvqXOPIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lBw1188cdmsgj5Tqdup1bVohva76TjnQAord5Kbvt8JCTA4ERN3CaDOr/AaMxmpZF
-         lF+FQrtXtSPniHqf4rQvLnlJHohn2hhKJWC8CBPMm0Vs/JV64Dh+C+Xlo44GHO1zdN
-         TuE02A4VUzLJLzAAisaFyg8K5acfZ2q3+vkjyyJg=
+        b=wzvaVtD0c7DeFZfVOn3/vzgUa0fdnoUQXyjc8HuoiHfY9HKI1uU2PsAL6YBEQjQgM
+         iQtn0Afdy7pL5Fc+NQaw4J8G1xr84xCeKZt5/K/MuCgMpVymB9gD6bYJbKsJ0lrTY1
+         0b3rtO6z1OReprFiw6DzIKwKDDd4skDgEbSJnBHI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        stable@vger.kernel.org,
+        "Pavithra R. Prakash" <pavrampu@in.ibm.com>,
+        Greg Kurz <groug@kaod.org>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.1 352/371] powerpc/powernv/npu: Fix reference leak
-Date:   Wed, 24 Jul 2019 21:21:44 +0200
-Message-Id: <20190724191750.325605471@linuxfoundation.org>
+Subject: [PATCH 5.1 354/371] powerpc/pseries: Fix xive=off command line
+Date:   Wed, 24 Jul 2019 21:21:46 +0200
+Message-Id: <20190724191750.529500174@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -62,68 +64,166 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Greg Kurz <groug@kaod.org>
 
-commit 02c5f5394918b9b47ff4357b1b18335768cd867d upstream.
+commit a3bf9fbdad600b1e4335dd90979f8d6072e4f602 upstream.
 
-Since 902bdc57451c, get_pci_dev() calls pci_get_domain_bus_and_slot(). This
-has the effect of incrementing the reference count of the PCI device, as
-explained in drivers/pci/search.c:
+On POWER9, if the hypervisor supports XIVE exploitation mode, the
+guest OS will unconditionally requests for the XIVE interrupt mode
+even if XIVE was deactivated with the kernel command line xive=off.
+Later on, when the spapr XIVE init code handles xive=off, it disables
+XIVE and tries to fall back on the legacy mode XICS.
 
- * Given a PCI domain, bus, and slot/function number, the desired PCI
- * device is located in the list of PCI devices. If the device is
- * found, its reference count is increased and this function returns a
- * pointer to its data structure.  The caller must decrement the
- * reference count by calling pci_dev_put().  If no device is found,
- * %NULL is returned.
+This discrepency causes a kernel panic because the hypervisor is
+configured to provide the XIVE interrupt mode to the guest :
 
-Nothing was done to call pci_dev_put() and the reference count of GPU and
-NPU PCI devices rockets up.
+  kernel BUG at arch/powerpc/sysdev/xics/xics-common.c:135!
+  ...
+  NIP xics_smp_probe+0x38/0x98
+  LR  xics_smp_probe+0x2c/0x98
+  Call Trace:
+    xics_smp_probe+0x2c/0x98 (unreliable)
+    pSeries_smp_probe+0x40/0xa0
+    smp_prepare_cpus+0x62c/0x6ec
+    kernel_init_freeable+0x148/0x448
+    kernel_init+0x2c/0x148
+    ret_from_kernel_thread+0x5c/0x68
 
-A natural way to fix this would be to teach the callers about the change,
-so that they call pci_dev_put() when done with the pointer. This turns
-out to be quite intrusive, as it affects many paths in npu-dma.c,
-pci-ioda.c and vfio_pci_nvlink2.c. Also, the issue appeared in 4.16 and
-some affected code got moved around since then: it would be problematic
-to backport the fix to stable releases.
+Look for xive=off during prom_init and don't ask for XIVE in this
+case. One exception though: if the host only supports XIVE, we still
+want to boot so we ignore xive=off.
 
-All that code never cared for reference counting anyway. Call pci_dev_put()
-from get_pci_dev() to revert to the previous behavior.
+Similarly, have the spapr XIVE init code to looking at the interrupt
+mode negotiated during CAS, and ignore xive=off if the hypervisor only
+supports XIVE.
 
-Fixes: 902bdc57451c ("powerpc/powernv/idoa: Remove unnecessary pcidev from pci_dn")
-Cc: stable@vger.kernel.org # v4.16
+Fixes: eac1e731b59e ("powerpc/xive: guest exploitation of the XIVE interrupt controller")
+Cc: stable@vger.kernel.org # v4.20
+Reported-by: Pavithra R. Prakash <pavrampu@in.ibm.com>
 Signed-off-by: Greg Kurz <groug@kaod.org>
-Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/powernv/npu-dma.c |   15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/prom_init.c  |   16 +++++++++++-
+ arch/powerpc/sysdev/xive/spapr.c |   52 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 66 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/platforms/powernv/npu-dma.c
-+++ b/arch/powerpc/platforms/powernv/npu-dma.c
-@@ -31,9 +31,22 @@ static DEFINE_SPINLOCK(npu_context_lock)
- static struct pci_dev *get_pci_dev(struct device_node *dn)
- {
- 	struct pci_dn *pdn = PCI_DN(dn);
-+	struct pci_dev *pdev;
+--- a/arch/powerpc/kernel/prom_init.c
++++ b/arch/powerpc/kernel/prom_init.c
+@@ -174,6 +174,7 @@ static unsigned long __prombss prom_tce_
  
--	return pci_get_domain_bus_and_slot(pci_domain_nr(pdn->phb->bus),
-+	pdev = pci_get_domain_bus_and_slot(pci_domain_nr(pdn->phb->bus),
- 					   pdn->busno, pdn->devfn);
+ #ifdef CONFIG_PPC_PSERIES
+ static bool __prombss prom_radix_disable;
++static bool __prombss prom_xive_disable;
+ #endif
+ 
+ struct platform_support {
+@@ -684,6 +685,12 @@ static void __init early_cmdline_parse(v
+ 	}
+ 	if (prom_radix_disable)
+ 		prom_debug("Radix disabled from cmdline\n");
 +
-+	/*
-+	 * pci_get_domain_bus_and_slot() increased the reference count of
-+	 * the PCI device, but callers don't need that actually as the PE
-+	 * already holds a reference to the device. Since callers aren't
-+	 * aware of the reference count change, call pci_dev_put() now to
-+	 * avoid leaks.
-+	 */
-+	if (pdev)
-+		pci_dev_put(pdev);
-+
-+	return pdev;
++	opt = prom_strstr(prom_cmd_line, "xive=off");
++	if (opt) {
++		prom_xive_disable = true;
++		prom_debug("XIVE disabled from cmdline\n");
++	}
+ #endif /* CONFIG_PPC_PSERIES */
  }
  
- /* Given a NPU device get the associated PCI device. */
+@@ -1092,10 +1099,17 @@ static void __init prom_parse_xive_model
+ 	switch (val) {
+ 	case OV5_FEAT(OV5_XIVE_EITHER): /* Either Available */
+ 		prom_debug("XIVE - either mode supported\n");
+-		support->xive = true;
++		support->xive = !prom_xive_disable;
+ 		break;
+ 	case OV5_FEAT(OV5_XIVE_EXPLOIT): /* Only Exploitation mode */
+ 		prom_debug("XIVE - exploitation mode supported\n");
++		if (prom_xive_disable) {
++			/*
++			 * If we __have__ to do XIVE, we're better off ignoring
++			 * the command line rather than not booting.
++			 */
++			prom_printf("WARNING: Ignoring cmdline option xive=off\n");
++		}
+ 		support->xive = true;
+ 		break;
+ 	case OV5_FEAT(OV5_XIVE_LEGACY): /* Only Legacy mode */
+--- a/arch/powerpc/sysdev/xive/spapr.c
++++ b/arch/powerpc/sysdev/xive/spapr.c
+@@ -20,6 +20,7 @@
+ #include <linux/cpumask.h>
+ #include <linux/mm.h>
+ #include <linux/delay.h>
++#include <linux/libfdt.h>
+ 
+ #include <asm/prom.h>
+ #include <asm/io.h>
+@@ -663,6 +664,55 @@ static bool xive_get_max_prio(u8 *max_pr
+ 	return true;
+ }
+ 
++static const u8 *get_vec5_feature(unsigned int index)
++{
++	unsigned long root, chosen;
++	int size;
++	const u8 *vec5;
++
++	root = of_get_flat_dt_root();
++	chosen = of_get_flat_dt_subnode_by_name(root, "chosen");
++	if (chosen == -FDT_ERR_NOTFOUND)
++		return NULL;
++
++	vec5 = of_get_flat_dt_prop(chosen, "ibm,architecture-vec-5", &size);
++	if (!vec5)
++		return NULL;
++
++	if (size <= index)
++		return NULL;
++
++	return vec5 + index;
++}
++
++static bool xive_spapr_disabled(void)
++{
++	const u8 *vec5_xive;
++
++	vec5_xive = get_vec5_feature(OV5_INDX(OV5_XIVE_SUPPORT));
++	if (vec5_xive) {
++		u8 val;
++
++		val = *vec5_xive & OV5_FEAT(OV5_XIVE_SUPPORT);
++		switch (val) {
++		case OV5_FEAT(OV5_XIVE_EITHER):
++		case OV5_FEAT(OV5_XIVE_LEGACY):
++			break;
++		case OV5_FEAT(OV5_XIVE_EXPLOIT):
++			/* Hypervisor only supports XIVE */
++			if (xive_cmdline_disabled)
++				pr_warn("WARNING: Ignoring cmdline option xive=off\n");
++			return false;
++		default:
++			pr_warn("%s: Unknown xive support option: 0x%x\n",
++				__func__, val);
++			break;
++		}
++	}
++
++	return xive_cmdline_disabled;
++}
++
+ bool __init xive_spapr_init(void)
+ {
+ 	struct device_node *np;
+@@ -675,7 +725,7 @@ bool __init xive_spapr_init(void)
+ 	const __be32 *reg;
+ 	int i;
+ 
+-	if (xive_cmdline_disabled)
++	if (xive_spapr_disabled())
+ 		return false;
+ 
+ 	pr_devel("%s()\n", __func__);
 
 
