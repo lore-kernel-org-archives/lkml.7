@@ -2,67 +2,55 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6755C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B46C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D6321873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F9C21873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997277;
-	bh=+F7HcM9gQYjSw8TnsjDOsYFkBZNktlPjpXfNzZjW8t8=;
+	s=default; t=1563997280;
+	bh=Ii5Hng9bB7hkNR5FEREtXLqS8OrCl3P6l6VAqgsU6wg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SrxFA83oJuCEA5uBDWF0wy3wgd9cRpQxSdPtDBOisQk2ZNNB5GbWFCicDzlyQm1rG
-	 HYLl/KDqYVWspzWie6a8cSiSs7ccvpaSW4HxnDyxEoAT3v4hDKjwS+H43IJLZGVv1n
-	 1jAke8yiWWmD4GHy+89TeKmDMVrXVtws0wfhfvTM=
+	b=BaXgUcZDPUX14dEM2kQ5RYxLjQZLkztHu535xX7yCdqjaq8KoX6VXfbCjGvYeKuZU
+	 33/AC8WrWXeKnnWwjAsUx+TmeKItjG2SLYUWttqSGdBy6bM56vOEzHmDn8XjUicCQU
+	 q2s98Pyou8xdxw7yYaDevKNr/bkeL9RzTw8gSJdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390149AbfGXTlQ (ORCPT
+        id S2389915AbfGXTlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:41:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42446 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:41:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390138AbfGXTlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:41:12 -0400
+        id S2389559AbfGXTlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:41:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E8B520665;
-        Wed, 24 Jul 2019 19:41:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2258214AF;
+        Wed, 24 Jul 2019 19:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997270;
-        bh=+F7HcM9gQYjSw8TnsjDOsYFkBZNktlPjpXfNzZjW8t8=;
+        s=default; t=1563997273;
+        bh=Ii5Hng9bB7hkNR5FEREtXLqS8OrCl3P6l6VAqgsU6wg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nDZ2u/Nj0ibI5Kkj1SMcQz0qj99Qs8TeC3v7IKCB8RtLSK519RZo9EEfjbBMfdOad
-         Z2SEBOpAoHRiqGoiG//llRxvk3C/hBhm1QENxmsb6jjNfa9ZV9Ww0BhlYiIf0sA4k8
-         z6ZInY+VYfDsCNeFmmotxrIBl9F8JmqkeEsRoCTg=
+        b=GdMb9I+SK1GddRoGSKx9pmjH+gEL2shpThshvJd83u+Dw9H5oRAlpZnGO6Wr3LJa6
+         kDse9QL+sQg8h8EQCpcA+QlyLfjTPDbhtMquNDJ6mqPXlLK8eU2NyolgL4pcHR0/vn
+         FbbVMJXgURTzh1q5FpC30u0iHzuKCVy6khhzMiog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jane Chu <jane.chu@oracle.com>, Jeff Moyer <jmoyer@redhat.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Logan Gunthorpe <logang@deltatee.com>,
+        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
         Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Yafang Shao <shaoyafang@didiglobal.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH 5.2 377/413] libnvdimm/pfn: fix fsdax-mode namespace info-block zero-fields
-Date:   Wed, 24 Jul 2019 21:21:08 +0200
-Message-Id: <20190724191802.155774443@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.2 378/413] mm/memcontrol: fix wrong statistics in memory.stat
+Date:   Wed, 24 Jul 2019 21:21:09 +0200
+Message-Id: <20190724191802.201754427@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -75,143 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Yafang Shao <laoar.shao@gmail.com>
 
-commit 7e3e888dfc138089f4c15a81b418e88f0978f744 upstream.
+commit dd9239900e12db84c198855b262ae7796db1123b upstream.
 
-At namespace creation time there is the potential for the "expected to
-be zero" fields of a 'pfn' info-block to be filled with indeterminate
-data.  While the kernel buffer is zeroed on allocation it is immediately
-overwritten by nd_pfn_validate() filling it with the current contents of
-the on-media info-block location.  For fields like, 'flags' and the
-'padding' it potentially means that future implementations can not rely on
-those fields being zero.
+When we calculate total statistics for memcg1_stats and memcg1_events,
+we use the the index 'i' in the for loop as the events index.  Actually
+we should use memcg1_stats[i] and memcg1_events[i] as the events index.
 
-In preparation to stop using the 'start_pad' and 'end_trunc' fields for
-section alignment, arrange for fields that are not explicitly
-initialized to be guaranteed zero.  Bump the minor version to indicate
-it is safe to assume the 'padding' and 'flags' are zero.  Otherwise,
-this corruption is expected to benign since all other critical fields
-are explicitly initialized.
-
-Note The cc: stable is about spreading this new policy to as many
-kernels as possible not fixing an issue in those kernels.  It is not
-until the change titled "libnvdimm/pfn: Stop padding pmem namespaces to
-section alignment" where this improper initialization becomes a problem.
-So if someone decides to backport "libnvdimm/pfn: Stop padding pmem
-namespaces to section alignment" (which is not tagged for stable), make
-sure this pre-requisite is flagged.
-
-Link: http://lkml.kernel.org/r/156092356065.979959.6681003754765958296.stgit@dwillia2-desk3.amr.corp.intel.com
-Fixes: 32ab0a3f5170 ("libnvdimm, pmem: 'struct page' for pmem")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Tested-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>	[ppc64]
-Cc: <stable@vger.kernel.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Jane Chu <jane.chu@oracle.com>
-Cc: Jeff Moyer <jmoyer@redhat.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Logan Gunthorpe <logang@deltatee.com>
+Link: http://lkml.kernel.org/r/1562116978-19539-1-git-send-email-laoar.shao@gmail.com
+Fixes: 42a300353577 ("mm: memcontrol: fix recursive statistics correctness & scalabilty").
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
 Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Toshi Kani <toshi.kani@hpe.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Wei Yang <richardw.yang@linux.intel.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Christoph Hellwig <hch@lst.de>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Yafang Shao <shaoyafang@didiglobal.com>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvdimm/dax_devs.c |    2 +-
- drivers/nvdimm/pfn.h      |    1 +
- drivers/nvdimm/pfn_devs.c |   18 +++++++++++++++---
- 3 files changed, 17 insertions(+), 4 deletions(-)
+ mm/memcontrol.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/nvdimm/dax_devs.c
-+++ b/drivers/nvdimm/dax_devs.c
-@@ -118,7 +118,7 @@ int nd_dax_probe(struct device *dev, str
- 	nvdimm_bus_unlock(&ndns->dev);
- 	if (!dax_dev)
- 		return -ENOMEM;
--	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
-+	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	nd_pfn->pfn_sb = pfn_sb;
- 	rc = nd_pfn_validate(nd_pfn, DAX_SIG);
- 	dev_dbg(dev, "dax: %s\n", rc == 0 ? dev_name(dax_dev) : "<none>");
---- a/drivers/nvdimm/pfn.h
-+++ b/drivers/nvdimm/pfn.h
-@@ -28,6 +28,7 @@ struct nd_pfn_sb {
- 	__le32 end_trunc;
- 	/* minor-version-2 record the base alignment of the mapping */
- 	__le32 align;
-+	/* minor-version-3 guarantee the padding and flags are zero */
- 	u8 padding[4000];
- 	__le64 checksum;
- };
---- a/drivers/nvdimm/pfn_devs.c
-+++ b/drivers/nvdimm/pfn_devs.c
-@@ -412,6 +412,15 @@ static int nd_pfn_clear_memmap_errors(st
- 	return 0;
- }
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -3530,12 +3530,13 @@ static int memcg_stat_show(struct seq_fi
+ 		if (memcg1_stats[i] == MEMCG_SWAP && !do_memsw_account())
+ 			continue;
+ 		seq_printf(m, "total_%s %llu\n", memcg1_stat_names[i],
+-			   (u64)memcg_page_state(memcg, i) * PAGE_SIZE);
++			   (u64)memcg_page_state(memcg, memcg1_stats[i]) *
++			   PAGE_SIZE);
+ 	}
  
-+/**
-+ * nd_pfn_validate - read and validate info-block
-+ * @nd_pfn: fsdax namespace runtime state / properties
-+ * @sig: 'devdax' or 'fsdax' signature
-+ *
-+ * Upon return the info-block buffer contents (->pfn_sb) are
-+ * indeterminate when validation fails, and a coherent info-block
-+ * otherwise.
-+ */
- int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
- {
- 	u64 checksum, offset;
-@@ -557,7 +566,7 @@ int nd_pfn_probe(struct device *dev, str
- 	nvdimm_bus_unlock(&ndns->dev);
- 	if (!pfn_dev)
- 		return -ENOMEM;
--	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
-+	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	nd_pfn = to_nd_pfn(pfn_dev);
- 	nd_pfn->pfn_sb = pfn_sb;
- 	rc = nd_pfn_validate(nd_pfn, PFN_SIG);
-@@ -694,7 +703,7 @@ static int nd_pfn_init(struct nd_pfn *nd
- 	u64 checksum;
- 	int rc;
+ 	for (i = 0; i < ARRAY_SIZE(memcg1_events); i++)
+ 		seq_printf(m, "total_%s %llu\n", memcg1_event_names[i],
+-			   (u64)memcg_events(memcg, i));
++			   (u64)memcg_events(memcg, memcg1_events[i]));
  
--	pfn_sb = devm_kzalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
-+	pfn_sb = devm_kmalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	if (!pfn_sb)
- 		return -ENOMEM;
- 
-@@ -703,11 +712,14 @@ static int nd_pfn_init(struct nd_pfn *nd
- 		sig = DAX_SIG;
- 	else
- 		sig = PFN_SIG;
-+
- 	rc = nd_pfn_validate(nd_pfn, sig);
- 	if (rc != -ENODEV)
- 		return rc;
- 
- 	/* no info block, do init */;
-+	memset(pfn_sb, 0, sizeof(*pfn_sb));
-+
- 	nd_region = to_nd_region(nd_pfn->dev.parent);
- 	if (nd_region->ro) {
- 		dev_info(&nd_pfn->dev,
-@@ -760,7 +772,7 @@ static int nd_pfn_init(struct nd_pfn *nd
- 	memcpy(pfn_sb->uuid, nd_pfn->uuid, 16);
- 	memcpy(pfn_sb->parent_uuid, nd_dev_to_uuid(&ndns->dev), 16);
- 	pfn_sb->version_major = cpu_to_le16(1);
--	pfn_sb->version_minor = cpu_to_le16(2);
-+	pfn_sb->version_minor = cpu_to_le16(3);
- 	pfn_sb->start_pad = cpu_to_le32(start_pad);
- 	pfn_sb->end_trunc = cpu_to_le32(end_trunc);
- 	pfn_sb->align = cpu_to_le32(nd_pfn->align);
+ 	for (i = 0; i < NR_LRU_LISTS; i++)
+ 		seq_printf(m, "total_%s %llu\n", mem_cgroup_lru_names[i],
 
 
