@@ -2,183 +2,169 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217C1C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEB0C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02124218B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16A0218B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:09:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ao7/EbTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbfGXKI1 (ORCPT
+        id S1727082AbfGXKJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 06:08:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59610 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726070AbfGXKI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 06:08:27 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 15AD230ADC87;
-        Wed, 24 Jul 2019 10:08:26 +0000 (UTC)
-Received: from [10.72.12.18] (ovpn-12-18.pek2.redhat.com [10.72.12.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7395F19C70;
-        Wed, 24 Jul 2019 10:08:10 +0000 (UTC)
-Subject: Re: WARNING in __mmdrop
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
-        keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-References: <20190722035657-mutt-send-email-mst@kernel.org>
- <cfcd330d-5f4a-835a-69f7-c342d5d0d52d@redhat.com>
- <20190723010156-mutt-send-email-mst@kernel.org>
- <124be1a2-1c53-8e65-0f06-ee2294710822@redhat.com>
- <20190723032800-mutt-send-email-mst@kernel.org>
- <e2e01a05-63d8-4388-2bcd-b2be3c865486@redhat.com>
- <20190723062221-mutt-send-email-mst@kernel.org>
- <9baa4214-67fd-7ad2-cbad-aadf90bbfc20@redhat.com>
- <20190723110219-mutt-send-email-mst@kernel.org>
- <e0c91b89-d1e8-9831-00fe-23fe92d79fa2@redhat.com>
- <20190724040238-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <3dfa2269-60ba-7dd8-99af-5aef8552bd98@redhat.com>
-Date:   Wed, 24 Jul 2019 18:08:05 +0800
+        Wed, 24 Jul 2019 06:09:04 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:37779 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfGXKJD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 06:09:03 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190724100901epoutp03b87169cceaa0b66d691a2799cf8b552b~0UAJgEB9N3154031540epoutp03W
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 10:09:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190724100901epoutp03b87169cceaa0b66d691a2799cf8b552b~0UAJgEB9N3154031540epoutp03W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563962941;
+        bh=M76xakPDx2OTv/uYhsVSzoNlBCf/2Sk7P7BT1WxznQ0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Ao7/EbTdhhogTxPVyoaPgTDPTki+xUjmLoEEocZ1FSXtgL7ml+h9wpR4txVpRvm+W
+         sCbktKAKAQR19+ZXGFOQIVNf3FjpVMPlWuoTI5apzkwMNg4jZQZdZu929Xrupz3/Yu
+         zdWa+QZaSjKAgItsiC6pt03WirMtVo7bf97gIQuc=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20190724100901epcas1p45d07e4fc95975aa4404b76b1c6792c17~0UAJMsrJg0488304883epcas1p4_;
+        Wed, 24 Jul 2019 10:09:01 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.156]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 45trfM2nWGzMqYkV; Wed, 24 Jul
+        2019 10:08:59 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E0.BB.04160.B3E283D5; Wed, 24 Jul 2019 19:08:59 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190724100858epcas1p3e612bfe234c495208efbf160fe61e05a~0UAG8IsOh1360913609epcas1p3b;
+        Wed, 24 Jul 2019 10:08:58 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190724100858epsmtrp23a8d686322ef42d79e3dcc62ba5b13a5~0UAG7V4NS0817208172epsmtrp20;
+        Wed, 24 Jul 2019 10:08:58 +0000 (GMT)
+X-AuditID: b6c32a38-b4bff70000001040-17-5d382e3b6f66
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        89.42.03706.A3E283D5; Wed, 24 Jul 2019 19:08:58 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190724100858epsmtip15f6cb6fc9f00891c14a64916c9e8b837~0UAGwpD0D1096010960epsmtip1M;
+        Wed, 24 Jul 2019 10:08:58 +0000 (GMT)
+Subject: Re: [PATCH] extcon: fsa9480: Support the FSA880 variant
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Mike Lockwood <lockwood@google.com>,
+        devicetree@vger.kernel.org,
+        "cpgs (cpgs@samsung.com)" <cpgs@samsung.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <2e832c87-71ea-af32-211d-a301cf58cb04@samsung.com>
+Date:   Wed, 24 Jul 2019 19:12:01 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190724040238-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190723174301.31278-1-linus.walleij@linaro.org>
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 24 Jul 2019 10:08:26 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHJsWRmVeSWpSXmKPExsWy7bCmnq61nkWswb73QhYvD2lazD9yjtVi
+        yp/lTBab5/9htLi8aw6bxetFa9gtbjeuYHNg91iwqdTjzrU9bB59W1YxenzeJBfAEpVtk5Ga
+        mJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuWmQO0X0mhLDGnFCgU
+        kFhcrKRvZ1OUX1qSqpCRX1xiq5RakJJTYFmgV5yYW1yal66XnJ9rZWhgYGQKVJiQnXFv4UKW
+        gv98FXufdbI2MM7j6WLk4JAQMJHYN4exi5GLQ0hgB6NE7/aHrBDOJ0aJE1e2sUM43xglJnTf
+        Z+li5ATr6G9ezAaR2MsoMWNjD1T/e0aJ+9umMoFUCQs4SJxf1MEIYosIhEvsO3aAGaSIWWA9
+        o8TfOXPYQBJsAloS+1/cALP5BRQlrv54DNbAK2AnseTpYlYQm0VAVeLjknNgcVGBCIlPDw6z
+        QtQISpyc+YQF5AlOoPqupWDXMQuIS9x6Mp8JwpaXaN46G2yvhMBzNomjt36wQ7zgInFh6mJG
+        CFtY4tXxLVBxKYnP7/ayQdjVEitPHmGDaO5glNiy/wIrRMJYYv/SyUwgi5kFNCXW79KHCCtK
+        7Pw9F2omr0TDxt/sEEfwSbz72sMKCWxeiY42IYgSZYnLD+4yTWBUnoXkm1lIXpiF5IVZCMsW
+        MLKsYhRLLSjOTU8tNiwwQY7tTYzgtKllsYNxzzmfQ4wCHIxKPLwKDOaxQqyJZcWVuYcYJTiY
+        lUR4AxvMYoV4UxIrq1KL8uOLSnNSiw8xmgIDeyKzlGhyPjCl55XEG5oaGRsbW5gYmpkaGiqJ
+        8877oxkrJJCeWJKanZpakFoE08fEwSnVwFiloHuz5GcEc81ThzrjZ4b/NqU8M1ebs+vyqcM9
+        5QuFCo90P+V9+bZ/ntTquZdtxdebuJ64m3/hbN/UtoZw5jmCc1cut0k6uTomc3fCm8dbmxh/
+        uTw5fe7IwcNeGzpLug71HC/wKghkdqt2+sBT8jEnkiPa4mbXxrD1B08Ghld6Nwf7JMUdXqrE
+        UpyRaKjFXFScCAD/nDuWsQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42LZdlhJTtdKzyLW4ECHucXLQ5oW84+cY7WY
+        8mc5k8Xm+X8YLS7vmsNm8XrRGnaL240r2BzYPRZsKvW4c20Pm0ffllWMHp83yQWwRHHZpKTm
+        ZJalFunbJXBl3Fu4kKXgP1/F3medrA2M83i6GDk5JARMJPqbF7N1MXJxCAnsZpT4eOwGI0RC
+        UmLaxaPMXYwcQLawxOHDxRA1bxklvqzcxgZSIyzgIHF+UQdYvYhAuMTsBe+ZQYqYBdYzSqxv
+        WsgOkhASmMgosWmjCojNJqAlsf/FDbBmfgFFias/HoM18wrYSSx5upgVxGYRUJX4uOQcWFxU
+        IELi8I5ZUDWCEidnPmEBOYgTqL5rKQtImFlAXeLPvEvMELa4xK0n85kgbHmJ5q2zmScwCs9C
+        0j0LScssJC2zkLQsYGRZxSiZWlCcm55bbFhgmJdarlecmFtcmpeul5yfu4kRHD9amjsYLy+J
+        P8QowMGoxMOrwGAeK8SaWFZcmXuIUYKDWUmEN7DBLFaINyWxsiq1KD++qDQntfgQozQHi5I4
+        79O8Y5FCAumJJanZqakFqUUwWSYOTqkGRsEXBku2PGTq9Ps8w/XimeKsspD3e37+2n+4c+st
+        wcrowh+u8u+O8EZfc1CXUVMXV7fZdOv+vCXmO8QXuV5+kiT5OK9x654fImZ2/9s3hNx4+trd
+        aJm2zCQ2kT/zVe5Xu3/zyuLaLcz4j/OiiKmm0ZkJMu+ltLOFXB5dvOrALpXCVH4k8sAnGSWW
+        4oxEQy3mouJEAHtipjGbAgAA
+X-CMS-MailID: 20190724100858epcas1p3e612bfe234c495208efbf160fe61e05a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+X-CPGSPASS: Y
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190723174344epcas3p4dc935720d75f93a5ca0181662bc8036f
+References: <CGME20190723174344epcas3p4dc935720d75f93a5ca0181662bc8036f@epcas3p4.samsung.com>
+        <20190723174301.31278-1-linus.walleij@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 19. 7. 24. 오전 2:43, Linus Walleij wrote:
+> The older compatible variant of this chip is called FSA880
+> and works the same way, if we need some quirks in the future,
+> it is good to let it have its own compatible string.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt | 4 +++-
+>  drivers/extcon/extcon-fsa9480.c                             | 1 +
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
+> index d592c21245f2..624bd76f468e 100644
+> --- a/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
+> @@ -5,7 +5,9 @@ controlled using I2C and enables USB data, stereo and mono audio, video,
+>  microphone, and UART data to use a common connector port.
+>  
+>  Required properties:
+> - - compatible : Must be "fcs,fsa9480"
+> + - compatible : Must be one of
+> +   "fcs,fsa9480"
+> +   "fcs,fsa880"
+>   - reg : Specifies i2c slave address. Must be 0x25.
+>   - interrupts : Should contain one entry specifying interrupt signal of
+>     interrupt parent to which interrupt pin of the chip is connected.
+> diff --git a/drivers/extcon/extcon-fsa9480.c b/drivers/extcon/extcon-fsa9480.c
+> index 350fb34abfa0..8405512f5199 100644
+> --- a/drivers/extcon/extcon-fsa9480.c
+> +++ b/drivers/extcon/extcon-fsa9480.c
+> @@ -363,6 +363,7 @@ MODULE_DEVICE_TABLE(i2c, fsa9480_id);
+>  
+>  static const struct of_device_id fsa9480_of_match[] = {
+>  	{ .compatible = "fcs,fsa9480", },
+> +	{ .compatible = "fcs,fsa880", },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, fsa9480_of_match);
+> 
 
-On 2019/7/24 下午4:05, Michael S. Tsirkin wrote:
-> On Wed, Jul 24, 2019 at 10:17:14AM +0800, Jason Wang wrote:
->> On 2019/7/23 下午11:02, Michael S. Tsirkin wrote:
->>> On Tue, Jul 23, 2019 at 09:34:29PM +0800, Jason Wang wrote:
->>>> On 2019/7/23 下午6:27, Michael S. Tsirkin wrote:
->>>>>> Yes, since there could be multiple co-current invalidation requests. We need
->>>>>> count them to make sure we don't pin wrong pages.
->>>>>>
->>>>>>
->>>>>>> I also wonder about ordering. kvm has this:
->>>>>>>            /*
->>>>>>>              * Used to check for invalidations in progress, of the pfn that is
->>>>>>>              * returned by pfn_to_pfn_prot below.
->>>>>>>              */
->>>>>>>             mmu_seq = kvm->mmu_notifier_seq;
->>>>>>>             /*
->>>>>>>              * Ensure the read of mmu_notifier_seq isn't reordered with PTE reads in
->>>>>>>              * gfn_to_pfn_prot() (which calls get_user_pages()), so that we don't
->>>>>>>              * risk the page we get a reference to getting unmapped before we have a
->>>>>>>              * chance to grab the mmu_lock without mmu_notifier_retry() noticing.
->>>>>>>              *
->>>>>>>              * This smp_rmb() pairs with the effective smp_wmb() of the combination
->>>>>>>              * of the pte_unmap_unlock() after the PTE is zapped, and the
->>>>>>>              * spin_lock() in kvm_mmu_notifier_invalidate_<page|range_end>() before
->>>>>>>              * mmu_notifier_seq is incremented.
->>>>>>>              */
->>>>>>>             smp_rmb();
->>>>>>>
->>>>>>> does this apply to us? Can't we use a seqlock instead so we do
->>>>>>> not need to worry?
->>>>>> I'm not familiar with kvm MMU internals, but we do everything under of
->>>>>> mmu_lock.
->>>>>>
->>>>>> Thanks
->>>>> I don't think this helps at all.
->>>>>
->>>>> There's no lock between checking the invalidate counter and
->>>>> get user pages fast within vhost_map_prefetch. So it's possible
->>>>> that get user pages fast reads PTEs speculatively before
->>>>> invalidate is read.
->>>>>
->>>>> -- 
->>>> In vhost_map_prefetch() we do:
->>>>
->>>>           spin_lock(&vq->mmu_lock);
->>>>
->>>>           ...
->>>>
->>>>           err = -EFAULT;
->>>>           if (vq->invalidate_count)
->>>>                   goto err;
->>>>
->>>>           ...
->>>>
->>>>           npinned = __get_user_pages_fast(uaddr->uaddr, npages,
->>>>                                           uaddr->write, pages);
->>>>
->>>>           ...
->>>>
->>>>           spin_unlock(&vq->mmu_lock);
->>>>
->>>> Is this not sufficient?
->>>>
->>>> Thanks
->>> So what orders __get_user_pages_fast wrt invalidate_count read?
->>
->> So in invalidate_end() callback we have:
->>
->> spin_lock(&vq->mmu_lock);
->> --vq->invalidate_count;
->>          spin_unlock(&vq->mmu_lock);
->>
->>
->> So even PTE is read speculatively before reading invalidate_count (only in
->> the case of invalidate_count is zero). The spinlock has guaranteed that we
->> won't read any stale PTEs.
->>
->> Thanks
-> I'm sorry I just do not get the argument.
-> If you want to order two reads you need an smp_rmb
-> or stronger between them executed on the same CPU.
->
-> Executing any kind of barrier on another CPU
-> will have no ordering effect on the 1st one.
->
->
-> So if CPU1 runs the prefetch, and CPU2 runs invalidate
-> callback, read of invalidate counter on CPU1 can bypass
-> read of PTE on CPU1 unless there's a barrier
-> in between, and nothing CPU2 does can affect that outcome.
->
->
-> What did I miss?
+Applied it. Thanks.
 
-
-It doesn't harm if PTE is read before invalidate_count, this is because:
-
-1) This speculation is serialized with invalidate_range_end() because of 
-the spinlock
-
-2) This speculation can only make effect when we read invalidate_count 
-as zero.
-
-3) This means the speculation is done after the last 
-invalidate_range_end() and because of the spinlock, when we enter the 
-critical section of spinlock in prefetch, we can not see any stale PTE 
-that was unmapped before.
-
-Am I wrong?
-
-Thanks
-
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
