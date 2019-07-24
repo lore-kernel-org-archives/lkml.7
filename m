@@ -2,137 +2,105 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4472FC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C3FC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A5B2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDCC2070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:49:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a96Fshk/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbfGXDsy (ORCPT
+        id S1726558AbfGXDtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 23:48:54 -0400
-Received: from mm1.mcn.org ([216.150.240.85]:59864 "EHLO mailbe.mcn.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbfGXDsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 23:48:54 -0400
-X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Tue, 23 Jul 2019 23:48:54 EDT
-Received: (qmail 6297 invoked from network); 24 Jul 2019 03:42:13 -0000
-Received: from 63.0.134.39.8.furtherreach.net (HELO [192.168.1.125]) (joego@mcn.org@8.39.134.63)
-        by mailbe.mcn.org with (AES128-SHA encrypted) SMTP
-        (0558837a-adc5-11e9-92c7-00505681b3bc); Tue, 23 Jul 2019 20:42:13 -0700
-Subject: Re: Reminder: 3 open syzbot bugs in "net/ax25" subsystem
-To:     linux-hams@vger.kernel.org, netdev@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <20190724024049.GC643@sol.localdomain>
-From:   Joe <joego@mcn.org>
-Message-ID: <623ff230-5883-560c-22d0-3e6b0eeaba39@mcn.org>
-Date:   Tue, 23 Jul 2019 20:42:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190724024049.GC643@sol.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-MagicMail-OS: Unknown
-X-MagicMail-UUID: 0558837a-adc5-11e9-92c7-00505681b3bc
-X-MagicMail-Authenticated: joego@mcn.org
-X-MagicMail-SourceIP: 8.39.134.63
-X-MagicMail-RegexMatch: 2
-X-MagicMail-EnvelopeFrom: <joego@mcn.org>
+        Tue, 23 Jul 2019 23:49:24 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45008 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726525AbfGXDtY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 23:49:24 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i18so20467180pgl.11;
+        Tue, 23 Jul 2019 20:49:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=IQLyRnhX1U98uZ5/RlUPme0HMor/hCDsDY8BvZ+8wGg=;
+        b=a96Fshk/MwVVdB7NTmT4qZmZCuO8Xnost8WdcmjbpP9gHxAdpF98Ipx0xQu5jIjJfv
+         f+gLkd1Kc8DPyCaq9E6PV4aqzK+EiVhwpaUyLUq5/c6NsaXP89+pdCL7u+viIM52Lfih
+         uIa1UpOUc3PSnxqg1PKEvJRxokGT1YpgoCYCHtqPfB+NAdgtXMK5tud/u/rZ3bAeUq1S
+         VEAB2W3bpmCPHYFFGRwynJdB9a0s40Eh+MX+Eb0YCdUNBDQSvJn3wUMTOI3mV2A09JyH
+         PBtUpi0TooicuDLdNR5wbOUapVFpYVgcqRcZaujgUVysqrFv+ZJgQT6UFxjIXoLm+w4P
+         RB8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IQLyRnhX1U98uZ5/RlUPme0HMor/hCDsDY8BvZ+8wGg=;
+        b=ckSu1drg3QwVaHDZD14U7i6I268TI/aGXG4fs8DuquruzpSjQ/n8zuEcS15shIGGAA
+         pMGi+mhVKE7Mdgw5PZPFly3DWolzjOIUe/tSflATm5g9n0cbyzRG91j0DQp4de2tiYKz
+         SLUmdK+sB6Xa73Vnsi4mnW2JAg1gQfVAdLQnhN0ppxhjQ+XTzv1Y2pwQMh2OSJThPrhk
+         +84UiHqu1v3AWy1A8tMCHpRsZ9BmOPYdS8vWsx+MpRJqd8f/XS+i9lWiEdFG/rWYgAl7
+         mIYoQ9691C7BqAI5+NTMoA1OO/SkvpCK48Nu1B1Fccj4OTBhTQCZtWixj371inUGWZfx
+         KBOw==
+X-Gm-Message-State: APjAAAWv49yukZOnebyrFdM2WJEhB6481+hAfacDFE6/B0Wa1L2IPVtT
+        T/7WAzrnx0f7tdnBEwi6tXc=
+X-Google-Smtp-Source: APXvYqzOgcmy45hVT5pcQwcT4irKnM5W7z/3OPHvaOp68PJhdvXsJts8LJmb3h3u7VYjS/Db6ick4w==
+X-Received: by 2002:a62:38c6:: with SMTP id f189mr9125668pfa.157.1563940163555;
+        Tue, 23 Jul 2019 20:49:23 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id v10sm45113413pfe.163.2019.07.23.20.49.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 20:49:23 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     philipp.reisner@linbit.com, lars.ellenberg@linbit.com,
+        axboe@kernel.dk
+Cc:     drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH 1/2] block: drbd: Fix a possible null-pointer dereference in receive_protocol()
+Date:   Wed, 24 Jul 2019 11:49:16 +0800
+Message-Id: <20190724034916.28703-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric, How do I get off of this thread? When I try to unsubscribe it 
-tells me I'm not a member of the group.
+In receive_protocol(), when crypto_alloc_shash() on line 3754 fails,
+peer_integrity_tfm is NULL, and error handling code is executed.
+In this code, crypto_free_shash() is called with NULL, which can cause a
+null-pointer dereference, because:
+crypto_free_shash(NULL)
+    crypto_ahash_tfm(NULL)
+        "return &NULL->base"
 
-Thanks in advance,
+To fix this bug, peer_integrity_tfm is checked before calling
+crypto_free_shash().
 
-Joe G.
+This bug is found by a static analysis tool STCheck written by us.
 
-On 7/23/19 7:40 PM, Eric Biggers wrote:
-> [This email was generated by a script.  Let me know if you have any suggestions
-> to make it better, or if you want it re-generated with the latest status.]
->
-> Of the currently open syzbot reports against the upstream kernel, I've manually
-> marked 3 of them as possibly being bugs in the "net/ax25" subsystem.  I've
-> listed these reports below, sorted by an algorithm that tries to list first the
-> reports most likely to be still valid, important, and actionable.
->
-> If you believe a bug is no longer valid, please close the syzbot report by
-> sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-> original thread, as explained at https://goo.gl/tpsmEJ#status
->
-> If you believe I misattributed a bug to the "net/ax25" subsystem, please let me
-> know, and if possible forward the report to the correct people or mailing list.
->
-> Here are the bugs:
->
-> --------------------------------------------------------------------------------
-> Title:              general protection fault in ax25_send_frame
-> Last occurred:      0 days ago
-> Reported:           204 days ago
-> Branches:           Mainline and others
-> Dashboard link:     https://syzkaller.appspot.com/bug?id=1cdd5b120f129364fc8e9b2b027826cf99fa696e
-> Original thread:    https://lkml.kernel.org/lkml/0000000000009ea37c057e58d787@google.com/T/#u
->
-> Unfortunately, this bug does not have a reproducer.
->
-> No one replied to the original thread for this bug.
->
-> If you fix this bug, please add the following tag to the commit:
->      Reported-by: syzbot+e0b81535a27b8be39502@syzkaller.appspotmail.com
->
-> If you send any email or patch for this bug, please consider replying to the
-> original thread.  For the git send-email command to use, or tips on how to reply
-> if the thread isn't in your mailbox, see the "Reply instructions" at
-> https://lkml.kernel.org/r/0000000000009ea37c057e58d787@google.com
->
-> --------------------------------------------------------------------------------
-> Title:              KASAN: stack-out-of-bounds Write in ax25_getname
-> Last occurred:      90 days ago
-> Reported:           206 days ago
-> Branches:           Mainline and others
-> Dashboard link:     https://syzkaller.appspot.com/bug?id=fb195f91dc044978c1b186f1288b1eff61edcc20
-> Original thread:    https://lkml.kernel.org/lkml/000000000000ed4120057e2df0c6@google.com/T/#u
->
-> This bug has a syzkaller reproducer only.
->
-> No one replied to the original thread for this bug.
->
-> If you fix this bug, please add the following tag to the commit:
->      Reported-by: syzbot+6a29097222b4d3b8617c@syzkaller.appspotmail.com
->
-> If you send any email or patch for this bug, please consider replying to the
-> original thread.  For the git send-email command to use, or tips on how to reply
-> if the thread isn't in your mailbox, see the "Reply instructions" at
-> https://lkml.kernel.org/r/000000000000ed4120057e2df0c6@google.com
->
-> --------------------------------------------------------------------------------
-> Title:              inconsistent lock state in ax25_std_heartbeat_expiry
-> Last occurred:      122 days ago
-> Reported:           120 days ago
-> Branches:           net
-> Dashboard link:     https://syzkaller.appspot.com/bug?id=9086a8eac930890b2730d6441093bd478e32913f
-> Original thread:    https://lkml.kernel.org/lkml/0000000000001b07250584efbee3@google.com/T/#u
->
-> Unfortunately, this bug does not have a reproducer.
->
-> The original thread for this bug received 2 replies; the last was 119 days ago.
->
-> If you fix this bug, please add the following tag to the commit:
->      Reported-by: syzbot+e350b81e95a6a214da8a@syzkaller.appspotmail.com
->
-> If you send any email or patch for this bug, please consider replying to the
-> original thread.  For the git send-email command to use, or tips on how to reply
-> if the thread isn't in your mailbox, see the "Reply instructions" at
-> https://lkml.kernel.org/r/0000000000001b07250584efbee3@google.com
->
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/block/drbd/drbd_receiver.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 90ebfcae0ce6..a4df2b8291f6 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -3807,7 +3807,8 @@ static int receive_protocol(struct drbd_connection *connection, struct packet_in
+ disconnect_rcu_unlock:
+ 	rcu_read_unlock();
+ disconnect:
+-	crypto_free_shash(peer_integrity_tfm);
++	if (peer_integrity_tfm)
++		crypto_free_shash(peer_integrity_tfm);
+ 	kfree(int_dig_in);
+ 	kfree(int_dig_vv);
+ 	conn_request_state(connection, NS(conn, C_DISCONNECTING), CS_HARD);
+-- 
+2.17.0
+
