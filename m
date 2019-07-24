@@ -2,133 +2,133 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2C3C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFB1C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 157F5218F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563995886;
-	bh=FTIbky2RQh4n4trZB8J028hZOG5yvaFCDH0KTl+rYHY=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=dGegXyFRbHjuIxEYSmwqLhJby0FNfOyIKWOVq2ePJFtvm6xCgQyBH83P1qncrNnNZ
-	 cH+/xxEZGRuW309H199wQSu/B2LnDL55Fzct2rLoAIrXj0rU0gtGgdaa5zBzvhA0ti
-	 SmWFMCxdWGrMls3lT02S1WAZOjdH8S2dbLENLWCw=
+	by mail.kernel.org (Postfix) with ESMTP id 2D49E229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbfGXTSE (ORCPT
+        id S1728990AbfGXTSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:18:04 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34506 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGXTSE (ORCPT
+        Wed, 24 Jul 2019 15:18:09 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:56766 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728945AbfGXTSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:18:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ZvaDn2iuFkpUufm9sy0OMnQSAaQSZxJ0Gwy+hLn2UIE=; b=NTGKnuySZtkt
-        TysE1tGDvJ9HsFDVURtjonr+J14vGj798LDLiEhReft0rrOA4ngBq2Tx9I37QU0PmnsLUlws2TFru
-        oo2u4uDpkrhnI8ASc/9DuQUzW+PR3Ux09G6PTKB2/e9iR/247p02T7sKaV5cXyHhM9GgTssgCcJnZ
-        DYf6o=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hqMlz-000054-FX; Wed, 24 Jul 2019 19:17:59 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id EA01D2742B5D; Wed, 24 Jul 2019 20:17:58 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Keerthy <j-keerthy@ti.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: lp87565: Fix probe failure for "ti,lp87565"" to the regulator tree
-In-Reply-To: <20190711113517.26077-1-axel.lin@ingics.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190724191758.EA01D2742B5D@ypsilon.sirena.org.uk>
-Date:   Wed, 24 Jul 2019 20:17:58 +0100 (BST)
+        Wed, 24 Jul 2019 15:18:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id u25so51737767iol.23
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:18:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=/KbbthRJZk0AxJWbum4pr1UQLrzvmUjB/GqGbUAPhkE=;
+        b=D/5qLrLU/OucHoaTs6JTh6mhD16zUz2FVqF/D6jxkvlhV79uhDpG0i+rrJzdv/c3ZN
+         pZd66drXQ/3be2bWqTfQLTpyxUMw7ZEprtzAb3oL4nI/+q7PLqsBym4/3ol/gBh+uArd
+         GrQKBZYRRWvnmeO50ODlyQsgcxv6KPXkSbUA75+Fk7v5OiJQuuuBsQmkoXURJDwosOkW
+         xuJcBESqZooyzcp2ST8rkcYL4TCzDrXO6fU3GhphscrO5e/NjAWmcnj3Ad2NLV8E2QNd
+         V5XvRma4VFrFbH4wQebsnv7fV34bhySg28Z2Rf/4mJtqmuNVo9JbpkaqdURIzzeiOeK8
+         iMvw==
+X-Gm-Message-State: APjAAAVqwmWqimyq8HahANmBNSHkNpfFl2Ijs7lKjiiziXnB5gjNFV+1
+        hZuveitlM6zN5ysfN7vQ3SRuqxLb2LsbYL/8OkZ+Y6XdBJh3
+X-Google-Smtp-Source: APXvYqyFDeSAO4sa6RZWdMFSrRfA6xw74ThmADE7c0L0BoUD9BTewtNZ1iTIGdPQiciu8ZsPIdTxkSWkapBZnbtOmAfyK9+bJOHK
+MIME-Version: 1.0
+X-Received: by 2002:a5d:8447:: with SMTP id w7mr1629918ior.197.1563995887252;
+ Wed, 24 Jul 2019 12:18:07 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 12:18:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004a3a63058e722b94@google.com>
+Subject: WARNING in ovl_real_fdget_meta
+From:   syzbot <syzbot+032bc63605089a199d30@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org,
+        miklos@szeredi.hu, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hello,
 
-   regulator: lp87565: Fix probe failure for "ti,lp87565"
+syzbot found the following crash on:
 
-has been applied to the regulator tree at
+HEAD commit:    c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1346d53fa00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3c8985c08e1f9727
+dashboard link: https://syzkaller.appspot.com/bug?extid=032bc63605089a199d30
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15855334600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17fcc4c8600000
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+032bc63605089a199d30@syzkaller.appspotmail.com
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 8471 at fs/overlayfs/file.c:55 ovl_change_flags  
+fs/overlayfs/file.c:55 [inline]
+WARNING: CPU: 1 PID: 8471 at fs/overlayfs/file.c:55  
+ovl_real_fdget_meta.cold+0x11/0x1e fs/overlayfs/file.c:106
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 8471 Comm: syz-executor111 Not tainted 5.2.0+ #71
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x16f/0x1f0 lib/dump_stack.c:113
+  panic+0x2dc/0x755 kernel/panic.c:219
+  __warn.cold+0x20/0x4c kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
+RIP: 0010:ovl_change_flags fs/overlayfs/file.c:55 [inline]
+RIP: 0010:ovl_real_fdget_meta.cold+0x11/0x1e fs/overlayfs/file.c:106
+Code: e9 b3 fd ff ff e8 0c 68 4f ff e9 fb fd ff ff e8 02 68 4f ff e9 15 fe  
+ff ff e8 b8 a6 15 ff 48 c7 c7 a0 45 b3 87 e8 c0 db ff fe <0f> 0b 41 bc fb  
+ff ff ff e9 68 c6 ff ff e8 9a a6 15 ff 48 c7 c7 a0
+RSP: 0018:ffff8880a1bffdc0 EFLAGS: 00010286
+RAX: 0000000000000024 RBX: 0000000004048000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815b9de2 RDI: ffffed101437ffaa
+RBP: ffff8880a1bffdf0 R08: 0000000000000024 R09: ffffed1015d26079
+R10: ffffed1015d26078 R11: ffff8880ae9303c7 R12: 000000000000a000
+R13: ffff88809bc592c0 R14: ffff88809bc59338 R15: ffff8880898e0460
+  ovl_real_fdget fs/overlayfs/file.c:113 [inline]
+  ovl_llseek+0x105/0x3b0 fs/overlayfs/file.c:163
+  vfs_llseek fs/read_write.c:300 [inline]
+  ksys_lseek+0x116/0x1b0 fs/read_write.c:313
+  __do_sys_lseek fs/read_write.c:324 [inline]
+  __se_sys_lseek fs/read_write.c:322 [inline]
+  __x64_sys_lseek+0x73/0xb0 fs/read_write.c:322
+  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441ce9
+Code: e8 1c b4 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffcff68e398 EFLAGS: 00000246 ORIG_RAX: 0000000000000008
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441ce9
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000402af0 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From a853c0a0b013af3fee0f028cff3c44e275ce9abd Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Thu, 11 Jul 2019 19:35:17 +0800
-Subject: [PATCH] regulator: lp87565: Fix probe failure for "ti,lp87565"
-
-The "ti,lp87565" compatible string is still in of_lp87565_match_table,
-but current code will return -EINVAL because lp87565->dev_type is unknown.
-This was working in earlier kernel versions, so fix it.
-
-Fixes: 7ee63bd74750 ("regulator: lp87565: Add 4-phase lp87561 regulator support")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Link: https://lore.kernel.org/r/20190711113517.26077-1-axel.lin@ingics.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/lp87565-regulator.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/regulator/lp87565-regulator.c b/drivers/regulator/lp87565-regulator.c
-index 5d067f7c2116..0c440c5e2832 100644
---- a/drivers/regulator/lp87565-regulator.c
-+++ b/drivers/regulator/lp87565-regulator.c
-@@ -163,7 +163,7 @@ static int lp87565_regulator_probe(struct platform_device *pdev)
- 	struct lp87565 *lp87565 = dev_get_drvdata(pdev->dev.parent);
- 	struct regulator_config config = { };
- 	struct regulator_dev *rdev;
--	int i, min_idx = LP87565_BUCK_0, max_idx = LP87565_BUCK_3;
-+	int i, min_idx, max_idx;
- 
- 	platform_set_drvdata(pdev, lp87565);
- 
-@@ -182,9 +182,9 @@ static int lp87565_regulator_probe(struct platform_device *pdev)
- 		max_idx = LP87565_BUCK_3210;
- 		break;
- 	default:
--		dev_err(lp87565->dev, "Invalid lp config %d\n",
--			lp87565->dev_type);
--		return -EINVAL;
-+		min_idx = LP87565_BUCK_0;
-+		max_idx = LP87565_BUCK_3;
-+		break;
- 	}
- 
- 	for (i = min_idx; i <= max_idx; i++) {
--- 
-2.20.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
