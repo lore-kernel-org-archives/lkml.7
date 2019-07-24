@@ -2,54 +2,55 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7DAC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED90C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62716214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1837217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997684;
-	bh=1XWBff72RDQfxhqVy5h8El7/P9NVXNFJ4nDcKbal5QE=;
+	s=default; t=1563997686;
+	bh=UbNGCPG50lJAwM2kHoPTQY+0QvJ1SonV0cTOwFZihyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xJVk67DdqkqFyCtLGiQ6roqrTYn5yQXwEo9HBryrP0U/L1nu+yy/p4A8PmrAaLBgX
-	 uQqWgfW+Adp0URjeS2g8fqcUJWtRemOVOENTt/NX9CXqocnZgHGDP+HqjJM33amx5D
-	 x3Kq2LZGFzvdQLTkwWh4+FUww++qBgyLSzGLUmWY=
+	b=gyOGrSoOQkl8G3K2ClUxQuCpZOFTwncc3YaBvMP5D0qeetQYqTItVgV+T9IacVQDS
+	 ws+zD2od2q6fgvFdUf+1meKf3BB5FtY6tPzHqiRqciZEPDftn4jKEzhHAkIcbGqtIQ
+	 jrfjVnZdDxUHPv1z+ttzbplCxEAdfqE4+o+ybQgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390654AbfGXTsD (ORCPT
+        id S2390873AbfGXTsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:48:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54992 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:48:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391342AbfGXTsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:48:00 -0400
+        id S2391351AbfGXTsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:48:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBF5A20665;
-        Wed, 24 Jul 2019 19:47:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C30DF205C9;
+        Wed, 24 Jul 2019 19:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997679;
-        bh=1XWBff72RDQfxhqVy5h8El7/P9NVXNFJ4nDcKbal5QE=;
+        s=default; t=1563997683;
+        bh=UbNGCPG50lJAwM2kHoPTQY+0QvJ1SonV0cTOwFZihyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rTZdxZfc0psYYmId1+ePnyy89zZDd7kGVV73262HV2oyTESZd8KpI5ntV79I52pdB
-         +5bkKvEfHF9sTpkHqksGlaqClU6t15Q25ZCfEUsu9UmwGOP22vfiSSds2hHp8KOuIR
-         jPBwZCuDx1bryFYPP6dzZrI/zsSZWBrvQCOUGky4=
+        b=sc46rnKFJ/ovV//j0By+YbCFA1NhZaKrQHkjs/ij79/3LcOvUfGWWrJR7T16/4eUR
+         BTHpfRV7Y3ul0hRXzJe7vaTk3pndKap/4318Cm+WF6bc7xqtXUnnPTPv0i6cuVnK36
+         5bq4DrpYcVyCHswjZiZRnC3ffivn7cZxZPdHW3zg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 105/371] x86/atomic: Fix smp_mb__{before,after}_atomic()
-Date:   Wed, 24 Jul 2019 21:17:37 +0200
-Message-Id: <20190724191732.754173151@linuxfoundation.org>
+        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 106/371] perf evsel: Make perf_evsel__name() accept a NULL argument
+Date:   Wed, 24 Jul 2019 21:17:38 +0200
+Message-Id: <20190724191732.828551492@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -62,162 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 69d927bba39517d0980462efc051875b7f4db185 ]
+[ Upstream commit fdbdd7e8580eac9bdafa532746c865644d125e34 ]
 
-Recent probing at the Linux Kernel Memory Model uncovered a
-'surprise'. Strongly ordered architectures where the atomic RmW
-primitive implies full memory ordering and
-smp_mb__{before,after}_atomic() are a simple barrier() (such as x86)
-fail for:
+In which case it simply returns "unknown", like when it can't figure out
+the evsel->name value.
 
-	*x = 1;
-	atomic_inc(u);
-	smp_mb__after_atomic();
-	r0 = *y;
+This makes this code more robust and fixes a problem in 'perf trace'
+where a NULL evsel was being passed to a routine that only used the
+evsel for printing its name when a invalid syscall id was passed.
 
-Because, while the atomic_inc() implies memory order, it
-(surprisingly) does not provide a compiler barrier. This then allows
-the compiler to re-order like so:
-
-	atomic_inc(u);
-	*x = 1;
-	smp_mb__after_atomic();
-	r0 = *y;
-
-Which the CPU is then allowed to re-order (under TSO rules) like:
-
-	atomic_inc(u);
-	r0 = *y;
-	*x = 1;
-
-And this very much was not intended. Therefore strengthen the atomic
-RmW ops to include a compiler barrier.
-
-NOTE: atomic_{or,and,xor} and the bitops already had the compiler
-barrier.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-by: Leo Yan <leo.yan@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-f30ztaasku3z935cn3ak3h53@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/atomic_t.txt         | 3 +++
- arch/x86/include/asm/atomic.h      | 8 ++++----
- arch/x86/include/asm/atomic64_64.h | 8 ++++----
- arch/x86/include/asm/barrier.h     | 4 ++--
- 4 files changed, 13 insertions(+), 10 deletions(-)
+ tools/perf/util/evsel.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
-index 913396ac5824..ed0d814df7e0 100644
---- a/Documentation/atomic_t.txt
-+++ b/Documentation/atomic_t.txt
-@@ -177,6 +177,9 @@ These helper barriers exist because architectures have varying implicit
- ordering on their SMP atomic primitives. For example our TSO architectures
- provide full ordered atomics and these barriers are no-ops.
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 966360844fff..7ca79cfe1aea 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -584,6 +584,9 @@ const char *perf_evsel__name(struct perf_evsel *evsel)
+ {
+ 	char bf[128];
  
-+NOTE: when the atomic RmW ops are fully ordered, they should also imply a
-+compiler barrier.
++	if (!evsel)
++		goto out_unknown;
 +
- Thus:
+ 	if (evsel->name)
+ 		return evsel->name;
  
-   atomic_fetch_add();
-diff --git a/arch/x86/include/asm/atomic.h b/arch/x86/include/asm/atomic.h
-index ea3d95275b43..115127c7ad28 100644
---- a/arch/x86/include/asm/atomic.h
-+++ b/arch/x86/include/asm/atomic.h
-@@ -54,7 +54,7 @@ static __always_inline void arch_atomic_add(int i, atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "addl %1,%0"
- 		     : "+m" (v->counter)
--		     : "ir" (i));
-+		     : "ir" (i) : "memory");
+@@ -620,7 +623,10 @@ const char *perf_evsel__name(struct perf_evsel *evsel)
+ 
+ 	evsel->name = strdup(bf);
+ 
+-	return evsel->name ?: "unknown";
++	if (evsel->name)
++		return evsel->name;
++out_unknown:
++	return "unknown";
  }
  
- /**
-@@ -68,7 +68,7 @@ static __always_inline void arch_atomic_sub(int i, atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "subl %1,%0"
- 		     : "+m" (v->counter)
--		     : "ir" (i));
-+		     : "ir" (i) : "memory");
- }
- 
- /**
-@@ -95,7 +95,7 @@ static __always_inline bool arch_atomic_sub_and_test(int i, atomic_t *v)
- static __always_inline void arch_atomic_inc(atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "incl %0"
--		     : "+m" (v->counter));
-+		     : "+m" (v->counter) :: "memory");
- }
- #define arch_atomic_inc arch_atomic_inc
- 
-@@ -108,7 +108,7 @@ static __always_inline void arch_atomic_inc(atomic_t *v)
- static __always_inline void arch_atomic_dec(atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "decl %0"
--		     : "+m" (v->counter));
-+		     : "+m" (v->counter) :: "memory");
- }
- #define arch_atomic_dec arch_atomic_dec
- 
-diff --git a/arch/x86/include/asm/atomic64_64.h b/arch/x86/include/asm/atomic64_64.h
-index dadc20adba21..5e86c0d68ac1 100644
---- a/arch/x86/include/asm/atomic64_64.h
-+++ b/arch/x86/include/asm/atomic64_64.h
-@@ -45,7 +45,7 @@ static __always_inline void arch_atomic64_add(long i, atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "addq %1,%0"
- 		     : "=m" (v->counter)
--		     : "er" (i), "m" (v->counter));
-+		     : "er" (i), "m" (v->counter) : "memory");
- }
- 
- /**
-@@ -59,7 +59,7 @@ static inline void arch_atomic64_sub(long i, atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "subq %1,%0"
- 		     : "=m" (v->counter)
--		     : "er" (i), "m" (v->counter));
-+		     : "er" (i), "m" (v->counter) : "memory");
- }
- 
- /**
-@@ -87,7 +87,7 @@ static __always_inline void arch_atomic64_inc(atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "incq %0"
- 		     : "=m" (v->counter)
--		     : "m" (v->counter));
-+		     : "m" (v->counter) : "memory");
- }
- #define arch_atomic64_inc arch_atomic64_inc
- 
-@@ -101,7 +101,7 @@ static __always_inline void arch_atomic64_dec(atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "decq %0"
- 		     : "=m" (v->counter)
--		     : "m" (v->counter));
-+		     : "m" (v->counter) : "memory");
- }
- #define arch_atomic64_dec arch_atomic64_dec
- 
-diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
-index 14de0432d288..84f848c2541a 100644
---- a/arch/x86/include/asm/barrier.h
-+++ b/arch/x86/include/asm/barrier.h
-@@ -80,8 +80,8 @@ do {									\
- })
- 
- /* Atomic operations are already serializing on x86 */
--#define __smp_mb__before_atomic()	barrier()
--#define __smp_mb__after_atomic()	barrier()
-+#define __smp_mb__before_atomic()	do { } while (0)
-+#define __smp_mb__after_atomic()	do { } while (0)
- 
- #include <asm-generic/barrier.h>
- 
+ const char *perf_evsel__group_name(struct perf_evsel *evsel)
 -- 
 2.20.1
 
