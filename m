@@ -2,118 +2,69 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FC1C41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875C4C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93D87229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C13921911
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563988288;
-	bh=0CoSojDBSg7Flrzr4On9hveVMhjdtM7rW1mM3EQbqAE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jVmoP620e2ZhZp4ky2POoR2aTh14Ow6W2+XKmMaQBwrSuhvobofGde7TGchbNjJ/w
-	 FMzaE06kQRhpFIHhlvbci0tPsZG2A47zE+jCAqDb/B5qTbjxv2nhEVE981nXn1ZCp5
-	 QyxRZnViUybBUSx5A191REGQH2dIzwu1vypvTJRA=
+	s=default; t=1563988344;
+	bh=SSUJBkfMlYhqcaHtLVBYuZ1a8giKpapCmr67x26gzNs=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=nXDGSKpPbjUs57Q8y7GMqtdTTbOJ8zck65AXWv7oet2noZitOCNN7hF4RK4uMRIW+
+	 vwObnu4V1IVyMI9fr4GzTPbovutn5XRPcqRxy+E/EkeXJFJnj4egwpw4BiN+QzzXvi
+	 5tmXfVLaQOR4Sa6FYCODgmA34031iM1NYTtDxKcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbfGXRL1 (ORCPT
+        id S1728319AbfGXRKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:11:27 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34556 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbfGXRL0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:11:26 -0400
-Received: by mail-pl1-f195.google.com with SMTP id i2so22274095plt.1;
-        Wed, 24 Jul 2019 10:11:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ITF8T/T4IRmGXwtRff4SYZQW9zAOexuz5C2yXEWqdiw=;
-        b=pSA4u0tyJ7JlLMIahu8xE9Nv7IG7n0au5XkeRxFr+NCHw4jU0Me7rb4bQT8OKzrOj4
-         jfYPpkmVo5uvTdZklKuAlIDAIXF6xHGnuqCRpmXBsOmHnmEUz6GOln3ay0DWT71Od+LS
-         J94HHs1uvvW7DdKiWv8Qiv0wIfSfzfF0nRp4V2XrlKWcX4Mvz1J4oUkupSF8V9JKFqdS
-         JyYDdG80MN2yuy4YR3u4/h81tngGYS4153ToixySf4i8oU6nenBeLsFgMAqWK8RyvNLY
-         VZMSn0ruAb03gZIi1fuHPxlOc9nkUKcS+NGxVGRkhJx6SQD1ii3+PfQGraq7HV3hPQ2w
-         77Sg==
-X-Gm-Message-State: APjAAAXMtgnHqGJAXMDOOtWIEhfbovxmleDJf7DbZraBwazyEXDjsi8p
-        U4VK76CVy+8ht+8EUea8Ayg=
-X-Google-Smtp-Source: APXvYqwoAqWJaD8G9kpqywHtKCy/l+Vyxr3KKHtKTaJVbqukgpdEilFdeN9cgx3TW9bJG3WUBlH/LA==
-X-Received: by 2002:a17:902:7488:: with SMTP id h8mr12079513pll.168.1563988285727;
-        Wed, 24 Jul 2019 10:11:25 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id h16sm51887353pfo.34.2019.07.24.10.11.24
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 10:11:24 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id BEECC402A1; Wed, 24 Jul 2019 17:11:23 +0000 (UTC)
-Date:   Wed, 24 Jul 2019 17:11:23 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Alexandre Ghiti <alex@ghiti.fr>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH REBASE v4 05/14] arm64, mm: Make randomization selected
- by generic topdown mmap layout
-Message-ID: <20190724171123.GV19023@42.do-not-panic.com>
-References: <20190724055850.6232-1-alex@ghiti.fr>
- <20190724055850.6232-6-alex@ghiti.fr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724055850.6232-6-alex@ghiti.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 24 Jul 2019 13:10:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728168AbfGXRKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 13:10:22 -0400
+Subject: Re: [GIT PULL] dma-mapping fix for 5.3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563988221;
+        bh=SSUJBkfMlYhqcaHtLVBYuZ1a8giKpapCmr67x26gzNs=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=p8z0/gkLUJlg6QxzRk+oEILBD3aLN9GNPXnnKvgINWBARLv6w5lGSNCbArXdS+eVZ
+         3muyYyAGv6NF/Gn89TaZGNyhenP2uCRuvy57RN/Bmc+WkahCMDmh7TpUmtXvdKNh2M
+         n7IAIxmb/rb1eTNCOhwfNO3zYzWL2Z9qVv7HX8o0=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190724144942.GA7893@infradead.org>
+References: <20190724144942.GA7893@infradead.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190724144942.GA7893@infradead.org>
+X-PR-Tracked-Remote: git://git.infradead.org/users/hch/dma-mapping.git
+ tags/dma-mapping-5.3-2
+X-PR-Tracked-Commit-Id: 06532750010e06dd4b6d69983773677df7fc5291
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c2626876c24fe1f326381e3f1d48301bfc627d8e
+Message-Id: <156398822137.2764.4372152990600257983.pr-tracker-bot@kernel.org>
+Date:   Wed, 24 Jul 2019 17:10:21 +0000
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 01:58:41AM -0400, Alexandre Ghiti wrote:
-> diff --git a/mm/util.c b/mm/util.c
-> index 0781e5575cb3..16f1e56e2996 100644
-> --- a/mm/util.c
-> +++ b/mm/util.c
-> @@ -321,7 +321,15 @@ unsigned long randomize_stack_top(unsigned long stack_top)
->  }
->  
->  #ifdef CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-> -#ifdef CONFIG_ARCH_HAS_ELF_RANDOMIZE
-> +unsigned long arch_randomize_brk(struct mm_struct *mm)
-> +{
-> +	/* Is the current task 32bit ? */
-> +	if (!IS_ENABLED(CONFIG_64BIT) || is_compat_task())
-> +		return randomize_page(mm->brk, SZ_32M);
-> +
-> +	return randomize_page(mm->brk, SZ_1G);
-> +}
-> +
->  unsigned long arch_mmap_rnd(void)
->  {
->  	unsigned long rnd;
-> @@ -335,7 +343,6 @@ unsigned long arch_mmap_rnd(void)
->  
->  	return rnd << PAGE_SHIFT;
->  }
+The pull request you sent on Wed, 24 Jul 2019 16:49:42 +0200:
 
-So arch_randomize_brk is no longer ifdef'd around
-CONFIG_ARCH_HAS_ELF_RANDOMIZE either and yet the header
-still has it. Is that intentional?
+> git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.3-2
 
-  Luis
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c2626876c24fe1f326381e3f1d48301bfc627d8e
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
