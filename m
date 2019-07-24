@@ -5,52 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682E8C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF74C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404D4218EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E997A20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996672;
-	bh=ZGjHeyQUMbx1Gh9QwJq9WrZcByKj9BknvPXN3e4fnX0=;
+	s=default; t=1563996676;
+	bh=pSoYODkGw1XNJJXndGg8c6zsQxwYstfcpwBikoEnivA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QayrU3b9NGaB375h8qFuobw5OnBSjECUFs5yryMV1u4FICNchPcZXkxeDJPs/ts3i
-	 l3abBdWi+L73dmb9uHsn5hNP+vTbwWZ4ix3zx+XsPz7WS40qVMaBJCs1mPYuOu7/o6
-	 8ovLiEDLO0FLcfBd4lFxaCsOllBiqf/6Qzdtusww=
+	b=ms6zDKRd66tGX3XISKhRUIdC1l5ICt/ObXA1KvNOV8NgFsX/vCu1rK/bJHcpz0C+a
+	 3K2O+RjFMRyrjSr/NhHyeuACb2LDn0ZhdciR6lqMzzIZCz/7NCvc11WxAvM7CTks4w
+	 hR7Elx7qE/4bj8lWoP5fLF9Frvf6nZWaaAZgEb0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387424AbfGXTbK (ORCPT
+        id S2388447AbfGXTbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:31:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51734 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:31:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbfGXTbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:31:07 -0400
+        id S2387625AbfGXTbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:31:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E633A20659;
-        Wed, 24 Jul 2019 19:31:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BC0322ADC;
+        Wed, 24 Jul 2019 19:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996666;
-        bh=ZGjHeyQUMbx1Gh9QwJq9WrZcByKj9BknvPXN3e4fnX0=;
+        s=default; t=1563996669;
+        bh=pSoYODkGw1XNJJXndGg8c6zsQxwYstfcpwBikoEnivA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qXiEzKXRhePGLIzX/DPI0Ez2P/lxpyoaebKzfvCRDlmfZeI11AytuCvGToH59FZVu
-         XX1aSr3qq6uMmvaCb0OXufdbBjOv7W0tYVBg8QWxSA951LUEDmgcA8ACbku/2ZESkS
-         rVgv4nv6+w1LIQgr0mTK9wFEvP4QYHxVjl7c7740=
+        b=ks06ZPJs5kzjXul4y5FKo8wBMINd+JBiC4eJvczTsY0H28rqxH5xltMeFcohjjkDa
+         NUTMQkNtKfTfs+Lu/mre4ErALSwsMiyDwgQqSQjScWoyha/IeBYsoCcwD7BrRV72RD
+         QOLokCwprXvLJj0kJPUQuD5e/K8S4zwG9sOhLRv4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Georg Waibel <georg.waibel@sensor-technik.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 176/413] gpio: Fix return value mismatch of function gpiod_get_from_of_node()
-Date:   Wed, 24 Jul 2019 21:17:47 +0200
-Message-Id: <20190724191747.477033721@linuxfoundation.org>
+Subject: [PATCH 5.2 177/413] net: hns3: restore the MAC autoneg state after reset
+Date:   Wed, 24 Jul 2019 21:17:48 +0200
+Message-Id: <20190724191747.544403271@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -63,126 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 025bf37725f1929542361eef2245df30badf242e ]
+[ Upstream commit d736fc6c68a5f76e89a6c2c4100e3678706003a3 ]
 
-In case the requested gpio property is not found in the device tree, some
-callers of gpiod_get_from_of_node() expect a return value of NULL, others
-expect -ENOENT.
-In particular devm_fwnode_get_index_gpiod_from_child() expects -ENOENT.
-Currently it gets a NULL, which breaks the loop that tries all
-gpio_suffixes. The result is that a gpio property is not found, even
-though it is there.
+When doing global reset, the MAC autoneg state of fibre
+port is set to default, which may cause user configuration
+lost. This patch fixes it by restore the MAC autoneg state
+after reset.
 
-This patch changes gpiod_get_from_of_node() to return -ENOENT instead
-of NULL when the requested gpio property is not found in the device
-tree. Additionally it modifies all calling functions to properly
-evaluate the return value.
-
-Another approach would be to leave the return value of
-gpiod_get_from_of_node() as is and fix the bug in
-devm_fwnode_get_index_gpiod_from_child(). Other callers would still need
-to be reworked. The effort would be the same as with the chosen solution.
-
-Signed-off-by: Georg Waibel <georg.waibel@sensor-technik.de>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 22f48e24a23d ("net: hns3: add autoneg and change speed support for fibre port")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib.c                 | 6 +-----
- drivers/regulator/da9211-regulator.c   | 2 ++
- drivers/regulator/s2mps11.c            | 4 +++-
- drivers/regulator/s5m8767.c            | 4 +++-
- drivers/regulator/tps65090-regulator.c | 7 ++++---
- 5 files changed, 13 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index e013d417a936..be1d1d2f8aaa 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4244,8 +4244,7 @@ EXPORT_SYMBOL_GPL(gpiod_get_index);
-  *
-  * Returns:
-  * On successful request the GPIO pin is configured in accordance with
-- * provided @dflags. If the node does not have the requested GPIO
-- * property, NULL is returned.
-+ * provided @dflags.
-  *
-  * In case of error an ERR_PTR() is returned.
-  */
-@@ -4267,9 +4266,6 @@ struct gpio_desc *gpiod_get_from_of_node(struct device_node *node,
- 					index, &flags);
- 
- 	if (!desc || IS_ERR(desc)) {
--		/* If it is not there, just return NULL */
--		if (PTR_ERR(desc) == -ENOENT)
--			return NULL;
- 		return desc;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 4d9bcad26f06..645b9b3e0256 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -2389,6 +2389,15 @@ static int hclge_mac_init(struct hclge_dev *hdev)
+ 		return ret;
  	}
  
-diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
-index da37b4ccd834..0309823d2c72 100644
---- a/drivers/regulator/da9211-regulator.c
-+++ b/drivers/regulator/da9211-regulator.c
-@@ -289,6 +289,8 @@ static struct da9211_pdata *da9211_parse_regulators_dt(
- 				  0,
- 				  GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				  "da9211-enable");
-+		if (IS_ERR(pdata->gpiod_ren[n]))
-+			pdata->gpiod_ren[n] = NULL;
- 		n++;
- 	}
++	if (hdev->hw.mac.support_autoneg) {
++		ret = hclge_set_autoneg_en(hdev, hdev->hw.mac.autoneg);
++		if (ret) {
++			dev_err(&hdev->pdev->dev,
++				"Config mac autoneg fail ret=%d\n", ret);
++			return ret;
++		}
++	}
++
+ 	mac->link = 0;
  
-diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
-index 134c62db36c5..b518a81f75a3 100644
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -821,7 +821,9 @@ static void s2mps14_pmic_dt_parse_ext_control_gpio(struct platform_device *pdev,
- 				0,
- 				GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				"s2mps11-regulator");
--		if (IS_ERR(gpio[reg])) {
-+		if (PTR_ERR(gpio[reg]) == -ENOENT)
-+			gpio[reg] = NULL;
-+		else if (IS_ERR(gpio[reg])) {
- 			dev_err(&pdev->dev, "Failed to get control GPIO for %d/%s\n",
- 				reg, rdata[reg].name);
- 			continue;
-diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
-index bb9d1a083299..6ca27e9d5ef7 100644
---- a/drivers/regulator/s5m8767.c
-+++ b/drivers/regulator/s5m8767.c
-@@ -574,7 +574,9 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
- 			0,
- 			GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 			"s5m8767");
--		if (IS_ERR(rdata->ext_control_gpiod))
-+		if (PTR_ERR(rdata->ext_control_gpiod) == -ENOENT)
-+			rdata->ext_control_gpiod = NULL;
-+		else if (IS_ERR(rdata->ext_control_gpiod))
- 			return PTR_ERR(rdata->ext_control_gpiod);
- 
- 		rdata->id = i;
-diff --git a/drivers/regulator/tps65090-regulator.c b/drivers/regulator/tps65090-regulator.c
-index ca39b3d55123..10ea4b5a0f55 100644
---- a/drivers/regulator/tps65090-regulator.c
-+++ b/drivers/regulator/tps65090-regulator.c
-@@ -371,11 +371,12 @@ static struct tps65090_platform_data *tps65090_parse_dt_reg_data(
- 								    "dcdc-ext-control-gpios", 0,
- 								    gflags,
- 								    "tps65090");
--			if (IS_ERR(rpdata->gpiod))
--				return ERR_CAST(rpdata->gpiod);
--			if (!rpdata->gpiod)
-+			if (PTR_ERR(rpdata->gpiod) == -ENOENT) {
- 				dev_err(&pdev->dev,
- 					"could not find DCDC external control GPIO\n");
-+				rpdata->gpiod = NULL;
-+			} else if (IS_ERR(rpdata->gpiod))
-+				return ERR_CAST(rpdata->gpiod);
- 		}
- 
- 		if (of_property_read_u32(tps65090_matches[idx].of_node,
+ 	if (mac->user_fec_mode & BIT(HNAE3_FEC_USER_DEF)) {
 -- 
 2.20.1
 
