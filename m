@@ -2,141 +2,312 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8768CC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254F9C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54ACA21926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:07:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563995268;
-	bh=CHVJh9K7ZQptFPowFVNdpt0/XiL4yyZHMyfptvh0d/E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jtMv8oS2crVx9xti1nM1gq0pGyO/bDCPOp7deFt4pK/QB04YCoWbfq7A/DsF6ZVDk
-	 rzrITLJXUy2W6BhXlpo86N3+t7f95Z01Te6BWab39IZjw/q3DCpZZSCEBGiTCOa0ws
-	 NT6B3jWNWyy5mOasnYLwwOMtUjN2xF0JB9Zrm4yc=
+	by mail.kernel.org (Postfix) with ESMTP id CFD1921951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:07:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbfGXTHr convert rfc822-to-8bit (ORCPT
+        id S1728882AbfGXTHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:07:47 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34958 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfGXTHq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:07:46 -0400
-Received: by mail-wm1-f66.google.com with SMTP id l2so42561120wmg.0;
-        Wed, 24 Jul 2019 12:07:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=jtQSPuZ1QzMs99js7V9Wo2RTLphiNzuGhsELT//GEEg=;
-        b=q7WyBGiVaCx5zfiZXWWNePnxq2V8kdF+At38cApdo9WIgMtWVzeorGDfmE2mSdqKUS
-         8slYk5rh5ZcIPEmOSPzdDq/3WjYYoM9cFC1s1ZDZYagfVGQ6Iq7Bdqea5N39Zx/FAsa5
-         szF0mpUcDM3SWpJEWynYqY1oD1eIHl1BV+wDd063l3gEzuKxTqGUfwILWkSn1iCooBde
-         UqFNTNcXspiAK38An6RJIFkj+1lokybzjm8873pVBsUOKcsVu9mv+5sPChUfsDNnq/i0
-         cXJdvMEKpmIWz0a9nsPJlAVyOYD9lau589X+Y11kULsSmD5wNWJyEKjF3DKRGRplLCyZ
-         0Q+Q==
-X-Gm-Message-State: APjAAAWmzndQIqbCCVKBwMKE0YLxwaYFjj5/EbN28/NNl8Tpek2Z1l1+
-        I5AeB4Gr5DeLWzuzzrvzG70=
-X-Google-Smtp-Source: APXvYqzW5J/UxiwCLKihWU+W6v0QY2SUnZdcHCLGNhpwuL3J4T0/WFqdxk7zt2m7BHrB78puwFES8w==
-X-Received: by 2002:a05:600c:212:: with SMTP id 18mr25939276wmi.88.1563995264126;
-        Wed, 24 Jul 2019 12:07:44 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.239])
-        by smtp.googlemail.com with ESMTPSA id w23sm48058527wmi.45.2019.07.24.12.07.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jul 2019 12:07:43 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 21:07:41 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        georgi.djakov@linaro.org, m.szyprowski@samsung.com
-Subject: Re: [RFC PATCH 01/11] devfreq: exynos-bus: Extract
- exynos_bus_profile_init()
-Message-ID: <20190724190741.GD14346@kozik-lap>
-References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
- <CGME20190723122022eucas1p1266d90873d564894bd852c20140f8474@eucas1p1.samsung.com>
- <20190723122016.30279-2-a.swigon@partner.samsung.com>
+        Wed, 24 Jul 2019 15:07:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39290 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726622AbfGXTHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:07:50 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A85DA81F2F;
+        Wed, 24 Jul 2019 19:07:49 +0000 (UTC)
+Received: from [10.18.17.163] (dhcp-17-163.bos.redhat.com [10.18.17.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 385AC5D71C;
+        Wed, 24 Jul 2019 19:07:43 +0000 (UTC)
+Subject: Re: [PATCH v2 5/5] virtio-balloon: Add support for providing page
+ hints to host
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+ <20190724170514.6685.17161.stgit@localhost.localdomain>
+ <20190724143902-mutt-send-email-mst@kernel.org>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <33e41a02-7a9c-f166-8eb3-50abacb9d2cc@redhat.com>
+Date:   Wed, 24 Jul 2019 15:07:42 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190724143902-mutt-send-email-mst@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190723122016.30279-2-a.swigon@partner.samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 24 Jul 2019 19:07:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 02:20:06PM +0200, Artur Świgoń wrote:
-> This patch adds a new static function, exynos_bus_profile_init(), extracted
-> from exynos_bus_probe().
-> 
-> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
-> ---
->  drivers/devfreq/exynos-bus.c | 106 ++++++++++++++++++++---------------
->  1 file changed, 60 insertions(+), 46 deletions(-)
-> 
-> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-> index d9f377912c10..d8f1efaf2d49 100644
-> --- a/drivers/devfreq/exynos-bus.c
-> +++ b/drivers/devfreq/exynos-bus.c
-> @@ -372,12 +372,69 @@ static int exynos_bus_parse_of(struct device_node *np,
->  	return ret;
->  }
->  
-> +static int exynos_bus_profile_init(struct exynos_bus *bus,
-> +				   struct devfreq_dev_profile *profile)
-> +{
-> +	struct device *dev = bus->dev;
-> +	struct devfreq_simple_ondemand_data *ondemand_data;
-> +	int ret;
-> +
-> +	/* Initialize the struct profile and governor data for parent device */
-> +	profile->polling_ms = 50;
-> +	profile->target = exynos_bus_target;
-> +	profile->get_dev_status = exynos_bus_get_dev_status;
-> +	profile->exit = exynos_bus_exit;
-> +
-> +	ondemand_data = devm_kzalloc(dev, sizeof(*ondemand_data), GFP_KERNEL);
-> +	if (!ondemand_data) {
-> +		ret = -ENOMEM;
-> +		goto err;
 
-Just return proper error code. Less lines, obvious code since you do not
-have any cleanup in error path.
-
-> +	}
-> +	ondemand_data->upthreshold = 40;
-> +	ondemand_data->downdifferential = 5;
-> +
-> +	/* Add devfreq device to monitor and handle the exynos bus */
-> +	bus->devfreq = devm_devfreq_add_device(dev, profile,
-> +						DEVFREQ_GOV_SIMPLE_ONDEMAND,
-> +						ondemand_data);
-> +	if (IS_ERR(bus->devfreq)) {
-> +		dev_err(dev, "failed to add devfreq device\n");
-> +		ret = PTR_ERR(bus->devfreq);
-> +		goto err;
-> +	}
-> +
-> +	/* Register opp_notifier to catch the change of OPP  */
-> +	ret = devm_devfreq_register_opp_notifier(dev, bus->devfreq);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to register opp notifier\n");
-> +		goto err;
-
-The same - return err.
-
-Best regards,
-Krzysztof
-
+On 7/24/19 3:02 PM, Michael S. Tsirkin wrote:
+> On Wed, Jul 24, 2019 at 10:05:14AM -0700, Alexander Duyck wrote:
+>> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>>
+>> Add support for the page hinting feature provided by virtio-balloon.
+>> Hinting differs from the regular balloon functionality in that is is
+>> much less durable than a standard memory balloon. Instead of creating a
+>> list of pages that cannot be accessed the pages are only inaccessible
+>> while they are being indicated to the virtio interface. Once the
+>> interface has acknowledged them they are placed back into their respective
+>> free lists and are once again accessible by the guest system.
+>>
+>> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Looking at the design, it seems that hinted pages can immediately be
+> reused. I wonder how we can efficiently support this
+> with kvm when poisoning is in effect. Of course we can just
+> ignore the poison. However it seems cleaner to
+> 1. verify page is poisoned with the correct value
+> 2. fill the page with the correct value on fault
+Once VIRTIO_BALLOON_F_PAGE_POISON user side support is available.
+Can't we just use that at the time of initialization?
+> Requirement 2 requires some kind of madvise that
+> will save the poison e.g. in the VMA.
+>
+> Not a blocker for sure ... 
+>
+>
+>> ---
+>>  drivers/virtio/Kconfig              |    1 +
+>>  drivers/virtio/virtio_balloon.c     |   47 +++++++++++++++++++++++++++++++++++
+>>  include/uapi/linux/virtio_balloon.h |    1 +
+>>  3 files changed, 49 insertions(+)
+>>
+>> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+>> index 078615cf2afc..d45556ae1f81 100644
+>> --- a/drivers/virtio/Kconfig
+>> +++ b/drivers/virtio/Kconfig
+>> @@ -58,6 +58,7 @@ config VIRTIO_BALLOON
+>>  	tristate "Virtio balloon driver"
+>>  	depends on VIRTIO
+>>  	select MEMORY_BALLOON
+>> +	select PAGE_HINTING
+>>  	---help---
+>>  	 This driver supports increasing and decreasing the amount
+>>  	 of memory within a KVM guest.
+>> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+>> index 226fbb995fb0..dee9f8f3ad09 100644
+>> --- a/drivers/virtio/virtio_balloon.c
+>> +++ b/drivers/virtio/virtio_balloon.c
+>> @@ -19,6 +19,7 @@
+>>  #include <linux/mount.h>
+>>  #include <linux/magic.h>
+>>  #include <linux/pseudo_fs.h>
+>> +#include <linux/page_hinting.h>
+>>  
+>>  /*
+>>   * Balloon device works in 4K page units.  So each page is pointed to by
+>> @@ -27,6 +28,7 @@
+>>   */
+>>  #define VIRTIO_BALLOON_PAGES_PER_PAGE (unsigned)(PAGE_SIZE >> VIRTIO_BALLOON_PFN_SHIFT)
+>>  #define VIRTIO_BALLOON_ARRAY_PFNS_MAX 256
+>> +#define VIRTIO_BALLOON_ARRAY_HINTS_MAX	32
+>>  #define VIRTBALLOON_OOM_NOTIFY_PRIORITY 80
+>>  
+>>  #define VIRTIO_BALLOON_FREE_PAGE_ALLOC_FLAG (__GFP_NORETRY | __GFP_NOWARN | \
+>> @@ -46,6 +48,7 @@ enum virtio_balloon_vq {
+>>  	VIRTIO_BALLOON_VQ_DEFLATE,
+>>  	VIRTIO_BALLOON_VQ_STATS,
+>>  	VIRTIO_BALLOON_VQ_FREE_PAGE,
+>> +	VIRTIO_BALLOON_VQ_HINTING,
+>>  	VIRTIO_BALLOON_VQ_MAX
+>>  };
+>>  
+>> @@ -113,6 +116,10 @@ struct virtio_balloon {
+>>  
+>>  	/* To register a shrinker to shrink memory upon memory pressure */
+>>  	struct shrinker shrinker;
+>> +
+>> +	/* Unused page hinting device */
+>> +	struct virtqueue *hinting_vq;
+>> +	struct page_hinting_dev_info ph_dev_info;
+>>  };
+>>  
+>>  static struct virtio_device_id id_table[] = {
+>> @@ -152,6 +159,22 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
+>>  
+>>  }
+>>  
+>> +void virtballoon_page_hinting_react(struct page_hinting_dev_info *ph_dev_info,
+>> +				    unsigned int num_hints)
+>> +{
+>> +	struct virtio_balloon *vb =
+>> +		container_of(ph_dev_info, struct virtio_balloon, ph_dev_info);
+>> +	struct virtqueue *vq = vb->hinting_vq;
+>> +	unsigned int unused;
+>> +
+>> +	/* We should always be able to add these buffers to an empty queue. */
+>
+> can be an out of memory condition, and then ...
+>
+>> +	virtqueue_add_inbuf(vq, ph_dev_info->sg, num_hints, vb, GFP_KERNEL);
+>> +	virtqueue_kick(vq);
+> ... this will block forever.
+>
+>> +	/* When host has read buffer, this completes via balloon_ack */
+>> +	wait_event(vb->acked, virtqueue_get_buf(vq, &unused));
+> However below I suggest limiting capacity which will solve
+> this problem for you.
+>
+>
+>
+>> +}
+>> +
+>>  static void set_page_pfns(struct virtio_balloon *vb,
+>>  			  __virtio32 pfns[], struct page *page)
+>>  {
+>> @@ -476,6 +499,7 @@ static int init_vqs(struct virtio_balloon *vb)
+>>  	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
+>>  	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
+>>  	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+>> +	names[VIRTIO_BALLOON_VQ_HINTING] = NULL;
+>>  
+>>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+>>  		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
+>> @@ -487,11 +511,19 @@ static int init_vqs(struct virtio_balloon *vb)
+>>  		callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+>>  	}
+>>  
+>> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING)) {
+>> +		names[VIRTIO_BALLOON_VQ_HINTING] = "hinting_vq";
+>> +		callbacks[VIRTIO_BALLOON_VQ_HINTING] = balloon_ack;
+>> +	}
+>> +
+>>  	err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
+>>  					 vqs, callbacks, names, NULL, NULL);
+>>  	if (err)
+>>  		return err;
+>>  
+>> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING))
+>> +		vb->hinting_vq = vqs[VIRTIO_BALLOON_VQ_HINTING];
+>> +
+>>  	vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
+>>  	vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
+>>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+>> @@ -924,12 +956,24 @@ static int virtballoon_probe(struct virtio_device *vdev)
+>>  		if (err)
+>>  			goto out_del_balloon_wq;
+>>  	}
+>> +
+>> +	vb->ph_dev_info.react = virtballoon_page_hinting_react;
+>> +	vb->ph_dev_info.capacity = VIRTIO_BALLOON_ARRAY_HINTS_MAX;
+> As explained above I think you should limit this by vq size.
+> Otherwise virtqueue add buf might fail.
+> In fact by struct spec reading you need to limit it
+> anyway otherwise it will fail unconditionally.
+> In practice on most hypervisors it will typically work ...
+>
+>> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING)) {
+>> +		err = page_hinting_startup(&vb->ph_dev_info);
+>> +		if (err)
+>> +			goto out_unregister_shrinker;
+>> +	}
+>> +
+>>  	virtio_device_ready(vdev);
+>>  
+>>  	if (towards_target(vb))
+>>  		virtballoon_changed(vdev);
+>>  	return 0;
+>>  
+>> +out_unregister_shrinker:
+>> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+>> +		virtio_balloon_unregister_shrinker(vb);
+>>  out_del_balloon_wq:
+>>  	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+>>  		destroy_workqueue(vb->balloon_wq);
+>> @@ -958,6 +1002,8 @@ static void virtballoon_remove(struct virtio_device *vdev)
+>>  {
+>>  	struct virtio_balloon *vb = vdev->priv;
+>>  
+>> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING))
+>> +		page_hinting_shutdown(&vb->ph_dev_info);
+>>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+>>  		virtio_balloon_unregister_shrinker(vb);
+>>  	spin_lock_irq(&vb->stop_update_lock);
+>> @@ -1027,6 +1073,7 @@ static int virtballoon_validate(struct virtio_device *vdev)
+>>  	VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
+>>  	VIRTIO_BALLOON_F_FREE_PAGE_HINT,
+>>  	VIRTIO_BALLOON_F_PAGE_POISON,
+>> +	VIRTIO_BALLOON_F_HINTING,
+>>  };
+>>  
+>>  static struct virtio_driver virtio_balloon_driver = {
+>> diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
+>> index a1966cd7b677..2b0f62814e22 100644
+>> --- a/include/uapi/linux/virtio_balloon.h
+>> +++ b/include/uapi/linux/virtio_balloon.h
+>> @@ -36,6 +36,7 @@
+>>  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
+>>  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
+>>  #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
+>> +#define VIRTIO_BALLOON_F_HINTING	5 /* Page hinting virtqueue */
+>>  
+>>  /* Size of a PFN in the balloon interface. */
+>>  #define VIRTIO_BALLOON_PFN_SHIFT 12
+-- 
+Thanks
+Nitesh
