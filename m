@@ -2,81 +2,92 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53537C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE24AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 214C62238C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFBE42238C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbfGXBs6 (ORCPT
+        id S1728773AbfGXBtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 21:48:58 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2708 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728735AbfGXBs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 21:48:57 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 206BC30DD72286730F4D;
-        Wed, 24 Jul 2019 09:48:53 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 24 Jul 2019 09:48:47 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Christian Lamparter <chunkeey@googlemail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-CC:     YueHaibing <yuehaibing@huawei.com>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] carl9170: remove set but not used variable 'udev'
-Date:   Wed, 24 Jul 2019 01:54:11 +0000
-Message-ID: <20190724015411.66525-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 23 Jul 2019 21:49:23 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:38678 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728675AbfGXBtX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 21:49:23 -0400
+X-UUID: 517c04dad5a54f7aa85127aa0890d8b9-20190724
+X-UUID: 517c04dad5a54f7aa85127aa0890d8b9-20190724
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1467029798; Wed, 24 Jul 2019 09:49:16 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 24 Jul 2019 09:49:15 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 24 Jul 2019 09:49:15 +0800
+Message-ID: <1563932955.26104.0.camel@mtksdaap41>
+Subject: Re: [PATCH -next] drm/mediatek: Remove duplicated include from
+ mtk_drm_drv.c
+From:   CK Hu <ck.hu@mediatek.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Date:   Wed, 24 Jul 2019 09:49:15 +0800
+In-Reply-To: <20190724013348.153144-1-yuehaibing@huawei.com>
+References: <20190724013348.153144-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Hi, YueHaibing:
 
-drivers/net/wireless/ath/carl9170/usb.c: In function 'carl9170_usb_disconnect':
-drivers/net/wireless/ath/carl9170/usb.c:1110:21: warning:
- variable 'udev' set but not used [-Wunused-but-set-variable]
+On Wed, 2019-07-24 at 01:33 +0000, YueHaibing wrote:
+> Remove duplicated include.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-It is not used, so can be removed.
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/wireless/ath/carl9170/usb.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/carl9170/usb.c b/drivers/net/wireless/ath/carl9170/usb.c
-index 99f1897a775d..486957a04bd1 100644
---- a/drivers/net/wireless/ath/carl9170/usb.c
-+++ b/drivers/net/wireless/ath/carl9170/usb.c
-@@ -1107,12 +1107,10 @@ static int carl9170_usb_probe(struct usb_interface *intf,
- static void carl9170_usb_disconnect(struct usb_interface *intf)
- {
- 	struct ar9170 *ar = usb_get_intfdata(intf);
--	struct usb_device *udev;
- 
- 	if (WARN_ON(!ar))
- 		return;
- 
--	udev = ar->udev;
- 	wait_for_completion(&ar->fw_load_wait);
- 
- 	if (IS_INITIALIZED(ar)) {
-
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> index 2ee809a6f3dc..e3b64a266dcf 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> @@ -23,7 +23,6 @@
+>  
+>  #include "mtk_drm_crtc.h"
+>  #include "mtk_drm_ddp.h"
+> -#include "mtk_drm_ddp.h"
+>  #include "mtk_drm_ddp_comp.h"
+>  #include "mtk_drm_drv.h"
+>  #include "mtk_drm_fb.h"
+> 
+> 
+> 
+> 
+> 
 
 
