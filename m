@@ -2,109 +2,142 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DEAC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42433C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C11F821855
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17DC22189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:23:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B9aT+H8z"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="POKycPna"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728790AbfGXXV0 (ORCPT
+        id S1729717AbfGXXX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 19:21:26 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45180 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfGXXV0 (ORCPT
+        Wed, 24 Jul 2019 19:23:27 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:2928 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfGXXX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 19:21:26 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y8so22591635plr.12
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 16:21:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kcok0LgBsyc/okZx1Ol3rmWhL5MLbD+99FlIboC+ndY=;
-        b=B9aT+H8zZb0fNl2vjxmEtT81BPo37zTt5g98LCfuxuy01ddORWh/CB7Q3hnuQ/AX+s
-         vowRpzcr6WtyMgKF69p7p/q6KxV83JR231xFia1doXz5wITR+X1KThH8F/31CZ+kYWE7
-         H/PfmqrHNBQrYD7eylgT/EsKd/qOanXXwpV+mGeWJdiMWG3eAhPZNNuqg+EP1BZPuqk/
-         jRpvuLLnnUf+/O56aqMvbYEjIfEDAOqr/mR56+/imvtR2yMv8sIexbWJd2q9bwB+m9Oa
-         HYZ3T5czjU5hRe7Nuw3H73T5+nl9tG6oU29R3sPZm/zfGJZw0xYUb6mVuS2R8nRAG3U7
-         8RiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kcok0LgBsyc/okZx1Ol3rmWhL5MLbD+99FlIboC+ndY=;
-        b=dQC5H1iioR8nkgRJLz8jFYZCNPSkUWJ0rwzW1QBfy/yH6s/ye5mNydOZliiE/nO/Gc
-         3u3NqwUebrV4L/lfT1GxTBjVMazyyOAlgcwGDzQtYqyTp4fsu0GbRx/gr/IV3x8iOeps
-         d0rKAD5t83SDZYRIk5gCl3mjyMfPS0yNpPI9Q76D9YiFJMv6GVob1R7DiX+IpmOuwhWl
-         zs3/zkvzBUaDeYo4tf3pv1y8HUQy8skq1oME6oPHOz6ttutXVzVJuJTy9FDMdHnOeAHj
-         rDsvP4m70nYI0rxdJKilh4sXQ54Y2z/892fAe/XLJbQqqZREHY2A3kRsW2pjtAYsAmrW
-         Xllw==
-X-Gm-Message-State: APjAAAWyEtOSFW3y5moJmhJ/4ujZdXK14NX/t345KRCRpfHeb9gtw8P+
-        tKroN38oz+rGDcnLO5LrHIg=
-X-Google-Smtp-Source: APXvYqxwiudUxvu/coz792oUMUsi+3uSVa3zbEp1vcSY5LXXHGd7MfPYmIfYNlhGJTdsJVApfFFF4g==
-X-Received: by 2002:a17:902:29c3:: with SMTP id h61mr44698653plb.37.1564010485328;
-        Wed, 24 Jul 2019 16:21:25 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id g2sm61762399pfb.95.2019.07.24.16.21.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jul 2019 16:21:25 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 16:22:09 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     broonie@kernel.org, festevam@gmail.com, perex@perex.cz,
-        tiwai@suse.com, Xiubo.Lee@gmail.com, timur@kernel.org,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        shengjiu.wang@nxp.com, angus@akkea.ca, kernel@pengutronix.de,
-        l.stach@pengutronix.de, viorel.suman@nxp.com
-Subject: Re: [PATCH 08/10] ASoC: dt-bindings: Document fcomb_mode property
-Message-ID: <20190724232209.GC6859@Asurada-Nvidia.nvidia.com>
-References: <20190722124833.28757-1-daniel.baluta@nxp.com>
- <20190722124833.28757-9-daniel.baluta@nxp.com>
+        Wed, 24 Jul 2019 19:23:26 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d38e8730000>; Wed, 24 Jul 2019 16:23:31 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 24 Jul 2019 16:23:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 24 Jul 2019 16:23:23 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jul
+ 2019 23:23:22 +0000
+Subject: Re: [PATCH 00/12] block/bio, fs: convert put_page() to
+ put_user_page*()
+To:     Christoph Hellwig <hch@infradead.org>, <john.hubbard@gmail.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <ceph-devel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-cifs@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <samba-technical@lists.samba.org>,
+        <v9fs-developer@lists.sourceforge.net>,
+        <virtualization@lists.linux-foundation.org>
+References: <20190724042518.14363-1-jhubbard@nvidia.com>
+ <20190724061750.GA19397@infradead.org>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <17f12f3d-981e-a717-c8e5-bfbbfb7ec1a3@nvidia.com>
+Date:   Wed, 24 Jul 2019 16:23:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722124833.28757-9-daniel.baluta@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190724061750.GA19397@infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564010611; bh=U/byz8o3kezigETW8hWUjg+JqkNm/y0Q4UHjAnDVaRI=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=POKycPna3sFHaptSpPG8JFNhdv+KWPJt4Fqq7qra/U5uujHxVhga0mA2hyYe3oLWO
+         rvMjdBQgQaYdhe3tYVq3xzWzC7PXLH9gVg6v6GfrdnHKhzPSXOdrUzDa4Sfy+FpWme
+         AYx8XN4QHijtxUQThz9jDsFglp/BwmD6wmVyo2Ou4HoX36ySg8r0DnnWDfRMrkzmXC
+         XvSXsG7L9llJHump4bjV4yoH02Li7EYgdYhEFhGR3d1oO3a9DGx7nb70VEc+guaDrP
+         BAn4DIKE83X0lqImHCnmIIbgjVMdzz9Q4ePUhHR77cnRWD+JGehn4V8I2IYZgTvKbn
+         0ENu9Hbk0xmXw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 03:48:31PM +0300, Daniel Baluta wrote:
-> This allows combining multiple-data-line FIFOs into a
-> single-data-line FIFO.
-> 
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
->  Documentation/devicetree/bindings/sound/fsl-sai.txt | 4 ++++
+On 7/23/19 11:17 PM, Christoph Hellwig wrote:
+> On Tue, Jul 23, 2019 at 09:25:06PM -0700, john.hubbard@gmail.com wrote:
+>> * Store, in the iov_iter, a "came from gup (get_user_pages)" parameter.
+>>   Then, use the new iov_iter_get_pages_use_gup() to retrieve it when
+>>   it is time to release the pages. That allows choosing between put_page=
+()
+>>   and put_user_page*().
+>>
+>> * Pass in one more piece of information to bio_release_pages: a "from_gu=
+p"
+>>   parameter. Similar use as above.
+>>
+>> * Change the block layer, and several file systems, to use
+>>   put_user_page*().
+>=20
+> I think we can do this in a simple and better way.  We have 5 ITER_*
+> types.  Of those ITER_DISCARD as the name suggests never uses pages, so
+> we can skip handling it.  ITER_PIPE is rejected =D1=96n the direct I/O pa=
+th,
+> which leaves us with three.
+>=20
+> Out of those ITER_BVEC needs a user page reference, so we want to call
 
-This should be sent to devicetree mail-list also.
+               ^ ITER_IOVEC, I hope. Otherwise I'm hopeless lost. :)
 
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> index 59f4d965a5fb..ca27afd840ba 100644
-> --- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> +++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> @@ -54,6 +54,10 @@ Optional properties:
->  			  represents first data line, bit 1 represents second
->  			  data line and so on. Data line is enabled if
->  			  corresponding bit is set to 1.
-> +  - fsl,fcomb_mode	: list of two integers (first for RX, second for TX)
-> +			  representing FIFO combine mode. Possible values for
-> +			  combined mode are: 0 - disabled, 1 - Rx/Tx from shift
-> +			  registers, 2 - Rx/Tx by software, 3 - both.
+> put_user_page* on it.  ITER_BVEC always already has page reference,
+> which means in the block direct I/O path path we alread don't take
+> a page reference.  We should extent that handling to all other calls
+> of iov_iter_get_pages / iov_iter_get_pages_alloc.  I think we should
+> just reject ITER_KVEC for direct I/O as well as we have no users and
+> it is rather pointless.  Alternatively if we see a use for it the
+> callers should always have a life page reference anyway (or might
+> be on kmalloc memory), so we really should not take a reference either.
+>=20
+> In other words:  the only time we should ever have to put a page in
+> this patch is when they are user pages.  We'll need to clean up
+> various bits of code for that, but that can be done gradually before
+> even getting to the actual put_user_pages conversion.
+>=20
 
-Looks like a software configuration to me, instead of a device
-property. Is this configurable by user case, or hard-coded by
-SoC/hardware design?
+Sounds great. I'm part way into it and it doesn't look too bad. The main
+question is where to scatter various checks and assertions, to keep
+the kvecs out of direct I/0. Or at least keep the gups away from=20
+direct I/0.
+
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
