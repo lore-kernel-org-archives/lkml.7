@@ -4,62 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608B6C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B216C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C9520659
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2E41229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996443;
-	bh=Mg85mgCrIy2xrtULGoIFToYq7KDasH/cpmwXbL5Delk=;
+	s=default; t=1563996446;
+	bh=1d6+62kb1Pf/ZAwkeN74tfLs5AAmRHl8t/OHbwtkFGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QV3+ylv98o1rfYCCn2ngDEhanOVXBsvqHDcZeezLEnhfFeCY5qFBHBNUh7nuQJnDZ
-	 ibtjO/d+ESp+FoFyhj5/ERcR0rA6EZYtzdHr3+JuOrR9Vm8I4nDzAULHHf6BPPen7K
-	 u6DRKzCP01f7aNchuemP49e2AnPb748HJL4skJ1o=
+	b=pyPhhuf2yA8KNqFqHCzDh7JlqbDymdI2tUOUjcKWrpYuSirAGIWnf7E+GvoiBgYgw
+	 bewFJAnK27aHrATZxFXAJ1wvUpbFMsr5T3PTiklp53u/0DFk0m++fg4WCecmSuF15d
+	 EdC7M/3u4kR+xVSW20SRVNcJgG1i1mOIImv7pyHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387613AbfGXT1W (ORCPT
+        id S2388110AbfGXT1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:27:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44876 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:27:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729300AbfGXT1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:27:18 -0400
+        id S1728748AbfGXT1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:27:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46E9622ADB;
-        Wed, 24 Jul 2019 19:27:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D333121951;
+        Wed, 24 Jul 2019 19:27:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996437;
-        bh=Mg85mgCrIy2xrtULGoIFToYq7KDasH/cpmwXbL5Delk=;
+        s=default; t=1563996440;
+        bh=1d6+62kb1Pf/ZAwkeN74tfLs5AAmRHl8t/OHbwtkFGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ILm51VpgsReqCSeEv0U8hvuAYHYdxFeCyZ82ieQjfY+E24hmGhiG+l/hkFb8rQrWc
-         hQtvW3HEUABlw+Y8rEDKRFRtwhSxymx91RIgGtHSSjQHm/46x+Pa45wJc4v/D/mtpo
-         6Ncn1oUZorH12UWlivkJz8Wh5DyUirBOnRMz2lik=
+        b=sreKQY1k6tZ1ZA9ZM/HG1pWBM4id2VxYDQTkEif0jIGhI2MYrCVz6IG8mB1zIYbaD
+         WundTms21QHkV8l6KcGQHR6L2W1LOIDlDuRWE1q+QXLdu9OOqkGBSCMaGdyLlOniyi
+         2katpCCJKal8rHJB21pXvtOfsn/SZSF6VmxND7uw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, bp@suse.de,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 096/413] x86/cpu: Add Ice Lake NNPI to Intel family
-Date:   Wed, 24 Jul 2019 21:16:27 +0200
-Message-Id: <20190724191741.925587451@linuxfoundation.org>
+Subject: [PATCH 5.2 097/413] ASoC: meson: axg-tdm: fix sample clock inversion
+Date:   Wed, 24 Jul 2019 21:16:28 +0200
+Message-Id: <20190724191742.031707900@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -72,44 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e32d045cd4ba06b59878323e434bad010e78e658 ]
+[ Upstream commit cb36ff785e868992e96e8b9e5a0c2822b680a9e2 ]
 
-Add the CPUID model number of Ice Lake Neural Network Processor for Deep
-Learning Inference (ICL-NNPI) to the Intel family list. Ice Lake NNPI uses
-model number 0x9D and this will be documented in a future version of Intel
-Software Development Manual.
+The content of SND_SOC_DAIFMT_FORMAT_MASK is a number, not a bitfield,
+so the test to check if the format is i2s is wrong. Because of this the
+clock setting may be wrong. For example, the sample clock gets inverted
+in DSP B mode, when it should not.
 
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@suse.de
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com
+Fix the lrclk invert helper function
+
+Fixes: 1a11d88f499c ("ASoC: meson: add tdm formatter base driver")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/intel-family.h | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/meson/axg-tdm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 310118805f57..f60ddd655c78 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -56,6 +56,7 @@
- #define INTEL_FAM6_ICELAKE_XEON_D	0x6C
- #define INTEL_FAM6_ICELAKE_DESKTOP	0x7D
- #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
-+#define INTEL_FAM6_ICELAKE_NNPI		0x9D
+diff --git a/sound/soc/meson/axg-tdm.h b/sound/soc/meson/axg-tdm.h
+index e578b6f40a07..5774ce0916d4 100644
+--- a/sound/soc/meson/axg-tdm.h
++++ b/sound/soc/meson/axg-tdm.h
+@@ -40,7 +40,7 @@ struct axg_tdm_iface {
  
- /* "Small Core" Processors (Atom) */
+ static inline bool axg_tdm_lrclk_invert(unsigned int fmt)
+ {
+-	return (fmt & SND_SOC_DAIFMT_I2S) ^
++	return ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) == SND_SOC_DAIFMT_I2S) ^
+ 		!!(fmt & (SND_SOC_DAIFMT_IB_IF | SND_SOC_DAIFMT_NB_IF));
+ }
  
 -- 
 2.20.1
