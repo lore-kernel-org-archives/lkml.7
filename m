@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C39C3C76194
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FEBC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 972A3205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4C220665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997728;
-	bh=4jqX5u66y4Qf7X1G2HJvODoPVj0g3ObN57KBSnoBUF8=;
+	s=default; t=1563997731;
+	bh=kxrR3ZTKLhywdYlMyzuCoqVwYydWCssFeep6qKQ5QGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AGSBTAaA0CrWycZGO2G8ftsltjqL+wYsuBwfRnEHWvPQZHo6tqLHt1BRf8afbL0sH
-	 Yr1N8ZBLvnqvGkqfQDSVDHsUMthZamUlGGj50EIBWu64GTjlQrTdvXfqAEtPBnRF4E
-	 r7FD1NpnoaqH817NbMXuKmfyOgsRNY+1Rg/Oyawk=
+	b=AOkxVJYbBfWB0bfydu8qL9eYqH1CVr292VYOHc12ob+nhf8D8yD8LmvgiqGvtnu3A
+	 gEBzriXVEKOW3zHimBgt19pmukOiRAbIlXaVInRjgHnvItt4UBmPqWrVSfuDh8futj
+	 A7wJZ1PgXQLNvopBfpHV2GZPjn/cYLgWJ6KPS9MU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403856AbfGXTsr (ORCPT
+        id S2403931AbfGXTsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:48:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56268 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:48:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403815AbfGXTsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:48:45 -0400
+        id S2403815AbfGXTss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:48:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90AA020665;
-        Wed, 24 Jul 2019 19:48:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63B9021873;
+        Wed, 24 Jul 2019 19:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997724;
-        bh=4jqX5u66y4Qf7X1G2HJvODoPVj0g3ObN57KBSnoBUF8=;
+        s=default; t=1563997727;
+        bh=kxrR3ZTKLhywdYlMyzuCoqVwYydWCssFeep6qKQ5QGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iuujD+z9O2EC0TkLtIAOVgNFIlgtbk72XQ0yRFnaWlwV1/Z+RR+if0iVGEmoxwrvz
-         0VIJ30Pam/p6ZHFjEcBJiHhkxIBMyVzHjcaAvL4rsTCoiv8Y1H2HTbxxMkCa0e6Wym
-         +XZpJDnIAh6BEdynWAqgVJDnm6KGB5PkAGWPyr9Q=
+        b=IEOZw7k306Vcg6Fv3zdCstiNJYEjdofvWczzTUuro7rQbd0jIA30rQEHuzgLV5yf+
+         UxGTc7e273tbLQHq/jmntxTyTlH52ulyD0mt/L6bzPC7tg1isopXs1qU7LYx0nuq+K
+         C27O8YChrUl0TaEohh1ShKVmJ6wW0W9HfdgYgUbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 081/371] gpio: omap: ensure irq is enabled before wakeup
-Date:   Wed, 24 Jul 2019 21:17:13 +0200
-Message-Id: <20190724191730.944856709@linuxfoundation.org>
+Subject: [PATCH 5.1 082/371] regmap: fix bulk writes on paged registers
+Date:   Wed, 24 Jul 2019 21:17:14 +0200
+Message-Id: <20190724191731.019355270@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -62,83 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c859e0d479b3b4f6132fc12637c51e01492f31f6 ]
+[ Upstream commit db057679de3e9e6a03c1bcd5aee09b0d25fd9f5b ]
 
-Documentation states:
+On buses like SlimBus and SoundWire which does not support
+gather_writes yet in regmap, A bulk write on paged register
+would be silently ignored after programming page.
+This is because local variable 'ret' value in regmap_raw_write_impl()
+gets reset to 0 once page register is written successfully and the
+code below checks for 'ret' value to be -ENOTSUPP before linearising
+the write buffer to send to bus->write().
 
-  NOTE: There must be a correlation between the wake-up enable and
-  interrupt-enable registers. If a GPIO pin has a wake-up configured
-  on it, it must also have the corresponding interrupt enabled (on
-  one of the two interrupt lines).
+Fix this by resetting the 'ret' value to -ENOTSUPP in cases where
+gather_writes() is not supported or single register write is
+not possible.
 
-Ensure that this condition is always satisfied by enabling the detection
-events after enabling the interrupt, and disabling the detection before
-disabling the interrupt.  This ensures interrupt/wakeup events can not
-happen until both the wakeup and interrupt enables correlate.
-
-If we do any clearing, clear between the interrupt enable/disable and
-trigger setting.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Tested-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-omap.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/base/regmap/regmap.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index 0708e50a27f0..233245bc693c 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -838,9 +838,9 @@ static void omap_gpio_irq_shutdown(struct irq_data *d)
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index 4f822e087def..61d1a0864dea 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1642,6 +1642,8 @@ static int _regmap_raw_write_impl(struct regmap *map, unsigned int reg,
+ 					     map->format.reg_bytes +
+ 					     map->format.pad_bytes,
+ 					     val, val_len);
++	else
++		ret = -ENOTSUPP;
  
- 	raw_spin_lock_irqsave(&bank->lock, flags);
- 	bank->irq_usage &= ~(BIT(offset));
--	omap_set_gpio_irqenable(bank, offset, 0);
--	omap_clear_gpio_irqstatus(bank, offset);
- 	omap_set_gpio_triggering(bank, offset, IRQ_TYPE_NONE);
-+	omap_clear_gpio_irqstatus(bank, offset);
-+	omap_set_gpio_irqenable(bank, offset, 0);
- 	if (!LINE_USED(bank->mod_usage, offset))
- 		omap_clear_gpio_debounce(bank, offset);
- 	omap_disable_gpio_module(bank, offset);
-@@ -876,8 +876,8 @@ static void omap_gpio_mask_irq(struct irq_data *d)
- 	unsigned long flags;
- 
- 	raw_spin_lock_irqsave(&bank->lock, flags);
--	omap_set_gpio_irqenable(bank, offset, 0);
- 	omap_set_gpio_triggering(bank, offset, IRQ_TYPE_NONE);
-+	omap_set_gpio_irqenable(bank, offset, 0);
- 	raw_spin_unlock_irqrestore(&bank->lock, flags);
- }
- 
-@@ -889,9 +889,6 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
- 	unsigned long flags;
- 
- 	raw_spin_lock_irqsave(&bank->lock, flags);
--	if (trigger)
--		omap_set_gpio_triggering(bank, offset, trigger);
--
- 	omap_set_gpio_irqenable(bank, offset, 1);
- 
- 	/*
-@@ -899,9 +896,13 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
- 	 * is cleared, thus after the handler has run. OMAP4 needs this done
- 	 * after enabing the interrupt to clear the wakeup status.
- 	 */
--	if (bank->level_mask & BIT(offset))
-+	if (bank->regs->leveldetect0 && bank->regs->wkup_en &&
-+	    trigger & (IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
- 		omap_clear_gpio_irqstatus(bank, offset);
- 
-+	if (trigger)
-+		omap_set_gpio_triggering(bank, offset, trigger);
-+
- 	raw_spin_unlock_irqrestore(&bank->lock, flags);
- }
- 
+ 	/* If that didn't work fall back on linearising by hand. */
+ 	if (ret == -ENOTSUPP) {
 -- 
 2.20.1
 
