@@ -2,96 +2,89 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2C5C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 465C1C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C2422387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DABB22387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:45:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gKoiSrCl";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="f5Fhs597"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbfGXLp1 (ORCPT
+        id S1727869AbfGXLpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 07:45:27 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:39712 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727128AbfGXLp1 (ORCPT
+        Wed, 24 Jul 2019 07:45:45 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48448 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727128AbfGXLpp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 07:45:27 -0400
-X-IronPort-AV: E=Sophos;i="5.64,302,1559512800"; 
-   d="scan'208";a="393144701"
-Received: from c-73-22-29-55.hsd1.il.comcast.net (HELO hadrien) ([73.22.29.55])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 13:45:24 +0200
-Date:   Wed, 24 Jul 2019 06:45:23 -0500 (CDT)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Joe Perches <joe@perches.com>
-cc:     David Laight <David.Laight@ACULAB.COM>,
-        cocci <cocci@systeme.lip6.fr>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [Fwd: [PATCH 1/2] string: Add stracpy and stracpy_pad
- mechanisms]
-In-Reply-To: <d2b2b528b9f296dfeb1d92554be024245abd678e.camel@perches.com>
-Message-ID: <alpine.DEB.2.21.1907240644580.2560@hadrien>
-References: <7ab8957eaf9b0931a59eff6e2bd8c5169f2f6c41.1563841972.git.joe@perches.com>  <66fcdbf607d7d0bea41edb39e5579d63b62b7d84.camel@perches.com>  <alpine.DEB.2.21.1907231546090.2551@hadrien>  <0f3ba090dfc956f5651e6c7c430abdba94ddcb8b.camel@perches.com> 
- <alpine.DEB.2.21.1907232252260.2539@hadrien>  <d5993902fd44ce89915fab94f4db03f5081c3c8e.camel@perches.com>  <alpine.DEB.2.21.1907232326360.2539@hadrien>  <f909b4b31f123c7d88535db397a04421077ed0ab.camel@perches.com>  <563222fbfdbb44daa98078db9d404972@AcuMS.aculab.com>
- <d2b2b528b9f296dfeb1d92554be024245abd678e.camel@perches.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 24 Jul 2019 07:45:45 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C71D160398; Wed, 24 Jul 2019 11:45:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563968744;
+        bh=ZuhfMbHMLI0hvi4ZXIAZVY0yoatWa3wtQrh3+kOQraM=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=gKoiSrClFSy5Oq1FdDOlSjDGtU+is2W55tKdyvMxC9PE8tEMukUQwBPAHDkjs1CVQ
+         3kKd7XRdLFYhSfsU5HHpfuUVAn66yfBhOXuESlzX0lAJABuzWzOhZLCC6cT0AdF+YS
+         lAutrpjjUtm4GSEtNFV7+qu5o4c+sRBPtpYtVBEA=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 90F006044E;
+        Wed, 24 Jul 2019 11:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563968742;
+        bh=ZuhfMbHMLI0hvi4ZXIAZVY0yoatWa3wtQrh3+kOQraM=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=f5Fhs597BaWvsfG72SYmLDYsDvVtV9k8KfHjwzlDZSZbFXB33N72RjNH+4i2KvDL1
+         Iy9/Bzen7WJsi8eADsKE+jN+MamFjP0JKwuuuOWTMM7NhJhXPz4Vo2sd8ZifkxBG7q
+         hLDqSX3//7jjdqzfIe/exniGHmjuviqOeHTtVBxM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 90F006044E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] wl3501_cs: remove redundant variable rc
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190705103732.30568-1-colin.king@canonical.com>
+References: <20190705103732.30568-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190724114543.C71D160398@smtp.codeaurora.org>
+Date:   Wed, 24 Jul 2019 11:45:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Colin King <colin.king@canonical.com> wrote:
 
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable rc is being initialized with a value that is never
+> read and it is being updated later with a new value that is returned.
+> The variable is redundant and can be replaced with a return 0 as
+> there are no other return points in this function.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-On Wed, 24 Jul 2019, Joe Perches wrote:
+Patch applied to wireless-drivers-next.git, thanks.
 
-> On Wed, 2019-07-24 at 10:28 +0000, David Laight wrote:
-> > From: Joe Perches
-> > > Sent: 24 July 2019 05:38
-> > > On Tue, 2019-07-23 at 23:27 -0500, Julia Lawall wrote:
-> > > > On Tue, 23 Jul 2019, Joe Perches wrote:
-> > > > > On Tue, 2019-07-23 at 22:54 -0500, Julia Lawall wrote:
-> > > > > > A seantic patch and the resulting output for the case where the third
-> > > > > > arugument is a constant is attached.  Likewise the resulting output on a
-> > > > > > recent linux-next.
-> []
-> > > > > There is a problem with conversions with assignments
-> > > > > of strlcpy() so ideally the cocci script should make sure
-> > > > > any return value was not used before conversion.
-> > > > >
-> > > > > This is not a provably good conversion:
-> > > > >
-> > > > > drivers/s390/char/sclp_ftp.c
-> > > > > @@ -114,8 +114,7 @@ static int sclp_ftp_et7(const struct hmc
-> > > > >         sccb->evbuf.mdd.ftp.length = ftp->len;
-> > > > >         sccb->evbuf.mdd.ftp.bufaddr = virt_to_phys(ftp->buf);
-> > > > >
-> > > > > -       len = strlcpy(sccb->evbuf.mdd.ftp.fident, ftp->fname,
-> > > > > -                     HMCDRV_FTP_FIDENT_MAX);
-> > > > > +       len = stracpy(sccb->evbuf.mdd.ftp.fident, ftp->fname);
-> []
-> > > Any use of the strlcpy return value should not be converted
-> > > because the logic after an assignment or use of the return value
-> > > can not be assured to have the same behavior.
-> >
-> > Most of the code probably expects the length to be that copied
-> > (so is broken if the string is truncated).
->
-> Fortunately there are relatively few uses of the return
-> value of strlcpy so it's not a large problem set.
->
-> Slightly unrepresentative counts:
->
-> $ git grep -P "^\s+strlcpy\b" | wc -l
-> 1681
-> $ git grep -P "=\s*strlcpy\b" | wc -l
-> 28
+c032461936de wl3501_cs: remove redundant variable rc
 
-OK, it's easy to check for in any case.  Thanks.
+-- 
+https://patchwork.kernel.org/patch/11032441/
 
-julia
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
