@@ -6,56 +6,49 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6568C76194
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFC7C41517
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9C16229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42684229F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563936574;
-	bh=bFbYrPk33/TGZvejMcSVw4zNvNaWAiORVwmKoQETXMY=;
+	s=default; t=1563936612;
+	bh=xN+wRv1x3pibnAFVRxilNHFnNao5TC+4ihBg1DKbjIo=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=hkaI5weks8MW/9lN/2f+G1gAcc0h5ngzEfYm4rPkbS9eV7rrAZhXIBhefPDaOZhM2
-	 2MsD2jAnWEjo0jP2zksIfW/3p1+viC+y45NxB7pFLTrG8/pEuOl0aFniu58HX41do+
-	 GDumSf3tmsrinuXBF1PvfXLD3UwWFoic0UqYZXe0=
+	b=0dCxBIWyhCMVBLcrx8vjMRcjQ+Tiz+ZReHCpodxr61NdPpcGjH951I8rrqCmNELsK
+	 a7kIrHRGfShoXbBLXd65OU68WX43PS42886t+jtrw1oYt63PTDCYrXq8a4c03DarZr
+	 TiuzmR3I7gMngFDmz/eezuIepjbRDzoD4NM3BFWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbfGXCtd (ORCPT
+        id S1726282AbfGXCuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:49:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47242 "EHLO mail.kernel.org"
+        Tue, 23 Jul 2019 22:50:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbfGXCtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:49:33 -0400
+        id S1725827AbfGXCuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:50:10 -0400
 Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E0D2229F3;
-        Wed, 24 Jul 2019 02:49:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ECBE229F3;
+        Wed, 24 Jul 2019 02:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563936572;
-        bh=bFbYrPk33/TGZvejMcSVw4zNvNaWAiORVwmKoQETXMY=;
+        s=default; t=1563936609;
+        bh=xN+wRv1x3pibnAFVRxilNHFnNao5TC+4ihBg1DKbjIo=;
         h=Date:From:To:Cc:Subject:From;
-        b=Fi5EiZCGeNtXPqERl2CJYgehbRa+B6hSU6XOJxSx6oLaOSFCPlmUD6IQhTlGa+abJ
-         T4GmEBRuLsm8ohZ1kNuiB9ZcAtL1QeBFlXZKqXWJPK0RieMw/42TuGDOy6whfmqODu
-         GXzEGtVPS/QZ1podJRTtWTeLuhGjIvuNI+8vhPfo=
-Date:   Tue, 23 Jul 2019 19:49:30 -0700
+        b=KR1HsgKkkb/WO2xAB8jk5f/PxCYQZ96KM8Kdd2L/yQRjlTGe52FA5i81AVR2fQyDC
+         1SAYwEj1F1H84pHrqTvTEMitdYwj7gqwJ3KKm82CXdyced9RcCPFF3RjSiY5v1bRSX
+         6E0cPbINAHtVD1N5nYtXU5W9eYuCIjCTTOZQPAYM=
+Date:   Tue, 23 Jul 2019 19:50:08 -0700
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
+To:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 1 open syzbot bug in "security/integrity" subsystem
-Message-ID: <20190724024930.GK643@sol.localdomain>
-Mail-Followup-To: linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+Subject: Reminder: 1 open syzbot bug in rtc subsystem
+Message-ID: <20190724025008.GL643@sol.localdomain>
+Mail-Followup-To: linux-rtc@vger.kernel.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -69,37 +62,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 to make it better, or if you want it re-generated with the latest status.]
 
 Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 1 of them as possibly being a bug in the "security/integrity" subsystem.
+marked 1 of them as possibly being a bug in the rtc subsystem.
 
 If you believe this bug is no longer valid, please close the syzbot report by
 sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
 original thread, as explained at https://goo.gl/tpsmEJ#status
 
-If you believe I misattributed this bug to the "security/integrity" subsystem,
-please let me know, and if possible forward the report to the correct people or
-mailing list.
+If you believe I misattributed this bug to the rtc subsystem, please let me
+know, and if possible forward the report to the correct people or mailing list.
 
 Here is the bug:
 
 --------------------------------------------------------------------------------
-Title:              INFO: task hung in process_measurement
-Last occurred:      133 days ago
-Reported:           295 days ago
+Title:              BUG: workqueue lockup (4)
+Last occurred:      40 days ago
+Reported:           289 days ago
 Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=623c2e176b9d80b1872e7559e5b823b1ec4911b6
-Original thread:    https://lkml.kernel.org/lkml/00000000000033ebee0577262a98@google.com/T/#u
+Dashboard link:     https://syzkaller.appspot.com/bug?id=0041bf1423916e9ae458b08b760e269a33c14960
+Original thread:    https://lkml.kernel.org/lkml/0000000000005764090577a27486@google.com/T/#u
 
 This bug has a C reproducer.
 
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-The original thread for this bug received 1 reply, 120 days ago.
+The original thread for this bug received 4 replies; the last was 42 days ago.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+cdc562bc26a2b2b0a94f@syzkaller.appspotmail.com
+    Reported-by: syzbot+08116743f8ad6f9a6de7@syzkaller.appspotmail.com
 
 If you send any email or patch for this bug, please consider replying to the
 original thread.  For the git send-email command to use, or tips on how to reply
 if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000033ebee0577262a98@google.com
+https://lkml.kernel.org/r/0000000000005764090577a27486@google.com
 
