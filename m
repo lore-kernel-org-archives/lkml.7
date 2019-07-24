@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBFAC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A858FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E74214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E712214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999952;
-	bh=x5cBvB+ePUbEneL3+6RDnFsAOd6tOD2Z+cdqbyRCV1o=;
+	s=default; t=1563999958;
+	bh=rS0zYdFdtQ7G+JZz57Aeqv6qwSj0FtXQQ8hJ4e/VJ98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nal4wW3Aex72RHw4DiPGxEHd3PXfXX7T8yyUz+Ec++8vLpzwi8L9Nd1ygl00L/Z0A
-	 lCV1TUuPmns8a4pJoW2uBx+ciKVizl0IAzIrfzE98CgbbeKzMkF8jYvbpUnIIc+G18
-	 Xug5hnJ89MO4Ewxf28i9habKOiwQS7+iJmeIRykQ=
+	b=g/ftUSzzUFwgL3YbNwukHfgIpH3LfSfDCWvmNUa8USnypVl/U+fDXRRuVh7x/zfO+
+	 vCeJJT/n+EditZln+zoXa0smsFZfsHkj3DQPuqsw0NoV2B1eQ6EfINvtPJKsdih4T7
+	 pB+3ZjInXCQmLff0QiRyo/T9bBhFtsfHOm+1VNes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390041AbfGXUZu (ORCPT
+        id S2390410AbfGXUZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:25:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39176 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:25:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389193AbfGXTib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:38:31 -0400
+        id S2389739AbfGXTi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:38:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAB9B20665;
-        Wed, 24 Jul 2019 19:38:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3030E229F4;
+        Wed, 24 Jul 2019 19:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997110;
-        bh=x5cBvB+ePUbEneL3+6RDnFsAOd6tOD2Z+cdqbyRCV1o=;
+        s=default; t=1563997107;
+        bh=rS0zYdFdtQ7G+JZz57Aeqv6qwSj0FtXQQ8hJ4e/VJ98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ICG8CEUQegaYP2wpW83032ZSIWlpDUjZp4HyMZo0zPWCrUfiLbNNYm9BhV+H+HOUR
-         +wMVTvTeJJEbC8/YLZ345On2W5q/XppQvWpb4RyXJ1EtUhsUYZdTHAEMfUZZdhHVMy
-         S18gtYYkwO8mAdFE/yfPBFln+L5Hi40NbOh5+nt0=
+        b=KH7pH/1egggLJGR3EJO7cqFy4LQcLzM4RGaoc201tiNcnQ+ZX4Z2a5/Sgj0RwTKv3
+         h3NJNVgErSzpNzyoCABPyJZXodpDfHxDMuK3NvF/nSs9KtcP29d0TerJcNFvE2o7ry
+         g8pcT4vFZQPlvU/rvQkSdym8+fxdhQbywbc8fXmw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.2 324/413] media: videobuf2-core: Prevent size alignment wrapping buffer size to 0
-Date:   Wed, 24 Jul 2019 21:20:15 +0200
-Message-Id: <20190724191759.052586448@linuxfoundation.org>
+Subject: [PATCH 5.2 323/413] media: coda: Remove unbalanced and unneeded mutex unlock
+Date:   Wed, 24 Jul 2019 21:20:14 +0200
+Message-Id: <20190724191758.984113359@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,38 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-commit defcdc5d89ced780fb45196d539d6570ec5b1ba5 upstream.
+commit 766b9b168f6c75c350dd87c3e0bc6a9b322f0013 upstream.
 
-PAGE_ALIGN() may wrap the buffer size around to 0. Prevent this by
-checking that the aligned value is not smaller than the unaligned one.
+The mutex unlock in the threaded interrupt handler is not paired
+with any mutex lock. Remove it.
 
-Note on backporting to stable: the file used to be under
-drivers/media/v4l2-core, it was moved to the current location after 4.14.
+This bug has been here for a really long time, so it applies
+to any stable repo.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Cc: stable@vger.kernel.org
-Reviewed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/common/videobuf2/videobuf2-core.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/platform/coda/coda-bit.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/media/common/videobuf2/videobuf2-core.c
-+++ b/drivers/media/common/videobuf2/videobuf2-core.c
-@@ -207,6 +207,10 @@ static int __vb2_buf_mem_alloc(struct vb
- 	for (plane = 0; plane < vb->num_planes; ++plane) {
- 		unsigned long size = PAGE_ALIGN(vb->planes[plane].length);
+--- a/drivers/media/platform/coda/coda-bit.c
++++ b/drivers/media/platform/coda/coda-bit.c
+@@ -2310,7 +2310,6 @@ irqreturn_t coda_irq_handler(int irq, vo
+ 	if (ctx == NULL) {
+ 		v4l2_err(&dev->v4l2_dev,
+ 			 "Instance released before the end of transaction\n");
+-		mutex_unlock(&dev->coda_mutex);
+ 		return IRQ_HANDLED;
+ 	}
  
-+		/* Did it wrap around? */
-+		if (size < vb->planes[plane].length)
-+			goto free;
-+
- 		mem_priv = call_ptr_memop(vb, alloc,
- 				q->alloc_devs[plane] ? : q->dev,
- 				q->dma_attrs, size, q->dma_dir, q->gfp_flags);
 
 
