@@ -2,165 +2,106 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF05C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2943BC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92CB0217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:57:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aK7rHmIR"
+	by mail.kernel.org (Postfix) with ESMTP id EBAB1217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfGXI5C (ORCPT
+        id S1726617AbfGXI5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:57:02 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35229 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfGXI5B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:57:01 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y4so46063087wrm.2;
-        Wed, 24 Jul 2019 01:56:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nS11U7aQYbR6FrVLZkmgGzedl7yGkGWQ5Fg3AiFJx50=;
-        b=aK7rHmIRnnPnTg3ntYCBn9NyiVtMIT7A64kixmaBRA/gox+o5LYGXplpw37OdbJXqJ
-         GJBrZBojsznBd/7xMa2QaRo1w3+77FDro8GJcRHNRquOxZm0ZafM/TyhNEHZjLhAtSLu
-         vahNDA+jF0m1b4upnuxaIvJx/pb2egfoKfWCr0Db82NN2Ddglspe958Krd8kBG+05e2a
-         tAoUbrT91Zp57QfDPnbMsNgEuLBLsy40996WKGSgkMfS4hkFANjgIx6yz5vdOqDThZof
-         KCfIjZNw3HoCDSvtGlp/QVMN73SudqPJuYJ8OZpGcuPdnfytl09zRdcH/rDW16Lb6t3k
-         dAYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nS11U7aQYbR6FrVLZkmgGzedl7yGkGWQ5Fg3AiFJx50=;
-        b=UXQsqhMOh3/iRlilKV1hBCE6VEI7eE6nTIE3hZ0lV0z/+HYUeJsChqcRuK6WJnVW+7
-         rTTq1FDB9piKQjoARw1DsITOBJVUglIyIb30F3T9f/pqiPlRRDumXdRcwQbVW73fOd9B
-         qmTmHdkqO5SC0FhZyYrk+cXc/li63rtaECqy1TUeDoWfN7qg5B9eKAMKa/vLziD1Qffp
-         ca2E9vQGM4NlIpZ1JNq24E6kWNwy5HqWVkrOk+HbeSWhbknFy59S+lnActW1FSTrAYWO
-         4tDcA3a6r6a4AM2AX5d6iFK4YI+j+E+KNsy7rKDrqzI+tmK/CGxvnfjBhShIymLOQh5P
-         xPCg==
-X-Gm-Message-State: APjAAAUGUByIbt+xNj+y+HMcoQvRyTU7E9LIn1GUFU49xYHtHX6j9H0j
-        YHqtP1kyH3D1HCSRpQM25MQ=
-X-Google-Smtp-Source: APXvYqzVkHjQ4fYrwflU5EfZZ7N6g3BUBLzJHgZ4PHqokfI3W6tGoyr4GYhF5mfDCiyDpCJkTp8wvA==
-X-Received: by 2002:a5d:52c5:: with SMTP id r5mr67154185wrv.146.1563958618470;
-        Wed, 24 Jul 2019 01:56:58 -0700 (PDT)
-Received: from [192.168.8.147] (200.150.22.93.rev.sfr.net. [93.22.150.200])
-        by smtp.gmail.com with ESMTPSA id v124sm48139208wmf.23.2019.07.24.01.56.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 01:56:57 -0700 (PDT)
-Subject: Re: [RFC] performance regression with commit-id<adb03115f459> ("net:
- get rid of an signed integer overflow in ip_idents_reserve()")
-To:     Zhangshaokun <zhangshaokun@hisilicon.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        "guoyang (C)" <guoyang2@huawei.com>,
-        "zhudacai@hisilicon.com" <zhudacai@hisilicon.com>
-References: <051e93d4-0206-7416-e639-376b8d2eb98b@hisilicon.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <3d77a08a-22e9-16e8-4091-c5ba4851ff13@gmail.com>
-Date:   Wed, 24 Jul 2019 10:56:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 24 Jul 2019 04:57:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35212 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725999AbfGXI5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 04:57:39 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0E1D830C1E3F;
+        Wed, 24 Jul 2019 08:57:39 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 44A8D60BFC;
+        Wed, 24 Jul 2019 08:57:37 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed, 24 Jul 2019 10:57:38 +0200 (CEST)
+Date:   Wed, 24 Jul 2019 10:57:36 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
+        Matthew Wilcox <matthew.wilcox@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        William Kucharski <william.kucharski@oracle.com>
+Subject: Re: [PATCH v7 2/4] uprobe: use original page when all uprobes are
+ removed
+Message-ID: <20190724085736.GA21599@redhat.com>
+References: <20190625235325.2096441-1-songliubraving@fb.com>
+ <20190625235325.2096441-3-songliubraving@fb.com>
+ <20190715152513.GD1222@redhat.com>
+ <EA58E3BD-7EB1-4433-8F7F-1E3894F8D563@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <051e93d4-0206-7416-e639-376b8d2eb98b@hisilicon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <EA58E3BD-7EB1-4433-8F7F-1E3894F8D563@fb.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 24 Jul 2019 08:57:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 07/24, Song Liu wrote:
+>
+>
+> > On Jul 15, 2019, at 8:25 AM, Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> >> +	if (!is_register) {
+> >> +		struct page *orig_page;
+> >> +		pgoff_t index;
+> >> +
+> >> +		index = vaddr_to_offset(vma, vaddr & PAGE_MASK) >> PAGE_SHIFT;
+> >> +		orig_page = find_get_page(vma->vm_file->f_inode->i_mapping,
+> >> +					  index);
+> >> +
+> >> +		if (orig_page) {
+> >> +			if (pages_identical(new_page, orig_page)) {
+> >
+> > Shouldn't we at least check PageUptodate?
+>
+> For page cache, we only do ClearPageUptodate() on read failures,
 
+Hmm. I don't think so.
 
-On 7/24/19 10:38 AM, Zhangshaokun wrote:
-> Hi,
-> 
-> I've observed an significant performance regression with the following commit-id <adb03115f459>
-> ("net: get rid of an signed integer overflow in ip_idents_reserve()").
+> so
+> this should be really rare case. But I guess we can check anyway.
 
-Yes this UBSAN false positive has been painful
+Can? I think we should or this code is simply wrong...
 
+> > and I am a bit surprised there is no simple way to unmap the old page
+> > in this case...
+>
+> The easiest way I have found requires flush_cache_page() plus a few
+> mmu_notifier calls around it.
 
+But we need to do this anyway? At least with your patch replace_page() still
+does this after page_add_file_rmap().
 
-> 
-> Here are my test scenes:
-> ----Server----
-> Cmd: iperf3 -s xxx.xxx.xxxx.xxx -p 10000 -i 0 -A 0
-> Kenel: 4.19.34
-> Server number: 32
-> Port: 10000 – 10032
-> CPU affinity: 0 – 32
-> CPU architecture: aarch64
-> NUMA node0 CPU(s): 0-23
-> NUMA node1 CPU(s): 24-47
-> 
-> ----Client----
-> Cmd: iperf3 -u -c xxx.xxx.xxxx.xxx -p 10000 -l 16 -b 0 -t 0 -i 0 -A 8
-> Kenel: 4.19.34
-> Client number: 32
-> Port: 10000 – 10032
-> CPU affinity: 0 – 32
-> CPU architecture: aarch64
-> NUMA node0 CPU(s): 0-23
-> NUMA node1 CPU(s): 24-47
-> 
-> Firstly, With patch <adb03115f459> ("net: get rid of an signed integer overflow in ip_idents_reserve()") ,
-> client’s cpu is 100%, and function ip_idents_reserve() cpu usage is very high, but the result is not good.
-> 03:08:32 AM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
-> 03:08:33 AM      eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
-> 03:08:33 AM      eth1      0.00 3461296.00      0.00 196049.97      0.00      0.00      0.00      0.00
-> 03:08:33 AM        lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
-> 
-> Secondly, revert that patch, use atomic_add_return() instead, the result is better, as below:
-> 03:23:24 AM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
-> 03:23:25 AM        lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
-> 03:23:25 AM      eth1      0.00 12834590.00      0.00 726959.20      0.00      0.00      0.00      0.00
-> 03:23:25 AM      eth0      7.00     11.00      0.40      2.95      0.00      0.00      0.00      0.00
-> 
-> Thirdly, atomic is not used in ip_idents_reserve() completely ,while each cpu core allocates its own ID segment,
-> Such as: cpu core0 allocate ID 0 – 1023, cpu core1 allocate 1024 – 2047, …,etc
-> the result is the best:
+> I think current solution is better than
+> that,
 
-Not sure what you mean.
+perhaps, I won't argue,
 
-Less entropy in IPv4 ID is not going to help when fragments _are_ needed.
+> as it saves a page fault.
 
-Send 40,000 datagrams of 2000 bytes each, add delays, reorders, and boom, most of the packets will be lost.
+I don't think it matters in this case.
 
-This is not because your use case does not need proper IP ID that we can mess with them.
-
-If you need to send packets very fast,  maybe use AF_PACKET ?
-
-> 03:27:06 AM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
-> 03:27:07 AM        lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
-> 03:27:07 AM      eth1      0.00 14275505.00      0.00 808573.53      0.00      0.00      0.00      0.00
-> 03:27:07 AM      eth0      0.00      2.00      0.00      0.18      0.00      0.00      0.00      0.00
-> 
-> Because atomic operation performance is bottleneck when cpu core number increase, Can we revert the patch or
-> use ID segment for each cpu core instead?
-
-
-This has been discussed in the past.
-
-https://lore.kernel.org/lkml/b0160f4b-b996-b0ee-405a-3d5f1866272e@gmail.com/
-
-We can revert now UBSAN has been fixed.
-
-Or even use Peter patch : https://lore.kernel.org/lkml/20181101172739.GA3196@hirez.programming.kicks-ass.net/
-
-However, you will still hit badly a shared cache line, not matter what.
-
-Some arches are known to have terrible LL/SC implementation :/
+Oleg.
 
