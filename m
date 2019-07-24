@@ -2,104 +2,106 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B723AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AC6C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD5E20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D2F20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999396;
-	bh=eoUuKILwWbW58gWvO2lTHtVKNhTV3/Qr2k/LLV33VJs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TiEQTf2hM1Fo8qYvIOMPXrL6UieuS4acdVF670MmXblDcB5MvjfYkNhfols4la/rj
-	 nRkaMg2ykR4FRAqrwAwkkXcGB5JJJ6NBAFnykCDFCCIhtd3xZEZXtRPFoUE0f/nxAX
-	 8ZozjePZNXFyhanmjWGi7Y0jVLiQ7vLp5xVXOISk=
+	s=default; t=1563999401;
+	bh=b78mm6Pn0rAv52OU4ubmpH9PV2ZfFp9g4+YY0qCPGeo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TzXwk3PIiJBNLFd4RAm/FiqsiveHUxGtckeAHOYGuZ87sKfSTX9AE5WKyIlJcU4Hf
+	 wSKahvg0pY5YMixbIPCLwRlpeB9q6gIVKRyE3QDXyHz3l2tZ1qJmaJn1EloiAjMw1r
+	 90Tl157Ysq7dLQt6xKH1sI/BxmYaMKNWcM+uGzvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391791AbfGXUQf (ORCPT
+        id S2392844AbfGXUQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:16:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391623AbfGXTvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:51:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44A8621873;
-        Wed, 24 Jul 2019 19:51:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997870;
-        bh=eoUuKILwWbW58gWvO2lTHtVKNhTV3/Qr2k/LLV33VJs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LvzAzSfp9hIbG+YUYQ0jmM+1AP8LLQ9zd906wCSHQtRy7mOVpOKlpanPykIfiPu2p
-         JmwU4EKgxr/x6HpS+Ox5JrHEoqFvuosGQ1hktP6VMu0S+3WIjEMKBGdlhotU1gQ9q4
-         YkIhXhxV+RpFVq3QYR5Qb27nLEe1b0BqZ7gj27No=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 173/371] net: hns3: fix a -Wformat-nonliteral compile warning
-Date:   Wed, 24 Jul 2019 21:18:45 +0200
-Message-Id: <20190724191738.278440034@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
-References: <20190724191724.382593077@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 16:16:40 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:32821 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387586AbfGXUQh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:16:37 -0400
+Received: by mail-io1-f66.google.com with SMTP id z3so92392628iog.0;
+        Wed, 24 Jul 2019 13:16:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SleUqq6V31kzUwMjIX1qfrELhcVA/KVuaspMZ04YgL4=;
+        b=hnUrX0SNfyvI1kO1tKzrbX8dqiUXo+qlmeDnL0kQ5PfAA6cQdXdsJfNAJYpN4E5IOZ
+         S68LTpldBbjlPC7pHn6xDxx3koH9J0Lsp9u5M0tcATkFWbCDz+OKu5ajHmkH32srj87f
+         4fRJM+lV6OSBeNvIz3ClFjTSWL4+f2oIKlX5WzYSJ8+reYfIkzAs3CIcH+H8aFPNmznQ
+         m9vTwjhB1gmMKsthCFYlvrl4Zo+9HHD3spHPor0WDRiFmFrTBHxcqmPrgW+6w9VvKfkm
+         YxwropmcLAFUxBRuzAyHodSGBXZXirJFlzHWV7502mTx0OGsVzptCwgAwBvuDeBA3TTs
+         tFbg==
+X-Gm-Message-State: APjAAAX6DVF6Qh4T2mOapkZ7MsOvWbl+i1a9ZKbl7+dgANMmOQ9ulYBo
+        ZCA87vEIcy8pJN20PCxC1A==
+X-Google-Smtp-Source: APXvYqwqmUodaynFku7YClU/Ql2xFlbvkHEw7X/q17Yh5pYFol9maQFHH3YaP1av1prEvMzfEF8uMA==
+X-Received: by 2002:a6b:6f06:: with SMTP id k6mr2226288ioc.32.1563999397076;
+        Wed, 24 Jul 2019 13:16:37 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id i23sm33894203ioj.24.2019.07.24.13.16.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 13:16:36 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 14:16:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     yongqiang.niu@mediatek.com
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v4, 05/33] dt-bindings: mediatek: add RDMA1 description
+ for mt8183 display
+Message-ID: <20190724201635.GA18345@bogus>
+References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1562625253-29254-6-git-send-email-yongqiang.niu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1562625253-29254-6-git-send-email-yongqiang.niu@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 18d219b783da61a6cc77581f55fc4af2fa16bc36 ]
+On Tue, Jul 09, 2019 at 06:33:45AM +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This patch add RDMA1 description for mt8183 display
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> index afd3c90..bb9274a 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> @@ -30,6 +30,7 @@ Required properties (all function blocks):
+>  	"mediatek,<chip>-disp-ovl"   		- overlay (4 layers, blending, csc)
+>  	"mediatek,<chip>-disp-ovl-2l"           - overlay (2 layers, blending, csc)
+>  	"mediatek,<chip>-disp-rdma"  		- read DMA / line buffer
+> +	"mediatek,<chip>-disp-rdma1"            - function is same with RDMA, fifo size is different
 
-When setting -Wformat=2, there is a compiler warning like this:
+This can't be determined by which chip it is? IOW, a chip may have both 
+rdma and rdma1?
 
-hclge_main.c:xxx:x: warning: format not a string literal and no
-format arguments [-Wformat-nonliteral]
-strs[i].desc);
-^~~~
-
-This patch adds missing format parameter "%s" to snprintf() to
-fix it.
-
-Fixes: 46a3df9f9718 ("Add HNS3 Acceleration Engine & Compatibility Layer Support")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 6d4d5a470163..563eefa20003 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -550,8 +550,7 @@ static u8 *hclge_comm_get_strings(u32 stringset,
- 		return buff;
- 
- 	for (i = 0; i < size; i++) {
--		snprintf(buff, ETH_GSTRING_LEN,
--			 strs[i].desc);
-+		snprintf(buff, ETH_GSTRING_LEN, "%s", strs[i].desc);
- 		buff = buff + ETH_GSTRING_LEN;
- 	}
- 
--- 
-2.20.1
-
-
-
+>  	"mediatek,<chip>-disp-wdma"  		- write DMA
+>  	"mediatek,<chip>-disp-ccorr"            - color correction
+>  	"mediatek,<chip>-disp-color" 		- color processor
+> -- 
+> 1.8.1.1.dirty
+> 
