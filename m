@@ -2,111 +2,89 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B771C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3158AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0AE0218F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996221;
-	bh=bu466d31ZG83S78E9LnHXITEMycjX7VQlNIXd5cHdPs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rmwH0XRa3Bd1fX5zZNBOYxBYbWuyo6hU92DgPTwvHFSJTrqqyHhUn4nvWzKZrtURw
-	 qfAGHHq3O5MWeO8w6p/VXTEows3NxTnuMK3nky1UTzB6++WLEpN9/POwkbwlVPMbab
-	 f/OwRpMR2dt6aEE9be8BpDXKUE8njr8j42zgYnKU=
+	by mail.kernel.org (Postfix) with ESMTP id 0CCFC22ADC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387837AbfGXTXk (ORCPT
+        id S2387848AbfGXTXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:23:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727593AbfGXTXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:23:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDCC822387;
-        Wed, 24 Jul 2019 19:23:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996216;
-        bh=bu466d31ZG83S78E9LnHXITEMycjX7VQlNIXd5cHdPs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vCkpt5p+RANTzTqkuKD+EMF/GQ04XS1eO1elG6WkH9Yqbx72mkZYer8pJrTkGJCXa
-         6BNZYcOwy67iloNxqbukY7BPMJixAFL31fHOPg3ik0rI848UlrPiAW7YyyFMdG5z6p
-         BqR/7MDn+IM6kpvhXSLK2mnoAMLaY2gP5FKB/Fpw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 020/413] crypto: talitos - fix skcipher failure due to wrong output IV
-Date:   Wed, 24 Jul 2019 21:15:11 +0200
-Message-Id: <20190724191736.891673121@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-References: <20190724191735.096702571@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 15:23:43 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:36527 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728592AbfGXTXi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:23:38 -0400
+Received: from xps13 ([83.160.161.190])
+        by smtp-cloud9.xs4all.net with ESMTPSA
+        id qMrLhJkQP0QvJqMrOhAAlA; Wed, 24 Jul 2019 21:23:36 +0200
+Message-ID: <b22cf290b089cb1174ec0fdeb15bdf2e90bf51dc.camel@tiscali.nl>
+Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
+From:   Paul Bolle <pebolle@tiscali.nl>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        "Souza, Jose" <jose.souza@intel.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Wed, 24 Jul 2019 21:23:31 +0200
+In-Reply-To: <1563398966.3438.5.camel@HansenPartnership.com>
+References: <1561834612.3071.6.camel@HansenPartnership.com>
+         <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
+         <1562875878.2840.0.camel@HansenPartnership.com>
+         <27a5b2ca8cfc79bf617387a363ea7192acc4e1f0.camel@intel.com>
+         <1562876880.2840.12.camel@HansenPartnership.com>
+         <1562882235.13723.1.camel@HansenPartnership.com>
+         <dad073fb4b06cf0abb7ab702a9474b9c443186eb.camel@intel.com>
+         <1562884722.15001.3.camel@HansenPartnership.com>
+         <2c4edfabf49998eb5da3a6adcabc006eb64bfe90.camel@tiscali.nl>
+         <55f4d1c242d684ca2742e8c14613d810a9ee9504.camel@intel.com>
+         <1562888433.2915.0.camel@HansenPartnership.com>
+         <1562941185.3398.1.camel@HansenPartnership.com>
+         <68472c5f390731e170221809a12d88cb3bc6460e.camel@tiscali.nl>
+         <143142cad4a946361a0bf285b6f1701c81096c7b.camel@intel.com>
+         <595d9bc87bf47717c8675eb5b1a1cbb2bc463752.camel@tiscali.nl>
+         <a10f009fc160f05077760ff59cd86a9c99006b39.camel@intel.com>
+         <9ef8fc1ae2c3a9bad588899488a781333af4449a.camel@tiscali.nl>
+         <1563398966.3438.5.camel@HansenPartnership.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfAak953jrG8+iI+u62M70niCTw5ChlP5YsW2e6m8dc3mQ9x0fFKajOQht3QdhLJaClnveoYliKavy1/mjNjvYgjLgJkltxUqoKdO+uN4o/rhdgecDc7K
+ 1lqJTGziXjpIMvuFwlp0VMWNObq5EFKq2jIdr/OvXshg1kMKZAr9H1a7DBcYPx82ZFu4aewwAqVuLxjcZYrDEHDtHwdvOGcxYjP4ntjZ9ieER4eb6PG+tOlA
+ YizXsZtaPUnV2QnqvzpyfyFRUHisoqIJpl3bWW4G+tfFqK9uTrAv6EnCCpodZMGU+CvMlmMpMjmfW8FMwWMIDWW0RMaZlmmE2b5KQJ8oQoc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3e03e792865ae48b8cfc69a0b4d65f02f467389f ]
+Hi Jose,
 
-Selftests report the following:
+James Bottomley schreef op do 18-07-2019 om 06:29 [+0900]:
+> On Wed, 2019-07-17 at 23:27 +0200, Paul Bolle wrote:
+> > I've just reached a day of uptime with your revert. (The proper
+> > uptime is just a fraction of a day, this being a laptop.) Anyhow, no
+> > screen freezes occurred during this day.
+> 
+> I'm afraid my status is that I'm in Tokyo doing conference
+> presentations (and kernel demos) so I'm a bit reluctant to mess with my
+> setup until I finish everything on Friday, but I will test it after
+> then, promise.
 
-[    2.984845] alg: skcipher: cbc-aes-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-[    2.995377] 00000000: 3d af ba 42 9d 9e b4 30 b4 22 da 80 2c 9f ac 41
-[    3.032673] alg: skcipher: cbc-des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-[    3.043185] 00000000: fe dc ba 98 76 54 32 10
-[    3.063238] alg: skcipher: cbc-3des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-[    3.073818] 00000000: 7d 33 88 93 0f 93 b2 42
+By now I'm testing this for a week (currently on top of 5.2.2). Still no
+freezes whatsoever. 
 
-This above dumps show that the actual output IV is indeed the input IV.
-This is due to the IV not being copied back into the request.
+So what's the status of this revert? Unless this is something pretty obscure
+that for some odd reason only James and I are able to hit it would be nice to
+get this into stable before the main distros switch over to 5.2.y.
 
-This patch fixes that.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/crypto/talitos.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
-index 8c57c5af0930..396199b2db7d 100644
---- a/drivers/crypto/talitos.c
-+++ b/drivers/crypto/talitos.c
-@@ -1606,11 +1606,15 @@ static void ablkcipher_done(struct device *dev,
- 			    int err)
- {
- 	struct ablkcipher_request *areq = context;
-+	struct crypto_ablkcipher *cipher = crypto_ablkcipher_reqtfm(areq);
-+	struct talitos_ctx *ctx = crypto_ablkcipher_ctx(cipher);
-+	unsigned int ivsize = crypto_ablkcipher_ivsize(cipher);
- 	struct talitos_edesc *edesc;
- 
- 	edesc = container_of(desc, struct talitos_edesc, desc);
- 
- 	common_nonsnoop_unmap(dev, edesc, areq);
-+	memcpy(areq->info, ctx->iv, ivsize);
- 
- 	kfree(edesc);
- 
--- 
-2.20.1
+Thanks,
 
 
+Paul Bolle
 
