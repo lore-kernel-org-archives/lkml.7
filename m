@@ -5,52 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4F5C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF7FC41517
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F4421855
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223E721734
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000518;
-	bh=wzqwrX74dR3G7OHB5fz38U9yevnkrxg3WmYhEN7OhUA=;
+	s=default; t=1564000520;
+	bh=24KKvS/5BVLuNBrRT/Ci1feReR9yLJePTHw4GykVB30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Jjjf1KVzP7wqH3Qe9kjnfnn2T8VFGDzmkunCaiGaPjNxK7yqMOJ5J1xJ1R5kyedp
-	 //kTc0r2Wa8p0etl91LDYXMK73euWEau/ahxF9Dtp8xPlU0DbOk4L7k8+WoAx0aHXj
-	 ZIDnasC9tL/AS9fl8+M5hMUXkjXoZNQuq/4W7d3o=
+	b=DiFkkfYbkQLaRtYPOPTNvjmjEkLNBijI0pg8GcAxf1exR5Rzj7lFz8iRqonwA2rqW
+	 B0ZEqmUcIztLBZVgu0UTHtppPIrS40Usp8PYw3hIe0OT7oEx6wHtWCld4Bjuiy5Oas
+	 AWWd/YEmlMhCc4aNkBQATkyUM/5Kx16KqfV03mAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388075AbfGXT0A (ORCPT
+        id S2388043AbfGXTZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:26:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42892 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:25:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726371AbfGXTZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:25:56 -0400
+        id S1726240AbfGXTZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:25:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57DAA22387;
-        Wed, 24 Jul 2019 19:25:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2275229F3;
+        Wed, 24 Jul 2019 19:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996355;
-        bh=wzqwrX74dR3G7OHB5fz38U9yevnkrxg3WmYhEN7OhUA=;
+        s=default; t=1563996353;
+        bh=24KKvS/5BVLuNBrRT/Ci1feReR9yLJePTHw4GykVB30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X3R9iMkn+gSskNjfyoSDfeqSUSjd8RET4JtBOB3bXMY5JiBMFAWfUcIGBrAL+MytP
-         EdFVVCIvO5VLMWjudz7/cAoHt9wya6afU+1G8fasPiAWGko9i3GLthmU6xJSkFjzoR
-         Rv+Aav8NZqp2wh0RK8WyXztxq1iFu/yhoBkxrFEU=
+        b=0tA91nROyXKBRJEIyx2dqKqYCM7MLy29g7yAmp97/Rw5dlMJUQYJyAH17Gohy1vEJ
+         b5KtXu2DfIMFFwY8OZN61uSMueV1yW8xyWqb/Vw1vUks2bfpLROaspZRplbfLoxhVk
+         TY0Fu1modY1Hg/rgw0/rwWVneGFuycb/BCKnIYg0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ben Gainey <ben.gainey@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 067/413] media: aspeed: change irq to threaded irq
-Date:   Wed, 24 Jul 2019 21:15:58 +0200
-Message-Id: <20190724191739.967570464@linuxfoundation.org>
+Subject: [PATCH 5.2 066/413] perf jvmti: Address gcc string overflow warning for strncpy()
+Date:   Wed, 24 Jul 2019 21:15:57 +0200
+Message-Id: <20190724191739.908350221@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -63,41 +65,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 12ae1c1bf5db2f33fcd9092a96f630291c4b181a ]
+[ Upstream commit 279ab04dbea1370d2eac0f854270369ccaef8a44 ]
 
-Differently from other Aspeed drivers, this driver calls clock
-control APIs in interrupt context. Since ECLK is coupled with a
-reset bit in clk-aspeed module, aspeed_clk_enable will make 10ms of
-busy waiting delay for triggering the reset and it will eventually
-disturb other drivers' interrupt handling. To fix this issue, this
-commit changes this driver's irq to threaded irq so that the delay
-can be happened in a thread context.
+We are getting false positive gcc warning when we compile with gcc9 (9.1.1):
 
-Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Reviewed-by: Eddie James <eajames@linux.ibm.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+     CC       jvmti/libjvmti.o
+   In file included from /usr/include/string.h:494,
+                    from jvmti/libjvmti.c:5:
+   In function ‘strncpy’,
+       inlined from ‘copy_class_filename.constprop’ at jvmti/libjvmti.c:166:3:
+   /usr/include/bits/string_fortified.h:106:10: error: ‘__builtin_strncpy’ specified bound depends on the length of the source argument [-Werror=stringop-overflow=]
+     106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   jvmti/libjvmti.c: In function ‘copy_class_filename.constprop’:
+   jvmti/libjvmti.c:165:26: note: length computed here
+     165 |   size_t file_name_len = strlen(file_name);
+         |                          ^~~~~~~~~~~~~~~~~
+   cc1: all warnings being treated as errors
+
+As per Arnaldo's suggestion use strlcpy(), which does the same thing and keeps
+gcc silent.
+
+Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ben Gainey <ben.gainey@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190531131321.GB1281@krava
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/aspeed-video.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/jvmti/libjvmti.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-index 8144fe36ad48..76d7512c82a3 100644
---- a/drivers/media/platform/aspeed-video.c
-+++ b/drivers/media/platform/aspeed-video.c
-@@ -1589,8 +1589,9 @@ static int aspeed_video_init(struct aspeed_video *video)
- 		return -ENODEV;
+diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
+index aea7b1fe85aa..c441a34cb1c0 100644
+--- a/tools/perf/jvmti/libjvmti.c
++++ b/tools/perf/jvmti/libjvmti.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/compiler.h>
++#include <linux/string.h>
+ #include <sys/types.h>
+ #include <stdio.h>
+ #include <string.h>
+@@ -162,8 +163,7 @@ copy_class_filename(const char * class_sign, const char * file_name, char * resu
+ 		result[i] = '\0';
+ 	} else {
+ 		/* fallback case */
+-		size_t file_name_len = strlen(file_name);
+-		strncpy(result, file_name, file_name_len < max_length ? file_name_len : max_length);
++		strlcpy(result, file_name, max_length);
  	}
+ }
  
--	rc = devm_request_irq(dev, irq, aspeed_video_irq, IRQF_SHARED,
--			      DEVICE_NAME, video);
-+	rc = devm_request_threaded_irq(dev, irq, NULL, aspeed_video_irq,
-+				       IRQF_ONESHOT | IRQF_SHARED, DEVICE_NAME,
-+				       video);
- 	if (rc < 0) {
- 		dev_err(dev, "Unable to request IRQ %d\n", irq);
- 		return rc;
 -- 
 2.20.1
 
