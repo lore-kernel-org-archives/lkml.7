@@ -2,155 +2,108 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 406D2C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EFEC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C39E204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B3F204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564000049;
+	bh=R2uVoCl7+JtEDoVTkZtGlMieRUdPFOP57pNTsyFkbTg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TYL8jd3khVu2Qi3pMXWIsWTYeQSZzRMbcmy/zh+KsxtUSEsixlLe9UGkk/7hCP/8D
+	 s0CdGv/eb0kunQm9j1kkgZShsb+rLsCBOrR7UC1gmecRoxmqSJC4bDU2SRIr5YhHQB
+	 JmlPF/fkeo76aaCMFpNtDFuRcGc9+ZVejwxAIjMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388890AbfGXTfs (ORCPT
+        id S2388879AbfGXTfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:35:48 -0400
-Received: from mga18.intel.com ([134.134.136.126]:56931 "EHLO mga18.intel.com"
+        Wed, 24 Jul 2019 15:35:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389255AbfGXTfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2389254AbfGXTfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jul 2019 15:35:43 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 12:35:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,303,1559545200"; 
-   d="scan'208";a="321437783"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.165])
-  by orsmga004.jf.intel.com with ESMTP; 24 Jul 2019 12:35:42 -0700
-Date:   Wed, 24 Jul 2019 12:35:42 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com
-Subject: Re: [PATCH v21 08/28] x86/cpu/intel: Detect SGX support and update
- caps appropriately
-Message-ID: <20190724193542.GD25376@linux.intel.com>
-References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
- <20190713170804.2340-9-jarkko.sakkinen@linux.intel.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73EAF21951;
+        Wed, 24 Jul 2019 19:35:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563996942;
+        bh=R2uVoCl7+JtEDoVTkZtGlMieRUdPFOP57pNTsyFkbTg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qdTJeqE66PUyIsmqaJX3QS63FGRP0o71zqQCA+3x61ngklzEuWRjwfte178lxHVUA
+         gSIJNfVyChvqLFsp5GZPLcsBlc0ZgOou1YdvJ+BrFlF2cZ2qAJO5OeeUh0wsDK5VGs
+         sm2NuFewgZfmDBpqV9FTQWmfFunXriHI5fp7JRhU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.2 270/413] crypto: crypto4xx - fix blocksize for cfb and ofb
+Date:   Wed, 24 Jul 2019 21:19:21 +0200
+Message-Id: <20190724191755.539307524@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190713170804.2340-9-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 08:07:44PM +0300, Jarkko Sakkinen wrote:
->  arch/x86/kernel/cpu/intel.c | 71 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 71 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index 8d6d92ebeb54..1503b251d10f 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -623,6 +623,72 @@ static void detect_tme(struct cpuinfo_x86 *c)
->  	c->x86_phys_bits -= keyid_bits;
->  }
->  
-> +static void __maybe_unused detect_sgx(struct cpuinfo_x86 *c)
-> +{
-> +	unsigned long long fc;
-> +
-> +	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
-> +	if (!(fc & FEATURE_CONTROL_LOCKED)) {
-> +		pr_err_once("sgx: The feature control MSR is not locked\n");
-> +		goto err_unsupported;
-> +	}
-> +
-> +	if (!(fc & FEATURE_CONTROL_SGX_ENABLE)) {
-> +		pr_err_once("sgx: SGX is not enabled in IA32_FEATURE_CONTROL MSR\n");
-> +		goto err_unsupported;
-> +	}
-> +
-> +	if (!cpu_has(c, X86_FEATURE_SGX1)) {
-> +		pr_err_once("sgx: SGX1 instruction set is not supported\n");
-> +		goto err_unsupported;
-> +	}
-> +
-> +	if (!(fc & FEATURE_CONTROL_SGX_LE_WR)) {
-> +		pr_info_once("sgx: The launch control MSRs are not writable\n");
-> +		goto err_msrs_rdonly;
-> +	}
-> +
-> +	return;
-> +
-> +err_unsupported:
-> +	setup_clear_cpu_cap(X86_FEATURE_SGX);
-> +	setup_clear_cpu_cap(X86_FEATURE_SGX1);
-> +	setup_clear_cpu_cap(X86_FEATURE_SGX2);
-> +
-> +err_msrs_rdonly:
-> +	setup_clear_cpu_cap(X86_FEATURE_SGX_LC);
-> +}
-> +
-> +static void init_intel_energy_perf(struct cpuinfo_x86 *c)
-> +{
-> +	u64 epb;
-> +
-> +	/*
-> +	 * Initialize MSR_IA32_ENERGY_PERF_BIAS if not already initialized.
-> +	 * (x86_energy_perf_policy(8) is available to change it at run-time.)
-> +	 */
-> +	if (!cpu_has(c, X86_FEATURE_EPB))
-> +		return;
-> +
-> +	rdmsrl(MSR_IA32_ENERGY_PERF_BIAS, epb);
-> +	if ((epb & 0xF) != ENERGY_PERF_BIAS_PERFORMANCE)
-> +		return;
-> +
-> +	pr_warn_once("ENERGY_PERF_BIAS: Set to 'normal', was 'performance'\n");
-> +	pr_warn_once("ENERGY_PERF_BIAS: View and update with x86_energy_perf_policy(8)\n");
-> +	epb = (epb & ~0xF) | ENERGY_PERF_BIAS_NORMAL;
-> +	wrmsrl(MSR_IA32_ENERGY_PERF_BIAS, epb);
-> +}
-> +
-> +static void intel_bsp_resume(struct cpuinfo_x86 *c)
-> +{
-> +	/*
-> +	 * MSR_IA32_ENERGY_PERF_BIAS is lost across suspend/resume,
-> +	 * so reinitialize it properly like during bootup:
-> +	 */
-> +	init_intel_energy_perf(c);
-> +}
-> +
->  static void init_cpuid_fault(struct cpuinfo_x86 *c)
->  {
->  	u64 msr;
-> @@ -760,6 +826,11 @@ static void init_intel(struct cpuinfo_x86 *c)
->  	if (cpu_has(c, X86_FEATURE_TME))
->  		detect_tme(c);
->  
-> +	if (IS_ENABLED(CONFIG_INTEL_SGX) && cpu_has(c, X86_FEATURE_SGX))
-> +		detect_sgx(c);
-> +
-> +	init_intel_energy_perf(c);
+From: Christian Lamparter <chunkeey@gmail.com>
 
-All of the energy_perf additions are bogus, looks like a rebase gone wrong.
+commit 70c4997f34b6c6888b3ac157adec49e01d0df2d5 upstream.
 
-> +
->  	init_intel_misc_features(c);
->  }
->  
-> -- 
-> 2.20.1
-> 
+While the hardware consider them to be blockciphers, the
+reference implementation defines them as streamciphers.
+
+Do the right thing and set the blocksize to 1. This
+was found by CONFIG_CRYPTO_MANAGER_EXTRA_TESTS.
+
+This fixes the following issues:
+skcipher: blocksize for ofb-aes-ppc4xx (16) doesn't match generic impl (1)
+skcipher: blocksize for cfb-aes-ppc4xx (16) doesn't match generic impl (1)
+
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: f2a13e7cba9e ("crypto: crypto4xx - enable AES RFC3686, ECB, CFB and OFB offloads")
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/crypto/amcc/crypto4xx_core.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/crypto/amcc/crypto4xx_core.c
++++ b/drivers/crypto/amcc/crypto4xx_core.c
+@@ -1222,7 +1222,7 @@ static struct crypto4xx_alg_common crypt
+ 			.cra_priority = CRYPTO4XX_CRYPTO_PRIORITY,
+ 			.cra_flags = CRYPTO_ALG_ASYNC |
+ 				CRYPTO_ALG_KERN_DRIVER_ONLY,
+-			.cra_blocksize = AES_BLOCK_SIZE,
++			.cra_blocksize = 1,
+ 			.cra_ctxsize = sizeof(struct crypto4xx_ctx),
+ 			.cra_module = THIS_MODULE,
+ 		},
+@@ -1302,7 +1302,7 @@ static struct crypto4xx_alg_common crypt
+ 			.cra_priority = CRYPTO4XX_CRYPTO_PRIORITY,
+ 			.cra_flags = CRYPTO_ALG_ASYNC |
+ 				CRYPTO_ALG_KERN_DRIVER_ONLY,
+-			.cra_blocksize = AES_BLOCK_SIZE,
++			.cra_blocksize = 1,
+ 			.cra_ctxsize = sizeof(struct crypto4xx_ctx),
+ 			.cra_module = THIS_MODULE,
+ 		},
+
+
