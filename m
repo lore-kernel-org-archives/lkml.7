@@ -2,90 +2,204 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5414C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1E9C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4726229F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2980B2190F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:09:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KDCBOWKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbfGXLII (ORCPT
+        id S1727362AbfGXLJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 07:08:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:39012 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727349AbfGXLII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 07:08:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC335337;
-        Wed, 24 Jul 2019 04:08:07 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDCE33F71A;
-        Wed, 24 Jul 2019 04:08:06 -0700 (PDT)
-Subject: Re: [PATCH] KVM: arm/arm64: Properly check for MMIO regions
-To:     KarimAllah Ahmed <karahmed@amazon.de>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu
-References: <1562919728-642-1-git-send-email-karahmed@amazon.de>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <653177b8-7e74-aef3-3a4c-a45df5bcdab2@arm.com>
-Date:   Wed, 24 Jul 2019 12:08:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 24 Jul 2019 07:09:46 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:17262 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfGXLJp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 07:09:45 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d383c7c0001>; Wed, 24 Jul 2019 04:09:50 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 24 Jul 2019 04:09:42 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 24 Jul 2019 04:09:42 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jul
+ 2019 11:09:40 +0000
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jul
+ 2019 11:09:38 +0000
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (104.47.41.56) by
+ HQMAIL111.nvidia.com (172.20.187.18) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Wed, 24 Jul 2019 11:09:38 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ckP0nL0YDzXe0DcPvyin++hfpn3JNDcY2KSJ8psP6Szbp/LcvqkG7ywca18Bxt9o9BoopK4mMuZ+HhmA1aYlhLj0mYCvKpFI07kpfJWcKGn/ldXeGX7ItfYeMJwkZVbogKeMexyYMhxs+w6iMH+qaFyh+9A57dWjz2bwDOdghZFcIrrSHQzn+xHxpmHs6iDuNPpg0VmHx+TzSgeWiVCtaVyGcwSZp7scFyuOD82lBxs/L54gmZEHiIyrqvblCOW4Z0h5OQQnMY4RP8P6UeFCjykDtIN2fOMfJqCKvFUt815hRhGUqtiZLkfY5Se/S0DbHI+Gh6GzwjBluPtVTkOH0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=64pvQAzngqMk7AG89Gc1hIlBoPRTyU24GqBquAM9mAA=;
+ b=cGJYo3slFbCeUI6WgEsAKXkJhwxFsNJrjG32foGf091RlFN37aKtHXthnbRdp8u9ywBI2Jqy3nT1AHFcdmKljhb+So8R+D6lUg7DulW2b2HBx12mXPb4qn9Q/5V9YKZBdZHuBrirF9A8fw9QcYqGG1YVrWMpbJ0Eqt405QnScS0IGq+5bYKlxJsSPGPcEL48vtuS98c70kO8irts9liuIt9PIypvKTTIAkQikCsnDs1fPeISp8vDkelL9Jl80MHBsycJ31eGTy5sqtn7nDO+QCsMg4SCriqRgOSPxtxPa1//k80qxnJSR1rJB0JP3wXLoGI2LZxCaPH0NqtvOwXGdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nvidia.com;dmarc=pass action=none
+ header.from=nvidia.com;dkim=pass header.d=nvidia.com;arc=none
+Received: from MN2PR12MB3134.namprd12.prod.outlook.com (20.178.241.79) by
+ MN2PR12MB3662.namprd12.prod.outlook.com (10.255.86.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.12; Wed, 24 Jul 2019 11:09:19 +0000
+Received: from MN2PR12MB3134.namprd12.prod.outlook.com
+ ([fe80::dc51:e88a:6b19:84e6]) by MN2PR12MB3134.namprd12.prod.outlook.com
+ ([fe80::dc51:e88a:6b19:84e6%6]) with mapi id 15.20.2094.013; Wed, 24 Jul 2019
+ 11:09:19 +0000
+From:   Viswanath L <viswanathl@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+CC:     "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v3] drm/tegra: sor: Enable HDA interrupts at plug-in
+Thread-Topic: [PATCH v3] drm/tegra: sor: Enable HDA interrupts at plug-in
+Thread-Index: AQHVQVPTsv4j3faqzkWrVfHN7h03fqbZgXuAgAAcNvA=
+Date:   Wed, 24 Jul 2019 11:09:18 +0000
+Message-ID: <MN2PR12MB313403F2CB9F8105C1DDFD39ADC60@MN2PR12MB3134.namprd12.prod.outlook.com>
+References: <1563885610-27198-1-git-send-email-viswanathl@nvidia.com>
+ <0ba35efb-44ec-d56c-b559-59f1daa3e6e4@gmail.com>
+In-Reply-To: <0ba35efb-44ec-d56c-b559-59f1daa3e6e4@gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=viswanathl@nvidia.com;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2019-07-24T11:09:15.9077751Z;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=78b9a304-82b9-40b2-8a59-ce2eaa89d11e;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=viswanathl@nvidia.com; 
+x-originating-ip: [121.244.166.165]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fb1920a6-23bc-4a97-73b4-08d710275fce
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR12MB3662;
+x-ms-traffictypediagnostic: MN2PR12MB3662:
+x-microsoft-antispam-prvs: <MN2PR12MB366286E244EE8371921F3329ADC60@MN2PR12MB3662.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0108A997B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(136003)(39860400002)(396003)(199004)(189003)(13464003)(33656002)(76116006)(2501003)(86362001)(5660300002)(25786009)(54906003)(52536014)(316002)(110136005)(478600001)(8936002)(81166006)(81156014)(68736007)(76176011)(8676002)(14454004)(66066001)(7696005)(99286004)(66446008)(64756008)(66556008)(66476007)(66946007)(102836004)(53936002)(26005)(2906002)(6436002)(6506007)(53546011)(7736002)(305945005)(6246003)(186003)(74316002)(71200400001)(71190400001)(6636002)(55016002)(229853002)(256004)(14444005)(9686003)(486006)(11346002)(476003)(4326008)(6116002)(3846002)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3662;H:MN2PR12MB3134.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nvidia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: RjE2SGH3f2a/ndjwTxvkEDwp9DwGAkZvhL/Lx4LwL4pt4d9rp35ig5jEQmUB+zPHSxGoeE7+/SZlMLRAuBovTenP6zHQ/h8gtdKu+HEaDvKVQSbXQYxZoDiAesYazg3Oaq7F0lFPSszmcAgo9lWRO4LepFgz3mTsJ/Zrq4NWbRrKoXOtnMA62/wiULcxFppny/an70nbSt1s03rHQa7cz1BGNymggSQnITso1fnru4XeERzWLiI+nNM866aKEkKshvaan4ssi0T0wK/Awe3ngaxp/gYtegTzbxfSdtZMgP6A0JQcaL5nLMqAyLcDZKqrl/oXSaAUMW0IfWe9OBeW5AnwxxZ/I3GtFBTIiULE8aurEaLGfFzSgOxbF8WR6D9z4C+G4J5jQutRg4xOgeQt0qHcAiw6n/E8kqb2tEz4crA=
 MIME-Version: 1.0
-In-Reply-To: <1562919728-642-1-git-send-email-karahmed@amazon.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb1920a6-23bc-4a97-73b4-08d710275fce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2019 11:09:19.2339
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: viswanathl@nvidia.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3662
+X-OriginatorOrg: Nvidia.com
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563966590; bh=64pvQAzngqMk7AG89Gc1hIlBoPRTyU24GqBquAM9mAA=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
+         Thread-Index:Date:Message-ID:References:In-Reply-To:
+         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
+         authentication-results:x-originating-ip:x-ms-publictraffictype:
+         x-ms-office365-filtering-correlation-id:x-microsoft-antispam:
+         x-ms-traffictypediagnostic:x-microsoft-antispam-prvs:
+         x-ms-oob-tlc-oobclassifiers:x-forefront-prvs:
+         x-forefront-antispam-report:received-spf:
+         x-ms-exchange-senderadcheck:x-microsoft-antispam-message-info:
+         MIME-Version:X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-originalarrivaltime:
+         X-MS-Exchange-CrossTenant-fromentityheader:
+         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
+         X-MS-Exchange-CrossTenant-userprincipalname:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
+         Content-Language:Content-Type:Content-Transfer-Encoding;
+        b=KDCBOWKwk7+x8KwMecRJ8kdlxQYBwGmHmUsTHqVLdQWoQDYMxuWuXm4khoEBCzMjU
+         Zr4OK6EieWav5bWcWpsYni+LWsSvq0w/uVJrLxo4Um/T3AQXcU2uEQrYj2dtQdagfz
+         29Zr3kc8RRaNxgzf95sclAWg4WhUr5jv4YfpwVFZ/NPF8zvu4L6iUGvO3XKqK+7ODL
+         vYQGnsd+/5VxHRE6rLFLB+pVxTJeXG+IQvk9Zrf8b/RFNQtmpKFAK3wVxVWxy2yGnV
+         i4DjpP4oTu58cek4rjiA7aHPZG7EZiLtiFNQ2BkVq39Y0TbMYkTPpG5vGqzQ9wRA7F
+         Gs2ONLuy2lODg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi KarimAllah,
-
-On 12/07/2019 09:22, KarimAllah Ahmed wrote:
-> Valid RAM can live outside kernel control (e.g. using "mem=" command-line
-> parameter). This memory can still be used as valid guest memory for KVM. So
-> ensure that we validate that this memory is definitely not "RAM" before
-> assuming that it is an MMIO region.
-> 
-> One way to use memory outside kernel control is:
-> 
-> 1- Pass 'mem=' in the kernel command-line to limit the amount of memory managed
->    by the kernel.
-
-"mem=" is a debug option, we ignore it if we need something located outside the 'mem=' region.
-
-
-> 2- Map this physical memory you want to give to the guest with:
->    mmap("/dev/mem", physical_address_offset, ..)
-
-/dev/mem is an egregious hack! If you need to use it, you probably didn't want an
-operating-system in the first place.
-
-
-> 3- Use the user-space virtual address as the "userspace_addr" field in
->    KVM_SET_USER_MEMORY_REGION ioctl.
-
-
-... What do you want to do this for?
-
-At a guess: this is to save all that annoying 'memory allocation' overhead at guest
-startup. If you get your VMM to use hugetlbfs, you can reserve the memory during boot. I
-do this with "hugepagesz=2M hugepages=512" on the kernel command-line.
-
-(if you get a RAS error affecting memory that the kernel doesn't know about, it will
-ignore it. Using hugetlbfs instead gives you all the good things: hugepage-splitting,
-signals to your VMM, stage2 unmapping etc.)
-
-
-Thanks,
-
-James
+VGhhbmtzIHZlcnkgbXVjaCBmb3IgdGhlIHJldmlldywgRG1pdHJ5IQ0KDQotLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KRnJvbTogRG1pdHJ5IE9zaXBlbmtvIDxkaWdldHhAZ21haWwuY29tPiAN
+ClNlbnQ6IFdlZG5lc2RheSwgSnVseSAyNCwgMjAxOSAyOjU4IFBNDQpUbzogVmlzd2FuYXRoIEwg
+PHZpc3dhbmF0aGxAbnZpZGlhLmNvbT47IHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbTsgSm9uYXRo
+YW4gSHVudGVyIDxqb25hdGhhbmhAbnZpZGlhLmNvbT4NCkNjOiBhaXJsaWVkQGxpbnV4LmllOyBk
+YW5pZWxAZmZ3bGwuY2g7IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmc7IGxpbnV4LXRl
+Z3JhQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgc3RhYmxl
+QHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogUmU6IFtQQVRDSCB2M10gZHJtL3RlZ3JhOiBzb3I6
+IEVuYWJsZSBIREEgaW50ZXJydXB0cyBhdCBwbHVnLWluDQoNCjIzLjA3LjIwMTkgMTU6NDAsIFZp
+c3dhbmF0aCBMINC/0LjRiNC10YI6DQo+IEhETUkgcGx1Z291dCBjYWxscyBydW50aW1lIHN1c3Bl
+bmQsIHdoaWNoIGNsZWFycyBpbnRlcnJ1cHQgcmVnaXN0ZXJzIA0KPiBhbmQgY2F1c2VzIGF1ZGlv
+IGZ1bmN0aW9uYWxpdHkgdG8gYnJlYWsgb24gc3Vic2VxdWVudCBwbHVnLWluOyBzZXR0aW5nIA0K
+PiBpbnRlcnJ1cHQgcmVnaXN0ZXJzIGluIHNvcl9hdWRpb19wcmVwYXJlKCkgc29sdmVzIHRoZSBp
+c3N1ZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFZpc3dhbmF0aCBMIDx2aXN3YW5hdGhsQG52aWRp
+YS5jb20+DQoNCllvdXJzIHNpZ25lZC1vZmYtYnkgYWx3YXlzIHNob3VsZCBiZSB0aGUgbGFzdCBs
+aW5lIG9mIHRoZSBjb21taXQncyBtZXNzYWdlIGJlY2F1c2UgdGhlIHRleHQgYmVsb3cgaXQgYmVs
+b25ncyB0byBhIHBlcnNvbiB3aG8gYXBwbGllcyB0aGlzIHBhdGNoLCBUaGllcnJ5IGluIHRoaXMg
+Y2FzZS4gVGhpcyBpcyBub3QgYSBiaWcgZGVhbCBhdCBhbGwgYW5kIFRoaWVycnkgY291bGQgbWFr
+ZSBhIGZpeHVwIHdoaWxlIGFwcGx5aW5nIHRoZSBwYXRjaCBpZiB3aWxsIGRlZW0gdGhhdCBhcyBu
+ZWNlc3NhcnkuDQoNClNlY29uZGx5LCB0aGVyZSBpcyBubyBuZWVkIHRvIGFkZCAic3RhYmxlQHZn
+ZXIua2VybmVsLm9yZyIgdG8gdGhlIGVtYWlsJ3MgcmVjaXBpZW50cyBiZWNhdXNlIHRoZSBwYXRj
+aCB3aWxsIGZsb3cgaW50byBzdGFibGUga2VybmVsIHZlcnNpb25zIGZyb20gdGhlIG1haW5saW5l
+IG9uY2UgaXQgd2lsbCBnZXQgYXBwbGllZC4gVGhhdCBoYXBwZW5zIGJhc2VkIG9uIHRoZSBzdGFi
+bGUgdGFnIHByZXNlbmNlLCBoZW5jZSBpdCdzIGVub3VnaCB0byBhZGQgdGhlICdDYycgdGFnIHRv
+IHRoZSBjb21taXQncyBtZXNzYWdlIGluIG9yZGVyIHRvIGdldCBwYXRjaCBiYWNrcG9ydGVkLg0K
+DQpMYXN0bHksIG5leHQgdGltZSBwbGVhc2UgYWRkIGV2ZXJ5b25lIHRvIHRoZSBlbWFpbCdzIHJl
+Y2lwaWVudHMgd2hvbSB5b3UncmUgZXhwZWN0aW5nIHRvIGdldCBhIHJlcGx5LiBPdGhlcndpc2Ug
+dGhlcmUgaXMgYSBjaGFuY2UgdGhhdCBwYXRjaCB3aWxsIGJlIGxlZnQgdW5ub3RpY2VkLg0KDQpF
+dmVyeXRoaW5nIGVsc2UgbG9va3MgZ29vZCB0byBtZSwgdGhhbmtzIQ0KDQpSZXZpZXdlZC1ieTog
+RG1pdHJ5IE9zaXBlbmtvIDxkaWdldHhAZ21haWwuY29tPg0KDQo+IEZpeGVzOiA4ZTI5ODhhNzZj
+MjYgKCJkcm0vdGVncmE6IHNvcjogU3VwcG9ydCBmb3IgYXVkaW8gb3ZlciBIRE1JIikNCj4gQ2M6
+IDxzdGFibGVAdmdlci5rZXJuZWwub3JnPg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS90ZWdy
+YS9zb3IuYyB8IDE4ICsrKysrKysrKy0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5z
+ZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
+dS9kcm0vdGVncmEvc29yLmMgYi9kcml2ZXJzL2dwdS9kcm0vdGVncmEvc29yLmMgDQo+IGluZGV4
+IDViZTVhMDguLjA0NzBjZmUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9z
+b3IuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdGVncmEvc29yLmMNCj4gQEAgLTIxNjQsNiAr
+MjE2NCwxNSBAQCBzdGF0aWMgdm9pZCB0ZWdyYV9zb3JfYXVkaW9fcHJlcGFyZShzdHJ1Y3QgDQo+
+IHRlZ3JhX3NvciAqc29yKQ0KPiAgDQo+ICAJdmFsdWUgPSBTT1JfQVVESU9fSERBX1BSRVNFTlNF
+X0VMRFYgfCBTT1JfQVVESU9fSERBX1BSRVNFTlNFX1BEOw0KPiAgCXRlZ3JhX3Nvcl93cml0ZWwo
+c29yLCB2YWx1ZSwgU09SX0FVRElPX0hEQV9QUkVTRU5TRSk7DQo+ICsNCj4gKwkvKg0KPiArCSAq
+IEVuYWJsZSBhbmQgdW5tYXNrIHRoZSBIREEgY29kZWMgU0NSQVRDSDAgcmVnaXN0ZXIgaW50ZXJy
+dXB0LiBUaGlzDQo+ICsJICogaXMgdXNlZCBmb3IgaW50ZXJvcGVyYWJpbGl0eSBiZXR3ZWVuIHRo
+ZSBIREEgY29kZWMgZHJpdmVyIGFuZCB0aGUNCj4gKwkgKiBIRE1JL0RQIGRyaXZlci4NCj4gKwkg
+Ki8NCj4gKwl2YWx1ZSA9IFNPUl9JTlRfQ09ERUNfU0NSQVRDSDEgfCBTT1JfSU5UX0NPREVDX1ND
+UkFUQ0gwOw0KPiArCXRlZ3JhX3Nvcl93cml0ZWwoc29yLCB2YWx1ZSwgU09SX0lOVF9FTkFCTEUp
+Ow0KPiArCXRlZ3JhX3Nvcl93cml0ZWwoc29yLCB2YWx1ZSwgU09SX0lOVF9NQVNLKTsNCj4gIH0N
+Cj4gIA0KPiAgc3RhdGljIHZvaWQgdGVncmFfc29yX2F1ZGlvX3VucHJlcGFyZShzdHJ1Y3QgdGVn
+cmFfc29yICpzb3IpIEBAIA0KPiAtMjkxMywxNSArMjkyMiw2IEBAIHN0YXRpYyBpbnQgdGVncmFf
+c29yX2luaXQoc3RydWN0IGhvc3QxeF9jbGllbnQgKmNsaWVudCkNCj4gIAlpZiAoZXJyIDwgMCkN
+Cj4gIAkJcmV0dXJuIGVycjsNCj4gIA0KPiAtCS8qDQo+IC0JICogRW5hYmxlIGFuZCB1bm1hc2sg
+dGhlIEhEQSBjb2RlYyBTQ1JBVENIMCByZWdpc3RlciBpbnRlcnJ1cHQuIFRoaXMNCj4gLQkgKiBp
+cyB1c2VkIGZvciBpbnRlcm9wZXJhYmlsaXR5IGJldHdlZW4gdGhlIEhEQSBjb2RlYyBkcml2ZXIg
+YW5kIHRoZQ0KPiAtCSAqIEhETUkvRFAgZHJpdmVyLg0KPiAtCSAqLw0KPiAtCXZhbHVlID0gU09S
+X0lOVF9DT0RFQ19TQ1JBVENIMSB8IFNPUl9JTlRfQ09ERUNfU0NSQVRDSDA7DQo+IC0JdGVncmFf
+c29yX3dyaXRlbChzb3IsIHZhbHVlLCBTT1JfSU5UX0VOQUJMRSk7DQo+IC0JdGVncmFfc29yX3dy
+aXRlbChzb3IsIHZhbHVlLCBTT1JfSU5UX01BU0spOw0KPiAtDQo+ICAJcmV0dXJuIDA7DQo+ICB9
+DQo+ICANCj4gDQoNCg==
