@@ -2,102 +2,108 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5619C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0E2C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A507122ADB
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77FB622ADB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:16:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGsmj29n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387504AbfGXOMl (ORCPT
+        id S1727029AbfGXOQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:12:41 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58270 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725870AbfGXOMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:12:41 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8C038DD57E4095B86D96;
-        Wed, 24 Jul 2019 22:12:34 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
- 22:12:25 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <arend.vanspriel@broadcom.com>, <franky.lin@broadcom.com>,
-        <hante.meuleman@broadcom.com>, <chi-hsien.lin@cypress.com>,
-        <wright.feng@cypress.com>, <kvalo@codeaurora.org>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>,
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        <brcm80211-dev-list@cypress.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] brcmfmac: remove set but not used variable 'dtim_period'
-Date:   Wed, 24 Jul 2019 22:12:01 +0800
-Message-ID: <20190724141201.59640-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 24 Jul 2019 10:16:01 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44449 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfGXOQB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:16:01 -0400
+Received: by mail-pf1-f194.google.com with SMTP id t16so21009327pfe.11;
+        Wed, 24 Jul 2019 07:16:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D2niVLsdZKtUu10jdvC8RdtEQjbdxPl6wlDVDqafru4=;
+        b=mGsmj29nBng8l3G9WUE6TqeL5PhM7V5sw7PQDuNqCPdg7k7t6yLaidwBZlFCYe/ZkU
+         0pU64QjvMfcd/cDOmR3jRMVfxtXCnV8p4PyAlmcjF75KjEu341B+FpHXG57SC5VChmcl
+         Jm65sd2ShUaA8ApPk4qoOSn4nLIMYlvejCioknX0xdVUxFdRzHLu62nE75JtptFYJwpb
+         y83NAxY1U0h80mKZ+msygNKGuzhhh8ixZ68wJXhvSXsNZBslzGQuktcY3c7pmbKd9vPw
+         fZlvBNJBZ9e++J0qM+aCLIT2x+jJlSD1q3nGm9eKgIR1bB2AmjusGMejBp6eMXudnS72
+         G4wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D2niVLsdZKtUu10jdvC8RdtEQjbdxPl6wlDVDqafru4=;
+        b=GQeAeOo0mW6La5GMHT5T2itJbLf+0fuMnn+j49rj5CqEJOwlLfK2KvEYK9Fe//9wXj
+         h8PipzFTMj9S909msHIy2jpelVf646X7sBZha9VwTAb4WnwXvzXrWT+4xRffM4QXKFzA
+         9zwPbKaU3LKA8vGdSdSQZHK9dt+5LULQeULDa3gJBw6HKeUJM9bzN4mqP+5/hi8NF5Om
+         Ykz9pbwd7iUhEkNEp91oyLskC/0346WvH5Olf/3y5xYcsPUWWSrZSbisIslPYTqDNoSY
+         f7nAHIUaSGe28B0j+k672OJ6zSqT94K4pkMVTFWVW7b2Xe1zjiDWwajTXiXp5gL0IBoG
+         rmcQ==
+X-Gm-Message-State: APjAAAUB64GTnDg1d6kt7rjiX4fWThN2Tcb9HYTrbP7QKx7yOepilENJ
+        GLbXlRAOzHQjN7zxLDFljdo=
+X-Google-Smtp-Source: APXvYqwSAT17fwPwcWVMVT9/K/beHWmtX06kb53WhP7hy4B580mMpmO7dwD3E2Cyf5G55e6B3R4MLw==
+X-Received: by 2002:a65:60d3:: with SMTP id r19mr56459815pgv.91.1563977760057;
+        Wed, 24 Jul 2019 07:16:00 -0700 (PDT)
+Received: from masabert (i118-21-156-233.s30.a048.ap.plala.or.jp. [118.21.156.233])
+        by smtp.gmail.com with ESMTPSA id f88sm45672023pjg.5.2019.07.24.07.15.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 07:15:59 -0700 (PDT)
+Received: by masabert (Postfix, from userid 1000)
+        id DC3CA201374; Wed, 24 Jul 2019 23:15:56 +0900 (JST)
+From:   Masanari Iida <standby24x7@gmail.com>
+To:     shuah@kernel.org, linux-kernel@vger.kernel.org, jiri@mellanox.com,
+        idosch@mellanox.com, linux-kselftest@vger.kernel.org,
+        rdunlap@infradead.org
+Cc:     Masanari Iida <standby24x7@gmail.com>
+Subject: [PATCH] selftests: mlxsw: Fix typo in qos_mc_aware.sh
+Date:   Wed, 24 Jul 2019 23:15:54 +0900
+Message-Id: <20190724141554.31723-1-standby24x7@gmail.com>
+X-Mailer: git-send-email 2.22.0.545.g9c9b961d7eb1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+This patch fixes some spelling typo in qos_mc_aware.sh
 
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c: In function brcmf_update_bss_info:
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:2962:5: warning: variable dtim_period set but not used [-Wunused-but-set-variable]
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c: In function brcmf_update_bss_info:
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:2961:6: warning: variable beacon_interval set but not used [-Wunused-but-set-variable]
-
-They are never used so can be removed.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-index b6d0df3..ec17f7f 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-@@ -2958,8 +2958,6 @@ static s32 brcmf_update_bss_info(struct brcmf_cfg80211_info *cfg,
- 	struct brcmf_pub *drvr = cfg->pub;
- 	struct brcmf_bss_info_le *bi;
- 	const struct brcmf_tlv *tim;
--	u16 beacon_interval;
--	u8 dtim_period;
- 	size_t ie_len;
- 	u8 *ie;
- 	s32 err = 0;
-@@ -2983,12 +2981,9 @@ static s32 brcmf_update_bss_info(struct brcmf_cfg80211_info *cfg,
+diff --git a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
+index 71231ad2dbfb..47315fe48d5a 100755
+--- a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
++++ b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
+@@ -262,7 +262,7 @@ test_mc_aware()
  
- 	ie = ((u8 *)bi) + le16_to_cpu(bi->ie_offset);
- 	ie_len = le32_to_cpu(bi->ie_length);
--	beacon_interval = le16_to_cpu(bi->beacon_period);
+ 	stop_traffic
  
- 	tim = brcmf_parse_tlvs(ie, ie_len, WLAN_EID_TIM);
--	if (tim)
--		dtim_period = tim->data[1];
--	else {
-+	if (!tim) {
- 		/*
- 		* active scan was done so we could not get dtim
- 		* information out of probe response.
-@@ -3000,7 +2995,6 @@ static s32 brcmf_update_bss_info(struct brcmf_cfg80211_info *cfg,
- 			bphy_err(drvr, "wl dtim_assoc failed (%d)\n", err);
- 			goto update_bss_info_out;
- 		}
--		dtim_period = (u8)var;
- 	}
+-	log_test "UC performace under MC overload"
++	log_test "UC performance under MC overload"
  
- update_bss_info_out:
+ 	echo "UC-only throughput  $(humanize $ucth1)"
+ 	echo "UC+MC throughput    $(humanize $ucth2)"
+@@ -316,7 +316,7 @@ test_uc_aware()
+ 
+ 	stop_traffic
+ 
+-	log_test "MC performace under UC overload"
++	log_test "MC performance under UC overload"
+ 	echo "    ingress UC throughput $(humanize ${uc_ir})"
+ 	echo "    egress UC throughput  $(humanize ${uc_er})"
+ 	echo "    sent $attempts BC ARPs, got $passes responses"
 -- 
-2.7.4
-
+2.22.0.545.g9c9b961d7eb1
 
