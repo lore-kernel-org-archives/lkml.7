@@ -2,125 +2,89 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DA9C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC535C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A50B21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:48:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563950882;
-	bh=51p6sj9EACBV/HaJVhSnzJqh0RByt7lvzLHqxRSkm1Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NCuSi6fs6HwW4iv0LGHCUd16uyEwtlAnXTXBrCNb+VoQI51UDmGvG76vUFqYE1jtK
-	 UD+4JMGvBK341c5uaLGFfhxHHetq/f1XL0jmxZMqnprttlASn+MAuC4shmWB+mPz53
-	 rh//eUOjZLOQGVJ+0ErgwPLjGcLTjgPdfzp/nnt8=
+	by mail.kernel.org (Postfix) with ESMTP id B033B21743
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:48:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfGXGsA (ORCPT
+        id S1726371AbfGXGsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:48:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46616 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 02:48:05 -0400
+Received: from muru.com ([72.249.23.125]:55858 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725878AbfGXGr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:47:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D65A821743;
-        Wed, 24 Jul 2019 06:47:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563950876;
-        bh=51p6sj9EACBV/HaJVhSnzJqh0RByt7lvzLHqxRSkm1Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zxrsT7E6iAz0Hi5ft7Px1t+JEbuXOMqq791LZnmBbp0XRhH6ht6pxbMrjQ8uTbGbj
-         d6AFFhuiZqzKjUZ3AOpd2WcTo+F9dssYYFJp2EMpc1PuSCYZ8ojBHrg32+bvPEkNPq
-         hIx2Yr5NrylsU3kqc+jpA61CiP/K7eYR+P8uK4Mk=
-Date:   Wed, 24 Jul 2019 08:47:54 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 1/5] can: m_can: Create a m_can platform framework
-Message-ID: <20190724064754.GC22447@kroah.com>
-References: <20190509161109.10499-1-dmurphy@ti.com>
- <dbb7bdef-820d-5dcc-d7b5-a82bc1b076fb@ti.com>
- <a8e3f2d3-18c3-3bdb-1318-8964afc7e032@ti.com>
- <93530d94-ec65-de82-448e-f2460dd39fb9@ti.com>
- <0f6c41c8-0071-ed3a-9e65-caf02a0fbefe@ti.com>
- <6fa79302-ad32-7f43-f9d5-af70aa789284@ti.com>
- <f236a88a-485c-9002-1e4a-9a5ad0e1c81f@ti.com>
- <437b6371-8488-a0ff-fa68-d1fb5a81bb8b@ti.com>
+        id S1725878AbfGXGsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 02:48:03 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 6EFF9816A;
+        Wed, 24 Jul 2019 06:48:27 +0000 (UTC)
+Date:   Tue, 23 Jul 2019 23:47:58 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     linux-omap@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 5/8] ARM: dts: Drop bogus ahclkr clocks for dra7 mcasp 3
+ to 8
+Message-ID: <20190724064758.GU5447@atomide.com>
+References: <20190723112811.44381-1-tony@atomide.com>
+ <20190723112811.44381-6-tony@atomide.com>
+ <2c750847-700e-c835-ee53-a656b363c36c@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <437b6371-8488-a0ff-fa68-d1fb5a81bb8b@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <2c750847-700e-c835-ee53-a656b363c36c@ti.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 10:14:14AM -0500, Dan Murphy wrote:
-> Hello
+* Suman Anna <s-anna@ti.com> [190723 21:02]:
+> Hi Tony,
 > 
-> On 7/10/19 7:08 AM, Dan Murphy wrote:
-> > Hello
-> > 
-> > On 6/17/19 10:09 AM, Dan Murphy wrote:
-> > > Marc
-> > > 
-> > > On 6/10/19 11:35 AM, Dan Murphy wrote:
-> > > > Bump
-> > > > 
-> > > > On 6/6/19 8:16 AM, Dan Murphy wrote:
-> > > > > Marc
-> > > > > 
-> > > > > Bump
-> > > > > 
-> > > > > On 5/31/19 6:51 AM, Dan Murphy wrote:
-> > > > > > Marc
-> > > > > > 
-> > > > > > On 5/15/19 3:54 PM, Dan Murphy wrote:
-> > > > > > > Marc
-> > > > > > > 
-> > > > > > > On 5/9/19 11:11 AM, Dan Murphy wrote:
-> > > > > > > > Create a m_can platform framework that peripheral
-> > > > > > > > devices can register to and use common code and register sets.
-> > > > > > > > The peripheral devices may provide read/write and configuration
-> > > > > > > > support of the IP.
-> > > > > > > > 
-> > > > > > > > Acked-by: Wolfgang Grandegger <wg@grandegger.com>
-> > > > > > > > Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> > > > > > > > ---
-> > > > > > > > 
-> > > > > > > > v12 - Update the m_can_read/write functions to
-> > > > > > > > create a backtrace if the callback
-> > > > > > > > pointer is NULL. - https://lore.kernel.org/patchwork/patch/1052302/
-> > > > > > > > 
-> > > > > > > Is this able to be merged now?
-> > > > > > 
-> > > > > > ping
-> > > 
-> > > Wondering if there is anything else we need to do?
-> > > 
-> > > The part has officially shipped and we had hoped to have driver
-> > > support in Linux as part of the announcement.
-> > > 
-> > Is this being sent in a PR for 5.3?
-> > 
-> > Dan
-> > 
-> Adding Greg to this thread as I have no idea what is going on with this. 
+> On 7/23/19 6:28 AM, Tony Lindgren wrote:
+> > The ahclkr clkctrl clock bit 28 only exists for mcasp 1 and 2 on dra7.
+> > Otherwise we get the following warning on beagle-x15:
+...
+> > @@ -2962,9 +2958,8 @@
+> >  					<SYSC_IDLE_SMART>;
+> >  			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
+> >  			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 0>,
+> > -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 24>,
+> > -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 28>;
+> > -			clock-names = "fck", "ahclkx", "ahclkr";
+> > +				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 24>;
+> > +			clock-names = "fck", "ahclkx";
+> 
+> The equivalent change to MCASP8 is missing.
 
-Why me?  What am I supposed to do here?  I see no patches at all to do
-anything with :(
+Thanks for spotting it, probably should be set up the same way as
+MCASP4 too looking at the TRM.
 
-thanks,
+Tero, care to check the dra7 mcasp clocks we have defined?
 
-greg "not a miracle worker" k-h
+$ grep MCASP drivers/clk/ti/clk-7xx.c
+        { DRA7_IPU_MCASP1_CLKCTRL, dra7_mcasp1_bit_data, CLKF_SW_SUP, "ipu-clkctrl:0000:22" },
+        { DRA7_L4PER2_MCASP2_CLKCTRL, dra7_mcasp2_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:0154:22" },
+        { DRA7_L4PER2_MCASP3_CLKCTRL, dra7_mcasp3_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:015c:22" },
+        { DRA7_L4PER2_MCASP5_CLKCTRL, dra7_mcasp5_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:016c:22" },
+        { DRA7_L4PER2_MCASP8_CLKCTRL, dra7_mcasp8_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:0184:24" },
+        { DRA7_L4PER2_MCASP4_CLKCTRL, dra7_mcasp4_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:018c:22" },
+        { DRA7_L4PER2_MCASP6_CLKCTRL, dra7_mcasp6_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:01f8:22" },
+        { DRA7_L4PER2_MCASP7_CLKCTRL, dra7_mcasp7_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:01fc:22" },
+
+Is bit 24 above correct for MCASP8 or should it too be 22 like
+adjacent MCASP4 in the TRM?
+
+Regards,
+
+Tony
