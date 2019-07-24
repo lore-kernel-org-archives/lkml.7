@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AE2C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA82C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8206422ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D75A21951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996680;
-	bh=oVO4OIooG09V32BefcY6Qz8jrnLQLyos9B1fipRdE9E=;
+	s=default; t=1563996684;
+	bh=FWreuhMM6Mt1r7S5lDbbQSWGpAelMHeB009HZa6gmmc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nRJIixb9Kvfd+qDi9J4A/AcOxl8w9VhOfMxt0M/mbQ9wWAqwRgSgXpaJQ21Uq4Aya
-	 53dk0SN+Vxrli+3LqYSTTJNY+9d1mbv1U5hBqqtf9Ksy96cpErgR6GszcSs7VyQwZv
-	 tUq0OL+FL3DMUkgZxxbAANm+YMb3ONKnJloqeRzQ=
+	b=I0CmsgxEpQHUW96wZWk5upZqIfUNRhILXgRWY4mSCZec0Vim4BA5HFfdCSZlA2yAg
+	 mCBGMHRhmlQVLHjzMeZC49XEP0VTCGmBJHkUTQRSzX/ha/y+a52jSJ/IPPfI4gTFU1
+	 UD5A9oAd6eENt8f5WOc8I1BfCDzaozjJPx1K+3SI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388465AbfGXTbT (ORCPT
+        id S2388473AbfGXTbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:31:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52016 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:31:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387564AbfGXTbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:31:15 -0400
+        id S2388459AbfGXTbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:31:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17960229F4;
-        Wed, 24 Jul 2019 19:31:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D8E5218EA;
+        Wed, 24 Jul 2019 19:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996674;
-        bh=oVO4OIooG09V32BefcY6Qz8jrnLQLyos9B1fipRdE9E=;
+        s=default; t=1563996677;
+        bh=FWreuhMM6Mt1r7S5lDbbQSWGpAelMHeB009HZa6gmmc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0uw4DTzvzmegYR2dn+MgsxnW+59r+mA+RlrMfzm3SnkT7NxD4V/aSebt/NV23/cT3
-         mXLrscirUhi6AD+hownjlKrcwucPpfxRf33Mjo8bhM9lkGKt3ddrdAbTFuoVVa0swg
-         27/piJL3Zs6iDjnVuyFaiUn9ycJ3sp1R9iiEbJ84=
+        b=mscaT6l70CCYVbaaOhLk1Ja5w2WdP/D902cdIetBrjOWiNRFi9/F02yz3AhOS7eWO
+         GJEQJMleZxbnHULg8tjawsXf6V7VP7ZFgHDeg+DBn9trmtZX5HZ32xIDG4YXRZMfcW
+         2VBTwuOw1iIwM6vaMsLTCHWEc9pNXL5jEHhOUGiw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 179/413] ixgbe: Check DDM existence in transceiver before access
-Date:   Wed, 24 Jul 2019 21:17:50 +0200
-Message-Id: <20190724191747.660888212@linuxfoundation.org>
+Subject: [PATCH 5.2 180/413] crypto: serpent - mark __serpent_setkey_sbox noinline
+Date:   Wed, 24 Jul 2019 21:17:51 +0200
+Message-Id: <20190724191747.711245129@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -63,61 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 655c91414579d7bb115a4f7898ee726fc18e0984 ]
+[ Upstream commit 473971187d6727609951858c63bf12b0307ef015 ]
 
-Some transceivers may comply with SFF-8472 but not implement the Digital
-Diagnostic Monitoring (DDM) interface described in it. The existence of
-such area is specified by bit 6 of byte 92, set to 1 if implemented.
+The same bug that gcc hit in the past is apparently now showing
+up with clang, which decides to inline __serpent_setkey_sbox:
 
-Currently, due to not checking this bit ixgbe fails trying to read SFP
-module's eeprom with the follow message:
+crypto/serpent_generic.c:268:5: error: stack frame size of 2112 bytes in function '__serpent_setkey' [-Werror,-Wframe-larger-than=]
 
-ethtool -m enP51p1s0f0
-Cannot get Module EEPROM data: Input/output error
+Marking it 'noinline' reduces the stack usage from 2112 bytes to
+192 and 96 bytes, respectively, and seems to generate more
+useful object code.
 
-Because it fails to read the additional 256 bytes in which it was assumed
-to exist the DDM data.
-
-This issue was noticed using a Mellanox Passive DAC PN 01FT738. The eeprom
-data was confirmed by Mellanox as correct and present in other Passive
-DACs in from other manufacturers.
-
-Signed-off-by: "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>
-Reviewed-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: c871c10e4ea7 ("crypto: serpent - improve __serpent_setkey with UBSAN")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c | 3 ++-
- drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h     | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ crypto/serpent_generic.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-index acba067cc15a..7c52ae8ac005 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-@@ -3226,7 +3226,8 @@ static int ixgbe_get_module_info(struct net_device *dev,
- 		page_swap = true;
- 	}
+diff --git a/crypto/serpent_generic.c b/crypto/serpent_generic.c
+index 16f612b6dbca..a9cc0b2aa0d6 100644
+--- a/crypto/serpent_generic.c
++++ b/crypto/serpent_generic.c
+@@ -225,7 +225,13 @@
+ 	x4 ^= x2;					\
+ 	})
  
--	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap) {
-+	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap ||
-+	    !(addr_mode & IXGBE_SFF_DDM_IMPLEMENTED)) {
- 		/* We have a SFP, but it does not support SFF-8472 */
- 		modinfo->type = ETH_MODULE_SFF_8079;
- 		modinfo->eeprom_len = ETH_MODULE_SFF_8079_LEN;
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-index 214b01085718..6544c4539c0d 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-@@ -45,6 +45,7 @@
- #define IXGBE_SFF_SOFT_RS_SELECT_10G		0x8
- #define IXGBE_SFF_SOFT_RS_SELECT_1G		0x0
- #define IXGBE_SFF_ADDRESSING_MODE		0x4
-+#define IXGBE_SFF_DDM_IMPLEMENTED		0x40
- #define IXGBE_SFF_QSFP_DA_ACTIVE_CABLE		0x1
- #define IXGBE_SFF_QSFP_DA_PASSIVE_CABLE		0x8
- #define IXGBE_SFF_QSFP_CONNECTOR_NOT_SEPARABLE	0x23
+-static void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4, u32 *k)
++/*
++ * both gcc and clang have misoptimized this function in the past,
++ * producing horrible object code from spilling temporary variables
++ * on the stack. Forcing this part out of line avoids that.
++ */
++static noinline void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2,
++					   u32 r3, u32 r4, u32 *k)
+ {
+ 	k += 100;
+ 	S3(r3, r4, r0, r1, r2); store_and_load_keys(r1, r2, r4, r3, 28, 24);
 -- 
 2.20.1
 
