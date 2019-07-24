@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E24C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BF8C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F2E21880
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A239B22BEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033345;
-	bh=LOARK0T404+azY1suHxq6Tt9I+LxkICd8FbLI+35sfo=;
+	s=default; t=1564033351;
+	bh=hw2uRw21RGEKo558VPfLuqeeQP2hTeyB602HS4SPkQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qBC5uDRr1WrpWE9T2h63lQizvFJGkhde63PlHF4pMSG5gldfLTRLBdpVwKboxTuKk
-	 sA/IKcQJFX5VOLjrKphD/2B2bDRi514frRkqJki3k/b4acrcmahKR9bHv/IEypDUsj
-	 CGk5IUr1NlwB/mcoILhxyzijW017bgIWZmGaxRYA=
+	b=XwcnIe01pUOt254rBbneTqyYSnJxmDX9GCYRLkAOoHaq1NYqLo01IBiOm26/seF68
+	 1JVQn0j7ohkequ9v8BdX3HTOgXJCk78mYLD3jRR00/60DpZ3L8T7SwXXZGMS8yQXT5
+	 RmRipkFhLjPDzIgv9FEAR6Zg4Ct/t/Ns2nwuT4t4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390835AbfGYFmY (ORCPT
+        id S2390873AbfGYFma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:42:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57250 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:42:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390822AbfGYFmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:42:21 -0400
+        id S2390847AbfGYFm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:42:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D63422BF3;
-        Thu, 25 Jul 2019 05:42:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A67022BEB;
+        Thu, 25 Jul 2019 05:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033340;
-        bh=LOARK0T404+azY1suHxq6Tt9I+LxkICd8FbLI+35sfo=;
+        s=default; t=1564033346;
+        bh=hw2uRw21RGEKo558VPfLuqeeQP2hTeyB602HS4SPkQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ews6soD0xNoxh++YCH0hLvlPuG7LRgDRkHVx2uYkUk4EtaPT737v7zqCIEmKxazmG
-         +Z+2706XQibs+CxQ5HVOBWlGkvDInj+DY3ZeHQGBLmWxmWA9almUCZpON8DabUjZvY
-         41k+KStn/QU6ZKo1rVsg2VXj7oW8Cp6P5UrCvopw=
+        b=YlDUBWafiGjv97ZuXeotIDflPkulIv5r8eXl4BQbzqRtCouiQzG9O5GeFjysHxE05
+         eHc5VcSPWg6MxyJ977bozYJdWS+p9l6DVpawK0GRreX/WgJrnTIQdkpqP4wn9WR565
+         sqTZL7Yi1NiwNmT18t2yZeR5yNcLl4Ito+WSWDrI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 167/271] Revert "scsi: ncr5380: Increase register polling limit"
-Date:   Wed, 24 Jul 2019 21:20:36 +0200
-Message-Id: <20190724191709.484438228@linuxfoundation.org>
+        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 177/271] crypto: crypto4xx - fix AES CTR blocksize value
+Date:   Wed, 24 Jul 2019 21:20:46 +0200
+Message-Id: <20190724191710.320031701@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -61,43 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-commit 25fcf94a2fa89dd3e73e965ebb0b38a2a4f72aa4 upstream.
+commit bfa2ba7d9e6b20aca82b99e6842fe18842ae3a0f upstream.
 
-This reverts commit 4822827a69d7cd3bc5a07b7637484ebd2cf88db6.
+This patch fixes a issue with crypto4xx's ctr(aes) that was
+discovered by libcapi's kcapi-enc-test.sh test.
 
-The purpose of that commit was to suppress a timeout warning message which
-appeared to be caused by target latency. But suppressing the warning is
-undesirable as the warning may indicate a messed up transfer count.
+The some of the ctr(aes) encryptions test were failing on the
+non-power-of-two test:
 
-Another problem with that commit is that 15 ms is too long to keep
-interrupts disabled as interrupt latency can cause system clock drift and
-other problems.
+kcapi-enc - Error: encryption failed with error 0
+kcapi-enc - Error: decryption failed with error 0
+[FAILED: 32-bit - 5.1.0-rc1+] 15 bytes: STDIN / STDOUT enc test (128 bits):
+original file (1d100e..cc96184c) and generated file (e3b0c442..1b7852b855)
+[FAILED: 32-bit - 5.1.0-rc1+] 15 bytes: STDIN / STDOUT enc test (128 bits)
+(openssl generated CT): original file (e3b0..5) and generated file (3..8e)
+[PASSED: 32-bit - 5.1.0-rc1+] 15 bytes: STDIN / STDOUT enc test (128 bits)
+(openssl generated PT)
+[FAILED: 32-bit - 5.1.0-rc1+] 15 bytes: STDIN / STDOUT enc test (password):
+original file (1d1..84c) and generated file (e3b..852b855)
 
-Cc: Michael Schmitz <schmitzmic@gmail.com>
+But the 16, 32, 512, 65536 tests always worked.
+
+Thankfully, this isn't a hidden hardware problem like previously,
+instead this turned out to be a copy and paste issue.
+
+With this patch, all the tests are passing with and
+kcapi-enc-test.sh gives crypto4xx's a clean bill of health:
+ "Number of failures: 0" :).
+
 Cc: stable@vger.kernel.org
-Fixes: 4822827a69d7 ("scsi: ncr5380: Increase register polling limit")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 98e87e3d933b ("crypto: crypto4xx - add aes-ctr support")
+Fixes: f2a13e7cba9e ("crypto: crypto4xx - enable AES RFC3686, ECB, CFB and OFB offloads")
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/NCR5380.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/amcc/crypto4xx_core.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/NCR5380.h
-+++ b/drivers/scsi/NCR5380.h
-@@ -235,7 +235,7 @@ struct NCR5380_cmd {
- #define NCR5380_PIO_CHUNK_SIZE		256
- 
- /* Time limit (ms) to poll registers when IRQs are disabled, e.g. during PDMA */
--#define NCR5380_REG_POLL_TIME		15
-+#define NCR5380_REG_POLL_TIME		10
- 
- static inline struct scsi_cmnd *NCR5380_to_scmd(struct NCR5380_cmd *ncmd_ptr)
- {
+--- a/drivers/crypto/amcc/crypto4xx_core.c
++++ b/drivers/crypto/amcc/crypto4xx_core.c
+@@ -1186,7 +1186,7 @@ static struct crypto4xx_alg_common crypt
+ 			.cra_flags = CRYPTO_ALG_NEED_FALLBACK |
+ 				CRYPTO_ALG_ASYNC |
+ 				CRYPTO_ALG_KERN_DRIVER_ONLY,
+-			.cra_blocksize = AES_BLOCK_SIZE,
++			.cra_blocksize = 1,
+ 			.cra_ctxsize = sizeof(struct crypto4xx_ctx),
+ 			.cra_module = THIS_MODULE,
+ 		},
+@@ -1206,7 +1206,7 @@ static struct crypto4xx_alg_common crypt
+ 			.cra_priority = CRYPTO4XX_CRYPTO_PRIORITY,
+ 			.cra_flags = CRYPTO_ALG_ASYNC |
+ 				CRYPTO_ALG_KERN_DRIVER_ONLY,
+-			.cra_blocksize = AES_BLOCK_SIZE,
++			.cra_blocksize = 1,
+ 			.cra_ctxsize = sizeof(struct crypto4xx_ctx),
+ 			.cra_module = THIS_MODULE,
+ 		},
 
 
