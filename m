@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4535AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC9DC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A4621873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0AF0205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998277;
-	bh=1otD8bJipzPQajaBeXsTvYYuAQZRLswvtzUv+MELmZ0=;
+	s=default; t=1563998280;
+	bh=tYhMCD5qtmkjP1Q4w67G4pB6CPy15S17nFVaUeW9plA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ke9X6esKTXJAlqvZ6/BmQxvQ61XZToi2++ORfVhaN5hS4gL1t22bllJhNbODNM2yW
-	 H9Sil9mCMpxbBQzIkOYcoB8pFkyM1q20MBexBkkYBMD4pBqE96Bk+xWekkJmB6ePCv
-	 Li7mKiq60by2p5tso+3vnpyuaKbc2y31qDL4VLKM=
+	b=vp7BGGdL3Xzxt8Szc/epaP3p5H56taFcW/W7LY/smZrcaeqh9KAQNskuxRVxwTrgq
+	 Q2YmXSr6tYWMiL10A4/n4yilDMRQRUEdZul+V9a2TatNQv2IDPIEI30692Y/Ztb74y
+	 SfjKqYKnyb2JaglCcJTSHMBN5zjiJB5TA+Rhgg5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392147AbfGXT5z (ORCPT
+        id S2392160AbfGXT57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:57:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43816 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:57:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392125AbfGXT5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:57:54 -0400
+        id S2392125AbfGXT55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:57:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F0BF206BA;
-        Wed, 24 Jul 2019 19:57:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5557214AF;
+        Wed, 24 Jul 2019 19:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998272;
-        bh=1otD8bJipzPQajaBeXsTvYYuAQZRLswvtzUv+MELmZ0=;
+        s=default; t=1563998276;
+        bh=tYhMCD5qtmkjP1Q4w67G4pB6CPy15S17nFVaUeW9plA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iA3JDFD4pddJwST2k86zJHVcWgwhM26JvTkGejnZ+VBiz4Iy1mbl+mF9TXoXKj7rL
-         6T+SIWhYnHO1kLCHediJWoV1Jf8GTRiAlQA+W6ebg/ixfmsUKaxDPtuKfGkIdHhCiG
-         YN4wY4s+rUGARBlyy/CqRtOZPapEUtU7SAbdbo2g=
+        b=xD/fL79Ib32Z8yHm12NateTqcbPQUt/YmoYdODw/78TePXNQGy1+wsROxpiB8HTMt
+         CM0GEkM24hItDckuYze266/KzJZByewHrXhy/51VfjqyGjLhEp3qMujRx5XvHFAgm9
+         4aqyqjycnO9PYzGWICb6dBsFwygH0OHZ+VteKIx4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-usb@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH 5.1 308/371] signal/usb: Replace kill_pid_info_as_cred with kill_pid_usb_asyncio
-Date:   Wed, 24 Jul 2019 21:21:00 +0200
-Message-Id: <20190724191747.337616550@linuxfoundation.org>
+        stable@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: [PATCH 5.1 309/371] signal: Correct namespace fixups of si_pid and si_uid
+Date:   Wed, 24 Jul 2019 21:21:01 +0200
+Message-Id: <20190724191747.390218951@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -63,456 +60,140 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric W. Biederman <ebiederm@xmission.com>
 
-commit 70f1b0d34bdf03065fe869e93cc17cad1ea20c4a upstream.
+commit 7a0cf094944e2540758b7f957eb6846d5126f535 upstream.
 
-The usb support for asyncio encoded one of it's values in the wrong
-field.  It should have used si_value but instead used si_addr which is
-not present in the _rt union member of struct siginfo.
+The function send_signal was split from __send_signal so that it would
+be possible to bypass the namespace logic based upon current[1].  As it
+turns out the si_pid and the si_uid fixup are both inappropriate in
+the case of kill_pid_usb_asyncio so move that logic into send_signal.
 
-The practical result of this is that on a 64bit big endian kernel
-when delivering a signal to a 32bit process the si_addr field
-is set to NULL, instead of the expected pointer value.
+It is difficult to arrange but possible for a signal with an si_code
+of SI_TIMER or SI_SIGIO to be sent across namespace boundaries.  In
+which case tests for when it is ok to change si_pid and si_uid based
+on SI_FROMUSER are incorrect.  Replace the use of SI_FROMUSER with a
+new test has_si_pid_and_used based on siginfo_layout.
 
-This issue can not be fixed in copy_siginfo_to_user32 as the usb
-usage of the the _sigfault (aka si_addr) member of the siginfo
-union when SI_ASYNCIO is set is incompatible with the POSIX and
-glibc usage of the _rt member of the siginfo union.
+Now that the uid fixup is no longer present after expanding
+SEND_SIG_NOINFO properly calculate the si_uid that the target
+task needs to read.
 
-Therefore replace kill_pid_info_as_cred with kill_pid_usb_asyncio a
-dedicated function for this one specific case.  There are no other
-users of kill_pid_info_as_cred so this specialization should have no
-impact on the amount of code in the kernel.  Have kill_pid_usb_asyncio
-take instead of a siginfo_t which is difficult and error prone, 3
-arguments, a signal number, an errno value, and an address enconded as
-a sigval_t.  The encoding of the address as a sigval_t allows the
-code that reads the userspace request for a signal to handle this
-compat issue along with all of the other compat issues.
-
-Add BUILD_BUG_ONs in kernel/signal.c to ensure that we can now place
-the pointer value at the in si_pid (instead of si_addr).  That is the
-code now verifies that si_pid and si_addr always occur at the same
-location.  Further the code veries that for native structures a value
-placed in si_pid and spilling into si_uid will appear in userspace in
-si_addr (on a byte by byte copy of siginfo or a field by field copy of
-siginfo).  The code also verifies that for a 64bit kernel and a 32bit
-userspace the 32bit pointer will fit in si_pid.
-
-I have used the usbsig.c program below written by Alan Stern and
-slightly tweaked by me to run on a big endian machine to verify the
-issue exists (on sparc64) and to confirm the patch below fixes the issue.
-
- /* usbsig.c -- test USB async signal delivery */
-
- #define _GNU_SOURCE
- #include <stdio.h>
- #include <fcntl.h>
- #include <signal.h>
- #include <string.h>
- #include <sys/ioctl.h>
- #include <unistd.h>
- #include <endian.h>
- #include <linux/usb/ch9.h>
- #include <linux/usbdevice_fs.h>
-
- static struct usbdevfs_urb urb;
- static struct usbdevfs_disconnectsignal ds;
- static volatile sig_atomic_t done = 0;
-
- void urb_handler(int sig, siginfo_t *info , void *ucontext)
- {
- 	printf("Got signal %d, signo %d errno %d code %d addr: %p urb: %p\n",
- 	       sig, info->si_signo, info->si_errno, info->si_code,
- 	       info->si_addr, &urb);
-
- 	printf("%s\n", (info->si_addr == &urb) ? "Good" : "Bad");
- }
-
- void ds_handler(int sig, siginfo_t *info , void *ucontext)
- {
- 	printf("Got signal %d, signo %d errno %d code %d addr: %p ds: %p\n",
- 	       sig, info->si_signo, info->si_errno, info->si_code,
- 	       info->si_addr, &ds);
-
- 	printf("%s\n", (info->si_addr == &ds) ? "Good" : "Bad");
- 	done = 1;
- }
-
- int main(int argc, char **argv)
- {
- 	char *devfilename;
- 	int fd;
- 	int rc;
- 	struct sigaction act;
- 	struct usb_ctrlrequest *req;
- 	void *ptr;
- 	char buf[80];
-
- 	if (argc != 2) {
- 		fprintf(stderr, "Usage: usbsig device-file-name\n");
- 		return 1;
- 	}
-
- 	devfilename = argv[1];
- 	fd = open(devfilename, O_RDWR);
- 	if (fd == -1) {
- 		perror("Error opening device file");
- 		return 1;
- 	}
-
- 	act.sa_sigaction = urb_handler;
- 	sigemptyset(&act.sa_mask);
- 	act.sa_flags = SA_SIGINFO;
-
- 	rc = sigaction(SIGUSR1, &act, NULL);
- 	if (rc == -1) {
- 		perror("Error in sigaction");
- 		return 1;
- 	}
-
- 	act.sa_sigaction = ds_handler;
- 	sigemptyset(&act.sa_mask);
- 	act.sa_flags = SA_SIGINFO;
-
- 	rc = sigaction(SIGUSR2, &act, NULL);
- 	if (rc == -1) {
- 		perror("Error in sigaction");
- 		return 1;
- 	}
-
- 	memset(&urb, 0, sizeof(urb));
- 	urb.type = USBDEVFS_URB_TYPE_CONTROL;
- 	urb.endpoint = USB_DIR_IN | 0;
- 	urb.buffer = buf;
- 	urb.buffer_length = sizeof(buf);
- 	urb.signr = SIGUSR1;
-
- 	req = (struct usb_ctrlrequest *) buf;
- 	req->bRequestType = USB_DIR_IN | USB_TYPE_STANDARD | USB_RECIP_DEVICE;
- 	req->bRequest = USB_REQ_GET_DESCRIPTOR;
- 	req->wValue = htole16(USB_DT_DEVICE << 8);
- 	req->wIndex = htole16(0);
- 	req->wLength = htole16(sizeof(buf) - sizeof(*req));
-
- 	rc = ioctl(fd, USBDEVFS_SUBMITURB, &urb);
- 	if (rc == -1) {
- 		perror("Error in SUBMITURB ioctl");
- 		return 1;
- 	}
-
- 	rc = ioctl(fd, USBDEVFS_REAPURB, &ptr);
- 	if (rc == -1) {
- 		perror("Error in REAPURB ioctl");
- 		return 1;
- 	}
-
- 	memset(&ds, 0, sizeof(ds));
- 	ds.signr = SIGUSR2;
- 	ds.context = &ds;
- 	rc = ioctl(fd, USBDEVFS_DISCSIGNAL, &ds);
- 	if (rc == -1) {
- 		perror("Error in DISCSIGNAL ioctl");
- 		return 1;
- 	}
-
- 	printf("Waiting for usb disconnect\n");
- 	while (!done) {
- 		sleep(1);
- 	}
-
- 	close(fd);
- 	return 0;
- }
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Oliver Neukum <oneukum@suse.com>
-Fixes: v2.3.39
+[1] 7978b567d315 ("signals: add from_ancestor_ns parameter to send_signal()")
 Cc: stable@vger.kernel.org
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Fixes: 6588c1e3ff01 ("signals: SI_USER: Masquerade si_pid when crossing pid ns boundary")
+Fixes: 6b550f949594 ("user namespace: make signal.c respect user namespaces")
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/devio.c     |   48 ++++++++++++++---------------
- include/linux/sched/signal.h |    2 -
- kernel/signal.c              |   69 ++++++++++++++++++++++++++++++++++++++-----
- 3 files changed, 86 insertions(+), 33 deletions(-)
+ kernel/signal.c |   67 +++++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 40 insertions(+), 27 deletions(-)
 
---- a/drivers/usb/core/devio.c
-+++ b/drivers/usb/core/devio.c
-@@ -63,7 +63,7 @@ struct usb_dev_state {
- 	unsigned int discsignr;
- 	struct pid *disc_pid;
- 	const struct cred *cred;
--	void __user *disccontext;
-+	sigval_t disccontext;
- 	unsigned long ifclaimed;
- 	u32 disabled_bulk_eps;
- 	bool privileges_dropped;
-@@ -90,6 +90,7 @@ struct async {
- 	unsigned int ifnum;
- 	void __user *userbuffer;
- 	void __user *userurb;
-+	sigval_t userurb_sigval;
- 	struct urb *urb;
- 	struct usb_memory *usbm;
- 	unsigned int mem_usage;
-@@ -582,22 +583,19 @@ static void async_completed(struct urb *
- {
- 	struct async *as = urb->context;
- 	struct usb_dev_state *ps = as->ps;
--	struct kernel_siginfo sinfo;
- 	struct pid *pid = NULL;
- 	const struct cred *cred = NULL;
- 	unsigned long flags;
--	int signr;
-+	sigval_t addr;
-+	int signr, errno;
- 
- 	spin_lock_irqsave(&ps->lock, flags);
- 	list_move_tail(&as->asynclist, &ps->async_completed);
- 	as->status = urb->status;
- 	signr = as->signr;
- 	if (signr) {
--		clear_siginfo(&sinfo);
--		sinfo.si_signo = as->signr;
--		sinfo.si_errno = as->status;
--		sinfo.si_code = SI_ASYNCIO;
--		sinfo.si_addr = as->userurb;
-+		errno = as->status;
-+		addr = as->userurb_sigval;
- 		pid = get_pid(as->pid);
- 		cred = get_cred(as->cred);
- 	}
-@@ -615,7 +613,7 @@ static void async_completed(struct urb *
- 	spin_unlock_irqrestore(&ps->lock, flags);
- 
- 	if (signr) {
--		kill_pid_info_as_cred(sinfo.si_signo, &sinfo, pid, cred);
-+		kill_pid_usb_asyncio(signr, errno, addr, pid, cred);
- 		put_pid(pid);
- 		put_cred(cred);
- 	}
-@@ -1427,7 +1425,7 @@ find_memory_area(struct usb_dev_state *p
- 
- static int proc_do_submiturb(struct usb_dev_state *ps, struct usbdevfs_urb *uurb,
- 			struct usbdevfs_iso_packet_desc __user *iso_frame_desc,
--			void __user *arg)
-+			void __user *arg, sigval_t userurb_sigval)
- {
- 	struct usbdevfs_iso_packet_desc *isopkt = NULL;
- 	struct usb_host_endpoint *ep;
-@@ -1727,6 +1725,7 @@ static int proc_do_submiturb(struct usb_
- 	isopkt = NULL;
- 	as->ps = ps;
- 	as->userurb = arg;
-+	as->userurb_sigval = userurb_sigval;
- 	if (as->usbm) {
- 		unsigned long uurb_start = (unsigned long)uurb->buffer;
- 
-@@ -1801,13 +1800,17 @@ static int proc_do_submiturb(struct usb_
- static int proc_submiturb(struct usb_dev_state *ps, void __user *arg)
- {
- 	struct usbdevfs_urb uurb;
-+	sigval_t userurb_sigval;
- 
- 	if (copy_from_user(&uurb, arg, sizeof(uurb)))
- 		return -EFAULT;
- 
-+	memset(&userurb_sigval, 0, sizeof(userurb_sigval));
-+	userurb_sigval.sival_ptr = arg;
-+
- 	return proc_do_submiturb(ps, &uurb,
- 			(((struct usbdevfs_urb __user *)arg)->iso_frame_desc),
--			arg);
-+			arg, userurb_sigval);
- }
- 
- static int proc_unlinkurb(struct usb_dev_state *ps, void __user *arg)
-@@ -1977,7 +1980,7 @@ static int proc_disconnectsignal_compat(
- 	if (copy_from_user(&ds, arg, sizeof(ds)))
- 		return -EFAULT;
- 	ps->discsignr = ds.signr;
--	ps->disccontext = compat_ptr(ds.context);
-+	ps->disccontext.sival_int = ds.context;
- 	return 0;
- }
- 
-@@ -2005,13 +2008,17 @@ static int get_urb32(struct usbdevfs_urb
- static int proc_submiturb_compat(struct usb_dev_state *ps, void __user *arg)
- {
- 	struct usbdevfs_urb uurb;
-+	sigval_t userurb_sigval;
- 
- 	if (get_urb32(&uurb, (struct usbdevfs_urb32 __user *)arg))
- 		return -EFAULT;
- 
-+	memset(&userurb_sigval, 0, sizeof(userurb_sigval));
-+	userurb_sigval.sival_int = ptr_to_compat(arg);
-+
- 	return proc_do_submiturb(ps, &uurb,
- 			((struct usbdevfs_urb32 __user *)arg)->iso_frame_desc,
--			arg);
-+			arg, userurb_sigval);
- }
- 
- static int processcompl_compat(struct async *as, void __user * __user *arg)
-@@ -2092,7 +2099,7 @@ static int proc_disconnectsignal(struct
- 	if (copy_from_user(&ds, arg, sizeof(ds)))
- 		return -EFAULT;
- 	ps->discsignr = ds.signr;
--	ps->disccontext = ds.context;
-+	ps->disccontext.sival_ptr = ds.context;
- 	return 0;
- }
- 
-@@ -2614,22 +2621,15 @@ const struct file_operations usbdev_file
- static void usbdev_remove(struct usb_device *udev)
- {
- 	struct usb_dev_state *ps;
--	struct kernel_siginfo sinfo;
- 
- 	while (!list_empty(&udev->filelist)) {
- 		ps = list_entry(udev->filelist.next, struct usb_dev_state, list);
- 		destroy_all_async(ps);
- 		wake_up_all(&ps->wait);
- 		list_del_init(&ps->list);
--		if (ps->discsignr) {
--			clear_siginfo(&sinfo);
--			sinfo.si_signo = ps->discsignr;
--			sinfo.si_errno = EPIPE;
--			sinfo.si_code = SI_ASYNCIO;
--			sinfo.si_addr = ps->disccontext;
--			kill_pid_info_as_cred(ps->discsignr, &sinfo,
--					ps->disc_pid, ps->cred);
--		}
-+		if (ps->discsignr)
-+			kill_pid_usb_asyncio(ps->discsignr, EPIPE, ps->disccontext,
-+					     ps->disc_pid, ps->cred);
- 	}
- }
- 
---- a/include/linux/sched/signal.h
-+++ b/include/linux/sched/signal.h
-@@ -328,7 +328,7 @@ extern void force_sigsegv(int sig, struc
- extern int force_sig_info(int, struct kernel_siginfo *, struct task_struct *);
- extern int __kill_pgrp_info(int sig, struct kernel_siginfo *info, struct pid *pgrp);
- extern int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid);
--extern int kill_pid_info_as_cred(int, struct kernel_siginfo *, struct pid *,
-+extern int kill_pid_usb_asyncio(int sig, int errno, sigval_t addr, struct pid *,
- 				const struct cred *);
- extern int kill_pgrp(struct pid *pid, int sig, int priv);
- extern int kill_pid(struct pid *pid, int sig, int priv);
 --- a/kernel/signal.c
 +++ b/kernel/signal.c
-@@ -1436,13 +1436,44 @@ static inline bool kill_as_cred_perm(con
- 	       uid_eq(cred->uid, pcred->uid);
+@@ -1053,27 +1053,6 @@ static inline bool legacy_queue(struct s
+ 	return (sig < SIGRTMIN) && sigismember(&signals->signal, sig);
  }
  
--/* like kill_pid_info(), but doesn't use uid/euid of "current" */
--int kill_pid_info_as_cred(int sig, struct kernel_siginfo *info, struct pid *pid,
--			 const struct cred *cred)
-+/*
-+ * The usb asyncio usage of siginfo is wrong.  The glibc support
-+ * for asyncio which uses SI_ASYNCIO assumes the layout is SIL_RT.
-+ * AKA after the generic fields:
-+ *	kernel_pid_t	si_pid;
-+ *	kernel_uid32_t	si_uid;
-+ *	sigval_t	si_value;
-+ *
-+ * Unfortunately when usb generates SI_ASYNCIO it assumes the layout
-+ * after the generic fields is:
-+ *	void __user 	*si_addr;
-+ *
-+ * This is a practical problem when there is a 64bit big endian kernel
-+ * and a 32bit userspace.  As the 32bit address will encoded in the low
-+ * 32bits of the pointer.  Those low 32bits will be stored at higher
-+ * address than appear in a 32 bit pointer.  So userspace will not
-+ * see the address it was expecting for it's completions.
-+ *
-+ * There is nothing in the encoding that can allow
-+ * copy_siginfo_to_user32 to detect this confusion of formats, so
-+ * handle this by requiring the caller of kill_pid_usb_asyncio to
-+ * notice when this situration takes place and to store the 32bit
-+ * pointer in sival_int, instead of sival_addr of the sigval_t addr
-+ * parameter.
-+ */
-+int kill_pid_usb_asyncio(int sig, int errno, sigval_t addr,
-+			 struct pid *pid, const struct cred *cred)
+-#ifdef CONFIG_USER_NS
+-static inline void userns_fixup_signal_uid(struct kernel_siginfo *info, struct task_struct *t)
+-{
+-	if (current_user_ns() == task_cred_xxx(t, user_ns))
+-		return;
+-
+-	if (SI_FROMKERNEL(info))
+-		return;
+-
+-	rcu_read_lock();
+-	info->si_uid = from_kuid_munged(task_cred_xxx(t, user_ns),
+-					make_kuid(current_user_ns(), info->si_uid));
+-	rcu_read_unlock();
+-}
+-#else
+-static inline void userns_fixup_signal_uid(struct kernel_siginfo *info, struct task_struct *t)
+-{
+-	return;
+-}
+-#endif
+-
+ static int __send_signal(int sig, struct kernel_siginfo *info, struct task_struct *t,
+ 			enum pid_type type, int from_ancestor_ns)
  {
--	int ret = -EINVAL;
-+	struct kernel_siginfo info;
- 	struct task_struct *p;
- 	unsigned long flags;
-+	int ret = -EINVAL;
-+
-+	clear_siginfo(&info);
-+	info.si_signo = sig;
-+	info.si_errno = errno;
-+	info.si_code = SI_ASYNCIO;
-+	*((sigval_t *)&info.si_pid) = addr;
- 
- 	if (!valid_signal(sig))
- 		return ret;
-@@ -1453,17 +1484,17 @@ int kill_pid_info_as_cred(int sig, struc
- 		ret = -ESRCH;
- 		goto out_unlock;
- 	}
--	if (si_fromuser(info) && !kill_as_cred_perm(cred, p)) {
-+	if (!kill_as_cred_perm(cred, p)) {
- 		ret = -EPERM;
- 		goto out_unlock;
- 	}
--	ret = security_task_kill(p, info, sig, cred);
-+	ret = security_task_kill(p, &info, sig, cred);
- 	if (ret)
- 		goto out_unlock;
- 
- 	if (sig) {
- 		if (lock_task_sighand(p, &flags)) {
--			ret = __send_signal(sig, info, p, PIDTYPE_TGID, 0);
-+			ret = __send_signal(sig, &info, p, PIDTYPE_TGID, 0);
- 			unlock_task_sighand(p, &flags);
- 		} else
- 			ret = -ESRCH;
-@@ -1472,7 +1503,7 @@ out_unlock:
- 	rcu_read_unlock();
+@@ -1131,7 +1110,11 @@ static int __send_signal(int sig, struct
+ 			q->info.si_code = SI_USER;
+ 			q->info.si_pid = task_tgid_nr_ns(current,
+ 							task_active_pid_ns(t));
+-			q->info.si_uid = from_kuid_munged(current_user_ns(), current_uid());
++			rcu_read_lock();
++			q->info.si_uid =
++				from_kuid_munged(task_cred_xxx(t, user_ns),
++						 current_uid());
++			rcu_read_unlock();
+ 			break;
+ 		case (unsigned long) SEND_SIG_PRIV:
+ 			clear_siginfo(&q->info);
+@@ -1143,13 +1126,8 @@ static int __send_signal(int sig, struct
+ 			break;
+ 		default:
+ 			copy_siginfo(&q->info, info);
+-			if (from_ancestor_ns)
+-				q->info.si_pid = 0;
+ 			break;
+ 		}
+-
+-		userns_fixup_signal_uid(&q->info, t);
+-
+ 	} else if (!is_si_special(info)) {
+ 		if (sig >= SIGRTMIN && info->si_code != SI_USER) {
+ 			/*
+@@ -1193,6 +1171,28 @@ ret:
  	return ret;
  }
--EXPORT_SYMBOL_GPL(kill_pid_info_as_cred);
-+EXPORT_SYMBOL_GPL(kill_pid_usb_asyncio);
  
- /*
-  * kill_something_info() interprets pid in interesting ways just like kill(2).
-@@ -4411,6 +4442,28 @@ static inline void siginfo_buildtime_che
- 	CHECK_OFFSET(si_syscall);
- 	CHECK_OFFSET(si_arch);
- #undef CHECK_OFFSET
-+
-+	/* usb asyncio */
-+	BUILD_BUG_ON(offsetof(struct siginfo, si_pid) !=
-+		     offsetof(struct siginfo, si_addr));
-+	if (sizeof(int) == sizeof(void __user *)) {
-+		BUILD_BUG_ON(sizeof_field(struct siginfo, si_pid) !=
-+			     sizeof(void __user *));
-+	} else {
-+		BUILD_BUG_ON((sizeof_field(struct siginfo, si_pid) +
-+			      sizeof_field(struct siginfo, si_uid)) !=
-+			     sizeof(void __user *));
-+		BUILD_BUG_ON(offsetofend(struct siginfo, si_pid) !=
-+			     offsetof(struct siginfo, si_uid));
++static inline bool has_si_pid_and_uid(struct kernel_siginfo *info)
++{
++	bool ret = false;
++	switch (siginfo_layout(info->si_signo, info->si_code)) {
++	case SIL_KILL:
++	case SIL_CHLD:
++	case SIL_RT:
++		ret = true;
++		break;
++	case SIL_TIMER:
++	case SIL_POLL:
++	case SIL_FAULT:
++	case SIL_FAULT_MCEERR:
++	case SIL_FAULT_BNDERR:
++	case SIL_FAULT_PKUERR:
++	case SIL_SYS:
++		ret = false;
++		break;
 +	}
-+#ifdef CONFIG_COMPAT
-+	BUILD_BUG_ON(offsetof(struct compat_siginfo, si_pid) !=
-+		     offsetof(struct compat_siginfo, si_addr));
-+	BUILD_BUG_ON(sizeof_field(struct compat_siginfo, si_pid) !=
-+		     sizeof(compat_uptr_t));
-+	BUILD_BUG_ON(sizeof_field(struct compat_siginfo, si_pid) !=
-+		     sizeof_field(struct siginfo, si_pid));
-+#endif
++	return ret;
++}
++
+ static int send_signal(int sig, struct kernel_siginfo *info, struct task_struct *t,
+ 			enum pid_type type)
+ {
+@@ -1202,7 +1202,20 @@ static int send_signal(int sig, struct k
+ 	from_ancestor_ns = si_fromuser(info) &&
+ 			   !task_pid_nr_ns(current, task_active_pid_ns(t));
+ #endif
++	if (!is_si_special(info) && has_si_pid_and_uid(info)) {
++		struct user_namespace *t_user_ns;
++
++		rcu_read_lock();
++		t_user_ns = task_cred_xxx(t, user_ns);
++		if (current_user_ns() != t_user_ns) {
++			kuid_t uid = make_kuid(current_user_ns(), info->si_uid);
++			info->si_uid = from_kuid_munged(t_user_ns, uid);
++		}
++		rcu_read_unlock();
+ 
++		if (!task_pid_nr_ns(current, task_active_pid_ns(t)))
++			info->si_pid = 0;
++	}
+ 	return __send_signal(sig, info, t, type, from_ancestor_ns);
  }
  
- void __init signals_init(void)
 
 
