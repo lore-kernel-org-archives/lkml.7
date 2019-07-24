@@ -5,53 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FF8C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 431B8C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B30A2238C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16F7A22AED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996663;
-	bh=3rri1YZONZ3TOLxUQI7fXal6vOj9b7arHk6JSs0kj/8=;
+	s=default; t=1563996666;
+	bh=B/MRkndD4KINmC0kypX/wNiPqJQbmlsj1gSgqJmCGME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dQstNOpg6ZTwLQb2/msy99If//JO/xtARRfCsLO25egiPzvDopPEzrUOmP3VIJWgz
-	 xumyMwtHFVRhUFnxbB35ZKypdb7ztYo2CegnQIkcSsZ5JxivrpHTdnusQDMM/vrm3J
-	 R1m+BPLHJ8b99VT4Neh350xcuTf3QhZBS5ojBn/Q=
+	b=Iopyj5O2Hmj7uBpT23/ViUeIaSTOrH8Uiiwl06ncjXbsLHRKvm/t3nnISTJbvJstT
+	 dGWSwrokVJ6KQsNeO93QUAAm+emU8ZMi2n8w0nC6nyauVco2zJuFSsCCBBvqmF3hLd
+	 40Dp4P03qdt10GClfgIfv+B1gFuWTVq+pW1oreAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbfGXTbC (ORCPT
+        id S1729044AbfGXTbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:31:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51360 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:31:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388433AbfGXTa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:30:56 -0400
+        id S1728306AbfGXTbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:31:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B856C21951;
-        Wed, 24 Jul 2019 19:30:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C260D21951;
+        Wed, 24 Jul 2019 19:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996655;
-        bh=3rri1YZONZ3TOLxUQI7fXal6vOj9b7arHk6JSs0kj/8=;
+        s=default; t=1563996661;
+        bh=B/MRkndD4KINmC0kypX/wNiPqJQbmlsj1gSgqJmCGME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mUSRIM09mi4A2M1vacUlZM6IKBLsVX8HMWAnz84kV0imMAwaGE8n8oWGBOxq88Wdd
-         zyvfQZGj5MmzWRir2nML3vr+XVsmw6ZNzoJpLBIEOH+grGse/ye4kS9EaEk1xk3s79
-         nfe8j8O3gCuRT9D5rHIRVC3JSc+s+oWzfbxC0ZkM=
+        b=caZfpW8p9vFU3xIYdfgiOiAg+D3YRuJpNWl1mBPxjJannJJ4ex6L9D6B0z3CU2ofA
+         6iRUkDslxf1XiiwrIC8TWru/702Zw8swiMBJOgCrGXk7H0mwDrApz6cgq7vUElnNfG
+         kDmoGpkVuoH7Rt82ledq9JBdq7ONqWFzb+BaG508=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyle Meyer <kyle.meyer@hpe.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Jiong Wang <jiong.wang@netronome.com>,
+        Song Liu <songliubraving@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 164/413] perf tools: Increase MAX_NR_CPUS and MAX_CACHES
-Date:   Wed, 24 Jul 2019 21:17:35 +0200
-Message-Id: <20190724191746.787421443@linuxfoundation.org>
+Subject: [PATCH 5.2 174/413] bpf: fix BPF_ALU32 | BPF_ARSH on BE arches
+Date:   Wed, 24 Jul 2019 21:17:45 +0200
+Message-Id: <20190724191747.374500795@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -64,68 +65,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9f94c7f947e919c343b30f080285af53d0fa9902 ]
+[ Upstream commit 75672dda27bd00109a84cd975c17949ad9c45663 ]
 
-Attempting to profile 1024 or more CPUs with perf causes two errors:
+Yauheni reported the following code do not work correctly on BE arches:
 
-  perf record -a
-  [ perf record: Woken up X times to write data ]
-  way too many cpu caches..
-  [ perf record: Captured and wrote X MB perf.data (X samples) ]
+       ALU_ARSH_X:
+               DST = (u64) (u32) ((*(s32 *) &DST) >> SRC);
+               CONT;
+       ALU_ARSH_K:
+               DST = (u64) (u32) ((*(s32 *) &DST) >> IMM);
+               CONT;
 
-  perf report -C 1024
-  Error: failed to set  cpu bitmap
-  Requested CPU 1024 too large. Consider raising MAX_NR_CPUS
+and are causing failure of test_verifier test 'arsh32 on imm 2' on BE
+arches.
 
-  Increasing MAX_NR_CPUS from 1024 to 2048 and redefining MAX_CACHES as
-  MAX_NR_CPUS * 4 returns normal functionality to perf:
+The code is taking address and interpreting memory directly, so is not
+endianness neutral. We should instead perform standard C type casting on
+the variable. A u64 to s32 conversion will drop the high 32-bit and reserve
+the low 32-bit as signed integer, this is all we want.
 
-  perf record -a
-  [ perf record: Woken up X times to write data ]
-  [ perf record: Captured and wrote X MB perf.data (X samples) ]
-
-  perf report -C 1024
-  ...
-
-Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190620193630.154025-1-meyerk@stormcage.eag.rdlabs.hpecorp.net
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 2dc6b100f928 ("bpf: interpreter support BPF_ALU | BPF_ARSH")
+Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
+Signed-off-by: Jiong Wang <jiong.wang@netronome.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/perf.h        | 2 +-
- tools/perf/util/header.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ kernel/bpf/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index d59dee61b64d..a26555baf692 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -26,7 +26,7 @@ static inline unsigned long long rdclock(void)
- }
- 
- #ifndef MAX_NR_CPUS
--#define MAX_NR_CPUS			1024
-+#define MAX_NR_CPUS			2048
- #endif
- 
- extern const char *input_name;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index fb0aa661644b..b82d4577d969 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1100,7 +1100,7 @@ static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
- 	return 0;
- }
- 
--#define MAX_CACHES 2000
-+#define MAX_CACHES (MAX_NR_CPUS * 4)
- 
- static int write_cache(struct feat_fd *ff,
- 		       struct perf_evlist *evlist __maybe_unused)
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 080e2bb644cc..f2148db91439 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -1364,10 +1364,10 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+ 		insn++;
+ 		CONT;
+ 	ALU_ARSH_X:
+-		DST = (u64) (u32) ((*(s32 *) &DST) >> SRC);
++		DST = (u64) (u32) (((s32) DST) >> SRC);
+ 		CONT;
+ 	ALU_ARSH_K:
+-		DST = (u64) (u32) ((*(s32 *) &DST) >> IMM);
++		DST = (u64) (u32) (((s32) DST) >> IMM);
+ 		CONT;
+ 	ALU64_ARSH_X:
+ 		(*(s64 *) &DST) >>= SRC;
 -- 
 2.20.1
 
