@@ -2,127 +2,159 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0736C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C390C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 893EA21841
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F42229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:01:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3q7lweo"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="G8gdkDUl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfGXKBT (ORCPT
+        id S1727169AbfGXKBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 06:01:19 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40933 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbfGXKBS (ORCPT
+        Wed, 24 Jul 2019 06:01:46 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:34610 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbfGXKBq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 06:01:18 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v19so41061159wmj.5;
-        Wed, 24 Jul 2019 03:01:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=eardGiG9sgaXsGeo8bpQv9K/DCZgdVYTWR1Pqk2OwkY=;
-        b=J3q7lweoHQPYYUM83gyEYhTojQ+pKicvf6vieXh3JR9fC258Nxdem8XC48Lwpn8YxH
-         GV+nBzDUZg/irSM0hGozeVSCzUZUO93CIDPFcO945U5h6VLnW4WFenswd8eFNnj7ob0D
-         G+Zr2QBqKPO/PKMn6NtbWzp++U2ZKZoWzTzn4jyBpu5tF++LngjmZnetSF3wMu7idzVf
-         izK69UIpmXPZ6ZDroVpWV8T4z50/t8fnc2PkwQu3Yl2I0XltVcuHWDl7kYJkpBt2tYSN
-         aR0PXBvFn/dygedKsYgXqONgLLDDpmj93ZP+kdTQ8Kq0imHz3xRj6ZZHnpEy20qGulye
-         5eEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eardGiG9sgaXsGeo8bpQv9K/DCZgdVYTWR1Pqk2OwkY=;
-        b=TcWHcfMMuKs+4FtFF5PXBtIbCcbJS14jBeDYy1fXFc4s+lwVYGkWAVtG5Dyz0L6FFI
-         JydyWLJTv3BYyhzsVd7NiROvMFi6myfMmMumaCXcGJjO2fMD1zNhCpOmbF22uk1ZjK4V
-         GyJMacm5/60hE0etL10TIw/uUto+4PdEGbDJgqvnIt2jWdqSii5DLkWHxqC0HV3CKzz/
-         o0UEZEZS/zq3zcHvffRUZkvIR5Afy4mF0koGPFVWs3W0+ghFuic6JS49XaoRM5AW5GJX
-         rnLHDaQBgYhgcV5gY22wuu15OKlTk0VJ5msHMv0V8Z4CIOnLunkHd+6WJ9iP8I7627/2
-         SkJQ==
-X-Gm-Message-State: APjAAAV4M48Ug94PtNNg7hqputK3wCW3VynoT2/WJdmvYVZtTBl7CTS3
-        VSFVGC4akYKR+OrwSQsHUBBPtVW4
-X-Google-Smtp-Source: APXvYqw8jbpCojRMa90lBf2zLLJ/B6ocFFfKvZdX80jGWruuFFEAh4/9mfLcAatyHsXqd5BDG2h5kw==
-X-Received: by 2002:a05:600c:291:: with SMTP id 17mr72160774wmk.32.1563962476284;
-        Wed, 24 Jul 2019 03:01:16 -0700 (PDT)
-Received: from [192.168.8.147] (200.150.22.93.rev.sfr.net. [93.22.150.200])
-        by smtp.gmail.com with ESMTPSA id r123sm41660326wme.7.2019.07.24.03.01.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 03:01:15 -0700 (PDT)
-Subject: Re: [PATCH 4.4 stable net] net: tcp: Fix use-after-free in
- tcp_write_xmit
-To:     Mao Wenan <maowenan@huawei.com>, davem@davemloft.net,
-        gregkh@linuxfoundation.org, netdev@vger.kernel.org,
+        Wed, 24 Jul 2019 06:01:46 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190724100143epoutp03d7ccabc271a8941a04a18f060a45f8a8~0T5w-Up0l2461424614epoutp03_
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 10:01:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190724100143epoutp03d7ccabc271a8941a04a18f060a45f8a8~0T5w-Up0l2461424614epoutp03_
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563962503;
+        bh=c5ptV5HA49sNH19sxY9DMgig1lliijWYCMj8k/TIqIM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=G8gdkDUlJGmTWEwPsXs3ZA14lUyjxL7AIdU+3BYrYZMVhO348JB5AukwSIPUpEaJl
+         P7yb34SoxnRWA1f1uQ1gBSdY/onc5r6eJkVyzhJCGHf9KAt2zx+ySGs/6jAEEXr2Db
+         XR990k2AcbokFSthX1FsZP7hu+Jee4DKNySvAYMA=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20190724100142epcas1p3eabb061cc801a35fc86f8af3ae0e2e5b~0T5wriZpM1150511505epcas1p3Q;
+        Wed, 24 Jul 2019 10:01:42 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 45trTv5h9czMqYkk; Wed, 24 Jul
+        2019 10:01:39 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CE.27.04066.47C283D5; Wed, 24 Jul 2019 19:01:24 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190724100124epcas1p19d46da4028d1867b2fd02d13f4a90ec9~0T5fPdCgd1979719797epcas1p14;
+        Wed, 24 Jul 2019 10:01:24 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190724100124epsmtrp2c438f08135858e7f655cffab024b05a1~0T5fO0mVW0318803188epsmtrp2e;
+        Wed, 24 Jul 2019 10:01:24 +0000 (GMT)
+X-AuditID: b6c32a37-e27ff70000000fe2-4c-5d382c74ebeb
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        97.E1.03706.37C283D5; Wed, 24 Jul 2019 19:01:23 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190724100123epsmtip2b9a9d037afa2bedcb1db49d892d3d299~0T5fHj5Ar2396923969epsmtip2O;
+        Wed, 24 Jul 2019 10:01:23 +0000 (GMT)
+Subject: Re: [PATCH 1/1] extcon: extcon-max77843: convert to
+ i2c_new_dummy_device
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
         linux-kernel@vger.kernel.org
-References: <20190724091715.137033-1-maowenan@huawei.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <badce2b6-b75e-db01-39c8-d68a0161c101@gmail.com>
-Date:   Wed, 24 Jul 2019 12:01:14 +0200
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <6bff5707-c460-c7e8-d913-bbc4d8fd5447@samsung.com>
+Date:   Wed, 24 Jul 2019 19:04:27 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190724091715.137033-1-maowenan@huawei.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190722172601.3506-2-wsa+renesas@sang-engineering.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmk+LIzCtJLcpLzFFi42LZdlhTV7dExyLWYMEHdYuOv18YLS7vmsNm
+        cbtxBZtF3zl3BxaPvi2rGD2eLVzP4vF5k1wAc1S2TUZqYkpqkUJqXnJ+SmZeuq2Sd3C8c7yp
+        mYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QMiWFssScUqBQQGJxsZK+nU1RfmlJqkJGfnGJrVJq
+        QUpOgWWBXnFibnFpXrpecn6ulaGBgZEpUGFCdsbcI7wF3VwVy/uusDYwLufoYuTkkBAwkZgy
+        ZTNzFyMXh5DADkaJppmv2SGcT0BO32s2COcbo8SqG/2MMC3LFt9ggkjsZZS4fu8cC4TznlFi
+        1re3TCBVwgLBEv8/tLCB2CICARIT/i9kBbGZBTwl+ma0g8XZBLQk9r+4AWbzCyhKXP3xGGwD
+        r4CdxOv5t8DmsAioSjR8mgrWKyoQIfHpwWFWiBpBiZMzn7CA2JwCrhKXtm6Gmi8ucevJfCYI
+        W16ieetssOckBA6wSfw//4Qd4gUXia3zfkPZwhKvjm+BsqUkPr/bywZhV0usPHmEDaK5g1Fi
+        y/4LrBAJY4n9SycDbeAA2qApsX6XPkRYUWLn77mMEIv5JN597WEFKZEQ4JXoaBOCKFGWuPzg
+        LhOELSmxuL2TbQKj0iwk78xC8sIsJC/MQli2gJFlFaNYakFxbnpqsWGBMXJsb2IEJ0Qt8x2M
+        G875HGIU4GBU4uFVYDCPFWJNLCuuzD3EKMHBrCTCG9hgFivEm5JYWZValB9fVJqTWnyI0RQY
+        2hOZpUST84HJOq8k3tDUyNjY2MLE0MzU0FBJnHfeH81YIYH0xJLU7NTUgtQimD4mDk6pBsbc
+        NWcvCtUb73iU2cP7ZnGlqQsn3x2HTxr3c40eZUt9nLE68e6J52snNSkemnn/e/KJxtzjuQ9v
+        BwZMCTMTeOv+dK9fA3v11Fq56PP9Gz8ITC40UPELcG8/x/LYcfKSh1OXe6mdjeE+FCD9JL+D
+        i/9+K3d9xpPtxg8Ldy1ddWtdzr1j057JisgosRRnJBpqMRcVJwIAtwqq154DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKLMWRmVeSWpSXmKPExsWy7bCSvG6xjkWswYT/NhYdf78wWlzeNYfN
+        4nbjCjaLvnPuDiwefVtWMXo8W7iexePzJrkA5igum5TUnMyy1CJ9uwSujLlHeAu6uSqW911h
+        bWBcztHFyMkhIWAisWzxDaYuRi4OIYHdjBJNO88zQyQkJaZdPApkcwDZwhKHDxdD1LxllOg/
+        fZkRpEZYIFji/4cWNhBbRMBP4tCyd2C9zAKeEn0z2tkgGi4zSsxdMJcVJMEmoCWx/8UNsAZ+
+        AUWJqz8egw3iFbCTeD3/FhOIzSKgKtHwaSpYvahAhMThHbOgagQlTs58wgJicwq4SlzaupkV
+        Ypm6xJ95l6AWi0vcejKfCcKWl2jeOpt5AqPwLCTts5C0zELSMgtJywJGllWMkqkFxbnpucWG
+        BYZ5qeV6xYm5xaV56XrJ+bmbGMGRoaW5g/HykvhDjAIcjEo8vAoM5rFCrIllxZW5hxglOJiV
+        RHgDG8xihXhTEiurUovy44tKc1KLDzFKc7AoifM+zTsWKSSQnliSmp2aWpBaBJNl4uCUamDs
+        /HtskUV0Vm5LfeleT60NE0xmfTlYcGjBfM3KheHNU9946S9TDfinWZ4mf/1u0U1lL6WAqO4v
+        jFVPvK5nF3dskua86JTNXtPBHifqP3dH/KL4fzzyN95eZpp7wM1B8qXF7dg3Av/ywtWD2OVa
+        uOUMv1o86TZ5lnNqy0Zf0URhtRztaVM0HJVYijMSDbWYi4oTAfscDPqIAgAA
+X-CMS-MailID: 20190724100124epcas1p19d46da4028d1867b2fd02d13f4a90ec9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190722172604epcas5p4ce41ff3eda1b28ae07eef332808780ac
+References: <20190722172601.3506-1-wsa+renesas@sang-engineering.com>
+        <CGME20190722172604epcas5p4ce41ff3eda1b28ae07eef332808780ac@epcas5p4.samsung.com>
+        <20190722172601.3506-2-wsa+renesas@sang-engineering.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 19. 7. 23. 오전 2:26, Wolfram Sang wrote:
+> Move from i2c_new_dummy() to i2c_new_dummy_device(), so we now get an
+> ERRPTR which we use in error handling.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+> 
+> Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
+> 
+>  drivers/extcon/extcon-max77843.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/extcon/extcon-max77843.c b/drivers/extcon/extcon-max77843.c
+> index a343a6ef3506..e6b50ca83008 100644
+> --- a/drivers/extcon/extcon-max77843.c
+> +++ b/drivers/extcon/extcon-max77843.c
+> @@ -774,12 +774,12 @@ static int max77843_init_muic_regmap(struct max77693_dev *max77843)
+>  {
+>  	int ret;
+>  
+> -	max77843->i2c_muic = i2c_new_dummy(max77843->i2c->adapter,
+> +	max77843->i2c_muic = i2c_new_dummy_device(max77843->i2c->adapter,
+>  			I2C_ADDR_MUIC);
+> -	if (!max77843->i2c_muic) {
+> +	if (IS_ERR(max77843->i2c_muic)) {
+>  		dev_err(&max77843->i2c->dev,
+>  				"Cannot allocate I2C device for MUIC\n");
+> -		return -ENOMEM;
+> +		return PTR_ERR(max77843->i2c_muic);
+>  	}
+>  
+>  	i2c_set_clientdata(max77843->i2c_muic, max77843);
+> 
 
+Applied it. Thanks.
 
-On 7/24/19 11:17 AM, Mao Wenan wrote:
-> There is one report about tcp_write_xmit use-after-free with version 4.4.136:
-
-Current stable 4.4 is 4.4.186
-
-Can you check the bug is still there ?
-
-List of patches between 4.4.136 and 4.4.186 (this list is not exhaustive)
-
-46c7b5d6f2a51c355b29118814fbfbdb79c35656 tcp: refine memory limit test in tcp_fragment()
-f938ae0ce5ef7b693125b918509b941281afc957 tcp: enforce tcp_min_snd_mss in tcp_mtu_probing()
-e757d052f3b8ce739d068a1e890643376c16b7a9 tcp: add tcp_min_snd_mss sysctl
-ad472d3a9483abc155e1644ad740cd8c039b5170 tcp: tcp_fragment() should apply sane memory limits
-4657ee0fe05e15ab572b157f13a82e080d4b7d73 tcp: limit payload size of sacked skbs
-b6d37bba0f7a7492427d7518d4be485dcdd9d5d1 tcp: tcp_grow_window() needs to respect tcp_space()
-68337354043a3d5207cd4f055e5a8342ec4eec0f tcp: Ensure DCTCP reacts to losses
-7ed7c0386ef2a5cbe58e15af5014c9302d3593eb tcp/dccp: drop SYN packets if accept queue is full
-191aa19ab8c1459c11a5c541801f17e01dda17de tcp: handle inet_csk_reqsk_queue_add() failures
-a466589807a13da2b7fbb2776e01634b38a4233b tcp: clear icsk_backoff in tcp_write_queue_purge()
-122e4a30779336643614fe0f81e1f3fcbd0a371c tcp: tcp_v4_err() should be more careful
-ed7748bcf290ad8f80020217d832f458ac9bae7f tcp: fix NULL ref in tail loss probe
-eee1af4e268e10fecb76bce42a8d7343aeb2a5e6 tcp: add tcp_ooo_try_coalesce() helper
-be288481479ca8c1beba02a7e779ffeaa11f1597 tcp: call tcp_drop() from tcp_data_queue_ofo()
-352b66932a23fb11f0a7c316361220648bca3c79 tcp: free batches of packets in tcp_prune_ofo_queue()
-e747775172a2d4dc4dae794f248f9687ba793f54 tcp: fix a stale ooo_last_skb after a replace
-4666b6e2b27d91e05a5b8459e40e4a05dbc1c7b0 tcp: use an RB tree for ooo receive queue
-ec7055c62714326c56dabcf7757069ac7f276bda tcp: increment sk_drops for dropped rx packets
-86a0a00794c21b35c72d767a98fb917b5b76b513 tcp: do not restart timewait timer on rst reception
-81970da69122fe4bf2af5bb1bb4c7f62d4744e79 tcp: identify cryptic messages as TCP seq # bugs
-43707aa8c55fb165a1a56f590e0defb198ebdde9 tcp: remove DELAYED ACK events in DCTCP
-42962538cd9fe281a6e8602f22c7b1e218ed812a tcp: Fix missing range_truesize enlargement in the backport
-27a0762cb570834dc44155363c118cabdd024c3c tcp: add one more quick ack after after ECN events
-cd760ab9f4e13aedccc80f19a0b7863d5c0b3c8c tcp: refactor tcp_ecn_check_ce to remove sk type cast
-96b792d199d17545d6a53faf44b9c91d038f1ab3 tcp: do not aggressively quick ack after ECN events
-2b30c04bc6f9e7be2d9a5e1b504faa904154c7da tcp: add max_quickacks param to tcp_incr_quickack and tcp_enter_quickack_mode
-e2f337e2bd4efe32051a496a7fcdd94ea67c0cfa tcp: do not force quickack when receiving out-of-order packets
-dc6ae4dffd656811dee7151b19545e4cd839d378 tcp: detect malicious patterns in tcp_collapse_ofo_queue()
-5fbec4801264cb3279ef6ac9c70bcbe2aaef89d5 tcp: avoid collapses in tcp_prune_queue() if possible
-255924ea891f647451af3acbc40a3730dcb3255e tcp: do not delay ACK in DCTCP upon CE status change
-0b1d40e9e7738e3396ce414b1c62b911c285dfa3 tcp: do not cancel delay-AcK on DCTCP special ACK
-17fea38e74ab24afb06970bbd9dc52db11a8034b tcp: helpers to send special DCTCP ack
-500e03f463835e74c75890d56d9a7ab63755aa2d tcp: fix dctcp delayed ACK schedule
-61c66cc52d42f78bbdd8f2e40b7c0bb9b936a12d tcp: prevent bogus FRTO undos with non-SACK flows
-48ffbdea28808354b89447fac2d8524c29ce7ab4 tcp: verify the checksum of the first data segment in a new connection
-4dff97920e13af3e92180eefa6b7712d4eac5e58 tcp: do not overshoot window_clamp in tcp_rcv_space_adjust()
-
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
