@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB17C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96DFC41517
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BBC122AEC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9676B22BE9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997429;
-	bh=k7obKKqlAkIYwKC6eR3tddu+08+X5r047EbyTzv6Ksg=;
+	s=default; t=1563997434;
+	bh=b9TOP3Xn3cc3W5pR2KgfKQ1bc00mbBY4OpSSUmZjhzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kOZy8ib9NK2jSGkDRtvahLnzihVcFyDr4qTP8k8n7hmQx0htFWSu2ZZR46891Nu7S
-	 TN2qwpeHryWd7HHZBeeJjJg4BGf32q/I6hEKtLvhG2u0hONWiqWYXZocvMrAawJ+61
-	 1Ri3wqzalLdnKxy3tH+lMZmkwba4DYRwM5GFOW1A=
+	b=kxZCGEFoWWJJWzQfV8ONdqXcLN59QJfWOGvWd2mZ3jdp6z0SzJq2jryz/7Ygehq8w
+	 0B4cMuZFaTncx/isqLTR/ImhRoHBGin6Mjc0t7G5NwvCHiORNfuupjqCp+4XabhHPq
+	 ygltSvQQ8KZ7aRIJ++heuzNBZNiPOXDa2Jt39E08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390607AbfGXTns (ORCPT
+        id S2390664AbfGXTnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:43:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46148 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:43:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389715AbfGXTno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:43:44 -0400
+        id S2390628AbfGXTnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:43:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BE9C22ADA;
-        Wed, 24 Jul 2019 19:43:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C433122ADA;
+        Wed, 24 Jul 2019 19:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997424;
-        bh=k7obKKqlAkIYwKC6eR3tddu+08+X5r047EbyTzv6Ksg=;
+        s=default; t=1563997429;
+        bh=b9TOP3Xn3cc3W5pR2KgfKQ1bc00mbBY4OpSSUmZjhzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KEyODLmF40WviSfCDHyNx9BSn9ZG68NVuCmsysanr8xL1bkVA5xn1GVJ6c9iLJl3Z
-         15f04hlGWaT7Qm69VDqkY8RuJAniQC68rG9ObbKu2ucVC5qeZ782yEpPyrvnG/YMh7
-         Dp0e70YoZm4wsHevzPOwLaJ93xJk96KPfaZrGxYg=
+        b=iZCNCNwzuzQOCUgkQrBXXXIDF8TXlQCTAzZqBAEdWdZ984dP6jzjb+FcBV92XzPLg
+         IT8U5dk+ICVJ7+kGKI1+8LdfD8fw7l6VDkFmG/+fi7wDEtV70VSVQF5TqgFNzA//4W
+         EzNnkCZCP4Ym670P7/+94J4akZxxVZ2WSA8yIQbQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tamizh chelvam <tamizhr@codeaurora.org>,
-        Anilkumar Kolli <akolli@codeaurora.org>,
+        stable@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 019/371] ath: DFS JP domain W56 fixed pulse type 3 RADAR detection
-Date:   Wed, 24 Jul 2019 21:16:11 +0200
-Message-Id: <20190724191725.939572988@linuxfoundation.org>
+Subject: [PATCH 5.1 020/371] ath10k: Fix encoding for protected management frames
+Date:   Wed, 24 Jul 2019 21:16:12 +0200
+Message-Id: <20190724191726.019338255@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,42 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d8792393a783158cbb2c39939cb897dc5e5299b6 ]
+[ Upstream commit 42f1bc43e6a97b9ddbe976eba9bd05306c990c75 ]
 
-Increase pulse width range from 1-2usec to 0-4usec.
-During data traffic HW occasionally fails detecting radar pulses,
-so that SW cannot get enough radar reports to achieve the success rate.
+Currently the protected management frames are
+not appended with the MIC_LEN which results in
+the protected management frames being encoded
+incorrectly.
 
-Tested ath10k hw and fw:
-	* QCA9888(10.4-3.5.1-00052)
-	* QCA4019(10.4-3.2.1.1-00017)
-	* QCA9984(10.4-3.6-00104)
-	* QCA988X(10.2.4-1.0-00041)
+Add the extra space at the end of the protected
+management frames to fix this encoding error for
+the protected management frames.
 
-Tested ath9k hw: AR9300
+Tested HW: WCN3990
+Tested FW: WLAN.HL.3.1-00784-QCAHLSWMTPLZ-1
 
-Tested-by: Tamizh chelvam <tamizhr@codeaurora.org>
-Signed-off-by: Tamizh chelvam <tamizhr@codeaurora.org>
-Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/dfs_pattern_detector.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/wmi-tlv.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/dfs_pattern_detector.c b/drivers/net/wireless/ath/dfs_pattern_detector.c
-index d52b31b45df7..a274eb0d1968 100644
---- a/drivers/net/wireless/ath/dfs_pattern_detector.c
-+++ b/drivers/net/wireless/ath/dfs_pattern_detector.c
-@@ -111,7 +111,7 @@ static const struct radar_detector_specs jp_radar_ref_types[] = {
- 	JP_PATTERN(0, 0, 1, 1428, 1428, 1, 18, 29, false),
- 	JP_PATTERN(1, 2, 3, 3846, 3846, 1, 18, 29, false),
- 	JP_PATTERN(2, 0, 1, 1388, 1388, 1, 18, 50, false),
--	JP_PATTERN(3, 1, 2, 4000, 4000, 1, 18, 50, false),
-+	JP_PATTERN(3, 0, 4, 4000, 4000, 1, 18, 50, false),
- 	JP_PATTERN(4, 0, 5, 150, 230, 1, 23, 50, false),
- 	JP_PATTERN(5, 6, 10, 200, 500, 1, 16, 50, false),
- 	JP_PATTERN(6, 11, 20, 200, 500, 1, 12, 50, false),
+diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+index 582fb11f648a..02709fc99034 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
++++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+@@ -2840,8 +2840,10 @@ ath10k_wmi_tlv_op_gen_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
+ 	if ((ieee80211_is_action(hdr->frame_control) ||
+ 	     ieee80211_is_deauth(hdr->frame_control) ||
+ 	     ieee80211_is_disassoc(hdr->frame_control)) &&
+-	     ieee80211_has_protected(hdr->frame_control))
++	     ieee80211_has_protected(hdr->frame_control)) {
++		skb_put(msdu, IEEE80211_CCMP_MIC_LEN);
+ 		buf_len += IEEE80211_CCMP_MIC_LEN;
++	}
+ 
+ 	buf_len = min_t(u32, buf_len, WMI_TLV_MGMT_TX_FRAME_MAX_LEN);
+ 	buf_len = round_up(buf_len, 4);
 -- 
 2.20.1
 
