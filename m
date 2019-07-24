@@ -2,180 +2,185 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E561EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A7FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7174214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A39214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Y8l89H10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389637AbfGXU3k (ORCPT
+        id S2390025AbfGXU3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:29:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45872 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389224AbfGXU3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:29:38 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 70E7130BD1BB;
-        Wed, 24 Jul 2019 20:29:37 +0000 (UTC)
-Received: from [10.18.17.163] (dhcp-17-163.bos.redhat.com [10.18.17.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DB5695D968;
-        Wed, 24 Jul 2019 20:29:28 +0000 (UTC)
-Subject: Re: [PATCH v2 QEMU] virtio-balloon: Provide a interface for "bubble
- hinting"
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
-        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
- <20190724171050.7888.62199.stgit@localhost.localdomain>
- <20190724150224-mutt-send-email-mst@kernel.org>
- <6218af96d7d55935f2cf607d47680edc9b90816e.camel@linux.intel.com>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <ee5387b1-89af-daf4-8492-8139216c6dcf@redhat.com>
-Date:   Wed, 24 Jul 2019 16:29:27 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <6218af96d7d55935f2cf607d47680edc9b90816e.camel@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 24 Jul 2019 20:29:37 +0000 (UTC)
+        Wed, 24 Jul 2019 16:29:44 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:36354 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389224AbfGXU3m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:29:42 -0400
+Received: by mail-qk1-f193.google.com with SMTP id g18so34761028qkl.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 13:29:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=jMuXZCkU9Ct89wOn6NBnDyHgJz0Yj3VpJrE3krYoMBo=;
+        b=Y8l89H10hDJOBdtg0LtWprl/ct7QZfhT5686p+b9YXoN+oy3Eclg3xjZXguHL3KwmO
+         abUyx4EoNNPkVVU0UByMLrD6y7rbBUYgi4E3RQTBS+z94H/nZiuLXHMLAIWoui/4bUlG
+         PnOwXPkgW2UZbhsNwQW7pkaX5YGilXWuOsloqeV9lUjsAB5aRFrEvXvwgp1wTqFrQ5O5
+         g1sz3KrIkBtUt7opmlF21wev+CI73210Iu930+Biwds/yzbhGeNO7TMcZPbQ5q4pZb2A
+         WmUz2zd/8AtntvDiB3BIrPjWuzlzNdxRPx/fCF+GhdkaF562DDlA746+0Fk4qMHUBFiJ
+         9BpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jMuXZCkU9Ct89wOn6NBnDyHgJz0Yj3VpJrE3krYoMBo=;
+        b=qSJuXAQyaU/8RRX0OKUElKTYigFROSzYCe334lNgevEn/gorFeJjZVhn9jXkS1Xzlf
+         c1dtXOTQPxnhU9jPW3rfz71ZIm7tuZFJsLntQhD8GnJ2fEiMu3vdQuVcR0HxszlxoJQp
+         Ztvm4pmNUuG9yBC2w3Q/kvBfH3CBYDnL7mniCCWnkDU1w7URQHl3QNMprZc58X+5+JEn
+         9AVLXlnN1vd7FzMoRLyPaXk7qPDthh5Jqgmc9hM67nwYwDKoMphwe8ZaXCWhUflPfmYo
+         YMsgQQTC22fAEUX/MlOB4oMJ8y1Q0ju2lM2eGCiSU6S3SaGJzTxP2Am1kYwFg9aEaKDD
+         0LAg==
+X-Gm-Message-State: APjAAAXVicAi0KtWQenEFnv81Oh3uOh+85FTvltig3eIpriypXT8cx5d
+        oEfn3RgqxmT4GNGcdw+0xCS0LQ==
+X-Google-Smtp-Source: APXvYqw9LTSo4+/ExlpXauIFR9jBl5GdjmT+cEkMwOIsoifwY6EF1GRlgatrSdGiKHpe4HSQVmcY2g==
+X-Received: by 2002:a05:620a:10bc:: with SMTP id h28mr55522007qkk.289.1564000181815;
+        Wed, 24 Jul 2019 13:29:41 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id r205sm24529121qke.115.2019.07.24.13.29.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 13:29:41 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     davem@davemloft.net, arnd@arndb.de, dhowells@redhat.com,
+        ndesaulniers@google.com, morbo@google.com, jyknight@google.com,
+        natechancellor@gmail.com, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH v2] asm-generic: fix -Wtype-limits compiler warnings
+Date:   Wed, 24 Jul 2019 16:29:26 -0400
+Message-Id: <1564000166-31428-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The commit d66acc39c7ce ("bitops: Optimise get_order()") introduced a
+compilation warning because "rx_frag_size" is an "ushort" while
+PAGE_SHIFT here is 16. The commit changed the get_order() to be a
+multi-line macro where compilers insist to check all statements in the
+macro even when __builtin_constant_p(rx_frag_size) will return false as
+"rx_frag_size" is a module parameter.
 
-On 7/24/19 4:18 PM, Alexander Duyck wrote:
-> On Wed, 2019-07-24 at 15:02 -0400, Michael S. Tsirkin wrote:
->> On Wed, Jul 24, 2019 at 10:12:10AM -0700, Alexander Duyck wrote:
->>> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
->>>
->>> Add support for what I am referring to as "bubble hinting". Basically the
->>> idea is to function very similar to how the balloon works in that we
->>> basically end up madvising the page as not being used. However we don't
->>> really need to bother with any deflate type logic since the page will be
->>> faulted back into the guest when it is read or written to.
->>>
->>> This is meant to be a simplification of the existing balloon interface
->>> to use for providing hints to what memory needs to be freed. I am assuming
->>> this is safe to do as the deflate logic does not actually appear to do very
->>> much other than tracking what subpages have been released and which ones
->>> haven't.
->>>
->>> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
->>> ---
->>>  hw/virtio/virtio-balloon.c                      |   40 +++++++++++++++++++++++
->>>  include/hw/virtio/virtio-balloon.h              |    2 +
->>>  include/standard-headers/linux/virtio_balloon.h |    1 +
->>>  3 files changed, 42 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
->>> index 2112874055fb..70c0004c0f88 100644
->>> --- a/hw/virtio/virtio-balloon.c
->>> +++ b/hw/virtio/virtio-balloon.c
->>> @@ -328,6 +328,39 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
->>>      balloon_stats_change_timer(s, 0);
->>>  }
->>>  
->>> +static void virtio_bubble_handle_output(VirtIODevice *vdev, VirtQueue *vq)
->>> +{
->>> +    VirtQueueElement *elem;
->>> +
->>> +    while ((elem = virtqueue_pop(vq, sizeof(VirtQueueElement)))) {
->>> +    	unsigned int i;
->>> +
->>> +        for (i = 0; i < elem->in_num; i++) {
->>> +            void *addr = elem->in_sg[i].iov_base;
->>> +            size_t size = elem->in_sg[i].iov_len;
->>> +            ram_addr_t ram_offset;
->>> +            size_t rb_page_size;
->>> +            RAMBlock *rb;
->>> +
->>> +            if (qemu_balloon_is_inhibited())
->>> +                continue;
->>> +
->>> +            rb = qemu_ram_block_from_host(addr, false, &ram_offset);
->>> +            rb_page_size = qemu_ram_pagesize(rb);
->>> +
->>> +            /* For now we will simply ignore unaligned memory regions */
->>> +            if ((ram_offset | size) & (rb_page_size - 1))
->>> +                continue;
->>> +
->>> +            ram_block_discard_range(rb, ram_offset, size);
->> I suspect this needs to do like the migration type of
->> hinting and get disabled if page poisoning is in effect.
->> Right?
-> Shouldn't something like that end up getting handled via
-> qemu_balloon_is_inhibited, or did I miss something there? I assumed cases
-> like that would end up setting qemu_balloon_is_inhibited to true, if that
-> isn't the case then I could add some additional conditions. I would do it
-> in about the same spot as the qemu_balloon_is_inhibited check.
-I don't think qemu_balloon_is_inhibited() will take care of the page poisoning
-situations.
-If I am not wrong we may have to look to extend VIRTIO_BALLOON_F_PAGE_POISON
-support as per Michael's suggestion.
->
->
+In file included from ./arch/powerpc/include/asm/page_64.h:107,
+                 from ./arch/powerpc/include/asm/page.h:242,
+                 from ./arch/powerpc/include/asm/mmu.h:132,
+                 from ./arch/powerpc/include/asm/lppaca.h:47,
+                 from ./arch/powerpc/include/asm/paca.h:17,
+                 from ./arch/powerpc/include/asm/current.h:13,
+                 from ./include/linux/thread_info.h:21,
+                 from ./arch/powerpc/include/asm/processor.h:39,
+                 from ./include/linux/prefetch.h:15,
+                 from drivers/net/ethernet/emulex/benet/be_main.c:14:
+drivers/net/ethernet/emulex/benet/be_main.c: In function
+'be_rx_cqs_create':
+./include/asm-generic/getorder.h:54:9: warning: comparison is always
+true due to limited range of data type [-Wtype-limits]
+   (((n) < (1UL << PAGE_SHIFT)) ? 0 :  \
+         ^
+drivers/net/ethernet/emulex/benet/be_main.c:3138:33: note: in expansion
+of macro 'get_order'
+  adapter->big_page_size = (1 << get_order(rx_frag_size)) * PAGE_SIZE;
+                                 ^~~~~~~~~
+
+Fix it by moving all of this multi-line macro into a proper function,
+and killing __get_order() off.
+
+Fixes: d66acc39c7ce ("bitops: Optimise get_order()")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+
+v2: Kill off __get_order() per Andrew.
+    Update the comments per David.
+    Remove a variable "order" to be consistent with the rest of return
+    statements.
+
+ include/asm-generic/getorder.h | 50 +++++++++++++++++-------------------------
+ 1 file changed, 20 insertions(+), 30 deletions(-)
+
+diff --git a/include/asm-generic/getorder.h b/include/asm-generic/getorder.h
+index c64bea7a52be..e9f20b813a69 100644
+--- a/include/asm-generic/getorder.h
++++ b/include/asm-generic/getorder.h
+@@ -7,24 +7,6 @@
+ #include <linux/compiler.h>
+ #include <linux/log2.h>
+ 
+-/*
+- * Runtime evaluation of get_order()
+- */
+-static inline __attribute_const__
+-int __get_order(unsigned long size)
+-{
+-	int order;
+-
+-	size--;
+-	size >>= PAGE_SHIFT;
+-#if BITS_PER_LONG == 32
+-	order = fls(size);
+-#else
+-	order = fls64(size);
+-#endif
+-	return order;
+-}
+-
+ /**
+  * get_order - Determine the allocation order of a memory size
+  * @size: The size for which to get the order
+@@ -43,19 +25,27 @@ int __get_order(unsigned long size)
+  * to hold an object of the specified size.
+  *
+  * The result is undefined if the size is 0.
+- *
+- * This function may be used to initialise variables with compile time
+- * evaluations of constants.
+  */
+-#define get_order(n)						\
+-(								\
+-	__builtin_constant_p(n) ? (				\
+-		((n) == 0UL) ? BITS_PER_LONG - PAGE_SHIFT :	\
+-		(((n) < (1UL << PAGE_SHIFT)) ? 0 :		\
+-		 ilog2((n) - 1) - PAGE_SHIFT + 1)		\
+-	) :							\
+-	__get_order(n)						\
+-)
++static inline __attribute_const__ int get_order(unsigned long size)
++{
++	if (__builtin_constant_p(size)) {
++		if (!size)
++			return BITS_PER_LONG - PAGE_SHIFT;
++
++		if (size < (1UL << PAGE_SHIFT))
++			return 0;
++
++		return ilog2((size) - 1) - PAGE_SHIFT + 1;
++	}
++
++	size--;
++	size >>= PAGE_SHIFT;
++#if BITS_PER_LONG == 32
++	return fls(size);
++#else
++	return fls64(size);
++#endif
++}
+ 
+ #endif	/* __ASSEMBLY__ */
+ 
 -- 
-Thanks
-Nitesh
+1.8.3.1
+
