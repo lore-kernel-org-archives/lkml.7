@@ -2,89 +2,104 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3158AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D16AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CCFC22ADC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8FC722ADC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563996225;
+	bh=DW0BB2DTYiRuPIgJVs7ix7BEP9vmGWAvsSoJQnzaCJQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bBv3UBOOGgsltdkNrrjwPyz1pSKmW/T2rwjD+TsoyRoZm73Eg2tdkU/c7y85SMst4
+	 QrDBbG+hKC/01STKNCA+2W88vc2lOth5xJYwFym1HLnWiFaT0oqNDOL4WIJ7g1YSBz
+	 3zueNrDsLvGXI66K688IdOUzHczOtBQvxnPjjT8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387848AbfGXTXn (ORCPT
+        id S2387860AbfGXTXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:23:43 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:36527 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728592AbfGXTXi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:23:38 -0400
-Received: from xps13 ([83.160.161.190])
-        by smtp-cloud9.xs4all.net with ESMTPSA
-        id qMrLhJkQP0QvJqMrOhAAlA; Wed, 24 Jul 2019 21:23:36 +0200
-Message-ID: <b22cf290b089cb1174ec0fdeb15bdf2e90bf51dc.camel@tiscali.nl>
-Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
-From:   Paul Bolle <pebolle@tiscali.nl>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        "Souza, Jose" <jose.souza@intel.com>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Wed, 24 Jul 2019 21:23:31 +0200
-In-Reply-To: <1563398966.3438.5.camel@HansenPartnership.com>
-References: <1561834612.3071.6.camel@HansenPartnership.com>
-         <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
-         <1562875878.2840.0.camel@HansenPartnership.com>
-         <27a5b2ca8cfc79bf617387a363ea7192acc4e1f0.camel@intel.com>
-         <1562876880.2840.12.camel@HansenPartnership.com>
-         <1562882235.13723.1.camel@HansenPartnership.com>
-         <dad073fb4b06cf0abb7ab702a9474b9c443186eb.camel@intel.com>
-         <1562884722.15001.3.camel@HansenPartnership.com>
-         <2c4edfabf49998eb5da3a6adcabc006eb64bfe90.camel@tiscali.nl>
-         <55f4d1c242d684ca2742e8c14613d810a9ee9504.camel@intel.com>
-         <1562888433.2915.0.camel@HansenPartnership.com>
-         <1562941185.3398.1.camel@HansenPartnership.com>
-         <68472c5f390731e170221809a12d88cb3bc6460e.camel@tiscali.nl>
-         <143142cad4a946361a0bf285b6f1701c81096c7b.camel@intel.com>
-         <595d9bc87bf47717c8675eb5b1a1cbb2bc463752.camel@tiscali.nl>
-         <a10f009fc160f05077760ff59cd86a9c99006b39.camel@intel.com>
-         <9ef8fc1ae2c3a9bad588899488a781333af4449a.camel@tiscali.nl>
-         <1563398966.3438.5.camel@HansenPartnership.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Wed, 24 Jul 2019 15:23:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387835AbfGXTXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:23:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 845DB229ED;
+        Wed, 24 Jul 2019 19:23:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563996219;
+        bh=DW0BB2DTYiRuPIgJVs7ix7BEP9vmGWAvsSoJQnzaCJQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PxIZMT9EeimY3KCThwJfPXzxWqzrFNfa2B1yY8EZzS243ml4oH2hT77czEwMZXteM
+         zr2K1v84P1QkH9dT286O2dtgPABe3TwbmSyRGwnzOT0f3d+efGjigLCGDkOdfHl68T
+         DlqNdPlJjoT6fmzyd26RxmX2yvjz1PZzMfAyNR00=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 021/413] media: ov7740: avoid invalid framesize setting
+Date:   Wed, 24 Jul 2019 21:15:12 +0200
+Message-Id: <20190724191736.960254327@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfAak953jrG8+iI+u62M70niCTw5ChlP5YsW2e6m8dc3mQ9x0fFKajOQht3QdhLJaClnveoYliKavy1/mjNjvYgjLgJkltxUqoKdO+uN4o/rhdgecDc7K
- 1lqJTGziXjpIMvuFwlp0VMWNObq5EFKq2jIdr/OvXshg1kMKZAr9H1a7DBcYPx82ZFu4aewwAqVuLxjcZYrDEHDtHwdvOGcxYjP4ntjZ9ieER4eb6PG+tOlA
- YizXsZtaPUnV2QnqvzpyfyFRUHisoqIJpl3bWW4G+tfFqK9uTrAv6EnCCpodZMGU+CvMlmMpMjmfW8FMwWMIDWW0RMaZlmmE2b5KQJ8oQoc=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jose,
+[ Upstream commit 6e4ab830ac6d6a0d7cd7f87dc5d6536369bf24a8 ]
 
-James Bottomley schreef op do 18-07-2019 om 06:29 [+0900]:
-> On Wed, 2019-07-17 at 23:27 +0200, Paul Bolle wrote:
-> > I've just reached a day of uptime with your revert. (The proper
-> > uptime is just a fraction of a day, this being a laptop.) Anyhow, no
-> > screen freezes occurred during this day.
-> 
-> I'm afraid my status is that I'm in Tokyo doing conference
-> presentations (and kernel demos) so I'm a bit reluctant to mess with my
-> setup until I finish everything on Friday, but I will test it after
-> then, promise.
+If the requested framesize by VIDIOC_SUBDEV_S_FMT is larger than supported
+framesizes, it causes an out of bounds array access and the resulting
+framesize is unexpected.
 
-By now I'm testing this for a week (currently on top of 5.2.2). Still no
-freezes whatsoever. 
+Avoid out of bounds array access and select the default framesize.
 
-So what's the status of this revert? Unless this is something pretty obscure
-that for some odd reason only James and I are able to hit it would be nice to
-get this into stable before the main distros switch over to 5.2.y.
+Cc: Wenyou Yang <wenyou.yang@microchip.com>
+Cc: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/i2c/ov7740.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Thanks,
+diff --git a/drivers/media/i2c/ov7740.c b/drivers/media/i2c/ov7740.c
+index 54e80a60aa57..63011d4b4738 100644
+--- a/drivers/media/i2c/ov7740.c
++++ b/drivers/media/i2c/ov7740.c
+@@ -785,7 +785,11 @@ static int ov7740_try_fmt_internal(struct v4l2_subdev *sd,
+ 
+ 		fsize++;
+ 	}
+-
++	if (i >= ARRAY_SIZE(ov7740_framesizes)) {
++		fsize = &ov7740_framesizes[0];
++		fmt->width = fsize->width;
++		fmt->height = fsize->height;
++	}
+ 	if (ret_frmsize != NULL)
+ 		*ret_frmsize = fsize;
+ 
+-- 
+2.20.1
 
 
-Paul Bolle
 
