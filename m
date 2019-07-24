@@ -2,119 +2,198 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FFEC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70417C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB08421852
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AE3620840
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:08:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uSCiCyQU"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="S7rUKC1h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727284AbfGXSEh (ORCPT
+        id S1726810AbfGXSIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:04:37 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:35226 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbfGXSEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:04:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=UpzgCoPq0Wu6UDjrL//LrXChGIZ8cQyw8Fm5gnrCxag=; b=uSCiCyQURATsR/8rSFcWw4XWAi
-        SFtoSKMVeIDa2RmJc1V6rmyvW0kYyCPDOGcHOCEFtupgRlAqo6wTLZEh5RcntlIn+sspActh0D7CD
-        NIq3MQlbePLbM/hYbTyIJHrJoEsr79jvr7L8959e3/hdG9X/lzK5p3siuZhy8dLeLbXA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hqLcs-0001VX-3i; Wed, 24 Jul 2019 20:04:30 +0200
-Date:   Wed, 24 Jul 2019 20:04:30 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [RFC] dt-bindings: net: phy: Add subnode for LED configuration
-Message-ID: <20190724180430.GB28488@lunn.ch>
-References: <20190722223741.113347-1-mka@chromium.org>
+        Wed, 24 Jul 2019 14:08:39 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33323 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfGXSIj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 14:08:39 -0400
+Received: by mail-qk1-f195.google.com with SMTP id r6so34477966qkc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 11:08:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZLdMBcqFGKnya02V6xTsnoJZW3Z9hdAyMDyBEEBYZwk=;
+        b=S7rUKC1hP1+ZhH3UP11jol99wjJrkdHFHWPmbPAsoHGA2OkbYAPGgChi4JgYRiKTlA
+         ivkNkOjRFM1AWz0SOCeFg5IZu82LX7zT++0UHabmT6tlcapyF4hoi2yEd0kJkX0Zlhuy
+         G5oemA8Fh1PR4M52mRNWhYmvibd37x0ivsWhY4xHbfKNpzeW6GAUBSsZmYlfnypzgdEv
+         ff4NbVY5PS4zXE2RFmZUCL7xJBpQvmsMEiwwnmerSY+eEnHKSvxQQLgDJjkdMEzRg93N
+         trKhYFepum43PWTaenbut+z5hDtDVd/KJNIZMG3RMka+hN7laWuvWymC+OG9kplFGJNI
+         o0eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZLdMBcqFGKnya02V6xTsnoJZW3Z9hdAyMDyBEEBYZwk=;
+        b=HsNkyJOYbGK67eYHB2iQPORf0x6hO+pj6Ux5WkKHiTD7CSQqzzE5JhtIg+CKPQCu6T
+         1zGRaP1ckxTPM+vW6ZkDBPXds4VVKyPESkTjEQBDfd4XmhrlostjzIsgUvEiuWjmaeOk
+         wnZqQ0gUlsKWt5j6nlwQWCIdStNHk/GQ1CszfNJleE6FrKCgdsN/TfraFl6GCivyQ2Ds
+         GBB80K79aOBuneTVTI9sMXj97lZrlng8aBxDPbdrWB1GgnjyMtHxroXZlQNEuXFNSDFs
+         b4Nv64RV7JZDjaSJ/zA4hdYR4mi1AweuHjoer94KKr/hRvJE1MEbPQ93y8Q8Ueyy/fYB
+         mQow==
+X-Gm-Message-State: APjAAAXDZHCRntstVfMNXgqRG1zH59PhsZIuhlU8LpOShDegHWO+RBrM
+        0np+2gNwY76jR8GLdsRA6sGbzQ==
+X-Google-Smtp-Source: APXvYqyUhibTemqaI03gwtS61w99gAgQQ5F/eG0mK+lhyla7PrZjk1HOKK+XfNVnKzTJUkkmUlG2cg==
+X-Received: by 2002:a37:f511:: with SMTP id l17mr50579291qkk.99.1563991718206;
+        Wed, 24 Jul 2019 11:08:38 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id s25sm20315125qkm.130.2019.07.24.11.08.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jul 2019 11:08:37 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hqLgr-0003X8-9P; Wed, 24 Jul 2019 15:08:37 -0300
+Date:   Wed, 24 Jul 2019 15:08:37 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: Re: [PATCH] mm/hmm: replace hmm_update with mmu_notifier_range
+Message-ID: <20190724180837.GF28493@ziepe.ca>
+References: <20190723210506.25127-1-rcampbell@nvidia.com>
+ <20190724070553.GA2523@lst.de>
+ <20190724152858.GB28493@ziepe.ca>
+ <20190724175858.GC6410@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190722223741.113347-1-mka@chromium.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190724175858.GC6410@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 03:37:41PM -0700, Matthias Kaehlcke wrote:
-> The LED behavior of some Ethernet PHYs is configurable. Add an
-> optional 'leds' subnode with a child node for each LED to be
-> configured. The binding aims to be compatible with the common
-> LED binding (see devicetree/bindings/leds/common.txt).
+On Wed, Jul 24, 2019 at 07:58:58PM +0200, Michal Hocko wrote:
+> On Wed 24-07-19 12:28:58, Jason Gunthorpe wrote:
+> > On Wed, Jul 24, 2019 at 09:05:53AM +0200, Christoph Hellwig wrote:
+> > > Looks good:
+> > > 
+> > > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > > 
+> > > One comment on a related cleanup:
+> > > 
+> > > >  	list_for_each_entry(mirror, &hmm->mirrors, list) {
+> > > >  		int rc;
+> > > >  
+> > > > -		rc = mirror->ops->sync_cpu_device_pagetables(mirror, &update);
+> > > > +		rc = mirror->ops->sync_cpu_device_pagetables(mirror, nrange);
+> > > >  		if (rc) {
+> > > > -			if (WARN_ON(update.blockable || rc != -EAGAIN))
+> > > > +			if (WARN_ON(mmu_notifier_range_blockable(nrange) ||
+> > > > +			    rc != -EAGAIN))
+> > > >  				continue;
+> > > >  			ret = -EAGAIN;
+> > > >  			break;
+> > > 
+> > > This magic handling of error seems odd.  I think we should merge rc and
+> > > ret into one variable and just break out if any error happens instead
+> > > or claiming in the comments -EAGAIN is the only valid error and then
+> > > ignoring all others here.
+> > 
+> > The WARN_ON is enforcing the rules already commented near
+> > mmuu_notifier_ops.invalidate_start - we could break or continue, it
+> > doesn't much matter how to recover from a broken driver, but since we
+> > did the WARN_ON this should sanitize the ret to EAGAIN or 0
+> > 
+> > Humm. Actually having looked this some more, I wonder if this is a
+> > problem:
+> > 
+> > I see in __oom_reap_task_mm():
+> > 
+> > 			if (mmu_notifier_invalidate_range_start_nonblock(&range)) {
+> > 				tlb_finish_mmu(&tlb, range.start, range.end);
+> > 				ret = false;
+> > 				continue;
+> > 			}
+> > 			unmap_page_range(&tlb, vma, range.start, range.end, NULL);
+> > 			mmu_notifier_invalidate_range_end(&range);
+> > 
+> > Which looks like it creates an unbalanced start/end pairing if any
+> > start returns EAGAIN?
+> > 
+> > This does not seem OK.. Many users require start/end to be paired to
+> > keep track of their internal locking. Ie for instance hmm breaks
+> > because the hmm->notifiers counter becomes unable to get to 0.
+> > 
+> > Below is the best idea I've had so far..
+> > 
+> > Michal, what do you think?
 > 
-> A LED can be configured to be 'on' when a link with a certain speed
-> is active, or to blink on RX/TX activity. For the configuration to
-> be effective it needs to be supported by the hardware and the
-> corresponding PHY driver.
-> 
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> This RFC is a follow up of the discussion on "[PATCH v2 6/7]
-> dt-bindings: net: realtek: Add property to configure LED mode"
-> (https://lore.kernel.org/patchwork/patch/1097185/).
-> 
-> For now posting as RFC to get a basic agreement on the bindings
-> before proceding with the implementation in phylib and a specific
-> driver.
-> ---
->  Documentation/devicetree/bindings/net/phy.txt | 33 +++++++++++++++++++
->  1 file changed, 33 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
-> index 9b9e5b1765dd..ad495d3abbbb 100644
-> --- a/Documentation/devicetree/bindings/net/phy.txt
-> +++ b/Documentation/devicetree/bindings/net/phy.txt
-> @@ -46,6 +46,25 @@ Optional Properties:
->    Mark the corresponding energy efficient ethernet mode as broken and
->    request the ethernet to stop advertising it.
->  
-> +- leds: A sub-node which is a container of only LED nodes. Each child
-> +    node represents a PHY LED.
-> +
-> +  Required properties for LED child nodes:
-> +  - reg: The ID number of the LED, typically corresponds to a hardware ID.
-> +
-> +  Optional properties for child nodes:
-> +  - label: The label for this LED. If omitted, the label is taken from the node
-> +    name (excluding the unit address). It has to uniquely identify a device,
-> +    i.e. no other LED class device can be assigned the same label.
+> IIRC we have discussed this with Jerome back then when I've introduced
+> this code and unless I misremember he said the current code was OK.
 
-Hi Matthias
+Nope, it has always been broken.
 
-I've thought about label a bit more. 
+> Maybe new users have started relying on a new semantic in the meantime,
+> back then, none of the notifier has even started any action in blocking
+> mode on a EAGAIN bailout. Most of them simply did trylock early in the
+> process and bailed out so there was nothing to do for the range_end
+> callback.
 
-> +			label = "ethphy0:left:green";
+Single notifiers are not the problem. I tried to make this clear in
+the commit message, but lets be more explicit.
 
-We need to be careful with names here. systemd etc renames
-interfaces. ethphy0 could in fact be connected to enp3s0, or eth0
-might get renamed to eth1, etc. So i think we should avoid things like
-ethphy0. Also, i'm not sure we actually need a label, at least not to
-start with.Do we have any way to expose it to the user?
+We have *two* notifiers registered to the mm, A and B:
 
-If we do ever make it part of the generic LED framework, we can then
-use the label. At that point, i would probably combine the label with
-the interface name in a dynamic way to avoid issues like this.
+A invalidate_range_start: (has no blocking)
+    spin_lock()
+    counter++
+    spin_unlock()
 
-    Andrew
+A invalidate_range_end:
+    spin_lock()
+    counter--
+    spin_unlock()
+
+And this one:
+
+B invalidate_range_start: (has blocking)
+    if (!try_mutex_lock())
+        return -EAGAIN;
+    counter++
+    mutex_unlock()
+
+B invalidate_range_end:
+    spin_lock()
+    counter--
+    spin_unlock()
+
+So now the oom path does:
+
+invalidate_range_start_non_blocking:
+ for each mn:
+   a->invalidate_range_start
+   b->invalidate_range_start
+   rc = EAGAIN
+
+Now we SKIP A's invalidate_range_end even though A had no idea this
+would happen has state that needs to be unwound. A is broken.
+
+B survived just fine.
+
+A and B *alone* work fine, combined they fail.
+
+When the commit was landed you can use KVM as an example of A and RDMA
+ODP as an example of B
+
+Jason
