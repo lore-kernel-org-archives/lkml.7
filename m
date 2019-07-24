@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61932C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C3AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3307C205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE88206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998577;
-	bh=JIsYvSnObyUjfnEizYBKTt/8+80svdSteAWxJHBQpLo=;
+	s=default; t=1563998579;
+	bh=aw2hyCYR//DFDIF22zc37GORwOeYBZKCul+rf3DVcMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pRHjc2uLB1hqAvHnUowZ8BHZun52O8eifvjHNoEB1TUKNwbpwFlp0HKlFqm1Eogv0
-	 kqVGQSbRVC1tAhH3+Q9ZCTBgBgrmDMaCID50Zhfe/GfD/pcaHjpEVDVgkUWJchdyIC
-	 AwJMUZTrBaZlgEQyEsBDzV5f5xLREFOm64nrJhfM=
+	b=Uw0qrKm6rFLAftTjBuUCRq9aK96M0v9fhYbD3vXPFm8PXaF1s9YrJg9ut5zXKHs0e
+	 mHn2VOhL0LAQlDtXdjOjPHDlmoj7mFCwK6QnfqPPLaNo3SNGg3vXohXwTXSY8FP7VG
+	 O+W8JV1uLavK+25mF38ZUJl6NqgKmk/Emxyqzugw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405178AbfGXUC4 (ORCPT
+        id S2405630AbfGXUC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:02:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52880 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:02:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404679AbfGXUCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:02:51 -0400
+        id S2405258AbfGXUCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:02:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CB52205C9;
-        Wed, 24 Jul 2019 20:02:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EC8C205C9;
+        Wed, 24 Jul 2019 20:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998569;
-        bh=JIsYvSnObyUjfnEizYBKTt/8+80svdSteAWxJHBQpLo=;
+        s=default; t=1563998575;
+        bh=aw2hyCYR//DFDIF22zc37GORwOeYBZKCul+rf3DVcMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=reJJSSYRIzdee9pP4ECQegDgn764aoEjDRlwFHZzHhH8yn0e+NqkrSjQ6/ACqNwNf
-         0aNE+ytsikNMO8iJjVcbj4P59suKLC4/A8gQnsxFGFS5rvQ13oXo3Qc9BaSEe8/AW8
-         Ml/rNrJbavzAHHhmzemMQWbjzyaow+ai53aiacE4=
+        b=xZLSxSavO6IKfb47YXLzoncbefUWqS6SyJjy6KXHsCBuVeksEXPRkUczos6INjLsX
+         8ojERJkX3avllclfRanIM/E/JvmIXimOKLI+DKEy/HG5cm3gunHeEgOxk6/T7Gk/q2
+         5Bs7rzs8f6I5KQO0fQVJJ6HKj/aDA5NRXo1vYwhg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
-        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        stable@vger.kernel.org, Surabhi Vishnoi <svishnoi@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 005/271] dmaengine: imx-sdma: fix use-after-free on probe error path
-Date:   Wed, 24 Jul 2019 21:17:54 +0200
-Message-Id: <20190724191655.719420950@linuxfoundation.org>
+Subject: [PATCH 4.19 007/271] ath10k: Do not send probe response template for mesh
+Date:   Wed, 24 Jul 2019 21:17:56 +0200
+Message-Id: <20190724191655.898566689@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -60,105 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2b8066c3deb9140fdf258417a51479b2aeaa7622 ]
+[ Upstream commit 97354f2c432788e3163134df6bb144f4b6289d87 ]
 
-If probe() fails anywhere beyond the point where
-sdma_get_firmware() is called, then a kernel oops may occur.
+Currently mac80211 do not support probe response template for
+mesh point. When WMI_SERVICE_BEACON_OFFLOAD is enabled, host
+driver tries to configure probe response template for mesh, but
+it fails because the interface type is not NL80211_IFTYPE_AP but
+NL80211_IFTYPE_MESH_POINT.
 
-Problematic sequence of events:
-1. probe() calls sdma_get_firmware(), which schedules the
-   firmware callback to run when firmware becomes available,
-   using the sdma instance structure as the context
-2. probe() encounters an error, which deallocates the
-   sdma instance structure
-3. firmware becomes available, firmware callback is
-   called with deallocated sdma instance structure
-4. use after free - kernel oops !
+To avoid this failure, skip sending probe response template to
+firmware for mesh point.
 
-Solution: only attempt to load firmware when we're certain
-that probe() will succeed. This guarantees that the firmware
-callback's context will remain valid.
+Tested HW: WCN3990/QCA6174/QCA9984
 
-Note that the remove() path is unaffected by this issue: the
-firmware loader will increment the driver module's use count,
-ensuring that the module cannot be unloaded while the
-firmware callback is pending or running.
-
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Reviewed-by: Robin Gong <yibin.gong@nxp.com>
-[vkoul: fixed braces for if condition]
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Surabhi Vishnoi <svishnoi@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/imx-sdma.c | 48 ++++++++++++++++++++++++------------------
- 1 file changed, 27 insertions(+), 21 deletions(-)
+ drivers/net/wireless/ath/ath10k/mac.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 1c658ec3cbf4..3f5a01cb4ab4 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -2039,27 +2039,6 @@ static int sdma_probe(struct platform_device *pdev)
- 	if (pdata && pdata->script_addrs)
- 		sdma_add_scripts(sdma, pdata->script_addrs);
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index f3b1cfacfe9d..1419f9d1505f 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -1624,6 +1624,10 @@ static int ath10k_mac_setup_prb_tmpl(struct ath10k_vif *arvif)
+ 	if (arvif->vdev_type != WMI_VDEV_TYPE_AP)
+ 		return 0;
  
--	if (pdata) {
--		ret = sdma_get_firmware(sdma, pdata->fw_name);
--		if (ret)
--			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
--	} else {
--		/*
--		 * Because that device tree does not encode ROM script address,
--		 * the RAM script in firmware is mandatory for device tree
--		 * probe, otherwise it fails.
--		 */
--		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
--					      &fw_name);
--		if (ret)
--			dev_warn(&pdev->dev, "failed to get firmware name\n");
--		else {
--			ret = sdma_get_firmware(sdma, fw_name);
--			if (ret)
--				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
--		}
--	}
--
- 	sdma->dma_device.dev = &pdev->dev;
- 
- 	sdma->dma_device.device_alloc_chan_resources = sdma_alloc_chan_resources;
-@@ -2103,6 +2082,33 @@ static int sdma_probe(struct platform_device *pdev)
- 		of_node_put(spba_bus);
- 	}
- 
-+	/*
-+	 * Kick off firmware loading as the very last step:
-+	 * attempt to load firmware only if we're not on the error path, because
-+	 * the firmware callback requires a fully functional and allocated sdma
-+	 * instance.
-+	 */
-+	if (pdata) {
-+		ret = sdma_get_firmware(sdma, pdata->fw_name);
-+		if (ret)
-+			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
-+	} else {
-+		/*
-+		 * Because that device tree does not encode ROM script address,
-+		 * the RAM script in firmware is mandatory for device tree
-+		 * probe, otherwise it fails.
-+		 */
-+		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
-+					      &fw_name);
-+		if (ret) {
-+			dev_warn(&pdev->dev, "failed to get firmware name\n");
-+		} else {
-+			ret = sdma_get_firmware(sdma, fw_name);
-+			if (ret)
-+				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
-+		}
-+	}
++	 /* For mesh, probe response and beacon share the same template */
++	if (ieee80211_vif_is_mesh(vif))
++		return 0;
 +
- 	return 0;
- 
- err_register:
+ 	prb = ieee80211_proberesp_get(hw, vif);
+ 	if (!prb) {
+ 		ath10k_warn(ar, "failed to get probe resp template from mac80211\n");
 -- 
 2.20.1
 
