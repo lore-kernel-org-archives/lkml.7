@@ -2,98 +2,209 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887F2C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AB3C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4EE22ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F0C229FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:22:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="eBuUYksT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfGXNWX (ORCPT
+        id S1727911AbfGXNWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 09:22:23 -0400
-Received: from mga03.intel.com ([134.134.136.65]:12795 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726981AbfGXNWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:22:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 06:22:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,303,1559545200"; 
-   d="scan'208";a="189095851"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Jul 2019 06:22:21 -0700
-Received: from [10.251.5.204] (kliang2-mobl.ccr.corp.intel.com [10.251.5.204])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id E1B255803EA;
-        Wed, 24 Jul 2019 06:22:20 -0700 (PDT)
-Subject: Re: Reminder: 19 open syzbot bugs in perf subsystem
-To:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        syzkaller-bugs@googlegroups.com
-References: <20190724014510.GG643@sol.localdomain>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <dbbad15e-6452-76b9-f7d1-82a19c7eff68@linux.intel.com>
-Date:   Wed, 24 Jul 2019 09:22:19 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 24 Jul 2019 09:22:53 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:48611 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727722AbfGXNWw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 09:22:52 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6ODMJ1T548860
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 24 Jul 2019 06:22:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6ODMJ1T548860
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1563974540;
+        bh=HTvdMoYmj62/nIKk37CBNQtbiGBHSzDh/WTcWcvePQU=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=eBuUYksTYbY/iFc+rOHdZrrCCnU+5DZYhvlJ+LOLAqQMA8HAIlIJmZTbNuURD57pn
+         xoLdX6G+b3hnFLWvnPze/YNyPTl+i9toQDFjHYiJhXW6LU2mB09dw/XXCeLYiRqdA/
+         Gki1QDVhT8Cw42xy0fbMewq5206uwoA6aG99rAggOlBpRAvShOd4A3/+3FstjlsdWM
+         2CGQzUyJO1uLPitJBoCy2O43cTG5qkOwF1W9WljwW5JvFFZEfQEYJCGePeavPrIO36
+         t1o0sE9XoF6SjXKCsZxtx9+wbYkqs7d2OCEojEcuFbCa4oKAiXHf4uqGaWL5TBPjjv
+         BwOHEQQCX0BzQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6ODMJXs548857;
+        Wed, 24 Jul 2019 06:22:19 -0700
+Date:   Wed, 24 Jul 2019 06:22:19 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Jan Kiszka <tipbot@zytor.com>
+Message-ID: <tip-21e450d21ccad4cb7c7984c29ff145012b47736d@git.kernel.org>
+Cc:     tglx@linutronix.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        jan.kiszka@siemens.com, mingo@kernel.org
+Reply-To: mingo@kernel.org, jan.kiszka@siemens.com, hpa@zytor.com,
+          tglx@linutronix.de, linux-kernel@vger.kernel.org
+In-Reply-To: <0fbbcb64-5f26-4ffb-1bb9-4f5f48426893@siemens.com>
+References: <0fbbcb64-5f26-4ffb-1bb9-4f5f48426893@siemens.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/mm] x86/mm: Avoid redundant interrupt disable in
+ load_mm_cr4()
+Git-Commit-ID: 21e450d21ccad4cb7c7984c29ff145012b47736d
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190724014510.GG643@sol.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit-ID:  21e450d21ccad4cb7c7984c29ff145012b47736d
+Gitweb:     https://git.kernel.org/tip/21e450d21ccad4cb7c7984c29ff145012b47736d
+Author:     Jan Kiszka <jan.kiszka@siemens.com>
+AuthorDate: Tue, 18 Jun 2019 09:32:11 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 24 Jul 2019 14:43:37 +0200
 
+x86/mm: Avoid redundant interrupt disable in load_mm_cr4()
 
-On 7/23/2019 9:45 PM, Eric Biggers wrote:
-> --------------------------------------------------------------------------------
-> Title:              WARNING in perf_reg_value
-> Last occurred:      25 days ago
-> Reported:           34 days ago
-> Branches:           Mainline and others
-> Dashboard link:https://syzkaller.appspot.com/bug?id=629d95983fbba49821af91acf780387bca180546
-> Original thread:https://lkml.kernel.org/lkml/000000000000734545058bb27ebb@google.com/T/#u
-> 
-> This bug has a C reproducer.
-> 
-> This bug was bisected to:
-> 
-> 	commit 878068ea270ea82767ff1d26c91583263c81fba0
-> 	Author: Kan Liang<kan.liang@linux.intel.com>
-> 	Date:   Tue Apr 2 19:44:59 2019 +0000
-> 
-> 	  perf/x86: Support outputting XMM registers
-> 
-> The original thread for this bug has received 3 replies; the last was 33 days
-> ago.
->
+load_mm_cr4() is always called with interrupts disabled from:
 
-I believe the bug fixes have been merged month ago.
-https://lore.kernel.org/lkml/1559081314-9714-1-git-send-email-kan.liang@linux.intel.com/
+ - switch_mm_irqs_off()
+ - refresh_pce(), which is a on_each_cpu() callback
 
-Thanks,
-Kan
+Thus, disabling interrupts in cr4_set/clear_bits() is redundant.
 
-> If you fix this bug, please add the following tag to the commit:
->      Reported-by:syzbot+10189b9b0f8c4664badd@syzkaller.appspotmail.com
-> 
-> If you send any email or patch for this bug, please consider replying to the
-> original thread.  For the git send-email command to use, or tips on how to reply
-> if the thread isn't in your mailbox, see the "Reply instructions" at
-> https://lkml.kernel.org/r/000000000000734545058bb27ebb@google.com
+Implement cr4_set/clear_bits_irqsoff() helpers, rename load_mm_cr4() to
+load_mm_cr4_irqsoff() and use the new helpers. The new helpers do not need
+a lockdep assert as __cr4_set() has one already.
+
+The renaming in combination with the checks in __cr4_set() ensure that any
+changes in the boundary conditions at the call sites will be detected.
+
+[ tglx: Massaged change log ]
+
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/0fbbcb64-5f26-4ffb-1bb9-4f5f48426893@siemens.com
+---
+ arch/x86/events/core.c             |  2 +-
+ arch/x86/include/asm/mmu_context.h |  8 ++++----
+ arch/x86/include/asm/tlbflush.h    | 30 +++++++++++++++++++++++-------
+ arch/x86/mm/tlb.c                  |  2 +-
+ 4 files changed, 29 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 81b005e4c7d9..cfe256ca76df 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2087,7 +2087,7 @@ static int x86_pmu_event_init(struct perf_event *event)
+ 
+ static void refresh_pce(void *ignored)
+ {
+-	load_mm_cr4(this_cpu_read(cpu_tlbstate.loaded_mm));
++	load_mm_cr4_irqsoff(this_cpu_read(cpu_tlbstate.loaded_mm));
+ }
+ 
+ static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
+diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+index 9024236693d2..16ae821483c8 100644
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -28,16 +28,16 @@ static inline void paravirt_activate_mm(struct mm_struct *prev,
+ 
+ DECLARE_STATIC_KEY_FALSE(rdpmc_always_available_key);
+ 
+-static inline void load_mm_cr4(struct mm_struct *mm)
++static inline void load_mm_cr4_irqsoff(struct mm_struct *mm)
+ {
+ 	if (static_branch_unlikely(&rdpmc_always_available_key) ||
+ 	    atomic_read(&mm->context.perf_rdpmc_allowed))
+-		cr4_set_bits(X86_CR4_PCE);
++		cr4_set_bits_irqsoff(X86_CR4_PCE);
+ 	else
+-		cr4_clear_bits(X86_CR4_PCE);
++		cr4_clear_bits_irqsoff(X86_CR4_PCE);
+ }
+ #else
+-static inline void load_mm_cr4(struct mm_struct *mm) {}
++static inline void load_mm_cr4_irqsoff(struct mm_struct *mm) {}
+ #endif
+ 
+ #ifdef CONFIG_MODIFY_LDT_SYSCALL
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index dee375831962..6f66d841262d 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -290,26 +290,42 @@ static inline void __cr4_set(unsigned long cr4)
+ }
+ 
+ /* Set in this cpu's CR4. */
+-static inline void cr4_set_bits(unsigned long mask)
++static inline void cr4_set_bits_irqsoff(unsigned long mask)
+ {
+-	unsigned long cr4, flags;
++	unsigned long cr4;
+ 
+-	local_irq_save(flags);
+ 	cr4 = this_cpu_read(cpu_tlbstate.cr4);
+ 	if ((cr4 | mask) != cr4)
+ 		__cr4_set(cr4 | mask);
+-	local_irq_restore(flags);
+ }
+ 
+ /* Clear in this cpu's CR4. */
+-static inline void cr4_clear_bits(unsigned long mask)
++static inline void cr4_clear_bits_irqsoff(unsigned long mask)
+ {
+-	unsigned long cr4, flags;
++	unsigned long cr4;
+ 
+-	local_irq_save(flags);
+ 	cr4 = this_cpu_read(cpu_tlbstate.cr4);
+ 	if ((cr4 & ~mask) != cr4)
+ 		__cr4_set(cr4 & ~mask);
++}
++
++/* Set in this cpu's CR4. */
++static inline void cr4_set_bits(unsigned long mask)
++{
++	unsigned long flags;
++
++	local_irq_save(flags);
++	cr4_set_bits_irqsoff(mask);
++	local_irq_restore(flags);
++}
++
++/* Clear in this cpu's CR4. */
++static inline void cr4_clear_bits(unsigned long mask)
++{
++	unsigned long flags;
++
++	local_irq_save(flags);
++	cr4_clear_bits_irqsoff(mask);
+ 	local_irq_restore(flags);
+ }
+ 
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 4de9704c4aaf..e6a9edc5baaf 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -440,7 +440,7 @@ void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
+ 	this_cpu_write(cpu_tlbstate.loaded_mm_asid, new_asid);
+ 
+ 	if (next != real_prev) {
+-		load_mm_cr4(next);
++		load_mm_cr4_irqsoff(next);
+ 		switch_ldt(real_prev, next);
+ 	}
+ }
