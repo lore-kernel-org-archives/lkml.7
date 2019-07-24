@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34120C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FD4C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04BFC22ADC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F73520665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998172;
-	bh=YDNPVR2upBWG7vIpoFahm/H7QwvSrGnlzyQx0Kt6y1M=;
+	s=default; t=1563998177;
+	bh=wPeLi7+nqS2I7NrSj3ujATue3ugECmzerkrt/EmeAoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x+UClyCVF4/y0S66Gq+2C8znu6v4FFrnaNQbmyCOGrTe5069Ds2ZGocFsJBIqaFae
-	 C7xbPoBdyuoB9eDvhQOGYxTAPA9UhuqZ0yPgunkYeA7yI2EbzVbRr9DbwFBacPBcZl
-	 nzVHDNwYV8Q66re9tC92R91Pr7EFmkvEIiof2wtA=
+	b=L+0uY9hJ2xcpcCQiSUMhbW2eTI0xD3HhH3lg1UPet6kgJ7trg7IE8KOE0U8xX6Nbw
+	 Frjc5QLtT2dBwIyHRJsG9fz5vNdH9U65CtO7uXUvLiKJqOh5x20Zs8xiTiEwhUMLpy
+	 OjMupI1RzAYYRHiWqUzzIzMJWgl1c80gi2Zk2ZhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404602AbfGXT4K (ORCPT
+        id S2391842AbfGXT4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:56:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40136 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:56:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404586AbfGXT4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:56:02 -0400
+        id S2404605AbfGXT4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:56:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03BAF205C9;
-        Wed, 24 Jul 2019 19:56:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B81DC22ADC;
+        Wed, 24 Jul 2019 19:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998162;
-        bh=YDNPVR2upBWG7vIpoFahm/H7QwvSrGnlzyQx0Kt6y1M=;
+        s=default; t=1563998171;
+        bh=wPeLi7+nqS2I7NrSj3ujATue3ugECmzerkrt/EmeAoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=olLxtoSTvtHJ7Oo9VV79ZFWRNZ9V929T6HDpuy/OjR6z9BK+DfWrpg3AbQEWIcUWx
-         k52cRrcvvAHcSJYfUSsReCZMGtTyHIqf/yBd322IscoutUUpsSOtPcZM0fWg3NiUYG
-         JHhDLG4KfphrKVagnV9ejA3GVzsYtSIjOSJ6WhTM=
+        b=K+P6x2VQqB4l+z9agAxvRv+pFZz2HIgiGiyKYgcmj7ESROMS6MCpbbXBGNd0cDxXg
+         64XpO8lgR/csSAi37r+bmqDhEgeG6BVAknd1VR2xZBeig6V9Qx8kH/XSYbLK/f2RLj
+         2Tmynji7gN2v3zq5vHbzZbAU61UY2mOJCAKtvYI8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oren Givon <oren.givon@intel.com>,
-        Luciano Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.1 269/371] iwlwifi: add support for hr1 RF ID
-Date:   Wed, 24 Jul 2019 21:20:21 +0200
-Message-Id: <20190724191744.566685575@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>
+Subject: [PATCH 5.1 271/371] iwlwifi: pcie: fix ALIVE interrupt handling for gen2 devices w/o MSI-X
+Date:   Wed, 24 Jul 2019 21:20:23 +0200
+Message-Id: <20190724191744.703399482@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,51 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oren Givon <oren.givon@intel.com>
+From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 
-commit 498d3eb5bfbb2e05e40005152976a7b9eadfb59c upstream.
+commit ec46ae30245ecb41d73f8254613db07c653fb498 upstream.
 
-The 22000 series FW that was meant to be used with hr is
-also the FW that is used for hr1 and has a different RF ID.
-Add support to load the hr FW when hr1 RF ID is detected.
+We added code to restock the buffer upon ALIVE interrupt
+when MSI-X is disabled. This was added as part of the context
+info code. This code was added only if the ISR debug level
+is set which is very unlikely to be related.
+Move this code to run even when the ISR debug level is not
+set.
 
-Cc: stable@vger.kernel.org # 5.1+
-Signed-off-by: Oren Givon <oren.givon@intel.com>
-Signed-off-by: Luciano Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Note that gen2 devices work with MSI-X in most cases so that
+this path is seldom used.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/iwl-csr.h    |    1 +
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c |    8 +++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c |   34 ++++++++++++---------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/iwl-csr.h
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-csr.h
-@@ -335,6 +335,7 @@ enum {
- /* RF_ID value */
- #define CSR_HW_RF_ID_TYPE_JF		(0x00105100)
- #define CSR_HW_RF_ID_TYPE_HR		(0x0010A000)
-+#define CSR_HW_RF_ID_TYPE_HR1		(0x0010c100)
- #define CSR_HW_RF_ID_TYPE_HRCDB		(0x00109F00)
- #define CSR_HW_RF_ID_TYPE_GF		(0x0010D000)
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -1832,25 +1832,23 @@ irqreturn_t iwl_pcie_irq_handler(int irq
+ 		goto out;
+ 	}
  
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -3562,9 +3562,11 @@ struct iwl_trans *iwl_trans_pcie_alloc(s
- 			trans->cfg = &iwlax210_2ax_cfg_so_gf_a0;
+-	if (iwl_have_debug_level(IWL_DL_ISR)) {
+-		/* NIC fires this, but we don't use it, redundant with WAKEUP */
+-		if (inta & CSR_INT_BIT_SCD) {
+-			IWL_DEBUG_ISR(trans,
+-				      "Scheduler finished to transmit the frame/frames.\n");
+-			isr_stats->sch++;
+-		}
++	/* NIC fires this, but we don't use it, redundant with WAKEUP */
++	if (inta & CSR_INT_BIT_SCD) {
++		IWL_DEBUG_ISR(trans,
++			      "Scheduler finished to transmit the frame/frames.\n");
++		isr_stats->sch++;
++	}
+ 
+-		/* Alive notification via Rx interrupt will do the real work */
+-		if (inta & CSR_INT_BIT_ALIVE) {
+-			IWL_DEBUG_ISR(trans, "Alive interrupt\n");
+-			isr_stats->alive++;
+-			if (trans->cfg->gen2) {
+-				/*
+-				 * We can restock, since firmware configured
+-				 * the RFH
+-				 */
+-				iwl_pcie_rxmq_restock(trans, trans_pcie->rxq);
+-			}
++	/* Alive notification via Rx interrupt will do the real work */
++	if (inta & CSR_INT_BIT_ALIVE) {
++		IWL_DEBUG_ISR(trans, "Alive interrupt\n");
++		isr_stats->alive++;
++		if (trans->cfg->gen2) {
++			/*
++			 * We can restock, since firmware configured
++			 * the RFH
++			 */
++			iwl_pcie_rxmq_restock(trans, trans_pcie->rxq);
  		}
- 	} else if (cfg == &iwl_ax101_cfg_qu_hr) {
--		if (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
--		    CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HR) &&
--		    trans->hw_rev == CSR_HW_REV_TYPE_QNJ_B0) {
-+		if ((CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
-+		     CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HR) &&
-+		     trans->hw_rev == CSR_HW_REV_TYPE_QNJ_B0) ||
-+		    (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
-+		     CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HR1))) {
- 			trans->cfg = &iwl22000_2ax_cfg_qnj_hr_b0;
- 		} else if (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
- 		    CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HR)) {
+ 	}
+ 
 
 
