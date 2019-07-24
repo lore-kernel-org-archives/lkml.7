@@ -6,183 +6,122 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3ADDC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CB1C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8630820449
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3779C214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfGXNqU (ORCPT
+        id S1727246AbfGXNsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 09:46:20 -0400
-Received: from mga14.intel.com ([192.55.52.115]:17524 "EHLO mga14.intel.com"
+        Wed, 24 Jul 2019 09:48:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:41130 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbfGXNqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:46:20 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 06:46:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,303,1559545200"; 
-   d="scan'208";a="369299427"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga006.fm.intel.com with ESMTP; 24 Jul 2019 06:46:17 -0700
-Date:   Wed, 24 Jul 2019 21:29:20 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-doc@vger.kernel.org, atull@kernel.org,
-        Ananda Ravuri <ananda.ravuri@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH v3 04/12] fpga: dfl: afu: add AFU state related sysfs
- interfaces
-Message-ID: <20190724132920.GB8463@hao-dev>
-References: <1563857495-26692-1-git-send-email-hao.wu@intel.com>
- <1563857495-26692-5-git-send-email-hao.wu@intel.com>
- <20190724094110.GD29532@kroah.com>
+        id S1726767AbfGXNsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 09:48:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6868828;
+        Wed, 24 Jul 2019 06:48:17 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A85F23F71A;
+        Wed, 24 Jul 2019 06:48:14 -0700 (PDT)
+Subject: Re: [PATCH v9 10/21] mm: Add generic p?d_leaf() macros
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20190722154210.42799-1-steven.price@arm.com>
+ <20190722154210.42799-11-steven.price@arm.com>
+ <20190723094113.GA8085@lakrids.cambridge.arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <4366c0d8-6175-88d0-8cf2-938dff56f1ac@arm.com>
+Date:   Wed, 24 Jul 2019 14:48:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724094110.GD29532@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190723094113.GA8085@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 11:41:10AM +0200, Greg KH wrote:
-> On Tue, Jul 23, 2019 at 12:51:27PM +0800, Wu Hao wrote:
-> > This patch introduces more sysfs interfaces for Accelerated
-> > Function Unit (AFU). These interfaces allow users to read
-> > current AFU Power State (APx), read / clear AFU Power (APx)
-> > events which are sticky to identify transient APx state,
-> > and manage AFU's LTR (latency tolerance reporting).
-> > 
-> > Signed-off-by: Ananda Ravuri <ananda.ravuri@intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Acked-by: Alan Tull <atull@kernel.org>
-> > Signed-off-by: Moritz Fischer <mdf@kernel.org>
-> > ---
-> > v2: rebased, and remove DRV/MODULE_VERSION modifications
-> > v3: update kernel version and date in sysfs doc
-> > ---
-> >  Documentation/ABI/testing/sysfs-platform-dfl-port |  30 +++++
-> >  drivers/fpga/dfl-afu-main.c                       | 137 ++++++++++++++++++++++
-> >  drivers/fpga/dfl.h                                |  11 ++
-> >  3 files changed, 178 insertions(+)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-port b/Documentation/ABI/testing/sysfs-platform-dfl-port
-> > index 6a92dda..5961fb2 100644
-> > --- a/Documentation/ABI/testing/sysfs-platform-dfl-port
-> > +++ b/Documentation/ABI/testing/sysfs-platform-dfl-port
-> > @@ -14,3 +14,33 @@ Description:	Read-only. User can program different PR bitstreams to FPGA
-> >  		Accelerator Function Unit (AFU) for different functions. It
-> >  		returns uuid which could be used to identify which PR bitstream
-> >  		is programmed in this AFU.
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-port.0/power_state
-> > +Date:		July 2019
-> > +KernelVersion:	5.4
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Read-only. It reports the APx (AFU Power) state, different APx
-> > +		means different throttling level. When reading this file, it
-> > +		returns "0" - Normal / "1" - AP1 / "2" - AP2 / "6" - AP6.
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-port.0/ap1_event
-> > +Date:		July 2019
-> > +KernelVersion:	5.4
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Read-write. Read or set 1 to clear AP1 (AFU Power State 1)
-> > +		event. It's used to indicate transient AP1 state.
+On 23/07/2019 10:41, Mark Rutland wrote:
+> On Mon, Jul 22, 2019 at 04:41:59PM +0100, Steven Price wrote:
+>> Exposing the pud/pgd levels of the page tables to walk_page_range() means
+>> we may come across the exotic large mappings that come with large areas
+>> of contiguous memory (such as the kernel's linear map).
+>>
+>> For architectures that don't provide all p?d_leaf() macros, provide
+>> generic do nothing default that are suitable where there cannot be leaf
+>> pages that that level.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
 > 
-> So reading the value changes the state of the system?  That's almost
-> always never a good idea.
-> 
-> Force userspace to write the value to change something.  Otherwise all
-> libraries that use sysfs will be accidentally changing the state of your
-> system without you ever knowing it.
+> Not a big deal, but it would probably make sense for this to be patch 1
+> in the series, given it defines the semantic of p?d_leaf(), and they're
+> not used until we provide all the architectural implemetnations anyway.
 
-Oh.. I think the description makes some misunderstanding here, will fix it
-in the next version. This AP1/AP2 event will only be cleared by write 1 to
-it, read will not change the state.
+Sure, I'll move it. When it was named p?d_large() this had to come after
+some architectures that implement p?d_large() as static inline. But
+p?d_leaf() doesn't have that issue.
 
-> 
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-port.0/ap2_event
-> > +Date:		July 2019
-> > +KernelVersion:	5.4
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Read-write. Read or set 1 to clear AP2 (AFU Power State 2)
-> > +		event. It's used to indicate transient AP2 state.
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-port.0/ltr
-> > +Date:		July 2019
-> > +KernelVersion:	5.4
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Read-write. Read and set AFU latency tolerance reporting value.
-> > +		Set ltr to 1 if the AFU can tolerate latency >= 40us or set it
-> > +		to 0 if it is latency sensitive.
-> > diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-> > index 68b4d08..cb3f73e 100644
-> > --- a/drivers/fpga/dfl-afu-main.c
-> > +++ b/drivers/fpga/dfl-afu-main.c
-> > @@ -141,8 +141,145 @@ static int port_get_id(struct platform_device *pdev)
-> >  }
-> >  static DEVICE_ATTR_RO(id);
-> >  
-> > +static ssize_t
-> > +ltr_show(struct device *dev, struct device_attribute *attr, char *buf)
-> > +{
-> > +	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
-> > +	void __iomem *base;
-> > +	u64 v;
-> > +
-> > +	base = dfl_get_feature_ioaddr_by_id(dev, PORT_FEATURE_ID_HEADER);
-> > +
-> > +	mutex_lock(&pdata->lock);
-> > +	v = readq(base + PORT_HDR_CTRL);
-> > +	mutex_unlock(&pdata->lock);
-> 
-> Why do you need a lock to call readq()?  What are you protecting here?
+> It might also be worth pointing out the reasons for this naming, e.g.
+> p?d_large() aren't currently generic, and this name minimizes potential
+> confusion between p?d_{large,huge}().
 
-If this code is running on 32bit machine, readq will be replaced with 2
-readl operation. If that is the case, should we protect the code against
-it?
+Ok, how about:
 
-> 
-> 
-> > +
-> > +	return sprintf(buf, "%x\n", (u8)FIELD_GET(PORT_CTRL_LATENCY, v));
-> > +}
-> > +
-> > +static ssize_t
-> > +ltr_store(struct device *dev, struct device_attribute *attr,
-> > +	  const char *buf, size_t count)
-> > +{
-> > +	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
-> > +	void __iomem *base;
-> > +	u8 ltr;
-> > +	u64 v;
-> > +
-> > +	if (kstrtou8(buf, 0, &ltr) || ltr > 1)
-> > +		return -EINVAL;
-> 
-> Are you doing anything with this value?  If not, how about just using
-> the sysfs boolean read function and if it is 1, then do the clearing?
-> 
-> Same for all other show/store functions in here.
+The name p?d_leaf() is chosen because to minimize the confusion with
+existing uses of "large" pages and "huge" pages which do not necessary
+mean that the entry is a leaf (for example it may be a set of contiguous
+entries that only take 1 TLB slot). For the purpose of walking the page
+tables we don't need to know how it will be represented in the TLB, but
+we do need to know for sure if it is a leaf of the tree.
 
-Sure, will fix this in the next version.
-
-Thanks a lot for the comments.
-
-Hao
-
+>> ---
+>>  include/asm-generic/pgtable.h | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>
+>> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+>> index 75d9d68a6de7..46275896ca66 100644
+>> --- a/include/asm-generic/pgtable.h
+>> +++ b/include/asm-generic/pgtable.h
+>> @@ -1188,4 +1188,23 @@ static inline bool arch_has_pfn_modify_check(void)
+>>  #define mm_pmd_folded(mm)	__is_defined(__PAGETABLE_PMD_FOLDED)
+>>  #endif
+>>  
+>> +/*
+>> + * p?d_leaf() - true if this entry is a final mapping to a physical address.
+>> + * This differs from p?d_huge() by the fact that they are always available (if
+>> + * the architecture supports large pages at the appropriate level) even
+>> + * if CONFIG_HUGETLB_PAGE is not defined.
+>> + */
 > 
-> thanks,
+> I assume it's only safe to call these on valid entries? I think it would
+> be worth calling that out explicitly.
+
+Yes only meaningful on valid entries - I'll add that as a comment.
+
+> Otherwise, this looks sound to me:
 > 
-> greg k-h
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Thanks for the review
+
+Steve
