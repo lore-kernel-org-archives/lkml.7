@@ -2,135 +2,243 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A594CC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AEBC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B250229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:43:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TbGLMcMI"
+	by mail.kernel.org (Postfix) with ESMTP id 3CE47206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfGXJnU (ORCPT
+        id S1727027AbfGXJn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 05:43:20 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34492 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbfGXJnT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 05:43:19 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n9so14722533pgc.1;
-        Wed, 24 Jul 2019 02:43:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dfGfB3xwwf3iQZ8pUv1Cce8BeLxDLL9fV/CFtRrfuaU=;
-        b=TbGLMcMIOmm+LtHtnas4F9H/XOneNA7H5ua3fknsao5aQPVc7pNzn/HHb6FQZFQTex
-         419/Z8qJ6swsZgE6Bl0WzbCMIB9etUZPgjqOgQyt8m0S6jIrNYsd23gli3uwV8aHL1Gc
-         bW0iWhhi9Rz9wkn998rGGla8JsywPVNYKWm33aSaJujOzTnQ5yBZXHTnXIIt/CUakOq3
-         xgIPR0mTH4ZnguwR1hhZqVNh9umXepJa588iKGy2g2lTcO4LyOnfpNmuxteJx/HPCBqX
-         c+0gj6xb0FU2VZXa7uPmam9yVFRw10yCk+ZfdLuBGJHp3+aPV+0ugDi/ma1wJcN//3Jf
-         cY8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dfGfB3xwwf3iQZ8pUv1Cce8BeLxDLL9fV/CFtRrfuaU=;
-        b=IDB5L/l7G3lbDA5wFj+GooeL+o647nIlp5vPvzJzMCkfQdIZxDXdQ/x+6oN4KyfhmO
-         2qhiU0f6J0UAc4CulPnkYL4XzERrIyHVdVNZuxQAGVolPC6mRWcJrjZXpu2fkOPuyJrL
-         hMe/gy2OAHIh1Gj3pqG78Yr61/hLGo1U4SMLcnHF1PMhdivTLVXfVD0FqjHByoQkVC7H
-         8MwBPm2d66DTETe45a7Q+x5wCJhJl2Dq/0VZ8IeLe6Eym3pD6uzldyeCr4vGAonD2o8Y
-         DYBMQewk7nrxYcrplIs+Y/+cbzWfJSF90Xdy6C9i+yMB++JZvrf24rMRTPm6YqeTdM/9
-         8a5A==
-X-Gm-Message-State: APjAAAWNrNRgACsuyckA7+O7ZWcqRRP/fb8dBJjySKDVoneP5i1z6e2B
-        rhiJHWOGtuAOJDOGJqHJTJ3UDuz2Dyk=
-X-Google-Smtp-Source: APXvYqxoKsM5gyvJ5hPl4B1K+JyJhCr20cKUNHQXvVSTIIHVYMjxT2XeJLcsE7cvSoMk8shTsz+mZQ==
-X-Received: by 2002:a63:58c:: with SMTP id 134mr84192409pgf.106.1563961398634;
-        Wed, 24 Jul 2019 02:43:18 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id o3sm86318789pje.1.2019.07.24.02.43.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 24 Jul 2019 02:43:18 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH] KVM: X86: Boost queue head vCPU to mitigate lock waiter preemption
-Date:   Wed, 24 Jul 2019 17:43:13 +0800
-Message-Id: <1563961393-10301-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 24 Jul 2019 05:43:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40944 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727025AbfGXJnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 05:43:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 067A0AFE4;
+        Wed, 24 Jul 2019 09:43:20 +0000 (UTC)
+Date:   Wed, 24 Jul 2019 11:43:18 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Cooks <acooks@rationali.st>, linux-acpi@vger.kernel.org,
+        platypus-sw@opengear.com, "Tobin C . Harding" <me@tobin.cc>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Will Wagner <willw@carallon.com>
+Subject: Re: [RESEND][PATCH v4 2/3] i2c: piix4: fix probing of reserved
+ ports on AMD
+Message-ID: <20190724114318.5f826dd3@endymion>
+In-Reply-To: <970f151329b43cfa5f842dc0fe0604b03c5c1297.1519601860.git.andrew.cooks@opengear.com>
+References: <cover.1519601860.git.andrew.cooks@opengear.com>
+        <970f151329b43cfa5f842dc0fe0604b03c5c1297.1519601860.git.andrew.cooks@opengear.com>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On Mon, 26 Feb 2018 10:28:44 +1000, Andrew Cooks wrote:
+> Prevent bus timeouts and resets on Family 16h Model 30h by not probing
+> reserved Ports 3 and 4.
+> 
+> According to the AMD BIOS and Kernel Developer's Guides (BKDG), Port 3
+> and Port 4 are reserved on the following devices:
+>  - Family 15h Model 60h-6Fh
+>  - Family 15h Model 70h-7Fh
+>  - Family 16h Model 30h-3Fh
+> 
+> Signed-off-by: Andrew Cooks <andrew.cooks@opengear.com>
+> ---
+>  drivers/i2c/busses/i2c-piix4.c | 19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
 
-Commit 11752adb (locking/pvqspinlock: Implement hybrid PV queued/unfair locks)
-introduces hybrid PV queued/unfair locks 
- - queued mode (no starvation)
- - unfair mode (good performance on not heavily contended lock)
-The lock waiter goes into the unfair mode especially in VMs with over-commit
-vCPUs since increaing over-commitment increase the likehood that the queue 
-head vCPU may have been preempted and not actively spinning.
+I agree the change is needed but I'm not convinced about the
+implementation. It seems more complex than it needs to be and not
+reliable is something goes wrong.
 
-However, reschedule queue head vCPU timely to acquire the lock still can get 
-better performance than just depending on lock stealing in over-subscribe 
-scenario.
+> diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
+> index 5c90a44..01f1610 100644
+> --- a/drivers/i2c/busses/i2c-piix4.c
+> +++ b/drivers/i2c/busses/i2c-piix4.c
+> @@ -80,7 +80,8 @@
+>  #define PIIX4_BLOCK_DATA	0x14
+>  
+>  /* Multi-port constants */
+> -#define PIIX4_MAX_ADAPTERS 4
+> +#define PIIX4_MAX_ADAPTERS	4
+> +#define HUDSON2_MAIN_PORTS	2 /* HUDSON2, KERNCZ reserves ports 3, 4 */
+>  
+>  /* SB800 constants */
+>  #define SB800_PIIX4_SMB_IDX		0xcd6
+> @@ -800,6 +801,7 @@ MODULE_DEVICE_TABLE (pci, piix4_ids);
+>  
+>  static struct i2c_adapter *piix4_main_adapters[PIIX4_MAX_ADAPTERS];
+>  static struct i2c_adapter *piix4_aux_adapter;
+> +static int piix4_adapter_count;
+>  
+>  static int piix4_add_adapter(struct pci_dev *dev, unsigned short smba,
+>  			     bool sb800_main, u8 port, bool notify_imc,
+> @@ -849,6 +851,7 @@ static int piix4_add_adapter(struct pci_dev *dev, unsigned short smba,
+>  	}
+>  
+>  	*padap = adap;
+> +	piix4_adapter_count++;
+>  	return 0;
+>  }
 
-Testing on 80 HT 2 socket Xeon Skylake server, with 80 vCPUs VM 80GB RAM:
-ebizzy -M
-             vanilla     boosting    improved
- 1VM          23520        25040         6%
- 2VM           8000        13600        70%
- 3VM           3100         5400        74%
+So piix4_adapter_count is counting the *overall* number of
+*successfully* created adapters. This count could be *more* than
+PIIX4_MAX_ADAPTERS/HUDSON2_MAIN_PORTS (if all main adapters plus the
+aux adapter are created successfully). But this count could also be
+*less* than PIIX4_MAX_ADAPTERS (on all systems where ports 3 and 4 are
+reserved and thus now skipped).
 
-The lock holder vCPU yields to the queue head vCPU when unlock, to boost queue 
-head vCPU which is involuntary preemption or the one which is voluntary halt 
-due to fail to acquire the lock after a short spin in the guest.
+>  
+> @@ -856,10 +859,17 @@ static int piix4_add_adapters_sb800(struct pci_dev *dev, unsigned short smba,
+>  				    bool notify_imc)
+>  {
+>  	struct i2c_piix4_adapdata *adapdata;
+> -	int port;
+> +	int port, port_count;
+>  	int retval;
+>  
+> -	for (port = 0; port < PIIX4_MAX_ADAPTERS; port++) {
+> +	if (dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS ||
+> +	    dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) {
 
-Cc: Waiman Long <longman@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/x86.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+(There's another potential problem here, see below.)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 01e18ca..c6d951c 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7206,7 +7206,7 @@ static void kvm_sched_yield(struct kvm *kvm, unsigned long dest_id)
+> +		port_count = HUDSON2_MAIN_PORTS;
+> +	} else {
+> +		port_count = PIIX4_MAX_ADAPTERS;
+> +	}
+> +
+
+Here port_count represents the number of *possible* *main* adapter
+ports. So not the same as piix4_adapter_count.
+
+> +	for (port = 0; port < port_count; port++) {
+>  		retval = piix4_add_adapter(dev, smba, true, port, notify_imc,
+>  					   piix4_main_port_names_sb800[port],
+>  					   &piix4_main_adapters[port]);
+> @@ -889,6 +899,7 @@ static int piix4_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  {
+>  	int retval;
+>  	bool is_sb800 = false;
+> +	piix4_adapter_count = 0;
+>  
+>  	if ((dev->vendor == PCI_VENDOR_ID_ATI &&
+>  	     dev->device == PCI_DEVICE_ID_ATI_SBX00_SMBUS &&
+> @@ -993,7 +1004,7 @@ static void piix4_adap_remove(struct i2c_adapter *adap)
+>  
+>  static void piix4_remove(struct pci_dev *dev)
+>  {
+> -	int port = PIIX4_MAX_ADAPTERS;
+> +	int port = piix4_adapter_count;
+
+And here we have the problem. We are basically looping over
+piix4_main_adapters[] which has exactly PIIX4_MAX_ADAPTERS elements,
+some of which may be unused. If piix4_adapter_count is 5 (4 main + 1
+aux port) we will overrun the array. And if one "middle" main adapter
+port failed to register (unlikely event but can happen in theory, for
+example on memory allocation error) then we may omit to unregister the
+last main adapter.
+
+What we really need here is port_count from function
+piix4_add_adapters_sb800(), which unfortunately was a local and no
+longer exists.
+
+>  
+>  	while (--port >= 0) {
+>  		if (piix4_main_adapters[port]) {
+
+I think the whole change can be simplified by introducing only 1 new
+variable instead of 2, and using it where appropriate:
+
+--- linux-5.1.orig/drivers/i2c/busses/i2c-piix4.c	2019-07-24 10:02:40.404816668 +0200
++++ linux-5.1/drivers/i2c/busses/i2c-piix4.c	2019-07-24 11:22:47.827417870 +0200
+@@ -80,7 +80,8 @@
+ #define PIIX4_BLOCK_DATA	0x14
  
- 	rcu_read_unlock();
+ /* Multi-port constants */
+-#define PIIX4_MAX_ADAPTERS 4
++#define PIIX4_MAX_ADAPTERS	4
++#define HUDSON2_MAIN_PORTS	2 /* HUDSON2, KERNCZ reserves ports 3, 4 */
  
--	if (target)
-+	if (target && READ_ONCE(target->ready))
- 		kvm_vcpu_yield_to(target);
- }
+ /* SB800 constants */
+ #define SB800_PIIX4_SMB_IDX		0xcd6
+@@ -814,6 +815,7 @@ MODULE_DEVICE_TABLE (pci, piix4_ids);
  
-@@ -7246,6 +7246,7 @@ int kvm_emulate_hypercall(struct kvm_vcpu *vcpu)
- 		break;
- 	case KVM_HC_KICK_CPU:
- 		kvm_pv_kick_cpu_op(vcpu->kvm, a0, a1);
-+		kvm_sched_yield(vcpu->kvm, a1);
- 		ret = 0;
- 		break;
- #ifdef CONFIG_X86_64
+ static struct i2c_adapter *piix4_main_adapters[PIIX4_MAX_ADAPTERS];
+ static struct i2c_adapter *piix4_aux_adapter;
++static int piix4_adapter_count;
+ 
+ static int piix4_add_adapter(struct pci_dev *dev, unsigned short smba,
+ 			     bool sb800_main, u8 port, bool notify_imc,
+@@ -873,7 +875,14 @@ static int piix4_add_adapters_sb800(stru
+ 	int port;
+ 	int retval;
+ 
+-	for (port = 0; port < PIIX4_MAX_ADAPTERS; port++) {
++	if (dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS ||
++	    dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) {
++		piix4_adapter_count = HUDSON2_MAIN_PORTS;
++	} else {
++		piix4_adapter_count = PIIX4_MAX_ADAPTERS;
++	}
++
++	for (port = 0; port < piix4_adapter_count; port++) {
+ 		retval = piix4_add_adapter(dev, smba, true, port, notify_imc,
+ 					   piix4_main_port_names_sb800[port],
+ 					   &piix4_main_adapters[port]);
+@@ -995,7 +1005,7 @@ static void piix4_adap_remove(struct i2c
+ 
+ static void piix4_remove(struct pci_dev *dev)
+ {
+-	int port = PIIX4_MAX_ADAPTERS;
++	int port = piix4_adapter_count;
+ 
+ 	while (--port >= 0) {
+ 		if (piix4_main_adapters[port]) {
+
+Anyone sees a problem with this approach?
+
+The second issue I see is that ports 3 and 4 are skipped for all
+PCI_DEVICE_ID_AMD_HUDSON2_SMBUS devices while the previous patch in
+this series suggests that the Bolton chipset (device revision 0x15)
+behaves differently. As a matter of fact the description of this patch
+does not list it as being affected by the issue. So in effect we would
+be disabling ports 3 and 4 for Bolton users, who may have valuable I2C
+devices connected there. We just fixed a regression for them with
+previous patch, let's not introduce a new one with this patch. I think
+the device test should look like:
+
+	if (PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS ||
+	    (PIIX4_dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS &&
+	     PIIX4_dev->revision >= 0x1F)) {
+		piix4_adapter_count = HUDSON2_MAIN_PORTS;
+	} else {
+		(...)
+
+i.e. the same as in previous patch.
+
+By the way, I don't own compatible hardware. I will see if I can gain
+access to a SUSE Labs machine for testing purposes, but it would be a
+lot easier if someone with the hardware could test the patch series
+once it is rebased. Volunteers?
+
+Thanks,
 -- 
-2.7.4
-
+Jean Delvare
+SUSE L3 Support
