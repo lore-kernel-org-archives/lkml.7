@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C25AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C74C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42222214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E868E214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000080;
-	bh=qAlaxnlGCc/tBpKvRf/hjFWEEe2Hk7thRw4cpq3e0RI=;
+	s=default; t=1564000083;
+	bh=Y9Pq0EbIcsS7FR/8qWpRKOO8+pZQLtcLgHAYAnC7vw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sqJek36fc8OpADWfggR4sDoq7W+J74vi+j3xW6l+WHYykWeXLz5MpkTqXfSIbCdpK
-	 tCKMiVq7XRA0VUIrvu7DJolR6aYC6mjlkoPjwMYgQ2Tbkfqr9Yk00r+EVko3/MIdGS
-	 jjerpZvPUq1qI4++AkT4EfmuwrLSaC4syvzHUp7c=
+	b=MVtZVx8JAHAebg14vp7sRKpDd6UjfTNVIoIWJSLdUBp+5B1bhvxcWro+gEVLWua9I
+	 FUuMSAG6GwonEDxPHmiygo3AoiHNQLkOUoY8jFmJaHFa9UV8J8FY9ShAWbnX4dQWZ0
+	 ugG82TfKMrjmOMQUTulo6fOw1/QdekC+yYIIAvZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388133AbfGXTfO (ORCPT
+        id S2389155AbfGXTfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:35:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58946 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:35:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389134AbfGXTfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:35:10 -0400
+        id S2389115AbfGXTfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:35:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58D4E20659;
-        Wed, 24 Jul 2019 19:35:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23B3622ADC;
+        Wed, 24 Jul 2019 19:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996909;
-        bh=qAlaxnlGCc/tBpKvRf/hjFWEEe2Hk7thRw4cpq3e0RI=;
+        s=default; t=1563996903;
+        bh=Y9Pq0EbIcsS7FR/8qWpRKOO8+pZQLtcLgHAYAnC7vw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=afHQobgE/DII8gWnGjJ3iit3Pm+HRzSW963MOcSSA/+VBojFUcyz2kyOAHFc9A9Fs
-         co7SUFwusiog6GjD3lcJRms3Y41Yl+a9q1eifc8sO5+qd3vXqB2D7CwLw+wzbtQfmw
-         JfmbeaW7VqmZu27QV+CHBphaweE7KuPOCAJ4/ZCw=
+        b=RBVvgXOmjIPVvlBuaYJKPVREO4xlqlpDmU7LYa5JQ6H4UoIJ5rq3raTkF8JS/JOSq
+         iD8edH7i/eu7G8BD91L8AbU2hXAGL6XdpbLP7af9zkRcb+P7N4KqqXFv0dyVGJ26sb
+         SzdJ8Uggq9UgBPsrsCtkoLkywOA5l5fEGBqHY+8A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+8a3fc6674bbc3978ed4e@syzkaller.appspotmail.com,
-        Phong Tran <tranmanphong@gmail.com>,
+        stable@vger.kernel.org, Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 216/413] net: usb: asix: init MAC address buffers
-Date:   Wed, 24 Jul 2019 21:18:27 +0200
-Message-Id: <20190724191750.070561141@linuxfoundation.org>
+Subject: [PATCH 5.2 214/413] vxlan: do not destroy fdb if register_netdevice() is failed
+Date:   Wed, 24 Jul 2019 21:18:25 +0200
+Message-Id: <20190724191749.860604568@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,119 +61,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 78226f6eaac80bf30256a33a4926c194ceefdf36 ]
+[ Upstream commit 7c31e54aeee517d1318dfc0bde9fa7de75893dc6 ]
 
-This is for fixing bug KMSAN: uninit-value in ax88772_bind
+__vxlan_dev_create() destroys FDB using specific pointer which indicates
+a fdb when error occurs.
+But that pointer should not be used when register_netdevice() fails because
+register_netdevice() internally destroys fdb when error occurs.
 
-Tested by
-https://groups.google.com/d/msg/syzkaller-bugs/aFQurGotng4/eB_HlNhhCwAJ
+This patch makes vxlan_fdb_create() to do not link fdb entry to vxlan dev
+internally.
+Instead, a new function vxlan_fdb_insert() is added to link fdb to vxlan
+dev.
 
-Reported-by: syzbot+8a3fc6674bbc3978ed4e@syzkaller.appspotmail.com
+vxlan_fdb_insert() is called after calling register_netdevice().
+This routine can avoid situation that ->ndo_uninit() destroys fdb entry
+in error path of register_netdevice().
+Hence, error path of __vxlan_dev_create() routine can have an opportunity
+to destroy default fdb entry by hand.
 
-syzbot found the following crash on:
+Test command
+    ip link add bonding_masters type vxlan id 0 group 239.1.1.1 \
+	    dev enp0s9 dstport 4789
 
-HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
-git tree:       kmsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=136d720ea00000
-kernel config:
-https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
-dashboard link:
-https://syzkaller.appspot.com/bug?extid=8a3fc6674bbc3978ed4e
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
-syz repro:
-https://syzkaller.appspot.com/x/repro.syz?x=12788316a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120359aaa00000
+Splat looks like:
+[  213.392816] kasan: GPF could be caused by NULL-ptr deref or user memory access
+[  213.401257] general protection fault: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+[  213.402178] CPU: 0 PID: 1414 Comm: ip Not tainted 5.2.0-rc5+ #256
+[  213.402178] RIP: 0010:vxlan_fdb_destroy+0x120/0x220 [vxlan]
+[  213.402178] Code: df 48 8b 2b 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 06 01 00 00 4c 8b 63 08 48 b8 00 00 00 00 00 fc d
+[  213.402178] RSP: 0018:ffff88810cb9f0a0 EFLAGS: 00010202
+[  213.402178] RAX: dffffc0000000000 RBX: ffff888101d4a8c8 RCX: 0000000000000000
+[  213.402178] RDX: 1bd5a00000000040 RSI: ffff888101d4a8c8 RDI: ffff888101d4a8d0
+[  213.402178] RBP: 0000000000000000 R08: fffffbfff22b72d9 R09: 0000000000000000
+[  213.402178] R10: 00000000ffffffef R11: 0000000000000000 R12: dead000000000200
+[  213.402178] R13: ffff88810cb9f1f8 R14: ffff88810efccda0 R15: ffff88810efccda0
+[  213.402178] FS:  00007f7f6621a0c0(0000) GS:ffff88811b000000(0000) knlGS:0000000000000000
+[  213.402178] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  213.402178] CR2: 000055746f0807d0 CR3: 00000001123e0000 CR4: 00000000001006f0
+[  213.402178] Call Trace:
+[  213.402178]  __vxlan_dev_create+0x3a9/0x7d0 [vxlan]
+[  213.402178]  ? vxlan_changelink+0x740/0x740 [vxlan]
+[  213.402178]  ? rcu_read_unlock+0x60/0x60 [vxlan]
+[  213.402178]  ? __kasan_kmalloc.constprop.3+0xa0/0xd0
+[  213.402178]  vxlan_newlink+0x8d/0xc0 [vxlan]
+[  213.402178]  ? __vxlan_dev_create+0x7d0/0x7d0 [vxlan]
+[  213.554119]  ? __netlink_ns_capable+0xc3/0xf0
+[  213.554119]  __rtnl_newlink+0xb75/0x1180
+[  213.554119]  ? rtnl_link_unregister+0x230/0x230
+[ ... ]
 
-==================================================================
-BUG: KMSAN: uninit-value in is_valid_ether_addr
-include/linux/etherdevice.h:200 [inline]
-BUG: KMSAN: uninit-value in asix_set_netdev_dev_addr
-drivers/net/usb/asix_devices.c:73 [inline]
-BUG: KMSAN: uninit-value in ax88772_bind+0x93d/0x11e0
-drivers/net/usb/asix_devices.c:724
-CPU: 0 PID: 3348 Comm: kworker/0:2 Not tainted 5.1.0+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
-  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
-  is_valid_ether_addr include/linux/etherdevice.h:200 [inline]
-  asix_set_netdev_dev_addr drivers/net/usb/asix_devices.c:73 [inline]
-  ax88772_bind+0x93d/0x11e0 drivers/net/usb/asix_devices.c:724
-  usbnet_probe+0x10f5/0x3940 drivers/net/usb/usbnet.c:1728
-  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
-  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x454/0x730 drivers/base/dd.c:844
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-  device_add+0x288d/0x30e0 drivers/base/core.c:2106
-  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
-  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x454/0x730 drivers/base/dd.c:844
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-  device_add+0x288d/0x30e0 drivers/base/core.c:2106
-  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
-  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x189c/0x2460 kernel/workqueue.c:2417
-  kthread+0x4b5/0x4f0 kernel/kthread.c:254
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Fixes: 0241b836732f ("vxlan: fix default fdb entry netlink notify ordering during netdev create")
+Suggested-by: Roopa Prabhu <roopa@cumulusnetworks.com>
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Acked-by: Roopa Prabhu <roopa@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/asix_devices.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/vxlan.c | 37 +++++++++++++++++++++++++++----------
+ 1 file changed, 27 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/usb/asix_devices.c b/drivers/net/usb/asix_devices.c
-index c9bc96310ed4..ef548beba684 100644
---- a/drivers/net/usb/asix_devices.c
-+++ b/drivers/net/usb/asix_devices.c
-@@ -226,7 +226,7 @@ static void asix_phy_reset(struct usbnet *dev, unsigned int reset_bits)
- static int ax88172_bind(struct usbnet *dev, struct usb_interface *intf)
+diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
+index 083f3f0bf37f..b4283f52a09d 100644
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -804,6 +804,14 @@ static struct vxlan_fdb *vxlan_fdb_alloc(struct vxlan_dev *vxlan,
+ 	return f;
+ }
+ 
++static void vxlan_fdb_insert(struct vxlan_dev *vxlan, const u8 *mac,
++			     __be32 src_vni, struct vxlan_fdb *f)
++{
++	++vxlan->addrcnt;
++	hlist_add_head_rcu(&f->hlist,
++			   vxlan_fdb_head(vxlan, mac, src_vni));
++}
++
+ static int vxlan_fdb_create(struct vxlan_dev *vxlan,
+ 			    const u8 *mac, union vxlan_addr *ip,
+ 			    __u16 state, __be16 port, __be32 src_vni,
+@@ -829,18 +837,13 @@ static int vxlan_fdb_create(struct vxlan_dev *vxlan,
+ 		return rc;
+ 	}
+ 
+-	++vxlan->addrcnt;
+-	hlist_add_head_rcu(&f->hlist,
+-			   vxlan_fdb_head(vxlan, mac, src_vni));
+-
+ 	*fdb = f;
+ 
+ 	return 0;
+ }
+ 
+-static void vxlan_fdb_free(struct rcu_head *head)
++static void __vxlan_fdb_free(struct vxlan_fdb *f)
  {
- 	int ret = 0;
--	u8 buf[ETH_ALEN];
-+	u8 buf[ETH_ALEN] = {0};
- 	int i;
- 	unsigned long gpio_bits = dev->driver_info->data;
+-	struct vxlan_fdb *f = container_of(head, struct vxlan_fdb, rcu);
+ 	struct vxlan_rdst *rd, *nd;
  
-@@ -677,7 +677,7 @@ static int asix_resume(struct usb_interface *intf)
- static int ax88772_bind(struct usbnet *dev, struct usb_interface *intf)
+ 	list_for_each_entry_safe(rd, nd, &f->remotes, list) {
+@@ -850,6 +853,13 @@ static void vxlan_fdb_free(struct rcu_head *head)
+ 	kfree(f);
+ }
+ 
++static void vxlan_fdb_free(struct rcu_head *head)
++{
++	struct vxlan_fdb *f = container_of(head, struct vxlan_fdb, rcu);
++
++	__vxlan_fdb_free(f);
++}
++
+ static void vxlan_fdb_destroy(struct vxlan_dev *vxlan, struct vxlan_fdb *f,
+ 			      bool do_notify, bool swdev_notify)
  {
- 	int ret, i;
--	u8 buf[ETH_ALEN], chipcode = 0;
-+	u8 buf[ETH_ALEN] = {0}, chipcode = 0;
- 	u32 phyid;
- 	struct asix_common_private *priv;
+@@ -977,6 +987,7 @@ static int vxlan_fdb_update_create(struct vxlan_dev *vxlan,
+ 	if (rc < 0)
+ 		return rc;
  
-@@ -1061,7 +1061,7 @@ static const struct net_device_ops ax88178_netdev_ops = {
- static int ax88178_bind(struct usbnet *dev, struct usb_interface *intf)
- {
- 	int ret;
--	u8 buf[ETH_ALEN];
-+	u8 buf[ETH_ALEN] = {0};
++	vxlan_fdb_insert(vxlan, mac, src_vni, f);
+ 	rc = vxlan_fdb_notify(vxlan, f, first_remote_rtnl(f), RTM_NEWNEIGH,
+ 			      swdev_notify, extack);
+ 	if (rc)
+@@ -3571,12 +3582,17 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
+ 	if (err)
+ 		goto errout;
  
- 	usbnet_get_endpoints(dev,intf);
+-	/* notify default fdb entry */
+ 	if (f) {
++		vxlan_fdb_insert(vxlan, all_zeros_mac,
++				 vxlan->default_dst.remote_vni, f);
++
++		/* notify default fdb entry */
+ 		err = vxlan_fdb_notify(vxlan, f, first_remote_rtnl(f),
+ 				       RTM_NEWNEIGH, true, extack);
+-		if (err)
+-			goto errout;
++		if (err) {
++			vxlan_fdb_destroy(vxlan, f, false, false);
++			goto unregister;
++		}
+ 	}
  
+ 	list_add(&vxlan->next, &vn->vxlan_list);
+@@ -3588,7 +3604,8 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
+ 	 * destroy the entry by hand here.
+ 	 */
+ 	if (f)
+-		vxlan_fdb_destroy(vxlan, f, false, false);
++		__vxlan_fdb_free(f);
++unregister:
+ 	if (unregister)
+ 		unregister_netdevice(dev);
+ 	return err;
 -- 
 2.20.1
 
