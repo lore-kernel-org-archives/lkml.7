@@ -2,104 +2,55 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63125C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8E0C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2980721873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564002595;
-	bh=u0DKWk7HCAdM9K+LNvrAozVOXRXioQba7PWbcuRuGbE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SyEDYNH/1B2d7E/oPwyBkm3YjijZFrNGZHjDjiCOrVqa/VgK8uaZlDbq3SXuKRdYz
-	 mt+diqiL/tUcNTxpJQMuFaR7V3mKZUGJJ9s8KZ1SwO+TEJ445Yc2rtewP43mhVLxzy
-	 jXsum9PCvknxAGXDbt12OOIBZaDMqTZqFHK/SeXk=
+	by mail.kernel.org (Postfix) with ESMTP id 8933D2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387980AbfGXVJy (ORCPT
+        id S2388096AbfGXVLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 17:09:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387568AbfGXVJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 17:09:53 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0516B2054F;
-        Wed, 24 Jul 2019 21:09:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564002593;
-        bh=u0DKWk7HCAdM9K+LNvrAozVOXRXioQba7PWbcuRuGbE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ISL8X1YreDGnnHZlrqkUMDyeJY403ARQ1AlYq7VdKyHA9wQjBSiWDz2/YwfXZtJCa
-         ilTgdagZ+MTWkAEk/fLxBl9qVuHOprsZW+TM4v+2+kqsg0X10vC3QRsyXQ33g9R+BY
-         5W3JjjbZ7osVcC727uC4MT57GcWTbzyFLXLRQ9ao=
-Date:   Wed, 24 Jul 2019 14:09:51 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     eric.dumazet@gmail.com, dvyukov@google.com, netdev@vger.kernel.org,
-        fw@strlen.de, i.maximets@samsung.com, edumazet@google.com,
-        dsahern@gmail.com, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
-Message-ID: <20190724210950.GH213255@gmail.com>
-Mail-Followup-To: David Miller <davem@davemloft.net>,
-        eric.dumazet@gmail.com, dvyukov@google.com, netdev@vger.kernel.org,
-        fw@strlen.de, i.maximets@samsung.com, edumazet@google.com,
-        dsahern@gmail.com, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <20190724163014.GC673@sol.localdomain>
- <20190724.111225.2257475150626507655.davem@davemloft.net>
- <20190724183710.GF213255@gmail.com>
- <20190724.130928.1854327585456756387.davem@davemloft.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724.130928.1854327585456756387.davem@davemloft.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 24 Jul 2019 17:11:17 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:51918 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387568AbfGXVLR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 17:11:17 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6BFBE1543A181;
+        Wed, 24 Jul 2019 14:11:16 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 14:11:15 -0700 (PDT)
+Message-Id: <20190724.141115.1138018570861660677.davem@davemloft.net>
+To:     corentinmusard@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        trivial@kernel.org
+Subject: Re: [PATCH] r8169: fix a typo in a comment
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190724123443.GA9626@user.home>
+References: <20190724123443.GA9626@user.home>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 24 Jul 2019 14:11:16 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 01:09:28PM -0700, David Miller wrote:
-> From: Eric Biggers <ebiggers@kernel.org>
-> Date: Wed, 24 Jul 2019 11:37:12 -0700
+From: Corentin Musard <corentinmusard@gmail.com>
+Date: Wed, 24 Jul 2019 14:34:43 +0200
+
+> Replace "additonal" by "additional" in a comment.
+> Typo found by checkpatch.pl.
 > 
-> > We can argue about what words to use to describe this situation, but
-> > it doesn't change the situation itself.
-> 
-> And we should argue about those words because it matters to humans and
-> effects how they feel, and humans ultimately fix these bugs.
-> 
-> So please stop with the hyperbole.
-> 
-> Thank you.
+> Signed-off-by: Corentin Musard <corentinmusard@gmail.com>
 
-Okay, there are 151 bugs that syzbot saw on the mainline Linux kernel in the
-last 7 days (90.1% with reproducers).  Of those, 59 were reported over 3 months
-ago (89.8% with reproducers).  Of those, 12 were reported over a year ago (83.3%
-with reproducers).
-
-No opinion on whether those are small/medium/large numbers, in case it would
-hurt someone's feelings.
-
-These numbers do *not* include bugs that are still valid but weren't seen on
-mainline in last 7 days, e.g.:
-
-- Bugs that are seen only rarely, so by chance weren't seen in last 7 days.
-- Bugs only in linux-next and/or subsystem branches.
-- Bugs that were seen in mainline more than 7 days ago, and then only on
-  linux-next or subsystem branch in last 7 days.
-- Bugs that stopped being seen due to a change in syzkaller.
-- Bugs that stopped being seen due to a change in kernel config.
-- Bugs that stopped being seen due to other environment changes such as kernel
-  command line parameters.
-- Bugs that stopped being seen due to a kernel change that hid the bug but
-  didn't actually fix it, i.e. still reachable in other ways.
-
-Eric
+Applied to net-next.
