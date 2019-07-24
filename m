@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3674C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E22AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA70F20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B3EB20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998125;
-	bh=oVO4OIooG09V32BefcY6Qz8jrnLQLyos9B1fipRdE9E=;
+	s=default; t=1563998130;
+	bh=BZ03rb4wgKDrHSygldFT+3+zsCVRtCg95khI63e01/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Avq+596u39gt2m2xhDBhGEezranHCFVGhuRFZQkYnMMAKdOm6TzZApwFXwW4KbOvb
-	 VMBl7U3k3G2zdTw69g4hwqPny36WhE+4mMKMEJvRuZptsCK4scEeMkyfXJKmhyTWAU
-	 cwzMY/q08NauB2K419Ho72QcYyg54L19+iCzFSNY=
+	b=hXeXey+sCdGPdPDES8nJ+rr6+W9ydVsnPKIqc+b1BdIsC+k2koyi+BMQiaEQ8bvAh
+	 euUhK0Fm2ca1pbK/KCKcvmAdF4jVvdFxN0+3r9ZJGHYTPu41ylf5T5PNgkRr57Y4f8
+	 jXqFRBhjPXfCgwbF9fa31sJG1aARIKJRCT8rIqlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391958AbfGXTzY (ORCPT
+        id S2391969AbfGXTz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:55:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35740 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:55:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391809AbfGXTxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:53:22 -0400
+        id S2391885AbfGXTxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:53:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 689A1205C9;
-        Wed, 24 Jul 2019 19:53:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13D26205C9;
+        Wed, 24 Jul 2019 19:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998001;
-        bh=oVO4OIooG09V32BefcY6Qz8jrnLQLyos9B1fipRdE9E=;
+        s=default; t=1563998004;
+        bh=BZ03rb4wgKDrHSygldFT+3+zsCVRtCg95khI63e01/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0L0JL93t/n6m4CzY6MaEebdPYu5zhJReIOalK3BjT3AG+ocw46ZZVvZgMderY+uqg
-         7EZhxZctP0oK9GZXE10B7j+msYlReYJPuI+PLoi+t1UZYGUk5O8XHBtTmYeq4u0iZU
-         DHV5Yws626Za3j3MJWLZEB1fmkAPxDza7Cn/vSFg=
+        b=yVZqZjG2q+4cB0FDKSwrPIOeQlUy5fV3FeC/GGnLvkAKkPClCt0d41kOKeUCBG4zO
+         cinTrhTQ0GiysReq8+2EM+jOUESKbM1NsROxnQWh2UAxASmSkaHEpKbM+YnUcK3BSc
+         +zB+DT2A3Ug/04e/cLvX+SMg78KEiO0VAzHmfrIo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
+        Michael Scott <mike@foundries.io>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 162/371] ixgbe: Check DDM existence in transceiver before access
-Date:   Wed, 24 Jul 2019 21:18:34 +0200
-Message-Id: <20190724191737.366675467@linuxfoundation.org>
+Subject: [PATCH 5.1 207/371] Bluetooth: 6lowpan: search for destination address in all peers
+Date:   Wed, 24 Jul 2019 21:19:19 +0200
+Message-Id: <20190724191740.160077036@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -63,61 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 655c91414579d7bb115a4f7898ee726fc18e0984 ]
+[ Upstream commit b188b03270b7f8568fc714101ce82fbf5e811c5a ]
 
-Some transceivers may comply with SFF-8472 but not implement the Digital
-Diagnostic Monitoring (DDM) interface described in it. The existence of
-such area is specified by bit 6 of byte 92, set to 1 if implemented.
+Handle overlooked case where the target address is assigned to a peer
+and neither route nor gateway exist.
 
-Currently, due to not checking this bit ixgbe fails trying to read SFP
-module's eeprom with the follow message:
+For one peer, no checks are performed to see if it is meant to receive
+packets for a given address.
 
-ethtool -m enP51p1s0f0
-Cannot get Module EEPROM data: Input/output error
+As soon as there is a second peer however, checks are performed
+to deal with routes and gateways for handling complex setups with
+multiple hops to a target address.
+This logic assumed that no route and no gateway imply that the
+destination address can not be reached, which is false in case of a
+direct peer.
 
-Because it fails to read the additional 256 bytes in which it was assumed
-to exist the DDM data.
-
-This issue was noticed using a Mellanox Passive DAC PN 01FT738. The eeprom
-data was confirmed by Mellanox as correct and present in other Passive
-DACs in from other manufacturers.
-
-Signed-off-by: "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>
-Reviewed-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Acked-by: Jukka Rissanen <jukka.rissanen@linux.intel.com>
+Tested-by: Michael Scott <mike@foundries.io>
+Signed-off-by: Josua Mayer <josua.mayer@jm0.eu>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c | 3 ++-
- drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h     | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ net/bluetooth/6lowpan.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-index acba067cc15a..7c52ae8ac005 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-@@ -3226,7 +3226,8 @@ static int ixgbe_get_module_info(struct net_device *dev,
- 		page_swap = true;
+diff --git a/net/bluetooth/6lowpan.c b/net/bluetooth/6lowpan.c
+index a7cd23f00bde..50530561da98 100644
+--- a/net/bluetooth/6lowpan.c
++++ b/net/bluetooth/6lowpan.c
+@@ -187,10 +187,16 @@ static inline struct lowpan_peer *peer_lookup_dst(struct lowpan_btle_dev *dev,
  	}
  
--	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap) {
-+	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap ||
-+	    !(addr_mode & IXGBE_SFF_DDM_IMPLEMENTED)) {
- 		/* We have a SFP, but it does not support SFF-8472 */
- 		modinfo->type = ETH_MODULE_SFF_8079;
- 		modinfo->eeprom_len = ETH_MODULE_SFF_8079_LEN;
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-index 214b01085718..6544c4539c0d 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-@@ -45,6 +45,7 @@
- #define IXGBE_SFF_SOFT_RS_SELECT_10G		0x8
- #define IXGBE_SFF_SOFT_RS_SELECT_1G		0x0
- #define IXGBE_SFF_ADDRESSING_MODE		0x4
-+#define IXGBE_SFF_DDM_IMPLEMENTED		0x40
- #define IXGBE_SFF_QSFP_DA_ACTIVE_CABLE		0x1
- #define IXGBE_SFF_QSFP_DA_PASSIVE_CABLE		0x8
- #define IXGBE_SFF_QSFP_CONNECTOR_NOT_SEPARABLE	0x23
+ 	if (!rt) {
+-		nexthop = &lowpan_cb(skb)->gw;
+-
+-		if (ipv6_addr_any(nexthop))
+-			return NULL;
++		if (ipv6_addr_any(&lowpan_cb(skb)->gw)) {
++			/* There is neither route nor gateway,
++			 * probably the destination is a direct peer.
++			 */
++			nexthop = daddr;
++		} else {
++			/* There is a known gateway
++			 */
++			nexthop = &lowpan_cb(skb)->gw;
++		}
+ 	} else {
+ 		nexthop = rt6_nexthop(rt, daddr);
+ 
 -- 
 2.20.1
 
