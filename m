@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB009C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26169C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E6F22AEC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E000722BE9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997603;
-	bh=bSy0U5yVi9iyH1R9tnjzF1EO7KPdJi0N7GTkYrzC4Hk=;
+	s=default; t=1563997609;
+	bh=L2lOm5Rni18yK6PKzNIl2jF5hHRrKSkT9xmNvGKvhE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GnAPT8slD/m8hKIsIVlUHbzGHTNtYtighE8wwv2kZ2HNfHoQf7PLslbkZBvDWgIDv
-	 Gj37i3hVVbaOBdp1K6ggpN34sn77TYpjnsfHWhU6MB87kFW8w8lF1C+OePcZmRWiR+
-	 pPae0JdKtD0eo4dbeaH1oFd191165AVw8jXysls8=
+	b=J4fu1KhUbdU8qkQPinQYoV4jCv8LwtoTdULOTPbrkpc6p5wdZcz6ktZScFTzUjc8p
+	 Qvskpl6MwbhOi1/FrAKojVyn0Gh+CzWnPbmeqJFLam40kU2U8yy6i7QDg3Bqj289GE
+	 ZyrpJvhnSbrXXUA2iUy8D9WuShOEc0EPpfIOaMIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391117AbfGXTqm (ORCPT
+        id S2391108AbfGXTqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:46:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52436 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:46:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391104AbfGXTqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:46:39 -0400
+        id S2391120AbfGXTqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:46:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB70C205C9;
-        Wed, 24 Jul 2019 19:46:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61A7222ADA;
+        Wed, 24 Jul 2019 19:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997598;
-        bh=bSy0U5yVi9iyH1R9tnjzF1EO7KPdJi0N7GTkYrzC4Hk=;
+        s=default; t=1563997603;
+        bh=L2lOm5Rni18yK6PKzNIl2jF5hHRrKSkT9xmNvGKvhE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N+FW0Vn6HkDtv6Nd//mEGpTzfxp7GGt6J9/gFL6y8JYO017/HwtRCsDDsf8EDtT36
-         eYwe48lgjNxGjrJF3f5TwoRvbydIIHQrW7xzO705DRjyhg1iXm8D9t72tRudtBq42Y
-         6VdBF90XkxVpuRkuC6I1Fjl6cHHBfcuGPJaK1Wrc=
+        b=XankJw0DQWvwdeYUkieEr2UOhRELXdmq1ZqJXispQoEXn2BowUItZJjg/06xUdOb8
+         gE1/8fUbVl2nnpY4T0eAXV+bA23bhgGlwHqzknbvbyxFn95WpTlTBhv6ZBlb+B7j5y
+         YQijpTBvAfFu+JEMTw3qOyPA5q9iDA3/kuWIghxA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Lezcano <daniel.lezcano@free.fr>,
-        Serge Hallyn <serge@hallyn.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
+        stable@vger.kernel.org,
+        syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com,
+        Jeremy Sowden <jeremy@azazel.net>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 037/371] signal/pid_namespace: Fix reboot_pid_ns to use send_sig not force_sig
-Date:   Wed, 24 Jul 2019 21:16:29 +0200
-Message-Id: <20190724191727.326676535@linuxfoundation.org>
+Subject: [PATCH 5.1 039/371] af_key: fix leaks in key_pol_get_resp and dump_sp.
+Date:   Wed, 24 Jul 2019 21:16:31 +0200
+Message-Id: <20190724191727.481281165@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -62,48 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f9070dc94542093fd516ae4ccea17ef46a4362c5 ]
+[ Upstream commit 7c80eb1c7e2b8420477fbc998971d62a648035d9 ]
 
-The locking in force_sig_info is not prepared to deal with a task that
-exits or execs (as sighand may change).  The is not a locking problem
-in force_sig as force_sig is only built to handle synchronous
-exceptions.
+In both functions, if pfkey_xfrm_policy2msg failed we leaked the newly
+allocated sk_buff.  Free it on error.
 
-Further the function force_sig_info changes the signal state if the
-signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
-delivery of the signal.  The signal SIGKILL can not be ignored and can
-not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
-delivered.
-
-So using force_sig rather than send_sig for SIGKILL is confusing
-and pointless.
-
-Because it won't impact the sending of the signal and and because
-using force_sig is wrong, replace force_sig with send_sig.
-
-Cc: Daniel Lezcano <daniel.lezcano@free.fr>
-Cc: Serge Hallyn <serge@hallyn.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Fixes: cf3f89214ef6 ("pidns: add reboot_pid_ns() to handle the reboot syscall")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Fixes: 55569ce256ce ("Fix conversion between IPSEC_MODE_xxx and XFRM_MODE_xxx.")
+Reported-by: syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/pid_namespace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/key/af_key.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-index aa6e72fb7c08..098233ebe589 100644
---- a/kernel/pid_namespace.c
-+++ b/kernel/pid_namespace.c
-@@ -325,7 +325,7 @@ int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd)
+diff --git a/net/key/af_key.c b/net/key/af_key.c
+index 4af1e1d60b9f..51c0f10bb131 100644
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -2442,8 +2442,10 @@ static int key_pol_get_resp(struct sock *sk, struct xfrm_policy *xp, const struc
+ 		goto out;
  	}
+ 	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
+-	if (err < 0)
++	if (err < 0) {
++		kfree_skb(out_skb);
+ 		goto out;
++	}
  
- 	read_lock(&tasklist_lock);
--	force_sig(SIGKILL, pid_ns->child_reaper);
-+	send_sig(SIGKILL, pid_ns->child_reaper, 1);
- 	read_unlock(&tasklist_lock);
+ 	out_hdr = (struct sadb_msg *) out_skb->data;
+ 	out_hdr->sadb_msg_version = hdr->sadb_msg_version;
+@@ -2694,8 +2696,10 @@ static int dump_sp(struct xfrm_policy *xp, int dir, int count, void *ptr)
+ 		return PTR_ERR(out_skb);
  
- 	do_exit(0);
+ 	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
+-	if (err < 0)
++	if (err < 0) {
++		kfree_skb(out_skb);
+ 		return err;
++	}
+ 
+ 	out_hdr = (struct sadb_msg *) out_skb->data;
+ 	out_hdr->sadb_msg_version = pfk->dump.msg_version;
 -- 
 2.20.1
 
