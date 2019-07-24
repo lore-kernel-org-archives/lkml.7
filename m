@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA621C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1E7C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D23321734
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BDD8204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000245;
-	bh=aPqXeDed3l9oxzwaouHlEQYupd50IJGT37oCZSo7CpA=;
+	s=default; t=1564000253;
+	bh=IwmdfIkC2MqFSmTk8Jj9ODAe/YIn4lBeiRKZeC1gaSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MRoLF22RrEJMp9ouB0ms6XvPZPbO43II+hsvnBdjSjy8Joqbs3P6DhY7HCWkgFfFr
-	 Q2lIoysnB7Y7zsQDCZz1z512iubba9AuTvXd1LkXIGZsxxFo4J5t+FWcXgPzJYfsF2
-	 VVTqULzoG1lbSlB8Iqk3Vkqcs+kBmal2fzCM2tU8=
+	b=akKU+gZ8W20iAknHqng1lalu78k2ujwWNvpX9PIKcC+qQqi7j/9So8jsRjHvO6zQI
+	 4dCdj12HOVlGT4w7FrQjPhXPaZ2StLCXv9pJ7oXIuFWjRJoD9DG6Z4h9ZnRtR9Yr24
+	 PrqJysqagR4T0s2LFDJsQNOGAICGZWUpmEpwQJjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388500AbfGXUao (ORCPT
+        id S2389730AbfGXUaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:30:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52686 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:30:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388501AbfGXTbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:31:37 -0400
+        id S2388479AbfGXTb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:31:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E6A621951;
-        Wed, 24 Jul 2019 19:31:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40C9221951;
+        Wed, 24 Jul 2019 19:31:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996696;
-        bh=aPqXeDed3l9oxzwaouHlEQYupd50IJGT37oCZSo7CpA=;
+        s=default; t=1563996686;
+        bh=IwmdfIkC2MqFSmTk8Jj9ODAe/YIn4lBeiRKZeC1gaSk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lje+LvEoCb8OGE5FWSyE12rGZhu0Ubg8BZULBV5XQ7s/ADF+SOShDtURPFygKca2c
-         GnzdzjP0ng99LuGLyXrQmj/vgck/bG4O9CW2fO0KPdzW4v9QwtXmKFptePj4DAml1K
-         BX0ITjBuEBag1rmypAaBQ8Y94Px5//a5c386QW3k=
+        b=bj6MDSt+DP6fD3Op5WbKktvuWvDQRKUaXaatIShNZ4yQPgzSFeqth6EmbvefhOo/7
+         TrCXG2AEX8eL8ini3txrnff4stg/lsh97xvrlyVN5YpSHjJZo4I4JWJ44L85kJgtD5
+         SE+U9j2LRwmrwYjoE/Y0Pu1uDq8cr2YhTjMhjGac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 185/413] net/mlx5e: Attach/detach XDP program safely
-Date:   Wed, 24 Jul 2019 21:17:56 +0200
-Message-Id: <20190724191747.985210203@linuxfoundation.org>
+Subject: [PATCH 5.2 165/413] ASoC: Intel: hdac_hdmi: Set ops to NULL on remove
+Date:   Wed, 24 Jul 2019 21:17:36 +0200
+Message-Id: <20190724191746.841668644@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,84 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e18953240de8b46360a67090c87ee1ef8160b35d ]
+[ Upstream commit 0f6ff78540bd1b4df1e0f17806b0ce2e1dff0d78 ]
 
-When an XDP program is set, a full reopen of all channels happens in two
-cases:
+When we unload Skylake driver we may end up calling
+hdac_component_master_unbind(), it uses acomp->audio_ops, which we set
+in hdmi_codec_probe(), so we need to set it to NULL in hdmi_codec_remove(),
+otherwise we will dereference no longer existing pointer.
 
-1. When there was no program set, and a new one is being set.
-
-2. When there was a program set, but it's being unset.
-
-The full reopen is necessary, because the channel parameters may change
-if XDP is enabled or disabled. However, it's performed in an unsafe way:
-if the new channels fail to open, the old ones are already closed, and
-the interface goes down. Use the safe way to switch channels instead.
-The same way is already used for other configuration changes.
-
-Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/mellanox/mlx5/core/en_main.c | 31 ++++++++++++-------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+ sound/soc/codecs/hdac_hdmi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index a8e8350b38aa..8db9fdbc03ea 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -4192,8 +4192,6 @@ static int mlx5e_xdp_set(struct net_device *netdev, struct bpf_prog *prog)
- 	/* no need for full reset when exchanging programs */
- 	reset = (!priv->channels.params.xdp_prog || !prog);
- 
--	if (was_opened && reset)
--		mlx5e_close_locked(netdev);
- 	if (was_opened && !reset) {
- 		/* num_channels is invariant here, so we can take the
- 		 * batched reference right upfront.
-@@ -4205,20 +4203,31 @@ static int mlx5e_xdp_set(struct net_device *netdev, struct bpf_prog *prog)
- 		}
- 	}
- 
--	/* exchange programs, extra prog reference we got from caller
--	 * as long as we don't fail from this point onwards.
--	 */
--	old_prog = xchg(&priv->channels.params.xdp_prog, prog);
-+	if (was_opened && reset) {
-+		struct mlx5e_channels new_channels = {};
+diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
+index 1f57126708e7..c9f9820968bb 100644
+--- a/sound/soc/codecs/hdac_hdmi.c
++++ b/sound/soc/codecs/hdac_hdmi.c
+@@ -1859,6 +1859,12 @@ static void hdmi_codec_remove(struct snd_soc_component *component)
+ {
+ 	struct hdac_hdmi_priv *hdmi = snd_soc_component_get_drvdata(component);
+ 	struct hdac_device *hdev = hdmi->hdev;
++	int ret;
 +
-+		new_channels.params = priv->channels.params;
-+		new_channels.params.xdp_prog = prog;
-+		mlx5e_set_rq_type(priv->mdev, &new_channels.params);
-+		old_prog = priv->channels.params.xdp_prog;
-+
-+		err = mlx5e_safe_switch_channels(priv, &new_channels, NULL);
-+		if (err)
-+			goto unlock;
-+	} else {
-+		/* exchange programs, extra prog reference we got from caller
-+		 * as long as we don't fail from this point onwards.
-+		 */
-+		old_prog = xchg(&priv->channels.params.xdp_prog, prog);
-+	}
-+
- 	if (old_prog)
- 		bpf_prog_put(old_prog);
++	ret = snd_hdac_acomp_register_notifier(hdev->bus, NULL);
++	if (ret < 0)
++		dev_err(&hdev->dev, "notifier unregister failed: err: %d\n",
++				ret);
  
--	if (reset) /* change RQ type according to priv->xdp_prog */
-+	if (!was_opened && reset) /* change RQ type according to priv->xdp_prog */
- 		mlx5e_set_rq_type(priv->mdev, &priv->channels.params);
- 
--	if (was_opened && reset)
--		err = mlx5e_open_locked(netdev);
--
--	if (!test_bit(MLX5E_STATE_OPENED, &priv->state) || reset)
-+	if (!was_opened || reset)
- 		goto unlock;
- 
- 	/* exchanging programs w/o reset, we update ref counts on behalf
+ 	pm_runtime_disable(&hdev->dev);
+ }
 -- 
 2.20.1
 
