@@ -5,57 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873CCC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1ED1C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6105E22BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F8C22CB8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033195;
-	bh=PEofQeh1xLeuSIEsoTeLSK3obeB2xLua1eztJzQA6fs=;
+	s=default; t=1564033197;
+	bh=WO7lM+upPBvUtwOll1Wkav1Vka6e95b0zA6c7vFYhfk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UA+dcRA/QpkfAw9tl7lE8X9uLcF+DDc6gMekKNjXatg/Ucq+xuVNN9o2E7Q2zA+sY
-	 qAJjUnY6F35wlKs9oulzG7GKR0ib7xJ9BdIHnc7EZ2awet6Pan2bO8s/zY9GaXEYhN
-	 XJc/zw5Pb5CHx0TzK/+Yz7/70+lPYGi8jT3VAl/E=
+	b=n8FqZJFG4G1rqkbA9+dmwQ1iJAvPyOxxx35aJN3MBdmGnm3xMRYKAqKaM48KlFY+y
+	 wiVLHP3l4KmQ8ngeUwlhn8djlmMTHT78Pmbe2WhxBQJE4r6+8CAw8FCTxV+2X67aXa
+	 FX937cUMepEQny9mOMzZoZ6B5TdikkjkeJI5AB0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404216AbfGYFjy (ORCPT
+        id S2404233AbfGYFj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:39:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54156 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:39:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404180AbfGYFju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:39:50 -0400
+        id S2404214AbfGYFjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:39:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A86F22C7C;
-        Thu, 25 Jul 2019 05:39:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FFA022BEF;
+        Thu, 25 Jul 2019 05:39:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033190;
-        bh=PEofQeh1xLeuSIEsoTeLSK3obeB2xLua1eztJzQA6fs=;
+        s=default; t=1564033194;
+        bh=WO7lM+upPBvUtwOll1Wkav1Vka6e95b0zA6c7vFYhfk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Aei5qrvExoUzwO43EqIX0fd1MiJTIglyL+o4bdvPYQcl5SJJ3PKQzGjYladnNH2PO
-         QPUItJ/hqKs3xorizOVc5ViptTdjW/zo8OOt/n7Yd9YBTQiog60MmVEZHqOg5h404X
-         ebZtnVN56vyI1FGEN3xrzUBP3pO1UPLGfc01EZ3M=
+        b=Xrlcp4TWiyzfAxlYCE1s4Y/HSsmMWmY2OmpCrp7JaJwjMci55MUHjkJ9TRkJDrfDO
+         4DE6rE2Kwg9uiPsoTESYl99FrydIDM5gKRntaVujfaOfilxcOTUozJUxdrnijVJs5x
+         QLTh8UJQsaoNShJtOyToepZhYKzs8YjA8L8qwGEg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Borislav Petkov <bp@suse.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pu Wen <puwen@hygon.cn>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 083/271] x86/cacheinfo: Fix a -Wtype-limits warning
-Date:   Wed, 24 Jul 2019 21:19:12 +0200
-Message-Id: <20190724191702.299978898@linuxfoundation.org>
+        stable@vger.kernel.org, Dennis Zhou <dennis@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 084/271] blk-iolatency: only account submitted bios
+Date:   Wed, 24 Jul 2019 21:19:13 +0200
+Message-Id: <20190724191702.387111366@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -68,51 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1b7aebf0487613033aff26420e32fa2076d52846 ]
+[ Upstream commit a3fb01ba5af066521f3f3421839e501bb2c71805 ]
 
-cpuinfo_x86.x86_model is an unsigned type, so comparing against zero
-will generate a compilation warning:
+As is, iolatency recognizes done_bio and cleanup as ending paths. If a
+request is marked REQ_NOWAIT and fails to get a request, the bio is
+cleaned up via rq_qos_cleanup() and ended in bio_wouldblock_error().
+This results in underflowing the inflight counter. Fix this by only
+accounting bios that were actually submitted.
 
-  arch/x86/kernel/cpu/cacheinfo.c: In function 'cacheinfo_amd_init_llc_id':
-  arch/x86/kernel/cpu/cacheinfo.c:662:19: warning: comparison is always true \
-    due to limited range of data type [-Wtype-limits]
-
-Remove the unnecessary lower bound check.
-
- [ bp: Massage. ]
-
-Fixes: 68091ee7ac3c ("x86/CPU/AMD: Calculate last level cache ID from number of sharing threads")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Pu Wen <puwen@hygon.cn>
-Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1560954773-11967-1-git-send-email-cai@lca.pw
+Signed-off-by: Dennis Zhou <dennis@kernel.org>
+Cc: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/cacheinfo.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ block/blk-iolatency.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index 0c5fcbd998cf..9d863e8f9b3f 100644
---- a/arch/x86/kernel/cpu/cacheinfo.c
-+++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -651,8 +651,7 @@ void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, int cpu, u8 node_id)
- 	if (c->x86 < 0x17) {
- 		/* LLC is at the node level. */
- 		per_cpu(cpu_llc_id, cpu) = node_id;
--	} else if (c->x86 == 0x17 &&
--		   c->x86_model >= 0 && c->x86_model <= 0x1F) {
-+	} else if (c->x86 == 0x17 && c->x86_model <= 0x1F) {
- 		/*
- 		 * LLC is at the core complex level.
- 		 * Core complex ID is ApicId[3] for these processors.
+diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
+index 6b8396ccb5c4..75df47ad2e79 100644
+--- a/block/blk-iolatency.c
++++ b/block/blk-iolatency.c
+@@ -565,6 +565,10 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
+ 	if (!blkg)
+ 		return;
+ 
++	/* We didn't actually submit this bio, don't account it. */
++	if (bio->bi_status == BLK_STS_AGAIN)
++		return;
++
+ 	iolat = blkg_to_lat(bio->bi_blkg);
+ 	if (!iolat)
+ 		return;
 -- 
 2.20.1
 
