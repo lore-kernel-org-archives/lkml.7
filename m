@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2ACC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5AEC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE67720665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E75220665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999054;
-	bh=JNc42WtyVfVK6e98eNIysp/T3W7wGar0f0MMrReHzCQ=;
+	s=default; t=1563999060;
+	bh=eO0h03KlQJOXUAo5ZXToyNf4OaRQbcRRIWCrBWlHd+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XTxBp2t9lzihxwzIFhq4E5Vg0b5v0/yZIOSXDkkkSsZDXRn2SKvuxCAriKQOe83aK
-	 jP4GvaAFVBfyKxO63h87s27qRRm38JqHInDEsSffjn1gJAKvgrOO1DGHbVCK/06gMN
-	 taIYhv/1tnhzlSz932ANru1fp6qYsRDTXr2w7ufM=
+	b=CJ8miJJxhj5x5MxIKDvYHcd5ISHbEyL/WRSP37v1LyG+DPaZDHrem49FLh7iaIf+S
+	 rH38C10fbQdxIlh3o5MiV4aPwA1WMq0IY1NyyWsGz6MRRc+bHgEEIrZY5RRg70qY4E
+	 W8Qdq9lL91fgMmrHM/4SZ2+rnU/EhaxRByLebhHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392732AbfGXUKx (ORCPT
+        id S2391893AbfGXT6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:10:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45480 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:58:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404087AbfGXT6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:58:43 -0400
+        id S2404939AbfGXT6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:58:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC841206BA;
-        Wed, 24 Jul 2019 19:58:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FBC9205C9;
+        Wed, 24 Jul 2019 19:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998322;
-        bh=JNc42WtyVfVK6e98eNIysp/T3W7wGar0f0MMrReHzCQ=;
+        s=default; t=1563998301;
+        bh=eO0h03KlQJOXUAo5ZXToyNf4OaRQbcRRIWCrBWlHd+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hKeqNIoOwUnTkR12PGgNbmqk3bz/eg8ATSBPWMM81txDCyjjkdQ/pWVD9a6BTvRMB
-         cW8zcBtr0BcJYtQVH+dtdh9Z2beluAuIgISudo9uvObZ5p54Eqqx4rVVf0SGKE4Fnv
-         A9eNl7BrDZ5QzFXJlDU5beh5Kp7Ni7Kxf+hLkNeM=
+        b=LVMR/N+TNLw4DkQ7SmXy3nTzHnMRySK6ETIeoUuWoIplqZCxW5nRpdGZ7uQQNdH2k
+         QOWTEtOSuoyxP09iguvfSBl3yIEsuxJAt/QRdA9c6k9QO19pe51X+ZNMyT+GVEsTEy
+         x7giKDNML2Y8i5h9i5adW7U0DTpSBst+vCPuMUKg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andres Rodriguez <andresx7@gmail.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-Subject: [PATCH 5.1 325/371] drm/edid: parse CEA blocks embedded in DisplayID
-Date:   Wed, 24 Jul 2019 21:21:17 +0200
-Message-Id: <20190724191748.334248511@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: [PATCH 5.1 317/371] xen/events: fix binding user event channels to cpus
+Date:   Wed, 24 Jul 2019 21:21:09 +0200
+Message-Id: <20190724191747.858217793@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,173 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andres Rodriguez <andresx7@gmail.com>
+From: Juergen Gross <jgross@suse.com>
 
-commit e28ad544f462231d3fd081a7316339359efbb481 upstream.
+commit bce5963bcb4f9934faa52be323994511d59fd13c upstream.
 
-DisplayID blocks allow embedding of CEA blocks. The payloads are
-identical to traditional top level CEA extension blocks, but the header
-is slightly different.
+When binding an interdomain event channel to a vcpu via
+IOCTL_EVTCHN_BIND_INTERDOMAIN not only the event channel needs to be
+bound, but the affinity of the associated IRQi must be changed, too.
+Otherwise the IRQ and the event channel won't be moved to another vcpu
+in case the original vcpu they were bound to is going offline.
 
-This change allows the CEA parser to find a CEA block inside a DisplayID
-block. Additionally, it adds support for parsing the embedded CTA
-header. No further changes are necessary due to payload parity.
-
-This change fixes audio support for the Valve Index HMD.
-
-Signed-off-by: Andres Rodriguez <andresx7@gmail.com>
-Reviewed-by: Dave Airlie <airlied@redhat.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: <stable@vger.kernel.org> # v4.15
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190619180901.17901-1-andresx7@gmail.com
+Cc: <stable@vger.kernel.org> # 4.13
+Fixes: c48f64ab472389df ("xen-evtchn: Bind dyn evtchn:qemu-dm interrupt to next online VCPU")
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_edid.c  |   81 ++++++++++++++++++++++++++++++++++++++------
- include/drm/drm_displayid.h |   10 +++++
- 2 files changed, 80 insertions(+), 11 deletions(-)
+ drivers/xen/events/events_base.c |   12 ++++++++++--
+ drivers/xen/evtchn.c             |    2 +-
+ include/xen/events.h             |    3 ++-
+ 3 files changed, 13 insertions(+), 4 deletions(-)
 
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -1349,6 +1349,7 @@ MODULE_PARM_DESC(edid_fixup,
- 
- static void drm_get_displayid(struct drm_connector *connector,
- 			      struct edid *edid);
-+static int validate_displayid(u8 *displayid, int length, int idx);
- 
- static int drm_edid_block_checksum(const u8 *raw_edid)
- {
-@@ -2932,16 +2933,46 @@ static u8 *drm_find_edid_extension(const
- 	return edid_ext;
+--- a/drivers/xen/events/events_base.c
++++ b/drivers/xen/events/events_base.c
+@@ -1293,7 +1293,7 @@ void rebind_evtchn_irq(int evtchn, int i
  }
  
--static u8 *drm_find_cea_extension(const struct edid *edid)
--{
--	return drm_find_edid_extension(edid, CEA_EXT);
--}
- 
- static u8 *drm_find_displayid_extension(const struct edid *edid)
+ /* Rebind an evtchn so that it gets delivered to a specific cpu */
+-int xen_rebind_evtchn_to_cpu(int evtchn, unsigned tcpu)
++static int xen_rebind_evtchn_to_cpu(int evtchn, unsigned int tcpu)
  {
- 	return drm_find_edid_extension(edid, DISPLAYID_EXT);
- }
+ 	struct evtchn_bind_vcpu bind_vcpu;
+ 	int masked;
+@@ -1327,7 +1327,6 @@ int xen_rebind_evtchn_to_cpu(int evtchn,
  
-+static u8 *drm_find_cea_extension(const struct edid *edid)
-+{
-+	int ret;
-+	int idx = 1;
-+	int length = EDID_LENGTH;
-+	struct displayid_block *block;
-+	u8 *cea;
-+	u8 *displayid;
-+
-+	/* Look for a top level CEA extension block */
-+	cea = drm_find_edid_extension(edid, CEA_EXT);
-+	if (cea)
-+		return cea;
-+
-+	/* CEA blocks can also be found embedded in a DisplayID block */
-+	displayid = drm_find_displayid_extension(edid);
-+	if (!displayid)
-+		return NULL;
-+
-+	ret = validate_displayid(displayid, length, idx);
-+	if (ret)
-+		return NULL;
-+
-+	idx += sizeof(struct displayid_hdr);
-+	for_each_displayid_db(displayid, block, idx, length) {
-+		if (block->tag == DATA_BLOCK_CTA) {
-+			cea = (u8 *)block;
-+			break;
-+		}
-+	}
-+
-+	return cea;
-+}
-+
- /*
-  * Calculate the alternate clock for the CEA mode
-  * (60Hz vs. 59.94Hz etc.)
-@@ -3665,13 +3696,38 @@ cea_revision(const u8 *cea)
- static int
- cea_db_offsets(const u8 *cea, int *start, int *end)
- {
--	/* Data block offset in CEA extension block */
--	*start = 4;
--	*end = cea[2];
--	if (*end == 0)
--		*end = 127;
--	if (*end < 4 || *end > 127)
--		return -ERANGE;
-+	/* DisplayID CTA extension blocks and top-level CEA EDID
-+	 * block header definitions differ in the following bytes:
-+	 *   1) Byte 2 of the header specifies length differently,
-+	 *   2) Byte 3 is only present in the CEA top level block.
-+	 *
-+	 * The different definitions for byte 2 follow.
-+	 *
-+	 * DisplayID CTA extension block defines byte 2 as:
-+	 *   Number of payload bytes
-+	 *
-+	 * CEA EDID block defines byte 2 as:
-+	 *   Byte number (decimal) within this block where the 18-byte
-+	 *   DTDs begin. If no non-DTD data is present in this extension
-+	 *   block, the value should be set to 04h (the byte after next).
-+	 *   If set to 00h, there are no DTDs present in this block and
-+	 *   no non-DTD data.
-+	 */
-+	if (cea[0] == DATA_BLOCK_CTA) {
-+		*start = 3;
-+		*end = *start + cea[2];
-+	} else if (cea[0] == CEA_EXT) {
-+		/* Data block offset in CEA extension block */
-+		*start = 4;
-+		*end = cea[2];
-+		if (*end == 0)
-+			*end = 127;
-+		if (*end < 4 || *end > 127)
-+			return -ERANGE;
-+	} else {
-+		return -ENOTSUPP;
-+	}
-+
  	return 0;
  }
+-EXPORT_SYMBOL_GPL(xen_rebind_evtchn_to_cpu);
  
-@@ -5219,6 +5275,9 @@ static int drm_parse_display_id(struct d
- 		case DATA_BLOCK_TYPE_1_DETAILED_TIMING:
- 			/* handled in mode gathering code. */
- 			break;
-+		case DATA_BLOCK_CTA:
-+			/* handled in the cea parser code. */
-+			break;
- 		default:
- 			DRM_DEBUG_KMS("found DisplayID tag 0x%x, unhandled\n", block->tag);
- 			break;
---- a/include/drm/drm_displayid.h
-+++ b/include/drm/drm_displayid.h
-@@ -40,6 +40,7 @@
- #define DATA_BLOCK_DISPLAY_INTERFACE 0x0f
- #define DATA_BLOCK_STEREO_DISPLAY_INTERFACE 0x10
- #define DATA_BLOCK_TILED_DISPLAY 0x12
-+#define DATA_BLOCK_CTA 0x81
+ static int set_affinity_irq(struct irq_data *data, const struct cpumask *dest,
+ 			    bool force)
+@@ -1341,6 +1340,15 @@ static int set_affinity_irq(struct irq_d
+ 	return ret;
+ }
  
- #define DATA_BLOCK_VENDOR_SPECIFIC 0x7f
- 
-@@ -90,4 +91,13 @@ struct displayid_detailed_timing_block {
- 	struct displayid_block base;
- 	struct displayid_detailed_timings_1 timings[0];
- };
++/* To be called with desc->lock held. */
++int xen_set_affinity_evtchn(struct irq_desc *desc, unsigned int tcpu)
++{
++	struct irq_data *d = irq_desc_get_irq_data(desc);
 +
-+#define for_each_displayid_db(displayid, block, idx, length) \
-+	for ((block) = (struct displayid_block *)&(displayid)[idx]; \
-+	     (idx) + sizeof(struct displayid_block) <= (length) && \
-+	     (idx) + sizeof(struct displayid_block) + (block)->num_bytes <= (length) && \
-+	     (block)->num_bytes > 0; \
-+	     (idx) += (block)->num_bytes + sizeof(struct displayid_block), \
-+	     (block) = (struct displayid_block *)&(displayid)[idx])
++	return set_affinity_irq(d, cpumask_of(tcpu), false);
++}
++EXPORT_SYMBOL_GPL(xen_set_affinity_evtchn);
 +
+ static void enable_dynirq(struct irq_data *data)
+ {
+ 	int evtchn = evtchn_from_irq(data->irq);
+--- a/drivers/xen/evtchn.c
++++ b/drivers/xen/evtchn.c
+@@ -447,7 +447,7 @@ static void evtchn_bind_interdom_next_vc
+ 	this_cpu_write(bind_last_selected_cpu, selected_cpu);
+ 
+ 	/* unmask expects irqs to be disabled */
+-	xen_rebind_evtchn_to_cpu(evtchn, selected_cpu);
++	xen_set_affinity_evtchn(desc, selected_cpu);
+ 	raw_spin_unlock_irqrestore(&desc->lock, flags);
+ }
+ 
+--- a/include/xen/events.h
++++ b/include/xen/events.h
+@@ -3,6 +3,7 @@
+ #define _XEN_EVENTS_H
+ 
+ #include <linux/interrupt.h>
++#include <linux/irq.h>
+ #ifdef CONFIG_PCI_MSI
+ #include <linux/msi.h>
  #endif
+@@ -59,7 +60,7 @@ void evtchn_put(unsigned int evtchn);
+ 
+ void xen_send_IPI_one(unsigned int cpu, enum ipi_vector vector);
+ void rebind_evtchn_irq(int evtchn, int irq);
+-int xen_rebind_evtchn_to_cpu(int evtchn, unsigned tcpu);
++int xen_set_affinity_evtchn(struct irq_desc *desc, unsigned int tcpu);
+ 
+ static inline void notify_remote_via_evtchn(int port)
+ {
 
 
