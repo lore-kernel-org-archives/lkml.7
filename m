@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59371C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895ABC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2936322ADC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5249821873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997919;
-	bh=UIt44Sy2Z317ig9zcjRjZVvOxAI/fLmn8R0PcqkaCAQ=;
+	s=default; t=1563997923;
+	bh=OeIkqK8Y0XklASlo+vRxyTqQThrrZsRCUX3HADXzfXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=un7l8YanauCUAEIJ2Y/GzDa89BeNxMBfZjl2xxWMo9WSEjcvXpjDsxlB2Lf/1xpq5
-	 aeseQm6bw+vwBByuUpB+OnE7MPn84iKP25qTc2/BYkgBWHRRAIyiMZrTQ5Ww6ggcay
-	 ze3RbjASyWqKXbVNdyxT2kPzRZrxvX1eaRq8LaZw=
+	b=Zh/Y14qzTeFG6fteraTawzEj4WHxo9+m/oIpU2mcJBGYcV8yIvNYD0bIqOcDbe5r+
+	 9u8uVfLbz64wTV960wEOm/f2HMGJfEc15NhFVMdjGLT18jw73kO4f9eJq/ZVu8M5/q
+	 efbqeTqqj2cP/GZICl4bDn+0IAchcL6xZLVaDZk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404057AbfGXTv6 (ORCPT
+        id S2404066AbfGXTwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:51:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33348 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:52:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404037AbfGXTvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:51:55 -0400
+        id S2404060AbfGXTv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:51:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9657422ADF;
-        Wed, 24 Jul 2019 19:51:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1361E214AF;
+        Wed, 24 Jul 2019 19:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997915;
-        bh=UIt44Sy2Z317ig9zcjRjZVvOxAI/fLmn8R0PcqkaCAQ=;
+        s=default; t=1563997918;
+        bh=OeIkqK8Y0XklASlo+vRxyTqQThrrZsRCUX3HADXzfXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vDsK4+l1vxTKSOfTk7VBSwO78J3oPjf09LjhYcI9u1U8FCCzdALa78BBBHlDeA83p
-         +ZKGl+8Zv3STPjGnznvsLMJOuvKbDWS4ZcKHeJLV91frF0SzkdovpFXWZI7FAwGF4+
-         S0zjtrZz7KbMMs8dkTDzyQaZhEnR6bGXi51yi2vw=
+        b=PGxJzui+XC2BDK5PEQeBKRVKtHbxmmeEdyqkYvssn9V8K1YjDMTVnU1EomOSzbmWl
+         RzIogLGTqg0PokduVwNkCUptCuP/rwfZwO9klnRtjOXn8DjOvqOgit3M/2oBrhCZDX
+         XMmvjc2ktle7IeRK3TZ10x6QVDWNAv8UvGYmRLJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Rander Wang <rander.wang@linux.intel.com>,
+        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 187/371] ALSA: hda: Fix a headphone detection issue when using SOF
-Date:   Wed, 24 Jul 2019 21:18:59 +0200
-Message-Id: <20190724191739.107624383@linuxfoundation.org>
+Subject: [PATCH 5.1 188/371] perf stat: Make metric event lookup more robust
+Date:   Wed, 24 Jul 2019 21:19:00 +0200
+Message-Id: <20190724191739.165855459@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,55 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7c2b3629d09ddec810dc4c1d3a6657c32def8f71 ]
+[ Upstream commit 145c407c808352acd625be793396fd4f33c794f8 ]
 
-To save power, the hda hdmi driver in ASoC invokes snd_hdac_ext_bus_link_put
-to disable CORB/RIRB buffers DMA if there is no user of bus and invokes
-snd_hdac_ext_bus_link_get to set up CORB/RIRB buffers when it is used.
-Unsolicited responses is disabled in snd_hdac_bus_stop_cmd_io called by
-snd_hdac_ext_bus_link_put , but it is not enabled in snd_hdac_bus_init_cmd_io
-called by snd_hdac_ext_bus_link_get. So for put-get sequence, Unsolicited
-responses is disabled and headphone can't be detected by hda codecs.
+After setting up metric groups through the event parser, the metricgroup
+code looks them up again in the event list.
 
-Now unsolicited responses is only enabled in snd_hdac_bus_reset_link
-which resets controller. The function is only called for setup of
-controller. This patch enables Unsolicited responses after RIRB is
-initialized in snd_hdac_bus_init_cmd_io which works together with
-snd_hdac_bus_reset_link to set up controller.
+Make sure we only look up events that haven't been used by some other
+metric. The data structures currently cannot handle more than one metric
+per event. This avoids problems with multiple events partially
+overlapping.
 
-Tested legacy hda driver and SOF driver on intel whiskeylake.
-
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Link: http://lkml.kernel.org/r/20190624193711.35241-2-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/hda/hdac_controller.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ tools/perf/util/stat-shadow.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/sound/hda/hdac_controller.c b/sound/hda/hdac_controller.c
-index b2e9454f5816..6a190f0d2803 100644
---- a/sound/hda/hdac_controller.c
-+++ b/sound/hda/hdac_controller.c
-@@ -78,6 +78,8 @@ void snd_hdac_bus_init_cmd_io(struct hdac_bus *bus)
- 	snd_hdac_chip_writew(bus, RINTCNT, 1);
- 	/* enable rirb dma and response irq */
- 	snd_hdac_chip_writeb(bus, RIRBCTL, AZX_RBCTL_DMA_EN | AZX_RBCTL_IRQ_EN);
-+	/* Accept unsolicited responses */
-+	snd_hdac_chip_updatel(bus, GCTL, AZX_GCTL_UNSOL, AZX_GCTL_UNSOL);
- 	spin_unlock_irq(&bus->reg_lock);
- }
- EXPORT_SYMBOL_GPL(snd_hdac_bus_init_cmd_io);
-@@ -414,9 +416,6 @@ int snd_hdac_bus_reset_link(struct hdac_bus *bus, bool full_reset)
- 		return -EBUSY;
- 	}
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 83d8094be4fe..e545e2a8ae71 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -303,7 +303,7 @@ static struct perf_evsel *perf_stat__find_event(struct perf_evlist *evsel_list,
+ 	struct perf_evsel *c2;
  
--	/* Accept unsolicited responses */
--	snd_hdac_chip_updatel(bus, GCTL, AZX_GCTL_UNSOL, AZX_GCTL_UNSOL);
--
- 	/* detect codecs */
- 	if (!bus->codec_mask) {
- 		bus->codec_mask = snd_hdac_chip_readw(bus, STATESTS);
+ 	evlist__for_each_entry (evsel_list, c2) {
+-		if (!strcasecmp(c2->name, name))
++		if (!strcasecmp(c2->name, name) && !c2->collect_stat)
+ 			return c2;
+ 	}
+ 	return NULL;
+@@ -342,7 +342,8 @@ void perf_stat__collect_metric_expr(struct perf_evlist *evsel_list)
+ 			if (leader) {
+ 				/* Search in group */
+ 				for_each_group_member (oc, leader) {
+-					if (!strcasecmp(oc->name, metric_names[i])) {
++					if (!strcasecmp(oc->name, metric_names[i]) &&
++						!oc->collect_stat) {
+ 						found = true;
+ 						break;
+ 					}
 -- 
 2.20.1
 
