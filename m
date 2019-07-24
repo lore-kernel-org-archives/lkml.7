@@ -2,113 +2,85 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589BEC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E46C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B21214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1BF214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999730;
-	bh=G5+9tOKfggG9ArmxDYJRKpm1HlpZ+AmbuewaNhRrSb8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Sbhi3CAyMhr42iFVR+K/n9lxqP0wQR3yGNGUA3ohTeCtflCJdc4PZ7jc4gmpRpkr
-	 eUFIBLp+Z+qogalqPrX4Sj9QEEBYrZ+bXqDFiCW+zSAxuHFjfNGZfbtqZ4u78HNA19
-	 pNDIj7ACBehTzrBv77yje6ZF8upSzreHtmAX5Wwg=
+	s=default; t=1563999735;
+	bh=pOQ5hG3KottIS8v1HNbGEdwmegP5XHsvE7vXdILawNc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ez5Uq3wPoEbWiOHUCRHZMxRT3qJCBCPon3SW4FPJcRgxbiw/2ywR6pZ7p86UNEGkB
+	 mXzvE6Dh574RbiNXekYy6OvVbWVcCketxUiUObbzzJbLcc7cGRIaT1S5TIEDDZm2QZ
+	 LkggN8k/k/1bZfQyTDwCPp38IzQt7EVIgSVql2Ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390791AbfGXToR (ORCPT
+        id S2392236AbfGXUWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:44:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390770AbfGXToO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:44:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61B2A214AF;
-        Wed, 24 Jul 2019 19:44:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997453;
-        bh=G5+9tOKfggG9ArmxDYJRKpm1HlpZ+AmbuewaNhRrSb8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jmcAVLyrdAfVEhIotQ520ZMjcvKd12oD9YkuHmzGlM24ODNGPJ8795XE8IbLCJVtY
-         bUpAYgTe3I14c5eBvXbaIy8pnIwdNYEHmEwbKBVBikbdpLSYuX5EpHh1Fj57eVftMY
-         E8xh7c38n5cBrNTIvvPWZcSA6N8pi5v4g2mFU8q8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jungo Lin <jungo.lin@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 029/371] media: media_device_enum_links32: clean a reserved field
-Date:   Wed, 24 Jul 2019 21:16:21 +0200
-Message-Id: <20190724191726.684945920@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
-References: <20190724191724.382593077@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 16:22:14 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40394 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390815AbfGXUWL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:22:11 -0400
+Received: by mail-io1-f67.google.com with SMTP id h6so5804918iom.7;
+        Wed, 24 Jul 2019 13:22:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/30AS3nqkWWu+3IMVyX4v9nQ/uVi14wrBVbKbNIwDH0=;
+        b=ekj0LIeZj9w5dZ1iFJTQMocLGklgKFNFkBXzDwuhI4RB10PYuavh/i6uOI32d86B2C
+         ypTECM/GBXT90NiCeRuCFHbWlUFgCV7VKamtmNBuIEv5+JsQhj1FzUS+O/EMwdCH6dcO
+         P0NYZGuMMILra9O7AV4bXVRtv1zeSEC64XsLkYfbGSn6WO4cwl4Vgj7P/nSUHe5YMaKO
+         9Io15AcVq5ImPVNFW+NzVsDzoYKzwNV8XmLBGFvWyteipR1T/PuH3YVywCZNc/09l7nv
+         kel45+XZXMcJIKx9+AL9K/mP7Uwsp/SZ5vghfH9WbfznN3puV5oUmF6PjSY3kpV+iI5J
+         pTqg==
+X-Gm-Message-State: APjAAAUL+Ou5xExnGsGQUNWjTps4YOw0N88V0Km2aTOWtG1+nr7MEkLB
+        hKhKCqwLnrC8dCiTARBtKg==
+X-Google-Smtp-Source: APXvYqw8/yMFLvKjW7NMwY+ZvPnqeFIopuxH5djPlnJEGbRQVjM6/Fd6l3umrAZVnmBM4ywFQ0VJmA==
+X-Received: by 2002:a02:b395:: with SMTP id p21mr88532316jan.31.1563999730430;
+        Wed, 24 Jul 2019 13:22:10 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id x22sm33617648ioh.87.2019.07.24.13.22.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 13:22:09 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 14:22:09 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Eugen.Hristev@microchip.com
+Cc:     wsa@the-dreams.de, peda@axentia.se, mark.rutland@arm.com,
+        Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com,
+        alexandre.belloni@bootlin.com, robh+dt@kernel.org,
+        Nicolas.Ferre@microchip.com, Eugen.Hristev@microchip.com
+Subject: Re: [PATCH v3 1/9] dt-bindings: i2c: at91: add new compatible
+Message-ID: <20190724202209.GA31102@bogus>
+References: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
+ <1562678049-17581-2-git-send-email-eugen.hristev@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1562678049-17581-2-git-send-email-eugen.hristev@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f49308878d7202e07d8761238e01bd0e5fce2750 ]
+On Tue, 9 Jul 2019 13:19:29 +0000, <Eugen.Hristev@microchip.com> wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+> 
+> Add compatible for new Microchip SoC, sam9x60
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-at91.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
 
-In v4l2-compliance utility, test MEDIA_IOC_ENUM_ENTITIES
-will check whether reserved field of media_links_enum filled
-with zero.
-
-However, for 32 bit program, the reserved field is missing
-copy from kernel space to user space in media_device_enum_links32
-function.
-
-This patch adds the cleaning a reserved field logic in
-media_device_enum_links32 function.
-
-Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/media-device.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/media-device.c b/drivers/media/media-device.c
-index b8ec88612df7..6893843edada 100644
---- a/drivers/media/media-device.c
-+++ b/drivers/media/media-device.c
-@@ -502,6 +502,7 @@ static long media_device_enum_links32(struct media_device *mdev,
- {
- 	struct media_links_enum links;
- 	compat_uptr_t pads_ptr, links_ptr;
-+	int ret;
- 
- 	memset(&links, 0, sizeof(links));
- 
-@@ -513,7 +514,13 @@ static long media_device_enum_links32(struct media_device *mdev,
- 	links.pads = compat_ptr(pads_ptr);
- 	links.links = compat_ptr(links_ptr);
- 
--	return media_device_enum_links(mdev, &links);
-+	ret = media_device_enum_links(mdev, &links);
-+	if (ret)
-+		return ret;
-+
-+	memset(ulinks->reserved, 0, sizeof(ulinks->reserved));
-+
-+	return 0;
- }
- 
- #define MEDIA_IOC_ENUM_LINKS32		_IOWR('|', 0x02, struct media_links_enum32)
--- 
-2.20.1
-
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
