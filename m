@@ -2,259 +2,114 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DE4C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A62C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A905221951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B86A322387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563993407;
-	bh=CxyRvmDVap51evYyH9RnfHgJ/+FkvH+1mwZ9X+utEb8=;
+	s=default; t=1563993436;
+	bh=tb1yBoYnFaWG6mahNMfY72POj83PUfuPV2T0fEbS7EI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KWfSPDiXw2lXtsDC6KkEUpQ5peJiEI6yvxppmHiQGjtMywiVrklBzYQcw1bNyY4H+
-	 JYDWq9YB88Jweg+oKyReSvmNM6i3E/0zKYL2Gdf4l7N/ZLCSD9kd1wQcMR3HMpT74e
-	 +3+EZYTePaqOYrWASmExAvpsjvHoUQnSaXfYRSjk=
+	b=obe3I0qLYatttWLuXgNKsBHpwzWMqnwJfLPz/kVI0X7IHLvPrOwWIVak+Sws3TJrv
+	 ArRVHPWhK6go/NwAhlTBeGgshpXhhBC9W+i892kPRs/1sj6ZdL+ymGNgofrwrVzL6S
+	 qFIVY6kMy6pp/2DfMEg7xQKuNyoz0BnMGaUk0ADY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbfGXSgq convert rfc822-to-8bit (ORCPT
+        id S1728599AbfGXShP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:36:46 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33084 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727716AbfGXSgq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:36:46 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so48131756wru.0;
-        Wed, 24 Jul 2019 11:36:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Xzl/fiLKGCPpOVGcck93S7ZblEbRn80OrLwMSsnTC7Q=;
-        b=s2WBRcER3bW+bLnXvva2d0XhYmFUTF3Y4Jz9GAz//pJpF2GNAF8k/DTwff7fea8GQp
-         mwI3LyTb7bDjPNkuDP3+tYQtKr1Qi+hWVzjYA01hDqjNiu6U3M7z9FylD1rpf4izGzGe
-         Ibv3M5bPhvT6x5DtQrVxfrpxP7oBt7wC0q/eL1zUjXLsfb/1lGx5kJPuwtW8FYNg0KgD
-         ZO1Fma2Bog1HxqxHsRsu7bZcB/05xvK/08G0yVv5heDOauOFPl/2IkWvxw+3BlaCZgwu
-         VWs5vYMLlyShNJ1qgtnytIcODHdH73w6Hqknhg+dSEHmxJxBsddf6Cj8kY8fmmnBFS+N
-         Z5Ng==
-X-Gm-Message-State: APjAAAXIpfK5GGejrmtlkx92d82ZlJyNqzXHQHIXOG7lSMdPYQJlNAoH
-        q0y4yeRl36HIoUlNmvNzzn8=
-X-Google-Smtp-Source: APXvYqxYRMQS1TmGXcymc3W7ToVdMWgVBoEQhDPGcYVwmX41aL1Qhj0AF02NdM3bX24C9cVeLuh4lg==
-X-Received: by 2002:adf:b195:: with SMTP id q21mr85664720wra.2.1563993402757;
-        Wed, 24 Jul 2019 11:36:42 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.239])
-        by smtp.googlemail.com with ESMTPSA id c7sm40775879wro.70.2019.07.24.11.36.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jul 2019 11:36:41 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 20:36:39 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        georgi.djakov@linaro.org, m.szyprowski@samsung.com
-Subject: Re: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
- functionality to exynos-bus
-Message-ID: <20190724183639.GA14346@kozik-lap>
-References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
- <CGME20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b@eucas1p2.samsung.com>
- <20190723122016.30279-10-a.swigon@partner.samsung.com>
+        Wed, 24 Jul 2019 14:37:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727499AbfGXShP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 14:37:15 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECBA42173B;
+        Wed, 24 Jul 2019 18:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563993434;
+        bh=tb1yBoYnFaWG6mahNMfY72POj83PUfuPV2T0fEbS7EI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SsBk6ptk456duEqnAc2K2yrM4uGu1DHk0/jUojwW79I7W6NLqiTJZD7/0yzzeFrwC
+         ON2aK2A9wxisiOSqnQg9P70VDEuHRMuqIEha+ZjBnTj7InD2s59uJt3wBzDDHq7ZK/
+         UGNZAFoEaOx0QY5rAu0sIJr3LIWvIuNCFHWPjVsU=
+Date:   Wed, 24 Jul 2019 11:37:12 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     eric.dumazet@gmail.com, dvyukov@google.com, netdev@vger.kernel.org,
+        fw@strlen.de, i.maximets@samsung.com, edumazet@google.com,
+        dsahern@gmail.com, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
+Message-ID: <20190724183710.GF213255@gmail.com>
+Mail-Followup-To: David Miller <davem@davemloft.net>,
+        eric.dumazet@gmail.com, dvyukov@google.com, netdev@vger.kernel.org,
+        fw@strlen.de, i.maximets@samsung.com, edumazet@google.com,
+        dsahern@gmail.com, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <20190724013813.GB643@sol.localdomain>
+ <63f12327-dd4b-5210-4de2-705af6bc4ba4@gmail.com>
+ <20190724163014.GC673@sol.localdomain>
+ <20190724.111225.2257475150626507655.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190723122016.30279-10-a.swigon@partner.samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190724.111225.2257475150626507655.davem@davemloft.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 02:20:14PM +0200, Artur Świgoń wrote:
-> This patch adds interconnect functionality to the exynos-bus devfreq
-> driver.
+On Wed, Jul 24, 2019 at 11:12:25AM -0700, David Miller wrote:
+> From: Eric Biggers <ebiggers@kernel.org>
+> Date: Wed, 24 Jul 2019 09:30:14 -0700
 > 
-> The SoC topology is a graph (or, more specifically, a tree) and most of its
-> edges are taken from the devfreq parent-child hierarchy (cf.
-> Documentation/devicetree/bindings/devfreq/exynos-bus.txt). The previous
-> patch adds missing edges to the DT (under the name 'parent'). Due to
-
-Do not refer to DT patches. They will come through different tree so
-"previous" will not be correct anymore. You mentioned dependencies in
-cover letter so it is sufficient.
-
-> unspecified relative probing order, -EPROBE_DEFER may be propagated to
-> guarantee that a child is probed before its parent.
+> > On Wed, Jul 24, 2019 at 08:39:05AM +0200, Eric Dumazet wrote:
+> >> Some of the bugs have been fixed already, before syzbot found them.
+> >> 
+> >> Why force human to be gentle to bots and actually replying to them ?
+> >> 
+> >> I usually simply wait that syzbot is finding the bug does not repro anymore,
+> >> but now if you send these emails, we will have even more pressure on us.
+> >> 
+> > 
+> > First, based on experience, I'd guess about 30-45 of these are still valid.  17
+> > were seen in mainline in the last week, but some others are valid too.  The ones
+> > most likely to still be valid are at the beginning of the list.  So let's try
+> > not use the presence of outdated bugs as an excuse not to fix current bugs.
 > 
-> Each bus is now an interconnect provider and an interconnect node as well
-> (cf. Documentation/interconnect/interconnect.rst), i.e. every bus registers
-> itself as a node. Node IDs are not hardcoded but rather assigned at
-> runtime, in probing order (subject to the above-mentioned exception
-> regarding relative order). This approach allows for using this driver with
-> various Exynos SoCs.
+> So about half of the bugs we are to look at are already fixed and thus
+> noise, even as estimated by you.
 > 
-> The devfreq target() callback provided by exynos-bus now selects either the
-> frequency calculated by the devfreq governor or the frequency requested via
-> the interconnect API for the given node, whichever is higher.
+> I agree with Eric, these "reminders" are bad for the people you
+> actually want to work on fixing these bugs.
+
+Well, the problem is that no one knows for sure which bugs are fixed and which
+aren't.  To be certain, a human needs to review each bug.  A bot can only guess.
+
+Note that the bugs in my reminders are already automatically prioritized by how
+likely they are to still be valid, important, actionable.  So one simply needs
+to start at the beginning of the list if they want to focus on those types of
+bugs.  Isn't this helpful?
+
 > 
-> Please note that it is not an error when CONFIG_INTERCONNECT is 'n', in
-> which case all interconnect API functions are no-op.
+> > Since the kernel community is basically in continuous bug bankruptcy and lots of
 > 
-> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
-> ---
->  drivers/devfreq/exynos-bus.c | 145 +++++++++++++++++++++++++++++++++++
->  1 file changed, 145 insertions(+)
+> I don't like this hyperbole.  Please present facts and information we
+> can actually use to improve the kernel development and bug fixing
+> process.
 > 
-> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-> index 412511ca7703..12fb7c84ae50 100644
-> --- a/drivers/devfreq/exynos-bus.c
-> +++ b/drivers/devfreq/exynos-bus.c
-> @@ -14,6 +14,7 @@
->  #include <linux/devfreq-event.h>
->  #include <linux/device.h>
->  #include <linux/export.h>
-> +#include <linux/interconnect-provider.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/pm_opp.h>
-> @@ -23,6 +24,8 @@
->  #define DEFAULT_SATURATION_RATIO	40
->  #define DEFAULT_VOLTAGE_TOLERANCE	2
->  
-> +#define icc_units_to_hz(x) ((x) * 1000UL / 8)
-> +
->  struct exynos_bus {
->  	struct device *dev;
->  
-> @@ -31,12 +34,17 @@ struct exynos_bus {
->  	unsigned int edev_count;
->  	struct mutex lock;
->  
-> +	unsigned long min_freq;
->  	unsigned long curr_freq;
->  
->  	struct regulator *regulator;
->  	struct clk *clk;
->  	unsigned int voltage_tolerance;
->  	unsigned int ratio;
-> +
-> +	/* One provider per bus, one node per provider */
-> +	struct icc_provider provider;
-> +	struct icc_node *node;
->  };
->  
->  /*
-> @@ -61,6 +69,13 @@ exynos_bus_ops_edev(enable_edev);
->  exynos_bus_ops_edev(disable_edev);
->  exynos_bus_ops_edev(set_event);
->  
-> +static int exynos_bus_next_id(void)
-> +{
-> +	static int exynos_bus_node_id;
-> +
-> +	return exynos_bus_node_id++;
 
-This does not look robust. Use IDR for IDs. 
+A huge number of valid open bugs are not being fixed, which is a fact.  We can
+argue about what words to use to describe this situation, but it doesn't change
+the situation itself.
 
-> +}
-> +
->  static int exynos_bus_get_event(struct exynos_bus *bus,
->  				struct devfreq_event_data *edata)
->  {
-> @@ -98,6 +113,8 @@ static int exynos_bus_target(struct device *dev, unsigned long *freq, u32 flags)
->  	unsigned long old_freq, new_freq, new_volt, tol;
->  	int ret = 0;
->  
-> +	*freq = max(*freq, bus->min_freq);
-> +
->  	/* Get new opp-bus instance according to new bus clock */
->  	new_opp = devfreq_recommended_opp(dev, freq, flags);
->  	if (IS_ERR(new_opp)) {
-> @@ -208,6 +225,8 @@ static int exynos_bus_passive_target(struct device *dev, unsigned long *freq,
->  	unsigned long old_freq, new_freq;
->  	int ret = 0;
->  
-> +	*freq = max(*freq, bus->min_freq);
-> +
->  	/* Get new opp-bus instance according to new bus clock */
->  	new_opp = devfreq_recommended_opp(dev, freq, flags);
->  	if (IS_ERR(new_opp)) {
-> @@ -251,6 +270,35 @@ static void exynos_bus_passive_exit(struct device *dev)
->  	clk_disable_unprepare(bus->clk);
->  }
->  
-> +static int exynos_bus_icc_set(struct icc_node *src, struct icc_node *dst)
-> +{
-> +	struct exynos_bus *src_bus = src->data, *dst_bus = dst->data;
-> +
-> +	src_bus->min_freq = icc_units_to_hz(src->peak_bw);
-> +	dst_bus->min_freq = icc_units_to_hz(dst->peak_bw);
-> +
-> +	return 0;
-> +}
-> +
-> +static int exynos_bus_icc_aggregate(struct icc_node *node, u32 avg_bw,
-> +				    u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-> +{
-> +	*agg_peak = *agg_avg = peak_bw;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct icc_node *exynos_bus_icc_xlate(struct of_phandle_args *spec,
-> +					     void *data)
-> +{
-> +	struct exynos_bus *bus = data;
-> +
-> +	if (spec->np != bus->dev->of_node)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	return bus->node;
-> +}
-> +
->  static int exynos_bus_parent_parse_of(struct device_node *np,
->  					struct exynos_bus *bus)
->  {
-> @@ -469,6 +517,95 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
->  	return ret;
->  }
->  
-> +static int exynos_bus_icc_connect(struct exynos_bus *bus)
-> +{
-> +	struct device_node *np = bus->dev->of_node;
-> +	struct devfreq *parent_devfreq;
-> +	struct icc_node *parent_node = NULL;
-> +	struct of_phandle_args args;
-> +	int ret = 0;
-> +
-> +	parent_devfreq = devfreq_get_devfreq_by_phandle(bus->dev, 0);
-> +	if (!IS_ERR(parent_devfreq)) {
-> +		struct exynos_bus *parent_bus;
+What is your proposed solution?
 
-What if someone unbinds this parent devfreq? I guess everything in
-devfreq starts exploding... however it's not the problem of this patch.
-
-Do you also need suspend/resume order (device links)? I guess the other
-side, e.g.  mixer, should resume before the bus?
-
-> +
-> +		parent_bus = dev_get_drvdata(parent_devfreq->dev.parent);
-> +		parent_node = parent_bus->node;
-> +	} else {
-> +		/* Look for parent in DT */
-> +		int num = of_count_phandle_with_args(np, "parent",
-> +						     "#interconnect-cells");
-> +		if (num != 1)
-
-You will return here 0 but isn't it an error?
-
-Best regards,
-Krzysztof
-
+- Eric
