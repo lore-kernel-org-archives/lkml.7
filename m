@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0638EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC56C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0508217D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7146C217D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000299;
-	bh=w4us00/9sn9R8EktR5DtQjHif2aVMiSmqh/+yBf/PJM=;
+	s=default; t=1564000302;
+	bh=2hx8cUTZuWP+77yvfyByCSbaY1wI1oEe9aok1bEUhzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ppFa+I/y4RgQjaxByk3F4CmwJNufbVaEczDWjOCcy1fY6ouqozRNdpCFI1mmLlumH
-	 gRlPzPeQbdi0lXistKC1s+xh/jy95cIpPIPXCn78hiEkn/3fTsy+WdD0HK9Y9y3RjT
-	 56pxd0nEUwNrQ1kyLcyrv8ir+BvYi+7sCBqoUAuE=
+	b=K02nlVdUbs3JiJX4bMD5HSS329kvPV9Oz27A0+8GL7fRJ34czOWBNxoCR4NVqdWhW
+	 V1zhiJ7SU+NRZf8IzK3VpJ3A6gNSTa9fc5nht6jE1dyHDLHkel3fjbgjTZEC56Z72b
+	 tTQLY06GigzwFeBnQ04oLJahFnbqGNA+VT/wpJc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388506AbfGXUbi (ORCPT
+        id S2388266AbfGXTaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:31:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50152 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:30:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728486AbfGXTaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:30:14 -0400
+        id S2388256AbfGXTaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:30:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BE5D20659;
-        Wed, 24 Jul 2019 19:30:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE06E20659;
+        Wed, 24 Jul 2019 19:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996613;
-        bh=w4us00/9sn9R8EktR5DtQjHif2aVMiSmqh/+yBf/PJM=;
+        s=default; t=1563996601;
+        bh=2hx8cUTZuWP+77yvfyByCSbaY1wI1oEe9aok1bEUhzM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=on9a/NUna4d0iRN7PPXfCLS9agB9xyiE9qJ6VK7EgYVdNDAr6NUkbg5QO5YCrFj4a
-         a4R7LtjEkGmJ69xVoYhY6xnUfa1sukhsNSeDxgHKNO+6XhV7UEECyrHzZxjukOnAyc
-         qavGPzi4N+gpjfvpUayjWwgh0Js8detaA/uNjmEo=
+        b=x6U5fTiwZ0a5NK7UnOEFm0Znb02RUJyXEiVP4FmZt4ZlzL6OGX5pYAjrdKizM9ydo
+         YV1IXOvwTxlE5k/598s7wvJ0ZVYCGRU4bV4fC8EdrA3en1iJfb9qX+yUoTPiFRlGmW
+         HUaOIBTQdQjeXq30G9Y+TZn85WNrxPLQ6X+kSQqI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        stable@vger.kernel.org, Keith Pyle <kpyle@austin.rr.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 156/413] x86/build: Add set -e to mkcapflags.sh to delete broken capflags.c
-Date:   Wed, 24 Jul 2019 21:17:27 +0200
-Message-Id: <20190724191746.228619650@linuxfoundation.org>
+Subject: [PATCH 5.2 152/413] media: hdpvr: fix locking and a missing msleep
+Date:   Wed, 24 Jul 2019 21:17:23 +0200
+Message-Id: <20190724191745.870999790@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,50 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bc53d3d777f81385c1bb08b07bd1c06450ecc2c1 ]
+[ Upstream commit 6bc5a4a1927556ff9adce1aa95ea408c95453225 ]
 
-Without 'set -e', shell scripts continue running even after any
-error occurs. The missed 'set -e' is a typical bug in shell scripting.
+This driver has three locking issues:
 
-For example, when a disk space shortage occurs while this script is
-running, it actually ends up with generating a truncated capflags.c.
+- The wait_event_interruptible() condition calls hdpvr_get_next_buffer(dev)
+  which uses a mutex, which is not allowed. Rewrite with list_empty_careful()
+  that doesn't need locking.
 
-Yet, mkcapflags.sh continues running and exits with 0. So, the build
-system assumes it has succeeded.
+- In hdpvr_read() the call to hdpvr_stop_streaming() didn't lock io_mutex,
+  but it should have since stop_streaming expects that.
 
-It will not be re-generated in the next invocation of Make since its
-timestamp is newer than that of any of the source files.
+- In hdpvr_device_release() io_mutex was locked when calling flush_work(),
+  but there it shouldn't take that mutex since the work done by flush_work()
+  also wants to lock that mutex.
 
-Add 'set -e' so that any error in this script is caught and propagated
-to the build system.
+There are also two other changes (suggested by Keith):
 
-Since 9c2af1c7377a ("kbuild: add .DELETE_ON_ERROR special target"),
-make automatically deletes the target on any failure. So, the broken
-capflags.c will be deleted automatically.
+- msecs_to_jiffies(4000); (a NOP) should have been msleep(4000).
+- Change v4l2_dbg to v4l2_info to always log if streaming had to be restarted.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Link: https://lkml.kernel.org/r/20190625072622.17679-1-yamada.masahiro@socionext.com
+Reported-by: Keith Pyle <kpyle@austin.rr.com>
+Suggested-by: Keith Pyle <kpyle@austin.rr.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mkcapflags.sh | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/usb/hdpvr/hdpvr-video.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mkcapflags.sh b/arch/x86/kernel/cpu/mkcapflags.sh
-index d0dfb892c72f..aed45b8895d5 100644
---- a/arch/x86/kernel/cpu/mkcapflags.sh
-+++ b/arch/x86/kernel/cpu/mkcapflags.sh
-@@ -4,6 +4,8 @@
- # Generate the x86_cap/bug_flags[] arrays from include/asm/cpufeatures.h
- #
+diff --git a/drivers/media/usb/hdpvr/hdpvr-video.c b/drivers/media/usb/hdpvr/hdpvr-video.c
+index 7580fc5f2f12..6a6405b80797 100644
+--- a/drivers/media/usb/hdpvr/hdpvr-video.c
++++ b/drivers/media/usb/hdpvr/hdpvr-video.c
+@@ -435,7 +435,7 @@ static ssize_t hdpvr_read(struct file *file, char __user *buffer, size_t count,
+ 	/* wait for the first buffer */
+ 	if (!(file->f_flags & O_NONBLOCK)) {
+ 		if (wait_event_interruptible(dev->wait_data,
+-					     hdpvr_get_next_buffer(dev)))
++					     !list_empty_careful(&dev->rec_buff_list)))
+ 			return -ERESTARTSYS;
+ 	}
  
-+set -e
-+
- IN=$1
- OUT=$2
+@@ -461,10 +461,17 @@ static ssize_t hdpvr_read(struct file *file, char __user *buffer, size_t count,
+ 				goto err;
+ 			}
+ 			if (!err) {
+-				v4l2_dbg(MSG_INFO, hdpvr_debug, &dev->v4l2_dev,
+-					"timeout: restart streaming\n");
++				v4l2_info(&dev->v4l2_dev,
++					  "timeout: restart streaming\n");
++				mutex_lock(&dev->io_mutex);
+ 				hdpvr_stop_streaming(dev);
+-				msecs_to_jiffies(4000);
++				mutex_unlock(&dev->io_mutex);
++				/*
++				 * The FW needs about 4 seconds after streaming
++				 * stopped before it is ready to restart
++				 * streaming.
++				 */
++				msleep(4000);
+ 				err = hdpvr_start_streaming(dev);
+ 				if (err) {
+ 					ret = err;
+@@ -1127,9 +1134,7 @@ static void hdpvr_device_release(struct video_device *vdev)
+ 	struct hdpvr_device *dev = video_get_drvdata(vdev);
  
+ 	hdpvr_delete(dev);
+-	mutex_lock(&dev->io_mutex);
+ 	flush_work(&dev->worker);
+-	mutex_unlock(&dev->io_mutex);
+ 
+ 	v4l2_device_unregister(&dev->v4l2_dev);
+ 	v4l2_ctrl_handler_free(&dev->hdl);
 -- 
 2.20.1
 
