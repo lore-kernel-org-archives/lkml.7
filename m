@@ -2,118 +2,124 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D304C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64930C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 698FC21911
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B4A02189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:38:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="C2o/om1I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbfGXQgu (ORCPT
+        id S2387477AbfGXQif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:36:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:43732 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726316AbfGXQgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:36:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3690E28;
-        Wed, 24 Jul 2019 09:36:49 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C337C3F71F;
-        Wed, 24 Jul 2019 09:36:46 -0700 (PDT)
-Subject: Re: [PATCH v9 19/21] mm: Add generic ptdump
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20190722154210.42799-1-steven.price@arm.com>
- <20190722154210.42799-20-steven.price@arm.com>
- <20190723095747.GB8085@lakrids.cambridge.arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <ee707646-0196-63bb-45cc-6b949ae9530e@arm.com>
-Date:   Wed, 24 Jul 2019 17:36:45 +0100
+        Wed, 24 Jul 2019 12:38:35 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:54027 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387410AbfGXQie (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 12:38:34 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6OGZxKK003801;
+        Wed, 24 Jul 2019 18:38:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=LIYF+WcEyHaSveQjneiWBz5V/SW/gazjJXI0PW9I0e8=;
+ b=C2o/om1ItzSc3OdBwnt83hedbHngy+MPN/wTWy9hUMGQU+KNxgEHGTALLAHw+rV/VPpz
+ BFdTu8JaBosBTkGFtxJixvbaSahxZEHmk0W+mGhYXlRZsfcljHKawomaQ0rhZ6UNVJDq
+ kILBoPUa82+q8CTTOzCjTAIePw+qdzjyxkgJKVIqPOfa4rdwPkoLAz6qhWwHyunvh0W1
+ TsP4xXwq6+qTbOfRK0M+MtUhWOisZOmOW5Cvg4sGAsFoG6jm+sZ+ITLFoQKRYQgprTNs
+ PR0W9toqOQBoU/F5r3+YMZhPF+zmNwSeHnU0iwOOm+vDGwAyuwnfUc+H/Y1tOeSy/OLO 5w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2tx603xbgc-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 24 Jul 2019 18:38:07 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EE96A38;
+        Wed, 24 Jul 2019 16:38:06 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C259F5212;
+        Wed, 24 Jul 2019 16:38:06 +0000 (GMT)
+Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 24 Jul
+ 2019 18:38:06 +0200
+Subject: Re: [PATCH 1/4] ARM: dts: stm32: add FMC2 NAND controller support on
+ stm32mp157c
+To:     Christophe Kerello <christophe.kerello@st.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <linux@armlinux.org.uk>, <olof@lixom.net>, <arnd@arndb.de>
+CC:     <mcoquelin.stm32@gmail.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1561128590-14621-1-git-send-email-christophe.kerello@st.com>
+ <1561128590-14621-2-git-send-email-christophe.kerello@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <4b6a8df1-593e-44b2-4bb3-2af9f732396c@st.com>
+Date:   Wed, 24 Jul 2019 18:38:05 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190723095747.GB8085@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+In-Reply-To: <1561128590-14621-2-git-send-email-christophe.kerello@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-24_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/07/2019 10:57, Mark Rutland wrote:
-> On Mon, Jul 22, 2019 at 04:42:08PM +0100, Steven Price wrote:
->> Add a generic version of page table dumping that architectures can
->> opt-in to
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
+Hi Christophe
+
+On 6/21/19 4:49 PM, Christophe Kerello wrote:
+> This patch adds FMC2 NAND controller support used by stm32mp157c SOC.
 > 
-> [...]
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> ---
+>   arch/arm/boot/dts/stm32mp157c.dtsi | 19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
 > 
->> +#ifdef CONFIG_KASAN
->> +/*
->> + * This is an optimization for KASAN=y case. Since all kasan page tables
->> + * eventually point to the kasan_early_shadow_page we could call note_page()
->> + * right away without walking through lower level page tables. This saves
->> + * us dozens of seconds (minutes for 5-level config) while checking for
->> + * W+X mapping or reading kernel_page_tables debugfs file.
->> + */
->> +static inline bool kasan_page_table(struct ptdump_state *st, void *pt,
->> +				    unsigned long addr)
->> +{
->> +	if (__pa(pt) == __pa(kasan_early_shadow_pmd) ||
->> +#ifdef CONFIG_X86
->> +	    (pgtable_l5_enabled() &&
->> +			__pa(pt) == __pa(kasan_early_shadow_p4d)) ||
->> +#endif
->> +	    __pa(pt) == __pa(kasan_early_shadow_pud)) {
->> +		st->note_page(st, addr, 5, pte_val(kasan_early_shadow_pte[0]));
->> +		return true;
->> +	}
->> +	return false;
+> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+> index 0c4e6eb..f2bda28 100644
+> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+> @@ -1239,6 +1239,25 @@
+>   			dma-requests = <48>;
+>   		};
+>   
+> +		fmc: nand-controller@58002000 {
+> +			compatible = "st,stm32mp15-fmc2";
+> +			reg = <0x58002000 0x1000>,
+> +			      <0x80000000 0x1000>,
+> +			      <0x88010000 0x1000>,
+> +			      <0x88020000 0x1000>,
+> +			      <0x81000000 0x1000>,
+> +			      <0x89010000 0x1000>,
+> +			      <0x89020000 0x1000>;
+> +			interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+> +			dmas = <&mdma1 20 0x10 0x12000A02 0x0 0x0>,
+> +			       <&mdma1 20 0x10 0x12000A08 0x0 0x0>,
+> +			       <&mdma1 21 0x10 0x12000A0A 0x0 0x0>;
+
+Please, don't use capital letter here.
+
+> +			dma-names = "tx", "rx", "ecc";
+> +			clocks = <&rcc FMC_K>;
+> +			resets = <&rcc FMC_R>;
+> +			status = "disabled";
+> +		};
+> +
+>   		qspi: spi@58003000 {
+>   			compatible = "st,stm32f469-qspi";
+>   			reg = <0x58003000 0x1000>, <0x70000000 0x10000000>;
 > 
-> Having you tried this with CONFIG_DEBUG_VIRTUAL?
-> 
-> The kasan_early_shadow_pmd is a kernel object rather than a linear map
-> object, so you should use __pa_symbol for that.
-
-Thanks for pointing that out - it is indeed broken on arm64. This was
-moved from x86 where CONFIG_DEBUG_VIRTUAL doesn't seem to pick this up.
-There is actually a problem here that 'pt' might not be in the linear
-map (so __pa(pt) barfs on arm64 as well as kasan_early_shadow_p?d).
-
-It looks like having the comparisons of the form "pt ==
-lm_alias(kasan_early_shadow_p?d)" is probably best.
-
-> It's a bit horrid to have to test multiple levels in one function; can't
-> we check the relevant level inline in each of the test_p?d funcs?
-> 
-> They're optional anyway, so they only need to be defined for
-> CONFIG_KASAN.
-
-Good point - removing the test_p?d callbacks when !CONFIG_KASAN
-simplifies the code.
-
-Thanks,
-
-Steve
