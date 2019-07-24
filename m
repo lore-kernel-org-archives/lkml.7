@@ -2,124 +2,120 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DDAC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBA0C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD876229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:49:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Impj17Op";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="K4lybffh"
+	by mail.kernel.org (Postfix) with ESMTP id D6E9F229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:50:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563969015;
+	bh=7cDmvSdXx7R91mdbB8raYepiGCr+m08yAbZBHR6nYms=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=cnyGinjOWoDiSa6KDFbyU5gk5ESN6NTF83W9uyNzyvedfOXJIilbO2iWrq/NuzAcx
+	 i75OpHIPS5BEVZgxrLwdcwNxoHKhubz8xL65+dAsZWEh8Oax089N+D64bQzRZjGoPz
+	 S9CPf6Iv3KX5xNHipYEEoVVOkCC9lnrn4lFYehcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbfGXLtl (ORCPT
+        id S2387411AbfGXLuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 07:49:41 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:51532 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727570AbfGXLtl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 07:49:41 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4436E6053D; Wed, 24 Jul 2019 11:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563968980;
-        bh=Apr32KU/6B9aTPa2tfZUiPw1kdiISwzr6gcZw8IeftQ=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=Impj17OplB8isAvlFP+/CakfnYAXi2QXZV6Qio9f6okxmSh03RJ3NkrwNPqv96mGv
-         wzwAUAZ3aewrIs9r6nDT68F+DVm8DFKi3VwpMj1fkmPJHSvPNXB1gPPXgVRkyMAi3g
-         mqwEYpf9qhzg6X/Z1Hp/w6eQ6AYEI6tMU13nWoCU=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        Wed, 24 Jul 2019 07:50:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387393AbfGXLuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 07:50:14 -0400
+Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AF79960214;
-        Wed, 24 Jul 2019 11:49:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563968978;
-        bh=Apr32KU/6B9aTPa2tfZUiPw1kdiISwzr6gcZw8IeftQ=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=K4lybffhYJ10/BlwkdUoAzaRQIc6N1THAkohn7DdqgP2PT0ozi2XyuN7rb4rbBnc1
-         tt0bbkjG45WVx8xL0gQMJ+EkUqifNWl5Spy7j2VbQ/WkSaMOzTGC4oQvqzIkcFuY7y
-         b6twOBEfcEgOWWMX1Tocl+vUUejrgzd8QKZcN5TQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AF79960214
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mail.kernel.org (Postfix) with ESMTPSA id 471DD22387;
+        Wed, 24 Jul 2019 11:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563969012;
+        bh=7cDmvSdXx7R91mdbB8raYepiGCr+m08yAbZBHR6nYms=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=HwI4hRn8vZRUDokkkUOJfg9Xhuenbsj49RncrNPNpO8Cm3fOXbbCqZ6Z3CnpcHfgc
+         JeUw3gNzprlxW6Cu30LDt/Z6yVkERqlH98BtI3dkAqyv8/+qLsql6AG3xxr0h+PrS2
+         mowlt3kiH4Uyld9M6J8Tv5MFawosXYwfPjfQnptw=
+Message-ID: <49ef4b704f7925c584a2bab6650648ba456b5717.camel@kernel.org>
+Subject: Re: [RFC PATCH] ceph: fix directories inode i_blkbits initialization
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Ilya Dryomov <idryomov@gmail.com>, Sage Weil <sage@redhat.com>,
+        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 24 Jul 2019 07:50:11 -0400
+In-Reply-To: <874l3b694l.fsf@suse.com>
+References: <20190723155020.17338-1-lhenriques@suse.com>
+         <c657b0d65acd5e8bc9d5d726d68e2ad1fff38b51.camel@kernel.org>
+         <87o91k61sr.fsf@suse.com> <874l3b694l.fsf@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v4 1/2] rtw88: pci: Rearrange the memory usage for skb in
- RX ISR
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190711052427.5582-1-jian-hong@endlessm.com>
-References: <20190711052427.5582-1-jian-hong@endlessm.com>
-To:     Jian-Hong Pan <jian-hong@endlessm.com>
-Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        David Laight <David.Laight@aculab.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        Daniel Drake <drake@endlessm.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>, stable@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190724114940.4436E6053D@smtp.codeaurora.org>
-Date:   Wed, 24 Jul 2019 11:49:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jian-Hong Pan <jian-hong@endlessm.com> wrote:
+On Wed, 2019-07-24 at 11:04 +0100, Luis Henriques wrote:
+> Luis Henriques <lhenriques@suse.com> writes:
+> 
+> > "Jeff Layton" <jlayton@kernel.org> writes:
+> > 
+> > > On Tue, 2019-07-23 at 16:50 +0100, Luis Henriques wrote:
+> > > > When filling an inode with info from the MDS, i_blkbits is being
+> > > > initialized using fl_stripe_unit, which contains the stripe unit in
+> > > > bytes.  Unfortunately, this doesn't make sense for directories as they
+> > > > have fl_stripe_unit set to '0'.  This means that i_blkbits will be set
+> > > > to 0xff, causing an UBSAN undefined behaviour in i_blocksize():
+> > > > 
+> > > >   UBSAN: Undefined behaviour in ./include/linux/fs.h:731:12
+> > > >   shift exponent 255 is too large for 32-bit type 'int'
+> > > > 
+> > > > Fix this by initializing i_blkbits to CEPH_BLOCK_SHIFT if fl_stripe_unit
+> > > > is zero.
+> > > > 
+> > > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > > > ---
+> > > >  fs/ceph/inode.c | 7 ++++++-
+> > > >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > > > 
+> > > > Hi Jeff,
+> > > > 
+> > > > To be honest, I'm not sure CEPH_BLOCK_SHIFT is the right value to use
+> > > > here, but for sure the one currently being used isn't correct if the
+> > > > inode is a directory.  Using stripe units seems to be a bug that has
+> > > > been there since the beginning, but it definitely became bigger problem
+> > > > after commit 69448867abcb ("fs: shave 8 bytes off of struct inode").
+> > > > 
+> > > > This fix could also be moved into the 'switch' statement later in that
+> > > > function, in the S_IFDIR case, similar to commit 5ba72e607cdb ("ceph:
+> > > > set special inode's blocksize to page size").  Let me know which version
+> > > > you would prefer.
+> > > > 
+> > > 
+> > > What happens with (e.g.) named pipes or symlinks? Do those inodes also
+> > > get this bogus value? Assuming that they do, I'd probably prefer this
+> > > patch since it'd fix things for all inode types, not just directories.
+> > 
+> > I tested symlinks and they seem to be handled correctly (i.e. the stripe
+> > units seems to be the same as the target file).  Regarding pipes, I
+> > didn't test them, but from the code it should be set to PAGE_SHIFT (see
+> > the above mentioned commit 5ba72e607cdb).
+> 
+> Ok, after looking closer at the other inode types and running a few
+> tests with extra debug code, it all seems to be sane -- only directories
+> (root dir is an exception) will cause problems with i_blkbits being set
+> to a bogus value.  So, I'm sticking with my original RFC patch approach,
+> which should be easy to apply to stable kernels.
+> 
+> Cheers,
 
-> Testing with RTL8822BE hardware, when available memory is low, we
-> frequently see a kernel panic and system freeze.
-> 
-> First, rtw_pci_rx_isr encounters a memory allocation failure (trimmed):
-> 
-> rx routine starvation
-> WARNING: CPU: 7 PID: 9871 at drivers/net/wireless/realtek/rtw88/pci.c:822 rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpci]
-> [ 2356.580313] RIP: 0010:rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpci]
-> 
-> Then we see a variety of different error conditions and kernel panics,
-> such as this one (trimmed):
-> 
-> rtw_pci 0000:02:00.0: pci bus timeout, check dma status
-> skbuff: skb_over_panic: text:00000000091b6e66 len:415 put:415 head:00000000d2880c6f data:000000007a02b1ea tail:0x1df end:0xc0 dev:<NULL>
-> ------------[ cut here ]------------
-> kernel BUG at net/core/skbuff.c:105!
-> invalid opcode: 0000 [#1] SMP NOPTI
-> RIP: 0010:skb_panic+0x43/0x45
-> 
-> When skb allocation fails and the "rx routine starvation" is hit, the
-> function returns immediately without updating the RX ring. At this
-> point, the RX ring may continue referencing an old skb which was already
-> handed off to ieee80211_rx_irqsafe(). When it comes to be used again,
-> bad things happen.
-> 
-> This patch allocates a new, data-sized skb first in RX ISR. After
-> copying the data in, we pass it to the upper layers. However, if skb
-> allocation fails, we effectively drop the frame. In both cases, the
-> original, full size ring skb is reused.
-> 
-> In addition, to fixing the kernel crash, the RX routine should now
-> generally behave better under low memory conditions.
-> 
-> Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204053
-> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> Cc: <stable@vger.kernel.org>
+Sounds good. I'll just plan to merge your RFC patch, after I run some
+more tests on it.
 
-2 patches applied to wireless-drivers-next.git, thanks.
-
-ee6db78f5db9 rtw88: pci: Rearrange the memory usage for skb in RX ISR
-29b68a920f6a rtw88: pci: Use DMA sync instead of remapping in RX ISR
-
+Thanks!
 -- 
-https://patchwork.kernel.org/patch/11039275/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Jeff Layton <jlayton@kernel.org>
 
