@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6203C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B64C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E10722387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3A5218F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996248;
-	bh=9T1K/j99ownobVpfDjcO5E4ydlDMnfWqVQ6G1Al7pOw=;
+	s=default; t=1563996252;
+	bh=Kdb2esTfhVVGQeQlYtgqPeYU5C6rZUsNpOO0RND6b6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mIIvNr3JERFUdBTMDr9K0XKLWpFNK/P4709EHNn4EptphYVouI1OAwSw9GFcXqd4A
-	 8nx332S7cF7raIlPluIzajq7tuL/XAfupigKwt1N08GhwK8nBXMHB2xtRKeLEflQdD
-	 M12x3Z9XulEyPBjOrofmCjvhnDV7A1FWliYmabTg=
+	b=Aaq7m26nfEugB0/QhIAesiJYmKluoH7hJUsvCc62QV1q41BLHeFEaAeutAz8dx2yG
+	 nFa9tK6oqGDXZxbSQ7uUgi9HCqN5iJlMDzuK+l3cN9YFGXFwHBpulpEhnsQL3RRxMW
+	 /6WswCoD5+vZkSJiFIZBtwBm+Nb7r59aM7qGiq5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbfGXTYH (ORCPT
+        id S2387921AbfGXTYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:24:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40106 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:24:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728933AbfGXTYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:24:05 -0400
+        id S1728933AbfGXTYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:24:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB5ED218F0;
-        Wed, 24 Jul 2019 19:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DB10218F0;
+        Wed, 24 Jul 2019 19:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996244;
-        bh=9T1K/j99ownobVpfDjcO5E4ydlDMnfWqVQ6G1Al7pOw=;
+        s=default; t=1563996247;
+        bh=Kdb2esTfhVVGQeQlYtgqPeYU5C6rZUsNpOO0RND6b6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2qlhOM1dRsp2/rnvb9o7lvwXlsYxQPyZymF9FwmCRO0c9TbZJ0MA9/eNRNXDyamGv
-         2wYje+NgK4nfj6wZlHeYPFbXBOgWCtBnKInZCjd15Fj5jRV3MubV2fMWzCguOu8JNT
-         av9m8z6nNA4Zgxlj3pP9UudhWx6nwmGIuyIDDmzc=
+        b=Gnh0quhpEz7Z+f749+YCp1Ki+LPjfdC8rntfQ0Bnnm1NUQ+tgdN5af/U3ZLt8LkjA
+         FDrT7J9en9pB/DFpNBQzS+wcT5r1H99nkz3iEloKJWRBMowBsgFDeEjqlHwNbBrZJq
+         OY0MFNL7iug7q83bknKEYiFfY6YwoDamJWu4ZHwk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhi Chen <zhichen@codeaurora.org>,
-        Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Jose Abreu <joabreu@synopsys.com>,
+        Joao Pinto <jpinto@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 003/413] ath10k: fix incorrect multicast/broadcast rate setting
-Date:   Wed, 24 Jul 2019 21:14:54 +0200
-Message-Id: <20190724191735.392212794@linuxfoundation.org>
+Subject: [PATCH 5.2 030/413] net: stmmac: dwmac4/5: Clear unused address entries
+Date:   Wed, 24 Jul 2019 21:15:21 +0200
+Message-Id: <20190724191737.673962550@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,56 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 93ee3d108fc77e19efeac3ec5aa7d5886711bfef ]
+[ Upstream commit 0620ec6c62a5a07625b65f699adc5d1b90394ee6 ]
 
-Invalid rate code is sent to firmware when multicast rate value of 0 is
-sent to driver indicating disabled case, causing broken mesh path.
-so fix that.
+In case we don't use a given address entry we need to clear it because
+it could contain previous values that are no longer valid.
 
-Tested on QCA9984 with firmware 10.4-3.6.1-00827
+Found out while running stmmac selftests.
 
-Sven tested on IPQ4019 with 10.4-3.5.3-00057 and QCA9888 with 10.4-3.5.3-00053
-(ath10k-firmware) and 10.4-3.6-00140 (linux-firmware 2018-12-16-211de167).
-
-Fixes: cd93b83ad92 ("ath10k: support for multicast rate control")
-Co-developed-by: Zhi Chen <zhichen@codeaurora.org>
-Signed-off-by: Zhi Chen <zhichen@codeaurora.org>
-Signed-off-by: Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>
-Tested-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/mac.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 9c703d287333..e8997e22ceec 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -5588,8 +5588,8 @@ static void ath10k_bss_info_changed(struct ieee80211_hw *hw,
- 	struct cfg80211_chan_def def;
- 	u32 vdev_param, pdev_param, slottime, preamble;
- 	u16 bitrate, hw_value;
--	u8 rate, basic_rate_idx;
--	int rateidx, ret = 0, hw_rate_code;
-+	u8 rate, basic_rate_idx, rateidx;
-+	int ret = 0, hw_rate_code, mcast_rate;
- 	enum nl80211_band band;
- 	const struct ieee80211_supported_band *sband;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index 99d772517242..206170d0bf81 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -443,14 +443,20 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 		 * are required
+ 		 */
+ 		value |= GMAC_PACKET_FILTER_PR;
+-	} else if (!netdev_uc_empty(dev)) {
+-		int reg = 1;
++	} else {
+ 		struct netdev_hw_addr *ha;
++		int reg = 1;
  
-@@ -5776,7 +5776,11 @@ static void ath10k_bss_info_changed(struct ieee80211_hw *hw,
- 	if (changed & BSS_CHANGED_MCAST_RATE &&
- 	    !ath10k_mac_vif_chan(arvif->vif, &def)) {
- 		band = def.chan->band;
--		rateidx = vif->bss_conf.mcast_rate[band] - 1;
-+		mcast_rate = vif->bss_conf.mcast_rate[band];
-+		if (mcast_rate > 0)
-+			rateidx = mcast_rate - 1;
-+		else
-+			rateidx = ffs(vif->bss_conf.basic_rates) - 1;
+ 		netdev_for_each_uc_addr(ha, dev) {
+ 			dwmac4_set_umac_addr(hw, ha->addr, reg);
+ 			reg++;
+ 		}
++
++		while (reg <= GMAC_MAX_PERFECT_ADDRESSES) {
++			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
++			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
++			reg++;
++		}
+ 	}
  
- 		if (ar->phy_capability & WHAL_WLAN_11A_CAPABILITY)
- 			rateidx += ATH10K_MAC_FIRST_OFDM_RATE_IDX;
+ 	writel(value, ioaddr + GMAC_PACKET_FILTER);
 -- 
 2.20.1
 
