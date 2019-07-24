@@ -2,79 +2,69 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E8FC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FCFC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1722189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B103F2189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:23:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="YeeC3awk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbfGXRXX (ORCPT
+        id S1728658AbfGXRX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:23:23 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34504 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728590AbfGXRR3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:17:29 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id C3B2028B604
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH 3/7] media: hantro: Constify the control array
-Date:   Wed, 24 Jul 2019 14:16:58 -0300
-Message-Id: <20190724171702.9449-4-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724171702.9449-1-ezequiel@collabora.com>
-References: <20190724171702.9449-1-ezequiel@collabora.com>
+        Wed, 24 Jul 2019 13:23:26 -0400
+Received: from mx4.wp.pl ([212.77.101.12]:54010 "EHLO mx4.wp.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727313AbfGXRXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 13:23:25 -0400
+X-Greylist: delayed 478 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Jul 2019 13:23:25 EDT
+Received: (wp-smtpd smtp.wp.pl 30481 invoked from network); 24 Jul 2019 19:16:43 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1563988604; bh=z41DzGtUFzaWWcpQAVjI+8rAtK/VXbLYrGHn+dMjo3I=;
+          h=From:To:Cc:Subject;
+          b=YeeC3awkT/FVcvjk+fURFqdyv0r3NGECJaqSruBjt2MEMxHyXyddFZaA64nkaxrka
+           0lLpbm0O7VZrCjgigBSnZ19v6fCSXRbOMwIZThg3hxH5pulTydVwW1xI4EtrctTXRp
+           wUor382uyQhCqpSoEE8V8sOX195Tb9e+kJQh7ApQ=
+Received: from 014.152-60-66-biz-static.surewest.net (HELO cakuba.netronome.com) (kubakici@wp.pl@[66.60.152.14])
+          (envelope-sender <kubakici@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <navid.emamdoost@gmail.com>; 24 Jul 2019 19:16:43 +0200
+Date:   Wed, 24 Jul 2019 10:16:36 -0700
+From:   Jakub Kicinski <kubakici@wp.pl>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     kvalo@codeaurora.org, emamd001@umn.edu, kjlu@umn.edu,
+        smccaman@umn.edu, secalert@redhat.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mt7601u: null check the allocation
+Message-ID: <20190724101636.4699c30a@cakuba.netronome.com>
+In-Reply-To: <20190724141736.29994-1-navid.emamdoost@gmail.com>
+References: <87d0i00z4t.fsf@kamboji.qca.qualcomm.com>
+        <20190724141736.29994-1-navid.emamdoost@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-WP-MailID: fe13a5d9e194338bda75b16965620f67
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 000000A [QTPk]                               
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
+On Wed, 24 Jul 2019 09:17:36 -0500, Navid Emamdoost wrote:
+> devm_kzalloc may fail and return NULL. So the null check is needed.
+> 
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-controls[] is not supposed to be modified at runtime, let's make it
-explicit by adding a const specifier.
+Ah, I replied to the wrong one..
 
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
- drivers/staging/media/hantro/hantro_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-index ff2dcbf43e81..398618b0d586 100644
---- a/drivers/staging/media/hantro/hantro_drv.c
-+++ b/drivers/staging/media/hantro/hantro_drv.c
-@@ -262,7 +262,7 @@ static const struct v4l2_ctrl_ops hantro_ctrl_ops = {
- 	.s_ctrl = hantro_s_ctrl,
- };
- 
--static struct hantro_ctrl controls[] = {
-+static const struct hantro_ctrl controls[] = {
- 	{
- 		.codec = HANTRO_JPEG_ENCODER,
- 		.cfg = {
--- 
-2.22.0
-
+Acked-by: Jakub Kicinski <kubakici@wp.pl>
