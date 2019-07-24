@@ -2,142 +2,107 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42433C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 862B6C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17DC22189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B59A2189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:27:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="POKycPna"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mHFm/5BS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbfGXXX1 (ORCPT
+        id S1729727AbfGXX1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 19:23:27 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:2928 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfGXXX0 (ORCPT
+        Wed, 24 Jul 2019 19:27:07 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:15280 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729232AbfGXX1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 19:23:26 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d38e8730000>; Wed, 24 Jul 2019 16:23:31 -0700
+        Wed, 24 Jul 2019 19:27:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d38e94a0000>; Wed, 24 Jul 2019 16:27:06 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 24 Jul 2019 16:23:23 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 24 Jul 2019 16:27:06 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 24 Jul 2019 16:23:23 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jul
- 2019 23:23:22 +0000
-Subject: Re: [PATCH 00/12] block/bio, fs: convert put_page() to
- put_user_page*()
-To:     Christoph Hellwig <hch@infradead.org>, <john.hubbard@gmail.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>, <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <ceph-devel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-cifs@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <samba-technical@lists.samba.org>,
-        <v9fs-developer@lists.sourceforge.net>,
-        <virtualization@lists.linux-foundation.org>
-References: <20190724042518.14363-1-jhubbard@nvidia.com>
- <20190724061750.GA19397@infradead.org>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <17f12f3d-981e-a717-c8e5-bfbbfb7ec1a3@nvidia.com>
-Date:   Wed, 24 Jul 2019 16:23:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by hqpgpgate101.nvidia.com on Wed, 24 Jul 2019 16:27:06 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jul
+ 2019 23:27:05 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 24 Jul 2019 23:27:05 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d38e9490001>; Wed, 24 Jul 2019 16:27:05 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-mm@kvack.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH v3 0/3] mm/hmm: fixes for device private page migration
+Date:   Wed, 24 Jul 2019 16:26:57 -0700
+Message-ID: <20190724232700.23327-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190724061750.GA19397@infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564010611; bh=U/byz8o3kezigETW8hWUjg+JqkNm/y0Q4UHjAnDVaRI=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+        t=1564010826; bh=gTLfLpBBgzH14pN0OishW6D/G2zPoxenwkGRe8J45rs=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Type:
          Content-Transfer-Encoding;
-        b=POKycPna3sFHaptSpPG8JFNhdv+KWPJt4Fqq7qra/U5uujHxVhga0mA2hyYe3oLWO
-         rvMjdBQgQaYdhe3tYVq3xzWzC7PXLH9gVg6v6GfrdnHKhzPSXOdrUzDa4Sfy+FpWme
-         AYx8XN4QHijtxUQThz9jDsFglp/BwmD6wmVyo2Ou4HoX36ySg8r0DnnWDfRMrkzmXC
-         XvSXsG7L9llJHump4bjV4yoH02Li7EYgdYhEFhGR3d1oO3a9DGx7nb70VEc+guaDrP
-         BAn4DIKE83X0lqImHCnmIIbgjVMdzz9Q4ePUhHR77cnRWD+JGehn4V8I2IYZgTvKbn
-         0ENu9Hbk0xmXw==
+        b=mHFm/5BSNkpiIizmFlxJBFlZ5AY3WiRyFEePDr9oWQ473aDpCVLOrRoB6nx0KwvjS
+         HYxtHV5bRdS23e6YHjzo2c+4shRrFMHOLx4DXn/XfeN/VXzFHKHJ3KcmukN5izfPyb
+         pHTAlnOE1JXeN8ZEnA8uY3CFSvD4vUReVd21A/cehRYjo7rr8nZkwkZRgNDX5nKtok
+         smxmGyZ/IUUAmmt6AVIAeIi1avYMjafvV4pQGVOwa3mtrI0if+Hf3GfcoNiNEivQgW
+         LI/+XnVIJppguZ69lKQjgs9cAKna0rPAqcb1junJAQrye8vz3mCYu4dXF/xVJyE7xv
+         JySHepvCjAlrA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/19 11:17 PM, Christoph Hellwig wrote:
-> On Tue, Jul 23, 2019 at 09:25:06PM -0700, john.hubbard@gmail.com wrote:
->> * Store, in the iov_iter, a "came from gup (get_user_pages)" parameter.
->>   Then, use the new iov_iter_get_pages_use_gup() to retrieve it when
->>   it is time to release the pages. That allows choosing between put_page=
-()
->>   and put_user_page*().
->>
->> * Pass in one more piece of information to bio_release_pages: a "from_gu=
-p"
->>   parameter. Similar use as above.
->>
->> * Change the block layer, and several file systems, to use
->>   put_user_page*().
->=20
-> I think we can do this in a simple and better way.  We have 5 ITER_*
-> types.  Of those ITER_DISCARD as the name suggests never uses pages, so
-> we can skip handling it.  ITER_PIPE is rejected =D1=96n the direct I/O pa=
-th,
-> which leaves us with three.
->=20
-> Out of those ITER_BVEC needs a user page reference, so we want to call
+Testing the latest linux git tree turned up a few bugs with page
+migration to and from ZONE_DEVICE private and anonymous pages.
+Hopefully this series clarifies how ZONE_DEVICE private struct page
+uses the same mapping and index fields from the source anonymous page
+mapping.
 
-               ^ ITER_IOVEC, I hope. Otherwise I'm hopeless lost. :)
+Changes from v2 to v3:
 
-> put_user_page* on it.  ITER_BVEC always already has page reference,
-> which means in the block direct I/O path path we alread don't take
-> a page reference.  We should extent that handling to all other calls
-> of iov_iter_get_pages / iov_iter_get_pages_alloc.  I think we should
-> just reject ITER_KVEC for direct I/O as well as we have no users and
-> it is rather pointless.  Alternatively if we see a use for it the
-> callers should always have a life page reference anyway (or might
-> be on kmalloc memory), so we really should not take a reference either.
->=20
-> In other words:  the only time we should ever have to put a page in
-> this patch is when they are user pages.  We'll need to clean up
-> various bits of code for that, but that can be done gradually before
-> even getting to the actual put_user_pages conversion.
->=20
+Patch #1 is basically new (like v1 but with comments from v2) to
+accommodate Matthew Wilcox's NAK of v2 and Christoph's objection to
+adding _zd_pad fields in v1.
 
-Sounds great. I'm part way into it and it doesn't look too bad. The main
-question is where to scatter various checks and assertions, to keep
-the kvecs out of direct I/0. Or at least keep the gups away from=20
-direct I/0.
+Patch #2 adds reviewed-by
 
+Patch #3 adds comments explaining the reason for setting "subpage".
 
-thanks,
+Changes from v1 to v2:
+
+Patch #1 merges ZONE_DEVICE page struct into a union of lru and
+a struct for ZONE_DEVICE fields. So, basically a new patch.
+
+Patch #2 updates the code comments for clearing page->mapping as
+suggested by John Hubbard.
+
+Patch #3 is unchanged from the previous posting but note that
+Andrew Morton has v1 queued in v5.2-mmotm-2019-07-18-16-08.
+
+Ralph Campbell (3):
+  mm: document zone device struct page reserved fields
+  mm/hmm: fix ZONE_DEVICE anon page mapping reuse
+  mm/hmm: Fix bad subpage pointer in try_to_unmap_one
+
+ include/linux/mm_types.h | 9 ++++++++-
+ kernel/memremap.c        | 4 ++++
+ mm/rmap.c                | 1 +
+ 3 files changed, 13 insertions(+), 1 deletion(-)
+
 --=20
-John Hubbard
-NVIDIA
+2.20.1
+
