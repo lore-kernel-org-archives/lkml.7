@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA289C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC4BC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8EE20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7EB214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998138;
-	bh=bJYU+BBdlRGXP2j5ps58YvTfzAMLYvWUtZycSO9cWgc=;
+	s=default; t=1563998143;
+	bh=Qx3p2aY8FmQsvDIKJs05yFhKahVc0zt4Suew8NhSa50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aBYmyxBMey/jmcJ/LU8rLiZn8TI3+HkR/UDXk5q5gALkYrx4tiO6VHeqjFPdLUNZf
-	 dQIIHvAeBkPb701N0J2e3uf2qyTiB2ZnlS44waJooKW5vzJF3Nk0K+BLGrmQwe1Xf/
-	 2PJNnDyQ6Tcg7MeLJOBJaVbSlguFHdQAp60dfM3U=
+	b=DDIKDnM51Cye8+/hBVJlIlkAwSy7HqIfKQ6sDXlciXt9Tpz28EQISFhp1t1mzr2vx
+	 TKGtePf9+J8ouY6nRCq+FWwx7D2SDzSV6LY8fJUL2ooyVfHSpGKsCJTgtTx4lyO2X1
+	 r8q7nU7UT+1GdC9Qc9jgD6qfEJhCNeFko2ubYbKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404537AbfGXTzh (ORCPT
+        id S2391415AbfGXTzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:55:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39304 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:55:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404508AbfGXTzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:55:32 -0400
+        id S2404523AbfGXTzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:55:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20572205C9;
-        Wed, 24 Jul 2019 19:55:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA1E4205C9;
+        Wed, 24 Jul 2019 19:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998131;
-        bh=bJYU+BBdlRGXP2j5ps58YvTfzAMLYvWUtZycSO9cWgc=;
+        s=default; t=1563998134;
+        bh=Qx3p2aY8FmQsvDIKJs05yFhKahVc0zt4Suew8NhSa50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KYAX6HXKl8xaFxrR1hRBTiaUrjJ7yQwJGBkSHKr8lrtDv2cr4ipd9qI2gzI6IlQzS
-         +Kpa2tdbqX3soSB3UVNndooSrVNn8kuehdn7/1VF0zqdMIG5VIXkAsawytPp4XF15A
-         Tzfpn3BQz5td56YdSpIJi6O5nBzaL4hXYJX9tzAA=
+        b=WIbxuGdyRDmkCHsIs8HlIRxRZCHDSxiL+j/2tHbVv3NRsidOC9nHXqiGgC8GaxULo
+         ovmuEKe3HzLts8eb91ZJnCpBnEF8ob0LFM2ooIlMs7LV3IAeuPr6TgpL3OpKbU6RWT
+         Mgt4hQ3ioqHuOV/90ck7PRJO07vtagyrn15leRRo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 215/371] gtp: fix Illegal context switch in RCU read-side critical section.
-Date:   Wed, 24 Jul 2019 21:19:27 +0200
-Message-Id: <20190724191740.731183797@linuxfoundation.org>
+Subject: [PATCH 5.1 206/371] Bluetooth: Add new 13d3:3501 QCA_ROME device
+Date:   Wed, 24 Jul 2019 21:19:18 +0200
+Message-Id: <20190724191740.103605694@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,69 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3f167e1921865b379a9becf03828e7202c7b4917 ]
+[ Upstream commit 881cec4f6b4da78e54b73c046a60f39315964c7d ]
 
-ipv4_pdp_add() is called in RCU read-side critical section.
-So GFP_KERNEL should not be used in the function.
-This patch make ipv4_pdp_add() to use GFP_ATOMIC instead of GFP_KERNEL.
+Without the QCA ROME setup routine this adapter fails to establish a SCO
+connection.
 
-Test commands:
-gtp-link add gtp1 &
-gtp-tunnel add gtp1 v1 100 200 1.1.1.1 2.2.2.2
+T:  Bus=01 Lev=01 Prnt=01 Port=04 Cnt=01 Dev#=  2 Spd=12  MxCh= 0
+D:  Ver= 1.10 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
+P:  Vendor=13d3 ProdID=3501 Rev=00.01
+C:  #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=100mA
+I:  If#=0x0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+I:  If#=0x1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
 
-Splat looks like:
-[  130.618881] =============================
-[  130.626382] WARNING: suspicious RCU usage
-[  130.626994] 5.2.0-rc6+ #50 Not tainted
-[  130.627622] -----------------------------
-[  130.628223] ./include/linux/rcupdate.h:266 Illegal context switch in RCU read-side critical section!
-[  130.629684]
-[  130.629684] other info that might help us debug this:
-[  130.629684]
-[  130.631022]
-[  130.631022] rcu_scheduler_active = 2, debug_locks = 1
-[  130.632136] 4 locks held by gtp-tunnel/1025:
-[  130.632925]  #0: 000000002b93c8b7 (cb_lock){++++}, at: genl_rcv+0x15/0x40
-[  130.634159]  #1: 00000000f17bc999 (genl_mutex){+.+.}, at: genl_rcv_msg+0xfb/0x130
-[  130.635487]  #2: 00000000c644ed8e (rtnl_mutex){+.+.}, at: gtp_genl_new_pdp+0x18c/0x1150 [gtp]
-[  130.636936]  #3: 0000000007a1cde7 (rcu_read_lock){....}, at: gtp_genl_new_pdp+0x187/0x1150 [gtp]
-[  130.638348]
-[  130.638348] stack backtrace:
-[  130.639062] CPU: 1 PID: 1025 Comm: gtp-tunnel Not tainted 5.2.0-rc6+ #50
-[  130.641318] Call Trace:
-[  130.641707]  dump_stack+0x7c/0xbb
-[  130.642252]  ___might_sleep+0x2c0/0x3b0
-[  130.642862]  kmem_cache_alloc_trace+0x1cd/0x2b0
-[  130.643591]  gtp_genl_new_pdp+0x6c5/0x1150 [gtp]
-[  130.644371]  genl_family_rcv_msg+0x63a/0x1030
-[  130.645074]  ? mutex_lock_io_nested+0x1090/0x1090
-[  130.645845]  ? genl_unregister_family+0x630/0x630
-[  130.646592]  ? debug_show_all_locks+0x2d0/0x2d0
-[  130.647293]  ? check_flags.part.40+0x440/0x440
-[  130.648099]  genl_rcv_msg+0xa3/0x130
-[ ... ]
-
-Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/bluetooth/btusb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index f45a806b6c06..6f1ad7ccaea6 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -958,7 +958,7 @@ static int ipv4_pdp_add(struct gtp_dev *gtp, struct sock *sk,
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 0e2c86da6479..4c9f11766e82 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -281,6 +281,7 @@ static const struct usb_device_id blacklist_table[] = {
+ 	{ USB_DEVICE(0x04ca, 0x301a), .driver_info = BTUSB_QCA_ROME },
+ 	{ USB_DEVICE(0x13d3, 0x3491), .driver_info = BTUSB_QCA_ROME },
+ 	{ USB_DEVICE(0x13d3, 0x3496), .driver_info = BTUSB_QCA_ROME },
++	{ USB_DEVICE(0x13d3, 0x3501), .driver_info = BTUSB_QCA_ROME },
  
- 	}
- 
--	pctx = kmalloc(sizeof(struct pdp_ctx), GFP_KERNEL);
-+	pctx = kmalloc(sizeof(*pctx), GFP_ATOMIC);
- 	if (pctx == NULL)
- 		return -ENOMEM;
- 
+ 	/* Broadcom BCM2035 */
+ 	{ USB_DEVICE(0x0a5c, 0x2009), .driver_info = BTUSB_BCM92035 },
 -- 
 2.20.1
 
