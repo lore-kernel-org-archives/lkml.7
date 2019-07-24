@@ -2,117 +2,105 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 069D9C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FEBC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D04A72189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C8D21880
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:45:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qk+DAsNe"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B1lXYQsc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388387AbfGXXj1 (ORCPT
+        id S2387711AbfGXXpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 19:39:27 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38608 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729749AbfGXXjW (ORCPT
+        Wed, 24 Jul 2019 19:45:05 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:42089 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbfGXXpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 19:39:22 -0400
-Received: by mail-io1-f67.google.com with SMTP id j6so18152107ioa.5;
-        Wed, 24 Jul 2019 16:39:22 -0700 (PDT)
+        Wed, 24 Jul 2019 19:45:05 -0400
+Received: by mail-pf1-f202.google.com with SMTP id 21so29577427pfu.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 16:45:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iHIcdZJ5DH84ujFpUNF0zbPMo8AZLf+hnT10L/puUdA=;
-        b=Qk+DAsNep7be2o8vxasuB63X1XihHLXN+ZYWVBogQMSCyNVadQYOYO7BC4q8JFCJpH
-         IDpu6/S5LtY57NZcKNSJd7NcfHUVe1rseFUhj9lhIgBKrde0Rh+H2pxhPHprAPVXYGr4
-         gY1OY9gT2hKlITPmDMoT1ymbZEQlm3sYvSmJbgc4oVBGgwp9R1Y9XajbZJn2PIdT0rPn
-         T1KCfUvNSKzVTrzbCLWNAN23YaGgEPn1CZc3iGwkhLWuQBOU/+LoJacoY74t01PPofm6
-         2Fd30Fvy2oDPKBZ46jufPxEkQ0D3f1KIZf/+6oDaw5YkOS474KdfMvF1uNxLTRLJU1cL
-         +OMg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=GsusRCebKftTZon46v3ZWIHJN0uYkKUK209eUAX0ooM=;
+        b=B1lXYQsc/LR94o2K8zpnGLTTgfWtDcLlDAn0OQ7TSesRexUMZCK2ldktGPUDi3v24L
+         UQKCPpY38Wwesil6AX13EJvvDVC2l1UFjEmMIw70UEZ+DcN5s2p2/mPTT+nI+XlrbwV0
+         uU8i6zW0eTXqSpG9fMwKuChsZHG/ghe+h1Tn7JO4noRWe9LQse+7A2GLxBPLPs8MuVcS
+         XaXNlQdg5SgrUyRsYwN+2GJm/OrOJv0zU70rPQvwTsR9yeInU2S2S2MsGt7vJIzFBoai
+         KekF9eidTCSCWbLBuCBwIbLe58ePuTZjAcefIqkXirP4P6dD8f6wl1btQg8Wf2pWngc4
+         1enA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iHIcdZJ5DH84ujFpUNF0zbPMo8AZLf+hnT10L/puUdA=;
-        b=DsPKmBit0Y7ay5zyo5tfd5uCQF73NPLUFGVv4IrJrlkqCBq9UCQ0EaJE7UIgmdtcTb
-         8P7YtF1ECmPdKIHn1klpGvRL4aUfUYoAuHA9F3SuMseu0xGL+n0laIy04TInh1xjLBB9
-         3oAL0BWMifZqLe6RJM5HcmMD4ItYXMDvbG9Y1CfYJieWvDaXSWsOCHQgYhvRhA15EASP
-         5RHr1wMAc3Olw9LsK4e7nwR0kxTEfVq3hfETXLI7ad2BORjeAaSiEqo2bGkwGyMwwLHp
-         7AKrCH0IcQgnj9Nu7DSsJEH5EAj2cWLKIfUwsvdHNU7334Opjzw9mGyopiuBz6jNHXKV
-         bGxQ==
-X-Gm-Message-State: APjAAAVYgGQ9fhjGbKR6p19EBkFKKec2pMdUOTL9eGpRHCMFqjboxaTV
-        zd6jkzHDk7mWszl6ZPcgoiA=
-X-Google-Smtp-Source: APXvYqw7D0LWHVBi4GlpZqzVDpgwErE+kicK1CPnm/4ij5UTN/bhW3vaCwtXopOyzvrK/3V6EDb57Q==
-X-Received: by 2002:a05:6602:2183:: with SMTP id b3mr67144001iob.249.1564011561758;
-        Wed, 24 Jul 2019 16:39:21 -0700 (PDT)
-Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id b14sm51612959iod.33.2019.07.24.16.39.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 16:39:21 -0700 (PDT)
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     skunberg.kelsey@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v2 02/11] PCI: Move PME declarations to drivers/pci/pci.h
-Date:   Wed, 24 Jul 2019 17:38:39 -0600
-Message-Id: <20190724233848.73327-3-skunberg.kelsey@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190724233848.73327-1-skunberg.kelsey@gmail.com>
-References: <20190711222341.111556-1-skunberg.kelsey@gmail.com>
- <20190724233848.73327-1-skunberg.kelsey@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=GsusRCebKftTZon46v3ZWIHJN0uYkKUK209eUAX0ooM=;
+        b=dUeQ/1w9QUZvvHV2vg4R8djq8aOpdhq5tMxXrNCSPB9tO+tIDYsif36Roh2WoRBz8R
+         Eml7JpzaIohXvZtbrjMLxtlwKezx6BulVzAZ60G1QGridBvXSvFkRdwB378m5hs7fEQa
+         YMtP9s9i9dIMCnsXtUm4Z/Oyc+wVrTZ8fpg95GPOtqkjub1xl473EXXOUO1v3VQpGHPd
+         Gth5ei7NyIVJJ8Ny1bb440Eo60K75o9j14HioCg1d8cvcLSmZxFaVBQfa30N2Sz18EfK
+         iT6LLsk+WJv1kT0yuotpGVFsgo5tRDezq0MmxFDniMv5QQEcKEFgEIrjIETumkfxZfBd
+         iTPQ==
+X-Gm-Message-State: APjAAAUdYQR5foe5FvA1LBvaorniqwzjgSOeYTau0FfHrjJlk3To2E8u
+        21WuXFjkCoC387wycfA9HdgOZx1n
+X-Google-Smtp-Source: APXvYqw6hUOHUkcFR49i4DzhDdF0tm+5r6GTEibaj0QMkvIZmrIIcmwscukh0UoEEARYZzwvJttkwEWy
+X-Received: by 2002:a63:7a06:: with SMTP id v6mr84513475pgc.115.1564011904078;
+ Wed, 24 Jul 2019 16:45:04 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 16:44:57 -0700
+Message-Id: <20190724234500.253358-1-nums@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
+Subject: [PATCH 0/3] Perf uninitialized value fixes
+From:   Numfor Mbiziwo-Tiapo <nums@google.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, songliubraving@fb.com, mbd@fb.com
+Cc:     linux-kernel@vger.kernel.org, irogers@google.com,
+        eranian@google.com, Numfor Mbiziwo-Tiapo <nums@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pci_check_pme_status() and pci_pme_wakeup_bus() are only
-called within drivers/pci/. Since declarations do not need to be visible
-to the rest of the kernel, move to drivers/pci/pci.h.
+These patches are all warnings that the MSAN (Memory Sanitizer) build
+of perf has caught.
 
-Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
----
- drivers/pci/pci.h   | 2 ++
- include/linux/pci.h | 2 --
- 2 files changed, 2 insertions(+), 2 deletions(-)
+To build perf with MSAN enabled run:
+make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
+ -fsanitize-memory-track-origins"
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 708413632429..ad1fe54ab8ee 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -89,6 +89,8 @@ void pci_power_up(struct pci_dev *dev);
- void pci_disable_enabled_device(struct pci_dev *dev);
- int pci_finish_runtime_suspend(struct pci_dev *dev);
- void pcie_clear_root_pme_status(struct pci_dev *dev);
-+bool pci_check_pme_status(struct pci_dev *dev);
-+void pci_pme_wakeup_bus(struct pci_bus *bus);
- int __pci_pme_wakeup(struct pci_dev *dev, void *ign);
- void pci_pme_restore(struct pci_dev *dev);
- bool pci_dev_need_resume(struct pci_dev *dev);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 238449460210..e1f784de459f 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1236,8 +1236,6 @@ int pci_wake_from_d3(struct pci_dev *dev, bool enable);
- int pci_prepare_to_sleep(struct pci_dev *dev);
- int pci_back_from_sleep(struct pci_dev *dev);
- bool pci_dev_run_wake(struct pci_dev *dev);
--bool pci_check_pme_status(struct pci_dev *dev);
--void pci_pme_wakeup_bus(struct pci_bus *bus);
- void pci_d3cold_enable(struct pci_dev *dev);
- void pci_d3cold_disable(struct pci_dev *dev);
- bool pcie_relaxed_ordering_enabled(struct pci_dev *dev);
+(The -fsanitizer-memory-track-origins makes the bugs clearer but
+isn't strictly necessary.)
+
+(Additionally, llvm might have to be installed and clang might have to
+be specified as the compiler - export CC=/usr/bin/clang).
+
+The patches "Fix util.c use of uninitialized value warning" and "Fix 
+annotate.c use of uninitialized value error" build on top of each other
+(the changes in Fix util.c use of uninitialized value warning must be
+made first).
+
+When running the commands provided in the repro instructions, MSAN will
+generate false positive uninitialized memory errors. This is happening
+because libc is not MSAN-instrumented. Finding a way to build libc with
+MSAN will get rid of these false positives and allow the real warnings
+mentioned in the patches to be shown. 
+
+Numfor Mbiziwo-Tiapo (3):
+  Fix util.c use of uninitialized value warning
+  Fix annotate.c use of uninitialized value error
+  Fix sched-messaging.c use of uninitialized value errors
+
+ tools/perf/bench/sched-messaging.c |  3 ++-
+ tools/perf/util/annotate.c         | 15 +++++++++++----
+ tools/perf/util/header.c           |  2 +-
+ 3 files changed, 14 insertions(+), 6 deletions(-)
+
 -- 
-2.20.1
+2.22.0.657.g960e92d24f-goog
 
