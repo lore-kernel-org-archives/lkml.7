@@ -2,55 +2,53 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED90C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EED4C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1837217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9EBE214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997686;
-	bh=UbNGCPG50lJAwM2kHoPTQY+0QvJ1SonV0cTOwFZihyQ=;
+	s=default; t=1563997691;
+	bh=gz2H/pXpGaEFJ3NWwbUY2T7vre0nwdVuho6rGUaJPes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gyOGrSoOQkl8G3K2ClUxQuCpZOFTwncc3YaBvMP5D0qeetQYqTItVgV+T9IacVQDS
-	 ws+zD2od2q6fgvFdUf+1meKf3BB5FtY6tPzHqiRqciZEPDftn4jKEzhHAkIcbGqtIQ
-	 jrfjVnZdDxUHPv1z+ttzbplCxEAdfqE4+o+ybQgg=
+	b=SAMFwksY3iJAgZMIeQQFIpGKVEHBy/WRv365PIB58gnO7x/oU6rJb07qpOUKtwfSe
+	 J0z5jEdDHjTk3DtLSN28RpJFW+osz5z1Y94tVlYFjZgKiH3qbSh9eG+O9k5plZDnck
+	 0rnUr3rhGA6Idtr/Kf2XYBbD/JaE41CvFL5Zrgww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390873AbfGXTsF (ORCPT
+        id S2390438AbfGXTsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:48:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55110 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:48:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391351AbfGXTsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:48:04 -0400
+        id S2391351AbfGXTsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:48:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C30DF205C9;
-        Wed, 24 Jul 2019 19:48:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61077214AF;
+        Wed, 24 Jul 2019 19:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997683;
-        bh=UbNGCPG50lJAwM2kHoPTQY+0QvJ1SonV0cTOwFZihyQ=;
+        s=default; t=1563997685;
+        bh=gz2H/pXpGaEFJ3NWwbUY2T7vre0nwdVuho6rGUaJPes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sc46rnKFJ/ovV//j0By+YbCFA1NhZaKrQHkjs/ij79/3LcOvUfGWWrJR7T16/4eUR
-         BTHpfRV7Y3ul0hRXzJe7vaTk3pndKap/4318Cm+WF6bc7xqtXUnnPTPv0i6cuVnK36
-         5bq4DrpYcVyCHswjZiZRnC3ffivn7cZxZPdHW3zg=
+        b=M/y8bgWJXMcSqK1J9Sk5pZRqVqAk1aPqewVeq7LEt4fpd9LRCGpLjd5Up0XFmN7RP
+         FT0Osu6+gqauGmI5hpwgO2AIBlgZaqdg4UczONoYHYgXgyTAD1VYJ4KC7CjJN0/Pzv
+         WTtlI/jSX2BFgdGHMjqzslWYMI5QWLAig1IgO9zU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 106/371] perf evsel: Make perf_evsel__name() accept a NULL argument
-Date:   Wed, 24 Jul 2019 21:17:38 +0200
-Message-Id: <20190724191732.828551492@linuxfoundation.org>
+Subject: [PATCH 5.1 107/371] vhost_net: disable zerocopy by default
+Date:   Wed, 24 Jul 2019 21:17:39 +0200
+Message-Id: <20190724191732.899609057@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -63,52 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fdbdd7e8580eac9bdafa532746c865644d125e34 ]
+[ Upstream commit 098eadce3c622c07b328d0a43dda379b38cf7c5e ]
 
-In which case it simply returns "unknown", like when it can't figure out
-the evsel->name value.
+Vhost_net was known to suffer from HOL[1] issues which is not easy to
+fix. Several downstream disable the feature by default. What's more,
+the datapath was split and datacopy path got the support of batching
+and XDP support recently which makes it faster than zerocopy part for
+small packets transmission.
 
-This makes this code more robust and fixes a problem in 'perf trace'
-where a NULL evsel was being passed to a routine that only used the
-evsel for printing its name when a invalid syscall id was passed.
+It looks to me that disable zerocopy by default is more
+appropriate. It cold be enabled by default again in the future if we
+fix the above issues.
 
-Reported-by: Leo Yan <leo.yan@linaro.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-f30ztaasku3z935cn3ak3h53@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+[1] https://patchwork.kernel.org/patch/3787671/
+
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/evsel.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/vhost/net.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 966360844fff..7ca79cfe1aea 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -584,6 +584,9 @@ const char *perf_evsel__name(struct perf_evsel *evsel)
- {
- 	char bf[128];
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index df51a35cf537..8beacbee2553 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -36,7 +36,7 @@
  
-+	if (!evsel)
-+		goto out_unknown;
-+
- 	if (evsel->name)
- 		return evsel->name;
+ #include "vhost.h"
  
-@@ -620,7 +623,10 @@ const char *perf_evsel__name(struct perf_evsel *evsel)
- 
- 	evsel->name = strdup(bf);
- 
--	return evsel->name ?: "unknown";
-+	if (evsel->name)
-+		return evsel->name;
-+out_unknown:
-+	return "unknown";
- }
- 
- const char *perf_evsel__group_name(struct perf_evsel *evsel)
+-static int experimental_zcopytx = 1;
++static int experimental_zcopytx = 0;
+ module_param(experimental_zcopytx, int, 0444);
+ MODULE_PARM_DESC(experimental_zcopytx, "Enable Zero Copy TX;"
+ 		                       " 1 -Enable; 0 - Disable");
 -- 
 2.20.1
 
