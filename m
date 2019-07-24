@@ -2,58 +2,53 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DATE_IN_PAST_06_12,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD38C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC83C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D3222BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E64A822BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033180;
-	bh=aoMdvRpuYKhI8barI7UHl9rwv9UGaS5nDWQl5NAdW/I=;
+	s=default; t=1564033186;
+	bh=l1Cm2EL1qXcjbICe/XrmTns1yILFXoIX9ISpqXLSLXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vzt/wJ2FjfDglRKbGTSe8LfZK5ZOVl1DiN9Isx8CHeObGUGBn5uerPc9RoFHlUOxF
-	 3EfRENhRsmzH/SE6ah+psauMopXbkHmOJGS7gBmB2bbBckV6MCzme90ZhA1Sk9fbj7
-	 YSBJLVufIeOBy8VKhymUCDiVuEUDJTA7UaRqIYRk=
+	b=cHofMF+7yITXBBhiwrOHWVOvy1NTLwLpZSMgjOB/U1AZZE5sAfLorD9c8+/MLezaD
+	 E2JfIfXsq+GLQL2UGUMGki3S5CBVplHFcOYWMYAdi8XYqKj7pXHw9McWWQy4yvYnHH
+	 JU2Fg9omtNKHeAfPnYePwwahzQxSBe/jKfu/yiZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404115AbfGYFji (ORCPT
+        id S2404146AbfGYFjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:39:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53816 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:39:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404099AbfGYFje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:39:34 -0400
+        id S2404118AbfGYFjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:39:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83CCC22BEF;
-        Thu, 25 Jul 2019 05:39:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2D9E22BED;
+        Thu, 25 Jul 2019 05:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033174;
-        bh=aoMdvRpuYKhI8barI7UHl9rwv9UGaS5nDWQl5NAdW/I=;
+        s=default; t=1564033179;
+        bh=l1Cm2EL1qXcjbICe/XrmTns1yILFXoIX9ISpqXLSLXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cRooWgfIGRV+Adrfs5U7euuzifvQ6IxZvL5uzuyYwqelQXwK1YUV12sHsCUCKs3dg
-         y6D0CJfaqcClu3WR/QciZ5DZE63h9UmiON0KIzKdcVfIg3Txc3mwf7/l1dd27+ycao
-         qTnZU8ztZUG6NNqW5t9P1ZSa72piikqnfIbGaglo=
+        b=vI6KY76nVVbqgeQO7W0ND8/hQjuFuCM/nGTcg6vMuEeILZWcc8zywLdZryKU0bVF9
+         S6Ehqq2BR0oGKjz0wJbGr8JBKxNLNWg/azL7oHp9/TGDNi+w1jVw6wjoExovvAU9+U
+         BGD41LSCsF4Nf5By6Pc5jf9f82DLMDfXomiZTGcI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        Doug Ledford <dledford@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 116/271] xsk: Properly terminate assignment in xskq_produce_flush_desc
-Date:   Wed, 24 Jul 2019 21:19:45 +0200
-Message-Id: <20190724191705.183354868@linuxfoundation.org>
+Subject: [PATCH 4.19 082/271] ipoib: correcly show a VF hardware address
+Date:   Wed, 24 Jul 2019 21:19:11 +0200
+Message-Id: <20190724191702.214797213@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -66,49 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f7019b7b0ad14bde732b8953161994edfc384953 ]
+[ Upstream commit 64d701c608fea362881e823b666327f5d28d7ffd ]
 
-Clang warns:
+in the case of IPoIB with SRIOV enabled hardware
+ip link show command incorrecly prints
+0 instead of a VF hardware address.
 
-In file included from net/xdp/xsk_queue.c:10:
-net/xdp/xsk_queue.h:292:2: warning: expression result unused
-[-Wunused-value]
-        WRITE_ONCE(q->ring->producer, q->prod_tail);
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-include/linux/compiler.h:284:6: note: expanded from macro 'WRITE_ONCE'
-        __u.__val;                                      \
-        ~~~ ^~~~~
-1 warning generated.
+Before:
+11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
+state UP mode DEFAULT group default qlen 256
+    link/infiniband
+80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
+00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    vf 0 MAC 00:00:00:00:00:00, spoof checking off, link-state disable,
+trust off, query_rss off
+...
+After:
+11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
+state UP mode DEFAULT group default qlen 256
+    link/infiniband
+80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
+00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    vf 0     link/infiniband
+80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
+00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff, spoof
+checking off, link-state disable, trust off, query_rss off
 
-The q->prod_tail assignment has a comma at the end, not a semi-colon.
-Fix that so clang no longer warns and everything works as expected.
+v1->v2: just copy an address without modifing ifla_vf_mac
+v2->v3: update the changelog
 
-Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
-Link: https://github.com/ClangBuiltLinux/linux/issues/544
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Acked-by: Björn Töpel <bjorn.topel@intel.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Denis Kirjanov <kda@linux-powerpc.org>
+Acked-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xsk_queue.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/ulp/ipoib/ipoib_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/xdp/xsk_queue.h b/net/xdp/xsk_queue.h
-index 8a64b150be54..fe96c0d039f2 100644
---- a/net/xdp/xsk_queue.h
-+++ b/net/xdp/xsk_queue.h
-@@ -239,7 +239,7 @@ static inline void xskq_produce_flush_desc(struct xsk_queue *q)
- 	/* Order producer and data */
- 	smp_wmb();
+diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
+index 30f840f874b3..009615499b37 100644
+--- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
++++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
+@@ -1997,6 +1997,7 @@ static int ipoib_get_vf_config(struct net_device *dev, int vf,
+ 		return err;
  
--	q->prod_tail = q->prod_head,
-+	q->prod_tail = q->prod_head;
- 	WRITE_ONCE(q->ring->producer, q->prod_tail);
+ 	ivf->vf = vf;
++	memcpy(ivf->mac, dev->dev_addr, dev->addr_len);
+ 
+ 	return 0;
  }
- 
 -- 
 2.20.1
 
