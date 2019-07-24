@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D753BC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3437DC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A948B20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA0D2147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997936;
-	bh=6+Wdk9P84D5keGPfCrFXElQqbeYWyusl5dcj9PAplls=;
+	s=default; t=1563997940;
+	bh=LtA1RB9Bg1G5SyqVDN+x6J+YySV0lxzHatCV6C1Neug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N3gTK3oFiJP3EFdZGW3cpJr/XQQUrubShcwbMTyN1ioXtsoe6Jclb5TLmOWCK1x/v
-	 8/8hTtFEKmeAoVUxY+xAuFS7Yu4RMlrMr+ztXw4oUQ0quqynYUFCDLGmjU2Rjk92RV
-	 ZjfnDSbCjE1rK76ctEkAVKAIvFGUfB40j/67g/Ao=
+	b=iuBgrFzlP2Omvvm3AZLD5IYThiZbi/j7vsixUzbX+gQeq1QY92mgzpytL9CjmJOwm
+	 4PvN2GiSx8EbsoBQORuCOjmYZSO5KlUgcpCKxIiOHpyi3gOGmC/E/iVyfBXZPgA8Ng
+	 bkwZHSQZOgMMR7QA4qbFJgfUOn9qEZ4IJhlOfTNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404113AbfGXTwP (ORCPT
+        id S2404126AbfGXTwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:52:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33810 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:52:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404095AbfGXTwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:52:11 -0400
+        id S2404107AbfGXTwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:52:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55A5A205C9;
-        Wed, 24 Jul 2019 19:52:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1D652147A;
+        Wed, 24 Jul 2019 19:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997930;
-        bh=6+Wdk9P84D5keGPfCrFXElQqbeYWyusl5dcj9PAplls=;
+        s=default; t=1563997933;
+        bh=LtA1RB9Bg1G5SyqVDN+x6J+YySV0lxzHatCV6C1Neug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WdlDNtydXlYNOIpE0mpM6LrOddEm+qpwJ35keLkErL2HR8XPgRstJq6vnOl4OqVKL
-         WTXLSiTuUHBCEZBKbLtRPrLCIONE2eU6Jg0a7pW6DIt38CQRagI4L9mVwlstUqBWDu
-         87K2dun5JtDp9tZlkjc1QVEJg04+381pLaenE7Hg=
+        b=2Ac6XwSMvjFaGWLOjlSyBTDCu6LwJqDBYk672n1F2GA9zzLR4od94hOcxyFW130NW
+         O2C291NFkrkqBVgMt1W2lx/xaCmw/Rtk4sxCFVSnNQAC3BnYXRc5lq6qyCTHxMVICU
+         iGPf9yh8K8/pO1fdP+iK+4bMZ8dbIjYLXTzJv/YE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zefir Kurtisi <zefir.kurtisi@neratec.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 165/371] ath9k: correctly handle short radar pulses
-Date:   Wed, 24 Jul 2019 21:18:37 +0200
-Message-Id: <20190724191737.611582326@linuxfoundation.org>
+Subject: [PATCH 5.1 192/371] vxlan: do not destroy fdb if register_netdevice() is failed
+Date:   Wed, 24 Jul 2019 21:19:04 +0200
+Message-Id: <20190724191739.360882915@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,56 +61,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit df5c4150501ee7e86383be88f6490d970adcf157 ]
+[ Upstream commit 7c31e54aeee517d1318dfc0bde9fa7de75893dc6 ]
 
-In commit 3c0efb745a17 ("ath9k: discard undersized packets")
-the lower bound of RX packets was set to 10 (min ACK size) to
-filter those that would otherwise be treated as invalid at
-mac80211.
+__vxlan_dev_create() destroys FDB using specific pointer which indicates
+a fdb when error occurs.
+But that pointer should not be used when register_netdevice() fails because
+register_netdevice() internally destroys fdb when error occurs.
 
-Alas, short radar pulses are reported as PHY_ERROR frames
-with length set to 3. Therefore their detection stopped
-working after that commit.
+This patch makes vxlan_fdb_create() to do not link fdb entry to vxlan dev
+internally.
+Instead, a new function vxlan_fdb_insert() is added to link fdb to vxlan
+dev.
 
-NOTE: ath9k drivers built thereafter will not pass DFS
-certification.
+vxlan_fdb_insert() is called after calling register_netdevice().
+This routine can avoid situation that ->ndo_uninit() destroys fdb entry
+in error path of register_netdevice().
+Hence, error path of __vxlan_dev_create() routine can have an opportunity
+to destroy default fdb entry by hand.
 
-This extends the criteria for short packets to explicitly
-handle PHY_ERROR frames.
+Test command
+    ip link add bonding_masters type vxlan id 0 group 239.1.1.1 \
+	    dev enp0s9 dstport 4789
 
-Fixes: 3c0efb745a17 ("ath9k: discard undersized packets")
-Signed-off-by: Zefir Kurtisi <zefir.kurtisi@neratec.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Splat looks like:
+[  213.392816] kasan: GPF could be caused by NULL-ptr deref or user memory access
+[  213.401257] general protection fault: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+[  213.402178] CPU: 0 PID: 1414 Comm: ip Not tainted 5.2.0-rc5+ #256
+[  213.402178] RIP: 0010:vxlan_fdb_destroy+0x120/0x220 [vxlan]
+[  213.402178] Code: df 48 8b 2b 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 06 01 00 00 4c 8b 63 08 48 b8 00 00 00 00 00 fc d
+[  213.402178] RSP: 0018:ffff88810cb9f0a0 EFLAGS: 00010202
+[  213.402178] RAX: dffffc0000000000 RBX: ffff888101d4a8c8 RCX: 0000000000000000
+[  213.402178] RDX: 1bd5a00000000040 RSI: ffff888101d4a8c8 RDI: ffff888101d4a8d0
+[  213.402178] RBP: 0000000000000000 R08: fffffbfff22b72d9 R09: 0000000000000000
+[  213.402178] R10: 00000000ffffffef R11: 0000000000000000 R12: dead000000000200
+[  213.402178] R13: ffff88810cb9f1f8 R14: ffff88810efccda0 R15: ffff88810efccda0
+[  213.402178] FS:  00007f7f6621a0c0(0000) GS:ffff88811b000000(0000) knlGS:0000000000000000
+[  213.402178] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  213.402178] CR2: 000055746f0807d0 CR3: 00000001123e0000 CR4: 00000000001006f0
+[  213.402178] Call Trace:
+[  213.402178]  __vxlan_dev_create+0x3a9/0x7d0 [vxlan]
+[  213.402178]  ? vxlan_changelink+0x740/0x740 [vxlan]
+[  213.402178]  ? rcu_read_unlock+0x60/0x60 [vxlan]
+[  213.402178]  ? __kasan_kmalloc.constprop.3+0xa0/0xd0
+[  213.402178]  vxlan_newlink+0x8d/0xc0 [vxlan]
+[  213.402178]  ? __vxlan_dev_create+0x7d0/0x7d0 [vxlan]
+[  213.554119]  ? __netlink_ns_capable+0xc3/0xf0
+[  213.554119]  __rtnl_newlink+0xb75/0x1180
+[  213.554119]  ? rtnl_link_unregister+0x230/0x230
+[ ... ]
+
+Fixes: 0241b836732f ("vxlan: fix default fdb entry netlink notify ordering during netdev create")
+Suggested-by: Roopa Prabhu <roopa@cumulusnetworks.com>
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Acked-by: Roopa Prabhu <roopa@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/recv.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/vxlan.c | 37 +++++++++++++++++++++++++++----------
+ 1 file changed, 27 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/recv.c b/drivers/net/wireless/ath/ath9k/recv.c
-index 4e97f7f3b2a3..06e660858766 100644
---- a/drivers/net/wireless/ath/ath9k/recv.c
-+++ b/drivers/net/wireless/ath/ath9k/recv.c
-@@ -815,6 +815,7 @@ static int ath9k_rx_skb_preprocess(struct ath_softc *sc,
- 	struct ath_common *common = ath9k_hw_common(ah);
- 	struct ieee80211_hdr *hdr;
- 	bool discard_current = sc->rx.discard_next;
-+	bool is_phyerr;
+diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
+index 38ecb66fb3e9..82c25f07261f 100644
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -806,6 +806,14 @@ static struct vxlan_fdb *vxlan_fdb_alloc(struct vxlan_dev *vxlan,
+ 	return f;
+ }
  
- 	/*
- 	 * Discard corrupt descriptors which are marked in
-@@ -827,8 +828,11 @@ static int ath9k_rx_skb_preprocess(struct ath_softc *sc,
- 
- 	/*
- 	 * Discard zero-length packets and packets smaller than an ACK
-+	 * which are not PHY_ERROR (short radar pulses have a length of 3)
- 	 */
--	if (rx_stats->rs_datalen < 10) {
-+	is_phyerr = rx_stats->rs_status & ATH9K_RXERR_PHY;
-+	if (!rx_stats->rs_datalen ||
-+	    (rx_stats->rs_datalen < 10 && !is_phyerr)) {
- 		RX_STAT_INC(sc, rx_len_err);
- 		goto corrupt;
++static void vxlan_fdb_insert(struct vxlan_dev *vxlan, const u8 *mac,
++			     __be32 src_vni, struct vxlan_fdb *f)
++{
++	++vxlan->addrcnt;
++	hlist_add_head_rcu(&f->hlist,
++			   vxlan_fdb_head(vxlan, mac, src_vni));
++}
++
+ static int vxlan_fdb_create(struct vxlan_dev *vxlan,
+ 			    const u8 *mac, union vxlan_addr *ip,
+ 			    __u16 state, __be16 port, __be32 src_vni,
+@@ -831,18 +839,13 @@ static int vxlan_fdb_create(struct vxlan_dev *vxlan,
+ 		return rc;
  	}
+ 
+-	++vxlan->addrcnt;
+-	hlist_add_head_rcu(&f->hlist,
+-			   vxlan_fdb_head(vxlan, mac, src_vni));
+-
+ 	*fdb = f;
+ 
+ 	return 0;
+ }
+ 
+-static void vxlan_fdb_free(struct rcu_head *head)
++static void __vxlan_fdb_free(struct vxlan_fdb *f)
+ {
+-	struct vxlan_fdb *f = container_of(head, struct vxlan_fdb, rcu);
+ 	struct vxlan_rdst *rd, *nd;
+ 
+ 	list_for_each_entry_safe(rd, nd, &f->remotes, list) {
+@@ -852,6 +855,13 @@ static void vxlan_fdb_free(struct rcu_head *head)
+ 	kfree(f);
+ }
+ 
++static void vxlan_fdb_free(struct rcu_head *head)
++{
++	struct vxlan_fdb *f = container_of(head, struct vxlan_fdb, rcu);
++
++	__vxlan_fdb_free(f);
++}
++
+ static void vxlan_fdb_destroy(struct vxlan_dev *vxlan, struct vxlan_fdb *f,
+ 			      bool do_notify, bool swdev_notify)
+ {
+@@ -979,6 +989,7 @@ static int vxlan_fdb_update_create(struct vxlan_dev *vxlan,
+ 	if (rc < 0)
+ 		return rc;
+ 
++	vxlan_fdb_insert(vxlan, mac, src_vni, f);
+ 	rc = vxlan_fdb_notify(vxlan, f, first_remote_rtnl(f), RTM_NEWNEIGH,
+ 			      swdev_notify, extack);
+ 	if (rc)
+@@ -3573,12 +3584,17 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
+ 	if (err)
+ 		goto errout;
+ 
+-	/* notify default fdb entry */
+ 	if (f) {
++		vxlan_fdb_insert(vxlan, all_zeros_mac,
++				 vxlan->default_dst.remote_vni, f);
++
++		/* notify default fdb entry */
+ 		err = vxlan_fdb_notify(vxlan, f, first_remote_rtnl(f),
+ 				       RTM_NEWNEIGH, true, extack);
+-		if (err)
+-			goto errout;
++		if (err) {
++			vxlan_fdb_destroy(vxlan, f, false, false);
++			goto unregister;
++		}
+ 	}
+ 
+ 	list_add(&vxlan->next, &vn->vxlan_list);
+@@ -3590,7 +3606,8 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
+ 	 * destroy the entry by hand here.
+ 	 */
+ 	if (f)
+-		vxlan_fdb_destroy(vxlan, f, false, false);
++		__vxlan_fdb_free(f);
++unregister:
+ 	if (unregister)
+ 		unregister_netdevice(dev);
+ 	return err;
 -- 
 2.20.1
 
