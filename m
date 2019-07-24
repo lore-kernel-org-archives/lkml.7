@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199EEC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A9CC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8000214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122B920665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999043;
-	bh=+l/JtDVZXE7La4+a5A8W23d/csoG77VgDQf98Ngqo68=;
+	s=default; t=1563999049;
+	bh=8+TBomzxAkcDXL5UogI8Nir1ASwsrKUsND8Gix3C+L4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TTBhM2BIRt+ae2bns80qPhscKpUWgEPiLOtbDvNUjPT2hCfqnimEt/P/VggH4P8xZ
-	 LmWNnfDXUOf7q/LPEVDEh+wFHAV9wAvQcPqVUp3pAuMRuwPzYWGwmmPeoi008skbCo
-	 25Q9qRs8hc+0t+ASsphtqfQSR3f7W7K4EIIJ9uD0=
+	b=Xu7BItFr0PPNtWVJsTp33DsGvb1wL/v97cQIxsQOzD2SvEGqQtIF0y4Z/tFcOl+vY
+	 YtGeap5r8I3NkXCKOedtWc+JJhkY+haQYco0bVbKJRUaZNx9N4ysYDTy8OjtbXbk1g
+	 mhyn9v+Ydr9ljPwymnqamcbm+HIzu/DsXv9m/mZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405388AbfGXUKm (ORCPT
+        id S2388678AbfGXUKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:10:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45754 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:10:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405008AbfGXT6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:58:51 -0400
+        id S2404993AbfGXT6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:58:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD4F021873;
-        Wed, 24 Jul 2019 19:58:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B09722ADC;
+        Wed, 24 Jul 2019 19:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998330;
-        bh=+l/JtDVZXE7La4+a5A8W23d/csoG77VgDQf98Ngqo68=;
+        s=default; t=1563998327;
+        bh=8+TBomzxAkcDXL5UogI8Nir1ASwsrKUsND8Gix3C+L4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZkcyJyubaQ46EazFId6nUeGV1F/ngL0qr3mA7tm/p4Qzd7qTBgtESLkxys6q1pqU8
-         /Mol3eOIqJBYgxmygh7HZJvFigZ4hoAyJ+LZKzeUrVYHvU1CBOWUO3xCS2QsuPE/Ph
-         +6lKtPKrhsAJ65EEXFiK7OjNQz4+Lk7BgFZlTydU=
+        b=l9Zz4+dk33mBGvumk1q7nKaLuZX7O5dZ8ImliF64W7FD1J/y5uwoQLRmTxIdtOgXw
+         egTeNUpDE5TDOx+/xznh3pm//gFbCum1rTYUmhX5hefpCXHfx4S9mAppdIwZ+0bytL
+         nvZzC/8Q3XHS2SawImBc2fyASzgW1wU2rlCn/aAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.1 327/371] block: Fix potential overflow in blk_report_zones()
-Date:   Wed, 24 Jul 2019 21:21:19 +0200
-Message-Id: <20190724191748.443843713@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.1 326/371] block: Allow mapping of vmalloc-ed buffers
+Date:   Wed, 24 Jul 2019 21:21:18 +0200
+Message-Id: <20190724191748.387204624@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,64 +65,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Damien Le Moal <damien.lemoal@wdc.com>
 
-commit 113ab72ed4794c193509a97d7c6d32a6886e1682 upstream.
+commit b4c5875d36178e8df409bdce232f270cac89fafe upstream.
 
-For large values of the number of zones reported and/or large zone
-sizes, the sector increment calculated with
+To allow the SCSI subsystem scsi_execute_req() function to issue
+requests using large buffers that are better allocated with vmalloc()
+rather than kmalloc(), modify bio_map_kern() to allow passing a buffer
+allocated with vmalloc().
 
-blk_queue_zone_sectors(q) * n
+To do so, detect vmalloc-ed buffers using is_vmalloc_addr(). For
+vmalloc-ed buffers, flush the buffer using flush_kernel_vmap_range(),
+use vmalloc_to_page() instead of virt_to_page() to obtain the pages of
+the buffer, and invalidate the buffer addresses with
+invalidate_kernel_vmap_range() on completion of read BIOs. This last
+point is executed using the function bio_invalidate_vmalloc_pages()
+which is defined only if the architecture defines
+ARCH_HAS_FLUSH_KERNEL_DCACHE_PAGE, that is, if the architecture
+actually needs the invalidation done.
 
-in blk_report_zones() loop can overflow the unsigned int type used for
-the calculation as both "n" and blk_queue_zone_sectors() value are
-unsigned int. E.g. for a device with 256 MB zones (524288 sectors),
-overflow happens with 8192 or more zones reported.
-
-Changing the return type of blk_queue_zone_sectors() to sector_t, fixes
-this problem and avoids overflow problem for all other callers of this
-helper too. The same change is also applied to the bdev_zone_sectors()
-helper.
-
+Fixes: 515ce6061312 ("scsi: sd_zbc: Fix sd_zbc_report_zones() buffer allocation")
 Fixes: e76239a3748c ("block: add a report_zones method")
 Cc: stable@vger.kernel.org
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-zoned.c      |    2 +-
- include/linux/blkdev.h |    4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ block/bio.c |   28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
---- a/block/blk-zoned.c
-+++ b/block/blk-zoned.c
-@@ -69,7 +69,7 @@ EXPORT_SYMBOL_GPL(__blk_req_zone_write_u
- static inline unsigned int __blkdev_nr_zones(struct request_queue *q,
- 					     sector_t nr_sectors)
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -29,6 +29,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/cgroup.h>
+ #include <linux/blk-cgroup.h>
++#include <linux/highmem.h>
+ 
+ #include <trace/events/block.h>
+ #include "blk.h"
+@@ -1475,8 +1476,22 @@ void bio_unmap_user(struct bio *bio)
+ 	bio_put(bio);
+ }
+ 
++static void bio_invalidate_vmalloc_pages(struct bio *bio)
++{
++#ifdef ARCH_HAS_FLUSH_KERNEL_DCACHE_PAGE
++	if (bio->bi_private && !op_is_write(bio_op(bio))) {
++		unsigned long i, len = 0;
++
++		for (i = 0; i < bio->bi_vcnt; i++)
++			len += bio->bi_io_vec[i].bv_len;
++		invalidate_kernel_vmap_range(bio->bi_private, len);
++	}
++#endif
++}
++
+ static void bio_map_kern_endio(struct bio *bio)
  {
--	unsigned long zone_sectors = blk_queue_zone_sectors(q);
-+	sector_t zone_sectors = blk_queue_zone_sectors(q);
- 
- 	return (nr_sectors + zone_sectors - 1) >> ilog2(zone_sectors);
- }
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -662,7 +662,7 @@ static inline bool blk_queue_is_zoned(st
- 	}
++	bio_invalidate_vmalloc_pages(bio);
+ 	bio_put(bio);
  }
  
--static inline unsigned int blk_queue_zone_sectors(struct request_queue *q)
-+static inline sector_t blk_queue_zone_sectors(struct request_queue *q)
- {
- 	return blk_queue_is_zoned(q) ? q->limits.chunk_sectors : 0;
- }
-@@ -1400,7 +1400,7 @@ static inline bool bdev_is_zoned(struct
- 	return false;
- }
+@@ -1497,6 +1512,8 @@ struct bio *bio_map_kern(struct request_
+ 	unsigned long end = (kaddr + len + PAGE_SIZE - 1) >> PAGE_SHIFT;
+ 	unsigned long start = kaddr >> PAGE_SHIFT;
+ 	const int nr_pages = end - start;
++	bool is_vmalloc = is_vmalloc_addr(data);
++	struct page *page;
+ 	int offset, i;
+ 	struct bio *bio;
  
--static inline unsigned int bdev_zone_sectors(struct block_device *bdev)
-+static inline sector_t bdev_zone_sectors(struct block_device *bdev)
- {
- 	struct request_queue *q = bdev_get_queue(bdev);
+@@ -1504,6 +1521,11 @@ struct bio *bio_map_kern(struct request_
+ 	if (!bio)
+ 		return ERR_PTR(-ENOMEM);
  
++	if (is_vmalloc) {
++		flush_kernel_vmap_range(data, len);
++		bio->bi_private = data;
++	}
++
+ 	offset = offset_in_page(kaddr);
+ 	for (i = 0; i < nr_pages; i++) {
+ 		unsigned int bytes = PAGE_SIZE - offset;
+@@ -1514,7 +1536,11 @@ struct bio *bio_map_kern(struct request_
+ 		if (bytes > len)
+ 			bytes = len;
+ 
+-		if (bio_add_pc_page(q, bio, virt_to_page(data), bytes,
++		if (!is_vmalloc)
++			page = virt_to_page(data);
++		else
++			page = vmalloc_to_page(data);
++		if (bio_add_pc_page(q, bio, page, bytes,
+ 				    offset) < bytes) {
+ 			/* we don't support partial mappings */
+ 			bio_put(bio);
 
 
