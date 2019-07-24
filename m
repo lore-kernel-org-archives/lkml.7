@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93718C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE57BC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6611C21951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8759821951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996958;
-	bh=PT6DfoSs+iQkViIua4q5ciViDMnsl3QPT8AElINdXBM=;
+	s=default; t=1563996962;
+	bh=3qMwmjDkCoCfgkdAGp/mueibKfxoUb9z1llMH7RJw2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nwK4RM3qgxwJfeMf6HQ0lew8MQq6S32ANyMKzxTrOK0RJItIwO4diE2mseklswEnm
-	 Uw6HiAkRCEKRvQGPgSNdfCFMq5xAxQIw5FcJGLqT1WhoIM6MnNaEWAH3/Jj0SFidu6
-	 UhaNGj+GrroLQbHQgD1KD8oU9zSWdJ0tJoGNXU+U=
+	b=gwnkZc4Iq61rkhTQQo8Mr2hZM05o1ocvGZljyYC3vWOsGJzsC4M1YGfF71cZUhySG
+	 lqBazsZqgyO/A/w0B9laIt3YO1jEAylTFXccmk29GQXqeJAmxIIFlISwMOK/ZAN+wf
+	 sBWxLk7r4x/OwfrjTaCY5Jk6sTekwgnSyYGNNO3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388952AbfGXTf5 (ORCPT
+        id S2388975AbfGXTgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:35:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34508 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:36:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388938AbfGXTfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:35:54 -0400
+        id S2388951AbfGXTf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:35:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D630E21951;
-        Wed, 24 Jul 2019 19:35:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57CC320659;
+        Wed, 24 Jul 2019 19:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996954;
-        bh=PT6DfoSs+iQkViIua4q5ciViDMnsl3QPT8AElINdXBM=;
+        s=default; t=1563996956;
+        bh=3qMwmjDkCoCfgkdAGp/mueibKfxoUb9z1llMH7RJw2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hJJwzQK0OC5eCMo9c49WbU9gKITuU2LUuzeuRrgtgF3D8mNCSY9BvmZDH339E/Hm0
-         2vlQiS0E5eU7FJMm3szVL3TzVAZYFXHaEFoLD87tT+p947hu6pszqf6S+lrWpA8SwE
-         xy2Zv0AnYWvS7b5Lyb/Aqrtde8aLVOx+w2q/enDY=
+        b=kBbX38I9QQdZD8FCmSNlHtcXS72h3WMPSTAbmk7uYKu4SkbGrsAwED2wbKn9slbN/
+         aPFoHBeqOeFwGvUEW+wb9431RNgOkh+d5hqsN+8JSvwwQbPbJCTiGE2W36kLUMv6X1
+         Hcp5MFGRCSJbapwSETs976Kvihspj5pWHPh2Oc0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cfir Cohen <cfir@google.com>,
-        Gary R Hook <ghook@amd.com>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        linux-crypto@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.2 273/413] crypto: ccp/gcm - use const time tag comparison.
-Date:   Wed, 24 Jul 2019 21:19:24 +0200
-Message-Id: <20190724191755.776712513@linuxfoundation.org>
+Subject: [PATCH 5.2 274/413] crypto: crypto4xx - fix a potential double free in ppc4xx_trng_probe
+Date:   Wed, 24 Jul 2019 21:19:25 +0200
+Message-Id: <20190724191755.858461201@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,34 +65,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cfir Cohen <cfir@google.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-commit 538a5a072e6ef04377b180ee9b3ce5bae0a85da4 upstream.
+commit 95566aa75cd6b3b404502c06f66956b5481194b3 upstream.
 
-Avoid leaking GCM tag through timing side channel.
+There is a possible double free issue in ppc4xx_trng_probe():
 
-Fixes: 36cf515b9bbe ("crypto: ccp - Enable support for AES GCM on v5 CCPs")
-Cc: <stable@vger.kernel.org> # v4.12+
-Signed-off-by: Cfir Cohen <cfir@google.com>
-Acked-by: Gary R Hook <ghook@amd.com>
+85:	dev->trng_base = of_iomap(trng, 0);
+86:	of_node_put(trng);          ---> released here
+87:	if (!dev->trng_base)
+88:		goto err_out;
+...
+110:	ierr_out:
+111:		of_node_put(trng);  ---> double released here
+...
+
+This issue was detected by using the Coccinelle software.
+We fix it by removing the unnecessary of_node_put().
+
+Fixes: 5343e674f32f ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: <stable@vger.kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Armijn Hemel <armijn@tjaldur.nl>
+Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Julia Lawall <julia.lawall@lip6.fr>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccp/ccp-ops.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/crypto/amcc/crypto4xx_trng.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/crypto/ccp/ccp-ops.c
-+++ b/drivers/crypto/ccp/ccp-ops.c
-@@ -850,7 +850,8 @@ static int ccp_run_aes_gcm_cmd(struct cc
- 		if (ret)
- 			goto e_tag;
+--- a/drivers/crypto/amcc/crypto4xx_trng.c
++++ b/drivers/crypto/amcc/crypto4xx_trng.c
+@@ -108,7 +108,6 @@ void ppc4xx_trng_probe(struct crypto4xx_
+ 	return;
  
--		ret = memcmp(tag.address, final_wa.address, AES_BLOCK_SIZE);
-+		ret = crypto_memneq(tag.address, final_wa.address,
-+				    AES_BLOCK_SIZE) ? -EBADMSG : 0;
- 		ccp_dm_free(&tag);
- 	}
- 
+ err_out:
+-	of_node_put(trng);
+ 	iounmap(dev->trng_base);
+ 	kfree(rng);
+ 	dev->trng_base = NULL;
 
 
