@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 246FBC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A33C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB2D822ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0AE22ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996971;
-	bh=81FLMvKyIW+Hbj1AKRYsesglV37r+KO7iH97GzPiGqw=;
+	s=default; t=1563996974;
+	bh=JyVWWgTru0+hhOtXI5G3CuzzTpgTucTPxwcbyHaOmug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o28nw2x7Gb96zWCksTx4xn2bEv1ZrmCnFP1gnBrgMyRCyhqVVVoQh5BE9syOUVOp5
-	 npYLobCGJl/FPGu2cIJcVcSu/jbq+wZGfvCtWk18oB9Lkq+LtUO7v/PfeV3MkVndNd
-	 tOd3bQ8PkOyJTfu5QCyp/i3/gZMfVu3604mYOvbI=
+	b=QsPLrU/kNdTGKiM3pT/rCxDXy6100moFFAJj1oI01RiYVNeAXEHRxpBfSKZWcc93h
+	 /04wHta8f/W6sqzGbi/YcN1GI9rQfcxS4unMsC6Tb90z4TiC/OovxixotRo9PCzVdy
+	 ssIeX9Y8WWUXtZgKDfzXZJKJ597b1oYVxCMUnTeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389283AbfGXTgJ (ORCPT
+        id S2388828AbfGXTgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:36:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35712 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:36:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389270AbfGXTgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:36:07 -0400
+        id S2389284AbfGXTgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:36:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C0B020659;
-        Wed, 24 Jul 2019 19:36:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96E382238C;
+        Wed, 24 Jul 2019 19:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996966;
-        bh=81FLMvKyIW+Hbj1AKRYsesglV37r+KO7iH97GzPiGqw=;
+        s=default; t=1563996969;
+        bh=JyVWWgTru0+hhOtXI5G3CuzzTpgTucTPxwcbyHaOmug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bde1zSdBZZF+9xQj6Ez6QmUSGIMYsSUeAn4MSbcLx7Wr7K47T1/xSn8hXvtDdIGkk
-         heHSxNlbE0jKCOWYuT0jwxidOc8+0KfuZev7NUCyuqzeeumegIygWKH0y96U3lbsOT
-         OB7K96rMdmtC2tMpBRN+PWRHVgPsjq0STobLQL5I=
+        b=jjXRN4/rxsEC4O1MAfBqgpKitfcH5814TzVf1cLJrcSoFy1/ATUxgjfgs5P4tDDCW
+         bGig3ucANeU4vhvoQVN5rAqObohH4tqTA2rbRiqh8qmEQzIR+mR0HuAqcvUZwE+A1B
+         HUX4X3YV5TRzVPYFYffKQhVdzYIdklxx5QPwRX6A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paulo Alcantara (SUSE)" <paulo@paulo.ac>,
-        Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilove@microsoft.com>
-Subject: [PATCH 5.2 277/413] cifs: Properly handle auto disabling of serverino option
-Date:   Wed, 24 Jul 2019 21:19:28 +0200
-Message-Id: <20190724191756.112025678@linuxfoundation.org>
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.2 278/413] cifs: flush before set-info if we have writeable handles
+Date:   Wed, 24 Jul 2019 21:19:29 +0200
+Message-Id: <20190724191756.193439255@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,69 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paulo Alcantara (SUSE) <paulo@paulo.ac>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-commit 29fbeb7a908a60a5ae8c50fbe171cb8fdcef1980 upstream.
+commit aa081859b10c5d8b19f5c525c78883a59d73c2b8 upstream.
 
-Fix mount options comparison when serverino option is turned off later
-in cifs_autodisable_serverino() and thus avoiding mismatch of new cifs
-mounts.
+Servers can defer destaging any data and updating the mtime until close().
+This means that if we do a setinfo to modify the mtime while other handles
+are open for write the server may overwrite our setinfo timestamps when
+if flushes the file on close() of the writeable handle.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Paulo Alcantara (SUSE) <paulo@paulo.ac>
+To solve this we add an explicit flush when the mtime is about to
+be updated.
+
+This fixes "cp -p" to preserve mtime when copying a file onto an SMB2 share.
+
+CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilove@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/cifs_fs_sb.h |    5 +++++
- fs/cifs/connect.c    |    8 ++++++--
- fs/cifs/misc.c       |    1 +
- 3 files changed, 12 insertions(+), 2 deletions(-)
+ fs/cifs/inode.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---- a/fs/cifs/cifs_fs_sb.h
-+++ b/fs/cifs/cifs_fs_sb.h
-@@ -83,5 +83,10 @@ struct cifs_sb_info {
- 	 * failover properly.
- 	 */
- 	char *origin_fullpath; /* \\HOST\SHARE\[OPTIONAL PATH] */
-+	/*
-+	 * Indicate whether serverino option was turned off later
-+	 * (cifs_autodisable_serverino) in order to match new mounts.
-+	 */
-+	bool mnt_cifs_serverino_autodisabled;
- };
- #endif				/* _CIFS_FS_SB_H */
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -3460,12 +3460,16 @@ compare_mount_options(struct super_block
- {
- 	struct cifs_sb_info *old = CIFS_SB(sb);
- 	struct cifs_sb_info *new = mnt_data->cifs_sb;
-+	unsigned int oldflags = old->mnt_cifs_flags & CIFS_MOUNT_MASK;
-+	unsigned int newflags = new->mnt_cifs_flags & CIFS_MOUNT_MASK;
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -2408,6 +2408,8 @@ cifs_setattr_nounix(struct dentry *diren
+ 	struct inode *inode = d_inode(direntry);
+ 	struct cifs_sb_info *cifs_sb = CIFS_SB(inode->i_sb);
+ 	struct cifsInodeInfo *cifsInode = CIFS_I(inode);
++	struct cifsFileInfo *wfile;
++	struct cifs_tcon *tcon;
+ 	char *full_path = NULL;
+ 	int rc = -EACCES;
+ 	__u32 dosattr = 0;
+@@ -2454,6 +2456,20 @@ cifs_setattr_nounix(struct dentry *diren
+ 	mapping_set_error(inode->i_mapping, rc);
+ 	rc = 0;
  
- 	if ((sb->s_flags & CIFS_MS_MASK) != (mnt_data->flags & CIFS_MS_MASK))
- 		return 0;
- 
--	if ((old->mnt_cifs_flags & CIFS_MOUNT_MASK) !=
--	    (new->mnt_cifs_flags & CIFS_MOUNT_MASK))
-+	if (old->mnt_cifs_serverino_autodisabled)
-+		newflags &= ~CIFS_MOUNT_SERVER_INUM;
++	if (attrs->ia_valid & ATTR_MTIME) {
++		rc = cifs_get_writable_file(cifsInode, false, &wfile);
++		if (!rc) {
++			tcon = tlink_tcon(wfile->tlink);
++			rc = tcon->ses->server->ops->flush(xid, tcon, &wfile->fid);
++			cifsFileInfo_put(wfile);
++			if (rc)
++				return rc;
++		} else if (rc != -EBADF)
++			return rc;
++		else
++			rc = 0;
++	}
 +
-+	if (oldflags != newflags)
- 		return 0;
- 
- 	/*
---- a/fs/cifs/misc.c
-+++ b/fs/cifs/misc.c
-@@ -539,6 +539,7 @@ cifs_autodisable_serverino(struct cifs_s
- 			tcon = cifs_sb_master_tcon(cifs_sb);
- 
- 		cifs_sb->mnt_cifs_flags &= ~CIFS_MOUNT_SERVER_INUM;
-+		cifs_sb->mnt_cifs_serverino_autodisabled = true;
- 		cifs_dbg(VFS, "Autodisabling the use of server inode numbers on %s.\n",
- 			 tcon ? tcon->treeName : "new server");
- 		cifs_dbg(VFS, "The server doesn't seem to support them properly or the files might be on different servers (DFS).\n");
+ 	if (attrs->ia_valid & ATTR_SIZE) {
+ 		rc = cifs_set_file_size(inode, attrs, xid, full_path);
+ 		if (rc != 0)
 
 
