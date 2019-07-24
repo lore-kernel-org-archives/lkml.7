@@ -2,84 +2,135 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AD3C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2458C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB9921670
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB5A20823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbfGXD6y (ORCPT
+        id S1725917AbfGXEBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 23:58:54 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2710 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725855AbfGXD6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 23:58:53 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 098302A12B22F6B5C30E;
-        Wed, 24 Jul 2019 11:58:52 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
- 11:58:42 +0800
-Subject: Re: [PATCH v2] RDMA/hns: Fix build error for hip06
-To:     <oulijun@huawei.com>, <xavier.huwei@huawei.com>,
-        <dledford@redhat.com>, <jgg@ziepe.ca>, <leon@kernel.org>
-References: <20190723024535.61412-1-yuehaibing@huawei.com>
- <20190724034428.13944-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <62e79055-948e-155f-19eb-b216a540458a@huawei.com>
-Date:   Wed, 24 Jul 2019 11:58:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Wed, 24 Jul 2019 00:01:23 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33747 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfGXEBX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 00:01:23 -0400
+Received: by mail-ot1-f66.google.com with SMTP id q20so46368150otl.0;
+        Tue, 23 Jul 2019 21:01:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bP783P8vHL5hvGQlKfl7m6itu22DJvCAUy0AE7ISvs8=;
+        b=qPCplhanET8r4/AEG8Z1Oez4ly5YfbYj4GLsdIxHRcXyBhdG7qQv5tKVda6VGFN0wM
+         LJaApJvBC6njyvQQ26dUfFIGfAa4vXbHJr/SUhX7M5c+FMhApEdRPvqja9R/m6LxFDm+
+         yKVg2f1U/YJYDx7MEYh/VGa7M5ltkg+9Di8c0Vajc17XVxihzTho2liR5JBp+FixCxbR
+         WAeCZZtU8kBlKjfQrXum+zoAgO0yG5Qad+JbgaQKSWpcn0k6ij1L/NNuPAk6Os1CTRjl
+         qeHQDP5fNQyzjlhO/y5TArPmVp7XeBX7a0LuwRLHNclhdyVLcv2nqixDMLS2jqsJNDq8
+         ZJDA==
+X-Gm-Message-State: APjAAAUXPEUH2/O4zOb6jE9CY/uFmx5lhEztqsAumI/++guoPL29vbhO
+        u4T60dvV0g6vIXdk3rUTsbOi2qCteQU=
+X-Google-Smtp-Source: APXvYqzjQnT/DOSjKiboa1+pO2X26nHpVVkku+OAM/CDAP5PrqN95J4LDbJVoBS0zVwaEYQxeDcYCQ==
+X-Received: by 2002:a9d:5ed:: with SMTP id 100mr6248811otd.105.1563940881828;
+        Tue, 23 Jul 2019 21:01:21 -0700 (PDT)
+Received: from sultan-box.localdomain ([192.111.140.132])
+        by smtp.gmail.com with ESMTPSA id v65sm15464278oig.51.2019.07.23.21.01.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 21:01:21 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 22:01:18 -0600
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mbcache: Speed up cache entry creation
+Message-ID: <20190724040118.GA31214@sultan-box.localdomain>
+References: <20190723053549.14465-1-sultan@kerneltoast.com>
+ <5EDDA127-031C-4F16-9B9B-8DBC94C7E471@dilger.ca>
 MIME-Version: 1.0
-In-Reply-To: <20190724034428.13944-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5EDDA127-031C-4F16-9B9B-8DBC94C7E471@dilger.ca>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 23, 2019 at 10:56:05AM -0600, Andreas Dilger wrote:
+> Do you have any kind of performance metrics that show this is an actual
+> improvement in performance?  This would be either macro-level benchmarks
+> (e.g. fio, but this seems unlikely to show any benefit), or micro-level
+> measurements (e.g. flame graph) that show a net reduction in CPU cycles,
+> lock contention, etc. in this part of the code.
 
-Pls ignore this, I will fix it.
+Hi Andreas,
 
-On 2019/7/24 11:44, YueHaibing wrote:
-> If INFINIBAND_HNS_HIP06 is selected and HNS_DSAF
-> is m, but INFINIBAND_HNS is y, building fails:
-> 
-> drivers/infiniband/hw/hns/hns_roce_hw_v1.o: In function `hns_roce_v1_reset':
-> hns_roce_hw_v1.c:(.text+0x39fa): undefined reference to `hns_dsaf_roce_reset'
-> hns_roce_hw_v1.c:(.text+0x3a25): undefined reference to `hns_dsaf_roce_reset'
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 08805fdbeb2d ("RDMA/hns: Split hw v1 driver from hns roce driver")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
-> v2: use select instead of depends
-> ---
->  drivers/infiniband/hw/hns/Kconfig | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/infiniband/hw/hns/Kconfig b/drivers/infiniband/hw/hns/Kconfig
-> index b9dfac0..5f6d750 100644
-> --- a/drivers/infiniband/hw/hns/Kconfig
-> +++ b/drivers/infiniband/hw/hns/Kconfig
-> @@ -12,7 +12,8 @@ config INFINIBAND_HNS
->  
->  config INFINIBAND_HNS_HIP06
->  	bool "Hisilicon Hip06 Family RoCE support"
-> -	depends on INFINIBAND_HNS && HNS && HNS_DSAF && HNS_ENET
-> +	depends on INFINIBAND_HNS && HNS && HNS_ENET
-> +	select HNS_DSAF
->  	---help---
->  	  RoCE driver support for Hisilicon RoCE engine in Hisilicon Hip06 and
->  	  Hip07 SoC. These RoCE engines are platform devices.
-> 
+Here are some basic micro-benchmark results:
 
+Before:
+[    3.162896] mb_cache_entry_create: AVG cycles: 75
+[    3.054701] mb_cache_entry_create: AVG cycles: 78
+[    3.152321] mb_cache_entry_create: AVG cycles: 77
+
+After:
+[    3.043380] mb_cache_entry_create: AVG cycles: 68
+[    3.194321] mb_cache_entry_create: AVG cycles: 71
+[    3.038100] mb_cache_entry_create: AVG cycles: 69
+
+The performance difference is probably more drastic when free memory is low,
+since an unnecessary call to kmem_cache_alloc() can result in a long wait for
+pages to be freed.
+
+The micro-benchmark code is attached.
+
+Thanks,
+Sultan
+---
+diff --git a/fs/mbcache.c b/fs/mbcache.c
+index 289f3664061e..e0f22ff8fab8 100644
+--- a/fs/mbcache.c
++++ b/fs/mbcache.c
+@@ -82,7 +82,7 @@ static inline struct mb_bucket *mb_cache_entry_bucket(struct mb_cache *cache,
+  * -EBUSY if entry with the same key and value already exists in cache.
+  * Otherwise 0 is returned.
+  */
+-int mb_cache_entry_create(struct mb_cache *cache, gfp_t mask, u32 key,
++static int __mb_cache_entry_create(struct mb_cache *cache, gfp_t mask, u32 key,
+ 			  u64 value, bool reusable)
+ {
+ 	struct mb_cache_entry *entry, *dup;
+@@ -148,6 +148,29 @@ int mb_cache_entry_create(struct mb_cache *cache, gfp_t mask, u32 key,
+ 
+ 	return 0;
+ }
++
++int mb_cache_entry_create(struct mb_cache *cache, gfp_t mask, u32 key,
++			  u64 value, bool reusable)
++{
++	static unsigned long count, sum;
++	static DEFINE_MUTEX(lock);
++	volatile cycles_t start, delta;
++	int ret;
++
++	mutex_lock(&lock);
++	local_irq_disable();
++	start = get_cycles();
++	ret = __mb_cache_entry_create(cache, mask, key, value, reusable);
++	delta = get_cycles() - start;
++	local_irq_enable();
++
++	sum += delta;
++	if (++count == 1000)
++		printk("%s: AVG cycles: %lu\n", __func__, sum / count);
++	mutex_unlock(&lock);
++
++	return ret;
++}
+ EXPORT_SYMBOL(mb_cache_entry_create);
+ 
+ void __mb_cache_entry_free(struct mb_cache_entry *entry)
