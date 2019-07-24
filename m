@@ -5,64 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCEDC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE13CC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C32922BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D11F22BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033537;
-	bh=O48jEoPOz+rxuKKs9p+jdKNL6LHdM71H57tZi/SoVaI=;
+	s=default; t=1564033541;
+	bh=GxwN1mmkCycNO3fHNV+ZrdYXA6d6xmqH0Z4BO14KspE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rVkPZWNNcRFZ4SvUihYyU/2c1rJHWJjVB5yzUAYl+CjgaULShqX/2QQXNrePwE2O4
-	 ayC8UNOWnLhWxl+CsplxsIJ/uLhzJuvN6krFOkqybmET3Uvl5AjkTIQ6YBzm1bCCV+
-	 AMXoFmcDR7SInHogZ1IZTR0p0JvYaAafQCsczkJ4=
+	b=y95LEStpg73Z3a7BSzxVXIYuDAO0VBo+Ullw+rloRDbnsHlQ+BGVPFD7PSSC2OXNJ
+	 cfRCjopJL9sZekDp9EF/03ViYo0xExGwRKRZkVpg6jNGKXhkl3YfF7ciYYrWJQL7W9
+	 pwvxMKNwyaBjg+eJ2iPtpY0oFeoknc3a3iMQF7mY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405235AbfGYFpg (ORCPT
+        id S2391329AbfGYFpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:45:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32804 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:45:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405210AbfGYFpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:45:32 -0400
+        id S2405210AbfGYFph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:45:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 098D921880;
-        Thu, 25 Jul 2019 05:45:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A7D822BEB;
+        Thu, 25 Jul 2019 05:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033531;
-        bh=O48jEoPOz+rxuKKs9p+jdKNL6LHdM71H57tZi/SoVaI=;
+        s=default; t=1564033536;
+        bh=GxwN1mmkCycNO3fHNV+ZrdYXA6d6xmqH0Z4BO14KspE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Va44hojr026cWopG3bLmo1fm3HnWXhzlVkU3NtC3G0Nc+IFQjuJaaIuyn69vPfcst
-         Y5EdrghS1Y+QPskW4H5b1vE8o+zXFEaUBmqPYNcpGvlmIhpAEjLY2/Ia7j7E4UOPrg
-         nxNqV0K+iaieH2/bzgtZ4caz2rRgivuxKL9LLLS8=
+        b=apOtmE1ZMHpasMloYA4VonZbF/pDzx0m58RWIOABmsl62DToauIMg1DD39zoNtiJZ
+         80YVXuWrhfdZWghrPqvJnnOIp0cm4mfMndSB/08NjEgjiN7L/Iil0B6UmS8Yj2lAkm
+         JoRV5Ix8SnlLT6W4wr6WiOxYw9MUAlEub3QCbzHg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jane Chu <jane.chu@oracle.com>, Jeff Moyer <jmoyer@redhat.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>,
+        stable@vger.kernel.org, Drew Davenport <ddavenport@chromium.org>,
+        Kees Cook <keescook@chromium.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH 4.19 239/271] libnvdimm/pfn: fix fsdax-mode namespace info-block zero-fields
-Date:   Wed, 24 Jul 2019 21:21:48 +0200
-Message-Id: <20190724191715.652990178@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 241/271] include/asm-generic/bug.h: fix "cut here" for WARN_ON for __WARN_TAINT architectures
+Date:   Wed, 24 Jul 2019 21:21:50 +0200
+Message-Id: <20190724191715.827690757@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -75,143 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Drew Davenport <ddavenport@chromium.org>
 
-commit 7e3e888dfc138089f4c15a81b418e88f0978f744 upstream.
+commit 6b15f678fb7d5ef54e089e6ace72f007fe6e9895 upstream.
 
-At namespace creation time there is the potential for the "expected to
-be zero" fields of a 'pfn' info-block to be filled with indeterminate
-data.  While the kernel buffer is zeroed on allocation it is immediately
-overwritten by nd_pfn_validate() filling it with the current contents of
-the on-media info-block location.  For fields like, 'flags' and the
-'padding' it potentially means that future implementations can not rely on
-those fields being zero.
+For architectures using __WARN_TAINT, the WARN_ON macro did not print
+out the "cut here" string.  The other WARN_XXX macros would print "cut
+here" inside __warn_printk, which is not called for WARN_ON since it
+doesn't have a message to print.
 
-In preparation to stop using the 'start_pad' and 'end_trunc' fields for
-section alignment, arrange for fields that are not explicitly
-initialized to be guaranteed zero.  Bump the minor version to indicate
-it is safe to assume the 'padding' and 'flags' are zero.  Otherwise,
-this corruption is expected to benign since all other critical fields
-are explicitly initialized.
-
-Note The cc: stable is about spreading this new policy to as many
-kernels as possible not fixing an issue in those kernels.  It is not
-until the change titled "libnvdimm/pfn: Stop padding pmem namespaces to
-section alignment" where this improper initialization becomes a problem.
-So if someone decides to backport "libnvdimm/pfn: Stop padding pmem
-namespaces to section alignment" (which is not tagged for stable), make
-sure this pre-requisite is flagged.
-
-Link: http://lkml.kernel.org/r/156092356065.979959.6681003754765958296.stgit@dwillia2-desk3.amr.corp.intel.com
-Fixes: 32ab0a3f5170 ("libnvdimm, pmem: 'struct page' for pmem")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Tested-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>	[ppc64]
+Link: http://lkml.kernel.org/r/20190624154831.163888-1-ddavenport@chromium.org
+Fixes: a7bed27af194 ("bug: fix "cut here" location for __WARN_TAINT architectures")
+Signed-off-by: Drew Davenport <ddavenport@chromium.org>
+Acked-by: Kees Cook <keescook@chromium.org>
+Tested-by: Kees Cook <keescook@chromium.org>
 Cc: <stable@vger.kernel.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Jane Chu <jane.chu@oracle.com>
-Cc: Jeff Moyer <jmoyer@redhat.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Toshi Kani <toshi.kani@hpe.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Wei Yang <richardw.yang@linux.intel.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvdimm/dax_devs.c |    2 +-
- drivers/nvdimm/pfn.h      |    1 +
- drivers/nvdimm/pfn_devs.c |   18 +++++++++++++++---
- 3 files changed, 17 insertions(+), 4 deletions(-)
+ include/asm-generic/bug.h |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/nvdimm/dax_devs.c
-+++ b/drivers/nvdimm/dax_devs.c
-@@ -126,7 +126,7 @@ int nd_dax_probe(struct device *dev, str
- 	nvdimm_bus_unlock(&ndns->dev);
- 	if (!dax_dev)
- 		return -ENOMEM;
--	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
-+	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	nd_pfn->pfn_sb = pfn_sb;
- 	rc = nd_pfn_validate(nd_pfn, DAX_SIG);
- 	dev_dbg(dev, "dax: %s\n", rc == 0 ? dev_name(dax_dev) : "<none>");
---- a/drivers/nvdimm/pfn.h
-+++ b/drivers/nvdimm/pfn.h
-@@ -36,6 +36,7 @@ struct nd_pfn_sb {
- 	__le32 end_trunc;
- 	/* minor-version-2 record the base alignment of the mapping */
- 	__le32 align;
-+	/* minor-version-3 guarantee the padding and flags are zero */
- 	u8 padding[4000];
- 	__le64 checksum;
- };
---- a/drivers/nvdimm/pfn_devs.c
-+++ b/drivers/nvdimm/pfn_devs.c
-@@ -361,6 +361,15 @@ struct device *nd_pfn_create(struct nd_r
- 	return dev;
- }
- 
-+/**
-+ * nd_pfn_validate - read and validate info-block
-+ * @nd_pfn: fsdax namespace runtime state / properties
-+ * @sig: 'devdax' or 'fsdax' signature
-+ *
-+ * Upon return the info-block buffer contents (->pfn_sb) are
-+ * indeterminate when validation fails, and a coherent info-block
-+ * otherwise.
-+ */
- int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
- {
- 	u64 checksum, offset;
-@@ -506,7 +515,7 @@ int nd_pfn_probe(struct device *dev, str
- 	nvdimm_bus_unlock(&ndns->dev);
- 	if (!pfn_dev)
- 		return -ENOMEM;
--	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
-+	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	nd_pfn = to_nd_pfn(pfn_dev);
- 	nd_pfn->pfn_sb = pfn_sb;
- 	rc = nd_pfn_validate(nd_pfn, PFN_SIG);
-@@ -638,7 +647,7 @@ static int nd_pfn_init(struct nd_pfn *nd
- 	u64 checksum;
- 	int rc;
- 
--	pfn_sb = devm_kzalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
-+	pfn_sb = devm_kmalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	if (!pfn_sb)
- 		return -ENOMEM;
- 
-@@ -647,11 +656,14 @@ static int nd_pfn_init(struct nd_pfn *nd
- 		sig = DAX_SIG;
- 	else
- 		sig = PFN_SIG;
-+
- 	rc = nd_pfn_validate(nd_pfn, sig);
- 	if (rc != -ENODEV)
- 		return rc;
- 
- 	/* no info block, do init */;
-+	memset(pfn_sb, 0, sizeof(*pfn_sb));
-+
- 	nd_region = to_nd_region(nd_pfn->dev.parent);
- 	if (nd_region->ro) {
- 		dev_info(&nd_pfn->dev,
-@@ -705,7 +717,7 @@ static int nd_pfn_init(struct nd_pfn *nd
- 	memcpy(pfn_sb->uuid, nd_pfn->uuid, 16);
- 	memcpy(pfn_sb->parent_uuid, nd_dev_to_uuid(&ndns->dev), 16);
- 	pfn_sb->version_major = cpu_to_le16(1);
--	pfn_sb->version_minor = cpu_to_le16(2);
-+	pfn_sb->version_minor = cpu_to_le16(3);
- 	pfn_sb->start_pad = cpu_to_le32(start_pad);
- 	pfn_sb->end_trunc = cpu_to_le32(end_trunc);
- 	pfn_sb->align = cpu_to_le32(nd_pfn->align);
+--- a/include/asm-generic/bug.h
++++ b/include/asm-generic/bug.h
+@@ -104,8 +104,10 @@ extern void warn_slowpath_null(const cha
+ 	warn_slowpath_fmt_taint(__FILE__, __LINE__, taint, arg)
+ #else
+ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
+-#define __WARN()		__WARN_TAINT(TAINT_WARN)
+-#define __WARN_printf(arg...)	do { __warn_printk(arg); __WARN(); } while (0)
++#define __WARN() do { \
++	printk(KERN_WARNING CUT_HERE); __WARN_TAINT(TAINT_WARN); \
++} while (0)
++#define __WARN_printf(arg...)	__WARN_printf_taint(TAINT_WARN, arg)
+ #define __WARN_printf_taint(taint, arg...)				\
+ 	do { __warn_printk(arg); __WARN_TAINT(taint); } while (0)
+ #endif
 
 
