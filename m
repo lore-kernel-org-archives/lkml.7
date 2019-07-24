@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C633FC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323A0C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B136206DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA72C2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000426;
-	bh=Cn7BozbWGXy8u2TffAHqQHE+mfuQkgHdCQiFY9C5FCw=;
+	s=default; t=1564000435;
+	bh=Ic/A8kNZeS40Gc0OvdGwgwwBx7unIcFf4oygHMb8BtY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RS349ehBSC1Db6/TtHec0JUwu+S2FFabowrj6DGYfO554+j/yTnF2X+DE9Ivj7444
-	 DUhp6zVcIaBlA/quEoteo1KB70dBzUvfQDZdvM+6Y0Q289eggi46ZmB0Fs/b6uB3hv
-	 ZkXlF1F/D8haQdG3np1GZcUJiHUU6s4eext4Nd2w=
+	b=uzTE33dQ3dyO5RWChh4Xcs2uWlW8BdcTGU/8OsjO1cxuV8V9ZFac5X3Gb/fr6ZsLk
+	 4Y4nnMcrPS0IVknNtPt4icoX8yHiQQA8RLZHH4w7t/XXFNfJL4eMKeVGE4ds9P2tdE
+	 r0mUG3WLN1AtgGaUpZLCgODp/wSP+3nTiQENG4uU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbfGXT1t (ORCPT
+        id S1729234AbfGXUdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:27:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45614 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:33:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388141AbfGXT1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:27:44 -0400
+        id S1728088AbfGXT1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:27:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4C32229F3;
-        Wed, 24 Jul 2019 19:27:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F126E229F3;
+        Wed, 24 Jul 2019 19:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996463;
-        bh=Cn7BozbWGXy8u2TffAHqQHE+mfuQkgHdCQiFY9C5FCw=;
+        s=default; t=1563996457;
+        bh=Ic/A8kNZeS40Gc0OvdGwgwwBx7unIcFf4oygHMb8BtY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HszOM5gZl2RXMkBSm+CSiv0UiQBJKZ5IcJsIafSmzQXve+2g7z9C3jjBTGRXztxef
-         UjP87XNqBz6qN1KzuIKDwnVAYiNibd3Dqrf6zd4jGUF2CR0Nf6B6zwH9+kZOkBzkG3
-         iat3IjxwK1bJnPnxz66rCinBXXhdj4VbWBgvylCY=
+        b=xKKjID04RdVsntC3MYGfAwTUwfDjJjX5nfKtdQU4KZKjfSFc4vdPDoxAcHjPGd3Z6
+         FH+Vqv8KxXByrOs3RkMxVci27EKSntrNz8knvnCBGTG1l04B7aaNcFEi3ZZODCPKRw
+         1Fkq8xZATG4lhnJFppSLRXlxPy+ZG7dOasDCUIsY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NOYB <JunkYardMail1@Frontier.com>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        stable@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 078/413] ipset: Fix memory accounting for hash types on resize
-Date:   Wed, 24 Jul 2019 21:16:09 +0200
-Message-Id: <20190724191740.678737351@linuxfoundation.org>
+Subject: [PATCH 5.2 103/413] net: hns3: fix for skb leak when doing selftest
+Date:   Wed, 24 Jul 2019 21:16:34 +0200
+Message-Id: <20190724191742.593413313@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,80 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 11921796f4799ca9c61c4b22cc54d84aa69f8a35 ]
+[ Upstream commit 8f9eed1a8791b83eb1c54c261d68424717e4111e ]
 
-If a fresh array block is allocated during resize, the current in-memory
-set size should be increased by the size of the block, not replaced by it.
+If hns3_nic_net_xmit does not return NETDEV_TX_BUSY when doing
+a loopback selftest, the skb is not freed in hns3_clean_tx_ring
+or hns3_nic_net_xmit, which causes skb not freed problem.
 
-Before the fix, adding entries to a hash set type, leading to a table
-resize, caused an inconsistent memory size to be reported. This becomes
-more obvious when swapping sets with similar sizes:
+This patch fixes it by freeing skb when hns3_nic_net_xmit does
+not return NETDEV_TX_OK.
 
-  # cat hash_ip_size.sh
-  #!/bin/sh
-  FAIL_RETRIES=10
+Fixes: c39c4d98dc65 ("net: hns3: Add mac loopback selftest support in hns3 driver")
 
-  tries=0
-  while [ ${tries} -lt ${FAIL_RETRIES} ]; do
-  	ipset create t1 hash:ip
-  	for i in `seq 1 4345`; do
-  		ipset add t1 1.2.$((i / 255)).$((i % 255))
-  	done
-  	t1_init="$(ipset list t1|sed -n 's/Size in memory: \(.*\)/\1/p')"
-
-  	ipset create t2 hash:ip
-  	for i in `seq 1 4360`; do
-  		ipset add t2 1.2.$((i / 255)).$((i % 255))
-  	done
-  	t2_init="$(ipset list t2|sed -n 's/Size in memory: \(.*\)/\1/p')"
-
-  	ipset swap t1 t2
-  	t1_swap="$(ipset list t1|sed -n 's/Size in memory: \(.*\)/\1/p')"
-  	t2_swap="$(ipset list t2|sed -n 's/Size in memory: \(.*\)/\1/p')"
-
-  	ipset destroy t1
-  	ipset destroy t2
-  	tries=$((tries + 1))
-
-  	if [ ${t1_init} -lt 10000 ] || [ ${t2_init} -lt 10000 ]; then
-  		echo "FAIL after ${tries} tries:"
-  		echo "T1 size ${t1_init}, after swap ${t1_swap}"
-  		echo "T2 size ${t2_init}, after swap ${t2_swap}"
-  		exit 1
-  	fi
-  done
-  echo "PASS"
-  # echo -n 'func hash_ip4_resize +p' > /sys/kernel/debug/dynamic_debug/control
-  # ./hash_ip_size.sh
-  [ 2035.018673] attempt to resize set t1 from 10 to 11, t 00000000fe6551fa
-  [ 2035.078583] set t1 resized from 10 (00000000fe6551fa) to 11 (00000000172a0163)
-  [ 2035.080353] Table destroy by resize 00000000fe6551fa
-  FAIL after 4 tries:
-  T1 size 9064, after swap 71128
-  T2 size 71128, after swap 9064
-
-Reported-by: NOYB <JunkYardMail1@Frontier.com>
-Fixes: 9e41f26a505c ("netfilter: ipset: Count non-static extension memory for userspace")
-Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipset/ip_set_hash_gen.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/ipset/ip_set_hash_gen.h b/net/netfilter/ipset/ip_set_hash_gen.h
-index 10f619625abd..175f8fedcfaf 100644
---- a/net/netfilter/ipset/ip_set_hash_gen.h
-+++ b/net/netfilter/ipset/ip_set_hash_gen.h
-@@ -622,7 +622,7 @@ mtype_resize(struct ip_set *set, bool retried)
- 					goto cleanup;
- 				}
- 				m->size = AHASH_INIT_SIZE;
--				extsize = ext_size(AHASH_INIT_SIZE, dsize);
-+				extsize += ext_size(AHASH_INIT_SIZE, dsize);
- 				RCU_INIT_POINTER(hbucket(t, key), m);
- 			} else if (m->pos >= m->size) {
- 				struct hbucket *ht;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index d1588ea6132c..24fce343e7fc 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -243,11 +243,13 @@ static int hns3_lp_run_test(struct net_device *ndev, enum hnae3_loop mode)
+ 
+ 		skb_get(skb);
+ 		tx_ret = hns3_nic_net_xmit(skb, ndev);
+-		if (tx_ret == NETDEV_TX_OK)
++		if (tx_ret == NETDEV_TX_OK) {
+ 			good_cnt++;
+-		else
++		} else {
++			kfree_skb(skb);
+ 			netdev_err(ndev, "hns3_lb_run_test xmit failed: %d\n",
+ 				   tx_ret);
++		}
+ 	}
+ 	if (good_cnt != HNS3_NIC_LB_TEST_PKT_NUM) {
+ 		ret_val = HNS3_NIC_LB_TEST_TX_CNT_ERR;
 -- 
 2.20.1
 
