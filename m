@@ -5,47 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256F2C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E640C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3C1E22C7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3344A22BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033437;
-	bh=zY0UsNUuEJdMOZmq3GwU0pCwGzFJPeoyFllKkKPO920=;
+	s=default; t=1564033440;
+	bh=11E7e5E99LqGGNJmqynG3uIbu/ENqOYwEjK/1K0oJ5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HiwoKk3vAgSrBRtPNk5aOLitLpi93IUb5EYuvDe8OzKGKO1FFw3FVTlf6XXlmIEvN
-	 dX+dZw5MQde5ElVI5kTDvpmN7FlIgaB2cOPAScdybWxAxO8dI5Xz4ljPJe4JmSR640
-	 SQTJQjEX98GVfkRTmaRay5a0izGaV4TFVBw7eWfo=
+	b=Wdtf07/vJJxNQVi5orufVIeLwi0hvWOfc9/JCvdpqBOHfWGXTxpVSixRPaU1lY+/f
+	 aE59CiANEauhnTJfVrv7Du+ig+69Gg9vDQglUV5EyMSwmhvbXlzjJnjS5OtJrlRNTd
+	 4Z4Wzq3fG7ITRm+rBo4bhkIKM0mxf/U4m2WsY2Nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391122AbfGYFnz (ORCPT
+        id S2391135AbfGYFn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:43:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58856 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:43:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391096AbfGYFnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:43:51 -0400
+        id S2391107AbfGYFnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:43:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B908F21850;
-        Thu, 25 Jul 2019 05:43:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EB9721850;
+        Thu, 25 Jul 2019 05:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033430;
-        bh=zY0UsNUuEJdMOZmq3GwU0pCwGzFJPeoyFllKkKPO920=;
+        s=default; t=1564033432;
+        bh=11E7e5E99LqGGNJmqynG3uIbu/ENqOYwEjK/1K0oJ5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PnM04IYyQzFVT9S5GeaOz84Efjc7NTGJT2TxiZIXdbyxANQMt1MZjcRUJMN0aQzRq
-         Cm9y6WgnFZjlYyn60vlvTifS68uYOGeR4pisZZEkseg6mwciWI9owAgXdgVlms/JFp
-         lI1u1EcaBqUTkxCXykDptMA1fsNuHQNrHdbtIwGo=
+        b=gTPlkx9lzcGxH1FrR7FnT62phLq0m5q1wLlUr7zL3juua4YdFtA69T17ldIFFhy0r
+         8m7vYiBd6du9A4Ma4yx6vt/BLNAJjsPx4/pJGbve1kL5PYCBHck+EPxUQgR4RZI7x1
+         aK3o0lVpbYVv3ymApxqGrsv4jDTCM9OFbS5wWf9I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 204/271] ASoC: dapm: Adapt for debugfs API change
-Date:   Wed, 24 Jul 2019 21:21:13 +0200
-Message-Id: <20190724191712.575607776@linuxfoundation.org>
+        stable@vger.kernel.org, Michal Soltys <soltys@ziu.info>,
+        Xiao Ni <xni@redhat.com>, Song Liu <songliubraving@fb.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 205/271] raid5-cache: Need to do start() part job after adding journal device
+Date:   Wed, 24 Jul 2019 21:21:14 +0200
+Message-Id: <20190724191712.656388776@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -58,72 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Brown <broonie@kernel.org>
+From: Xiao Ni <xni@redhat.com>
 
-commit ceaea851b9ea75f9ea2bbefb53ff0d4b27cd5a6e upstream.
+commit d9771f5ec46c282d518b453c793635dbdc3a2a94 upstream.
 
-Back in ff9fb72bc07705c (debugfs: return error values, not NULL) the
-debugfs APIs were changed to return error pointers rather than NULL
-pointers on error, breaking the error checking in ASoC. Update the
-code to use IS_ERR() and log the codes that are returned as part of
-the error messages.
+commit d5d885fd514f ("md: introduce new personality funciton start()")
+splits the init job to two parts. The first part run() does the jobs that
+do not require the md threads. The second part start() does the jobs that
+require the md threads.
 
-Fixes: ff9fb72bc07705c (debugfs: return error values, not NULL)
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Now it just does run() in adding new journal device. It needs to do the
+second part start() too.
+
+Fixes: d5d885fd514f ("md: introduce new personality funciton start()")
+Cc: stable@vger.kernel.org #v4.9+
+Reported-by: Michal Soltys <soltys@ziu.info>
+Signed-off-by: Xiao Ni <xni@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-dapm.c |   18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/md/raid5.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -2139,23 +2139,25 @@ void snd_soc_dapm_debugfs_init(struct sn
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -7670,7 +7670,7 @@ abort:
+ static int raid5_add_disk(struct mddev *mddev, struct md_rdev *rdev)
  {
- 	struct dentry *d;
- 
--	if (!parent)
-+	if (!parent || IS_ERR(parent))
- 		return;
- 
- 	dapm->debugfs_dapm = debugfs_create_dir("dapm", parent);
- 
--	if (!dapm->debugfs_dapm) {
-+	if (IS_ERR(dapm->debugfs_dapm)) {
- 		dev_warn(dapm->dev,
--		       "ASoC: Failed to create DAPM debugfs directory\n");
-+			 "ASoC: Failed to create DAPM debugfs directory %ld\n",
-+			 PTR_ERR(dapm->debugfs_dapm));
- 		return;
+ 	struct r5conf *conf = mddev->private;
+-	int err = -EEXIST;
++	int ret, err = -EEXIST;
+ 	int disk;
+ 	struct disk_info *p;
+ 	int first = 0;
+@@ -7685,7 +7685,14 @@ static int raid5_add_disk(struct mddev *
+ 		 * The array is in readonly mode if journal is missing, so no
+ 		 * write requests running. We should be safe
+ 		 */
+-		log_init(conf, rdev, false);
++		ret = log_init(conf, rdev, false);
++		if (ret)
++			return ret;
++
++		ret = r5l_start(conf->log);
++		if (ret)
++			return ret;
++
+ 		return 0;
  	}
- 
- 	d = debugfs_create_file("bias_level", 0444,
- 				dapm->debugfs_dapm, dapm,
- 				&dapm_bias_fops);
--	if (!d)
-+	if (IS_ERR(d))
- 		dev_warn(dapm->dev,
--			 "ASoC: Failed to create bias level debugfs file\n");
-+			 "ASoC: Failed to create bias level debugfs file: %ld\n",
-+			 PTR_ERR(d));
- }
- 
- static void dapm_debugfs_add_widget(struct snd_soc_dapm_widget *w)
-@@ -2169,10 +2171,10 @@ static void dapm_debugfs_add_widget(stru
- 	d = debugfs_create_file(w->name, 0444,
- 				dapm->debugfs_dapm, w,
- 				&dapm_widget_power_fops);
--	if (!d)
-+	if (IS_ERR(d))
- 		dev_warn(w->dapm->dev,
--			"ASoC: Failed to create %s debugfs file\n",
--			w->name);
-+			 "ASoC: Failed to create %s debugfs file: %ld\n",
-+			 w->name, PTR_ERR(d));
- }
- 
- static void dapm_debugfs_cleanup(struct snd_soc_dapm_context *dapm)
+ 	if (mddev->recovery_disabled == conf->recovery_disabled)
 
 
