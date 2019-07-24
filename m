@@ -2,82 +2,190 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97147C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C32C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B050229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:39:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="U5GPeLH3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ocFHY2l9"
+	by mail.kernel.org (Postfix) with ESMTP id E0EDD22387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563968405;
+	bh=Waz30FvbM2bDuciG00WYPrNVQxeN8XFol+6MLZngaDU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OHfjZUsGHnBFFOrXjHks0oCd6ptqLsLEaQN2Gm4O188JB49Jb2DocmhKKSVH29+xM
+	 Uwx4hlq9R+QVPWzhnf1b/LQyKFAtAa104544deBCnIjPgYqsQNcIAOTmKfQGxEeWxv
+	 7GpqKwiDpsBskdziDwxfw2hq63LxmREXWZTeTL7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfGXLjh (ORCPT
+        id S1727607AbfGXLkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 07:39:37 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41894 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727128AbfGXLjg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 07:39:36 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A1A056021C; Wed, 24 Jul 2019 11:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563968375;
-        bh=ofgYBmGSUa5nhgpLRPQsiG2fQFZbyQOHphQJgkKsWzo=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=U5GPeLH3QHhWqZhwFEOorsu5kqNdfCt45XgSlD51/ypDZ08unp441lAEnqX977YQa
-         OTp6LAEA6mSOculcl2W2tHgsGMHogpkSz7hZIWujyHR3E9HKu5kJ4+6H38K76iZTzL
-         tbeju8WfQPzbc+n6EAXDuJNfNSbBMZYVZ+N/OHgE=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 24 Jul 2019 07:40:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727409AbfGXLkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 07:40:03 -0400
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5B7066021C;
-        Wed, 24 Jul 2019 11:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563968374;
-        bh=ofgYBmGSUa5nhgpLRPQsiG2fQFZbyQOHphQJgkKsWzo=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=ocFHY2l9ASxrEVZKU6AhtBZpqSNWQ9Wk++XwCtu+42WAOtZFRaPvJHBTdSywlL0o5
-         IJvDsCG3XI5Jm9LrTZDjiLzKzC+jut9gksRBcFnfEqS67VlB//JReTxBjvGQuEVO4M
-         YsWr6dIPJY2rzblPlcH4cWn14BUIwNinq9v9iZWs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5B7066021C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mail.kernel.org (Postfix) with ESMTPSA id A257022BEA;
+        Wed, 24 Jul 2019 11:40:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563968402;
+        bh=Waz30FvbM2bDuciG00WYPrNVQxeN8XFol+6MLZngaDU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UbDgSp5MCNlE5sgwQ9+EIE7o8SHwMpf+XN4VT6PiWNo6t5C+chmfrADPAC81mnyzB
+         lLmezBMZBzexYyBBLromTjhqtQTKq0OCsnLq13HYRjL1N0PQazge1y0S3uzvb70j/g
+         CY2l7sN0Vh3XA6XhCjKmPSJf9D1Fd+bQNC9WtNO4=
+Received: by mail-lf1-f41.google.com with SMTP id b29so24483102lfq.1;
+        Wed, 24 Jul 2019 04:40:01 -0700 (PDT)
+X-Gm-Message-State: APjAAAW5d3OgsVcSacdRv7N3+Olybz6wP/sAvCRKKHpbCnTNLhnIKX2Q
+        8ES034jbw5iDUVMz9nu1/rz0DlS01SOhbCK7S7o=
+X-Google-Smtp-Source: APXvYqx3+A563bA8Nc3lxEu2U+a/qw7GJbEPteETDwnhna9Ox1cYxk6dVWTYQpIDqElHtzAZl4iPfU/mdKjG6U8RDME=
+X-Received: by 2002:ac2:4891:: with SMTP id x17mr39260124lfc.60.1563968399768;
+ Wed, 24 Jul 2019 04:39:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] marvell wireless: cleanup -- make error values consistent
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190724095015.GA6592@amd>
-References: <20190724095015.GA6592@amd>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     amitkarwar@gmail.com, nishants@marvell.com, gbhat@marvell.com,
-        huxinming820@gmail.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190724113935.A1A056021C@smtp.codeaurora.org>
-Date:   Wed, 24 Jul 2019 11:39:35 +0000 (UTC)
+References: <CGME20190722094727eucas1p10041ba25819e6e62d639423a97435f2d@eucas1p1.samsung.com>
+ <20190722094646.13342-1-l.luba@partner.samsung.com> <20190722094646.13342-4-l.luba@partner.samsung.com>
+In-Reply-To: <20190722094646.13342-4-l.luba@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 24 Jul 2019 13:39:48 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdue75yF=v5vsawOdfvcCMBDP6HGVXdwngBWE264kGJwg@mail.gmail.com>
+Message-ID: <CAJKOXPdue75yF=v5vsawOdfvcCMBDP6HGVXdwngBWE264kGJwg@mail.gmail.com>
+Subject: Re: [PATCH v12 3/9] drivers: memory: extend of_memory by LPDDR3 support
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
+        willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel Machek <pavel@ucw.cz> wrote:
+On Mon, 22 Jul 2019 at 11:47, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> The patch adds AC timings information needed to support LPDDR3 and memory
+> controllers. The structure is used in of_memory and currently in Exynos
+> 5422 DMC. Add parsing data needed for LPDDR3 support.
+> It is currently used in Exynos5422 Dynamic Memory Controller.
+>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  drivers/memory/jedec_ddr.h |  61 +++++++++++++++
+>  drivers/memory/of_memory.c | 154 +++++++++++++++++++++++++++++++++++++
+>  drivers/memory/of_memory.h |  18 +++++
+>  3 files changed, 233 insertions(+)
+>
+> diff --git a/drivers/memory/jedec_ddr.h b/drivers/memory/jedec_ddr.h
+> index 4a21b5044ff8..38e26d461bdb 100644
+> --- a/drivers/memory/jedec_ddr.h
+> +++ b/drivers/memory/jedec_ddr.h
+> @@ -29,6 +29,7 @@
+>  #define DDR_TYPE_LPDDR2_S4     3
+>  #define DDR_TYPE_LPDDR2_S2     4
+>  #define DDR_TYPE_LPDDR2_NVM    5
+> +#define DDR_TYPE_LPDDR3                6
+>
+>  /* DDR IO width */
+>  #define DDR_IO_WIDTH_4         1
+> @@ -169,4 +170,64 @@ extern const struct lpddr2_timings
+>         lpddr2_jedec_timings[NUM_DDR_TIMING_TABLE_ENTRIES];
+>  extern const struct lpddr2_min_tck lpddr2_jedec_min_tck;
+>
+> +/*
+> + * Structure for timings for LPDDR3 based on LPDDR2 plus additional fields.
+> + * All parameters are in pico seconds(ps) unless explicitly indicated
+> + * with a suffix like tRAS_max_ns below
+> + */
+> +struct lpddr3_timings {
+> +       u32 max_freq;
+> +       u32 min_freq;
+> +       u32 tRFC;
+> +       u32 tRRD;
+> +       u32 tRPab;
+> +       u32 tRPpb;
+> +       u32 tRCD;
+> +       u32 tRC;
+> +       u32 tRAS;
+> +       u32 tWTR;
+> +       u32 tWR;
+> +       u32 tRTP;
+> +       u32 tW2W_C2C;
+> +       u32 tR2R_C2C;
+> +       u32 tWL;
+> +       u32 tDQSCK;
+> +       u32 tRL;
+> +       u32 tFAW;
+> +       u32 tXSR;
+> +       u32 tXP;
+> +       u32 tCKE;
+> +       u32 tCKESR;
+> +       u32 tMRD;
+> +};
+> +
+> +/*
+> + * Min value for some parameters in terms of number of tCK cycles(nCK)
+> + * Please set to zero parameters that are not valid for a given memory
+> + * type
+> + */
+> +struct lpddr3_min_tck {
+> +       u32 tRFC;
+> +       u32 tRRD;
+> +       u32 tRPab;
+> +       u32 tRPpb;
+> +       u32 tRCD;
+> +       u32 tRC;
+> +       u32 tRAS;
+> +       u32 tWTR;
+> +       u32 tWR;
+> +       u32 tRTP;
+> +       u32 tW2W_C2C;
+> +       u32 tR2R_C2C;
+> +       u32 tWL;
+> +       u32 tDQSCK;
+> +       u32 tRL;
+> +       u32 tFAW;
+> +       u32 tXSR;
+> +       u32 tXP;
+> +       u32 tCKE;
+> +       u32 tCKESR;
+> +       u32 tMRD;
+> +};
+> +
+>  #endif /* __JEDEC_DDR_H */
+> diff --git a/drivers/memory/of_memory.c b/drivers/memory/of_memory.c
+> index 46539b27a3fb..4f5b8c81669f 100644
+> --- a/drivers/memory/of_memory.c
+> +++ b/drivers/memory/of_memory.c
+> @@ -3,6 +3,12 @@
+>   * OpenFirmware helpers for memory drivers
+>   *
+>   * Copyright (C) 2012 Texas Instruments, Inc.
+> + * Copyright (C) 2019 Samsung Electronics Co., Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
 
-> Surrounding code uses -ERRNO as a result, so don't pass plain -1.
-> 
-> Signed-off-by: Pavel Machek <pavel@denx.de>
+What's this?
 
-The title prefix should be "mwifiex:", I'll fix that.
+Please, get a independent review or ack for this patch.
 
--- 
-https://patchwork.kernel.org/patch/11056525/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Best regards,
+Krzysztof
