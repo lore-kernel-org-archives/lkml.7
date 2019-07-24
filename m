@@ -2,139 +2,119 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE10C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04359C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0062721BF6
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D579C21BF6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:30:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbfGXM3l (ORCPT
+        id S1728354AbfGXMaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 08:29:41 -0400
-Received: from mx2.freebsd.org ([96.47.72.81]:60519 "EHLO mx2.freebsd.org"
+        Wed, 24 Jul 2019 08:30:12 -0400
+Received: from ou.quest-ce.net ([195.154.187.82]:58382 "EHLO ou.quest-ce.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbfGXM3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 08:29:38 -0400
-X-Greylist: delayed 354 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Jul 2019 08:29:36 EDT
-Received: from mx1.freebsd.org (mx1.freebsd.org [IPv6:2610:1c1:1:606c::19:1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client CN "mx1.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
-        by mx2.freebsd.org (Postfix) with ESMTPS id 58B996BAB9;
-        Wed, 24 Jul 2019 12:23:44 +0000 (UTC)
-        (envelope-from manu@freebsd.org)
-Received: from smtp.freebsd.org (smtp.freebsd.org [96.47.72.83])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "smtp.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
-        by mx1.freebsd.org (Postfix) with ESMTPS id AED8D77C79;
-        Wed, 24 Jul 2019 12:23:43 +0000 (UTC)
-        (envelope-from manu@freebsd.org)
-Received: from localhost.localdomain (ip-9.net-89-3-105.rev.numericable.fr [89.3.105.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: manu)
-        by smtp.freebsd.org (Postfix) with ESMTPSA id 9E65A2BB04;
-        Wed, 24 Jul 2019 12:23:42 +0000 (UTC)
-        (envelope-from manu@freebsd.org)
-From:   Emmanuel Vadot <manu@freebsd.org>
-To:     bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-omap@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Emmanuel Vadot <manu@freebsd.org>
-Subject: [PATCH 1/1] ARM: dts: am335x: Fix UARTs length
-Date:   Wed, 24 Jul 2019 14:23:29 +0200
-Message-Id: <20190724122329.21231-2-manu@freebsd.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724122329.21231-1-manu@freebsd.org>
-References: <20190724122329.21231-1-manu@freebsd.org>
+        id S1726558AbfGXMaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 08:30:12 -0400
+X-Greylist: delayed 1449 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Jul 2019 08:30:11 EDT
+Received: from [37.164.191.68] (helo=opteyam2)
+        by ou.quest-ce.net with esmtpsa (TLS1.1:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <ydroneaud@opteya.com>)
+        id 1hqG1s-000DGH-PU; Wed, 24 Jul 2019 14:05:57 +0200
+Message-ID: <bc1ad99a420dd842ce3a17c2c38a2f94683dc91c.camel@opteya.com>
+From:   Yann Droneaud <ydroneaud@opteya.com>
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Rasmus Villemoes' <linux@rasmusvillemoes.dk>,
+        Joe Perches <joe@perches.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Stephen Kitt <steve@sk2.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nitin Gote <nitin.r.gote@intel.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Wed, 24 Jul 2019 14:05:48 +0200
+In-Reply-To: <5ffdbf4f87054b47a2daf23a6afabecf@AcuMS.aculab.com>
+References: <cover.1563841972.git.joe@perches.com>
+         <7ab8957eaf9b0931a59eff6e2bd8c5169f2f6c41.1563841972.git.joe@perches.com>
+         <eec901c6-ca51-89e4-1887-1ccab0288bee@rasmusvillemoes.dk>
+         <5ffdbf4f87054b47a2daf23a6afabecf@AcuMS.aculab.com>
+Organization: OPTEYA
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: AED8D77C79
-X-Spamd-Bar: --
-Authentication-Results: mx1.freebsd.org
-X-Spamd-Result: default: False [-2.94 / 15.00];
-         TAGGED_RCPT(0.00)[dt];
-         local_wl_from(0.00)[freebsd.org];
-         NEURAL_HAM_SHORT(-0.94)[-0.940,0];
-         NEURAL_HAM_MEDIUM(-1.00)[-1.000,0];
-         ASN(0.00)[asn:11403, ipnet:96.47.64.0/20, country:US];
-         NEURAL_HAM_LONG(-1.00)[-1.000,0]
+X-SA-Exim-Connect-IP: 37.164.191.68
+X-SA-Exim-Mail-From: ydroneaud@opteya.com
+Subject: Re: [PATCH 1/2] string: Add stracpy and stracpy_pad mechanisms
+X-SA-Exim-Version: 4.2.1 (built Mon, 26 Dec 2011 16:24:06 +0000)
+X-SA-Exim-Scanned: Yes (on ou.quest-ce.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As seen on the AM335x TRM all the UARTs controller only are 0x1000 in size.
-Fix this in the DTS.
+Hi,
 
-Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
----
- arch/arm/boot/dts/am33xx-l4.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Le mardi 23 juillet 2019 à 15:41 +0000, David Laight a écrit :
+> From: Rasmus Villemoes
+> > Sent: 23 July 2019 07:56
+> ...
+> > > +/**
+> > > + * stracpy - Copy a C-string into an array of char
+> > > + * @to: Where to copy the string, must be an array of char and
+> > > not a pointer
+> > > + * @from: String to copy, may be a pointer or const char array
+> > > + *
+> > > + * Helper for strscpy.
+> > > + * Copies a maximum of sizeof(@to) bytes of @from with %NUL
+> > > termination.
+> > > + *
+> > > + * Returns:
+> > > + * * The number of characters copied (not including the trailing
+> > > %NUL)
+> > > + * * -E2BIG if @to is a zero size array.
+> > 
+> > Well, yes, but more importantly and generally: -E2BIG if the copy
+> > including %NUL didn't fit. [The zero size array thing could be made
+> > into
+> > a build bug for these stra* variants if one thinks that might
+> > actually
+> > occur in real code.]
+> 
+> Probably better is to return the size of the destination if the copy
+> didn't fit
+> (zero if the buffer is zero length).
+> This allows code to do repeated:
+> 	offset += str*cpy(buf + offset, src, sizeof buf - offset);
+> and do a final check for overflow after all the copies.
+> 
+> The same is true for a snprintf()like function
+> 
 
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-index ced1a19d5f89..a20b04b72be4 100644
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -185,7 +185,7 @@
- 			uart0: serial@0 {
- 				compatible = "ti,am3352-uart", "ti,omap3-uart";
- 				clock-frequency = <48000000>;
--				reg = <0x0 0x2000>;
-+				reg = <0x0 0x1000>;
- 				interrupts = <72>;
- 				status = "disabled";
- 				dmas = <&edma 26 0>, <&edma 27 0>;
-@@ -934,7 +934,7 @@
- 			uart1: serial@0 {
- 				compatible = "ti,am3352-uart", "ti,omap3-uart";
- 				clock-frequency = <48000000>;
--				reg = <0x0 0x2000>;
-+				reg = <0x0 0x1000>;
- 				interrupts = <73>;
- 				status = "disabled";
- 				dmas = <&edma 28 0>, <&edma 29 0>;
-@@ -966,7 +966,7 @@
- 			uart2: serial@0 {
- 				compatible = "ti,am3352-uart", "ti,omap3-uart";
- 				clock-frequency = <48000000>;
--				reg = <0x0 0x2000>;
-+				reg = <0x0 0x1000>;
- 				interrupts = <74>;
- 				status = "disabled";
- 				dmas = <&edma 30 0>, <&edma 31 0>;
-@@ -1614,7 +1614,7 @@
- 			uart3: serial@0 {
- 				compatible = "ti,am3352-uart", "ti,omap3-uart";
- 				clock-frequency = <48000000>;
--				reg = <0x0 0x2000>;
-+				reg = <0x0 0x1000>;
- 				interrupts = <44>;
- 				status = "disabled";
- 			};
-@@ -1644,7 +1644,7 @@
- 			uart4: serial@0 {
- 				compatible = "ti,am3352-uart", "ti,omap3-uart";
- 				clock-frequency = <48000000>;
--				reg = <0x0 0x2000>;
-+				reg = <0x0 0x1000>;
- 				interrupts = <45>;
- 				status = "disabled";
- 			};
-@@ -1674,7 +1674,7 @@
- 			uart5: serial@0 {
- 				compatible = "ti,am3352-uart", "ti,omap3-uart";
- 				clock-frequency = <48000000>;
--				reg = <0x0 0x2000>;
-+				reg = <0x0 0x1000>;
- 				interrupts = <46>;
- 				status = "disabled";
- 			};
+Beware that snprintf(), per C standard, is supposed to return the
+length of the formatted string, regarless of the size of the
+destination buffer.
+
+So encouraging developper to write something like code below because
+snprintf() in kernel behave in a non-standard way, will likely create
+some issues in the near future.
+
+  for(;...;)
+    offset += snprintf(buf + offset, size - offset, "......", ....);
+
+(Reminder: the code below is not safe and shouldn't be used)
+
+Regards.
+
 -- 
-2.22.0
+Yann Droneaud
+OPTEYA
+
 
