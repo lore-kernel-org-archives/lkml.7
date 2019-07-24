@@ -2,103 +2,179 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E571FC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 753B5C76190
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACBC5227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:34:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1c4BoDR"
+	by mail.kernel.org (Postfix) with ESMTP id 46012227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:34:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563935697;
+	bh=de+IB35aJ8YXt1atbBHJSF8MOiOuDUmHPwZn8dakJCI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=U+r1aHG2H3t5tfFcQvXyyrj3K9ukY96Zr6oNPVpH8SmJH72Hu55O+TPvA0NLcEEHy
+	 q/04mt7ff5h6t4a2TeJfvt0QQ9csc8GXELQWSTYdrlA0LANd0+1HtmZEAfuVgUwDuV
+	 e/pL9kQWPGxG2QIKRXNmnN4kDyz/FqNEEoyTDvyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbfGXCeP (ORCPT
+        id S1728939AbfGXCez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:34:15 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36387 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfGXCeO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:34:14 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l21so20376272pgm.3;
-        Tue, 23 Jul 2019 19:34:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zLRKL/gPs+H8SY77w9eVBrRyeHltVjkGP2Avoqt8jdk=;
-        b=A1c4BoDRmx0ORVvKKiL72V4Q6T65Dly7SwVr7+L8Z8PoVqhMCd5V+h3oDgzqhF0xlS
-         ZlJ7J9Vbr41LsJCV46TKMxMdiUav5iiRAbeEW/goapwL0PE8/kp5UbsQvCBCFPT9AORV
-         ICxXCjOC7KafO89PTQnfamcfZyvnOoOzc5Vk4qJApDpd/DZ7jt0f1yv5HmyrBnRAvxbg
-         9WcDNJcPQlLP1RXjnZv75dsEtr8g2WFQW8t2lkASc9U59F5Iy2iO0w06QmL0AUt8Ld5l
-         gkr5ubVzpi9i9wOrQlgbqdhZY7wz4td7IbR3XYK+nSJEdjyTBIdz88jnWffHhRwNeibw
-         GcNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zLRKL/gPs+H8SY77w9eVBrRyeHltVjkGP2Avoqt8jdk=;
-        b=OTJt7pqUw+4qxm8fCFdeIOwWJWlSCn9vR3YdtDOJv5rA3myV+iS3AqXsqXCwrX4bpF
-         yZ0w1myAgfu+3IRH2oujhwgy0tIf5Vvn3TYDCnVmeWV19l1d9BLNsB+TerI3jJqEpa1F
-         K3C+NNXMvCqCPEDLwCVCfcg9FK4nXeDoGM2iZE4vBgU5OstIGwpQekrkLtaHqIrulgT9
-         BK5M3moFgPMByIExEN67N2jP0TRGEB7GT/KR2wM10mvTgo4qEMgGxpH4YqnF6g+C2qYM
-         ONngGNkTSruunPLmJvZPIKRXMvxtjsWPfE0Rk4CRENBTldFvHeXlS9uFtWdh7sMWg9dQ
-         5TLg==
-X-Gm-Message-State: APjAAAWVV27wd62xMnnwVAha2ychwlpPx/DOSJFvad6NmEC6xtTbXSY6
-        LuLRpNqiG20Y1HSC6CTonfM=
-X-Google-Smtp-Source: APXvYqzfA83c3TncrVOHNCO4gafJ0pOTxGRqj3ih5x1kS51UKLt8voYTdn970u/vx83IkL0x3MjUow==
-X-Received: by 2002:a63:5a4d:: with SMTP id k13mr76810401pgm.174.1563935654132;
-        Tue, 23 Jul 2019 19:34:14 -0700 (PDT)
-Received: from [192.168.1.5] ([110.78.179.210])
-        by smtp.googlemail.com with ESMTPSA id s66sm48054058pfs.8.2019.07.23.19.34.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 19:34:13 -0700 (PDT)
-Subject: Re: [PATCH] USB: serial: option: Add Motorola modem UARTs
-To:     Tony Lindgren <tony@atomide.com>, Johan Hovold <johan@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Bj=c3=b8rn_Mork?= <bjorn@mork.no>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Marcel Partap <mpartap@gmx.net>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Michael Scott <hashcode0f@gmail.com>,
-        NeKit <nekit1000@gmail.com>, Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>
-References: <20190723144956.55753-1-tony@atomide.com>
-From:   Lars Melin <larsm17@gmail.com>
-Message-ID: <75e9bccc-d76d-2bc6-f9f3-a0efc25e8238@gmail.com>
-Date:   Wed, 24 Jul 2019 09:34:09 +0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 23 Jul 2019 22:34:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725861AbfGXCez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:34:55 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B9E4227BF;
+        Wed, 24 Jul 2019 02:34:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563935693;
+        bh=de+IB35aJ8YXt1atbBHJSF8MOiOuDUmHPwZn8dakJCI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CwiofahFiYRXaPs8PpUbS+6nIjlTYVIoMFgKFC6r22RxAsDs3JXrvoNeWWoVFgE9x
+         k5cj790rl+WwNq4LMJgjj1Z60x+u3Gqcccy+7l+q1Wmb2MEJUV/rk4dQuls60R5F3v
+         zwXkualeTbe/7KbPOnjQY0yHd3C2bMfW+d2nDMTo=
+Date:   Tue, 23 Jul 2019 19:34:52 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Reminder: 4 open syzbot bugs in "net/rds" subsystem
+Message-ID: <20190724023452.GW643@sol.localdomain>
+Mail-Followup-To: netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 MIME-Version: 1.0
-In-Reply-To: <20190723144956.55753-1-tony@atomide.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/2019 21:49, Tony Lindgren wrote:
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better, or if you want it re-generated with the latest status.]
 
-> +#define MOTOROLA_VENDOR_ID			0x22b8
-> +#define MOTOROLA_PRODUCT_MDM6600		0x2a70
-> +#define MOTOROLA_PRODUCT_MDM9600		0x2e0a
-> +#define MOTOROLA_PRODUCT_MDM_RAM_DL		0x4281
-> +#define MOTOROLA_PRODUCT_MDM_QC_DL		0x900e
-> +
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 4 of them as possibly being bugs in the "net/rds" subsystem.  I've listed
+these reports below, sorted by an algorithm that tries to list first the reports
+most likely to be still valid, important, and actionable.
 
-Johan, when he is back from vacation, will tell you to drop those 
-defines and instead use the values directly in the list with a comment 
-behind reflecting the device model.
-Just telling you so you can save time by sending out your v2 early..
+Of these 4 bugs, 1 was seen in mainline in the last week.
 
+Of these 4 bugs, 1 was bisected to a commit from the following person:
 
-best rgds
-/Lars
+	Dennis Dalessandro <dennis.dalessandro@intel.com>
+
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
+
+If you believe I misattributed a bug to the "net/rds" subsystem, please let me
+know, and if possible forward the report to the correct people or mailing list.
+
+Here are the bugs:
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in rds_recv_rcvbuf_delta
+Last occurred:      26 days ago
+Reported:           253 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=e1d2492507fca6102dbce03c16b40a21130c8dbf
+Original thread:    https://lkml.kernel.org/lkml/000000000000445dd9057a7149f1@google.com/T/#u
+
+This bug has a C reproducer.
+
+This bug was bisected to:
+
+	commit b534875d5ab348fb9193692589e2ee82ae768e3a
+	Author: Dennis Dalessandro <dennis.dalessandro@intel.com>
+	Date:   Wed Jan 6 18:02:59 2016 +0000
+
+	  IB/rdmavt: Add device specific info prints
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+4b4f8163c2e246df3c4c@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000445dd9057a7149f1@google.com
+
+--------------------------------------------------------------------------------
+Title:              memory leak in rds_send_probe
+Last occurred:      0 days ago
+Reported:           0 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=39b72114839a6dbd66c1d2104522698a813f9ae2
+Original thread:    https://lkml.kernel.org/lkml/000000000000ad1dfe058e5b89ab@google.com/T/#u
+
+This bug has a C reproducer.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+The original thread for this bug has received 4 replies; the last was 3 hours
+ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+5134cdf021c4ed5aaa5f@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread, which had activity only 3 hours ago.  For the git send-email command to
+use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
+instructions" at https://lkml.kernel.org/r/000000000000ad1dfe058e5b89ab@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in rds_cong_queue_updates (2)
+Last occurred:      112 days ago
+Reported:           365 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=6f435350bd496374955b3aeba9e313d16db4b30b
+Original thread:    https://lkml.kernel.org/lkml/000000000000cdb5450571adfe40@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+The original thread for this bug received 1 reply, 365 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+470ae97a39f16146af45@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000cdb5450571adfe40@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: slab-out-of-bounds Read in rds_cong_queue_updates (2)
+Last occurred:      110 days ago
+Reported:           377 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=58c0193d54290dfe8266db64b482b0e796f0d611
+Original thread:    https://lkml.kernel.org/lkml/0000000000005274c40570be9f48@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+The original thread for this bug received 1 reply, 377 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+0570fef57a5e020bdc87@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000005274c40570be9f48@google.com
+
