@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 161C3C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E818C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3D422ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3261820659
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996872;
-	bh=9g7CCjjavbfNXhLex0hZ7r+JBm+d9AM+T5LNW3TD2NM=;
+	s=default; t=1563996878;
+	bh=2JedzVbS3p0gQxDbnhbGdggAoCwQd65/ctQNtr30MIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JqwnEAhvaAcq5+CDohMNsebGx5aXvCFCvEyTNuEQyoTBA6v9EmbIZiOuNYSbPZgWC
-	 B76pVmBWYEAWzuX6Lw5KCOuCYqSLAaCy63uBUo+LOnpxL2QVzkhvn2Jg62SC9GK77t
-	 GXCmuxUuO12VcDFj9jcR/86q+A93ULNutDd9gU2E=
+	b=SDnRZ5/bvSZN1Q8fURswXBU0SFsJAHKXgSZGVNAQWcMQmuCe3Mhi3M01vnsRYDzBn
+	 xbMmZAInL8RdJ2eX6tCjuforwmmOu37ygJRP1UDKxtcgrD/pZW7gZhzzQhVVlSnvvf
+	 N5vneWOjD7pkCtnDlsjIWm8KPPJOlnFhT00zoqKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfGXTeb (ORCPT
+        id S1728749AbfGXTeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:34:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:34:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388095AbfGXTe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:34:29 -0400
+        id S2388095AbfGXTed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:34:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFE7520659;
-        Wed, 24 Jul 2019 19:34:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFE1E22BE9;
+        Wed, 24 Jul 2019 19:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996868;
-        bh=9g7CCjjavbfNXhLex0hZ7r+JBm+d9AM+T5LNW3TD2NM=;
+        s=default; t=1563996873;
+        bh=2JedzVbS3p0gQxDbnhbGdggAoCwQd65/ctQNtr30MIQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1HikBzr5sWOn58vKv8Yzjf+iUUf1guoRpAKi18WT2h5cw/W9aoXIvyJFMQNJNmlXN
-         31j/FJP5lGXoPPTS3yMGuS5nJ6f1d/y+uHO9DyejEmfD1/jWVgkRgKyZtzlvs3dtOD
-         41yYTrhBMGqjKtcwOMrg/24hqsTqR30AU5YDyWAY=
+        b=AMBZW9/jAH+gUfwJ6F6YWM2JGgxaz9Xn1xiwRA8KzmjCPWK6gypR14pX3w2FFR2rS
+         hXHcqXB8CEO3oLp1rDACpL7+nJdcgQkcXI4KecWy4OsWixuwTbNG5NZWrqXQP5zoSR
+         Z/JXPEepmlVoklVaWwQLs/HVusopC7SWpnqrHnuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josua Mayer <josua@solid-run.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 243/413] net: mvmdio: defer probe of orion-mdio if a clock is not ready
-Date:   Wed, 24 Jul 2019 21:18:54 +0200
-Message-Id: <20190724191752.806971039@linuxfoundation.org>
+Subject: [PATCH 5.2 245/413] iavf: fix dereference of null rx_buffer pointer
+Date:   Wed, 24 Jul 2019 21:18:56 +0200
+Message-Id: <20190724191753.032383306@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,43 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 433a06d7d74e677c40b1148c70c48677ff62fb6b ]
+[ Upstream commit 9fe06a51287b2d41baef7ece94df34b5abf19b90 ]
 
-Defer probing of the orion-mdio interface when getting a clock returns
-EPROBE_DEFER. This avoids locking up the Armada 8k SoC when mdio is used
-before all clocks have been enabled.
+A recent commit efa14c3985828d ("iavf: allow null RX descriptors") added
+a null pointer sanity check on rx_buffer, however, rx_buffer is being
+dereferenced before that check, which implies a null pointer dereference
+bug can potentially occur.  Fix this by only dereferencing rx_buffer
+until after the null pointer check.
 
-Signed-off-by: Josua Mayer <josua@solid-run.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Addresses-Coverity: ("Dereference before null check")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvmdio.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/intel/iavf/iavf_txrx.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvmdio.c b/drivers/net/ethernet/marvell/mvmdio.c
-index c5dac6bd2be4..903836e334d8 100644
---- a/drivers/net/ethernet/marvell/mvmdio.c
-+++ b/drivers/net/ethernet/marvell/mvmdio.c
-@@ -321,6 +321,10 @@ static int orion_mdio_probe(struct platform_device *pdev)
- 
- 	for (i = 0; i < ARRAY_SIZE(dev->clk); i++) {
- 		dev->clk[i] = of_clk_get(pdev->dev.of_node, i);
-+		if (PTR_ERR(dev->clk[i]) == -EPROBE_DEFER) {
-+			ret = -EPROBE_DEFER;
-+			goto out_clk;
-+		}
- 		if (IS_ERR(dev->clk[i]))
- 			break;
- 		clk_prepare_enable(dev->clk[i]);
-@@ -362,6 +366,7 @@ static int orion_mdio_probe(struct platform_device *pdev)
- 	if (dev->err_interrupt > 0)
- 		writel(0, dev->regs + MVMDIO_ERR_INT_MASK);
- 
-+out_clk:
- 	for (i = 0; i < ARRAY_SIZE(dev->clk); i++) {
- 		if (IS_ERR(dev->clk[i]))
- 			break;
+diff --git a/drivers/net/ethernet/intel/iavf/iavf_txrx.c b/drivers/net/ethernet/intel/iavf/iavf_txrx.c
+index c97b9ecf026a..26422bc9ca8c 100644
+--- a/drivers/net/ethernet/intel/iavf/iavf_txrx.c
++++ b/drivers/net/ethernet/intel/iavf/iavf_txrx.c
+@@ -1296,7 +1296,7 @@ static struct sk_buff *iavf_construct_skb(struct iavf_ring *rx_ring,
+ 					  struct iavf_rx_buffer *rx_buffer,
+ 					  unsigned int size)
+ {
+-	void *va = page_address(rx_buffer->page) + rx_buffer->page_offset;
++	void *va;
+ #if (PAGE_SIZE < 8192)
+ 	unsigned int truesize = iavf_rx_pg_size(rx_ring) / 2;
+ #else
+@@ -1308,6 +1308,7 @@ static struct sk_buff *iavf_construct_skb(struct iavf_ring *rx_ring,
+ 	if (!rx_buffer)
+ 		return NULL;
+ 	/* prefetch first cache line of first page */
++	va = page_address(rx_buffer->page) + rx_buffer->page_offset;
+ 	prefetch(va);
+ #if L1_CACHE_BYTES < 128
+ 	prefetch(va + L1_CACHE_BYTES);
+@@ -1362,7 +1363,7 @@ static struct sk_buff *iavf_build_skb(struct iavf_ring *rx_ring,
+ 				      struct iavf_rx_buffer *rx_buffer,
+ 				      unsigned int size)
+ {
+-	void *va = page_address(rx_buffer->page) + rx_buffer->page_offset;
++	void *va;
+ #if (PAGE_SIZE < 8192)
+ 	unsigned int truesize = iavf_rx_pg_size(rx_ring) / 2;
+ #else
+@@ -1374,6 +1375,7 @@ static struct sk_buff *iavf_build_skb(struct iavf_ring *rx_ring,
+ 	if (!rx_buffer)
+ 		return NULL;
+ 	/* prefetch first cache line of first page */
++	va = page_address(rx_buffer->page) + rx_buffer->page_offset;
+ 	prefetch(va);
+ #if L1_CACHE_BYTES < 128
+ 	prefetch(va + L1_CACHE_BYTES);
 -- 
 2.20.1
 
