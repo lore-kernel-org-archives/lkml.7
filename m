@@ -2,57 +2,55 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFC5C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66645C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0025321738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3420620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998483;
-	bh=8hB8GEYwwsBCWI9E/TaVGO1DZZahcDjnJqvJxAcZX8k=;
+	s=default; t=1563998488;
+	bh=SsVjIke4UlVjkShmJ1TDaeCMaCptp8bMSWleLinyf08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rICldLc2gHSupD+EZiXNmj3xNwVGx40GSMKuV50NulvVTKxiU+84rdpSvpYLy+R4A
-	 lixiV7BYpxI6Um0mHVSkE5GOTMoCvwnOszPRrPA9OhS8eve9OZDswTgnKv7ZV7mpSx
-	 G/d4Zv4QtCHRgv6cG+buc6T8LFXA/Wqp1gobJlKk=
+	b=VG0GeOFXfBtOA7/mcbfyG8KPQSrzCM4JqPIgeukIqO+CoTk6XllbE3UHUPVWgecr3
+	 5bWLs6gsaPzDZQ8Kmr/NFSgMqH917S8ZNFk+NLDI0mFJNggZl6sFPJXtTDtMWI7i/8
+	 RuSkXo2XacNBRT8UW6c2evmHGEV7dkewMU7VIYkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405404AbfGXUBW (ORCPT
+        id S2405424AbfGXUB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:01:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50000 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:01:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405386AbfGXUBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:01:18 -0400
+        id S2405143AbfGXUBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:01:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8223422ADC;
-        Wed, 24 Jul 2019 20:01:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 908B521738;
+        Wed, 24 Jul 2019 20:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998478;
-        bh=8hB8GEYwwsBCWI9E/TaVGO1DZZahcDjnJqvJxAcZX8k=;
+        s=default; t=1563998484;
+        bh=SsVjIke4UlVjkShmJ1TDaeCMaCptp8bMSWleLinyf08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ef/xdnOETZK0rDfRw+Lvb/cqI+hnue1Axo+frqMu4haWZi1mwFI+PabInvv92Q06r
-         3cJmq9SZTyNjWw1nd57lpVsuajK/vojBf+FWRHmr/RCFg12tr+pagd1NK7Sp34bsf5
-         KSpAjP4TVIGQteurjcTG90Hl8cUA9zIIGDe9LOp4=
+        b=XQn3nGUubSbcoteOSng0AfFs2iEAnPdEcUkbU4vKaFd05VlFElwQBkSvS9IyLGgyA
+         i5z6K595/C3rt7CvXNjLxlV7CPVCAFoXcDb+vrgVHvvgz3aqZdIcwZLCSQas9Iw0UN
+         bVC3BrDXa4THss7PAFb+W+1XLKPBb4EsJIsArKmc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 340/371] mm/nvdimm: add is_ioremap_addr and use that to check ioremap address
-Date:   Wed, 24 Jul 2019 21:21:32 +0200
-Message-Id: <20190724191749.276584347@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Gong <wgong@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 010/271] ath10k: add peer id check in ath10k_peer_find_by_id
+Date:   Wed, 24 Jul 2019 21:17:59 +0200
+Message-Id: <20190724191656.165123751@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
-References: <20190724191724.382593077@linuxfoundation.org>
+In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
+References: <20190724191655.268628197@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,79 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+[ Upstream commit 49ed34b835e231aa941257394716bc689bc98d9f ]
 
-commit 9bd3bb6703d8c0a5fb8aec8e3287bd55b7341dcd upstream.
+For some SDIO chip, the peer id is 65535 for MPDU with error status,
+then test_bit will trigger buffer overflow for peer's memory, if kasan
+enabled, it will report error.
 
-Architectures like powerpc use different address range to map ioremap
-and vmalloc range.  The memunmap() check used by the nvdimm layer was
-wrongly using is_vmalloc_addr() to check for ioremap range which fails
-for ppc64.  This result in ppc64 not freeing the ioremap mapping.  The
-side effect of this is an unbind failure during module unload with
-papr_scm nvdimm driver
+Reason is when station is in disconnecting status, firmware do not delete
+the peer info since it not disconnected completely, meanwhile some AP will
+still send data packet to station, then hardware will receive the packet
+and send to firmware, firmware's logic will report peer id of 65535 for
+MPDU with error status.
 
-Link: http://lkml.kernel.org/r/20190701134038.14165-1-aneesh.kumar@linux.ibm.com
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Fixes: b5beae5e224f ("powerpc/pseries: Add driver for PAPR SCM regions")
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Add check for overflow the size of peer's peer_ids will avoid the buffer
+overflow access.
 
+Call trace of kasan:
+dump_backtrace+0x0/0x2ec
+show_stack+0x20/0x2c
+__dump_stack+0x20/0x28
+dump_stack+0xc8/0xec
+print_address_description+0x74/0x240
+kasan_report+0x250/0x26c
+__asan_report_load8_noabort+0x20/0x2c
+ath10k_peer_find_by_id+0x180/0x1e4 [ath10k_core]
+ath10k_htt_t2h_msg_handler+0x100c/0x2fd4 [ath10k_core]
+ath10k_htt_htc_t2h_msg_handler+0x20/0x34 [ath10k_core]
+ath10k_sdio_irq_handler+0xcc8/0x1678 [ath10k_sdio]
+process_sdio_pending_irqs+0xec/0x370
+sdio_run_irqs+0x68/0xe4
+sdio_irq_work+0x1c/0x28
+process_one_work+0x3d8/0x8b0
+worker_thread+0x508/0x7cc
+kthread+0x24c/0x264
+ret_from_fork+0x10/0x18
+
+Tested with QCA6174 SDIO with firmware
+WLAN.RMH.4.4.1-00007-QCARMSWP-1.
+
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/pgtable.h |   14 ++++++++++++++
- include/linux/mm.h                 |    5 +++++
- kernel/iomem.c                     |    2 +-
- 3 files changed, 20 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/txrx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/powerpc/include/asm/pgtable.h
-+++ b/arch/powerpc/include/asm/pgtable.h
-@@ -137,6 +137,20 @@ static inline void pte_frag_set(mm_conte
- }
- #endif
- 
-+#ifdef CONFIG_PPC64
-+#define is_ioremap_addr is_ioremap_addr
-+static inline bool is_ioremap_addr(const void *x)
-+{
-+#ifdef CONFIG_MMU
-+	unsigned long addr = (unsigned long)x;
-+
-+	return addr >= IOREMAP_BASE && addr < IOREMAP_END;
-+#else
-+	return false;
-+#endif
-+}
-+#endif /* CONFIG_PPC64 */
-+
- #endif /* __ASSEMBLY__ */
- 
- #endif /* _ASM_POWERPC_PGTABLE_H */
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -590,6 +590,11 @@ static inline bool is_vmalloc_addr(const
- 	return false;
- #endif
- }
-+
-+#ifndef is_ioremap_addr
-+#define is_ioremap_addr(x) is_vmalloc_addr(x)
-+#endif
-+
- #ifdef CONFIG_MMU
- extern int is_vmalloc_or_module_addr(const void *x);
- #else
---- a/kernel/iomem.c
-+++ b/kernel/iomem.c
-@@ -121,7 +121,7 @@ EXPORT_SYMBOL(memremap);
- 
- void memunmap(void *addr)
+diff --git a/drivers/net/wireless/ath/ath10k/txrx.c b/drivers/net/wireless/ath/ath10k/txrx.c
+index cda164f6e9f6..6f62ddc0494c 100644
+--- a/drivers/net/wireless/ath/ath10k/txrx.c
++++ b/drivers/net/wireless/ath/ath10k/txrx.c
+@@ -156,6 +156,9 @@ struct ath10k_peer *ath10k_peer_find_by_id(struct ath10k *ar, int peer_id)
  {
--	if (is_vmalloc_addr(addr))
-+	if (is_ioremap_addr(addr))
- 		iounmap((void __iomem *) addr);
- }
- EXPORT_SYMBOL(memunmap);
+ 	struct ath10k_peer *peer;
+ 
++	if (peer_id >= BITS_PER_TYPE(peer->peer_ids))
++		return NULL;
++
+ 	lockdep_assert_held(&ar->data_lock);
+ 
+ 	list_for_each_entry(peer, &ar->peers, list)
+-- 
+2.20.1
+
 
 
