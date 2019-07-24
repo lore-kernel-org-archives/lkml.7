@@ -2,911 +2,540 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78264C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F671C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC0021951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BDC521841
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:05:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRMU+1pQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fB8XTHbC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727342AbfGXRFL (ORCPT
+        id S1727570AbfGXRFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:05:11 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35543 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfGXRFL (ORCPT
+        Wed, 24 Jul 2019 13:05:33 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33804 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfGXRFc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:05:11 -0400
-Received: by mail-io1-f68.google.com with SMTP id m24so91178615ioo.2;
-        Wed, 24 Jul 2019 10:05:10 -0700 (PDT)
+        Wed, 24 Jul 2019 13:05:32 -0400
+Received: by mail-qk1-f194.google.com with SMTP id t8so34302108qkt.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 10:05:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=EdB1fvJ2UIfN9MK80DlB9EXRkbzZe2alnUINvp0mAD4=;
-        b=SRMU+1pQKt24pMqH+pa3gHU8eL364E9EFYTcOdKATOeAAcmWmzZSq2WKXhUok6vUgj
-         i8YbwHjJD5zBrRFIMg7N/a/G5O7mPy05sFtvlfyU3eu2TkToWYPKW1L1osbcW9B8tx+X
-         /pW2BzPVEIiYKwtOIsr6D8LOgV0FA8FRE4S3w7vyxgBomroBhwO9VcA/6yZ9FAntUwyJ
-         L4QtEwufdlYqzAEfnAnNUOM1JB9T/gswYpErwhaCoMCKZg3IpiJ6aKTDBtCG1AafX1Im
-         Gt2u8M1GmJntlSACAS9X2XZ0jgDiX15XfkgrBWaAGXvWgxFmuqlL7w7yd7oo5az6BRc6
-         DQwA==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AP65/Wb5+uN6l1ty3c5CNbByMzUTzcCuK4tXfyLwYa4=;
+        b=fB8XTHbCDesvN21iw+euv0FJlU7P8QeV0j5pC99l3sO3XhUrdCKw09H/SLvHb/5NFe
+         JtOjcKmfo3LNYW8irDC2vkxfR54TjVSHvPPX1/lwr9owrPR8tp+UQ9VN4z2wopkFRdc0
+         o369Xj00hl+4AgwRi7MhjecfJNKiZPavsVKnOzfq/jsgqlKKqL2pxMig1bdtWDcqiIgL
+         jgPG3a6NLLpisvMCLVYIdDGMBiPPdUym0jB0oMXmqBIVselZdiFyEnLKHcyqYAufzRfq
+         itWmAkkQIhA4v41/bkYagXyKKpukep80lZwNGue5azBMJNShhAtfvcAkGWWncu0xU3Qg
+         yRFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=EdB1fvJ2UIfN9MK80DlB9EXRkbzZe2alnUINvp0mAD4=;
-        b=d2vjg/7+QpYdo81pS7YVvH27eQlsJGvZbaTjJG6Hzc60sVMfj2+f0ZGX7A/Oqz+eD2
-         l4eAaKxyhAoLhrxM0LAULhYlhYjQSLNwTAu/0Os6T2EGXxjMzldDPPvuA82r/k2+TIoD
-         1TehMAVSBjwtpwmozRyL/Ijowl+FbM7hSVPBlGBj7vzNQbsadiSS3qmXFt/ah3aGxjme
-         llsCHU3w3GjvtuOx1Ydxc59eDmRDBQZWrInv6k/9ZO2dmp/zj0dSiuyO7ESb/cBMB3WZ
-         fFcVY2EPuZg123zCq3FwHhV7Q8M+VmceZgMrbKBs8rRLFuWnQ5TvCBtsgMWlHhIdWvL3
-         zuoA==
-X-Gm-Message-State: APjAAAVA2EDWcRnTGRZ6B2S0FU1ByzJCsi/iIU922sLDbTRE+D9cCZUb
-        PQaecZzUBVpE0LWSiexhIx4=
-X-Google-Smtp-Source: APXvYqw4EWZ44teDYe7DqvveZv2Vd8v20RraEqD8LVP27seh3Q8jdSy0lppE0eMopwWz3JvOMmIG5g==
-X-Received: by 2002:a02:b68f:: with SMTP id i15mr56624615jam.107.1563987909410;
-        Wed, 24 Jul 2019 10:05:09 -0700 (PDT)
-Received: from localhost.localdomain (50-39-177-61.bvtn.or.frontiernet.net. [50.39.177.61])
-        by smtp.gmail.com with ESMTPSA id q13sm42456451ioh.36.2019.07.24.10.05.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 10:05:08 -0700 (PDT)
-Subject: [PATCH v2 4/5] mm: Introduce Hinted pages
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
-        mst@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
-Date:   Wed, 24 Jul 2019 10:03:00 -0700
-Message-ID: <20190724170259.6685.18028.stgit@localhost.localdomain>
-In-Reply-To: <20190724165158.6685.87228.stgit@localhost.localdomain>
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AP65/Wb5+uN6l1ty3c5CNbByMzUTzcCuK4tXfyLwYa4=;
+        b=dcndn/w/wW/9HFfHIwYBidVxDOh2cjk+Ve5zPy3ceG+Ii2wY6GWgmxDR5dkAdfqAMK
+         H6Ci/yYjLQb+y5WCIv6rQGn9PdsQXXC1ADlA07wY+wTll3baCAtLaLrlqZ1qyytTSjqg
+         HAeQrlJtlNoyxmAdbysKoFZeu3bwbEr4+gdnWmRPSL5U6KpaKEmLJK7m6etrvid75sce
+         Juc8dFPiBoBv2SGHNhPkKlBtPW930s3y8UHrdcaf5Xbr1TU8vulKrr0bLE5AKfc3Qkv1
+         hygzyboXsXBdae90vg9r46jZjHD8dlbwb0tPejxPHc6tX1IxeCE/6Zy/30AYr1OW/2Hp
+         4d7w==
+X-Gm-Message-State: APjAAAUzYQZEUE6hJBa1badE58h3xoVqB7fycRWNBGOs8RZ5Uzmj3/Ns
+        ZXFDl+1JBaWGlXSKRGel4C9SNWjq
+X-Google-Smtp-Source: APXvYqy4L7mcq2dkRJqQ2Z6ktiEKF4mb6tyMa0CHswCLPbHgKdHWSiyneqshisaH85mjCOcQt+TsiQ==
+X-Received: by 2002:a05:620a:5a7:: with SMTP id q7mr56608855qkq.477.1563987930713;
+        Wed, 24 Jul 2019 10:05:30 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id h40sm27130729qth.4.2019.07.24.10.05.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 10:05:29 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 190E840340; Wed, 24 Jul 2019 14:05:26 -0300 (-03)
+Date:   Wed, 24 Jul 2019 14:05:26 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 54/79] libperf: Add cpus to struct perf_evlist
+Message-ID: <20190724170526.GE5727@kernel.org>
+References: <20190721112506.12306-1-jolsa@kernel.org>
+ <20190721112506.12306-55-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190721112506.12306-55-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Em Sun, Jul 21, 2019 at 01:24:41PM +0200, Jiri Olsa escreveu:
+> Moving cpus from evlist into perf_evlist struct.
 
-In order to pave the way for free page hinting in virtualized environments
-we will need a way to get pages out of the free lists and identify those
-pages after they have been returned. To accomplish this, this patch adds
-the concept of a Hinted Buddy, which is essentially meant to just be the
-Offline page type used in conjunction with the Buddy page type.
+Fixed up this one:
 
-It adds a set of pointers we shall call "boundary" which represents the
-upper boundary between the unhinted and hinted pages. The general idea is
-that in order for a page to cross from one side of the boundary to the
-other it will need to go through the hinting process. Ultimately a
-free_list has been fully processed when the boundary has been moved from
-the tail all they way up to occupying the first entry in the list.
+  tools/perf/arch/arm/util/cs-etm.c
+ 
+> Link: http://lkml.kernel.org/n/tip-ds5cpk70kzmpiiut210n2g6i@git.kernel.org
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/arch/x86/util/intel-bts.c     |  2 +-
+>  tools/perf/arch/x86/util/intel-pt.c      |  4 +--
+>  tools/perf/builtin-ftrace.c              |  2 +-
+>  tools/perf/builtin-record.c              |  2 +-
+>  tools/perf/builtin-stat.c                | 16 +++++------
+>  tools/perf/builtin-top.c                 |  2 +-
+>  tools/perf/lib/include/internal/evlist.h |  9 ++++--
+>  tools/perf/util/auxtrace.c               |  2 +-
+>  tools/perf/util/evlist.c                 | 36 ++++++++++++------------
+>  tools/perf/util/evlist.h                 |  1 -
+>  tools/perf/util/record.c                 |  6 ++--
+>  tools/perf/util/stat-display.c           |  6 ++--
+>  tools/perf/util/stat.c                   |  2 +-
+>  tools/perf/util/top.c                    |  6 ++--
+>  14 files changed, 49 insertions(+), 47 deletions(-)
+> 
+> diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
+> index d8a091266185..7b23318ebd7b 100644
+> --- a/tools/perf/arch/x86/util/intel-bts.c
+> +++ b/tools/perf/arch/x86/util/intel-bts.c
+> @@ -106,7 +106,7 @@ static int intel_bts_recording_options(struct auxtrace_record *itr,
+>  			container_of(itr, struct intel_bts_recording, itr);
+>  	struct perf_pmu *intel_bts_pmu = btsr->intel_bts_pmu;
+>  	struct evsel *evsel, *intel_bts_evsel = NULL;
+> -	const struct perf_cpu_map *cpus = evlist->cpus;
+> +	const struct perf_cpu_map *cpus = evlist->core.cpus;
+>  	bool privileged = geteuid() == 0 || perf_event_paranoid() < 0;
+>  
+>  	btsr->evlist = evlist;
+> diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+> index aada6a2c456a..218a4e694618 100644
+> --- a/tools/perf/arch/x86/util/intel-pt.c
+> +++ b/tools/perf/arch/x86/util/intel-pt.c
+> @@ -365,7 +365,7 @@ static int intel_pt_info_fill(struct auxtrace_record *itr,
+>  			ui__warning("Intel Processor Trace: TSC not available\n");
+>  	}
+>  
+> -	per_cpu_mmaps = !cpu_map__empty(session->evlist->cpus);
+> +	per_cpu_mmaps = !cpu_map__empty(session->evlist->core.cpus);
+>  
+>  	auxtrace_info->type = PERF_AUXTRACE_INTEL_PT;
+>  	auxtrace_info->priv[INTEL_PT_PMU_TYPE] = intel_pt_pmu->type;
+> @@ -557,7 +557,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
+>  	struct perf_pmu *intel_pt_pmu = ptr->intel_pt_pmu;
+>  	bool have_timing_info, need_immediate = false;
+>  	struct evsel *evsel, *intel_pt_evsel = NULL;
+> -	const struct perf_cpu_map *cpus = evlist->cpus;
+> +	const struct perf_cpu_map *cpus = evlist->core.cpus;
+>  	bool privileged = geteuid() == 0 || perf_event_paranoid() < 0;
+>  	u64 tsc_bit;
+>  	int err;
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 77989254fdd8..f481a870e728 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -192,7 +192,7 @@ static int set_tracing_cpumask(struct perf_cpu_map *cpumap)
+>  
+>  static int set_tracing_cpu(struct perf_ftrace *ftrace)
+>  {
+> -	struct perf_cpu_map *cpumap = ftrace->evlist->cpus;
+> +	struct perf_cpu_map *cpumap = ftrace->evlist->core.cpus;
+>  
+>  	if (!target__has_cpu(&ftrace->target))
+>  		return 0;
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 27ff899bed88..d4f0430c2f49 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1283,7 +1283,7 @@ static int record__synthesize(struct record *rec, bool tail)
+>  		return err;
+>  	}
+>  
+> -	err = perf_event__synthesize_cpu_map(&rec->tool, rec->evlist->cpus,
+> +	err = perf_event__synthesize_cpu_map(&rec->tool, rec->evlist->core.cpus,
+>  					     process_synthesized_event, NULL);
+>  	if (err < 0) {
+>  		pr_err("Couldn't synthesize cpu map.\n");
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 8ad3643d61f9..d81b0b1ef514 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -884,21 +884,21 @@ static int perf_stat_init_aggr_mode(void)
+>  
+>  	switch (stat_config.aggr_mode) {
+>  	case AGGR_SOCKET:
+> -		if (cpu_map__build_socket_map(evsel_list->cpus, &stat_config.aggr_map)) {
+> +		if (cpu_map__build_socket_map(evsel_list->core.cpus, &stat_config.aggr_map)) {
+>  			perror("cannot build socket map");
+>  			return -1;
+>  		}
+>  		stat_config.aggr_get_id = perf_stat__get_socket_cached;
+>  		break;
+>  	case AGGR_DIE:
+> -		if (cpu_map__build_die_map(evsel_list->cpus, &stat_config.aggr_map)) {
+> +		if (cpu_map__build_die_map(evsel_list->core.cpus, &stat_config.aggr_map)) {
+>  			perror("cannot build die map");
+>  			return -1;
+>  		}
+>  		stat_config.aggr_get_id = perf_stat__get_die_cached;
+>  		break;
+>  	case AGGR_CORE:
+> -		if (cpu_map__build_core_map(evsel_list->cpus, &stat_config.aggr_map)) {
+> +		if (cpu_map__build_core_map(evsel_list->core.cpus, &stat_config.aggr_map)) {
+>  			perror("cannot build core map");
+>  			return -1;
+>  		}
+> @@ -906,7 +906,7 @@ static int perf_stat_init_aggr_mode(void)
+>  		break;
+>  	case AGGR_NONE:
+>  		if (term_percore_set()) {
+> -			if (cpu_map__build_core_map(evsel_list->cpus,
+> +			if (cpu_map__build_core_map(evsel_list->core.cpus,
+>  						    &stat_config.aggr_map)) {
+>  				perror("cannot build core map");
+>  				return -1;
+> @@ -926,7 +926,7 @@ static int perf_stat_init_aggr_mode(void)
+>  	 * taking the highest cpu number to be the size of
+>  	 * the aggregation translate cpumap.
+>  	 */
+> -	nr = cpu_map__get_max(evsel_list->cpus);
+> +	nr = cpu_map__get_max(evsel_list->core.cpus);
+>  	stat_config.cpus_aggr_map = cpu_map__empty_new(nr + 1);
+>  	return stat_config.cpus_aggr_map ? 0 : -ENOMEM;
+>  }
+> @@ -1057,21 +1057,21 @@ static int perf_stat_init_aggr_mode_file(struct perf_stat *st)
+>  
+>  	switch (stat_config.aggr_mode) {
+>  	case AGGR_SOCKET:
+> -		if (perf_env__build_socket_map(env, evsel_list->cpus, &stat_config.aggr_map)) {
+> +		if (perf_env__build_socket_map(env, evsel_list->core.cpus, &stat_config.aggr_map)) {
+>  			perror("cannot build socket map");
+>  			return -1;
+>  		}
+>  		stat_config.aggr_get_id = perf_stat__get_socket_file;
+>  		break;
+>  	case AGGR_DIE:
+> -		if (perf_env__build_die_map(env, evsel_list->cpus, &stat_config.aggr_map)) {
+> +		if (perf_env__build_die_map(env, evsel_list->core.cpus, &stat_config.aggr_map)) {
+>  			perror("cannot build die map");
+>  			return -1;
+>  		}
+>  		stat_config.aggr_get_id = perf_stat__get_die_file;
+>  		break;
+>  	case AGGR_CORE:
+> -		if (perf_env__build_core_map(env, evsel_list->cpus, &stat_config.aggr_map)) {
+> +		if (perf_env__build_core_map(env, evsel_list->core.cpus, &stat_config.aggr_map)) {
+>  			perror("cannot build core map");
+>  			return -1;
+>  		}
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index 54d06d271bfd..947f83e53272 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -989,7 +989,7 @@ static int perf_top__start_counters(struct perf_top *top)
+>  
+>  	evlist__for_each_entry(evlist, counter) {
+>  try_again:
+> -		if (evsel__open(counter, top->evlist->cpus,
+> +		if (evsel__open(counter, top->evlist->core.cpus,
+>  				     top->evlist->threads) < 0) {
+>  
+>  			/*
+> diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
+> index 9964e4a9456e..f9caab1fe3c3 100644
+> --- a/tools/perf/lib/include/internal/evlist.h
+> +++ b/tools/perf/lib/include/internal/evlist.h
+> @@ -2,10 +2,13 @@
+>  #ifndef __LIBPERF_INTERNAL_EVLIST_H
+>  #define __LIBPERF_INTERNAL_EVLIST_H
+>  
+> +struct perf_cpu_map;
+> +
+>  struct perf_evlist {
+> -	struct list_head	entries;
+> -	int			nr_entries;
+> -	bool			has_user_cpus;
+> +	struct list_head	 entries;
+> +	int			 nr_entries;
+> +	bool			 has_user_cpus;
+> +	struct perf_cpu_map	*cpus;
+>  };
+>  
+>  #endif /* __LIBPERF_INTERNAL_EVLIST_H */
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index 843959f85d6f..67a2afc5d964 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
+> @@ -130,7 +130,7 @@ void auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp,
+>  	mp->idx = idx;
+>  
+>  	if (per_cpu) {
+> -		mp->cpu = evlist->cpus->map[idx];
+> +		mp->cpu = evlist->core.cpus->map[idx];
+>  		if (evlist->threads)
+>  			mp->tid = thread_map__pid(evlist->threads, 0);
+>  		else
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index 5d104678d4d9..c568e64e10ce 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -143,9 +143,9 @@ void evlist__delete(struct evlist *evlist)
+>  
+>  	perf_evlist__munmap(evlist);
+>  	evlist__close(evlist);
+> -	perf_cpu_map__put(evlist->cpus);
+> +	perf_cpu_map__put(evlist->core.cpus);
+>  	perf_thread_map__put(evlist->threads);
+> -	evlist->cpus = NULL;
+> +	evlist->core.cpus = NULL;
+>  	evlist->threads = NULL;
+>  	perf_evlist__purge(evlist);
+>  	perf_evlist__exit(evlist);
+> @@ -161,7 +161,7 @@ static void __perf_evlist__propagate_maps(struct evlist *evlist,
+>  	 */
+>  	if (!evsel->core.own_cpus || evlist->core.has_user_cpus) {
+>  		perf_cpu_map__put(evsel->core.cpus);
+> -		evsel->core.cpus = perf_cpu_map__get(evlist->cpus);
+> +		evsel->core.cpus = perf_cpu_map__get(evlist->core.cpus);
+>  	} else if (evsel->core.cpus != evsel->core.own_cpus) {
+>  		perf_cpu_map__put(evsel->core.cpus);
+>  		evsel->core.cpus = perf_cpu_map__get(evsel->core.own_cpus);
+> @@ -398,7 +398,7 @@ static int perf_evlist__enable_event_thread(struct evlist *evlist,
+>  					    int thread)
+>  {
+>  	int cpu;
+> -	int nr_cpus = cpu_map__nr(evlist->cpus);
+> +	int nr_cpus = cpu_map__nr(evlist->core.cpus);
+>  
+>  	if (!evsel->fd)
+>  		return -EINVAL;
+> @@ -414,7 +414,7 @@ static int perf_evlist__enable_event_thread(struct evlist *evlist,
+>  int perf_evlist__enable_event_idx(struct evlist *evlist,
+>  				  struct evsel *evsel, int idx)
+>  {
+> -	bool per_cpu_mmaps = !cpu_map__empty(evlist->cpus);
+> +	bool per_cpu_mmaps = !cpu_map__empty(evlist->core.cpus);
+>  
+>  	if (per_cpu_mmaps)
+>  		return perf_evlist__enable_event_cpu(evlist, evsel, idx);
+> @@ -424,7 +424,7 @@ int perf_evlist__enable_event_idx(struct evlist *evlist,
+>  
+>  int perf_evlist__alloc_pollfd(struct evlist *evlist)
+>  {
+> -	int nr_cpus = cpu_map__nr(evlist->cpus);
+> +	int nr_cpus = cpu_map__nr(evlist->core.cpus);
+>  	int nr_threads = thread_map__nr(evlist->threads);
+>  	int nfds = 0;
+>  	struct evsel *evsel;
+> @@ -552,8 +552,8 @@ static void perf_evlist__set_sid_idx(struct evlist *evlist,
+>  {
+>  	struct perf_sample_id *sid = SID(evsel, cpu, thread);
+>  	sid->idx = idx;
+> -	if (evlist->cpus && cpu >= 0)
+> -		sid->cpu = evlist->cpus->map[cpu];
+> +	if (evlist->core.cpus && cpu >= 0)
+> +		sid->cpu = evlist->core.cpus->map[cpu];
+>  	else
+>  		sid->cpu = -1;
+>  	if (!evsel->system_wide && evlist->threads && thread >= 0)
+> @@ -720,8 +720,8 @@ static struct perf_mmap *perf_evlist__alloc_mmap(struct evlist *evlist,
+>  	int i;
+>  	struct perf_mmap *map;
+>  
+> -	evlist->nr_mmaps = cpu_map__nr(evlist->cpus);
+> -	if (cpu_map__empty(evlist->cpus))
+> +	evlist->nr_mmaps = cpu_map__nr(evlist->core.cpus);
+> +	if (cpu_map__empty(evlist->core.cpus))
+>  		evlist->nr_mmaps = thread_map__nr(evlist->threads);
+>  	map = zalloc(evlist->nr_mmaps * sizeof(struct perf_mmap));
+>  	if (!map)
+> @@ -759,7 +759,7 @@ static int perf_evlist__mmap_per_evsel(struct evlist *evlist, int idx,
+>  {
+>  	struct evsel *evsel;
+>  	int revent;
+> -	int evlist_cpu = cpu_map__cpu(evlist->cpus, cpu_idx);
+> +	int evlist_cpu = cpu_map__cpu(evlist->core.cpus, cpu_idx);
+>  
+>  	evlist__for_each_entry(evlist, evsel) {
+>  		struct perf_mmap *maps = evlist->mmap;
+> @@ -835,7 +835,7 @@ static int perf_evlist__mmap_per_cpu(struct evlist *evlist,
+>  				     struct mmap_params *mp)
+>  {
+>  	int cpu, thread;
+> -	int nr_cpus = cpu_map__nr(evlist->cpus);
+> +	int nr_cpus = cpu_map__nr(evlist->core.cpus);
+>  	int nr_threads = thread_map__nr(evlist->threads);
+>  
+>  	pr_debug2("perf event ring buffer mmapped per cpu\n");
+> @@ -1014,7 +1014,7 @@ int perf_evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
+>  			 int comp_level)
+>  {
+>  	struct evsel *evsel;
+> -	const struct perf_cpu_map *cpus = evlist->cpus;
+> +	const struct perf_cpu_map *cpus = evlist->core.cpus;
+>  	const struct perf_thread_map *threads = evlist->threads;
+>  	/*
+>  	 * Delay setting mp.prot: set it before calling perf_mmap__mmap.
+> @@ -1116,9 +1116,9 @@ void perf_evlist__set_maps(struct evlist *evlist, struct perf_cpu_map *cpus,
+>  	 * original reference count of 1.  If that is not the case it is up to
+>  	 * the caller to increase the reference count.
+>  	 */
+> -	if (cpus != evlist->cpus) {
+> -		perf_cpu_map__put(evlist->cpus);
+> -		evlist->cpus = perf_cpu_map__get(cpus);
+> +	if (cpus != evlist->core.cpus) {
+> +		perf_cpu_map__put(evlist->core.cpus);
+> +		evlist->core.cpus = perf_cpu_map__get(cpus);
+>  	}
+>  
+>  	if (threads != evlist->threads) {
+> @@ -1398,7 +1398,7 @@ int evlist__open(struct evlist *evlist)
+>  	 * Default: one fd per CPU, all threads, aka systemwide
+>  	 * as sys_perf_event_open(cpu = -1, thread = -1) is EINVAL
+>  	 */
+> -	if (evlist->threads == NULL && evlist->cpus == NULL) {
+> +	if (evlist->threads == NULL && evlist->core.cpus == NULL) {
+>  		err = perf_evlist__create_syswide_maps(evlist);
+>  		if (err < 0)
+>  			goto out_err;
+> @@ -1920,7 +1920,7 @@ int perf_evlist__start_sb_thread(struct evlist *evlist,
+>  		goto out_delete_evlist;
+>  
+>  	evlist__for_each_entry(evlist, counter) {
+> -		if (evsel__open(counter, evlist->cpus,
+> +		if (evsel__open(counter, evlist->core.cpus,
+>  				     evlist->threads) < 0)
+>  			goto out_delete_evlist;
+>  	}
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index 35cca0242631..fdd8f83eac2d 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -44,7 +44,6 @@ struct evlist {
+>  	struct perf_mmap *mmap;
+>  	struct perf_mmap *overwrite_mmap;
+>  	struct perf_thread_map *threads;
+> -	struct perf_cpu_map *cpus;
+>  	struct evsel *selected;
+>  	struct events_stats stats;
+>  	struct perf_env	*env;
+> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+> index 03dcdb3f33a7..e59382d99196 100644
+> --- a/tools/perf/util/record.c
+> +++ b/tools/perf/util/record.c
+> @@ -148,7 +148,7 @@ void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
+>  	if (opts->group)
+>  		perf_evlist__set_leader(evlist);
+>  
+> -	if (evlist->cpus->map[0] < 0)
+> +	if (evlist->core.cpus->map[0] < 0)
+>  		opts->no_inherit = true;
+>  
+>  	use_comm_exec = perf_can_comm_exec();
+> @@ -275,13 +275,13 @@ bool perf_evlist__can_select_event(struct evlist *evlist, const char *str)
+>  
+>  	evsel = perf_evlist__last(temp_evlist);
+>  
+> -	if (!evlist || cpu_map__empty(evlist->cpus)) {
+> +	if (!evlist || cpu_map__empty(evlist->core.cpus)) {
+>  		struct perf_cpu_map *cpus = perf_cpu_map__new(NULL);
+>  
+>  		cpu =  cpus ? cpus->map[0] : 0;
+>  		perf_cpu_map__put(cpus);
+>  	} else {
+> -		cpu = evlist->cpus->map[0];
+> +		cpu = evlist->core.cpus->map[0];
+>  	}
+>  
+>  	while (1) {
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 7c938135398b..4a162858583f 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -327,7 +327,7 @@ static int first_shadow_cpu(struct perf_stat_config *config,
+>  	for (i = 0; i < perf_evsel__nr_cpus(evsel); i++) {
+>  		int cpu2 = evsel__cpus(evsel)->map[i];
+>  
+> -		if (config->aggr_get_id(config, evlist->cpus, cpu2) == id)
+> +		if (config->aggr_get_id(config, evlist->core.cpus, cpu2) == id)
+>  			return cpu2;
+>  	}
+>  	return 0;
+> @@ -500,7 +500,7 @@ static void aggr_update_shadow(struct perf_stat_config *config,
+>  		evlist__for_each_entry(evlist, counter) {
+>  			val = 0;
+>  			for (cpu = 0; cpu < perf_evsel__nr_cpus(counter); cpu++) {
+> -				s2 = config->aggr_get_id(config, evlist->cpus, cpu);
+> +				s2 = config->aggr_get_id(config, evlist->core.cpus, cpu);
+>  				if (s2 != id)
+>  					continue;
+>  				val += perf_counts(counter->counts, cpu, 0)->val;
+> @@ -868,7 +868,7 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+>  	u64 ena, run, val;
+>  	double uval;
+>  
+> -	nrcpus = evlist->cpus->nr;
+> +	nrcpus = evlist->core.cpus->nr;
+>  	for (cpu = 0; cpu < nrcpus; cpu++) {
+>  		bool first = true;
+>  
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index 1e351462ca49..24c9c3015983 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -514,7 +514,7 @@ int perf_stat_synthesize_config(struct perf_stat_config *config,
+>  		return err;
+>  	}
+>  
+> -	err = perf_event__synthesize_cpu_map(tool, evlist->cpus,
+> +	err = perf_event__synthesize_cpu_map(tool, evlist->core.cpus,
+>  					     process, NULL);
+>  	if (err < 0) {
+>  		pr_err("Couldn't synthesize thread map.\n");
+> diff --git a/tools/perf/util/top.c b/tools/perf/util/top.c
+> index f533f1aac045..e5b690cf2898 100644
+> --- a/tools/perf/util/top.c
+> +++ b/tools/perf/util/top.c
+> @@ -95,15 +95,15 @@ size_t perf_top__header_snprintf(struct perf_top *top, char *bf, size_t size)
+>  
+>  	if (target->cpu_list)
+>  		ret += SNPRINTF(bf + ret, size - ret, ", CPU%s: %s)",
+> -				top->evlist->cpus->nr > 1 ? "s" : "",
+> +				top->evlist->core.cpus->nr > 1 ? "s" : "",
+>  				target->cpu_list);
+>  	else {
+>  		if (target->tid)
+>  			ret += SNPRINTF(bf + ret, size - ret, ")");
+>  		else
+>  			ret += SNPRINTF(bf + ret, size - ret, ", %d CPU%s)",
+> -					top->evlist->cpus->nr,
+> -					top->evlist->cpus->nr > 1 ? "s" : "");
+> +					top->evlist->core.cpus->nr,
+> +					top->evlist->core.cpus->nr > 1 ? "s" : "");
+>  	}
+>  
+>  	perf_top__reset_sample_counters(top);
+> -- 
+> 2.21.0
 
-Doing this we should be able to make certain that we keep the hinted
-pages as one contiguous block in each free list. This will allow us to
-efficiently manipulate the free lists whenever we need to go in and start
-sending hints to the hypervisor that there are new pages that have been
-freed and are no longer in use.
+-- 
 
-An added advantage to this approach is that we should be reducing the
-overall memory footprint of the guest as it will be more likely to recycle
-warm pages versus trying to allocate the hinted pages that were likely
-evicted from the guest memory.
-
-Since we will only be hinting one zone at a time we keep the boundary
-limited to being defined for just the zone we are currently placing hinted
-pages into. Doing this we can keep the number of additional pointers needed
-quite small. To flag that the boundaries are in place we use a single bit
-in the zone to indicate that hinting and the boundaries are active.
-
-The determination of when to start hinting is based on the tracking of the
-number of free pages in a given area versus the number of hinted pages in
-that area. We keep track of the number of hinted pages per free_area in a
-separate zone specific area. We do this to avoid modifying the free_area
-structure as this can lead to false sharing for the highest order with the
-zone lock which leads to a noticeable performance degradation.
-
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- include/linux/mmzone.h       |   40 +++++-
- include/linux/page-flags.h   |    8 +
- include/linux/page_hinting.h |  139 ++++++++++++++++++++
- mm/Kconfig                   |    5 +
- mm/Makefile                  |    1 
- mm/memory_hotplug.c          |    1 
- mm/page_alloc.c              |  136 ++++++++++++++++++-
- mm/page_hinting.c            |  298 ++++++++++++++++++++++++++++++++++++++++++
- 8 files changed, 620 insertions(+), 8 deletions(-)
- create mode 100644 include/linux/page_hinting.h
- create mode 100644 mm/page_hinting.c
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index f0c68b6b6154..42bdebb20484 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -460,6 +460,14 @@ struct zone {
- 	seqlock_t		span_seqlock;
- #endif
- 
-+#ifdef CONFIG_PAGE_HINTING
-+	/*
-+	 * Pointer to hinted page tracking statistics array. The size of
-+	 * the array is MAX_ORDER - PAGE_HINTING_MIN_ORDER. NULL when
-+	 * page hinting is not present.
-+	 */
-+	unsigned long		*hinted_pages;
-+#endif
- 	int initialized;
- 
- 	/* Write-intensive fields used from the page allocator */
-@@ -535,6 +543,14 @@ enum zone_flags {
- 	ZONE_BOOSTED_WATERMARK,		/* zone recently boosted watermarks.
- 					 * Cleared when kswapd is woken.
- 					 */
-+	ZONE_PAGE_HINTING_REQUESTED,	/* zone enabled page hinting and has
-+					 * requested flushing the data out of
-+					 * higher order pages.
-+					 */
-+	ZONE_PAGE_HINTING_ACTIVE,	/* zone enabled page hinting and is
-+					 * activly flushing the data out of
-+					 * higher order pages.
-+					 */
- };
- 
- static inline unsigned long zone_managed_pages(struct zone *zone)
-@@ -755,6 +771,8 @@ static inline bool pgdat_is_empty(pg_data_t *pgdat)
- 	return !pgdat->node_start_pfn && !pgdat->node_spanned_pages;
- }
- 
-+#include <linux/page_hinting.h>
-+
- /* Used for pages not on another list */
- static inline void add_to_free_list(struct page *page, struct zone *zone,
- 				    unsigned int order, int migratetype)
-@@ -769,10 +787,16 @@ static inline void add_to_free_list(struct page *page, struct zone *zone,
- static inline void add_to_free_list_tail(struct page *page, struct zone *zone,
- 					 unsigned int order, int migratetype)
- {
--	struct free_area *area = &zone->free_area[order];
-+	struct list_head *tail = get_unhinted_tail(zone, order, migratetype);
- 
--	list_add_tail(&page->lru, &area->free_list[migratetype]);
--	area->nr_free++;
-+	/*
-+	 * To prevent the unhinted pages from being interleaved with the
-+	 * hinted ones while we are actively processing pages we will use
-+	 * the head of the hinted pages to determine the tail of the free
-+	 * list.
-+	 */
-+	list_add_tail(&page->lru, tail);
-+	zone->free_area[order].nr_free++;
- }
- 
- /* Used for pages which are on another list */
-@@ -781,12 +805,22 @@ static inline void move_to_free_list(struct page *page, struct zone *zone,
- {
- 	struct free_area *area = &zone->free_area[order];
- 
-+	/*
-+	 * Clear Hinted flag, if present, to avoid placing hinted pages
-+	 * at the top of the free_list. It is cheaper to just process this
-+	 * page again, then have to walk around a page that is already hinted.
-+	 */
-+	clear_page_hinted(page, zone);
-+
- 	list_move(&page->lru, &area->free_list[migratetype]);
- }
- 
- static inline void del_page_from_free_list(struct page *page, struct zone *zone,
- 					   unsigned int order)
- {
-+	/* Clear Hinted flag, if present, before clearing the Buddy flag */
-+	clear_page_hinted(page, zone);
-+
- 	list_del(&page->lru);
- 	__ClearPageBuddy(page);
- 	set_page_private(page, 0);
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index b848517da64c..b753dbf673cb 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -745,6 +745,14 @@ static inline int page_has_type(struct page *page)
- PAGE_TYPE_OPS(Offline, offline)
- 
- /*
-+ * PageHinted() is an alias for Offline, however it is not meant to be an
-+ * exclusive value. It should be combined with PageBuddy() when seen as it
-+ * is meant to indicate that the page has been scrubbed while waiting in
-+ * the buddy system.
-+ */
-+PAGE_TYPE_OPS(Hinted, offline)
-+
-+/*
-  * If kmemcg is enabled, the buddy allocator will set PageKmemcg() on
-  * pages allocated with __GFP_ACCOUNT. It gets cleared on page free.
-  */
-diff --git a/include/linux/page_hinting.h b/include/linux/page_hinting.h
-new file mode 100644
-index 000000000000..526fb26663d9
---- /dev/null
-+++ b/include/linux/page_hinting.h
-@@ -0,0 +1,139 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_PAGE_HINTING_H
-+#define _LINUX_PAGE_HINTING_H
-+
-+#include <linux/mmzone.h>
-+#include <linux/jump_label.h>
-+#include <linux/pageblock-flags.h>
-+#include <asm/pgtable_types.h>
-+
-+#define PAGE_HINTING_MIN_ORDER	pageblock_order
-+#define PAGE_HINTING_HWM		32
-+
-+#ifdef CONFIG_PAGE_HINTING
-+struct page_hinting_dev_info {
-+	/* function that alters pages to make them "hinted" */
-+	void (*react)(struct page_hinting_dev_info *phdev,
-+		      unsigned int num_hints);
-+
-+	/* scatterlist containing pages to be processed */
-+	struct scatterlist *sg;
-+
-+	/*
-+	 * Upper limit on the number of pages that the react function
-+	 * expects to be placed into the batch list to be processed.
-+	 */
-+	unsigned long capacity;
-+
-+	/* work struct for processing hints */
-+	struct delayed_work work;
-+
-+	/*
-+	 * The number of zones requesting hinting, plus one additional if
-+	 * processing thread is active.
-+	 */
-+	atomic_t refcnt;
-+};
-+
-+extern struct static_key page_hinting_notify_enabled;
-+
-+/* Boundary functions */
-+struct list_head *__page_hinting_get_boundary(unsigned int order,
-+					      int migratetype);
-+void page_hinting_del_from_boundary(struct page *page, struct zone *zone);
-+void page_hinting_add_to_boundary(struct page *page, struct zone *zone,
-+			     int migratetype);
-+
-+/* Hinted page accessors, defined in page_alloc.c */
-+struct page *get_unhinted_page(struct zone *zone, unsigned int order,
-+			       int migratetype);
-+void put_hinted_page(struct zone *zone, struct page *page);
-+
-+void __page_hinting_request(struct zone *zone);
-+void __page_hinting_free_stats(struct zone *zone);
-+
-+/* Tear-down and bring-up for page hinting devices */
-+void page_hinting_shutdown(struct page_hinting_dev_info *phdev);
-+int page_hinting_startup(struct page_hinting_dev_info *phdev);
-+#endif /* CONFIG_PAGE_HINTING */
-+
-+static inline struct list_head *get_unhinted_tail(struct zone *zone,
-+						  unsigned int order,
-+						  int migratetype)
-+{
-+#ifdef CONFIG_PAGE_HINTING
-+	if (order >= PAGE_HINTING_MIN_ORDER &&
-+	    test_bit(ZONE_PAGE_HINTING_ACTIVE, &zone->flags))
-+		return __page_hinting_get_boundary(order, migratetype);
-+#endif
-+	return &zone->free_area[order].free_list[migratetype];
-+}
-+
-+static inline void clear_page_hinted(struct page *page,
-+				     struct zone *zone)
-+{
-+#ifdef CONFIG_PAGE_HINTING
-+	if (likely(!PageHinted(page)))
-+		return;
-+
-+	/* push boundary back if we removed the upper boundary */
-+	if (test_bit(ZONE_PAGE_HINTING_ACTIVE, &zone->flags))
-+		page_hinting_del_from_boundary(page, zone);
-+
-+	__ClearPageHinted(page);
-+
-+	/* page_private will contain the page order, so just use it directly */
-+	zone->hinted_pages[page_private(page) - PAGE_HINTING_MIN_ORDER]--;
-+#endif
-+}
-+
-+/* Free hinted_pages and reset hinted page tracking count to 0 */
-+static inline void page_hinting_reset(struct zone *zone)
-+{
-+#ifdef CONFIG_PAGE_HINTING
-+	if (zone->hinted_pages)
-+		__page_hinting_free_stats(zone);
-+#endif
-+}
-+
-+/**
-+ * page_hinting_notify_free - Free page notification to start page processing
-+ * @zone: Pointer to current zone of last page processed
-+ * @order: Order of last page added to zone
-+ *
-+ * This function is meant to act as a screener for __page_hinting_request which
-+ * will determine if a give zone has crossed over the high-water mark that
-+ * will justify us beginning page treatment. If we have crossed that
-+ * threshold then it will start the process of pulling some pages and
-+ * placing them in the batch list for treatment.
-+ */
-+static inline void page_hinting_notify_free(struct zone *zone, int order)
-+{
-+#ifdef CONFIG_PAGE_HINTING
-+	unsigned long nr_hinted;
-+
-+	/* Called from hot path in __free_one_page() */
-+	if (!static_key_false(&page_hinting_notify_enabled))
-+		return;
-+
-+	/* Limit notifications only to higher order pages */
-+	if (order < PAGE_HINTING_MIN_ORDER)
-+		return;
-+
-+	/* Do not bother with tests if we have already requested hinting */
-+	if (test_bit(ZONE_PAGE_HINTING_REQUESTED, &zone->flags))
-+		return;
-+
-+	/* If hinted_pages is not populated, assume 0 */
-+	nr_hinted = zone->hinted_pages ?
-+		    zone->hinted_pages[order - PAGE_HINTING_MIN_ORDER] : 0;
-+
-+	/* Only request it if we have enough to begin the page hinting */
-+	if (zone->free_area[order].nr_free < nr_hinted + PAGE_HINTING_HWM)
-+		return;
-+
-+	/* This is slow, but should be called very rarely */
-+	__page_hinting_request(zone);
-+#endif
-+}
-+#endif /*_LINUX_PAGE_HINTING_H */
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 56cec636a1fc..38354668f849 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -237,6 +237,11 @@ config COMPACTION
-           linux-mm@kvack.org.
- 
- #
-+# support for free page hinting
-+config PAGE_HINTING
-+	bool
-+
-+#
- # support for page migration
- #
- config MIGRATION
-diff --git a/mm/Makefile b/mm/Makefile
-index 338e528ad436..7277ced923ab 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -104,3 +104,4 @@ obj-$(CONFIG_HARDENED_USERCOPY) += usercopy.o
- obj-$(CONFIG_PERCPU_STATS) += percpu-stats.o
- obj-$(CONFIG_HMM_MIRROR) += hmm.o
- obj-$(CONFIG_MEMFD_CREATE) += memfd.o
-+obj-$(CONFIG_PAGE_HINTING) += page_hinting.o
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 2a9bbddb0e55..7c2d49b1a918 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1622,6 +1622,7 @@ static int __ref __offline_pages(unsigned long start_pfn,
- 	if (!populated_zone(zone)) {
- 		zone_pcp_reset(zone);
- 		build_all_zonelists(NULL);
-+		page_hinting_reset(zone);
- 	} else
- 		zone_pcp_update(zone);
- 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 9a73f69b37af..c83cb4a30aff 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -68,6 +68,7 @@
- #include <linux/lockdep.h>
- #include <linux/nmi.h>
- #include <linux/psi.h>
-+#include <linux/page_hinting.h>
- 
- #include <asm/sections.h>
- #include <asm/tlbflush.h>
-@@ -915,7 +916,7 @@ static inline struct capture_control *task_capc(struct zone *zone)
- static inline void __free_one_page(struct page *page,
- 		unsigned long pfn,
- 		struct zone *zone, unsigned int order,
--		int migratetype)
-+		int migratetype, bool hinted)
- {
- 	struct capture_control *capc = task_capc(zone);
- 	unsigned long uninitialized_var(buddy_pfn);
-@@ -990,11 +991,20 @@ static inline void __free_one_page(struct page *page,
- done_merging:
- 	set_page_order(page, order);
- 
--	if (is_shuffle_order(order) ? shuffle_add_to_tail() :
--	    buddy_merge_likely(pfn, buddy_pfn, page, order))
-+	if (hinted ||
-+	    (is_shuffle_order(order) ? shuffle_add_to_tail() :
-+	     buddy_merge_likely(pfn, buddy_pfn, page, order)))
- 		add_to_free_list_tail(page, zone, order, migratetype);
- 	else
- 		add_to_free_list(page, zone, order, migratetype);
-+
-+	/*
-+	 * No need to notify on a hinted page as the total count of
-+	 * unhinted pages will not have increased since we have essentially
-+	 * merged the hinted page with one or more unhinted pages.
-+	 */
-+	if (!hinted)
-+		page_hinting_notify_free(zone, order);
- }
- 
- /*
-@@ -1305,7 +1315,7 @@ static void free_pcppages_bulk(struct zone *zone, int count,
- 		if (unlikely(isolated_pageblocks))
- 			mt = get_pageblock_migratetype(page);
- 
--		__free_one_page(page, page_to_pfn(page), zone, 0, mt);
-+		__free_one_page(page, page_to_pfn(page), zone, 0, mt, false);
- 		trace_mm_page_pcpu_drain(page, 0, mt);
- 	}
- 	spin_unlock(&zone->lock);
-@@ -1321,7 +1331,7 @@ static void free_one_page(struct zone *zone,
- 		is_migrate_isolate(migratetype))) {
- 		migratetype = get_pfnblock_migratetype(page, pfn);
- 	}
--	__free_one_page(page, pfn, zone, order, migratetype);
-+	__free_one_page(page, pfn, zone, order, migratetype, false);
- 	spin_unlock(&zone->lock);
- }
- 
-@@ -2183,6 +2193,122 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
- 	return NULL;
- }
- 
-+#ifdef CONFIG_PAGE_HINTING
-+/**
-+ * get_unhinted_page - Pull an unhinted page from the free_list
-+ * @zone: Zone to draw pages from
-+ * @order: Order to draw pages from
-+ * @mt: Migratetype to draw pages from
-+ *
-+ * This function will obtain a page from the free list. It will start by
-+ * attempting to pull from the tail of the free list and if that is already
-+ * hinted on it will instead pull the head if that is unhinted.
-+ *
-+ * The page will have the migrate type and order stored in the page
-+ * metadata. While being processed the page will not be avaialble for
-+ * allocation.
-+ *
-+ * Return: page pointer if raw page found, otherwise NULL
-+ */
-+struct page *get_unhinted_page(struct zone *zone, unsigned int order, int mt)
-+{
-+	struct list_head *tail = get_unhinted_tail(zone, order, mt);
-+	struct free_area *area = &(zone->free_area[order]);
-+	struct list_head *list = &area->free_list[mt];
-+	struct page *page;
-+
-+	/* zone lock should be held when this function is called */
-+	lockdep_assert_held(&zone->lock);
-+
-+	/* Find a page of the appropriate size in the preferred list */
-+	page = list_last_entry(tail, struct page, lru);
-+	list_for_each_entry_from_reverse(page, list, lru) {
-+		/* If we entered this loop then the "raw" list isn't empty */
-+
-+		/* If the page is hinted try the head of the list */
-+		if (PageHinted(page)) {
-+			page = list_first_entry(list, struct page, lru);
-+
-+			/*
-+			 * If both the head and tail are hinted then reset
-+			 * the boundary so that we read as an empty list
-+			 * next time and bail out.
-+			 */
-+			if (PageHinted(page)) {
-+				page_hinting_add_to_boundary(page, zone, mt);
-+				break;
-+			}
-+		}
-+
-+		del_page_from_free_list(page, zone, order);
-+
-+		/* record migratetype and order within page */
-+		set_pcppage_migratetype(page, mt);
-+		set_page_private(page, order);
-+
-+		/*
-+		 * Page will not be available for allocation while we are
-+		 * processing it so update the freepage state.
-+		 */
-+		__mod_zone_freepage_state(zone, -(1 << order), mt);
-+
-+		return page;
-+	}
-+
-+	return NULL;
-+}
-+
-+/**
-+ * put_hinted_page - Return a now-hinted page back where we got it
-+ * @zone: Zone to return pages to
-+ * @page: Page that was hinted
-+ *
-+ * This function will pull the migratetype and order information out
-+ * of the page and attempt to return it where it found it. If the page
-+ * is added to the free list without changes we will mark it as being
-+ * hinted.
-+ */
-+void put_hinted_page(struct zone *zone, struct page *page)
-+{
-+	unsigned int order, mt;
-+	unsigned long pfn;
-+
-+	/* zone lock should be held when this function is called */
-+	lockdep_assert_held(&zone->lock);
-+
-+	mt = get_pcppage_migratetype(page);
-+	pfn = page_to_pfn(page);
-+
-+	if (unlikely(has_isolate_pageblock(zone) || is_migrate_isolate(mt))) {
-+		mt = get_pfnblock_migratetype(page, pfn);
-+		set_pcppage_migratetype(page, mt);
-+	}
-+
-+	order = page_private(page);
-+	set_page_private(page, 0);
-+
-+	__free_one_page(page, pfn, zone, order, mt, true);
-+
-+	/*
-+	 * If page was comingled with another page we cannot consider
-+	 * the result to be "hinted" since part of the page hasn't been.
-+	 * In this case we will simply exit and not update the "hinted"
-+	 * state. Instead just treat the result as a unhinted page.
-+	 */
-+	if (!PageBuddy(page) || page_order(page) != order)
-+		return;
-+
-+	/* update areated page accounting */
-+	zone->hinted_pages[order - PAGE_HINTING_MIN_ORDER]++;
-+
-+	/* update boundary of new migratetype and record it */
-+	page_hinting_add_to_boundary(page, zone, mt);
-+
-+	/* flag page as hinted */
-+	__SetPageHinted(page);
-+}
-+#endif /* CONFIG_PAGE_HINTING */
-+
- /*
-  * This array describes the order lists are fallen back to when
-  * the free lists for the desirable migrate type are depleted
-diff --git a/mm/page_hinting.c b/mm/page_hinting.c
-new file mode 100644
-index 000000000000..d06d3762b315
---- /dev/null
-+++ b/mm/page_hinting.c
-@@ -0,0 +1,298 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/mm.h>
-+#include <linux/mmzone.h>
-+#include <linux/page-isolation.h>
-+#include <linux/gfp.h>
-+#include <linux/export.h>
-+#include <linux/delay.h>
-+#include <linux/slab.h>
-+#include <linux/scatterlist.h>
-+#include "internal.h"
-+
-+static struct page_hinting_dev_info __rcu *ph_dev_info __read_mostly;
-+struct static_key page_hinting_notify_enabled;
-+
-+struct list_head *boundary[MAX_ORDER - PAGE_HINTING_MIN_ORDER][MIGRATE_TYPES];
-+
-+static void page_hinting_reset_boundary(struct zone *zone, unsigned int order,
-+				   unsigned int migratetype)
-+{
-+	boundary[order - PAGE_HINTING_MIN_ORDER][migratetype] =
-+			&zone->free_area[order].free_list[migratetype];
-+}
-+
-+#define for_each_hinting_migratetype_order(_order, _type) \
-+	for (_order = MAX_ORDER; _order-- != PAGE_HINTING_MIN_ORDER;) \
-+		for (_type = MIGRATE_TYPES; _type--;)
-+
-+static int page_hinting_populate_metadata(struct zone *zone)
-+{
-+	unsigned int order, mt;
-+
-+	/*
-+	 * We need to make sure we have somewhere to store the tracking
-+	 * data for how many hinted pages are in the zone. To do that
-+	 * we need to make certain zone->hinted_pages is populated.
-+	 */
-+	if (!zone->hinted_pages) {
-+		zone->hinted_pages = kcalloc(MAX_ORDER - PAGE_HINTING_MIN_ORDER,
-+					     sizeof(unsigned long),
-+					     GFP_KERNEL);
-+		if (!zone->hinted_pages)
-+			return -ENOMEM;
-+	}
-+
-+	/* Update boundary data to reflect the zone we are currently working */
-+	for_each_hinting_migratetype_order(order, mt)
-+		page_hinting_reset_boundary(zone, order, mt);
-+
-+	return 0;
-+}
-+
-+struct list_head *__page_hinting_get_boundary(unsigned int order,
-+					      int migratetype)
-+{
-+	return boundary[order - PAGE_HINTING_MIN_ORDER][migratetype];
-+}
-+
-+void page_hinting_del_from_boundary(struct page *page, struct zone *zone)
-+{
-+	unsigned int order = page_private(page) - PAGE_HINTING_MIN_ORDER;
-+	int mt = get_pcppage_migratetype(page);
-+	struct list_head **tail = &boundary[order][mt];
-+
-+	if (*tail == &page->lru)
-+		*tail = page->lru.next;
-+}
-+
-+void page_hinting_add_to_boundary(struct page *page, struct zone *zone,
-+			     int migratetype)
-+{
-+	unsigned int order = page_private(page) - PAGE_HINTING_MIN_ORDER;
-+	struct list_head **tail = &boundary[order][migratetype];
-+
-+	*tail = &page->lru;
-+}
-+
-+static unsigned int page_hinting_fill(struct zone *zone,
-+				      struct page_hinting_dev_info *phdev)
-+{
-+	struct scatterlist *sg = phdev->sg;
-+	unsigned int order, mt, count = 0;
-+
-+	sg_init_table(phdev->sg, phdev->capacity);
-+
-+	for_each_hinting_migratetype_order(order, mt) {
-+		struct page *page;
-+
-+		/*
-+		 * Pull pages from free list until we have drained
-+		 * it or we have reached capacity.
-+		 */
-+		while ((page = get_unhinted_page(zone, order, mt))) {
-+			sg_set_page(&sg[count], page, PAGE_SIZE << order, 0);
-+
-+			if (++count == phdev->capacity)
-+				return count;
-+		}
-+	}
-+
-+	/* mark end of scatterlist due to underflow */
-+	if (count)
-+		sg_mark_end(&sg[count - 1]);
-+
-+	/*
-+	 * If there are no longer enough free pages to fully populate
-+	 * the scatterlist, then we can just shut it down for this zone.
-+	 */
-+	clear_bit(ZONE_PAGE_HINTING_REQUESTED, &zone->flags);
-+	atomic_dec(&phdev->refcnt);
-+
-+	return count;
-+}
-+
-+static void page_hinting_drain(struct zone *zone,
-+			       struct page_hinting_dev_info *phdev)
-+{
-+	struct scatterlist *sg = phdev->sg;
-+
-+	/*
-+	 * Drain the now hinted pages back into their respective
-+	 * free lists/areas. We assume at least one page is populated.
-+	 */
-+	do {
-+		put_hinted_page(zone, sg_page(sg));
-+	} while (!sg_is_last(sg++));
-+}
-+
-+/*
-+ * The page hinting cycle consists of 4 stages, fill, react, drain, and idle.
-+ * We will cycle through the first 3 stages until we fail to obtain any
-+ * pages, in that case we will switch to idle.
-+ */
-+static void page_hinting_cycle(struct zone *zone,
-+			       struct page_hinting_dev_info *phdev)
-+{
-+	/*
-+	 * Guarantee boundaries and stats are populated before we
-+	 * start placing hinted pages in the zone.
-+	 */
-+	if (page_hinting_populate_metadata(zone))
-+		return;
-+
-+	spin_lock(&zone->lock);
-+
-+	/* set bit indicating boundaries are present */
-+	set_bit(ZONE_PAGE_HINTING_ACTIVE, &zone->flags);
-+
-+	do {
-+		/* Pull pages out of allocator into a scaterlist */
-+		unsigned int num_hints = page_hinting_fill(zone, phdev);
-+
-+		/* no pages were acquired, give up */
-+		if (!num_hints)
-+			break;
-+
-+		spin_unlock(&zone->lock);
-+
-+		/* begin processing pages in local list */
-+		phdev->react(phdev, num_hints);
-+
-+		spin_lock(&zone->lock);
-+
-+		/*
-+		 * We should have a scatterlist of pages that have been
-+		 * processed. Return them to their original free lists.
-+		 */
-+		page_hinting_drain(zone, phdev);
-+
-+		/* keep pulling pages till there are none to pull */
-+	} while (test_bit(ZONE_PAGE_HINTING_REQUESTED, &zone->flags));
-+
-+	/* processing of the zone is complete, we can disable boundaries */
-+	clear_bit(ZONE_PAGE_HINTING_ACTIVE, &zone->flags);
-+
-+	spin_unlock(&zone->lock);
-+}
-+
-+static void page_hinting_process(struct work_struct *work)
-+{
-+	struct delayed_work *d_work = to_delayed_work(work);
-+	struct page_hinting_dev_info *phdev =
-+		container_of(d_work, struct page_hinting_dev_info, work);
-+	struct zone *zone = first_online_pgdat()->node_zones;
-+
-+	do {
-+		if (test_bit(ZONE_PAGE_HINTING_REQUESTED, &zone->flags))
-+			page_hinting_cycle(zone, phdev);
-+
-+		/*
-+		 * Move to next zone, if at the end of the list
-+		 * test to see if we can just go into idle.
-+		 */
-+		zone = next_zone(zone);
-+		if (zone)
-+			continue;
-+		zone = first_online_pgdat()->node_zones;
-+
-+		/*
-+		 * As long as refcnt has not reached zero there are still
-+		 * zones to be processed.
-+		 */
-+	} while (atomic_read(&phdev->refcnt));
-+}
-+
-+/* request page hinting on this zone */
-+void __page_hinting_request(struct zone *zone)
-+{
-+	struct page_hinting_dev_info *phdev;
-+
-+	rcu_read_lock();
-+
-+	/*
-+	 * We use RCU to protect the ph_dev_info pointer. In almost all
-+	 * cases this should be present, however in the unlikely case of
-+	 * a shutdown this will be NULL and we should exit.
-+	 */
-+	phdev = rcu_dereference(ph_dev_info);
-+	if (unlikely(!phdev))
-+		return;
-+
-+	/*
-+	 * We can use separate test and set operations here as there
-+	 * is nothing else that can set or clear this bit while we are
-+	 * holding the zone lock. The advantage to doing it this way is
-+	 * that we don't have to dirty the cacheline unless we are
-+	 * changing the value.
-+	 */
-+	set_bit(ZONE_PAGE_HINTING_REQUESTED, &zone->flags);
-+
-+	/*
-+	 * Delay the start of work to allow a sizable queue to
-+	 * build. For now we are limiting this to running no more
-+	 * than 10 times per second.
-+	 */
-+	if (!atomic_fetch_inc(&phdev->refcnt))
-+		schedule_delayed_work(&phdev->work, HZ / 10);
-+
-+	rcu_read_unlock();
-+}
-+
-+void __page_hinting_free_stats(struct zone *zone)
-+{
-+	/* free hinted_page statisitics */
-+	kfree(zone->hinted_pages);
-+	zone->hinted_pages = NULL;
-+}
-+
-+void page_hinting_shutdown(struct page_hinting_dev_info *phdev)
-+{
-+	if (rcu_access_pointer(ph_dev_info) != phdev)
-+		return;
-+
-+	/* Disable page hinting notification */
-+	static_key_slow_dec(&page_hinting_notify_enabled);
-+	RCU_INIT_POINTER(ph_dev_info, NULL);
-+	synchronize_rcu();
-+
-+	/* Flush any existing work, and lock it out */
-+	cancel_delayed_work_sync(&phdev->work);
-+
-+	/* Free scatterlist */
-+	kfree(phdev->sg);
-+	phdev->sg = NULL;
-+}
-+EXPORT_SYMBOL_GPL(page_hinting_shutdown);
-+
-+int page_hinting_startup(struct page_hinting_dev_info *phdev)
-+{
-+	struct zone *zone;
-+
-+	/* nothing to do if already in use */
-+	if (rcu_access_pointer(ph_dev_info))
-+		return -EBUSY;
-+
-+	/* allocate scatterlist to store pages being hinted on */
-+	phdev->sg = kcalloc(phdev->capacity, sizeof(*phdev->sg), GFP_KERNEL);
-+	if (!phdev->sg)
-+		return -ENOMEM;
-+
-+	/* initialize refcnt and work structures */
-+	atomic_set(&phdev->refcnt, 0);
-+	INIT_DELAYED_WORK(&phdev->work, &page_hinting_process);
-+
-+	/* assign device, and begin initial flush of populated zones */
-+	rcu_assign_pointer(ph_dev_info, phdev);
-+	for_each_populated_zone(zone) {
-+		spin_lock(&zone->lock);
-+		__page_hinting_request(zone);
-+		spin_unlock(&zone->lock);
-+	}
-+
-+	/* enable page hinting notification */
-+	static_key_slow_inc(&page_hinting_notify_enabled);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(page_hinting_startup);
-+
-
+- Arnaldo
