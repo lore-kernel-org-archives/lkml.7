@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF249C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B1FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78A6A214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE07021873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997041;
-	bh=FbZbedkP++TyVHZEGVF8M9bwJy5eFHGnrq/eBQWUgCE=;
+	s=default; t=1563997046;
+	bh=eafawqtvtT/Z9ZKNJ7ZvmhbWCM0RJA1U0SNZNUhjf7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=brUy79c6jBfhjGClnt+XmbTzB0oGzxZhAKthH5DSJC4NQ2hE+n7BwDxWZ97F+//A9
-	 5mxPWtdXxgWjswNmLvxuDx+U+Fy5bNMxM//zoIO6A5kJZ2Acwci/qtrqwjpmZaZEZV
-	 6HV231h2PscZ/uB8oImYra9Y2YBIxTSK2BtBE2W8=
+	b=sih5aS4K3MNxxO4AHp0KIy/HZ5Iv4sKmnJEmWfP1+kKbViJea3Ck8hNk4Gjqv88KQ
+	 Ju/I25vbRJRRlOLAWKYjsy3OsOmVWF8Nb+2LJDqXFn4pp0lBnBiVxURbZPLrfG8072
+	 nyBeEs8wEXU8n/d8o+/5o2ffTgHr8kSfxsAI2E5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389446AbfGXThU (ORCPT
+        id S2389085AbfGXThY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:37:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37388 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:37:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389433AbfGXThR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:37:17 -0400
+        id S2389202AbfGXThU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:37:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 614C1214AF;
-        Wed, 24 Jul 2019 19:37:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 082A1229F4;
+        Wed, 24 Jul 2019 19:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997036;
-        bh=FbZbedkP++TyVHZEGVF8M9bwJy5eFHGnrq/eBQWUgCE=;
+        s=default; t=1563997039;
+        bh=eafawqtvtT/Z9ZKNJ7ZvmhbWCM0RJA1U0SNZNUhjf7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gyGPpQx0yLHcaSIozgV8bYCnHNcumsw29KPMztUKyEwcAPddXSL939PYAN2gMkv1C
-         6VIr8ezy4plEhIt1Fp75ZmeLQ3hUtnOCOLWpNyJq40WouG+rka9d/88ToAWeSRc47Z
-         bQn1bxuWJEia6gZSFFGSfJkLZBaJBCYTJ7DKD1ys=
+        b=aAjAzfLBYEdg/KNaQdHadNF9BvYYTI2nk7SFR+DoI4wAnXuEJNTA/ZostxpQmELFo
+         5LXwypuxUeXLdPAC8Subn4FWlX0bFMOgZGTPHW0TXHU0DRMhAXSO/aU46f9toEkP/B
+         PTi64Xy67svJZa48OvwxPzsAAgC9PMcBDwc12vgU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Stan Johnson <userm57@yahoo.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.2 260/413] scsi: megaraid_sas: Fix calculation of target ID
-Date:   Wed, 24 Jul 2019 21:19:11 +0200
-Message-Id: <20190724191754.674264112@linuxfoundation.org>
+Subject: [PATCH 5.2 261/413] scsi: mac_scsi: Increase PIO/PDMA transfer length threshold
+Date:   Wed, 24 Jul 2019 21:19:12 +0200
+Message-Id: <20190724191754.767562687@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,39 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-commit c8f96df5b8e633056b7ebf5d52a9d6fb1b156ce3 upstream.
+commit 7398cee4c3e6aea1ba07a6449e5533ecd0b92cdd upstream.
 
-In megasas_get_target_prop(), driver is incorrectly calculating the target
-ID for devices with channel 1 and 3.  Due to this, firmware will either
-fail the command (if there is no device with the target id sent from
-driver) or could return the properties for a target which was not
-intended.  Devices could end up with the wrong queue depth due to this.
+Some targets introduce delays when handshaking the response to certain
+commands. For example, a disk may send a 96-byte response to an INQUIRY
+command (or a 24-byte response to a MODE SENSE command) too slowly.
 
-Fix target id calculation for channel 1 and 3.
+Apparently the first 12 or 14 bytes are handshaked okay but then the system
+bus error timeout is reached while transferring the next word.
 
-Fixes: 96188a89cc6d ("scsi: megaraid_sas: NVME interface target prop added")
-Cc: stable@vger.kernel.org
-Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Since the scsi bus phase hasn't changed, the driver then sets the target
+borken flag to prevent further PDMA transfers. The driver also logs the
+warning, "switching to slow handshake".
+
+Raise the PDMA threshold to 512 bytes so that PIO transfers will be used
+for these commands. This default is sufficiently low that PDMA will still
+be used for READ and WRITE commands.
+
+The existing threshold (16 bytes) was chosen more or less at random.
+However, best performance requires the threshold to be as low as possible.
+Those systems that don't need the PIO workaround at all may benefit from
+mac_scsi.setup_use_pdma=1
+
+Cc: Michael Schmitz <schmitzmic@gmail.com>
+Cc: stable@vger.kernel.org # v4.14+
+Fixes: 3a0f64bfa907 ("mac_scsi: Fix pseudo DMA implementation")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/mac_scsi.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -6155,7 +6155,8 @@ megasas_get_target_prop(struct megasas_i
- 	int ret;
- 	struct megasas_cmd *cmd;
- 	struct megasas_dcmd_frame *dcmd;
--	u16 targetId = (sdev->channel % 2) + sdev->id;
-+	u16 targetId = ((sdev->channel % 2) * MEGASAS_MAX_DEV_PER_CHANNEL) +
-+			sdev->id;
+--- a/drivers/scsi/mac_scsi.c
++++ b/drivers/scsi/mac_scsi.c
+@@ -53,7 +53,7 @@ static int setup_cmd_per_lun = -1;
+ module_param(setup_cmd_per_lun, int, 0);
+ static int setup_sg_tablesize = -1;
+ module_param(setup_sg_tablesize, int, 0);
+-static int setup_use_pdma = -1;
++static int setup_use_pdma = 512;
+ module_param(setup_use_pdma, int, 0);
+ static int setup_hostid = -1;
+ module_param(setup_hostid, int, 0);
+@@ -306,7 +306,7 @@ static int macscsi_dma_xfer_len(struct N
+                                 struct scsi_cmnd *cmd)
+ {
+ 	if (hostdata->flags & FLAG_NO_PSEUDO_DMA ||
+-	    cmd->SCp.this_residual < 16)
++	    cmd->SCp.this_residual < setup_use_pdma)
+ 		return 0;
  
- 	cmd = megasas_get_cmd(instance);
- 
+ 	return cmd->SCp.this_residual;
 
 
