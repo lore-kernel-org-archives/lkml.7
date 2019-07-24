@@ -2,53 +2,57 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D8AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EC4C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCED214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 980712147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999425;
-	bh=cosIYsLoDbojTikTTllFASYBvS4Q4wiXY0nvkkX8xGk=;
+	s=default; t=1563999430;
+	bh=PnkC2LTDZuIcwwAJ99NHnnP7Cmp2QjzGZpMgYPKqKtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cayduz9ul2vDi+ZzrxtnbH4GC5uLuwqhP+9WWjB7OcMApcX0d/GFYcLPOqY1MJ8tF
-	 KHbk3i8J8/HNtu3KhQ2rXViorvgAbhvYZgudv3E9xnQflzN2RnD0GnY7SCLrTp+Yuj
-	 rGb0ozQMeuuRR8CShBQq5RoOUft/ZjS1AINLX34Y=
+	b=U8lzZQzJnV8kN/X6VynOHWe04gcEahtvkflsaquADSRO5wGICIqx6TlmmEOA31dE7
+	 ojKEerhoV82JiAtG9/zNpISBI1nnB82YVAw4VTQbO9K7kQDdRXdw+vWSElqpTYiyzu
+	 11uWsQZd6xzRDYYdGzr/6ieG0xI1Tn8IhZuWn6mA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392867AbfGXURE (ORCPT
+        id S1729175AbfGXTug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:17:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59480 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:50:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403863AbfGXTuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:50:39 -0400
+        id S2391586AbfGXTu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:50:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69C8D217D4;
-        Wed, 24 Jul 2019 19:50:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E8A820659;
+        Wed, 24 Jul 2019 19:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997838;
-        bh=cosIYsLoDbojTikTTllFASYBvS4Q4wiXY0nvkkX8xGk=;
+        s=default; t=1563997827;
+        bh=PnkC2LTDZuIcwwAJ99NHnnP7Cmp2QjzGZpMgYPKqKtE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m8UAJwS2+vjVR2e3sGGoer377bceZSf/bsEhFu7pj+L6c/72hZyniNEH0zavvPgou
-         LQ4W/26Ro1ozqTxiEOdJuKdPp7iAQwlE+2VQZbl6mAXZ+fxxOuoMtWAb/2sNR1yUwA
-         WAd/FhIJLIwRZKzD2H/wsWoGmhqvnqX05lPmArj0=
+        b=lMieNJkW+5jG3ulFW87/qWE9a/HKKCMR+cA/q4vVlbxprxaH1Uy9A+K8ZWfFZ87rh
+         tKL8vnfvdsxiW2YjuJiQEmKoi9OHuZSk0diRw1i7Rr9WNnU35qI/z3DG5B6lLQ68U6
+         4ckkFeidODMoZfG8FmEM8oATbwHhxA395/Zzp0+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 159/371] rslib: Fix handling of of caller provided syndrome
-Date:   Wed, 24 Jul 2019 21:18:31 +0200
-Message-Id: <20190724191737.128277013@linuxfoundation.org>
+Subject: [PATCH 5.1 156/371] xsk: Properly terminate assignment in xskq_produce_flush_desc
+Date:   Wed, 24 Jul 2019 21:18:28 +0200
+Message-Id: <20190724191736.917136789@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,44 +65,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ef4d6a8556b637ad27c8c2a2cff1dda3da38e9a9 ]
+[ Upstream commit f7019b7b0ad14bde732b8953161994edfc384953 ]
 
-Check if the syndrome provided by the caller is zero, and act
-accordingly.
+Clang warns:
 
-Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190620141039.9874-6-ferdinand.blomqvist@gmail.com
+In file included from net/xdp/xsk_queue.c:10:
+net/xdp/xsk_queue.h:292:2: warning: expression result unused
+[-Wunused-value]
+        WRITE_ONCE(q->ring->producer, q->prod_tail);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/linux/compiler.h:284:6: note: expanded from macro 'WRITE_ONCE'
+        __u.__val;                                      \
+        ~~~ ^~~~~
+1 warning generated.
+
+The q->prod_tail assignment has a comma at the end, not a semi-colon.
+Fix that so clang no longer warns and everything works as expected.
+
+Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
+Link: https://github.com/ClangBuiltLinux/linux/issues/544
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Acked-by: Björn Töpel <bjorn.topel@intel.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/reed_solomon/decode_rs.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ net/xdp/xsk_queue.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
-index 3313bf944ff1..121beb2f0930 100644
---- a/lib/reed_solomon/decode_rs.c
-+++ b/lib/reed_solomon/decode_rs.c
-@@ -42,8 +42,18 @@
- 	BUG_ON(pad < 0 || pad >= nn);
+diff --git a/net/xdp/xsk_queue.h b/net/xdp/xsk_queue.h
+index 610c0bdc0c2b..cd333701f4bf 100644
+--- a/net/xdp/xsk_queue.h
++++ b/net/xdp/xsk_queue.h
+@@ -240,7 +240,7 @@ static inline void xskq_produce_flush_desc(struct xsk_queue *q)
+ 	/* Order producer and data */
+ 	smp_wmb();
  
- 	/* Does the caller provide the syndrome ? */
--	if (s != NULL)
--		goto decode;
-+	if (s != NULL) {
-+		for (i = 0; i < nroots; i++) {
-+			/* The syndrome is in index form,
-+			 * so nn represents zero
-+			 */
-+			if (s[i] != nn)
-+				goto decode;
-+		}
-+
-+		/* syndrome is zero, no errors to correct  */
-+		return 0;
-+	}
+-	q->prod_tail = q->prod_head,
++	q->prod_tail = q->prod_head;
+ 	WRITE_ONCE(q->ring->producer, q->prod_tail);
+ }
  
- 	/* form the syndromes; i.e., evaluate data(x) at roots of
- 	 * g(x) */
 -- 
 2.20.1
 
