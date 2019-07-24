@@ -5,50 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB81C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62206C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2327B22AEC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33C9220665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997963;
-	bh=hLJwoxGCEhIXliv/Juh+dWJj8SLc20uVUGBu7kODr2s=;
+	s=default; t=1563997967;
+	bh=KAb3NWyoP0PNIblTwiZYg056ddwWCOwhql5La9oPsuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Fx3HU8URXHXuhvcpOFcmKfTdasABcFBcdQ9ooNPhp/iQsF+CDeDqvhN0nPMJNuh5
-	 5GWqajE+Qx+hp4LCsV6Fjw5izXMzhixD+kl7ZsFHZVQ3mi4LZI/RrmNKXO8WyDkDh7
-	 0s4wB13ql2xbpSTFI2hkFGpnNzulTDupowS67eZo=
+	b=KStmBsNU/rz6jg3wDlIFlKu7z/wvo9oahjqF0DIohsTprRs+mgA1qsKuykL3nsT+H
+	 VjkLIYcZ/CK6LQ54DydF9adBXpvnzv51PmjxiM9bcPhylKsAc7SGrJ29/lg3QyHogW
+	 7SaKidB3eZkeMrxozKy4a3miRQLcVdcTbkquvEiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391761AbfGXTwm (ORCPT
+        id S2391775AbfGXTwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:52:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34636 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:52:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391751AbfGXTwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:52:40 -0400
+        id S2391751AbfGXTwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:52:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E4FF217D4;
-        Wed, 24 Jul 2019 19:52:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44C6622BE8;
+        Wed, 24 Jul 2019 19:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997959;
-        bh=hLJwoxGCEhIXliv/Juh+dWJj8SLc20uVUGBu7kODr2s=;
+        s=default; t=1563997962;
+        bh=KAb3NWyoP0PNIblTwiZYg056ddwWCOwhql5La9oPsuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f9yVrAndBuJ4NiABLN7/6bgm4A9QPBULKgymERvK/oVxJi9Z+RcXb8fX83Vu8N3bz
-         NF1HtBr9XE25Hl7+4gV2ujPNsa915y/X3o8exzvmEhRs9OqChVsztVE5d702rNrCOX
-         QSE7EYuBrBvfOBqK/NPS8jbFCPWjTvIpMy8uwbUM=
+        b=Hsw+tQ+gqKYzYaj9L0tNzU+slEdKHEXlbQkKOjGo4rwcXbcc5uhEMT9KR17ZDBwzw
+         cFLDkfydQVP/N3HpC+X6/YaKA8o066hAKgb8WEFd6GVNOggBC1vwKMGTQ71HWl2zgR
+         JR7wsjzX26Jy2ucvS6zQ3hkn6vjPBy+ZOSjP34Jk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 200/371] gpiolib: Fix references to gpiod_[gs]et_*value_cansleep() variants
-Date:   Wed, 24 Jul 2019 21:19:12 +0200
-Message-Id: <20190724191739.772267703@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        alsa-devel@alsa-project.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 201/371] ASoC: audio-graph-card: fix use-after-free in graph_for_each_link
+Date:   Wed, 24 Jul 2019 21:19:13 +0200
+Message-Id: <20190724191739.820465787@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,64 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3285170f28a850638794cdfe712eb6d93e51e706 ]
+[ Upstream commit 1bcc1fd64e4dd903f4d868a9e053986e3b102713 ]
 
-Commit 372e722ea4dd4ca1 ("gpiolib: use descriptors internally") renamed
-the functions to use a "gpiod" prefix, and commit 79a9becda8940deb
-("gpiolib: export descriptor-based GPIO interface") introduced the "raw"
-variants, but both changes forgot to update the comments.
+After calling of_node_put() on the codec_ep and codec_port variables,
+they are still being used, which may result in use-after-free.
+We fix this issue by calling of_node_put() after the last usage.
 
-Readd a similar reference to gpiod_set_value(), which was accidentally
-removed by commit 1e77fc82110ac36f ("gpio: Add missing open drain/source
-handling to gpiod_set_value_cansleep()").
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20190701142738.25219-1-geert+renesas@glider.be
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: fce9b90c1ab7 ("ASoC: audio-graph-card: cleanup DAI link loop method - step2")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: alsa-devel@alsa-project.org
+Cc: linux-kernel@vger.kernel.org
+Link: https://lore.kernel.org/r/1562229530-8121-1-git-send-email-wen.yang99@zte.com.cn
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ sound/soc/generic/audio-graph-card.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index fd1344056e1d..b8a5c1e3b99d 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3012,7 +3012,7 @@ int gpiod_get_array_value_complex(bool raw, bool can_sleep,
- int gpiod_get_raw_value(const struct gpio_desc *desc)
- {
- 	VALIDATE_DESC(desc);
--	/* Should be using gpio_get_value_cansleep() */
-+	/* Should be using gpiod_get_raw_value_cansleep() */
- 	WARN_ON(desc->gdev->chip->can_sleep);
- 	return gpiod_get_raw_value_commit(desc);
- }
-@@ -3033,7 +3033,7 @@ int gpiod_get_value(const struct gpio_desc *desc)
- 	int value;
+diff --git a/sound/soc/generic/audio-graph-card.c b/sound/soc/generic/audio-graph-card.c
+index 69bc4848d787..f730830fb36c 100644
+--- a/sound/soc/generic/audio-graph-card.c
++++ b/sound/soc/generic/audio-graph-card.c
+@@ -460,9 +460,6 @@ static int graph_for_each_link(struct graph_priv *priv,
+ 			codec_ep = of_graph_get_remote_endpoint(cpu_ep);
+ 			codec_port = of_get_parent(codec_ep);
  
- 	VALIDATE_DESC(desc);
--	/* Should be using gpio_get_value_cansleep() */
-+	/* Should be using gpiod_get_value_cansleep() */
- 	WARN_ON(desc->gdev->chip->can_sleep);
+-			of_node_put(codec_ep);
+-			of_node_put(codec_port);
+-
+ 			/* get convert-xxx property */
+ 			memset(&adata, 0, sizeof(adata));
+ 			graph_get_conversion(dev, codec_ep, &adata);
+@@ -482,6 +479,9 @@ static int graph_for_each_link(struct graph_priv *priv,
+ 			else
+ 				ret = func_noml(priv, cpu_ep, codec_ep, li);
  
- 	value = gpiod_get_raw_value_commit(desc);
-@@ -3304,7 +3304,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
- void gpiod_set_raw_value(struct gpio_desc *desc, int value)
- {
- 	VALIDATE_DESC_VOID(desc);
--	/* Should be using gpiod_set_value_cansleep() */
-+	/* Should be using gpiod_set_raw_value_cansleep() */
- 	WARN_ON(desc->gdev->chip->can_sleep);
- 	gpiod_set_raw_value_commit(desc, value);
- }
-@@ -3345,6 +3345,7 @@ static void gpiod_set_value_nocheck(struct gpio_desc *desc, int value)
- void gpiod_set_value(struct gpio_desc *desc, int value)
- {
- 	VALIDATE_DESC_VOID(desc);
-+	/* Should be using gpiod_set_value_cansleep() */
- 	WARN_ON(desc->gdev->chip->can_sleep);
- 	gpiod_set_value_nocheck(desc, value);
- }
++			of_node_put(codec_ep);
++			of_node_put(codec_port);
++
+ 			if (ret < 0)
+ 				return ret;
+ 
 -- 
 2.20.1
 
