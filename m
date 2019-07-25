@@ -2,207 +2,109 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52098C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27627C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C95D22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:33:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ICHURx0M"
+	by mail.kernel.org (Postfix) with ESMTP id 0830D22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbfGYOdj (ORCPT
+        id S1728889AbfGYOdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:33:39 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39227 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728420AbfGYOdg (ORCPT
+        Thu, 25 Jul 2019 10:33:52 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:36643 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725944AbfGYOdw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:33:36 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PEXPUo1041320
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 25 Jul 2019 07:33:25 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PEXPUo1041320
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564065206;
-        bh=Aaj0vWujqzqpFjmQS3JzUmdNp9XlQRB0IiBuxqP3Cps=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=ICHURx0M+1yVLOYU8z4XN1MKY/CScKDCx7Q3oJSEfG9MElgU9NnbE57RDGcFWbuqF
-         meqiCkcJyOLOCmRcGEhs0EanfNeb8jKscCkmYqBg26N3ZCMkuRfXBKF9moSjlXW7kg
-         UawtDeWSvSjG7NDyEUfXfKvs414TeeP65eemDUt0DAdj2BgTCNVofuRS8/ykNbxUTo
-         uGj7Qh6f05/NBtX0C6SOgAdMDoHq9YmIT15SJ0mSsoUl1cuFcC5ye2ef1sSEC6MpUw
-         dmW8Nf/akYpRWyBsuZrax6BQwIlWjd+G8DBKC7LXEVxDcG72pDU+uwP7OjuJrcjeHP
-         OdvrLOe3c9+fA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PEXPH11041317;
-        Thu, 25 Jul 2019 07:33:25 -0700
-Date:   Thu, 25 Jul 2019 07:33:25 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-d0a7166bc7ac4feac5c482ebe8b2417aa3302ef4@git.kernel.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
-        peterz@infradead.org, tglx@linutronix.de
-Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
-          peterz@infradead.org, tglx@linutronix.de
-In-Reply-To: <20190722105220.677835995@linutronix.de>
-References: <20190722105220.677835995@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/apic] x86/smp: Move smp_function_call implementations into
- IPI code
-Git-Commit-ID: d0a7166bc7ac4feac5c482ebe8b2417aa3302ef4
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 25 Jul 2019 10:33:52 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0TXn-kBY_1564065224;
+Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TXn-kBY_1564065224)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 25 Jul 2019 22:33:46 +0800
+Date:   Thu, 25 Jul 2019 22:33:44 +0800
+From:   Aaron Lu <aaron.lu@linux.alibaba.com>
+To:     Aubrey Li <aubrey.intel@gmail.com>
+Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 3/3] temp hack to make tick based schedule happen
+Message-ID: <20190725143344.GD992@aaronlu>
+References: <20190531210816.GA24027@sinkpad>
+ <20190606152637.GA5703@sinkpad>
+ <20190612163345.GB26997@sinkpad>
+ <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com>
+ <20190613032246.GA17752@sinkpad>
+ <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
+ <20190619183302.GA6775@sinkpad>
+ <20190718100714.GA469@aaronlu>
+ <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
+ <20190725143003.GA992@aaronlu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190725143003.GA992@aaronlu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  d0a7166bc7ac4feac5c482ebe8b2417aa3302ef4
-Gitweb:     https://git.kernel.org/tip/d0a7166bc7ac4feac5c482ebe8b2417aa3302ef4
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Mon, 22 Jul 2019 20:47:25 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 25 Jul 2019 16:12:01 +0200
+When a hyperthread is forced idle and the other hyperthread has a single
+CPU intensive task running, the running task can occupy the hyperthread
+for a long time with no scheduling point and starve the other
+hyperthread.
 
-x86/smp: Move smp_function_call implementations into IPI code
+Fix this temporarily by always checking if the task has exceed its
+timeslice and if so, do a schedule.
 
-Move it where it belongs. That allows to keep all the shorthand logic in
-one place.
-
-No functional change.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190722105220.677835995@linutronix.de
-
+Signed-off-by: Aaron Lu <ziqian.lzq@antfin.com>
 ---
- arch/x86/include/asm/smp.h |  1 +
- arch/x86/kernel/apic/ipi.c | 40 ++++++++++++++++++++++++++++++++++++++++
- arch/x86/kernel/smp.c      | 40 ----------------------------------------
- 3 files changed, 41 insertions(+), 40 deletions(-)
+ kernel/sched/fair.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-index e1356a3b8223..e15f364efbcc 100644
---- a/arch/x86/include/asm/smp.h
-+++ b/arch/x86/include/asm/smp.h
-@@ -143,6 +143,7 @@ void play_dead_common(void);
- void wbinvd_on_cpu(int cpu);
- int wbinvd_on_all_cpus(void);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 43babc2a12a5..730c9359e9c9 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4093,6 +4093,9 @@ check_preempt_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr)
+ 		return;
+ 	}
  
-+void native_smp_send_reschedule(int cpu);
- void native_send_call_func_ipi(const struct cpumask *mask);
- void native_send_call_func_single_ipi(int cpu);
- void x86_idle_thread_init(unsigned int cpu, struct task_struct *idle);
-diff --git a/arch/x86/kernel/apic/ipi.c b/arch/x86/kernel/apic/ipi.c
-index f53de3e0145e..eaac65bf58f0 100644
---- a/arch/x86/kernel/apic/ipi.c
-+++ b/arch/x86/kernel/apic/ipi.c
-@@ -62,6 +62,46 @@ void apic_send_IPI_allbutself(unsigned int vector)
- 		apic->send_IPI_mask_allbutself(cpu_online_mask, vector);
++	if (cfs_rq->nr_running <= 1)
++		return;
++
+ 	/*
+ 	 * Ensure that a task that missed wakeup preemption by a
+ 	 * narrow margin doesn't have to wait for a full slice.
+@@ -4261,8 +4264,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
+ 		return;
+ #endif
+ 
+-	if (cfs_rq->nr_running > 1)
+-		check_preempt_tick(cfs_rq, curr);
++	check_preempt_tick(cfs_rq, curr);
  }
  
-+/*
-+ * Send a 'reschedule' IPI to another CPU. It goes straight through and
-+ * wastes no time serializing anything. Worst case is that we lose a
-+ * reschedule ...
-+ */
-+void native_smp_send_reschedule(int cpu)
-+{
-+	if (unlikely(cpu_is_offline(cpu))) {
-+		WARN(1, "sched: Unexpected reschedule of offline CPU#%d!\n", cpu);
-+		return;
-+	}
-+	apic->send_IPI(cpu, RESCHEDULE_VECTOR);
-+}
-+
-+void native_send_call_func_single_ipi(int cpu)
-+{
-+	apic->send_IPI(cpu, CALL_FUNCTION_SINGLE_VECTOR);
-+}
-+
-+void native_send_call_func_ipi(const struct cpumask *mask)
-+{
-+	cpumask_var_t allbutself;
-+
-+	if (!alloc_cpumask_var(&allbutself, GFP_ATOMIC)) {
-+		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
-+		return;
-+	}
-+
-+	cpumask_copy(allbutself, cpu_online_mask);
-+	__cpumask_clear_cpu(smp_processor_id(), allbutself);
-+
-+	if (cpumask_equal(mask, allbutself) &&
-+	    cpumask_equal(cpu_online_mask, cpu_callout_mask))
-+		apic->send_IPI_allbutself(CALL_FUNCTION_VECTOR);
-+	else
-+		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
-+
-+	free_cpumask_var(allbutself);
-+}
-+
- #endif /* CONFIG_SMP */
  
- static inline int __prepare_ICR2(unsigned int mask)
-diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
-index b8ad1876a081..b8d4e9c3c070 100644
---- a/arch/x86/kernel/smp.c
-+++ b/arch/x86/kernel/smp.c
-@@ -115,46 +115,6 @@
- static atomic_t stopping_cpu = ATOMIC_INIT(-1);
- static bool smp_no_nmi_ipi = false;
- 
--/*
-- * this function sends a 'reschedule' IPI to another CPU.
-- * it goes straight through and wastes no time serializing
-- * anything. Worst case is that we lose a reschedule ...
-- */
--static void native_smp_send_reschedule(int cpu)
--{
--	if (unlikely(cpu_is_offline(cpu))) {
--		WARN(1, "sched: Unexpected reschedule of offline CPU#%d!\n", cpu);
--		return;
--	}
--	apic->send_IPI(cpu, RESCHEDULE_VECTOR);
--}
--
--void native_send_call_func_single_ipi(int cpu)
--{
--	apic->send_IPI(cpu, CALL_FUNCTION_SINGLE_VECTOR);
--}
--
--void native_send_call_func_ipi(const struct cpumask *mask)
--{
--	cpumask_var_t allbutself;
--
--	if (!alloc_cpumask_var(&allbutself, GFP_ATOMIC)) {
--		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
--		return;
--	}
--
--	cpumask_copy(allbutself, cpu_online_mask);
--	__cpumask_clear_cpu(smp_processor_id(), allbutself);
--
--	if (cpumask_equal(mask, allbutself) &&
--	    cpumask_equal(cpu_online_mask, cpu_callout_mask))
--		apic->send_IPI_allbutself(CALL_FUNCTION_VECTOR);
--	else
--		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
--
--	free_cpumask_var(allbutself);
--}
--
- static int smp_stop_nmi_callback(unsigned int val, struct pt_regs *regs)
- {
- 	/* We are registered on stopping cpu too, avoid spurious NMI */
+-- 
+2.19.1.3.ge56e4f7
+
