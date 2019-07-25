@@ -2,103 +2,114 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E529DC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89010C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA4522CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 598A1218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:07:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L+koLszY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQPZ9xr5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfGYUHM (ORCPT
+        id S1726695AbfGYUHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 16:07:12 -0400
-Received: from mail-qt1-f201.google.com ([209.85.160.201]:50829 "EHLO
-        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbfGYUHM (ORCPT
+        Thu, 25 Jul 2019 16:07:16 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33498 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfGYUHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jul 2019 16:07:12 -0400
-Received: by mail-qt1-f201.google.com with SMTP id g30so45319335qtm.17
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 13:07:11 -0700 (PDT)
+Received: by mail-qt1-f194.google.com with SMTP id r6so46114631qtt.0;
+        Thu, 25 Jul 2019 13:07:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=Ty05lRNnYEjxTaLhAlpE2gx2Zy7GWIE7L8QY/O06f/I=;
-        b=L+koLszYgKU+7K9nKDi+EHeoRBBciyMOAI5YEVDbvAZ5G3sIs6JTFjtTJIKilccaLM
-         c7LKP5MOeEt+hia2yo1iQh4XLA9TafkU+mdvYwPdkPODSqO2y7BTRagZkSdwWlpDwsfv
-         b3exmk8ntSWX3XgsSuxyvD8gVy/Y/AljXpAJOO0sDR4KHMuZS1fbDY8x9klvQJCp8GfA
-         ZfDHP6vPqBOrL+4vt6xcTU1ObkYGEbhgHrlUNYk5pgEDg7H5i9PUwT4QaRNoVxIms3WD
-         +SalUPYER3CuQHjiTf9iexCPkW4BtXzvmrmqw613+y62lk/Lulg3pCCrGaZCZg8HnEei
-         7v5g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JUKV8WRNFyPUgh72J2ygKbXLGmL3yg1CtOIEnQ3ys8Q=;
+        b=dQPZ9xr5JDDOjCF7rG8SZMnCbkMeZmnwNjiXYICC0ydBM86Vn5XGqOtYYCso904WEN
+         rkO5Kdpek6TREvb1CUOFZ2xlofa3+1Dz/mXtCmwlJa9KxE/+tGsoBS+cEYvaeieZ0ads
+         h2BxtBG3aKG/X0e5VCq5/QHGzKvn+MxRUkgdx/K110yQNIo4xVqFVdzxN3oeBzSAQlsa
+         6ghaFVqSbThPwZ7n8t0iZ7XEmpORWy48ZIqewk/8vY1xZOfsmuwGe0wiJM4uQ3uxttgl
+         NXPqQyjohfu4R4oo0q3rfiiTGLiimANHKOZDWgONTvM8UJVF05urU9S4VzISttcA2h9z
+         J36A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=Ty05lRNnYEjxTaLhAlpE2gx2Zy7GWIE7L8QY/O06f/I=;
-        b=EHqvdwPLDhubFGXDL3Wd12yRjR68lMmXVzeRZzx7oilhXtHhP647ztONetX6MwResn
-         CbrAdpVx92ngy5e/XmyaD7IPHtm1XbteFLGlhmVTJFj6UaHaWhddMgd7Treq/GqHhl7r
-         ijjag2mxMHgZ7GqhGYOkY9C0wOHno/S680Mf6sC8DkB1fVS+tV2dEqYkf1uxezQV3dBm
-         TwodYLcR7JNsFSt1fAwbDLJ7GPdSrUfnfZHsTsgaNbRV/GPE3tvwMhAmz3WHRPYVpqjr
-         NzHaxzKwr3EEe8r6luYr09ERDHE8zHU/GiiNEnaaWXJwjv3EXGQDBWmbA8qBsxwSkL9Z
-         Z8+Q==
-X-Gm-Message-State: APjAAAVBt55S/E+UXMDQ4H3NDSJKAHfQZ+xVHLLx4LNhALAzS3XCY7zE
-        3fTKdn2vbaLBf1uQK7/I6U6QhGIhaPVeTmnv9OY=
-X-Google-Smtp-Source: APXvYqw0907duddRtb4OUF5TewdHeasj/6+RTAfVpkbxz1rCPgrD2wgxG8RM7Saw1zlhKxYj72Ufj9JOySJ+X98mqbY=
-X-Received: by 2002:a05:6214:601:: with SMTP id z1mr47731460qvw.197.1564085231149;
- Thu, 25 Jul 2019 13:07:11 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 13:06:19 -0700
-In-Reply-To: <20190725200625.174838-1-ndesaulniers@google.com>
-Message-Id: <20190725200625.174838-3-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20190725200625.174838-1-ndesaulniers@google.com>
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-Subject: [PATCH v4 0/2] Support kexec/kdump for clang built kernel
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Cc:     peterz@infradead.org, clang-built-linux@googlegroups.com,
-        linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com,
-        Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JUKV8WRNFyPUgh72J2ygKbXLGmL3yg1CtOIEnQ3ys8Q=;
+        b=a/dhKAqdG07UkXPX3qSzySPqncl6Uhp2NOJuVpsF1gZp2ggZKrRPUJI599fxLqzo0m
+         mMXXF1dg52HoM5I3hlOKkWGlnSeuuL7BExvq7CKW0XFnbMNEJZuyRLxQu8CDSa+zV0Jp
+         O6ogCPWnY6MXg9BAu+qgxYGiVcY0Gse2jrOVbRv+K6gtxcW5d2MAjEDpKAs1hRChoG+j
+         cN2On5lBQXY/6NSasdnKzgkIcNkd7BzJsJU3xLE1iciRrbqfoWIdqpNdshCZgQSnT+lV
+         rpUMZULnabKEcvvA577oumtq8YTd4TaqbDURzddJ2905lIYWrlMnWUFNxU9KpxePqSSg
+         srvQ==
+X-Gm-Message-State: APjAAAVeiCgpLLe1rVbyCLdqdwPkruROd0A6oA6NDIYSSquMlCLxay3M
+        ph0iOl3XyPiLxTMJ+YY3mKY=
+X-Google-Smtp-Source: APXvYqzTAnhUIkULBN0XJBcTBc0KkqTq7wvnRGk68Q1Vi1EEcYmBr1jGdDzUfom5Ei+A5SLsCSLrBQ==
+X-Received: by 2002:a0c:d7cc:: with SMTP id g12mr31578289qvj.220.1564085231696;
+        Thu, 25 Jul 2019 13:07:11 -0700 (PDT)
+Received: from karz-laptop.vlan96.localdomain ([200.17.97.58])
+        by smtp.gmail.com with ESMTPSA id g10sm21709514qkk.91.2019.07.25.13.07.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 13:07:11 -0700 (PDT)
+From:   Kartik Kulkarni <kartik.koolks@gmail.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com,
+        Kartik Kulkarni <kartik.koolks@gmail.com>,
+        Matheus Tavares <matheus.bernardino@usp.br>
+Subject: [PATCH] staging:iio:adc:ad7280a: add of_match_table entry
+Date:   Fri, 26 Jul 2019 01:36:49 +0530
+Message-Id: <20190725200649.30592-1-kartik.koolks@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Reuse the implementation of memcpy and memset instead of relying on
-__builtin_memcpy and __builtin_memset as it causes infinite recursion
-in Clang (at any opt level) or GCC at -O2.
-2. Don't reset KBUILD_CFLAGS, rather filter CONFIG_FUNCTION_TRACER,
-CONFIG_STACKPROTECTOR, and CONFIG_STACKPROTECTOR_STRONG flags via
-`CFLAGS_REMOVE_<file>.o'
+Add the of_device_id struct and the respective
+of_match_device entry to complete device tree support.
 
-A good test of this series (besides boot testing a kexec kernel):
-* There should be no undefined symbols in arch/x86/purgatory/purgatory.ro:
-$ nm arch/x86/purgatory/purgatory.ro
-  particularly `warn`, `bcmp`, `__stack_chk_fail`, `memcpy` or `memset`.
-* `-pg`, `-fstack-protector`, `-fstack-protector-strong` should not be
-  added to the command line for the c source files under arch/x86/purgatory/
-  when compiling with CONFIG_FUNCTION_TRACER=y, CONFIG_STACKPROTECTOR=y,
-  and CONFIG_STACKPROTECTOR_STRONG=y.
+Signed-off-by: Kartik Kulkarni <kartik.koolks@gmail.com>
+Reviewed-by: Matheus Tavares <matheus.bernardino@usp.br>
+---
+ drivers/staging/iio/adc/ad7280a.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-V4 of: https://lkml.org/lkml/2019/7/23/864
-
-Nick Desaulniers (2):
-  x86/purgatory: do not use __builtin_memcpy and __builtin_memset
-  x86/purgatory: use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS
-
- arch/x86/boot/string.c         |  7 +++++++
- arch/x86/purgatory/Makefile    | 29 ++++++++++++++++++++++++-----
- arch/x86/purgatory/purgatory.c |  6 ++++++
- arch/x86/purgatory/string.c    | 23 -----------------------
- 4 files changed, 37 insertions(+), 28 deletions(-)
- delete mode 100644 arch/x86/purgatory/string.c
-
+diff --git a/drivers/staging/iio/adc/ad7280a.c b/drivers/staging/iio/adc/ad7280a.c
+index 2d9c7551f314..ded0ba093a28 100644
+--- a/drivers/staging/iio/adc/ad7280a.c
++++ b/drivers/staging/iio/adc/ad7280a.c
+@@ -1027,9 +1027,16 @@ static const struct spi_device_id ad7280_id[] = {
+ };
+ MODULE_DEVICE_TABLE(spi, ad7280_id);
+ 
++static const struct of_device_id ad7280_of_match[] = {
++	{ .compatible = "adi,ad7280a", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ad7280_of_match);
++
+ static struct spi_driver ad7280_driver = {
+ 	.driver = {
+ 		.name	= "ad7280a",
++		.of_match_table = ad7280_of_match,
+ 	},
+ 	.probe		= ad7280_probe,
+ 	.id_table	= ad7280_id,
 -- 
-2.22.0.709.g102302147b-goog
+2.20.1
 
