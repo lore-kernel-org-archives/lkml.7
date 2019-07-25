@@ -2,92 +2,121 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 188D0C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4107C41517
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDDD6229F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:55:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hsg2cctp"
+	by mail.kernel.org (Postfix) with ESMTP id 83EA3229F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:56:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564059399;
+	bh=F/FsA+e4Dd8Scx3bQFdthOpfRrhA8DdCEIxJU7+kOf0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r00E7AKH6mTVS6DxneeZpKBc/JM2PSWtMrA/gJZzSH1KGfUsK/OaXjFw9kHQlj3vv
+	 68bH8+X2RA0MVK+ls5lAs+TSo7RVUyCQdgGgbjxBdqN7AtfL6lDw4A4gYM2CqAtCIs
+	 Q92OE9de98ZZkFWpMArM3cgdKBUyJ27BZOXevUq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389569AbfGYMzz (ORCPT
+        id S2389608AbfGYM4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:55:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45664 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389504AbfGYMzz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:55:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=s5Z6EurVp6TZLOQ8ZvNGlmSS1tYEjf/1b9mDRYLPXPs=; b=Hsg2cctp+d5eAKszON1CuJxF0
-        tcXTs/jkypbx96r4p5rG727pZLN5sHbmjfWb0/B307oo998Gebr8TaBpQ8sZKbE0sWRHR+X417+LD
-        VwYhd9vnYU0+lmOr33lgDmDl6DBvOOBv8/tolWozRgh9SbwFgrUKdNloZrELvjNo1yJ9MIxiY/SO9
-        olPNILvoTyJxmM4dnrY5k3G2utGJbF4WDBfoWLz1rGmv/jb0xvkzexLDrjGmTXadTiCZHmpuiQO4M
-        HmWjr7MYJ8wNjnUhgmQY7kWhxpbTLw2SllYdqrLAPsWeNtgZdp4TVoiplhC5PKbKu5idSw9KMgB9J
-        IEHb715cQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqdHm-0004PR-MU; Thu, 25 Jul 2019 12:55:54 +0000
-Date:   Thu, 25 Jul 2019 05:55:54 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v7 2/5] dma-buf: heaps: Add heap helpers
-Message-ID: <20190725125554.GF20286@infradead.org>
-References: <20190724003656.59780-1-john.stultz@linaro.org>
- <20190724003656.59780-3-john.stultz@linaro.org>
+        Thu, 25 Jul 2019 08:56:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49480 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387901AbfGYM4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 08:56:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D02BCAF05;
+        Thu, 25 Jul 2019 12:56:36 +0000 (UTC)
+Date:   Thu, 25 Jul 2019 14:56:36 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v1] ACPI / scan: Acquire device_hotplug_lock in
+ acpi_scan_init()
+Message-ID: <20190725125636.GA3582@dhcp22.suse.cz>
+References: <20190724143017.12841-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190724003656.59780-3-john.stultz@linaro.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190724143017.12841-1-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +struct dma_buf *heap_helper_export_dmabuf(
-> +				struct heap_helper_buffer *helper_buffer,
-> +				int fd_flags)
+On Wed 24-07-19 16:30:17, David Hildenbrand wrote:
+> We end up calling __add_memory() without the device hotplug lock held.
+> (I used a local patch to assert in __add_memory() that the
+>  device_hotplug_lock is held - I might upstream that as well soon)
+> 
+> [   26.771684]        create_memory_block_devices+0xa4/0x140
+> [   26.772952]        add_memory_resource+0xde/0x200
+> [   26.773987]        __add_memory+0x6e/0xa0
+> [   26.775161]        acpi_memory_device_add+0x149/0x2b0
+> [   26.776263]        acpi_bus_attach+0xf1/0x1f0
+> [   26.777247]        acpi_bus_attach+0x66/0x1f0
+> [   26.778268]        acpi_bus_attach+0x66/0x1f0
+> [   26.779073]        acpi_bus_attach+0x66/0x1f0
+> [   26.780143]        acpi_bus_scan+0x3e/0x90
+> [   26.780844]        acpi_scan_init+0x109/0x257
+> [   26.781638]        acpi_init+0x2ab/0x30d
+> [   26.782248]        do_one_initcall+0x58/0x2cf
+> [   26.783181]        kernel_init_freeable+0x1bd/0x247
+> [   26.784345]        kernel_init+0x5/0xf1
+> [   26.785314]        ret_from_fork+0x3a/0x50
+> 
+> So perform the locking just like in acpi_device_hotplug().
 
-Indentation seems odd here as it doesn't follow any of the usual schools
-for multi-level prototypes.  But maybe shortening some identifier would
-help avoiding that problem altogether :)
+While playing with the device_hotplug_lock, can we actually document
+what it is protecting please? I have a bad feeling that we are adding
+this lock just because some other code path does rather than with a good
+idea why it is needed. This patch just confirms that. What exactly does
+the lock protect from here in an early boot stage.
 
-> +static void *dma_heap_map_kernel(struct heap_helper_buffer *buffer)
-> +{
-> +	void *vaddr;
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Len Brown <lenb@kernel.org
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/acpi/scan.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 0e28270b0fd8..cbc9d64b48dd 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -2204,7 +2204,9 @@ int __init acpi_scan_init(void)
+>  	acpi_gpe_apply_masked_gpes();
+>  	acpi_update_all_gpes();
+>  
+> +	lock_device_hotplug();
+>  	mutex_lock(&acpi_scan_lock);
 > +
-> +	vaddr = vmap(buffer->pages, buffer->pagecount, VM_MAP, PAGE_KERNEL);
-> +	if (!vaddr)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	return vaddr;
-> +}
+>  	/*
+>  	 * Enumerate devices in the ACPI namespace.
+>  	 */
+> @@ -2232,6 +2234,7 @@ int __init acpi_scan_init(void)
+>  
+>   out:
+>  	mutex_unlock(&acpi_scan_lock);
+> +	unlock_device_hotplug();
+>  	return result;
+>  }
+>  
+> -- 
+> 2.21.0
 
-Note that a lot of systems don't have highmem at all or don't support
-CMA in highmem.  So for contigous allocations that aren't highmem we
-could skip the vmap here altogether and just use the direct mapping.
+-- 
+Michal Hocko
+SUSE Labs
