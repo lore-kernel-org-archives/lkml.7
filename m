@@ -2,113 +2,149 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70BEC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E360C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C9A322BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AECB22BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564037961;
-	bh=yrDu6i8kJTZ5JgPYIQrkoqt/GawfokDLPdWoND6VkrQ=;
+	s=default; t=1564037966;
+	bh=Xe+l4V9Bz5H90pXUVpwpyR0kc4IDBDqSB1YjehgmLd0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y8tlKbtW6iAVqBpitcC3O65hmRW4BdNlpOY1NfVJCVvqU6BM16z6iIGJpt3j+h5ri
-	 Z5w93kuNE52MjYXOj+lvmhgIPy2YS5iZTqeFIWVMeiUX3BUl2zrw0nEIjpVvwuEgDZ
-	 hybpfbdy2RXbHcKCiNNBhrKB9NQhZW+TDcmCulcs=
+	b=rpOpe2MLJUHZKWUMtGN+JR8LncTLbohp1/dc/6H5sq73NwV34h9pCDk35AeiXcdm5
+	 Yzq7qQjC41dWCVIeDl/pXhZ2HJw0T/PhsoYDJxbNKvGerQNRbP8zxViFgaEezAHSDY
+	 ccjOR6LORG/+yaLKDcRPN+FrUsixNduLdjqh+RBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729430AbfGYG7U (ORCPT
+        id S1729497AbfGYG7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 02:59:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33224 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 02:59:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbfGYG7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 02:59:19 -0400
+        id S1726479AbfGYG7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 02:59:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 887EE2081B;
-        Thu, 25 Jul 2019 06:59:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA6F321871;
+        Thu, 25 Jul 2019 06:59:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564037959;
-        bh=yrDu6i8kJTZ5JgPYIQrkoqt/GawfokDLPdWoND6VkrQ=;
+        s=default; t=1564037962;
+        bh=Xe+l4V9Bz5H90pXUVpwpyR0kc4IDBDqSB1YjehgmLd0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EhA3qo5UGHPzaCyjcxJMzKu3MlbprMP0hmGZf0lFRsEbfkw56ZihXzlt/7eeQw7Ld
-         7MyiDnCVqwg1pDz006LwzwTD1uRJy9c+3fLIeJtpouRswZ1AfWivz7wRZ4QzeqEYMR
-         wKVdBvAfK+whz4xhYvNKD/gumZqKlSLoylgZMRjc=
-Date:   Thu, 25 Jul 2019 08:24:47 +0200
+        b=dkdppeqfpCvxrXpgyq8c6jN0etpzOcFD1xOh4TdEUvTsSGlmL0nS/basfBC3XVena
+         nbn+s/Vh4tYb981X/z/W9B4h/prm0GY5ouAyBxDa8oby4ENnn1o+Bl9PWvys7wDyPa
+         yAZVvdRF7jus2QiXi+/Z4KoB3BksOYVAiCNzbixA=
+Date:   Thu, 25 Jul 2019 08:28:34 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "H.J. Lu" <hjl.tools@gmail.com>,
-        Mike Lothian <mike@fireburn.co.uk>,
-        Tom Lendacky <thomas.lendacky@amd.com>, bhe@redhat.com,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, lijiang@redhat.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to be
- reserved
-Message-ID: <20190725062447.GB5647@kroah.com>
-References: <20190723130513.GA25290@kroah.com>
- <alpine.DEB.2.21.1907231519430.1659@nanos.tec.linutronix.de>
- <20190723134454.GA7260@kroah.com>
- <20190724153416.GA27117@kroah.com>
- <alpine.DEB.2.21.1907241746010.1791@nanos.tec.linutronix.de>
- <20190724155735.GC5571@kroah.com>
- <alpine.DEB.2.21.1907241801320.1791@nanos.tec.linutronix.de>
- <20190724161634.GB10454@kroah.com>
- <alpine.DEB.2.21.1907242153320.1791@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1907242208590.1791@nanos.tec.linutronix.de>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 1/5] can: m_can: Create a m_can platform framework
+Message-ID: <20190725062834.GC5647@kroah.com>
+References: <20190509161109.10499-1-dmurphy@ti.com>
+ <dbb7bdef-820d-5dcc-d7b5-a82bc1b076fb@ti.com>
+ <a8e3f2d3-18c3-3bdb-1318-8964afc7e032@ti.com>
+ <93530d94-ec65-de82-448e-f2460dd39fb9@ti.com>
+ <0f6c41c8-0071-ed3a-9e65-caf02a0fbefe@ti.com>
+ <6fa79302-ad32-7f43-f9d5-af70aa789284@ti.com>
+ <f236a88a-485c-9002-1e4a-9a5ad0e1c81f@ti.com>
+ <437b6371-8488-a0ff-fa68-d1fb5a81bb8b@ti.com>
+ <20190724064754.GC22447@kroah.com>
+ <443fe5e5-5e5c-f669-1f4b-565d9f3dd6c8@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907242208590.1791@nanos.tec.linutronix.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <443fe5e5-5e5c-f669-1f4b-565d9f3dd6c8@ti.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:20:34PM +0200, Thomas Gleixner wrote:
-> On Wed, 24 Jul 2019, Thomas Gleixner wrote:
+On Wed, Jul 24, 2019 at 10:36:02AM -0500, Dan Murphy wrote:
+> Hello
 > 
-> > On Wed, 24 Jul 2019, Greg KH wrote:
-> > > On Wed, Jul 24, 2019 at 06:03:41PM +0200, Thomas Gleixner wrote:
-> > > > > Gotta love old tool-chains :(
-> > > > 
-> > > > Oh yes. /me does archaeology to find a VM with old stuff
+> On 7/24/19 1:47 AM, Greg KH wrote:
+> > On Tue, Jul 23, 2019 at 10:14:14AM -0500, Dan Murphy wrote:
+> > > Hello
 > > > 
-> > > I can provide a binary if you can't find anything.
-> > 
-> > Found GNU ld (GNU Binutils for Debian) 2.25 and after fiddling with
-> > LD_PRELOAD it builds without failure.
-> > 
-> > ld.gold from that binutils version dies with a segfault on various files ...
+> > > On 7/10/19 7:08 AM, Dan Murphy wrote:
+> > > > Hello
+> > > > 
+> > > > On 6/17/19 10:09 AM, Dan Murphy wrote:
+> > > > > Marc
+> > > > > 
+> > > > > On 6/10/19 11:35 AM, Dan Murphy wrote:
+> > > > > > Bump
+> > > > > > 
+> > > > > > On 6/6/19 8:16 AM, Dan Murphy wrote:
+> > > > > > > Marc
+> > > > > > > 
+> > > > > > > Bump
+> > > > > > > 
+> > > > > > > On 5/31/19 6:51 AM, Dan Murphy wrote:
+> > > > > > > > Marc
+> > > > > > > > 
+> > > > > > > > On 5/15/19 3:54 PM, Dan Murphy wrote:
+> > > > > > > > > Marc
+> > > > > > > > > 
+> > > > > > > > > On 5/9/19 11:11 AM, Dan Murphy wrote:
+> > > > > > > > > > Create a m_can platform framework that peripheral
+> > > > > > > > > > devices can register to and use common code and register sets.
+> > > > > > > > > > The peripheral devices may provide read/write and configuration
+> > > > > > > > > > support of the IP.
+> > > > > > > > > > 
+> > > > > > > > > > Acked-by: Wolfgang Grandegger <wg@grandegger.com>
+> > > > > > > > > > Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> > > > > > > > > > ---
+> > > > > > > > > > 
+> > > > > > > > > > v12 - Update the m_can_read/write functions to
+> > > > > > > > > > create a backtrace if the callback
+> > > > > > > > > > pointer is NULL. - https://lore.kernel.org/patchwork/patch/1052302/
+> > > > > > > > > > 
+> > > > > > > > > Is this able to be merged now?
+> > > > > > > > ping
+> > > > > Wondering if there is anything else we need to do?
+> > > > > 
+> > > > > The part has officially shipped and we had hoped to have driver
+> > > > > support in Linux as part of the announcement.
+> > > > > 
+> > > > Is this being sent in a PR for 5.3?
+> > > > 
+> > > > Dan
+> > > > 
+> > > Adding Greg to this thread as I have no idea what is going on with this.
+> > Why me?  What am I supposed to do here?  I see no patches at all to do
+> > anything with :(
 > 
-> Then tried that old ld.bfd with GCC8 and that causes ld.bfd to segfault on
-> every other file.
-> 
-> Copied that config to the clang build directory and it causes the same
-> explosions with ld.bfd.
-> 
-> What a time waste...
-> 
-> 
-> 
+> I am not sure who to email. The maintainer seems to be on hiatus or super
+> busy with other work.
 
-Ugh, sorry about this.  I can't seem to track it down either, and at
-this point am just going to punt and let the Android build people try to
-figure it out as it is their custom build system that is failing at the
-moment, only for x86, and if this single patch is reverted, it starts
-working again.
+Who is the maintainer?
 
-voodo...
+> So I added you to see if you know how to handle this.  Wolfgang Acked it but
+> he said Marc needs to pull
 
-thanks,
+Then work with them, again, what can I do if I can't even see the
+patches here?
+
+> it in.  We have quite a few users of this patchset. I have been hosting the
+> patchset in a different tree.
+> 
+> These users keep pinging us for upstream status and all we can do is point
+> them to the
+> 
+> LKML to show we are continuing to pursue inclusion.
+> 
+> https://lore.kernel.org/patchwork/project/lkml/list/?series=393454
+
+Looks sane, work with the proper developers, good luck!
 
 greg k-h
