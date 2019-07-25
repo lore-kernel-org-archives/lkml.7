@@ -2,90 +2,132 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60236C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF237C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312212084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C696D20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:50:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WaQ6X+y1"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rI6tcfKj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391397AbfGYRte (ORCPT
+        id S2391402AbfGYRuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:49:34 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38739 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbfGYRtd (ORCPT
+        Thu, 25 Jul 2019 13:50:04 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:7666 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387988AbfGYRuE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:49:33 -0400
-Received: by mail-pl1-f194.google.com with SMTP id az7so23669513plb.5;
-        Thu, 25 Jul 2019 10:49:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l2BJIslaNIswmvgTol4V5L0Vj/yDrK/SgSYfdATf9ME=;
-        b=WaQ6X+y11G7pCD3oqPwkvQ6X30erNd35PMGZv+eSltcVvkE4p5xxNkBCCNDX9y+xiD
-         Ox8dZIHZfNtWUODM/hWymYQSdsxoAx3vpD0nS5tIjiamIeI/iCBzQLTs1mllddbLdq/W
-         NTTxdkvluSc/v+MZjjGvZ/+GV+GtYddg1XgW3uNV9JD5LS+u/U8aMLsEh7fqQquPRnjW
-         foT7Jmjz5XYQ0LUMmZjL/aCfUT6wgSxuvYsNp9NeJrjMJI5kH5Qk49+3oHkitYg9z5wB
-         /OZuCXqzwN3f9hLPIVK+5qvMae+9+MIxc5q553V6va1PnSLsFMtpc5p7vS9DUuKjSpBA
-         H4uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l2BJIslaNIswmvgTol4V5L0Vj/yDrK/SgSYfdATf9ME=;
-        b=uCFEaZDJ0WiE+Jeo8rT3qIy+fVJEWKP28KQiBqtS0Kyi1anMeOifQgZvOpqTl7bKTe
-         36z7GuPcTogRrkVeSzb2vz4YLKH5yWofkuO7Jck5U6psO4/WCP0ck/BloqWi5kb3g7/g
-         a9fH7CNdL059G52W6+wOj0OqQcI8VwRw/+HWai8G6K7NBXKGxAyTTzwhrAiMAxG6uKX/
-         FKhP9/URdxf3qcooULVomBLgP1JIy7dxVemATlE4ddfL1hGHfgxfmZEKcLBZWTERSHCO
-         2k3y3bQ2BVL1+vQYnZjR1vtw4LeN6hnxGtgN3RB4AM+pEyOD5UGnGImJK8EV0t3qJTD4
-         feqA==
-X-Gm-Message-State: APjAAAVBteaJZCrivriwgXTOF8OZqTXEZOf89rU6BUZl1lM+mJDMBfZs
-        AhmgeZKN6u1DFQFV8x190RczwbazK3uAivaUeGc=
-X-Google-Smtp-Source: APXvYqwhwEsYNUUkS+BYkZ9yygVXiAwC/5MQXbEH3PLWYh8PkTAUC345hfJWgphH9g+GrE9L3Q35IuTl91AK2NKlgOs=
-X-Received: by 2002:a17:902:694a:: with SMTP id k10mr91275985plt.255.1564076972831;
- Thu, 25 Jul 2019 10:49:32 -0700 (PDT)
+        Thu, 25 Jul 2019 13:50:04 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d39ebc90001>; Thu, 25 Jul 2019 10:50:01 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 25 Jul 2019 10:50:03 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 10:50:03 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 25 Jul
+ 2019 17:49:59 +0000
+Subject: Re: [PATCH v3 1/3] mm: document zone device struct page field usage
+To:     Jason Gunthorpe <jgg@mellanox.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Matthew Wilcox" <willy@infradead.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Christoph Lameter" <cl@linux.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20190724232700.23327-1-rcampbell@nvidia.com>
+ <20190724232700.23327-2-rcampbell@nvidia.com>
+ <20190725012225.GB32003@mellanox.com>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <131f7c2d-704e-6f58-a330-e62d2ef5539e@nvidia.com>
+Date:   Thu, 25 Jul 2019 10:49:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190704090205.19400-1-fe@dev.tdt.de> <CAHp75Vcocs=9AwX32ouOWFc+wAduCFv2DT_p4JYPUVV0BumjqA@mail.gmail.com>
- <4b43316c-3e05-0ce9-3ada-db22996205b9@metux.net> <cc5bbcd7148ece53a075948f240bc66b@dev.tdt.de>
-In-Reply-To: <cc5bbcd7148ece53a075948f240bc66b@dev.tdt.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 25 Jul 2019 20:49:21 +0300
-Message-ID: <CAHp75Vct4O+P62vUo02e5iJy9JMFBDjijFf-JUxjRrMhf1XTEg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Update pcengines-apuv2 platform device
-To:     Florian Eckert <fe@dev.tdt.de>
-Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Eckert.Florian@googlemail.com,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190725012225.GB32003@mellanox.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564077001; bh=oG7iW18JoTbi7qpLIpRxo4HqaxvkInQKbpTpVVtqeEU=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=rI6tcfKjR1LQ254m/IBmbYjmdPRO+O414xxVE9H4xpU4Cf8g4LrW5czg2J7R/E9UK
+         IuCJmkMOGHg5UbU9py+N6/OsZqu0i3kxRiq72lxvyBAr4R/SRk3Ph9b4cPcj0+1LeQ
+         HcTMy4xeIFVIAR/fE4ZXX5aJEY1rtnMNaOKBxofLLtl/zXXuVCCDs4bXhLpGBDLgQt
+         jjmro4lglHz8GYKuKJiGVMABgSpyow5/WGddYIcOrx8yIJ0mqOfTMoW7AvMdQppRqc
+         XVh3RCs98U6YxWpnWEHvzQGz1G2j+AT6dv7iCO4T/AZ4bzZCYxC97uD7qOLtgfVRr8
+         Xb1mVLma/E6qQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 3:54 PM Florian Eckert <fe@dev.tdt.de> wrote:
->
-> On 2019-07-08 21:45, Enrico Weigelt, metux IT consult wrote:
-> > On 04.07.19 15:39, Andy Shevchenko wrote:
-> >> On Thu, Jul 4, 2019 at 12:02 PM Florian Eckert <fe@dev.tdt.de> wrote:
-> >>>
-> >>> This patchset adds the following changes to this pcengines-apuv2
-> >>> platform device.
 
-Guys, I'm lost with this series.
-So, for now I dropped them from queue, if needed, please resend a new version.
+On 7/24/19 6:22 PM, Jason Gunthorpe wrote:
+> On Wed, Jul 24, 2019 at 04:26:58PM -0700, Ralph Campbell wrote:
+>> Struct page for ZONE_DEVICE private pages uses the page->mapping and
+>> and page->index fields while the source anonymous pages are migrated to
+>> device private memory. This is so rmap_walk() can find the page when
+>> migrating the ZONE_DEVICE private page back to system memory.
+>> ZONE_DEVICE pmem backed fsdax pages also use the page->mapping and
+>> page->index fields when files are mapped into a process address space.
+>>
+>> Add comments to struct page and remove the unused "_zd_pad_1" field
+>> to make this more clear.
+>>
+>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+>> Cc: Matthew Wilcox <willy@infradead.org>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Christoph Lameter <cl@linux.com>
+>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+>> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+>> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+>> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+>> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+>> Cc: Pekka Enberg <penberg@kernel.org>
+>> Cc: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+>> Cc: Christoph Hellwig <hch@lst.de>
+>> Cc: Jason Gunthorpe <jgg@mellanox.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+>>   include/linux/mm_types.h | 11 ++++++++++-
+>>   1 file changed, 10 insertions(+), 1 deletion(-)
+>=20
+> Ralph, you marked some of thes patches as mm/hmm, but I feel it is
+> best if Andrew takes them through the normal -mm path.
+>=20
+> They don't touch hmm.c or mmu notifiers so I don't forsee conflicts,
+> and I don't feel comfortable to review this code.
+>=20
+> Regards,
+> Jason
+>=20
 
--- 
-With Best Regards,
-Andy Shevchenko
+Fine with me. I should have been clear in the cover letter which
+tree to target.
