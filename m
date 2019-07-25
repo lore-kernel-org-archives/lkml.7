@@ -2,113 +2,185 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCB7C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B989C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 620B721871
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:27:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEdHBdGN"
+	by mail.kernel.org (Postfix) with ESMTP id 11E5822BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389657AbfGYI1m (ORCPT
+        id S2389678AbfGYI2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 04:27:42 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41907 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389623AbfGYI1l (ORCPT
+        Thu, 25 Jul 2019 04:28:50 -0400
+Received: from mail-qt1-f173.google.com ([209.85.160.173]:41318 "EHLO
+        mail-qt1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389231AbfGYI2u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 04:27:41 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m9so23022047pls.8
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 01:27:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=XrnR0ob5JN+jXhmz3b6uLie9luXhbO1bl9luxd0o9lU=;
-        b=uEdHBdGN1tspb+2pw1vjjIP9TPRoE69vcLhIkbQ3Buu7aF3UPsHXWe2IGuA3tRNBVq
-         eZXOen8g79oqskTFwJi1T4z8wTYMs5sHGS0dqZWc/XYrk3vIl90BAeCwfVc+QcLwYOQz
-         684c2rKuEzuenlNVqPQqjGAjSAeU3XELQqNfmTeBKmIgEEhwTS98qHi5dH17lvRp0YYC
-         s6m0F+PUjW1Agvc//exnF281ZadBdvEmKtcTVmcM4wsV2N3OFyRGwROU1WbmN1p0uxrN
-         60cn7S8wSpSNHW/6RJ3ewRADxQ2F1NIrCVVYAo4bhsdyT7rNAgsxSWrJB+GgjsoyU1uJ
-         Rx2g==
+        Thu, 25 Jul 2019 04:28:50 -0400
+Received: by mail-qt1-f173.google.com with SMTP id d17so48174656qtj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 01:28:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=XrnR0ob5JN+jXhmz3b6uLie9luXhbO1bl9luxd0o9lU=;
-        b=SWGxaRhKlKg84l6IN84NL13Pu0j+NgxtOxXauZhBBoXIMBUcGw/Ono9Ym2mTbNOf2n
-         NdlVqBYrGuPGtBAQ5P07sYX4drWdaHtrAPqPCeSUibPIJkwxX/ky+UgOwq0cDLjSDle9
-         uehHGTdhd/9eXDnU8+UN9EpZHG+Ai1G8E/Yw6+2WbADEJkMDM4lHGpSTYR0v747nPUaQ
-         j5+k2f4HqG+zTUymN4Pze3ltrpvKxyfDsrpQrbA1yAj6Tq46MVhKbfmvlda+tWnp2txg
-         A8TmXxi5IWWI9C/o0SD1beKbncFKH9uhna89g+91irtKQV+UzeYF8KLKSHjZUN32P1e2
-         xcgQ==
-X-Gm-Message-State: APjAAAUgP0vRViTsc6LzmLFWIwYefKtRm7bv6IYGfi15DrIo6CYgHxL/
-        8SXYAEUO28L69jr2qjs5rEHzI5u17QQ=
-X-Google-Smtp-Source: APXvYqww6hvROz9O0Lb5ItTHVgyKuuT2KrkP+kX9Gqvrb1HRFc/sHhySqFiHwAfn8TyH0dHBPbAzXg==
-X-Received: by 2002:a17:902:e383:: with SMTP id ch3mr89404861plb.23.1564043260596;
-        Thu, 25 Jul 2019 01:27:40 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id 201sm58677399pfz.24.2019.07.25.01.27.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 01:27:39 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     perex@perex.cz, tiwai@suse.com, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, rfontana@redhat.com
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] ALSA: i2c: ak4xxx-adda: Fix a possible null pointer dereference in build_adc_controls()
-Date:   Thu, 25 Jul 2019 16:27:33 +0800
-Message-Id: <20190725082733.15234-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=W9gVDQuWc00uLJaqP5LZiohnBPPDA5P8er6pMpADl+8=;
+        b=Am6T5hnCnXthUwxxjVpiWHuoiEhm4JRiA2EEEoN4aBgoBtRt7nr9jKC9o65uRqaIFS
+         fDXmfB5mGNxlXXDUwOhjXL9fjQTjUGlkkBx+IrfpIgptBWG30vQ0K/zCjmaFPeR96U0F
+         +T/TKoP5IySvAybevDBy7JZNrAka2OEWrbo0V5CMCo2iCMyoaKn+UocpQaxqSro/IWh7
+         x6FtDrNpWGNXcq/+vQseUhBBJVvneZmqJRRVgDHVUW6VCFqtf2FfWzTh064+hiS5V7O0
+         BiUMC1lEP2quTyNTp8loMO+O/YTH8FH2r+MlNEN0Z9Zuh9Wi6Z0IM41lPwgD39CEZCBU
+         fxeg==
+X-Gm-Message-State: APjAAAXk4iFO9GS4KBIY/Uh51kPfzqeOIy8daT7TyYDtPcJGULKxtFOu
+        ubo9HHi1i36/N/PoL9SrthQ7/YodVfllRw==
+X-Google-Smtp-Source: APXvYqypxxYh1SBYrdx7sBULiRodWoRyZYhZUU0NIqTYlxg9WD9pqSvNPlHTYL+xZ+kptrKYhL64aw==
+X-Received: by 2002:aed:3667:: with SMTP id e94mr55831866qtb.382.1564043329003;
+        Thu, 25 Jul 2019 01:28:49 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id z21sm19762286qto.48.2019.07.25.01.28.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 01:28:48 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 04:28:39 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+Subject: Re: WARNING in __mmdrop
+Message-ID: <20190725042651-mutt-send-email-mst@kernel.org>
+References: <20190723010019-mutt-send-email-mst@kernel.org>
+ <b4696f2e-678a-bdb2-4b7c-fb4ce040ec2a@redhat.com>
+ <20190723032024-mutt-send-email-mst@kernel.org>
+ <1d14de4d-0133-1614-9f64-3ded381de04e@redhat.com>
+ <20190723035725-mutt-send-email-mst@kernel.org>
+ <3f4178f1-0d71-e032-0f1f-802428ceca59@redhat.com>
+ <20190723051828-mutt-send-email-mst@kernel.org>
+ <caff362a-e208-3468-3688-63e1d093a9d3@redhat.com>
+ <20190725012149-mutt-send-email-mst@kernel.org>
+ <55e8930c-2695-365f-a07b-3ad169654d28@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <55e8930c-2695-365f-a07b-3ad169654d28@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In build_adc_controls(), there is an if statement on line 773 to check
-whether ak->adc_info is NULL:
-	if (! ak->adc_info || 
-		! ak->adc_info[mixer_ch].switch_name)
+On Thu, Jul 25, 2019 at 03:43:41PM +0800, Jason Wang wrote:
+> 
+> On 2019/7/25 下午1:52, Michael S. Tsirkin wrote:
+> > On Tue, Jul 23, 2019 at 09:31:35PM +0800, Jason Wang wrote:
+> > > On 2019/7/23 下午5:26, Michael S. Tsirkin wrote:
+> > > > On Tue, Jul 23, 2019 at 04:49:01PM +0800, Jason Wang wrote:
+> > > > > On 2019/7/23 下午4:10, Michael S. Tsirkin wrote:
+> > > > > > On Tue, Jul 23, 2019 at 03:53:06PM +0800, Jason Wang wrote:
+> > > > > > > On 2019/7/23 下午3:23, Michael S. Tsirkin wrote:
+> > > > > > > > > > Really let's just use kfree_rcu. It's way cleaner: fire and forget.
+> > > > > > > > > Looks not, you need rate limit the fire as you've figured out?
+> > > > > > > > See the discussion that followed. Basically no, it's good enough
+> > > > > > > > already and is only going to be better.
+> > > > > > > > 
+> > > > > > > > > And in fact,
+> > > > > > > > > the synchronization is not even needed, does it help if I leave a comment to
+> > > > > > > > > explain?
+> > > > > > > > Let's try to figure it out in the mail first. I'm pretty sure the
+> > > > > > > > current logic is wrong.
+> > > > > > > Here is what the code what to achieve:
+> > > > > > > 
+> > > > > > > - The map was protected by RCU
+> > > > > > > 
+> > > > > > > - Writers are: MMU notifier invalidation callbacks, file operations (ioctls
+> > > > > > > etc), meta_prefetch (datapath)
+> > > > > > > 
+> > > > > > > - Readers are: memory accessor
+> > > > > > > 
+> > > > > > > Writer are synchronized through mmu_lock. RCU is used to synchronized
+> > > > > > > between writers and readers.
+> > > > > > > 
+> > > > > > > The synchronize_rcu() in vhost_reset_vq_maps() was used to synchronized it
+> > > > > > > with readers (memory accessors) in the path of file operations. But in this
+> > > > > > > case, vq->mutex was already held, this means it has been serialized with
+> > > > > > > memory accessor. That's why I think it could be removed safely.
+> > > > > > > 
+> > > > > > > Anything I miss here?
+> > > > > > > 
+> > > > > > So invalidate callbacks need to reset the map, and they do
+> > > > > > not have vq mutex. How can they do this and free
+> > > > > > the map safely? They need synchronize_rcu or kfree_rcu right?
+> > > > > Invalidation callbacks need but file operations (e.g ioctl) not.
+> > > > > 
+> > > > > 
+> > > > > > And I worry somewhat that synchronize_rcu in an MMU notifier
+> > > > > > is a problem, MMU notifiers are supposed to be quick:
+> > > > > Looks not, since it can allow to be blocked and lots of driver depends on
+> > > > > this. (E.g mmu_notifier_range_blockable()).
+> > > > Right, they can block. So why don't we take a VQ mutex and be
+> > > > done with it then? No RCU tricks.
+> > > 
+> > > This is how I want to go with RFC and V1. But I end up with deadlock between
+> > > vq locks and some MM internal locks. So I decide to use RCU which is 100%
+> > > under the control of vhost.
+> > > 
+> > > Thanks
+> > And I guess the deadlock is because GUP is taking mmu locks which are
+> > taken on mmu notifier path, right?
+> 
+> 
+> Yes, but it's not the only lock. I don't remember the details, but I can
+> confirm I meet issues with one or two other locks.
+> 
+> 
+> >    How about we add a seqlock and take
+> > that in invalidate callbacks?  We can then drop the VQ lock before GUP,
+> > and take it again immediately after.
+> > 
+> > something like
+> > 	if (!vq_meta_mapped(vq)) {
+> > 		vq_meta_setup(&uaddrs);
+> > 		mutex_unlock(vq->mutex)
+> > 		vq_meta_map(&uaddrs);
+> 
+> 
+> The problem is the vq address could be changed at this time.
+> 
+> 
+> > 		mutex_lock(vq->mutex)
+> > 
+> > 		/* recheck both sock->private_data and seqlock count. */
+> > 		if changed - bail out
+> > 	}
+> > 
+> > And also requires that VQ uaddrs is defined like this:
+> > - writers must have both vq mutex and dev mutex
+> > - readers must have either vq mutex or dev mutex
+> > 
+> > 
+> > That's a big change though. For now, how about switching to a per-vq SRCU?
+> > That is only a little bit more expensive than RCU, and we
+> > can use synchronize_srcu_expedited.
+> > 
+> 
+> Consider we switch to use kfree_rcu(), what's the advantage of per-vq SRCU?
+> 
+> Thanks
 
-When ak->adc_info is NULL, it is used on line 792:
-    knew.name = ak->adc_info[mixer_ch].selector_name;
 
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, referring to lines 773 and 774, ak->adc_info 
-and ak->adc_info[mixer_ch].selector_name are checked before being used.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- sound/i2c/other/ak4xxx-adda.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/sound/i2c/other/ak4xxx-adda.c b/sound/i2c/other/ak4xxx-adda.c
-index 5f59316f982a..9a891470e84a 100644
---- a/sound/i2c/other/ak4xxx-adda.c
-+++ b/sound/i2c/other/ak4xxx-adda.c
-@@ -775,11 +775,13 @@ static int build_adc_controls(struct snd_akm4xxx *ak)
- 				return err;
- 
- 			memset(&knew, 0, sizeof(knew));
--			knew.name = ak->adc_info[mixer_ch].selector_name;
--			if (!knew.name) {
-+			if (! ak->adc_info ||
-+				! ak->adc_info[mixer_ch].selector_name) {
- 				knew.name = "Capture Channel";
- 				knew.index = mixer_ch + ak->idx_offset * 2;
- 			}
-+			else
-+				knew.name = ak->adc_info[mixer_ch].selector_name;
- 
- 			knew.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
- 			knew.info = ak4xxx_capture_source_info;
--- 
-2.17.0
-
+I thought we established that notifiers must wait for
+all readers to finish before they mark page dirty, to
+prevent page from becoming dirty after address
+has been invalidated.
+Right?
