@@ -2,226 +2,143 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14378C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04101C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D830822BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA0A22AED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564029615;
-	bh=8oxT8xgyNUwuwFXTPBDPfAgyusjMHHhLLfJMiVh45oI=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=MCrNsmpUt7vYqveW7LiDUvYf6e3uxfqd9Y5KILDvTTi+904QTsTRlvB6WQ14Eu0k/
-	 hOsGFCd/xWgsp1GOZZO+6vspC4FXLegUlnNW2qSJR7anWka75f2Jl/IrvuXCU1S8VB
-	 L1naSzf8CdzUZgP/JTcsSBgbQzfRuNIt7RBolRoI=
+	s=default; t=1564029636;
+	bh=wcwG4pMAinnKbG7g0QnFfuSmByspa9vQBYKTGDgSLfg=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=qJ2Pki59ASpTJrr9Y98pwsSn+iZgp+zEB++NZz4Or4jaSpg+QX6jKLy+kN5ABEpx0
+	 IQHkCs4aeRhg2gvP/49qHW7se4TWr67R2IGJxDpyc6L0SJ3dt10A3M2SIdfRh1qKuu
+	 KG9VgFKGBjLu+n8/qtozgpX0eaQgTtGzV5E+4caA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389595AbfGYEkO (ORCPT
+        id S2390131AbfGYEkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 00:40:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35948 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 00:40:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389297AbfGYEkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 00:40:13 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        id S2389297AbfGYEkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 00:40:35 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 710F3218DA;
-        Thu, 25 Jul 2019 04:40:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD337218DA;
+        Thu, 25 Jul 2019 04:40:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564029611;
-        bh=8oxT8xgyNUwuwFXTPBDPfAgyusjMHHhLLfJMiVh45oI=;
-        h=Date:From:To:Subject:From;
-        b=ox0dlalhd8kPMMrPqsYYxIH76KrkpBJDavG47yS5iy2z9gbiy+dEZnZDDWXTPJ9Dq
-         LWfefQ4d+nCJ+BItBanHurqGjqU11IEhTe/DuclzOMq/pwC0hVJQZM8+6uScAFeXiH
-         Dpapju0lUDZi8paPRlNtUsTbRb8N/8sOrU6RZJT4=
-Date:   Wed, 24 Jul 2019 21:40:10 -0700
-From:   akpm@linux-foundation.org
-To:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
-Subject:  mmotm 2019-07-24-21-39 uploaded
-Message-ID: <20190725044010.4tE0dhrji%akpm@linux-foundation.org>
-User-Agent: s-nail v14.8.16
+        s=default; t=1564029634;
+        bh=wcwG4pMAinnKbG7g0QnFfuSmByspa9vQBYKTGDgSLfg=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=n+AtQlS8DgC2uB6+dqe/2ZEDwF3+o+vdoXUv6KtJTv0AHp/MSsnvsCcDfXcSgDSJ0
+         OZ1T+sQ4jg8/TT3FFRy3w1cHk2dwBj39FE36wLS5wiziIl7JgMc9dHmUmSikmOUe9r
+         sCoBZxU4mgjtSWFIDDM8CtUgykz6sKZnNU0bMEBM=
+Date:   Wed, 24 Jul 2019 21:40:32 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        David Miller <davem@davemloft.net>, eric.dumazet@gmail.com,
+        dvyukov@google.com, netdev@vger.kernel.org, fw@strlen.de,
+        i.maximets@samsung.com, edumazet@google.com, dsahern@gmail.com,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
+Message-ID: <20190725044032.GB677@sol.localdomain>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        David Miller <davem@davemloft.net>, eric.dumazet@gmail.com,
+        dvyukov@google.com, netdev@vger.kernel.org, fw@strlen.de,
+        i.maximets@samsung.com, edumazet@google.com, dsahern@gmail.com,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20190724163014.GC673@sol.localdomain>
+ <20190724.111225.2257475150626507655.davem@davemloft.net>
+ <20190724183710.GF213255@gmail.com>
+ <20190724.130928.1854327585456756387.davem@davemloft.net>
+ <20190725033913.GB13651@mit.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725033913.GB13651@mit.edu>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mm-of-the-moment snapshot 2019-07-24-21-39 has been uploaded to
+On Wed, Jul 24, 2019 at 11:39:13PM -0400, Theodore Y. Ts'o wrote:
+> On Wed, Jul 24, 2019 at 01:09:28PM -0700, David Miller wrote:
+> > From: Eric Biggers <ebiggers@kernel.org>
+> > Date: Wed, 24 Jul 2019 11:37:12 -0700
+> > 
+> > > We can argue about what words to use to describe this situation, but
+> > > it doesn't change the situation itself.
+> > 
+> > And we should argue about those words because it matters to humans and
+> > effects how they feel, and humans ultimately fix these bugs.
+> > 
+> > So please stop with the hyperbole.
+> 
+> Perhaps it would be better to call them, "syzbot reports".  Not all
+> syzbot reports are bugs.  In fact, Dmitry has steadfastly refused to
+> add features which any basic bug-tracking system would have, claiming
+> that syzbot should not be a bug-tracking system, and something like
+> bugzilla should be forcibly imposed on all kernel developers.  So I
+> don't consider syzkaller reports as bugs --- they are just reports.
+> 
+> In order for developers to want to engage with "syzbot reports", we
+> need to reduce developer toil which syzbot imposes on developers, such
+> that it is a net benefit, instead of it being just a source of
+> annoying e-mails, some of which are actionable, and some of which are
+> noise.
+> 
+> In particular, asking developers to figure out which syzbot reports
+> should be closed, because developers found the problem independently,
+> and fixed it without hearing about from syzbot first, really isn't a
+> fair thing to ask.  Especially if we can automate away the problem.
+> 
+> If there is a reproducer, it should be possible to automatically
+> categorize the reproducer as a reliable reproducer or a flakey one.
+> If it is a reliable reproducer on version X, and it fails to be
+> reliably reproduce on version X+N, then it should be able to figure
+> out that it has been fixed, instead of requesting that a human confirm
+> it.  If you really want a human to look at it, now that syzkaller has
+> a bisection feature, it should be possible to use the reliable
+> reproducer to do a negative bisection search to report a candidate
+> fix.  This would significantly reproduce the developer toil imposed as
+> a tax on developers.  And if Dmitry doesn't want to auto-close those
+> reports that appear to be fixed already, at the very least they should
+> be down-prioritized on Eric's reports, so people who don't want to
+> waste their time on "bureaucracy" can do so.
+> 
+> Cheers,
+> 
+> 						- Ted
+> 
+> P.S.  Another criteria I'd suggest down-prioritizing on is, "does it
+> require root privileges?"  After all, since root has so many different
+> ways of crashing a system already, and if we're all super-busy, we
+> need to prioritize which reports should be addressed first.
+> 
 
-   http://www.ozlabs.org/~akpm/mmotm/
+I agree with all this.  Fix bisection would be really useful.  I think what we'd
+actually need to do to get decent results, though, is consider many different
+signals (days since last occurred, repro type, fix bisected, bug bisected,
+occurred in mainline or not, does the repro work as root, is it clearly a "bad"
+bug like use-after-free, etc.) and compute an appropriate timeout based on that.
 
-mmotm-readme.txt says
+However, I'd like to emphasize that in my reminder emails, I've *already*
+considered many of these factors when sorting the bug reports, and in particular
+the bugs/reports that have been seen recently are strongly weighted towards
+being listed first, especially if they were seen in mainline.  In this
+particular reminder email, for example, the first 18 bugs/reports have *all*
+been seen in the last 4 days.
 
-README for mm-of-the-moment:
+These first 18 bugs/reports are ready to be worked on and fixed now.  It's
+unclear to me what is most impeding this.  Is it part of the syzbot process?
+Bad reproducers?  Too much noise?  Or is it no funding?  Not enough qualified
+people?  No maintainers?  Not enough reminders?  Lack of CVEs and demonstrable
+exploits?  What is most impeding these 18 bugs from being fixed?
 
-http://www.ozlabs.org/~akpm/mmotm/
-
-This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-more than once a week.
-
-You will need quilt to apply these patches to the latest Linus release (5.x
-or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-http://ozlabs.org/~akpm/mmotm/series
-
-The file broken-out.tar.gz contains two datestamp files: .DATE and
-.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-followed by the base kernel version against which this patch series is to
-be applied.
-
-This tree is partially included in linux-next.  To see which patches are
-included in linux-next, consult the `series' file.  Only the patches
-within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-linux-next.
-
-
-A full copy of the full kernel tree with the linux-next and mmotm patches
-already applied is available through git within an hour of the mmotm
-release.  Individual mmotm releases are tagged.  The master branch always
-points to the latest release, so it's constantly rebasing.
-
-http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/
-
-
-
-The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
-contains daily snapshots of the -mm tree.  It is updated more frequently
-than mmotm, and is untested.
-
-A git copy of this tree is available at
-
-	http://git.cmpxchg.org/cgit.cgi/linux-mmots.git/
-
-and use of this tree is similar to
-http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/, described above.
-
-
-This mmotm tree contains the following patches against 5.3-rc1:
-(patches marked "*" will be included in linux-next)
-
-  origin.patch
-* docs-signal-fix-a-kernel-doc-markup.patch
-* revert-kmemleak-allow-to-coexist-with-fault-injection.patch
-* ocfs2-remove-set-but-not-used-variable-last_hash.patch
-* mm-vmscan-check-if-mem-cgroup-is-disabled-or-not-before-calling-memcg-slab-shrinker.patch
-* mm-migrate-fix-reference-check-race-between-__find_get_block-and-migration.patch
-* mm-compaction-avoid-100%-cpu-usage-during-compaction-when-a-task-is-killed.patch
-* kasan-remove-clang-version-check-for-kasan_stack.patch
-* proc-kpageflags-prevent-an-integer-overflow-in-stable_page_flags.patch
-* proc-kpageflags-do-not-use-uninitialized-struct-pages.patch
-* mm-document-zone-device-struct-page-field-usage.patch
-* mm-hmm-fix-zone_device-anon-page-mapping-reuse.patch
-* mm-hmm-fix-bad-subpage-pointer-in-try_to_unmap_one.patch
-* mm-hmm-fix-bad-subpage-pointer-in-try_to_unmap_one-v3.patch
-* ubsan-build-ubsanc-more-conservatively.patch
-* page-flags-prioritize-kasan-bits-over-last-cpuid.patch
-* coredump-split-pipe-command-whitespace-before-expanding-template.patch
-* mm-migrate-initialize-pud_entry-in-migrate_vma.patch
-* mm-hotplug-remove-unneeded-return-for-void-function.patch
-* cgroup-kselftest-relax-fs_spec-checks.patch
-* asm-generic-fix-wtype-limits-compiler-warnings.patch
-* asm-generic-fix-wtype-limits-compiler-warnings-fix.patch
-* asm-generic-fix-wtype-limits-compiler-warnings-v2.patch
-* acpi-scan-acquire-device_hotplug_lock-in-acpi_scan_init.patch
-* mm-mempolicy-make-the-behavior-consistent-when-mpol_mf_move-and-mpol_mf_strict-were-specified.patch
-* mm-mempolicy-make-the-behavior-consistent-when-mpol_mf_move-and-mpol_mf_strict-were-specified-v4.patch
-* mm-mempolicy-handle-vma-with-unmovable-pages-mapped-correctly-in-mbind.patch
-* mm-mempolicy-handle-vma-with-unmovable-pages-mapped-correctly-in-mbind-v4.patch
-* kbuild-clean-compressed-initramfs-image.patch
-* ocfs2-use-jbd2_inode-dirty-range-scoping.patch
-* jbd2-remove-jbd2_journal_inode_add_.patch
-* ocfs2-clear-zero-in-unaligned-direct-io.patch
-* ocfs2-clear-zero-in-unaligned-direct-io-checkpatch-fixes.patch
-* ocfs2-wait-for-recovering-done-after-direct-unlock-request.patch
-* ocfs2-checkpoint-appending-truncate-log-transaction-before-flushing.patch
-* ramfs-support-o_tmpfile.patch
-  mm.patch
-* mm-slab-extend-slab-shrink-to-shrink-all-memcg-caches.patch
-* mm-slab-move-memcg_cache_params-structure-to-mm-slabh.patch
-* memremap-move-from-kernel-to-mm.patch
-* mm-page_poison-fix-a-typo-in-a-comment.patch
-* mm-rmapc-remove-set-but-not-used-variable-cstart.patch
-* mm-introduce-page_size.patch
-* mm-introduce-page_shift.patch
-* mm-introduce-page_shift-fix.patch
-* mm-introduce-compound_nr.patch
-* mm-replace-list_move_tail-with-add_page_to_lru_list_tail.patch
-* mm-filemap-rewrite-mapping_needs_writeback-in-less-fancy-manner.patch
-* mm-throttle-allocators-when-failing-reclaim-over-memoryhigh.patch
-* mm-throttle-allocators-when-failing-reclaim-over-memoryhigh-fix.patch
-* mm-vmscan-expose-cgroup_ino-for-memcg-reclaim-tracepoints.patch
-* mm-gup-add-make_dirty-arg-to-put_user_pages_dirty_lock.patch
-* drivers-gpu-drm-via-convert-put_page-to-put_user_page.patch
-* net-xdp-convert-put_page-to-put_user_page.patch
-* mm-remove-redundant-assignment-of-entry.patch
-* mm-mmap-fix-the-adjusted-length-error.patch
-* mm-memory_hotplug-remove-move_pfn_range.patch
-* mm-memory_hotplug-remove-move_pfn_range-fix.patch
-* drivers-base-nodec-simplify-unregister_memory_block_under_nodes.patch
-* mm-sparse-fix-memory-leak-of-sparsemap_buf-in-aliged-memory.patch
-* mm-sparse-fix-memory-leak-of-sparsemap_buf-in-aliged-memory-fix.patch
-* mm-sparse-fix-align-without-power-of-2-in-sparse_buffer_alloc.patch
-* mm-vmalloc-do-not-keep-unpurged-areas-in-the-busy-tree.patch
-* mm-vmalloc-modify-struct-vmap_area-to-reduce-its-size.patch
-* mm-compaction-clear-total_migratefree_scanned-before-scanning-a-new-zone.patch
-* mm-compaction-clear-total_migratefree_scanned-before-scanning-a-new-zone-fix.patch
-* mm-compaction-clear-total_migratefree_scanned-before-scanning-a-new-zone-fix-fix.patch
-* mm-compaction-clear-total_migratefree_scanned-before-scanning-a-new-zone-fix-2.patch
-* mm-compaction-clear-total_migratefree_scanned-before-scanning-a-new-zone-fix-2-fix.patch
-* mm-oom-avoid-printk-iteration-under-rcu.patch
-* mm-oom-avoid-printk-iteration-under-rcu-fix.patch
-* mm-oom_killer-add-task-uid-to-info-message-on-an-oom-kill.patch
-* mm-oom_killer-add-task-uid-to-info-message-on-an-oom-kill-fix.patch
-* psi-annotate-refault-stalls-from-io-submission.patch
-* psi-annotate-refault-stalls-from-io-submission-fix.patch
-* psi-annotate-refault-stalls-from-io-submission-fix-2.patch
-* mm-introduce-madv_cold.patch
-* mm-change-pageref_reclaim_clean-with-page_refreclaim.patch
-* mm-account-nr_isolated_xxx-in-_lru_page.patch
-* mm-introduce-madv_pageout.patch
-* mm-factor-out-common-parts-between-madv_cold-and-madv_pageout.patch
-* zpool-add-malloc_support_movable-to-zpool_driver.patch
-* zswap-use-movable-memory-if-zpool-support-allocate-movable-memory.patch
-* mm-proportional-memorylowmin-reclaim.patch
-* mm-make-memoryemin-the-baseline-for-utilisation-determination.patch
-* mm-make-memoryemin-the-baseline-for-utilisation-determination-fix.patch
-* mm-vmscan-remove-unused-lru_pages-argument.patch
-* mm-dont-expose-page-to-fast-gup-before-its-ready.patch
-* info-task-hung-in-generic_file_write_iter.patch
-* info-task-hung-in-generic_file_write-fix.patch
-* kernel-hung_taskc-monitor-killed-tasks.patch
-* hung_task-allow-printing-warnings-every-check-interval.patch
-* lib-genallocc-export-symbol-addr_in_gen_pool.patch
-* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr.patch
-* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr-fix.patch
-* string-add-stracpy-and-stracpy_pad-mechanisms.patch
-* kernel-doc-core-api-include-stringh-into-core-api.patch
-* kernel-doc-core-api-include-stringh-into-core-api-v2.patch
-* lib-fix-possible-incorrect-result-from-rational-fractions-helper.patch
-* checkpatch-dont-interpret-stack-dumps-as-commit-ids.patch
-* checkpatch-improve-spdx-license-checking.patch
-* checkpatchpl-warn-on-invalid-commit-id.patch
-* checkpatch-add-_notifier_head-as-var-definition.patch
-* fat-add-nobarrier-to-workaround-the-strange-behavior-of-device.patch
-* cpumask-nicer-for_each_cpumask_and-signature.patch
-* kexec-bail-out-upon-sigkill-when-allocating-memory.patch
-* aio-simplify-read_events.patch
-* kgdb-dont-use-a-notifier-to-enter-kgdb-at-panic-call-directly.patch
-* ipc-consolidate-all-xxxctl_down-functions.patch
-  linux-next.patch
-  diff-sucks.patch
-* pinctrl-fix-pxa2xxc-build-warnings.patch
-* mm-treewide-clarify-pgtable_page_ctordtor-naming.patch
-* drivers-tty-serial-sh-scic-suppress-warning.patch
-* fix-read-buffer-overflow-in-delta-ipc.patch
-  make-sure-nobodys-leaking-resources.patch
-  releasing-resources-with-children.patch
-  mutex-subsystem-synchro-test-module.patch
-  kernel-forkc-export-kernel_thread-to-modules.patch
-  workaround-for-a-pci-restoring-bug.patch
+- Eric
