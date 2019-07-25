@@ -2,86 +2,106 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17499C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4DBC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7AF32166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7969218DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="W5WgwoW8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="uAZM9BM/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfGYUjJ (ORCPT
+        id S1726687AbfGYUm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 16:39:09 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51353 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726195AbfGYUjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 16:39:09 -0400
-Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3281:e7ea:4585:74bd:2ff0])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x6PKcpZg1158853
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Thu, 25 Jul 2019 13:38:52 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x6PKcpZg1158853
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564087132;
-        bh=9+UfSFFvVBfC/Y+BWP+Ce+brhw7Kq1b1vMVNHyn+PyQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=W5WgwoW8LHGW5eRt4XIJhQBYTCC/r0o4d9h7R00QJAx/nMXMkSuTK7PqPXT1qyOig
-         qiqczL7sMJFQGCBjok7AKaoEgEmwo2cUoQjIKgbW7vaF91kFAjUudC6zI8RHrDWUKF
-         3JTn6P33/VkuhB9CgerMAq62nz7FWHEcyvfI/n1lRGxgQK+gUimYlUVJDz8XDzvxkb
-         zikasoWIEf4QXDCsh6WO7l+6bt0QSadpV5enZgAX5g2FPJ7kFJZjVd/iwCW4I5/zPK
-         Umgd7nk0vr9wAjYRRGjmiw1ueltbQUa1z84zySVJ1TdAHcBgPsF0LvNortXVyXp04k
-         JUsQbHcrC4dzQ==
-Subject: Re: [PATCH 1/1] x86/boot: clear some fields explicitly
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     john.hubbard@gmail.com, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-References: <20190724231528.32381-1-jhubbard@nvidia.com>
- <20190724231528.32381-2-jhubbard@nvidia.com>
- <B7DC31CA-E378-445A-A937-1B99490C77B4@zytor.com>
- <alpine.DEB.2.21.1907250848050.1791@nanos.tec.linutronix.de>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <3831bbff-631a-2e62-9e82-e2b6181421c8@zytor.com>
-Date:   Thu, 25 Jul 2019 13:38:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 16:42:28 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:34074 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfGYUm1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 16:42:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1564087345; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wd/8RY8QtDpKhjy989F9knR8y6y/xiYlDP4O6NQdYHE=;
+        b=uAZM9BM/qI0q0R0385qtFObwkPKHfE1FfrOEybVSU6F4cSubWFYk4SzfU+gQ3oXlhNKr95
+        GvmdIoBuDI3yn+PA1xHVNwsi/O307s4J6uyrgsXjWp8Rhy4uGzPsB2TeheIxAeR4Y5KaIv
+        GfwfboMFslZNsooUKr5k23NnF0HUVRo=
+Date:   Thu, 25 Jul 2019 16:42:11 -0400
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] MIPS: Add support for partial kernel mode on Xburst CPUs
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, od@zcrc.me
+Message-Id: <1564087331.1848.1@crapouillou.net>
+In-Reply-To: <20190725165930.yvlvmavcgqocl3nn@pburton-laptop>
+References: <20190724234654.16555-1-paul@crapouillou.net>
+        <20190725165930.yvlvmavcgqocl3nn@pburton-laptop>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1907250848050.1791@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/25/19 12:22 AM, Thomas Gleixner wrote:
->>
->> The problem with this is that it will break silently when changes are
->> made to this structure.
-> 
-> That's not really the worst problem. Changes to that struct which touch any
-> of the to be cleared ranges will break anyway if not handled correctly in
-> the sanitizer function.
-> 
 
-Not really... that's kind of the point (the cleared ranges are cleared
-explicitly because the boot loader failed to do so, so zeroing them is what
-the boot loader should have done.)
 
-The most correct way to address this would be to have an explicit list of
-members to be *preserved* even if the sentinel triggers.
+Le jeu. 25 juil. 2019 =E0 12:59, Paul Burton <paul.burton@mips.com> a=20
+=E9crit :
+> Hi Paul,
+>=20
+> On Wed, Jul 24, 2019 at 07:46:54PM -0400, Paul Cercueil wrote:
+>>  Support partial kernel mode of Xburst CPUs found in Ingenic SoCs.
+>>  Partial kernel mode means the userspace applications have access to
+>>  the TCSM0 banks of the VPU,
+>=20
+> So far so (reasonably) good :)
+>=20
+>>  and can execute cache instructions.
+>=20
+> Aaaah! Scary!
+>=20
+> Does this allow *all* cache instructions? If so that's a big security=20
+> &
+> stability hole - if userland can invalidate kernel data or data from
+> other programs then it can create all sorts of chaos.
 
-The easy way would be to put in a suitable cast to clear the warning -- I
-would not be surprised if an explicit cast to something like (void *) would
-quiet the warning, or else (yuck) put in an explicit (well-commented) #pragma
-to shut it up.
+It looked a bit fishy to me as well, but I couldn't point a finger to
+the exact problem. I don't exactly know what it allows and what it
+doesn't.
 
-	-hpa
+> Also do you know which Ingenic SoCs this is available on? I see it
+> documented in the JZ4780 Programming Manual, but Config7 bit 6 is=20
+> shown
+> as reserved in my copy of the XBurst1 CPU Core Programming Manual.
+
+I have no idea. I assume all SoCs with a VPU. I know the JZ4770 has it.
+
+> I notice the JZ4780 documentation says it allows access "including=20
+> TCSM,
+> CACHE instructions" which is scary too since it doesn't say that's=20
+> *all*
+> it allows access to. Though just cache instructions by themselves are
+> enough to be game over for any notion of security as mentioned above.
+>=20
+> What is it you want to do with this? I'm wondering if we could achieve
+> your goal is in a safer way.
+
+The plan was to be able to communicate with the firmware running on the
+VPU without going through expensive context switches all the time.
+
+I guess we could mmap() the TCSM memories, but we'd need to bypass the
+data cache (is there a flag for that?).
+
+> Thanks,
+>     Paul
+
+=
+
