@@ -2,102 +2,140 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CDDC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E8BC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1A58218F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:34:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564083259;
-	bh=XmYuwxHf0VVKO+yWC7+GNQPhvgKyB5pGg9W5noBtV5A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LW9S8GUM4umI1Sn8O89vabKPA+TQGxpLKkLLq3MjQ/att1BuQ8dbgDB2zVQLM3T2p
-	 CAqA7rM9PdZ9ndrNp5tA0m5Td7OcgaVCyqUMDgykeZsQVZNDyzXUrU5VZ9yOvIeWr7
-	 sCQWw0ZKVh6HlsedbAmai2AetJK44Y4BfEqRv54Y=
+	by mail.kernel.org (Postfix) with ESMTP id E05292064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:36:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbfGYTeT (ORCPT
+        id S1726480AbfGYTgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 15:34:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43026 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 15:36:45 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:42696 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfGYTeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:34:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1FDC218EA;
-        Thu, 25 Jul 2019 19:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564083257;
-        bh=XmYuwxHf0VVKO+yWC7+GNQPhvgKyB5pGg9W5noBtV5A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=d3PTiS9N52mYF5DGcUuY4yOnuzZS4zliBNIktBb8T/57DhVRGzhaH7j5HmmWgnryx
-         C9l2UR21v5CIglf+hjNiv28E1LxVTEO0pmbHVRsvvVILqePuJLvSGSQ2VGdYSU4UX3
-         7o7ICHpuPnOeHJyd0e42GVoe16EdvBsM6kt32IU8=
-Date:   Thu, 25 Jul 2019 21:34:15 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sagi Grimberg <sagi@grimberg.me>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        id S1726220AbfGYTgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 15:36:45 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hqjXT-000461-Ns; Thu, 25 Jul 2019 13:36:32 -0600
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Christoph Hellwig <hch@lst.de>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
         Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
-Message-ID: <20190725193415.GA12117@kroah.com>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <20190725172335.6825-3-logang@deltatee.com>
- <20190725174032.GA27818@kroah.com>
- <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
- <20190725180816.GA32305@kroah.com>
- <da0eacb7-3738-ddf3-8c61-7ffc61aa41f4@deltatee.com>
- <20190725182701.GA11547@kroah.com>
- <a3262a7f-b78e-05ba-cda3-a7587946bd91@deltatee.com>
- <5951e0f5-cc90-f3de-0083-088fecfd43bb@grimberg.me>
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190722230859.5436-1-logang@deltatee.com>
+ <20190722230859.5436-12-logang@deltatee.com>
+ <20190725185830.GH7450@mellanox.com>
+ <cf61d237-8a8a-e3ac-a9df-466f20b63020@deltatee.com>
+ <20190725192944.GI7450@mellanox.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <01950d0a-ed22-681b-2eb7-ae553b785e2e@deltatee.com>
+Date:   Thu, 25 Jul 2019 13:36:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5951e0f5-cc90-f3de-0083-088fecfd43bb@grimberg.me>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190725192944.GI7450@mellanox.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, epilmore@gigaio.com, dan.j.williams@intel.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, Christian.Koenig@amd.com, hch@lst.de, bhelgaas@google.com, linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, jgg@mellanox.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 11/14] PCI/P2PDMA: dma_map P2PDMA map requests that
+ traverse the host bridge
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 12:02:30PM -0700, Sagi Grimberg wrote:
+
+
+On 2019-07-25 1:29 p.m., Jason Gunthorpe wrote:
+> On Thu, Jul 25, 2019 at 01:17:02PM -0600, Logan Gunthorpe wrote:
+>>
+>>
+>> On 2019-07-25 12:58 p.m., Jason Gunthorpe wrote:
+>>> On Mon, Jul 22, 2019 at 05:08:56PM -0600, Logan Gunthorpe wrote:
+>>>> Any requests that traverse the host bridge will need to be mapped into
+>>>> the IOMMU, so call dma_map_sg() inside pci_p2pdma_map_sg() when
+>>>> appropriate.
+>>>>
+>>>> Similarly, call dma_unmap_sg() inside pci_p2pdma_unmap_sg().
+>>>>
+>>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>>>>  drivers/pci/p2pdma.c | 31 ++++++++++++++++++++++++++++++-
+>>>>  1 file changed, 30 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+>>>> index 5f43f92f9336..76f51678342c 100644
+>>>> +++ b/drivers/pci/p2pdma.c
+>>>> @@ -830,8 +830,22 @@ int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
+>>>>  		int nents, enum dma_data_direction dir, unsigned long attrs)
+>>>>  {
+>>>>  	struct dev_pagemap *pgmap = sg_page(sg)->pgmap;
+>>>> +	struct pci_dev *client;
+>>>> +	int dist;
+>>>> +
+>>>> +	client = find_parent_pci_dev(dev);
+>>>> +	if (WARN_ON_ONCE(!client))
+>>>> +		return 0;
+>>>>  
+>>>> -	return __pci_p2pdma_map_sg(pgmap, dev, sg, nents);
+>>>> +	dist = upstream_bridge_distance(pgmap->pci_p2pdma_provider,
+>>>> +					client, NULL);
 > 
-> > > > > Why do you have a "string" within the kernel and are not using the
-> > > > > normal open() call from userspace on the character device node on the
-> > > > > filesystem in your namespace/mount/whatever?
-> > > > 
-> > > > NVMe-OF is configured using configfs. The target is specified by the
-> > > > user writing a path to a configfs attribute. This is the way it works
-> > > > today but with blkdev_get_by_path()[1]. For the passthru code, we need
-> > > > to get a nvme_ctrl instead of a block_device, but the principal is the same.
-> > > 
-> > > Why isn't a fd being passed in there instead of a random string?
-> > 
-> > I wouldn't know the answer to this but I assume because once we decided
-> > to use configfs, there was no way for the user to pass the kernel an fd.
+> Isn't is a bit of a leap to assume that the pgmap is uniform across
+> all the sgs?
+
+This is definitely a wart but there's not much we can do about it.
+Currently we can't support mixing p2p pages with regular pages. In the
+same way we can't support mixing p2p pages from different sources. No
+current users do that and it would be weird for them to want to at this
+point.
+
+>>>> +	if (WARN_ON_ONCE(dist & P2PDMA_NOT_SUPPORTED))
+>>>> +		return 0;
+>>>> +
+>>>> +	if (dist & P2PDMA_THRU_HOST_BRIDGE)
+>>>> +		return dma_map_sg_attrs(dev, sg, nents, dir, attrs);
+>>>
+>>> IIRC at this point the SG will have struct page references to the BAR
+>>> memory - so (all?) the IOMMU drivers are able to handle P2P setup in
+>>> this case?
+>>
+>> Yes. The IOMMU drivers refer to the physical address for BAR which they
+>> can get from the struct page. And this works fine today.
 > 
-> That's definitely not changing. But this is not different than how we
-> use the block device or file configuration, this just happen to need the
-> nvme controller chardev now to issue I/O.
+> Interesting.
+> 
+> So, for the places where we already map BAR memory to userspace, if I
+> were to make struct pages for those BARs and use vm_insert_page()
+> instead of io_remap_pfn_range(), then the main thing missing in RDMA
+> to actually do P2P DMA is a way to get those struct pages out of
+> get_user_pages and know to call the pci_p2pdma_map_sg version (ie in
+> ib_umem_get())?
 
-So, as was kind of alluded to in another part of the thread, what are
-you doing about permissions?  It seems that any user/group permissions
-are out the window when you have the kernel itself do the opening of the
-char device, right?  Why is that ok?  You can pass it _any_ character
-device node and away it goes?  What if you give it a "wrong" one?  Char
-devices are very different from block devices this way.
+Yes, we've been doing that for a long time with hacky code that would
+never get upstream.
 
-thanks,
+Essentially, if you expose those pages to userspace we also need to
+ensure that all other users of GUP either reject those pages or map them
+correctly.
 
-greg k-h
+Logan
