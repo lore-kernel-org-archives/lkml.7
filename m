@@ -2,95 +2,80 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8207DC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9E3C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D1620856
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84EDB20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfGYTFw (ORCPT
+        id S1726539AbfGYTGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 15:05:52 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35167 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfGYTFw (ORCPT
+        Thu, 25 Jul 2019 15:06:12 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:51939 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfGYTGL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:05:52 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j19so14313098otq.2;
-        Thu, 25 Jul 2019 12:05:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Vw35ctnHAyiweCYFIr8Q5tQ1sCTMUrzhYWyZVMQ2srE=;
-        b=PfoBHShhlyrT2DkUHewHf0gjDwYJ6MWQCgL3warjeUrra/7DhqZN+5v40UA2hu2Q9J
-         goQvRrNZUSB6Q0H0nmF9cBD5+iZohXVb+2UxFOo5E1hR+gxkxOl5XaFP0dgPHRjcLPs1
-         nSx9xplYcuBw6NB96XrgErw/vxIB+qDm6uL2srJYG0Iu2hdheYEYfA7o67orzqwmLZl8
-         kY/qO38Tp15EWHneKN3SqykJCTF5qJnpAW6Tbeb4p+sxijOHZSpNRrWQwx3anEOyiZg1
-         8gXj3hKuyQGJiOZAFsLDL1ssQ7KrwCu9PUeBiENubKIvaib/FMgxJxSt7htoDalXxLso
-         GF+w==
-X-Gm-Message-State: APjAAAWL4bIqu9CJ1/UeQIOz78or3rKv5B6BTD0/bAd2gtRY6l0AZe2j
-        zkn1TuiWFiyyQn8M5rvoBag=
-X-Google-Smtp-Source: APXvYqxh1xWV9l7hAx0RUdcnZmU1/Ak8tJk9mtOSSnUmKXjlKYymH3LgZ+g4WSGFfklKTPeVE93P7A==
-X-Received: by 2002:a9d:7:: with SMTP id 7mr68886666ota.248.1564081550962;
-        Thu, 25 Jul 2019 12:05:50 -0700 (PDT)
-Received: from [192.168.1.114] (162-195-240-247.lightspeed.sntcca.sbcglobal.net. [162.195.240.247])
-        by smtp.gmail.com with ESMTPSA id u16sm16785232otk.46.2019.07.25.12.05.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 12:05:50 -0700 (PDT)
-Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
-To:     Matthew Wilcox <willy@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Stephen Bates <sbates@raithlin.com>,
-        linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <20190725172335.6825-3-logang@deltatee.com>
- <20190725174032.GA27818@kroah.com>
- <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
- <20190725180816.GA32305@kroah.com>
- <da0eacb7-3738-ddf3-8c61-7ffc61aa41f4@deltatee.com>
- <20190725182701.GA11547@kroah.com>
- <20190725190024.GD30641@bombadil.infradead.org>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <27943e06-a503-162e-356b-abb9e106ab2e@grimberg.me>
-Date:   Thu, 25 Jul 2019 12:05:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190725190024.GD30641@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 25 Jul 2019 15:06:11 -0400
+Received: from orion.localdomain ([77.9.64.13]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MFKCV-1hazTw0Drl-00FjDC; Thu, 25 Jul 2019 21:06:05 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     info@metux.net, dvhart@infradead.org, andy@infradead.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2] platform/x86/pcengines-apuv2: use KEY_RESTART for front button
+Date:   Thu, 25 Jul 2019 21:06:03 +0200
+Message-Id: <1564081563-28322-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:adNwRs05/JGrziC0a2T4c+nfOAroExubb17H0iLxlQ33ip+kwz/
+ 7V7O6xwh96hqW3M4GD0lI+ijvGJF89qoi8v2j5Gsx9RbKeoJy5e0uEy5NTw86BA4UE2kVeZ
+ L987vPidVJkjN0zJ8WhBzZzI8yTP0y2C0x7MGK/tQUrtJFtYZq5wwMgi2qLC/0DJGSlYRgO
+ ZBbSdIWeB533Y8W4SXoBA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+SzGQ0XlC70=:ipwKXEW6l7cdJNKjcwxcGe
+ IeDZ9PF+8QLJpOLOCrbykmTRStnIXdLVSnn8XRmwDXKZQM+Oa0ynY9hULzXtj8zuVe34CzrrJ
+ wGUt9ebVvn0NgeoQ78oUDK0bE3A4LpwdGHUK96YLh1r3lFFFhuErwoOdsBP6A/9wJSbKpBJ1V
+ Stiy800JhX16UX5ozolpPtOcgzzyICF4LnT+6v/daxSjIwk2uxgRdixu95JoxFwaRspWVKbWo
+ sNEj/C58LSuARV5HSTebjBlTJ9FUCe5B7t0aw92X3l7Ce6wu2YFWWIb590BPLacb8ANA5OggE
+ A2S7JKSxqxgT/Ptx2e5OpUKJYBWpOqE6GUmDMMn/qHH6bGQApCmi27wpCdcMLeYVfildqwL2G
+ YzmnFnE5ffEhMNF1YKoe45FrZEWvkBXhuH523amSpkhIE8Hb/kxjKs0ipGB5+1J8l5aLQ9G/u
+ 6udYxlgqOQotJsgOklke8sqJ/+xX09L90wEIo5WhfrKGg4Ven1NYLjJKhRVs5Hvu6ECEohzUP
+ 523xZk9UGAYal2f+z4nxE38EmQEJR+oT99PgGYE/2VpgYaDbzar2thSo7PEXNR7hlFev0Wgkt
+ j3BupkqbRUuDx6AX+3yabA6Ttj+z8YXBT1yAOf54W1TXHqNcSOzgG+BRMzQ21ztPkdr21tEmd
+ iP974+lCw16gsk0Q+vvLNBvMlMgHJ2CZLuqSs9+/Bh8kCInVPsKXaVFJnahtsukKNTYK5xP1S
+ ecOvy145/vTT4XiJx+DZjinpjmK0BA0TRBoWKw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Enrico Weigelt <info@metux.net>
 
->>> NVMe-OF is configured using configfs. The target is specified by the
->>> user writing a path to a configfs attribute. This is the way it works
->>> today but with blkdev_get_by_path()[1]. For the passthru code, we need
->>> to get a nvme_ctrl instead of a block_device, but the principal is the same.
->>
->> Why isn't a fd being passed in there instead of a random string?
-> 
-> I suppose we could echo a string of the file descriptor number there,
-> and look up the fd in the process' file descriptor table ...
+The keycode KEY_RESTART is more appropriate for the front button,
+as most people use it for things like restart or factory reset.
 
-Assuming that there is a open handle somewhere out there...
+Signed-off-by: Enrico Weigelt <info@metux.net>
+Fixes: f8eb0235f65989fc5521c40c78d1261e7f25cdbe ("x86: pcengines apuv2 gpio/leds/keys platform driver")
+---
+ drivers/platform/x86/pcengines-apuv2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> I'll get my coat.
+diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
+index b0d3110..4138007c 100644
+--- a/drivers/platform/x86/pcengines-apuv2.c
++++ b/drivers/platform/x86/pcengines-apuv2.c
+@@ -93,7 +93,7 @@
+ 
+ static struct gpio_keys_button apu2_keys_buttons[] = {
+ 	{
+-		.code			= KEY_SETUP,
++		.code			= KEY_RESTART,
+ 		.active_low		= 1,
+ 		.desc			= "front button",
+ 		.type			= EV_KEY,
+-- 
+1.9.1
 
-Grab mine too..
