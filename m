@@ -2,75 +2,78 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1231BC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBBBC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB1821901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:36:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564061799;
-	bh=P14qZ4ZPdWg+EwZRpeIuk270A0Co0pdknb9KeS6lC4o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f0VrsbLsM2Ro7vpjfM9kSv8cGP2zuFn+dceDJgeyJlmmS/Cz6gt9W4zEzBzGU2tuc
-	 LTw+kRtSeuLF1v4k79fTEE9zbEd6nPKhdL/EEhJTIXNH7CfowbSlU61gdICgZoZcHO
-	 WUvWF8ccHyTiSVoqLbM79eFImu8lB7cMxrfIkhBE=
+	by mail.kernel.org (Postfix) with ESMTP id 0CA1422C7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389134AbfGYNgh (ORCPT
+        id S2389359AbfGYNhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:36:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388905AbfGYNgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:36:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19F7B21901;
-        Thu, 25 Jul 2019 13:36:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564061796;
-        bh=P14qZ4ZPdWg+EwZRpeIuk270A0Co0pdknb9KeS6lC4o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r6bpJHz6DFdt5uEwrs27i+gAFHPJru5oJr7PTkquA28Ocz9PtQRkwMqgvyNuukZ4W
-         6TApLTf63pgqo2x9w5WCxfFbspZYQYIubWztcYb9W1LVXizSRGqDPLpb1jW4bTNi3A
-         hEEYUOBoJZz5sCm1jyF0sjT7QnRMU5Alu+8X0FvI=
-Date:   Thu, 25 Jul 2019 15:36:34 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 06/10] arch_topology: Use CPUFREQ_CREATE_POLICY
- instead of CPUFREQ_NOTIFY
-Message-ID: <20190725133634.GA11115@kroah.com>
-References: <cover.1563862014.git.viresh.kumar@linaro.org>
- <3afc5046ba9435d229a004c17b005197488006d4.1563862014.git.viresh.kumar@linaro.org>
+        Thu, 25 Jul 2019 09:37:53 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2488 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387959AbfGYNhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 09:37:53 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 5CB8B7FCA28AA3ECAB45;
+        Thu, 25 Jul 2019 21:37:50 +0800 (CST)
+Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 25 Jul 2019 21:37:49 +0800
+Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
+ (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Thu, 25
+ Jul 2019 21:37:49 +0800
+Subject: Re: [PATCH net] net: hns: fix LED configuration for marvell phy
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     David Miller <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <shiju.jose@huawei.com>
+References: <1563775152-21369-1-git-send-email-liuyonglong@huawei.com>
+ <20190722.181906.2225538844348045066.davem@davemloft.net>
+ <72061222-411f-a58c-5873-ad873394cdb5@huawei.com>
+ <20190725042829.GB14276@lunn.ch>
+ <8017d9ff-2991-f94f-e611-4d1bac12e93b@huawei.com>
+ <20190725130807.GB21952@lunn.ch>
+From:   liuyonglong <liuyonglong@huawei.com>
+Message-ID: <908373a2-68cd-51c4-df11-499c49d80ae3@huawei.com>
+Date:   Thu, 25 Jul 2019 21:37:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3afc5046ba9435d229a004c17b005197488006d4.1563862014.git.viresh.kumar@linaro.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190725130807.GB21952@lunn.ch>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.37.248]
+X-ClientProxiedBy: dggeme704-chm.china.huawei.com (10.1.199.100) To
+ dggeme760-chm.china.huawei.com (10.3.19.106)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 11:44:06AM +0530, Viresh Kumar wrote:
-> CPUFREQ_NOTIFY is going to get removed soon, lets use
-> CPUFREQ_CREATE_POLICY instead of that here. CPUFREQ_CREATE_POLICY is
-> called only once (which is exactly what we want here) for each cpufreq
-> policy when it is first created.
+
+
+On 2019/7/25 21:08, Andrew Lunn wrote:
+>> You are discussing about the DT configuration, is Matthias Kaehlcke's work
+>> also provide a generic way to configure PHY LEDS using ACPI?
 > 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/base/arch_topology.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> In general, you should be able to use the same properties in ACPI as
+> DT. If the device_property_read_X() API is used, it will try both ACPI
+> and OF to get the property.
+> 
+>     Andrew
+> 
+> .
+> 
 
+OK, thanks very much!
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
