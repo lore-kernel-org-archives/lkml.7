@@ -2,100 +2,98 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B526C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EF1C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3074F2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04E32190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390397AbfGYJVN convert rfc822-to-8bit (ORCPT
+        id S1729236AbfGYJWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 05:21:13 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:59167 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389608AbfGYJVM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 05:21:12 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-235-scnLaRCdNWKuzfuwzi4QFQ-1; Thu, 25 Jul 2019 10:21:09 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu,
- 25 Jul 2019 10:21:08 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 25 Jul 2019 10:21:08 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Jian-Hong Pan' <jian-hong@endlessm.com>,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux@endlessm.com" <linux@endlessm.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] rtw88: pci: Use general byte arrays as the elements of RX
- ring
-Thread-Topic: [PATCH] rtw88: pci: Use general byte arrays as the elements of
- RX ring
-Thread-Index: AQHVQsDFH4BG56wpwU66J+Fzxhx3XabbDGOQ
-Date:   Thu, 25 Jul 2019 09:21:08 +0000
-Message-ID: <06d713fff7434dfb9ccab32c2e2112e2@AcuMS.aculab.com>
-References: <20190725080925.6575-1-jian-hong@endlessm.com>
-In-Reply-To: <20190725080925.6575-1-jian-hong@endlessm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 25 Jul 2019 05:22:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57270 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725808AbfGYJWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 05:22:12 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C36A230917AF;
+        Thu, 25 Jul 2019 09:22:11 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-117-212.ams2.redhat.com [10.36.117.212])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D39D5C652;
+        Thu, 25 Jul 2019 09:22:07 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH RFC] mm/memory_hotplug: Don't take the cpu_hotplug_lock
+Date:   Thu, 25 Jul 2019 11:22:06 +0200
+Message-Id: <20190725092206.23712-1-david@redhat.com>
 MIME-Version: 1.0
-X-MC-Unique: scnLaRCdNWKuzfuwzi4QFQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 25 Jul 2019 09:22:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian-Hong Pan
-> Sent: 25 July 2019 09:09
-> Each skb as the element in RX ring was expected with sized buffer 8216
-> (RTK_PCI_RX_BUF_SIZE) bytes. However, the skb buffer's true size is
-> 16640 bytes for alignment after allocated, x86_64 for example. And, the
-> difference will be enlarged 512 times (RTK_MAX_RX_DESC_NUM).
-> To prevent that much wasted memory, this patch follows David's
-> suggestion [1] and uses general buffer arrays, instead of skbs as the
-> elements in RX ring.
-...
->  	for (i = 0; i < len; i++) {
-> -		skb = dev_alloc_skb(buf_sz);
-> -		if (!skb) {
-> +		buf = devm_kzalloc(rtwdev->dev, buf_sz, GFP_ATOMIC);
+Commit 9852a7212324 ("mm: drop hotplug lock from lru_add_drain_all()")
+states that lru_add_drain_all() "Doesn't need any cpu hotplug locking
+because we do rely on per-cpu kworkers being shut down before our
+page_alloc_cpu_dead callback is executed on the offlined cpu."
 
-You should do this allocation somewhere than can sleep.
-So you don't need GFP_ATOMIC, making the allocate (and dma map)
-much less likely to fail.
-If they do fail using a smaller ring might be better than failing
-completely.
+And also "Calling this function with cpu hotplug locks held can actually
+lead to obscure indirect dependencies via WQ context.".
 
-I suspect that buf_sz gets rounded up somewhat.
-Also you almost certainly want 'buf' to be cache-line aligned.
-I don't think devm_kzalloc() guarantees that at all.
+Since commit 3f906ba23689 ("mm/memory-hotplug: switch locking to a percpu
+rwsem") we do a cpus_read_lock() in mem_hotplug_begin().
 
-While allocating all 512 buffers in one block (just over 4MB)
-is probably not a good idea, you may need to allocated (and dma map)
-then in groups.
+I don't see how that lock is still helpful, we already hold the
+device_hotplug_lock to protect try_offline_node(), which is AFAIK one
+problematic part that can race with CPU hotplug. If it is still
+necessary, we should document why.
 
-	David
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ mm/memory_hotplug.c | 2 --
+ 1 file changed, 2 deletions(-)
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index e7c3b219a305..43b8cd4b96f5 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -86,14 +86,12 @@ __setup("memhp_default_state=", setup_memhp_default_state);
+ 
+ void mem_hotplug_begin(void)
+ {
+-	cpus_read_lock();
+ 	percpu_down_write(&mem_hotplug_lock);
+ }
+ 
+ void mem_hotplug_done(void)
+ {
+ 	percpu_up_write(&mem_hotplug_lock);
+-	cpus_read_unlock();
+ }
+ 
+ u64 max_mem_size = U64_MAX;
+-- 
+2.21.0
 
