@@ -2,71 +2,261 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A06BC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C86C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C5E229F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7D92238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:59:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388771AbfGYO62 (ORCPT
+        id S2388803AbfGYO7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:58:28 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2757 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387834AbfGYO61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:58:27 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4B80EB1E2C5037A78C66;
-        Thu, 25 Jul 2019 22:58:22 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 25 Jul 2019
- 22:58:11 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <hdegoede@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] HID: logitech-dj: Fix check of logi_dj_recv_query_paired_devices()
-Date:   Thu, 25 Jul 2019 22:57:19 +0800
-Message-ID: <20190725145719.8344-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Thu, 25 Jul 2019 10:59:21 -0400
+Received: from mailgw02.mediatek.com ([216.200.240.185]:50183 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387834AbfGYO7U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 10:59:20 -0400
+X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Jul 2019 10:59:20 EDT
+X-UUID: 68c8c96cfe82444895fc582f3966f561-20190725
+X-UUID: 68c8c96cfe82444895fc582f3966f561-20190725
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1017426763; Thu, 25 Jul 2019 06:53:06 -0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 25 Jul 2019 22:27:04 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 25 Jul 2019 22:27:04 +0800
+From:   <miles.chen@mediatek.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+CC:     <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Miles Chen <miles.chen@mediatek.com>
+Subject: [RFC PATCH] mm: memcontrol: fix use after free in mem_cgroup_iter()
+Date:   Thu, 25 Jul 2019 22:27:03 +0800
+Message-ID: <20190725142703.27276-1-miles.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+X-TM-SNTS-SMTP: BA133858E120E853044F975DFC7A41746A406CCD8C5E6AAF83D767E759F686B22000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In delayedwork_callback(), logi_dj_recv_query_paired_devices
-may return positive value while success now, so check it
-correctly.
+From: Miles Chen <miles.chen@mediatek.com>
 
-Fixes: dbcbabf7da92 ("HID: logitech-dj: fix return value of logi_dj_recv_query_hidpp_devices")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+This RFC patch is sent to report an use after free in mem_cgroup_iter()
+after merging commit: be2657752e9e "mm: memcg: fix use after free in
+mem_cgroup_iter()".
+
+I work with android kernel tree (4.9 & 4.14), and the commit:
+be2657752e9e "mm: memcg: fix use after free in mem_cgroup_iter()" has
+been merged to the trees. However, I can still observe use after free
+issues addressed in the commit be2657752e9e.
+(on low-end devices, a few times this month)
+
+backtrace:
+	css_tryget <- crash here
+	mem_cgroup_iter
+	shrink_node
+	shrink_zones
+	do_try_to_free_pages
+	try_to_free_pages
+	__perform_reclaim
+	__alloc_pages_direct_reclaim
+	__alloc_pages_slowpath
+	__alloc_pages_nodemask
+
+To debug, I poisoned mem_cgroup before freeing it:
+
+static void __mem_cgroup_free(struct mem_cgroup *memcg)
+	for_each_node(node)
+	free_mem_cgroup_per_node_info(memcg, node);
+	free_percpu(memcg->stat);
++       /* poison memcg before freeing it */
++       memset(memcg, 0x78, sizeof(struct mem_cgroup));
+	kfree(memcg);
+}
+
+The coredump shows the position=0xdbbc2a00 is freed.
+
+(gdb) p/x ((struct mem_cgroup_per_node *)0xe5009e00)->iter[8]
+$13 = {position = 0xdbbc2a00, generation = 0x2efd}
+
+0xdbbc2a00:     0xdbbc2e00      0x00000000      0xdbbc2800      0x00000100
+0xdbbc2a10:     0x00000200      0x78787878      0x00026218      0x00000000
+0xdbbc2a20:     0xdcad6000      0x00000001      0x78787800      0x00000000
+0xdbbc2a30:     0x78780000      0x00000000      0x0068fb84      0x78787878
+0xdbbc2a40:     0x78787878      0x78787878      0x78787878      0xe3fa5cc0
+0xdbbc2a50:     0x78787878      0x78787878      0x00000000      0x00000000
+0xdbbc2a60:     0x00000000      0x00000000      0x00000000      0x00000000
+0xdbbc2a70:     0x00000000      0x00000000      0x00000000      0x00000000
+0xdbbc2a80:     0x00000000      0x00000000      0x00000000      0x00000000
+0xdbbc2a90:     0x00000001      0x00000000      0x00000000      0x00100000
+0xdbbc2aa0:     0x00000001      0xdbbc2ac8      0x00000000      0x00000000
+0xdbbc2ab0:     0x00000000      0x00000000      0x00000000      0x00000000
+0xdbbc2ac0:     0x00000000      0x00000000      0xe5b02618      0x00001000
+0xdbbc2ad0:     0x00000000      0x78787878      0x78787878      0x78787878
+0xdbbc2ae0:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2af0:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b00:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b10:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b20:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b30:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b40:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b50:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b60:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b70:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b80:     0x78787878      0x78787878      0x00000000      0x78787878
+0xdbbc2b90:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2ba0:     0x78787878      0x78787878      0x78787878      0x78787878
+
+In the reclaim path, try_to_free_pages() does not setup
+sc.target_mem_cgroup and sc is passed to do_try_to_free_pages(), ...,
+shrink_node().
+
+In mem_cgroup_iter(), root is set to root_mem_cgroup because
+sc->target_mem_cgroup is NULL.
+It is possible to assign a memcg to root_mem_cgroup.nodeinfo.iter in
+mem_cgroup_iter().
+
+	try_to_free_pages
+		struct scan_control sc = {...}, target_mem_cgroup is 0x0;
+	do_try_to_free_pages
+	shrink_zones
+	shrink_node
+		 mem_cgroup *root = sc->target_mem_cgroup;
+		 memcg = mem_cgroup_iter(root, NULL, &reclaim);
+	mem_cgroup_iter()
+		if (!root)
+			root = root_mem_cgroup;
+		...
+
+		css = css_next_descendant_pre(css, &root->css);
+		memcg = mem_cgroup_from_css(css);
+		cmpxchg(&iter->position, pos, memcg);
+
+My device uses memcg non-hierarchical mode.
+When we release a memcg: invalidate_reclaim_iterators() reaches only
+dead_memcg and its parents. If non-hierarchical mode is used,
+invalidate_reclaim_iterators() never reaches root_mem_cgroup.
+
+static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
+{
+	struct mem_cgroup *memcg = dead_memcg;
+
+	for (; memcg; memcg = parent_mem_cgroup(memcg)
+	...
+}
+
+So the use after free scenario looks like:
+
+CPU1						CPU2
+
+try_to_free_pages
+do_try_to_free_pages
+shrink_zones
+shrink_node
+mem_cgroup_iter()
+    if (!root)
+    	root = root_mem_cgroup;
+    ...
+    css = css_next_descendant_pre(css, &root->css);
+    memcg = mem_cgroup_from_css(css);
+    cmpxchg(&iter->position, pos, memcg);
+
+					invalidate_reclaim_iterators(memcg);
+					...
+					__mem_cgroup_free()
+						kfree(memcg);
+
+try_to_free_pages
+do_try_to_free_pages
+shrink_zones
+shrink_node
+mem_cgroup_iter()
+    if (!root)
+    	root = root_mem_cgroup;
+    ...
+    mz = mem_cgroup_nodeinfo(root, reclaim->pgdat->node_id);
+    iter = &mz->iter[reclaim->priority];
+    pos = READ_ONCE(iter->position);
+    css_tryget(&pos->css) <- use after free
+
+To avoid this, we should also invalidate root_mem_cgroup.nodeinfo.iter in
+invalidate_reclaim_iterators().
+
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
 ---
- drivers/hid/hid-logitech-dj.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/memcontrol.c | 33 +++++++++++++++++++++++----------
+ 1 file changed, 23 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
-index 8cdf373..bf6b289 100644
---- a/drivers/hid/hid-logitech-dj.c
-+++ b/drivers/hid/hid-logitech-dj.c
-@@ -793,7 +793,7 @@ static void delayedwork_callback(struct work_struct *work)
- 		break;
- 	case WORKITEM_TYPE_UNKNOWN:
- 		retval = logi_dj_recv_query_paired_devices(djrcv_dev);
--		if (retval) {
-+		if (retval < 0) {
- 			hid_err(djrcv_dev->hidpp, "%s: logi_dj_recv_query_paired_devices error: %d\n",
- 				__func__, retval);
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index cdbb7a84cb6e..578b02982c9a 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1130,26 +1130,39 @@ void mem_cgroup_iter_break(struct mem_cgroup *root,
+ 		css_put(&prev->css);
+ }
+ 
+-static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
++static void __invalidate_reclaim_iterators(struct mem_cgroup *from,
++					struct mem_cgroup *dead_memcg)
+ {
+-	struct mem_cgroup *memcg = dead_memcg;
+ 	struct mem_cgroup_reclaim_iter *iter;
+ 	struct mem_cgroup_per_node *mz;
+ 	int nid;
+ 	int i;
+ 
+-	for (; memcg; memcg = parent_mem_cgroup(memcg)) {
+-		for_each_node(nid) {
+-			mz = mem_cgroup_nodeinfo(memcg, nid);
+-			for (i = 0; i <= DEF_PRIORITY; i++) {
+-				iter = &mz->iter[i];
+-				cmpxchg(&iter->position,
+-					dead_memcg, NULL);
+-			}
++	for_each_node(nid) {
++		mz = mem_cgroup_nodeinfo(from, nid);
++		for (i = 0; i <= DEF_PRIORITY; i++) {
++			iter = &mz->iter[i];
++			cmpxchg(&iter->position,
++				dead_memcg, NULL);
  		}
+ 	}
+ }
+ 
++static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
++{
++	struct mem_cgroup *memcg = dead_memcg;
++	int invalid_root = 0;
++
++	for (; memcg; memcg = parent_mem_cgroup(memcg)) {
++		__invalidate_reclaim_iterators(memcg, dead_memcg);
++		if (memcg == root_mem_cgroup)
++			invalid_root = 1;
++	}
++
++	if (!invalid_root)
++		__invalidate_reclaim_iterators(root_mem_cgroup, dead_memcg);
++}
++
+ /**
+  * mem_cgroup_scan_tasks - iterate over tasks of a memory cgroup hierarchy
+  * @memcg: hierarchy root
 -- 
-2.7.4
-
+2.18.0
 
