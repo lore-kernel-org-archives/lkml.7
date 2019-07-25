@@ -2,198 +2,152 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C478FC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B3FC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E257218DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B270E22BE8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:05:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TlXZqAqR"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="j/5k05zx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391477AbfGYLA3 (ORCPT
+        id S2391511AbfGYLF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:00:29 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:36403 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388173AbfGYLA3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:00:29 -0400
-Received: by mail-yw1-f66.google.com with SMTP id x67so17769218ywd.3;
-        Thu, 25 Jul 2019 04:00:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a/9tM/cnY197lNtKIbEGvdjoci5BadrTWQa+L94ekpI=;
-        b=TlXZqAqRzPpf3gfD8V0EvgwNAWlvyzJuGQp0qP4ZcQNUngpwSwvdyCMRR/7R9AHZAW
-         GuOMdzNyGDZMf0PNKbCk7y9QD3lXOCjkZr7ZBB7uDm0BgUiMCBBBr4MJNZ79HcfB7uRR
-         L35CzL1tUcFV3AhEfiKdHSqMddOjEGDIjA6oYlJUoxFhaBszEVXcNnY1+6ul3za+2x57
-         Fw4/Z16Ne3tTR/xwVvioVo+dBJGbQUwLLnbbtQnDKJW3nE8e/fdWobY8TyMHl8mHwfZ/
-         0iniDeqcvqEVhuMQ9FeziB6ZkiOj1k+jcPLpT3Xj5U/CRQtc0a+tjL6VOfSGfW7Slce9
-         17fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a/9tM/cnY197lNtKIbEGvdjoci5BadrTWQa+L94ekpI=;
-        b=nvXblKHCrMjppxmTQchwtsjy8LKtAywid0MU3HOcQaRcmUW6lhEGod4ArhyD3iXpmV
-         Ew8BduBMrxZTb3a2b/p9iiZhjJKTII4mG0Viom0JediX4K+HmHb03bnHYn4lXFKhhGVf
-         RAtIS5gMxeVhrwGIKw8lIcc1y83+0sbP5+drJaiuECxQvNPN/i4+qV7SssVrWoaYXD/+
-         roEhsx9i/udPdhdKCdEmyaG2EkAeo8huiSYd1QF4ehgob0+LghBJ8MU7/E3jDCg0fbjx
-         Vr5pTIANLvYCcJs42dZe6r6ikX52h833sC8K1olwT84pmg4rr/KKXa1jvNcOo4mYq1Rq
-         Pygg==
-X-Gm-Message-State: APjAAAXsspmd7cd185araiRC0hRaz2ROKpOW36whz6kEvElur/OAdyUx
-        hEzlz5N7pBZ6qI6QHQ4kO9Hs8c9QRRUyGQh3PYQ=
-X-Google-Smtp-Source: APXvYqyaI0ALNuRqjV/CcW0cJWZEl55/D3HnYB1O7bWKszwmgtyXizOwoXMN/aHq3bEU7U72mLKk3KOKlEXc/ZyRTMM=
-X-Received: by 2002:a81:13d4:: with SMTP id 203mr53284263ywt.181.1564052428064;
- Thu, 25 Jul 2019 04:00:28 -0700 (PDT)
+        Thu, 25 Jul 2019 07:05:28 -0400
+Received: from mail-eopbgr150104.outbound.protection.outlook.com ([40.107.15.104]:8516
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388070AbfGYLF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 07:05:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GjZlEYAwkQuOHpggvgLSPz5qkfEifGxUwD1cpHGPbiy5WtdXQs2dxi2KyVqy9fj01/MgF1wL5Yyd5V873UpF+NIjBYRlVGFH5NEXPpf+QXW3efEZpDodyMj/rZYGJKSzfsq2uLaapfZYQPGGGzjEtIlLjRqD032oR2sPVWjETBDEiSb+SVPZTz9SG5ZJ1g8S3P/x+YJRGdzxMu4C7kPzMkPynJJu+iDPiOB7Bv4+QpaELU8egcbcf7lT+p2fmgSxF6FZIyBFvVpkapGn3ZOP9ExAL6Urc4wuFefxxNItP0/3NHqXo+7Xt36WUYNWzzLdwDWO9KQxkZZXVY8hCPwSmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U/SiP3mH5gYMkwediWUa1vnzvQioFDVFNGJQWCRQGu4=;
+ b=mb7bhGqTNFlFuy+K6w+b0nayMBddVjx2RW+rH77Bs60gg8jxk1OjtZcRCFT5d2oQCeOz9KAXADJksVLNtFrtG7ulUR1SvfAinMITRtVArqhR4TLQWlEiarFus7NpAaZCr+rfkLgbuorKAKX/4NMi8NH70N/IAwaPLHMuxW5oMzwFaf7fUsBlYKhs+3F192cVgqjnTcZGMw1nqqoY+RWDU/PmBh6NnIekWM/IoPt+35pTACJNBCvF/m0uFDFYZp11nrRgO0axHw+OPgTUHaoiDJKIXLnSxFgEuBq/ATX3+lfocn/C6AulXI350g8d8suRWAlk9g42qDbVdQMFapUKAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=toradex.com;dmarc=pass action=none
+ header.from=toradex.com;dkim=pass header.d=toradex.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U/SiP3mH5gYMkwediWUa1vnzvQioFDVFNGJQWCRQGu4=;
+ b=j/5k05zxNqWcoTXoJr/KHlpKxXTBxFiYGQVtNx3vldqxBV1FrDj58WtcRQ/UUnIOpN8pOa5+PcjQL4d7EJAjVDWL0/aiSYvIqRgMIAmzo6X5GN46Bhe3PQxeh0ljJ1N4XygKD8mNysDy/TpXPb8y130iPMhDhDtyh3ZKpdkUVOQ=
+Received: from AM6PR05MB6535.eurprd05.prod.outlook.com (20.179.18.16) by
+ AM6PR05MB5553.eurprd05.prod.outlook.com (20.177.119.202) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.16; Thu, 25 Jul 2019 11:05:23 +0000
+Received: from AM6PR05MB6535.eurprd05.prod.outlook.com
+ ([fe80::c860:b386:22a:8ec9]) by AM6PR05MB6535.eurprd05.prod.outlook.com
+ ([fe80::c860:b386:22a:8ec9%6]) with mapi id 15.20.2094.017; Thu, 25 Jul 2019
+ 11:05:23 +0000
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+To:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH 0/1] This patch fixes connection detection for monitors w/o
+ DDC.
+Thread-Topic: [PATCH 0/1] This patch fixes connection detection for monitors
+ w/o DDC.
+Thread-Index: AQHVQtjbQmQDpUU8tU2AbrHFyIUWgw==
+Date:   Thu, 25 Jul 2019 11:05:23 +0000
+Message-ID: <20190725110520.26848-1-oleksandr.suvorov@toradex.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM3PR07CA0136.eurprd07.prod.outlook.com
+ (2603:10a6:207:8::22) To AM6PR05MB6535.eurprd05.prod.outlook.com
+ (2603:10a6:20b:71::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oleksandr.suvorov@toradex.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-originating-ip: [194.105.145.90]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7cf54cad-5795-4259-90bb-08d710effd82
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM6PR05MB5553;
+x-ms-traffictypediagnostic: AM6PR05MB5553:
+x-microsoft-antispam-prvs: <AM6PR05MB55532DB02B97E0C07D0105BCF9C10@AM6PR05MB5553.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2089;
+x-forefront-prvs: 0109D382B0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(376002)(366004)(39850400004)(136003)(199004)(189003)(4326008)(44832011)(3846002)(305945005)(14444005)(14454004)(486006)(68736007)(1076003)(256004)(66066001)(5660300002)(6486002)(66446008)(64756008)(66556008)(66476007)(186003)(7416002)(54906003)(50226002)(110136005)(25786009)(26005)(478600001)(316002)(86362001)(6436002)(66946007)(52116002)(99286004)(36756003)(6506007)(386003)(53936002)(2906002)(6116002)(71190400001)(81166006)(81156014)(7736002)(102836004)(476003)(6512007)(8936002)(8676002)(2616005)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR05MB5553;H:AM6PR05MB6535.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pCCpK+e3AKs/jz6rRBxi2F+7SZLcaM6kTIKhtrik+KfrdPfi/AUOKurLLiTAI0ce4FXcG6LUeEzl72Hy9mCuCwn84g5o8ScJ3dm8mA18kmpjWrWhKq3wq227Jn3rI2bbGgVCzdE8vBYyUcFnpA2huDd7SCSA2H7BcbkL3R6Eil2sAPo/Ap1jjn+yjXGAaebMNyEVS7IZxhvsUWIrjQ4wRm2p6zmtijIrUBqFsNX0tiJieR/3m6UwQIdpKYpxJPw9DeR7BjMlTcsJNN3AHgw4pwT7yyoNRxwQ2r6zOZGhcEkXMIouPmzYf2j0pYQFBqFhBwPIQnreLbEwaQ4o5UVd2D3TyWKwDUyZdaNEtlR0EuXWeGNvGjmeh3FEPYkGpQQOK3coIysGJPZ0Go85mumpVkEFA3hQo82aaihlAHbBESU=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190724195719.218307-1-salyzyn@android.com> <20190724195719.218307-5-salyzyn@android.com>
-In-Reply-To: <20190724195719.218307-5-salyzyn@android.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Thu, 25 Jul 2019 14:00:16 +0300
-Message-ID: <CAOQ4uxhtASSymEOdh4XByXbxWO2_ZivzqjBrgK7jB3fWXLqr_w@mail.gmail.com>
-Subject: Re: [PATCH v10 4/5] overlayfs: internal getxattr operations without
- sepolicy checking
-To:     Mark Salyzyn <salyzyn@android.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-team@android.com, Miklos Szeredi <miklos@szeredi.hu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7cf54cad-5795-4259-90bb-08d710effd82
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2019 11:05:23.4274
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oleksandr.suvorov@toradex.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5553
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:57 PM Mark Salyzyn <salyzyn@android.com> wrote:
->
-> Check impure, opaque, origin & meta xattr with no sepolicy audit
-> (using __vfs_getxattr) since these operations are internal to
-> overlayfs operations and do not disclose any data.  This became
-> an issue for credential override off since sys_admin would have
-> been required by the caller; whereas would have been inherently
-> present for the creator since it performed the mount.
->
-> This is a change in operations since we do not check in the new
-> ovl_vfs_getxattr function if the credential override is off or
-> not.  Reasoning is that the sepolicy check is unnecessary overhead,
-> especially since the check can be expensive.
 
-I don't know that this reasoning suffice to skip the sepolicy checks
-for overlayfs private xattrs.
-Can't sepolicy be defined to allow get access to trusted.overlay.*?
+Even in source code of this driver there is an author's description:
+    /*
+     * Even if we have an I2C bus, we can't assume that the cable
+     * is disconnected if drm_probe_ddc fails. Some cables don't
+     * wire the DDC pins, or the I2C bus might not be working at
+     * all.
+     */
 
->
-> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
-> Cc: Miklos Szeredi <miklos@szeredi.hu>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: Eric W. Biederman <ebiederm@xmission.com>
-> Cc: Amir Goldstein <amir73il@gmail.com>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Stephen Smalley <sds@tycho.nsa.gov>
-> Cc: linux-unionfs@vger.kernel.org
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kernel-team@android.com
-> ---
-> v10 - added to patch series
-> ---
->  fs/overlayfs/namei.c     | 12 +++++++-----
->  fs/overlayfs/overlayfs.h |  2 ++
->  fs/overlayfs/util.c      | 24 +++++++++++++++---------
->  3 files changed, 24 insertions(+), 14 deletions(-)
->
-> diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
-> index 9702f0d5309d..fb6c0cd7b65f 100644
-> --- a/fs/overlayfs/namei.c
-> +++ b/fs/overlayfs/namei.c
-> @@ -106,10 +106,11 @@ int ovl_check_fh_len(struct ovl_fh *fh, int fh_len)
->
->  static struct ovl_fh *ovl_get_fh(struct dentry *dentry, const char *name)
->  {
-> -       int res, err;
-> +       ssize_t res;
-> +       int err;
->         struct ovl_fh *fh = NULL;
->
-> -       res = vfs_getxattr(dentry, name, NULL, 0);
-> +       res = ovl_vfs_getxattr(dentry, name, NULL, 0);
->         if (res < 0) {
->                 if (res == -ENODATA || res == -EOPNOTSUPP)
->                         return NULL;
-> @@ -123,7 +124,7 @@ static struct ovl_fh *ovl_get_fh(struct dentry *dentry, const char *name)
->         if (!fh)
->                 return ERR_PTR(-ENOMEM);
->
-> -       res = vfs_getxattr(dentry, name, fh, res);
-> +       res = ovl_vfs_getxattr(dentry, name, fh, res);
->         if (res < 0)
->                 goto fail;
->
-> @@ -141,10 +142,11 @@ static struct ovl_fh *ovl_get_fh(struct dentry *dentry, const char *name)
->         return NULL;
->
->  fail:
-> -       pr_warn_ratelimited("overlayfs: failed to get origin (%i)\n", res);
-> +       pr_warn_ratelimited("overlayfs: failed to get origin (%zi)\n", res);
->         goto out;
->  invalid:
-> -       pr_warn_ratelimited("overlayfs: invalid origin (%*phN)\n", res, fh);
-> +       pr_warn_ratelimited("overlayfs: invalid origin (%*phN)\n",
-> +                           (int)res, fh);
->         goto out;
->  }
->
-> diff --git a/fs/overlayfs/overlayfs.h b/fs/overlayfs/overlayfs.h
-> index 73a02a263fbc..82574684a9b6 100644
-> --- a/fs/overlayfs/overlayfs.h
-> +++ b/fs/overlayfs/overlayfs.h
-> @@ -205,6 +205,8 @@ int ovl_want_write(struct dentry *dentry);
->  void ovl_drop_write(struct dentry *dentry);
->  struct dentry *ovl_workdir(struct dentry *dentry);
->  const struct cred *ovl_override_creds(struct super_block *sb);
-> +ssize_t ovl_vfs_getxattr(struct dentry *dentry, const char *name, void *buf,
-> +                        size_t size);
->  struct super_block *ovl_same_sb(struct super_block *sb);
->  int ovl_can_decode_fh(struct super_block *sb);
->  struct dentry *ovl_indexdir(struct super_block *sb);
-> diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
-> index f5678a3f8350..672459c3cff7 100644
-> --- a/fs/overlayfs/util.c
-> +++ b/fs/overlayfs/util.c
-> @@ -40,6 +40,12 @@ const struct cred *ovl_override_creds(struct super_block *sb)
->         return override_creds(ofs->creator_cred);
->  }
->
-> +ssize_t ovl_vfs_getxattr(struct dentry *dentry, const char *name, void *buf,
-> +                        size_t size)
-> +{
-> +       return __vfs_getxattr(dentry, d_inode(dentry), name, buf, size);
-> +}
-> +
+That's true. DDC and VGA channels are independent, and therefore
+we cannot decide whether the monitor is connected or not,
+depending on the information from the DDC.
 
-When introducing a new ovl_ => vfs_ wrapper, please follow the
-ovl_do_XXX helpers
-convention in overlayfs.h.
+So the monitor should always be considered connected.
+Thus there is no reason to use connector detect callback for this
+driver: DRM sub-system considers monitor always connected if there
+is no detect() callback registered with drm_connector_init().
 
-Note that those wrappers do not generally bypass security checks and
-you have not
-convinced me yet that skipping security checks on the overlayfs
-private xattr get
-is the right thing to do.
+How to reproduce the bug:
+* setup: i.MX8QXP, LCDIF video module + gpu/drm/mxsfb driver,
+  adv712x VGA DAC + dumb-vga-dac driver, VGA-connector w/o DDC;
+* try to use drivers chain mxsfb-drm + dumb-vga-dac;
+* any DRM applications consider the monitor is not connected:
+  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+  $ weston-start
+  $ cat /var/log/weston.log
+      ...
+      DRM: head 'VGA-1' found, connector 32 is disconnected.
+      ...
+  $ cat /sys/devices/platform/5a180000.lcdif/drm/card0/card0-VGA-1/status
+  unknown
+  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-Thanks,
-Amir.
+
+Oleksandr Suvorov (1):
+  drm/bridge: vga-dac: Fix detect of monitor connection
+
+ drivers/gpu/drm/bridge/dumb-vga-dac.c | 18 ------------------
+ 1 file changed, 18 deletions(-)
+
+--=20
+2.20.1
+
