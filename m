@@ -2,238 +2,208 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BD0C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070A4C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA4B922BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:26:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="NSAqiJFd";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Ps3KPk4Y"
+	by mail.kernel.org (Postfix) with ESMTP id C0F4F2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbfGYN0k (ORCPT
+        id S1728566AbfGYN05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:26:40 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:44502 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726801AbfGYN0k (ORCPT
+        Thu, 25 Jul 2019 09:26:57 -0400
+Received: from mail-qk1-f177.google.com ([209.85.222.177]:33811 "EHLO
+        mail-qk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbfGYN04 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:26:40 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2302EC0B70;
-        Thu, 25 Jul 2019 13:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1564061199; bh=2v8UMjZNBjQwo1ohwCpbtpmw+7KSGJkDmzosqySdh28=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=NSAqiJFd/9sxdAAoDPjAeIQRN1U3lPsppORj4BJ5G3c2kYpzcitXgYsXDVTqC3jeA
-         0xisl6Alz8rm4njIq/CFMNOeGMeBS0SKzV4yHtfo+SwK5cCrCT4jUDQ4ZKGZm39NKF
-         chGIwMoLl8PoaH04LN8foWaALiBG4M0a1ctB1vWlC4g0RSrMn6lDjbloa9jJ7V03tY
-         B0cfv8I53cPEUCD191MPv/uFFgtj2ek3Zg/B4JxHzBpsh30jKIgW5mvX7J4OqZbfiB
-         8gcqQ7oA1LeFBFvOmms/Vn0LB9Phvykno+4tnFRn9sWNDMtsgHKWyZ5dNEltSOXALy
-         ic1PAafG4tnsg==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 4887FA0067;
-        Thu, 25 Jul 2019 13:26:36 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 25 Jul 2019 06:26:26 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Thu, 25 Jul 2019 06:26:26 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zj3Dl+cZyZRcONkGdfOXaHNDTKEiSmPfJx135vADhoJFJPS/9nL6ZIFvGK2IMw13mYGUGirGPrpj82Y5ZxIkbHsT51Jm4aVs549y8f9S2LymWp7EBNScRp4wrlyzJ6No/47gCmayQ5df0q9LG6O8NUE+iFqAokQQnPXHAgYZbkWtIdfSIDvrKxIwDm1oejTi1cc609wL//4qdr5N1wo0vNeu7vkGfu78+FHIk65U/mon1G1My07PX8sMZSGcLP5IsbdQ6Hkt7PGdeI6O2kE62Nva/rO1EnV1gycH9smIN1TiJboNdAbxNRde05pk9cebiuF4363o9aMHfmugMNcGaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2v8UMjZNBjQwo1ohwCpbtpmw+7KSGJkDmzosqySdh28=;
- b=Uub0uPk5nEc7CxEcNallPonZGVrzm91gI4AxnjFpRPi9KhrVxkPUKGLuJs/tknNwtWchtpRJnz26Jw3r0tlPyUFnLhDL/YsEnN7WZloJFzK+SU6fq+DDZnr25iRblAQ1GKfcznVIlRRsml2KO2dIhncgjlejEbnEUS/7vQYEovEeo/sOZUN/XehtdAtqzJOkebjrhZWy/R2y4JG0vwt2dqEDlhQRdUJk/lvkgodfaK3RS2WS72aFeeJPgwNk5NZKFXY3XJB5/P78/textIMQEY2jBYBY9KgkC7+5k9usJ1o7XQqtS1hvxmBTWIH8ymNxPgFSrk9enl+rGP9NMgKf1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=synopsys.com;dmarc=pass action=none
- header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2v8UMjZNBjQwo1ohwCpbtpmw+7KSGJkDmzosqySdh28=;
- b=Ps3KPk4YbBeG1A+l2lDsFVahTvSRrroCbH+ATLvGIcKZkDqK9udzREynxXzbrYcIPbog1Bx/+imXHcKKRD0TAixd0UaJ6IjbnMu98/EeNV6D0hAUoxAG9RXjJVnuyjZnyLqQLWqN/yL6ksxk/w81bNkhkZhBE2p3SjXO3lLwUZY=
-Received: from BYAPR12MB3269.namprd12.prod.outlook.com (20.179.93.146) by
- BYAPR12MB2936.namprd12.prod.outlook.com (20.179.91.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.16; Thu, 25 Jul 2019 13:26:24 +0000
-Received: from BYAPR12MB3269.namprd12.prod.outlook.com
- ([fe80::f5b8:ac6e:ea68:cb1c]) by BYAPR12MB3269.namprd12.prod.outlook.com
- ([fe80::f5b8:ac6e:ea68:cb1c%4]) with mapi id 15.20.2094.013; Thu, 25 Jul 2019
- 13:26:24 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "wens@csie.org" <wens@csie.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>
-Subject: RE: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Thread-Topic: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Thread-Index: AQHVMYtq2Zx4WVoG/U2kL8GCK0bP/abbdEOAgAAAgcA=
-Date:   Thu, 25 Jul 2019 13:26:24 +0000
-Message-ID: <BYAPR12MB3269927AB1F67D46E150ED6BD3C10@BYAPR12MB3269.namprd12.prod.outlook.com>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
- <7a79be5d-7ba2-c457-36d3-1ccef6572181@nvidia.com>
-In-Reply-To: <7a79be5d-7ba2-c457-36d3-1ccef6572181@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 00140198-2dd0-4fa1-6f60-08d71103b0ec
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR12MB2936;
-x-ms-traffictypediagnostic: BYAPR12MB2936:
-x-microsoft-antispam-prvs: <BYAPR12MB29361ACF4C972D711333859DD3C10@BYAPR12MB2936.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 0109D382B0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(136003)(376002)(396003)(39860400002)(52314003)(189003)(199004)(5660300002)(53546011)(2201001)(7696005)(33656002)(66066001)(7416002)(81166006)(9686003)(99286004)(26005)(81156014)(6246003)(55016002)(6436002)(110136005)(14454004)(478600001)(486006)(53936002)(3846002)(68736007)(102836004)(11346002)(8936002)(476003)(74316002)(6506007)(8676002)(6116002)(76176011)(14444005)(66556008)(66446008)(186003)(66946007)(64756008)(71200400001)(52536014)(86362001)(71190400001)(229853002)(446003)(25786009)(2906002)(7736002)(4326008)(54906003)(316002)(2501003)(76116006)(305945005)(66476007)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR12MB2936;H:BYAPR12MB3269.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: lmLf0UpJIKZ4l6CfCSehIoCkwwu4hkNT0PwTGnuK5/xDXIJipDYt+7xHRquZsLVbNS3ZQ3Go1Uz+ZIEDrb5Do88MQozcQwXK8R9M5la5n9+XkJHPVuR+9Xlrx4Es+99Z6jF+zFqS9jR8kDPCHZNNgG0POz+Lib2W6o3Pc6qehcW8fQOKiXCGouaZ4alRdlLxGuJmGzjZjai9vpzlwDLVk988h/fHT8p9sRazTr5Ez0cJZWY6BDtDXuqxWtwZ0rwmGiDeltW1ky4O7ZxIJMrjOqGhUDC7hehai6v1SjbfurFVeI4bowFuO9uzknNSYIEjQ6y7X5bQVltujaGySxUlF86wUA80HT3+pjnIYIqrsfM6luaIRCQIJl9iMw06+wCRCRHcMX5tA94e1WUn0fdcO2v218QnN5uoe2seiiQWAQs=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 25 Jul 2019 09:26:56 -0400
+Received: by mail-qk1-f177.google.com with SMTP id t8so36387321qkt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:26:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=KjjBu7BMfk8xmpq06aF6LWsxATJ7zX54K3XmB9nU8ns=;
+        b=lZzuUWqmsiIbpirdIT3keFKX8b83L+ju5wWcQZ8xcBBzi/9hVIkoQX3Z9T2TDtJoVd
+         fqFjEUUR4QfWKE6B/YDc9zAW6pqHDKibO9MfSVQg0JZE3HoUnwTKYiGlhgyNzklSov82
+         bTGXEyNWMXgFvYoz3zBHMQEx5W/NLupEDTMI0dViNPE7By62oStoF8Z/OeqB4g+fVvR2
+         6PWq1AosjMQ6EK2FFgy0E9mSrvGVM6QwVcGteyMpeQSQo+lRDEvyaZbN1lj6vmHkWcqF
+         k97mO3N8n0RZiqzICX+MA4Qq2ae/yY5MuJ+PrRJdhF64Mqcfu8PzuSpTjE1LZTkz2edX
+         XYlQ==
+X-Gm-Message-State: APjAAAXx/0triidT0a3XZs9VkUwzLLSJQkq6dHalRYn6NLx+wc6gM7dF
+        GrDXbQagJj/yY2akjl+37FaJzA==
+X-Google-Smtp-Source: APXvYqxOAsHTrNRpwq6vcJ7tGMHpKurQRE42kOps0/crxS2PgQFMsqddCIqZtIPX1c6ngHTE5rQAdg==
+X-Received: by 2002:a05:620a:1447:: with SMTP id i7mr59552516qkl.254.1564061215681;
+        Thu, 25 Jul 2019 06:26:55 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id 47sm29804600qtw.90.2019.07.25.06.26.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 06:26:54 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 09:26:46 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+Subject: Re: WARNING in __mmdrop
+Message-ID: <20190725092332-mutt-send-email-mst@kernel.org>
+References: <20190723032024-mutt-send-email-mst@kernel.org>
+ <1d14de4d-0133-1614-9f64-3ded381de04e@redhat.com>
+ <20190723035725-mutt-send-email-mst@kernel.org>
+ <3f4178f1-0d71-e032-0f1f-802428ceca59@redhat.com>
+ <20190723051828-mutt-send-email-mst@kernel.org>
+ <caff362a-e208-3468-3688-63e1d093a9d3@redhat.com>
+ <20190725012149-mutt-send-email-mst@kernel.org>
+ <55e8930c-2695-365f-a07b-3ad169654d28@redhat.com>
+ <20190725042651-mutt-send-email-mst@kernel.org>
+ <84bb2e31-0606-adff-cf2a-e1878225a847@redhat.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00140198-2dd0-4fa1-6f60-08d71103b0ec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2019 13:26:24.4974
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2936
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <84bb2e31-0606-adff-cf2a-e1878225a847@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSm9uIEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+DQpEYXRlOiBKdWwvMjUvMjAx
-OSwgMTQ6MjA6MDcgKFVUQyswMDowMCkNCg0KPiANCj4gT24gMDMvMDcvMjAxOSAxMTozNywgSm9z
-ZSBBYnJldSB3cm90ZToNCj4gPiBNYXBwaW5nIGFuZCB1bm1hcHBpbmcgRE1BIHJlZ2lvbiBpcyBh
-biBoaWdoIGJvdHRsZW5lY2sgaW4gc3RtbWFjIGRyaXZlciwNCj4gPiBzcGVjaWFsbHkgaW4gdGhl
-IFJYIHBhdGguDQo+ID4gDQo+ID4gVGhpcyBjb21taXQgaW50cm9kdWNlcyBzdXBwb3J0IGZvciBQ
-YWdlIFBvb2wgQVBJIGFuZCB1c2VzIGl0IGluIGFsbCBSWA0KPiA+IHF1ZXVlcy4gV2l0aCB0aGlz
-IGNoYW5nZSwgd2UgZ2V0IG1vcmUgc3RhYmxlIHRyb3VnaHB1dCBhbmQgc29tZSBpbmNyZWFzZQ0K
-PiA+IG9mIGJhbndpZHRoIHdpdGggaXBlcmY6DQo+ID4gCS0gTUFDMTAwMCAtIDk1MCBNYnBzDQo+
-ID4gCS0gWEdNQUM6IDkuMjIgR2Jwcw0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEpvc2UgQWJy
-ZXUgPGpvYWJyZXVAc3lub3BzeXMuY29tPg0KPiA+IENjOiBKb2FvIFBpbnRvIDxqcGludG9Ac3lu
-b3BzeXMuY29tPg0KPiA+IENjOiBEYXZpZCBTLiBNaWxsZXIgPGRhdmVtQGRhdmVtbG9mdC5uZXQ+
-DQo+ID4gQ2M6IEdpdXNlcHBlIENhdmFsbGFybyA8cGVwcGUuY2F2YWxsYXJvQHN0LmNvbT4NCj4g
-PiBDYzogQWxleGFuZHJlIFRvcmd1ZSA8YWxleGFuZHJlLnRvcmd1ZUBzdC5jb20+DQo+ID4gQ2M6
-IE1heGltZSBDb3F1ZWxpbiA8bWNvcXVlbGluLnN0bTMyQGdtYWlsLmNvbT4NCj4gPiBDYzogTWF4
-aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBib290bGluLmNvbT4NCj4gPiBDYzogQ2hlbi1ZdSBU
-c2FpIDx3ZW5zQGNzaWUub3JnPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9z
-dG1pY3JvL3N0bW1hYy9LY29uZmlnICAgICAgIHwgICAxICsNCj4gPiAgZHJpdmVycy9uZXQvZXRo
-ZXJuZXQvc3RtaWNyby9zdG1tYWMvc3RtbWFjLmggICAgICB8ICAxMCArLQ0KPiA+ICBkcml2ZXJz
-L25ldC9ldGhlcm5ldC9zdG1pY3JvL3N0bW1hYy9zdG1tYWNfbWFpbi5jIHwgMTk2ICsrKysrKy0t
-LS0tLS0tLS0tLS0tLS0NCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA2MyBpbnNlcnRpb25zKCspLCAx
-NDQgZGVsZXRpb25zKC0pDQo+IA0KPiAuLi4NCj4gDQo+ID4gQEAgLTMzMDYsNDkgKzMyOTUsMjIg
-QEAgc3RhdGljIGlubGluZSB2b2lkIHN0bW1hY19yeF9yZWZpbGwoc3RydWN0IHN0bW1hY19wcml2
-ICpwcml2LCB1MzIgcXVldWUpDQo+ID4gIAkJZWxzZQ0KPiA+ICAJCQlwID0gcnhfcS0+ZG1hX3J4
-ICsgZW50cnk7DQo+ID4gIA0KPiA+IC0JCWlmIChsaWtlbHkoIXJ4X3EtPnJ4X3NrYnVmZltlbnRy
-eV0pKSB7DQo+ID4gLQkJCXN0cnVjdCBza19idWZmICpza2I7DQo+ID4gLQ0KPiA+IC0JCQlza2Ig
-PSBuZXRkZXZfYWxsb2Nfc2tiX2lwX2FsaWduKHByaXYtPmRldiwgYmZzaXplKTsNCj4gPiAtCQkJ
-aWYgKHVubGlrZWx5KCFza2IpKSB7DQo+ID4gLQkJCQkvKiBzbyBmb3IgYSB3aGlsZSBubyB6ZXJv
-LWNvcHkhICovDQo+ID4gLQkJCQlyeF9xLT5yeF96ZXJvY190aHJlc2ggPSBTVE1NQUNfUlhfVEhS
-RVNIOw0KPiA+IC0JCQkJaWYgKHVubGlrZWx5KG5ldF9yYXRlbGltaXQoKSkpDQo+ID4gLQkJCQkJ
-ZGV2X2Vycihwcml2LT5kZXZpY2UsDQo+ID4gLQkJCQkJCSJmYWlsIHRvIGFsbG9jIHNrYiBlbnRy
-eSAlZFxuIiwNCj4gPiAtCQkJCQkJZW50cnkpOw0KPiA+IC0JCQkJYnJlYWs7DQo+ID4gLQkJCX0N
-Cj4gPiAtDQo+ID4gLQkJCXJ4X3EtPnJ4X3NrYnVmZltlbnRyeV0gPSBza2I7DQo+ID4gLQkJCXJ4
-X3EtPnJ4X3NrYnVmZl9kbWFbZW50cnldID0NCj4gPiAtCQkJICAgIGRtYV9tYXBfc2luZ2xlKHBy
-aXYtPmRldmljZSwgc2tiLT5kYXRhLCBiZnNpemUsDQo+ID4gLQkJCQkJICAgRE1BX0ZST01fREVW
-SUNFKTsNCj4gPiAtCQkJaWYgKGRtYV9tYXBwaW5nX2Vycm9yKHByaXYtPmRldmljZSwNCj4gPiAt
-CQkJCQkgICAgICByeF9xLT5yeF9za2J1ZmZfZG1hW2VudHJ5XSkpIHsNCj4gPiAtCQkJCW5ldGRl
-dl9lcnIocHJpdi0+ZGV2LCAiUnggRE1BIG1hcCBmYWlsZWRcbiIpOw0KPiA+IC0JCQkJZGV2X2tm
-cmVlX3NrYihza2IpOw0KPiA+ICsJCWlmICghYnVmLT5wYWdlKSB7DQo+ID4gKwkJCWJ1Zi0+cGFn
-ZSA9IHBhZ2VfcG9vbF9kZXZfYWxsb2NfcGFnZXMocnhfcS0+cGFnZV9wb29sKTsNCj4gPiArCQkJ
-aWYgKCFidWYtPnBhZ2UpDQo+ID4gIAkJCQlicmVhazsNCj4gPiAtCQkJfQ0KPiA+IC0NCj4gPiAt
-CQkJc3RtbWFjX3NldF9kZXNjX2FkZHIocHJpdiwgcCwgcnhfcS0+cnhfc2tidWZmX2RtYVtlbnRy
-eV0pOw0KPiA+IC0JCQlzdG1tYWNfcmVmaWxsX2Rlc2MzKHByaXYsIHJ4X3EsIHApOw0KPiA+IC0N
-Cj4gPiAtCQkJaWYgKHJ4X3EtPnJ4X3plcm9jX3RocmVzaCA+IDApDQo+ID4gLQkJCQlyeF9xLT5y
-eF96ZXJvY190aHJlc2gtLTsNCj4gPiAtDQo+ID4gLQkJCW5ldGlmX2RiZyhwcml2LCByeF9zdGF0
-dXMsIHByaXYtPmRldiwNCj4gPiAtCQkJCSAgInJlZmlsbCBlbnRyeSAjJWRcbiIsIGVudHJ5KTsN
-Cj4gPiAgCQl9DQo+ID4gLQkJZG1hX3dtYigpOw0KPiA+ICsNCj4gPiArCQlidWYtPmFkZHIgPSBi
-dWYtPnBhZ2UtPmRtYV9hZGRyOw0KPiA+ICsJCXN0bW1hY19zZXRfZGVzY19hZGRyKHByaXYsIHAs
-IGJ1Zi0+YWRkcik7DQo+ID4gKwkJc3RtbWFjX3JlZmlsbF9kZXNjMyhwcml2LCByeF9xLCBwKTsN
-Cj4gPiAgDQo+ID4gIAkJcnhfcS0+cnhfY291bnRfZnJhbWVzKys7DQo+ID4gIAkJcnhfcS0+cnhf
-Y291bnRfZnJhbWVzICU9IHByaXYtPnJ4X2NvYWxfZnJhbWVzOw0KPiA+ICAJCXVzZV9yeF93ZCA9
-IHByaXYtPnVzZV9yaXd0ICYmIHJ4X3EtPnJ4X2NvdW50X2ZyYW1lczsNCj4gPiAgDQo+ID4gLQkJ
-c3RtbWFjX3NldF9yeF9vd25lcihwcml2LCBwLCB1c2Vfcnhfd2QpOw0KPiA+IC0NCj4gPiAgCQlk
-bWFfd21iKCk7DQo+ID4gKwkJc3RtbWFjX3NldF9yeF9vd25lcihwcml2LCBwLCB1c2Vfcnhfd2Qp
-Ow0KPiA+ICANCj4gPiAgCQllbnRyeSA9IFNUTU1BQ19HRVRfRU5UUlkoZW50cnksIERNQV9SWF9T
-SVpFKTsNCj4gPiAgCX0NCj4gDQo+IEkgd2FzIGxvb2tpbmcgYXQgdGhpcyBjaGFuZ2UgaW4gYSBi
-aXQgY2xvc2VyIGRldGFpbCBhbmQgb25lIHRoaW5nIHRoYXQNCj4gc3R1Y2sgb3V0IHRvIG1lIHdh
-cyB0aGUgYWJvdmUgd2hlcmUgdGhlIGJhcnJpZXIgaGFkIGJlZW4gbW92ZWQgZnJvbQ0KPiBhZnRl
-ciB0aGUgc3RtbWFjX3NldF9yeF9vd25lcigpIGNhbGwgdG8gYmVmb3JlLiANCj4gDQo+IFNvIEkg
-bW92ZWQgdGhpcyBiYWNrIGFuZCBJIG5vIGxvbmdlciBzYXcgdGhlIGNyYXNoLiBIb3dldmVyLCB0
-aGVuIEkNCj4gcmVjYWxsZWQgSSBoYWQgdGhlIHBhdGNoIHRvIGVuYWJsZSB0aGUgZGVidWcgcHJp
-bnRzIGZvciB0aGUgYnVmZmVyDQo+IGFkZHJlc3MgYXBwbGllZCBidXQgYWZ0ZXIgcmV2ZXJ0aW5n
-IHRoYXQsIHRoZSBjcmFzaCBvY2N1cnJlZCBhZ2Fpbi4gDQo+IA0KPiBJbiBvdGhlciB3b3Jkcywg
-d2hhdCB3b3JrcyBmb3IgbWUgaXMgbW92aW5nIHRoZSBhYm92ZSBiYXJyaWVyIGFuZCBhZGRpbmcN
-Cj4gdGhlIGRlYnVnIHByaW50LCB3aGljaCBhcHBlYXJzIHRvIHN1Z2dlc3QgdGhhdCB0aGVyZSBp
-cyBzb21lDQo+IHRpbWluZy9jb2hlcmVuY3kgaXNzdWUgaGVyZS4gQW55d2F5LCBtYXliZSB0aGlz
-IGlzIGNsdWUgdG8gd2hhdCBpcyBnb2luZw0KPiBvbj8NCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL25ldC9ldGhlcm5ldC9zdG1pY3JvL3N0bW1hYy9zdG1tYWNfbWFpbi5jIGIvZHJpdmVycy9u
-ZXQvZXRoZXJuZXQvc3RtaWNyby9zdG1tYWMvc3RtbWFjX21haW4uYw0KPiBpbmRleCBhNzQ4NmMy
-ZjMyMjEuLjJmMDE2Mzk3MjMxYiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQv
-c3RtaWNyby9zdG1tYWMvc3RtbWFjX21haW4uYw0KPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5l
-dC9zdG1pY3JvL3N0bW1hYy9zdG1tYWNfbWFpbi5jDQo+IEBAIC0zMzAzLDggKzMzMDMsOCBAQCBz
-dGF0aWMgaW5saW5lIHZvaWQgc3RtbWFjX3J4X3JlZmlsbChzdHJ1Y3Qgc3RtbWFjX3ByaXYgKnBy
-aXYsIHUzMiBxdWV1ZSkNCj4gICAgICAgICAgICAgICAgIHJ4X3EtPnJ4X2NvdW50X2ZyYW1lcyAl
-PSBwcml2LT5yeF9jb2FsX2ZyYW1lczsNCj4gICAgICAgICAgICAgICAgIHVzZV9yeF93ZCA9IHBy
-aXYtPnVzZV9yaXd0ICYmIHJ4X3EtPnJ4X2NvdW50X2ZyYW1lczsNCj4gIA0KPiAtICAgICAgICAg
-ICAgICAgZG1hX3dtYigpOw0KPiAgICAgICAgICAgICAgICAgc3RtbWFjX3NldF9yeF9vd25lcihw
-cml2LCBwLCB1c2Vfcnhfd2QpOw0KPiArICAgICAgICAgICAgICAgZG1hX3dtYigpOw0KPiAgDQo+
-ICAgICAgICAgICAgICAgICBlbnRyeSA9IFNUTU1BQ19HRVRfRU5UUlkoZW50cnksIERNQV9SWF9T
-SVpFKTsNCj4gICAgICAgICB9DQo+IEBAIC0zNDM4LDYgKzM0MzgsMTAgQEAgc3RhdGljIGludCBz
-dG1tYWNfcngoc3RydWN0IHN0bW1hY19wcml2ICpwcml2LCBpbnQgbGltaXQsIHUzMiBxdWV1ZSkN
-Cj4gICAgICAgICAgICAgICAgICAgICAgICAgZG1hX3N5bmNfc2luZ2xlX2Zvcl9kZXZpY2UocHJp
-di0+ZGV2aWNlLCBidWYtPmFkZHIsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIGZyYW1lX2xlbiwgRE1BX0ZST01fREVWSUNFKTsNCj4gIA0KPiAr
-ICAgICAgICAgICAgICAgICAgICAgICBwcl9pbmZvKCIlczogcGFkZHI9MHglbGx4LCB2YWRkcj0w
-eCVsbHgsIGxlbj0lZCIsIF9fZnVuY19fLA0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgYnVmLT5hZGRyLCBwYWdlX2FkZHJlc3MoYnVmLT5wYWdlKSwNCj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZyYW1lX2xlbik7DQo+ICsNCj4gICAg
-ICAgICAgICAgICAgICAgICAgICAgaWYgKG5ldGlmX21zZ19wa3RkYXRhKHByaXYpKSB7DQo+ICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbmV0ZGV2X2RiZyhwcml2LT5kZXYsICJmcmFt
-ZSByZWNlaXZlZCAoJWRieXRlcykiLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgZnJhbWVfbGVuKTsNCj4gDQo+IENoZWVycw0KPiBKb24NCj4gDQo+IC0tIA0K
-PiBudnB1YmxpYw0KDQpXZWxsLCBJIHdhc24ndCBleHBlY3RpbmcgdGhhdCA6Lw0KDQpQZXIgZG9j
-dW1lbnRhdGlvbiBvZiBiYXJyaWVycyBJIHRoaW5rIHdlIHNob3VsZCBzZXQgZGVzY3JpcHRvciBm
-aWVsZHMgDQphbmQgdGhlbiBiYXJyaWVyIGFuZCBmaW5hbGx5IG93bmVyc2hpcCB0byBIVyBzbyB0
-aGF0IHJlbWFpbmluZyBmaWVsZHMgDQphcmUgY29oZXJlbnQgYmVmb3JlIG93bmVyIGlzIHNldC4N
-Cg0KQW55d2F5LCBjYW4geW91IGFsc28gYWRkIGEgZG1hX3JtYigpIGFmdGVyIHRoZSBjYWxsIHRv
-IA0Kc3RtbWFjX3J4X3N0YXR1cygpID8NCg0KLS0tDQpUaGFua3MsDQpKb3NlIE1pZ3VlbCBBYnJl
-dQ0K
+On Thu, Jul 25, 2019 at 09:21:22PM +0800, Jason Wang wrote:
+> 
+> On 2019/7/25 下午4:28, Michael S. Tsirkin wrote:
+> > On Thu, Jul 25, 2019 at 03:43:41PM +0800, Jason Wang wrote:
+> > > On 2019/7/25 下午1:52, Michael S. Tsirkin wrote:
+> > > > On Tue, Jul 23, 2019 at 09:31:35PM +0800, Jason Wang wrote:
+> > > > > On 2019/7/23 下午5:26, Michael S. Tsirkin wrote:
+> > > > > > On Tue, Jul 23, 2019 at 04:49:01PM +0800, Jason Wang wrote:
+> > > > > > > On 2019/7/23 下午4:10, Michael S. Tsirkin wrote:
+> > > > > > > > On Tue, Jul 23, 2019 at 03:53:06PM +0800, Jason Wang wrote:
+> > > > > > > > > On 2019/7/23 下午3:23, Michael S. Tsirkin wrote:
+> > > > > > > > > > > > Really let's just use kfree_rcu. It's way cleaner: fire and forget.
+> > > > > > > > > > > Looks not, you need rate limit the fire as you've figured out?
+> > > > > > > > > > See the discussion that followed. Basically no, it's good enough
+> > > > > > > > > > already and is only going to be better.
+> > > > > > > > > > 
+> > > > > > > > > > > And in fact,
+> > > > > > > > > > > the synchronization is not even needed, does it help if I leave a comment to
+> > > > > > > > > > > explain?
+> > > > > > > > > > Let's try to figure it out in the mail first. I'm pretty sure the
+> > > > > > > > > > current logic is wrong.
+> > > > > > > > > Here is what the code what to achieve:
+> > > > > > > > > 
+> > > > > > > > > - The map was protected by RCU
+> > > > > > > > > 
+> > > > > > > > > - Writers are: MMU notifier invalidation callbacks, file operations (ioctls
+> > > > > > > > > etc), meta_prefetch (datapath)
+> > > > > > > > > 
+> > > > > > > > > - Readers are: memory accessor
+> > > > > > > > > 
+> > > > > > > > > Writer are synchronized through mmu_lock. RCU is used to synchronized
+> > > > > > > > > between writers and readers.
+> > > > > > > > > 
+> > > > > > > > > The synchronize_rcu() in vhost_reset_vq_maps() was used to synchronized it
+> > > > > > > > > with readers (memory accessors) in the path of file operations. But in this
+> > > > > > > > > case, vq->mutex was already held, this means it has been serialized with
+> > > > > > > > > memory accessor. That's why I think it could be removed safely.
+> > > > > > > > > 
+> > > > > > > > > Anything I miss here?
+> > > > > > > > > 
+> > > > > > > > So invalidate callbacks need to reset the map, and they do
+> > > > > > > > not have vq mutex. How can they do this and free
+> > > > > > > > the map safely? They need synchronize_rcu or kfree_rcu right?
+> > > > > > > Invalidation callbacks need but file operations (e.g ioctl) not.
+> > > > > > > 
+> > > > > > > 
+> > > > > > > > And I worry somewhat that synchronize_rcu in an MMU notifier
+> > > > > > > > is a problem, MMU notifiers are supposed to be quick:
+> > > > > > > Looks not, since it can allow to be blocked and lots of driver depends on
+> > > > > > > this. (E.g mmu_notifier_range_blockable()).
+> > > > > > Right, they can block. So why don't we take a VQ mutex and be
+> > > > > > done with it then? No RCU tricks.
+> > > > > This is how I want to go with RFC and V1. But I end up with deadlock between
+> > > > > vq locks and some MM internal locks. So I decide to use RCU which is 100%
+> > > > > under the control of vhost.
+> > > > > 
+> > > > > Thanks
+> > > > And I guess the deadlock is because GUP is taking mmu locks which are
+> > > > taken on mmu notifier path, right?
+> > > 
+> > > Yes, but it's not the only lock. I don't remember the details, but I can
+> > > confirm I meet issues with one or two other locks.
+> > > 
+> > > 
+> > > >     How about we add a seqlock and take
+> > > > that in invalidate callbacks?  We can then drop the VQ lock before GUP,
+> > > > and take it again immediately after.
+> > > > 
+> > > > something like
+> > > > 	if (!vq_meta_mapped(vq)) {
+> > > > 		vq_meta_setup(&uaddrs);
+> > > > 		mutex_unlock(vq->mutex)
+> > > > 		vq_meta_map(&uaddrs);
+> > > 
+> > > The problem is the vq address could be changed at this time.
+> > > 
+> > > 
+> > > > 		mutex_lock(vq->mutex)
+> > > > 
+> > > > 		/* recheck both sock->private_data and seqlock count. */
+> > > > 		if changed - bail out
+> > > > 	}
+> > > > 
+> > > > And also requires that VQ uaddrs is defined like this:
+> > > > - writers must have both vq mutex and dev mutex
+> > > > - readers must have either vq mutex or dev mutex
+> > > > 
+> > > > 
+> > > > That's a big change though. For now, how about switching to a per-vq SRCU?
+> > > > That is only a little bit more expensive than RCU, and we
+> > > > can use synchronize_srcu_expedited.
+> > > > 
+> > > Consider we switch to use kfree_rcu(), what's the advantage of per-vq SRCU?
+> > > 
+> > > Thanks
+> > 
+> > I thought we established that notifiers must wait for
+> > all readers to finish before they mark page dirty, to
+> > prevent page from becoming dirty after address
+> > has been invalidated.
+> > Right?
+> 
+> 
+> Exactly, and that's the reason actually I use synchronize_rcu() there.
+> 
+> So the concern is still the possible synchronize_expedited()?
+
+
+I think synchronize_srcu_expedited.
+
+synchronize_expedited sends lots of IPI and is bad for realtime VMs.
+
+> Can I do this
+> on through another series on top of the incoming V2?
+> 
+> Thanks
+> 
+
+The question is this: is this still a gain if we switch to the
+more expensive srcu? If yes then we can keep the feature on,
+if not we'll put it off until next release and think
+of better solutions. rcu->srcu is just a find and replace,
+don't see why we need to defer that. can be a separate patch
+for sure, but we need to know how well it works.
+
+-- 
+MST
