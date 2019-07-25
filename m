@@ -7,110 +7,106 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF9AC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641ACC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D4E622BE8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346B222BE8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:59:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pLWb8Ybf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMnQOu5W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfGYR64 (ORCPT
+        id S1728405AbfGYR7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:58:56 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37743 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbfGYR6z (ORCPT
+        Thu, 25 Jul 2019 13:59:36 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45955 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbfGYR7g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:58:55 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 19so23132334pfa.4;
-        Thu, 25 Jul 2019 10:58:55 -0700 (PDT)
+        Thu, 25 Jul 2019 13:59:36 -0400
+Received: by mail-pl1-f196.google.com with SMTP id y8so23705041plr.12;
+        Thu, 25 Jul 2019 10:59:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EcbsdgPjPxknJYKkO+mmuPOpVmHnp8WiVb7FywqYwjg=;
-        b=pLWb8Ybf6p6AINE/Tdedy/fPEWySwUCrqiOaullsWbXTwPvWJNDPUDuiLyuaeqdPl2
-         Tja42m2lpthvgCBUg3vB+siLXguL4TxbnQvCCa9JUzWh3IjkMSu78hir5+dxUQPURUch
-         waYSuuhJ/1VaYy1MqDgFGdCeDkmf6BTEeQef/9/5cJCzYyBXYroUgocT5unH1zf/Y+ti
-         m97wLUmcz9VC9bWK2EcJ7vDV6S2XFIpURzLpgx8xhKyka35NyR0vqts6PBf+Af/n0feU
-         jNqcK035dt+IbCWfOPrmuhX57k+TNyHJKdqCXGFUe6tRVrwYocCmH5EUIiaB1o4tT9EF
-         gouA==
+        bh=sD8Qbz3F022x60ATZ5KjEBJOK5fMSN6Xf6Iq9Z7g8hQ=;
+        b=gMnQOu5WwTbg3O/s/yXsQEHhj/P2PtF8naw13O4RCFeKBlMuVFClo4Y1RqhdykLmfg
+         8+qBXazBt3z6uls4+mDu+Oepo75hHOdWKgwmjyuq4pCuvvYEOSROBzx0LtImEh+u///U
+         XdnwlTMMy6iS3FlJzTg6uPieAu9oNQVxTNkRpJ+7rx8eu5ZZuvopfz80+2CTp+MXhxjk
+         RgGDh/zHyNdqhMY4Wc+DU6z3dwmphOsetoaCbW1eBbqAW0jqb5xsHsVNvylos+dpp74R
+         31GFQW3zGxqfcfgKnhrq/9696bP/MMRH+qIl+x+o+grQzQD/7yGYzLVd8J1rD+q2xwq7
+         176A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EcbsdgPjPxknJYKkO+mmuPOpVmHnp8WiVb7FywqYwjg=;
-        b=Ju/RS+OHVaXNh0mY15NFpIMs6o78ilK1YHkHCJ+RrJHYSBOJW+vjs2gjBKPf0IYMwh
-         XUL/r/qC+14CuU/gbGsvWcj9qYXMdc3XMbeIwR7JTwJljxIJn0fpYJqnSgiUtwKeSsMI
-         r7tlcUntuOwq0JGLtDbmAfT90yWSV+eRxULVkD8FmjRKigJ4VtR3o/c3+cxiUGYqyFMQ
-         pg0FMpQL2v/cLYabY0IAcL2ZjbPW5PCzcgcMf9Ym6si+ZSyxevGzvyxq1xk5j+5biSla
-         pctYkzSvtjoaalsBosN5/sSk+lg65nbLRMBstUi8PeVK+/QQNcFNhfes4Acj/NFsQ3bh
-         ssXw==
-X-Gm-Message-State: APjAAAVSPhdDM6xl1eGgag7DFLUVkpGZ9aELrTVFPObGv8RXPfRkR8DZ
-        96tnth16SSRH0XKE0Z6xfxVY3B89i9NWGZ+sYZmAh1ky
-X-Google-Smtp-Source: APXvYqyN0erH9siXVeIm9awtwpitcLsB2EqG7BsgEEtQTTANapqojgKu6xjwncNfk04+wAhB8I2p5pEvqaS6XOUtIUU=
-X-Received: by 2002:a63:e54f:: with SMTP id z15mr87139832pgj.4.1564077534693;
- Thu, 25 Jul 2019 10:58:54 -0700 (PDT)
+        bh=sD8Qbz3F022x60ATZ5KjEBJOK5fMSN6Xf6Iq9Z7g8hQ=;
+        b=UlAcUa6ripp8vqB9TI1GMqVEm2v6YlGWX+6bGGW5CPCOkyEQ3UQjPyUBThvnCdm//w
+         urtQu/QDVOken9fsG4rDmmDMm4E6gCu1/Pn4/NlVUrs0PtRMEMPKOcQpHlB/xWpHJHSS
+         636K17u+9EQvBrfHk4uFa3QaYUfqQfmv+bh3HjLC5pUvXYuSgeEf0jigwOj+x34Lm04T
+         8emY+T8tENJQqZ+C4nvra8zDRsihik/Tr4LPta23s2dYs2YJlQGWRs0Kqxa3VUqOaH9H
+         SZCfC4lNi61/Qzt6hYayScvDWrEcQYNT2eIkF++ENrgXExbq7qEk/qewLiMT7WGvUqD7
+         jugw==
+X-Gm-Message-State: APjAAAWlCH+tnUlL6bSII2eLZVMduq3+HEbxbLuLB7oLUuVYYLpiW4Gb
+        JzFbssrFVLzQqDbtM98QZfUi1DDhWC3RbLOsi8U=
+X-Google-Smtp-Source: APXvYqy9fnl5MV63hXBMQ0jVVZQkUpkT51ZucTSN0PXBtlq0zFEluvCPnQEb/Iq+EN77II36t8naQTkeAzn7t9qTBHc=
+X-Received: by 2002:a17:902:934a:: with SMTP id g10mr93864498plp.18.1564077575393;
+ Thu, 25 Jul 2019 10:59:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190722031158.70311-1-skunberg.kelsey@gmail.com>
-In-Reply-To: <20190722031158.70311-1-skunberg.kelsey@gmail.com>
+References: <20190724081415.8926-1-rhyskidd@gmail.com>
+In-Reply-To: <20190724081415.8926-1-rhyskidd@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 25 Jul 2019 20:58:43 +0300
-Message-ID: <CAHp75Vc4qSNs6Kx6BdO163fi=fYNfPNHy+m3XVpO5v755pu2DA@mail.gmail.com>
-Subject: Re: [PATCH] platform: x86: Remove acpi_has_method() call in wmi.c
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
+Date:   Thu, 25 Jul 2019 20:59:24 +0300
+Message-ID: <CAHp75VeWw1rHRO+BBpr4-cyMnptF0QYkX4RQ_PUxDjVnEoV99g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] platform/x86: dell-wmi: Ignore keyboard backlight
+ change KBD_LED_ON_TOKEN
+To:     Rhys Kidd <rhyskidd@gmail.com>
+Cc:     Matthew Garrett <mjg59@google.com>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bjorn@helgaas.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 6:13 AM Kelsey Skunberg
-<skunberg.kelsey@gmail.com> wrote:
+On Wed, Jul 24, 2019 at 11:14 AM Rhys Kidd <rhyskidd@gmail.com> wrote:
 >
-> acpi_has_method() is unnecessary within __query_block() and should be
-> removed to avoid extra work.
+> There's a wmi event generated by dell-wmi when pressing keyboard backlight
+> toggle key:
+> [1224203.948894] dell_wmi: Unknown key with type 0x0011 and code 0x01e2 pressed
 >
-> wc_status is initialized to AE_ERROR before the acpi_has_method() call.
-> acpi_has_method() and acpi_execute_simple_method() failing due to the
-> method not existing will result in the same outcome from __query_block().
+> This event is for notification purposes, let's ignore it.
 >
 
 Pushed to my review and testing queue, thanks!
 
-> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+
+> Signed-off-by: Rhys Kidd <rhyskidd@gmail.com>
 > ---
->  drivers/platform/x86/wmi.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+>  drivers/platform/x86/dell-wmi.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index 784cea8572c2..59e9aa0f9643 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -340,9 +340,7 @@ static acpi_status __query_block(struct wmi_block *wblock, u8 instance,
->                  * expensive, but have no corresponding WCxx method. So we
->                  * should not fail if this happens.
->                  */
-> -               if (acpi_has_method(handle, wc_method))
-> -                       wc_status = acpi_execute_simple_method(handle,
-> -                                                               wc_method, 1);
-> +               wc_status = acpi_execute_simple_method(handle, wc_method, 1);
->         }
+> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+> index 1f565fb69098..ae331ac119a1 100644
+> --- a/drivers/platform/x86/dell-wmi.c
+> +++ b/drivers/platform/x86/dell-wmi.c
+> @@ -312,6 +312,7 @@ static const struct key_entry dell_wmi_keymap_type_0011[] = {
 >
->         strcpy(method, "WQ");
+>         /* Keyboard backlight level changed */
+>         { KE_IGNORE, 0x01e1, { KEY_RESERVED } },
+> +       { KE_IGNORE, 0x01e2, { KEY_RESERVED } },
+>         { KE_IGNORE, 0x02ea, { KEY_RESERVED } },
+>         { KE_IGNORE, 0x02eb, { KEY_RESERVED } },
+>         { KE_IGNORE, 0x02ec, { KEY_RESERVED } },
 > --
 > 2.20.1
 >
 
 
--- 
+--
 With Best Regards,
 Andy Shevchenko
