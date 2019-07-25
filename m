@@ -7,131 +7,101 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B161C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FACC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CB322CBD
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5B922C97
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:26:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="aZFlfwYl"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DXknfBB+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388074AbfGYO0D (ORCPT
+        id S2388220AbfGYO0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:26:03 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39106 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbfGYO0A (ORCPT
+        Thu, 25 Jul 2019 10:26:06 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:14345 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbfGYO0E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:26:00 -0400
-Received: by mail-wr1-f67.google.com with SMTP id x4so50971718wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 07:25:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=a4yNVultYze7PPpy5cvYCGPl+Bxml2Gu2G9EV6OVJFI=;
-        b=aZFlfwYl11ZfalVK9HQXiK6psS8etYrq9MwdgKIeCJ3kUwwzXuJGup6sST8vFdvBKQ
-         rkCcwECT04sJ7YhwAYxBq5jy2/UpsoS5q5OXFn8Ok8EH6a6wWiUESNyzJIs0r2rnNini
-         RX9AZbR1bJNbiqsydTo0QFCdo45Ml3jX2A9h03zVGZ+LxvCTOYzFpq2ls8Ngtu1BX49r
-         nsz/wBb4QJ6Y5MZ2ETI4GCfJuw76lG1feSBfo2lb+mpXmxfmQXsXEm536srR+dvDubLo
-         /w/peoDdqwFNa85L1h2g5AMrXUdpIFtsNgZYkqVRcW+LTelShFbzpDXHPBotrl1euBKw
-         YPpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=a4yNVultYze7PPpy5cvYCGPl+Bxml2Gu2G9EV6OVJFI=;
-        b=elB8u2J9qpptqwt1yPaWHQ1PuDIONVBUmF242w3N/Kiw23/HdycoaiceBM7eXn7cNW
-         oDo0oLxpoWUkr1XDLlvaLALHQEX8LybSB8p16YyxPodK72IuyTT/u73VhK9cXr+kqmtK
-         QBNuQGEDdyAUqSIuyS8r7V+l1q5Dy5Xbo7ukRoA5Xa7I66CR66GGDwuUwS4NOl2Tvnpc
-         Uc2idt3K/1LcsgnMaWKSuYLRWSCwYzboodXaEvYJYkYpUAyklCpqrXDJvguJwqyPKNBX
-         e3QomNeQbPHaDYc1Pcp+M5iHT55kDKjWcyZp/HmXSuZURYtO4mL+RpT1mUKn09kh/dbr
-         HQKw==
-X-Gm-Message-State: APjAAAUOnqPceLtbYvuslS0GaAu66lz0J73JTJL65syEW0dkuUvX/7Bk
-        M4c9RGITffhdBHDmzjyfTJUhNaSdxRYSsh2zz1OSwmPSznXyfGeTFiXx8OJSGZCpE+51qXgbnG7
-        dgbJ0qHsAPFviGOZgWKpbziC0xbFtuZvruGvoR+sUy01/WFob50YpZlwZv6WOolgzgtDwgt81Ws
-        dNrFPo3vn5OPNjm8o/gQln3xjBWquJBa7hjDUNBjU=
-X-Google-Smtp-Source: APXvYqxabH00r2hqqNGEp5to49iVTGmcAndrlBJ4BpORlLoVXwrBhNSWz9rDUPc4MdkiwTekqVtyvw==
-X-Received: by 2002:adf:eb4e:: with SMTP id u14mr95315821wrn.168.1564064758809;
-        Thu, 25 Jul 2019 07:25:58 -0700 (PDT)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id 4sm115262930wro.78.2019.07.25.07.25.57
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 07:25:58 -0700 (PDT)
-Subject: Re: [PATCH] hung_task: Allow printing warnings every check interval
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Vasiliy Khoruzhick <vasilykh@arista.com>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20190724170249.9644-1-dima@arista.com>
- <2964b430-63d6-e172-84e2-cb269cf43443@i-love.sakura.ne.jp>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <aa151251-d271-1e65-1cae-0d9da9764d56@arista.com>
-Date:   Thu, 25 Jul 2019 15:25:57 +0100
+        Thu, 25 Jul 2019 10:26:04 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d39bbf90000>; Thu, 25 Jul 2019 07:26:01 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 25 Jul 2019 07:26:03 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 25 Jul 2019 07:26:03 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 25 Jul
+ 2019 14:26:00 +0000
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <cover.1562149883.git.joabreu@synopsys.com>
+ <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+ <7a79be5d-7ba2-c457-36d3-1ccef6572181@nvidia.com>
+ <BYAPR12MB3269927AB1F67D46E150ED6BD3C10@BYAPR12MB3269.namprd12.prod.outlook.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <9e695f33-fd9f-a910-0891-2b63bd75e082@nvidia.com>
+Date:   Thu, 25 Jul 2019 15:25:59 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <2964b430-63d6-e172-84e2-cb269cf43443@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <BYAPR12MB3269927AB1F67D46E150ED6BD3C10@BYAPR12MB3269.namprd12.prod.outlook.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CLOUD-SEC-AV-Info: arista,google_mail,monitor
-X-CLOUD-SEC-AV-Sent: true
-X-Gm-Spam: 0
-X-Gm-Phishy: 0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564064761; bh=02CCi2dURDoTdTOLsKxT1oBFwomdLIlg5QDDNMYzFOQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=DXknfBB+azI5uGhCeC7AuX2u46+p182Ai+AfpMw9eJdl5incUApMGK/H63FgwohOJ
+         mOUAzFzHdP350C1HF/3gtjxX6c4geXco8PF/HfsaqzEnI3ih2794mUrwW23auOUuBm
+         5Cewh8XPlfrMPZKmCLvmdyHzCaS5yFP/F5d4E308ASTgwXIzMgkBqjvo6UPmBlqnm9
+         8YnIa+OSuqAaHE0uF91Zcqy5z+cyNUlRrRlJlNBPS0ugoFzxjmt0bYkSg7rqwLe2BF
+         EtyjQS7ifAkRCJUhEvLf8SqNxDh3xXejjKZIm4RSNdwGaxWAexRTeKGxaGfdvlEqWF
+         Atza3kh8wxz2g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/25/19 11:38 AM, Tetsuo Handa wrote:
-> On 2019/07/25 2:02, Dmitry Safonov wrote:
->> Hung task detector has one timeout and has two associated actions on it:
->> - issuing warnings with names and stacks of blocked tasks
->> - panic()
->>
->> We want switches to panic (and reboot) if there's a task
->> in uninterruptible sleep for some minutes - at that moment something
->> ugly has happened and the box needs a reboot.
->> But we also want to detect conditions that are "out of range"
->> or approaching the point of failure. Under such conditions we want
->> to issue an "early warning" of an impending failure, minutes before
->> the switch is going to panic.
+
+On 25/07/2019 14:26, Jose Abreu wrote:
+
+...
+
+> Well, I wasn't expecting that :/
 > 
-> Can't we do it by extending sysctl_hung_task_panic to accept values larger
-> than 1, and decrease by one when at least one thread was reported by each
-> check_hung_uninterruptible_tasks() check, and call panic() when
-> sysctl_hung_task_panic reached to 0 (or maybe 1 is simpler) ?
+> Per documentation of barriers I think we should set descriptor fields 
+> and then barrier and finally ownership to HW so that remaining fields 
+> are coherent before owner is set.
 > 
-> Hmm, might have the same problem regarding how/when to reset the counter.
-> If some userspace process can reset the counter, such process can trigger
-> SysRq-c when some period expired...
+> Anyway, can you also add a dma_rmb() after the call to 
+> stmmac_rx_status() ?
 
-Yes, also current distributions already using the counter to print
-warnings number of times and then silently ignore. I.e., on my Arch
-Linux setup:
-hung_task_warnings:10
+Yes. I removed the debug print added the barrier, but that did not help.
 
->> It seems rather easy to add printing tasks and their stacks for
->> notification and debugging purposes into hung task detector without
->> complicating the code or major cost (prints are with KERN_INFO loglevel
->> and so don't go on console, only into dmesg log).
-> 
-> Well, I don't think so. Might be noisy for systems without "quiet" kernel
-> command line option, and we can't pass KERN_DEBUG to e.g. sched_show_task()...
+Jon
 
-Yes, that's why it's disabled by default (=0).
-I tend to agree that printing with KERN_DEBUG may be better, but in my
-point of view the patch isn't enough justification for patching
-sched_show_task() and show_stack().
-
-Thanks,
-          Dmitry
+-- 
+nvpublic
