@@ -2,203 +2,194 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D9DC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CDEC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD1522C7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E431A22C7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:40:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pClRb23D"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MZkP95bV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389658AbfGYNkC (ORCPT
+        id S2389934AbfGYNkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:40:02 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:46789 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389523AbfGYNkB (ORCPT
+        Thu, 25 Jul 2019 09:40:23 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:40977 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389689AbfGYNkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:40:01 -0400
-Received: by mail-yw1-f68.google.com with SMTP id z197so19242339ywd.13
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:40:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9lpEIpCXHFfNmFCZkOjPjl+kYtFsIolKVOJaYVjNOcQ=;
-        b=pClRb23DEELadcP2hvlaLTNBN9yBrISbS5y+2Sy58VGj4Na8t28OTw/3TBQxSeKiGa
-         ya/pMORmmEz8ivB9+l0x9g+WjZdQpqbyWpPuVjw78499uHVw+bJFxkYRu0MRjvQxcoqG
-         ttIEHjWh5R85T1aAoaUjRzo236BGJ9Gl2NMSilykUIVINmhDuhX8oCAhtlfWhLYzsI6c
-         f6g43kIRS45FZ/q9owmTbNtyaBVbijlHYeSrZRY+MaHzS9r8LMV6QPc/F6pud16pN7gH
-         O03xcv5jrziakvliPeRdtuDU0qkVKSERW+WK0HBkkPxeJQbNlVTC+lyZg+RegmnXrEqV
-         BO+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9lpEIpCXHFfNmFCZkOjPjl+kYtFsIolKVOJaYVjNOcQ=;
-        b=M1rXHSB2+yX7Qj8gFqK1KqdMdDme020fINwgRgVxu9AwbffT7fHsFR1JQkjNRqpt8H
-         wOWo9LMQ3LvH63uju44EE0dJ2o7fSuRxeMMSV/W5nPxJExug7ni9jMdgrFI3lVMJTxdx
-         D7DfSaw8OqMBWxycjnLLbpCKvmTk9cp6mX/beXPM80lnugZDyo/EiSi1eMLNLwsw53Gp
-         4MJOVdHTZjIqynTf3L2ZFxF5CYuibT3beprFWZ4/oHRYVNGN4KMQ2AELCKhVJpWdLBXy
-         p/y71OQzhPq21GVFZ4J3baW+iSbN+QHdHHh77oNiHypoHVqjdzGl6Vm8qqIqsZ5kN72r
-         mYRA==
-X-Gm-Message-State: APjAAAWAdgvV1so4oH+BPxPNcMqhVUFRpMN+vMN+NLmKKF0lCBwoKWFP
-        C/T/brgJM2/hvyEx1YrSmR/8mYu0EfNoT3PSI8rqJw==
-X-Google-Smtp-Source: APXvYqwd3ANdyuU4S5oyUK8fV7stI4swqyK5QqzOFTOJPMGNzaeJPgrXe08Y8mGViXoInWrGAq7qVh1nEqKY+yR2k2U=
-X-Received: by 2002:a81:30c9:: with SMTP id w192mr52641306yww.371.1564062000403;
- Thu, 25 Jul 2019 06:40:00 -0700 (PDT)
+        Thu, 25 Jul 2019 09:40:23 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PDeBcg1023420
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 06:40:11 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PDeBcg1023420
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564062012;
+        bh=KdTvdtUJ2xYBbvljl4zkGCXlTd5kdOrVeeYsketxu40=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=MZkP95bVDuH9UGrNovlwlDjhVxr4YBsd80hCfadqI5JwV9T6TC7hZW95fUApTo4Dy
+         U5gkesjyh/1reWOi+7LYxRI2I77IIxKh+6HboEfRqyTAv8DnkkuuxyL/aTUB/Zk1GY
+         35t34zSBQMwGTBL6MgkOL1oLbnYYhVVbderaspSF6Ulm0SplWBGNCneiKzagBXYHSI
+         ZK+oGJVhJBi3kedhyHBVA2MB36bePA3pD1AR8qsLTZO6/oe2Su/oDGIKJrjR8Psglj
+         5veS2N46A7JOePPXFZ8EWvAMNybYaKWtHqVksRFyEfK6G0M8oiqE7ZZTurngDEp/2m
+         93DXJxgV2ONdg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PDeAYM1023417;
+        Thu, 25 Jul 2019 06:40:10 -0700
+Date:   Thu, 25 Jul 2019 06:40:10 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Grzegorz Halat <tipbot@zytor.com>
+Message-ID: <tip-d92e35b76cfcafc31987a2aa186a8e8b4ee84f52@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, hpa@zytor.com,
+        ghalat@redhat.com, dzickus@redhat.com, mingo@kernel.org
+Reply-To: tglx@linutronix.de, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, hpa@zytor.com, dzickus@redhat.com,
+          ghalat@redhat.com
+In-Reply-To: <20190628122813.15500-1-ghalat@redhat.com>
+References: <20190628122813.15500-1-ghalat@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/core] x86/reboot: Always use NMI fallback when shutdown
+ via reboot vector IPI fails
+Git-Commit-ID: d92e35b76cfcafc31987a2aa186a8e8b4ee84f52
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <1564043102-25298-1-git-send-email-rtresidd@electromag.com.au>
-In-Reply-To: <1564043102-25298-1-git-send-email-rtresidd@electromag.com.au>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Thu, 25 Jul 2019 06:39:48 -0700
-Message-ID: <CABXOdTdz=+P-HXaUbGAuLBjNE1GA0C8o4OPmF996DOrXxkQJAg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] power/supply/sbs-battery: Fix confusing battery
- status when idle or empty
-To:     Richard Tresidder <rtresidd@electromag.com.au>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Nick Crews <ncrews@chromium.org>, andrew.smirnov@gmail.com,
-        Guenter Roeck <groeck@chromium.org>, david@lechnology.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rfontana@redhat.com, allison@lohutok.net, baolin.wang@linaro.org,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 1:25 AM Richard Tresidder
-<rtresidd@electromag.com.au> wrote:
->
-> When a battery or batteries in a system are in parallel then one or more
-> may not be providing any current to the system.
-> This fixes an incorrect
-> status indication of FULL for the battery simply because it wasn't
-> discharging at that point in time.
-> The battery will now be flagged as IDLE.
-> Have also added the additional check for the battery FULL DISCHARGED flag
-> which will now flag a status of EMPTY.
->
-> Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
-> ---
->
-> Notes:
->     power/supply/sbs-battery: Fix confusing battery status when idle or empty
->
->     When a battery or batteries in a system are in parallel then one or more
->     may not be providing any current to the system.
->     This fixes an incorrect
->     status indication of FULL for the battery simply because it wasn't
->     discharging at that point in time.
->     The battery will now be flagged as IDLE.
->     Have also added the additional check for the battery FULL DISCHARGED flag
->     which will now flag a status of EMPTY.
->
->  drivers/power/supply/power_supply_sysfs.c |  3 ++-
->  drivers/power/supply/sbs-battery.c        | 28 ++++++++++++++--------------
->  include/linux/power_supply.h              |  2 ++
->  3 files changed, 18 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-> index ce6671c..68ec49d 100644
-> --- a/drivers/power/supply/power_supply_sysfs.c
-> +++ b/drivers/power/supply/power_supply_sysfs.c
-> @@ -51,7 +51,8 @@
->  };
->
->  static const char * const power_supply_status_text[] = {
-> -       "Unknown", "Charging", "Discharging", "Not charging", "Full"
-> +       "Unknown", "Charging", "Discharging", "Not charging", "Full",
-> +       "Empty", "Idle"
->  };
->
->  static const char * const power_supply_charge_type_text[] = {
-> diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
-> index ea8ba3e..e6c636c 100644
-> --- a/drivers/power/supply/sbs-battery.c
-> +++ b/drivers/power/supply/sbs-battery.c
-> @@ -294,14 +294,10 @@ static int sbs_status_correct(struct i2c_client *client, int *intval)
->
->         ret = (s16)ret;
->
-> -       /* Not drawing current means full (cannot be not charging) */
-> -       if (ret == 0)
-> -               *intval = POWER_SUPPLY_STATUS_FULL;
-> -
-> -       if (*intval == POWER_SUPPLY_STATUS_FULL) {
-> -               /* Drawing or providing current when full */
-> -               if (ret > 0)
-> -                       *intval = POWER_SUPPLY_STATUS_CHARGING;
-> +       if (*intval == POWER_SUPPLY_STATUS_DISCHARGING) {
-> +               /* Charging indicator not set in battery */
-> +               if (ret == 0)
-> +                       *intval = POWER_SUPPLY_STATUS_IDLE;
+Commit-ID:  d92e35b76cfcafc31987a2aa186a8e8b4ee84f52
+Gitweb:     https://git.kernel.org/tip/d92e35b76cfcafc31987a2aa186a8e8b4ee84f52
+Author:     Grzegorz Halat <ghalat@redhat.com>
+AuthorDate: Fri, 28 Jun 2019 14:28:13 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 25 Jul 2019 15:35:08 +0200
 
-But doesn't the above already indicate that it _is_ discharging ?
+x86/reboot: Always use NMI fallback when shutdown via reboot vector IPI fails
 
->                 else if (ret < 0)
->                         *intval = POWER_SUPPLY_STATUS_DISCHARGING;
+A reboot request sends an IPI via the reboot vector and waits for all other
+CPUs to stop. If one or more CPUs are in critical regions with interrupts
+disabled then the IPI is not handled on those CPUs and the shutdown hangs
+if native_stop_other_cpus() is called with the wait argument set.
 
-This doesn't make sense. *intval is already set to
-POWER_SUPPLY_STATUS_DISCHARGING
-in this situation.
+Such a situation can happen when one CPU was stopped within a lock held
+section and another CPU is trying to acquire that lock with interrupts
+disabled. There are other scenarios which can cause such a lockup as well.
 
->         }
-> @@ -424,10 +420,12 @@ static int sbs_get_battery_property(struct i2c_client *client,
->
->                 if (ret & BATTERY_FULL_CHARGED)
->                         val->intval = POWER_SUPPLY_STATUS_FULL;
-> -               else if (ret & BATTERY_DISCHARGING)
-> -                       val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
-> -               else
-> +               else if (ret & BATTERY_FULL_DISCHARGED)
-> +                       val->intval = POWER_SUPPLY_STATUS_EMPTY;
-> +               else if (!(ret & BATTERY_DISCHARGING))
->                         val->intval = POWER_SUPPLY_STATUS_CHARGING;
-> +               else
-> +                       val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
->
->                 sbs_status_correct(client, &val->intval);
->
-> @@ -781,10 +779,12 @@ static void sbs_delayed_work(struct work_struct *work)
->
->         if (ret & BATTERY_FULL_CHARGED)
->                 ret = POWER_SUPPLY_STATUS_FULL;
-> -       else if (ret & BATTERY_DISCHARGING)
-> -               ret = POWER_SUPPLY_STATUS_DISCHARGING;
-> -       else
-> +       else if (ret & BATTERY_FULL_DISCHARGED)
-> +               ret = POWER_SUPPLY_STATUS_EMPTY;
-> +       else if (!(ret & BATTERY_DISCHARGING))
->                 ret = POWER_SUPPLY_STATUS_CHARGING;
-> +       else
-> +               ret = POWER_SUPPLY_STATUS_DISCHARGING;
->
->         sbs_status_correct(chip->client, &ret);
->
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index 28413f7..c9f3347 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -37,6 +37,8 @@ enum {
->         POWER_SUPPLY_STATUS_DISCHARGING,
->         POWER_SUPPLY_STATUS_NOT_CHARGING,
->         POWER_SUPPLY_STATUS_FULL,
-> +       POWER_SUPPLY_STATUS_EMPTY,
-> +       POWER_SUPPLY_STATUS_IDLE,
->  };
->
->  /* What algorithm is the charger using? */
-> --
-> 1.8.3.1
->
+In theory the shutdown should be attempted by an NMI IPI after the timeout
+period elapsed. Though the wait loop after sending the reboot vector IPI
+prevents this. It checks the wait request argument and the timeout. If wait
+is set, which is true for sys_reboot() then it won't fall through to the
+NMI shutdown method after the timeout period has finished.
+
+This was an oversight when the NMI shutdown mechanism was added to handle
+the 'reboot IPI is not working' situation. The mechanism was added to deal
+with stuck panic shutdowns, which do not have the wait request set, so the
+'wait request' case was probably not considered.
+
+Remove the wait check from the post reboot vector IPI wait loop and enforce
+that the wait loop in the NMI fallback path is invoked even if NMI IPIs are
+disabled or the registration of the NMI handler fails. That second wait
+loop will then hang if not all CPUs shutdown and the wait argument is set.
+
+[ tglx: Avoid the hard to parse line break in the NMI fallback path,
+  	add comments and massage the changelog ]
+
+Fixes: 7d007d21e539 ("x86/reboot: Use NMI to assist in shutting down if IRQ fails")
+Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Don Zickus <dzickus@redhat.com>
+Link: https://lkml.kernel.org/r/20190628122813.15500-1-ghalat@redhat.com
+---
+ arch/x86/kernel/smp.c | 46 +++++++++++++++++++++++++++-------------------
+ 1 file changed, 27 insertions(+), 19 deletions(-)
+
+diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+index 96421f97e75c..231fa230ebc7 100644
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -179,6 +179,12 @@ asmlinkage __visible void smp_reboot_interrupt(void)
+ 	irq_exit();
+ }
+ 
++static int register_stop_handler(void)
++{
++	return register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
++				    NMI_FLAG_FIRST, "smp_stop");
++}
++
+ static void native_stop_other_cpus(int wait)
+ {
+ 	unsigned long flags;
+@@ -212,39 +218,41 @@ static void native_stop_other_cpus(int wait)
+ 		apic->send_IPI_allbutself(REBOOT_VECTOR);
+ 
+ 		/*
+-		 * Don't wait longer than a second if the caller
+-		 * didn't ask us to wait.
++		 * Don't wait longer than a second for IPI completion. The
++		 * wait request is not checked here because that would
++		 * prevent an NMI shutdown attempt in case that not all
++		 * CPUs reach shutdown state.
+ 		 */
+ 		timeout = USEC_PER_SEC;
+-		while (num_online_cpus() > 1 && (wait || timeout--))
++		while (num_online_cpus() > 1 && timeout--)
+ 			udelay(1);
+ 	}
+-	
+-	/* if the REBOOT_VECTOR didn't work, try with the NMI */
+-	if ((num_online_cpus() > 1) && (!smp_no_nmi_ipi))  {
+-		if (register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
+-					 NMI_FLAG_FIRST, "smp_stop"))
+-			/* Note: we ignore failures here */
+-			/* Hope the REBOOT_IRQ is good enough */
+-			goto finish;
+-
+-		/* sync above data before sending IRQ */
+-		wmb();
+ 
+-		pr_emerg("Shutting down cpus with NMI\n");
++	/* if the REBOOT_VECTOR didn't work, try with the NMI */
++	if (num_online_cpus() > 1) {
++		/*
++		 * If NMI IPI is enabled, try to register the stop handler
++		 * and send the IPI. In any case try to wait for the other
++		 * CPUs to stop.
++		 */
++		if (!smp_no_nmi_ipi && !register_stop_handler()) {
++			/* Sync above data before sending IRQ */
++			wmb();
+ 
+-		apic->send_IPI_allbutself(NMI_VECTOR);
++			pr_emerg("Shutting down cpus with NMI\n");
+ 
++			apic->send_IPI_allbutself(NMI_VECTOR);
++		}
+ 		/*
+-		 * Don't wait longer than a 10 ms if the caller
+-		 * didn't ask us to wait.
++		 * Don't wait longer than 10 ms if the caller didn't
++		 * reqeust it. If wait is true, the machine hangs here if
++		 * one or more CPUs do not reach shutdown state.
+ 		 */
+ 		timeout = USEC_PER_MSEC * 10;
+ 		while (num_online_cpus() > 1 && (wait || timeout--))
+ 			udelay(1);
+ 	}
+ 
+-finish:
+ 	local_irq_save(flags);
+ 	disable_local_APIC();
+ 	mcheck_cpu_clear(this_cpu_ptr(&cpu_info));
