@@ -2,94 +2,173 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE46C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF59C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F24A229F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC14D229F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:11:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MG1GENW/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390004AbfGYQKm (ORCPT
+        id S2390020AbfGYQLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:10:42 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34012 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729230AbfGYQKl (ORCPT
+        Thu, 25 Jul 2019 12:11:12 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:41351 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfGYQLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:10:41 -0400
-Received: by mail-wm1-f66.google.com with SMTP id w9so36103536wmd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 09:10:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QB8+Ez/D+PUFOQMAsouYXbDd4SjR4KTjj5x3oemn60c=;
-        b=FECzAtRDzeNdLMAut9J5MQ31lnu1WosCk8hmannAGcoBU8ICdBfGN+YDMT/sFZ7P+G
-         cavMbw5V5QAhTbyPAOiwalP8QmJ2zMDQeoDBnAuTtqzOtiuVZkfwXHb583MZG6AT9050
-         awmZO2vjNWXwXGAD7fjC0cw16OhPp9yG1rsYHdDWpPQW6OQxSd61OYqSrsrfpwjW9Qbv
-         cPPpvyk/ZliW4lPsVhBfwJuc+QXg7BnkgibbaqP398KQGAA2i0nl0VQYM/RamhPlS46W
-         8T7VnhNsNmXxe5t3zkP679SerAz95OYjhKHmC8X5/hGtrIbVowaoFpLMvC6JXSGLQmeD
-         B29w==
-X-Gm-Message-State: APjAAAXe4xISl8Dpn7n59VSW43vwSO+6lFUKbKmqmyzyoA7foYN0vcRz
-        6UYSvwh4tgO30zCAJBUzUlc3tw==
-X-Google-Smtp-Source: APXvYqzyc7ld3a0F97/OP7eE5jfJEUGNelvR19s3aWv/8FskLdH/9ILHyDLMt0101HiQPsZeQBEqig==
-X-Received: by 2002:a7b:ce01:: with SMTP id m1mr239009wmc.1.1564071039566;
-        Thu, 25 Jul 2019 09:10:39 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:cc23:f353:392:d2ee? ([2001:b07:6468:f312:cc23:f353:392:d2ee])
-        by smtp.gmail.com with ESMTPSA id f17sm45546782wmf.27.2019.07.25.09.10.38
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 09:10:39 -0700 (PDT)
-Subject: Re: [PATCH 5.2 000/413] 5.2.3-stable review
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        wanpengli@tencent.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        patches@kernelci.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>, jmattson@google.com
-References: <20190724191735.096702571@linuxfoundation.org>
- <CADYN=9+WLxhmqX3JNL_s-kWSN97G=8WhD=TF=uAuKecJnKcj_Q@mail.gmail.com>
- <20190725113437.GA27429@kroah.com>
- <230a5b34-d23e-8318-0b1f-d23ada7318e0@redhat.com>
- <CA+G9fYsWdmboyquZ=Bs3tkTwRFTzd1yuL0_EVpHOecNi4E_stA@mail.gmail.com>
- <20190725160939.GC18612@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <33f1cfaa-525d-996a-4977-fda32dc368ee@redhat.com>
-Date:   Thu, 25 Jul 2019 18:10:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 12:11:12 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PGAr4p1074192
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 09:10:53 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PGAr4p1074192
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564071054;
+        bh=TIQnxAZHlGeqm52QqtxDCN8XXiFa0PibdmQGR0ZHeO8=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=MG1GENW/wQWDbb41fU9TBSNl93c0fC9VITB/qNIOKroCz8SCNZs1gtPQr7MvXgvLB
+         +IrKsI/v42rBJxmwTk3Bj81YsxutR4b3DiIQ6FNMPxjQJpKKS92+OHSZKWzN4qcgQ0
+         YsbQhMWlHvwGe42nqNyrTgeCOF5YT7imZoTqtswHIcrqE+X7F4FG3b91yiSUFo6WpP
+         OlSuf2oDmsH8W6d2NECrv+UZvySbI3n6l5UOKsXbtOd84C3rlfuA/qptRzqsQxQ3TL
+         davRTf9ZSrwP1Oi8xvGSC8bFrTk3ehFPQgoQUPp8RX5AcpckC6KsFxkh28cxuwnZmz
+         NaGQlkrANYCEg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PGArNM1074189;
+        Thu, 25 Jul 2019 09:10:53 -0700
+Date:   Thu, 25 Jul 2019 09:10:53 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Bart Van Assche <tipbot@zytor.com>
+Message-ID: <tip-8c779229d0f4fe83ead90bdcbbf08b02989aa200@git.kernel.org>
+Cc:     bvanassche@acm.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, will.deacon@arm.com,
+        torvalds@linux-foundation.org, peterz@infradead.org,
+        longman@redhat.com, hpa@zytor.com, mingo@kernel.org
+Reply-To: torvalds@linux-foundation.org, will.deacon@arm.com,
+          linux-kernel@vger.kernel.org, bvanassche@acm.org,
+          tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com,
+          longman@redhat.com, peterz@infradead.org
+In-Reply-To: <20190722182443.216015-5-bvanassche@acm.org>
+References: <20190722182443.216015-5-bvanassche@acm.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:locking/core] locking/lockdep: Report more stack trace
+ statistics
+Git-Commit-ID: 8c779229d0f4fe83ead90bdcbbf08b02989aa200
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190725160939.GC18612@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/07/19 18:09, Sean Christopherson wrote:
->> This investigation confirms it is a new test code failure on stable-rc 5.2.3
-> No, it only confirms that kvm-unit-tests/master fails on 5.2.*.  To confirm
-> a new failure in 5.2.3 you would need to show a test that passes on 5.2.2
-> and fails on 5.2.3.
+Commit-ID:  8c779229d0f4fe83ead90bdcbbf08b02989aa200
+Gitweb:     https://git.kernel.org/tip/8c779229d0f4fe83ead90bdcbbf08b02989aa200
+Author:     Bart Van Assche <bvanassche@acm.org>
+AuthorDate: Mon, 22 Jul 2019 11:24:43 -0700
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Thu, 25 Jul 2019 15:43:28 +0200
 
-I think he meant "a failure in new test code". :)
+locking/lockdep: Report more stack trace statistics
 
-Paolo
+Report the number of stack traces and the number of stack trace hash
+chains. These two numbers are useful because these allow to estimate
+the number of stack trace hash collisions.
 
-> As Paolo suspected, kvm-unit-tests/master fails on 5.2.* and passes if
-> commit 95d6d2c ("nVMX: Test Host Segment Registers and Descriptor Tables on
-> vmentry of nested guests") is reverted (from kvm-unit-tests).
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Link: https://lkml.kernel.org/r/20190722182443.216015-5-bvanassche@acm.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/locking/lockdep.c           | 29 +++++++++++++++++++++++++++++
+ kernel/locking/lockdep_internals.h |  4 ++++
+ kernel/locking/lockdep_proc.c      |  6 ++++++
+ 3 files changed, 39 insertions(+)
+
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 1a96869cb2f0..3c3902c40a0e 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -516,6 +516,35 @@ static struct lock_trace *save_trace(void)
+ 
+ 	return trace;
+ }
++
++/* Return the number of stack traces in the stack_trace[] array. */
++u64 lockdep_stack_trace_count(void)
++{
++	struct lock_trace *trace;
++	u64 c = 0;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(stack_trace_hash); i++) {
++		hlist_for_each_entry(trace, &stack_trace_hash[i], hash_entry) {
++			c++;
++		}
++	}
++
++	return c;
++}
++
++/* Return the number of stack hash chains that have at least one stack trace. */
++u64 lockdep_stack_hash_count(void)
++{
++	u64 c = 0;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(stack_trace_hash); i++)
++		if (!hlist_empty(&stack_trace_hash[i]))
++			c++;
++
++	return c;
++}
+ #endif
+ 
+ unsigned int nr_hardirq_chains;
+diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
+index 93a008bf77db..18d85aebbb57 100644
+--- a/kernel/locking/lockdep_internals.h
++++ b/kernel/locking/lockdep_internals.h
+@@ -140,6 +140,10 @@ extern unsigned int max_bfs_queue_depth;
+ #ifdef CONFIG_PROVE_LOCKING
+ extern unsigned long lockdep_count_forward_deps(struct lock_class *);
+ extern unsigned long lockdep_count_backward_deps(struct lock_class *);
++#ifdef CONFIG_TRACE_IRQFLAGS
++u64 lockdep_stack_trace_count(void);
++u64 lockdep_stack_hash_count(void);
++#endif
+ #else
+ static inline unsigned long
+ lockdep_count_forward_deps(struct lock_class *class)
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index ed9842425cac..dadb7b7fba37 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -285,6 +285,12 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ 			nr_process_chains);
+ 	seq_printf(m, " stack-trace entries:           %11lu [max: %lu]\n",
+ 			nr_stack_trace_entries, MAX_STACK_TRACE_ENTRIES);
++#if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
++	seq_printf(m, " number of stack traces:        %llu\n",
++		   lockdep_stack_trace_count());
++	seq_printf(m, " number of stack hash chains:   %llu\n",
++		   lockdep_stack_hash_count());
++#endif
+ 	seq_printf(m, " combined max dependencies:     %11u\n",
+ 			(nr_hardirq_chains + 1) *
+ 			(nr_softirq_chains + 1) *
