@@ -2,121 +2,83 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B825EC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A412C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 885592190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:23:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UWpYFZCq"
+	by mail.kernel.org (Postfix) with ESMTP id 77C9922387
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:23:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389053AbfGYCXt (ORCPT
+        id S2389079AbfGYCX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 22:23:49 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35874 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389026AbfGYCXs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 22:23:48 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r7so21891252pfl.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 19:23:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=f2gYhr2xF9eqfzuK1I6ByZW/6E+IIFIf49moUqSig44=;
-        b=UWpYFZCqApaDNfrjdA5KtekES5UJ5GTU1kmcTFDFb2FLfRCDcNFDgvronSImr9dgD9
-         0mFTlZI7X35xO1vEdd3Gki5LIf98gKG5QhKxb/Y4+VDIDhfB1gwWeVXBqiLEyWL2EkgW
-         NT11Oz6vHpCvPOjC1YKTKmUoFKun/2NxPqpp1JkpL65nRxlStWUN4lRLXspUzJnsSUs7
-         f0W+td0YgaR8ANRf2sKNe+yfU85x4p815cUUDhoDA7GMXy2XLaBS0z1jQB9wcs/VHaCv
-         7pV5B+RTx3CuZ/R9xi/w3tBHDvXglw6aX/anI5anp/fOKcEQncy2ECQwLBNYPNc9rUd9
-         Z5QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f2gYhr2xF9eqfzuK1I6ByZW/6E+IIFIf49moUqSig44=;
-        b=QTHntieSIjKyOX6CG9Kxp6iry+E3vWJkY6WJZT0ULy/pk790br2pZELUcmdmhmtGd6
-         zwUEca4YeI6AWQbx+i3bQgG91a9gfIhnL9mLN5KzeA1dLgXvk+dJG0Y8Y2wZ+8iS8eXw
-         bgeYaCYdI4a2A48nbaBgktsySw+Q5qi4LpGqF/vnZUhEhdB13svX0H2EHchLbgdng79I
-         NUn1G3V7q/5Eu6E9UxM9Bl/2B/9srde2dEUZ0xfwEXLt1crJscLQ+9/9LGSLpI8O9e9s
-         8XRUfhJG6zd9M9HzsPVADk2yeVGKZzixv6b0ldm8ZZS8Dwzoryks+OR6kiGLprZr/rdY
-         JwLQ==
-X-Gm-Message-State: APjAAAXhl9/ffPklI1iUFIjoU0OeT6dQja28/03NVwHrp2tG47avQcSP
-        mzN0PcgtRYYFiME5s8v/bVrJ6Q==
-X-Google-Smtp-Source: APXvYqzXNlrdXx1C+X0/1qZx+FxwGsBmRDCWeiwCURuT22GPdQ5YuJbOB5TOiPQUDU7gUhGBG6bBRQ==
-X-Received: by 2002:a62:750c:: with SMTP id q12mr14690753pfc.59.1564021427936;
-        Wed, 24 Jul 2019 19:23:47 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id k25sm37963077pgt.53.2019.07.24.19.23.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 19:23:46 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 07:53:43 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>, krzk@kernel.org,
-        robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
-        kgene@kernel.org, pankaj.dubey@samsung.com,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
-Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
-Message-ID: <20190725022343.p7lqalrh5svxvtu2@vireshk-i7>
-References: <CGME20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1@eucas1p1.samsung.com>
- <20190718143044.25066-1-s.nawrocki@samsung.com>
- <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
- <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
+        Wed, 24 Jul 2019 22:23:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388629AbfGYCX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 22:23:57 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A2832190F;
+        Thu, 25 Jul 2019 02:23:56 +0000 (UTC)
+Date:   Wed, 24 Jul 2019 22:23:54 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Matthew Garrett <mjg59@google.com>
+Subject: Re: [PATCH V36 27/29] tracefs: Restrict tracefs when the kernel is
+ locked down
+Message-ID: <20190724222354.7cbd6c6e@oasis.local.home>
+In-Reply-To: <20190718194415.108476-28-matthewgarrett@google.com>
+References: <20190718194415.108476-1-matthewgarrett@google.com>
+        <20190718194415.108476-28-matthewgarrett@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-07-19, 15:10, Marek Szyprowski wrote:
-> Hi Viresh,
-> 
-> On 2019-07-23 04:04, Viresh Kumar wrote:
-> > On 18-07-19, 16:30, Sylwester Nawrocki wrote:
-> >> This is second iteration of patch series adding ASV (Adaptive Supply
-> >> Voltage) support for Exynos SoCs. The first one can be found at:
-> >> https://lore.kernel.org/lkml/20190404171735.12815-1-s.nawrocki@samsung.com
-> >>
-> >> The main changes comparing to the first (RFC) version are:
-> >>   - moving ASV data tables from DT to the driver,
-> >>   - converting the chipid and the ASV drivers to use regmap,
-> >>   - converting the ASV driver to proper platform driver.
-> >>
-> >> I tried the opp-supported-hw bitmask approach as in the Qualcomm CPUFreq
-> >> DT bindings but it resulted in too many OPPs and DT nodes, around 200
-> >> per CPU cluster. So the ASV OPP tables are now in the ASV driver, as in
-> >> downstream kernels.
-> > Hmm. Can you explain why do you have so many OPPs? How many
-> > frequencies do you actually support per cluster and what all varies
-> > per frequency based on hw ? How many hw version do u have ?
-> 
-> For big cores there are 20 frequencies (2100MHz .. 200MHz). Each SoC 
-> might belong to one of the 3 production 'sets' and each set contains 14 
-> so called 'asv groups', which assign the certain voltage values for each 
-> of those 20 frequencies (the lower asv group means lower voltage needed 
-> for given frequency).
+On Thu, 18 Jul 2019 12:44:13 -0700
+Matthew Garrett <matthewgarrett@google.com> wrote:
 
-There is another property which might be useful in this case:
-"opp-microvolt-<name>" and then you can use API
-dev_pm_opp_set_prop_name() to choose which voltage value to apply to
-all OPPs.
+> @@ -387,6 +412,7 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+>  				   struct dentry *parent, void *data,
+>  				   const struct file_operations *fops)
+>  {
+> +	struct file_operations *proxy_fops;
+>  	struct dentry *dentry;
+>  	struct inode *inode;
+>  
+> @@ -402,8 +428,18 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+>  	if (unlikely(!inode))
+>  		return failed_creating(dentry);
+>  
+> +	proxy_fops = kzalloc(sizeof(struct file_operations), GFP_KERNEL);
+> +	if (!proxy_fops)
 
-opp-supported-hw property is more useful for the cases where only a
-subset of frequencies will be supported for different versions of the
-SoC. And what you need is a different voltage value for all
-frequencies based on some h/w version.
+I believe we need "iput(inode);" here. Or move the allocation before
+the inode allocation and free it on inode failure.
 
--- 
-viresh
+-- Steve
+
+> +		return failed_creating(dentry);
+> +
+> +	if (!fops)
+> +		fops = &tracefs_file_operations;
+> +
+> +	dentry->d_fsdata = (void *)fops;
+> +	memcpy(proxy_fops, fops, sizeof(*proxy_fops));
+> +	proxy_fops->open = default_open_file;
+>  	inode->i_mode = mode;
+> -	inode->i_fop = fops ? fops : &tracefs_file_operations;
+> +	inode->i_fop = proxy_fops;
+>  	inode->i_private = data;
+>  	d_instantiate(dentry, inode);
+>  	fsnotify_create(dentry->d_parent->d_inode, dentry);
