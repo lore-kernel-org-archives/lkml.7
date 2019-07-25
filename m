@@ -2,121 +2,89 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3899C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89919C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8C62190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB0B22C7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:47:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564048076;
+	bh=MhJw4d4ewEjprJObjjCY8FP2AVv98yCru+fqqnG/PHY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FuPSi3Xbu8J+RbO8X5fphcHPo2eyHro0GrgFEIWemA+rZ8wDmx6CjhxFHFcYY8r/v
+	 0PRJIWUpMC9Vvj1F8rMMc16sMuoVLPbG0Od6h40DzkEaVsRB2Fh3QMew/tlBeh9HyV
+	 fcIyYXgBL7nyxEBHPY8eGp3KpHKhlNyI9opgj30M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390800AbfGYJqG (ORCPT
+        id S1728578AbfGYJrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 05:46:06 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:46217 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729162AbfGYJqC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 05:46:02 -0400
-X-Originating-IP: 92.137.69.152
-Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id ED6D040006;
-        Thu, 25 Jul 2019 09:45:58 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH 3/3] regulator: twl6030: workaround the VMMC reset behavior
-Date:   Thu, 25 Jul 2019 11:45:42 +0200
-Message-Id: <20190725094542.16547-4-gregory.clement@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190725094542.16547-1-gregory.clement@bootlin.com>
-References: <20190725094542.16547-1-gregory.clement@bootlin.com>
+        Thu, 25 Jul 2019 05:47:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725808AbfGYJry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 05:47:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AB9A2190F;
+        Thu, 25 Jul 2019 09:47:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564048073;
+        bh=MhJw4d4ewEjprJObjjCY8FP2AVv98yCru+fqqnG/PHY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t6o12Ytv1Exhs1I28zrnl74wKI6nj20dIk4ddtdSkBZj82Q3hbBIzpXiEN2p9hcr8
+         4Lf6Kc3PtesJ7+rw9u0xR8M+zkG9aE6KRJv2iGAfKtndAT+rrAHXAc7x5xJaJpDqPO
+         taGI+2++x+7/eT/mcJJohNw9CUWwtKkrpgqf4mr8=
+Date:   Thu, 25 Jul 2019 11:47:51 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Changqi Hu <changqi.hu@mediatek.com>
+Cc:     Jiri Slaby <jslaby@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Peter Shih <pihsun@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v3] serial: 8250-mtk: modify mtk uart power and clock
+ management
+Message-ID: <20190725094751.GB31845@kroah.com>
+References: <1563505182-2408-1-git-send-email-changqi.hu@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1563505182-2408-1-git-send-email-changqi.hu@mediatek.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During reset the VMMC regulator doesn't reach 0V and only drops to
-1.8V, furthermore the pulse width is under 200us whereas the SD
-specification expect 1ms.
+On Fri, Jul 19, 2019 at 10:59:42AM +0800, Changqi Hu wrote:
+> modify mtk uart runtime interface, add uart clock use count.
+> merge patch v1 and patch v2 together.
+> 
+> Signed-off-by: Changqi Hu <changqi.hu@mediatek.com>
+> ---
+>  drivers/tty/serial/8250/8250_mtk.c | 50 ++++++++++++++++++++++++--------------
+>  1 file changed, 32 insertions(+), 18 deletions(-)
 
-The WR_S bit allows the TWL6030 to no reset at all the VMMC during warm
-reset and keep the current voltage. Thanks to this workaround the SD
-card doesn't reach a undefined reset stage.
+Always describe what changed from the previous versions in the area
+below the --- line.
 
-Actually this behavior is available for all the LDO regulator, so the
-driver will also allow to use it with any of these regulator.
+Also, your changelog needs a lot more work.  Please read the section
+entitled "The canonical patch format" in the kernel file,
+Documentation/SubmittingPatches for a description of how to do this.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
----
- drivers/regulator/twl6030-regulator.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+thanks,
 
-diff --git a/drivers/regulator/twl6030-regulator.c b/drivers/regulator/twl6030-regulator.c
-index d73c81542ceb..b8100c3cedad 100644
---- a/drivers/regulator/twl6030-regulator.c
-+++ b/drivers/regulator/twl6030-regulator.c
-@@ -57,6 +57,9 @@ struct twlreg_info {
- #define VREG_BC_PROC		3
- #define VREG_BC_CLK_RST		4
- 
-+/* TWL6030 LDO register values for VREG_VOLTAGE */
-+#define TWL6030_VREG_VOLTAGE_WR_S   BIT(7)
-+
- /* TWL6030 LDO register values for CFG_STATE */
- #define TWL6030_CFG_STATE_OFF	0x00
- #define TWL6030_CFG_STATE_ON	0x01
-@@ -68,9 +71,10 @@ struct twlreg_info {
- #define TWL6030_CFG_STATE_APP(v)	(((v) & TWL6030_CFG_STATE_APP_MASK) >>\
- 						TWL6030_CFG_STATE_APP_SHIFT)
- 
--/* Flags for SMPS Voltage reading */
-+/* Flags for SMPS Voltage reading and LDO reading*/
- #define SMPS_OFFSET_EN		BIT(0)
- #define SMPS_EXTENDED_EN	BIT(1)
-+#define TWL_6030_WARM_RESET	BIT(3)
- 
- /* twl6032 SMPS EPROM values */
- #define TWL6030_SMPS_OFFSET		0xB0
-@@ -250,6 +254,9 @@ twl6030ldo_set_voltage_sel(struct regulator_dev *rdev, unsigned selector)
- {
- 	struct twlreg_info	*info = rdev_get_drvdata(rdev);
- 
-+	if (info->flags & TWL_6030_WARM_RESET)
-+		selector |= TWL6030_VREG_VOLTAGE_WR_S;
-+
- 	return twlreg_write(info, TWL_MODULE_PM_RECEIVER, VREG_VOLTAGE,
- 			    selector);
- }
-@@ -259,6 +266,9 @@ static int twl6030ldo_get_voltage_sel(struct regulator_dev *rdev)
- 	struct twlreg_info	*info = rdev_get_drvdata(rdev);
- 	int vsel = twlreg_read(info, TWL_MODULE_PM_RECEIVER, VREG_VOLTAGE);
- 
-+	if (info->flags & TWL_6030_WARM_RESET)
-+		vsel &= ~TWL6030_VREG_VOLTAGE_WR_S;
-+
- 	return vsel;
- }
- 
-@@ -710,6 +720,9 @@ static int twlreg_probe(struct platform_device *pdev)
- 		break;
- 	}
- 
-+	if (of_get_property(np, "ti,retain-on-reset", NULL))
-+		info->flags |= TWL_6030_WARM_RESET;
-+
- 	config.dev = &pdev->dev;
- 	config.init_data = initdata;
- 	config.driver_data = info;
--- 
-2.20.1
+greg k-h's patch email bot
 
+thanks,
+
+greg k-h
