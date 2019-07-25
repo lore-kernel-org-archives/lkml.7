@@ -2,132 +2,124 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FC7C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FF6C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F27C22CBE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DA4A218D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388945AbfGYPEH convert rfc822-to-8bit (ORCPT
+        id S2388956AbfGYPFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 11:04:07 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:28455 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388312AbfGYPEG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 11:04:06 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-185-V1oKFtahOA2D_7DwL36tsA-1; Thu, 25 Jul 2019 16:04:03 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu,
- 25 Jul 2019 16:04:02 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 25 Jul 2019 16:04:02 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Qian Cai' <cai@lca.pw>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-CC:     "tobin@kernel.org" <tobin@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tj@kernel.org" <tj@kernel.org>,
-        "dchinner@redhat.com" <dchinner@redhat.com>,
-        "fengguang.wu@intel.com" <fengguang.wu@intel.com>,
-        "jack@suse.cz" <jack@suse.cz>, "axboe@kernel.dk" <axboe@kernel.dk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] writeback: fix -Wstringop-truncation warnings
-Thread-Topic: [PATCH v2] writeback: fix -Wstringop-truncation warnings
-Thread-Index: AQHVQva1OgqbodGKtUurRIlIY2xLmqbbbehQ
-Date:   Thu, 25 Jul 2019 15:04:02 +0000
-Message-ID: <4017a4af4b0e4b96a6d7ed66afe18120@AcuMS.aculab.com>
-References: <1564065511-13206-1-git-send-email-cai@lca.pw>
-In-Reply-To: <1564065511-13206-1-git-send-email-cai@lca.pw>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 25 Jul 2019 11:05:32 -0400
+Received: from mga14.intel.com ([192.55.52.115]:45598 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388312AbfGYPFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 11:05:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 08:05:30 -0700
+X-IronPort-AV: E=Sophos;i="5.64,307,1559545200"; 
+   d="scan'208";a="321690255"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 08:05:30 -0700
+Message-ID: <bc162a5eaa58ac074c8ad20cb23d579aa04d0f43.camel@linux.intel.com>
+Subject: Re: [PATCH v2 QEMU] virtio-balloon: Provide a interface for "bubble
+ hinting"
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com
+Date:   Thu, 25 Jul 2019 08:05:30 -0700
+In-Reply-To: <fed474fe-93f4-a9f6-2e01-75e8903edd81@redhat.com>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+         <20190724171050.7888.62199.stgit@localhost.localdomain>
+         <20190724173403-mutt-send-email-mst@kernel.org>
+         <ada4e7d932ebd436d00c46e8de699212e72fd989.camel@linux.intel.com>
+         <fed474fe-93f4-a9f6-2e01-75e8903edd81@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-X-MC-Unique: V1oKFtahOA2D_7DwL36tsA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai
-> Sent: 25 July 2019 15:39
-> 
-> There are many of those warnings.
-> 
-> In file included from ./arch/powerpc/include/asm/paca.h:15,
->                  from ./arch/powerpc/include/asm/current.h:13,
->                  from ./include/linux/thread_info.h:21,
->                  from ./include/asm-generic/preempt.h:5,
->                  from ./arch/powerpc/include/generated/asm/preempt.h:1,
->                  from ./include/linux/preempt.h:78,
->                  from ./include/linux/spinlock.h:51,
->                  from fs/fs-writeback.c:19:
-> In function 'strncpy',
->     inlined from 'perf_trace_writeback_page_template' at
-> ./include/trace/events/writeback.h:56:1:
-> ./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified
-> bound 32 equals destination size [-Wstringop-truncation]
->   return __builtin_strncpy(p, q, size);
->          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Fix it by using the new strscpy_pad() which was introduced in the
-> commit 458a3bf82df4 ("lib/string: Add strscpy_pad() function") and will
-> always be NUL-terminated instead of strncpy(). Also, changes strlcpy()
-> to use strscpy_pad() in this file for consistency.
-> 
-> Fixes: 455b2864686d ("writeback: Initial tracing support")
-> Fixes: 028c2dd184c0 ("writeback: Add tracing to balance_dirty_pages")
-> Fixes: e84d0a4f8e39 ("writeback: trace event writeback_queue_io")
-> Fixes: b48c104d2211 ("writeback: trace event bdi_dirty_ratelimit")
-> Fixes: cc1676d917f3 ("writeback: Move requeueing when I_SYNC set to writeback_sb_inodes()")
-> Fixes: 9fb0a7da0c52 ("writeback: add more tracepoints")
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
-> 
-> v2: Use strscpy_pad() to address the possible data leaking concern from Steve [1].
->     Replace strlcpy() as well for consistency.
-> 
-> [1] https://lore.kernel.org/lkml/20190716170339.1c44719d@gandalf.local.home/
-> 
->  include/trace/events/writeback.h | 39 +++++++++++++++++++++------------------
->  1 file changed, 21 insertions(+), 18 deletions(-)
-> 
-> diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
-> index aa7f3aeac740..41092d63a8de 100644
-> --- a/include/trace/events/writeback.h
-> +++ b/include/trace/events/writeback.h
-> @@ -66,8 +66,10 @@
->  	),
-> 
->  	TP_fast_assign(
-> -		strncpy(__entry->name,
-> -			mapping ? dev_name(inode_to_bdi(mapping->host)->dev) : "(unknown)", 32);
-> +		strscpy_pad(__entry->name,
-> +			    mapping ?
-> +			    dev_name(inode_to_bdi(mapping->host)->dev) :
-> +			    "(unknown)", 32);
+On Thu, 2019-07-25 at 07:35 -0400, Nitesh Narayan Lal wrote:
+> On 7/24/19 6:03 PM, Alexander Duyck wrote:
+> > On Wed, 2019-07-24 at 17:38 -0400, Michael S. Tsirkin wrote:
+> > > On Wed, Jul 24, 2019 at 10:12:10AM -0700, Alexander Duyck wrote:
+> > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > 
+> > > > Add support for what I am referring to as "bubble hinting". Basically the
+> > > > idea is to function very similar to how the balloon works in that we
+> > > > basically end up madvising the page as not being used. However we don't
+> > > > really need to bother with any deflate type logic since the page will be
+> > > > faulted back into the guest when it is read or written to.
+> > > > 
+> > > > This is meant to be a simplification of the existing balloon interface
+> > > > to use for providing hints to what memory needs to be freed. I am assuming
+> > > > this is safe to do as the deflate logic does not actually appear to do very
+> > > > much other than tracking what subpages have been released and which ones
+> > > > haven't.
+> > > > 
+> > > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > BTW I wonder about migration here.  When we migrate we lose all hints
+> > > right?  Well destination could be smarter, detect that page is full of
+> > > 0s and just map a zero page. Then we don't need a hint as such - but I
+> > > don't think it's done like that ATM.
+> > I was wondering about that a bit myself. If you migrate with a balloon
+> > active what currently happens with the pages in the balloon? Do you
+> > actually migrate them, or do you ignore them and just assume a zero page?
+> > I'm just reusing the ram_block_discard_range logic that was being used for
+> > the balloon inflation so I would assume the behavior would be the same.
+> I agree, however, I think it is worth investigating to see if enabling hinting
+> adds some sort of overhead specifically in this kind of scenarios. What do you
+> think?
 
-Shouldn't the 32 be 'sizeof (something)' ??
+I suspect that the hinting/reporting would probably improve migration
+times based on the fact that from the sound of things it would just be
+migrated as a zero page.
 
-Oh, and a horrid line break.
+I don't have a good setup for testing migration though and I am not that
+familiar with trying to do a live migration. That is one of the reasons
+why I didn't want to stray too far from the existing balloon code as that
+has already been tested with migration so I would assume as long as I am
+doing almost the exact same thing to hint the pages away it should behave
+exactly the same.
 
-	David
+> > > I also wonder about interaction with deflate.  ATM deflate will add
+> > > pages to the free list, then balloon will come right back and report
+> > > them as free.
+> > I don't know how likely it is that somebody who is getting the free page
+> > reporting is likely to want to also use the balloon to take up memory.
+> I think it is possible. There are two possibilities:
+> 1. User has a workload running, which is allocating and freeing the pages and at
+> the same time, user deflates.
+> If these new pages get used by this workload, we don't have to worry as you are
+> already handling that by not hinting the free pages immediately.
+> 2. Guest is idle and the user adds up some memory, for this situation what you
+> have explained below does seems reasonable.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Us hinting on pages that are freed up via deflate wouldn't be too big of a
+deal. I would think that is something we could look at addressing as more
+of a follow-on if we ever needed to since it would just add more
+complexity.
+
+Really what I would like to see is the balloon itself get updated first to
+perhaps work with variable sized pages first so that we could then have
+pages come directly out of the balloon and go back into the freelist as
+hinted, or visa-versa where hinted pages could be pulled directly into the
+balloon without needing to notify the host.
 
