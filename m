@@ -2,99 +2,207 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8F2C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52098C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 472DB22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C95D22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:33:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rSl543HC"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ICHURx0M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbfGYOdh (ORCPT
+        id S1728840AbfGYOdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:33:37 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48110 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728721AbfGYOdg (ORCPT
+        Thu, 25 Jul 2019 10:33:39 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39227 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728420AbfGYOdg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jul 2019 10:33:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FZTjzooOQfdeIEKO6c7B0Q4Q39gStipSBPssv7rm1tw=; b=rSl543HC94I1WsxY4q6FwLykM
-        uOt0SEphra34W1vaXTw3cZj8K11hmmQm3EOjFcHVE0km8+dsyHdZcfjUHJJkT3SESQd5HnU5Gv+Kb
-        EgF31ARnFL3BQj1MBaJN59M5cJsLEqt5UNo2ei0djAiRo9Njkz0V5WzY6AuoRvk8R7nhQLxIRRlfU
-        L2JZkVs3KlmswNFZsUwtSA2r6+Mqgo4+B9CWjJP+LN62CiR8dGT6wB7Z9ck5gKdSgX7wmQSta54AG
-        8CWAptGhRQb0mfSCmnwGGe1jFrbSY/GlKRccFxKYAM6LczHExn5FrNaFPlc9aenfYk339k/PjJvBB
-        9TScD2FzA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqeoJ-0007gg-VX; Thu, 25 Jul 2019 14:33:35 +0000
-Date:   Thu, 25 Jul 2019 07:33:35 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
-Message-ID: <20190725143335.GB21894@infradead.org>
-References: <20190624194908.121273-1-john.stultz@linaro.org>
- <20190624194908.121273-5-john.stultz@linaro.org>
- <20190718100840.GB19666@infradead.org>
- <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
- <20190724065958.GC16225@infradead.org>
- <CALAqxLUbsz+paJ=P2hwKecuN8DQjJt9Vj4MENCnFuEh6waxsXg@mail.gmail.com>
- <20190725125206.GE20286@infradead.org>
- <CA+M3ks52ADKVCw_pZP9=LSNt+vhiEFyrtB-Jm2x=p62kSV7qVA@mail.gmail.com>
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PEXPUo1041320
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 07:33:25 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PEXPUo1041320
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564065206;
+        bh=Aaj0vWujqzqpFjmQS3JzUmdNp9XlQRB0IiBuxqP3Cps=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=ICHURx0M+1yVLOYU8z4XN1MKY/CScKDCx7Q3oJSEfG9MElgU9NnbE57RDGcFWbuqF
+         meqiCkcJyOLOCmRcGEhs0EanfNeb8jKscCkmYqBg26N3ZCMkuRfXBKF9moSjlXW7kg
+         UawtDeWSvSjG7NDyEUfXfKvs414TeeP65eemDUt0DAdj2BgTCNVofuRS8/ykNbxUTo
+         uGj7Qh6f05/NBtX0C6SOgAdMDoHq9YmIT15SJ0mSsoUl1cuFcC5ye2ef1sSEC6MpUw
+         dmW8Nf/akYpRWyBsuZrax6BQwIlWjd+G8DBKC7LXEVxDcG72pDU+uwP7OjuJrcjeHP
+         OdvrLOe3c9+fA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PEXPH11041317;
+        Thu, 25 Jul 2019 07:33:25 -0700
+Date:   Thu, 25 Jul 2019 07:33:25 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-d0a7166bc7ac4feac5c482ebe8b2417aa3302ef4@git.kernel.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
+        peterz@infradead.org, tglx@linutronix.de
+Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
+          peterz@infradead.org, tglx@linutronix.de
+In-Reply-To: <20190722105220.677835995@linutronix.de>
+References: <20190722105220.677835995@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/apic] x86/smp: Move smp_function_call implementations into
+ IPI code
+Git-Commit-ID: d0a7166bc7ac4feac5c482ebe8b2417aa3302ef4
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <CA+M3ks52ADKVCw_pZP9=LSNt+vhiEFyrtB-Jm2x=p62kSV7qVA@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 03:20:11PM +0200, Benjamin Gaignard wrote:
-> > But that just means we need a flag that memory needs to be contiguous,
-> > which totally makes sense at the API level.  But CMA is not the only
-> > source of contigous memory, so we should not conflate the two.
-> 
-> We have one file descriptor per heap to be able to add access control
-> on each heap.
-> That wasn't possible with ION because the heap was selected given the
-> flags in ioctl
-> structure and we can't do access control based on that. If we put flag
-> to select the
-> allocation mechanism (system, CMA, other) in ioctl we come back to ION status.
-> For me one allocation mechanism = one heap.
+Commit-ID:  d0a7166bc7ac4feac5c482ebe8b2417aa3302ef4
+Gitweb:     https://git.kernel.org/tip/d0a7166bc7ac4feac5c482ebe8b2417aa3302ef4
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Mon, 22 Jul 2019 20:47:25 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 25 Jul 2019 16:12:01 +0200
 
-Well, I agree with your split for different fundamentally different
-allocators.  But the point is that CMA (at least the system cma area)
-fundamentally isn't a different allocator.  The per-device CMA area
-still are kinda the same, but you can just have one fd for each
-per-device CMA area to make your life simple.
+x86/smp: Move smp_function_call implementations into IPI code
+
+Move it where it belongs. That allows to keep all the shorthand logic in
+one place.
+
+No functional change.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105220.677835995@linutronix.de
+
+---
+ arch/x86/include/asm/smp.h |  1 +
+ arch/x86/kernel/apic/ipi.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/smp.c      | 40 ----------------------------------------
+ 3 files changed, 41 insertions(+), 40 deletions(-)
+
+diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
+index e1356a3b8223..e15f364efbcc 100644
+--- a/arch/x86/include/asm/smp.h
++++ b/arch/x86/include/asm/smp.h
+@@ -143,6 +143,7 @@ void play_dead_common(void);
+ void wbinvd_on_cpu(int cpu);
+ int wbinvd_on_all_cpus(void);
+ 
++void native_smp_send_reschedule(int cpu);
+ void native_send_call_func_ipi(const struct cpumask *mask);
+ void native_send_call_func_single_ipi(int cpu);
+ void x86_idle_thread_init(unsigned int cpu, struct task_struct *idle);
+diff --git a/arch/x86/kernel/apic/ipi.c b/arch/x86/kernel/apic/ipi.c
+index f53de3e0145e..eaac65bf58f0 100644
+--- a/arch/x86/kernel/apic/ipi.c
++++ b/arch/x86/kernel/apic/ipi.c
+@@ -62,6 +62,46 @@ void apic_send_IPI_allbutself(unsigned int vector)
+ 		apic->send_IPI_mask_allbutself(cpu_online_mask, vector);
+ }
+ 
++/*
++ * Send a 'reschedule' IPI to another CPU. It goes straight through and
++ * wastes no time serializing anything. Worst case is that we lose a
++ * reschedule ...
++ */
++void native_smp_send_reschedule(int cpu)
++{
++	if (unlikely(cpu_is_offline(cpu))) {
++		WARN(1, "sched: Unexpected reschedule of offline CPU#%d!\n", cpu);
++		return;
++	}
++	apic->send_IPI(cpu, RESCHEDULE_VECTOR);
++}
++
++void native_send_call_func_single_ipi(int cpu)
++{
++	apic->send_IPI(cpu, CALL_FUNCTION_SINGLE_VECTOR);
++}
++
++void native_send_call_func_ipi(const struct cpumask *mask)
++{
++	cpumask_var_t allbutself;
++
++	if (!alloc_cpumask_var(&allbutself, GFP_ATOMIC)) {
++		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
++		return;
++	}
++
++	cpumask_copy(allbutself, cpu_online_mask);
++	__cpumask_clear_cpu(smp_processor_id(), allbutself);
++
++	if (cpumask_equal(mask, allbutself) &&
++	    cpumask_equal(cpu_online_mask, cpu_callout_mask))
++		apic->send_IPI_allbutself(CALL_FUNCTION_VECTOR);
++	else
++		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
++
++	free_cpumask_var(allbutself);
++}
++
+ #endif /* CONFIG_SMP */
+ 
+ static inline int __prepare_ICR2(unsigned int mask)
+diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+index b8ad1876a081..b8d4e9c3c070 100644
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -115,46 +115,6 @@
+ static atomic_t stopping_cpu = ATOMIC_INIT(-1);
+ static bool smp_no_nmi_ipi = false;
+ 
+-/*
+- * this function sends a 'reschedule' IPI to another CPU.
+- * it goes straight through and wastes no time serializing
+- * anything. Worst case is that we lose a reschedule ...
+- */
+-static void native_smp_send_reschedule(int cpu)
+-{
+-	if (unlikely(cpu_is_offline(cpu))) {
+-		WARN(1, "sched: Unexpected reschedule of offline CPU#%d!\n", cpu);
+-		return;
+-	}
+-	apic->send_IPI(cpu, RESCHEDULE_VECTOR);
+-}
+-
+-void native_send_call_func_single_ipi(int cpu)
+-{
+-	apic->send_IPI(cpu, CALL_FUNCTION_SINGLE_VECTOR);
+-}
+-
+-void native_send_call_func_ipi(const struct cpumask *mask)
+-{
+-	cpumask_var_t allbutself;
+-
+-	if (!alloc_cpumask_var(&allbutself, GFP_ATOMIC)) {
+-		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
+-		return;
+-	}
+-
+-	cpumask_copy(allbutself, cpu_online_mask);
+-	__cpumask_clear_cpu(smp_processor_id(), allbutself);
+-
+-	if (cpumask_equal(mask, allbutself) &&
+-	    cpumask_equal(cpu_online_mask, cpu_callout_mask))
+-		apic->send_IPI_allbutself(CALL_FUNCTION_VECTOR);
+-	else
+-		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
+-
+-	free_cpumask_var(allbutself);
+-}
+-
+ static int smp_stop_nmi_callback(unsigned int val, struct pt_regs *regs)
+ {
+ 	/* We are registered on stopping cpu too, avoid spurious NMI */
