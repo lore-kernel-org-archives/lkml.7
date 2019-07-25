@@ -2,348 +2,317 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCA1C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 755C9C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F0862173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:44:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="c6+O3NQB"
+	by mail.kernel.org (Postfix) with ESMTP id 4DBA022BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbfGYOoA (ORCPT
+        id S2388549AbfGYOoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:44:00 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:41884 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729163AbfGYOn3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:43:29 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190725144327euoutp02220f42d9ea4bec3bc8af37fda0168874~0rZCqLKLQ1229012290euoutp02l
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 14:43:27 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190725144327euoutp02220f42d9ea4bec3bc8af37fda0168874~0rZCqLKLQ1229012290euoutp02l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1564065807;
-        bh=UyI1wQ20jgXxJKqp5TkkQjurNLXPwK0/yJfHRL2NaWQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c6+O3NQBC4Ns3Zzy/47I6P2MW2aTdQS+pNiWQitTU42czt/ljOhTnybL+iMahx3Lw
-         vEuKMsZxj/15H0fOX74Euk8xo7HU+4gnvyOLMuXkDbRVcGB5hcMOVVl7uBXVABoeOs
-         NM3x23fj6CdbocUu9/KUxU78DHb07Zm220D3eXdQ=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190725144326eucas1p14f80b2ad8cd63ad739d5171090ac0896~0rZCCDwNT1363913639eucas1p1j;
-        Thu, 25 Jul 2019 14:43:26 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id CF.38.04298.E00C93D5; Thu, 25
-        Jul 2019 15:43:26 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190725144325eucas1p204f9ffe8988a3604fdf21f77d242c7b8~0rZBLUxw71530115301eucas1p2o;
-        Thu, 25 Jul 2019 14:43:25 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190725144325eusmtrp11e79d58e292db99dbf0c8c1eed063582~0rZA9ETcK0724307243eusmtrp1A;
-        Thu, 25 Jul 2019 14:43:25 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-d6-5d39c00efc85
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 2E.2E.04146.D00C93D5; Thu, 25
-        Jul 2019 15:43:25 +0100 (BST)
-Received: from AMDC3218.DIGITAL.local (unknown [106.120.51.18]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190725144324eusmtip12c99b1a847eb7d9406e4cc76ba4d2538~0rZAOPIad3128231282eusmtip1j;
-        Thu, 25 Jul 2019 14:43:24 +0000 (GMT)
-From:   k.konieczny@partner.samsung.com
-To:     k.konieczny@partner.samsung.com
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Subject: [PATCH v4 2/5] devfreq: exynos-bus: convert to use
- dev_pm_opp_set_rate()
-Date:   Thu, 25 Jul 2019 16:42:57 +0200
-Message-Id: <20190725144300.25014-3-k.konieczny@partner.samsung.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190725144300.25014-1-k.konieczny@partner.samsung.com>
+        Thu, 25 Jul 2019 10:44:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36052 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728121AbfGYOoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 10:44:17 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B6E9FC049598;
+        Thu, 25 Jul 2019 14:44:16 +0000 (UTC)
+Received: from [10.18.17.163] (dhcp-17-163.bos.redhat.com [10.18.17.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5A88819D70;
+        Thu, 25 Jul 2019 14:44:02 +0000 (UTC)
+Subject: Re: [PATCH v2 5/5] virtio-balloon: Add support for providing page
+ hints to host
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+ <20190724170514.6685.17161.stgit@localhost.localdomain>
+ <20190724143902-mutt-send-email-mst@kernel.org>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <21cc88cd-3577-e8b4-376f-26c7848f5764@redhat.com>
+Date:   Thu, 25 Jul 2019 10:44:01 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe3fOzjmKk9M0fHBStCgy8BYGrxSWdFtFIBVFWdTSg5Y6ZVNr
-        RaVl2axm5QcvybqaIt62pqmpNRtJmS4vaRHlQEuraTUXFaW27djl2+/8L/zfBw5DiAeF/swB
-        RRqnVMiTpJQnWf/ohyXI+0HEntCxagnWF9YI8YBjRIivmruEWNs6jXDe0EcCWyy1NO48aaOx
-        YahfiHubSig8ccGMcKGlVYCrzK9pXDrQLcCvssopbPveKcCnW8w0nurXk/iO9RG1Siyr1FUi
-        maFCQ8nu3DohM403C2RaYwWStb+4K5BNGOZG07s8V8RxSQcyOGVI5D7PhC7DfSq1Y+nh531n
-        iEzkWJyLPBhgw+GGXSdwsZgtR3C1LTAXeTrZgeCiRUfxHxMIPo1kk38aXd9PkrxRhsAypBf8
-        rTSNNhGuFMUuBGPhe9rFvuwCyH9TQLhCBPuDhNpevdvwYbfCkPYncjHpLJjybrtZxK4Be0cm
-        xc/NA03DPfe0B7sWJrOqZjKz4XHRsFsnnJlTdVfcA8CO0dD4qRHx5TVQlPeS4NkHPrQbaZ4D
-        oCP//Mw9h+DtdS3Nl7MRWHO+zBjL4WF7tzAXMc6FQKhpCuHlKLAP2mmXDKw3vBibzb/BGy7X
-        u450ySI4e0bMp4NAN/1UyLMEcqerZ1gGk7YW+iKaX/zfNcX/XVP8b/caIiqQH5euSo7nVGEK
-        7lCwSp6sSlfEB8emJBuQ87frmGq3N6CvPfvbEMsgqZfoWVnEHrFQnqFSJ7chYAipr6iuwSmJ
-        4uTqI5wyZa8yPYlTtSEJQ0r9REdnWWPEbLw8jUvkuFRO+ccVMB7+mSjRq2SLfnvZZ5t0SwLs
-        WDmorzYF9cc2nm9UaNTLc578MpWULuphW4cnYozb1I4ofW3BVGdf7KlNo+ObHWniLhuySy71
-        WpsPhn9713wscfU6y+nxtEj725vm+Zq+7mzbBuv6c7dXTkZ9fT9YuiI6o2WOOGdZSdTxncEm
-        LsC4MSt0t5RUJcjDlhBKlfw3x4AvX3IDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsVy+t/xu7q8ByxjDSYeVrLYOGM9q8X1L89Z
-        LeYfOcdq0bfvP6NF/+PXzBbnz29gtzjb9IbdYtPja6wWl3fNYbP43HuE0WLG+X1MFmuP3GW3
-        WHr9IpPF7cYVbBZvfpxlsmjde4Td4t+1jSwWmx8cY3MQ8lgzbw2jx6ZVnWwem5fUexx8t4fJ
-        o2/LKkaP4ze2M3l83iQXwB6lZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRv
-        Z5OSmpNZllqkb5egl3Fu0362gtNGFVevtDE3MH7R6GLk5JAQMJE496OJBcQWEljKKLHvkz5E
-        XFqi8fRqJghbWOLPtS62LkYuoJpPjBLvVpxgA0mwCahKbJnxkh3EFhFQlph8bzozSBGzQCer
-        xIonR8CKhAUCJf7cnsAKYrMANRzsX8YIYvMKuEh8Ot3ABrFBXqJzx26wKzgFXCX+Nq5lhLjI
-        RaKx/xhUvaDEyZlPwGqYgeqbt85mnsAoMAtJahaS1AJGplWMIqmlxbnpucWGesWJucWleel6
-        yfm5mxiBUbnt2M/NOxgvbQw+xCjAwajEw3thuWWsEGtiWXFl7iFGCQ5mJRHerTuAQrwpiZVV
-        qUX58UWlOanFhxhNgZ6YyCwlmpwPTBh5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNT
-        UwtSi2D6mDg4pRoYJ7Yzhzy050y26b/ZHv3IUqq2WOJ14Ja1fVM2bOowCJ6mys19Yu/7ypuz
-        /zWqTK/I3mi6R2XtBd53X6PEw+zEmsS2zFyy2n1XTNXP01+vaM6JDEsqLIm4+Pr1xj6lRSmz
-        svyZuGXW5Fad72jUD1xbnfi0ZrLcukKtex/VGHgaGzc7LuX8Eh2nxFKckWioxVxUnAgA3LTP
-        +uACAAA=
-X-CMS-MailID: 20190725144325eucas1p204f9ffe8988a3604fdf21f77d242c7b8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190725144325eucas1p204f9ffe8988a3604fdf21f77d242c7b8
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190725144325eucas1p204f9ffe8988a3604fdf21f77d242c7b8
-References: <20190725144300.25014-1-k.konieczny@partner.samsung.com>
-        <CGME20190725144325eucas1p204f9ffe8988a3604fdf21f77d242c7b8@eucas1p2.samsung.com>
+In-Reply-To: <20190724143902-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 25 Jul 2019 14:44:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reuse opp core code for setting bus clock and voltage. As a side
-effect this allow usage of coupled regulators feature (required
-for boards using Exynos5422/5800 SoCs) because dev_pm_opp_set_rate()
-uses regulator_set_voltage_triplet() for setting regulator voltage
-while the old code used regulator_set_voltage_tol() with fixed
-tolerance. This patch also removes no longer needed parsing of DT
-property "exynos,voltage-tolerance" (no Exynos devfreq DT node uses
-it).
 
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
----
-Changes:
-v4:
-- remove unrelated changes, add newline before comment
+On 7/24/19 3:02 PM, Michael S. Tsirkin wrote:
+> On Wed, Jul 24, 2019 at 10:05:14AM -0700, Alexander Duyck wrote:
+>> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>>
+>> Add support for the page hinting feature provided by virtio-balloon.
+>> Hinting differs from the regular balloon functionality in that is is
+>> much less durable than a standard memory balloon. Instead of creating a
+>> list of pages that cannot be accessed the pages are only inaccessible
+>> while they are being indicated to the virtio interface. Once the
+>> interface has acknowledged them they are placed back into their respective
+>> free lists and are once again accessible by the guest system.
+>>
+>> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Looking at the design, it seems that hinted pages can immediately be
+> reused. I wonder how we can efficiently support this
+> with kvm when poisoning is in effect. Of course we can just
+> ignore the poison. However it seems cleaner to
+> 1. verify page is poisoned with the correct value
+> 2. fill the page with the correct value on fault
+>
+> Requirement 2 requires some kind of madvise that
+> will save the poison e.g. in the VMA.
+>
+> Not a blocker for sure ... 
+>
+>
+>> ---
+>>  drivers/virtio/Kconfig              |    1 +
+>>  drivers/virtio/virtio_balloon.c     |   47 +++++++++++++++++++++++++++++++++++
+>>  include/uapi/linux/virtio_balloon.h |    1 +
+>>  3 files changed, 49 insertions(+)
+>>
+>> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+>> index 078615cf2afc..d45556ae1f81 100644
+>> --- a/drivers/virtio/Kconfig
+>> +++ b/drivers/virtio/Kconfig
+>> @@ -58,6 +58,7 @@ config VIRTIO_BALLOON
+>>  	tristate "Virtio balloon driver"
+>>  	depends on VIRTIO
+>>  	select MEMORY_BALLOON
+>> +	select PAGE_HINTING
+>>  	---help---
+>>  	 This driver supports increasing and decreasing the amount
+>>  	 of memory within a KVM guest.
+>> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+>> index 226fbb995fb0..dee9f8f3ad09 100644
+>> --- a/drivers/virtio/virtio_balloon.c
+>> +++ b/drivers/virtio/virtio_balloon.c
+>> @@ -19,6 +19,7 @@
+>>  #include <linux/mount.h>
+>>  #include <linux/magic.h>
+>>  #include <linux/pseudo_fs.h>
+>> +#include <linux/page_hinting.h>
+>>  
+>>  /*
+>>   * Balloon device works in 4K page units.  So each page is pointed to by
+>> @@ -27,6 +28,7 @@
+>>   */
+>>  #define VIRTIO_BALLOON_PAGES_PER_PAGE (unsigned)(PAGE_SIZE >> VIRTIO_BALLOON_PFN_SHIFT)
+>>  #define VIRTIO_BALLOON_ARRAY_PFNS_MAX 256
+>> +#define VIRTIO_BALLOON_ARRAY_HINTS_MAX	32
+>>  #define VIRTBALLOON_OOM_NOTIFY_PRIORITY 80
+>>  
+>>  #define VIRTIO_BALLOON_FREE_PAGE_ALLOC_FLAG (__GFP_NORETRY | __GFP_NOWARN | \
+>> @@ -46,6 +48,7 @@ enum virtio_balloon_vq {
+>>  	VIRTIO_BALLOON_VQ_DEFLATE,
+>>  	VIRTIO_BALLOON_VQ_STATS,
+>>  	VIRTIO_BALLOON_VQ_FREE_PAGE,
+>> +	VIRTIO_BALLOON_VQ_HINTING,
+>>  	VIRTIO_BALLOON_VQ_MAX
+>>  };
+>>  
+>> @@ -113,6 +116,10 @@ struct virtio_balloon {
+>>  
+>>  	/* To register a shrinker to shrink memory upon memory pressure */
+>>  	struct shrinker shrinker;
+>> +
+>> +	/* Unused page hinting device */
+>> +	struct virtqueue *hinting_vq;
+>> +	struct page_hinting_dev_info ph_dev_info;
+>>  };
+>>  
+>>  static struct virtio_device_id id_table[] = {
+>> @@ -152,6 +159,22 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
+>>  
+>>  }
+>>  
+>> +void virtballoon_page_hinting_react(struct page_hinting_dev_info *ph_dev_info,
+>> +				    unsigned int num_hints)
+>> +{
+>> +	struct virtio_balloon *vb =
+>> +		container_of(ph_dev_info, struct virtio_balloon, ph_dev_info);
+>> +	struct virtqueue *vq = vb->hinting_vq;
+>> +	unsigned int unused;
+>> +
+>> +	/* We should always be able to add these buffers to an empty queue. */
+>
+> can be an out of memory condition, and then ...
 
----
- drivers/devfreq/exynos-bus.c | 108 +++++++++--------------------------
- 1 file changed, 28 insertions(+), 80 deletions(-)
+Do we need an error check here?
 
-diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-index f34fa26f00d0..ebb8f46312b6 100644
---- a/drivers/devfreq/exynos-bus.c
-+++ b/drivers/devfreq/exynos-bus.c
-@@ -25,7 +25,6 @@
- #include <linux/slab.h>
- 
- #define DEFAULT_SATURATION_RATIO	40
--#define DEFAULT_VOLTAGE_TOLERANCE	2
- 
- struct exynos_bus {
- 	struct device *dev;
-@@ -37,9 +36,8 @@ struct exynos_bus {
- 
- 	unsigned long curr_freq;
- 
--	struct regulator *regulator;
-+	struct opp_table *opp_table;
- 	struct clk *clk;
--	unsigned int voltage_tolerance;
- 	unsigned int ratio;
- };
- 
-@@ -99,56 +97,23 @@ static int exynos_bus_target(struct device *dev, unsigned long *freq, u32 flags)
- {
- 	struct exynos_bus *bus = dev_get_drvdata(dev);
- 	struct dev_pm_opp *new_opp;
--	unsigned long old_freq, new_freq, new_volt, tol;
- 	int ret = 0;
- 
--	/* Get new opp-bus instance according to new bus clock */
-+	/* Get correct frequency for bus. */
- 	new_opp = devfreq_recommended_opp(dev, freq, flags);
- 	if (IS_ERR(new_opp)) {
- 		dev_err(dev, "failed to get recommended opp instance\n");
- 		return PTR_ERR(new_opp);
- 	}
- 
--	new_freq = dev_pm_opp_get_freq(new_opp);
--	new_volt = dev_pm_opp_get_voltage(new_opp);
- 	dev_pm_opp_put(new_opp);
- 
--	old_freq = bus->curr_freq;
--
--	if (old_freq == new_freq)
--		return 0;
--	tol = new_volt * bus->voltage_tolerance / 100;
--
- 	/* Change voltage and frequency according to new OPP level */
- 	mutex_lock(&bus->lock);
-+	ret = dev_pm_opp_set_rate(dev, *freq);
-+	if (!ret)
-+		bus->curr_freq = *freq;
- 
--	if (old_freq < new_freq) {
--		ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
--		if (ret < 0) {
--			dev_err(bus->dev, "failed to set voltage\n");
--			goto out;
--		}
--	}
--
--	ret = clk_set_rate(bus->clk, new_freq);
--	if (ret < 0) {
--		dev_err(dev, "failed to change clock of bus\n");
--		clk_set_rate(bus->clk, old_freq);
--		goto out;
--	}
--
--	if (old_freq > new_freq) {
--		ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
--		if (ret < 0) {
--			dev_err(bus->dev, "failed to set voltage\n");
--			goto out;
--		}
--	}
--	bus->curr_freq = new_freq;
--
--	dev_dbg(dev, "Set the frequency of bus (%luHz -> %luHz, %luHz)\n",
--			old_freq, new_freq, clk_get_rate(bus->clk));
--out:
- 	mutex_unlock(&bus->lock);
- 
- 	return ret;
-@@ -196,8 +161,10 @@ static void exynos_bus_exit(struct device *dev)
- 
- 	dev_pm_opp_of_remove_table(dev);
- 	clk_disable_unprepare(bus->clk);
--	if (bus->regulator)
--		regulator_disable(bus->regulator);
-+	if (bus->opp_table) {
-+		dev_pm_opp_put_regulators(bus->opp_table);
-+		bus->opp_table = NULL;
-+	}
- }
- 
- /*
-@@ -208,39 +175,23 @@ static int exynos_bus_passive_target(struct device *dev, unsigned long *freq,
- {
- 	struct exynos_bus *bus = dev_get_drvdata(dev);
- 	struct dev_pm_opp *new_opp;
--	unsigned long old_freq, new_freq;
--	int ret = 0;
-+	int ret;
- 
--	/* Get new opp-bus instance according to new bus clock */
-+	/* Get correct frequency for bus. */
- 	new_opp = devfreq_recommended_opp(dev, freq, flags);
- 	if (IS_ERR(new_opp)) {
- 		dev_err(dev, "failed to get recommended opp instance\n");
- 		return PTR_ERR(new_opp);
- 	}
- 
--	new_freq = dev_pm_opp_get_freq(new_opp);
- 	dev_pm_opp_put(new_opp);
- 
--	old_freq = bus->curr_freq;
--
--	if (old_freq == new_freq)
--		return 0;
--
- 	/* Change the frequency according to new OPP level */
- 	mutex_lock(&bus->lock);
-+	ret = dev_pm_opp_set_rate(dev, *freq);
-+	if (!ret)
-+		bus->curr_freq = *freq;
- 
--	ret = clk_set_rate(bus->clk, new_freq);
--	if (ret < 0) {
--		dev_err(dev, "failed to set the clock of bus\n");
--		goto out;
--	}
--
--	*freq = new_freq;
--	bus->curr_freq = new_freq;
--
--	dev_dbg(dev, "Set the frequency of bus (%luHz -> %luHz, %luHz)\n",
--			old_freq, new_freq, clk_get_rate(bus->clk));
--out:
- 	mutex_unlock(&bus->lock);
- 
- 	return ret;
-@@ -258,21 +209,19 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
- 					struct exynos_bus *bus)
- {
- 	struct device *dev = bus->dev;
-+	struct opp_table *opp_table;
-+	const char *vdd = "vdd";
- 	int i, ret, count, size;
- 
--	/* Get the regulator to provide each bus with the power */
--	bus->regulator = devm_regulator_get(dev, "vdd");
--	if (IS_ERR(bus->regulator)) {
--		dev_err(dev, "failed to get VDD regulator\n");
--		return PTR_ERR(bus->regulator);
--	}
--
--	ret = regulator_enable(bus->regulator);
--	if (ret < 0) {
--		dev_err(dev, "failed to enable VDD regulator\n");
-+	opp_table = dev_pm_opp_set_regulators(dev, &vdd, 1);
-+	if (IS_ERR(opp_table)) {
-+		ret = PTR_ERR(opp_table);
-+		dev_err(dev, "failed to set regulators %d\n", ret);
- 		return ret;
- 	}
- 
-+	bus->opp_table = opp_table;
-+
- 	/*
- 	 * Get the devfreq-event devices to get the current utilization of
- 	 * buses. This raw data will be used in devfreq ondemand governor.
-@@ -313,14 +262,11 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
- 	if (of_property_read_u32(np, "exynos,saturation-ratio", &bus->ratio))
- 		bus->ratio = DEFAULT_SATURATION_RATIO;
- 
--	if (of_property_read_u32(np, "exynos,voltage-tolerance",
--					&bus->voltage_tolerance))
--		bus->voltage_tolerance = DEFAULT_VOLTAGE_TOLERANCE;
--
- 	return 0;
- 
- err_regulator:
--	regulator_disable(bus->regulator);
-+	dev_pm_opp_put_regulators(bus->opp_table);
-+	bus->opp_table = NULL;
- 
- 	return ret;
- }
-@@ -511,8 +457,10 @@ static int exynos_bus_probe(struct platform_device *pdev)
- 	dev_pm_opp_of_remove_table(dev);
- 	clk_disable_unprepare(bus->clk);
- err_reg:
--	if (!passive)
--		regulator_disable(bus->regulator);
-+	if (!passive) {
-+		dev_pm_opp_put_regulators(bus->opp_table);
-+		bus->opp_table = NULL;
-+	}
- 
- 	return ret;
- }
+For situations where this fails we should disable hinting completely, maybe?
+
+
+>
+>> +	virtqueue_add_inbuf(vq, ph_dev_info->sg, num_hints, vb, GFP_KERNEL);
+>> +	virtqueue_kick(vq);
+> ... this will block forever.
+>
+>> +	/* When host has read buffer, this completes via balloon_ack */
+>> +	wait_event(vb->acked, virtqueue_get_buf(vq, &unused));
+> However below I suggest limiting capacity which will solve
+> this problem for you.
+>
+>
+>
+>> +}
+>> +
+>>  static void set_page_pfns(struct virtio_balloon *vb,
+>>  			  __virtio32 pfns[], struct page *page)
+>>  {
+>> @@ -476,6 +499,7 @@ static int init_vqs(struct virtio_balloon *vb)
+>>  	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
+>>  	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
+>>  	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+>> +	names[VIRTIO_BALLOON_VQ_HINTING] = NULL;
+>>  
+>>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+>>  		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
+>> @@ -487,11 +511,19 @@ static int init_vqs(struct virtio_balloon *vb)
+>>  		callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+>>  	}
+>>  
+>> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING)) {
+>> +		names[VIRTIO_BALLOON_VQ_HINTING] = "hinting_vq";
+>> +		callbacks[VIRTIO_BALLOON_VQ_HINTING] = balloon_ack;
+>> +	}
+>> +
+>>  	err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
+>>  					 vqs, callbacks, names, NULL, NULL);
+>>  	if (err)
+>>  		return err;
+>>  
+>> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING))
+>> +		vb->hinting_vq = vqs[VIRTIO_BALLOON_VQ_HINTING];
+>> +
+>>  	vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
+>>  	vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
+>>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+>> @@ -924,12 +956,24 @@ static int virtballoon_probe(struct virtio_device *vdev)
+>>  		if (err)
+>>  			goto out_del_balloon_wq;
+>>  	}
+>> +
+>> +	vb->ph_dev_info.react = virtballoon_page_hinting_react;
+>> +	vb->ph_dev_info.capacity = VIRTIO_BALLOON_ARRAY_HINTS_MAX;
+> As explained above I think you should limit this by vq size.
+> Otherwise virtqueue add buf might fail.
+> In fact by struct spec reading you need to limit it
+> anyway otherwise it will fail unconditionally.
+> In practice on most hypervisors it will typically work ...
+>
+>> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING)) {
+>> +		err = page_hinting_startup(&vb->ph_dev_info);
+>> +		if (err)
+>> +			goto out_unregister_shrinker;
+>> +	}
+>> +
+>>  	virtio_device_ready(vdev);
+>>  
+>>  	if (towards_target(vb))
+>>  		virtballoon_changed(vdev);
+>>  	return 0;
+>>  
+>> +out_unregister_shrinker:
+>> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+>> +		virtio_balloon_unregister_shrinker(vb);
+>>  out_del_balloon_wq:
+>>  	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+>>  		destroy_workqueue(vb->balloon_wq);
+>> @@ -958,6 +1002,8 @@ static void virtballoon_remove(struct virtio_device *vdev)
+>>  {
+>>  	struct virtio_balloon *vb = vdev->priv;
+>>  
+>> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING))
+>> +		page_hinting_shutdown(&vb->ph_dev_info);
+>>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+>>  		virtio_balloon_unregister_shrinker(vb);
+>>  	spin_lock_irq(&vb->stop_update_lock);
+>> @@ -1027,6 +1073,7 @@ static int virtballoon_validate(struct virtio_device *vdev)
+>>  	VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
+>>  	VIRTIO_BALLOON_F_FREE_PAGE_HINT,
+>>  	VIRTIO_BALLOON_F_PAGE_POISON,
+>> +	VIRTIO_BALLOON_F_HINTING,
+>>  };
+>>  
+>>  static struct virtio_driver virtio_balloon_driver = {
+>> diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
+>> index a1966cd7b677..2b0f62814e22 100644
+>> --- a/include/uapi/linux/virtio_balloon.h
+>> +++ b/include/uapi/linux/virtio_balloon.h
+>> @@ -36,6 +36,7 @@
+>>  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
+>>  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
+>>  #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
+>> +#define VIRTIO_BALLOON_F_HINTING	5 /* Page hinting virtqueue */
+>>  
+>>  /* Size of a PFN in the balloon interface. */
+>>  #define VIRTIO_BALLOON_PFN_SHIFT 12
 -- 
-2.22.0
-
+Thanks
+Nitesh
