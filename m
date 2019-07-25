@@ -2,163 +2,120 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB852C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E1EC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8658122BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564076635;
-	bh=qVyB1Zul8As9/WHjxhmM2QzMVCPeMyHtNlzZaWpyttU=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=AEdase1sFM0fbWepCGZW23JQbNYD70qBji9PjCYmTo5MPO40n3GQ39sA4l3xRzAz3
-	 T4lxWWBAXAKBdoDTp+arlWwppiYIvbpyuVY+B2xV1KLunLCR+MBwzGZTzpqBd/LkHd
-	 Y2V6LKIMeEIR3hKc945cnoxGKYPX6w6PgRyuq86M=
+	by mail.kernel.org (Postfix) with ESMTP id DA43A22BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:43:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOaCcdZd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389504AbfGYRny (ORCPT
+        id S2389842AbfGYRn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:43:54 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36628 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730058AbfGYRnq (ORCPT
+        Thu, 25 Jul 2019 13:43:57 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40284 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388650AbfGYRnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:43:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ANMpYSDNY6oEnY6y25VTsTy96X4rP+mF/SNqvsiqdGc=; b=T8D604aqzVVJ
-        Duk4kaKnMxAxRnPCj5r5XAKqalKsudgHJe3rBjW8ZdIA+LY6CYgSBE4CdJolyW8qJqlau0KJXR++/
-        +VdCXXyqPRgg4UrjpEeNhJ62/GQD0ROtsaFD07lLC2sVFNgBfsBKAeJZG6u7dMK2X83q2Mquxcnrf
-        zo+a0=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hqhmG-0003NG-MR; Thu, 25 Jul 2019 17:43:40 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id BAF9D2742B60; Thu, 25 Jul 2019 18:43:39 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: codec2codec: name link using stream direction" to the asoc tree
-In-Reply-To: <20190725165949.29699-3-jbrunet@baylibre.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190725174339.BAF9D2742B60@ypsilon.sirena.org.uk>
-Date:   Thu, 25 Jul 2019 18:43:39 +0100 (BST)
+        Thu, 25 Jul 2019 13:43:55 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w10so23404335pgj.7;
+        Thu, 25 Jul 2019 10:43:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t5SEt75qcdQLeyNsgISfIFcUiLRspw97fiGfJI426FY=;
+        b=OOaCcdZdBxd/c92WdcSebQtmHYOk2yKXMcVkoXGRjPp48wMuErNw/8FJGKC33rZ69v
+         lNC3KchcfsyXpGQvbWPczkmcGySfLgaFBq3LO9cxcEl5xX8Pb2fYRFynULU2RXeFN950
+         FessKS+lPPIadwP9FhGtB2cb7MQ3mdalQonPfbkZyCgvg7FPBdfXmEGUl+GwwIbsNbE7
+         tn1hqHVuVOXSWosdhV7QV3Q0lt6gggL9rM1CB4HsYalGorvUwZ2qe8rUh5LA2IujMq+Z
+         R4Z1k5aIP7cbXlFNnfioDDnyXXwmOLw1kkFwYLrBZ+3+Z8kwgMR9QV1PonLKlpx2dXBT
+         7Hsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t5SEt75qcdQLeyNsgISfIFcUiLRspw97fiGfJI426FY=;
+        b=rnnpohqUKjjET40mCTa5q9Qbx+08RDY14A+SY6OCDwFkCIdBkmXGefN9U5YBZVS6D5
+         7cceTvuCt7OReP19yjf0rPpG98D2qRLLYIYRd8IfULkZzUl6IdJP0FRXbfJ0tweaiv43
+         cFCnFez+LCUPmHynHuHRAW0SMwkyB+tgcJlmrb9axFos1TL0g8u0qJtIgyk6V86ElD/y
+         3wRDHOxxV/lsdS8ezlDl1hY75uKKYs6J6ExwmUVorccI1LG090wQkcJ3fUt1ImgAkjdz
+         G+yF8/N0lF8ePhMdGLa22PRTO8WJn12C6/fCYFo+NZwXIWjMxPiLlsuuyPVtthpWZTn+
+         07yQ==
+X-Gm-Message-State: APjAAAVew7EsCNvKEhmQJon1VMSZajqwI16bP/Qf70jiQtyyT3DQS7Xu
+        bllQszQ0KfL7P0Oi/7hc9r1b5nDq/wQiDYAngCnSjPGy
+X-Google-Smtp-Source: APXvYqwl+TiFrrT+zkrjzuDVWj496eVxJCSNlaPsIAvv+6zQ5C0vOaf6Ge3pLdrp6lfpo1uhmIHUt9LEKhZ/DyJ/z/E=
+X-Received: by 2002:a63:6eca:: with SMTP id j193mr12182093pgc.74.1564076634408;
+ Thu, 25 Jul 2019 10:43:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190703162951.32737-1-huangfq.daxian@gmail.com>
+In-Reply-To: <20190703162951.32737-1-huangfq.daxian@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 25 Jul 2019 20:43:43 +0300
+Message-ID: <CAHp75VeFrg6KwxAyMx6o46jbJ8teMMGSEckm8xM=J9kFyODQNg@mail.gmail.com>
+Subject: Re: [PATCH v2 20/35] platform/x86/asus: Use kmemdup rather than
+ duplicating its implementation
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Wed, Jul 3, 2019 at 7:30 PM Fuqian Huang <huangfq.daxian@gmail.com> wrote:
+>
+> kmemdup is introduced to duplicate a region of memory in a neat way.
+> Rather than kmalloc/kzalloc + memcpy, which the programmer needs to
+> write the size twice (sometimes lead to mistakes), kmemdup improves
+> readability, leads to smaller code and also reduce the chances of mistakes.
+> Suggestion to use kmemdup rather than using kmalloc/kzalloc + memcpy.
+>
 
-   ASoC: codec2codec: name link using stream direction
+Pushed to my review and testing queue, thanks!
 
-has been applied to the asoc tree at
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+> ---
+> Changes in v2:
+>   - Fix a typo in commit message (memset -> memcpy)
+>   - Split into two patches.
+>
+>  drivers/platform/x86/asus-wmi.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 9b18a184e0aa..472b317ad814 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -260,12 +260,11 @@ static int asus_wmi_evaluate_method_agfn(const struct acpi_buffer args)
+>          * Copy to dma capable address otherwise memory corruption occurs as
+>          * bios has to be able to access it.
+>          */
+> -       input.pointer = kzalloc(args.length, GFP_DMA | GFP_KERNEL);
+> +       input.pointer = kmemdup(args.pointer, args.length, GFP_DMA | GFP_KERNEL);
+>         input.length = args.length;
+>         if (!input.pointer)
+>                 return -ENOMEM;
+>         phys_addr = virt_to_phys(input.pointer);
+> -       memcpy(input.pointer, args.pointer, args.length);
+>
+>         status = asus_wmi_evaluate_method(ASUS_WMI_METHODID_AGFN,
+>                                         phys_addr, 0, &retval);
+> --
+> 2.11.0
+>
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 054d65004c6a008dfefbdae4fc1b46a3ad4e94c1 Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu, 25 Jul 2019 18:59:45 +0200
-Subject: [PATCH] ASoC: codec2codec: name link using stream direction
-
-At the moment, codec to codec dai link widgets are named after the
-cpu dai and the 1st codec valid on the link. This might be confusing
-if there is multiple valid codecs on the link for one stream
-direction.
-
-Instead, use the dai link name and the stream direction to name the
-the dai link widget
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20190725165949.29699-3-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/soc-dapm.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
-
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index 034b31fd2ecb..7db4abd9a0a5 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -4056,8 +4056,7 @@ snd_soc_dapm_alloc_kcontrol(struct snd_soc_card *card,
- 
- static struct snd_soc_dapm_widget *
- snd_soc_dapm_new_dai(struct snd_soc_card *card, struct snd_soc_pcm_runtime *rtd,
--		     struct snd_soc_dapm_widget *source,
--		     struct snd_soc_dapm_widget *sink)
-+		     char *id)
- {
- 	struct snd_soc_dapm_widget template;
- 	struct snd_soc_dapm_widget *w;
-@@ -4067,7 +4066,7 @@ snd_soc_dapm_new_dai(struct snd_soc_card *card, struct snd_soc_pcm_runtime *rtd,
- 	int ret;
- 
- 	link_name = devm_kasprintf(card->dev, GFP_KERNEL, "%s-%s",
--				   source->name, sink->name);
-+				   rtd->dai_link->name, id);
- 	if (!link_name)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -4247,15 +4246,13 @@ static void dapm_connect_dai_link_widgets(struct snd_soc_card *card,
- 	}
- 
- 	for_each_rtd_codec_dai(rtd, i, codec_dai) {
--
- 		/* connect BE DAI playback if widgets are valid */
- 		codec = codec_dai->playback_widget;
- 
- 		if (playback_cpu && codec) {
- 			if (!playback) {
- 				playback = snd_soc_dapm_new_dai(card, rtd,
--								playback_cpu,
--								codec);
-+								"playback");
- 				if (IS_ERR(playback)) {
- 					dev_err(rtd->dev,
- 						"ASoC: Failed to create DAI %s: %ld\n",
-@@ -4284,8 +4281,7 @@ static void dapm_connect_dai_link_widgets(struct snd_soc_card *card,
- 		if (codec && capture_cpu) {
- 			if (!capture) {
- 				capture = snd_soc_dapm_new_dai(card, rtd,
--							       codec,
--							       capture_cpu);
-+							       "capture");
- 				if (IS_ERR(capture)) {
- 					dev_err(rtd->dev,
- 						"ASoC: Failed to create DAI %s: %ld\n",
 -- 
-2.20.1
-
+With Best Regards,
+Andy Shevchenko
