@@ -2,91 +2,96 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06327C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21FDC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D00D422C7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8606922C7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:32:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564072355;
+	bh=xwPVtyJ5T1l4b3jgDCdQoLUD8adJlLm8DqRgOMu0TCs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XhepjPfVraxH+DwWRTx7hV+Pw1XUA84ZabiofGcfvjP8qZDtSFrdiVrhEkcML3+Wo
+	 YjWO2oQfzKI2oA94vF4M88jJon6nOVdDNrikuPeN5vDxyj6HrMjW7Bx9wNeATFO7Gt
+	 loJpqta5HktqbDgvUGXPyN4sDynIrHwyncMYYlAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbfGYQcV (ORCPT
+        id S1729324AbfGYQce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:32:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57516 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726087AbfGYQcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:32:21 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F144A86679;
-        Thu, 25 Jul 2019 16:32:20 +0000 (UTC)
-Received: from [10.36.116.102] (ovpn-116-102.ams2.redhat.com [10.36.116.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7EA3E60C05;
-        Thu, 25 Jul 2019 16:32:16 +0000 (UTC)
-Subject: Re: [PATCH 2/2] virtio/virtio_ring: Fix the dma_max_mapping_size call
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>, eric.auger.pro@gmail.com,
-        m.szyprowski@samsung.com, mst@redhat.com, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-References: <20190722145509.1284-1-eric.auger@redhat.com>
- <20190722145509.1284-3-eric.auger@redhat.com>
- <e4a288f2-a93a-5ce4-32da-f5434302551f@arm.com> <20190723153851.GE720@lst.de>
- <fa0fbad5-9b44-d937-e0fd-65fb20c90666@redhat.com>
- <20190725130416.GA4992@lst.de>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <11b7b5e4-2de7-2089-57d2-d0a138f94376@redhat.com>
-Date:   Thu, 25 Jul 2019 18:32:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 25 Jul 2019 12:32:34 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45828 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfGYQcd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 12:32:33 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u10so34959890lfm.12
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 09:32:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JqOFR6ie8Zaoa2hn6SZllwIPPh5UhjENPA2Q0bn9vfg=;
+        b=CVnx+CPrZRWriTDWiJoish2j/9LHhqWaP2xJQvJOBX95wj/wrHDKQfrkszdzZTakLl
+         iU/tjq16CMZ4gvuLAxJ3aV7rCxcl4fmpZvOkLHV8dl4gWnQauNEw/oiQgeh5vM3qdZOB
+         1zDwearX/Gx62mziEFU3rTy1XcTR+XmyD9acE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JqOFR6ie8Zaoa2hn6SZllwIPPh5UhjENPA2Q0bn9vfg=;
+        b=c/Ys9y5onWEbW9+JtXBOZI3QA3AnIqWhJZM7A9RfeTbS9e7C0MYKK8EV30BCC7Nql6
+         86c+dIsijJ8eY10DDPDouz0dkdryQuE3TwXobL5LGJdp4PR0FeKCwxPbFdVCvwpwKrfH
+         Np3WB9cYVjvQFPUx4kHR3QOLjLlnZs/uKnF3Pf0Uwbh9zpN/u5yPrG2jNrx9Q1pzPLsX
+         tZwMBe9qoWTCWstUmxrimDuiVLzc7GMz6e+unustXI8zmif9wUhp0SgQqt/4dHZmhXwN
+         Cadbzpt97KTCmNAVL7XPVJ4lehXrjzSmqB/cArnk7bSGPBf2zzCGQq8jALlpqnKQ7/mG
+         vnPQ==
+X-Gm-Message-State: APjAAAUZ5Fif+SCivLinLYdtyoSuyMLbgbl6JPvrn+sHMUQOG87TT9Yv
+        mULHOmL8WOmlOO12hcED1SHUnNQHYG0=
+X-Google-Smtp-Source: APXvYqxhZLHIXMU+/pqE9V1UH7ZscTaG6PD3Ep0sirCgAQdbjJKIRbyoZDuk5QKuNxQG0Y7DbuY3qA==
+X-Received: by 2002:ac2:546a:: with SMTP id e10mr42468630lfn.75.1564072350759;
+        Thu, 25 Jul 2019 09:32:30 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id 63sm9296725ljs.84.2019.07.25.09.32.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 09:32:29 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id r15so17985074lfm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 09:32:29 -0700 (PDT)
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr31129161lfp.61.1564072349436;
+ Thu, 25 Jul 2019 09:32:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190725130416.GA4992@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 25 Jul 2019 16:32:21 +0000 (UTC)
+References: <20190725110944.GA22106@shao2-debian> <20190725132617.GA23135@rei.lan>
+In-Reply-To: <20190725132617.GA23135@rei.lan>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 25 Jul 2019 09:32:13 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg+yRjY_AUrjbgrN59OeGAWMF_q=-Dqf2cYtVzoY01j7Q@mail.gmail.com>
+Message-ID: <CAHk-=wg+yRjY_AUrjbgrN59OeGAWMF_q=-Dqf2cYtVzoY01j7Q@mail.gmail.com>
+Subject: Re: [LTP] 56cbb429d9: ltp.fs_fill.fail
+To:     Cyril Hrubis <chrubis@suse.cz>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>, ltp@lists.linux.it
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph, Michael,
+On Thu, Jul 25, 2019 at 6:26 AM Cyril Hrubis <chrubis@suse.cz> wrote:
+>
+> This looks like mkfs.vfat got EBUSY after the loop device was
+> succesfully umounted.
 
-On 7/25/19 3:04 PM, Christoph Hellwig wrote:
-> On Thu, Jul 25, 2019 at 01:53:49PM +0200, Auger Eric wrote:
->> I am confused: if vring_use_dma_api() returns false if the dma_mask is
->> unset (ie. vring_use_dma_api() returns false), the virtio-blk-pci device
->> will not be able to get translated addresses and won't work properly.
->>
->> The patch above allows the dma api to be used and only influences the
->> max_segment_size and it works properly.
->>
->> So is it normal the dma_mask is unset in my case?
-> 
-> Its not normal.  I assume you use virtio-nmio?  Due to the mess with
-> the dma_mask being a pointer a lot of subsystems forgot to set a dma
-> mask up, and oddly enough seem to mostly get away with it.
-> 
+Hmm. Smells like the RCU-delaying got triggered again.
 
-No the issue is encountered with virtio-blk-pci
+We have that "synchronize_rcu_expedited()" in namespace_unlock(),
+which is so that everything should be done by the time we return to
+user space.
 
-I think the problem is virtio_max_dma_size() is called from
-virtblk_probe (virtio_blk.c) on the virtio<n> device and not the actual
-virtio_pci_device which has a dma_mask set. I don't think the virtio<n>
-device ever has a dma_mask set.
+Al, maybe that RCU synchronization should be after the mntput()s?
 
-We do not hit the guest crash on the virtio-net-pci device as the
-virtio-net driver does not call virtio_max_dma_size() on the virtio<n>
-device.
-
-Does fd1068e1860e ("virtio-blk: Consider virtio_max_dma_size() for
-maximum segment size") call virtio_max_dma_size() on the right device?
-
-Thanks
-
-Eric
+               Linus
