@@ -2,132 +2,107 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83090C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B88C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C79422BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:43:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564094588;
-	bh=lBESfuT3DmI+rgGQfA5Bgd1cqeRkqGQxNUSPLRT7J/w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HanOQ/bo4QMB8NEj922QS7TyladkgHaYQvuzpGr9IeE8ImGNYe+EeL+ZX9xac1qGk
-	 SqBlzYpK4T5yUC8db3x6aI18DcwjVi8B1mKkg/rnlSig+rWTHcXTOlRkkMNuMoGV0o
-	 gvDOvvcxAdVvGVPJHWfStQzHhhh4bdld5nxV49ew=
+	by mail.kernel.org (Postfix) with ESMTP id C6DCC22BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbfGYWnH (ORCPT
+        id S1726963AbfGYWnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 18:43:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726704AbfGYWnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 18:43:07 -0400
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E8BB22BF5;
-        Thu, 25 Jul 2019 22:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564094585;
-        bh=lBESfuT3DmI+rgGQfA5Bgd1cqeRkqGQxNUSPLRT7J/w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Nv80oMNgEN71r3/BbqLh/q7zx+mZrVMhluqgvK4uigmTgyG2Qrpej99va5ARTRYqz
-         hNJlcDNZ5zVI3+fa4g9d0ZUUDegPlf28mUu6+eCDC/czkZ0H05t/GEVU1VfhMYABRd
-         1/+T5bnkyHC2A6g6LO4gPGxap4XYNjcZRILpeRwo=
-Received: by mail-qt1-f180.google.com with SMTP id z4so50787195qtc.3;
-        Thu, 25 Jul 2019 15:43:05 -0700 (PDT)
-X-Gm-Message-State: APjAAAX3lNwfuIZomWaUDY6UePS9LWFNB8ZwsoP68vLsCDLHse9OPlIg
-        q/gviR489Nggv9+Uu89u1gtUHUPhZN4ilTLH6Q==
-X-Google-Smtp-Source: APXvYqxdeWh9cmjbYBWJqGtuD2MR1ApRKd+If++ai9lKP0uWwFcRMyo2Qs/i7JSDX0ekJFmk7Df2ahT9V7pGKFBaufs=
-X-Received: by 2002:a0c:b627:: with SMTP id f39mr66634624qve.72.1564094584748;
- Thu, 25 Jul 2019 15:43:04 -0700 (PDT)
+        Thu, 25 Jul 2019 18:43:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35318 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726704AbfGYWnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 18:43:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DEB95AEF6;
+        Thu, 25 Jul 2019 22:43:12 +0000 (UTC)
+Date:   Thu, 25 Jul 2019 23:43:07 +0100
+From:   Mel Gorman <mgorman@suse.de>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Hillf Danton <hdanton@sina.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [RFC PATCH 3/3] hugetlbfs: don't retry when pool page
+ allocations start to fail
+Message-ID: <20190725224307.GE2708@suse.de>
+References: <20190724175014.9935-1-mike.kravetz@oracle.com>
+ <20190724175014.9935-4-mike.kravetz@oracle.com>
+ <20190725081350.GD2708@suse.de>
+ <6a7f3705-9550-e22f-efa1-5e3616351df6@oracle.com>
 MIME-Version: 1.0
-References: <cover.1562597164.git.hns@goldelico.com> <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com>
- <20190724194259.GA25847@bogus> <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com>
-In-Reply-To: <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 25 Jul 2019 16:42:53 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com>
-Message-ID: <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to make
- display work again
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <6a7f3705-9550-e22f-efa1-5e3616351df6@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 12:23 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> Hi Rob,
->
-> > Am 24.07.2019 um 21:42 schrieb Rob Herring <robh@kernel.org>:
-> >
-> > On Mon, Jul 08, 2019 at 04:46:05PM +0200, H. Nikolaus Schaller wrote:
-> >> commit 6953c57ab172 "gpio: of: Handle SPI chipselect legacy bindings"
+On Thu, Jul 25, 2019 at 10:15:29AM -0700, Mike Kravetz wrote:
+> On 7/25/19 1:13 AM, Mel Gorman wrote:
+> > On Wed, Jul 24, 2019 at 10:50:14AM -0700, Mike Kravetz wrote:
+> >> When allocating hugetlbfs pool pages via /proc/sys/vm/nr_hugepages,
+> >> the pages will be interleaved between all nodes of the system.  If
+> >> nodes are not equal, it is quite possible for one node to fill up
+> >> before the others.  When this happens, the code still attempts to
+> >> allocate pages from the full node.  This results in calls to direct
+> >> reclaim and compaction which slow things down considerably.
 > >>
-> >> did introduce logic to centrally handle the legacy spi-cs-high property
-> >> in combination with cs-gpios. This assumes that the polarity
-> >> of the CS has to be inverted if spi-cs-high is missing, even
-> >> and especially if non-legacy GPIO_ACTIVE_HIGH is specified.
+> >> When allocating pool pages, note the state of the previous allocation
+> >> for each node.  If previous allocation failed, do not use the
+> >> aggressive retry algorithm on successive attempts.  The allocation
+> >> will still succeed if there is memory available, but it will not try
+> >> as hard to free up memory.
 > >>
-> >> The DTS for the GTA04 was orginally introduced under the assumption
-> >> that there is no need for spi-cs-high if the gpio is defined with
-> >> proper polarity GPIO_ACTIVE_HIGH.
-> >
-> > Given that spi-cs-high is called legacy, that would imply that DT's
-> > should not have to use spi-cs-high.
->
+> >> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+> > 
+> > set_max_huge_pages can fail the NODEMASK_ALLOC() alloc which you handle
+> > *but* in the event of an allocation failure this bug can silently recur.
+> > An informational message might be justified in that case in case the
+> > stall should recur with no hint as to why.
+> 
+> Right.
+> Perhaps a NODEMASK_ALLOC() failure should just result in a quick exit/error.
+> If we can't allocate a node mask, it is unlikely we will be able to allocate
+> a/any huge pages.  And, the system must be extremely low on memory and there
+> are likely other bigger issues.
+> 
+
+That might be better overall, you make a valid point that a failed
+kmalloc is not a good sign for hugetlbfs allocations.
+
+> There have been discussions elsewhere about discontinuing the use of
+> NODEMASK_ALLOC() and just putting the mask on the stack.  That may be
+> acceptable here as well.
+> 
+
+They can be big and while this particular path would be relatively safe,
+I think the fact that there will not be much functional difference
+between allocating on the stack and a failed kmalloc in terms of
+hugetlbfs allocation success rates.
+
+> >                                            Technically passing NULL into
+> > NODEMASK_FREE is also safe as kfree (if used for that kernel config) can
+> > handle freeing of a NULL pointer. However, that is cosmetic more than
+> > anything. Whether you decide to change either or not;
+> 
 > Yes.
->
-> >
-> >> This was not a problem until gpiolib changed the interpretation of
-> >> GPIO_ACTIVE_HIGH and missing spi-cs-high.
-> >
-> > Then we should fix gpiolib...
->
-> I tried to convince Linus that this is the right way but he convinced
-> me that a fix that handles all cases does not exist.
->
-> There seem to be embedded devices with older DTB (potentially in ROM)
-> which provide a plain 0 value for a gpios definition. And either with
-> or without spi-cs-high.
->
-> Since "0" is the same as "GPIO_ACTIVE_HIGH", the absence of
-> spi-cs-high was and must be interpreted as active low for these
-> devices. This leads to the inversion logic in code.
->
-> AFAIR it boils down to the question if gpiolib and the bindings
-> should still support such legacy devices with out-of tree DTB,
-> but force in-tree DTS to add the legacy spi-cs-high property.
->
-> Or if we should fix the 2 or 3 cases of in-tree legacy cases
-> and potentially break out-of tree DTBs.
+> I will clean up with an updated series after more feedback.
+> 
 
-If it is small number of platforms, then the kernel could handle those
-cases explicitly as needed.
+Thanks.
 
-> IMHO it is more general to keep the out-of-tree DTBs working
-> and "fix" what we can control (in-tree DTS).
-
-If we do this, then we need to not call spi-cs-high legacy because
-we're stuck with it forever.
-
-Rob
+-- 
+Mel Gorman
+SUSE Labs
