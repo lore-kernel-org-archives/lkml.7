@@ -2,118 +2,291 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EB9C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DC7C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17CA3206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:26:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="HzJjnq8I"
+	by mail.kernel.org (Postfix) with ESMTP id 75C0B206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:28:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbfGYM04 (ORCPT
+        id S1729886AbfGYM2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:26:56 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38118 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727890AbfGYM0z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:26:55 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r12so15268213edo.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 05:26:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9aKNcQbqtSEQ2QLViWMxlIXutxeIxOIYk6E7Syx9R3M=;
-        b=HzJjnq8ICgDrR/7Xt9pOiXw5RVUlib1TORuUxu71HvMJqO65/Ux6jTfikdMemxdpXs
-         xFB0F/XS/GROuLQWSgIn2x9kn5aWhHaQWsS8cmP+5v21cBaEOV391x1lc/EP2gfOdFwM
-         2Vuhy4xdru8Z3/6rvFqVnx0F+ShoAKvnJmHJYKdk+CK2Q2zSwzDo4NAg0J83Vn8RKwMO
-         napUZgvr/ZqSc5Sm4vU5FKroJjmMGEn/1ctbCa8Iqi0bp+cKh5D5l2TQuhfESD+ZlwLy
-         DjgBv9l3jBj+1KHDP9CQEXJ0x9Pml9WH+WdNCariBSFYNSwP3XuzOvmrukVquHywW4nl
-         K0ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9aKNcQbqtSEQ2QLViWMxlIXutxeIxOIYk6E7Syx9R3M=;
-        b=HKwqok0J0C9PEQl/KxiSw0sbTkZcFOrltY8LumPmzV93pjQTRkkUCM/naw2QJa5fbC
-         4nw1Uv5vTD2LpTmquYrGe7QNLSqe+DOKcWV13n08Kq/t5X54ZhF4/rtIaOLmOkic+Rtb
-         6yZ4RRR5bocACeb1L32EG2MFLyYKk+29+myCh3buo2rbwzngcm7h2Db88U8uLTy/3Ckq
-         hgTiDY074RYwUhEiB9TR4GngpDlRL+2vhsKwLSYb7u6kkh4faVkpLuc7H1Ssiv/nSS7z
-         Zg3Rowv/OIXgSUE1i8VjEUBZnJ+h5LzqdXBwAaiv5R3lXINRbLV7VGimEMVA0tLBGk8O
-         ZNvg==
-X-Gm-Message-State: APjAAAUzBrv7Ug+aOn5ENZSy//u4ft8bOMn0VpweStf98bIq/lg984sF
-        oyZcQ8F0q/NEdRloEYR7RQs=
-X-Google-Smtp-Source: APXvYqypQMriHbVL4iQKojOec0aGpscsAqpWxtIHGIkJrv+ZbpQN6mKWH0jWKzkROfrq+kgYvpd7Bg==
-X-Received: by 2002:a17:906:28c4:: with SMTP id p4mr68122099ejd.181.1564057613670;
-        Thu, 25 Jul 2019 05:26:53 -0700 (PDT)
-Received: from brauner.io (ip5b40f7ec.dynamic.kabel-deutschland.de. [91.64.247.236])
-        by smtp.gmail.com with ESMTPSA id t13sm13350326edd.13.2019.07.25.05.26.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 05:26:52 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 14:26:51 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, ebiederm@xmission.com,
-        keescook@chromium.org, joel@joelfernandes.org, tglx@linutronix.de,
-        tj@kernel.org, dhowells@redhat.com, jannh@google.com,
-        luto@kernel.org, akpm@linux-foundation.org, cyphar@cyphar.com,
-        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        kernel-team@android.com, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH 4/5] pidfd: add CLONE_WAIT_PID
-Message-ID: <20190725122650.4i3arct5rpchqmyt@brauner.io>
-References: <20190724144651.28272-1-christian@brauner.io>
- <20190724144651.28272-5-christian@brauner.io>
- <20190725103543.GF4707@redhat.com>
- <20190725104006.7myahvjtnbcgu3in@brauner.io>
- <20190725112503.GG4707@redhat.com>
- <20190725114359.GH4707@redhat.com>
+        Thu, 25 Jul 2019 08:28:09 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2487 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727890AbfGYM2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 08:28:09 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id D203DAE15A54074DDC27;
+        Thu, 25 Jul 2019 20:28:05 +0800 (CST)
+Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 25 Jul 2019 20:28:05 +0800
+Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
+ (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Thu, 25
+ Jul 2019 20:28:04 +0800
+Subject: Re: [PATCH net-next 07/11] net: hns3: adds debug messages to identify
+ eth down cause
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        "tanhuazhong@huawei.com" <tanhuazhong@huawei.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "lipeng321@huawei.com" <lipeng321@huawei.com>,
+        "yisen.zhuang@huawei.com" <yisen.zhuang@huawei.com>,
+        "salil.mehta@huawei.com" <salil.mehta@huawei.com>,
+        "linuxarm@huawei.com" <linuxarm@huawei.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
+ <1563938327-9865-8-git-send-email-tanhuazhong@huawei.com>
+ <ffd942e7d7442549a3a6d469709b7f7405928afe.camel@mellanox.com>
+From:   liuyonglong <liuyonglong@huawei.com>
+Message-ID: <30483e38-5e4a-0111-f431-4742ceb1aa62@huawei.com>
+Date:   Thu, 25 Jul 2019 20:28:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190725114359.GH4707@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <ffd942e7d7442549a3a6d469709b7f7405928afe.camel@mellanox.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.37.248]
+X-ClientProxiedBy: dggeme716-chm.china.huawei.com (10.1.199.112) To
+ dggeme760-chm.china.huawei.com (10.3.19.106)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 01:43:59PM +0200, Oleg Nesterov wrote:
-> Or. We can change wait_consider_task() to not clear ->notask_error if
-> WXXX and the child is PF_WAIT_PID.
+
+
+On 2019/7/25 3:12, Saeed Mahameed wrote:
+> On Wed, 2019-07-24 at 11:18 +0800, Huazhong Tan wrote:
+>> From: Yonglong Liu <liuyonglong@huawei.com>
+>>
+>> Some times just see the eth interface have been down/up via
+>> dmesg, but can not know why the eth down. So adds some debug
+>> messages to identify the cause for this.
+>>
 > 
-> This way you can "safely" use wait() without WNOHANG, it won't block if
-> all the children which can report an even are PF_WAIT_PID.
+> I really don't like this. your default msg lvl has NETIF_MSG_IFDOWN
+> turned on .. dumping every single operation that happens on your device
+> by default to kernel log is too much ! 
 > 
-> But I do not understand your use-cases, I have no idea if this can help
+> We should really consider using trace buffers with well defined
+> structures for vendor specific events. so we can use bpf filters and
+> state of the art tools for netdev debugging.
+> 
 
-One usecase (among others listed in the commit message) are shared
-libraries. P_ALL is usually something you can't really use in a shared
-library because you have no idea what else might be fork()ed off. Only
-the main program can use this but none of the auxiliary libraries that
-it uses.
-The other way around you want to be able fork() off something without
-affecting P_ALL in the main program.
-The key is that you want to be able to create child processes in a
-shared library without the main programing having to know about this so
-that it can use P_ALL and never get stuff from the library.
+We do this because we can just see a link down message in dmesg, and had
+take a long time to found the cause of link down, just because another
+user changed the settings.
 
-Assume you have a project with a main loop with a million things
-happening in that mainloop like some gui app running an avi video. For
-example, gtk uses gstreamer which forks off all codecs in child
-processes which are sandboxed for security. So gstreamer is using helper
-processes in the background which are my children now. Now I'm creating
-four more additional helper processes as well. Now, in my (glib, qt
-whatever) mainloop on SIGCHLD some part of the app is checking with
-WNHOANG and finds a process has exited. It's cleaning this thing up now
-but it's not a process it wanted to clean up. The other part of the app
-is now doing waitid(P_PID, pid) but will find the process already gone
-it wanted to reap.
+We can change the net_open/net_stop/dcbnl_ops to msg_drv (not default
+turned on),  and want to keep the others default print to kernel log,
+is it acceptable?
 
-I hope I'm expressing this well enough.
+>> @@ -1593,6 +1603,11 @@ static int hns3_ndo_set_vf_vlan(struct
+>> net_device *netdev, int vf, u16 vlan,
+>>  	struct hnae3_handle *h = hns3_get_handle(netdev);
+>>  	int ret = -EIO;
+>>  
+>> +	if (netif_msg_ifdown(h))
+> 
+> why msg_ifdown ? looks like netif_msg_drv is more appropriate, for many
+> of the cases in this patch.
+> 
+
+This operation may cause link down, so we use msg_ifdown.
+
+>> +		netdev_info(netdev,
+>> +			    "set vf vlan: vf=%d, vlan=%d, qos=%d,
+>> vlan_proto=%d\n",
+>> +			    vf, vlan, qos, vlan_proto);
+>> +
+>>  	if (h->ae_algo->ops->set_vf_vlan_filter)
+>>  		ret = h->ae_algo->ops->set_vf_vlan_filter(h, vf, vlan,
+>>  							  qos,
+>> vlan_proto);
+>> @@ -1611,6 +1626,10 @@ static int hns3_nic_change_mtu(struct
+>> net_device *netdev, int new_mtu)
+>>  	if (!h->ae_algo->ops->set_mtu)
+>>  		return -EOPNOTSUPP;
+>>  
+>> +	if (netif_msg_ifdown(h))
+>> +		netdev_info(netdev, "change mtu from %d to %d\n",
+>> +			    netdev->mtu, new_mtu);
+>> +
+>>  	ret = h->ae_algo->ops->set_mtu(h, new_mtu);
+>>  	if (ret)
+>>  		netdev_err(netdev, "failed to change MTU in hardware
+>> %d\n",
+>> @@ -4395,6 +4414,11 @@ int hns3_set_channels(struct net_device
+>> *netdev,
+>>  	if (kinfo->rss_size == new_tqp_num)
+>>  		return 0;
+>>  
+>> +	if (netif_msg_ifdown(h))
+>> +		netdev_info(netdev,
+>> +			    "set channels: tqp_num=%d, rxfh=%d\n",
+>> +			    new_tqp_num, rxfh_configured);
+>> +
+>>  	ret = hns3_reset_notify(h, HNAE3_DOWN_CLIENT);
+>>  	if (ret)
+>>  		return ret;
+>> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+>> b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+>> index e71c92b..edb9845 100644
+>> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+>> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+>> @@ -311,6 +311,9 @@ static void hns3_self_test(struct net_device
+>> *ndev,
+>>  	if (eth_test->flags != ETH_TEST_FL_OFFLINE)
+>>  		return;
+>>  
+>> +	if (netif_msg_ifdown(h))
+>> +		netdev_info(ndev, "self test start\n");
+>> +
+>>  	st_param[HNAE3_LOOP_APP][0] = HNAE3_LOOP_APP;
+>>  	st_param[HNAE3_LOOP_APP][1] =
+>>  			h->flags & HNAE3_SUPPORT_APP_LOOPBACK;
+>> @@ -374,6 +377,9 @@ static void hns3_self_test(struct net_device
+>> *ndev,
+>>  
+>>  	if (if_running)
+>>  		ndev->netdev_ops->ndo_open(ndev);
+>> +
+>> +	if (netif_msg_ifdown(h))
+>> +		netdev_info(ndev, "self test end\n");
+>>  }
+>>  
+>>  static int hns3_get_sset_count(struct net_device *netdev, int
+>> stringset)
+>> @@ -604,6 +610,11 @@ static int hns3_set_pauseparam(struct net_device
+>> *netdev,
+>>  {
+>>  	struct hnae3_handle *h = hns3_get_handle(netdev);
+>>  
+>> +	if (netif_msg_ifdown(h))
+>> +		netdev_info(netdev,
+>> +			    "set pauseparam: autoneg=%d, rx:%d,
+>> tx:%d\n",
+>> +			    param->autoneg, param->rx_pause, param-
+>>> tx_pause);
+>> +
+>>  	if (h->ae_algo->ops->set_pauseparam)
+>>  		return h->ae_algo->ops->set_pauseparam(h, param-
+>>> autoneg,
+>>  						       param->rx_pause,
+>> @@ -743,6 +754,13 @@ static int hns3_set_link_ksettings(struct
+>> net_device *netdev,
+>>  	if (cmd->base.speed == SPEED_1000 && cmd->base.duplex ==
+>> DUPLEX_HALF)
+>>  		return -EINVAL;
+>>  
+>> +	if (netif_msg_ifdown(handle))
+>> +		netdev_info(netdev,
+>> +			    "set link(%s): autoneg=%d, speed=%d,
+>> duplex=%d\n",
+>> +			    netdev->phydev ? "phy" : "mac",
+>> +			    cmd->base.autoneg, cmd->base.speed,
+>> +			    cmd->base.duplex);
+>> +
+>>  	/* Only support ksettings_set for netdev with phy attached for
+>> now */
+>>  	if (netdev->phydev)
+>>  		return phy_ethtool_ksettings_set(netdev->phydev, cmd);
+>> @@ -984,6 +1002,10 @@ static int hns3_nway_reset(struct net_device
+>> *netdev)
+>>  		return -EINVAL;
+>>  	}
+>>  
+>> +	if (netif_msg_ifdown(handle))
+>> +		netdev_info(netdev, "nway reset (using %s)\n",
+>> +			    phy ? "phy" : "mac");
+>> +
+>>  	if (phy)
+>>  		return genphy_restart_aneg(phy);
+>>  
+>> @@ -1308,6 +1330,10 @@ static int hns3_set_fecparam(struct net_device
+>> *netdev,
+>>  	if (!ops->set_fec)
+>>  		return -EOPNOTSUPP;
+>>  	fec_mode = eth_to_loc_fec(fec->fec);
+>> +
+>> +	if (netif_msg_ifdown(handle))
+>> +		netdev_info(netdev, "set fecparam: mode=%d\n",
+>> fec_mode);
+>> +
+>>  	return ops->set_fec(handle, fec_mode);
+>>  }
+>>  
+>> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
+>> b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
+>> index bac4ce1..133e7c6 100644
+>> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
+>> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
+>> @@ -201,6 +201,7 @@ static int hclge_client_setup_tc(struct hclge_dev
+>> *hdev)
+>>  static int hclge_ieee_setets(struct hnae3_handle *h, struct ieee_ets
+>> *ets)
+>>  {
+>>  	struct hclge_vport *vport = hclge_get_vport(h);
+>> +	struct net_device *netdev = h->kinfo.netdev;
+>>  	struct hclge_dev *hdev = vport->back;
+>>  	bool map_changed = false;
+>>  	u8 num_tc = 0;
+>> @@ -215,6 +216,9 @@ static int hclge_ieee_setets(struct hnae3_handle
+>> *h, struct ieee_ets *ets)
+>>  		return ret;
+>>  
+>>  	if (map_changed) {
+>> +		if (netif_msg_ifdown(h))
+>> +			netdev_info(netdev, "set ets\n");
+>> +
+>>  		ret = hclge_notify_client(hdev, HNAE3_DOWN_CLIENT);
+>>  		if (ret)
+>>  			return ret;
+>> @@ -300,6 +304,7 @@ static int hclge_ieee_getpfc(struct hnae3_handle
+>> *h, struct ieee_pfc *pfc)
+>>  static int hclge_ieee_setpfc(struct hnae3_handle *h, struct ieee_pfc
+>> *pfc)
+>>  {
+>>  	struct hclge_vport *vport = hclge_get_vport(h);
+>> +	struct net_device *netdev = h->kinfo.netdev;
+>>  	struct hclge_dev *hdev = vport->back;
+>>  	u8 i, j, pfc_map, *prio_tc;
+>>  
+>> @@ -325,6 +330,11 @@ static int hclge_ieee_setpfc(struct hnae3_handle
+>> *h, struct ieee_pfc *pfc)
+>>  	hdev->tm_info.hw_pfc_map = pfc_map;
+>>  	hdev->tm_info.pfc_en = pfc->pfc_en;
+>>  
+>> +	if (netif_msg_ifdown(h))
+>> +		netdev_info(netdev,
+>> +			    "set pfc: pfc_en=%d, pfc_map=%d,
+>> num_tc=%d\n",
+>> +			    pfc->pfc_en, pfc_map, hdev-
+>>> tm_info.num_tc);
+>> +
+>>  	hclge_tm_pfc_info_update(hdev);
+>>  
+>>  	return hclge_pause_setup_hw(hdev, false);
+>> @@ -345,8 +355,12 @@ static u8 hclge_getdcbx(struct hnae3_handle *h)
+>>  static u8 hclge_setdcbx(struct hnae3_handle *h, u8 mode)
+>>  {
+>>  	struct hclge_vport *vport = hclge_get_vport(h);
+>> +	struct net_device *netdev = h->kinfo.netdev;
+>>  	struct hclge_dev *hdev = vport->back;
+>>  
+>> +	if (netif_msg_drv(h))
+>> +		netdev_info(netdev, "set dcbx: mode=%d\n", mode);
+>> +
+>>  	/* No support for LLD_MANAGED modes or CEE */
+>>  	if ((mode & DCB_CAP_DCBX_LLD_MANAGED) ||
+>>  	    (mode & DCB_CAP_DCBX_VER_CEE) ||
+
