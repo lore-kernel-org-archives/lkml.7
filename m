@@ -2,105 +2,139 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1F2C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A8DC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 075622190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F6DB20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:25:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="DZ2Ni7t0"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="TUVu/4cr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729842AbfGYKWC (ORCPT
+        id S1727488AbfGYKZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 06:22:02 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:38684 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbfGYKV7 (ORCPT
+        Thu, 25 Jul 2019 06:25:24 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:37765 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726347AbfGYKZY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 06:21:59 -0400
-Received: by mail-ed1-f68.google.com with SMTP id r12so14937791edo.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:21:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xg/jPeKKTB739DC4K1Kn5i6nMiOCPP3yYS7XnqJJUR0=;
-        b=DZ2Ni7t05/jQ93QmmC1R/YHMhpDaH8fwuJhAj4qWCViaKIFm+SJfKoKs4xeUSlf6RS
-         ailFXEETYnNGKz+7klPXoF8lDxcqG89449URMDPBWZjGELL7cSyACtnBbD4QDxEv4DoY
-         Vn7vJM73S9XdMTu9iKTl/VdhHTOPfXZTu92TnJvcAWj+umf2IJhq27wK7ddcHkcgAu9y
-         mqrSYlYtMqqPZ7K3fJP+EFG9XjL32ozVRHam37ox6u7p+F/nzOG6Vss7s/WlKrCfsT6W
-         tjCKCSkaCnKbS7sl/aZOHoTqbO5jqslxO5EDaNiyel8F4szFy3JP3f0qL8zonVM1mpTl
-         2dig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xg/jPeKKTB739DC4K1Kn5i6nMiOCPP3yYS7XnqJJUR0=;
-        b=UWyFGjrPbP1ixF6OE8BH9suelOWEPxZ2ScxJCpIGY6ZlmnQ/4mxFBItYW3Ox1HDA7C
-         ordoKqklkZVROF7uxOP2p1R4HcLK4rYJdAuqbRocjzv02aaLWSYrLHsUpjIGYZW0d/3N
-         wyjRX9TXx1FodBwj7R6B3iX9fvlkgcPF+LnXv4hdf8lK+op01mXyb5yh/CaFjZ638pLZ
-         yDcQiBibmQAhsS1EjtkY08lo6o0vR11T+o6i5tEfG4oYPS0cH9n68yRwV0JM+jibCZ6J
-         6jBrTavxhIP+gA0pJAU4qOQnPvxTv5Qbdxl+UwfDtLrFfOj6Kr2TwkiM4ltSGhnyeSf3
-         JZJg==
-X-Gm-Message-State: APjAAAVG74XzRUE+WSS7jlyveimbYCnv62q6mm80SpqEBy3ikxg9l/k6
-        NWghyeP7jFJdirLhJVn3iJ8=
-X-Google-Smtp-Source: APXvYqwnnlwEsNrhcUAHrNjHscYNwb1YbvHUcf+02n2cfVtguvWwOau6+5+iaL+tXi5yG6SvDguEKg==
-X-Received: by 2002:a50:ad45:: with SMTP id z5mr75231854edc.21.1564050117987;
-        Thu, 25 Jul 2019 03:21:57 -0700 (PDT)
-Received: from brauner.io (ip5b40f7ec.dynamic.kabel-deutschland.de. [91.64.247.236])
-        by smtp.gmail.com with ESMTPSA id uz27sm9729326ejb.24.2019.07.25.03.21.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 03:21:57 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 12:21:56 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, ebiederm@xmission.com,
-        keescook@chromium.org, joel@joelfernandes.org, tglx@linutronix.de,
-        tj@kernel.org, dhowells@redhat.com, jannh@google.com,
-        luto@kernel.org, akpm@linux-foundation.org, cyphar@cyphar.com,
-        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        kernel-team@android.com, linux-api@vger.kernel.org
-Subject: Re: [PATCH 2/5] pidfd: add pidfd_wait()
-Message-ID: <20190725102156.nqnngsrb6dwmyztb@brauner.io>
-References: <20190724144651.28272-1-christian@brauner.io>
- <20190724144651.28272-3-christian@brauner.io>
- <20190725101626.GD4707@redhat.com>
+        Thu, 25 Jul 2019 06:25:24 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PAPFtZ958563
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 03:25:15 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PAPFtZ958563
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564050315;
+        bh=3VmaafQMX69052rZTCEMnFZherDDtPLEYB3ZW7XCFPM=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=TUVu/4crwu1uCDmyZqT0Ps67R9orgIK3toYFja2QxJq7VNCW2PUUt0DaLakpZml6Z
+         ZXND/RxaKfccyFHQZOfZDkOudsjyNO3jdhBy9aD6Ebgg5kJsBUvBbbxJnNszjpz6zu
+         gceUhRDPO3n+chN3xA9FFJg9U4mmnMV/xmSJMSqb53vXnW+P/S/ThCEbqy2iE1ghM0
+         OaG7Vk2op3c2wEuRY2AdfFcJOzWVdIUKgrPjPXLO/9vWknDRX8rQyu1JHWgFetbUDG
+         Ddm6xEYtLV0ceU9dyKSyVRi/gtGR05yPf/63SDg0+egEzI73fwDnlWq5nZAOdj1xhh
+         VlrBHpyBmZtDA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PAPEhE958560;
+        Thu, 25 Jul 2019 03:25:14 -0700
+Date:   Thu, 25 Jul 2019 03:25:14 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-643d83f0a3518d6fbcf88f970de0340a5aa6b5a2@git.kernel.org>
+Cc:     rsalvaterra@gmail.com, mingo@kernel.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, hpa@zytor.com
+Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com,
+          rsalvaterra@gmail.com, mingo@kernel.org, tglx@linutronix.de
+In-Reply-To: <alpine.DEB.2.21.1907250810530.1791@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907250810530.1791@nanos.tec.linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/hpet: Undo the early counter is counting check
+Git-Commit-ID: 643d83f0a3518d6fbcf88f970de0340a5aa6b5a2
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190725101626.GD4707@redhat.com>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 12:16:27PM +0200, Oleg Nesterov wrote:
-> On 07/24, Christian Brauner wrote:
-> >
-> > +SYSCALL_DEFINE6(pidfd_wait, int, pidfd, int __user *, stat_addr,
-> > +		siginfo_t __user *, info, struct rusage __user *, ru,
-> > +		unsigned int, states, unsigned int, flags)
-> > +{
-> 
-> Oh, I too think that P_PIDFD makes more sense.
+Commit-ID:  643d83f0a3518d6fbcf88f970de0340a5aa6b5a2
+Gitweb:     https://git.kernel.org/tip/643d83f0a3518d6fbcf88f970de0340a5aa6b5a2
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Thu, 25 Jul 2019 08:28:45 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 25 Jul 2019 12:21:32 +0200
 
-I have already updated the patch to introduce P_PIDFD.
+x86/hpet: Undo the early counter is counting check
 
-> 
-> and could you explain in the changelog why? I am not arguing and if
-> nothing else this is consistent with other pidfd features, but if you
-> are parent/debugger you can't hit the problem with pid-reuse, unless
-> you races with your sub-threads.
+Rui reported that on a Pentium D machine which has HPET forced enabled
+because it is not advertised by ACPI, the early counter is counting check
+leads to a silent boot hang.
 
-One of the things is that later on this will allow us to make it
-possible to retrieve the exit status via waitid(P_PIDFD) for non-parent
-processes if handed a _suitable_ pidfd that has this feature set. Maybe
-even - if safe - make it possible to wait on a process as a non-parent.
-And some tools just really want to do away with pids completely.
+The reason is that the ordering of checking the counter first and then
+reconfiguring the HPET fails to work on that machine. As the HPET is not
+advertised and presumably not initialized by the BIOS the early enable and
+the following reconfiguration seems to bring it into a broken state. Adding
+clocksource=jiffies to the command line results in the following
+clocksource watchdog warning:
 
-Christian
+  clocksource: timekeeping watchdog on CPU1:
+  Marking clocksource 'tsc-early' as unstable because the skew is too large:
+  clocksource:  'hpet' wd_now: 33 wd_last: 33 mask: ffffffff
+
+That clearly shows that the HPET is not counting after it got reconfigured
+and reenabled. If the counter is not working then the HPET timer is not
+expiring either, which explains the boot hang.
+
+Move the counter is counting check after the full configuration again to
+unbreak these systems.
+
+Reported-by: Rui Salvaterra <rsalvaterra@gmail.com>
+Fixes: 3222daf970f3 ("x86/hpet: Separate counter check out of clocksource register code")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Rui Salvaterra <rsalvaterra@gmail.com>
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1907250810530.1791@nanos.tec.linutronix.de
+
+---
+ arch/x86/kernel/hpet.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+index c43e96a938d0..c6f791bc481e 100644
+--- a/arch/x86/kernel/hpet.c
++++ b/arch/x86/kernel/hpet.c
+@@ -827,10 +827,6 @@ int __init hpet_enable(void)
+ 	if (!hpet_cfg_working())
+ 		goto out_nohpet;
+ 
+-	/* Validate that the counter is counting */
+-	if (!hpet_counting())
+-		goto out_nohpet;
+-
+ 	/*
+ 	 * Read the period and check for a sane value:
+ 	 */
+@@ -896,6 +892,14 @@ int __init hpet_enable(void)
+ 	}
+ 	hpet_print_config();
+ 
++	/*
++	 * Validate that the counter is counting. This needs to be done
++	 * after sanitizing the config registers to properly deal with
++	 * force enabled HPETs.
++	 */
++	if (!hpet_counting())
++		goto out_nohpet;
++
+ 	clocksource_register_hz(&clocksource_hpet, (u32)hpet_freq);
+ 
+ 	if (id & HPET_ID_LEGSUP) {
