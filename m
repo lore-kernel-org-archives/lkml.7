@@ -2,176 +2,90 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D1CC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF197C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0C1229F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3257229F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:58:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ok+ytzS/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fce7whCG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfGYR6G (ORCPT
+        id S1728099AbfGYR6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:58:06 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46207 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbfGYR6F (ORCPT
+        Thu, 25 Jul 2019 13:58:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53586 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbfGYR6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:58:05 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c2so23668067plz.13;
-        Thu, 25 Jul 2019 10:58:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TpXeI3bjGZJFrAoMRGWEMRsLJE/ZUctqhpPZgA4Uju4=;
-        b=ok+ytzS/Q9CbY/1VOtr6oEyeKil7vtncL3AnGuH9fdCXnD2A3GhbiqokFNplhJe3G/
-         URl/lfz/oqLFXBH1zlNAzZl+er5dJT4I0aDzQ334dCuaHSP6RYp5i51mgT8dOvggKnH4
-         58xT2Kt0AH2DICErB3525JLaUXiMmDdKIZhij64A0D6ESK/QbKu2cfMf/hGLml3RMAKX
-         72hrZ1d/ATtOmyfTyg0iaEIwOyoLXfNsWa57EYWC0VjAQ7/37np0/o+omNVxxi5cpY9W
-         r7HEh47aN1eWyA4lIoY+by12qXRtCcuhqdC+uLDYxKFrbIohVL7qaoYMspwy7zRKK4tM
-         bFnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TpXeI3bjGZJFrAoMRGWEMRsLJE/ZUctqhpPZgA4Uju4=;
-        b=fKQpVDrYJUuTCrb1s6auTI8p/lQez5/Qrjuzv3/yVDvSgzDS6AqyN1DkIwf3siSxPY
-         bTK3TT0ijI5zqh2LvbrVmho6UQ7kGUDeIckkFuZuxulZ+wRO3zBvX4pR0WB8bbKEedLX
-         rK10FkZWmDug2Z2Zd8Kv1MwXnHAiYlD78ISi3TXIbEu/to568SAV+2Xc+hEOngkatgmT
-         J+IgVVvFDeEqItclDJWysVXu1oSAEanO+PrbSQoaVhd5dvwPyCIbCVubKQo/02THOppm
-         GcQziTs/SrcFAqYumgVG+U179J2AqivWJvw37ev03EYAd4SHXhWq0Nb6grCgvnZA6AMP
-         RP2w==
-X-Gm-Message-State: APjAAAU/huuFApT5jqHYOj366NOeVIJS8XehMAnwy38r2VGl65C/HS/c
-        SKvvPPwyisvjAz38KgLWdNvPingl81cododNtkY=
-X-Google-Smtp-Source: APXvYqz4A+vOh0bYalI3BQl0fT/OksBSxz+ankbzQWNMIQ4XulhQSKCsGcPC5zSqhii/b2k5b1DFsutGteopFql21Po=
-X-Received: by 2002:a17:902:694a:: with SMTP id k10mr91300116plt.255.1564077485133;
- Thu, 25 Jul 2019 10:58:05 -0700 (PDT)
+        Thu, 25 Jul 2019 13:58:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=XQ6rI4d7gxBNj6SNlmzuGaSaA8CuaLNKV7YKP78h+Cc=; b=Fce7whCGz/V/DBAMhW7HcJDlK
+        hsk1SqJTkIq8akKJSz8MfOzYVgM62isRP3FAAyJ8ha68W6y08DNv4jdLNi14uNUgu2qLXe/0XLzO1
+        wTiABPnQYx/qD4NyVm0SnpQYdPhRj2Zhg+5m0JhHFr1U36CMI6AB0yTT1tlD2/ZAazHFfobvyoQUU
+        +0dAMO8k5Q+PqJTwUiJILur+fLkMJp5XZbWNfqEW0Kvo/EgBuYuhv2PiDLLv0uylGsTozlXrN5SXN
+        OWleTSJSPsOFaaptcq92Wti/80HwUuUrV5vxt8qXqsu0JBPnGBHZNY4Qv3V/u7Xt4hMiDt0elbHEr
+        6ZBjuBohw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hqi0g-0004X8-K9; Thu, 25 Jul 2019 17:58:34 +0000
+Date:   Thu, 25 Jul 2019 10:58:34 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
+Message-ID: <20190725175834.GB30641@bombadil.infradead.org>
+References: <20190725172335.6825-1-logang@deltatee.com>
+ <20190725172335.6825-3-logang@deltatee.com>
+ <20190725174032.GA27818@kroah.com>
+ <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
 MIME-Version: 1.0
-References: <20190720150511.95076-1-luzmaximilian@gmail.com> <20190720150511.95076-2-luzmaximilian@gmail.com>
-In-Reply-To: <20190720150511.95076-2-luzmaximilian@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 25 Jul 2019 20:57:53 +0300
-Message-ID: <CAHp75Ve+3c-TFeN3Dh-DB75Rjft8mY2DA8vNkrFyp7JK-ZOjDA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] platform/x86: surfacepro3_button: Fix device check
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 20, 2019 at 6:05 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
->
-> Do not use the surfacepro3_button driver on newer Microsoft Surface
-> models, only use it on the Surface Pro 3 and 4. Newer models (5th, 6th
-> and possibly future generations) use the same device as the Surface Pro
-> 4 to represent their volume and power buttons (MSHW0040), but their
-> actual implementation is significantly different. This patch ensures
-> that the surfacepro3_button driver is only used on the Pro 3 and 4
-> models, allowing a different driver to bind on other models.
->
+On Thu, Jul 25, 2019 at 11:53:20AM -0600, Logan Gunthorpe wrote:
+> 
+> 
+> On 2019-07-25 11:40 a.m., Greg Kroah-Hartman wrote:
+> > On Thu, Jul 25, 2019 at 11:23:21AM -0600, Logan Gunthorpe wrote:
+> >> cdev_get_by_path() attempts to retrieve a struct cdev from
+> >> a path name. It is analagous to blkdev_get_by_path().
+> >>
+> >> This will be necessary to create a nvme_ctrl_get_by_path()to
+> >> support NVMe-OF passthru.
+> > 
+> > Ick, why?  Why would a cdev have a "pathname"?
+> 
+> So we can go from "/dev/nvme0" (which points to a char device) to its
+> struct cdev and eventually it's struct nvme_ctrl. Doing it this way also
+> allows supporting symlinks that might be created by udev rules.
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+But you're not really trying to go from a string to a chardev.  You're
+trying to go from a nvmet_subsys to a chardev.  Isn't there a better
+way to link the two somewhere else?
 
-assuming it will go thru Input subsystem.
-
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-> ---
->  drivers/platform/x86/surfacepro3_button.c | 47 +++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->
-> diff --git a/drivers/platform/x86/surfacepro3_button.c b/drivers/platform/x86/surfacepro3_button.c
-> index 47c6d000465a..ec515223f654 100644
-> --- a/drivers/platform/x86/surfacepro3_button.c
-> +++ b/drivers/platform/x86/surfacepro3_button.c
-> @@ -20,6 +20,12 @@
->  #define SURFACE_BUTTON_OBJ_NAME                "VGBI"
->  #define SURFACE_BUTTON_DEVICE_NAME     "Surface Pro 3/4 Buttons"
->
-> +#define MSHW0040_DSM_REVISION          0x01
-> +#define MSHW0040_DSM_GET_OMPR          0x02    // get OEM Platform Revision
-> +static const guid_t MSHW0040_DSM_UUID =
-> +       GUID_INIT(0x6fd05c69, 0xcde3, 0x49f4, 0x95, 0xed, 0xab, 0x16, 0x65,
-> +                 0x49, 0x80, 0x35);
-> +
->  #define SURFACE_BUTTON_NOTIFY_TABLET_MODE      0xc8
->
->  #define SURFACE_BUTTON_NOTIFY_PRESS_POWER      0xc6
-> @@ -142,6 +148,44 @@ static int surface_button_resume(struct device *dev)
->  }
->  #endif
->
-> +/*
-> + * Surface Pro 4 and Surface Book 2 / Surface Pro 2017 use the same device
-> + * ID (MSHW0040) for the power/volume buttons. Make sure this is the right
-> + * device by checking for the _DSM method and OEM Platform Revision.
-> + *
-> + * Returns true if the driver should bind to this device, i.e. the device is
-> + * either MSWH0028 (Pro 3) or MSHW0040 on a Pro 4 or Book 1.
-> + */
-> +static bool surface_button_check_MSHW0040(struct acpi_device *dev)
-> +{
-> +       acpi_handle handle = dev->handle;
-> +       union acpi_object *result;
-> +       u64 oem_platform_rev = 0;       // valid revisions are nonzero
-> +
-> +       // get OEM platform revision
-> +       result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
-> +                                        MSHW0040_DSM_REVISION,
-> +                                        MSHW0040_DSM_GET_OMPR,
-> +                                        NULL, ACPI_TYPE_INTEGER);
-> +
-> +       /*
-> +        * If evaluating the _DSM fails, the method is not present. This means
-> +        * that we have either MSHW0028 or MSHW0040 on Pro 4 or Book 1, so we
-> +        * should use this driver. We use revision 0 indicating it is
-> +        * unavailable.
-> +        */
-> +
-> +       if (result) {
-> +               oem_platform_rev = result->integer.value;
-> +               ACPI_FREE(result);
-> +       }
-> +
-> +       dev_dbg(&dev->dev, "OEM Platform Revision %llu\n", oem_platform_rev);
-> +
-> +       return oem_platform_rev == 0;
-> +}
-> +
-> +
->  static int surface_button_add(struct acpi_device *device)
->  {
->         struct surface_button *button;
-> @@ -154,6 +198,9 @@ static int surface_button_add(struct acpi_device *device)
->             strlen(SURFACE_BUTTON_OBJ_NAME)))
->                 return -ENODEV;
->
-> +       if (!surface_button_check_MSHW0040(device))
-> +               return -ENODEV;
-> +
->         button = kzalloc(sizeof(struct surface_button), GFP_KERNEL);
->         if (!button)
->                 return -ENOMEM;
-> --
-> 2.22.0
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+(I must confess that once I would have known the answer to this, but
+the NVMe subsystem has grown ridiculously complex and I can no longer
+fit it in my head)
