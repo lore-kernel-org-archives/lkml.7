@@ -2,108 +2,76 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2462AC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617A0C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA4B1206A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:51:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5jUkgSw"
+	by mail.kernel.org (Postfix) with ESMTP id 276CB20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728952AbfGYJvZ (ORCPT
+        id S1729121AbfGYJvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 05:51:25 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:44981 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbfGYJvZ (ORCPT
+        Thu, 25 Jul 2019 05:51:44 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:65413 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbfGYJvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 05:51:25 -0400
-Received: by mail-vs1-f68.google.com with SMTP id v129so33299755vsb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 02:51:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U6wP9P6W628pwsNoz0uPS/Pivt4xDGduNsvhZDp9MnQ=;
-        b=g5jUkgSwiAQTdPyxXYC99PohHjZpw4vN33ELhAaf74icYXeVey4yxZQ3J1D9b5IB2F
-         ycK8QUxJ0zNpvlgqIY28nAv/RocTsY7uhvz5hRxUmi13/guskqWcnzQjwKz3DbC9v8hN
-         Nao+IAQfBWkYy7dShadaiLuSTo/ftztKCuKG6xekV8a5Lx8qNhJd3E99p9OT6byBw0fs
-         TGwIVD4KZ0Dc82it4goXoKZJxrSwDifF1jNiZSf6HUhPwTQ1LHENlddXNIgn4lUHZ6k+
-         iyO1y+BwRYK+SpoaA7ofqf0E/5z1vqLTj9XMR7FlG+TQasdgaqDoJ5KxlqWpQP6x+ZoM
-         S9+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U6wP9P6W628pwsNoz0uPS/Pivt4xDGduNsvhZDp9MnQ=;
-        b=PQn+HC2E0MW6R7iDw0CL4UVDUBgN7FuuAlWj9WABufyaUKv6/s1RHJeV3Xtj8hjl5C
-         q2FkF7uUwPkByWYbv2Vbio9tibfj66D+wrU1WjueylhSsQVDTX8AATxxtMXu1iEBoJm2
-         JXROdLEZXec4UhBTf0pC5dG+LujedYHbUiU0NVuLeEQIrTS9AzWTilF14Hw7QUZxanZ7
-         bmwpZZRhYN7X9QqMvazbb65HnfSJusGnN3H8uBxtMqthrmUT6Jkh9/xPQfRWdAqKK0Ch
-         JIWw7RdhXYiyZtot6ZsvaPVWksXInVu3FVZK2ETEArZDrMESvPorRyFaGYUwUgPxwf2N
-         +Cvg==
-X-Gm-Message-State: APjAAAXgFwaABeHl7pL1fMG1FkqbghQHYh9EvB/vwFwDtYmMhspSLcsl
-        /jWhHUxJRjao1Vy4rUDqkH1aoQDiVssAgcdWQQ==
-X-Google-Smtp-Source: APXvYqydx09PFugR1+DQAAtY+36xMPy/hV8WYTgdDC1ltB5Cq8o2gndqs0x9JjppyF4d2kZnJDz5Ie7Z1Edt9DFa1zE=
-X-Received: by 2002:a67:d46:: with SMTP id 67mr55814029vsn.181.1564048284438;
- Thu, 25 Jul 2019 02:51:24 -0700 (PDT)
+        Thu, 25 Jul 2019 05:51:43 -0400
+Received: from 79.184.253.188.ipv4.supernova.orange.pl (79.184.253.188) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id 4cf206ac235193a0; Thu, 25 Jul 2019 11:51:41 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Keith Busch <keith.busch@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [Regression] Commit "nvme/pci: Use host managed power state for suspend" has problems
+Date:   Thu, 25 Jul 2019 11:51:41 +0200
+Message-ID: <2332799.izEFUvJP67@kreacher>
 MIME-Version: 1.0
-References: <CALjTZvbrS3dGrTrMMkGRkk=hRL38rrGiYTZ4REX9rJ0T+wcGoQ@mail.gmail.com>
- <alpine.DEB.2.21.1907241257240.1791@nanos.tec.linutronix.de>
- <CALjTZvZtu8sSycu2soSXCEP1yZiVNFKkxs4JY_puFahwFuuRcQ@mail.gmail.com>
- <alpine.DEB.2.21.1907250810530.1791@nanos.tec.linutronix.de>
- <CALjTZvb6aiUEgLN9BxOxBZCBXHoFxOx4TpBxkRQbZjgCna4WUA@mail.gmail.com> <alpine.DEB.2.21.1907251127430.1791@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1907251127430.1791@nanos.tec.linutronix.de>
-From:   Rui Salvaterra <rsalvaterra@gmail.com>
-Date:   Thu, 25 Jul 2019 10:51:13 +0100
-Message-ID: <CALjTZvY6b3C4EnKCDfqN2HUje45sh0uojYRRuyO=Jiuzz8uauw@mail.gmail.com>
-Subject: Re: [BUG] Linux 5.3-rc1: timer problem on x86-64 (Pentium D)
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Daniel Drake <drake@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Thomas,
+Hi Keith,
 
-On Thu, 25 Jul 2019 at 10:37, Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Duh. Yes, this explains it nicely.
->
-> > [    1.123548] clocksource: timekeeping watchdog on CPU1: Marking
-> > clocksource 'tsc-early' as unstable because the skew is too large:
-> > [    1.123552] clocksource:                       'hpet' wd_now: 33
-> > wd_last: 33 mask: ffffffff
->
-> The HPET counter check succeeded, but the early enable and the following
-> reconfiguration confused it completely. So the HPET is not counting:
->
->         'hpet' wd_now: 33 wd_last: 33 mask: ffffffff
->
-> Which is a full explanation for the boot fail because if the counter is not
-> working then the HPET timer is not expiring and the early boot is waiting
-> for HPET to fire forever.
+Unfortunately,
 
-Interesting. Thanks for the detailed explanation!
+commit d916b1be94b6dc8d293abed2451f3062f6af7551
+Author: Keith Busch <keith.busch@intel.com>
+Date:   Thu May 23 09:27:35 2019 -0600
 
-> That's consistent with the above. 5.3-rc1 unpatched would of course boot as
-> well with hpet=disable now that we know the root cause.
+    nvme-pci: use host managed power state for suspend
 
-I guess that's the only thing I hadn't tried, hindsight is 20/20. :)
+doesn't universally improve things.  In fact, in some cases it makes things worse.
 
-> I'll write a changelog and route it to Linus for -rc2.
->
-> Thanks a lot for debugging this and providing all the information!
+For example, on the Dell XPS13 9380 I have here it prevents the processor package
+from reaching idle states deeper than PC2 in suspend-to-idle (which, of course, also
+prevents the SoC from reaching any kind of S0ix).
 
-My pleasure! I'm glad to have this old workhorse chugging along again.
+That can be readily explained too.  Namely, with the commit above the NVMe device
+stays in D0 over suspend/resume, so the root port it is connected to also has to stay in
+D0 and that "blocks" package C-states deeper than PC2.
 
-Thanks,
-Rui
+In order for the root port to be able to go to D3, the device connected to it also needs
+to go into D3, so it looks like (at least on this particular machine, but maybe in
+general), both D3 and the NVMe-specific PM are needed.
+
+I'm not sure what to do here, because evidently there are systems where that commit
+helps.  I was thinking about adding a module option allowing the user to override the
+default behavior which in turn should be compatible with 5.2 and earlier kernels.
+
+Cheers,
+Rafael
+
+
+
