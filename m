@@ -2,102 +2,107 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03842C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCACC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADCFA229F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22894229F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:58:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="rg5hUaiZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="sHapK5Dv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfGYV5h (ORCPT
+        id S1726862AbfGYV62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 17:57:37 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:36223 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726747AbfGYV5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 17:57:37 -0400
-Received: from [IPv6:2601:646:8600:3281:c0fd:a1a9:fe86:7a43] ([IPv6:2601:646:8600:3281:c0fd:a1a9:fe86:7a43])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x6PLvGSa1183782
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Thu, 25 Jul 2019 14:57:20 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x6PLvGSa1183782
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564091840;
-        bh=RqnM1Hbe/2mxPUWtAJdKgwytQ94sTTvucO2DuQjVfmw=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=rg5hUaiZrqgvQvzMnzp6GWGlmEg4xH+/yZOdKnQkQeTz2gkT9fht/SYKHf6S1b0Sm
-         rwmzvTn3e7wrU9H544eMGEMl040uqaGgEgnFYu7m6/mMMsM1G9gRXROUEXWYwUi7g5
-         PpXu2btHFVU3ZxmUhPJjE63VU/cnjzsn4YJdEu2Uh6s3E6sZhydqXeGdCGR7ALtetd
-         DEFe2ujhqaNvmCHKCOFpensSDVp8v3xD9eb0J9/U8fFpX39OFN3g27+jXtbnM9COAD
-         Ix39/17MxqzZ3sEKv3DekpXohTTrHLaIQ9HX+DfW2w1ISPbdVwADccRvausBSE+vh/
-         TcFV6auq0dW7Q==
-Date:   Thu, 25 Jul 2019 14:57:10 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <alpine.DEB.2.21.1907252343180.1791@nanos.tec.linutronix.de>
-References: <20190724231528.32381-1-jhubbard@nvidia.com> <20190724231528.32381-2-jhubbard@nvidia.com> <B7DC31CA-E378-445A-A937-1B99490C77B4@zytor.com> <alpine.DEB.2.21.1907250848050.1791@nanos.tec.linutronix.de> <345add60-de4a-73b1-0445-127738c268b4@nvidia.com> <alpine.DEB.2.21.1907252343180.1791@nanos.tec.linutronix.de>
+        Thu, 25 Jul 2019 17:58:28 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:40794 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbfGYV62 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 17:58:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3G0DbANSEEz3gBLVg4LbmF0CvfiTNd4gqwl2oAi+YHw=; b=sHapK5Dv01/JCHeQu/SjqvySW
+        pH6NXKfPa0ocMNU8dGO4QMKJt+V/hxIZBWxflM6ndEmDYOb+0THMyDtpoiwsq1QwIEczr5gydc+AX
+        ukWeOWFYxCs1H6b9ICoaEjcsxGhK/oWcWJZ2XRa7t1VukD9tmGNPRuMHBe/ljDRZlPMihyMqVlK2D
+        Zix8A5XlQ9FwZM/jPoOI9e2CCXMdN+i0KM+peI6omltOm/LQWwmL8ST1sdCM4dZxZpjZ50MpqviaZ
+        xvkaCb3IbY8GQo0+w56JWRDQeiSn6vs2kO1h0XtKVS+EnAzq8fGF8RKxA0nrZQogQb0j3TfenlS3k
+        s2G1lrXVA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:37148)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hqlkb-0002Yr-TM; Thu, 25 Jul 2019 22:58:14 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hqlka-00062y-II; Thu, 25 Jul 2019 22:58:12 +0100
+Date:   Thu, 25 Jul 2019 22:58:12 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        x86@kernel.org, Dave Hansen <dave.hansen@intel.com>,
+        linux-kernel@vger.kernel.org, Steven Price <Steven.Price@arm.com>,
+        linux-mm@kvack.org, Mark Brown <Mark.Brown@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC] mm/pgtable/debug: Add test validating architecture page
+ table helpers
+Message-ID: <20190725215812.GN1330@shell.armlinux.org.uk>
+References: <1564037723-26676-1-git-send-email-anshuman.khandual@arm.com>
+ <1564037723-26676-2-git-send-email-anshuman.khandual@arm.com>
+ <20190725143920.GW363@bombadil.infradead.org>
+ <20190725213858.GK1330@shell.armlinux.org.uk>
+ <20190725214222.GG30641@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/1] x86/boot: clear some fields explicitly
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        John Hubbard <jhubbard@nvidia.com>
-CC:     john.hubbard@gmail.com, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-From:   hpa@zytor.com
-Message-ID: <3DFA2707-89A6-4DD2-8DFB-0C2D1ABA1B3C@zytor.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725214222.GG30641@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On July 25, 2019 2:48:30 PM PDT, Thomas Gleixner <tglx@linutronix=2Ede> wro=
-te:
->On Thu, 25 Jul 2019, John Hubbard wrote:
->> On 7/25/19 12:22 AM, Thomas Gleixner wrote:
->> > It removes the clearing of the range between kbd_status and hdr
->without any
->> > replacement=2E It neither clears edid_info=2E
->>=20
->>=20
->> Yes=2E Somehow I left that chunk out=2E Not my finest hour=2E=20
->
->S*** happens
->
->> > +		char *p =3D (char *) boot_params;
->> > +		int i;
->> > +
->> > +		for (i =3D 0; i < ARRAY_SIZE(toclear); i++)
->> > +			memset(p + toclear[i]=2Estart, 0, toclear[i]=2Elen);
->> >  	}
->> >  }
->>=20
->> Looks nice=2E
->
->I have no idea whether it works and I have no cycles either, so I would
->appreciate it if you could polish it up so we can handle that new
->fangled
->GCC "feature" nicely=2E
->
->Alternatively file a bug report to the GCC folks :)
->
->But seriously I think it's not completely insane what they are doing
->and
->the table based approach is definitely more readable and maintainable
->than
->the existing stuff=2E
->
->Thanks,
->
->	tglx
+On Thu, Jul 25, 2019 at 02:42:22PM -0700, Matthew Wilcox wrote:
+> On Thu, Jul 25, 2019 at 10:38:58PM +0100, Russell King - ARM Linux admin wrote:
+> > On Thu, Jul 25, 2019 at 07:39:21AM -0700, Matthew Wilcox wrote:
+> > > But 'page' isn't necessarily PMD-aligned.  I don't think we can rely on
+> > > architectures doing the right thing if asked to make a PMD for a randomly
+> > > aligned page.
+> > > 
+> > > How about finding the physical address of something like kernel_init(),
+> > > and using the corresponding pte/pmd/pud/p4d/pgd that encompasses that
+> > > address?  It's also better to pass in the pfn/page rather than using global
+> > > variables to communicate to the test functions.
+> > 
+> > There are architectures (32-bit ARM) where the kernel is mapped using
+> > section mappings, and we don't expect the Linux page table walking to
+> > work for section mappings.
+> 
+> This test doesn't go so far as to insert the PTE/PMD/PUD/... into the
+> page tables.  It merely needs an appropriately aligned PFN to create a
+> PTE/PMD/PUD/... from.
 
-Doing this table based does seem like a good idea=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Well, in any case,
+
+c085ac68 t kernel_init
+
+so I'm not sure that would be an improvement.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
