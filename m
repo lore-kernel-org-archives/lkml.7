@@ -2,85 +2,73 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8CAC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9D7C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2486222BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3973D22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:25:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391842AbfGYLZL (ORCPT
+        id S2391864AbfGYLZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:25:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49411 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728468AbfGYLZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:25:11 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A6F122F8BD7;
-        Thu, 25 Jul 2019 11:25:10 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id A47D819D71;
-        Thu, 25 Jul 2019 11:25:04 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 25 Jul 2019 13:25:10 +0200 (CEST)
-Date:   Thu, 25 Jul 2019 13:25:03 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, ebiederm@xmission.com,
-        keescook@chromium.org, joel@joelfernandes.org, tglx@linutronix.de,
-        tj@kernel.org, dhowells@redhat.com, jannh@google.com,
-        luto@kernel.org, akpm@linux-foundation.org, cyphar@cyphar.com,
-        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        kernel-team@android.com, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH 4/5] pidfd: add CLONE_WAIT_PID
-Message-ID: <20190725112503.GG4707@redhat.com>
-References: <20190724144651.28272-1-christian@brauner.io>
- <20190724144651.28272-5-christian@brauner.io>
- <20190725103543.GF4707@redhat.com>
- <20190725104006.7myahvjtnbcgu3in@brauner.io>
+        Thu, 25 Jul 2019 07:25:15 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41516 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728468AbfGYLZO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 07:25:14 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hqbry-0008Sh-7K; Thu, 25 Jul 2019 11:25:10 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] can: kvaser_pciefd: remove redundant negative check on trigger
+Date:   Thu, 25 Jul 2019 12:25:09 +0100
+Message-Id: <20190725112509.1075-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725104006.7myahvjtnbcgu3in@brauner.io>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 25 Jul 2019 11:25:10 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/25, Christian Brauner wrote:
->
-> On Thu, Jul 25, 2019 at 12:35:44PM +0200, Oleg Nesterov wrote:
-> >
-> > I have to admit this feature looks a bit exotic to me...
->
-> It might look like it from the kernels perspective but from the feedback
-> on this when presenting on this userspace has real usecases for this.
+From: Colin Ian King <colin.king@canonical.com>
 
-OK...
+The check to see if trigger is less than zero is always false, trigger
+is always in the range 0..255.  Hence the check is redundant and can
+be removed.
 
-but then perhaps we can make PF_WAIT_PID more flexible.
+Addresses-Coverity: ("Logically dead code")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/can/kvaser_pciefd.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Say, we can add the new WXXX wait option and change eligible_child()
-
-	if ((p->flags & PF_WAIT_PID) && (wo->options & WXXX))
-		return 0;
-
-this way the parent can tell waitid() whether the PF_WAIT_PID tasks should
-be filtered or not.
-
-And if we do this we can even add PR_SET_WAIT_PID/PR_CLR_WAIT_PID instead
-of the new CLONE_ flag.
-
-Oleg.
+diff --git a/drivers/net/can/kvaser_pciefd.c b/drivers/net/can/kvaser_pciefd.c
+index 3af747cbbde4..68e00aad0810 100644
+--- a/drivers/net/can/kvaser_pciefd.c
++++ b/drivers/net/can/kvaser_pciefd.c
+@@ -652,9 +652,6 @@ static void kvaser_pciefd_pwm_stop(struct kvaser_pciefd_can *can)
+ 	top = (pwm_ctrl >> KVASER_PCIEFD_KCAN_PWM_TOP_SHIFT) & 0xff;
+ 
+ 	trigger = (100 * top + 50) / 100;
+-	if (trigger < 0)
+-		trigger = 0;
+-
+ 	pwm_ctrl = trigger & 0xff;
+ 	pwm_ctrl |= (top & 0xff) << KVASER_PCIEFD_KCAN_PWM_TOP_SHIFT;
+ 	iowrite32(pwm_ctrl, can->reg_base + KVASER_PCIEFD_KCAN_PWM_REG);
+-- 
+2.20.1
 
