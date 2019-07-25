@@ -2,178 +2,125 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6A7C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0E5C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57972218F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:54:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sQQDJiby"
+	by mail.kernel.org (Postfix) with ESMTP id 7DDE020679
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564062982;
+	bh=My2AlPRxvFWcBJAZeh/oDf/UzerJdJsd5urms52cBFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o16s33ow8gVNJxfy+Uj4AmTSiLkZ8wCkqshyMRNQF06rLGjgyYhijTTXFrRGmsStK
+	 LlmEi+M2rZCu1tt2psk4GE2yAA4ChNzbLGNnik4nGvU2YPNTi4NWPVIJm1E9Ot01o1
+	 ujfiW5ScP9nJfCLhkqupiT528VDC94vKZv8qnjg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404169AbfGYNye (ORCPT
+        id S1728079AbfGYN4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:54:34 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43797 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728943AbfGYNyc (ORCPT
+        Thu, 25 Jul 2019 09:56:21 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52820 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbfGYN4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:54:32 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p13so50863420wru.10
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:54:30 -0700 (PDT)
+        Thu, 25 Jul 2019 09:56:20 -0400
+Received: by mail-wm1-f68.google.com with SMTP id s3so45087451wms.2;
+        Thu, 25 Jul 2019 06:56:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=kiGD59LaW0LszoAZzmVLJ1Hft59fIaEtybxXjg0U4OU=;
-        b=sQQDJiby1lR9rJnYwpFayBJL1RCmEUHrXJL5ktfkxstXcB1e72/IJ+7W0b7G/ZBDE7
-         l2/Oe7WGAKBlaplOUnR9eKLvijJm+yqgNtv1e2Xt94tpqVPUHg4DEcD9UGsRs0szMquI
-         gd0SnX7mYKDLhjJOaB+OD74kiTzZcmfgGeIajBjxHk8HORwabuVH5qYZ14shV48okQcq
-         oV1q3+hmkLuRmabQQ4N1s3WbE9w1LtffyarQQhGJ98ItiO4babxYtOZPj/d8HElgIXh3
-         +7ifv5dKadFG/B1N65t8KG2r29CwpiyOZg/YA0MfSDcC9TY3HZioK4MipWty6YP9bw5P
-         6xWg==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ijKb9xkNQpLXP3ePyMDNd5C2fEcHsiRFSZbSc5IKwxM=;
+        b=TsCFOLazPPC9sGh202Kobh/yPQrBmnaqShEAsYKLqQO3VNfmeJJYk/TywMrrUGJ0NL
+         +YJy1nGykJKnieNuddH32ahJFUEhWfLPbcxWIj71+1L1N/b9DHGkLQTdDheQJUdmhhfh
+         /qfiS0UapR+mySo3aXeazFrZjACw20RBjdfWEsvGKEgLv6MZBAfwFN+my8tD46Y4i4E1
+         NS4U2Q4xG6REuvi31RMpEpeH5tMyKBWU76pjsxHozO6iLXS7pcrms3mnb49CfN8ApVtM
+         5nNF3gcqjM3ArdyE1bjXeiFo2dNYTfKkO9qfZ/eQ0FPq3CVPXR+9rhMQ1+ZeX35QCSFp
+         ZA8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=kiGD59LaW0LszoAZzmVLJ1Hft59fIaEtybxXjg0U4OU=;
-        b=ltB1p/gom1IFtMSu21b2TNE7bB6lDQaG1f2vii86L4pv0P1utEG90uK2RtmxWOmzOG
-         aLNAu17h213aGCJKBOCN0+HFYQwwZdRAnvAVNDnIZItmWUPHqYlfrcPX5TWJTEzjzVCS
-         ogyHJESB4XTfb7gyOSF2Un4KnlJf9qKkxj6Ba56Uhp6Ij9lNO/GiQD/Fs3abdpkDECXg
-         sOA4jWs+skRWJ35YgDuRxw72Y4gJIhLmq0CUjoJa/1xIxCbKTlkg5GQUHbcnz4MYFk35
-         5Eq+kj65Iy0CpROIzbRjY286WLfVqxlvJVBmhySl+G+wVNC26tkaCU+APCvldofyobte
-         28AA==
-X-Gm-Message-State: APjAAAVhnwEl3WVvNl8Z30e1TQMGT+Jz8mwOMKuA83EJlsnpTgBnbgf4
-        I9K0pXfufDR3RBt3DUZQYsfAwQ==
-X-Google-Smtp-Source: APXvYqyi+7SaHwgU0aK/nQJij+0evagD7L54rP/lc55M34rnwnlBR+KX1Ln1iOdMtsPd3Xr0XJt2kw==
-X-Received: by 2002:adf:f3d1:: with SMTP id g17mr64650717wrp.38.1564062869954;
-        Thu, 25 Jul 2019 06:54:29 -0700 (PDT)
-Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id c9sm40786310wml.41.2019.07.25.06.54.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Jul 2019 06:54:29 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 14:54:02 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        rafael@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Liam Girdwood <lgirdwood@gmail.com>, linux-i2c@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-spi@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Wolfram Sang <wsa@the-dreams.de>, Alan Tull <atull@kernel.org>,
-        Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>, Mark Brown <broonie@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        Jiri Slaby <jslaby@suse.com>
-Subject: Re: [PATCH v3 2/7] drivers: Introduce device lookup variants by
- of_node
-Message-ID: <20190725135402.GL23883@dell>
-References: <20190723221838.12024-1-suzuki.poulose@arm.com>
- <20190723221838.12024-3-suzuki.poulose@arm.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ijKb9xkNQpLXP3ePyMDNd5C2fEcHsiRFSZbSc5IKwxM=;
+        b=JuQQxBQBlHq04YhizdYD7+WXkU1kXlnfIRUBEqTzVkBHg3e7KiArfG1F6zZqACCKoM
+         rK46yOGrV99GDNhxC+5SEFgFs0fNseCErITzOxfFvVQAda9omzolNjUDoPy9kErJGgLI
+         ZbFN2pi02v+8+IwMGkkkUg1fp2zfgsHpLIEbOIs4s+SXfDzMiRX0Qw/9sm24uJipYkhe
+         JzwdJ1TPZtX1RfCkh8xAsqQ+0LiBAuPI3o3DNwJ6Q3OuTT50Lo9nImON8tr8Ojf602cn
+         8pMwGvkI9NbX+EYGKctl8+3GBvMLP6UPfSaZHIwfthn0bdb9+K167TFDzHrEoXulizZD
+         bNxQ==
+X-Gm-Message-State: APjAAAUqN/MtUcYAp/EzyNI6n2P1j4dMCpzR7caO3ecSspiQwgQTzwn6
+        F09JQeKUoJXkdeDEiaBtPKQ=
+X-Google-Smtp-Source: APXvYqwV57hxYZ2iz1hb3kPahcmQuB05GV8QWb5v2lzdhH3COHujj5QS8w5a/awpNNDpJ2LiGvIfCA==
+X-Received: by 2002:a1c:5453:: with SMTP id p19mr74461459wmi.148.1564062978247;
+        Thu, 25 Jul 2019 06:56:18 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id u186sm84400263wmu.26.2019.07.25.06.56.16
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 06:56:17 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 15:56:15 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
+        tj@kernel.org, linux-kernel@vger.kernel.org,
+        luca.abeni@santannapisa.it, claudio@evidence.eu.com,
+        tommaso.cucinotta@santannapisa.it, bristot@redhat.com,
+        mathieu.poirier@linaro.org, lizefan@huawei.com, longman@redhat.com,
+        dietmar.eggemann@arm.com, cgroups@vger.kernel.org
+Subject: Re: [PATCH v9 3/8] cpuset: Rebuild root domain deadline accounting
+ information
+Message-ID: <20190725135615.GB108579@gmail.com>
+References: <20190719140000.31694-1-juri.lelli@redhat.com>
+ <20190719140000.31694-4-juri.lelli@redhat.com>
+ <20190725135351.GA108579@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190723221838.12024-3-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190725135351.GA108579@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jul 2019, Suzuki K Poulose wrote:
 
-> Introduce wrappers for {bus/driver/class}_find_device() to
-> locate devices by its of_node.
+* Ingo Molnar <mingo@kernel.org> wrote:
+
 > 
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: devicetree@vger.kernel.org
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: linux-i2c@vger.kernel.org
-> Cc: linux-rockchip@lists.infradead.org
-> Cc: linux-spi@vger.kernel.org
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Cc: Takashi Iwai <tiwai@suse.com>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: Alan Tull <atull@kernel.org>
-> Cc: Moritz Fischer <mdf@kernel.org>
-> Cc: linux-fpga@vger.kernel.org
-> Cc: Peter Rosin <peda@axentia.se>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Heiner Kallweit <hkallweit1@gmail.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Thor Thayer <thor.thayer@linux.intel.com>
-> Cc: Jiri Slaby <jslaby@suse.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Peter Rosin <peda@axentia.se>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  - Dropped the reviewed-by tags from Thor, Mark, Andrew and Peter as the
->    patches are mereged, though there are no functional changes.
-> ---
->  drivers/amba/tegra-ahb.c              | 11 +-------
->  drivers/fpga/fpga-bridge.c            |  8 +-----
->  drivers/fpga/fpga-mgr.c               |  8 +-----
->  drivers/gpu/drm/drm_mipi_dsi.c        |  7 +----
->  drivers/i2c/i2c-core-of.c             |  7 +----
->  drivers/mfd/altera-sysmgr.c           | 14 ++--------
+> * Juri Lelli <juri.lelli@redhat.com> wrote:
+> 
+> > When the topology of root domains is modified by CPUset or CPUhotplug
+> > operations information about the current deadline bandwidth held in the
+> > root domain is lost.
+> > 
+> > This patch addresses the issue by recalculating the lost deadline
+> > bandwidth information by circling through the deadline tasks held in
+> > CPUsets and adding their current load to the root domain they are
+> > associated with.
+> > 
+> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+> 
+> Was this commit written by Mathieu? If yes then it's missing a From line. 
+> If not then the Signed-off-by should probably be changed to Acked-by or 
+> Reviewed-by?
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+So for now I'm assuming that the original patch was written by Mathieu, 
+with modifications by you. So I added his From line and extended the SOB 
+chain with the additional information that you modified the patch:
 
-What's the merge plan for this patch?
+    Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+    Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+    Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+    [ Various additional modifications. ]
+    Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+    Signed-off-by: Ingo Molnar <mingo@kernel.org>
 
-Is anyone prepared to create an immutable branch for us to pull from?
-I'm happy to do it if no one else steps up.
+Let me know if that's not accurate!
 
->  drivers/mux/core.c                    |  7 +----
->  drivers/net/phy/mdio_bus.c            |  9 +------
->  drivers/nvmem/core.c                  |  7 +----
->  drivers/of/of_mdio.c                  |  8 +-----
->  drivers/of/platform.c                 |  7 +----
->  drivers/regulator/of_regulator.c      |  7 +----
->  drivers/spi/spi.c                     | 20 +++------------
->  include/linux/device.h                | 37 +++++++++++++++++++++++++++
->  sound/soc/rockchip/rk3399_gru_sound.c |  9 ++-----
->  15 files changed, 56 insertions(+), 110 deletions(-)
+Thanks,
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+	Ingo
