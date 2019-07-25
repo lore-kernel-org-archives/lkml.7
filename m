@@ -2,345 +2,488 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA15FC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D798C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0DF4229F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4CED22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:15:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IrRWQG9Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389098AbfGYPPR (ORCPT
+        id S2389122AbfGYPPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 11:15:17 -0400
-Received: from mga06.intel.com ([134.134.136.31]:22444 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389020AbfGYPPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 11:15:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 08:15:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,307,1559545200"; 
-   d="scan'208";a="345468008"
-Received: from tthayer-hp-z620.an.intel.com ([10.122.105.146])
-  by orsmga005.jf.intel.com with ESMTP; 25 Jul 2019 08:15:02 -0700
-From:   thor.thayer@linux.intel.com
-To:     mdf@kernel.org, richard.gong@linux.intel.com, agust@denx.de
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thor Thayer <thor.thayer@linux.intel.com>
-Subject: [PATCHv3 1/3] fpga: altera-cvp: Discover Vendor Specific offset
-Date:   Thu, 25 Jul 2019 10:16:46 -0500
-Message-Id: <1564067808-21173-2-git-send-email-thor.thayer@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564067808-21173-1-git-send-email-thor.thayer@linux.intel.com>
-References: <1564067808-21173-1-git-send-email-thor.thayer@linux.intel.com>
+        Thu, 25 Jul 2019 11:15:53 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:52243 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388931AbfGYPPx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 11:15:53 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190725151551euoutp02dfce48503280c8459b89a74d868261ea~0r1U_Zl9Z2921029210euoutp02z
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 15:15:51 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190725151551euoutp02dfce48503280c8459b89a74d868261ea~0r1U_Zl9Z2921029210euoutp02z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1564067751;
+        bh=agewonXrWwhUtSxSzdJEA96UwZdMKX8h25eDIpRixpY=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=IrRWQG9Que18m81jBN/zhTmZv5KsVV/i+nV3wZzoQ5m+PHyrrpTiPmSJBesi4tBrF
+         3KOPG6ZZm/uwyM4Bgxh9IS1yKo0G02u5UxlAiCcsQcfc/tW3lzAtxUGpzDUTHgb//G
+         HBJn3Vpimsq1Er2COy2YY7F7TNfTAoI89gkraBC0=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190725151550eucas1p222573bce7c0681fb4325cef64de50d78~0r1UMPTRp0329203292eucas1p2i;
+        Thu, 25 Jul 2019 15:15:50 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id FF.15.04325.5A7C93D5; Thu, 25
+        Jul 2019 16:15:49 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190725151549eucas1p19905f65c96d190e25d8e6ab1a9384d6a~0r1TTP00W1182111821eucas1p1Q;
+        Thu, 25 Jul 2019 15:15:49 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190725151549eusmtrp2364226c69972dc591d61e89a3ce8be8c~0r1TFB4Ze0673606736eusmtrp2h;
+        Thu, 25 Jul 2019 15:15:49 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-fa-5d39c7a57551
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 25.F9.04140.5A7C93D5; Thu, 25
+        Jul 2019 16:15:49 +0100 (BST)
+Received: from [106.120.51.18] (unknown [106.120.51.18]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190725151548eusmtip105bff170fec204f620580b172a620d70~0r1SWBaq12193221932eusmtip1U;
+        Thu, 25 Jul 2019 15:15:48 +0000 (GMT)
+Subject: Re: [PATCH v3 3/5] devfreq: exynos-bus: convert to use
+ dev_pm_opp_set_rate()
+To:     cwchoi00@gmail.com
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+From:   Kamil Konieczny <k.konieczny@partner.samsung.com>
+Message-ID: <4f62d397-0f62-f81d-8b76-b73c6fbee93d@partner.samsung.com>
+Date:   Thu, 25 Jul 2019 17:15:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAGTfZH1OaYpTheQxWQs7Fs4qcJEGtXQHESLg0CJSsL=dmROpQw@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTURSGubN0hkrxUhdOwCVpolER1KjxooS4EOwDicuLK8ogE0CgklYE
+        5UFARCURlwTBSkCCWyqKVCibgmKlCrKlIKhgUFATkQcFgsomw0Dk7Tv/Wf77J5en1d9YNz5c
+        d1zU64RIjULJWGr+NHjesXkHru5wJIWZBSxpG/jGkq8vPUiOtYEll7p7adLY+Igj9Uk/OGLu
+        fssSe3mWgvRftCKS2VhJkQfWTo7cbmumyIfEewry43c9Rc4+tXJk7G0hQx531Sg2q7X52flI
+        W2bs5LRm0wWF9vGt09q0IhPS2tpLKG2/edFObr/SJ0SMDD8h6lf5BinDLhckUtEPguM+vUxg
+        E1CdNhU58oDXQXpCGpWKlLwa30NgMg1OFQMILEMNU0U/gsKsNG56pTarnZVYje8iuJ4cLXMf
+        gswSkHgO3gPn8i5MzszF86HkWg+SDtG4iYW+R1UKqaHAG+BzyRtKYhX2h+bniZPM4CVwy57M
+        SDwP74VfXS9YecYFXl/vmdQd8S7I+5uCJKaxK7zvyaFkXgxnim/QkhngKzxkvBuZMOMnCj8Y
+        zfeTA8yB77aiqTALYLxM3gUcC19ypZDSbjKCrnM/GbmxCV7YmlnpDo2XQ0H5KlneAm0VNiSf
+        d4b2Phf5Cc5w1ZJBy7IKzqeo5WlPyB5/w8rsDqnjD9nLSGOcEcw4I4xxRhjjf9+biDEhVzHG
+        EBUqGtbqxFgvgxBliNGFeh05FmVGE9+vbsw2WIoqR4KrEeaRxkm1zOQdqGaFE4aTUdUIeFoz
+        V1VcOiGpQoSTp0T9scP6mEjRUI3ceUbjqop36DqgxqHCcTFCFKNF/XSX4h3dEhDj2fIuyVPH
+        c60dAf17nFrzY6OZ9Utzq+w5QrZ4qHfgSZOHxSfwYFxpeeKG2H3p9tltm+/rA5/VL4jAyz8m
+        D78K6LVvtTZ5v99urAh77VzO7Q5oEfxXbskN7cCllucOOeaybb7dDhtrg0aDRgZVPiELL+6I
+        dx8+OpSqrO1snVV7UMMYwoQ1K2i9QfgHqsX5I3oDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLIsWRmVeSWpSXmKPExsVy+t/xu7pLj1vGGhzfz22xccZ6VovrX56z
+        Wjw7qm0x/8g5Vov+x6+ZLc6f38BucbbpDbvFpsfXWC0u75rDZvG59wijxYzz+5gs1h65y26x
+        9PpFJovbjSvYLN78OMtk0br3CLvFv2sbWSw2PzjG5iDksWbeGkaPnbPusntsWtXJ5rF5Sb1H
+        35ZVjB7Hb2xn8vi8SS6APUrPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/O
+        JiU1J7MstUjfLkEvY8L6RqaCtUkVD482sDYwnvboYuTkkBAwkTg15wZrFyMXh5DAUkaJe8/O
+        MEMkpCUaT69mgrCFJf5c62IDsYUEXjNKnO2qBbGFBcIl2hd3soLYIgJiEtunPWEEGcQscIVV
+        4tDJTmaIqT3MEiverQCrYhMwl3i0/QzYVF4BN4mLBxvBbBYBVYkll1tYQGxRgQiJwztmMULU
+        CEqcnPkELM4pECix+FcbWJxZQF3iz7xLzBC2uMStJ/OZIGx5ieats5knMArNQtI+C0nLLCQt
+        s5C0LGBkWcUoklpanJueW2ykV5yYW1yal66XnJ+7iREY9duO/dyyg7HrXfAhRgEORiUe3gvL
+        LWOFWBPLiitzDzFKcDArifBu3QEU4k1JrKxKLcqPLyrNSS0+xGgK9NxEZinR5HxgQsoriTc0
+        NTS3sDQ0NzY3NrNQEuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cC4kI/DOL7JKkzI4N7r7df2
+        cQTXneH9c3jZtPa+jGO/V7C/Wi+tpS7Sz/n3RmS/etitE6euHJ0kdIrFne39zssWJQFaNZef
+        nVxnMX3CVsm+U05fD2tWPC18zbnRpOqVbeDKa3M/hVzZuNHg1/lFDq8j39nEFNx5HBWc3qce
+        wu1k0Ln86he2t46PlFiKMxINtZiLihMBlC7u7BADAAA=
+X-CMS-MailID: 20190725151549eucas1p19905f65c96d190e25d8e6ab1a9384d6a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190719150555eucas1p197adc3c58e45c53137fd70cadbfae60e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190719150555eucas1p197adc3c58e45c53137fd70cadbfae60e
+References: <20190719150535.15501-1-k.konieczny@partner.samsung.com>
+        <CGME20190719150555eucas1p197adc3c58e45c53137fd70cadbfae60e@eucas1p1.samsung.com>
+        <20190719150535.15501-4-k.konieczny@partner.samsung.com>
+        <beb2455b-7f9e-35df-d524-01f4f51a1c62@samsung.com>
+        <ed80b6e3-5b40-18ce-ca1e-65520edf516e@partner.samsung.com>
+        <CAGTfZH1OaYpTheQxWQs7Fs4qcJEGtXQHESLg0CJSsL=dmROpQw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+Hi,
 
-Newer Intel FPGAs have different Vendor Specific offsets than
-legacy parts. Use PCI discovery to find the CvP registers.
-Since the register positions remain the same, change the hard
-coded address to a more flexible way of indexing registers
-from the offset.
-Adding new PCI read and write abstraction functions to
-handle the offset (altera_read_config_dword() and
-altera_write_config_dword()).
+On 25.07.2019 16:53, Chanwoo Choi wrote:
+> 2019년 7월 25일 (목) 오후 11:19, Kamil Konieczny
+> <k.konieczny@partner.samsung.com>님이 작성:
+>>
+>> Hi Chanwoo,
+>>
+>> On 25.07.2019 12:17, Chanwoo Choi wrote:
+>>> Hi Kamil,
+>>>
+>>> Looks good to me. But, I have some comment. Please check them.
+>>
+>> Thank you for review, please see answers below.
+>>
+>>> After this patch, exynos_bus_target is perfectly same with
+>>> exynos_bus_passive_target. The exynos_bus_passive_target() could be removed.
+>>
+>> Ok, I will make it in separate patch to simplify review process.
+> 
+> I think you can just modify this patch without any separate patch.
 
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
----
-v2 Remove inline designator from abstraction functions.
-   Reverse Christmas Tree format for local variables
-v3 Fix return codes of abstraction functions.
----
- drivers/fpga/altera-cvp.c | 96 +++++++++++++++++++++++++++++------------------
- 1 file changed, 59 insertions(+), 37 deletions(-)
+Do you want me to send v5 with patch 5 squashed in patch 3 ?
+ 
+>>> On 19. 7. 20. 오전 12:05, k.konieczny@partner.samsung.com wrote:
+>>>> Reuse opp core code for setting bus clock and voltage. As a side
+>>>> effect this allow useage of coupled regulators feature (required
+>>>
+>>> s/useage/usage ?
+>>
+>> Good catch, I will change it.
+>>
+>>>> for boards using Exynos5422/5800 SoCs) because dev_pm_opp_set_rate()
+>>>> uses regulator_set_voltage_triplet() for setting regulator voltage
+>>>> while the old code used regulator_set_voltage_tol() with fixed
+>>>> tolerance. This patch also removes no longer needed parsing of DT
+>>>> property "exynos,voltage-tolerance" (no Exynos devfreq DT node uses
+>>>> it).
+>>>>
+>>>> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+>>>> ---
+>>>>  drivers/devfreq/exynos-bus.c | 143 +++++++++--------------------------
+>>>>  1 file changed, 37 insertions(+), 106 deletions(-)
+>>>>
+>>>> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+>>>> index f391044aa39d..c2147b0912a0 100644
+>>>> --- a/drivers/devfreq/exynos-bus.c
+>>>> +++ b/drivers/devfreq/exynos-bus.c
+>>>> @@ -25,7 +25,6 @@
+>>>>  #include <linux/slab.h>
+>>>>
+>>>>  #define DEFAULT_SATURATION_RATIO    40
+>>>> -#define DEFAULT_VOLTAGE_TOLERANCE   2
+>>>>
+>>>>  struct exynos_bus {
+>>>>      struct device *dev;
+>>>> @@ -37,9 +36,9 @@ struct exynos_bus {
+>>>>
+>>>>      unsigned long curr_freq;
+>>>>
+>>>> -    struct regulator *regulator;
+>>>> +    struct opp_table *opp_table;
+>>>> +
+>>>>      struct clk *clk;
+>>>> -    unsigned int voltage_tolerance;
+>>>>      unsigned int ratio;
+>>>>  };
+>>>>
+>>>> @@ -99,56 +98,23 @@ static int exynos_bus_target(struct device *dev, unsigned long *freq, u32 flags)
+>>>>  {
+>>>>      struct exynos_bus *bus = dev_get_drvdata(dev);
+>>>>      struct dev_pm_opp *new_opp;
+>>>> -    unsigned long old_freq, new_freq, new_volt, tol;
+>>>>      int ret = 0;
+>>>>
+>>>> -    /* Get new opp-bus instance according to new bus clock */
+>>>> +    /* Get correct frequency for bus. */
+>>>>      new_opp = devfreq_recommended_opp(dev, freq, flags);
+>>>>      if (IS_ERR(new_opp)) {
+>>>>              dev_err(dev, "failed to get recommended opp instance\n");
+>>>>              return PTR_ERR(new_opp);
+>>>>      }
+>>>>
+>>>> -    new_freq = dev_pm_opp_get_freq(new_opp);
+>>>> -    new_volt = dev_pm_opp_get_voltage(new_opp);
+>>>>      dev_pm_opp_put(new_opp);
+>>>>
+>>>> -    old_freq = bus->curr_freq;
+>>>> -
+>>>> -    if (old_freq == new_freq)
+>>>> -            return 0;
+>>>> -    tol = new_volt * bus->voltage_tolerance / 100;
+>>>> -
+>>>>      /* Change voltage and frequency according to new OPP level */
+>>>>      mutex_lock(&bus->lock);
+>>>> +    ret = dev_pm_opp_set_rate(dev, *freq);
+>>>> +    if (!ret)
+>>>> +            bus->curr_freq = *freq;
+>>>>
+>>>> -    if (old_freq < new_freq) {
+>>>> -            ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
+>>>> -            if (ret < 0) {
+>>>> -                    dev_err(bus->dev, "failed to set voltage\n");
+>>>> -                    goto out;
+>>>> -            }
+>>>> -    }
+>>>> -
+>>>> -    ret = clk_set_rate(bus->clk, new_freq);
+>>>> -    if (ret < 0) {
+>>>> -            dev_err(dev, "failed to change clock of bus\n");
+>>>> -            clk_set_rate(bus->clk, old_freq);
+>>>> -            goto out;
+>>>> -    }
+>>>> -
+>>>> -    if (old_freq > new_freq) {
+>>>> -            ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
+>>>> -            if (ret < 0) {
+>>>> -                    dev_err(bus->dev, "failed to set voltage\n");
+>>>> -                    goto out;
+>>>> -            }
+>>>> -    }
+>>>> -    bus->curr_freq = new_freq;
+>>>> -
+>>>> -    dev_dbg(dev, "Set the frequency of bus (%luHz -> %luHz, %luHz)\n",
+>>>> -                    old_freq, new_freq, clk_get_rate(bus->clk));
+>>>> -out:
+>>>>      mutex_unlock(&bus->lock);
+>>>>
+>>>>      return ret;
+>>>> @@ -195,8 +161,8 @@ static void exynos_bus_exit(struct device *dev)
+>>>>              dev_warn(dev, "failed to disable the devfreq-event devices\n");
+>>>>
+>>>>      clk_disable_unprepare(bus->clk);
+>>>> -    if (bus->regulator)
+>>>> -            regulator_disable(bus->regulator);
+>>>> +    if (bus->opp_table)
+>>>> +            dev_pm_opp_put_regulators(bus->opp_table);
+>>>>
+>>>>      dev_pm_opp_of_remove_table(dev);
+>>>>  }
+>>>> @@ -209,39 +175,23 @@ static int exynos_bus_passive_target(struct device *dev, unsigned long *freq,
+>>>>  {
+>>>>      struct exynos_bus *bus = dev_get_drvdata(dev);
+>>>>      struct dev_pm_opp *new_opp;
+>>>> -    unsigned long old_freq, new_freq;
+>>>> -    int ret = 0;
+>>>> +    int ret;
+>>>>
+>>>> -    /* Get new opp-bus instance according to new bus clock */
+>>>> +    /* Get correct frequency for bus. */
+>>>>      new_opp = devfreq_recommended_opp(dev, freq, flags);
+>>>>      if (IS_ERR(new_opp)) {
+>>>>              dev_err(dev, "failed to get recommended opp instance\n");
+>>>>              return PTR_ERR(new_opp);
+>>>>      }
+>>>>
+>>>> -    new_freq = dev_pm_opp_get_freq(new_opp);
+>>>>      dev_pm_opp_put(new_opp);
+>>>>
+>>>> -    old_freq = bus->curr_freq;
+>>>> -
+>>>> -    if (old_freq == new_freq)
+>>>> -            return 0;
+>>>> -
+>>>>      /* Change the frequency according to new OPP level */
+>>>>      mutex_lock(&bus->lock);
+>>>> +    ret = dev_pm_opp_set_rate(dev, *freq);
+>>>> +    if (!ret)
+>>>> +            bus->curr_freq = *freq;
+>>>>
+>>>> -    ret = clk_set_rate(bus->clk, new_freq);
+>>>> -    if (ret < 0) {
+>>>> -            dev_err(dev, "failed to set the clock of bus\n");
+>>>> -            goto out;
+>>>> -    }
+>>>> -
+>>>> -    *freq = new_freq;
+>>>> -    bus->curr_freq = new_freq;
+>>>> -
+>>>> -    dev_dbg(dev, "Set the frequency of bus (%luHz -> %luHz, %luHz)\n",
+>>>> -                    old_freq, new_freq, clk_get_rate(bus->clk));
+>>>> -out:
+>>>>      mutex_unlock(&bus->lock);
+>>>>
+>>>>      return ret;
+>>>> @@ -259,20 +209,9 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+>>>>                                      struct exynos_bus *bus)
+>>>>  {
+>>>>      struct device *dev = bus->dev;
+>>>> -    int i, ret, count, size;
+>>>> -
+>>>> -    /* Get the regulator to provide each bus with the power */
+>>>> -    bus->regulator = devm_regulator_get(dev, "vdd");
+>>>> -    if (IS_ERR(bus->regulator)) {
+>>>> -            dev_err(dev, "failed to get VDD regulator\n");
+>>>> -            return PTR_ERR(bus->regulator);
+>>>> -    }
+>>>> -
+>>>> -    ret = regulator_enable(bus->regulator);
+>>>> -    if (ret < 0) {
+>>>> -            dev_err(dev, "failed to enable VDD regulator\n");
+>>>> -            return ret;
+>>>> -    }
+>>>> +    struct opp_table *opp_table;
+>>>> +    const char *vdd = "vdd";
+>>>> +    int i, count, size;
+>>>>
+>>>>      /*
+>>>>       * Get the devfreq-event devices to get the current utilization of
+>>>> @@ -281,26 +220,29 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+>>>>      count = devfreq_event_get_edev_count(dev);
+>>>>      if (count < 0) {
+>>>>              dev_err(dev, "failed to get the count of devfreq-event dev\n");
+>>>> -            ret = count;
+>>>> -            goto err_regulator;
+>>>> +            return count;
+>>>>      }
+>>>> -    bus->edev_count = count;
+>>>>
+>>>> +    bus->edev_count = count;
+>>>>      size = sizeof(*bus->edev) * count;
+>>>>      bus->edev = devm_kzalloc(dev, size, GFP_KERNEL);
+>>>> -    if (!bus->edev) {
+>>>> -            ret = -ENOMEM;
+>>>> -            goto err_regulator;
+>>>> -    }
+>>>> +    if (!bus->edev)
+>>>> +            return -ENOMEM;
+>>>>
+>>>>      for (i = 0; i < count; i++) {
+>>>>              bus->edev[i] = devfreq_event_get_edev_by_phandle(dev, i);
+>>>> -            if (IS_ERR(bus->edev[i])) {
+>>>> -                    ret = -EPROBE_DEFER;
+>>>> -                    goto err_regulator;
+>>>> -            }
+>>>> +            if (IS_ERR(bus->edev[i]))
+>>>> +                    return -EPROBE_DEFER;
+>>>> +    }
+>>>> +
+>>>> +    opp_table = dev_pm_opp_set_regulators(dev, &vdd, 1);
+>>>> +    if (IS_ERR(opp_table)) {
+>>>> +            i = PTR_ERR(opp_table);
+>>>> +            dev_err(dev, "failed to set regulators %d\n", i);
+>>>> +            return i;
+>>>
+>>> Maybe, you just used the 'i' defined variable instead of adding
+>>> new variable. But, I think that you better to add new variable
+>>> like 'err' for the readability. Or, jut use the 'PTR_ERR(opp_table)'
+>>> directly without any additional variable.
+>>
+>> I will remove not related changes, so here I will reuse 'ret' variable.
+>>
+>>>>      }
+>>>>
+>>>> +    bus->opp_table = opp_table;
+>>>
+>>> Add blank line.
+>>
+>> OK
+>>
+>>>>      /*
+>>>>       * Optionally, Get the saturation ratio according to Exynos SoC
+>>>>       * When measuring the utilization of each AXI bus with devfreq-event
+>>>> @@ -314,16 +256,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+>>>>      if (of_property_read_u32(np, "exynos,saturation-ratio", &bus->ratio))
+>>>>              bus->ratio = DEFAULT_SATURATION_RATIO;
+>>>>
+>>>> -    if (of_property_read_u32(np, "exynos,voltage-tolerance",
+>>>> -                                    &bus->voltage_tolerance))
+>>>> -            bus->voltage_tolerance = DEFAULT_VOLTAGE_TOLERANCE;
+>>>> -
+>>>>      return 0;
+>>>> -
+>>>> -err_regulator:
+>>>> -    regulator_disable(bus->regulator);
+>>>> -
+>>>> -    return ret;
+>>>>  }
+>>>>
+>>>>  static int exynos_bus_parse_of(struct exynos_bus *bus)
+>>>> @@ -414,12 +347,8 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>>>>
+>>>>      /* Parse the device-tree to get the resource information */
+>>>>      ret = exynos_bus_parse_of(bus);
+>>>> -    if (ret < 0) {
+>>>> -            if (!passive)
+>>>> -                    regulator_disable(bus->regulator);
+>>>> -
+>>>> -            return ret;
+>>>> -    }
+>>>> +    if (ret < 0)
+>>>> +            goto err_reg;
+>>>>
+>>>>      if (passive)
+>>>>              goto passive;
+>>>> @@ -512,10 +441,12 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>>>>
+>>>>  err:
+>>>>      clk_disable_unprepare(bus->clk);
+>>>> -    if (!passive)
+>>>> -            regulator_disable(bus->regulator);
+>>>> -
+>>>>      dev_pm_opp_of_remove_table(dev);
+>>>
+>>> This function removes the 'opp_table'. But, the below code
+>>> uses the 'opp_table' variable by dev_pm_opp_put_regulators().
+>>>
+>>> To disable the regulator, you have to call dev_pm_opp_of_remove_table(dev)
+>>> after dev_pm_opp_put_regulators(bus->opp_table).
+>>
+>> Regulators should be set before dev_pm_opp_add_table(), so exit sequence
+>> should be in reverse order,
+>>
+>> init order:
+>>
+>> exynos_bus_parent_parse_of()
+>>         dev_pm_opp_set_regulators()
+>> exynos_bus_parse_of()
+>>         clk_prepare_enable()
+>>         dev_pm_opp_of_add_table()
+>>
+>> exit or error order:
+>>
+>> dev_pm_opp_of_remove_table()
+>> clk_disable_unprepare()
+>> if (bus->opp_table)
+>>         dev_pm_opp_put_regulators(bus->opp_table);
+> 
+> dev_pm_opp_of_remove_table() have to be called at the end of exit sequence
+> after disabling clock and put regulators. Because dev_pm_opp_of_remove_table()
+> frees the 'opp_table' pointer of device.
+> 
+> clk_disable_unprepare()
+> if (bus->opp_table)
+>           dev_pm_opp_put_regulators(bus->opp_table);
+> dev_pm_opp_of_remove_table()
 
-diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
-index 770915fb97f9..3297613722c3 100644
---- a/drivers/fpga/altera-cvp.c
-+++ b/drivers/fpga/altera-cvp.c
-@@ -22,10 +22,10 @@
- #define TIMEOUT_US	2000	/* CVP STATUS timeout for USERMODE polling */
- 
- /* Vendor Specific Extended Capability Registers */
--#define VSE_PCIE_EXT_CAP_ID		0x200
-+#define VSE_PCIE_EXT_CAP_ID		0x0
- #define VSE_PCIE_EXT_CAP_ID_VAL		0x000b	/* 16bit */
- 
--#define VSE_CVP_STATUS			0x21c	/* 32bit */
-+#define VSE_CVP_STATUS			0x1c	/* 32bit */
- #define VSE_CVP_STATUS_CFG_RDY		BIT(18)	/* CVP_CONFIG_READY */
- #define VSE_CVP_STATUS_CFG_ERR		BIT(19)	/* CVP_CONFIG_ERROR */
- #define VSE_CVP_STATUS_CVP_EN		BIT(20)	/* ctrl block is enabling CVP */
-@@ -33,18 +33,18 @@
- #define VSE_CVP_STATUS_CFG_DONE		BIT(23)	/* CVP_CONFIG_DONE */
- #define VSE_CVP_STATUS_PLD_CLK_IN_USE	BIT(24)	/* PLD_CLK_IN_USE */
- 
--#define VSE_CVP_MODE_CTRL		0x220	/* 32bit */
-+#define VSE_CVP_MODE_CTRL		0x20	/* 32bit */
- #define VSE_CVP_MODE_CTRL_CVP_MODE	BIT(0)	/* CVP (1) or normal mode (0) */
- #define VSE_CVP_MODE_CTRL_HIP_CLK_SEL	BIT(1) /* PMA (1) or fabric clock (0) */
- #define VSE_CVP_MODE_CTRL_NUMCLKS_OFF	8	/* NUMCLKS bits offset */
- #define VSE_CVP_MODE_CTRL_NUMCLKS_MASK	GENMASK(15, 8)
- 
--#define VSE_CVP_DATA			0x228	/* 32bit */
--#define VSE_CVP_PROG_CTRL		0x22c	/* 32bit */
-+#define VSE_CVP_DATA			0x28	/* 32bit */
-+#define VSE_CVP_PROG_CTRL		0x2c	/* 32bit */
- #define VSE_CVP_PROG_CTRL_CONFIG	BIT(0)
- #define VSE_CVP_PROG_CTRL_START_XFER	BIT(1)
- 
--#define VSE_UNCOR_ERR_STATUS		0x234	/* 32bit */
-+#define VSE_UNCOR_ERR_STATUS		0x34	/* 32bit */
- #define VSE_UNCOR_ERR_CVP_CFG_ERR	BIT(5)	/* CVP_CONFIG_ERROR_LATCHED */
- 
- #define DRV_NAME		"altera-cvp"
-@@ -60,14 +60,29 @@ struct altera_cvp_conf {
- 	void			(*write_data)(struct altera_cvp_conf *, u32);
- 	char			mgr_name[64];
- 	u8			numclks;
-+	u32			vsec_offset;
- };
- 
-+static int altera_read_config_dword(struct altera_cvp_conf *conf,
-+				    int where, u32 *val)
-+{
-+	return pci_read_config_dword(conf->pci_dev, conf->vsec_offset + where,
-+				     val);
-+}
-+
-+static int altera_write_config_dword(struct altera_cvp_conf *conf,
-+				     int where, u32 val)
-+{
-+	return pci_write_config_dword(conf->pci_dev, conf->vsec_offset + where,
-+				      val);
-+}
-+
- static enum fpga_mgr_states altera_cvp_state(struct fpga_manager *mgr)
- {
- 	struct altera_cvp_conf *conf = mgr->priv;
- 	u32 status;
- 
--	pci_read_config_dword(conf->pci_dev, VSE_CVP_STATUS, &status);
-+	altera_read_config_dword(conf, VSE_CVP_STATUS, &status);
- 
- 	if (status & VSE_CVP_STATUS_CFG_DONE)
- 		return FPGA_MGR_STATE_OPERATING;
-@@ -85,7 +100,8 @@ static void altera_cvp_write_data_iomem(struct altera_cvp_conf *conf, u32 val)
- 
- static void altera_cvp_write_data_config(struct altera_cvp_conf *conf, u32 val)
- {
--	pci_write_config_dword(conf->pci_dev, VSE_CVP_DATA, val);
-+	pci_write_config_dword(conf->pci_dev, conf->vsec_offset + VSE_CVP_DATA,
-+			       val);
- }
- 
- /* switches between CvP clock and internal clock */
-@@ -95,10 +111,10 @@ static void altera_cvp_dummy_write(struct altera_cvp_conf *conf)
- 	u32 val;
- 
- 	/* set 1 CVP clock cycle for every CVP Data Register Write */
--	pci_read_config_dword(conf->pci_dev, VSE_CVP_MODE_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_MODE_CTRL, &val);
- 	val &= ~VSE_CVP_MODE_CTRL_NUMCLKS_MASK;
- 	val |= 1 << VSE_CVP_MODE_CTRL_NUMCLKS_OFF;
--	pci_write_config_dword(conf->pci_dev, VSE_CVP_MODE_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_MODE_CTRL, val);
- 
- 	for (i = 0; i < CVP_DUMMY_WR; i++)
- 		conf->write_data(conf, 0); /* dummy data, could be any value */
-@@ -115,7 +131,7 @@ static int altera_cvp_wait_status(struct altera_cvp_conf *conf, u32 status_mask,
- 		retries++;
- 
- 	do {
--		pci_read_config_dword(conf->pci_dev, VSE_CVP_STATUS, &val);
-+		altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
- 		if ((val & status_mask) == status_val)
- 			return 0;
- 
-@@ -130,18 +146,17 @@ static int altera_cvp_teardown(struct fpga_manager *mgr,
- 			       struct fpga_image_info *info)
- {
- 	struct altera_cvp_conf *conf = mgr->priv;
--	struct pci_dev *pdev = conf->pci_dev;
- 	int ret;
- 	u32 val;
- 
- 	/* STEP 12 - reset START_XFER bit */
--	pci_read_config_dword(pdev, VSE_CVP_PROG_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_PROG_CTRL, &val);
- 	val &= ~VSE_CVP_PROG_CTRL_START_XFER;
--	pci_write_config_dword(pdev, VSE_CVP_PROG_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_PROG_CTRL, val);
- 
- 	/* STEP 13 - reset CVP_CONFIG bit */
- 	val &= ~VSE_CVP_PROG_CTRL_CONFIG;
--	pci_write_config_dword(pdev, VSE_CVP_PROG_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_PROG_CTRL, val);
- 
- 	/*
- 	 * STEP 14
-@@ -163,7 +178,6 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
- 				 const char *buf, size_t count)
- {
- 	struct altera_cvp_conf *conf = mgr->priv;
--	struct pci_dev *pdev = conf->pci_dev;
- 	u32 iflags, val;
- 	int ret;
- 
-@@ -183,7 +197,7 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
- 		conf->numclks = 1; /* for uncompressed and unencrypted images */
- 
- 	/* STEP 1 - read CVP status and check CVP_EN flag */
--	pci_read_config_dword(pdev, VSE_CVP_STATUS, &val);
-+	altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
- 	if (!(val & VSE_CVP_STATUS_CVP_EN)) {
- 		dev_err(&mgr->dev, "CVP mode off: 0x%04x\n", val);
- 		return -ENODEV;
-@@ -201,14 +215,14 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
- 	 * - set HIP_CLK_SEL and CVP_MODE (must be set in the order mentioned)
- 	 */
- 	/* switch from fabric to PMA clock */
--	pci_read_config_dword(pdev, VSE_CVP_MODE_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_MODE_CTRL, &val);
- 	val |= VSE_CVP_MODE_CTRL_HIP_CLK_SEL;
--	pci_write_config_dword(pdev, VSE_CVP_MODE_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_MODE_CTRL, val);
- 
- 	/* set CVP mode */
--	pci_read_config_dword(pdev, VSE_CVP_MODE_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_MODE_CTRL, &val);
- 	val |= VSE_CVP_MODE_CTRL_CVP_MODE;
--	pci_write_config_dword(pdev, VSE_CVP_MODE_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_MODE_CTRL, val);
- 
- 	/*
- 	 * STEP 3
-@@ -217,10 +231,10 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
- 	altera_cvp_dummy_write(conf);
- 
- 	/* STEP 4 - set CVP_CONFIG bit */
--	pci_read_config_dword(pdev, VSE_CVP_PROG_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_PROG_CTRL, &val);
- 	/* request control block to begin transfer using CVP */
- 	val |= VSE_CVP_PROG_CTRL_CONFIG;
--	pci_write_config_dword(pdev, VSE_CVP_PROG_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_PROG_CTRL, val);
- 
- 	/* STEP 5 - poll CVP_CONFIG READY for 1 with 10us timeout */
- 	ret = altera_cvp_wait_status(conf, VSE_CVP_STATUS_CFG_RDY,
-@@ -237,15 +251,15 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
- 	altera_cvp_dummy_write(conf);
- 
- 	/* STEP 7 - set START_XFER */
--	pci_read_config_dword(pdev, VSE_CVP_PROG_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_PROG_CTRL, &val);
- 	val |= VSE_CVP_PROG_CTRL_START_XFER;
--	pci_write_config_dword(pdev, VSE_CVP_PROG_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_PROG_CTRL, val);
- 
- 	/* STEP 8 - start transfer (set CVP_NUMCLKS for bitstream) */
--	pci_read_config_dword(pdev, VSE_CVP_MODE_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_MODE_CTRL, &val);
- 	val &= ~VSE_CVP_MODE_CTRL_NUMCLKS_MASK;
- 	val |= conf->numclks << VSE_CVP_MODE_CTRL_NUMCLKS_OFF;
--	pci_write_config_dword(pdev, VSE_CVP_MODE_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_MODE_CTRL, val);
- 
- 	return 0;
- }
-@@ -256,7 +270,7 @@ static inline int altera_cvp_chk_error(struct fpga_manager *mgr, size_t bytes)
- 	u32 val;
- 
- 	/* STEP 10 (optional) - check CVP_CONFIG_ERROR flag */
--	pci_read_config_dword(conf->pci_dev, VSE_CVP_STATUS, &val);
-+	altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
- 	if (val & VSE_CVP_STATUS_CFG_ERR) {
- 		dev_err(&mgr->dev, "CVP_CONFIG_ERROR after %zu bytes!\n",
- 			bytes);
-@@ -315,27 +329,25 @@ static int altera_cvp_write_complete(struct fpga_manager *mgr,
- 				     struct fpga_image_info *info)
- {
- 	struct altera_cvp_conf *conf = mgr->priv;
--	struct pci_dev *pdev = conf->pci_dev;
-+	u32 mask, val;
- 	int ret;
--	u32 mask;
--	u32 val;
- 
- 	ret = altera_cvp_teardown(mgr, info);
- 	if (ret)
- 		return ret;
- 
- 	/* STEP 16 - check CVP_CONFIG_ERROR_LATCHED bit */
--	pci_read_config_dword(pdev, VSE_UNCOR_ERR_STATUS, &val);
-+	altera_read_config_dword(conf, VSE_UNCOR_ERR_STATUS, &val);
- 	if (val & VSE_UNCOR_ERR_CVP_CFG_ERR) {
- 		dev_err(&mgr->dev, "detected CVP_CONFIG_ERROR_LATCHED!\n");
- 		return -EPROTO;
- 	}
- 
- 	/* STEP 17 - reset CVP_MODE and HIP_CLK_SEL bit */
--	pci_read_config_dword(pdev, VSE_CVP_MODE_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_MODE_CTRL, &val);
- 	val &= ~VSE_CVP_MODE_CTRL_HIP_CLK_SEL;
- 	val &= ~VSE_CVP_MODE_CTRL_CVP_MODE;
--	pci_write_config_dword(pdev, VSE_CVP_MODE_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_MODE_CTRL, val);
- 
- 	/* STEP 18 - poll PLD_CLK_IN_USE and USER_MODE bits */
- 	mask = VSE_CVP_STATUS_PLD_CLK_IN_USE | VSE_CVP_STATUS_USERMODE;
-@@ -394,22 +406,29 @@ static int altera_cvp_probe(struct pci_dev *pdev,
- {
- 	struct altera_cvp_conf *conf;
- 	struct fpga_manager *mgr;
-+	int ret, offset;
- 	u16 cmd, val;
- 	u32 regval;
--	int ret;
-+
-+	/* Discover the Vendor Specific Offset for this device */
-+	offset = pci_find_next_ext_capability(pdev, 0, PCI_EXT_CAP_ID_VNDR);
-+	if (!offset) {
-+		dev_err(&pdev->dev, "No Vendor Specific Offset.\n");
-+		return -ENODEV;
-+	}
- 
- 	/*
- 	 * First check if this is the expected FPGA device. PCI config
- 	 * space access works without enabling the PCI device, memory
- 	 * space access is enabled further down.
- 	 */
--	pci_read_config_word(pdev, VSE_PCIE_EXT_CAP_ID, &val);
-+	pci_read_config_word(pdev, offset + VSE_PCIE_EXT_CAP_ID, &val);
- 	if (val != VSE_PCIE_EXT_CAP_ID_VAL) {
- 		dev_err(&pdev->dev, "Wrong EXT_CAP_ID value 0x%x\n", val);
- 		return -ENODEV;
- 	}
- 
--	pci_read_config_dword(pdev, VSE_CVP_STATUS, &regval);
-+	pci_read_config_dword(pdev, offset + VSE_CVP_STATUS, &regval);
- 	if (!(regval & VSE_CVP_STATUS_CVP_EN)) {
- 		dev_err(&pdev->dev,
- 			"CVP is disabled for this device: CVP_STATUS Reg 0x%x\n",
-@@ -421,6 +440,9 @@ static int altera_cvp_probe(struct pci_dev *pdev,
- 	if (!conf)
- 		return -ENOMEM;
- 
-+	conf->vsec_offset = offset;
-+	dev_dbg(&pdev->dev, "Vendor Specific Data Offset at 0x%x\n", offset);
-+
- 	/*
- 	 * Enable memory BAR access. We cannot use pci_enable_device() here
- 	 * because it will make the driver unusable with FPGA devices that
+The table is reference counted so it will be freed after count go to zero.
+
+>> I will send v4 soon.
+>>
+>>>> +err_reg:
+>>>> +    if (bus->opp_table) {
+>>>> +            dev_pm_opp_put_regulators(bus->opp_table);
+>>>> +            bus->opp_table = NULL;
+>>>> +    }
+>>>>
+>>>>      return ret;
+>>>>  }
+
 -- 
-2.7.4
+Best regards,
+Kamil Konieczny
+Samsung R&D Institute Poland
 
