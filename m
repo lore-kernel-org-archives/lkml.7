@@ -2,105 +2,85 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEFAC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5009C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6821221734
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A2BA22C7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564066374;
-	bh=UiAPxBMDA0i/iMkH2fdA0nFfj4Rn3c8p0jAXHIvZ0og=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gv4C3lW2RtN7R8EcH7JOKXwffZH7DBsC0C3kYVfPEW3xGlRSoLZgGRtHavwU0fLIu
-	 rF5gYzjIQKJ5ObJ241Yu+VLwcMci1NjZ1rCm6xxmf6v/mmA4XPdNRJoMG7TxMGBNuo
-	 xXsG34b48IRZKJchETDtGTCy6Ckn/czX16zQX4ek=
+	s=default; t=1564066380;
+	bh=aA2TJGFrTFD2kniTHTChUAByBdRuVeG5Y7UlnhgOl/0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=kFPcrFw2kMY0bm43s+faqZSkQnSgCPnm3bboMpAjZmORKHuIRPFYSjf9pVXnnUxt1
+	 dIwJB8mMCDUJrK3HY+ZRTMnWwbXsvBipfqVIj8Q7ou3d10yEDaLzUccRHM8NqbOO5T
+	 LYSIqBDvoRUMtDB/ZCjiopYyH4KdZS86blCovFbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388582AbfGYOwx (ORCPT
+        id S2388615AbfGYOw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:52:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43192 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 10:52:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387646AbfGYOwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:52:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727437AbfGYOw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 10:52:58 -0400
+Received: from localhost.localdomain (unknown [180.111.32.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B4E421734;
-        Thu, 25 Jul 2019 14:52:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4667722BF5;
+        Thu, 25 Jul 2019 14:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564066372;
-        bh=UiAPxBMDA0i/iMkH2fdA0nFfj4Rn3c8p0jAXHIvZ0og=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qI7UPyLJQ98A3zSspuu8RTVksaDq1QaMKEkkw7btW+Aj4OCcSqpUxLcys6FN/ctNf
-         ZxrqUa+qWaSzdtNjYKLdto+bbh0+HjEuSAbH4vhDNqyhcp92mdZ7sGuW6Ucol5y1Ds
-         zmVnX+Gywp1MH4/lE9cQ3GEbGP6Cb/cQusPgDVmo=
-Date:   Thu, 25 Jul 2019 16:52:49 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: Disable procfs debugging by default
-Message-ID: <20190725145249.GA32271@kroah.com>
-References: <20190718092522.17748-1-kai.heng.feng@canonical.com>
- <20190725075503.GA16693@kroah.com>
- <83A2CB3F-B0C4-43C6-A3A6-B6E8B440BECC@canonical.com>
+        s=default; t=1564066378;
+        bh=aA2TJGFrTFD2kniTHTChUAByBdRuVeG5Y7UlnhgOl/0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=o+nDEGl+dM89r2UXqrtgV3BraDJpIwnjFi2mVg9qmzUGnrxJO8NI3kLMvPWigPg9l
+         a+AJK6oxKLIm4o0+9umaxohysG+PYu9NTFU2nCUM3I2+hD+TzJoJWcvLLPasngwNDA
+         vho/N14ahAos9eQ3qy55bV/2vICO22/QV1tD38hE=
+From:   Chao Yu <chao@kernel.org>
+To:     jaegeuk@kernel.org
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH] f2fs: disallow direct IO in atomic write
+Date:   Thu, 25 Jul 2019 22:39:11 +0800
+Message-Id: <20190725143911.28468-1-chao@kernel.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <83A2CB3F-B0C4-43C6-A3A6-B6E8B440BECC@canonical.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 10:48:42PM +0800, Kai-Heng Feng wrote:
-> at 15:55, Greg KH <gregkh@linuxfoundation.org> wrote:
-> 
-> > On Thu, Jul 18, 2019 at 05:25:22PM +0800, Kai-Heng Feng wrote:
-> > > The procfs provides many useful information for debugging, but it may be
-> > > too much for normal usage, routines like proc_get_sec_info() reports
-> > > various security related information.
-> > > 
-> > > So disable it by defaultl.
-> > > 
-> > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > ---
-> > >  drivers/staging/rtl8723bs/include/autoconf.h | 4 ----
-> > >  1 file changed, 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/staging/rtl8723bs/include/autoconf.h
-> > > b/drivers/staging/rtl8723bs/include/autoconf.h
-> > > index 196aca3aed7b..8f4c1e734473 100644
-> > > --- a/drivers/staging/rtl8723bs/include/autoconf.h
-> > > +++ b/drivers/staging/rtl8723bs/include/autoconf.h
-> > > @@ -57,9 +57,5 @@
-> > >  #define DBG	0	/*  for ODM & BTCOEX debug */
-> > >  #endif /*  !DEBUG */
-> > > 
-> > > -#ifdef CONFIG_PROC_FS
-> > > -#define PROC_DEBUG
-> > > -#endif
-> > 
-> > What?  Why?  If you are going to do this, then rip out all of the code
-> > as well.
-> 
-> Or make it a Kconfig option? Which one do you think is better?
+From: Chao Yu <yuchao0@huawei.com>
 
-No new config options please.
+Atomic write needs page cache to cache data of transaction,
+direct IO should never be allowed in atomic write, detect
+and deny it when open atomic write file.
 
-> > And are you _sure_ you want to do this?
-> 
-> Yes. The procfs of rtl8723bs is useful to Realtek to decode but not to
-> others.
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/file.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-If no one else needs this, then rip out all of the code that uses it,
-not just the single #define.
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 43d878f3db0f..34de73be2cc9 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1842,6 +1842,9 @@ static int f2fs_ioc_start_atomic_write(struct file *filp)
+ 	if (!S_ISREG(inode->i_mode))
+ 		return -EINVAL;
+ 
++	if (filp->f_flags & O_DIRECT)
++		return -EINVAL;
++
+ 	ret = mnt_want_write_file(filp);
+ 	if (ret)
+ 		return ret;
+-- 
+2.22.0
 
-thanks,
-
-greg k-h
