@@ -2,158 +2,120 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C52C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A61FC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77E0321743
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F672190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:32:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="WKwOxX6K"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ip6hXMPL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387789AbfGYNbq (ORCPT
+        id S2387926AbfGYNcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:31:46 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44828 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387665AbfGYNbq (ORCPT
+        Thu, 25 Jul 2019 09:32:20 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50898 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387632AbfGYNcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:31:46 -0400
-Received: by mail-lj1-f193.google.com with SMTP id k18so47990371ljc.11
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:31:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lRofjpGVnPdkvHjT1abpzFvdhqRUdMtCwITS9XC9FqY=;
-        b=WKwOxX6KPDQIRmCgJAKTRU8nyTVTibB5C1TnIuihKcSV5lNt9QF4vT4B5iz0FMTva1
-         X+7McxEoaoHiZtop26NDtdsbRmzb/o4oqU+CfFw5lOJcRcmxL8HDtEfX54kpPakjiubz
-         MUTRw3XXFYfdTUeK+go0VcL/q1AxSnTaPZfY4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lRofjpGVnPdkvHjT1abpzFvdhqRUdMtCwITS9XC9FqY=;
-        b=Mbw1AldtUeRx3nZv8yngIDuTR85KPZPhG7VKYJhCL1ybK2t+D7LVAsTk5nB5JTnYDh
-         odLatM82GK8q/5R2Z8V01q/YS85apIKLrg5ZXPymLyIQhT2OVZ5bSzfn9IrHkpc5znDb
-         78C6EHLM3Y8KpyYnHvcBii+Vl2pbpQO/DZuaWUjD18B8fxEohfJ0Mg95rn7vC9tZoLfA
-         i1i96+toRsH2bpAhpvBAP06tf2iwpWjaKAxblZ5MlbrT36OI7TrRLGIK+2j41eygNuOU
-         pQagbihj2AJD2G73dsHx+CD2C/XC1iUl+Lv021lTdVjWC08F7UxuyYnhDGGjsgGXO9d5
-         XZZw==
-X-Gm-Message-State: APjAAAWGD4VX5dPc+0sci/0wA9f6lvMpRViRJZvLcNliSHafQVocCw8w
-        +QKhGvfxTjNBGocY1bG2TbY=
-X-Google-Smtp-Source: APXvYqz/F986DupauyPnWK3++D6Z9b8wSPFEQgtug6IFVchRI8stLut7ttlybhQferFVWVbypQXzzQ==
-X-Received: by 2002:a2e:3013:: with SMTP id w19mr46339678ljw.73.1564061503937;
-        Thu, 25 Jul 2019 06:31:43 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id l22sm9051754ljc.4.2019.07.25.06.31.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 06:31:43 -0700 (PDT)
-Subject: Re: [PATCH 7/9] media: hantro: Add core bits to support H264 decoding
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Hertz Wong <hertz.wong@rock-chips.com>
-References: <20190619121540.29320-1-boris.brezillon@collabora.com>
- <20190619121540.29320-8-boris.brezillon@collabora.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <25cc2826-fc8f-570a-07fa-8cbdb11830a7@rasmusvillemoes.dk>
-Date:   Thu, 25 Jul 2019 15:31:41 +0200
+        Thu, 25 Jul 2019 09:32:20 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6PDVqIt074564;
+        Thu, 25 Jul 2019 08:31:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564061512;
+        bh=B/ntLJ2e1bIKShYP2qLtMwAe3jOvq47HHoEw6r4s2ZA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Ip6hXMPL4GiG/YNz0lIukcvAkp/BqHTNVXLtqtwTWZvDh3xsO4c9kteivrfZmAiEB
+         QUzcDPwqZj9HSlvBM+ZyC7PovEIcxAsqzqfVowgMbmbsJACjBO4EdlBZa5c257g+EK
+         vbtBslAD/tq6XsA/Cjk9N9zv7D04+VmLjp19dKT0=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6PDVql1073481
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 25 Jul 2019 08:31:52 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 25
+ Jul 2019 08:31:51 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 25 Jul 2019 08:31:51 -0500
+Received: from [10.250.86.29] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6PDVo6N082317;
+        Thu, 25 Jul 2019 08:31:50 -0500
+Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        butao <butao@hisilicon.com>,
+        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
+        Yudongbin <yudongbin@hisilicon.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+References: <20190624194908.121273-1-john.stultz@linaro.org>
+ <20190624194908.121273-5-john.stultz@linaro.org>
+ <20190718100840.GB19666@infradead.org>
+ <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
+ <20190724065958.GC16225@infradead.org>
+ <8e6f8e4f-20fc-1f1f-2228-f4fd7c7c5c1f@ti.com>
+ <20190725125014.GD20286@infradead.org>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <0eae0024-1fdf-bd06-a8ff-1a41f0af3c69@ti.com>
+Date:   Thu, 25 Jul 2019 09:31:50 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190619121540.29320-8-boris.brezillon@collabora.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20190725125014.GD20286@infradead.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/06/2019 14.15, Boris Brezillon wrote:
-> From: Hertz Wong <hertz.wong@rock-chips.com>
+On 7/25/19 8:50 AM, Christoph Hellwig wrote:
+> On Wed, Jul 24, 2019 at 11:46:01AM -0400, Andrew F. Davis wrote:
+>> https://patchwork.kernel.org/patch/10863957/
+>>
+>> It's actually a more simple heap type IMHO, but the logic inside is
+>> incompatible with the system/CMA heaps, if you move any of their code
+>> into the core framework then this heap stops working. Leading to out of
+>> tree hacks on the core to get it back functional. I see the same for the
+>> "complex" heaps with ION.
 > 
-> Add helpers and patch hantro_{drv,v4l2}.c to prepare addition of H264
-> decoding support.
+> Well, this mostly is just another allocator (gen_pool).  And given that
+> the whole dma-buf infrastucture assumes things are backed by pages we
+> really shouldn't need much more than an alloc and a free callback (and
+> maybe the pgprot to map it) and handle the rest in common code.
 > 
-> Signed-off-by: Hertz Wong <hertz.wong@rock-chips.com>
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> ---
-> +
-> +	/*
-> +	 * Short term pics in descending pic num order, long term ones in
-> +	 * ascending order.
-> +	 */
-> +	if (!(a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM))
-> +		return b->frame_num - a->frame_num;
-> +
-> +	return a->pic_num - b->pic_num;
-> +}
 
-Pet peeve: This works because ->frame_num and ->pic_num are u16, so
-their difference is guaranteed to fit in an int.
+But that's just it, dma-buf does not assume buffers are backed by normal
+kernel managed memory, it is up to the buffer exporter where and when to
+allocate the memory. The memory backed by this SRAM buffer does not have
+the normal struct page backing. So moving the map, sync, etc functions
+to common code would fail for this and many other heap types. This was a
+major problem with Ion that prompted this new design.
 
-> +static int b0_ref_list_cmp(const void *ptra, const void *ptrb, const void *data)
-> +{
-> +	const struct hantro_h264_reflist_builder *builder = data;
-> +	const struct v4l2_h264_dpb_entry *a, *b;
-> +	s32 poca, pocb;
-> +	u8 idxa, idxb;
-> +
-> +	idxa = *((u8 *)ptra);
-> +	idxb = *((u8 *)ptrb);
-> +	a = &builder->dpb[idxa];
-> +	b = &builder->dpb[idxb];
-> +
-> +	if ((a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM) !=
-> +	    (b->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)) {
-> +		/* Short term pics firt. */
-> +		if (!(a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM))
-> +			return -1;
-> +		else
-> +			return 1;
-> +	}
-> +
-> +	/* Long term pics in ascending pic num order. */
-> +	if (a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)
-> +		return a->pic_num - b->pic_num;
-> +
-> +	poca = builder->pocs[idxa];
-> +	pocb = builder->pocs[idxb];
-> +
-> +	/*
-> +	 * Short term pics with POC < cur POC first in POC descending order
-> +	 * followed by short term pics with POC > cur POC in POC ascending
-> +	 * order.
-> +	 */
-> +	if ((poca < builder->curpoc) != (pocb < builder->curpoc))
-> +		return poca - pocb;
-> +	else if (poca < builder->curpoc)
-> +		return pocb - poca;
-> +
-> +	return poca - pocb;
-> +}
+Each heap type may need to do something different depending on its
+backing memory, moving everything to common code that is common to
+System and CMA heaps is would lead those being the only upstreamable heaps.
 
-Here, however, poca and pocb are ints. What guarantees that their values
-are not more than 2^31 apart? I know absolutely nothing about this code
-or what these numbers represent, so it may be obvious that they are
-smallish.
-
-Rasmus
+Andrew
