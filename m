@@ -2,186 +2,112 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F39E4C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12286C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C14162081B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD65D2238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:22:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387941AbfGYHWU (ORCPT
+        id S2387986AbfGYHWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 03:22:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45389 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbfGYHWU (ORCPT
+        Thu, 25 Jul 2019 03:22:34 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:45753 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387951AbfGYHWe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 03:22:20 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hqY4p-0000Pt-AL; Thu, 25 Jul 2019 09:22:11 +0200
-Date:   Thu, 25 Jul 2019 09:22:10 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     hpa@zytor.com
-cc:     john.hubbard@gmail.com, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH 1/1] x86/boot: clear some fields explicitly
-In-Reply-To: <B7DC31CA-E378-445A-A937-1B99490C77B4@zytor.com>
-Message-ID: <alpine.DEB.2.21.1907250848050.1791@nanos.tec.linutronix.de>
-References: <20190724231528.32381-1-jhubbard@nvidia.com> <20190724231528.32381-2-jhubbard@nvidia.com> <B7DC31CA-E378-445A-A937-1B99490C77B4@zytor.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 25 Jul 2019 03:22:34 -0400
+Received: from [192.168.1.110] ([77.9.64.13]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MsqMq-1ifCnO1BAu-00t9wS; Thu, 25 Jul 2019 09:22:30 +0200
+Subject: Re: AMD Drivers
+To:     Gilberto Nunes <gilberto.nunes32@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        dri devel <dri-devel@lists.freedesktop.org>
+References: <CAOKSTBs-cHMr7xbJVVUjZ9C3__bY6jZU-_TZ0RmMRMJ3dBk3PA@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <0c3f445d-1e37-1531-d3d5-f7ad75c58343@metux.net>
+Date:   Thu, 25 Jul 2019 09:22:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <CAOKSTBs-cHMr7xbJVVUjZ9C3__bY6jZU-_TZ0RmMRMJ3dBk3PA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:659jE6DNqxATIz6lVOvFCp//CjtOqPsWVkvHo3c2gH0Z9BnolE/
+ 7E02SQSPqT3EXNqNqKQHpo9pNLqXIrjBLgSZ35p+FLFj+9uAfcE3s3uxpjCwEddXW2lT8TA
+ zYUuGjfQoU+DSlVeX8Y797vlaJys0GJbU4Ouf5kTCaaBngNL1leKjiWEVwEvnXd1gP2EVNb
+ ByFNaTu55yZ7orXAW9hfg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:18pTWSl+wSI=:u79uo7fZm4iSH46IVznB4x
+ BM3e8D3G+q/Vsf3DesUmX1N5BTg5+fYFUBXXggBIWMKJyFk4byDFXyGCnpLghV4nPwdP02kCZ
+ if4v6A7e1A2Ju0apUUiS627vdcnEhJZpIP92MFCSRXQuVFdQvayYxLCb3CQaF8wFhbk4JSpdn
+ unAG+q7mKeDwnbNdFU3m+hE+AgpzdW3cMJdcsSAhnFz/cgwa0m2zO6e1cgkFDUDQ4NNJByKrH
+ RS0Bhs0rCuTA5nYTp86C3xN/KJ/F+l/dWYBYVl3G7dzvBc/MKtFjmJPL9rjGfLLAy8AC7PK/q
+ H/4wxmLajPHD3eMBEXEUsgiRhc78BCpWK/DFn3zaYhnbdHKAwc6xQvqPbI0TzGkd+xL6ukU+w
+ 7XL3uk3tHjJrTfYAIBa06cXjYpelXepvP63eyDMjirz9js/1OKXdT8g/PImbA94DraT6nZm70
+ 1wyDs2zqSUeCzhmRtcOPJ5P3o0cncJdTf19x69yloBJAsjstsUqW9wlY9+X3ixbHQH8rNQOWM
+ mdulsMgeOqJCCcDGtYKBR97JAwU/zfoid/g3IOAN+HED8ud9CxQIPrmbfFWgncYsQAxZP6XLG
+ T+shpWnhmo2Mybql9qT0ftDSOZ4c7twGckuJqdyxnRvF9vV6xr/o3q9kDMizqFaxIUHEcgOzY
+ qoT5wgxeANOZAlII48PLfW1oTygihlwidlbuU5XY+pxab6rrdbC6xGAX1oXiICQJ+EkjbP6rF
+ 9NGAQcSNvdiaAyyrxrI9YLDq3WQ2Tjb9e1WFZD7rXcyw6qynph93jnIHUsY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jul 2019, hpa@zytor.com wrote:
-> On July 24, 2019 4:15:28 PM PDT, john.hubbard@gmail.com wrote:
-> >From: John Hubbard <jhubbard@nvidia.com>
-> >
-> >Recent gcc compilers (gcc 9.1) generate warnings about an
-> >out of bounds memset, if you trying memset across several fields
-> >of a struct. This generated a couple of warnings on x86_64 builds.
-> >
-> >Because struct boot_params is __packed__, normal variable
-> >variable assignment will work just as well as a memset here.
-> >Change three u32 fields to be cleared to zero that way, and
-> >just memset the _pad4 field.
-> >
-> >This clears up the build warnings for me.
-> >
-> >Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> >---
-> > arch/x86/include/asm/bootparam_utils.h | 11 +++++------
-> > 1 file changed, 5 insertions(+), 6 deletions(-)
-> >
-> >diff --git a/arch/x86/include/asm/bootparam_utils.h
-> >b/arch/x86/include/asm/bootparam_utils.h
-> >index 101eb944f13c..4df87d4a043b 100644
-> >--- a/arch/x86/include/asm/bootparam_utils.h
-> >+++ b/arch/x86/include/asm/bootparam_utils.h
-> >@@ -37,12 +37,11 @@ static void sanitize_boot_params(struct boot_params
-> >*boot_params)
-> > 	if (boot_params->sentinel) {
-> > 		/* fields in boot_params are left uninitialized, clear them */
-> > 		boot_params->acpi_rsdp_addr = 0;
-> >-		memset(&boot_params->ext_ramdisk_image, 0,
-> >-		       (char *)&boot_params->efi_info -
-> >-			(char *)&boot_params->ext_ramdisk_image);
-> >-		memset(&boot_params->kbd_status, 0,
-> >-		       (char *)&boot_params->hdr -
-> >-		       (char *)&boot_params->kbd_status);
-> >+		boot_params->ext_ramdisk_image = 0;
-> >+		boot_params->ext_ramdisk_size = 0;
-> >+		boot_params->ext_cmd_line_ptr = 0;
-> >+
-> >+		memset(&boot_params->_pad4, 0, sizeof(boot_params->_pad4));
-> > 		memset(&boot_params->_pad7[0], 0,
-> > 		       (char *)&boot_params->edd_mbr_sig_buffer[0] -
-> > 			(char *)&boot_params->_pad7[0]);
+On 24.07.19 16:17, Gilberto Nunes wrote:
+
+Hi,
+
+crossposting to dri-devel, as it smells like a problem w/ amdgpu driver.
+
+> CPU - AMD A12-9720P RADEON R7, 12 COMPUTE CORES 4C+8G
+> GPU - Wani [Radeon R5/R6/R7 Graphics] (amdgpu)
+> Network Interface card:
+> 01:00.1 Ethernet controller: Realtek Semiconductor Co., Ltd.
+> RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 12)
 > 
-> The problem with this is that it will break silently when changes are
-> made to this structure.
+> When I install kernel 4.18.x or 5.x, the network doesn't work anymore...
 
-That's not really the worst problem. Changes to that struct which touch any
-of the to be cleared ranges will break anyway if not handled correctly in
-the sanitizer function.
+What about other versions (eg. v4.19) ?
+Which is the last working version ?
 
-What's worse is that the patch is broken.  It 'clears' the build warnings,
-but not all the fields which have been cleared before:
+> I can loaded the modulo r8169 andr8168.
+> I saw enp1s0f1 as well but there's no link at all!
+> Even when I fixed the IP none link!
+> I cannot ping the network gateway or any other IP inside LAN!
+> Right now, I booted my laptop with kernel
+> Linux version 5.2.2-050202-generic (kernel@kathleen) (gcc version
+> 9.1.0 (Ubuntu 9.1.0-9ubuntu2)) #201907231250 SMP Tue Jul 23 12:53:21
+> UTC 2019
 
-It removes the clearing of the range between kbd_status and hdr without any
-replacement. It neither clears edid_info.
+Could you also try 5.3 ?
 
-The above approach is doomed and if we have to handle this GCC0.1 madness
-then this needs to be done smarter. Something like the completely untested
-thing below.
+> The system boot slowly, and I have a SSD Samsung, which in kernel
+> 4.15, boot quickly.
+> And there's many errors in dmesg command, like you can see in this pastbin
+> 
+> https://paste.ubuntu.com/p/YhbjnzYYYh/
 
-Thanks,
+looks like something's wrong w/ reading gpu registers (more precisely
+waiting for some changing), that's causing the soft lockup. (maybe too
+big timeout ?)
 
-	tglx
+> Oh! By the way, the network card r8169 are work wonderful!
 
-8<--------------
-diff --git a/arch/x86/include/asm/bootparam_utils.h b/arch/x86/include/asm/bootparam_utils.h
-index 101eb944f13c..f5bc4c01b66b 100644
---- a/arch/x86/include/asm/bootparam_utils.h
-+++ b/arch/x86/include/asm/bootparam_utils.h
-@@ -9,6 +9,18 @@
-  * add completing #includes to make it standalone.
-  */
- 
-+struct boot_params_clear {
-+	unsigned int	offs;
-+	unsigned int	len;
-+};
-+
-+#define BOOT_PARAM_CLEAR(start, end)				\
-+{								\
-+	.offs	= offsetof(struct boot_params, start),		\
-+	.len	= offsetof(struct boot_params, end) -		\
-+		  offsetof(struct boot_params, start),		\
-+}
-+
- /*
-  * Deal with bootloaders which fail to initialize unknown fields in
-  * boot_params to zero.  The list fields in this list are taken from
-@@ -20,7 +32,19 @@
-  */
- static void sanitize_boot_params(struct boot_params *boot_params)
- {
--	/* 
-+	const struct boot_params_clear toclear[] = {
-+		BOOT_PARAM_CLEAR(acpi_rdsp_addr, _pad3),
-+		BOOT_PARAM_CLEAR(ext_ramdisk_image, efi_info),
-+		BOOT_PARAM_CLEAR(kbd_status, hdr),
-+		BOOT_PARAM_CLEAR(_pad7, edd_mbr_sig_buffer),
-+		BOOT_PARAM_CLEAR(_pad8, eddbuf),
-+		{
-+			.offs	= offsetof(struct boot_params, _pad9),
-+			.len	= sizeof(boot_params->_pad9),
-+		},
-+	}
-+
-+	/*
- 	 * IMPORTANT NOTE TO BOOTLOADER AUTHORS: do not simply clear
- 	 * this field.  The purpose of this field is to guarantee
- 	 * compliance with the x86 boot spec located in
-@@ -36,20 +60,11 @@ static void sanitize_boot_params(struct boot_params *boot_params)
- 	 */
- 	if (boot_params->sentinel) {
- 		/* fields in boot_params are left uninitialized, clear them */
--		boot_params->acpi_rsdp_addr = 0;
--		memset(&boot_params->ext_ramdisk_image, 0,
--		       (char *)&boot_params->efi_info -
--			(char *)&boot_params->ext_ramdisk_image);
--		memset(&boot_params->kbd_status, 0,
--		       (char *)&boot_params->hdr -
--		       (char *)&boot_params->kbd_status);
--		memset(&boot_params->_pad7[0], 0,
--		       (char *)&boot_params->edd_mbr_sig_buffer[0] -
--			(char *)&boot_params->_pad7[0]);
--		memset(&boot_params->_pad8[0], 0,
--		       (char *)&boot_params->eddbuf[0] -
--			(char *)&boot_params->_pad8[0]);
--		memset(&boot_params->_pad9[0], 0, sizeof(boot_params->_pad9));
-+		char *p = (char *) boot_params;
-+		int i;
-+
-+		for (i = 0; i < ARRAY_SIZE(toclear); i++)
-+			memset(p + toclear[i].start, 0, toclear[i].len);
- 	}
- }
- 
+Didn't you say (above) that it does not work ?
+Or is it just an immediate fail and later comes back ?
 
+
+--mtx
+
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
