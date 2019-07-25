@@ -2,137 +2,118 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92364C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06E1C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6935A21951
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:35:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C+5aYuGN"
+	by mail.kernel.org (Postfix) with ESMTP id C301E22BE8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730014AbfGYRfz (ORCPT
+        id S1730027AbfGYRjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:35:55 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40724 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728019AbfGYRfy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:35:54 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w10so23394787pgj.7
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 10:35:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Tnaeq0Y3gkRSznLM6wB5JlAIZ9EuxGX/RgrHx+lQ6GU=;
-        b=C+5aYuGN+LuL47FHCQgQ9iMOaKrQPwI6rEsMqVIxiLRCFl0kcnZ69GnOd+kfP+3l/4
-         NMb0HnaCFhUke7ZRA8n8Z0DCNmrjLMoGxxCqmbIwNuIV0ruFj/VzEPzf1NxzCK7O0O/1
-         WwxUoiojsmZ35+KD2hXhb20xaKkY5xMReRfSlsK060VHSPiRJjQNeU0qIF4ti/MYIiXl
-         TVTBQMIxdpAY9/Ovwh1DGI07f48+LwYAf7s17RpCoY2bgEOG6JiF1f1mt4xb3JiH+TIs
-         QITDNjyjPq5oIcqvi7vBU1qOv+Woc3yaux5G3GVaKl8i1XTSaLP1H0Kw6ycxoL4ekXbb
-         2IAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Tnaeq0Y3gkRSznLM6wB5JlAIZ9EuxGX/RgrHx+lQ6GU=;
-        b=NYhdzHsEDUAoF1TjY+j9DT1OJLrf8JS4vKlrzrocJsP0wIx0ILQjL8F8EkWbI3jLJ2
-         bqQMcnux2z8WNmxxnWrxn+Yt6G58EMPDMGjTQt+G3KTL4NuGmo0EWZO2xKPsDJLrVHe+
-         CnJQg7JAbs04YTDR01w+IuzutwcWjf9DQ48Uozm6xe0JJQ3Z5Cmd+GeWW6drIRfOj7LX
-         xRWW0FroUSV1Ywg7u3jINYp7oOapHtxeGtGAZBrSnv6RcP71+qbziTnRMAYIV+67n+P/
-         zjybWXepupwebsCabIrRrVzj21aPJpkWYA9Me2Z5P9P58bGDqrOx5Gk8to8PapH9KuQw
-         HqOQ==
-X-Gm-Message-State: APjAAAX1FVHUNAYCBQS9oAdVoIo0vdc8i6nSv8Y3dpY2QhWWkvYaYIw2
-        F/851WlkRrf2KeQHgKs74Y4=
-X-Google-Smtp-Source: APXvYqwe+yUchsfysKmX+u+rwDIkY25DbaaG/Uj2Zbrvveshs2+AdWjHxuGcXkR4lEW/BnFn30cwhQ==
-X-Received: by 2002:a65:60cd:: with SMTP id r13mr61150026pgv.315.1564076153804;
-        Thu, 25 Jul 2019 10:35:53 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id z4sm78975766pfg.166.2019.07.25.10.35.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Jul 2019 10:35:53 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 10:36:38 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu/dma: Fix calculation overflow in __finalise_sg()
-Message-ID: <20190725173637.GC31961@Asurada-Nvidia.nvidia.com>
-References: <20190622043814.5003-1-nicoleotsuka@gmail.com>
- <20190701122158.GE8166@8bytes.org>
- <91a389be-fd76-c87f-7613-8cc972b69685@arm.com>
- <20190701215016.GA16247@Asurada-Nvidia.nvidia.com>
- <d4bccb17-2f7a-65e4-6c89-e37cceb6d935@arm.com>
- <20190702210400.GA14593@Asurada-Nvidia.nvidia.com>
+        Thu, 25 Jul 2019 13:39:51 -0400
+Received: from mga14.intel.com ([192.55.52.115]:57638 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725774AbfGYRjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 13:39:51 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 10:38:50 -0700
+X-IronPort-AV: E=Sophos;i="5.64,307,1559545200"; 
+   d="scan'208";a="164251652"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 10:38:49 -0700
+Message-ID: <b3568a5422d0f6b88f7c5cb46577db1a43057c04.camel@linux.intel.com>
+Subject: Re: [PATCH v2 4/5] mm: Introduce Hinted pages
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Zhang <yang.zhang.wz@gmail.com>, pagupta@redhat.com,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        lcapitulino@redhat.com, wei.w.wang@intel.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, dan.j.williams@intel.com,
+        Matthew Wilcox <willy@infradead.org>
+Date:   Thu, 25 Jul 2019 10:38:49 -0700
+In-Reply-To: <f0ac7747-0e18-5039-d341-5dfda8d5780e@redhat.com>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+         <20190724170259.6685.18028.stgit@localhost.localdomain>
+         <a9f52894-52df-cd0c-86ac-eea9fbe96e34@redhat.com>
+         <CAKgT0Ud-UNk0Mbef92hDLpWb2ppVHsmd24R9gEm2N8dujb4iLw@mail.gmail.com>
+         <f0ac7747-0e18-5039-d341-5dfda8d5780e@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702210400.GA14593@Asurada-Nvidia.nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry to ping this but it's been a while.
+On Thu, 2019-07-25 at 18:48 +0200, David Hildenbrand wrote:
+> On 25.07.19 17:59, Alexander Duyck wrote:
+> > On Thu, Jul 25, 2019 at 1:53 AM David Hildenbrand <david@redhat.com> wrote:
+> > > On 24.07.19 19:03, Alexander Duyck wrote:
+> > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > 
 
-Robin, did you get a chance to resend your version?
+<snip>
 
-Thanks
-Nicolin
+> > > Can't we reuse one of the traditional page flags for that, not used
+> > > along with buddy pages? E.g., PG_dirty: Pages that were not hinted yet
+> > > are dirty.
+> > 
+> > Reusing something like the dirty bit would just be confusing in my
+> > opinion. In addition it looks like Xen has also re-purposed PG_dirty
+> > already for another purpose.
+> 
+> You brought up waste page management. A dirty bit for unprocessed pages
+> fits perfectly in this context. Regarding XEN, as long as it's not used
+> along with buddy pages, no issue.
 
-On Tue, Jul 02, 2019 at 02:04:01PM -0700, Nicolin Chen wrote:
-> On Tue, Jul 02, 2019 at 11:40:02AM +0100, Robin Murphy wrote:
-> > On reflection, I don't really think that size_t fits here anyway, since
-> > all the members of the incoming struct scatterlist are unsigned int too.
-> > Does the patch below work?
+I would rather not have to dirty all pages that aren't hinted. That starts
+to get too invasive. Ideally we only modify pages if we are hinting on
+them. That is why I said I didn't like the use of a dirty bit. What we
+want is more of a "guaranteed clean" bit.
+
+> FWIW, I don't even thing PG_offline matches to what you are using it
+> here for. The pages are not logically offline. They were simply buddy
+> pages that were hinted. (I'd even prefer a separate page type for that
+> instead - if we cannot simply reuse one of the other flags)
 > 
-> Yes.
+> "Offline pages" that are not actually offline in the context of the
+> buddy is way more confusing.
+
+Right now offline and hinted are essentially the same thing since the
+effect is identical.
+
+There may be cases in the future where that is not the case, but with the
+current patch set they both result in the pages being evicted from the
+guest.
+
+> > If anything I could probably look at seeing if the PG_private flags
+> > are available when a page is in the buddy allocator which I suspect
+> > they probably are since the only users I currently see appear to be
+> > SLOB and compound pages. Either that or maybe something like PG_head
+> > might make sense since once we start allocating them we are popping
+> > the head off of the boundary list.
 > 
-> > ----->8-----
-> > From: Robin Murphy <robin.murphy@arm.com>
-> > Subject: [PATCH] iommu/dma: Handle SG length overflow better
-> > 
-> > Since scatterlist dimensions are all unsigned ints, in the relatively
-> > rare cases where a device's max_segment_size is set to UINT_MAX, then
-> > the "cur_len + s_length <= max_len" check in __finalise_sg() will always
-> > return true. As a result, the corner case of such a device mapping an
-> > excessively large scatterlist which is mergeable to or beyond a total
-> > length of 4GB can lead to overflow and a bogus truncated dma_length in
-> > the resulting segment.
-> > 
-> > As we already assume that any single segment must be no longer than
-> > max_len to begin with, this can easily be addressed by reshuffling the
-> > comparison.
-> > 
-> > Fixes: 809eac54cdd6 ("iommu/dma: Implement scatterlist segment merging")
-> > Reported-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> 
-> Tested-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> 
-> Thank you!
-> 
-> > ---
-> >  drivers/iommu/dma-iommu.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> > index 129c4badf9ae..8de6cf623362 100644
-> > --- a/drivers/iommu/dma-iommu.c
-> > +++ b/drivers/iommu/dma-iommu.c
-> > @@ -721,7 +721,7 @@ static int __finalise_sg(struct device *dev, struct scatterlist *sg, int nents,
-> >  		 * - and wouldn't make the resulting output segment too long
-> >  		 */
-> >  		if (cur_len && !s_iova_off && (dma_addr & seg_mask) &&
-> > -		    (cur_len + s_length <= max_len)) {
-> > +		    (max_len - cur_len >= s_length)) {
-> >  			/* ...then concatenate it with the previous one */
-> >  			cur_len += s_length;
-> >  		} else {
+> Would also be fine with me.
+
+Actually I may have found an even better bit if we are going with the
+"reporting" name. I could probably use "PG_uptodate" since it looks like
+most of its uses are related to filesystems. I will wait till I hear from
+Matthew on what bits would be available for use before I update things.
+
