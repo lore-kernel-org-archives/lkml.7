@@ -2,121 +2,186 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0839FC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F39E4C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB5F221734
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:19:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fDS+98o9"
+	by mail.kernel.org (Postfix) with ESMTP id C14162081B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:22:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387911AbfGYHTS (ORCPT
+        id S2387941AbfGYHWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 03:19:18 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36052 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387562AbfGYHTS (ORCPT
+        Thu, 25 Jul 2019 03:22:20 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45389 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbfGYHWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 03:19:18 -0400
-Received: by mail-lj1-f194.google.com with SMTP id i21so47002768ljj.3;
-        Thu, 25 Jul 2019 00:19:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DwIfRA6fcW2oe7CbnwGUIqq7af18U05Jyy+yWqYqM5c=;
-        b=fDS+98o9oalApKwxVG4RF/dDFVdI9yPmoz5I/YflcP8OTzLCsqj2s/Lw7gaK0ZlgzE
-         YT2QDp+xw78giiso+t9s9p/uQmOwlXpwbJXXZdLif3T0KVGo86suj2LbKnKzfPaDOnKZ
-         OxiBxBkuwoibEeO9CMWm6usPAJ4t9/BC1/jq/JAZq9T3AzogJ0dOl6vL7rspjXuFKNuP
-         YujnoqZsKobRZkeGBKUM81yZF/AMDtbkJ94t1+xOlJvYaRKaCwD1wYYu8GdfJbXBy0iK
-         Mr/SfnBladD45nbmVG2ov2H0mNdGpkR6IxIyJog58mRHdV5B4VB/xaIiaU/trnnzsOmy
-         2ncA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DwIfRA6fcW2oe7CbnwGUIqq7af18U05Jyy+yWqYqM5c=;
-        b=Zv9PqyWe613yEDs+19B+B8yJSau/XQNG8e4SZZTbtUmG1rpF+k6t6jUYb8PKRBtU9o
-         pejCDbAhYp2DQF0v+iVnNpoyxG1Pak61fI5aInUB4ms0K2yc+9HEV8IuqeflRYV/olJo
-         gr9G3/+tcmR14Ne1xF08acB2G14e2eHnDzxO/7fiHT8i6V66wPXszysVqRZDekBXfErW
-         IH/l+kQjZ0GXag184Pt545WkYnZJLJRDFdiRfmJiwZfZ8wrAjy0fgX6COhNWiVFZT9qg
-         WRwJbyaUeOtvNcp7vUN9PphiqIhfLBCeNFuP2nTSAkkVi7YNQkkvox+B5u2WuEVYWU35
-         uUCQ==
-X-Gm-Message-State: APjAAAXs2Dr63XKOoN2KT/4dkAfTpFTPPhmnx/Wu5JJ2mHCKOXkfUfup
-        rO1I3fGZ62V1jhoBA4dPYko=
-X-Google-Smtp-Source: APXvYqxprjXpA4VtptPUsVGzv6lssMvOez7iIOSBw530C47pRhsph33mQPMj4q73tDMwTwnr11zYqQ==
-X-Received: by 2002:a2e:63cd:: with SMTP id s74mr44547114lje.164.1564039155632;
-        Thu, 25 Jul 2019 00:19:15 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id q21sm7370835lfc.96.2019.07.25.00.19.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 00:19:14 -0700 (PDT)
-Subject: Re: [PATCH] media: staging: tegra-vde: Fix build error
-To:     YueHaibing <yuehaibing@huawei.com>, mchehab@kernel.org,
-        gregkh@linuxfoundation.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, robin.murphy@arm.com,
-        sakari.ailus@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-References: <dc354ede-5963-cd7f-ee53-f3df3061d39a@gmail.com>
- <20190725024129.22664-1-yuehaibing@huawei.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <dd547b44-7abb-371f-aeee-a82b96f824e2@gmail.com>
-Date:   Thu, 25 Jul 2019 10:19:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 25 Jul 2019 03:22:20 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hqY4p-0000Pt-AL; Thu, 25 Jul 2019 09:22:11 +0200
+Date:   Thu, 25 Jul 2019 09:22:10 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     hpa@zytor.com
+cc:     john.hubbard@gmail.com, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH 1/1] x86/boot: clear some fields explicitly
+In-Reply-To: <B7DC31CA-E378-445A-A937-1B99490C77B4@zytor.com>
+Message-ID: <alpine.DEB.2.21.1907250848050.1791@nanos.tec.linutronix.de>
+References: <20190724231528.32381-1-jhubbard@nvidia.com> <20190724231528.32381-2-jhubbard@nvidia.com> <B7DC31CA-E378-445A-A937-1B99490C77B4@zytor.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190725024129.22664-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-25.07.2019 5:41, YueHaibing пишет:
-> If IOMMU_SUPPORT is not set, and COMPILE_TEST is y,
-> IOMMU_IOVA may be set to m. So building will fails:
+On Wed, 24 Jul 2019, hpa@zytor.com wrote:
+> On July 24, 2019 4:15:28 PM PDT, john.hubbard@gmail.com wrote:
+> >From: John Hubbard <jhubbard@nvidia.com>
+> >
+> >Recent gcc compilers (gcc 9.1) generate warnings about an
+> >out of bounds memset, if you trying memset across several fields
+> >of a struct. This generated a couple of warnings on x86_64 builds.
+> >
+> >Because struct boot_params is __packed__, normal variable
+> >variable assignment will work just as well as a memset here.
+> >Change three u32 fields to be cleared to zero that way, and
+> >just memset the _pad4 field.
+> >
+> >This clears up the build warnings for me.
+> >
+> >Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> >---
+> > arch/x86/include/asm/bootparam_utils.h | 11 +++++------
+> > 1 file changed, 5 insertions(+), 6 deletions(-)
+> >
+> >diff --git a/arch/x86/include/asm/bootparam_utils.h
+> >b/arch/x86/include/asm/bootparam_utils.h
+> >index 101eb944f13c..4df87d4a043b 100644
+> >--- a/arch/x86/include/asm/bootparam_utils.h
+> >+++ b/arch/x86/include/asm/bootparam_utils.h
+> >@@ -37,12 +37,11 @@ static void sanitize_boot_params(struct boot_params
+> >*boot_params)
+> > 	if (boot_params->sentinel) {
+> > 		/* fields in boot_params are left uninitialized, clear them */
+> > 		boot_params->acpi_rsdp_addr = 0;
+> >-		memset(&boot_params->ext_ramdisk_image, 0,
+> >-		       (char *)&boot_params->efi_info -
+> >-			(char *)&boot_params->ext_ramdisk_image);
+> >-		memset(&boot_params->kbd_status, 0,
+> >-		       (char *)&boot_params->hdr -
+> >-		       (char *)&boot_params->kbd_status);
+> >+		boot_params->ext_ramdisk_image = 0;
+> >+		boot_params->ext_ramdisk_size = 0;
+> >+		boot_params->ext_cmd_line_ptr = 0;
+> >+
+> >+		memset(&boot_params->_pad4, 0, sizeof(boot_params->_pad4));
+> > 		memset(&boot_params->_pad7[0], 0,
+> > 		       (char *)&boot_params->edd_mbr_sig_buffer[0] -
+> > 			(char *)&boot_params->_pad7[0]);
 > 
-> drivers/staging/media/tegra-vde/iommu.o: In function `tegra_vde_iommu_map':
-> iommu.c:(.text+0x41): undefined reference to `alloc_iova'
-> iommu.c:(.text+0x56): undefined reference to `__free_iova'
-> 
-> Select IOMMU_IOVA while COMPILE_TEST is set to fix this.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Suggested-by: Dmitry Osipenko <digetx@gmail.com>
-> Fixes: b301f8de1925 ("media: staging: media: tegra-vde: Add IOMMU support")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/staging/media/tegra-vde/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/media/tegra-vde/Kconfig b/drivers/staging/media/tegra-vde/Kconfig
-> index 2e7f644..ba49ea5 100644
-> --- a/drivers/staging/media/tegra-vde/Kconfig
-> +++ b/drivers/staging/media/tegra-vde/Kconfig
-> @@ -3,7 +3,7 @@ config TEGRA_VDE
->  	tristate "NVIDIA Tegra Video Decoder Engine driver"
->  	depends on ARCH_TEGRA || COMPILE_TEST
->  	select DMA_SHARED_BUFFER
-> -	select IOMMU_IOVA if IOMMU_SUPPORT
-> +	select IOMMU_IOVA if (IOMMU_SUPPORT || COMPILE_TEST)
->  	select SRAM
->  	help
->  	    Say Y here to enable support for the NVIDIA Tegra video decoder
-> 
+> The problem with this is that it will break silently when changes are
+> made to this structure.
 
-This results in missing the case of compile-testing !IOMMU_IOVA for the
-driver, but probably that's not a big deal.
+That's not really the worst problem. Changes to that struct which touch any
+of the to be cleared ranges will break anyway if not handled correctly in
+the sanitizer function.
 
-Acked-by: Dmitry Osipenko <digetx@gmail.com>
+What's worse is that the patch is broken.  It 'clears' the build warnings,
+but not all the fields which have been cleared before:
+
+It removes the clearing of the range between kbd_status and hdr without any
+replacement. It neither clears edid_info.
+
+The above approach is doomed and if we have to handle this GCC0.1 madness
+then this needs to be done smarter. Something like the completely untested
+thing below.
+
+Thanks,
+
+	tglx
+
+8<--------------
+diff --git a/arch/x86/include/asm/bootparam_utils.h b/arch/x86/include/asm/bootparam_utils.h
+index 101eb944f13c..f5bc4c01b66b 100644
+--- a/arch/x86/include/asm/bootparam_utils.h
++++ b/arch/x86/include/asm/bootparam_utils.h
+@@ -9,6 +9,18 @@
+  * add completing #includes to make it standalone.
+  */
+ 
++struct boot_params_clear {
++	unsigned int	offs;
++	unsigned int	len;
++};
++
++#define BOOT_PARAM_CLEAR(start, end)				\
++{								\
++	.offs	= offsetof(struct boot_params, start),		\
++	.len	= offsetof(struct boot_params, end) -		\
++		  offsetof(struct boot_params, start),		\
++}
++
+ /*
+  * Deal with bootloaders which fail to initialize unknown fields in
+  * boot_params to zero.  The list fields in this list are taken from
+@@ -20,7 +32,19 @@
+  */
+ static void sanitize_boot_params(struct boot_params *boot_params)
+ {
+-	/* 
++	const struct boot_params_clear toclear[] = {
++		BOOT_PARAM_CLEAR(acpi_rdsp_addr, _pad3),
++		BOOT_PARAM_CLEAR(ext_ramdisk_image, efi_info),
++		BOOT_PARAM_CLEAR(kbd_status, hdr),
++		BOOT_PARAM_CLEAR(_pad7, edd_mbr_sig_buffer),
++		BOOT_PARAM_CLEAR(_pad8, eddbuf),
++		{
++			.offs	= offsetof(struct boot_params, _pad9),
++			.len	= sizeof(boot_params->_pad9),
++		},
++	}
++
++	/*
+ 	 * IMPORTANT NOTE TO BOOTLOADER AUTHORS: do not simply clear
+ 	 * this field.  The purpose of this field is to guarantee
+ 	 * compliance with the x86 boot spec located in
+@@ -36,20 +60,11 @@ static void sanitize_boot_params(struct boot_params *boot_params)
+ 	 */
+ 	if (boot_params->sentinel) {
+ 		/* fields in boot_params are left uninitialized, clear them */
+-		boot_params->acpi_rsdp_addr = 0;
+-		memset(&boot_params->ext_ramdisk_image, 0,
+-		       (char *)&boot_params->efi_info -
+-			(char *)&boot_params->ext_ramdisk_image);
+-		memset(&boot_params->kbd_status, 0,
+-		       (char *)&boot_params->hdr -
+-		       (char *)&boot_params->kbd_status);
+-		memset(&boot_params->_pad7[0], 0,
+-		       (char *)&boot_params->edd_mbr_sig_buffer[0] -
+-			(char *)&boot_params->_pad7[0]);
+-		memset(&boot_params->_pad8[0], 0,
+-		       (char *)&boot_params->eddbuf[0] -
+-			(char *)&boot_params->_pad8[0]);
+-		memset(&boot_params->_pad9[0], 0, sizeof(boot_params->_pad9));
++		char *p = (char *) boot_params;
++		int i;
++
++		for (i = 0; i < ARRAY_SIZE(toclear); i++)
++			memset(p + toclear[i].start, 0, toclear[i].len);
+ 	}
+ }
+ 
+
