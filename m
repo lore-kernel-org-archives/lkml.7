@@ -2,131 +2,118 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06717C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D395C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF618229F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709F4229F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:20:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mtl8aXY6"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="NifUXO46"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389954AbfGYNUY (ORCPT
+        id S2390013AbfGYNUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:20:24 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40260 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389884AbfGYNUX (ORCPT
+        Thu, 25 Jul 2019 09:20:38 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50764 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387789AbfGYNUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:20:23 -0400
-Received: by mail-qt1-f196.google.com with SMTP id a15so48978620qtn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:20:23 -0700 (PDT)
+        Thu, 25 Jul 2019 09:20:37 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v15so45007898wml.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:20:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hksOcYMTFsQQXxPG74pF4Ev5omBJ6BpaQhz1gWRfnWA=;
-        b=mtl8aXY6om467I/IRPDfWhsEihgtMKaOYEz8QL8yLJvBwx9xKAmAQPrkOp1Vo38B9/
-         aQ9vOKurZmrzM8ZpTDLNbxQyxjavPEGh6EErSqOnbi8Nb6NihoL2oXkGjD5xpSAVAID6
-         KjtwDJ3aVfk5Sbm9+llQAEo+pjUNBXgC3xcgI995HebYCYdNc4igLjlGb74aR6k0tuD3
-         W+3FF2JHUzwCx9wpYbINO+Ons8sA/FNu226bVz+6xWI1igdZGir0lIFg+5siubDUKTBv
-         9I+pykPeBgve2ZbuvF8QNefQzEEQwQ0i7ERiaS+D1vKyhdhwlu99yOb2iuPsy3gvS5bF
-         H34g==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UlHPQbgyQYfGZ3NYNuBRx+Lr52kdbe694moegnICIVc=;
+        b=NifUXO46j7w7Famst0qSTWA+/NAM63+P3EEYOVDutdfzQG+lK0vxeP1W9KJl2ETjQ7
+         JYP0quRtoQLFtAnCn7C6Pc3FPDxtA/BAwt2L8CF4rT2eLsfFPOexvuzSo5aEgUenXEKF
+         0xJD1ZPaQUgYskYoku7SCxlDucpHqt4XuP4VpktEH/xgT+qb9NxNwqJ6vKAo+oM+K7qJ
+         p4pv+z98jk9nWshsZwikW5iH3QZiYecYIXm8id5dC6AdA6RFNy94z/9qQA1s7rRTS9S7
+         o0jU6sDTrVHcIz8qEpotKPocMOYRC8+R1o2j3d6Xj22b4M+z7IhWR0RELbV6dSxIxFfI
+         Ojmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hksOcYMTFsQQXxPG74pF4Ev5omBJ6BpaQhz1gWRfnWA=;
-        b=gVSrtbn+sbYFM3TxfP2hAv5uZfb18sQg2/OLmNcq9OhJZXfpgrtbV31qbhW4RNrlVq
-         shKXOE8L+dyBp/7I9VN5q7sJTMRM6tCke+pkTAv4ru6gXBGVULnzIENNHcowZpx+eX69
-         JzqesdQ/kMPvcP6USKPYMnPL4a/160vG8xJQWA6qMKlo7hBS3X6gNnFAc0R6yS72twfv
-         rsQ9AXZBIFQ+6acw7duuwr+p8TX4HNOoS5NwDh4hMX2OpOhNIm6uWY5hkw2Lq2hidrpN
-         5pWcNOFUV/qvnx5lVXXRJAcBFZ6JOhuUq+oJwf80WGUOqaklEqJvYFYG+DxT5Mozxx1f
-         Jzxw==
-X-Gm-Message-State: APjAAAX7mMySeSd/Y9mnt0AexRsTIcjtXN+uVGi7m/eJ3g5YpnlFi+/s
-        EllpBP1VO/3IlDBge/bv+2Y9qM8QM9699OMWHivayg==
-X-Google-Smtp-Source: APXvYqzbohpFc3U6eGc+1t9EcQe7Xduc50XTK8rY2fyUI8XmNmk8NGB9t9ex3V+pUZPDY5hCm9tEx+NwkrM8pQoP8Kg=
-X-Received: by 2002:ac8:7219:: with SMTP id a25mr61991427qtp.234.1564060822527;
- Thu, 25 Jul 2019 06:20:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UlHPQbgyQYfGZ3NYNuBRx+Lr52kdbe694moegnICIVc=;
+        b=JZBKJek9Jgwxh6Icy97dyrgk6pISFvfAyV+OSRhaGvORsSm2wIhTzP0z6X8UBb27LK
+         z56drvVe4T/WpfiZXcjOu7GSNjM8KMi5h3PhO8lh5SYyhBenVlZNBp5rL9qZ08Xd5Sb3
+         diyurzuFnP73vktRdVL6j0tRW9SUm0NXuKiuoLNozZ16qXvIMOeb8Qbad82ZFyNbSAtZ
+         tv9OD52DAQkXhtv1KyBbwupOoxffRxZvQaqe+SNU6UP8wXveVoTjHtL6FCoEGl7yNMhj
+         im2AN02eYk7eBTyZYrkG5CrhVaZ4Vguo8KjlqQmPi9wMyvn+eh1ve5JRpCj3Pt4+p+1G
+         lNJQ==
+X-Gm-Message-State: APjAAAXdh4ZBwa/k1mYzuVbZ8eZi0NToKpSasTjg2gj13nla6aSjW9nH
+        RluZQg9AK04TPZeXgmymKCrsTzFx
+X-Google-Smtp-Source: APXvYqwY8Li4ENYOTTDLqaDLIZqrJmGdo/DsVkKI6zl4K5u/ERvtsF3kWAQdjUnv/c82L9w7qWyNag==
+X-Received: by 2002:a05:600c:204c:: with SMTP id p12mr79503703wmg.121.1564060382076;
+        Thu, 25 Jul 2019 06:13:02 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id z7sm47119735wrh.67.2019.07.25.06.13.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 06:13:01 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Lechner <david@lechnology.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 0/5] ARM: make DaVinci part of the ARM v5 multiplatform build
+Date:   Thu, 25 Jul 2019 15:12:52 +0200
+Message-Id: <20190725131257.6142-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190624194908.121273-1-john.stultz@linaro.org>
- <20190624194908.121273-5-john.stultz@linaro.org> <20190718100840.GB19666@infradead.org>
- <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
- <20190724065958.GC16225@infradead.org> <CALAqxLUbsz+paJ=P2hwKecuN8DQjJt9Vj4MENCnFuEh6waxsXg@mail.gmail.com>
- <20190725125206.GE20286@infradead.org>
-In-Reply-To: <20190725125206.GE20286@infradead.org>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Thu, 25 Jul 2019 15:20:11 +0200
-Message-ID: <CA+M3ks52ADKVCw_pZP9=LSNt+vhiEFyrtB-Jm2x=p62kSV7qVA@mail.gmail.com>
-Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le jeu. 25 juil. 2019 =C3=A0 14:52, Christoph Hellwig <hch@infradead.org> a=
- =C3=A9crit :
->
-> On Wed, Jul 24, 2019 at 11:46:24AM -0700, John Stultz wrote:
-> > I'm still not understanding how this would work. Benjamin and Laura
-> > already commented on this point, but for a simple example, with the
-> > HiKey boards, the DRM driver requires contiguous memory for the
-> > framebuffer, but the GPU can handle non-contiguous. Thus the target
-> > framebuffers that we pass to the display has to be CMA allocated, but
-> > all the other graphics buffers that the GPU will render to and
-> > composite can be system.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-No we have uses cases where graphic buffers can go directly to display with=
-out
-using GPU. For example we can grab frames from the camera and send them dir=
-ectly
-in display (same for video decoder) because we have planes for that.
+This series makes DaVinci part of the multiplatform build for ARM v5.
 
->
-> But that just means we need a flag that memory needs to be contiguous,
-> which totally makes sense at the API level.  But CMA is not the only
-> source of contigous memory, so we should not conflate the two.
+First three patches fix build errors spotted and fixed by Arnd with v1.
 
-We have one file descriptor per heap to be able to add access control
-on each heap.
-That wasn't possible with ION because the heap was selected given the
-flags in ioctl
-structure and we can't do access control based on that. If we put flag
-to select the
-allocation mechanism (system, CMA, other) in ioctl we come back to ION stat=
-us.
-For me one allocation mechanism =3D one heap.
+The fourth patch adds necessary bits and pieces for davinci to support
+multiplatform build and the last one actually adds all davinci boards
+to multi_v5_defconfig.
 
->
-> > Laura already touched on this, but similar logic can be used for
-> > camera buffers, which can make sure we allocate from a specifically
-> > reserved CMA region that is only used for the camera so we can always
-> > be sure to have N free buffers immediately to capture with, etc.
->
-> And for that we already have per-device CMA areas hanging off struct
-> device, which this should reuse instead of adding another duplicate
-> CMA area lookup scheme.
+Tested on da850-lcdk with both multi_v5 as well as davinci_all defconfigs.
+
+v1 -> v2:
+- added patches from Arnd that fix build errors spotted when building
+  random configurations (much appreciated)
+- rebased on top of v5.3-rc1
+
+Arnd Bergmann (3):
+  staging: media/davinci_vpfe: fix pinmux setup compilation
+  media: davinci-vpbe: remove obsolete includes
+  davinci: fix sleep.S build error on ARMv4
+
+Bartosz Golaszewski (2):
+  ARM: davinci: support multiplatform build for ARM v5
+  ARM: multi_v5_defconfig: make DaVinci part of the ARM v5 multiplatform
+    build
+
+ arch/arm/Kconfig                              | 21 -------------------
+ arch/arm/configs/davinci_all_defconfig        |  5 +++++
+ arch/arm/configs/multi_v5_defconfig           | 12 +++++++++++
+ arch/arm/mach-davinci/Kconfig                 | 17 +++++++++++----
+ arch/arm/mach-davinci/Makefile                |  2 ++
+ arch/arm/mach-davinci/sleep.S                 |  1 +
+ drivers/media/platform/davinci/vpbe_display.c |  4 ----
+ drivers/media/platform/davinci/vpbe_osd.c     |  5 -----
+ drivers/media/platform/davinci/vpbe_venc.c    |  5 -----
+ drivers/staging/media/davinci_vpfe/Makefile   |  5 -----
+ .../staging/media/davinci_vpfe/dm365_isif.c   |  8 +++----
+ .../staging/media/davinci_vpfe/dm365_isif.h   |  2 --
+ drivers/staging/media/davinci_vpfe/vpfe.h     |  2 ++
+ 13 files changed, 38 insertions(+), 51 deletions(-)
+
+-- 
+2.21.0
+
