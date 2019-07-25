@@ -2,107 +2,96 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1210C41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5288C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7465217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A544C217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:01:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388839AbfGYIBI (ORCPT
+        id S2388872AbfGYIBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 04:01:08 -0400
-Received: from mga07.intel.com ([134.134.136.100]:20296 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388596AbfGYIBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 04:01:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 01:01:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,306,1559545200"; 
-   d="scan'208";a="170170809"
-Received: from rbhardw1-mobl.gar.corp.intel.com (HELO [10.66.75.233]) ([10.66.75.233])
-  by fmsmga008.fm.intel.com with ESMTP; 25 Jul 2019 01:01:05 -0700
-Subject: Re: [PATCH 2/2] powercap/rapl: Add Ice Lake NNPI support to RAPL
- driver
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     linux-kernel@vger.kernel.org, len.brown@intel.com,
-        rafael.j.wysocki@intel.com, linux-pm@vger.kernel.org
-References: <20190614080523.13464-1-rajneesh.bhardwaj@linux.intel.com>
- <2359736.lHFMKXy7DL@kreacher>
- <52eaefed-8f94-8cb0-0cfa-c0c16a34bd0b@linux.intel.com>
- <3695289.DUDsO16Ie3@kreacher>
-From:   "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Message-ID: <ec3be69b-5728-9d5a-b580-83e98c1c41ae@linux.intel.com>
-Date:   Thu, 25 Jul 2019 13:31:04 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 04:01:14 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:49169 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388596AbfGYIBN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 04:01:13 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id qYgWhCDqBLqASqYgZhS8aI; Thu, 25 Jul 2019 10:01:11 +0200
+Subject: Re: [PATCH] media: vivid: fix device init when no_error_inj=1 and fb
+ disabled
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, stable@vger.kernel.org
+References: <20190724151922.11124-1-guillaume.tucker@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <f17408a7-9fe9-4773-e65e-9b6902b8a3d5@xs4all.nl>
+Date:   Thu, 25 Jul 2019 10:01:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <3695289.DUDsO16Ie3@kreacher>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190724151922.11124-1-guillaume.tucker@collabora.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfIuGBWIwoYQBSx957OuHTumsupf8/RkUBa6k2//VgT25QcHRUy9KKLNQnAEFyAqsYySeo/CeJV1fTKDF9LAQ91/W4vDMgy6CCUxQLX10cUCaoxVlnCw1
+ XL9Zvohf6BK2OL2ZndTJVkXQ+27OcnjkMUpitbqMVVSEsU+rNkSO25hTeTl5yZbGhsuDh7ARwRx5mN21TmKxN2AzKlLuVHruHEP3jQbv+kl1iNj1Gtx+Chp2
+ 0d+75JL0qF9w1fd1LdEruznblylq65AP/1jF78RDsqATHKesrz7SZJkn2Sh5P3wgLzJnNSccZlEPIuS2Ii/yP5IDgcOPwafW+F2210sZOMoBj266DJVhH0U6
+ KQ09JKb/Gv4U+sm+iDUu+hdmjdv2cnleTwKQwWyNT8XTWbskpRg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+On 7/24/19 5:19 PM, Guillaume Tucker wrote:
+> Add an extra condition to add the video output control class when the
+> device has some hdmi outputs defined.  This is required to then always
+> be able to add the display present control, which is enabled when
+> there are some hdmi outputs.
+> 
+> This fixes the corner case where no_error_inj is enabled and the
+> device has no frame buffer but some hdmi outputs, as otherwise the
+> video output control class would be added anyway.  Without this fix,
+> the sanity checks fail in v4l2_ctrl_new() as name is NULL.
 
-On 05-Jul-19 3:43 PM, Rafael J. Wysocki wrote:
-> On Friday, June 28, 2019 10:21:41 AM CEST Bhardwaj, Rajneesh wrote:
->> On 28-Jun-19 3:32 AM, Rafael J. Wysocki wrote:
->>> On Friday, June 14, 2019 10:05:23 AM CEST Rajneesh Bhardwaj wrote:
->>>> Enables support for ICL-NNPI, which is a neural network processor for deep
->>>> learning inference. From RAPL point of view it is same as Ice Lake Mobile
->>>> processor.
->>>>
->>>> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
->>>> Cc: linux-pm@vger.kernel.org
->>>> Link: https://lkml.org/lkml/2019/6/5/1034
->>>> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
->>>> ---
->>>>    drivers/powercap/intel_rapl.c | 1 +
->>>>    1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/drivers/powercap/intel_rapl.c b/drivers/powercap/intel_rapl.c
->>>> index 4347f15165f8..431c8c8bdf07 100644
->>>> --- a/drivers/powercap/intel_rapl.c
->>>> +++ b/drivers/powercap/intel_rapl.c
->>>> @@ -1157,6 +1157,7 @@ static const struct x86_cpu_id rapl_ids[] __initconst = {
->>>>    	INTEL_CPU_FAM6(KABYLAKE_DESKTOP,	rapl_defaults_core),
->>>>    	INTEL_CPU_FAM6(CANNONLAKE_MOBILE,	rapl_defaults_core),
->>>>    	INTEL_CPU_FAM6(ICELAKE_MOBILE,		rapl_defaults_core),
->>>> +	INTEL_CPU_FAM6(ICELAKE_NNPI,		rapl_defaults_core),
->>>>    
->>>>    	INTEL_CPU_FAM6(ATOM_SILVERMONT,		rapl_defaults_byt),
->>>>    	INTEL_CPU_FAM6(ATOM_AIRMONT,		rapl_defaults_cht),
->>>>
->>> It is in my queue, but I get build errors when I try to apply it.
->>>
->>> I guess the definition of ICELAKE_NNPI is not there in the Linus' tree yet.
->> Yes, though
->> https://www.spinics.net/lists/linux-tip-commits/msg48978.html is
->> accepted by Thomas already.
-> It is not in 5.2-rc7, though, AFAICS.
->
-> The patch is still in my queue and waiting.
+Good catch.
 
+Note that you can just drop the no_error_inj module option: v4l2-compliance
+will detect the vivid driver and skip the error controls while testing.
 
-The CPUID patch on which this change depends is upstream now. 
-https://github.com/torvalds/linux/blob/bed38c3e2dca01b358a62b5e73b46e875742fd75/arch/x86/include/asm/intel-family.h#L59 
+I stopped using no_error_inj since I made that v4l2-compliance change.
 
+Regards,
 
-Thank you
+	Hans
 
-Rajneesh
+> 
+> Fixes: c533435ffb91 ("media: vivid: add display present control")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+> ---
+>  drivers/media/platform/vivid/vivid-ctrls.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/vivid/vivid-ctrls.c b/drivers/media/platform/vivid/vivid-ctrls.c
+> index 3e916c8befb7..7a52f585cab7 100644
+> --- a/drivers/media/platform/vivid/vivid-ctrls.c
+> +++ b/drivers/media/platform/vivid/vivid-ctrls.c
+> @@ -1473,7 +1473,7 @@ int vivid_create_controls(struct vivid_dev *dev, bool show_ccs_cap,
+>  	v4l2_ctrl_handler_init(hdl_vid_cap, 55);
+>  	v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_class, NULL);
+>  	v4l2_ctrl_handler_init(hdl_vid_out, 26);
+> -	if (!no_error_inj || dev->has_fb)
+> +	if (!no_error_inj || dev->has_fb || dev->num_hdmi_outputs)
+>  		v4l2_ctrl_new_custom(hdl_vid_out, &vivid_ctrl_class, NULL);
+>  	v4l2_ctrl_handler_init(hdl_vbi_cap, 21);
+>  	v4l2_ctrl_new_custom(hdl_vbi_cap, &vivid_ctrl_class, NULL);
+> 
 
->
->
->
