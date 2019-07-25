@@ -2,109 +2,171 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77337C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD49C761A8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE1122BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:55:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iG6/G3YJ"
+	by mail.kernel.org (Postfix) with ESMTP id ACFC322CB9
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389928AbfGYIzG (ORCPT
+        id S2389970AbfGYIzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 04:55:06 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34075 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388546AbfGYIzF (ORCPT
+        Thu, 25 Jul 2019 04:55:37 -0400
+Received: from icp-osb-irony-out1.external.iinet.net.au ([203.59.1.210]:13393
+        "EHLO icp-osb-irony-out1.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388546AbfGYIzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 04:55:05 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b13so22407253pfo.1;
-        Thu, 25 Jul 2019 01:55:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I7zuXq+B8emJm/vwCEOOJ6LOcGUENqYhRqQbLruFnYI=;
-        b=iG6/G3YJLE4ZZGea2kup1qrO4DItBBydDovywo+tTg9ZRIZaHFUrYsuegRP7lJrc7k
-         VZ4jAT1mjtpHJQePHzpgvOtTTBzRVPZ43OGnzNVa5buz/pFO/HmNBtICgAN93710KKZ5
-         f71WgNGqQGuZ3MURp6lOSgpJZjg9GcWvpv18G0vBuXv/emNyVFYXZ9yU222fp/PxOGtQ
-         d0mb1NrQ/f7f+POT0jZRdPGrjNnrGFIJ915kXms5D9TWUR0QjpT/07T9cE9zfMiO+yxC
-         81+eWCF9RLYhVSX9FAwAoQ11nuIp93bpJn03UpE7/cnIOfa48GE4YaVAVdRCYJ9tn0rF
-         qFkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I7zuXq+B8emJm/vwCEOOJ6LOcGUENqYhRqQbLruFnYI=;
-        b=G3Wlo0rEIujAn9Q8R92pDFM9QFdMGziXgXgpax8fuEBQaj2cRsNxRp5TFq57OF3wKm
-         msn9xb20TvqOJQeSEQasO946eNjht5aZ8GtBOMemPBdmshrVgjiO0c/s1+cf23tih66Q
-         fJabRUh8ojjuzX03ER/uQaADj9kHtuaa9JCe0XUnZ/aT53Y2dcrp3xkPzkM+KbX1C2ic
-         jtBu1liRx/sHdO+wpuFkWfTYCi/PpaIsLqlG6xVrCiRpcG6SN4MkZq8wx9+8J7G4RnbY
-         lpD1gTXeDxygh+eGkXQkxv/SS6EO+SGRpXinTxT4ju2u9D4PZ8dIHf8ANpiC6+1iiF09
-         nPXw==
-X-Gm-Message-State: APjAAAV5/eI7L+Gw4l5WFR97iKTYM6KYJt8gYSAD/J9MwBeoBSOJ4QD5
-        BaN4nv7MCtxtj4bOrzmYRc9N7JAAa+k=
-X-Google-Smtp-Source: APXvYqyROMZ1snJL0IyvlReyvkUAmYeODq5nc1+cHMd9O8CtOIrT16U0ipbSGzDixJiDjpCVFvTUfA==
-X-Received: by 2002:aa7:8b55:: with SMTP id i21mr15598222pfd.155.1564044904544;
-        Thu, 25 Jul 2019 01:55:04 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id e11sm61474201pfm.35.2019.07.25.01.55.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 01:55:03 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Patrick Havelange <patrick.havelange@essensium.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] counter/ftm-quaddec: Use device-managed registration API
-Date:   Thu, 25 Jul 2019 16:54:58 +0800
-Message-Id: <20190725085458.21838-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 25 Jul 2019 04:55:37 -0400
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AkBQC3bTld/1/rO8tmghmDdhIXE40?=
+ =?us-ascii?q?ZiBcBgkMBg1mFU48egXsJAQEBAQEBAQEBGxwBAYQ6BIMCNAkOAQMBAQEEAQE?=
+ =?us-ascii?q?BAQUBbYRlRYV4L3JwEoMigXcTrkwzhAYBhG6BSIE0hwmEboFAP4ERgmRshAM?=
+ =?us-ascii?q?NGIV/BIwkiROVNQmBJXeUEhmYC4tggViZTTiBWE0fGYMngk4XFI1WRDUwjko?=
+ =?us-ascii?q?BAQ?=
+X-IPAS-Result: =?us-ascii?q?A2AkBQC3bTld/1/rO8tmghmDdhIXE40ZiBcBgkMBg1mFU?=
+ =?us-ascii?q?48egXsJAQEBAQEBAQEBGxwBAYQ6BIMCNAkOAQMBAQEEAQEBAQUBbYRlRYV4L?=
+ =?us-ascii?q?3JwEoMigXcTrkwzhAYBhG6BSIE0hwmEboFAP4ERgmRshAMNGIV/BIwkiROVN?=
+ =?us-ascii?q?QmBJXeUEhmYC4tggViZTTiBWE0fGYMngk4XFI1WRDUwjkoBAQ?=
+X-IronPort-AV: E=Sophos;i="5.64,306,1559491200"; 
+   d="scan'208";a="228554185"
+Received: from 203-59-235-95.perm.iinet.net.au (HELO rtcentos7.electromag.com.au) ([203.59.235.95])
+  by icp-osb-irony-out1.iinet.net.au with ESMTP; 25 Jul 2019 16:55:30 +0800
+From:   Richard Tresidder <rtresidd@electromag.com.au>
+To:     sre@kernel.org, enric.balletbo@collabora.com, ncrews@chromium.org,
+        andrew.smirnov@gmail.com, groeck@chromium.org,
+        rtresidd@electromag.com.au, david@lechnology.com,
+        tglx@linutronix.de, kstewart@linuxfoundation.org,
+        gregkh@linuxfoundation.org, rfontana@redhat.com,
+        allison@lohutok.net, baolin.wang@linaro.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RESEND v2 1/1] power/supply/sbs-battery: Fix confusing battery status when idle or empty
+Date:   Thu, 25 Jul 2019 16:55:29 +0800
+Message-Id: <1564044929-26104-1-git-send-email-rtresidd@electromag.com.au>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of devm_counter_register.
-Then we can remove redundant unregistration API
-usage to make code simpler.
+When a battery or batteries in a system are in parallel then one or more
+may not be providing any current to the system.
+This fixes an incorrect status indication of FULL for the battery simply
+because it wasn't discharging at that point in time.
+The battery will now be flagged as IDLE.
+Have also added the additional check for the battery FULL DISCHARGED flag
+which will now flag a status of EMPTY.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
 ---
- drivers/counter/ftm-quaddec.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/counter/ftm-quaddec.c b/drivers/counter/ftm-quaddec.c
-index 68a9b7393457..bccbca8681b6 100644
---- a/drivers/counter/ftm-quaddec.c
-+++ b/drivers/counter/ftm-quaddec.c
-@@ -317,7 +317,7 @@ static int ftm_quaddec_probe(struct platform_device *pdev)
+Notes:
+    power/supply/sbs-battery: Fix confusing battery status when idle or empty
+    
+    When a battery or batteries in a system are in parallel then one or more
+    may not be providing any current to the system.
+    This fixes an incorrect
+    status indication of FULL for the battery simply because it wasn't
+    discharging at that point in time.
+    The battery will now be flagged as IDLE.
+    Have also added the additional check for the battery FULL DISCHARGED flag
+    which will now flag a status of EMPTY.
+    
+    v2: missed a later merge that should have been included in original patch
+
+ drivers/power/supply/power_supply_sysfs.c |  3 ++-
+ drivers/power/supply/sbs-battery.c        | 32 +++++++++++++++----------------
+ include/linux/power_supply.h              |  2 ++
+ 3 files changed, 20 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index ce6671c..68ec49d 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -51,7 +51,8 @@
+ };
  
- 	ftm_quaddec_init(ftm);
+ static const char * const power_supply_status_text[] = {
+-	"Unknown", "Charging", "Discharging", "Not charging", "Full"
++	"Unknown", "Charging", "Discharging", "Not charging", "Full",
++	"Empty", "Idle"
+ };
  
--	ret = counter_register(&ftm->counter);
-+	ret = devm_counter_register(&pdev->dev, &ftm->counter);
- 	if (ret)
- 		ftm_quaddec_disable(ftm);
+ static const char * const power_supply_charge_type_text[] = {
+diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
+index ea8ba3e..664c317 100644
+--- a/drivers/power/supply/sbs-battery.c
++++ b/drivers/power/supply/sbs-battery.c
+@@ -294,16 +294,12 @@ static int sbs_status_correct(struct i2c_client *client, int *intval)
  
-@@ -328,8 +328,6 @@ static int ftm_quaddec_remove(struct platform_device *pdev)
- {
- 	struct ftm_quaddec *ftm = platform_get_drvdata(pdev);
+ 	ret = (s16)ret;
  
--	counter_unregister(&ftm->counter);
+-	/* Not drawing current means full (cannot be not charging) */
+-	if (ret == 0)
+-		*intval = POWER_SUPPLY_STATUS_FULL;
 -
- 	ftm_quaddec_disable(ftm);
+-	if (*intval == POWER_SUPPLY_STATUS_FULL) {
+-		/* Drawing or providing current when full */
+-		if (ret > 0)
+-			*intval = POWER_SUPPLY_STATUS_CHARGING;
+-		else if (ret < 0)
+-			*intval = POWER_SUPPLY_STATUS_DISCHARGING;
++	if ((*intval == POWER_SUPPLY_STATUS_DISCHARGING && (ret == 0)) {
++		/* Charging indicator not set in battery */
++		*intval = POWER_SUPPLY_STATUS_IDLE;
++	} else if ((*intval == POWER_SUPPLY_STATUS_FULL) && (ret < 0)) {
++		/* Full Flag set but we are discharging */
++		*intval = POWER_SUPPLY_STATUS_DISCHARGING;
+ 	}
  
  	return 0;
+@@ -424,10 +420,12 @@ static int sbs_get_battery_property(struct i2c_client *client,
+ 
+ 		if (ret & BATTERY_FULL_CHARGED)
+ 			val->intval = POWER_SUPPLY_STATUS_FULL;
+-		else if (ret & BATTERY_DISCHARGING)
+-			val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
+-		else
++		else if (ret & BATTERY_FULL_DISCHARGED)
++			val->intval = POWER_SUPPLY_STATUS_EMPTY;
++		else if (!(ret & BATTERY_DISCHARGING))
+ 			val->intval = POWER_SUPPLY_STATUS_CHARGING;
++		else
++			val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
+ 
+ 		sbs_status_correct(client, &val->intval);
+ 
+@@ -781,10 +779,12 @@ static void sbs_delayed_work(struct work_struct *work)
+ 
+ 	if (ret & BATTERY_FULL_CHARGED)
+ 		ret = POWER_SUPPLY_STATUS_FULL;
+-	else if (ret & BATTERY_DISCHARGING)
+-		ret = POWER_SUPPLY_STATUS_DISCHARGING;
+-	else
++	else if (ret & BATTERY_FULL_DISCHARGED)
++		ret = POWER_SUPPLY_STATUS_EMPTY;
++	else if (!(ret & BATTERY_DISCHARGING))
+ 		ret = POWER_SUPPLY_STATUS_CHARGING;
++	else
++		ret = POWER_SUPPLY_STATUS_DISCHARGING;
+ 
+ 	sbs_status_correct(chip->client, &ret);
+ 
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index 28413f7..c9f3347 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -37,6 +37,8 @@ enum {
+ 	POWER_SUPPLY_STATUS_DISCHARGING,
+ 	POWER_SUPPLY_STATUS_NOT_CHARGING,
+ 	POWER_SUPPLY_STATUS_FULL,
++	POWER_SUPPLY_STATUS_EMPTY,
++	POWER_SUPPLY_STATUS_IDLE,
+ };
+ 
+ /* What algorithm is the charger using? */
 -- 
-2.20.1
+1.8.3.1
 
