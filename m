@@ -2,125 +2,111 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0E5C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2097C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DDE020679
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B34222C7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564062982;
-	bh=My2AlPRxvFWcBJAZeh/oDf/UzerJdJsd5urms52cBFA=;
+	s=default; t=1564063071;
+	bh=3/gSn8ciWx/Rc0CKt8m5Ivb1PTazc8jVyqJ+l93TB24=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o16s33ow8gVNJxfy+Uj4AmTSiLkZ8wCkqshyMRNQF06rLGjgyYhijTTXFrRGmsStK
-	 LlmEi+M2rZCu1tt2psk4GE2yAA4ChNzbLGNnik4nGvU2YPNTi4NWPVIJm1E9Ot01o1
-	 ujfiW5ScP9nJfCLhkqupiT528VDC94vKZv8qnjg4=
+	b=GUxkCkxfDkKn6RLooJSrOzOQTeO/BbJCXGpEEITv5Us2URKa5F1Vj7p0JowzwtstB
+	 /Dt1+Qirc9rUtgYScYMykT3QXUG7AZrH3qbLwvsWLRO2K/EH3hlgXZXf97P0700UlB
+	 +Yi+KaBatuUzPtU9/iq0YDyj2CUZJDHXgs1NhhSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbfGYN4V (ORCPT
+        id S2404171AbfGYN5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:56:21 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52820 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbfGYN4U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:56:20 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s3so45087451wms.2;
-        Thu, 25 Jul 2019 06:56:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ijKb9xkNQpLXP3ePyMDNd5C2fEcHsiRFSZbSc5IKwxM=;
-        b=TsCFOLazPPC9sGh202Kobh/yPQrBmnaqShEAsYKLqQO3VNfmeJJYk/TywMrrUGJ0NL
-         +YJy1nGykJKnieNuddH32ahJFUEhWfLPbcxWIj71+1L1N/b9DHGkLQTdDheQJUdmhhfh
-         /qfiS0UapR+mySo3aXeazFrZjACw20RBjdfWEsvGKEgLv6MZBAfwFN+my8tD46Y4i4E1
-         NS4U2Q4xG6REuvi31RMpEpeH5tMyKBWU76pjsxHozO6iLXS7pcrms3mnb49CfN8ApVtM
-         5nNF3gcqjM3ArdyE1bjXeiFo2dNYTfKkO9qfZ/eQ0FPq3CVPXR+9rhMQ1+ZeX35QCSFp
-         ZA8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ijKb9xkNQpLXP3ePyMDNd5C2fEcHsiRFSZbSc5IKwxM=;
-        b=JuQQxBQBlHq04YhizdYD7+WXkU1kXlnfIRUBEqTzVkBHg3e7KiArfG1F6zZqACCKoM
-         rK46yOGrV99GDNhxC+5SEFgFs0fNseCErITzOxfFvVQAda9omzolNjUDoPy9kErJGgLI
-         ZbFN2pi02v+8+IwMGkkkUg1fp2zfgsHpLIEbOIs4s+SXfDzMiRX0Qw/9sm24uJipYkhe
-         JzwdJ1TPZtX1RfCkh8xAsqQ+0LiBAuPI3o3DNwJ6Q3OuTT50Lo9nImON8tr8Ojf602cn
-         8pMwGvkI9NbX+EYGKctl8+3GBvMLP6UPfSaZHIwfthn0bdb9+K167TFDzHrEoXulizZD
-         bNxQ==
-X-Gm-Message-State: APjAAAUqN/MtUcYAp/EzyNI6n2P1j4dMCpzR7caO3ecSspiQwgQTzwn6
-        F09JQeKUoJXkdeDEiaBtPKQ=
-X-Google-Smtp-Source: APXvYqwV57hxYZ2iz1hb3kPahcmQuB05GV8QWb5v2lzdhH3COHujj5QS8w5a/awpNNDpJ2LiGvIfCA==
-X-Received: by 2002:a1c:5453:: with SMTP id p19mr74461459wmi.148.1564062978247;
-        Thu, 25 Jul 2019 06:56:18 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id u186sm84400263wmu.26.2019.07.25.06.56.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 06:56:17 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 15:56:15 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
-        tj@kernel.org, linux-kernel@vger.kernel.org,
-        luca.abeni@santannapisa.it, claudio@evidence.eu.com,
-        tommaso.cucinotta@santannapisa.it, bristot@redhat.com,
-        mathieu.poirier@linaro.org, lizefan@huawei.com, longman@redhat.com,
-        dietmar.eggemann@arm.com, cgroups@vger.kernel.org
-Subject: Re: [PATCH v9 3/8] cpuset: Rebuild root domain deadline accounting
- information
-Message-ID: <20190725135615.GB108579@gmail.com>
-References: <20190719140000.31694-1-juri.lelli@redhat.com>
- <20190719140000.31694-4-juri.lelli@redhat.com>
- <20190725135351.GA108579@gmail.com>
+        Thu, 25 Jul 2019 09:57:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39800 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727498AbfGYN5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 09:57:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A79ACAFCE;
+        Thu, 25 Jul 2019 13:57:47 +0000 (UTC)
+Date:   Thu, 25 Jul 2019 15:57:47 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v1] ACPI / scan: Acquire device_hotplug_lock in
+ acpi_scan_init()
+Message-ID: <20190725135747.GB3582@dhcp22.suse.cz>
+References: <20190724143017.12841-1-david@redhat.com>
+ <20190725125636.GA3582@dhcp22.suse.cz>
+ <6dc566c2-faf6-565d-4ef1-2ac3a366bc76@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190725135351.GA108579@gmail.com>
+In-Reply-To: <6dc566c2-faf6-565d-4ef1-2ac3a366bc76@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Ingo Molnar <mingo@kernel.org> wrote:
-
-> 
-> * Juri Lelli <juri.lelli@redhat.com> wrote:
-> 
-> > When the topology of root domains is modified by CPUset or CPUhotplug
-> > operations information about the current deadline bandwidth held in the
-> > root domain is lost.
+On Thu 25-07-19 15:05:02, David Hildenbrand wrote:
+> On 25.07.19 14:56, Michal Hocko wrote:
+> > On Wed 24-07-19 16:30:17, David Hildenbrand wrote:
+> >> We end up calling __add_memory() without the device hotplug lock held.
+> >> (I used a local patch to assert in __add_memory() that the
+> >>  device_hotplug_lock is held - I might upstream that as well soon)
+> >>
+> >> [   26.771684]        create_memory_block_devices+0xa4/0x140
+> >> [   26.772952]        add_memory_resource+0xde/0x200
+> >> [   26.773987]        __add_memory+0x6e/0xa0
+> >> [   26.775161]        acpi_memory_device_add+0x149/0x2b0
+> >> [   26.776263]        acpi_bus_attach+0xf1/0x1f0
+> >> [   26.777247]        acpi_bus_attach+0x66/0x1f0
+> >> [   26.778268]        acpi_bus_attach+0x66/0x1f0
+> >> [   26.779073]        acpi_bus_attach+0x66/0x1f0
+> >> [   26.780143]        acpi_bus_scan+0x3e/0x90
+> >> [   26.780844]        acpi_scan_init+0x109/0x257
+> >> [   26.781638]        acpi_init+0x2ab/0x30d
+> >> [   26.782248]        do_one_initcall+0x58/0x2cf
+> >> [   26.783181]        kernel_init_freeable+0x1bd/0x247
+> >> [   26.784345]        kernel_init+0x5/0xf1
+> >> [   26.785314]        ret_from_fork+0x3a/0x50
+> >>
+> >> So perform the locking just like in acpi_device_hotplug().
 > > 
-> > This patch addresses the issue by recalculating the lost deadline
-> > bandwidth information by circling through the deadline tasks held in
-> > CPUsets and adding their current load to the root domain they are
-> > associated with.
-> > 
-> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+> > While playing with the device_hotplug_lock, can we actually document
+> > what it is protecting please? I have a bad feeling that we are adding
+> > this lock just because some other code path does rather than with a good
+> > idea why it is needed. This patch just confirms that. What exactly does
+> > the lock protect from here in an early boot stage.
 > 
-> Was this commit written by Mathieu? If yes then it's missing a From line. 
-> If not then the Signed-off-by should probably be changed to Acked-by or 
-> Reviewed-by?
+> We have plenty of documentation already
+> 
+> mm/memory_hotplug.c
+> 
+> git grep -C5 device_hotplug mm/memory_hotplug.c
+> 
+> Also see
+> 
+> Documentation/core-api/memory-hotplug.rst
 
-So for now I'm assuming that the original patch was written by Mathieu, 
-with modifications by you. So I added his From line and extended the SOB 
-chain with the additional information that you modified the patch:
+OK, fair enough. I was more pointing to a documentation right there
+where the lock is declared because that is the place where people
+usually check for documentation. The core-api documentation looks quite
+nice. And based on that doc it seems that this patch is actually not
+needed because neither the online/offline or cpu hotplug should be
+possible that early unless I am missing something.
 
-    Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-    Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-    Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-    [ Various additional modifications. ]
-    Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-    Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Regarding the early stage: primarily lockdep as I mentioned.
 
-Let me know if that's not accurate!
+Could you add a lockdep splat that would be fixed by this patch to the
+changelog for reference?
 
-Thanks,
-
-	Ingo
+-- 
+Michal Hocko
+SUSE Labs
