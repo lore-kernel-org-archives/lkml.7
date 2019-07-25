@@ -2,87 +2,110 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEA6C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96795C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8483A2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572AE2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:23:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UpD8rDzo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730036AbfGYNXD (ORCPT
+        id S1729797AbfGYNXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:23:03 -0400
-Received: from gate.crashing.org ([63.228.1.57]:43593 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbfGYNXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:23:02 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6PDMX5o003118;
-        Thu, 25 Jul 2019 08:22:34 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id x6PDMWpp003114;
-        Thu, 25 Jul 2019 08:22:32 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Thu, 25 Jul 2019 08:22:32 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2] powerpc: slightly improve cache helpers
-Message-ID: <20190725132232.GQ20882@gate.crashing.org>
-References: <a5864549-40c3-badd-8c41-d5b7bf3c4f3c@c-s.fr> <20190709064952.GA40851@archlinux-threadripper> <20190719032456.GA14108@archlinux-threadripper> <20190719152303.GA20882@gate.crashing.org> <20190719160455.GA12420@archlinux-threadripper> <20190721075846.GA97701@archlinux-threadripper> <20190721180150.GN20882@gate.crashing.org> <87imru74ul.fsf@concordia.ellerman.id.au> <20190722151801.GC20882@gate.crashing.org> <875znt7izy.fsf@concordia.ellerman.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875znt7izy.fsf@concordia.ellerman.id.au>
-User-Agent: Mutt/1.4.2.3i
+        Thu, 25 Jul 2019 09:23:51 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:47084 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfGYNXu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 09:23:50 -0400
+Received: by mail-oi1-f194.google.com with SMTP id 65so37620284oid.13
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:23:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KwM2+qYHt0UEBA6UJDkeQDcGwUyIPjkorh2VTV9IDzw=;
+        b=UpD8rDzoKa7CF0RszwEp2yu+B1fDuQVKouFsCxQnA5dTxpou+Ba3K9lVpz2jMPqq/1
+         sxeFNJK6Sf38cQGqrVLHeAQfBsqpgOTYVX12hsupalkh+KnDYymBDvqA/45etUsKBwvZ
+         0Ab4Z822WfZQm+okMa5x6zu0rnY+sVZpRjGRLe4ekSilG1jJLTHwNCG57S00SQJ5TMeq
+         FkIBGCDmkRRu2QfHuvfH0DHb8rHjKJn2RvtTKU2M76OnXw1kYCVoK5OQljlokqn7EnmN
+         6P5kJri4WNNlZJ+Uj/pSGWD+8m6are5chNBp4JvdEWWOhAaKh9LZB24sZiuH7WT7DHK/
+         kCJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KwM2+qYHt0UEBA6UJDkeQDcGwUyIPjkorh2VTV9IDzw=;
+        b=m9gLTcsVv/IGOn1YWKQXSjHEOZ2k8bQx81SaoOdAT9SShvJ1CwXR66c5WL0o1DideF
+         CE+nSLPujMYk9DmMftLfq5exe3dR/2uCJRNjSUnWr9lZd9+xCdUtkL3QRL+yICiRVFaD
+         gynuPXERo9Ag/5ct/21RB/g4lvLElRutG40s+n0Fap4ber9/DGTToKocPW/d0ZPaO6ea
+         rfNebM7hzw8Wz/JkNsZkCMDq1zZ9TV79brEobZeKvO6zrDGOKSXVHq1H/H3MHY46lEYU
+         z8E30nZy47a2xEP6Ngwxf7PuOx/RMRtStbtz6dBtHWe7be5dDl5jFACipA7PuGdTtrHJ
+         VI7w==
+X-Gm-Message-State: APjAAAUzmFSYzJMs4ryZ95sNf//VF3G7QRMiRThYHl6iFE33QQtv+Nwl
+        7fPnWUUgdR5zXkSyfMIabTjK2sYuZJD+rJKOJb+gB3m9
+X-Google-Smtp-Source: APXvYqypjRf2awMQdztO7PYDu9Rw91aR4GcRmWVCqGbM344Dbhlb0mEkUpz8ySSDsEuabMZWkpRRW0tnWgt9tzqllw0=
+X-Received: by 2002:ac5:c2d2:: with SMTP id i18mr33137975vkk.36.1564060526687;
+ Thu, 25 Jul 2019 06:15:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190725151748.1a59b1ba@xhacker.debian>
+In-Reply-To: <20190725151748.1a59b1ba@xhacker.debian>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 25 Jul 2019 15:14:50 +0200
+Message-ID: <CAPDyKFpwOaa-8GxkWnXoyoC8nLyGMGE8moyEJr4a7TVBSiw6mw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-pltfm: Use devm_platform_ioremap_resource() to
+ simplify code
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 09:21:53AM +1000, Michael Ellerman wrote:
-> Segher Boessenkool <segher@kernel.crashing.org> writes:
-> >> can use both RA and RB to compute the address, rather than us forcing RA
-> >> to 0.
-> >> 
-> >> But at least with my compiler here (GCC 8 vintage) I don't actually see
-> >> GCC ever using both GPRs even with the patch. Or at least, there's no
-> >> difference before/after the patch as far as I can see.
-> >
-> > The benefit is small, certainly.
-> 
-> Zero is small, but I guess some things are smaller? :P
+On Thu, 25 Jul 2019 at 09:28, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
+>
+> devm_platform_ioremap_resource() wraps platform_get_resource() and
+> devm_ioremap_resource() in a single helper, let's use that helper to
+> simplify the code.
+>
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-Heh.  0 out of 12 is small.
+Applied for next, thanks!
 
-It actually is quite easy to do trigger the macros to generate two-reg
-dcb* instructions; but all the places where that is especially useful,
-in loops for example, already use hand-written assembler code (and yes,
-using two-reg forms).
-
-You probably will not want to write those routines as plain C ever
-given how important those are for performance (memset, clear-a-page),
-so the dcb* macros won't ever be very hot, oh well.
-
-> >> So my inclination is to revert the original patch. We can try again in a
-> >> few years :D
-> >> 
-> >> Thoughts?
-> >
-> > I think you should give the clang people time to figure out what is
-> > going on.
-> 
-> Yeah fair enough, will wait and see what their diagnosis is.
-
-Thanks!
+Kind regards
+Uffe
 
 
-Segher
+> ---
+>  drivers/mmc/host/sdhci-pltfm.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
+> index d268b3b8850a..11ecff9e998d 100644
+> --- a/drivers/mmc/host/sdhci-pltfm.c
+> +++ b/drivers/mmc/host/sdhci-pltfm.c
+> @@ -118,12 +118,10 @@ struct sdhci_host *sdhci_pltfm_init(struct platform_device *pdev,
+>                                     size_t priv_size)
+>  {
+>         struct sdhci_host *host;
+> -       struct resource *iomem;
+>         void __iomem *ioaddr;
+>         int irq, ret;
+>
+> -       iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -       ioaddr = devm_ioremap_resource(&pdev->dev, iomem);
+> +       ioaddr = devm_platform_ioremap_resource(pdev, 0);
+>         if (IS_ERR(ioaddr)) {
+>                 ret = PTR_ERR(ioaddr);
+>                 goto err;
+> --
+> 2.22.0
+>
