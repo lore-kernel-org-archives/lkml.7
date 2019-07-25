@@ -2,114 +2,111 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E081C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0DAC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD4420856
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:02:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tjDMGaLu"
+	by mail.kernel.org (Postfix) with ESMTP id 48B5A20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:02:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbfGYGCh (ORCPT
+        id S1729399AbfGYGCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 02:02:37 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35230 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726547AbfGYGCg (ORCPT
+        Thu, 25 Jul 2019 02:02:53 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:38199 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbfGYGCw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 02:02:36 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y4so49336325wrm.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 23:02:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pU+mAWOKuT+1icWHPxBVuENuKDz0OQKOsIOlqLtN9d4=;
-        b=tjDMGaLuEFwmnP5PNPyUU25EqT5kbEnRrw6KDGkV6Gb97e+iP5mC5KKgA/9r+l4VJf
-         VzlSPmG+ybqde7hYfyiy8wQ15slKfYBqHc8co2TKeF5bNk29sNEiSCuIxIe8RmiMtckl
-         ruT832weiB0FIxU08Z056Z5OTH0fbtYlNsfC7zBvhggV2X5Cd6Ep4w2ty6eTQo4qn6Mw
-         TNoqdzn/0fNab2feocd7K0N9ekjF4zwAVTIa2IzxaUhlUDE4lTANZnmzQaFqbd3IWljy
-         88lR2KUYkwMOQS6i3w+XqHHBBQE7raT55qqJKS5V4zfYicQPto5wOsmF4FiwyV1MUQs2
-         Di8w==
+        Thu, 25 Jul 2019 02:02:52 -0400
+Received: by mail-qk1-f196.google.com with SMTP id a27so35611323qkk.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 23:02:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pU+mAWOKuT+1icWHPxBVuENuKDz0OQKOsIOlqLtN9d4=;
-        b=K2/UnPU4iKjUdv/rPfDCMllUjdwPwnJcm4r6zITz3CLP68stvevL4yEVO7PZeHwJPT
-         LzyqVP1x1pRhp7Rcj3jOxwyVp6ljTKP5PKatrGYj0QHos3JdfjnoGjh4bQJEXuKpnvgL
-         NxZKaxhZt5EYMRZzJp9LxxT1aUtulq/ZZkmqAwQoai0D4XAnfX/zuFvbn7b+p2JVFIiy
-         cy4iYwF7L6XcMKndRNBbNkPT1RegyP0JEvTalBbx1+7G14A1Z3G4DA7W1yeRJxV8FIkw
-         sIuQQ1n5JCjsUc9pJ5xsTEPAORKKKrOf8Vjdsn8NpYEMVQF/Ec2UdMlNvmPYM6Lzyp0r
-         oDIA==
-X-Gm-Message-State: APjAAAWOxObIp8sNjCqygvUIidzM0I6iLK2A4Olblig/Qy/86VO50ySg
-        fxW3ZWPPAiaMcVTrfn1FPFzL2qmtuu63NG3Ar3c=
-X-Google-Smtp-Source: APXvYqyyHKiyF0F/r/FwIu7Qxo19mAVSEFeS5FNJ3bM5+0ZtoFzpwVF+0XlzchviCc8j+UG6zqtZKP7V/9kKChSpYiA=
-X-Received: by 2002:adf:c70e:: with SMTP id k14mr95081636wrg.201.1564034554176;
- Wed, 24 Jul 2019 23:02:34 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zOvrC4jRrz0ugoagicTAba2I/X1iVC+b4ZZraA+kmso=;
+        b=ZzWI7O/fN98tTQkI3qHL6OagWDYbr9Ft4HU+TDYKP5+jeZg8SZjNWZ+gmufBXeY15m
+         7sN3V+SnaFhEHHl1YxswC7bQi/qrwcKbiGsSqmCXATMFE3W5J8D1c2Pk7k6ljjib70V1
+         3crSxUwo+r4ouCnKSJnuoImhat/voniA+LkQ/lop0BP4g4Y5UuZG3obWDmrjF2fat9JO
+         vyRCLoy15wmI+j2NTNkiRe8n6S5zXZHxqBdbvPs0JqXA9XI5PjPPSJl3mv8bR0jelSJv
+         bfR66k76cFYMWiOZU4DZ4OEAksHhNRqWYb/wlE/Uiyqg5XCRB5Zpa/l1EcqqgfSsm1V5
+         WEsw==
+X-Gm-Message-State: APjAAAX0lATPQ9D/Nm8L7zS70IQRPUMdQuwHwcH0icpY+dclyQr71YBh
+        hVxjg4oDELwHk8aeopCYq1fa0g==
+X-Google-Smtp-Source: APXvYqwbxlaMB/Ups0MK5ym5+FoeShoFD8maMViZfmHscXpKdz4RszQUYRwaBR+eewotyh05tZCO4w==
+X-Received: by 2002:a37:aa04:: with SMTP id t4mr57308995qke.359.1564034571775;
+        Wed, 24 Jul 2019 23:02:51 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id i62sm22519634qke.52.2019.07.24.23.02.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 23:02:50 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 02:02:41 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jasowang@redhat.com,
+        jglisse@redhat.com, keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+Subject: Re: WARNING in __mmdrop
+Message-ID: <20190725015402-mutt-send-email-mst@kernel.org>
+References: <0000000000008dd6bb058e006938@google.com>
+ <000000000000964b0d058e1a0483@google.com>
+ <20190721044615-mutt-send-email-mst@kernel.org>
+ <20190722141152.GA13711@ziepe.ca>
 MIME-Version: 1.0
-References: <20190722124833.28757-1-daniel.baluta@nxp.com> <20190722124833.28757-9-daniel.baluta@nxp.com>
- <20190724232209.GC6859@Asurada-Nvidia.nvidia.com>
-In-Reply-To: <20190724232209.GC6859@Asurada-Nvidia.nvidia.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Thu, 25 Jul 2019 09:02:22 +0300
-Message-ID: <CAEnQRZBW7LNZ7=c_h_ef4ZDcbFzEt61h4VAJSLo2Fb80kBqtpw@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH 08/10] ASoC: dt-bindings: Document fcomb_mode property
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Viorel Suman <viorel.suman@nxp.com>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722141152.GA13711@ziepe.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 2:22 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> On Mon, Jul 22, 2019 at 03:48:31PM +0300, Daniel Baluta wrote:
-> > This allows combining multiple-data-line FIFOs into a
-> > single-data-line FIFO.
-> >
-> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/sound/fsl-sai.txt | 4 ++++
->
-> This should be sent to devicetree mail-list also.
->
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> > index 59f4d965a5fb..ca27afd840ba 100644
-> > --- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> > +++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> > @@ -54,6 +54,10 @@ Optional properties:
-> >                         represents first data line, bit 1 represents second
-> >                         data line and so on. Data line is enabled if
-> >                         corresponding bit is set to 1.
-> > +  - fsl,fcomb_mode   : list of two integers (first for RX, second for TX)
-> > +                       representing FIFO combine mode. Possible values for
-> > +                       combined mode are: 0 - disabled, 1 - Rx/Tx from shift
-> > +                       registers, 2 - Rx/Tx by software, 3 - both.
->
-> Looks like a software configuration to me, instead of a device
-> property. Is this configurable by user case, or hard-coded by
-> SoC/hardware design?
+On Mon, Jul 22, 2019 at 11:11:52AM -0300, Jason Gunthorpe wrote:
+> On Sun, Jul 21, 2019 at 06:02:52AM -0400, Michael S. Tsirkin wrote:
+> > On Sat, Jul 20, 2019 at 03:08:00AM -0700, syzbot wrote:
+> > > syzbot has bisected this bug to:
+> > > 
+> > > commit 7f466032dc9e5a61217f22ea34b2df932786bbfc
+> > > Author: Jason Wang <jasowang@redhat.com>
+> > > Date:   Fri May 24 08:12:18 2019 +0000
+> > > 
+> > >     vhost: access vq metadata through kernel virtual address
+> > > 
+> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=149a8a20600000
+> > > start commit:   6d21a41b Add linux-next specific files for 20190718
+> > > git tree:       linux-next
+> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=169a8a20600000
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=129a8a20600000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=e58112d71f77113ddb7b
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10139e68600000
+> > > 
+> > > Reported-by: syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com
+> > > Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual
+> > > address")
+> > > 
+> > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> > 
+> > 
+> > OK I poked at this for a bit, I see several things that
+> > we need to fix, though I'm not yet sure it's the reason for
+> > the failures:
+> 
+> This stuff looks quite similar to the hmm_mirror use model and other
+> places in the kernel. I'm still hoping we can share this code a bit more.
 
-Indeed this is a software configuration and configurable by user case.
-Will think of a another way to specify it.
+Right. I think hmm is something we should look at.
+
+-- 
+MST
