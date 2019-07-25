@@ -2,451 +2,96 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38693C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5332C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32F0229F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:31:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHlOM0Qy"
+	by mail.kernel.org (Postfix) with ESMTP id 8E2C4229F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:32:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfGYSbz (ORCPT
+        id S1726211AbfGYScr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 14:31:55 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38804 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfGYSbz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 14:31:55 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f5so14632192pgu.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 11:31:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=qPt6GSvNaRNxnnTu6bRMZgg7HoSbPOn74FTRNXInFbk=;
-        b=EHlOM0QygTwzmZQvs33/voY6md2Kl/JmHanGKPu3dGDQcFuBknI63q591sKbcgB/kN
-         haIXUpg22a8h+wmcHTm7QdT5jsPM3YAW/TsCCXITTyAHAwNieSUSmdcCYh2lJm+uBs3B
-         FXiQ9BbpQYr0FykEF5Rz0Ey3tXfKRVY6hHjGEGxxkJw+Sa1aHY87qoVAMGMEgDbopUS5
-         EnlM6FKEB4s1ipS30YgMF+CjlMkzD0L7nit1nsqvAbUmrOKCHfaD4aC26gVvPJRlA7iI
-         KuGbouX5yZC+elOjkG87SlwQCpajKOBv//vIUD0BG72KXkyw04QJ5OW0TKZAJCqGTv8Q
-         Tfig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=qPt6GSvNaRNxnnTu6bRMZgg7HoSbPOn74FTRNXInFbk=;
-        b=IMmuljcSLdNfyAT112exHruwfvu+pxM1acngpWXEPZeZcuSBbxWvyn05Kc68KyL/aY
-         xCS8Ar26rIUM60OhapO66V8oFWwQmGpeKUKJvmfFBva1CHMvuBzNBBmy9jLOr3G93xjI
-         tt/Ctvuu2iMOzkV3ia+Xkwjl7whlkUeXfZMtwMPLf4/W5/bj/dy46lOV5qLqMyF3M8/O
-         aOm9SboBooos5JIlkh8KC98+pDS28neFa6N3ytGMUGxBbzUVSvo+VXYHNS2pGuwBiRwQ
-         dkZrSWxMJaRNTnnKzXaMs5G3KM1ZNO6WJw8cmXXoa8VNZHHxAX/0DZuC8/lXOmN/yM/H
-         2fUQ==
-X-Gm-Message-State: APjAAAViOmB/DwmtO0AON/ZuF+16lwSs9ZTgOacp3sMrUlhp9lF2+KwW
-        habZVKQYrDEjLlGoJ8eFXxg=
-X-Google-Smtp-Source: APXvYqxvm1fX7QjHkQM2xD11QPpwhO6OXzuaDSdDN5yGVIeR7nIoZK+NOr8aXEWhiMrP7Og03UtJ+Q==
-X-Received: by 2002:a63:5f09:: with SMTP id t9mr54149080pgb.351.1564079514119;
-        Thu, 25 Jul 2019 11:31:54 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id a5sm43583407pjv.21.2019.07.25.11.31.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 11:31:53 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 00:01:47 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shobhit Kukreti <shobhitkukreti@gmail.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        hdegoede@redhat.com, Larry.Finger@lwfinger.net
-Subject: [PATCH] staging: rtl8723bs: os_dep: Move common code to func
-Message-ID: <20190725183147.GA15303@hari-Inspiron-1545>
+        Thu, 25 Jul 2019 14:32:47 -0400
+Received: from mga07.intel.com ([134.134.136.100]:57967 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725800AbfGYScr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 14:32:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 11:32:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,307,1559545200"; 
+   d="scan'208";a="181555504"
+Received: from ddalessa-mobl.amr.corp.intel.com (HELO [10.254.202.8]) ([10.254.202.8])
+  by orsmga002.jf.intel.com with ESMTP; 25 Jul 2019 11:32:45 -0700
+Subject: Re: linux-next: build failure after merge of the rdma tree
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kamenee Arumugam <kamenee.arumugam@intel.com>
+References: <20190708125725.25c38fa7@canb.auug.org.au>
+ <20190708160823.GH23966@mellanox.com>
+From:   Dennis Dalessandro <dennis.dalessandro@intel.com>
+Message-ID: <0ccdc302-210f-7551-fcd4-f2bd453436a2@intel.com>
+Date:   Thu, 25 Jul 2019 14:32:44 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190708160823.GH23966@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Inthis file all functions has below common functionality
-1.Check flag padapter->bSurpriseRemoved
-2.Get sdio_func structure from intf_hdl.
+On 7/8/2019 12:08 PM, Jason Gunthorpe wrote:
+> On Mon, Jul 08, 2019 at 12:57:25PM +1000, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> After merging the rdma tree, today's linux-next build (x86_64
+>> allmodconfig) failed like this:
+>>
+>> In file included from <command-line>:32:
+>> ./usr/include/rdma/rvt-abi.h:13:10: fatal error: rdma/ib_verbs.h: No such file or directory
+>>   #include <rdma/ib_verbs.h>
+>>            ^~~~~~~~~~~~~~~~~
+>>
+>> Caused by commits
+>>
+>>    dabac6e460ce ("IB/hfi1: Move receive work queue struct into uapi directory")
+>>
+>> interacting with commit
+>>
+>>    0c422a3d4e1b ("kbuild: compile-test exported headers to ensure they are self-contained")
+>>
+>> from the kbuild tree.
+>>
+>> You can't reference the include/linux headers from uapi headers ...
+>>
+>> I have used the rmda tree from 20190628 again today (given the previous
+>> errors).
+> 
+> This is a bug that will break our userspace package too, we must fix
+> it, very happy to see the functionality in "kbuild: compile-test
+> exported headers to ensure they are self-contained"
+> 
+> Dennis, you must put stuff in rdma-core and run the rdma-core CI if
+> you are messing with the uapi headers.
 
-This patch introduces two new APIs
-rtw_isadapter_removed,rtw_sdio_get_func which helps to do above common
-functionality.
+Sorry for the delay, I've been on vacation the past few weeks, just now 
+seeing this...
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c | 149 ++++++----------------
- 1 file changed, 41 insertions(+), 108 deletions(-)
+I'm pretty sure Kamenee did when she prepared the patches in the first 
+place and sent the PR. Not sure where things went off the rails but 
+we'll be more careful in the future. Thanks for fixing.
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c b/drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c
-index 50b8934..126429e 100644
---- a/drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c
-@@ -26,26 +26,38 @@ inline void rtw_sdio_set_irq_thd(struct dvobj_priv *dvobj, void *thd_hdl)
- 	sdio_data->sys_sdio_irq_thd = thd_hdl;
- }
- 
--u8 sd_f0_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
-+static s32 rtw_isadapter_removed(struct intf_hdl *pintfhdl)
- {
- 	struct adapter *padapter;
-+
-+	padapter = pintfhdl->padapter;
-+	return padapter->bSurpriseRemoved;
-+}
-+
-+static struct sdio_func *rtw_sdio_get_func(struct intf_hdl *pintfhdl)
-+{
- 	struct dvobj_priv *psdiodev;
- 	struct sdio_data *psdio;
- 
-+	psdiodev = pintfhdl->pintf_dev;
-+	psdio = &psdiodev->intf_data;
-+
-+	return psdio->func;
-+}
-+
-+u8 sd_f0_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
-+{
- 	u8 v = 0;
- 	struct sdio_func *func;
- 	bool claim_needed;
- 
--	padapter = pintfhdl->padapter;
--	psdiodev = pintfhdl->pintf_dev;
--	psdio = &psdiodev->intf_data;
- 
--	if (padapter->bSurpriseRemoved) {
-+	if (rtw_isadapter_removed(pintfhdl)) {
- 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
- 		return v;
- 	}
- 
--	func = psdio->func;
-+	func = rtw_sdio_get_func(pintfhdl);
- 	claim_needed = rtw_sdio_claim_host_needed(func);
- 
- 	if (claim_needed)
-@@ -65,23 +77,15 @@ u8 sd_f0_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
-  */
- s32 _sd_cmd52_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
- {
--	struct adapter *padapter;
--	struct dvobj_priv *psdiodev;
--	struct sdio_data *psdio;
--
- 	int err = 0, i;
- 	struct sdio_func *func;
- 
--	padapter = pintfhdl->padapter;
--	psdiodev = pintfhdl->pintf_dev;
--	psdio = &psdiodev->intf_data;
--
--	if (padapter->bSurpriseRemoved) {
-+	if (rtw_isadapter_removed(pintfhdl)) {
- 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
- 		return err;
- 	}
- 
--	func = psdio->func;
-+	func = rtw_sdio_get_func(pintfhdl);
- 
- 	for (i = 0; i < cnt; i++) {
- 		pdata[i] = sdio_readb(func, addr+i, &err);
-@@ -100,24 +104,16 @@ s32 _sd_cmd52_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
-  */
- s32 sd_cmd52_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
- {
--	struct adapter *padapter;
--	struct dvobj_priv *psdiodev;
--	struct sdio_data *psdio;
--
- 	int err = 0;
- 	struct sdio_func *func;
- 	bool claim_needed;
- 
--	padapter = pintfhdl->padapter;
--	psdiodev = pintfhdl->pintf_dev;
--	psdio = &psdiodev->intf_data;
--
--	if (padapter->bSurpriseRemoved) {
-+	if (rtw_isadapter_removed(pintfhdl)) {
- 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
- 		return err;
- 	}
- 
--	func = psdio->func;
-+	func = rtw_sdio_get_func(pintfhdl);
- 	claim_needed = rtw_sdio_claim_host_needed(func);
- 
- 	if (claim_needed)
-@@ -135,23 +131,15 @@ s32 sd_cmd52_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
-  */
- s32 _sd_cmd52_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
- {
--	struct adapter *padapter;
--	struct dvobj_priv *psdiodev;
--	struct sdio_data *psdio;
--
- 	int err = 0, i;
- 	struct sdio_func *func;
- 
--	padapter = pintfhdl->padapter;
--	psdiodev = pintfhdl->pintf_dev;
--	psdio = &psdiodev->intf_data;
--
--	if (padapter->bSurpriseRemoved) {
-+	if (rtw_isadapter_removed(pintfhdl)) {
- 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
- 		return err;
- 	}
- 
--	func = psdio->func;
-+	func = rtw_sdio_get_func(pintfhdl);
- 
- 	for (i = 0; i < cnt; i++) {
- 		sdio_writeb(func, pdata[i], addr+i, &err);
-@@ -170,24 +158,16 @@ s32 _sd_cmd52_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
-  */
- s32 sd_cmd52_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
- {
--	struct adapter *padapter;
--	struct dvobj_priv *psdiodev;
--	struct sdio_data *psdio;
--
- 	int err = 0;
- 	struct sdio_func *func;
- 	bool claim_needed;
- 
--	padapter = pintfhdl->padapter;
--	psdiodev = pintfhdl->pintf_dev;
--	psdio = &psdiodev->intf_data;
--
--	if (padapter->bSurpriseRemoved) {
-+	if (rtw_isadapter_removed(pintfhdl)) {
- 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
- 		return err;
- 	}
- 
--	func = psdio->func;
-+	func = rtw_sdio_get_func(pintfhdl);
- 	claim_needed = rtw_sdio_claim_host_needed(func);
- 
- 	if (claim_needed)
-@@ -200,24 +180,16 @@ s32 sd_cmd52_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
- 
- u8 sd_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
- {
--	struct adapter *padapter;
--	struct dvobj_priv *psdiodev;
--	struct sdio_data *psdio;
--
- 	u8 v = 0;
- 	struct sdio_func *func;
- 	bool claim_needed;
- 
--	padapter = pintfhdl->padapter;
--	psdiodev = pintfhdl->pintf_dev;
--	psdio = &psdiodev->intf_data;
--
--	if (padapter->bSurpriseRemoved) {
-+	if (rtw_isadapter_removed(pintfhdl)) {
- 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
- 		return v;
- 	}
- 
--	func = psdio->func;
-+	func = rtw_sdio_get_func(pintfhdl);
- 	claim_needed = rtw_sdio_claim_host_needed(func);
- 
- 	if (claim_needed)
-@@ -234,21 +206,19 @@ u32 sd_read32(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
- {
- 	struct adapter *padapter;
- 	struct dvobj_priv *psdiodev;
--	struct sdio_data *psdio;
- 	u32 v = 0;
- 	struct sdio_func *func;
- 	bool claim_needed;
- 
- 	padapter = pintfhdl->padapter;
- 	psdiodev = pintfhdl->pintf_dev;
--	psdio = &psdiodev->intf_data;
- 
- 	if (padapter->bSurpriseRemoved) {
- 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
- 		return v;
- 	}
- 
--	func = psdio->func;
-+	func = rtw_sdio_get_func(pintfhdl);
- 	claim_needed = rtw_sdio_claim_host_needed(func);
- 
- 	if (claim_needed)
-@@ -295,22 +265,15 @@ u32 sd_read32(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
- 
- void sd_write8(struct intf_hdl *pintfhdl, u32 addr, u8 v, s32 *err)
- {
--	struct adapter *padapter;
--	struct dvobj_priv *psdiodev;
--	struct sdio_data *psdio;
- 	struct sdio_func *func;
- 	bool claim_needed;
- 
--	padapter = pintfhdl->padapter;
--	psdiodev = pintfhdl->pintf_dev;
--	psdio = &psdiodev->intf_data;
--
--	if (padapter->bSurpriseRemoved) {
-+	if (rtw_isadapter_removed(pintfhdl)) {
- 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
- 		return;
- 	}
- 
--	func = psdio->func;
-+	func = rtw_sdio_get_func(pintfhdl);
- 	claim_needed = rtw_sdio_claim_host_needed(func);
- 
- 	if (claim_needed)
-@@ -326,20 +289,18 @@ void sd_write32(struct intf_hdl *pintfhdl, u32 addr, u32 v, s32 *err)
- {
- 	struct adapter *padapter;
- 	struct dvobj_priv *psdiodev;
--	struct sdio_data *psdio;
- 	struct sdio_func *func;
- 	bool claim_needed;
- 
- 	padapter = pintfhdl->padapter;
- 	psdiodev = pintfhdl->pintf_dev;
--	psdio = &psdiodev->intf_data;
- 
- 	if (padapter->bSurpriseRemoved) {
- 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
- 		return;
- 	}
- 
--	func = psdio->func;
-+	func = rtw_sdio_get_func(pintfhdl);
- 	claim_needed = rtw_sdio_claim_host_needed(func);
- 
- 	if (claim_needed)
-@@ -398,23 +359,15 @@ void sd_write32(struct intf_hdl *pintfhdl, u32 addr, u32 v, s32 *err)
-  */
- s32 _sd_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
- {
--	struct adapter *padapter;
--	struct dvobj_priv *psdiodev;
--	struct sdio_data *psdio;
--
- 	int err = -EPERM;
- 	struct sdio_func *func;
- 
--	padapter = pintfhdl->padapter;
--	psdiodev = pintfhdl->pintf_dev;
--	psdio = &psdiodev->intf_data;
--
--	if (padapter->bSurpriseRemoved) {
-+	if (rtw_isadapter_removed(pintfhdl)) {
- 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
- 		return err;
- 	}
- 
--	func = psdio->func;
-+	func = rtw_sdio_get_func(pintfhdl);
- 
- 	if (unlikely((cnt == 1) || (cnt == 2))) {
- 		int i;
-@@ -453,23 +406,18 @@ s32 _sd_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
-  */
- s32 sd_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
- {
--	struct adapter *padapter;
--	struct dvobj_priv *psdiodev;
--	struct sdio_data *psdio;
- 
- 	struct sdio_func *func;
- 	bool claim_needed;
- 	s32 err = -EPERM;
- 
--	padapter = pintfhdl->padapter;
--	psdiodev = pintfhdl->pintf_dev;
--	psdio = &psdiodev->intf_data;
- 
--	if (padapter->bSurpriseRemoved) {
-+	if (rtw_isadapter_removed(pintfhdl)) {
- 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
- 		return err;
- 	}
--	func = psdio->func;
-+
-+	func = rtw_sdio_get_func(pintfhdl);
- 	claim_needed = rtw_sdio_claim_host_needed(func);
- 
- 	if (claim_needed)
-@@ -497,24 +445,16 @@ s32 sd_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
-  */
- s32 _sd_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
- {
--	struct adapter *padapter;
--	struct dvobj_priv *psdiodev;
--	struct sdio_data *psdio;
--
- 	struct sdio_func *func;
- 	u32 size;
- 	s32 err =  -EPERM;
- 
--	padapter = pintfhdl->padapter;
--	psdiodev = pintfhdl->pintf_dev;
--	psdio = &psdiodev->intf_data;
--
--	if (padapter->bSurpriseRemoved) {
-+	if (rtw_isadapter_removed(pintfhdl)) {
- 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
- 		return err;
- 	}
- 
--	func = psdio->func;
-+	func = rtw_sdio_get_func(pintfhdl);
- /*	size = sdio_align_size(func, cnt); */
- 
- 	if (unlikely((cnt == 1) || (cnt == 2))) {
-@@ -555,23 +495,16 @@ s32 _sd_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
-  */
- s32 sd_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
- {
--	struct adapter *padapter;
--	struct dvobj_priv *psdiodev;
--	struct sdio_data *psdio;
- 	struct sdio_func *func;
- 	bool claim_needed;
- 	s32 err =  -EPERM;
- 
--	padapter = pintfhdl->padapter;
--	psdiodev = pintfhdl->pintf_dev;
--	psdio = &psdiodev->intf_data;
--
--	if (padapter->bSurpriseRemoved) {
-+	if (rtw_isadapter_removed(pintfhdl)) {
- 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
- 		return err;
- 	}
- 
--	func = psdio->func;
-+	func = rtw_sdio_get_func(pintfhdl);
- 	claim_needed = rtw_sdio_claim_host_needed(func);
- 
- 	if (claim_needed)
--- 
-2.7.4
-
+-Denny
