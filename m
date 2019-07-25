@@ -2,73 +2,123 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9112CC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8DBC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6575E2238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99CCE22C7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:09:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564074576;
+	bh=rkdM8CWr1A1LMWe/EH04Dnfcj0n7tqCfgrgm7BTi5jQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wMewECVe+88ZSaHzZ1qqhshZ7ckdT3e90kRtdsHcIIC8me2Zs4e1V7Fw0wZ/AnnEc
+	 kjCQ25UAft74FFWlKlOf6ClgMOtg14IhtjW4hVXWuqWB5TwwAX3VTZLYPZXAdLKyzJ
+	 kNHvalCJ2AzGVSTbqre8reiTYjpVurpvCVZ8PAA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388580AbfGYRH0 (ORCPT
+        id S2389769AbfGYRJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:07:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:33132 "EHLO foss.arm.com"
+        Thu, 25 Jul 2019 13:09:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387923AbfGYRHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:07:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C96A174E;
-        Thu, 25 Jul 2019 10:07:25 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3EFD23F71A;
-        Thu, 25 Jul 2019 10:07:23 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 18:07:21 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Mark Rutland <mark.rutland@arm.com>,
-        x86@kernel.org, Kees Cook <keescook@chromium.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Brown <Mark.Brown@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Price <Steven.Price@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC] mm/pgtable/debug: Add test validating architecture page
- table helpers
-Message-ID: <20190725170720.GB11545@arrakis.emea.arm.com>
-References: <1564037723-26676-1-git-send-email-anshuman.khandual@arm.com>
- <1564037723-26676-2-git-send-email-anshuman.khandual@arm.com>
+        id S2388559AbfGYRJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 13:09:35 -0400
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64C3822C7B;
+        Thu, 25 Jul 2019 17:09:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564074573;
+        bh=rkdM8CWr1A1LMWe/EH04Dnfcj0n7tqCfgrgm7BTi5jQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=V2kS5kGzF++a03Gk5zIP6RZHen6WFgWlfieoKDlrHqhEHPec5TNp/uyFIM1M9uehw
+         LnN/eGuu4aLZCbQHXlzK4cEM25XKPTnaNYChzXcEWdoNw9zQyjL+vFPdlyy6PV4aH5
+         wyN/g5oynAZo0AxPt7Dvwsws0Sm+M9vkaj0veq4o=
+Received: by mail-wr1-f50.google.com with SMTP id n9so51672752wru.0;
+        Thu, 25 Jul 2019 10:09:33 -0700 (PDT)
+X-Gm-Message-State: APjAAAVchACu9+4DfrJwnByOAiWXS7fa4zbLsTb942psMJLSrWTENUrN
+        ls4uYm87r0BqtAcxe5ZdkT9zv+sbF1z9ypuV6dE=
+X-Google-Smtp-Source: APXvYqyhMUD0VRm57goMo+umKK9xrgzMe/ILEaoUR4e6spWK6lgrnxam7yAoo2qceAKGdHiCpgWiUDRXhXO1xXYbZ1k=
+X-Received: by 2002:adf:c613:: with SMTP id n19mr39171710wrg.109.1564074571943;
+ Thu, 25 Jul 2019 10:09:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1564037723-26676-2-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190722095425.14193-1-amergnat@baylibre.com> <20190722095425.14193-4-amergnat@baylibre.com>
+ <1j5znqxj74.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1j5znqxj74.fsf@starbuckisacylon.baylibre.com>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Fri, 26 Jul 2019 01:09:20 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64AJFMkZQaytYMN+EsLT0sS-3VwzWUfb3g7SdL7kCfu+g@mail.gmail.com>
+Message-ID: <CAGb2v64AJFMkZQaytYMN+EsLT0sS-3VwzWUfb3g7SdL7kCfu+g@mail.gmail.com>
+Subject: Re: [PATCH 3/8] clk: meson: gxbb: migrate to the new parent
+ description method
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Alexandre Mergnat <amergnat@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        baylibre-upstreaming@groups.io,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 12:25:23PM +0530, Anshuman Khandual wrote:
-> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
-> +static void pud_clear_tests(void)
-> +{
-> +	pud_t pud;
-> +
-> +	pud_clear(&pud);
-> +	WARN_ON(!pud_none(pud));
-> +}
+On Thu, Jul 25, 2019 at 10:50 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>
+> On Mon 22 Jul 2019 at 11:54, Alexandre Mergnat <amergnat@baylibre.com> wrote:
+>
+>
+> > @@ -1592,13 +1737,29 @@ static struct clk_regmap gxbb_vid_pll_div = {
+> >       .hw.init = &(struct clk_init_data) {
+> >               .name = "vid_pll_div",
+> >               .ops = &meson_vid_pll_div_ro_ops,
+> > -             .parent_names = (const char *[]){ "hdmi_pll" },
+> > +             .parent_data = &(const struct clk_parent_data) {
+> > +                     /*
+> > +                      * This clock is declared here for GXL and GXBB SoC, so
+> > +                      * we must use string name to set this parent to avoid
+> > +                      * pointer issue.
+> > +                      */
+>
+> I don't really get the issue with this comment.
+>
+> How about:
+>
+> /*
+>  * Note:
+>  * gxl and gxbb have different hdmi_plls (with different struct clk_hw).
+>  * We fallback to the global naming string mechanism so vid_pll_div picks
+>  * up the appropriate one.
+>  */
 
-For the clear tests, I think you should initialise the local variable to
-something non-zero rather than rely on whatever was on the stack. In
-case it fails, you have a more deterministic behaviour.
+If you're sticking to global names for now, you could just skip converting
+this clock altogether. I suspect .parent_names will be around for some time.
 
--- 
-Catalin
+On the other hand, if you really want to get rid of global clock name based
+parenting, you could use clk_hw pointers, and have the probe function fix
+up this one based on the compatible string. That's what I did.
+
+Just my two cents.
+
+ChenYu
+
+> > +                     .name = "hdmi_pll",
+> > +                     .index = -1,
+> > +             },
+> >               .num_parents = 1,
+> >               .flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
+> >       },
+> >  };
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
