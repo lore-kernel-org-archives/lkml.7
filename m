@@ -2,97 +2,126 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349EFC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F326FC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B97217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:48:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q/tA4mT0"
+	by mail.kernel.org (Postfix) with ESMTP id C2B6122C7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:48:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389245AbfGYMsX (ORCPT
+        id S2389350AbfGYMsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:48:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40706 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388497AbfGYMsX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:48:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=05xwHelLjSHHBuReW+EIr66fHPltEo6bHo2T1pZhDCg=; b=Q/tA4mT0PXt+o9525krpx7Q7B
-        zuIKWtu8R3tg8EuI2BRFi4bwQ/bBDfZgR2BOsraAY6TDYT7CQcExzTW7WgqRcRKS0ElmcHclHcxpy
-        jHZB2p/o8KKMODwWQdjcxX7n5sQXs5BJfDe3OI7KOd/Z69BRd39yfyhAbPnfE4s7ScMJeuuPP1xe1
-        Ijj8fw4A3Gx9s3oLKRbrN7CYJQAdl7lfBfrLgPdzj3WiiY14YAnWy6VGHCEeT0/UFL/ssx+cmQDAr
-        QHCahuSme8WRIkn7skl0W0g+F4m7ygHjF4rdrGQJhNGZUgfTKpFJVUbGmXKDj2J6Y+lMrx9HHo05J
-        TGNY1nDeA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqdAS-0000dx-3H; Thu, 25 Jul 2019 12:48:20 +0000
-Date:   Thu, 25 Jul 2019 05:48:20 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Laura Abbott <labbott@redhat.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
-Message-ID: <20190725124820.GC20286@infradead.org>
-References: <20190624194908.121273-1-john.stultz@linaro.org>
- <20190624194908.121273-5-john.stultz@linaro.org>
- <20190718100840.GB19666@infradead.org>
- <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
- <20190724065958.GC16225@infradead.org>
- <25353c4f-5389-0352-b34e-78698b35e588@redhat.com>
+        Thu, 25 Jul 2019 08:48:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:56642 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbfGYMsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 08:48:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B302E152D;
+        Thu, 25 Jul 2019 05:48:40 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2545A3F71F;
+        Thu, 25 Jul 2019 05:48:39 -0700 (PDT)
+Subject: Re: [PATCH] KVM: arm64: Update kvm_arm_exception_class and
+ esr_class_str for new EC
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     marc.zyngier@arm.com, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
+        will@kernel.org, julien.thierry@arm.com, suzuki.poulose@arm.com,
+        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+        amit.kachhap@arm.com, Dave.Martin@arm.com,
+        wanghaibin.wang@huawei.com
+References: <1562992854-972-1-git-send-email-yuzenghui@huawei.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <e009aceb-9d23-1a58-8186-4883ab98bd45@arm.com>
+Date:   Thu, 25 Jul 2019 13:48:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <25353c4f-5389-0352-b34e-78698b35e588@redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <1562992854-972-1-git-send-email-yuzenghui@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 07:38:07AM -0400, Laura Abbott wrote:
-> It's not just an optimization for Ion though. Ion was designed to
-> let the callers choose between system and multiple CMA heaps.
+Hi,
 
-Who cares about ion?  That some out of tree android crap that should
-not be relevant for upstream except as an example for how not to design
-things..
+On 13/07/2019 05:40, Zenghui Yu wrote:
+> We've added two ESR exception classes for new ARM hardware extensions:
+> ESR_ELx_EC_PAC and ESR_ELx_EC_SVE.
+> 
+> This patch updates "kvm_arm_exception_class" for these two EC, which the
 
-> On other
-> systems there may be multiple CMA regions dedicated to a specific
-> purpose or placed at a specific address. The callers need to
-> be able to choose exactly whether they want a particular CMA region
-> or discontiguous regions.
+> new EC will be parsed in kvm_exit trace events (for guest's usage of
 
-At least in cma is only used either with the global pool or a per-device
-cma pool.  I think if you want to make this new dma-buf API fit in with
-the rest with the kernel you follow that model, and pass in a struct
-device to select the particular cma area, similar how the DMA allocator
-works.
+new EC will be visible to user-space via kvm_exit() trace events... ?
+
+
+> Pointer Authentication and Scalable Vector Extension).  The same updates
+> to "esr_class_str" for ESR_ELx_EC_PAC, by which we can get more accurate
+> debug info.
+
+Its accurate either way round. This stops the trace-point print from printing the EC in
+hex, instead giving it a name, like we do for all the others.
+
+
+>  Trivial changes, update them in one go.
+
+(I don't think this bit needs to go in the git-log!)
+
+
+> diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
+> index a8b205e..ddf9d76 100644
+> --- a/arch/arm64/include/asm/kvm_arm.h
+> +++ b/arch/arm64/include/asm/kvm_arm.h
+> @@ -316,9 +316,10 @@
+>  
+>  #define kvm_arm_exception_class \
+>  	ECN(UNKNOWN), ECN(WFx), ECN(CP15_32), ECN(CP15_64), ECN(CP14_MR), \
+> -	ECN(CP14_LS), ECN(FP_ASIMD), ECN(CP10_ID), ECN(CP14_64), ECN(SVC64), \
+> -	ECN(HVC64), ECN(SMC64), ECN(SYS64), ECN(IMP_DEF), ECN(IABT_LOW), \
+> -	ECN(IABT_CUR), ECN(PC_ALIGN), ECN(DABT_LOW), ECN(DABT_CUR), \
+> +	ECN(CP14_LS), ECN(FP_ASIMD), ECN(CP10_ID), ECN(PAC), ECN(CP14_64), \
+> +	ECN(SVC64), ECN(HVC64), ECN(SMC64), ECN(SYS64), ECN(SVE), \
+> +	ECN(IMP_DEF), ECN(IABT_LOW), ECN(IABT_CUR), \
+> +	ECN(PC_ALIGN), ECN(DABT_LOW), ECN(DABT_CUR), \
+>  	ECN(SP_ALIGN), ECN(FP_EXC32), ECN(FP_EXC64), ECN(SERROR), \
+>  	ECN(BREAKPT_LOW), ECN(BREAKPT_CUR), ECN(SOFTSTP_LOW), \
+>  	ECN(SOFTSTP_CUR), ECN(WATCHPT_LOW), ECN(WATCHPT_CUR), \
+
+Do we need to add:
+ESR_ELx_EC_ILL
+ESR_ELx_EC_HVC32
+ESR_ELx_EC_SMC32
+
+
+(I don't see how any of the _CUR entries could ever happen as these EC originally come
+from ESR_EL2, but they're harmless)
+
+
+> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+> index 8c03456..969e156 100644
+> --- a/arch/arm64/kernel/traps.c
+> +++ b/arch/arm64/kernel/traps.c
+> @@ -734,6 +734,7 @@ asmlinkage void __exception do_sysinstr(unsigned int esr, struct pt_regs *regs)
+>  	[ESR_ELx_EC_CP14_LS]		= "CP14 LDC/STC",
+>  	[ESR_ELx_EC_FP_ASIMD]		= "ASIMD",
+>  	[ESR_ELx_EC_CP10_ID]		= "CP10 MRC/VMRS",
+> +	[ESR_ELx_EC_PAC]		= "PAC",
+>  	[ESR_ELx_EC_CP14_64]		= "CP14 MCRR/MRRC",
+>  	[ESR_ELx_EC_ILL]		= "PSTATE.IL",
+>  	[ESR_ELx_EC_SVC32]		= "SVC (AArch32)",
+
+
+Reviewed-by: James Morse <james.morse@arm.com>
+
+
+Thanks,
+
+James
