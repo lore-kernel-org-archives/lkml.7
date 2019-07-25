@@ -2,111 +2,239 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8045FC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BCAC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0C72238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:19:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="OWEjS7Hf"
+	by mail.kernel.org (Postfix) with ESMTP id 9CE582238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:20:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564060812;
+	bh=GSqPHwkENM/AAnYLaWV75aqY26gqm5mfAQfQpZ5B/h4=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=s+z8mWwyI3BVJv0iF1+29hSGPmwVEhr/438Ki01SFc0/X1vtbF56nTHhBXxPXT0nK
+	 vPlECPX7DHY8L6igJvi51lmcvNArRyVkaHc29oT/jhP8rLVUj6LK7CMz0+s6TVj0Xm
+	 DP1wthO1IVsCHXrrwJXcFeeY5yu9YeBSVoCDoC+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389763AbfGYNTc (ORCPT
+        id S2389822AbfGYNUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:19:32 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53911 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389724AbfGYNTb (ORCPT
+        Thu, 25 Jul 2019 09:20:03 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45214 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389776AbfGYNUC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:19:31 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x15so44988947wmj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:19:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WPFUtxJDXKra9fqJ0rdgv7MWa5JnMhUuO280IUrtqLM=;
-        b=OWEjS7Hf1Kk56zL7T/30GFyMXn6LUQKT6Ts67SfuOj67mvRUIrf4EyBnH0R2RBATWt
-         qxQu0AHjxM6cKbcwz7nSqeQ8w/cIT51lxpcfrgGn1B3VJyD1R6dcigM1uO+rfVyDYAWn
-         qn58p0EyOqw1zgDvQz+NfS7ZpkZ5uSFzmPnlWXafFOoxhrxk9K9G9HNMOgpveXOsvvAz
-         7DWqkBRXFZaQZeamMHaJfN1N4ViJ0Yf9u5IR8jFaNN7KA2l9jsNpHYywHVI4FZrORkQP
-         8CkWLwHGyp4qHToMT+0GTGYDR5OAW8+SzzisjCl8fYnu8kDiMJDe+TlOCgK1bBNYQOlL
-         nO6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WPFUtxJDXKra9fqJ0rdgv7MWa5JnMhUuO280IUrtqLM=;
-        b=ZWVkWYyQx+zY17BGN7/8jsb6oGndo8+d2HioX8c+TG2gbVaEXAXebfwcFGhrC5g0oy
-         iqh/jzRm9ZpMoV/yPif/+xmo5GfkWsfuoRLcyAGE1RGrCfXT+sduQG+eppeSHZhhmwiE
-         SAzUKBtfl7kQvoe4xSexr6xGQzKNoWlg8Wm9HY4Jb9VudSGxQ9ywh8Rb18u6x8i2T7ey
-         Lc+PViWqF9iut0UA/VkXHMlnKnH6PVtHJLQxpjgDi9RZSad7v8JQoSLy3zBCcwoUuALs
-         LS7/UqZwTSJuOE4yhnVuWTxy7mY7qMIa9YJt9Y7/vNROAUl0S54hWcsS7DSgqbuUKRbZ
-         iTDw==
-X-Gm-Message-State: APjAAAUwfme6sSf4fstVq/gSW/6Frv+fd3gNaM4eQf50LnZP2zV8oOcL
-        BFrMpcnOxru1dx/xcHLr7ZU=
-X-Google-Smtp-Source: APXvYqwDivgfLYdB0sN1gN2PO4Z6g44XVRn1LUpNdsylFxeXh0Y0+CckexauNmiwoeRBfnFoB8M5CA==
-X-Received: by 2002:a1c:9696:: with SMTP id y144mr79410440wmd.73.1564060388417;
-        Thu, 25 Jul 2019 06:13:08 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id z7sm47119735wrh.67.2019.07.25.06.13.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 06:13:07 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Lechner <david@lechnology.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 5/5] ARM: multi_v5_defconfig: make DaVinci part of the ARM v5 multiplatform build
-Date:   Thu, 25 Jul 2019 15:12:57 +0200
-Message-Id: <20190725131257.6142-6-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190725131257.6142-1-brgl@bgdev.pl>
-References: <20190725131257.6142-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 25 Jul 2019 09:20:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=Mbxu8AN5/JoOf4Q5zWfvCpbaISPtwSaSppkQ+bMDnVQ=; b=mTNJ6hCK5QvP
+        Z9QzX/SuQ38Av+GnnEv57mtloeTDqm/3CrTvWAb94Pq8KJquuG9qGyqzNwpkjkvzEW6y/oE2Xv8HX
+        gQRKrjIS4CEBdpXz9sK/+j6bZ2bGQ9Op88UrH83iShiWX0WjReM6xFfg9fde/vZZMfLt7ch2nxHck
+        zaYhQ=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hqdeY-0002rR-Ix; Thu, 25 Jul 2019 13:19:26 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id D36082742B5F; Thu, 25 Jul 2019 14:19:25 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        kernel-janitors@vger.kernel.org, liam.r.girdwood@linux.intel.com,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        perex@perex.cz, pierre-louis.bossart@linux.intel.com,
+        tiwai@suse.com, yang.jie@linux.intel.com
+Subject: Applied "ASoC: Intel: Fix some acpi vs apci typo in somme comments" to the asoc tree
+In-Reply-To: <20190725053523.16542-1-christophe.jaillet@wanadoo.fr>
+X-Patchwork-Hint: ignore
+Message-Id: <20190725131925.D36082742B5F@ypsilon.sirena.org.uk>
+Date:   Thu, 25 Jul 2019 14:19:25 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+The patch
 
-Add all DaVinci boards to multi_v5_defconfig.
+   ASoC: Intel: Fix some acpi vs apci typo in somme comments
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 72ea86391cd3249638fbef340b865c4bfa31465b Mon Sep 17 00:00:00 2001
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Date: Thu, 25 Jul 2019 07:35:23 +0200
+Subject: [PATCH] ASoC: Intel: Fix some acpi vs apci typo in somme comments
+
+Fix some typo to have the filaname given in a comment match the real name
+of the file.
+Some 'acpi' have erroneously been written 'apci'
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/20190725053523.16542-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/arm/configs/multi_v5_defconfig | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ sound/soc/intel/common/soc-acpi-intel-bxt-match.c     | 2 +-
+ sound/soc/intel/common/soc-acpi-intel-byt-match.c     | 2 +-
+ sound/soc/intel/common/soc-acpi-intel-cht-match.c     | 2 +-
+ sound/soc/intel/common/soc-acpi-intel-cnl-match.c     | 2 +-
+ sound/soc/intel/common/soc-acpi-intel-glk-match.c     | 2 +-
+ sound/soc/intel/common/soc-acpi-intel-hda-match.c     | 2 +-
+ sound/soc/intel/common/soc-acpi-intel-hsw-bdw-match.c | 2 +-
+ sound/soc/intel/common/soc-acpi-intel-icl-match.c     | 2 +-
+ sound/soc/intel/common/soc-acpi-intel-kbl-match.c     | 2 +-
+ sound/soc/intel/common/soc-acpi-intel-skl-match.c     | 2 +-
+ 10 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/configs/multi_v5_defconfig b/arch/arm/configs/multi_v5_defconfig
-index 201237002c65..bd018873e47a 100644
---- a/arch/arm/configs/multi_v5_defconfig
-+++ b/arch/arm/configs/multi_v5_defconfig
-@@ -14,6 +14,18 @@ CONFIG_ARCH_ASPEED=y
- CONFIG_MACH_ASPEED_G4=y
- CONFIG_ARCH_AT91=y
- CONFIG_SOC_AT91SAM9=y
-+CONFIG_ARCH_DAVINCI=y
-+CONFIG_ARCH_DAVINCI_DM644x=y
-+CONFIG_ARCH_DAVINCI_DM355=y
-+CONFIG_ARCH_DAVINCI_DM646x=y
-+CONFIG_ARCH_DAVINCI_DA830=y
-+CONFIG_ARCH_DAVINCI_DA850=y
-+CONFIG_ARCH_DAVINCI_DM365=y
-+CONFIG_MACH_SFFSDR=y
-+CONFIG_MACH_NEUROS_OSD2=y
-+CONFIG_MACH_DM355_LEOPARD=y
-+CONFIG_MACH_MITYOMAPL138=y
-+CONFIG_MACH_OMAPL138_HAWKBOARD=y
- CONFIG_ARCH_MXC=y
- CONFIG_MACH_MX21ADS=y
- CONFIG_MACH_MX27ADS=y
+diff --git a/sound/soc/intel/common/soc-acpi-intel-bxt-match.c b/sound/soc/intel/common/soc-acpi-intel-bxt-match.c
+index 229e39586868..4a5adae1d785 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-bxt-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-bxt-match.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * soc-apci-intel-bxt-match.c - tables and support for BXT ACPI enumeration.
++ * soc-acpi-intel-bxt-match.c - tables and support for BXT ACPI enumeration.
+  *
+  * Copyright (c) 2018, Intel Corporation.
+  *
+diff --git a/sound/soc/intel/common/soc-acpi-intel-byt-match.c b/sound/soc/intel/common/soc-acpi-intel-byt-match.c
+index b94b482ac34f..1cc801ba92eb 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-byt-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-byt-match.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * soc-apci-intel-byt-match.c - tables and support for BYT ACPI enumeration.
++ * soc-acpi-intel-byt-match.c - tables and support for BYT ACPI enumeration.
+  *
+  * Copyright (c) 2017, Intel Corporation.
+  */
+diff --git a/sound/soc/intel/common/soc-acpi-intel-cht-match.c b/sound/soc/intel/common/soc-acpi-intel-cht-match.c
+index b7f11f6be1cf..d0fb43c2b9f6 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-cht-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-cht-match.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * soc-apci-intel-cht-match.c - tables and support for CHT ACPI enumeration.
++ * soc-acpi-intel-cht-match.c - tables and support for CHT ACPI enumeration.
+  *
+  * Copyright (c) 2017, Intel Corporation.
+  */
+diff --git a/sound/soc/intel/common/soc-acpi-intel-cnl-match.c b/sound/soc/intel/common/soc-acpi-intel-cnl-match.c
+index c36c0aa4f683..771b0ef21051 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-cnl-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-cnl-match.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * soc-apci-intel-cnl-match.c - tables and support for CNL ACPI enumeration.
++ * soc-acpi-intel-cnl-match.c - tables and support for CNL ACPI enumeration.
+  *
+  * Copyright (c) 2018, Intel Corporation.
+  *
+diff --git a/sound/soc/intel/common/soc-acpi-intel-glk-match.c b/sound/soc/intel/common/soc-acpi-intel-glk-match.c
+index 616eb09e78a0..60dea358fa04 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-glk-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-glk-match.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * soc-apci-intel-glk-match.c - tables and support for GLK ACPI enumeration.
++ * soc-acpi-intel-glk-match.c - tables and support for GLK ACPI enumeration.
+  *
+  * Copyright (c) 2018, Intel Corporation.
+  *
+diff --git a/sound/soc/intel/common/soc-acpi-intel-hda-match.c b/sound/soc/intel/common/soc-acpi-intel-hda-match.c
+index 68ae43f7b4b2..cc972d2ac691 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-hda-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-hda-match.c
+@@ -2,7 +2,7 @@
+ // Copyright (c) 2018, Intel Corporation.
+ 
+ /*
+- * soc-apci-intel-hda-match.c - tables and support for HDA+ACPI enumeration.
++ * soc-acpi-intel-hda-match.c - tables and support for HDA+ACPI enumeration.
+  *
+  */
+ 
+diff --git a/sound/soc/intel/common/soc-acpi-intel-hsw-bdw-match.c b/sound/soc/intel/common/soc-acpi-intel-hsw-bdw-match.c
+index d27853e7a369..34eb0baaa951 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-hsw-bdw-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-hsw-bdw-match.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * soc-apci-intel-hsw-bdw-match.c - tables and support for ACPI enumeration.
++ * soc-acpi-intel-hsw-bdw-match.c - tables and support for ACPI enumeration.
+  *
+  * Copyright (c) 2017, Intel Corporation.
+  */
+diff --git a/sound/soc/intel/common/soc-acpi-intel-icl-match.c b/sound/soc/intel/common/soc-acpi-intel-icl-match.c
+index 0b430b9b3673..38977669b576 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-icl-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-icl-match.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * soc-apci-intel-icl-match.c - tables and support for ICL ACPI enumeration.
++ * soc-acpi-intel-icl-match.c - tables and support for ICL ACPI enumeration.
+  *
+  * Copyright (c) 2018, Intel Corporation.
+  *
+diff --git a/sound/soc/intel/common/soc-acpi-intel-kbl-match.c b/sound/soc/intel/common/soc-acpi-intel-kbl-match.c
+index 4b331058e807..e200baa11011 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-kbl-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-kbl-match.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * soc-apci-intel-kbl-match.c - tables and support for KBL ACPI enumeration.
++ * soc-acpi-intel-kbl-match.c - tables and support for KBL ACPI enumeration.
+  *
+  * Copyright (c) 2018, Intel Corporation.
+  *
+diff --git a/sound/soc/intel/common/soc-acpi-intel-skl-match.c b/sound/soc/intel/common/soc-acpi-intel-skl-match.c
+index 0c9c0edd35b3..42fa40a8d932 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-skl-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-skl-match.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * soc-apci-intel-skl-match.c - tables and support for SKL ACPI enumeration.
++ * soc-acpi-intel-skl-match.c - tables and support for SKL ACPI enumeration.
+  *
+  * Copyright (c) 2018, Intel Corporation.
+  *
 -- 
-2.21.0
+2.20.1
 
