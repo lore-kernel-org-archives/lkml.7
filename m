@@ -2,106 +2,113 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,
+	NUMERIC_HTTP_ADDR,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4772C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DB5C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB8321850
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E4B21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:19:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ElkF0jZ2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P2WDBWnF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbfGYGRe (ORCPT
+        id S1728647AbfGYGT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 02:17:34 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37989 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727455AbfGYGRd (ORCPT
+        Thu, 25 Jul 2019 02:19:57 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46229 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfGYGT4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 02:17:33 -0400
-Received: by mail-io1-f67.google.com with SMTP id j6so19677607ioa.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 23:17:33 -0700 (PDT)
+        Thu, 25 Jul 2019 02:19:56 -0400
+Received: by mail-wr1-f66.google.com with SMTP id z1so49330826wru.13;
+        Wed, 24 Jul 2019 23:19:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LRoqbDJHGfr38RXpT7qcza55DevlOlHgy5CoUePAUmA=;
-        b=ElkF0jZ2oXdbwt+dCFUKNeLkDixlYYHEpD+pFLmuOYWj6wWyJcscplUObqPiiwAmyW
-         OKcMh09HoG8tb6nJaEneRZMa7p/p5Aa/Xw2wOGBvu5ro3WetRLqQ5RNfjfwGwGGgfbMH
-         AtZf04obC8OEXzLfTJ1vFUeSdSJpVszRAbPF/6rDDPB0O44x5zPiNIm7uJUsewru5p0o
-         VU31YGLkjCU0mUhgaDfqke3vxe43OfWiFY81rhYW99fQKA1gkl+6P1rHoZGwGG2mUS9I
-         On/OQMC0fFPzzFgBI79nNP9Y9yiH8Fjs6jxIK10ffXre40U7yqMytaLqS/z5gaxBx5Eh
-         zMBQ==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=oairFP+0IPKj9z34QsgCMnG9avxEW40PIU4DCp8RWuw=;
+        b=P2WDBWnFpseUEZC2tFSn/41K/3wV8NfZRDP8IOxM4ICMYSeIwFduUAq9oz3lb9ovhk
+         h4SJhOBkiAyddhMSBxOGPxa0kp6WmrY170evuzYJ6F4yBXE2KG+Ze6ukW8XeXVpObS0j
+         reYS7dNb/OlXKlmcehv+3BhapgXsvRmGBzRCp+VYrVC5/Kqvi2JHUg2w5RmDpTgK6oir
+         eKtMw1griabhuXiNQFGkaeAgvxXDYfDZEyT+EXP0Ecaw11tZi34UUu42L81Sgq06YGtG
+         8eeBm4mgn7c15fBWPUcRWdfwi4r3ojWlosS5XyB5xcpwmneZpj+dHFeR1JIIHiMZnAQr
+         aBaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LRoqbDJHGfr38RXpT7qcza55DevlOlHgy5CoUePAUmA=;
-        b=asNjrohdpZfqlOFBn9WSzvmixXaDhczYLfENIA6lWZk4uJDP0nQ2KF+pUn0e7XyhAM
-         ccMXFg+0WHIaTgwBQpTU67UNWHB1Fr5B045Yj26LhW7KxbJxlSaf5pqmLKvbSd0dDoVw
-         hkmRdxvWTLkvp3QymKF6PVkrt2eroPeX3ttFYbZY30FAlSlmR0UQawrZ7nmlwydB12zF
-         mRdZ5Si3R4mBNyC8JOJTz1GbQvNBniS8TvKvC0u7aGifhzW4qTiCccJNJPVpWOLK8Poj
-         +/CS/pfS8tTw3zV3YSGCak5DeAoKgouPPrXq/iLl1VNqWqaPDWZbKi5JWae16W7b3crL
-         EBJg==
-X-Gm-Message-State: APjAAAXCujfjgVPkFBuZ9seFVc15urbvFtoLx01pxNmQinOangF2ZhRj
-        abenkN0T2WplpoCX+lU5T8wOQ9bBx07ZAidiL2P1kXy/PLMS4A==
-X-Google-Smtp-Source: APXvYqw3GQTATk7TCpJIxhOvn2PyGKQTOn1eklEiI+U7h4SZXAwdtGqiBf2d5eqHcZ865TD85nByVoKsejn8s5nuf38=
-X-Received: by 2002:a02:bb05:: with SMTP id y5mr86296517jan.93.1564035452598;
- Wed, 24 Jul 2019 23:17:32 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oairFP+0IPKj9z34QsgCMnG9avxEW40PIU4DCp8RWuw=;
+        b=Gzj+OWMIv6eQjkTBWQcqCi1s1X2xvvvDA/iQLR7MmsZYOJTM1QTc5b2z0D88KR+Tfc
+         RvEs39cW9uNkZT45nX8dCRPnTYJBFj8pf7jlHgep3CI02ELKuf+ujfMhUcrJLVYdF2RO
+         eang1BoIlVjDcGK0TZ+dROwGV2JOK2B+5qc5FCBOwU/CVew2AX3U/E6sUBaSQz5CDOmt
+         GvM2NddF5IvINqD6rL32+yDIETw+y5IKblDZRs6Uw1dUI7vc1erE64jGSRKoLyUa3Wzf
+         CBtlfCQBQlUW6UsJ+bqqFPbVhQ3v/R7f1fXRcTnHhH32ijkoO+rDtYTNKWd1e9HeG2Zb
+         e3Lw==
+X-Gm-Message-State: APjAAAXLYd/R9sihud6eZkaJmP2EgD0QBxSSjEzgwUw5wy+mz6eaL57Y
+        YWkvGj8J7eGTU87vAVY6Fl09jhZ7
+X-Google-Smtp-Source: APXvYqzUfCB9qKelAt7/YGzQ+wDGxjkeqzNGZaQxBMlUr15kSwxOCLHvY9XrWW8c1hbwMT4ANQlhbQ==
+X-Received: by 2002:a5d:6583:: with SMTP id q3mr98127700wru.184.1564035594038;
+        Wed, 24 Jul 2019 23:19:54 -0700 (PDT)
+Received: from [192.168.8.147] (240.169.185.81.rev.sfr.net. [81.185.169.240])
+        by smtp.gmail.com with ESMTPSA id r11sm60497627wre.14.2019.07.24.23.19.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 23:19:53 -0700 (PDT)
+Subject: Re: [PATCH 4.4 stable net] net: tcp: Fix use-after-free in
+ tcp_write_xmit
+To:     maowenan <maowenan@huawei.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
+        gregkh@linuxfoundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190724091715.137033-1-maowenan@huawei.com>
+ <2e09f4d1-8a47-27e9-60f9-63d3b19a98ec@gmail.com>
+ <13ffa2fe-d064-9786-bc52-e4281d26ed1d@huawei.com>
+ <44f0ba0d-fd19-d44b-9c5c-686e2f8ef988@gmail.com>
+ <9a8d6a5a-9a9d-9cb5-caa9-5c12ba04a43c@huawei.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <510109e3-101f-517c-22b4-921432f04fe5@gmail.com>
+Date:   Thu, 25 Jul 2019 08:19:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <CABXGCsN9mYmBD-4GaaeW_NrDu+FDXLzr_6x+XNxfmFV6QkYCDg@mail.gmail.com>
- <CAC=cRTMz5S636Wfqdn3UGbzwzJ+v_M46_juSfoouRLS1H62orQ@mail.gmail.com>
- <CABXGCsOo-4CJicvTQm4jF4iDSqM8ic+0+HEEqP+632KfCntU+w@mail.gmail.com>
- <878ssqbj56.fsf@yhuang-dev.intel.com> <CABXGCsOhimxC17j=jApoty-o1roRhKYoe+oiqDZ3c1s2r3QxFw@mail.gmail.com>
- <87zhl59w2t.fsf@yhuang-dev.intel.com>
-In-Reply-To: <87zhl59w2t.fsf@yhuang-dev.intel.com>
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Thu, 25 Jul 2019 11:17:21 +0500
-Message-ID: <CABXGCsNRpq=AF1aRgyquszy2MZzVfKZwrKXiSW-PnGiAR652cg@mail.gmail.com>
-Subject: Re: kernel BUG at mm/swap_state.c:170!
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     huang ying <huang.ying.caritas@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9a8d6a5a-9a9d-9cb5-caa9-5c12ba04a43c@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jul 2019 at 10:08, Huang, Ying <ying.huang@intel.com> wrote:
->
-> Thanks!  I have found another (easier way) to reproduce the panic.
-> Could you try the below patch on top of v5.2-rc2?  It can fix the panic
-> for me.
->
 
-Thanks! Amazing work! The patch fixes the issue completely. The system
-worked at a high load of 16 hours without failures.
 
-But still seems to me that page cache is being too actively crowded
-out with a lack of memory. Since, in addition to the top speed SSD on
-which the swap is located, there is also the slow HDD in the system
-that just starts to rustle continuously when swap being used. It would
-seem better to push some of the RAM onto a fast SSD into the swap
-partition than to leave the slow HDD without a cache.
+On 7/25/19 6:29 AM, maowenan wrote:
+> 
 
-https://imgur.com/a/e8TIkBa
+>>>>> Syzkaller reproducer():
+>>>>> r0 = socket$packet(0x11, 0x3, 0x300)
+>>>>> r1 = socket$inet_tcp(0x2, 0x1, 0x0)
+>>>>> bind$inet(r1, &(0x7f0000000300)={0x2, 0x4e21, @multicast1}, 0x10)
+>>>>> connect$inet(r1, &(0x7f0000000140)={0x2, 0x1000004e21, @loopback}, 0x10)
+>>>>> recvmmsg(r1, &(0x7f0000001e40)=[{{0x0, 0x0, &(0x7f0000000100)=[{&(0x7f00000005c0)=""/88, 0x58}], 0x1}}], 0x1, 0x40000000, 0x0)
+>>>>> sendto$inet(r1, &(0x7f0000000000)="e2f7ad5b661c761edf", 0x9, 0x8080, 0x0, 0x0)
+>>>>> r2 = fcntl$dupfd(r1, 0x0, r0)
+>>>>> connect$unix(r2, &(0x7f00000001c0)=@file={0x0, './file0\x00'}, 0x6e)
+>>>>>
+>>
+>> It does call tcp_disconnect(), by one of the connect() call.
+> 
+> yes, __inet_stream_connect will call tcp_disconnect when sa_family == AF_UNSPEC, in c repro if it
+> passes sa_family with AF_INET it won't call disconnect, and then sk_send_head won't be NULL when tcp_connect.
+> 
 
-But I am afraid it will be difficult to implement such an algorithm
-that analyzes the waiting time for the file I/O and waiting for paging
-(memory) and decides to leave parts in memory where the waiting time
-is more higher it would be more efficient for systems with several
-drives with access speeds can vary greatly. By waiting time I mean
-waiting time reading/writing to storage multiplied on the count of
-hits. Thus, we will not just keep in memory the most popular parts of
-the memory/disk, but also those parts of which read/write where was
-most costly.
 
---
-Best Regards,
-Mike Gavrilov.
+Look again at the Syzkaller reproducer()
+
+It definitely uses tcp_disconnect()
+
+Do not be fooled by connect$unix(), this is a connect() call really, with AF_UNSPEC
