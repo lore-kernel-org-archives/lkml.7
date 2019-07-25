@@ -2,113 +2,128 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A56C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E0BC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D51E229F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:55:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="onQS0xZQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4C4E3229F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:56:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564091766;
+	bh=WiwQMRx4WG4irtjjyTFzZAkKpzMmVmnL5fSYWsS5oLM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=e28VDtUvw0c6tW0ZEa2sXAWy4hVNTjFe2TeSwKPEke7Ftr+s34rLJM8ZKkTQAAoTo
+	 JIs4BH99E+Yn9l33ZqXo2VxpGDU3YGAE7hAHaKl3NGvuUqH1XmQsEFJpUrBhajuev6
+	 x8/uDk32Cxz+QOQN7HrZwWqTZJHoyxQtmVAxcF80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfGYVz4 (ORCPT
+        id S1726890AbfGYV4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 17:55:56 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:40742 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfGYVzz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 17:55:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fzoi6WTT/aaFWW+EuhftGIjPkQCTrBX+tQdM10oXzQs=; b=onQS0xZQENxHyCKqj50vHJgse
-        VJTs1WxUKipVOOxrF17e1WtWT2eO9I0521g1Q/wxP2XCIF0Lp2s8fsl0LIn8HMInkmfMIExs94tNr
-        IPCIDuPYtKWQcJFT0pSUPHlvA05IvoViM2QLHeEKDW4tDIBV+jn4eDZMgQrjL9iTR4DA4WyYfZDNf
-        A/5HlTli48G/GAXowpO5qTNxrRMg0DvqPjieKrU3dYgIrWeDpp6uU3loaHQGfNFta3rxscJdPmjhZ
-        KRwRlhmzN2JUYBLFZXVffXFUmYB61SLAwt/2ST9vZUFjtCrECRQHvpATZnm+MqeXjRvLgFhOuiPZA
-        uqd3FBcoA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:44660)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hqliC-0002Xi-5p; Thu, 25 Jul 2019 22:55:44 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hqli8-00062p-5X; Thu, 25 Jul 2019 22:55:40 +0100
-Date:   Thu, 25 Jul 2019 22:55:40 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     "George G. Davis" <george_davis@mentor.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: Fix null die() string for unhandled data and
- prefetch abort cases
-Message-ID: <20190725215540.GM1330@shell.armlinux.org.uk>
-References: <1563589976-19004-1-git-send-email-george_davis@mentor.com>
- <20190720123023.GA1330@shell.armlinux.org.uk>
- <20190725213754.GA29898@mam-gdavis-lt>
+        Thu, 25 Jul 2019 17:56:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726823AbfGYV4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 17:56:04 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B379A229F9;
+        Thu, 25 Jul 2019 21:56:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564091763;
+        bh=WiwQMRx4WG4irtjjyTFzZAkKpzMmVmnL5fSYWsS5oLM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=14MaIIpVNUHnvzAOUCW5ZR/5bwcop0S2xY27mFvq3/qsZm+vSzwUAs10bFXZwUnuL
+         po2rTYzJQh4Dnrpv0GkxY14BfE/MlFy1gGcsxroPPtkAhf0PYfKrOSBbVSYOMiGCI0
+         gJbTJqBhr3ZHr3rQ6XMPXka0CYWsAUF/tE6Ksszg=
+Received: by mail-qt1-f174.google.com with SMTP id r6so46410341qtt.0;
+        Thu, 25 Jul 2019 14:56:03 -0700 (PDT)
+X-Gm-Message-State: APjAAAXon4LyUkhxjBTTiEaRqkIjhvUqsQQTjYpL5UNnVAFLCz+Jxwkp
+        uCsY2yFKz/a260dCCt2QCqP2bQZTAHWRQ0Vcvg==
+X-Google-Smtp-Source: APXvYqzF61IC2gKg1BZyzb1/vH+EPSCY6cxEFKqEgw9YGCFhz0ulGpiVU0Gotc4hMXY95huXyZdROY3xW380kjkgT34=
+X-Received: by 2002:a0c:b786:: with SMTP id l6mr65421386qve.148.1564091762902;
+ Thu, 25 Jul 2019 14:56:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725213754.GA29898@mam-gdavis-lt>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190712064206.48249-1-ran.wang_1@nxp.com> <20190724204222.GA1234@bogus>
+ <DB8PR04MB6826B4479A5A67A66025E89CF1C10@DB8PR04MB6826.eurprd04.prod.outlook.com>
+In-Reply-To: <DB8PR04MB6826B4479A5A67A66025E89CF1C10@DB8PR04MB6826.eurprd04.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 25 Jul 2019 15:55:51 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKd=+0kXyUJkTZezMfcv-SQznzefi_0J0VjdsXcP8qZ5w@mail.gmail.com>
+Message-ID: <CAL_JsqKd=+0kXyUJkTZezMfcv-SQznzefi_0J0VjdsXcP8qZ5w@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] usb: dwc3: Add node to update cache type setting
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 05:37:54PM -0400, George G. Davis wrote:
-> Hello Russell,
-> 
-> Thanks for your prompt reply!
-> 
-> On Sat, Jul 20, 2019 at 01:30:23PM +0100, Russell King - ARM Linux admin wrote:
-> > On Fri, Jul 19, 2019 at 10:32:55PM -0400, George G. Davis wrote:
-> > > When an unhandled data or prefetch abort occurs, the die() string
-> > > is empty resulting in backtrace messages similar to the following:
-> > > 
-> > > 	Internal error: : 1 [#1] PREEMPT SMP ARM
-> > > 
-> > > Replace the null string with the name of the abort handler in order
-> > > to provide more meaningful hints as to the cause of the fault.
-> > 
-> > NAK.
-> > 
-> > We already print the cause of the abort earlier in the dump, and we've
-> > also added a "cut here" marker to help people include all the necessary
-> > information when reporting a problem.
-> 
-> For what it's worth, I often receive crash dumps which lack the pr_alert
-> messages and only include the pr_emerg messages which this change would at
-> least provide extra hints, since the "Internal error" as at EMERG level
-> wereas the initial messages are only at ALERT level. It's subtle but for
-> cases where the end user has set loglevel such that they only see EMERG
-> messages, the change is helpful, to me at least.
-> 
-> > It's unfortunate that we have the additional colon in the oops dump,
-> 
-> Agreed, it's rather unfortunate that the string is NULL in these cases.
-> 
-> > but repeating the information that we've printed on one of the previous
-> > two lines is really not necessary.
-> 
-> It depends on the loglevel the user has set. So perhaps it's not such a
-> bad thing to repeat the information?
+On Wed, Jul 24, 2019 at 8:29 PM Ran Wang <ran.wang_1@nxp.com> wrote:
+>
+> Hi Rob,
+>
+> On Thursday, July 25, 2019 04:42 Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, Jul 12, 2019 at 02:42:05PM +0800, Ran Wang wrote:
+> > > Some Layerscape paltforms (such as LS1088A, LS2088A, etc) encounter
+> > > USB detect failues when adding dma-coherent to DWC3 node. This is
+> > > because the HW default cache type configuration of those SoC are not
+> > > right, need to be updated in DTS.
+> > >
+> > > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> > > ---
+> > > Change in v2:
+> > >     - New file.
+> > >
+> > >  Documentation/devicetree/bindings/usb/dwc3.txt | 43
+> > > ++++++++++++++++++++++++++
+> > >  1 file changed, 43 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > index 8e5265e..7bc1cef 100644
+> > > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > @@ -110,6 +110,43 @@ Optional properties:
+> > >   - in addition all properties from usb-xhci.txt from the current directory are
+> > >     supported as well
+> > >
+> > > +* Cache type nodes (optional)
+> > > +
+> > > +The Cache type node is used to tell how to configure cache type on 4
+> > > +different transfer types: Data Read, Desc Read, Data Write and Desc
+> > > +write. For each treasfer type, controller has a 4-bit register field
+> > > +to enable different cache type. Quoted from DWC3 data book Table 6-5
+> > Cache Type Bit Assignments:
+> > > +----------------------------------------------------------------
+> > > +MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
+> > > +----------------------------------------------------------------
+> > > +AHB      |Cacheable     |Bufferable   |Privilegge |Data
+> > > +AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
+> > > +AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
+> > > +AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
+> > > +Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
+> > > +----------------------------------------------------------------
+> > > +Note: The AHB, AXI3, AXI4, and PCIe busses use different names for
+> > > +certain signals, which have the same meaning:
+> > > +  Bufferable = Posted
+> > > +  Cacheable = Modifiable = Snoop (negation of No Snoop)
+> >
+> > This should all be implied from the SoC specific compatible strings.
+>
+> Did you mean I could implement a soc driver which can be matched by compatible of 'fsl,ls1088a-dwc3' which will pass known bus type to DWC3 driver? If yes, how to pass?
 
-Or maybe we should arrange for consistent usage of the log levels?
+Yes. The DT match table can have data associated with that compatible
+string. Beyond that, I'm not really familiar with the DWC3 driver.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Rob
