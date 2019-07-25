@@ -2,109 +2,163 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 532CCC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405F1C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1324C22BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:04:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hESbqYDG"
+	by mail.kernel.org (Postfix) with ESMTP id 0BE9B22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:05:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390160AbfGYJEt (ORCPT
+        id S2390214AbfGYJFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 05:04:49 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:13704 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387586AbfGYJEt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 05:04:49 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d3970b00001>; Thu, 25 Jul 2019 02:04:48 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 25 Jul 2019 02:04:47 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 02:04:47 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 25 Jul
- 2019 09:04:45 +0000
-Subject: Re: [PATCH 5.2 000/413] 5.2.3-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thu, 25 Jul 2019 05:05:20 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2755 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388104AbfGYJFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 05:05:19 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5F708DB57924582CF9E2;
+        Thu, 25 Jul 2019 17:05:16 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 25 Jul 2019
+ 17:05:10 +0800
+Subject: Re: [RFC] performance regression with commit-id<adb03115f459> ("net:
+ get rid of an signed integer overflow in ip_idents_reserve()")
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Jiri Pirko <jiri@resnulli.us>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190724191735.096702571@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <4a1e00d4-d952-c463-963f-0a26ba3976a2@nvidia.com>
-Date:   Thu, 25 Jul 2019 10:04:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+References: <051e93d4-0206-7416-e639-376b8d2eb98b@hisilicon.com>
+ <3d77a08a-22e9-16e8-4091-c5ba4851ff13@gmail.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        "guoyang (C)" <guoyang2@huawei.com>,
+        "zhudacai@hisilicon.com" <zhudacai@hisilicon.com>
+From:   Zhangshaokun <zhangshaokun@hisilicon.com>
+Message-ID: <80cfa8a8-5143-df42-2524-6ce4cade1592@hisilicon.com>
+Date:   Thu, 25 Jul 2019 17:05:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
+In-Reply-To: <3d77a08a-22e9-16e8-4091-c5ba4851ff13@gmail.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564045488; bh=GsSXQkthBYr1WWDhwOrxDqvdpQP0ikHvXO5VK92uA7s=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=hESbqYDGgX4/g5OQClEZtEhDmKk2v7mzBVxt5Q4yztE3gNSFDlFNluLxWyOgEzyJx
-         LQvqUKU76DUi2phqPPne16KFF2GVbmLI6/Hn2br5WrP9W/rMIpx0jwM7BG+mJ8DqHA
-         KBAwovQRsTY7fgSTrO1HXBL/tD9o4FPZm6fdAgiDZFXdBOehNdoNH5ZII4sIyb5EU4
-         E/JDsx23bdz7T1VeSdKVONsv1Lkuv6LR0gk5A5Q8/3n4QMWueXurdGqvETE3JW0ykT
-         OcdLMNo9xeSCnX/AXcNw2r7ecgcXIdti8US/OHJnyllvMyAwZV/0DlnOeLF9nAqFBD
-         AxbT4fIvyjmdA==
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Eric,
 
-On 24/07/2019 20:14, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.3 release.
-> There are 413 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Thanks your quick reply.
+
+On 2019/7/24 16:56, Eric Dumazet wrote:
 > 
-> Responses should be made by Fri 26 Jul 2019 07:13:35 PM UTC.
-> Anything received after that time might be too late.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.3-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> and the diffstat can be found below.
+> On 7/24/19 10:38 AM, Zhangshaokun wrote:
+>> Hi,
+>>
+>> I've observed an significant performance regression with the following commit-id <adb03115f459>
+>> ("net: get rid of an signed integer overflow in ip_idents_reserve()").
 > 
-> thanks,
+> Yes this UBSAN false positive has been painful
 > 
-> greg k-h
+> 
+> 
+>>
+>> Here are my test scenes:
+>> ----Server----
+>> Cmd: iperf3 -s xxx.xxx.xxxx.xxx -p 10000 -i 0 -A 0
+>> Kenel: 4.19.34
+>> Server number: 32
+>> Port: 10000 – 10032
+>> CPU affinity: 0 – 32
+>> CPU architecture: aarch64
+>> NUMA node0 CPU(s): 0-23
+>> NUMA node1 CPU(s): 24-47
+>>
+>> ----Client----
+>> Cmd: iperf3 -u -c xxx.xxx.xxxx.xxx -p 10000 -l 16 -b 0 -t 0 -i 0 -A 8
+>> Kenel: 4.19.34
+>> Client number: 32
+>> Port: 10000 – 10032
+>> CPU affinity: 0 – 32
+>> CPU architecture: aarch64
+>> NUMA node0 CPU(s): 0-23
+>> NUMA node1 CPU(s): 24-47
+>>
+>> Firstly, With patch <adb03115f459> ("net: get rid of an signed integer overflow in ip_idents_reserve()") ,
+>> client’s cpu is 100%, and function ip_idents_reserve() cpu usage is very high, but the result is not good.
+>> 03:08:32 AM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+>> 03:08:33 AM      eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+>> 03:08:33 AM      eth1      0.00 3461296.00      0.00 196049.97      0.00      0.00      0.00      0.00
+>> 03:08:33 AM        lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+>>
+>> Secondly, revert that patch, use atomic_add_return() instead, the result is better, as below:
+>> 03:23:24 AM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+>> 03:23:25 AM        lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+>> 03:23:25 AM      eth1      0.00 12834590.00      0.00 726959.20      0.00      0.00      0.00      0.00
+>> 03:23:25 AM      eth0      7.00     11.00      0.40      2.95      0.00      0.00      0.00      0.00
+>>
+>> Thirdly, atomic is not used in ip_idents_reserve() completely ,while each cpu core allocates its own ID segment,
+>> Such as: cpu core0 allocate ID 0 – 1023, cpu core1 allocate 1024 – 2047, …,etc
+>> the result is the best:
+> 
+> Not sure what you mean.
+> 
+> Less entropy in IPv4 ID is not going to help when fragments _are_ needed.
+> 
+> Send 40,000 datagrams of 2000 bytes each, add delays, reorders, and boom, most of the packets will be lost.
+> 
+> This is not because your use case does not need proper IP ID that we can mess with them.
+> 
 
-All tests are passing for Tegra ...
+Got it, thanks your more explanation.
 
-Test results for stable-v5.2:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
+> If you need to send packets very fast,  maybe use AF_PACKET ?
+> 
 
-Linux version:	5.2.3-rc1-gdb628fe0e67f
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+Ok, I will try it later.
 
-Cheers
-Jon
+>> 03:27:06 AM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+>> 03:27:07 AM        lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+>> 03:27:07 AM      eth1      0.00 14275505.00      0.00 808573.53      0.00      0.00      0.00      0.00
+>> 03:27:07 AM      eth0      0.00      2.00      0.00      0.18      0.00      0.00      0.00      0.00
+>>
+>> Because atomic operation performance is bottleneck when cpu core number increase, Can we revert the patch or
+>> use ID segment for each cpu core instead?
+> 
+> 
+> This has been discussed in the past.
+> 
+> https://lore.kernel.org/lkml/b0160f4b-b996-b0ee-405a-3d5f1866272e@gmail.com/
+> 
+> We can revert now UBSAN has been fixed.
+> 
+> Or even use Peter patch : https://lore.kernel.org/lkml/20181101172739.GA3196@hirez.programming.kicks-ass.net/
+> 
 
--- 
-nvpublic
+I have tried this patch under the condition that I remove try_cmpxchg because there is no this API in arm64 :
+09:21:16 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+09:21:17 PM        lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+09:21:17 PM      eth1      0.00 10434613.00      0.00 591023.00      0.00      0.00      0.00      0.00
+09:21:17 PM      eth0      1.00      0.00      0.12      0.00      0.00      0.00      0.00      0.00
+
+The result is 10434613.00 pps and it is less than the atomic_add_return(12834590.00 pps).
+Any thoughts?
+
+Thanks,
+Shaokun
+
+> However, you will still hit badly a shared cache line, not matter what.
+> 
+> Some arches are known to have terrible LL/SC implementation :/
+> 
+> 
+> .
+> 
+
