@@ -2,338 +2,125 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD06C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C08CC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA79421850
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1060721850
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:17:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXuSpQ3R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbfGYGRK (ORCPT
+        id S1729088AbfGYGR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 02:17:10 -0400
-Received: from pta-smg1.csir.co.za ([146.64.81.180]:64555 "EHLO
-        pta-smg1.csir.co.za" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727455AbfGYGRK (ORCPT
+        Thu, 25 Jul 2019 02:17:29 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55989 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727455AbfGYGR3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 02:17:10 -0400
-X-Greylist: delayed 358 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Jul 2019 02:17:07 EDT
-Received: from pta-smg1.csir.co.za (localhost.localdomain [127.0.0.1])
-        by localhost (Email Security Appliance) with SMTP id 9F8222979437_D3947F9B;
-        Thu, 25 Jul 2019 06:11:05 +0000 (GMT)
-Received: from willempc.meraka.csir.co.za (unknown [146.64.217.138])
-        by pta-smg1.csir.co.za (Sophos Email Appliance) with ESMTP id 228D22978B73_D3947F9F;
-        Thu, 25 Jul 2019 06:11:05 +0000 (GMT)
-Received: from [127.0.0.1] (helo=localhost)
-        by willempc.meraka.csir.co.za with esmtp (Exim 4.90_1)
-        (envelope-from <wvdwalt@csir.co.za>)
-        id 1hqWy0-0002Y8-VE; Thu, 25 Jul 2019 08:11:05 +0200
-Date:   Thu, 25 Jul 2019 08:11:04 +0200 (SAST)
-From:   Willem van der Walt <wvdwalt@csir.co.za>
-X-X-Sender: wvdwalt@willempc.meraka.csir.co.za
-To:     "Speakup is a screen review system for Linux." 
-        <speakup@linux-speakup.org>
-cc:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Okash Khawaja <okash.khawaja@gmail.com>,
-        devel@driverdev.osuosl.org, Kirk Reiser <kirk@reisers.ca>,
-        Simon Dickson <simonhdickson@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Christopher Brannon <chris@the-brannons.com>
-Subject: Re: [HELP REQUESTED from the community] Was: Staging status of
- speakup
-In-Reply-To: <20190725035352.GA7717@gregn.net>
-Message-ID: <alpine.DEB.2.21.1.1907250724490.6623@willempc.meraka.csir.co.za>
-References: <20190315130035.6a8f16e9@narunkot> <20190316031831.GA2499@kroah.com> <20190706200857.22918345@narunkot> <20190707065710.GA5560@kroah.com> <20190712083819.GA8862@kroah.com> <20190712092319.wmke4i7zqzr26tly@function> <20190713004623.GA9159@gregn.net>
- <20190725035352.GA7717@gregn.net>
-User-Agent: Alpine 2.21.1 (DEB 211 2017-05-04)
+        Thu, 25 Jul 2019 02:17:29 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a15so43792820wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 23:17:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=SzxCqlcNQ6D/PXRgJlqf5N+S31sDfHsDb/3gkPnk7H4=;
+        b=KXuSpQ3R0mukq3k5Zz8pHExmtrW7gK04tthYlnxlUkHLk4yfUcs81h2z/M4jC31GWo
+         al1/qQNZex95vvQhPuJKyybhUIgR3LcJAMwqjoamutxBC/idk3pBVY68GE5a4teOsEuA
+         JmfLih4oiIHLhBPS0ks+7ScwgP3TmYNYF+fUseWNlX8JDHVi4ghmuzFAPMIumjA8dGNy
+         6WKnq7UI7Q6pPVkLOf2fAR59SqfoxeTzkFGDJsMLgNDNVrSzIGtOIUXmRAe6kK9D4mw7
+         duF3aJtIZksvsYboAarMbK/5gVltEHRNJvxy1/pwI5t7xEyX4uRoHskfqGpwvCe4/q6Z
+         0o2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=SzxCqlcNQ6D/PXRgJlqf5N+S31sDfHsDb/3gkPnk7H4=;
+        b=tLK3nD9NOYYbCRTXkHoj76AQDzw0rvT2Q7rcOoVp55vX57pGFBScsUpTco7Ela+hyz
+         5YemwQThKNJaYe8RVUrWUXZcrksnsazOyex4IKK18wqlvr50WFErrxiPmzXw6DZtFZY2
+         x+Rw+F7ZeDcbSPVpEutLnyjGQ8T7bl0/Cu2LQxyjloJG3OayXUik2FXfXKrWkPWOZ21T
+         eqHaHlUuHINcqWv4yi4DsaWKf6v/sIqnKNWDxPmgi4NrExYlOcxDsC2Z2iSdjhalDIi7
+         6M7DfVtLevXfBdswUayKHX/01drZl7cE5/mD2IAnP1SRaT/FNmfqhl5j9CR8YRN/JbKI
+         6p7A==
+X-Gm-Message-State: APjAAAXwy0mqFfNlnEBEY8OdjZmFIl396JnbmrVt9ghfRItToFLHS0Mi
+        EgNoRpAxF4S+9FzSYnX3CtST6Ka9tY6qFlxGHD8=
+X-Google-Smtp-Source: APXvYqzC+to7nCQiCgdF7eSEcsqrkzDBHmrXrbVZE+VAlAc51SAWRf4rkSijNXnYzpIVvRiSmG+eV+4lcr3sg2s7e7E=
+X-Received: by 2002:a05:600c:10ce:: with SMTP id l14mr75641329wmd.118.1564035447400;
+ Wed, 24 Jul 2019 23:17:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
-X-SASI-RCODE: 200
+References: <alpine.DEB.2.21.1907182223560.1785@nanos.tec.linutronix.de>
+ <CA+icZUW5jNJY3L5EcxrtOttwpbdAWQ7=U_bZaLHcTogOdNuTcQ@mail.gmail.com>
+ <CA+icZUUtNibYGbHEt+cqsu6cuKYF7=MobvPQ9mkXU1pJZhFw9w@mail.gmail.com> <CA+icZUVbYL9RkcVqU=Z0HJgn0U=hYStr30rQDaZ_rcBr27Cv6Q@mail.gmail.com>
+In-Reply-To: <CA+icZUVbYL9RkcVqU=Z0HJgn0U=hYStr30rQDaZ_rcBr27Cv6Q@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Thu, 25 Jul 2019 08:17:16 +0200
+Message-ID: <CA+icZUVC+4-QP5Wj2DUxAZ9wP_Ox311k-EUKkAsSL+8S_j2j1A@mail.gmail.com>
+Subject: Re: x86 - clang / objtool status
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-I have added a few things inline in Greg's message, mainly regarding the 
-bleeps and cursor_time.
-FWIW, Willem
+On Mon, Jul 22, 2019 at 5:40 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> On Fri, Jul 19, 2019 at 3:48 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> >
+> > > First of all I find out that it is possible to download and apply the
+> > > series (here: v2) from patchwork (see [1]).
+> > > I highly appreciate to have this in Josh's Git [2].
+> > >
+> >
+> > There it is.
+> >
+> > - sed@ -
+> >
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/log/?h=objtool-many-fixes-v2
+>
+> next-20190722 has them.
+>
+> Parallely, I opened an CBL issue #617
+> "drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:
+> .altinstr_replacement+0x86: redundant UACCESS disable"
+>
+> I hope Josh can look at this.
+>
+> - Sedat -
+>
+> [1] https://github.com/ClangBuiltLinux/linux/issues/617
 
-On Wed, 24 Jul 2019, Gregory Nowak wrote:
+The objtool warning is fixed by [1].
 
-> [The e-mail server of the sender could not be verified (SPF Record)]
->
-> On Fri, Jul 12, 2019 at 05:46:23PM -0700, Gregory Nowak wrote:
->> On Fri, Jul 12, 2019 at 11:23:19AM +0200, Samuel Thibault wrote:
->>> Hello,
->>>
->>> To readers of the linux-speakup: could you help on this so we can get
->>> Speakup in mainline?  Neither Okash or I completely know what user
->>> consequences the files in /sys/accessibility/speakup/ have, so could
->>> people give brief explanations for each file (something like 3-6 lines
->>> of explanation)?
->>
->> I have a recollection of documenting most of this on the speakup list
->> in response to a similar query a number of years ago. Unfortunately,
->> the speakup mailing list archives aren't easily searchable, and I
->> don't have a local copy of that mail.
->>
->> Kirk, doing grep with a few of the file names in
->> /sys/accessibility/speakup against the list's mbox file archive should
->> find that message if it's in fact there. If you can please find it,
->> and post the date when it was sent, we can provide a URL to that
->> thread as a starting point. If my recollection is wrong, and such a
->> message isn't in the archives, I'll write up what I know about.
->
-> I've located the message I was thinking of in the archives, but that
-> describes some speakup key commands, not
-> /sys/accessibility/speakup. So, here's what I know, and hopefully
-> someone else can fill in the rest.
->
-> attrib_bleep
-> Beeps the PC speaker when there is an attribute change such as
-> foreground or background color when using speakup review commands. One
-> = on, zero = off. I'm not currently at a machine with a working PC
-> speaker, so can't test this right now.
->
-> bell_pos
-> As far as I know, this works much like a typewriter bell. If for
-> example 72 is echoed to bell_pos, it will beep the PC speaker when
-> typing on a line past character 72. Again, no PC speaker at the moment
-> here, so can't actually test this.
-Yes, it works as you  say, a verry short beep happens at the echoed 
-position.
->
-> bleeps
-> Not 100% sure, but I believe this controls whether one hears beeps
-> through the PC speaker when using speakup's review commands. If no one
-> jumps in on this, I'll experiment when at a machine with a working PC
-> speaker, and will reply back with details.
->
-Yes, when 0 is echoed to /sys/accessibility/speakup/bleeps, review beeps 
-stop. the default seem to be 3, so I suppose it controls more than just on 
-or off. When set to zero, the bell still sounds when, e.g. in a terminal 
-at a bash prompt, one press backspace.
-  > bleep_time
-> Again, not 100% sure, but I believe this controls the duration of the
-> PC speaker beeps speakup produces. I'm not sure of the units this is
-> in either, possibly jiffys. I'll come back with more details on this
-> one if no one else does.
-Yes, it seems to control the time as you say, verry small units though.
-It was 30 and I could set it to 180, but  not 360. At 180, the bleeps are 
-clearly a little longer, but not much.
+Now, I see only 3 objtool warnings (all "falls through to next function"):
 
->
-> cursor_time
-> Don't know.
-As far as I know, one can set cursor_time to a higher value when working 
-e.g. over a slow connection.
-When a connection is very slow, with the default setting, when moving with 
-the arrows, or backspacing etc. speakup says the incorrect characters.
-I am not 100% sure though, but seem to recall having used such a setting 
-in the past when working over dialup.
+drivers/gpu/drm/radeon/atom.o: warning: objtool: atom_op_move() falls
+through to next function atom_op_and()
+drivers/gpu/drm/radeon/evergreen_cs.o: warning: objtool:
+evergreen_cs_parse() falls through to next function
+evergreen_dma_cs_parse()
+drivers/infiniband/hw/hfi1/platform.o: warning: objtool: tune_serdes()
+falls through to next function apply_tx_lanes()
 
->
-> delimiters
-> Don't know. I've tried echoing various characters to this and looking
-> for differences when reviewing the screen, but no luck.
->
-> ex_num
-> Don't know.
->
-> key_echo
-> Controls if speakup speaks keys when they are typed. One = on, zero =
-> off or don't echo keys.
->
-> keymap
-> I believe this is the currently active kernel keymap. I'm not sure of
-> the format, probably what dumpkeys(1) and showkey(1) use. Echoing
-> different values here should allow for remapping speakup's review
-> commands besides remapping the keyboard as a whole.
->
-> no_interrupt
-> Controls if typing interrupts output from speakup. With no_interrupt
-> set to zero, typing on the keyboard will interrupt speakup if for
-> example the say screen command is used before the entire screen is
-> read. With no_interrupt set to one, if the say screen command is used,
-> and one then types on the keyboard, speakup will continue to say the
-> whole screen regardless until it finishes.
->
-> punc_all
-> This is a list of all the punctuation speakup should speak when
-> punc_level is set to four.
->
-> punc_level
-> Controls the level of punctuation spoken as the screen is displayed,
-> not reviewed. Levels range from zero no punctuation, to four, all
-> punctuation. As far as I can tell, one corresponds to punc_some, two
-> corresponds to punc_most, and three as well as four seem to both
-> correspond to punc_all, though I do stand to be corrected. I am using
-> the soft synthesizer driver, so it is possible that some hardware
-> synthesizers have different levels each corresponding to three and four
-> for punc_level. Also note that if punc_level is set to zero, and
-> key_echo is set to one, typed punctuation is still spoken as it is
-> typed.
->
-> punc_most
-> This is a list of all the punctuation speakup should speak when
-> punc_level is set to two.
->
-> punc_some
-> This is a list of all the punctuation speakup should speak when
-> punc_level is set to one.
->
-> reading_punc
-> Almost the same as punc_level, the differences being that reading_punc controls
-> the level of punctuation when reviewing the screen with speakup's
-> screen review commands. The other difference is that reading_punc set
-> to three speaks punc_all, and reading_punc set to four speaks all
-> punctuation, including spaces.
->
-> repeats
-> a list of characters speakup repeats. Normally, when there are
-> more than three characters in a row, speakup just reads three of those
-> characters. For example, "......" would be read as dot, dot, dot. If a
-> . is added to the list of characters in repeats, "......" would be
-> read as dot, dot, dot, times six.
->
-> say_control
-> If set to one, speakup speaks shift, alt and control when those keys are
-> pressed. Perhaps more keys are spoken, but those three are the ones I
-> found. If say_control is set to zero, shift, ctrl, and alt are not
-> spoken when they are pressed.
->
-> say_word_ctl
-> Don't know.
->
-> silent
-> Don't know.
->
-> spell_delay
-> As far as I can tell, this controls how fast a word is spelled when
-> speakup's say word review command is pressed twice quickly to speak
-> the current word being reviewed. Zero just speaks the letters one
-> after another, while values one through four seem to introduce more of
-> a pause between the spelling of each letter by speakup.
->
-> synth
-> Gets or sets the synthesizer driver currently in use. Reading synth
-> returns the synthesizer driver currently in use. Writing synth
-> switches to the given synthesizer driver, provided it is either built
-> into the kernel, or already loaded as a module.
->
-> synth_direct
-> Sends whatever is written to synth_direct
-> directly to the speech synthesizer in use, bypassing speakup. This
-> could be used to make the synthesizer speak a string, or to send
-> control sequences to the synthesizer to change how the synthesizer
-> behaves.
->
-> version
-> Reading version returns the version of speakup, and the version of the
-> synthesizer driver currently in use.
->
-> Synthesizer Driver Parameters
-> In /sys/accessibility/speakup is a directory corresponding to the
-> synthesizer driver currently in use (E.G) soft for the soft
-> driver. This directory contains files which control the speech
-> synthesizer itself, as opposed to controlling the speakup screen
-> reader. As far as I know, the parameters in this directory have the
-> same names and functions across all supported synthesizers. Also as
-> far as I know, the range of values for freq, pitch, rate, and vol is
-> the same for all supported synthesizers,
-> with the given range being internally mapped by the driver to more or
-> less fit the range of values supported for a given parameter by the
-> individual synthesizer. I will below describe the values and
-> parameters for the soft synthesizer, which I believe is the
-> synthesizer currently most commonly in use.
->
-> caps_start
-> I believe this is the string that is sent to the synthesizer to cause
-> it to start speaking uppercase letters. For the soft synthesizer and
-> most others, this causes the pitch of the voice to rise above the
-> currently set pitch.
->
-> caps_stop
-> I believe this is the string sent to the synthesizer to cause it to
-> stop speaking uppercase letters. In the case of the soft synthesizer
-> and most others, this returns the pitch of the voice down to the
-> currently set pitch.
->
-> delay_time
-> Don't know.
->
-> direct
-> Controls if punctuation is spoken by speakup, or by the
-> synthesizer. For example, speakup speaks ">" as "greater", while the
-> espeak synthesizer used by the soft driver speaks "greater than". Zero
-> lets speakup speak the punctuation. One lets the synthesizer itself
-> speak punctuation.
->
-> freq
-> Gets or sets the frequency of the speech synthesizer. Range is 0-9.
->
-> full_time
-> Don't know.
->
-> jiffy_delta
-> As far as I know, this controls how many jiffys the kernel gives to
-> the synthesizer. I seem to recall Kirk saying that setting this too
-> high can make a system unstable, or even crash it.
->
-> pitch
-> Gets or sets the pitch of the synthesizer. The range is 0-9.
->
-> punct
-> Gets or sets the amount of punctuation spoken by the synthesizer. The
-> range for the soft driver seems to be 0-2. I'm not exactly sure how
-> this relates to speakup's punc_level, or reading_punc
->
-> rate
-> Gets or sets the rate of the synthesizer. Range is from zero slowest,
-> to nine fastest.
->
-> tone
-> Gets or sets the tone of the speech synthesizer. The range for the
-> soft driver seems to be 0-2. This seems to make no difference if using
-> espeak and the espeakup connector. I'm not sure even if espeakup
-> supports different tonalities.
->
-> trigger_time
-> Don't know.
->
-> voice
-> Gets or sets the voice used by the synthesizer if the synthesizer can
-> speak in more than one voice. The range for the soft driver is
-> 0-7. Note that while espeak supports multiple voices, this parameter
-> will not set the voice when the espeakup connector is used between
-> speakup and espeak.
->
-> vol
-> Gets or sets the volume of the speech synthesizer. Range is 0-9, with
-> zero being the softest, and nine being the loudest.
->
-> Additions, clarifications, and corrections are welcome and
-> appreciated.
->
-> Greg
->
->
-> -- 
-> web site: http://www.gregn.net
-> gpg public key: http://www.gregn.net/pubkey.asc
-> skype: gregn1
-> (authorization required, add me to your contacts list first)
-> If we haven't been in touch before, e-mail me before adding me to your contacts.
->
-> --
-> Free domains: http://www.eu.org/ or mail dns-manager@EU.org
-> _______________________________________________
-> Speakup mailing list
-> Speakup@linux-speakup.org
-> http://linux-speakup.org/cgi-bin/mailman/listinfo/speakup
->
+The other i915 call-trace I have seen was independent of $COMPILER and
+the objtool warning (details see [2] and [3]).
+
+I was able to boot into my system.
+
+- Sedat -
+
+[1] https://lore.kernel.org/patchwork/series/403494/mbox/
+[2] https://lore.kernel.org/lkml/20190721142930.GA480@tigerII.localdomain/
+[3] https://github.com/ClangBuiltLinux/linux/issues/617#issuecomment-514906560
