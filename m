@@ -2,99 +2,102 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 705EAC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7F8C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3202E21901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C827F21901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388984AbfGYIDb (ORCPT
+        id S2389006AbfGYIEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 04:03:31 -0400
-Received: from mga03.intel.com ([134.134.136.65]:12585 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387824AbfGYIDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 04:03:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 01:03:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,306,1559545200"; 
-   d="scan'208";a="170171327"
-Received: from rbhardw1-mobl.gar.corp.intel.com (HELO [10.66.75.233]) ([10.66.75.233])
-  by fmsmga008.fm.intel.com with ESMTP; 25 Jul 2019 01:03:28 -0700
-Subject: Re: [PATCH 2/2] powercap/rapl: Add Ice Lake NNPI support to RAPL
- driver
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     linux-kernel@vger.kernel.org, len.brown@intel.com,
-        rafael.j.wysocki@intel.com, linux-pm@vger.kernel.org
-References: <20190614080523.13464-1-rajneesh.bhardwaj@linux.intel.com>
- <2359736.lHFMKXy7DL@kreacher>
-From:   "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Message-ID: <23df19ca-1ec5-ce9b-9862-29d33008e581@linux.intel.com>
-Date:   Thu, 25 Jul 2019 13:33:28 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 04:04:44 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:57013 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387586AbfGYIEo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 04:04:44 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id qYjuhCFwXLqASqYjyhSAIU; Thu, 25 Jul 2019 10:04:42 +0200
+Subject: Re: [PATCH 2/2] Revert "media: vimc: propagate pixel format in the
+ stream"
+To:     Helen Koike <helen.koike@collabora.com>,
+        linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
+        skhan@linuxfoundation.org
+References: <e144e6f5aae4e3d932e464fbf741d7cbaaf55980.1562701396.git.helen.koike@collabora.com>
+ <8450c879beff8c86dde7333f1f2d688eef380de4.1562701396.git.helen.koike@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <47703594-f336-3006-5ae0-7b459e48110f@xs4all.nl>
+Date:   Thu, 25 Jul 2019 10:04:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <2359736.lHFMKXy7DL@kreacher>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <8450c879beff8c86dde7333f1f2d688eef380de4.1562701396.git.helen.koike@collabora.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfF3+WuifdXyrzyLYdY3HGxRMUEXbkZCsnBqP3qn+DVu8FhP+gz5yphjZIyz/RMALPeO6z0qj7bpwMp/p1kjQSnaHYh7vpWZmrNJRSa/HoBBt0iSwUoAJ
+ LItKK9F+uUfy3Vn7JVwc5aesNrZBGMacwTQfNgL6b5GzBHiLbg9KL/ecc1cZ28WUr9++ZQQyMTtOaTUTNLksnCZz90QtnfKAgM/F+wlibGQfU+rMqNk+3AFU
+ lPTp2g7oSbqUqYvPe3ycnl67YCsRXOmBgAn43ZVRxdprGY05uMOR11dbkRg31ysS6SSRlB27d3/MSzJi7TmO2bK9wELo8+87IEihAR4MtqM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael
+Hi Helen,
 
-On 28-Jun-19 3:32 AM, Rafael J. Wysocki wrote:
-> On Friday, June 14, 2019 10:05:23 AM CEST Rajneesh Bhardwaj wrote:
->> Enables support for ICL-NNPI, which is a neural network processor for deep
->> learning inference. From RAPL point of view it is same as Ice Lake Mobile
->> processor.
->>
->> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
->> Cc: linux-pm@vger.kernel.org
->> Link: https://lkml.org/lkml/2019/6/5/1034
->> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
->> ---
->>   drivers/powercap/intel_rapl.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/powercap/intel_rapl.c b/drivers/powercap/intel_rapl.c
->> index 4347f15165f8..431c8c8bdf07 100644
->> --- a/drivers/powercap/intel_rapl.c
->> +++ b/drivers/powercap/intel_rapl.c
->> @@ -1157,6 +1157,7 @@ static const struct x86_cpu_id rapl_ids[] __initconst = {
->>   	INTEL_CPU_FAM6(KABYLAKE_DESKTOP,	rapl_defaults_core),
->>   	INTEL_CPU_FAM6(CANNONLAKE_MOBILE,	rapl_defaults_core),
->>   	INTEL_CPU_FAM6(ICELAKE_MOBILE,		rapl_defaults_core),
->> +	INTEL_CPU_FAM6(ICELAKE_NNPI,		rapl_defaults_core),
->>   
->>   	INTEL_CPU_FAM6(ATOM_SILVERMONT,		rapl_defaults_byt),
->>   	INTEL_CPU_FAM6(ATOM_AIRMONT,		rapl_defaults_cht),
->>
-> It is in my queue, but I get build errors when I try to apply it.
->
-> I guess the definition of ICELAKE_NNPI is not there in the Linus' tree yet.
+On 7/9/19 9:43 PM, Helen Koike wrote:
+> This reverts commit b6c61a6c37317efd7327199bfe24770af3d7e799.
+> 
+> The requested pixelformat is being propagated from the capture to the
+> tpg in the sensor.
+> 
+> This was a bad design choice, as we start having the following issues:
+> 
+> * We set a pixelformat in the capture;
+> * We set matching media bus formats in the subdevices pads;
+> * Link validate looks fine (sizes matches, media bus formats matches);
+> * Issue: if some of the subdevice doesn't know how to generate the
+> requested pixelformat in the capture, then stream_on fails. This is bad
+> because capture says it supports that pixelformat, everything looks
+> fine, but it is not, and there is no way to find it out through the
+> links.
+> 
+> This patch was implemented so we could request any pixelformat from the
+> pipeline regardeless of the media bus format configured between pads.
+> Not all pixelformat can be mapped into a media bus code (e.g.
+> multiplanar formats), so with this patch we could request those
+> pixelformats from the tpg.
+> 
+> Solution: map pixelformats to media bus codes as before, and implement
+> conversions to other pixelformats in the capture to support multiplanar.
+> 
+> So first step to this solution is to revert this patch.
+> 
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> ---
+>  drivers/media/platform/vimc/vimc-capture.c  |  76 ++---
+>  drivers/media/platform/vimc/vimc-common.c   | 309 ++++++++++++--------
+>  drivers/media/platform/vimc/vimc-common.h   |  58 ++--
+>  drivers/media/platform/vimc/vimc-debayer.c  |  83 ++----
+>  drivers/media/platform/vimc/vimc-scaler.c   |  63 ++--
+>  drivers/media/platform/vimc/vimc-sensor.c   |  51 +++-
+>  drivers/media/platform/vimc/vimc-streamer.c |   2 -
+>  drivers/media/platform/vimc/vimc-streamer.h |   6 -
+>  8 files changed, 342 insertions(+), 306 deletions(-)
+> 
 
-The dependent patch is now available in mainline, so can you please 
-apply this one?
+Unfortunately this patch no longer applies.
 
-https://github.com/torvalds/linux/blob/bed38c3e2dca01b358a62b5e73b46e875742fd75/arch/x86/include/asm/intel-family.h#L59 
+Can you respin this series?
 
+Also, should this be backported to 5.3 as well?
 
-Thanks
+Regards,
 
-Rajneesh
-
-
->
->
->
+	Hans
