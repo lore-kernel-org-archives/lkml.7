@@ -2,182 +2,172 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD781C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A6FC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858D62190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 349532190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:28:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l61Pt9f2"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="QUkbnBB/";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="Sde3X7ZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbfGYN10 (ORCPT
+        id S1727954AbfGYN2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:27:26 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36224 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfGYN10 (ORCPT
+        Thu, 25 Jul 2019 09:28:22 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:50284 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728359AbfGYN2W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:27:26 -0400
-Received: by mail-lf1-f68.google.com with SMTP id q26so34570026lfc.3;
-        Thu, 25 Jul 2019 06:27:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=WXiBayTqTdkKTq09rjY6tipJqJtsUSTf9qvOhgtptXE=;
-        b=l61Pt9f2xC+aDtypRt0x2wON8TQwif0kEQaB9wG4yMNYHVMH1B56FKjgcRsrZ0faFe
-         3GPlEaprv7OncIBA5s1Q6ImyRuZk3GXPShB9sE1juXK0z8yUwR8pPeC5l1WP9dWUPafi
-         Ed/34bGH+qMk1dUj3ViF+UCHnhe6jLJ/mA5UOdxt4r+fMOWRXX6s8EhNBRJBisWWy3j0
-         +pbOkjPCzOqgohgd3/NWnJ7UluS8cZQ0/Vkrz6RUUz4YOgdztrfBgkGGz91I6PW/0o1d
-         DIuFSkZ2HBg61DLk/SG1shV9emIytsU40xnOcaY8vMyvbw+tB6Cy97HfuGXZRpvtsz5T
-         BZLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=WXiBayTqTdkKTq09rjY6tipJqJtsUSTf9qvOhgtptXE=;
-        b=sXMbfjpwSr+TrNmHbAdSa6NqU5I1QHwYP9cA7FojopfxGpogvlPlD06yRgGWwb7x0x
-         i0+vE87qgXvUKlsXvlkE58AhH/TKjnD+fbau/3YVSdxrM0nUnrBDp0likQXP7HcxkMhM
-         qLsf2J3MK5BbG1NW0c2HmMgBrQN2SSoaWgZxcYiNEtoLKm7mEqeNUACZHDHmNKiS43an
-         O4tLUa+uak1hKFTzlqBePYjjXZXJt6LjRrw6AS2DogxNteVwDzcwWaX5FEhYt/QY6/6d
-         lxJXkIOhP4gTogtYu8/zk9eWUqAuMTEqhb/s3uH2ry/xzL0QcQo/WnpXYF5h8hp9i3E7
-         JyVw==
-X-Gm-Message-State: APjAAAWKmaRl6FgK7Vp/9xEcZw1LQoa6+2NXsIFKk0lxhyXeJIYXp2ib
-        PX0dDW3qnJeG93NAcLmxCA8htcVmO4yRA4CK6r0u+5tFWW4=
-X-Google-Smtp-Source: APXvYqw4Ed1+h8H7qf66p3bgbVK3gmUySWTmYzoU/O47r6Wa7RjMhhccNUNPE6lXOnU4XDyXX1GQMhICP//rsdR1lZc=
-X-Received: by 2002:ac2:47e8:: with SMTP id b8mr25974255lfp.84.1564059772302;
- Thu, 25 Jul 2019 06:02:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <CGME20190723122024eucas1p1ff060d072132bfbc8a8a1d10fa1f90f8@eucas1p1.samsung.com>
- <20190723122016.30279-1-a.swigon@partner.samsung.com> <20190723122016.30279-4-a.swigon@partner.samsung.com>
- <CAGTfZH09n9UOLMwNrCvcdeRCHYFO4TiB-YG2rMVuxA4bxuLCVw@mail.gmail.com>
-In-Reply-To: <CAGTfZH09n9UOLMwNrCvcdeRCHYFO4TiB-YG2rMVuxA4bxuLCVw@mail.gmail.com>
-Reply-To: cwchoi00@gmail.com
-From:   Chanwoo Choi <cwchoi00@gmail.com>
-Date:   Thu, 25 Jul 2019 22:02:14 +0900
-Message-ID: <CAGTfZH2pPh5VVQuHV1d_8Wj1N3TPAh6w4KUkQtssBhEdPgQiuA@mail.gmail.com>
-Subject: Re: [RFC PATCH 03/11] devfreq: exynos-bus: Change goto-based logic to
- if-else logic
-To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        georgi.djakov@linaro.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 25 Jul 2019 09:28:22 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6PDNptF021304;
+        Thu, 25 Jul 2019 06:28:01 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=EyyBGUacYXnQjizWq9fNekcgqM0FLXqrya+m4HVdjDw=;
+ b=QUkbnBB/XatwUSe/L7XNpGqcErDJOYk1iWvP4Uy1Sf1iSuq2AUohDoIKSC1hbhfBgj56
+ QLAaLkWxsPbU+oOJ4hSmu8+Bax/LeY4eC79JXLbbPGzXuAOKfaZkdZr6g5IQGm8Ibj56
+ SE9KAQmPpantxJX/s+AO8OApArAoPDWMO5gALhWq4UsOJip7tnXQNe5qoFYPErcbN+Qg
+ xyYiPdEF3ruX/BYY6yTjMZA/i/j+EIaxzsRd8zi062VIuKLsNapj59jiGljALt+PnGNS
+ C7V/Qn6S4sxCt7kCqDs4NfsnC9MthpzsvqVkMAuLZTOYefRI2zND7iJSQ+Agnxt0tEca aw== 
+Authentication-Results: cadence.com;
+        spf=pass smtp.mailfrom=pthombar@cadence.com
+Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2054.outbound.protection.outlook.com [104.47.46.54])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2tx61f9f8q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jul 2019 06:28:00 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WBECF5C6BJkExE/8XTg51752LMDtRcMGYNV2yYBIrpWPsyA2Y6WxPW1mfQnKLKndItU7Irt5DaDCXa26D0bPzpFAUFC9hKVlZCwK+T4iL6vrZQRS9UAFSKS1p3cKfIkAw32QmNiCyiSgciZ86KzAgaJHJ2jxB5xLKfarsDPFHu2SR1yfTm6c8NUD7AWiY5Tn1/gyG4R/n/32Xv/QM5//NwZj1YDuwpcadV+/yhcJNcwJWaX3S/ejqX1rsRLKRp9DUQ9MinZYf9Z+/B6yWULZmz9Cl8RuMVHkiQaRDouulGwn1gGTebeSI1BEfLZTBXMck4IOy7M1Vfyu+jPhu74tsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EyyBGUacYXnQjizWq9fNekcgqM0FLXqrya+m4HVdjDw=;
+ b=TUbNzkplg7Vf0AjFibs5yDa/koBBc4sNB/wI0jT4MCjZNPl67PEYLQYkVwiuVjp/lt5eeN/f1QqnYB8iInIPrg2Sp5fO2LfSeXsJE1JqBBVkdhMCSBRt1L9ZZZjJNhWEkUvD80uLF4ELbzeouI1po9xVLEe+/L8iq696N6wVm9d7birBEtl7jj10YTZZUE0L5Ydf7uA4LZXxpnZpnQI75ZnL0WZ9U9ZcplxEdr6EhKi9Z/IGuGkUpfgG1DIPc3hjWVUjDA7ISBBj2hmAPAe233TjKNM6fHkFXIWoqfKfwvXCf3g311sNa28H1m757X4BPML5KvGPGRWegdZieyei9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=cadence.com;dmarc=pass action=none
+ header.from=cadence.com;dkim=pass header.d=cadence.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EyyBGUacYXnQjizWq9fNekcgqM0FLXqrya+m4HVdjDw=;
+ b=Sde3X7ZLtaKnx5CleHxZvoZKclEvtUqW5Fyy/58Ta2anitnnbcBXH8W4O/5N67sx6YmZOVZBYeXNsLTtDvKtG+/XQ5MMsXF4b/QRPnLdgIVwO70ghgV6/5eMq1adOoYf1XrGI9d1c46uRvamcpoX0hG78/lwIKlaUsEm0/g/24U=
+Received: from CO2PR07MB2469.namprd07.prod.outlook.com (10.166.94.21) by
+ CO2PR07MB2565.namprd07.prod.outlook.com (10.166.201.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.10; Thu, 25 Jul 2019 13:27:58 +0000
+Received: from CO2PR07MB2469.namprd07.prod.outlook.com
+ ([fe80::8d1b:292f:5f51:f6d]) by CO2PR07MB2469.namprd07.prod.outlook.com
+ ([fe80::8d1b:292f:5f51:f6d%6]) with mapi id 15.20.2115.005; Thu, 25 Jul 2019
+ 13:27:58 +0000
+From:   Parshuram Raju Thombare <pthombar@cadence.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rafal Ciepiela <rafalc@cadence.com>,
+        Piotr Sroka <piotrs@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>,
+        Arthur Marris <arthurm@cadence.com>,
+        Steven Ho <stevenh@cadence.com>,
+        Milind Parab <mparab@cadence.com>
+Subject: RE: [PATCH v6 0/5] net: macb: cover letter
+Thread-Topic: [PATCH v6 0/5] net: macb: cover letter
+Thread-Index: AQHVNyz5FQb5Z+JcbkKLGishkgcgwabQiEQAgArffIA=
+Date:   Thu, 25 Jul 2019 13:27:58 +0000
+Message-ID: <CO2PR07MB246961335F7D401785377765C1C10@CO2PR07MB2469.namprd07.prod.outlook.com>
+References: <1562769391-31803-1-git-send-email-pthombar@cadence.com>
+ <20190718151310.GE25635@lunn.ch>
+In-Reply-To: <20190718151310.GE25635@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccHRob21iYXJcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy0wMTY0Nzk3MC1hZWUwLTExZTktODUwMy0xMDY1MzBlNmVmM2VcYW1lLXRlc3RcMDE2NDc5NzItYWVlMC0xMWU5LTg1MDMtMTA2NTMwZTZlZjNlYm9keS50eHQiIHN6PSIxNDU1IiB0PSIxMzIwODUzNDg3NDE0Mjg1NjMiIGg9ImVFRHFiMjhoNE91WDlEREJNOU5pclBkdmlYND0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: 
+x-originating-ip: [59.145.174.78]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 67c097c8-c3b9-41ff-3abd-08d71103e90c
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CO2PR07MB2565;
+x-ms-traffictypediagnostic: CO2PR07MB2565:
+x-microsoft-antispam-prvs: <CO2PR07MB25655D2978C1F8AB8BF3092BC1C10@CO2PR07MB2565.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0109D382B0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(396003)(376002)(136003)(346002)(36092001)(199004)(189003)(478600001)(8936002)(14444005)(6916009)(86362001)(256004)(71190400001)(6506007)(71200400001)(6436002)(74316002)(26005)(4326008)(102836004)(66476007)(66556008)(64756008)(81156014)(55016002)(66446008)(186003)(8676002)(66946007)(33656002)(229853002)(81166006)(476003)(11346002)(446003)(486006)(2906002)(9686003)(107886003)(66066001)(5660300002)(25786009)(52536014)(53936002)(54906003)(6246003)(3846002)(305945005)(68736007)(7736002)(7696005)(316002)(76176011)(6116002)(99286004)(76116006)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:CO2PR07MB2565;H:CO2PR07MB2469.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: cadence.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: CL/aJcBuvYLYzsndeLuvZT36PkJiVuoO12nRULfBQq2DaacWuOpURNar1zyc9j8fh6ND89Yf8seUu1FHTZi1W8Vf6Esc4HV5Dl60PBlp6yfUoeRdQOeE1syK/4JJYDehJyTFxKDBswLgxfquqIRdHLFM5BJ18pYg5IAt2RW+eQWVjQOS0aW+ayQUOcEau5agBcUpplVjs9EGhSEmKbpFqtIQfN197715sDznWfPotxT3OstoaegY0FoTk0vb/wRHvLrCkJq0yG2zeVOY161gbUsp9lnsvPfd+x10ViSNnkre4yfafrSrcd8NOWUVEfgjs5CzOurKdlJDIUNveIKIGE+fI3mjrXlP+LKS1weIu5oU5B6PefjEmX8bErS9GvR508IOV0n4KaGUuhEytG8VxDYifn/uL/slg/gwy6n+P88=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67c097c8-c3b9-41ff-3abd-08d71103e90c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2019 13:27:58.5942
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pthombar@global.cadence.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO2PR07MB2565
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
+ include:mktomail.com include:spf-0014ca01.pphosted.com
+ include:spf.protection.outlook.com include:auth.msgapp.com
+ include:spf.mandrillapp.com ~all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-25_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=905 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907250157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=EB=85=84 7=EC=9B=94 25=EC=9D=BC (=EB=AA=A9) =EC=98=A4=ED=9B=84 9:56, C=
-hanwoo Choi <cwchoi00@gmail.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> 2019=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EC=88=98) =EC=98=A4=EC=A0=84 8:08,=
- Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>=EB=8B=98=EC=9D=B4 =
-=EC=9E=91=EC=84=B1:
-> >
-> > This patch improves code readability by changing the following construc=
-t:
-> >
-> > >    if (cond)
-> > >        goto passive;
-> > >    foo();
-> > >    goto out;
-> > >passive:
-> > >    bar();
-> > >out:
-> >
-> > into this:
-> >
-> > >    if (cond)
-> > >        bar();
-> > >    else
-> > >        foo();
-> >
-> > Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>
-> > ---
-> >  drivers/devfreq/exynos-bus.c | 24 +++++++++---------------
-> >  1 file changed, 9 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.=
-c
-> > index cf6f6cbd0f55..4bb83b945bf7 100644
-> > --- a/drivers/devfreq/exynos-bus.c
-> > +++ b/drivers/devfreq/exynos-bus.c
-> > @@ -505,25 +505,19 @@ static int exynos_bus_probe(struct platform_devic=
-e *pdev)
-> >         node =3D of_parse_phandle(dev->of_node, "devfreq", 0);
-> >         if (node) {
-> >                 of_node_put(node);
-> > -               goto passive;
-> > +               ret =3D exynos_bus_profile_init_passive(bus, profile);
-> > +               if (ret < 0)
-> > +                       goto err;
-> >         } else {
-> >                 ret =3D exynos_bus_parent_parse_of(np, bus);
-> > +               if (ret < 0)
-> > +                       goto err;
-> > +
-> > +               ret =3D exynos_bus_profile_init(bus, profile);
-> > +               if (ret < 0)
-> > +                       goto err;
-> >         }
-> >
-> > -       if (ret < 0)
-> > -               goto err;
-> > -
-> > -       ret =3D exynos_bus_profile_init(bus, profile);
-> > -       if (ret < 0)
-> > -               goto err;
-> > -
-> > -       goto out;
-> > -passive:
-> > -       ret =3D exynos_bus_profile_init_passive(bus, profile);
-> > -       if (ret < 0)
-> > -               goto err;
-> > -
-> > -out:
-> >         max_state =3D bus->devfreq->profile->max_state;
-> >         min_freq =3D (bus->devfreq->profile->freq_table[0] / 1000);
-> >         max_freq =3D (bus->devfreq->profile->freq_table[max_state - 1] =
-/ 1000);
-> > --
-> > 2.17.1
-> >
->
-> It seems more simple than before.
-> Instead, please merge patch1/2/3 to one patch. and drop the patch4.
+Hi Andrew,
 
-But, I think that you better to drop the cleanup patch from this series
-because the series[1] touch the exynos-bus.c driver for coupled regulator.
-[1] https://www.spinics.net/lists/arm-kernel/msg741971.html
+>One thing which was never clear is how you are testing the features you ar=
+e
+>adding. Please could you describe your test setup and how each new feature
+>is tested using that hardware. I'm particularly interested in what C45 dev=
+ice
+>are you using? But i expect Russell would like to know more about SFP
+>modules you are using. Do you have any which require 1000BaseX,
+>2500BaseX, or provide copper 1G?
 
-I recommend that you send the cleanup patch with my comment
-either after reviewing the Kamil's patch[1] or rebase this series base
-on patch[1].
+Sorry for late reply.
+Here is a little more information on our setup used for testing C45 patch w=
+ith a view to
+try clarify a few points.=20
+Regarding the MDIO communication channel that our controller supports - We =
+have tested
+MDIO transfers through Clause 22, but none of our local PHY's support Claus=
+e 45 so our hardware
+team have created an example Clause 45 slave device for us to add support t=
+o the driver.
+Note our hardware has been in silicon for 20 years, with customers using th=
+eir own software to support
+MDIO (both clause 22 and clause 45 functionality) and so this has been in C=
+adence's hardware controller
+many times.=20
+The programming interface is not hugely different between the two clauses a=
+nd therefore we feel the risk is low.
 
->
-> --
-> Best Regards,
-> Chanwoo Choi
+For other features like SGMII, USXGMII we are using kc705 and vcu118 FPGA b=
+oards.
+10G SFP+ module from Tyco electronics is used for testing 10G USXGMII in fi=
+xed AN mode.
 
-
-
---=20
-Best Regards,
-Chanwoo Choi
+Regards,
+Parshuram Thombare
