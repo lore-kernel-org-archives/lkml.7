@@ -2,190 +2,83 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105B1C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCCBC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF7A218F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C131218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:20:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfGYSU1 (ORCPT
+        id S1727322AbfGYSUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 14:20:27 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52297 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfGYSU1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 14:20:27 -0400
-Received: from mail-pf1-f199.google.com ([209.85.210.199])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hqiLo-0003O0-Ps
-        for linux-kernel@vger.kernel.org; Thu, 25 Jul 2019 18:20:24 +0000
-Received: by mail-pf1-f199.google.com with SMTP id 6so31450421pfi.6
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 11:20:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=yHwUWcK6j/+zNvZlc0CX0T3xuIfR8a85ZfPN65Yms3g=;
-        b=HjC4lKJo/Aw2Uaqf74QcOB7nscBvA58not7cXAwmc3iqtj4C0xRiIGQ3IHe499XJwf
-         BV9Py4mBbBkY1dXIUTG7p8S8jtoAPf6wDtnNCR1sLt7p6XhNOdSnpMNLx3GSYe/m9WJ3
-         +bPmjz+hnJeaGFbZlTJAIynb9zAjPgqAG4vTNRhzUX/hyQ1ZWa1REIZtn98YNVTOG8Pl
-         kDJimB7e9sU2/+OLoA4L+oIn/qzJCZ9WP5OdmG8g5dCOblz9uRHakodbqCLLW0EaFHWl
-         LiYbl+X+kcoM5YAUXes9Yi+C3ejcTQQno5R8/fWEkjiF24+Lb9sn1+XMBk1LMVWIlSKJ
-         G17A==
-X-Gm-Message-State: APjAAAWsXXeiye9FSDFbGTr7Y/NKSIpv5LDcSlktgCePbkAmvo5jBg9+
-        GvdXQUqJWUp3Tsvj3kZkvitcW7gizqfA/vDpkPxx15VxNjGfztLt1YJVC2MxcXFPaOiW4HH+57w
-        nf+FXdr8J/cif3AT1CovvmqD1EIEH0VimSScTzwFjbw==
-X-Received: by 2002:a17:902:2926:: with SMTP id g35mr91872317plb.269.1564078823524;
-        Thu, 25 Jul 2019 11:20:23 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxi37g49T7GHIfRwJpako8OJ/ChT4uQFaHZ0fVnv2FoR0sjZP8k3dyyCZUHaqCLhBSId7/zeg==
-X-Received: by 2002:a17:902:2926:: with SMTP id g35mr91872285plb.269.1564078823186;
-        Thu, 25 Jul 2019 11:20:23 -0700 (PDT)
-Received: from 2001-b011-380f-3c20-0160-ac1c-9209-b8ff.dynamic-ip6.hinet.net (2001-b011-380f-3c20-0160-ac1c-9209-b8ff.dynamic-ip6.hinet.net. [2001:b011:380f:3c20:160:ac1c:9209:b8ff])
-        by smtp.gmail.com with ESMTPSA id j16sm38449307pjz.31.2019.07.25.11.20.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 11:20:22 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
-Date:   Fri, 26 Jul 2019 02:20:19 +0800
-Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>
-Content-Transfer-Encoding: 8bit
-Message-Id: <46857EDA-081E-4622-A8D7-D337127A38DE@canonical.com>
-References: <2332799.izEFUvJP67@kreacher>
- <E62786E4-5DA9-4542-899A-658D0E021190@canonical.com>
- <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
- <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Thu, 25 Jul 2019 14:20:36 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:41050 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725800AbfGYSUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 14:20:36 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hqiLv-0002Vc-S5; Thu, 25 Jul 2019 12:20:32 -0600
+To:     Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190718225132.5865-1-logang@deltatee.com>
+ <20190718225132.5865-2-logang@deltatee.com>
+ <c52f80b1-e154-b11f-a868-e3209e4ccb2d@grimberg.me>
+ <6deea9e7-ff3c-e115-b2f2-8914df0b6da7@deltatee.com>
+ <dd287560-2cb3-28ab-c22d-fe9f3682c609@grimberg.me>
+ <021b5195-9a09-4cc2-064f-940ada9cf764@deltatee.com>
+ <b501f53b-48e9-87a3-9023-8597ed1efc6d@grimberg.me>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <25f1903e-2ef1-8dbb-c08b-5dd0d44ba2d2@deltatee.com>
+Date:   Thu, 25 Jul 2019 12:20:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <b501f53b-48e9-87a3-9023-8597ed1efc6d@grimberg.me>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: hch@lst.de, axboe@fb.com, kbusch@kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, sagi@grimberg.me
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 2/2] nvme-core: Fix deadlock when deleting the ctrl while
+ scanning
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 01:03, Rafael J. Wysocki <rafael@kernel.org> wrote:
 
-> On Thu, Jul 25, 2019 at 6:24 PM <Mario.Limonciello@dell.com> wrote:
->> +Rajat
+
+On 2019-07-25 12:16 p.m., Sagi Grimberg wrote:
+> 
+>> Hey,
 >>
->>> -----Original Message-----
->>> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>> Sent: Thursday, July 25, 2019 9:03 AM
->>> To: Rafael J. Wysocki
->>> Cc: Keith Busch; Christoph Hellwig; Sagi Grimberg; linux-
->>> nvme@lists.infradead.org; Limonciello, Mario; Linux PM; LKML
->>> Subject: Re: [Regression] Commit "nvme/pci: Use host managed power  
->>> state for
->>> suspend" has problems
->>>
->>>
->>> [EXTERNAL EMAIL]
->>>
->>> Hi Rafael,
->>>
->>> at 17:51, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->>>
->>>> Hi Keith,
->>>>
->>>> Unfortunately,
->>>>
->>>> commit d916b1be94b6dc8d293abed2451f3062f6af7551
->>>> Author: Keith Busch <keith.busch@intel.com>
->>>> Date:   Thu May 23 09:27:35 2019 -0600
->>>>
->>>>     nvme-pci: use host managed power state for suspend
->>>>
->>>> doesn't universally improve things.  In fact, in some cases it makes
->>>> things worse.
->>>>
->>>> For example, on the Dell XPS13 9380 I have here it prevents the  
->>>> processor
->>>> package
->>>> from reaching idle states deeper than PC2 in suspend-to-idle (which, of
->>>> course, also
->>>> prevents the SoC from reaching any kind of S0ix).
->>>>
->>>> That can be readily explained too.  Namely, with the commit above the
->>>> NVMe device
->>>> stays in D0 over suspend/resume, so the root port it is connected to  
->>>> also
->>>> has to stay in
->>>> D0 and that "blocks" package C-states deeper than PC2.
->>>>
->>>> In order for the root port to be able to go to D3, the device connected
->>>> to it also needs
->>>> to go into D3, so it looks like (at least on this particular machine,  
->>>> but
->>>> maybe in
->>>> general), both D3 and the NVMe-specific PM are needed.
+>> Sorry for the delay.
 >>
->> Well this is really unfortunate to hear.  I recall that with some disks  
->> we were
->> seeing problems where NVME specific PM wasn't working when the disk was  
->> in D3.
->>
->> On your specific disk, it would be good to know if just removing the  
->> pci_save_state(pdev)
->> call helps.
->
-> Yes, it does help.
->
->> If so, :
->> * that might be a better option to add as a parameter.
->> * maybe we should double check all the disks one more time with that  
->> tweak.
->
-> At this point it seems so.
->
->>>> I'm not sure what to do here, because evidently there are systems where
->>>> that commit
->>>> helps.  I was thinking about adding a module option allowing the user to
->>>> override the
->>>> default behavior which in turn should be compatible with 5.2 and earlier
->>>> kernels.
->>>
->>> I just briefly tested s2i on XPS 9370, and the power meter shows a  
->>> 0.8~0.9W
->>> power consumption so at least I don’t see the issue on XPS 9370.
->>
->> To me that confirms NVME is down, but it still seems higher than I would  
->> have
->> expected.  We should be more typically in the order of ~0.3W I think.
+>> I tested your patch and it does work. Do you want me to send your change
+>> as a full patch? Can I add your signed-off-by?
+> 
+> I have a patch ready with a proper comment in place. I can send it
+> out... Can I get your tested-by and reported-by?
 
- From what I’ve observed, ~0.8W s2idle is already better than Windows (~1W).
-0.3W is what I see during S5.
+Yup. I can retest once you send the patch and I'll send a test-by then.
+For now you can add my reported-by:
 
->
-> It may go to PC10, but not reach S0ix.
->
-> Anyway, I run the s2idle tests under turbostat which then tells me
-> what has happened more precisely.
+Reported-by: Logan Gunthorpe <logang@deltatee.com>
 
-The XPS 9370 at my hand does reach to s0ix during s2idle:
-# cat /sys/kernel/debug/pmc_core/slp_s0_residency_usec
-15998400
+Note: I had to modify your original patch a fair bit so it compiled with
+multipath disabled.
 
-So I think keep the root port in D0 is not the culprit here.
-Maybe something is wrong on the ASPM settings?
+Logan
 
-Kai-Heng
+
