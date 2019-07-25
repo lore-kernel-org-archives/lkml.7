@@ -2,133 +2,295 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE9AC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F78C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12B1321951
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:29:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LK7rq+Js"
+	by mail.kernel.org (Postfix) with ESMTP id D1C4721951
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbfGYR3B (ORCPT
+        id S1729934AbfGYRbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:29:01 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:45196 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726547AbfGYR3A (ORCPT
+        Thu, 25 Jul 2019 13:31:12 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46532 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbfGYRbM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:29:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HoO6xqK/GBaL96N6V+tqdVamLqQPoZ/x5PiTNdy5VKk=; b=LK7rq+JskfBnWPbtFsLbM1Ode
-        xuwXaNnVOxr1AuEM1QDPeMLzrnv5UZo6wFVO+lEh4URPbSyxmXAZrzATaANTAsQqV/U+Y/cfwYrb9
-        P769RldFP04MrJeDndqJAXvmn0n8gO5nrBGRKEJEk0YnCX0NRrCWc4X5hjnT4ztZdRG80h2wJXbXa
-        A3xv3qQVb93kpjn76pACx2ZgMpPG9cQF59jJlBxMxSGBHu8QbQA7KP3YsX4UN/WSeyyHyu57ERnKy
-        VpwM3UbIt94+H7E5ksJPedt93fNgFnCrP2G73rWoL4wBI9xWmK1EzXQp9Sj2TBInlsztNTqXHdU/o
-        oyqLlWDWQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqhY1-0006np-Or; Thu, 25 Jul 2019 17:28:57 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 494852076726E; Thu, 25 Jul 2019 19:28:54 +0200 (CEST)
-Date:   Thu, 25 Jul 2019 19:28:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH] x86/hw_breakpoint: Prevent data breakpoints on
- cpu_entry_area
-Message-ID: <20190725172854.GL31381@hirez.programming.kicks-ass.net>
-References: <cf0ca526e3bc946766ab70bada2686c82e7da1ce.1564072590.git.luto@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cf0ca526e3bc946766ab70bada2686c82e7da1ce.1564072590.git.luto@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 25 Jul 2019 13:31:12 -0400
+Received: from [IPv6:2a02:810a:113f:a6c2::355a] (unknown [IPv6:2a02:810a:113f:a6c2::355a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: dafna)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id CF5E128BC07;
+        Thu, 25 Jul 2019 18:31:07 +0100 (BST)
+Message-ID: <1564075865.2339.6.camel@collabora.com>
+Subject: Re: [PATCH v3 1/2] dma-contiguous: Abstract
+ dma_{alloc,free}_contiguous()
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc:     hch@lst.de, robin.murphy@arm.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>, vdumpa@nvidia.com,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>, chris@zankel.net,
+        jcmvbkbc@gmail.com, joro@8bytes.org,
+        David Woodhouse <dwmw2@infradead.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        sfr@canb.auug.org.au, treding@nvidia.com, keescook@chromium.org,
+        iamjoonsoo.kim@lge.com, wsa+renesas@sang-engineering.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org,
+        dann.frazier@canonical.com, linux-media@vger.kernel.org,
+        hans.verkuil@cisco.com
+Date:   Thu, 25 Jul 2019 19:31:05 +0200
+In-Reply-To: <20190725165015.GA31961@Asurada-Nvidia.nvidia.com>
+References: <20190524040633.16854-1-nicoleotsuka@gmail.com>
+         <20190524040633.16854-2-nicoleotsuka@gmail.com>
+         <CAAEAJfA+edVLfZzEZe98249Y7NZQFht9185JH21pV10Bq9Wk3w@mail.gmail.com>
+         <20190725165015.GA31961@Asurada-Nvidia.nvidia.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 09:37:15AM -0700, Andy Lutomirski wrote:
-> A data breakpoint near the top of an IST stack will cause unresoverable
-> recursion.  A data breakpoint on the GDT, IDT, or TSS is terrifying.
-> Prevent either of these from happening.
+On Thu, 2019-07-25 at 09:50 -0700, Nicolin Chen wrote:
+> On Thu, Jul 25, 2019 at 01:06:42PM -0300, Ezequiel Garcia wrote:
+> > I can't find a way to forward-redirect from Gmail, so I'm Ccing Dafna
+> > who found a regression caused by this commit. Dafna, can you give all
+> > the details, including the log and how you are reproducing it?
 > 
-> Co-developed-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Andy Lutomirski <luto@kernel.org>
-
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
-One small nit beflow.
-
-> ---
+> I saw the conversation there. Sorry for not replying yet.
+> May we discuss there since there are full logs available?
 > 
->  arch/x86/include/asm/cpu_entry_area.h | 10 ++++++++++
->  arch/x86/kernel/hw_breakpoint.c       | 17 +++++++++++++++++
->  2 files changed, 27 insertions(+)
+> Thanks
+> Nicolin
 > 
-> diff --git a/arch/x86/include/asm/cpu_entry_area.h b/arch/x86/include/asm/cpu_entry_area.h
-> index e23e2d9a92d7..3f50d4738487 100644
-> --- a/arch/x86/include/asm/cpu_entry_area.h
-> +++ b/arch/x86/include/asm/cpu_entry_area.h
-> @@ -126,6 +126,16 @@ static inline struct entry_stack *cpu_entry_stack(int cpu)
->  	return &get_cpu_entry_area(cpu)->entry_stack_page.stack;
->  }
->  
-> +/*
-> + * Checks whether the range from addr to end, inclusive, overlaps the CPU
-> + * entry area range.
-> + */
-> +static inline bool within_cpu_entry_area(unsigned long addr, unsigned long end)
-> +{
-> +	return end >= CPU_ENTRY_AREA_PER_CPU &&
-> +		addr < (CPU_ENTRY_AREA_PER_CPU + CPU_ENTRY_AREA_TOT_SIZE);
-> +}
-> +
->  #define __this_cpu_ist_top_va(name)					\
->  	CEA_ESTACK_TOP(__this_cpu_read(cea_exception_stacks), name)
->  
-> diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-> index 218c8917118e..dc4581fe4b4e 100644
-> --- a/arch/x86/kernel/hw_breakpoint.c
-> +++ b/arch/x86/kernel/hw_breakpoint.c
-> @@ -231,6 +231,23 @@ static int arch_build_bp_info(struct perf_event *bp,
->  			      const struct perf_event_attr *attr,
->  			      struct arch_hw_breakpoint *hw)
->  {
-> +	unsigned long bp_end;
-> +
-> +	/* Ensure that bp_end does not oveflow. */
-> +	if (attr->bp_len >= ULONG_MAX - attr->bp_addr)
-> +		return -EINVAL;
-> +
-> +	bp_end = attr->bp_addr + attr->bp_len - 1;
 
-The alternative (and possibly more conventional) overflow test would be:
+Hi,
+I compiled vivid as built-in into the kernel (not as a separate module) for nitrogen8m device (imx8) and
+set it to use contig dma for mem_ops by adding the kernel param
+vivid.allocators=1,1,...
 
-	if (bp_end < attr->bp_addr)
-		return -EINVAL;
+I use this devicetree patch for the dtb file: https://lkml.org/lkml/2019/7/24/789. Although it should
+be the same on any Aarch64 platform.
 
-> +
-> +	/*
-> +	 * Prevent any breakpoint of any type that overlaps the
-> +	 * cpu_entry_area.  This protects the IST stacks and also
-> +	 * reduces the chance that we ever find out what happens if
-> +	 * there's a data breakpoint on the GDT, IDT, or TSS.
-> +	 */
-> +	if (within_cpu_entry_area(attr->bp_addr, bp_end))
-> +		return -EINVAL;
-> +
->  	hw->address = attr->bp_addr;
->  	hw->mask = 0;
->  
+Then, on the board I run the command:
+
+v4l2-ctl -d3 -v width=2592,height=1944,pixelformat=UYVY,bytesperline=5184 --stream-mmap --stream-to video.UYVY
+
+In every run there is a different crash. Here is one of them: https://pastebin.com/xXgbXMAN
+
+Dafna
+> > 
+> > 
+> > > > On Fri, 24 May 2019 at 01:08, Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+> > > 
+> > > Both dma_alloc_from_contiguous() and dma_release_from_contiguous()
+> > > are very simply implemented, but requiring callers to pass certain
+> > > parameters like count and align, and taking a boolean parameter to
+> > > check __GFP_NOWARN in the allocation flags. So every function call
+> > > duplicates similar work:
+> > >   /* A piece of example */
+> > >   unsigned long order = get_order(size);
+> > >   size_t count = size >> PAGE_SHIFT;
+> > >   page = dma_alloc_from_contiguous(dev, count, order, gfp & __GFP_NOWARN);
+> > >   [...]
+> > >   dma_release_from_contiguous(dev, page, size >> PAGE_SHIFT);
+> > > 
+> > > Additionally, as CMA can be used only in the context which permits
+> > > sleeping, most of callers do a gfpflags_allow_blocking() check and
+> > > a corresponding fallback allocation of normal pages upon any false
+> > > result:
+> > >   /* A piece of example */
+> > >   if (gfpflags_allow_blocking(flag))
+> > >       page = dma_alloc_from_contiguous();
+> > >   if (!page)
+> > >       page = alloc_pages();
+> > >   [...]
+> > >   if (!dma_release_from_contiguous(dev, page, count))
+> > >       __free_pages(page, get_order(size));
+> > > 
+> > > So this patch simplifies those function calls by abstracting these
+> > > operations into the two new functions: dma_{alloc,free}_contiguous.
+> > > 
+> > > As some callers of dma_{alloc,release}_from_contiguous() might be
+> > > complicated, this patch just implements these two new functions to
+> > > kernel/dma/direct.c only as an initial step.
+> > > 
+> > > > > > Suggested-by: Christoph Hellwig <hch@lst.de>
+> > > > > > Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> > > ---
+> > > Changelog
+> > > v2->v3:
+> > >  * Added missing "static inline" in header file to fix build error.
+> > > v1->v2:
+> > >  * Added new functions beside the old ones so we can replace callers
+> > >    one by one later.
+> > >  * Applied new functions to dma/direct.c only, because it's the best
+> > >    example caller to apply and should be safe with the new functions.
+> > > 
+> > >  include/linux/dma-contiguous.h | 11 ++++++++
+> > >  kernel/dma/contiguous.c        | 48 ++++++++++++++++++++++++++++++++++
+> > >  kernel/dma/direct.c            | 24 +++--------------
+> > >  3 files changed, 63 insertions(+), 20 deletions(-)
+> > > 
+> > > diff --git a/include/linux/dma-contiguous.h b/include/linux/dma-contiguous.h
+> > > index f247e8aa5e3d..00a370c1c140 100644
+> > > --- a/include/linux/dma-contiguous.h
+> > > +++ b/include/linux/dma-contiguous.h
+> > > @@ -115,6 +115,8 @@ struct page *dma_alloc_from_contiguous(struct device *dev, size_t count,
+> > >                                        unsigned int order, bool no_warn);
+> > >  bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+> > >                                  int count);
+> > > +struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp);
+> > > +void dma_free_contiguous(struct device *dev, struct page *page, size_t size);
+> > > 
+> > >  #else
+> > > 
+> > > @@ -157,6 +159,15 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+> > >         return false;
+> > >  }
+> > > 
+> > > +static inline
+> > > +struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+> > > +{
+> > > +       return NULL;
+> > > +}
+> > > +
+> > > +static inline
+> > > +void dma_free_contiguous(struct device *dev, struct page *page, size_t size) { }
+> > > +
+> > >  #endif
+> > > 
+> > >  #endif
+> > > diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+> > > index b2a87905846d..21f39a6cb04f 100644
+> > > --- a/kernel/dma/contiguous.c
+> > > +++ b/kernel/dma/contiguous.c
+> > > @@ -214,6 +214,54 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+> > >         return cma_release(dev_get_cma_area(dev), pages, count);
+> > >  }
+> > > 
+> > > +/**
+> > > + * dma_alloc_contiguous() - allocate contiguous pages
+> > > + * @dev:   Pointer to device for which the allocation is performed.
+> > > + * @size:  Requested allocation size.
+> > > + * @gfp:   Allocation flags.
+> > > + *
+> > > + * This function allocates contiguous memory buffer for specified device. It
+> > > + * first tries to use device specific contiguous memory area if available or
+> > > + * the default global one, then tries a fallback allocation of normal pages.
+> > > + */
+> > > +struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+> > > +{
+> > > +       int node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+> > > +       size_t count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+> > > +       size_t align = get_order(PAGE_ALIGN(size));
+> > > +       struct cma *cma = dev_get_cma_area(dev);
+> > > +       struct page *page = NULL;
+> > > +
+> > > +       /* CMA can be used only in the context which permits sleeping */
+> > > +       if (cma && gfpflags_allow_blocking(gfp)) {
+> > > +               align = min_t(size_t, align, CONFIG_CMA_ALIGNMENT);
+> > > +               page = cma_alloc(cma, count, align, gfp & __GFP_NOWARN);
+> > > +       }
+> > > +
+> > > +       /* Fallback allocation of normal pages */
+> > > +       if (!page)
+> > > +               page = alloc_pages_node(node, gfp, align);
+> > > +
+> > > +       return page;
+> > > +}
+> > > +
+> > > +/**
+> > > + * dma_free_contiguous() - release allocated pages
+> > > + * @dev:   Pointer to device for which the pages were allocated.
+> > > + * @page:  Pointer to the allocated pages.
+> > > + * @size:  Size of allocated pages.
+> > > + *
+> > > + * This function releases memory allocated by dma_alloc_contiguous(). As the
+> > > + * cma_release returns false when provided pages do not belong to contiguous
+> > > + * area and true otherwise, this function then does a fallback __free_pages()
+> > > + * upon a false-return.
+> > > + */
+> > > +void dma_free_contiguous(struct device *dev, struct page *page, size_t size)
+> > > +{
+> > > +       if (!cma_release(dev_get_cma_area(dev), page, size >> PAGE_SHIFT))
+> > > +               __free_pages(page, get_order(size));
+> > > +}
+> > > +
+> > >  /*
+> > >   * Support for reserved memory regions defined in device tree
+> > >   */
+> > > diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> > > index 2c2772e9702a..0816c1e8b05a 100644
+> > > --- a/kernel/dma/direct.c
+> > > +++ b/kernel/dma/direct.c
+> > > @@ -96,8 +96,6 @@ static bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
+> > >  struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
+> > >                 dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
+> > >  {
+> > > -       unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+> > > -       int page_order = get_order(size);
+> > >         struct page *page = NULL;
+> > >         u64 phys_mask;
+> > > 
+> > > @@ -109,20 +107,9 @@ struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
+> > >         gfp |= __dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
+> > >                         &phys_mask);
+> > >  again:
+> > > -       /* CMA can be used only in the context which permits sleeping */
+> > > -       if (gfpflags_allow_blocking(gfp)) {
+> > > -               page = dma_alloc_from_contiguous(dev, count, page_order,
+> > > -                                                gfp & __GFP_NOWARN);
+> > > -               if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
+> > > -                       dma_release_from_contiguous(dev, page, count);
+> > > -                       page = NULL;
+> > > -               }
+> > > -       }
+> > > -       if (!page)
+> > > -               page = alloc_pages_node(dev_to_node(dev), gfp, page_order);
+> > > -
+> > > +       page = dma_alloc_contiguous(dev, size, gfp);
+> > >         if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
+> > > -               __free_pages(page, page_order);
+> > > +               dma_free_contiguous(dev, page, size);
+> > >                 page = NULL;
+> > > 
+> > >                 if (IS_ENABLED(CONFIG_ZONE_DMA32) &&
+> > > @@ -154,7 +141,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+> > >         if (PageHighMem(page)) {
+> > >                 /*
+> > >                  * Depending on the cma= arguments and per-arch setup
+> > > -                * dma_alloc_from_contiguous could return highmem pages.
+> > > +                * dma_alloc_contiguous could return highmem pages.
+> > >                  * Without remapping there is no way to return them here,
+> > >                  * so log an error and fail.
+> > >                  */
+> > > @@ -176,10 +163,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+> > > 
+> > >  void __dma_direct_free_pages(struct device *dev, size_t size, struct page *page)
+> > >  {
+> > > -       unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+> > > -
+> > > -       if (!dma_release_from_contiguous(dev, page, count))
+> > > -               __free_pages(page, get_order(size));
+> > > +       dma_free_contiguous(dev, page, size);
+> > >  }
+> > > 
+> > >  void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
+> > > --
+> > > 2.17.1
+> > > 
