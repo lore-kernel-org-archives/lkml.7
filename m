@@ -2,147 +2,86 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 480FDC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76382C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA3A21951
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 525652238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:06:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389610AbfGYNFG (ORCPT
+        id S1728347AbfGYNGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:05:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42076 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727031AbfGYNFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:05:06 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 540C5319D1C3;
-        Thu, 25 Jul 2019 13:05:05 +0000 (UTC)
-Received: from [10.36.117.70] (ovpn-117-70.ams2.redhat.com [10.36.117.70])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B0E6B1001281;
-        Thu, 25 Jul 2019 13:05:03 +0000 (UTC)
-Subject: Re: [PATCH v1] ACPI / scan: Acquire device_hotplug_lock in
- acpi_scan_init()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>
-References: <20190724143017.12841-1-david@redhat.com>
- <20190725125636.GA3582@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwX4EEwECACgFAljj9eoCGwMFCQlmAYAGCwkI
- BwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEE3eEPcA/4Na5IIP/3T/FIQMxIfNzZshIq687qgG
- 8UbspuE/YSUDdv7r5szYTK6KPTlqN8NAcSfheywbuYD9A4ZeSBWD3/NAVUdrCaRP2IvFyELj
- xoMvfJccbq45BxzgEspg/bVahNbyuBpLBVjVWwRtFCUEXkyazksSv8pdTMAs9IucChvFmmq3
- jJ2vlaz9lYt/lxN246fIVceckPMiUveimngvXZw21VOAhfQ+/sofXF8JCFv2mFcBDoa7eYob
- s0FLpmqFaeNRHAlzMWgSsP80qx5nWWEvRLdKWi533N2vC/EyunN3HcBwVrXH4hxRBMco3jvM
- m8VKLKao9wKj82qSivUnkPIwsAGNPdFoPbgghCQiBjBe6A75Z2xHFrzo7t1jg7nQfIyNC7ez
- MZBJ59sqA9EDMEJPlLNIeJmqslXPjmMFnE7Mby/+335WJYDulsRybN+W5rLT5aMvhC6x6POK
- z55fMNKrMASCzBJum2Fwjf/VnuGRYkhKCqqZ8gJ3OvmR50tInDV2jZ1DQgc3i550T5JDpToh
- dPBxZocIhzg+MBSRDXcJmHOx/7nQm3iQ6iLuwmXsRC6f5FbFefk9EjuTKcLMvBsEx+2DEx0E
- UnmJ4hVg7u1PQ+2Oy+Lh/opK/BDiqlQ8Pz2jiXv5xkECvr/3Sv59hlOCZMOaiLTTjtOIU7Tq
- 7ut6OL64oAq+zsFNBFXLn5EBEADn1959INH2cwYJv0tsxf5MUCghCj/CA/lc/LMthqQ773ga
- uB9mN+F1rE9cyyXb6jyOGn+GUjMbnq1o121Vm0+neKHUCBtHyseBfDXHA6m4B3mUTWo13nid
- 0e4AM71r0DS8+KYh6zvweLX/LL5kQS9GQeT+QNroXcC1NzWbitts6TZ+IrPOwT1hfB4WNC+X
- 2n4AzDqp3+ILiVST2DT4VBc11Gz6jijpC/KI5Al8ZDhRwG47LUiuQmt3yqrmN63V9wzaPhC+
- xbwIsNZlLUvuRnmBPkTJwwrFRZvwu5GPHNndBjVpAfaSTOfppyKBTccu2AXJXWAE1Xjh6GOC
- 8mlFjZwLxWFqdPHR1n2aPVgoiTLk34LR/bXO+e0GpzFXT7enwyvFFFyAS0Nk1q/7EChPcbRb
- hJqEBpRNZemxmg55zC3GLvgLKd5A09MOM2BrMea+l0FUR+PuTenh2YmnmLRTro6eZ/qYwWkC
- u8FFIw4pT0OUDMyLgi+GI1aMpVogTZJ70FgV0pUAlpmrzk/bLbRkF3TwgucpyPtcpmQtTkWS
- gDS50QG9DR/1As3LLLcNkwJBZzBG6PWbvcOyrwMQUF1nl4SSPV0LLH63+BrrHasfJzxKXzqg
- rW28CTAE2x8qi7e/6M/+XXhrsMYG+uaViM7n2je3qKe7ofum3s4vq7oFCPsOgwARAQABwsFl
- BBgBAgAPBQJVy5+RAhsMBQkJZgGAAAoJEE3eEPcA/4NagOsP/jPoIBb/iXVbM+fmSHOjEshl
- KMwEl/m5iLj3iHnHPVLBUWrXPdS7iQijJA/VLxjnFknhaS60hkUNWexDMxVVP/6lbOrs4bDZ
- NEWDMktAeqJaFtxackPszlcpRVkAs6Msn9tu8hlvB517pyUgvuD7ZS9gGOMmYwFQDyytpepo
- YApVV00P0u3AaE0Cj/o71STqGJKZxcVhPaZ+LR+UCBZOyKfEyq+ZN311VpOJZ1IvTExf+S/5
- lqnciDtbO3I4Wq0ArLX1gs1q1XlXLaVaA3yVqeC8E7kOchDNinD3hJS4OX0e1gdsx/e6COvy
- qNg5aL5n0Kl4fcVqM0LdIhsubVs4eiNCa5XMSYpXmVi3HAuFyg9dN+x8thSwI836FoMASwOl
- C7tHsTjnSGufB+D7F7ZBT61BffNBBIm1KdMxcxqLUVXpBQHHlGkbwI+3Ye+nE6HmZH7IwLwV
- W+Ajl7oYF+jeKaH4DZFtgLYGLtZ1LDwKPjX7VAsa4Yx7S5+EBAaZGxK510MjIx6SGrZWBrrV
- TEvdV00F2MnQoeXKzD7O4WFbL55hhyGgfWTHwZ457iN9SgYi1JLPqWkZB0JRXIEtjd4JEQcx
- +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <6dc566c2-faf6-565d-4ef1-2ac3a366bc76@redhat.com>
-Date:   Thu, 25 Jul 2019 15:05:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190725125636.GA3582@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
+        Thu, 25 Jul 2019 09:06:37 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:56094 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726591AbfGYNGg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 09:06:36 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-213-goYqbzeaPXGDmAUnMJc0LA-1; Thu, 25 Jul 2019 14:06:33 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu,
+ 25 Jul 2019 14:06:32 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 25 Jul 2019 14:06:32 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Numfor Mbiziwo-Tiapo' <nums@google.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "songliubraving@fb.com" <songliubraving@fb.com>,
+        "mbd@fb.com" <mbd@fb.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "irogers@google.com" <irogers@google.com>,
+        "eranian@google.com" <eranian@google.com>
+Subject: RE: [PATCH 3/3] Fix insn.c misaligned address error
+Thread-Topic: [PATCH 3/3] Fix insn.c misaligned address error
+Thread-Index: AQHVQk/5K6bxIN0Ik02+UTPYCG0F5abbToOQ
+Date:   Thu, 25 Jul 2019 13:06:32 +0000
+Message-ID: <c256d9b6702b4d37a0c21b93f319b476@AcuMS.aculab.com>
+References: <20190724184512.162887-1-nums@google.com>
+ <20190724184512.162887-4-nums@google.com>
+In-Reply-To: <20190724184512.162887-4-nums@google.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 25 Jul 2019 13:05:05 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: goYqbzeaPXGDmAUnMJc0LA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.07.19 14:56, Michal Hocko wrote:
-> On Wed 24-07-19 16:30:17, David Hildenbrand wrote:
->> We end up calling __add_memory() without the device hotplug lock held.
->> (I used a local patch to assert in __add_memory() that the
->>  device_hotplug_lock is held - I might upstream that as well soon)
->>
->> [   26.771684]        create_memory_block_devices+0xa4/0x140
->> [   26.772952]        add_memory_resource+0xde/0x200
->> [   26.773987]        __add_memory+0x6e/0xa0
->> [   26.775161]        acpi_memory_device_add+0x149/0x2b0
->> [   26.776263]        acpi_bus_attach+0xf1/0x1f0
->> [   26.777247]        acpi_bus_attach+0x66/0x1f0
->> [   26.778268]        acpi_bus_attach+0x66/0x1f0
->> [   26.779073]        acpi_bus_attach+0x66/0x1f0
->> [   26.780143]        acpi_bus_scan+0x3e/0x90
->> [   26.780844]        acpi_scan_init+0x109/0x257
->> [   26.781638]        acpi_init+0x2ab/0x30d
->> [   26.782248]        do_one_initcall+0x58/0x2cf
->> [   26.783181]        kernel_init_freeable+0x1bd/0x247
->> [   26.784345]        kernel_init+0x5/0xf1
->> [   26.785314]        ret_from_fork+0x3a/0x50
->>
->> So perform the locking just like in acpi_device_hotplug().
-> 
-> While playing with the device_hotplug_lock, can we actually document
-> what it is protecting please? I have a bad feeling that we are adding
-> this lock just because some other code path does rather than with a good
-> idea why it is needed. This patch just confirms that. What exactly does
-> the lock protect from here in an early boot stage.
+RnJvbTogTnVtZm9yIE1iaXppd28tVGlhcG8NCj4gU2VudDogMjQgSnVseSAyMDE5IDE5OjQ1DQo+
+IA0KPiBUaGUgdWJzYW4gKHVuZGVmaW5lZCBiZWhhdmlvciBzYW5pdGl6ZXIpIHZlcnNpb24gb2Yg
+cGVyZiB0aHJvd3MgYW4NCj4gZXJyb3Igb24gdGhlICd4ODYgaW5zdHJ1Y3Rpb24gZGVjb2RlciAt
+IG5ldyBpbnN0cnVjdGlvbnMnIGZ1bmN0aW9uDQo+IG9mIHBlcmYgdGVzdC4NCj4gDQo+IFRvIHJl
+cHJvZHVjZSB0aGlzIHJ1bjoNCj4gbWFrZSAtQyB0b29scy9wZXJmIFVTRV9DTEFORz0xIEVYVFJB
+X0NGTEFHUz0iLWZzYW5pdGl6ZT11bmRlZmluZWQiDQo+IA0KPiB0aGVuIHJ1bjogdG9vbHMvcGVy
+Zi9wZXJmIHRlc3QgNjIgLXYNCj4gDQo+IFRoZSBlcnJvciBvY2N1cnMgaW4gdGhlIF9fZ2V0X25l
+eHQgbWFjcm8gKGxpbmUgMzQpIHdoZXJlIGFuIGludCBpcw0KPiByZWFkIGZyb20gYSBwb3RlbnRp
+YWxseSB1bmFsaWduZWQgYWRkcmVzcy4gVXNpbmcgbWVtY3B5IGluc3RlYWQgb2YNCj4gYXNzaWdu
+bWVudCBmcm9tIGFuIHVuYWxpZ25lZCBwb2ludGVyLg0KLi4uDQo+ICAjZGVmaW5lIF9fZ2V0X25l
+eHQodCwgaW5zbikJXA0KPiAtCSh7IHQgciA9ICoodCopaW5zbi0+bmV4dF9ieXRlOyBpbnNuLT5u
+ZXh0X2J5dGUgKz0gc2l6ZW9mKHQpOyByOyB9KQ0KPiArCSh7IHQgcjsgbWVtY3B5KCZyLCBpbnNu
+LT5uZXh0X2J5dGUsIHNpemVvZih0KSk7IFwNCj4gKwkJaW5zbi0+bmV4dF9ieXRlICs9IHNpemVv
+Zih0KTsgcjsgfSkNCg0KSXNuJ3QgdGhlcmUgYSBnZXRfdW5hbGlnbmVkX3UzMigpIChvciBzaW1p
+bGFyKSB0aGF0IGNhbiBiZSB1c2VkPw0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNz
+IExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAx
+UFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
-We have plenty of documentation already
-
-mm/memory_hotplug.c
-
-git grep -C5 device_hotplug mm/memory_hotplug.c
-
-Also see
-
-Documentation/core-api/memory-hotplug.rst
-
-Regarding the early stage: primarily lockdep as I mentioned.
-
--- 
-
-Thanks,
-
-David / dhildenb
