@@ -2,145 +2,145 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB332C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78DFC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6B5321901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4ED822BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:52:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="fmEbt+ms"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="fk5PxdqX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbfGYSwk (ORCPT
+        id S1726435AbfGYSww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 14:52:40 -0400
-Received: from mail-eopbgr70043.outbound.protection.outlook.com ([40.107.7.43]:6082
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726107AbfGYSwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 14:52:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PK+LV7i6YHO9/migAxqkMk4Vmcmfk7auNvQDGxW6bAkQxTbAgTLI6KDsu2+gr5phAVJuFczdT2DyF4HOKbkL7lesZFbdqSRqfwj5ZLkizgT0MRjfWGJSHFotl7RJctXvTTs1P20hH7Rv6aX4033s8HN9acEOdb8zrUcerHuUn13fRC3qhAgYfx1LhhS9gyqdDMNSvS9a79CVifIoh+dA6iejAMxAmBORVyRp1/T0cRwVJq/nX/Y1DT9SloMQkBe68x/EQhJnN13/NkoEuQacNdcKNgmtzGdVV0MDLM0KDl9sa5sPV8QxnOiuf3lDvRuoNvdBi9lAIsX+HclFRQOVJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kBO66a3QGuTu9B2KIJUgnGF7/Corv+KLAnmOAZSj3xw=;
- b=I33y/oqvpvyFETWQKOZFrw0SEpgvip801nTJ4t//o3MMZHPPHLXKvMsIYgquuiaGpavEwgHx3EN2I1BQ5woiBtAhGtd3U7bUI/KTPLKzcIBZFO7b+MoAtnpf95TlM5MgEDDfdhiShoJ9kgMxzbyWkQrNvP2xEmdMosQhbw2dxOzyZIspLtWpEZyyvIwwAZj9Y2raHO9lr1B0FoFf2wc8905MMTIF7n7AD1HoOnrr6m2cxsdSMvx0m0+jqt2k14xz8iqUGNKhH0kYpknj1qb2BCS3yQeel5XRtI2LDWNVVxYhgTNumGXWNjZjrRkRmv/zwHfs6P7zqSgNMGD+pxjTHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=mellanox.com;dmarc=pass action=none
- header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kBO66a3QGuTu9B2KIJUgnGF7/Corv+KLAnmOAZSj3xw=;
- b=fmEbt+msL1qJyULMhGzRBdmgl84mQiLbiwgPzHPng2rbxPfGG64DF9qu+ghhewB2mv/MjEkhxBWtfstKuBKm7F0o8ZbWF7P79NjS7hOQCAaJGnG5bzsn4sVZiKpaIllmC5mOIAPUDghG6neIefM/W5RDiiH4kqzr3enStyWDeuc=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB3358.eurprd05.prod.outlook.com (10.170.238.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.10; Thu, 25 Jul 2019 18:52:36 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::5c6f:6120:45cd:2880]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::5c6f:6120:45cd:2880%4]) with mapi id 15.20.2115.005; Thu, 25 Jul 2019
- 18:52:36 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Logan Gunthorpe <logang@deltatee.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH 06/14] PCI/P2PDMA: Add whitelist support for Intel Host
- Bridges
-Thread-Topic: [PATCH 06/14] PCI/P2PDMA: Add whitelist support for Intel Host
- Bridges
-Thread-Index: AQHVQOKA2Us7gXzzBkKJHgxgIGkDSabbsnMA
-Date:   Thu, 25 Jul 2019 18:52:36 +0000
-Message-ID: <20190725185230.GG7450@mellanox.com>
-References: <20190722230859.5436-1-logang@deltatee.com>
- <20190722230859.5436-7-logang@deltatee.com>
-In-Reply-To: <20190722230859.5436-7-logang@deltatee.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YQXPR0101CA0041.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:14::18) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ef2d2cb7-d562-47e4-ca15-08d71131426a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB3358;
-x-ms-traffictypediagnostic: VI1PR05MB3358:
-x-microsoft-antispam-prvs: <VI1PR05MB33581BB96C57DE5E2609F64CCFC10@VI1PR05MB3358.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0109D382B0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(346002)(136003)(39860400002)(366004)(189003)(199004)(186003)(6116002)(3846002)(1076003)(11346002)(2616005)(7416002)(256004)(229853002)(6916009)(305945005)(446003)(478600001)(8676002)(5660300002)(476003)(81156014)(6436002)(316002)(8936002)(81166006)(54906003)(7736002)(66066001)(2906002)(6512007)(76176011)(6246003)(52116002)(486006)(66946007)(66476007)(64756008)(25786009)(66556008)(66446008)(6486002)(86362001)(68736007)(14454004)(26005)(99286004)(102836004)(33656002)(386003)(71200400001)(4326008)(6506007)(71190400001)(36756003)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3358;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: X5zv/PNXQZX/h9bNqK/9ciD+cLCa3xdOSNNDguKFP0peleL9gzbqUPzC46rXy0e8/AGRTnVRQYsCqw7IBQt63Wl7BWd1Q6ffuRoha9pEZKwcn8h8nmeezLKaDMeY0jhKS0LcpMl7TNBC1bEEtr9L2Q0Ndu8r7is4hlBBQYfd5bBjXCVCNZ/iDwfiTZ1/EvoWzPpXVAVpXemBC1XWBMiLumziet9I9Xb1PrsNJ/l81UVfYu95+zjddS8KCvfa46PT00ZE3s/rfdDz97lzNQZRZWpCx7ZvFsKWE3UeegPStcEI+ZhHANoohNQ/sJu0U6iV1ybB/EqjBPHDUAl/X41r+k453jVYYsskXY03s7kQFqe56uG5IuGltKNpM9HsqDO7a81G1jl2o1TY3kBhcsMkYspQr4RHFuX2s+SwHB4gezc=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7F92BB72B415A740B49C55296D8E5B71@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef2d2cb7-d562-47e4-ca15-08d71131426a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2019 18:52:36.3907
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3358
+        Thu, 25 Jul 2019 14:52:52 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:42702 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfGYSww (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 14:52:52 -0400
+Received: by mail-ua1-f66.google.com with SMTP id a97so20236378uaa.9
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 11:52:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=w30g8iTJZ+UU2qLPrb+evOZb5z9OWHBiOGbGq1jemNU=;
+        b=fk5PxdqXwDMPwORg3XCxFG7uAIyVeAxzjCVFr+xY1GzC38VvJWux97NE9QX+CMxCWT
+         dW04AcGMPDsLPV36Mle3sHH8SfBxjOIw/qUNl8V7ZhAGicnLTjfSfmoBiocxOZZg4bsX
+         GueHeMwj15Cu7ORpM8BNUmrifrXhJs/fxE9WQyPlh1AHJW8e1ZDTzDFM3b2Y8A8cZ5Ee
+         Zym/8PjXzAcatIUnO7Fm1FMiiuJMEr9QWCVp9O3lKHrMoKEn4pG7flqM/1RgO/i7Tp5H
+         NB1nrOVWLfVvMaxoRs94O2pNu7mq8vhq1LjdJr0p7wEW5WxeQ6k84EitR4kgT4ZHfBrk
+         8fPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=w30g8iTJZ+UU2qLPrb+evOZb5z9OWHBiOGbGq1jemNU=;
+        b=rl2eGwZUyfLNb6RNQuDYph5NjSTY/f8P/jVKSUR0aMj/OKwtQzedwSNtsnZeuG7rkE
+         Rtol3QXPbS18rxI3MSdxh0ytoHCWZTZlt0CVW4/ffRsJzaC99y5vGuLEMLlDTupyfQRV
+         GGAtLZzZ6F9JfQyjaptPnAG2UfR2BA5rjYvnF65LBzBB8oaT7Zp1o5OnWHY42Ummg++c
+         JGvfpdn1qsfpeBqwsygnTF7oLyO4qNHXrQmMUeFk5ycQTrBBR9T9NtrM/yYK8zB8uaUG
+         9thUtH18TBzmtIB0eAYQmq8iNlDpu7j3zkC2MMViTq/xNP55Q6m/K0elPp7zq+26rWh3
+         GnSQ==
+X-Gm-Message-State: APjAAAUGDfPjR6spTBJitFV0/cl1eOEWgG7SuV2TpPV6OdFZH/wy1UBr
+        phKzbH8/VJ9CbB2e/NNzZAdLUw==
+X-Google-Smtp-Source: APXvYqzR+uo0BYzmmM09fGdkgM3r83aj04Jvid8uh+HP6b+ewHzxQIVEd/JNaC3+NAmqGGBGmAZ9Hg==
+X-Received: by 2002:a9f:2269:: with SMTP id 96mr55944133uad.80.1564080771058;
+        Thu, 25 Jul 2019 11:52:51 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id l20sm15288616vkl.2.2019.07.25.11.52.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 11:52:50 -0700 (PDT)
+Message-ID: <1564080768.11067.22.camel@lca.pw>
+Subject: Re: [PATCH 00/10] make "order" unsigned int
+From:   Qian Cai <cai@lca.pw>
+To:     Pengfei Li <lpf.vector@gmail.com>, akpm@linux-foundation.org
+Cc:     mgorman@techsingularity.net, mhocko@suse.com, vbabka@suse.cz,
+        aryabinin@virtuozzo.com, osalvador@suse.de, rostedt@goodmis.org,
+        mingo@redhat.com, pavel.tatashin@microsoft.com, rppt@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Date:   Thu, 25 Jul 2019 14:52:48 -0400
+In-Reply-To: <20190725184253.21160-1-lpf.vector@gmail.com>
+References: <20190725184253.21160-1-lpf.vector@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 05:08:51PM -0600, Logan Gunthorpe wrote:
-> Intel devices do not have good support for P2P requests that span
-> different host bridges as the transactions will cross the QPI/UPI bus
-> and this does not perform well.
->=20
-> Therefore, enable support for these devices only if the host bridges
-> match.
->=20
-> Adds the Intel device's that have been tested to work. There are
-> likely many others out there that will need to be tested and added.
->=20
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->  drivers/pci/p2pdma.c | 36 ++++++++++++++++++++++++++++++++----
->  1 file changed, 32 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index dfb802afc8ca..143e11d2a5c3 100644
-> +++ b/drivers/pci/p2pdma.c
-> @@ -250,9 +250,28 @@ static void seq_buf_print_bus_devfn(struct seq_buf *=
-buf, struct pci_dev *pdev)
->  	seq_buf_printf(buf, "%s;", pci_name(pdev));
->  }
-> =20
-> -static bool __host_bridge_whitelist(struct pci_host_bridge *host)
-> +static const struct pci_p2pdma_whitelist_entry {
-> +	unsigned short vendor;
-> +	unsigned short device;
-> +	bool req_same_host_bridge;
+On Fri, 2019-07-26 at 02:42 +0800, Pengfei Li wrote:
+> Objective
+> ----
+> The motivation for this series of patches is use unsigned int for
+> "order" in compaction.c, just like in other memory subsystems.
 
-This would be more readable in the initializer as a flags not a bool
+I suppose you will need more justification for this change. Right now, I don't
+see much real benefit apart from possibly introducing more regressions in those
+tricky areas of the code. Also, your testing seems quite lightweight.
 
-Jason
+> 
+> In addition, did some cleanup about "order" in page_alloc
+> and vmscan.
+> 
+> 
+> Description
+> ----
+> Directly modifying the type of "order" to unsigned int is ok in most
+> places, because "order" is always non-negative.
+> 
+> But there are two places that are special, one is next_search_order()
+> and the other is compact_node().
+> 
+> For next_search_order(), order may be negative. It can be avoided by
+> some modifications.
+> 
+> For compact_node(), order = -1 means performing manual compaction.
+> It can be avoided by specifying order = MAX_ORDER.
+> 
+> Key changes in [PATCH 05/10] mm/compaction: make "order" and
+> "search_order" unsigned.
+> 
+> More information can be obtained from commit messages.
+> 
+> 
+> Test
+> ----
+> I have done some stress testing locally and have not found any problems.
+> 
+> In addition, local tests indicate no performance impact.
+> 
+> 
+> Pengfei Li (10):
+>   mm/page_alloc: use unsigned int for "order" in should_compact_retry()
+>   mm/page_alloc: use unsigned int for "order" in __rmqueue_fallback()
+>   mm/page_alloc: use unsigned int for "order" in should_compact_retry()
+>   mm/page_alloc: remove never used "order" in alloc_contig_range()
+>   mm/compaction: make "order" and "search_order" unsigned int in struct
+>     compact_control
+>   mm/compaction: make "order" unsigned int in compaction.c
+>   trace/events/compaction: make "order" unsigned int
+>   mm/compaction: use unsigned int for "compact_order_failed" in struct
+>     zone
+>   mm/compaction: use unsigned int for "kcompactd_max_order" in struct
+>     pglist_data
+>   mm/vmscan: use unsigned int for "kswapd_order" in struct pglist_data
+> 
+>  include/linux/compaction.h        |  30 +++----
+>  include/linux/mmzone.h            |   8 +-
+>  include/trace/events/compaction.h |  40 +++++-----
+>  include/trace/events/kmem.h       |   6 +-
+>  include/trace/events/oom.h        |   6 +-
+>  include/trace/events/vmscan.h     |   4 +-
+>  mm/compaction.c                   | 127 +++++++++++++++---------------
+>  mm/internal.h                     |   6 +-
+>  mm/page_alloc.c                   |  16 ++--
+>  mm/vmscan.c                       |   6 +-
+>  10 files changed, 126 insertions(+), 123 deletions(-)
+> 
