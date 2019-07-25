@@ -4,29 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F2EC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B94F5C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CFD2081B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D2B82081B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:24:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391257AbfGYRYV (ORCPT
+        id S2391111AbfGYRXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:24:21 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:39736 "EHLO ale.deltatee.com"
+        Thu, 25 Jul 2019 13:23:52 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:39610 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391129AbfGYRXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:23:54 -0400
+        id S1726283AbfGYRXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 13:23:45 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hqhSw-0001Jc-8e; Thu, 25 Jul 2019 11:23:53 -0600
+        id 1hqhSv-0001JO-Pc; Thu, 25 Jul 2019 11:23:43 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hqhSw-0001nc-3Q; Thu, 25 Jul 2019 11:23:42 -0600
+        id 1hqhSv-0001nN-KG; Thu, 25 Jul 2019 11:23:41 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
@@ -35,19 +36,19 @@ Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
         Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
         Max Gurtovoy <maxg@mellanox.com>,
         Stephen Bates <sbates@raithlin.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 25 Jul 2019 11:23:31 -0600
-Message-Id: <20190725172335.6825-13-logang@deltatee.com>
+        Logan Gunthorpe <logang@deltatee.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Date:   Thu, 25 Jul 2019 11:23:26 -0600
+Message-Id: <20190725172335.6825-8-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190725172335.6825-1-logang@deltatee.com>
 References: <20190725172335.6825-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com, logang@deltatee.com
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v6 12/16] nvmet-core: don't check the data len for pt-ctrl
+Subject: [PATCH v6 07/16] nvmet: make nvmet_copy_ns_identifier() non-static
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,47 +56,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+This function will be needed by the upcoming passthru code.
 
-Right now, data_len is calculated before the transfer len after we
-parse the command, With passthru interface we allow VUCs (Vendor-Unique
-Commands). In order to make the code simple and compact, instead of
-assigning the data len or each VUC in the command parse function
-just use the transfer len as it is. This may result in error if expected
-data_len != transfer_len.
-
+[chaitanya.kulkarni@wdc.com: this was factored out of a patch
+ originally authored by Chaitanya]
 Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-[logang@deltatee.com:
-   * added definition of VUC to the commit message and comment
-   * use nvmet_req_passthru_ctrl() helper seeing we can't dereference
-     subsys->passthru_ctrl if CONFIG_NVME_TARGET_PASSTHRU is not set]
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- drivers/nvme/target/core.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/nvme/target/admin-cmd.c | 4 ++--
+ drivers/nvme/target/nvmet.h     | 2 ++
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index 9e92486e2ee9..77660dfc6c8f 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -942,7 +942,16 @@ EXPORT_SYMBOL_GPL(nvmet_req_uninit);
+diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
+index 4dc12ea52f23..eeb24f606d00 100644
+--- a/drivers/nvme/target/admin-cmd.c
++++ b/drivers/nvme/target/admin-cmd.c
+@@ -506,8 +506,8 @@ static void nvmet_execute_identify_nslist(struct nvmet_req *req)
+ 	nvmet_req_complete(req, status);
+ }
  
- void nvmet_req_execute(struct nvmet_req *req)
+-static u16 nvmet_copy_ns_identifier(struct nvmet_req *req, u8 type, u8 len,
+-				    void *id, off_t *off)
++u16 nvmet_copy_ns_identifier(struct nvmet_req *req, u8 type, u8 len,
++			     void *id, off_t *off)
  {
--	if (unlikely(req->data_len != req->transfer_len)) {
-+	/*
-+	 * data_len is calculated before the transfer len after we parse
-+	 * the command, With passthru interface we allow VUC (Vendor-Unique
-+	 * Commands)'s. In order to make the code simple and compact,
-+	 * instead of assinging the dala len for each VUC in the command
-+	 * parse function just use the transfer len as it is. This may
-+	 * result in error if expected data_len != transfer_len.
-+	 */
-+	if (!(req->sq->ctrl && nvmet_req_passthru_ctrl(req)) &&
-+	    unlikely(req->data_len != req->transfer_len)) {
- 		req->error_loc = offsetof(struct nvme_common_command, dptr);
- 		nvmet_req_complete(req, NVME_SC_SGL_INVALID_DATA | NVME_SC_DNR);
- 	} else
+ 	struct nvme_ns_id_desc desc = {
+ 		.nidt = type,
+diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
+index 217a787952e8..d1a0a3190a24 100644
+--- a/drivers/nvme/target/nvmet.h
++++ b/drivers/nvme/target/nvmet.h
+@@ -489,6 +489,8 @@ u16 nvmet_bdev_flush(struct nvmet_req *req);
+ u16 nvmet_file_flush(struct nvmet_req *req);
+ void nvmet_ns_changed(struct nvmet_subsys *subsys, u32 nsid);
+ 
++u16 nvmet_copy_ns_identifier(struct nvmet_req *req, u8 type, u8 len,
++			     void *id, off_t *off);
+ static inline u32 nvmet_rw_len(struct nvmet_req *req)
+ {
+ 	return ((u32)le16_to_cpu(req->cmd->rw.length) + 1) <<
 -- 
 2.20.1
 
