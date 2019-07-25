@@ -2,151 +2,117 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 351C2C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B62C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC112190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209A92190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:48:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="K+j5/UFi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l29inhlX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390219AbfGYErR (ORCPT
+        id S2390236AbfGYEsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 00:47:17 -0400
-Received: from ozlabs.org ([203.11.71.1]:47551 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390204AbfGYErR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 00:47:17 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45vKSf27J0z9sBt;
-        Thu, 25 Jul 2019 14:47:13 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564030034;
-        bh=XgNiyUC/8j8tQYX8YJAPfwm9flwHUimtQeGsqjcgCgk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=K+j5/UFiVp1yASqfFfYtxDs/Io9FD0y/x41FEDqoGc0fAHf5rlVnAQmDp1Djf9m8h
-         n55DtPVvc01KxlvO2xp6E2SjGeUZ/7SlntUyZAl/hUqPrr94v7XmAGbdOVm6Tb2xLr
-         KMEXt4BdioAo7CjNU7ZSor1NIMzw6YWCGxI7nqQxmxAIkT7VIMNMPJg2/wIqF3c2rc
-         QEn4XtWdPQG9BNxOnQV0D4s0oiWVcyA4k478X4bPhvCGfad7fhUYyV4xweAD3TeHWB
-         h/cmW+567geuOxcCWRxtPX+//PLKHmk8ZXaQmwiyI9kyn75JFDJNb5kOBEImaw1Tt+
-         JRMJ6hJr6qZYA==
-Date:   Thu, 25 Jul 2019 14:47:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nikolay Borisov <nborisov@suse.com>
-Subject: linux-next: run time BUG after merge of the vfs-fixes tree?
-Message-ID: <20190725144712.39cb1e5b@canb.auug.org.au>
+        Thu, 25 Jul 2019 00:48:52 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55599 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390204AbfGYEsv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 00:48:51 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a15so43644835wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 21:48:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+CjiCyagoNsqpoWWP7KGTzXOceM7b7O4YQsDKRX4Ms0=;
+        b=l29inhlXBVh2okbkCb5f/SAYbAURlgoamQDh/gA6pF7TXGwbDpqZbFX4aw/paPnLiU
+         u5h16aKmgLL72jOGJOywp1wxiAMVLCRDttztYZK5BwHjxJw4xW8lLaeHUDyvSjHWikCy
+         G7V34+woMGgeYGG/0JJQYx4pJPBZtKDjYsliFwJQRs+dPnopy/1aPr0szJhGguToz3xQ
+         pd1/6hitOzHw1nejxOggjj4JlnZv9ouR5Aw8m10wqH25D54QA5CvtIDOmdh0ZYTpoP+h
+         5pl7/r/vLe4bPB5gfKuFrEOg8WeV2+6TxaacDYi8hLKEFvElO0iviEC1fN7dmaLM4HLN
+         M5Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+CjiCyagoNsqpoWWP7KGTzXOceM7b7O4YQsDKRX4Ms0=;
+        b=NOPSpPuGcAbMva0Z4AYG28w9vrtmkdHoOu/WXg3ZReclMnEeed3aCSHaKqIs72/7xo
+         fJXpp1+I4gND7Q4/jCKpL1uUf1ZBq0iHMlx8MOYPxttP7GgKG922CZw5ZFQWD6pgcFTI
+         3649U7tnHTprEJo0ZLWmzhVNIAQV4tFarkg1wmdUwW5+SL1A4pSjW60ljQkRoihtk+xl
+         +TfYDJQ7jAYewvMKH8F+c/6uYs7X2wZwZpr3q7Gt4GhAS1WO8mhm5Yj03NGhM121e371
+         bDkPNfuxnHlrdLY1YDvnngacVxrEEVn040dclSZlQj4LUFs1QWINjSY2BBkIhVOlamb1
+         oKNQ==
+X-Gm-Message-State: APjAAAWbcIDToGUG0JyLVsjgJn0ftcvrj0jFj+hUIpPntvjXB6v36mnR
+        3HF80SOm510Ej/xB8/jaeYEcsc5g8/641ogPWnA7eMcpLQm8iA==
+X-Google-Smtp-Source: APXvYqw/5anRgyaiKCDwwspxRPCdSOmNMxbjsA4+qFmvCFzLAjk54gDo+M6pbm9Y/DuOU3ix5J9zf62/uj1ZqTKCC8U=
+X-Received: by 2002:a05:600c:2218:: with SMTP id z24mr76803011wml.84.1564030128834;
+ Wed, 24 Jul 2019 21:48:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pEgeTEg2=EXC5OrdPMK6f02";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <CAPhKKr-0SiE=_UFEUovbVpLvhJmZMq_i2tA6Pp0v6cy2aLS_YA@mail.gmail.com>
+In-Reply-To: <CAPhKKr-0SiE=_UFEUovbVpLvhJmZMq_i2tA6Pp0v6cy2aLS_YA@mail.gmail.com>
+From:   Dhaval Giani <dhaval.giani@gmail.com>
+Date:   Wed, 24 Jul 2019 21:48:37 -0700
+Message-ID: <CAPhKKr-o4p9oYZ7_iagWL5bouUR6O+K7s07dQzjDQw6t9JdRcQ@mail.gmail.com>
+Subject: Re: CFP: LPC Testing and Fuzzing microconference.
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        "Carpenter,Dan" <dan.carpenter@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        gustavo padovan <gustavo.padovan@collabora.co.uk>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        knut omang <knut.omang@oracle.com>, shuah <shuah@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Tim Bird <tbird20d@gmail.com>, guillaume.tucker@collabora.com,
+        mark.rutland@arm.com, Nick Desaulniers <ndesaulniers@google.com>,
+        Veronika Kabatova <vkabatov@redhat.com>,
+        Eliska Slobodova <eslobodo@redhat.com>,
+        andrea.parri@amarulasolutions.com,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/pEgeTEg2=EXC5OrdPMK6f02
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jul 2, 2019 at 1:12 PM Dhaval Giani <dhaval.giani@gmail.com> wrote:
+>
+> Hi folks,
+>
+> I am pleased to announce the Testing Microconference has been accepted
+> at LPC this year.
+>
+> The CfP process is now open, and please submit your talks on the LPC
+> website. It can be found at
+> https://linuxplumbersconf.org/event/4/abstracts/
+>
+> Potential topics include, but are not limited to
+> - Defragmentation of testing infrastructure: how can we combine
+> testing infrastructure to avoid duplication.
+> - Better sanitizers: Tag-based KASAN, making KTSAN usable, etc
+> - Better hardware testing, hardware sanitizers.
+> - Are fuzzers "solved"?
+> - Improving RT testing.
+> - Using clang for better testing coverage.
+> - Unit test framework.
+> - The future of kernelCI
+>
 
 Hi all,
 
-During my qemu boot tests (powerpc64 pseries_le_defconfig) today, I got
-the following BUG:
+Just a reminder, the CfP is open for the microconference and proposals
+are being accepted. We plan to start selecting topics starting Aug 11
+and  can let you know that if you don't get your topic in, it will not
+be selected!
 
-# halt
-# Stopping network...Saving random seed... [    6.515368] random: dd: unini=
-tialized urandom read (512 bytes read)
-done.
-Stopping logging: OK
-[    6.796972] BUG: Unable to handle kernel data access at 0x5deadbeef00001=
-22
-[    6.797133] Faulting instruction address: 0xc00000000041cba4
-[    6.797616] Oops: Kernel access of bad area, sig: 11 [#1]
-[    6.797725] LE PAGE_SIZE=3D64K MMU=3DHash SMP NR_CPUS=3D2048 NUMA pSeries
-[    6.797987] Modules linked in:
-[    6.798405] CPU: 0 PID: 111 Comm: umount Not tainted 5.3.0-rc1 #2
-[    6.798554] NIP:  c00000000041cba4 LR: c00000000041cb90 CTR: 00000000000=
-001fc
-[    6.798664] REGS: c00000007e1eba70 TRAP: 0380   Not tainted  (5.3.0-rc1)
-[    6.798716] MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 82242884 =
- XER: 20000000
-[    6.798957] CFAR: c00000000041c434 IRQMASK: 0=20
-[    6.798957] GPR00: c00000000041cb90 c00000007e1ebd00 c00000000110e100 00=
-00000000000001=20
-[    6.798957] GPR04: 0000000000000800 0000000000000800 0000000000020000 c0=
-0000000113dbf8=20
-[    6.798957] GPR08: 0000000000000048 c00000007a2e2100 5deadbeef0000122 c0=
-00000079417380=20
-[    6.798957] GPR12: 0000000022242884 c0000000012f0000 0000000000000000 00=
-00000000000000=20
-[    6.798957] GPR16: 0000000000000000 0000000000000000 0000000000000000 00=
-00000000000000=20
-[    6.798957] GPR20: 0000000000000000 0000000000000000 0000000000000000 00=
-000000100bce20=20
-[    6.798957] GPR24: 0000000000000000 c00000007a2e2100 0000000000000000 c0=
-0000007a2e2188=20
-[    6.798957] GPR28: 0000000000000000 5deadbeef0000100 5deadbeef0000122 5d=
-eadbeef0000100=20
-[    6.800143] NIP [c00000000041cba4] namespace_unlock+0x194/0x240
-[    6.800208] LR [c00000000041cb90] namespace_unlock+0x180/0x240
-[    6.800366] Call Trace:
-[    6.800456] [c00000007e1ebd00] [c00000000041cb90] namespace_unlock+0x180=
-/0x240 (unreliable)
-[    6.800603] [c00000007e1ebd60] [c00000000041e634] ksys_umount+0x324/0x6f0
-[    6.800760] [c00000007e1ebe00] [c00000000041ea24] sys_umount+0x24/0x40
-[    6.800824] [c00000007e1ebe20] [c00000000000ba64] system_call+0x5c/0x70
-[    6.800940] Instruction dump:
-[    6.801234] 81490124 fba900f0 fbc900f8 2f8a0000 409e00b0 7d234b78 4bfff8=
-0d 353fff10=20
-[    6.801374] 4182007c ebe900f0 e94900f8 2fbf0000 <fbea0000> 409effc8 3ce0=
-5dea 60e7dbee=20
-[    6.801992] ---[ end trace 34315779952607e2 ]---
-[    6.905920]=20
-The system is going down NOW!
+https://linuxplumbersconf.org/event/4/abstracts/
 
-5deadbeef is the ppc64 ILLEGAL_POINTER_VALUE.  I am guessing that the
-problem may have been introduced by commit
-
-  2085eeffbc6d ("fix the struct mount leak in umount_tree()")
-
-in the vfs-fixes tree today.
-
-And actually reverting that commit makes the BUG go away.
-
-After doing the revert (and also before today), I get the following log
-messages instead of the BUG trace:
-
-umount: devtmpfs busy - remounted read-only
-umount: can't unmount /: Invalid argument
-
-So, I have left that commit reverted for today.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/pEgeTEg2=EXC5OrdPMK6f02
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl05NFAACgkQAVBC80lX
-0GzMCgf/Z43iUTipx8OAm5+vbL33R6EKfD0dTufyKZFYSro17WVkUYcE27nQmYbj
-PII9tbx+S1uDvwMMX/0RumvK3aM2ygkf93RcVobI0D8+X95TCQe3Sx6IgsW2Uk8E
-lX7f3Nfzpcm29EdQJZ52c6x2wALnCmvQubFPi5E0q9azIrD/5Ih49pLrL3O2moiB
-z+7pCABIEr9eu5nEAFDDrOdyWgrwslY+ogZdmQo7KSqXYuX5yHqk/wWE6VVGAtCR
-bAEVczy8LFUONlQfIGmbULLZ+CFQ8djj7Izdf3aktfWUMHiD6iJLi9JsXOdg7aB/
-c4KSHUCk9Jn5CFkjN2IPikJ6JJCS5w==
-=9j6j
------END PGP SIGNATURE-----
-
---Sig_/pEgeTEg2=EXC5OrdPMK6f02--
+Thanks!
+Dhaval and Sasha
