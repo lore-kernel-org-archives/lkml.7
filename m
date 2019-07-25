@@ -2,160 +2,90 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 818E4C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60236C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C872084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 312212084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:49:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="PONBzy9m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WaQ6X+y1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729943AbfGYRt3 (ORCPT
+        id S2391397AbfGYRte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:49:29 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:40848 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbfGYRt2 (ORCPT
+        Thu, 25 Jul 2019 13:49:34 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38739 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbfGYRtd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:49:28 -0400
-Received: by mail-yw1-f68.google.com with SMTP id b143so19508586ywb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 10:49:28 -0700 (PDT)
+        Thu, 25 Jul 2019 13:49:33 -0400
+Received: by mail-pl1-f194.google.com with SMTP id az7so23669513plb.5;
+        Thu, 25 Jul 2019 10:49:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OoM8RtRnrNUtmStwHC0+KsBVS4r5eOo6VxB/ZvbIcwo=;
-        b=PONBzy9mx1DDK1v+PDvnFEOMsIP29+0jf0+9Dje+TouNHnF2UwKEqX8OOyaxBJTGnt
-         OV1bfLoOuHYjXDoU1BlfXjNKFe7sEOIcGb+ox+V0IEmBiaF1/HnpmsGUxsy/A6Xigvab
-         kdsVP8dDJdZssywclnmsA3ZUWVyamTEQmaG65pED40ts05lpsanvnqa/eOimkuHhGa8Q
-         N3eYdh6fDyAMvUKnz++34Ux316nwQeeHe/IgOmUIfDFUTL3VNAit82ry0LJO2taTti33
-         gcwZ38qJU33CNcpWNk7X7ujmL+v7j+g5FEb9c2vzDoq4VFSJHVMzmnUqwrOea8prtzZH
-         pU7g==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l2BJIslaNIswmvgTol4V5L0Vj/yDrK/SgSYfdATf9ME=;
+        b=WaQ6X+y11G7pCD3oqPwkvQ6X30erNd35PMGZv+eSltcVvkE4p5xxNkBCCNDX9y+xiD
+         Ox8dZIHZfNtWUODM/hWymYQSdsxoAx3vpD0nS5tIjiamIeI/iCBzQLTs1mllddbLdq/W
+         NTTxdkvluSc/v+MZjjGvZ/+GV+GtYddg1XgW3uNV9JD5LS+u/U8aMLsEh7fqQquPRnjW
+         foT7Jmjz5XYQ0LUMmZjL/aCfUT6wgSxuvYsNp9NeJrjMJI5kH5Qk49+3oHkitYg9z5wB
+         /OZuCXqzwN3f9hLPIVK+5qvMae+9+MIxc5q553V6va1PnSLsFMtpc5p7vS9DUuKjSpBA
+         H4uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OoM8RtRnrNUtmStwHC0+KsBVS4r5eOo6VxB/ZvbIcwo=;
-        b=MWBuNPL6VUyMGhm8zLDAMSOEg1edyCS4qdsfjTuJPQpVLyxe2uyNisStR18EOs2c7b
-         zi8ssHohzVMmLn5L5+8ueBDYzcTvBssOLUs0M5lXIixV06gBs7sD3hFVM+hPtlvr5RfO
-         lAn47SGQodQu/vFp51TzFNccLA2+mK/iougABQvFE99q5q+EUvTBrejnCpWJ74ONL3g7
-         9b+jdZOrimojIk6BSA96hxPjrOKIOF5bLizTKdoSgWrsrDpI68qPPF1706dj5O6gBrpo
-         QUnTVKIgFEd4XIA5BxrX1ZEDn3+c+o9YPbVrrO64gam0ARh+fDECaYHCJY3giIUcmbbV
-         a5nA==
-X-Gm-Message-State: APjAAAWzmaCiFcOEFJ3lU6gbJJ0sq7c8ILnBQDAMSOQCVyTHh08V4Isr
-        b4M586u6FVou8Z1xbP9gOvauZg==
-X-Google-Smtp-Source: APXvYqxAHNazdJ/L/5l/x5/K71LHWoAyCkyD4hcgJI1CalnKgpmUThw46IPfZZiomqYwo37622E3Ig==
-X-Received: by 2002:a81:a705:: with SMTP id e5mr52681935ywh.445.1564076967880;
-        Thu, 25 Jul 2019 10:49:27 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id 131sm11662257ywq.21.2019.07.25.10.49.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 10:49:27 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 13:49:27 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Sean Paul <sean@poorly.run>, Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Adam Jackson <ajax@redhat.com>
-Subject: Re: [PATCH v2] drm/bridge: dw-hdmi: Refuse DDC/CI transfers on the
- internal I2C controller
-Message-ID: <20190725174927.GN104440@art_vandelay>
-References: <20190722181945.244395-1-mka@chromium.org>
- <20190722202426.GL104440@art_vandelay>
- <20190722210207.GZ250418@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l2BJIslaNIswmvgTol4V5L0Vj/yDrK/SgSYfdATf9ME=;
+        b=uCFEaZDJ0WiE+Jeo8rT3qIy+fVJEWKP28KQiBqtS0Kyi1anMeOifQgZvOpqTl7bKTe
+         36z7GuPcTogRrkVeSzb2vz4YLKH5yWofkuO7Jck5U6psO4/WCP0ck/BloqWi5kb3g7/g
+         a9fH7CNdL059G52W6+wOj0OqQcI8VwRw/+HWai8G6K7NBXKGxAyTTzwhrAiMAxG6uKX/
+         FKhP9/URdxf3qcooULVomBLgP1JIy7dxVemATlE4ddfL1hGHfgxfmZEKcLBZWTERSHCO
+         2k3y3bQ2BVL1+vQYnZjR1vtw4LeN6hnxGtgN3RB4AM+pEyOD5UGnGImJK8EV0t3qJTD4
+         feqA==
+X-Gm-Message-State: APjAAAVBteaJZCrivriwgXTOF8OZqTXEZOf89rU6BUZl1lM+mJDMBfZs
+        AhmgeZKN6u1DFQFV8x190RczwbazK3uAivaUeGc=
+X-Google-Smtp-Source: APXvYqwhwEsYNUUkS+BYkZ9yygVXiAwC/5MQXbEH3PLWYh8PkTAUC345hfJWgphH9g+GrE9L3Q35IuTl91AK2NKlgOs=
+X-Received: by 2002:a17:902:694a:: with SMTP id k10mr91275985plt.255.1564076972831;
+ Thu, 25 Jul 2019 10:49:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722210207.GZ250418@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190704090205.19400-1-fe@dev.tdt.de> <CAHp75Vcocs=9AwX32ouOWFc+wAduCFv2DT_p4JYPUVV0BumjqA@mail.gmail.com>
+ <4b43316c-3e05-0ce9-3ada-db22996205b9@metux.net> <cc5bbcd7148ece53a075948f240bc66b@dev.tdt.de>
+In-Reply-To: <cc5bbcd7148ece53a075948f240bc66b@dev.tdt.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 25 Jul 2019 20:49:21 +0300
+Message-ID: <CAHp75Vct4O+P62vUo02e5iJy9JMFBDjijFf-JUxjRrMhf1XTEg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Update pcengines-apuv2 platform device
+To:     Florian Eckert <fe@dev.tdt.de>
+Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Eckert.Florian@googlemail.com,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 02:02:07PM -0700, Matthias Kaehlcke wrote:
-> On Mon, Jul 22, 2019 at 04:24:26PM -0400, Sean Paul wrote:
-> > On Mon, Jul 22, 2019 at 11:19:45AM -0700, Matthias Kaehlcke wrote:
-> > > The DDC/CI protocol involves sending a multi-byte request to the
-> > > display via I2C, which is typically followed by a multi-byte
-> > > response. The internal I2C controller only allows single byte
-> > > reads/writes or reads of 8 sequential bytes, hence DDC/CI is not
-> > > supported when the internal I2C controller is used. The I2C
-> > 
-> > This is very likely a stupid question, but I didn't see an answer for it, so
-> > I'll just ask :)
-> > 
-> > If the controller supports xfers of 8 bytes and 1 bytes, could you just split
-> > up any of these transactions into len/8+len%8 transactions?
-> 
-> The controller interprets all transfers to be register accesses. It is
-> not possible to just send the sequence '0x0a 0x0b 0x0c' as three byte
-> transfers, the controller expects an address for each byte and
-> (supposedly) sends it over the wire, which typically isn't what you
-> want.
-> 
-> Also the 8-byte reads only seem to be supported in certain
-> configurations ("when the DWC_HDMI_TX_20 parameter is enabled").
+On Wed, Jul 10, 2019 at 3:54 PM Florian Eckert <fe@dev.tdt.de> wrote:
+>
+> On 2019-07-08 21:45, Enrico Weigelt, metux IT consult wrote:
+> > On 04.07.19 15:39, Andy Shevchenko wrote:
+> >> On Thu, Jul 4, 2019 at 12:02 PM Florian Eckert <fe@dev.tdt.de> wrote:
+> >>>
+> >>> This patchset adds the following changes to this pcengines-apuv2
+> >>> platform device.
 
-Thanks for the detailed answers (both you and Doug)!
-
-This change looks good to me, but I'll leave it to a dw-hdmi expert to apply. So
-fwiw,
-
-Reviewed-by: Sean Paul <sean@poorly.run>
-
-
-> 
-> > > transfers complete without errors, however the data in the response
-> > > is garbage. Abort transfers to/from slave address 0x37 (DDC) with
-> > > -EOPNOTSUPP, to make it evident that the communication is failing.
-> > > 
-> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > ---
-> > > Changes in v2:
-> > > - changed DDC_I2C_ADDR to DDC_CI_ADDR
-> > > ---
-> > >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > > 
-> > > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > > index 045b1b13fd0e..28933629f3c7 100644
-> > > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > > @@ -35,6 +35,7 @@
-> > >  
-> > >  #include <media/cec-notifier.h>
-> > >  
-> > > +#define DDC_CI_ADDR		0x37
-> > >  #define DDC_SEGMENT_ADDR	0x30
-> > >  
-> > >  #define HDMI_EDID_LEN		512
-> > > @@ -322,6 +323,13 @@ static int dw_hdmi_i2c_xfer(struct i2c_adapter *adap,
-> > >  	u8 addr = msgs[0].addr;
-> > >  	int i, ret = 0;
-> > >  
-> > > +	if (addr == DDC_CI_ADDR)
-> > > +		/*
-> > > +		 * The internal I2C controller does not support the multi-byte
-> > > +		 * read and write operations needed for DDC/CI.
-> > > +		 */
-> > > +		return -EOPNOTSUPP;
-> > > +
-> > >  	dev_dbg(hdmi->dev, "xfer: num: %d, addr: %#x\n", num, addr);
-> > >  
-> > >  	for (i = 0; i < num; i++) {
-> > 
+Guys, I'm lost with this series.
+So, for now I dropped them from queue, if needed, please resend a new version.
 
 -- 
-Sean Paul, Software Engineer, Google / Chromium OS
+With Best Regards,
+Andy Shevchenko
