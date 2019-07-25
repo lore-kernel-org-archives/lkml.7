@@ -2,132 +2,99 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF237C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5A7C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C696D20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85F0522BE8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rI6tcfKj"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="2A7zoUHo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391402AbfGYRuE (ORCPT
+        id S1730025AbfGYRuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:50:04 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:7666 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387988AbfGYRuE (ORCPT
+        Thu, 25 Jul 2019 13:50:18 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37712 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfGYRuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:50:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d39ebc90001>; Thu, 25 Jul 2019 10:50:01 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 25 Jul 2019 10:50:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 10:50:03 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 25 Jul
- 2019 17:49:59 +0000
-Subject: Re: [PATCH v3 1/3] mm: document zone device struct page field usage
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Matthew Wilcox" <willy@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Christoph Lameter" <cl@linux.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20190724232700.23327-1-rcampbell@nvidia.com>
- <20190724232700.23327-2-rcampbell@nvidia.com>
- <20190725012225.GB32003@mellanox.com>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <131f7c2d-704e-6f58-a330-e62d2ef5539e@nvidia.com>
-Date:   Thu, 25 Jul 2019 10:49:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 25 Jul 2019 13:50:17 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6PHneBn053659;
+        Thu, 25 Jul 2019 17:50:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=T/6UXjTIk4O6K3Oj5xQH/Mu3o8xx8bGvbsb/pf1PMMc=;
+ b=2A7zoUHoRPgAh3r0/WGbCARKwST+kryKnKc+P3fESgFE0rH9dONDOBUUp7u3ZRqfjMYO
+ nPluHEhkjL7ZyeVgWizFphXdKdTak1Bel2iUGJXf6T2xYsKVGyVKGzyWQOpOmtlrWwW3
+ daoI+fMbtcntIVy5vUUMVibm7yZ4ahOXDIHwc5yCBBdkt5XX/l6dsXAsxKNQVsMYjF2X
+ xPuJzLkMwVbOD+TFk/opsQCs2HoGUb7uL9qox9OjwZTFmFSvAFRmiP5zXA6ZUsUt/ITY
+ lk8q0AEEiMIQXXss/G2KppwjXI13ZJTErDnNkzUan1ClyNXeR305j5A6pUVAjHlIrcre SQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2tx61c5n98-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jul 2019 17:50:15 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6PHgdxV074027;
+        Thu, 25 Jul 2019 17:50:15 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2tx60xy602-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jul 2019 17:50:14 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6PHoEf5007397;
+        Thu, 25 Jul 2019 17:50:14 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 25 Jul 2019 10:50:14 -0700
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id 99CF06A0133; Thu, 25 Jul 2019 13:52:07 -0400 (EDT)
+Date:   Thu, 25 Jul 2019 13:52:07 -0400
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] (ibft) for-linus-5.3
+Message-ID: <20190725175207.GC11606@char.us.oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20190725012225.GB32003@mellanox.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564077001; bh=oG7iW18JoTbi7qpLIpRxo4HqaxvkInQKbpTpVVtqeEU=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=rI6tcfKjR1LQ254m/IBmbYjmdPRO+O414xxVE9H4xpU4Cf8g4LrW5czg2J7R/E9UK
-         IuCJmkMOGHg5UbU9py+N6/OsZqu0i3kxRiq72lxvyBAr4R/SRk3Ph9b4cPcj0+1LeQ
-         HcTMy4xeIFVIAR/fE4ZXX5aJEY1rtnMNaOKBxofLLtl/zXXuVCCDs4bXhLpGBDLgQt
-         jjmro4lglHz8GYKuKJiGVMABgSpyow5/WGddYIcOrx8yIJ0mqOfTMoW7AvMdQppRqc
-         XVh3RCs98U6YxWpnWEHvzQGz1G2j+AT6dv7iCO4T/AZ4bzZCYxC97uD7qOLtgfVRr8
-         Xb1mVLma/E6qQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9329 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907250209
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9329 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907250210
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 7/24/19 6:22 PM, Jason Gunthorpe wrote:
-> On Wed, Jul 24, 2019 at 04:26:58PM -0700, Ralph Campbell wrote:
->> Struct page for ZONE_DEVICE private pages uses the page->mapping and
->> and page->index fields while the source anonymous pages are migrated to
->> device private memory. This is so rmap_walk() can find the page when
->> migrating the ZONE_DEVICE private page back to system memory.
->> ZONE_DEVICE pmem backed fsdax pages also use the page->mapping and
->> page->index fields when files are mapped into a process address space.
->>
->> Add comments to struct page and remove the unused "_zd_pad_1" field
->> to make this more clear.
->>
->> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
->> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
->> Cc: Matthew Wilcox <willy@infradead.org>
->> Cc: Vlastimil Babka <vbabka@suse.cz>
->> Cc: Christoph Lameter <cl@linux.com>
->> Cc: Dave Hansen <dave.hansen@linux.intel.com>
->> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
->> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
->> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
->> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
->> Cc: Pekka Enberg <penberg@kernel.org>
->> Cc: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
->> Cc: Christoph Hellwig <hch@lst.de>
->> Cc: Jason Gunthorpe <jgg@mellanox.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Linus Torvalds <torvalds@linux-foundation.org>
->>   include/linux/mm_types.h | 11 ++++++++++-
->>   1 file changed, 10 insertions(+), 1 deletion(-)
->=20
-> Ralph, you marked some of thes patches as mm/hmm, but I feel it is
-> best if Andrew takes them through the normal -mm path.
->=20
-> They don't touch hmm.c or mmu notifiers so I don't forsee conflicts,
-> and I don't feel comfortable to review this code.
->=20
-> Regards,
-> Jason
->=20
+Hey Linus,
 
-Fine with me. I should have been clear in the cover letter which
-tree to target.
+Please git pull the following branch which is a tiny bit late (patch
+was posted furing merge window and I wanted to wait until rc1):
+
+
+git://git.kernel.org/pub/scm/linux/kernel/git/konrad/ibft.git for-linus-5.3
+
+which has one tiny fix to enable iSCSI IBFT to be compiled under ARM.
+
+Thank you.
+
+ drivers/firmware/Kconfig      | 5 +++--
+ drivers/firmware/iscsi_ibft.c | 4 ++++
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+Thomas Tai (1):
+      iscsi_ibft: make ISCSI_IBFT dependson ACPI instead of ISCSI_IBFT_FIND
+
