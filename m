@@ -2,106 +2,137 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E4EC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92364C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE6F121951
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6935A21951
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:35:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LRiGObCe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C+5aYuGN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729999AbfGYRfl (ORCPT
+        id S1730014AbfGYRfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:35:41 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:45266 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728019AbfGYRfl (ORCPT
+        Thu, 25 Jul 2019 13:35:55 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40724 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728019AbfGYRfy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:35:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7S+mctC2FhBs/Hku2og3Bm1k7tfhyAgfjbJr1N7F9Uk=; b=LRiGObCedXMclAYzSlb4TkgRfX
-        QYlk179arC3nQls30Fm2NmETfGCoXzbLHCeaLFFF58gA9+wgVFfIuhnoYMsqaRzDlffp+5AvsCWjQ
-        GFWb4MOBLFQOMCnkng/JRLHns6JGNrGuDjxH5Xgx8LtKWuIEybpGNfTKSVOvecFHjNauR34S93lF+
-        rP2hrw3khBw1eZQecH4HwS8VdZNp5rlO1IJT4AcH+LfEwpbMHD2fv0gZNWXOdq2aveijdwe6C2gAL
-        O+MqzAPvMW+gwsATAamJ/v95B6FMfcDZvs0UDLVXj8siXxlmi6F2JdfA9TRADhP59bfi2xUiTeJwN
-        y1/zX8IA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqheE-0006qo-VI; Thu, 25 Jul 2019 17:35:23 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A91352019A002; Thu, 25 Jul 2019 19:35:21 +0200 (CEST)
-Date:   Thu, 25 Jul 2019 19:35:21 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org,
-        gustavo@embeddedor.com, torvalds@linux-foundation.org,
-        acme@kernel.org, kan.liang@linux.intel.com, namhyung@kernel.org,
-        jolsa@redhat.com, linux-kernel@vger.kernel.org,
-        alexander.shishkin@linux.intel.com, keescook@chromium.org,
-        linux-tip-commits@vger.kernel.org
-Subject: Re: [tip:perf/urgent] perf/x86/intel: Mark expected switch
- fall-throughs
-Message-ID: <20190725173521.GM31381@hirez.programming.kicks-ass.net>
-References: <20190624161913.GA32270@embeddedor>
- <tip-289a2d22b5b611d85030795802a710e9f520df29@git.kernel.org>
- <20190725170613.GC27348@nazgul.tnic>
+        Thu, 25 Jul 2019 13:35:54 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w10so23394787pgj.7
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 10:35:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Tnaeq0Y3gkRSznLM6wB5JlAIZ9EuxGX/RgrHx+lQ6GU=;
+        b=C+5aYuGN+LuL47FHCQgQ9iMOaKrQPwI6rEsMqVIxiLRCFl0kcnZ69GnOd+kfP+3l/4
+         NMb0HnaCFhUke7ZRA8n8Z0DCNmrjLMoGxxCqmbIwNuIV0ruFj/VzEPzf1NxzCK7O0O/1
+         WwxUoiojsmZ35+KD2hXhb20xaKkY5xMReRfSlsK060VHSPiRJjQNeU0qIF4ti/MYIiXl
+         TVTBQMIxdpAY9/Ovwh1DGI07f48+LwYAf7s17RpCoY2bgEOG6JiF1f1mt4xb3JiH+TIs
+         QITDNjyjPq5oIcqvi7vBU1qOv+Woc3yaux5G3GVaKl8i1XTSaLP1H0Kw6ycxoL4ekXbb
+         2IAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Tnaeq0Y3gkRSznLM6wB5JlAIZ9EuxGX/RgrHx+lQ6GU=;
+        b=NYhdzHsEDUAoF1TjY+j9DT1OJLrf8JS4vKlrzrocJsP0wIx0ILQjL8F8EkWbI3jLJ2
+         bqQMcnux2z8WNmxxnWrxn+Yt6G58EMPDMGjTQt+G3KTL4NuGmo0EWZO2xKPsDJLrVHe+
+         CnJQg7JAbs04YTDR01w+IuzutwcWjf9DQ48Uozm6xe0JJQ3Z5Cmd+GeWW6drIRfOj7LX
+         xRWW0FroUSV1Ywg7u3jINYp7oOapHtxeGtGAZBrSnv6RcP71+qbziTnRMAYIV+67n+P/
+         zjybWXepupwebsCabIrRrVzj21aPJpkWYA9Me2Z5P9P58bGDqrOx5Gk8to8PapH9KuQw
+         HqOQ==
+X-Gm-Message-State: APjAAAX1FVHUNAYCBQS9oAdVoIo0vdc8i6nSv8Y3dpY2QhWWkvYaYIw2
+        F/851WlkRrf2KeQHgKs74Y4=
+X-Google-Smtp-Source: APXvYqwe+yUchsfysKmX+u+rwDIkY25DbaaG/Uj2Zbrvveshs2+AdWjHxuGcXkR4lEW/BnFn30cwhQ==
+X-Received: by 2002:a65:60cd:: with SMTP id r13mr61150026pgv.315.1564076153804;
+        Thu, 25 Jul 2019 10:35:53 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id z4sm78975766pfg.166.2019.07.25.10.35.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Jul 2019 10:35:53 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 10:36:38 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu/dma: Fix calculation overflow in __finalise_sg()
+Message-ID: <20190725173637.GC31961@Asurada-Nvidia.nvidia.com>
+References: <20190622043814.5003-1-nicoleotsuka@gmail.com>
+ <20190701122158.GE8166@8bytes.org>
+ <91a389be-fd76-c87f-7613-8cc972b69685@arm.com>
+ <20190701215016.GA16247@Asurada-Nvidia.nvidia.com>
+ <d4bccb17-2f7a-65e4-6c89-e37cceb6d935@arm.com>
+ <20190702210400.GA14593@Asurada-Nvidia.nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190725170613.GC27348@nazgul.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190702210400.GA14593@Asurada-Nvidia.nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 07:06:13PM +0200, Borislav Petkov wrote:
-> On Thu, Jul 25, 2019 at 09:27:10AM -0700, tip-bot for Gustavo A. R. Silva wrote:
-> > Commit-ID:  289a2d22b5b611d85030795802a710e9f520df29
-> > Gitweb:     https://git.kernel.org/tip/289a2d22b5b611d85030795802a710e9f520df29
-> > Author:     Gustavo A. R. Silva <gustavo@embeddedor.com>
-> > AuthorDate: Mon, 24 Jun 2019 11:19:13 -0500
-> > Committer:  Ingo Molnar <mingo@kernel.org>
-> > CommitDate: Thu, 25 Jul 2019 15:57:03 +0200
-> > 
-> > perf/x86/intel: Mark expected switch fall-throughs
-> > 
-> > In preparation to enabling -Wimplicit-fallthrough, mark switch
-> > cases where we are expecting to fall through.
-> > 
-> > This patch fixes the following warnings:
-> 
-> "This patch"
-> 
-> > 
-> >   arch/x86/events/intel/core.c: In function ‘intel_pmu_init’:
-> >   arch/x86/events/intel/core.c:4959:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
-> >   arch/x86/events/intel/core.c:5008:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
-> > 
-> > Warning level 3 was used: -Wimplicit-fallthrough=3
-> > 
-> > This patch is part of the ongoing efforts to enable -Wimplicit-fallthrough.
-> 
-> Another "This patch"
-> 
-> I think it is clear about which patch the commit message is talking
-> about, without stating it explicitly.
+Sorry to ping this but it's been a while.
 
-It fits with the whole atrocious 'comments are significant' premise that
-the Changelog is atrocious too :-)
+Robin, did you get a chance to resend your version?
 
-/me runs for cover.
+Thanks
+Nicolin
 
-Seriously though; I detest these patches and we really, as in _really_
-should have done that attribute thing.
+On Tue, Jul 02, 2019 at 02:04:01PM -0700, Nicolin Chen wrote:
+> On Tue, Jul 02, 2019 at 11:40:02AM +0100, Robin Murphy wrote:
+> > On reflection, I don't really think that size_t fits here anyway, since
+> > all the members of the incoming struct scatterlist are unsigned int too.
+> > Does the patch below work?
+> 
+> Yes.
+> 
+> > ----->8-----
+> > From: Robin Murphy <robin.murphy@arm.com>
+> > Subject: [PATCH] iommu/dma: Handle SG length overflow better
+> > 
+> > Since scatterlist dimensions are all unsigned ints, in the relatively
+> > rare cases where a device's max_segment_size is set to UINT_MAX, then
+> > the "cur_len + s_length <= max_len" check in __finalise_sg() will always
+> > return true. As a result, the corner case of such a device mapping an
+> > excessively large scatterlist which is mergeable to or beyond a total
+> > length of 4GB can lead to overflow and a bogus truncated dma_length in
+> > the resulting segment.
+> > 
+> > As we already assume that any single segment must be no longer than
+> > max_len to begin with, this can easily be addressed by reshuffling the
+> > comparison.
+> > 
+> > Fixes: 809eac54cdd6 ("iommu/dma: Implement scatterlist segment merging")
+> > Reported-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> 
+> Tested-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> 
+> Thank you!
+> 
+> > ---
+> >  drivers/iommu/dma-iommu.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> > index 129c4badf9ae..8de6cf623362 100644
+> > --- a/drivers/iommu/dma-iommu.c
+> > +++ b/drivers/iommu/dma-iommu.c
+> > @@ -721,7 +721,7 @@ static int __finalise_sg(struct device *dev, struct scatterlist *sg, int nents,
+> >  		 * - and wouldn't make the resulting output segment too long
+> >  		 */
+> >  		if (cur_len && !s_iova_off && (dma_addr & seg_mask) &&
+> > -		    (cur_len + s_length <= max_len)) {
+> > +		    (max_len - cur_len >= s_length)) {
+> >  			/* ...then concatenate it with the previous one */
+> >  			cur_len += s_length;
+> >  		} else {
