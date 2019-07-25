@@ -2,233 +2,121 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B40C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCCFC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C710522C7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E88F221734
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:21:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Q3ru68zm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387499AbfGYOVG (ORCPT
+        id S2387597AbfGYOVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:21:06 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:2559 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387415AbfGYOVG (ORCPT
+        Thu, 25 Jul 2019 10:21:33 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56121 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387419AbfGYOVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:21:06 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: +zUMXScR/IuLVaoogFLG0eUFNk/cAntHaKZhUr2c0LTY9rqicfEs+mlubuSl0eQA10HINvK1SY
- fQ+v4pLoQm8xHkim4iesTvc+K+us513GtF6PqU2nrn+iLXXxeCg6kRn9d1wP3rmzQ82of3aOZw
- ONZzliXHcJECA0quRaCAV6+p3ilx8npUv4kPDPNZtOA3XR3yyDtZqa/cC0Lh4edu1sja4T24Cj
- X4pRqaMfbLFRMbGhclCIWdFBxgGN0X2agSPIAqMOSbzeDuhebAYMyRRnzfO/XEBLX1xL2ekEMN
- 3PM=
-X-IronPort-AV: E=Sophos;i="5.64,307,1559545200"; 
-   d="scan'208";a="42755638"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Jul 2019 07:21:04 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.87.71) by
- chn-vm-ex03.mchp-main.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 25 Jul 2019 07:21:04 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Thu, 25 Jul 2019 07:21:03 -0700
-Date:   Thu, 25 Jul 2019 16:21:03 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-CC:     <roopa@cumulusnetworks.com>, <davem@davemloft.net>,
-        <bridge@lists.linux-foundation.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <allan.nielsen@microchip.com>
-Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
-Message-ID: <20190725142101.65tusauc6fzxb2yp@soft-dev3.microsemi.net>
-References: <1564055044-27593-1-git-send-email-horatiu.vultur@microchip.com>
- <7e7a7015-6072-d884-b2ba-0a51177245ab@cumulusnetworks.com>
- <eef063fe-fd3a-7e02-89c2-e40728a17578@cumulusnetworks.com>
+        Thu, 25 Jul 2019 10:21:33 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PELMTR1037407
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 07:21:22 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PELMTR1037407
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564064482;
+        bh=bJO2fH+x7prVuH+z+1/XyhzqXDoq04T9vV0sRE/RPc4=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=Q3ru68zmLUeRfvHKWf1VZrS63KonCV/MRYfq0H994Q8ra3ZJIMzHdJsPuUbuo+E1g
+         Nh1HhfHd1uoUIL6SiqE13VzIoFWHyLTIppkDPHqTULq5TcpxO0Bd0V+aNTuLUgeUhQ
+         f03YCrHjP78xgmG6rXl8Gm4xjMZR1ZakR/yv1RC2VX4AeZPWECgPWZ1/KrR9zXwrej
+         GqgrUbEQG0/QDU+hxRQnhimHPJYTRoDn5Y2/Zx1qVBDlXXVF1sPYmPJHbgNRFRhJHk
+         Z5Or+0yhlC2MmSiGdz69rrnU9JWP6LaqlSa73S82JLWq6ch7j2/19qId1I7QbK/waA
+         EdrNYqlDCRVVw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PELLSM1037404;
+        Thu, 25 Jul 2019 07:21:21 -0700
+Date:   Thu, 25 Jul 2019 07:21:21 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-39c89dff9c366ad98d2e5598db41ff9b1bdb9e88@git.kernel.org>
+Cc:     tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com,
+        peterz@infradead.org, linux-kernel@vger.kernel.org
+Reply-To: linux-kernel@vger.kernel.org, peterz@infradead.org,
+          tglx@linutronix.de, hpa@zytor.com, mingo@kernel.org
+In-Reply-To: <20190722105218.962517234@linutronix.de>
+References: <20190722105218.962517234@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/apic] x86/apic: Invoke perf_events_lapic_init() after
+ enabling APIC
+Git-Commit-ID: 39c89dff9c366ad98d2e5598db41ff9b1bdb9e88
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <eef063fe-fd3a-7e02-89c2-e40728a17578@cumulusnetworks.com>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikolay,
+Commit-ID:  39c89dff9c366ad98d2e5598db41ff9b1bdb9e88
+Gitweb:     https://git.kernel.org/tip/39c89dff9c366ad98d2e5598db41ff9b1bdb9e88
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Mon, 22 Jul 2019 20:47:07 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 25 Jul 2019 16:11:56 +0200
 
-The 07/25/2019 16:21, Nikolay Aleksandrov wrote:
-> External E-Mail
-> 
-> 
-> On 25/07/2019 16:06, Nikolay Aleksandrov wrote:
-> > On 25/07/2019 14:44, Horatiu Vultur wrote:
-> >> There is no way to configure the bridge, to receive only specific link
-> >> layer multicast addresses. From the description of the command 'bridge
-> >> fdb append' is supposed to do that, but there was no way to notify the
-> >> network driver that the bridge joined a group, because LLADDR was added
-> >> to the unicast netdev_hw_addr_list.
-> >>
-> >> Therefore update fdb_add_entry to check if the NLM_F_APPEND flag is set
-> >> and if the source is NULL, which represent the bridge itself. Then add
-> >> address to multicast netdev_hw_addr_list for each bridge interfaces.
-> >> And then the .ndo_set_rx_mode function on the driver is called. To notify
-> >> the driver that the list of multicast mac addresses changed.
-> >>
-> >> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> >> ---
-> >>  net/bridge/br_fdb.c | 49 ++++++++++++++++++++++++++++++++++++++++++++++---
-> >>  1 file changed, 46 insertions(+), 3 deletions(-)
-> >>
-> > 
-> > Hi,
-> > I'm sorry but this patch is wrong on many levels, some notes below. In general
-> > NLM_F_APPEND is only used in vxlan, the bridge does not handle that flag at all.
-> > FDB is only for *unicast*, nothing is joined and no multicast should be used with fdbs.
-> > MDB is used for multicast handling, but both of these are used for forwarding.
-> > The reason the static fdbs are added to the filter is for non-promisc ports, so they can
-> > receive traffic destined for these FDBs for forwarding.
-> > If you'd like to join any multicast group please use the standard way, if you'd like to join
-> > it only on a specific port - join it only on that port (or ports) and the bridge and you'll
-> 
-> And obviously this is for the case where you're not enabling port promisc mode (non-default).
-> In general you'll only need to join the group on the bridge to receive traffic for it
-> or add it as an mdb entry to forward it.
-> 
-> > have the effect that you're describing. What do you mean there's no way ?
+x86/apic: Invoke perf_events_lapic_init() after enabling APIC
 
-Thanks for the explanation.
-There are few things that are not 100% clear to me and maybe you can
-explain them, not to go totally in the wrong direction. Currently I am
-writing a network driver on which I added switchdev support. Then I was
-looking for a way to configure the network driver to copy link layer
-multicast address to the CPU port.
+If the APIC is soft disabled then unmasking an LVT entry does not work and
+the write is ignored. perf_events_lapic_init() tries to do so.
 
-If I am using bridge mdb I can do it only for IP multicast addreses,
-but how should I do it if I want non IP frames with link layer multicast
-address to be copy to CPU? For example: all frames with multicast
-address '01-21-6C-00-00-01' to be copy to CPU. What is the user space
-command for that?
+Move the invocation after the point where the APIC has been enabled.
 
-> > 
-> > In addition you're allowing a mix of mcast functions to be called with unicast addresses
-> > and vice versa, it is not that big of a deal because the kernel will simply return an error
-> > but still makes no sense.
-> > 
-> > Nacked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-> > 
-> >> diff --git a/net/bridge/br_fdb.c b/net/bridge/br_fdb.c
-> >> index b1d3248..d93746d 100644
-> >> --- a/net/bridge/br_fdb.c
-> >> +++ b/net/bridge/br_fdb.c
-> >> @@ -175,6 +175,29 @@ static void fdb_add_hw_addr(struct net_bridge *br, const unsigned char *addr)
-> >>  	}
-> >>  }
-> >>  
-> >> +static void fdb_add_hw_maddr(struct net_bridge *br, const unsigned char *addr)
-> >> +{
-> >> +	int err;
-> >> +	struct net_bridge_port *p;
-> >> +
-> >> +	ASSERT_RTNL();
-> >> +
-> >> +	list_for_each_entry(p, &br->port_list, list) {
-> >> +		if (!br_promisc_port(p)) {
-> >> +			err = dev_mc_add(p->dev, addr);
-> >> +			if (err)
-> >> +				goto undo;
-> >> +		}
-> >> +	}
-> >> +
-> >> +	return;
-> >> +undo:
-> >> +	list_for_each_entry_continue_reverse(p, &br->port_list, list) {
-> >> +		if (!br_promisc_port(p))
-> >> +			dev_mc_del(p->dev, addr);
-> >> +	}
-> >> +}
-> >> +
-> >>  /* When a static FDB entry is deleted, the HW address from that entry is
-> >>   * also removed from the bridge private HW address list and updates all
-> >>   * the ports with needed information.
-> >> @@ -192,13 +215,27 @@ static void fdb_del_hw_addr(struct net_bridge *br, const unsigned char *addr)
-> >>  	}
-> >>  }
-> >>  
-> >> +static void fdb_del_hw_maddr(struct net_bridge *br, const unsigned char *addr)
-> >> +{
-> >> +	struct net_bridge_port *p;
-> >> +
-> >> +	ASSERT_RTNL();
-> >> +
-> >> +	list_for_each_entry(p, &br->port_list, list) {
-> >> +		if (!br_promisc_port(p))
-> >> +			dev_mc_del(p->dev, addr);
-> >> +	}
-> >> +}
-> >> +
-> >>  static void fdb_delete(struct net_bridge *br, struct net_bridge_fdb_entry *f,
-> >>  		       bool swdev_notify)
-> >>  {
-> >>  	trace_fdb_delete(br, f);
-> >>  
-> >> -	if (f->is_static)
-> >> +	if (f->is_static) {
-> >>  		fdb_del_hw_addr(br, f->key.addr.addr);
-> >> +		fdb_del_hw_maddr(br, f->key.addr.addr);
-> > 
-> > Walking over all ports again for each static delete is a no-go.
-> > 
-> >> +	}
-> >>  
-> >>  	hlist_del_init_rcu(&f->fdb_node);
-> >>  	rhashtable_remove_fast(&br->fdb_hash_tbl, &f->rhnode,
-> >> @@ -843,13 +880,19 @@ static int fdb_add_entry(struct net_bridge *br, struct net_bridge_port *source,
-> >>  			fdb->is_local = 1;
-> >>  			if (!fdb->is_static) {
-> >>  				fdb->is_static = 1;
-> >> -				fdb_add_hw_addr(br, addr);
-> >> +				if (flags & NLM_F_APPEND && !source)
-> >> +					fdb_add_hw_maddr(br, addr);
-> >> +				else
-> >> +					fdb_add_hw_addr(br, addr);
-> >>  			}
-> >>  		} else if (state & NUD_NOARP) {
-> >>  			fdb->is_local = 0;
-> >>  			if (!fdb->is_static) {
-> >>  				fdb->is_static = 1;
-> >> -				fdb_add_hw_addr(br, addr);
-> >> +				if (flags & NLM_F_APPEND && !source)
-> >> +					fdb_add_hw_maddr(br, addr);
-> >> +				else
-> >> +					fdb_add_hw_addr(br, addr);
-> >>  			}
-> >>  		} else {
-> >>  			fdb->is_local = 0;
-> >>
-> > 
-> 
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105218.962517234@linutronix.de
 
--- 
-/Horatiu
+---
+ arch/x86/kernel/apic/apic.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 84032bf81476..fa0846d4e000 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1517,7 +1517,6 @@ static void setup_local_APIC(void)
+ 	int logical_apicid, ldr_apicid;
+ #endif
+ 
+-
+ 	if (disable_apic) {
+ 		disable_ioapic_support();
+ 		return;
+@@ -1532,8 +1531,6 @@ static void setup_local_APIC(void)
+ 		apic_write(APIC_ESR, 0);
+ 	}
+ #endif
+-	perf_events_lapic_init();
+-
+ 	/*
+ 	 * Double-check whether this APIC is really registered.
+ 	 * This is meaningless in clustered apic mode, so we skip it.
+@@ -1617,6 +1614,8 @@ static void setup_local_APIC(void)
+ 	value |= SPURIOUS_APIC_VECTOR;
+ 	apic_write(APIC_SPIV, value);
+ 
++	perf_events_lapic_init();
++
+ 	/*
+ 	 * Set up LVT0, LVT1:
+ 	 *
