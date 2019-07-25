@@ -2,147 +2,169 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFB7C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B03C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C09C0217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA8A622BEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:52:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oblSu7qv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDriAVm9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390148AbfGYDvk (ORCPT
+        id S2390165AbfGYDwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 23:51:40 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:48771 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389014AbfGYDvj (ORCPT
+        Wed, 24 Jul 2019 23:52:06 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33148 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390150AbfGYDwG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 23:51:39 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190725035136epoutp0371865c4f81451bed9efdfcbfda5afd80~0if5TNPkV1301313013epoutp03B
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:51:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190725035136epoutp0371865c4f81451bed9efdfcbfda5afd80~0if5TNPkV1301313013epoutp03B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1564026696;
-        bh=qTrI9+HWCJEJXvAm5+OfcfASWfk5axEuKDIGAGVkh2U=;
-        h=Subject:To:From:Date:In-Reply-To:References:From;
-        b=oblSu7qvVOZjh2leOL48MJJR0covdZqPFb40j6rpDkaivk3lZQoUZ8U/TTQlCd4oH
-         y3+++4b+z7Oh/u6ihNKCwbzSBjtE06oP6u7+SvOjQHTLswAY79g+Qo4gC0lo1rjbfZ
-         LOFlLNJwLiFJ2wvIwCpJCI4ckxVG+WJOZPI1AU1U=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190725035135epcas1p33010efd4a7bdbd71d5e889f9129b67b1~0if4vntQ02588825888epcas1p3R;
-        Thu, 25 Jul 2019 03:51:35 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 45vJDQ0NFLzMqYkR; Thu, 25 Jul
-        2019 03:51:34 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5B.E5.04066.547293D5; Thu, 25 Jul 2019 12:51:34 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190725035132epcas1p1ae2e5efb3a8e49abeb5606a81ba41cf4~0if2YaG_K2180421804epcas1p13;
-        Thu, 25 Jul 2019 03:51:32 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190725035132epsmtrp19a6b04ec17ea92ae98733f8ecec45a26~0if2XuXoN1215612156epsmtrp1M;
-        Thu, 25 Jul 2019 03:51:32 +0000 (GMT)
-X-AuditID: b6c32a37-e3fff70000000fe2-7e-5d3927452dfd
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A3.01.03638.447293D5; Thu, 25 Jul 2019 12:51:32 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190725035132epsmtip2aefeaa6e44b2af2528327a2769b385e8~0if2OJqEL2652426524epsmtip2C;
-        Thu, 25 Jul 2019 03:51:32 +0000 (GMT)
-Subject: Re: [PATCH] devfreq: Correct devm_devfreq_remove_device()
- documentation
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <4006b5d7-7256-43af-d9ec-a9c8373d9f34@samsung.com>
-Date:   Thu, 25 Jul 2019 12:54:52 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Wed, 24 Jul 2019 23:52:06 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f20so13041663pgj.0;
+        Wed, 24 Jul 2019 20:52:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Q/98t+M2Y8cT5VRhI3CXJllAGvqhT13uQ4iFZGPeAKQ=;
+        b=TDriAVm9iNGKXqNyY9jNLT67/TAZxSgx1zvErjGKOnYp4i3vmCPs51kg4wyBv5sNXW
+         9u2ToLoPJcyMJOK0cH/VvWhw+kgFLrV5aSlaYpmYgnipRFVBF7VSK6bhuw/b5D3ESIVe
+         wm6hsZ+L1oM8SP6oh7Tb6MfHOWQf/yyKO6UvInwdgQCj0YneqYLajq6kyiqvJbC5oKyk
+         n0e7Moam56yuIoMHnwIjnH3LeRU+85F65f4vzHfGFmII8JI+rYPldKP29ADzahfh8rgY
+         7ARHhdqfQM7JxIhPnTm8k/wTb7OxKhT2tkWb9n8nK0TrVLzCOg7HayVmr2y2KHuXpDzN
+         Em7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Q/98t+M2Y8cT5VRhI3CXJllAGvqhT13uQ4iFZGPeAKQ=;
+        b=hx3Opncb8LwrB8OBPOKNtc4rRTRtB/9CssEPkxTjASyloNVrI1y3L367Nf1aMOoMy8
+         zk8S4Q78GOHN2/nxF4KTVdOu7TAI2nB3C+uFn2VfR0qVir0ljQNToWyrXG1PSsJrXOr2
+         DZX7swVULjZVVqXORWot+CeNZrOETEuELAX5gt2BqdWYDupPZk3HztJihQR4CBb+nwJD
+         HwuY97T/VFQx+OoiM1sdb0B10GbqoosKnO3nWJG1H39TN1pEEm1r3ubCvleL9vqInygJ
+         s9OxJeqaSsFot5Op8y+EeQwQb12AhS3FXHwt5dP0RM0RGcAjlIYxGFR+7gttvC6r1P2+
+         xvhA==
+X-Gm-Message-State: APjAAAXt2Wud2xmm545EFv512fpK0TFd+pwlIvlKW91pRiEVZfPJ1f+F
+        X31XuUudgprYurhwKXpQ0gFeYW27WqU=
+X-Google-Smtp-Source: APXvYqxPCChHRFanP/sFGlhVTRTI3yWFc7fZq6TDXEsUJclACOL+YZ7jSqEE28G9RJ/P3W29GbPl0Q==
+X-Received: by 2002:a65:6108:: with SMTP id z8mr53000362pgu.289.1564026725425;
+        Wed, 24 Jul 2019 20:52:05 -0700 (PDT)
+Received: from ?IPv6:2402:f000:4:72:808::177e? ([2402:f000:4:72:808::177e])
+        by smtp.gmail.com with ESMTPSA id z6sm19026125pgk.18.2019.07.24.20.52.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 20:52:05 -0700 (PDT)
+Subject: Re: [PATCH] fs: crypto: keyinfo: Fix a possible null-pointer
+ dereference in derive_key_aes()
+To:     tytso@mit.edu, jaegeuk@kernel.org, ebiggers@kernel.org
+References: <20190724100204.2009-1-baijiaju1990@gmail.com>
+ <20190724160711.GB673@sol.localdomain>
+ <3d206c43-994e-6134-3f28-b4a500472760@gmail.com>
+ <9740973d-6e59-e4df-7097-4e5d0da89235@gmail.com>
+ <20190725033951.GA677@sol.localdomain>
+Cc:     linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <33ae3693-9792-a793-5e9e-aca845c427a5@gmail.com>
+Date:   Thu, 25 Jul 2019 11:52:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190724185953.17545-1-krzk@kernel.org>
-Content-Language: en-US
+In-Reply-To: <20190725033951.GA677@sol.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEJsWRmVeSWpSXmKPExsWy7bCmrq6bumWswd0JTBbnz29gtzjb9Ibd
-        4vKuOWwWn3uPMFrcblzB5sDqsWlVJ5tH35ZVjB6fN8kFMEdl22SkJqakFimk5iXnp2Tmpdsq
-        eQfHO8ebmhkY6hpaWpgrKeQl5qbaKrn4BOi6ZeYArVRSKEvMKQUKBSQWFyvp29kU5ZeWpCpk
-        5BeX2CqlFqTkFFgW6BUn5haX5qXrJefnWhkaGBiZAhUmZGe0nT/NWvCcveLGVYsGxv1sXYyc
-        HBICJhLz2m8ydTFycQgJ7GCU2D7rCTOE84lR4sikJhYI5xujxJbP29hhWp5OfMIGkdjLKLFm
-        2xGolveMEhvPfQcbLCwQJHH0yD52kISIwE5GibbuC8wgCTYBLYn9L26AFfELKEpc/fGYEcTm
-        FbCTOHf5K1icRUBVYt6iiUwgtqhAhMSnB4dZIWoEJU7OfMICYnMKmEqcenQGrIZZQFzi1pP5
-        ULa8RPPW2WAXSQgcYJPY+mAxC8TdLhJPN3+BeltY4tXxLVD/SEm87G+DsqslVp48wgbR3AH0
-        9P4LrBAJY4n9SycDbeAA2qApsX6XPkRYUWLn77mMEIv5JN597WEFKZEQ4JXoaBOCKFGWuPzg
-        LhOELSmxuL0T6gQPiZk/37BOYFScheS1WUjemYXknVkIixcwsqxiFEstKM5NTy02LDBGju5N
-        jOD0qGW+g3HDOZ9DjAIcjEo8vBxJFrFCrIllxZW5hxglOJiVRHgDG8xihXhTEiurUovy44tK
-        c1KLDzGaAkN+IrOUaHI+MHXnlcQbmhoZGxtbmBiamRoaKonzLvwBNEcgPbEkNTs1tSC1CKaP
-        iYNTqoGxRKRwev4Krm/l15eJVO/ITfl2do/9Sz0bQdsFdbrrNJc1T/vzZtuj4qc6QkUSJ2/t
-        3s0pc6alMfvqzR25k3cbZ73IMHi1ujDN2mnb0bhdntnyb50YpywIWxvmmiPDG1FU+ybzWtX1
-        Pw0z2/5HHGr3PTAx+srhzcLBX2dwPWd5Ws96sPGs2rcjSizFGYmGWsxFxYkAVtt6BaUDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPLMWRmVeSWpSXmKPExsWy7bCSvK6LumWswY1dBhbnz29gtzjb9Ibd
-        4vKuOWwWn3uPMFrcblzB5sDqsWlVJ5tH35ZVjB6fN8kFMEdx2aSk5mSWpRbp2yVwZbSdP81a
-        8Jy94sZViwbG/WxdjJwcEgImEk8nPgGyuTiEBHYzSux6fZwJIiEpMe3iUeYuRg4gW1ji8OFi
-        iJq3jBLLtnxiB6kRFgiSOHpkHztIQgSk+cvhTmaQhJBAB6PEmuNgNpuAlsT+FzfAtvELKEpc
-        /fGYEcTmFbCTOHf5K1icRUBVYt6iiWCLRQUiJA7vmAVVIyhxcuYTFhCbU8BU4tSjM2A1zALq
-        En/mXWKGsMUlbj2ZDxWXl2jeOpt5AqPQLCTts5C0zELSMgtJywJGllWMkqkFxbnpucWGBUZ5
-        qeV6xYm5xaV56XrJ+bmbGMHRoKW1g/HEifhDjAIcjEo8vBxJFrFCrIllxZW5hxglOJiVRHgD
-        G8xihXhTEiurUovy44tKc1KLDzFKc7AoifPK5x+LFBJITyxJzU5NLUgtgskycXBKNTDyVBir
-        as0qLz7L+Pev0xYfnstKszex62p8Ft+bbh9ULcA9y3WPr6NW4o+4a5Z5Ek8/nFiY4NJ+tcmP
-        c+u8dzPnsM7dYRe/ueBPgvNtt+ryGba3rq7g++Jiv2eO16ZojsNSbhPllBbeqD569dJ39dVc
-        LL2Wxz/vY55RlbT01D82pwf/dDXufO9QYinOSDTUYi4qTgQAX9Quh4ICAAA=
-X-CMS-MailID: 20190725035132epcas1p1ae2e5efb3a8e49abeb5606a81ba41cf4
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190724190003epcas4p29fa01d9bedd3b663c3bd10a68b52b778
-References: <CGME20190724190003epcas4p29fa01d9bedd3b663c3bd10a68b52b778@epcas4p2.samsung.com>
-        <20190724185953.17545-1-krzk@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 7. 25. 오전 3:59, Krzysztof Kozlowski wrote:
-> Correct the documentation for devm_devfreq_remove_device() argument.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/devfreq/devfreq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> index 784c08e4f931..446490c9d635 100644
-> --- a/drivers/devfreq/devfreq.c
-> +++ b/drivers/devfreq/devfreq.c
-> @@ -867,7 +867,7 @@ EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_phandle);
->  
->  /**
->   * devm_devfreq_remove_device() - Resource-managed devfreq_remove_device()
-> - * @dev:	the device to add devfreq feature.
-> + * @dev:	the device from which to remove devfreq feature.
->   * @devfreq:	the devfreq instance to be removed
->   */
->  void devm_devfreq_remove_device(struct device *dev, struct devfreq *devfreq)
-> 
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+On 2019/7/25 11:39, Eric Biggers wrote:
+> On Thu, Jul 25, 2019 at 11:33:53AM +0800, Jia-Ju Bai wrote:
+>> Sorry, I forgot to send to Eric, so send it again.
+>>
+>> On 2019/7/25 11:30, Jia-Ju Bai wrote:
+>>>
+>>> On 2019/7/25 0:07, Eric Biggers wrote:
+>>>> [+Cc linux-crypto]
+>>>>
+>>>> On Wed, Jul 24, 2019 at 06:02:04PM +0800, Jia-Ju Bai wrote:
+>>>>> In derive_key_aes(), tfm is assigned to NULL on line 46, and then
+>>>>> crypto_free_skcipher(tfm) is executed.
+>>>>>
+>>>>> crypto_free_skcipher(tfm)
+>>>>>       crypto_skcipher_tfm(tfm)
+>>>>>           return &tfm->base;
+>>>>>
+>>>>> Thus, a possible null-pointer dereference may occur.
+>>>> This analysis is incorrect because only the address &tfm->base is taken.
+>>>> There's no pointer dereference.
+>>>>
+>>>> In fact all the crypto_free_*() functions are no-ops on NULL
+>>>> pointers, and many
+>>>> other callers rely on it.  So there's no bug here.
+>>> Thanks for the reply :)
+>>> I admit that "&tfm->base" is not a null-pointer dereference when tfm is
+>>> NULL.
+>>> But I still think crypto_free_skcipher(tfm) can cause security problems
+>>> when tfm is NULL.
+>>>
+>>> Looking at the code:
+>>>
+>>> static inline void crypto_free_skcipher(struct crypto_skcipher *tfm)
+>>> {
+>>>      crypto_destroy_tfm(tfm, crypto_skcipher_tfm(tfm));
+>>> }
+>>>
+>>> static inline struct crypto_tfm *crypto_skcipher_tfm(
+>>>      struct crypto_skcipher *tfm)
+>>> {
+>>>      return &tfm->base;
+>>> }
+>>>
+>>> void crypto_destroy_tfm(void *mem, struct crypto_tfm *tfm)
+>>> {
+>>>      struct crypto_alg *alg;
+>>>
+>>>      if (unlikely(!mem))
+>>>          return;
+> When the original pointer is NULL, mem == NULL here so crypto_destroy_tfm() is a
+> no-op.
+
+I overlooked this if statement, thanks for the pointer.
+
+>
+>>> Besides, I also find that some kernel modules check tfm before calling
+>>> crypto_free_*(), such as:
+>>>
+>>> drivers/crypto/vmx/aes_xts.c:
+>>>      if (ctx->fallback) {
+>>>          crypto_free_skcipher(ctx->fallback);
+>>>          ctx->fallback = NULL;
+>>>      }
+>>>
+>>> net/rxrpc/rxkad.c:
+>>>      if (conn->cipher)
+>>>          crypto_free_skcipher(conn->cipher);
+>>>
+>>> drivers/crypto/chelsio/chcr_algo.c:
+>>>      if (ablkctx->aes_generic)
+>>>          crypto_free_cipher(ablkctx->aes_generic);
+>>>
+>>> net/mac80211/wep.c:
+>>>      if (!IS_ERR(local->wep_tx_tfm))
+>>>          crypto_free_cipher(local->wep_tx_tfm);
+>>>
+> Well, people sometimes do that for kfree() too.  But that doesn't mean it's
+> needed, or that it's the preferred style (it's not).
+
+Okay.
+
+
+Best wishes,
+Jia-Ju Bai
