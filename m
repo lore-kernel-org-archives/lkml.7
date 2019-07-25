@@ -2,117 +2,104 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90329C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A059C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559542190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EBD52190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:20:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="srjPnRvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390346AbfGYJS6 (ORCPT
+        id S2390368AbfGYJUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 05:18:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46850 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390290AbfGYJS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 05:18:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D7FBBADC4;
-        Thu, 25 Jul 2019 09:18:56 +0000 (UTC)
-Date:   Thu, 25 Jul 2019 11:18:54 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH v1] ACPI / scan: Acquire device_hotplug_lock in
- acpi_scan_init()
-Message-ID: <20190725091625.GA15848@linux>
-References: <20190724143017.12841-1-david@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724143017.12841-1-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 25 Jul 2019 05:20:31 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39573 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389608AbfGYJUb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 05:20:31 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b7so23212226pls.6;
+        Thu, 25 Jul 2019 02:20:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=zA7KRGQBThFlm3trFdcFJLFeokCVJBElzgWnMbH4/xY=;
+        b=srjPnRvPY/aH+inPjd8GxoBJ9c8BAlAYvCtROiRCw5VK7mQ+3YQsHM9iiU0aJmzDOK
+         h9ekc2iQkY03EcwrfIF2JaWxwmbrH0+3NflYT+xFOkQB4ZX0/FFqWJ2eP7mAfwi2rJzS
+         Y764XokyisS4CiuKHKUrtAmMjqMgeydLpA//p8q18p4SManU6AsaV1jvovhpNYtM7Qhp
+         usFWqBuefOJ4jDrVP2fKbmKX1L7zAp535EcJCSXCdAKw8hrDP18slnoRIaYbAwvLdBiJ
+         rCBC0E+Dm/rmnLm051d/2IV9gWl6qbmCfWGVPxBwQ5mfuZ+7mZEs/OGA4kPhjOciD9pa
+         clpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zA7KRGQBThFlm3trFdcFJLFeokCVJBElzgWnMbH4/xY=;
+        b=DO5nN0DX764/zQdq0bfBlagALCldnHsEc5w8isXQFDKQT/+z8NLDpWm1AOgYJTZ5yp
+         2okFWyJtWmW1z20TmfNaIg1ZZz+C1aJoQrjTWyQMCdPL1DWwpf2ZWz4jHiTkU72mW/9s
+         LGWK4C5kOvh2iG4SJqwilicKPr9Y1u+eXPkEfgjQ/YqDFNw38i+O6uZysI528FUtQ1Lj
+         e0y9Co4iOzFC2iEMBKIRsKYBNwy5lzLFQl/NUHyH+iIs+jdWltJrD5vL9EP+lXS8nTlu
+         F1bt2+ifqdmHIA7wy2VU87ORIB0DMqB7rHZXQgQAMI7rVHPosvCoXDkIQuPjIhFkyzmo
+         ZLQg==
+X-Gm-Message-State: APjAAAVgW4HjkVDpCOLPN/TuQD+ayKQrZ4zuWrxQfDtHUg7XOsMmltu5
+        IZWNndGxemR64s5SihbrYURefZqxtnA=
+X-Google-Smtp-Source: APXvYqzCqFvoVk/5zWPv6j1nHOEeI11GV0H7hRlvnyHok4PklHT5XXeY2XXVO6icCHcI7eo4VD8Vqg==
+X-Received: by 2002:a17:902:6b44:: with SMTP id g4mr89424816plt.152.1564046429985;
+        Thu, 25 Jul 2019 02:20:29 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id s24sm49909791pfh.133.2019.07.25.02.20.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 02:20:29 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     jon.maloy@ericsson.com, ying.xue@windriver.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] net: tipc: Fix a possible null-pointer dereference in tipc_publ_purge()
+Date:   Thu, 25 Jul 2019 17:20:21 +0800
+Message-Id: <20190725092021.15855-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 04:30:17PM +0200, David Hildenbrand wrote:
-> We end up calling __add_memory() without the device hotplug lock held.
-> (I used a local patch to assert in __add_memory() that the
->  device_hotplug_lock is held - I might upstream that as well soon)
-> 
-> [   26.771684]        create_memory_block_devices+0xa4/0x140
-> [   26.772952]        add_memory_resource+0xde/0x200
-> [   26.773987]        __add_memory+0x6e/0xa0
-> [   26.775161]        acpi_memory_device_add+0x149/0x2b0
-> [   26.776263]        acpi_bus_attach+0xf1/0x1f0
-> [   26.777247]        acpi_bus_attach+0x66/0x1f0
-> [   26.778268]        acpi_bus_attach+0x66/0x1f0
-> [   26.779073]        acpi_bus_attach+0x66/0x1f0
-> [   26.780143]        acpi_bus_scan+0x3e/0x90
-> [   26.780844]        acpi_scan_init+0x109/0x257
-> [   26.781638]        acpi_init+0x2ab/0x30d
-> [   26.782248]        do_one_initcall+0x58/0x2cf
-> [   26.783181]        kernel_init_freeable+0x1bd/0x247
-> [   26.784345]        kernel_init+0x5/0xf1
-> [   26.785314]        ret_from_fork+0x3a/0x50
-> 
-> So perform the locking just like in acpi_device_hotplug().
-> 
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Len Brown <lenb@kernel.org
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+In tipc_publ_purge(), there is an if statement on 215 to 
+check whether p is NULL: 
+    if (p)
 
-Given that that call comes from a __init function, so while booting, I wonder
-how bad it is.
-Anyway, let us be consistent:
+When p is NULL, it is used on line 226:
+    kfree_rcu(p, rcu);
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Thus, a possible null-pointer dereference may occur.
 
+To fix this bug, p is checked before being used.
 
-> ---
->  drivers/acpi/scan.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 0e28270b0fd8..cbc9d64b48dd 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -2204,7 +2204,9 @@ int __init acpi_scan_init(void)
->  	acpi_gpe_apply_masked_gpes();
->  	acpi_update_all_gpes();
->  
-> +	lock_device_hotplug();
->  	mutex_lock(&acpi_scan_lock);
-> +
->  	/*
->  	 * Enumerate devices in the ACPI namespace.
->  	 */
-> @@ -2232,6 +2234,7 @@ int __init acpi_scan_init(void)
->  
->   out:
->  	mutex_unlock(&acpi_scan_lock);
-> +	unlock_device_hotplug();
->  	return result;
->  }
->  
-> -- 
-> 2.21.0
-> 
+This bug is found by a static analysis tool STCheck written by us.
 
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ net/tipc/name_distr.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/tipc/name_distr.c b/net/tipc/name_distr.c
+index 44abc8e9c990..241ed2274473 100644
+--- a/net/tipc/name_distr.c
++++ b/net/tipc/name_distr.c
+@@ -223,7 +223,8 @@ static void tipc_publ_purge(struct net *net, struct publication *publ, u32 addr)
+ 		       publ->key);
+ 	}
+ 
+-	kfree_rcu(p, rcu);
++	if (p)
++		kfree_rcu(p, rcu);
+ }
+ 
+ /**
 -- 
-Oscar Salvador
-SUSE L3
+2.17.0
+
