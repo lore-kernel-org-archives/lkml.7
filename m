@@ -2,190 +2,184 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787ABC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B35C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5276E2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A7CD217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:47:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wHXvEk5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390106AbfGYDpC (ORCPT
+        id S2390130AbfGYDrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 23:45:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59168 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389704AbfGYDpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 23:45:02 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E14BF30C62A0;
-        Thu, 25 Jul 2019 03:45:00 +0000 (UTC)
-Received: from [10.72.12.18] (ovpn-12-18.pek2.redhat.com [10.72.12.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 40D9B60603;
-        Thu, 25 Jul 2019 03:44:42 +0000 (UTC)
-Subject: Re: WARNING in __mmdrop
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
-        keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-References: <20190723010156-mutt-send-email-mst@kernel.org>
- <124be1a2-1c53-8e65-0f06-ee2294710822@redhat.com>
- <20190723032800-mutt-send-email-mst@kernel.org>
- <e2e01a05-63d8-4388-2bcd-b2be3c865486@redhat.com>
- <20190723062221-mutt-send-email-mst@kernel.org>
- <9baa4214-67fd-7ad2-cbad-aadf90bbfc20@redhat.com>
- <20190723110219-mutt-send-email-mst@kernel.org>
- <e0c91b89-d1e8-9831-00fe-23fe92d79fa2@redhat.com>
- <20190724040238-mutt-send-email-mst@kernel.org>
- <3dfa2269-60ba-7dd8-99af-5aef8552bd98@redhat.com>
- <20190724142533-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <d786141f-9145-788d-6a10-6fa673dd584c@redhat.com>
-Date:   Thu, 25 Jul 2019 11:44:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 24 Jul 2019 23:47:19 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45083 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389014AbfGYDrS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 23:47:18 -0400
+Received: by mail-ot1-f68.google.com with SMTP id x21so11735298otq.12
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 20:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aMjIeeabzA2glm2FgNQ5GnaE3BxUhRtGgmqv9hcezQY=;
+        b=wHXvEk5oHzm7Sws7eklMNmrftnJSG+btbxOyjYGAbrQL1qJy6zD4PObA+jWSEgMyRB
+         aRrkrq80Z3SJ2TSDws4Rv5GRprZNDrWDLrJQ0wX3686kQIu2OCLvI9w87d8UHHgOg+0d
+         GTePKHqwPknGA8PHhql/6tyfd3uPOh/2TEWx5qiFganq3CI2HM14/fLyaNDFJPivQgUE
+         AJkjK8XC/qBav++WOcziu3XSxf9dhzyMLjLbq5mM7h/sbnUvptmXH0y5tOUiHyLN72sK
+         xNtG93040FKsaE7cwu4XrwN/9ZyPqAIjdUosovdN6zX4Hoeb7KDzRbZ9hm/ScRQ2CIJ6
+         NaBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aMjIeeabzA2glm2FgNQ5GnaE3BxUhRtGgmqv9hcezQY=;
+        b=XFuGXmB6fGTcZ+CBUxxkgPBvCUCh5haG27jad0CRd/3r/v8z6FbkfWrvhX84u5Jom6
+         jttCWWXzP7nhsiNBeG8x9Y8RGKARKgRk0BsoclSjfFPZe6j5lq0Utxopn14Felop3HRI
+         zlqTeZE/B6tnzkKr0WSb8krWzCex5cC+ekAACuo49QBjS2Zx1VEZ2FasrCZjkmc7MPDL
+         hNvm8CNookvy10cQggkGxFS9XBxTYkKfRjTsbPgziETCuGdNtAQ1ei4X7iPPOeTn3u/P
+         qYl545H1QAT+dZ6kxzIAD0mEX43T0SkVaWQJFdqRgT9qAFPh9ooTz9aqhWh6wZSkB439
+         6l5g==
+X-Gm-Message-State: APjAAAVctX2aG56U9s/sbfoKRhhxCbBH8b6ggEUOCcP94XmxZ1Caav9t
+        HkuLbFAjTdx9ZsGxDWf8WzVciumN29+qgJFDrnaKVQ==
+X-Google-Smtp-Source: APXvYqxwTxwYWp2aKQeTiODwLq0phPgcO3cP/jhc5NSj2PouBt+Yra1YiOWB/mjtrI5O3dhVxWWJpN8W09pU0uWM2zM=
+X-Received: by 2002:a05:6830:160c:: with SMTP id g12mr7714792otr.231.1564026437377;
+ Wed, 24 Jul 2019 20:47:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190724142533-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 25 Jul 2019 03:45:01 +0000 (UTC)
+References: <20190717222340.137578-1-saravanak@google.com> <20190717222340.137578-3-saravanak@google.com>
+ <20190723095316.t5ltprixxd5veuj7@vireshk-i7> <CAGETcx-r6fZH0xYea-YXyXDwe33pimtfNerLzzBn4UHT2qQVvA@mail.gmail.com>
+ <20190725025849.y2xyxmqmgorrny6k@vireshk-i7>
+In-Reply-To: <20190725025849.y2xyxmqmgorrny6k@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 24 Jul 2019 20:46:41 -0700
+Message-ID: <CAGETcx8r3C_=Y0vSwqekCZPUeYkNQ6EOUDK4bUJksDHG6zPUjA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] OPP: Add function to look up required OPP's for a
+ given OPP
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 24, 2019 at 7:58 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 23-07-19, 17:23, Saravana Kannan wrote:
+> > On Tue, Jul 23, 2019 at 2:53 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 17-07-19, 15:23, Saravana Kannan wrote:
+> > > > Add a function that allows looking up required OPPs given a source OPP
+> > > > table, destination OPP table and the source OPP.
+> > > >
+> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > > ---
+> > > >  drivers/opp/core.c     | 54 ++++++++++++++++++++++++++++++++++++++++++
+> > > >  include/linux/pm_opp.h | 11 +++++++++
+> > > >  2 files changed, 65 insertions(+)
+> > > >
+> > > > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> > > > index 438fcd134d93..72c055a3f6b7 100644
+> > > > --- a/drivers/opp/core.c
+> > > > +++ b/drivers/opp/core.c
+> > > > @@ -1883,6 +1883,60 @@ void dev_pm_opp_detach_genpd(struct opp_table *opp_table)
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(dev_pm_opp_detach_genpd);
+> > > >
+> > > > +/**
+> > > > + * dev_pm_opp_xlate_opp() - Find required OPP for src_table OPP.
+> > > > + * @src_table: OPP table which has dst_table as one of its required OPP table.
+> > > > + * @dst_table: Required OPP table of the src_table.
+> > > > + * @pstate: OPP of the src_table.
+> > >
+> > > You should use @ before parameters in the comments as well ? Just like
+> > > you did that below.
+> >
+> > And I should probably be deleting the @pstate phantom parameter :)
+> >
+> > > > + *
+> > > > + * This function returns the OPP (present in @dst_table) pointed out by the
+> > > > + * "required-opps" property of the OPP (present in @src_table).
+> > > > + *
+> > > > + * The callers are required to call dev_pm_opp_put() for the returned OPP after
+> > > > + * use.
+> > > > + *
+> > > > + * Return: destination table OPP on success, otherwise NULL on errors.
+> > > > + */
+> > > > +struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
+> > >
+> > > Please name it dev_pm_opp_xlate_required_opp().
+> >
+> > Ok
+> >
+> > >
+> > > > +                                     struct opp_table *dst_table,
+> > > > +                                     struct dev_pm_opp *src_opp)
+> > > > +{
+> > > > +     struct dev_pm_opp *opp, *dest_opp = NULL;
+> > > > +     int i;
+> > > > +
+> > > > +     if (!src_table || !dst_table || !src_opp)
+> > > > +             return NULL;
+> > > > +
+> > > > +     for (i = 0; i < src_table->required_opp_count; i++) {
+> > > > +             if (src_table->required_opp_tables[i]->np == dst_table->np)
+> > >
+> > > Why can't we just compare the table pointers instead ? Yeah, I know
+> > > that's how I wrote that in the other xlate function, but I am confused
+> > > now :)
+> >
+> > I almost said "not sure. Let me just compare pointers".
+> > I think (not sure) it has to do with the same OPP table being used to
+> > create multiple OPP table copies if the "shared OPP table" flag isn't
+> > set?
+> > Can you confirm if this makes sense? If so, I can add a comment patch
+> > that adds comments to the existing code and then copies it into this
+> > function in this patch.
+>
+> Right, that was the reason but we also need to fix ...
 
-On 2019/7/25 上午2:25, Michael S. Tsirkin wrote:
-> On Wed, Jul 24, 2019 at 06:08:05PM +0800, Jason Wang wrote:
->> On 2019/7/24 下午4:05, Michael S. Tsirkin wrote:
->>> On Wed, Jul 24, 2019 at 10:17:14AM +0800, Jason Wang wrote:
->>>> On 2019/7/23 下午11:02, Michael S. Tsirkin wrote:
->>>>> On Tue, Jul 23, 2019 at 09:34:29PM +0800, Jason Wang wrote:
->>>>>> On 2019/7/23 下午6:27, Michael S. Tsirkin wrote:
->>>>>>>> Yes, since there could be multiple co-current invalidation requests. We need
->>>>>>>> count them to make sure we don't pin wrong pages.
->>>>>>>>
->>>>>>>>
->>>>>>>>> I also wonder about ordering. kvm has this:
->>>>>>>>>             /*
->>>>>>>>>               * Used to check for invalidations in progress, of the pfn that is
->>>>>>>>>               * returned by pfn_to_pfn_prot below.
->>>>>>>>>               */
->>>>>>>>>              mmu_seq = kvm->mmu_notifier_seq;
->>>>>>>>>              /*
->>>>>>>>>               * Ensure the read of mmu_notifier_seq isn't reordered with PTE reads in
->>>>>>>>>               * gfn_to_pfn_prot() (which calls get_user_pages()), so that we don't
->>>>>>>>>               * risk the page we get a reference to getting unmapped before we have a
->>>>>>>>>               * chance to grab the mmu_lock without mmu_notifier_retry() noticing.
->>>>>>>>>               *
->>>>>>>>>               * This smp_rmb() pairs with the effective smp_wmb() of the combination
->>>>>>>>>               * of the pte_unmap_unlock() after the PTE is zapped, and the
->>>>>>>>>               * spin_lock() in kvm_mmu_notifier_invalidate_<page|range_end>() before
->>>>>>>>>               * mmu_notifier_seq is incremented.
->>>>>>>>>               */
->>>>>>>>>              smp_rmb();
->>>>>>>>>
->>>>>>>>> does this apply to us? Can't we use a seqlock instead so we do
->>>>>>>>> not need to worry?
->>>>>>>> I'm not familiar with kvm MMU internals, but we do everything under of
->>>>>>>> mmu_lock.
->>>>>>>>
->>>>>>>> Thanks
->>>>>>> I don't think this helps at all.
->>>>>>>
->>>>>>> There's no lock between checking the invalidate counter and
->>>>>>> get user pages fast within vhost_map_prefetch. So it's possible
->>>>>>> that get user pages fast reads PTEs speculatively before
->>>>>>> invalidate is read.
->>>>>>>
->>>>>>> -- 
->>>>>> In vhost_map_prefetch() we do:
->>>>>>
->>>>>>            spin_lock(&vq->mmu_lock);
->>>>>>
->>>>>>            ...
->>>>>>
->>>>>>            err = -EFAULT;
->>>>>>            if (vq->invalidate_count)
->>>>>>                    goto err;
->>>>>>
->>>>>>            ...
->>>>>>
->>>>>>            npinned = __get_user_pages_fast(uaddr->uaddr, npages,
->>>>>>                                            uaddr->write, pages);
->>>>>>
->>>>>>            ...
->>>>>>
->>>>>>            spin_unlock(&vq->mmu_lock);
->>>>>>
->>>>>> Is this not sufficient?
->>>>>>
->>>>>> Thanks
->>>>> So what orders __get_user_pages_fast wrt invalidate_count read?
->>>> So in invalidate_end() callback we have:
->>>>
->>>> spin_lock(&vq->mmu_lock);
->>>> --vq->invalidate_count;
->>>>           spin_unlock(&vq->mmu_lock);
->>>>
->>>>
->>>> So even PTE is read speculatively before reading invalidate_count (only in
->>>> the case of invalidate_count is zero). The spinlock has guaranteed that we
->>>> won't read any stale PTEs.
->>>>
->>>> Thanks
->>> I'm sorry I just do not get the argument.
->>> If you want to order two reads you need an smp_rmb
->>> or stronger between them executed on the same CPU.
->>>
->>> Executing any kind of barrier on another CPU
->>> will have no ordering effect on the 1st one.
->>>
->>>
->>> So if CPU1 runs the prefetch, and CPU2 runs invalidate
->>> callback, read of invalidate counter on CPU1 can bypass
->>> read of PTE on CPU1 unless there's a barrier
->>> in between, and nothing CPU2 does can affect that outcome.
->>>
->>>
->>> What did I miss?
->>
->> It doesn't harm if PTE is read before invalidate_count, this is because:
->>
->> 1) This speculation is serialized with invalidate_range_end() because of the
->> spinlock
->>
->> 2) This speculation can only make effect when we read invalidate_count as
->> zero.
->>
->> 3) This means the speculation is done after the last invalidate_range_end()
->> and because of the spinlock, when we enter the critical section of spinlock
->> in prefetch, we can not see any stale PTE that was unmapped before.
->>
->> Am I wrong?
->>
->> Thanks
-> OK I think you are right. Sorry it took me a while to figure out.
+I know I gave that explanation but I'm still a bit confused by the
+existing logic. If the same DT OPP table is used to create multiple in
+memory OPP tables, how do you device which in memory OPP table is the
+right one to point to?
 
+>
+> > > > +                     break;
+> > > > +     }
+> > > > +
+> > > > +     if (unlikely(i == src_table->required_opp_count)) {
+> > > > +             pr_err("%s: Couldn't find matching OPP table (%p: %p)\n",
+> > > > +                    __func__, src_table, dst_table);
+> > > > +             return NULL;
+> > > > +     }
+> > > > +
+> > > > +     mutex_lock(&src_table->lock);
+> > > > +
+> > > > +     list_for_each_entry(opp, &src_table->opp_list, node) {
+> > > > +             if (opp == src_opp) {
+>
+> ... this as well. We must be comparing node pointers here as well.
 
-No problem. So do you want me to send a V2 of the fixes (e.g with the 
-conversion from synchronize_rcu() to kfree_rcu()). Or you want something 
-else. (e.g revert or a config option)?
+Not really, if an in memory OPP entry is not part of an in memory OPP
+table list, I don't think it should be considered part of the OPP
+table just because the node pointer is the same. I think that's
+explicitly wrong and the above code is correct as is.
 
-Thanks
-
+-Saravana
