@@ -2,320 +2,103 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 094D9C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42ACDC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3BC0218F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28B97218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbfGYSIn (ORCPT
+        id S1728113AbfGYSIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 14:08:43 -0400
-Received: from enpas.org ([46.38.239.100]:34214 "EHLO mail.enpas.org"
+        Thu, 25 Jul 2019 14:08:48 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:40804 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbfGYSIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727619AbfGYSIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jul 2019 14:08:43 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        by mail.enpas.org (Postfix) with ESMTPSA id 16C63FFDB4;
-        Thu, 25 Jul 2019 18:08:39 +0000 (UTC)
-From:   Max Staudt <max@enpas.org>
-To:     b.zolnierkie@samsung.com, axboe@kernel.dk
-Cc:     glaubitz@physik.fu-berlin.de, schmitzmic@gmail.com,
-        geert@linux-m68k.org, linux-ide@vger.kernel.org,
-        linux-m68k@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Max Staudt <max@enpas.org>
-Subject: [PATCH v3] ata/pata_buddha: Probe via modalias instead of initcall
-Date:   Thu, 25 Jul 2019 20:08:25 +0200
-Message-Id: <20190725180825.31508-1-max@enpas.org>
-X-Mailer: git-send-email 2.11.0
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hqiAH-0002J3-9h; Thu, 25 Jul 2019 12:08:30 -0600
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+References: <20190725172335.6825-1-logang@deltatee.com>
+ <20190725172335.6825-3-logang@deltatee.com>
+ <20190725174032.GA27818@kroah.com>
+ <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
+ <20190725175834.GB30641@bombadil.infradead.org>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <4bfbeaa7-9b81-b802-4cb6-ca141eb1a0c9@deltatee.com>
+Date:   Thu, 25 Jul 2019 12:08:27 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190725175834.GB30641@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: viro@zeniv.linux.org.uk, sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, hch@lst.de, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, willy@infradead.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Up until now, the pata_buddha driver would only check for cards on
-initcall time. Now, the kernel will call its probe function as soon
-as a compatible card is detected.
 
-v3: Clean up devm_*, implement device removal.
 
-v2: Rename 'zdev' to 'z' to make the patch easy to analyse with
-    git diff --ignore-space-change
+On 2019-07-25 11:58 a.m., Matthew Wilcox wrote:
+> On Thu, Jul 25, 2019 at 11:53:20AM -0600, Logan Gunthorpe wrote:
+>>
+>>
+>> On 2019-07-25 11:40 a.m., Greg Kroah-Hartman wrote:
+>>> On Thu, Jul 25, 2019 at 11:23:21AM -0600, Logan Gunthorpe wrote:
+>>>> cdev_get_by_path() attempts to retrieve a struct cdev from
+>>>> a path name. It is analagous to blkdev_get_by_path().
+>>>>
+>>>> This will be necessary to create a nvme_ctrl_get_by_path()to
+>>>> support NVMe-OF passthru.
+>>>
+>>> Ick, why?  Why would a cdev have a "pathname"?
+>>
+>> So we can go from "/dev/nvme0" (which points to a char device) to its
+>> struct cdev and eventually it's struct nvme_ctrl. Doing it this way also
+>> allows supporting symlinks that might be created by udev rules.
+> 
+> But you're not really trying to go from a string to a chardev.  You're
+> trying to go from a nvmet_subsys to a chardev.  Isn't there a better
+> way to link the two somewhere else?
+> 
+> (I must confess that once I would have known the answer to this, but
+> the NVMe subsystem has grown ridiculously complex and I can no longer
+> fit it in my head)
 
-Tested-by: Max Staudt <max@enpas.org>
-Signed-off-by: Max Staudt <max@enpas.org>
----
- drivers/ata/pata_buddha.c | 215 ++++++++++++++++++++++++++--------------------
- 1 file changed, 121 insertions(+), 94 deletions(-)
+Well the nvmet_subsys isn't related to the nvme_ctrl (and thus char dev)
+at all. An nvmet_subsys is created via configfs and the user has to
+specify an NVMe controller for it to use (by writting a string to a
+config attribute). The best handle the user has is a path to the
+controller's cdev (/dev/nvmeX) so the fabrics code has to be able to
+lookup the corresponding struct nvme_ctrl from the path.
 
-diff --git a/drivers/ata/pata_buddha.c b/drivers/ata/pata_buddha.c
-index 11a8044ff..b68392935 100644
---- a/drivers/ata/pata_buddha.c
-+++ b/drivers/ata/pata_buddha.c
-@@ -19,6 +19,7 @@
- #include <linux/libata.h>
- #include <linux/mm.h>
- #include <linux/module.h>
-+#include <linux/types.h>
- #include <linux/zorro.h>
- #include <scsi/scsi_cmnd.h>
- #include <scsi/scsi_host.h>
-@@ -29,7 +30,7 @@
- #include <asm/setup.h>
- 
- #define DRV_NAME "pata_buddha"
--#define DRV_VERSION "0.1.0"
-+#define DRV_VERSION "0.1.1"
- 
- #define BUDDHA_BASE1	0x800
- #define BUDDHA_BASE2	0xa00
-@@ -47,11 +48,11 @@ enum {
- 	BOARD_XSURF
- };
- 
--static unsigned int buddha_bases[3] __initdata = {
-+static unsigned int buddha_bases[3] = {
- 	BUDDHA_BASE1, BUDDHA_BASE2, BUDDHA_BASE3
- };
- 
--static unsigned int xsurf_bases[2] __initdata = {
-+static unsigned int xsurf_bases[2] = {
- 	XSURF_BASE1, XSURF_BASE2
- };
- 
-@@ -145,111 +146,137 @@ static struct ata_port_operations pata_xsurf_ops = {
- 	.set_mode	= pata_buddha_set_mode,
- };
- 
--static int __init pata_buddha_init_one(void)
-+static int pata_buddha_probe(struct zorro_dev *z,
-+			     const struct zorro_device_id *ent)
- {
--	struct zorro_dev *z = NULL;
--
--	while ((z = zorro_find_device(ZORRO_WILDCARD, z))) {
--		static const char *board_name[]
--			= { "Buddha", "Catweasel", "X-Surf" };
--		struct ata_host *host;
--		void __iomem *buddha_board;
--		unsigned long board;
--		unsigned int type, nr_ports = 2;
--		int i;
--
--		if (z->id == ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA) {
--			type = BOARD_BUDDHA;
--		} else if (z->id == ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL) {
--			type = BOARD_CATWEASEL;
--			nr_ports++;
--		} else if (z->id == ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF) {
--			type = BOARD_XSURF;
--		} else
--			continue;
--
--		dev_info(&z->dev, "%s IDE controller\n", board_name[type]);
--
--		board = z->resource.start;
-+	static const char * const board_name[]
-+		= { "Buddha", "Catweasel", "X-Surf" };
-+	struct ata_host *host;
-+	void __iomem *buddha_board;
-+	unsigned long board;
-+	unsigned int type, nr_ports = 2;
-+	int i;
-+
-+	switch (z->id) {
-+	case ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA:
-+	default:
-+		type = BOARD_BUDDHA;
-+		break;
-+	case ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL:
-+		type = BOARD_CATWEASEL;
-+		nr_ports++;
-+		break;
-+	case ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF:
-+		type = BOARD_XSURF;
-+		break;
-+	}
-+
-+	dev_info(&z->dev, "%s IDE controller\n", board_name[type]);
-+
-+	board = z->resource.start;
-+
-+	if (type != BOARD_XSURF) {
-+		if (!devm_request_mem_region(&z->dev,
-+					     board + BUDDHA_BASE1,
-+					     0x800, DRV_NAME))
-+			return -ENXIO;
-+	} else {
-+		if (!devm_request_mem_region(&z->dev,
-+					     board + XSURF_BASE1,
-+					     0x1000, DRV_NAME))
-+			return -ENXIO;
-+		if (!devm_request_mem_region(&z->dev,
-+					     board + XSURF_BASE2,
-+					     0x1000, DRV_NAME)) {
-+		}
-+	}
-+
-+	/* allocate host */
-+	host = ata_host_alloc(&z->dev, nr_ports);
-+	if (!host)
-+		return -ENXIO;
-+
-+	buddha_board = ZTWO_VADDR(board);
-+
-+	/* enable the board IRQ on Buddha/Catweasel */
-+	if (type != BOARD_XSURF)
-+		z_writeb(0, buddha_board + BUDDHA_IRQ_MR);
-+
-+	for (i = 0; i < nr_ports; i++) {
-+		struct ata_port *ap = host->ports[i];
-+		void __iomem *base, *irqport;
-+		unsigned long ctl = 0;
- 
- 		if (type != BOARD_XSURF) {
--			if (!devm_request_mem_region(&z->dev,
--						     board + BUDDHA_BASE1,
--						     0x800, DRV_NAME))
--				continue;
-+			ap->ops = &pata_buddha_ops;
-+			base = buddha_board + buddha_bases[i];
-+			ctl = BUDDHA_CONTROL;
-+			irqport = buddha_board + BUDDHA_IRQ + i * 0x40;
- 		} else {
--			if (!devm_request_mem_region(&z->dev,
--						     board + XSURF_BASE1,
--						     0x1000, DRV_NAME))
--				continue;
--			if (!devm_request_mem_region(&z->dev,
--						     board + XSURF_BASE2,
--						     0x1000, DRV_NAME))
--				continue;
-+			ap->ops = &pata_xsurf_ops;
-+			base = buddha_board + xsurf_bases[i];
-+			/* X-Surf has no CS1* (Control/AltStat) */
-+			irqport = buddha_board + XSURF_IRQ;
- 		}
- 
--		/* allocate host */
--		host = ata_host_alloc(&z->dev, nr_ports);
--		if (!host)
--			continue;
--
--		buddha_board = ZTWO_VADDR(board);
--
--		/* enable the board IRQ on Buddha/Catweasel */
--		if (type != BOARD_XSURF)
--			z_writeb(0, buddha_board + BUDDHA_IRQ_MR);
--
--		for (i = 0; i < nr_ports; i++) {
--			struct ata_port *ap = host->ports[i];
--			void __iomem *base, *irqport;
--			unsigned long ctl = 0;
--
--			if (type != BOARD_XSURF) {
--				ap->ops = &pata_buddha_ops;
--				base = buddha_board + buddha_bases[i];
--				ctl = BUDDHA_CONTROL;
--				irqport = buddha_board + BUDDHA_IRQ + i * 0x40;
--			} else {
--				ap->ops = &pata_xsurf_ops;
--				base = buddha_board + xsurf_bases[i];
--				/* X-Surf has no CS1* (Control/AltStat) */
--				irqport = buddha_board + XSURF_IRQ;
--			}
--
--			ap->pio_mask = ATA_PIO4;
--			ap->flags |= ATA_FLAG_SLAVE_POSS | ATA_FLAG_NO_IORDY;
--
--			ap->ioaddr.data_addr		= base;
--			ap->ioaddr.error_addr		= base + 2 + 1 * 4;
--			ap->ioaddr.feature_addr		= base + 2 + 1 * 4;
--			ap->ioaddr.nsect_addr		= base + 2 + 2 * 4;
--			ap->ioaddr.lbal_addr		= base + 2 + 3 * 4;
--			ap->ioaddr.lbam_addr		= base + 2 + 4 * 4;
--			ap->ioaddr.lbah_addr		= base + 2 + 5 * 4;
--			ap->ioaddr.device_addr		= base + 2 + 6 * 4;
--			ap->ioaddr.status_addr		= base + 2 + 7 * 4;
--			ap->ioaddr.command_addr		= base + 2 + 7 * 4;
--
--			if (ctl) {
--				ap->ioaddr.altstatus_addr = base + ctl;
--				ap->ioaddr.ctl_addr	  = base + ctl;
--			}
--
--			ap->private_data = (void *)irqport;
--
--			ata_port_desc(ap, "cmd 0x%lx ctl 0x%lx", board,
--				      ctl ? board + buddha_bases[i] + ctl : 0);
-+		ap->pio_mask = ATA_PIO4;
-+		ap->flags |= ATA_FLAG_SLAVE_POSS | ATA_FLAG_NO_IORDY;
-+
-+		ap->ioaddr.data_addr		= base;
-+		ap->ioaddr.error_addr		= base + 2 + 1 * 4;
-+		ap->ioaddr.feature_addr		= base + 2 + 1 * 4;
-+		ap->ioaddr.nsect_addr		= base + 2 + 2 * 4;
-+		ap->ioaddr.lbal_addr		= base + 2 + 3 * 4;
-+		ap->ioaddr.lbam_addr		= base + 2 + 4 * 4;
-+		ap->ioaddr.lbah_addr		= base + 2 + 5 * 4;
-+		ap->ioaddr.device_addr		= base + 2 + 6 * 4;
-+		ap->ioaddr.status_addr		= base + 2 + 7 * 4;
-+		ap->ioaddr.command_addr		= base + 2 + 7 * 4;
-+
-+		if (ctl) {
-+			ap->ioaddr.altstatus_addr = base + ctl;
-+			ap->ioaddr.ctl_addr	  = base + ctl;
- 		}
- 
--		ata_host_activate(host, IRQ_AMIGA_PORTS, ata_sff_interrupt,
--				  IRQF_SHARED, &pata_buddha_sht);
-+		ap->private_data = (void *)irqport;
- 
-+		ata_port_desc(ap, "cmd 0x%lx ctl 0x%lx", board,
-+			      ctl ? board + buddha_bases[i] + ctl : 0);
- 	}
- 
-+	ata_host_activate(host, IRQ_AMIGA_PORTS, ata_sff_interrupt,
-+			  IRQF_SHARED, &pata_buddha_sht);
-+
-+
- 	return 0;
- }
- 
--module_init(pata_buddha_init_one);
-+static void pata_buddha_remove(struct zorro_dev *zdev)
-+{
-+	struct ata_host *host = dev_get_drvdata(&zdev->dev);
-+
-+	ata_host_detach(host);
-+}
-+
-+static const struct zorro_device_id pata_buddha_zorro_tbl[] = {
-+	{ ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA, },
-+	{ ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL, },
-+	{ ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, },
-+	{ 0 }
-+};
-+
-+MODULE_DEVICE_TABLE(zorro, pata_buddha_zorro_tbl);
-+
-+static struct zorro_driver pata_buddha_driver = {
-+	.name           = "pata_buddha",
-+	.id_table       = pata_buddha_zorro_tbl,
-+	.probe          = pata_buddha_probe,
-+	.remove         = pata_buddha_remove,
-+};
-+
-+module_driver(pata_buddha_driver,
-+	      zorro_register_driver,
-+	      zorro_unregister_driver);
- 
- MODULE_AUTHOR("Bartlomiej Zolnierkiewicz");
- MODULE_DESCRIPTION("low-level driver for Buddha/Catweasel/X-Surf PATA");
--- 
-2.11.0
+This is directly analogous to the way NVMe-of works today: it uses
+blkdev_get_by_path() to translate a user provided path to a struct
+block_device. The only difference here is that, for passthru, we need a
+nvme_ctrl, not a block device.
 
+Logan
