@@ -2,252 +2,111 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DECC761AD
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5382CC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60756218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:20:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xCw3C5AX"
+	by mail.kernel.org (Postfix) with ESMTP id 21EA0218D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564093449;
+	bh=3JLogo6H+bSfeYeWtbaf6Mngs+H5aQPOTF5AdZi4JbQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VHij+Qd36QgT75tVE9+Q9esc4Iuokfk3Hxgaxyv+VtL8AvtjJAO+B8Wb734E+E6ue
+	 Xa+4NXJNsQx11oV2XG2zQLwEMUpVQw7K0vXx7GYW47btzqZcfsOBQRW5VMIDWi3Uk0
+	 THsiamheAjBcWGyMVtKFufQi60o6VmvVfB8/L/a0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfGYWUR (ORCPT
+        id S1726923AbfGYWYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 18:20:17 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39089 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfGYWTO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 18:19:14 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b7so23964535pls.6
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 15:19:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=sgLAsMf3tNoy5aMAxpDD6qYpvryasSPOG21vNe1gMGQ=;
-        b=xCw3C5AXZ3iwVVspZ/Sf7un1Xb/Y4ptsWpDNoVLh+zKSqefc1xJXf6Njj/TLjTMVO5
-         Y21PIn9jQvX7V1Cx0GJrSmxAU8xRmVOZMFr2xdbaNNHSMpK9BL72d9/6Fccmo1k8Puf6
-         14hjjLAjP6lE2HM6wF5bUr/5jQOfoU+gw5zj+Ij6OzjmlkmpuQgDLd6OD47TL0s1qAa7
-         CCGzY/E7uzgwcNDKXCHA3e9mM4YUfsBmPi3jboqweXzwDjhPwyWVw/xkycFVej9+JUa7
-         sqtaKqkWnv5mivp2UxDpl1cRO4EHYhFCzwRsVpiYw4fS7oMfpJNRTC1KGiipLbL7kZg5
-         E+Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=sgLAsMf3tNoy5aMAxpDD6qYpvryasSPOG21vNe1gMGQ=;
-        b=E2FuFRwL6DtRhEq5TVFit9q7FfTVva+VV+Z8bN8vAc3zlh2VyaNBQ+jdBplprOb+Cj
-         S9NR9f1KyM/zluzPOO4Br7LwzKMLOzsfTXLvejPd6nZ7ZYMYNsxxPAopQvV4zwBuipEh
-         AyZSTnjjI7S0DhflNfD9qCJGZj/+Aw/K8LxSgVNotmYEmVfhVpYwc7+r430jqSiS+EdH
-         65IFORZNaIQbiu7TdMYzlKsD8IIqtOMmKtNY/b3KicGtmyVF7UhYOr1IQTg/Zr0n8VDA
-         gTIRErvNZcVcK8vAGEAWgKFAJnBtX1x8OYhn9T8YzFLRq0gmXBLuObCEm8Uj4+49y/wW
-         WUbw==
-X-Gm-Message-State: APjAAAV5h3rzwrD/7b9QoZOY8oPg4+ucJmnFAWuJyKxwVt3Qlp8adyDl
-        52cjtEXDUjHzD1haWvO3e9g9+WVbKRfSpw==
-X-Google-Smtp-Source: APXvYqw6caS6FrzKnwk5660tgEQTZU3oROBvcbiOWhz90/aDLwqmMQvaggmOjeUBNjg0JmZxZuykdg==
-X-Received: by 2002:a17:902:102c:: with SMTP id b41mr91445248pla.204.1564093153359;
-        Thu, 25 Jul 2019 15:19:13 -0700 (PDT)
-Received: from localhost ([49.248.170.216])
-        by smtp.gmail.com with ESMTPSA id p68sm61956062pfb.80.2019.07.25.15.19.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Jul 2019 15:19:12 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, edubezval@gmail.com,
-        andy.gross@linaro.org, Andy Gross <agross@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thu, 25 Jul 2019 18:24:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbfGYWYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 18:24:07 -0400
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3672922C7E;
+        Thu, 25 Jul 2019 22:24:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564093446;
+        bh=3JLogo6H+bSfeYeWtbaf6Mngs+H5aQPOTF5AdZi4JbQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qQ0pmHASFnfLaGawnik5VEoSJv0ubNcBHj1bRacJYGJRhko66TxkYcoc0ZNJiWtRM
+         /okS464Oy2UMDzloZChf/rj6Bx3I39iCuYcOl2CWKKdV+eX2zOLVyfM4V+SctfAXHT
+         Rn+V2exDT35fhGJEVrOJoteHZDhoBpSCZFGmrwHA=
+Received: by mail-qt1-f169.google.com with SMTP id y26so50697975qto.4;
+        Thu, 25 Jul 2019 15:24:06 -0700 (PDT)
+X-Gm-Message-State: APjAAAWVDgv1p58BPm8DEpqS45SMDmz5lac/HjvzB4CTR290NP1mwzIE
+        t6mwC8PwfbVRdVAOeNXiql9SerLXqAv1i+tesA==
+X-Google-Smtp-Source: APXvYqymuR/CfxglS3eGlra1LScgdzgYCXA7Zoh0YgXpzw19WOcSOu4dPi51w8tk0qDx2h76/kSXt+skkFTYNwydBEM=
+X-Received: by 2002:aed:3fb0:: with SMTP id s45mr65093826qth.136.1564093445297;
+ Thu, 25 Jul 2019 15:24:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1562625253-29254-6-git-send-email-yongqiang.niu@mediatek.com>
+ <20190724201635.GA18345@bogus> <1564024819.2621.4.camel@mtksdaap41>
+In-Reply-To: <1564024819.2621.4.camel@mtksdaap41>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 25 Jul 2019 16:23:54 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL439PCnG3B75uqCXb3-OfH2uK6qtU7XpUb-cEnPWRkkQ@mail.gmail.com>
+Message-ID: <CAL_JsqL439PCnG3B75uqCXb3-OfH2uK6qtU7XpUb-cEnPWRkkQ@mail.gmail.com>
+Subject: Re: [PATCH v4, 05/33] dt-bindings: mediatek: add RDMA1 description
+ for mt8183 display
+To:     CK Hu <ck.hu@mediatek.com>
+Cc:     yongqiang.niu@mediatek.com, Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     linux-pm@vger.kernel.org
-Subject: [PATCH 04/15] drivers: thermal: tsens: Add debugfs support
-Date:   Fri, 26 Jul 2019 03:48:39 +0530
-Message-Id: <534b5017c2210ba8d541c206dace204d6617b4c9.1564091601.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1564091601.git.amit.kucheria@linaro.org>
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1564091601.git.amit.kucheria@linaro.org>
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dump some basic version info and sensor details into debugfs
+On Wed, Jul 24, 2019 at 9:20 PM CK Hu <ck.hu@mediatek.com> wrote:
+>
+> Hi, Rob:
+>
+> On Wed, 2019-07-24 at 14:16 -0600, Rob Herring wrote:
+> > On Tue, Jul 09, 2019 at 06:33:45AM +0800, yongqiang.niu@mediatek.com wrote:
+> > > From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> > >
+> > > This patch add RDMA1 description for mt8183 display
+> > >
+> > > Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> > > index afd3c90..bb9274a 100644
+> > > --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> > > +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> > > @@ -30,6 +30,7 @@ Required properties (all function blocks):
+> > >     "mediatek,<chip>-disp-ovl"              - overlay (4 layers, blending, csc)
+> > >     "mediatek,<chip>-disp-ovl-2l"           - overlay (2 layers, blending, csc)
+> > >     "mediatek,<chip>-disp-rdma"             - read DMA / line buffer
+> > > +   "mediatek,<chip>-disp-rdma1"            - function is same with RDMA, fifo size is different
+> >
+> > This can't be determined by which chip it is? IOW, a chip may have both
+> > rdma and rdma1?
+>
+> In MT8183, there are two different rdma. The difference is the fifo size
+> in each one. I've a question: is it better to have two compatible string
+> for each one, or just one compatible string for both but with a property
+> to set fifo size?
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- drivers/thermal/qcom/tsens-common.c | 85 +++++++++++++++++++++++++++++
- drivers/thermal/qcom/tsens.c        |  2 +
- drivers/thermal/qcom/tsens.h        |  6 ++
- 3 files changed, 93 insertions(+)
-
-diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
-index 7437bfe196e5..7ab2e740a1da 100644
---- a/drivers/thermal/qcom/tsens-common.c
-+++ b/drivers/thermal/qcom/tsens-common.c
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2015, The Linux Foundation. All rights reserved.
-  */
- 
-+#include <linux/debugfs.h>
- #include <linux/err.h>
- #include <linux/io.h>
- #include <linux/nvmem-consumer.h>
-@@ -139,6 +140,79 @@ int get_temp_common(struct tsens_sensor *s, int *temp)
- 	return 0;
- }
- 
-+#ifdef CONFIG_DEBUG_FS
-+static int dbg_sensors_show(struct seq_file *s, void *data)
-+{
-+	struct platform_device *pdev = s->private;
-+	struct tsens_priv *priv = platform_get_drvdata(pdev);
-+	int i;
-+
-+	seq_printf(s, "max: %2d\nnum: %2d\n\n",
-+		   priv->feat->max_sensors, priv->num_sensors);
-+
-+	seq_puts(s, "      id   slope  offset\n------------------------\n");
-+	for (i = 0;  i < priv->num_sensors; i++) {
-+		seq_printf(s, "%8d%8d%8d\n", priv->sensor[i].hw_id,
-+			   priv->sensor[i].slope, priv->sensor[i].offset);
-+	}
-+
-+	return 0;
-+}
-+
-+static int dbg_version_show(struct seq_file *s, void *data)
-+{
-+	struct platform_device *pdev = s->private;
-+	struct tsens_priv *priv = platform_get_drvdata(pdev);
-+	u32 maj_ver, min_ver, step_ver;
-+	int ret;
-+
-+	if (tsens_ver(priv) > VER_0_1) {
-+		ret = regmap_field_read(priv->rf[VER_MAJOR], &maj_ver);
-+		if (ret)
-+			return ret;
-+		ret = regmap_field_read(priv->rf[VER_MINOR], &min_ver);
-+		if (ret)
-+			return ret;
-+		ret = regmap_field_read(priv->rf[VER_STEP], &step_ver);
-+		if (ret)
-+			return ret;
-+		seq_printf(s, "%d.%d.%d\n", maj_ver, min_ver, step_ver);
-+	} else {
-+		seq_puts(s, "0.1.0\n");
-+	}
-+
-+	return 0;
-+}
-+
-+DEFINE_SHOW_ATTRIBUTE(dbg_version);
-+DEFINE_SHOW_ATTRIBUTE(dbg_sensors);
-+
-+static void tsens_debug_init(struct platform_device *pdev)
-+{
-+	struct tsens_priv *priv = platform_get_drvdata(pdev);
-+	struct dentry *root, *file;
-+
-+	root = debugfs_lookup("tsens", NULL);
-+	if (!root)
-+		priv->debug_root = debugfs_create_dir("tsens", NULL);
-+	else
-+		priv->debug_root = root;
-+
-+	file = debugfs_lookup("version", priv->debug_root);
-+	if (!file)
-+		debugfs_create_file("version", 0444, priv->debug_root,
-+				    pdev, &dbg_version_fops);
-+
-+	/* A directory for each instance of the TSENS IP */
-+	priv->debug = debugfs_create_dir(dev_name(&pdev->dev), priv->debug_root);
-+	debugfs_create_file("sensors", 0444, priv->debug, pdev, &dbg_sensors_fops);
-+
-+	return;
-+}
-+#else
-+static inline void tsens_debug_init(struct platform_device *pdev) {}
-+#endif
-+
- static const struct regmap_config tsens_config = {
- 	.name		= "tm",
- 	.reg_bits	= 32,
-@@ -199,6 +273,15 @@ int __init init_common(struct tsens_priv *priv)
- 		goto err_put_device;
- 	}
- 
-+	if (tsens_ver(priv) > VER_0_1) {
-+		for (i = VER_MAJOR; i <= VER_STEP; i++) {
-+			priv->rf[i] = devm_regmap_field_alloc(dev, priv->srot_map,
-+							      priv->fields[i]);
-+			if (IS_ERR(priv->rf[i]))
-+				return PTR_ERR(priv->rf[i]);
-+		}
-+	}
-+
- 	priv->rf[TSENS_EN] = devm_regmap_field_alloc(dev, priv->srot_map,
- 						     priv->fields[TSENS_EN]);
- 	if (IS_ERR(priv->rf[TSENS_EN])) {
-@@ -238,6 +321,8 @@ int __init init_common(struct tsens_priv *priv)
- 		}
- 	}
- 
-+	tsens_debug_init(op);
-+
- 	return 0;
- 
- err_put_device:
-diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-index 06c6bbd69a1a..772aa76b50e1 100644
---- a/drivers/thermal/qcom/tsens.c
-+++ b/drivers/thermal/qcom/tsens.c
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2015, The Linux Foundation. All rights reserved.
-  */
- 
-+#include <linux/debugfs.h>
- #include <linux/err.h>
- #include <linux/module.h>
- #include <linux/of.h>
-@@ -176,6 +177,7 @@ static int tsens_remove(struct platform_device *pdev)
- {
- 	struct tsens_priv *priv = platform_get_drvdata(pdev);
- 
-+	debugfs_remove_recursive(priv->debug_root);
- 	if (priv->ops->disable)
- 		priv->ops->disable(priv);
- 
-diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
-index d022e726d074..e1d6af71b2b9 100644
---- a/drivers/thermal/qcom/tsens.h
-+++ b/drivers/thermal/qcom/tsens.h
-@@ -292,6 +292,8 @@ struct tsens_context {
-  * @feat: features of the IP
-  * @fields: bitfield locations
-  * @ops: pointer to list of callbacks supported by this device
-+ * @debug_root: pointer to debugfs dentry for all tsens
-+ * @debug: pointer to debugfs dentry for tsens controller
-  * @sensor: list of sensors attached to this device
-  */
- struct tsens_priv {
-@@ -305,6 +307,10 @@ struct tsens_priv {
- 	const struct tsens_features	*feat;
- 	const struct reg_field		*fields;
- 	const struct tsens_ops		*ops;
-+
-+	struct dentry			*debug_root;
-+	struct dentry			*debug;
-+
- 	struct tsens_sensor		sensor[0];
- };
- 
--- 
-2.17.1
-
+If that's the only diff, then a property for fifo size is fine. We
+just don't want to be adding a new property for each new difference.
