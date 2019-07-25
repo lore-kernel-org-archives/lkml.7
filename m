@@ -2,112 +2,86 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DEEC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17499C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7092122BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7AF32166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:39:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="W5WgwoW8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfGYUhV (ORCPT
+        id S1726748AbfGYUjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 16:37:21 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:43852 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726741AbfGYUhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 16:37:20 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hqkU7-0005Lc-87; Thu, 25 Jul 2019 14:37:08 -0600
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <20190725172335.6825-5-logang@deltatee.com>
- <20190725175023.GA30641@bombadil.infradead.org>
- <da58f91e-6cfa-02e0-dd89-3cfa23764a0e@deltatee.com>
- <20190725195835.GA7317@localhost.localdomain>
- <5dd6a41d-21c4-cf8d-a81d-271549de6763@deltatee.com>
- <20190725203118.GB7317@localhost.localdomain>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <3bb266ae-abf3-0146-5d93-e7a600453493@deltatee.com>
-Date:   Thu, 25 Jul 2019 14:37:05 -0600
+        Thu, 25 Jul 2019 16:39:09 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51353 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726195AbfGYUjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 16:39:09 -0400
+Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3281:e7ea:4585:74bd:2ff0])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x6PKcpZg1158853
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Thu, 25 Jul 2019 13:38:52 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x6PKcpZg1158853
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564087132;
+        bh=9+UfSFFvVBfC/Y+BWP+Ce+brhw7Kq1b1vMVNHyn+PyQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=W5WgwoW8LHGW5eRt4XIJhQBYTCC/r0o4d9h7R00QJAx/nMXMkSuTK7PqPXT1qyOig
+         qiqczL7sMJFQGCBjok7AKaoEgEmwo2cUoQjIKgbW7vaF91kFAjUudC6zI8RHrDWUKF
+         3JTn6P33/VkuhB9CgerMAq62nz7FWHEcyvfI/n1lRGxgQK+gUimYlUVJDz8XDzvxkb
+         zikasoWIEf4QXDCsh6WO7l+6bt0QSadpV5enZgAX5g2FPJ7kFJZjVd/iwCW4I5/zPK
+         Umgd7nk0vr9wAjYRRGjmiw1ueltbQUa1z84zySVJ1TdAHcBgPsF0LvNortXVyXp04k
+         JUsQbHcrC4dzQ==
+Subject: Re: [PATCH 1/1] x86/boot: clear some fields explicitly
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     john.hubbard@gmail.com, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+References: <20190724231528.32381-1-jhubbard@nvidia.com>
+ <20190724231528.32381-2-jhubbard@nvidia.com>
+ <B7DC31CA-E378-445A-A937-1B99490C77B4@zytor.com>
+ <alpine.DEB.2.21.1907250848050.1791@nanos.tec.linutronix.de>
+From:   "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <3831bbff-631a-2e62-9e82-e2b6181421c8@zytor.com>
+Date:   Thu, 25 Jul 2019 13:38:46 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190725203118.GB7317@localhost.localdomain>
+In-Reply-To: <alpine.DEB.2.21.1907250848050.1791@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, sagi@grimberg.me, hch@lst.de, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, willy@infradead.org, kbusch@kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v6 04/16] nvme-core: introduce nvme_get_by_path()
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-07-25 2:31 p.m., Keith Busch wrote:
-> On Thu, Jul 25, 2019 at 02:28:28PM -0600, Logan Gunthorpe wrote:
+On 7/25/19 12:22 AM, Thomas Gleixner wrote:
 >>
->>
->> On 2019-07-25 1:58 p.m., Keith Busch wrote:
->>> On Thu, Jul 25, 2019 at 11:54:18AM -0600, Logan Gunthorpe wrote:
->>>>
->>>>
->>>> On 2019-07-25 11:50 a.m., Matthew Wilcox wrote:
->>>>> On Thu, Jul 25, 2019 at 11:23:23AM -0600, Logan Gunthorpe wrote:
->>>>>> nvme_get_by_path() is analagous to blkdev_get_by_path() except it
->>>>>> gets a struct nvme_ctrl from the path to its char dev (/dev/nvme0).
->>>>>>
->>>>>> The purpose of this function is to support NVMe-OF target passthru.
->>>>>
->>>>> I can't find anywhere that you use this in this patchset.
->>>>>
->>>>
->>>> Oh sorry, the commit message is out of date the function was actually
->>>> called nvme_ctrl_get_by_path() and it's used in Patch 10.
->>>
->>> Instead of by path, could we have configfs take something else, like
->>> the unique controller instance or serial number? I know that's different
->>> than how we handle blocks and files, but that way nvme core can lookup
->>> the cooresponding controller without adding new cdev dependencies.
->>
->> Well the previous version of the patchset just used the ctrl name
->> ("nvme1") and looped through all the controllers to find a match. But
->> this sucks because of the inconsistency and the fact that the name can
->> change if hardware changes and the number changes. Allowing the user to
->> make use of standard udev rules seems important to me.
+>> The problem with this is that it will break silently when changes are
+>> made to this structure.
 > 
-> Should we then create a new udev rule for persistent controller
-> names? /dev/nvme1 may not be the same controller each time you refer
-> to it.
+> That's not really the worst problem. Changes to that struct which touch any
+> of the to be cleared ranges will break anyway if not handled correctly in
+> the sanitizer function.
+> 
 
-Udev can only create symlinks from /dev/nvme0 to
-/dev/nvme-persistent-name and users can do this as they need now. No
-changes needed.
+Not really... that's kind of the point (the cleared ranges are cleared
+explicitly because the boot loader failed to do so, so zeroing them is what
+the boot loader should have done.)
 
-My point was if we use the ctrl name (nvme0) as a reference then the
-kernel can't make use of these symlinks or anything udev does seeing
-that name is internal to the kernel only.
+The most correct way to address this would be to have an explicit list of
+members to be *preserved* even if the sentinel triggers.
 
-If we use cdev_get_by_path()/nvme_ctrl_get_by_path() then this isn't a
-problem as we can open a symlink to /dev/nvme0 without any issues.
+The easy way would be to put in a suitable cast to clear the warning -- I
+would not be surprised if an explicit cast to something like (void *) would
+quiet the warning, or else (yuck) put in an explicit (well-commented) #pragma
+to shut it up.
 
-Logan
-
+	-hpa
