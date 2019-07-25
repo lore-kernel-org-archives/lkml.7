@@ -2,174 +2,98 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F799C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E461CC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6217122C7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8E10216C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:37:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P4GXONjn"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="VFMxkNkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfGYXf2 (ORCPT
+        id S1726942AbfGYXhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 19:35:28 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38384 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbfGYXf2 (ORCPT
+        Thu, 25 Jul 2019 19:37:22 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:34348 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbfGYXhV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 19:35:28 -0400
-Received: by mail-io1-f66.google.com with SMTP id j6so25806084ioa.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 16:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FkpQNBEJyUYlZ+foMWEjwOOmDuvJ1KqLXtHOKeziXTU=;
-        b=P4GXONjnr2ejlxTjuq3SyzpJD9nBSLIDYncSudn+pYgmDEbwzBYfQ+s1k01XDE9c2T
-         DWDFqDVeLm7azJLocwwU2rxApr+ds4l+E3vMIYAJrFqMV6T8SG8WKRbRQc0aHo5wFHLv
-         B62GJTBtjmJUkYJ0CJ4UU2A+Bndr5O6Fytp6g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FkpQNBEJyUYlZ+foMWEjwOOmDuvJ1KqLXtHOKeziXTU=;
-        b=jLLQyyCyBg0AnyQj1U6Ur9h87rwKYnYguMKb0t2/q5GyDhVeTF6ikQr4a1AmtQwPGO
-         OY/9+pGI91NFOG+rB+7WwRMp3Ow5uXaf1WAZ97RRtHNKfestugeBh4kT9xtPOSPQK6CG
-         y9Opf4AeyZqrlj6Wt+An938jWp18BG85EccrLo083PA6zbnUYzrVjRnOqiJ+reqO3xsq
-         3tXiKNtU1pBA6y55mXa6zIOwFO6Tc5gnQUBdJemNKdDKALugyG4EGPN2oRWDPztJWX9U
-         WowFV28OzhlpivOCc3vvKG4DBSXJudXYZ6EtH0Tdhw1yRxpsRPPU4ssT0YaUGum5f5BW
-         dJOQ==
-X-Gm-Message-State: APjAAAUerrnwXBWkSbEZZ1FGlyyhUtwaaCF6+yNxRVCb8RhCELQzmCeu
-        BZCQ2y9ThDZH0xyekb4pnfgfzBbQj2Y=
-X-Google-Smtp-Source: APXvYqy7aj4XE5NX8jx6KgQOMfc12ulKyooC02uHmgNfP3x8vyJb5EZUUbZORQAO4BgRef+n9lig+Q==
-X-Received: by 2002:a02:aa8f:: with SMTP id u15mr4725186jai.39.1564097727095;
-        Thu, 25 Jul 2019 16:35:27 -0700 (PDT)
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com. [209.85.166.51])
-        by smtp.gmail.com with ESMTPSA id p3sm43938502iog.70.2019.07.25.16.35.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 16:35:26 -0700 (PDT)
-Received: by mail-io1-f51.google.com with SMTP id g20so100936864ioc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 16:35:26 -0700 (PDT)
-X-Received: by 2002:a02:c6a9:: with SMTP id o9mr38028054jan.90.1564097725615;
- Thu, 25 Jul 2019 16:35:25 -0700 (PDT)
+        Thu, 25 Jul 2019 19:37:21 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 45FE98066C;
+        Fri, 26 Jul 2019 11:37:18 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1564097838;
+        bh=nLh8CaW4kdmpDJF6BplbubaAtEuBgr01eqwIgkMyJa4=;
+        h=From:To:CC:Subject:Date;
+        b=VFMxkNkOpvV7TPih+wfBJ9rkmklFFFXCCe5D0EuIq3AdAJsk4weRcLiAD7T610FYT
+         CcZ72oyJE7K99BEtGy7lLUoWgVck0aH0je/L66btKAclkbnHnX1P5pZ3Cfi3udFmAk
+         +anPtP4Id4pilHZgGtaIUcPuj3g2yjffie8vnu6S0R1llnW+Mi704rt82oqUTeVTdv
+         lEsXK4bV1WLUuPWerqZORkWeTwDUkD1SL71nBtOWVJh8wSxI1MrwUKIstNsaPNIz/g
+         zgbQk5b7g3kLSZsWU52oCMliqLI7lCtYjkmcko0Z9kVIqM63ZSHDOBGjFCpyDy4Fds
+         8jBBJVnwQ+/fA==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d3a3d2d0000>; Fri, 26 Jul 2019 11:37:17 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Fri, 26 Jul 2019 11:37:18 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Fri, 26 Jul 2019 11:37:17 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Slowness forming TIPC cluster with explicit node addresses
+Thread-Topic: Slowness forming TIPC cluster with explicit node addresses
+Thread-Index: AQHVQ0Hkw5M86TmlWkazctTgG4cJIQ==
+Date:   Thu, 25 Jul 2019 23:37:16 +0000
+Message-ID: <1564097836.11887.16.camel@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <729525783EC36B4DBBC1460562BCD8DF@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190620182056.61552-1-dianders@chromium.org> <CAD=FV=Wi21Emjg7CpCJfSRiKr_EisR20UO1tbPjAeJzdJNbSVw@mail.gmail.com>
- <CAD=FV=UhNfhVG422=huthFSptoV4FXED=xPtArO2KkyNb1U3Xw@mail.gmail.com> <3386344.sHu1S4gNag@phil>
-In-Reply-To: <3386344.sHu1S4gNag@phil>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 25 Jul 2019 16:35:12 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XNSc+-a6ytx2fsUnh54g64i6FW+6WsHMFqwEMWbBPZ5Q@mail.gmail.com>
-Message-ID: <CAD=FV=XNSc+-a6ytx2fsUnh54g64i6FW+6WsHMFqwEMWbBPZ5Q@mail.gmail.com>
-Subject: Re: [PATCH] Revert "ARM: dts: rockchip: add startup delay to
- rk3288-veyron panel-regulators"
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Thu, Jul 25, 2019 at 2:33 PM Heiko Stuebner <heiko@sntech.de> wrote:
->
-> Am Mittwoch, 3. Juli 2019, 06:54:58 CEST schrieb Doug Anderson:
-> > Hi,
-> >
-> > On Thu, Jun 20, 2019 at 1:31 PM Doug Anderson <dianders@chromium.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Thu, Jun 20, 2019 at 11:21 AM Douglas Anderson <dianders@chromium.org> wrote:
-> > > >
-> > > > This reverts commit 1f45e8c6d0161f044d679f242fe7514e2625af4a.
-> > > >
-> > > > This 100 ms mystery delay is not on downstream kernels and no longer
-> > > > seems needed on upstream kernels either [1].  Presumably something in the
-> > > > meantime has made things better.  A few possibilities for patches that
-> > > > have landed in the meantime that could have made this better are
-> > > > commit 3157694d8c7f ("pwm-backlight: Add support for PWM delays
-> > > > proprieties."), commit 5fb5caee92ba ("pwm-backlight: Enable/disable
-> > > > the PWM before/after LCD enable toggle."), and commit 6d5922dd0d60
-> > > > ("ARM: dts: rockchip: set PWM delay backlight settings for Veyron")
-> > > >
-> > > > Let's revert and get our 100 ms back.
-> > > >
-> > > > [1] https://lkml.kernel.org/r/2226970.BAPq4liE1j@diego
-> > > >
-> > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > > ---
-> > > >
-> > > >  arch/arm/boot/dts/rk3288-veyron-jaq.dts    | 1 -
-> > > >  arch/arm/boot/dts/rk3288-veyron-jerry.dts  | 1 -
-> > > >  arch/arm/boot/dts/rk3288-veyron-minnie.dts | 1 -
-> > > >  arch/arm/boot/dts/rk3288-veyron-speedy.dts | 1 -
-> > > >  4 files changed, 4 deletions(-)
-> > >
-> > > Maybe wait before applying.  I've been running reboot tests now with
-> > > this patch applied (among others) and with enough reboots I managed to
-> > > see:
-> > >
-> > > [    5.682418] rockchip-dp ff970000.dp: eDP link training failed (-5)
-> > >
-> > > I'll see if I can confirm that it's this patch and why things are
-> > > different compared to downstream.
-> >
-> > OK, I finally got back to this and confirmed:
-> >
-> > 1. The above error is actually somewhat harmless.  The eDP failure
-> > will be retried automatically despite the scary message.  Specifically
-> > see the loop in analogix_dp_bridge_enable().  I confirmed that after
-> > seeing the error the screen came up just fine (I looked at the screen
-> > in two actual instances but I believe it's pretty much always fine).
-> >
-> > 2. I haven't seen any evidence that the eDP link training happens any
-> > more often with this revert in place.  Specifically, I see the same
-> > message in the logs (at what appears to be the same rate) with or
-> > without this revert.
-> >
-> > 3. Probably the link-training failures here are the same ones we
-> > debugged for PSR for rk3399-gru-kevin that we fixed by making the eDP
-> > PCLK rate exactly 24 MHz.  See <https://crrev.com/c/433393> for
-> > details.  On rk3399-gru-kevin it was super important to resolve the
-> > root cause of these errors because we had PSR (which meant we were
-> > constantly taking to the eDP controller).  On rk3288-veyron devices
-> > with no PSR the retry should be a fine solution and it doesn't seem
-> > like a good idea to fully rejigger our clock plan to fix the root
-> > cause.
-> >
-> >
-> > NOTE: I saw _one_ case on rk3288-veyron-minnie where the screen looked
-> > wonky at bootup and I saw the eDP link training error in the logs.
-> > That's what originally made me cautious.  I haven't been able to
-> > reproduce this, but presumably I just got super unlucky in that one
-> > case.  I've left devices rebooting all day at work and haven't seen
-> > the wonky screen since then.
-> >
-> >
-> > Summary: I think this revert is just fine.
->
-> it looks like by picking Matthias' cleanups of the veyron displays
-> first I broke this patch. I guess we just need to remove the
->         startup-delay-us = <100000>;
-> from the panel_regulator in the new rk3288-veyron-edp.dtsi ?
-
-Oops, I only checked Matthias's change against the current status of
-your for-next tree and forgot about this change.  Yes, the
-startup-delay should be removed there.  Do you want to resolve that
-when applying the patch or would you prefer a resend?
-
--Doug
+SGksDQoNCkknbSBoYXZpbmcgcHJvYmxlbXMgZm9ybWluZyBhIFRJUEMgY2x1c3RlciBiZXR3ZWVu
+IDIgbm9kZXMuDQoNClRoaXMgaXMgdGhlIGJhc2ljIHN0ZXBzIEknbSBnb2luZyB0aHJvdWdoIG9u
+IGVhY2ggbm9kZS4NCg0KbW9kcHJvYmUgdGlwYw0KaXAgbGluayBzZXQgZXRoMiB1cA0KdGlwYyBu
+b2RlIHNldCBhZGRyIDEuMS41ICMgb3IgMS4xLjYNCnRpcGMgYmVhcmVyIGVuYWJsZSBtZWRpYSBl
+dGggZGV2IGV0aDANCg0KVGhlbiB0byBjb25maXJtIGlmIHRoZSBjbHVzdGVyIGlzIGZvcm1lZCBJ
+IHVzZcKgdGlwYyBsaW5rIGxpc3QNCg0KW3Jvb3RAbm9kZS01IH5dIyB0aXBjIGxpbmsgbGlzdA0K
+YnJvYWRjYXN0LWxpbms6IHVwDQouLi4NCg0KTG9va2luZyBhdCB0Y3BkdW1wIHRoZSB0d28gbm9k
+ZXMgYXJlIHNlbmRpbmcgcGFja2V0c8KgDQoNCjIyOjMwOjA1Ljc4MjMyMCBUSVBDIHYyLjAgMS4x
+LjUgPiAwLjAuMCwgaGVhZGVybGVuZ3RoIDYwIGJ5dGVzLA0KTWVzc2FnZVNpemUgNzYgYnl0ZXMs
+IE5laWdoYm9yIERldGVjdGlvbiBQcm90b2NvbCBpbnRlcm5hbCwgbWVzc2FnZVR5cGUNCkxpbmsg
+cmVxdWVzdA0KMjI6MzA6MDUuODYzNTU1IFRJUEMgdjIuMCAxLjEuNiA+IDAuMC4wLCBoZWFkZXJs
+ZW5ndGggNjAgYnl0ZXMsDQpNZXNzYWdlU2l6ZSA3NiBieXRlcywgTmVpZ2hib3IgRGV0ZWN0aW9u
+IFByb3RvY29sIGludGVybmFsLCBtZXNzYWdlVHlwZQ0KTGluayByZXF1ZXN0DQoNCkV2ZW50dWFs
+bHkgKGFmdGVyIGEgZmV3IG1pbnV0ZXMpIHRoZSBsaW5rIGRvZXMgY29tZSB1cA0KDQpbcm9vdEBu
+b2RlLTbCoH5dIyB0aXBjIGxpbmsgbGlzdA0KYnJvYWRjYXN0LWxpbms6IHVwDQoxMDAxMDA2OmV0
+aDItMTAwMTAwNTpldGgyOiB1cA0KDQpbcm9vdEBub2RlLTXCoH5dIyB0aXBjIGxpbmsgbGlzdA0K
+YnJvYWRjYXN0LWxpbms6IHVwDQoxMDAxMDA1OmV0aDItMTAwMTAwNjpldGgyOiB1cA0KDQpXaGVu
+IEkgcmVtb3ZlIHRoZSAidGlwYyBub2RlIHNldCBhZGRyIiB0aGluZ3Mgc2VlbSB0byBraWNrIGlu
+dG8gbGlmZQ0Kc3RyYWlnaHQgYXdheQ0KDQpbcm9vdEBub2RlLTUgfl0jIHRpcGMgbGluayBsaXN0
+DQpicm9hZGNhc3QtbGluazogdXANCjAwNTBiNjFiZDJhYTpldGgyLTAwNTBiNjFlNmRmYTpldGgy
+OiB1cA0KDQpTbyB0aGVyZSBhcHBlYXJzIHRvIGJlIHNvbWUgZGlmZmVyZW5jZSBpbiBiZWhhdmlv
+dXIgYmV0d2VlbiBoYXZpbmcgYW4NCmV4cGxpY2l0IG5vZGUgYWRkcmVzcyBhbmQgdXNpbmcgdGhl
+IGRlZmF1bHQuIFVuZm9ydHVuYXRlbHkgb3VyDQphcHBsaWNhdGlvbiByZWxpZXMgb24gc2V0dGlu
+ZyB0aGUgbm9kZSBhZGRyZXNzZXMuDQoNCltyb290QG5vZGUtNSB+XSMgdW5hbWUgLWENCkxpbnV4
+IGxpbnV4Ym94IDUuMi4wLWF0MSsgIzggU01QIFRodSBKdWwgMjUgMjM6MjI6NDEgVVRDIDIwMTkg
+cHBjDQpHTlUvTGludXgNCg0KQW55IHRob3VnaHRzIG9uIHRoZSBwcm9ibGVtPw0K
