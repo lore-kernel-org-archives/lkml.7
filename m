@@ -2,191 +2,182 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A26C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D48C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E58B21951
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:33:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gv/6STrQ"
+	by mail.kernel.org (Postfix) with ESMTP id 15B4821951
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:33:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729911AbfGYRdi (ORCPT
+        id S1729954AbfGYRdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:33:38 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45009 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728019AbfGYRdh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:33:37 -0400
-Received: by mail-pf1-f195.google.com with SMTP id t16so23073240pfe.11;
-        Thu, 25 Jul 2019 10:33:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XrodkBeX5Mf5TFe6lBwszo2RsWN3uHi/lpV1v4j+mhI=;
-        b=Gv/6STrQ9TKKjlPd+/E/QocW4XnPqBjwfTH/dOvH6OC9gCuzyq2k6LYeKmdaDs0ek+
-         tpV3iP+xgP3Bzfu5qLtrrGcjxhhrMl5S2IExQg1JOM4p521B1gYduTmhHklGYNfXNjKZ
-         lvBsCW8APOt5Vd1L+wT5Lm7TFs1smC/nVWCL/+yWKFt54K2IyDFkAx8zjTZvB254JvYz
-         e/IwXtdy1INuBU1Z8PlVibWue1WMtf0mcf4Iv/LFfBUkkSG5Q8S6pmiOArLZGIansQzD
-         N0/S82+PDfqRLdaARbPZHbK+3plyxg6zViEB64gHWFZTKvGkGIhE2yp+OuM1uFBFr/YM
-         jhCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XrodkBeX5Mf5TFe6lBwszo2RsWN3uHi/lpV1v4j+mhI=;
-        b=bU4PbV6JiFyt6i1Pg+VQ5yBBcrOeDsFIEWcKV0RuaoGXGpGaURqjhrLnnlm7lKc/vV
-         TvAFDeC6om9gjoFORB1WkicuouHaRJTs0otpdwdnJIXRXecQHDTW8NgsqX0WoapNjiui
-         Fd8SP2rRUI1j6a1KdxDROlgiA5RHiLg4qeb89PaQeSyprxhSTH77oAChxAd36BI4ot3T
-         BZofVkvNccZ2EYoL0N6M6t427bpA/1VbAzzN7L03XAri6ZREI/cBVB4ykATt+g+oOXyH
-         pE2xUlF6Q2PdlGn0kearyZ91azmPGC/gb5M+Wn1z4e4X6LAbRYzYa93Iz8rsp3o9w+j6
-         4GhQ==
-X-Gm-Message-State: APjAAAX6M4bNb6Imo7/h/teirgoG3nydZnpRhYS7nt5qNZi9lLh63hc/
-        mCrJZ8zsBZF3johyOkWWml6Xf6OeSGrMxRRgU9eu2tdM
-X-Google-Smtp-Source: APXvYqxUnpV7tsdC+Z/xev0yzqymTMPHHNJdKz8TMYjIcaz6enwJLIZ5/EyLf9EES/OiHz1dxL+fV9wGMJXNT7GT1dU=
-X-Received: by 2002:a63:6eca:: with SMTP id j193mr12150114pgc.74.1564076016793;
- Thu, 25 Jul 2019 10:33:36 -0700 (PDT)
+        Thu, 25 Jul 2019 13:33:49 -0400
+Received: from enpas.org ([46.38.239.100]:34154 "EHLO mail.enpas.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728019AbfGYRds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 13:33:48 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        by mail.enpas.org (Postfix) with ESMTPSA id F0C1BFFDB4;
+        Thu, 25 Jul 2019 17:33:44 +0000 (UTC)
+Subject: Re: [PATCH v2] ata/pata_buddha: Probe via modalias instead of
+ initcall
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-ide@vger.kernel.org, linux-m68k@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20190725102211.8526-1-max@enpas.org>
+ <CGME20190725170359eucas1p271187268f749869088f60bf961194169@eucas1p2.samsung.com>
+ <01cfe282-6ce6-ff40-9e85-e23724f9d50f@samsung.com>
+From:   Max Staudt <max@enpas.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=max@enpas.org; prefer-encrypt=mutual; keydata=
+ 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
+ urZIw0nz8zec+73Bv/qF4GHHftLYfA==
+Message-ID: <a81d7a5f-c773-9769-cddd-95d2fe47d32e@enpas.org>
+Date:   Thu, 25 Jul 2019 19:33:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20190630054108.19205-1-ayman.bagabas@gmail.com>
-In-Reply-To: <20190630054108.19205-1-ayman.bagabas@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 25 Jul 2019 20:33:25 +0300
-Message-ID: <CAHp75VdKCms0ZsqCcq2wWaMFYE3G+kT8FFDQuw=CZKeyDov8pg@mail.gmail.com>
-Subject: Re: [RFC 0/9] platform/x86: Huawei WMI laptop extras driver
-To:     Ayman Bagabas <ayman.bagabas@gmail.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <01cfe282-6ce6-ff40-9e85-e23724f9d50f@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 30, 2019 at 8:41 AM Ayman Bagabas <ayman.bagabas@gmail.com> wrote:
->
-> This patch series introduce changes to huawei-wmi driver that includes:
-> * Move to platform driver
-> * Implement WMI management interface
-> * Add micmute LED support through WMI
-> * Add battery charging protection support through WMI
-> * Add fn-lock support through WMI
-> * Implement driver quirks and parameters
-> * Add a debugfs interface to WMI
->
-> # Move to platform driver
->
-> The current driver offers hotkeys and micmute led support only. With
-> these changes, a platform driver makes more sense since it handles these
-> changes pretty nicely.
->
-> # Implement WMI management interface
->
-> Huawei Matebook laptops come with two WMI interfaces. The first being
-> WMI0 which is considered "legacy" and AFAIK only found on the Matebook X
-> released in 2017. The second has a UID of "HWMI" and is found in pretty
-> much all models with a slight difference in implementation except for
-> the Matebook X (2017). Since this model has two interfaces, some aspects
-> are controlled through the legacy interface and some through the other
-> interface. Currently, the legacy interface is not fully implemented and
-> is only used for hotkeys and further debugging has to be done.
->
-> The WMI interface takes a 64 bit integer, although uses 32 bits most of
-> the time, and returns a 256-260 bytes buffer consists of either one ACPI
-> buffer of 260 bytes, in the case of Matebook X (2017), or one ACPI
-> package of two buffers, one with 4 bytes, and the other with 256 bytes.
-> We only care about the latter 256 buffer in both cases since the 4 bytes
-> always return zeros. The first byte of this 256 buffer always has the
-> return status where 1 indicated error. Some models require calling the
-> WMI interface twice to execute a command.
->
-> # Add micmute LED support through WMI
->
-> After implementing the WMI interface, micmute LED can be controlled
-> easily. Models with the legacy interface fall back to ACPI EC method
-> control since the legacy interface is not implemented.
->
-> # Add battery charging protection support through WMI
->
-> Most models, that has the WMI interface, are capable of battery
-> protection where it can control battery charging thresholds and limits
-> charging the battery to certain values.
->
-> # Add fn-lock support through WMI
->
-> The behavior of hotkeys is not the same among all models. Some models
-> require fn-lock to do things like `Ctrl-Ins` or `Alt-PrtSc`. By default,
-> hotkeys behave as special keys (media keys, Ins, etc), but if a modifier
-> is used (ctrl, alt, shift) these keys behave as F1-F12 keys. If the Fn
-> key is toggled on, the hotkeys with or without a modifier, behave as
-> F1-F12 keys. This makes it impossible to use a modifier and `PrtSc` or
-> `Ins`.
->
-> Now, some models fix this by excluding `PrtSc` and `Ins` keys from being
-> treated as F11 and F12 keys with the use of a modifier. However, some
-> models do not, and fixes this by the so called fn-lock.
->
-> Fn-lock inverts the behavior of the top row from special keys to F1-F12
-> keys. So a modifier and a special key would be possible which make
-> things like `Alt-Ins` possible. Now, with fn-lock we would have 4 modes:
->
-> * Fn-key off & fn-lock off - hotkeys treated as special keys using a
->   modifier gives F1-F12 keys.
-> * Fn-key on & fn-lock off - hotkeys treated as F1-F12 keys and using a
->   modifier gives F1-F12.
-> * Fn-key off & fn-lock on - hotkeys are treated as F1-F12 keys and using
->   a modifier gives special keys.
-> * Fn-key on & fn-lock on - hotkeys are treated as special keys and using
->   a modifier gives special keys.
->
-> # Implement driver quirks and parameters
->
-> The driver introduces 3 quirks and 2 parameters that can change the
-> driver's behavior. These quirks being as:
-> 1. Fixes reporting brightness keys twice since it's already handled by
->    acpi-video.
-> 2. Some models need a short delay when setting battery thresholds to
->    prevent a race condition when two processes read/write.
-> 3. Matebook X (2017) handles micmute led through the "legacy" interface
->    which is not currently implemented. Use ACPI EC method to control
->    this led.
->
-> and the 2 parameters can enforce the behavior of quirk 1 & 2.
->
-> # Add a debugfs interface to WMI
->
-> An interface to the WMI management interface that allows easier
-> debugging.
->
+On 07/25/2019 07:03 PM, Bartlomiej Zolnierkiewicz wrote:
+>> +err_ata_host_alloc:
+>> +	switch (type) {
+>> +	case BOARD_BUDDHA:
+>> +	case BOARD_CATWEASEL:
+>> +	default:
+>> +		devm_release_mem_region(&z->dev,
+>> +					board + BUDDHA_BASE1,
+>> +					0x800);
+> 
+> Could you please explain why this is needed now?
+> 
+> [ The whole idea of using devm_* helpers is to not have to release
+>   resources explicitly. ]
 
-It doesn't apply to current for-next.
-
-> Ayman Bagabas (9):
->   platform/x86: huawei-wmi: rename guid and driver name
->   platform/x86: huawei-wmi: move to platform driver
->   platform/x86: huawei-wmi: implement huawei wmi management interface
->   platform/x86: huawei-wmi: add quirks and module parameters
->   platform/x86: huawei-wmi: control micmute led through wmi interface
->   platform/x86: huawei-wmi: add battery charging thresholds
->   platform/x86: huawei-wmi: add fn-lock support
->   platform/x86: huawei-wmi: add sysfs interface support
->   platform/x86: huawei-wmi: add debugfs support
->
->  drivers/platform/x86/huawei-wmi.c | 710 ++++++++++++++++++++++++++----
->  1 file changed, 629 insertions(+), 81 deletions(-)
->
-> --
-> 2.20.1
->
+My mistake. Thanks, I'll fix it.
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+>> +static void pata_buddha_remove(struct zorro_dev *zdev)
+>> +{
+>> +	/* NOT IMPLEMENTED */
+>> +
+>> +	WARN_ONCE(1, "pata_buddha: Attempted to remove driver. This is not implemented yet.\n");
+> 
+> Please try to implement it, should be as simple as:
+> 
+> static void pata_buddha_remove(struct zorro_dev *zdev)
+> {
+> 	struct ata_host *host = dev_get_drvdata(&zdev->dev);
+> 
+> 	ata_host_detach(host);
+> }
+> 
+> [ ata_host_alloc() in pata_buddha_probe() sets drvdata to host ]
+
+Seeing as the driver is almost 1:1 the same as pata_gayle, I see no reason against this.
+
+Do you need me to test module removal on the real machine, or is it okay to take your suggestion as-is, given that it is already accepted in pata_gayle?
+
+
+> The rest of the patch looks fine, thanks for working on this driver.
+
+Thanks for reviewing it, and thanks for porting buddha to libata!
+
+
+> PS Next time please also use scripts/get_maintainer.pl script to get
+>    the list of people that should be added to Cc:, i.e.:
+> 
+> $ ./scripts/get_maintainer.pl -f drivers/ata/pata_buddha.c
+> Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com> (maintainer:LIBATA PATA DRIVERS)
+> Jens Axboe <axboe@kernel.dk> (maintainer:LIBATA PATA DRIVERS)
+> linux-ide@vger.kernel.org (open list:LIBATA PATA DRIVERS)
+> linux-kernel@vger.kernel.org (open list)
+> 
+> [ I've also added John, Michael & Geert to Cc: (as they were all
+>   involved in the development of the initial driver version). ]
+
+Oops, thanks for fixing this.
+
+
+Max
