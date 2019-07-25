@@ -7,77 +7,86 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCBEC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE6FC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B94ED21901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0234A2238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564053181;
-	bh=mMK5K4N5CvSqsQyZwq8b7MF3oNNFffuZ/tnEY4fz8L4=;
+	s=default; t=1564053260;
+	bh=waVczpwrh6pnIoFCpGlxFz7cDpHgzuXb/1ydQioMguo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Il9RMhgfYJ68Gt3EbIspkkwGjcVYLbeBoibK8X4eq0v6LDo/PdNQwbFw0QSlzCpuT
-	 ugd9poJRBgRcQ8fbkWdN41a+UxkgGyBIM00IiiJwkwwLcMKhtVR1MjeZ1MKJvUQreX
-	 dMucJ9SpJbD5gqYZAQBbgpBIdVLghLdwyzEpD+2k=
+	b=1k8dAmma9vRjJyVc+gpXMtDSEMRJ560D0XYL2uAAyMBaWHCEHxPe6BOTYQkUDAX8r
+	 B2/uZH+7IJ9dvGZRzXszuyqgzL5uQEJmMKi5KF4Axg6mJ2qgSmLSCrsKm9IF6+/H/u
+	 YEkq6RIB7wOgda0YE2PMbwYoc7ETI/PqpKkGIr68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403877AbfGYLNA (ORCPT
+        id S2391665AbfGYLOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34112 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 07:14:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391544AbfGYLNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:13:00 -0400
+        id S2388791AbfGYLOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 07:14:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74CD021901;
-        Thu, 25 Jul 2019 11:12:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABACE21901;
+        Thu, 25 Jul 2019 11:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564053178;
-        bh=mMK5K4N5CvSqsQyZwq8b7MF3oNNFffuZ/tnEY4fz8L4=;
+        s=default; t=1564053257;
+        bh=waVczpwrh6pnIoFCpGlxFz7cDpHgzuXb/1ydQioMguo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=giihKCF7flr5BvKT0yReP79jee0cRVpAJX4gJnP0LdBuiezXKQx3jmURgIjep7+ei
-         M/cYgVP7IFKlcM95n8uRWIPifjDb/O5LT0fmHpocX0T/kWvqKYJb7Qd43Bi0OoB76i
-         IfzIqG1pPP4WtKbpoCfNqsT9cMywnIFcBkwZyP9Y=
-Date:   Thu, 25 Jul 2019 13:12:56 +0200
+        b=RSoggm/2P6WTNJIke3rmcCIrRUszI+WPd2hVnjsG/6bamaGdunKS9ApcZ18291LuM
+         z4n7cR04pDwpU0F9fmP1Mp1GBKZtteDW961BnQL3yENIvM+tE3+3lULQaJ5KyhdLIb
+         HgV2/LXYbIVMpbrR9D05M111z/h33mJ4GlsiXmg4=
+Date:   Thu, 25 Jul 2019 13:14:14 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kbuild: detect missing "WITH Linux-syscall-note" for
- uapi headers
-Message-ID: <20190725111256.GA30958@kroah.com>
-References: <20190725080513.4071-1-yamada.masahiro@socionext.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     yuehaibing@huawei.com, bpoirier@suse.com,
+        devel@driverdev.osuosl.org, GR-Linux-NIC-Dev@marvell.com,
+        manishc@marvell.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] qlge: Fix build error without CONFIG_ETHERNET
+Message-ID: <20190725111414.GB30958@kroah.com>
+References: <20190724130126.53532-1-yuehaibing@huawei.com>
+ <20190724.141202.10100086363454182.davem@davemloft.net>
+ <20190724.141228.454330962921320879.davem@davemloft.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190725080513.4071-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190724.141228.454330962921320879.davem@davemloft.net>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 05:05:13PM +0900, Masahiro Yamada wrote:
-> UAPI headers licensed under GPL are supposed to have exception
-> "WITH Linux-syscall-note" so that they can be included into non-GPL
-> user space application code.
+On Wed, Jul 24, 2019 at 02:12:28PM -0700, David Miller wrote:
+> From: David Miller <davem@davemloft.net>
+> Date: Wed, 24 Jul 2019 14:12:02 -0700 (PDT)
 > 
-> Unfortunately, people often miss to add it. Break 'make headers'
-> when any of exported headers lacks the exception note so that the
-> 0-day bot can easily catch it.
+> > From: YueHaibing <yuehaibing@huawei.com>
+> > Date: Wed, 24 Jul 2019 21:01:26 +0800
+> > 
+> >> Now if CONFIG_ETHERNET is not set, QLGE driver
+> >> building fails:
+> >> 
+> >> drivers/staging/qlge/qlge_main.o: In function `qlge_remove':
+> >> drivers/staging/qlge/qlge_main.c:4831: undefined reference to `unregister_netdev'
+> >> 
+> >> Reported-by: Hulk Robot <hulkci@huawei.com>
+> >> Fixes: 955315b0dc8c ("qlge: Move drivers/net/ethernet/qlogic/qlge/ to drivers/staging/qlge/")
+> >> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > 
+> > I'll let Greg take this.
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+> Actually, I take that back.
 > 
-> This patch depends on the following:
-> 
-> https://lore.kernel.org/patchwork/patch/1105289/
-> 
-> I will turn on the error after all headers are fixed.
+> Since the move to staging happened in my tree I will take this ;-)
 
-I've taken the dependancy here in the spdx tree and will send it to
-Linus for 5.3-rc2.  I can also take this now through that tree, or you
-can add it to yours afterward, which ever is easier for you.
+Thanks.  If you want to push that "move" to Linus soon, I can then take
+any cleanup patches that show up for this driver, otherwise feel free to
+ignore them until 5.4-rc1.
 
 thanks,
 
