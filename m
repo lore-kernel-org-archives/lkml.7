@@ -2,53 +2,60 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DC8C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 00:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E72EEC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 00:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CAB521901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 00:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C096121911
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 00:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564015403;
-	bh=K8suSIkZbvT0UfyneKMgJFCJCtS7yG8oOJLvoqvjUxU=;
+	s=default; t=1564015467;
+	bh=BnJm16XIJ4U5h0/wFfNFjUiyQUQlm05rCuTqzXG01x0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZA2iHkNHLyPpaBT9c7FkjM4rCsDwGcy2jYL4ckuwfWZ1/oKv59fHOoOHYUUq5MZhA
-	 QzBo+Hwlc3Y22q8if3CthcyYRdykNSF/RL2W/+oYN7iORPJhlynWudOuDmd3o2Ilr0
-	 CN8RcXDUFqh0hUrOciDOE626kKfEnH0ZBVGBemDU=
+	b=emWpIXqb9xdEhQ1uHAwXB6FJj6t4Qi6xppA6P9FQpWgx3gEYnTEWt+76FTCG/OJs0
+	 KM2lY+V4Sd5MYANI7f0YkGptEb92DPPPcBz/otCoShF+ledT/h9F/vrSG/PYK4Iedq
+	 pFhg6fTiV7UWfh4KurVEsvrhAO68VhWGfifqg/jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388132AbfGYAnU (ORCPT
+        id S2388169AbfGYAo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 20:43:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50620 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 20:44:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387913AbfGYAnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 20:43:20 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        id S2387421AbfGYAoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 20:44:25 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AC4521901;
-        Thu, 25 Jul 2019 00:43:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 251A921901;
+        Thu, 25 Jul 2019 00:44:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564015399;
-        bh=K8suSIkZbvT0UfyneKMgJFCJCtS7yG8oOJLvoqvjUxU=;
+        s=default; t=1564015464;
+        bh=BnJm16XIJ4U5h0/wFfNFjUiyQUQlm05rCuTqzXG01x0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=B0SM0Rbw5qI6IKvksMncpNpSmkg3vyt+kn7m4AS5hdVepz+V0YFkVrB+PgbWS9Zaq
-         3gEPAo/wJz3KPL+NYSKAwbXPKlco7lXaaHydtVfFBTEwUZAp/dBiyZIgyUpM8YXNUp
-         EOv2wk5AcbNxxqvFi4kgXZqWK0DmsfcvAcCVi2mY=
-Date:   Thu, 25 Jul 2019 09:43:16 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: kprobes, livepatch and FTRACE_OPS_FL_IPMODIFY
-Message-Id: <20190725094316.c6bf2524e4e925d9cc5937d1@kernel.org>
-In-Reply-To: <20190725093208.343db9d54f6a0f5abc99af7b@kernel.org>
-References: <20190724151942.GA7205@redhat.com>
-        <20190725093208.343db9d54f6a0f5abc99af7b@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        b=DTMevEAy6MsZBxplreEMB+bJxmKA1GsWpZtLmWP6cVbMq2QKKqVCfOMcytQ8gUcHi
+         2JRtFP16ImDGp/MasraDgzI0X9ruqK1X25hWfedDjzH+kLP0i3V4/xHmTmNp9rmAY5
+         OHff/q50Keh8KHkK1MMdNgOMrgVrKIzoTZZ1Fr0Y=
+Date:   Wed, 24 Jul 2019 17:44:23 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, mhocko@kernel.org,
+        mgorman@techsingularity.net, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [v4 PATCH 2/2] mm: mempolicy: handle vma with unmovable pages
+ mapped correctly in mbind
+Message-Id: <20190724174423.1826c92f72ce9c815ebc72d9@linux-foundation.org>
+In-Reply-To: <6aeca7cf-d9da-95cc-e6dc-a10c2978c523@suse.cz>
+References: <1563556862-54056-1-git-send-email-yang.shi@linux.alibaba.com>
+        <1563556862-54056-3-git-send-email-yang.shi@linux.alibaba.com>
+        <6c948a96-7af1-c0d2-b3df-5fe613284d4f@suse.cz>
+        <20190722180231.b7abbe8bdb046d725bdd9e6b@linux-foundation.org>
+        <a9b8cae7-4bca-3c98-99f9-6b92de7e5909@linux.alibaba.com>
+        <6aeca7cf-d9da-95cc-e6dc-a10c2978c523@suse.cz>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -57,37 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+On Wed, 24 Jul 2019 10:19:34 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
 
-On Thu, 25 Jul 2019 09:32:08 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> On 7/23/19 7:35 AM, Yang Shi wrote:
+> > 
+> > 
+> > On 7/22/19 6:02 PM, Andrew Morton wrote:
+> >> On Mon, 22 Jul 2019 09:25:09 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
+> >>
+> >>>> since there may be pages off LRU temporarily.  We should migrate other
+> >>>> pages if MPOL_MF_MOVE* is specified.  Set has_unmovable flag if some
+> >>>> paged could not be not moved, then return -EIO for mbind() eventually.
+> >>>>
+> >>>> With this change the above test would return -EIO as expected.
+> >>>>
+> >>>> Cc: Vlastimil Babka <vbabka@suse.cz>
+> >>>> Cc: Michal Hocko <mhocko@suse.com>
+> >>>> Cc: Mel Gorman <mgorman@techsingularity.net>
+> >>>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> >>> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> >> Thanks.
+> >>
+> >> I'm a bit surprised that this doesn't have a cc:stable.  Did we
+> >> consider that?
+> > 
+> > The VM_BUG just happens on 4.9, and it is enabled only by CONFIG_VM. For 
+> > post-4.9 kernel, this fixes the semantics of mbind which should be not a 
+> > regression IMHO.
+> 
+> 4.9 is a LTS kernel, so perhaps worth trying?
+> 
 
-> NO, that flag has been shared among all ftrace-based kprobes, and checked
-> when registering. So what we need is to introduce a new kprobe flag which
-> states that this kprobe doesn't modify regs->ip. And kprobe prepare 2 ftrace_ops
-> 1 is for IPMODIFY and 1 is for !IPMODIFY.
+OK, I'll add cc:stable to 
 
-Ah, OK. We don't even need the new flag.
+mm-mempolicy-make-the-behavior-consistent-when-mpol_mf_move-and-mpol_mf_strict-were-specified.patch
 
------
-The jump optimization changes the kprobe's pre_handler behavior.
-Without optimization, the pre_handler can change the kernel's execution
-path by changing regs->ip and returning 1.  However, when the probe
-is optimized, that modification is ignored.  Thus, if you want to
-tweak the kernel's execution path, you need to suppress optimization,
-using one of the following techniques:
+and
 
-- Specify an empty function for the kprobe's post_handler.
+mm-mempolicy-handle-vma-with-unmovable-pages-mapped-correctly-in-mbind.patch
 
-or
-
-- Execute 'sysctl -w debug.kprobes_optimization=n'
------
-
-So if we remove latter one, all kprobes which change regs->ip must
-set a dummy post_handler. 
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Do we have a Fixes: for these patches?
