@@ -2,106 +2,117 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD161C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 01:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 470F3C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 01:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA762238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 01:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13AF421855
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 01:12:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oUVUoRjn"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="mVWrDOAS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YXNOT5yI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbfGYBFA (ORCPT
+        id S1728616AbfGYBKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 21:05:00 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44455 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfGYBFA (ORCPT
+        Wed, 24 Jul 2019 21:10:22 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:40581 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726115AbfGYBKW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 21:05:00 -0400
-Received: by mail-oi1-f194.google.com with SMTP id e189so36331939oib.11;
-        Wed, 24 Jul 2019 18:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MGhC6NZhOcJQTc6Z3cGfpdRL2TRfqyy0teXVcrSw7IE=;
-        b=oUVUoRjnZ1rgv56iP4UaAuxbEeOUpXlSQk5y+mGbudilenj33di8mVPd9HjqCXYwlr
-         BxvaNqpdLD+wHcDolTe2p47Kge8ZIVPaG/uxsCu9NeUD0K94p8KTgqxPHHXqkoaQAeTt
-         zVjAmKSzGmOsjmjtW6c+BAP8UU+m0Z+BXepqJEb4UDlKPiDN2UZhajl/RNk8PUWRHqaJ
-         mGbJAnop5HwRThUaIYs00OWL8Batt4bw4XSpCCm480nO85xvTbqfTcSLy7iUXUAlnglC
-         gwBq8bWNQlEgoYCUhgACYferc1H/CCefC3ZDhsu+0JDgaCQbRdQ+hY7/x2QegDoHxNRx
-         6D+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MGhC6NZhOcJQTc6Z3cGfpdRL2TRfqyy0teXVcrSw7IE=;
-        b=H9t6kF5TJp/xyBM+95McZZNkF0P+SzmqnpzvGjWQrgBl16KkCAbqXtItUzeF7UtuBX
-         6RKxiLU7MTEEWA5Oz9cQlET2pVwg0RfFOGb/s8QH0A0W/p2R9VZEOqt+R2xmglZGuG1C
-         BrU4LqEdkHssQ/MKd+ECRcHaB6R2nLY1cok5LjLULskDkvu1IoimP7pOeMn9vceSbH4V
-         9zUNZKbUySXacfjfGrjxQcgGZlCJhRFJoxAoiVWsmJKzRZRmV96NT8/lURycMCtjyNMP
-         d6y5QnWu7r0/BbPwl1yYSVVDVRvbfPJ+61yEC1kTzh3heJUhnOuF6f+1j5hsaQF6KpSm
-         njfg==
-X-Gm-Message-State: APjAAAXYGHW1X4ZA5aWJXtPdR5Gv/NM1zNu/0OyxCtz6EvZVmSV+op7p
-        oGhJtdZLCgmJFv/+aT/FX0k=
-X-Google-Smtp-Source: APXvYqwIYVsVsc/tlDJ+zFrTSRRpIZI6ROoGTG6oXu07Frd1LqpAWczvtTwsPH6whMr5wnwWTtJhlQ==
-X-Received: by 2002:aca:ab57:: with SMTP id u84mr40928096oie.61.1564016699117;
-        Wed, 24 Jul 2019 18:04:59 -0700 (PDT)
-Received: from rYz3n ([2600:1700:210:3790::18])
-        by smtp.gmail.com with ESMTPSA id 11sm17314621otc.45.2019.07.24.18.04.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 18:04:58 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 20:04:57 -0500
-From:   Jiunn Chang <c0d1n61at3@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 000/371] 5.1.20-stable review
-Message-ID: <20190725010455.w6houpa5i725fujz@rYz3n>
-References: <20190724191724.382593077@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
-User-Agent: NeoMutt/20180716
+        Wed, 24 Jul 2019 21:10:22 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 355FE21FBC;
+        Wed, 24 Jul 2019 21:10:21 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Wed, 24 Jul 2019 21:10:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=hT6VUAYNVIFczKSf7p2tdTIbi+IZpnd
+        9IggzGcLtHyQ=; b=mVWrDOAS8HG4YyOWzxSU9uDXvpp/q9weSwMs3XphM6+9j4G
+        Vn5uC+KFR+gSeezq3K6biFvC0IAw7FpCTooOSKmKNt/wAmOIGai7wXCP6hi9FMwV
+        fmH8aADBK+O9iw6eWc5VQG32hdB/1zZ1mvC9tM0UDGIU/zSFZatxi103lvBA9ymE
+        mQ+9YepIikdaS3zI4HcrIIgvw7sGA9Tyjcp1xYkFYmPq7OTL3ZbkQAzNJAulfvVs
+        7xhpucFz6WHmVQhLoXGh0yXP3ZLy2+JnWAeVz2KrKsqzaT9sVmyWFyBsHZtlC5zQ
+        t7oYf4T4oExHpv6azHLECU+C+VWrVBVxlZbsH0Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=hT6VUA
+        YNVIFczKSf7p2tdTIbi+IZpnd9IggzGcLtHyQ=; b=YXNOT5yI7R7e/gLkcPvVid
+        o6vJv1Zkzo3zG02qo1uU4TnIth2J21EgzmyreA5qLiATdqEjgJ0T6kueXsEqoe/i
+        IsvDprSz7d2La5nluRvdMpESMqz0nRTnmVuEhyjza/Rib82IcNVAMn5X8x19oj/P
+        kmEh2NvRgsJKNeI4s+KhWon4/qSY01J1jkmC0f9bpuBPjL1JzsJOXasrbB6PwmSw
+        WH1WUJ2iTUF1UsI9V01nGwusK5uuutXuyKPK6Ellc1yd5K+2jTgTuLBzt0BSKjk5
+        rrdBpjmF1XMShHCsTZFWcTwFKLIw9XPohW2++c7WPq2aMq+jos/o0maU3Yu1/goQ
+        ==
+X-ME-Sender: <xms:egE5XeW7kZvQ9egeyjjFPGT_Jz-3NUpb2L8A72zmWRiLgAqmafE_sA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrkedugdefkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
+    ufhiiigvpedt
+X-ME-Proxy: <xmx:egE5XVFmtKPksS0mLeVK3pJ2RvFGODGVseqK6TGANCZgoLCsneqJVQ>
+    <xmx:egE5XfXzjZ6F9kA-eLW9_ZC-PHaoeYesnpKn4F1US-NptTJ5WvHDWg>
+    <xmx:egE5XYDE54I6zx4Fhs2E7uu7j3gLff9Nwl8ozKKchsPSAewL0xBHjQ>
+    <xmx:fQE5XQp0G_y4WUSzGSGO59QkCPaZRpqRwXl2fAfSy9Z7luzJZJ4Wdw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 64D16E0129; Wed, 24 Jul 2019 21:10:18 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-736-gdfb8e44-fmstable-20190718v2
+Mime-Version: 1.0
+Message-Id: <4f6709f8-381f-415c-8569-798b074b66c5@www.fastmail.com>
+In-Reply-To: <2a0c5ef5c7e20b190156908991e4c964a501d80a.camel@perches.com>
+References: <cover.1562734889.git.joe@perches.com>
+ <cddd7ad7e9f81dec1e86c106f04229d21fc21920.1562734889.git.joe@perches.com>
+ <2a0c5ef5c7e20b190156908991e4c964a501d80a.camel@perches.com>
+Date:   Thu, 25 Jul 2019 10:40:32 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Joe Perches" <joe@perches.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "Joel Stanley" <joel@jms.id.au>
+Cc:     "David Airlie" <airlied@linux.ie>,
+        "Daniel Vetter" <daniel@ffwll.ch>, linux-aspeed@lists.ozlabs.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/12] drm: aspeed_gfx: Fix misuse of GENMASK macro
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 09:15:52PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.1.20 release.
-> There are 371 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 26 Jul 2019 07:13:35 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.20-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> -------------
 
-Hello,
 
-Compiled and booted.  No regressions on x86_64.
+On Thu, 25 Jul 2019, at 02:46, Joe Perches wrote:
+> On Tue, 2019-07-09 at 22:04 -0700, Joe Perches wrote:
+> > Arguments are supposed to be ordered high then low.
+> > 
+> > Signed-off-by: Joe Perches <joe@perches.com>
+> > ---
+> >  drivers/gpu/drm/aspeed/aspeed_gfx.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/aspeed/aspeed_gfx.h b/drivers/gpu/drm/aspeed/aspeed_gfx.h
+> > index a10358bb61ec..095ea03e5833 100644
+> > --- a/drivers/gpu/drm/aspeed/aspeed_gfx.h
+> > +++ b/drivers/gpu/drm/aspeed/aspeed_gfx.h
+> > @@ -74,7 +74,7 @@ int aspeed_gfx_create_output(struct drm_device *drm);
+> >  /* CTRL2 */
+> >  #define CRT_CTRL_DAC_EN			BIT(0)
+> >  #define CRT_CTRL_VBLANK_LINE(x)		(((x) << 20) & CRT_CTRL_VBLANK_LINE_MASK)
+> > -#define CRT_CTRL_VBLANK_LINE_MASK	GENMASK(20, 31)
+> > +#define CRT_CTRL_VBLANK_LINE_MASK	GENMASK(31, 20)
 
-THX,
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 
-Jiunn
+> 
+> ping?
+> 
+> 
+>
