@@ -2,144 +2,107 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF292C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D47AC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C06FE20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CECA21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfGYTkV (ORCPT
+        id S1726595AbfGYTla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 15:40:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56506 "EHLO mx1.redhat.com"
+        Thu, 25 Jul 2019 15:41:30 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:42782 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbfGYTkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:40:20 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B457883F45;
-        Thu, 25 Jul 2019 19:40:19 +0000 (UTC)
-Received: from malachite.bss.redhat.com (dhcp-10-20-1-11.bss.redhat.com [10.20.1.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F194A5C6D9;
-        Thu, 25 Jul 2019 19:40:18 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     nouveau@lists.freedesktop.org
-Cc:     stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] drm/nouveau: Don't retry infinitely when receiving no data on i2c over AUX
-Date:   Thu, 25 Jul 2019 15:40:01 -0400
-Message-Id: <20190725194005.16572-3-lyude@redhat.com>
-In-Reply-To: <20190725194005.16572-1-lyude@redhat.com>
-References: <20190725194005.16572-1-lyude@redhat.com>
+        id S1726230AbfGYTla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 15:41:30 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hqjc6-0004BV-00; Thu, 25 Jul 2019 13:41:18 -0600
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sagi Grimberg <sagi@grimberg.me>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+References: <20190725172335.6825-1-logang@deltatee.com>
+ <20190725172335.6825-3-logang@deltatee.com>
+ <20190725174032.GA27818@kroah.com>
+ <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
+ <20190725180816.GA32305@kroah.com>
+ <da0eacb7-3738-ddf3-8c61-7ffc61aa41f4@deltatee.com>
+ <20190725182701.GA11547@kroah.com>
+ <a3262a7f-b78e-05ba-cda3-a7587946bd91@deltatee.com>
+ <5951e0f5-cc90-f3de-0083-088fecfd43bb@grimberg.me>
+ <20190725193415.GA12117@kroah.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <77a3e81d-2542-6782-0fc1-1d25bcc75598@deltatee.com>
+Date:   Thu, 25 Jul 2019 13:41:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 25 Jul 2019 19:40:19 +0000 (UTC)
+In-Reply-To: <20190725193415.GA12117@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: viro@zeniv.linux.org.uk, sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, hch@lst.de, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, sagi@grimberg.me, gregkh@linuxfoundation.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While I had thought I had fixed this issue in:
 
-commit 342406e4fbba ("drm/nouveau/i2c: Disable i2c bus access after
-->fini()")
 
-It turns out that while I did fix the error messages I was seeing on my
-P50 when trying to access i2c busses with the GPU in runtime suspend, I
-accidentally had missed one important detail that was mentioned on the
-bug report this commit was supposed to fix: that the CPU would only lock
-up when trying to access i2c busses _on connected devices_ _while the
-GPU is not in runtime suspend_. Whoops. That definitely explains why I
-was not able to get my machine to hang with i2c bus interactions until
-now, as plugging my P50 into it's dock with an HDMI monitor connected
-allowed me to finally reproduce this locally.
+On 2019-07-25 1:34 p.m., Greg Kroah-Hartman wrote:
+> On Thu, Jul 25, 2019 at 12:02:30PM -0700, Sagi Grimberg wrote:
+>>
+>>>>>> Why do you have a "string" within the kernel and are not using the
+>>>>>> normal open() call from userspace on the character device node on the
+>>>>>> filesystem in your namespace/mount/whatever?
+>>>>>
+>>>>> NVMe-OF is configured using configfs. The target is specified by the
+>>>>> user writing a path to a configfs attribute. This is the way it works
+>>>>> today but with blkdev_get_by_path()[1]. For the passthru code, we need
+>>>>> to get a nvme_ctrl instead of a block_device, but the principal is the same.
+>>>>
+>>>> Why isn't a fd being passed in there instead of a random string?
+>>>
+>>> I wouldn't know the answer to this but I assume because once we decided
+>>> to use configfs, there was no way for the user to pass the kernel an fd.
+>>
+>> That's definitely not changing. But this is not different than how we
+>> use the block device or file configuration, this just happen to need the
+>> nvme controller chardev now to issue I/O.
+> 
+> So, as was kind of alluded to in another part of the thread, what are
+> you doing about permissions?  It seems that any user/group permissions
+> are out the window when you have the kernel itself do the opening of the
+> char device, right?  Why is that ok?  You can pass it _any_ character
+> device node and away it goes?  What if you give it a "wrong" one?  Char
+> devices are very different from block devices this way.
 
-Now that I have managed to reproduce this issue properly, it looks like
-the problem is much simpler then it looks. It turns out that some
-connected devices, such as MST laptop docks, will actually ACK i2c reads
-even if no data was actually read:
+Well the permission question is no different from the block-device case
+we already have. The user has to be root to configure a target so it has
+access to the block/char device. Containers and NVMe-of are really not
+designed to mix and would take a lot of work to make this make any sense
+(And that's way out of scope of what I'm trying to do here and doesn't
+change the need for a the cdev_get_by_path()).
 
-[  275.063043] nouveau 0000:01:00.0: i2c: aux 000a: 1: 0000004c 1
-[  275.063447] nouveau 0000:01:00.0: i2c: aux 000a: 00 01101000 10040000
-[  275.063759] nouveau 0000:01:00.0: i2c: aux 000a: rd 00000001
-[  275.064024] nouveau 0000:01:00.0: i2c: aux 000a: rd 00000000
-[  275.064285] nouveau 0000:01:00.0: i2c: aux 000a: rd 00000000
-[  275.064594] nouveau 0000:01:00.0: i2c: aux 000a: rd 00000000
+If the user specifies a non-nvme char device, it is rejected by the code
+in nvme_ctrl_get_by_path() when it compares the fops. See patch 4.
 
-Because we don't handle the situation of i2c ack without any data, we
-end up entering an infinite loop in nvkm_i2c_aux_i2c_xfer() since the
-value of cnt always remains at 0. This finally properly explains how
-this could result in a CPU hang like the ones observed in the
-aforementioned commit.
-
-So, fix this by retrying transactions if no data is written or received,
-and give up and fail the transaction if we continue to not write or
-receive any data after 32 retries.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: stable@vger.kernel.org
----
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c | 24 +++++++++++++------
- 1 file changed, 17 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
-index b4e7404fe660..a11637b0f6cc 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
-@@ -40,8 +40,7 @@ nvkm_i2c_aux_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
- 		u8 *ptr = msg->buf;
- 
- 		while (remaining) {
--			u8 cnt = (remaining > 16) ? 16 : remaining;
--			u8 cmd;
-+			u8 cnt, retries, cmd;
- 
- 			if (msg->flags & I2C_M_RD)
- 				cmd = 1;
-@@ -51,10 +50,19 @@ nvkm_i2c_aux_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
- 			if (mcnt || remaining > 16)
- 				cmd |= 4; /* MOT */
- 
--			ret = aux->func->xfer(aux, true, cmd, msg->addr, ptr, &cnt);
--			if (ret < 0) {
--				nvkm_i2c_aux_release(aux);
--				return ret;
-+			for (retries = 0, cnt = 0;
-+			     retries < 32 && !cnt;
-+			     retries++) {
-+				cnt = min_t(u8, remaining, 16);
-+				ret = aux->func->xfer(aux, true, cmd,
-+						      msg->addr, ptr, &cnt);
-+				if (ret < 0)
-+					goto out;
-+			}
-+			if (!cnt) {
-+				AUX_TRACE(aux, "no data after 32 retries");
-+				ret = -EIO;
-+				goto out;
- 			}
- 
- 			ptr += cnt;
-@@ -64,8 +72,10 @@ nvkm_i2c_aux_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
- 		msg++;
- 	}
- 
-+	ret = num;
-+out:
- 	nvkm_i2c_aux_release(aux);
--	return num;
-+	return ret;
- }
- 
- static u32
--- 
-2.21.0
-
+Logan
