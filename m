@@ -2,288 +2,178 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B29F1C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB91C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F590218F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9AC218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:19:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmranaj6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JbeXsfGx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfGYURO (ORCPT
+        id S1726653AbfGYUTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 16:17:14 -0400
-Received: from mail-qt1-f170.google.com ([209.85.160.170]:39783 "EHLO
-        mail-qt1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfGYURN (ORCPT
+        Thu, 25 Jul 2019 16:19:37 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37182 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfGYUTh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 16:17:13 -0400
-Received: by mail-qt1-f170.google.com with SMTP id l9so50332812qtu.6
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 13:17:13 -0700 (PDT)
+        Thu, 25 Jul 2019 16:19:37 -0400
+Received: by mail-io1-f67.google.com with SMTP id q22so99945217iog.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 13:19:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FkjxPL7XMOpuLg8h3aU837wQ3g4RTfaP6Qi98DUbLE8=;
-        b=gmranaj6TIlJDaZauUR3Uu/j9hWcNZ2K9G6+aoEO3kxrCD9IyksKJKuUGGW+F5cqb4
-         2WZy2z9WtNs6fLWG70BESuKn2f7w6Uo7XMdg3/12oNWIuu/xn7wEH7vgDYEVObRjRP/+
-         Bu3r8sQH4ao2zmfeXSgALb0JjL4e7EFLEJb32RyXJaTtqYyLiYLvceSFmytw12P/snqG
-         OLceq8yPW/V/LDf6UVwoGH/vJ3glOGFM6nvav30eGpnRuIp1liAYQ7IqKdHPPxfZuUvX
-         plVNZs4pUmXG1yRtIxbPnaO9mFw8bZwXJyivdcbqC5h2yLYcYTHt5MUSN3E3eVxl3sxu
-         k2aw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=t+P0HgQtVoSGPP4WNOjKgOLE6EijYeFIeYo8RF4X35w=;
+        b=JbeXsfGxZNECNWfw5yFkXZH+MNoz+D/swRQgzPMLghoyO2zRQSK3HbEdvUo4mJPIZ4
+         2U0Xtr3B76TNn1kn0lNgvsG8fEuIIBoZa/nkAPludlxPF2i9BiNbOLNsgHDSdqK97rVA
+         9NynPzqCCA/Blt6TUOOd/oqOyZ4koex1kH2dIYCg/9nu5CrFCyzlRjtGe/S4g4qlrwzG
+         Db+dSHml4qN+iuUobdMw12MnsiLzFQP5V/8KTf8BxnuVXrHHcTQumHbGKORyp+796Etb
+         SCRD4noYvRc0rK8mLYGPKD+EwN2waXezF9fLF/ik4NgVrMbxKjFcBUr3vkABM+p0i8mG
+         7v3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FkjxPL7XMOpuLg8h3aU837wQ3g4RTfaP6Qi98DUbLE8=;
-        b=I8Z/mW59YzalrWLpx08DT+tBMrNF5Q0eGq7seX120WQlK3Bje1fgZe3XN54U++LXLj
-         ahlRqDNA5bQyGsX8nSeIMmvW4d5DKDJmyVjJjvZVndnSCnmA70yI5LZDJ+KELTWDhCYW
-         EVliPK4jRJa8p1Gc1aIyjGPcWpHx5xwDAGq2gzqKhAmvqYmdc/rQQ1ZDKOXALgZgVYhy
-         x0p0nBDcxt66VZmAOUsBKoLH9NeS3uHknNC+YxlMGfSA+9glvw+EMnri2cVsNCz9Gf0g
-         ektbN657R0FJKm9bAYHa+akoLMt7nB3+0it2neF+82/H3sD2xFiZjm3ZvE5reVKanjJ9
-         AzIw==
-X-Gm-Message-State: APjAAAW+vf0Mr07/adaQo7jjvtV5KRwkvQE03ioXpD+5nk8HtaNzc6sU
-        StMt7WDqSk7GKM64k5X0REPctRdRFNiM58IHQOU=
-X-Google-Smtp-Source: APXvYqxR1kHWxg3snhWFMbH+zcFIIZggZGUrl/9Q6f2TNTpB5w1b5ZTwo9CbaHlxX36BEchMERFKO0G/FkGq6u8Cvjk=
-X-Received: by 2002:ac8:7219:: with SMTP id a25mr63380875qtp.234.1564085832246;
- Thu, 25 Jul 2019 13:17:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=t+P0HgQtVoSGPP4WNOjKgOLE6EijYeFIeYo8RF4X35w=;
+        b=i/shJzYLdBUTbrs8LTPE/4CJvv+FQwECzteYFn/LujuX0ZO82I8+rfZxkVOXoksJBE
+         wA4anvHlmlEPt9oIGlVucNIS7ciLVV4V4LfO55phSpCnP4ajDPz2zDWlzq5hWnuI5F5O
+         XB33rUUvbHUYizziIRkay23vGbNs59coURrEOR+6KB5pvDUsrzjNhz3x7Uk4gzyELeP4
+         Ms8dhJ/CAy3U2R7Cfj6QDZ/WTnr8nklhZCgCONqgSKRxZ9OEnLAcowhl0MVp0EDqcjst
+         Ibl1uqdv0S0QhvbtvD9FoktviNzobwnDCL3rjcrdJKg6ZMEkoI3DRV7T7DCgXcIcP983
+         EPdw==
+X-Gm-Message-State: APjAAAVvfGtJobNpTlYIplhLMdjvq9HLfMoxmNRGX3QLa8837yqWjBpO
+        ya8JUpc+NQWvIhPGo53JimV+HQ==
+X-Google-Smtp-Source: APXvYqwvkJxxV0fZpjkKga8Y+RaQMVdGjDc9o4hwMDRkD6Ki+prPp7J6OIqwAahJ8ly4GjoglrQxzA==
+X-Received: by 2002:a6b:7909:: with SMTP id i9mr52428090iop.8.1564085975985;
+        Thu, 25 Jul 2019 13:19:35 -0700 (PDT)
+Received: from localhost (c-24-7-195-109.hsd1.mn.comcast.net. [24.7.195.109])
+        by smtp.gmail.com with ESMTPSA id t19sm51448100iog.41.2019.07.25.13.19.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 13:19:35 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 15:19:33 -0500
+From:   Dan Rue <dan.rue@linaro.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        wanpengli@tencent.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        patches@kernelci.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>, jmattson@google.com
+Subject: Re: [PATCH 5.2 000/413] 5.2.3-stable review
+Message-ID: <20190725201933.aiqh6oj7bacdwact@xps.therub.org>
+Mail-Followup-To: Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        wanpengli@tencent.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        patches@kernelci.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
+        jmattson@google.com
+References: <CADYN=9+WLxhmqX3JNL_s-kWSN97G=8WhD=TF=uAuKecJnKcj_Q@mail.gmail.com>
+ <20190725113437.GA27429@kroah.com>
+ <230a5b34-d23e-8318-0b1f-d23ada7318e0@redhat.com>
+ <CA+G9fYsWdmboyquZ=Bs3tkTwRFTzd1yuL0_EVpHOecNi4E_stA@mail.gmail.com>
+ <20190725160939.GC18612@linux.intel.com>
+ <33f1cfaa-525d-996a-4977-fda32dc368ee@redhat.com>
+ <20190725162053.GD18612@linux.intel.com>
+ <7bc207e0-0812-e41a-bfd5-e3fbfd43f242@redhat.com>
+ <20190725163946.xt2p3pvxwuabzojj@xps.therub.org>
+ <3e55414d-cb4f-8f3f-a359-e374b6298715@redhat.com>
 MIME-Version: 1.0
-References: <CAOKSTBs-cHMr7xbJVVUjZ9C3__bY6jZU-_TZ0RmMRMJ3dBk3PA@mail.gmail.com>
- <0c3f445d-1e37-1531-d3d5-f7ad75c58343@metux.net> <CADnq5_NqDNLzZW6h3cXBUfTMsBe6isvE6YQH=9Op6Gews=ubGg@mail.gmail.com>
- <CAOKSTBvjJ+3he9AJoRGkxQfQLoG_T9jY+H8p0o6A6FdmnisSJA@mail.gmail.com>
- <CADnq5_Mjq9GxeO3m3F2bEjfmWr7k2KbGkNVJ7k7YKNdVsyMb5Q@mail.gmail.com> <CAOKSTBvoakV3TeTFCnVRScT82U-Hc52DV5C8e2TyakoDGc8Big@mail.gmail.com>
-In-Reply-To: <CAOKSTBvoakV3TeTFCnVRScT82U-Hc52DV5C8e2TyakoDGc8Big@mail.gmail.com>
-From:   Gilberto Nunes <gilberto.nunes32@gmail.com>
-Date:   Thu, 25 Jul 2019 17:16:35 -0300
-Message-ID: <CAOKSTBvrQOSdbA46tCtsfG0v-CxLPN43toxUkjvxhboBaWkHXw@mail.gmail.com>
-Subject: Re: AMD Drivers
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3e55414d-cb4f-8f3f-a359-e374b6298715@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-FYK!
-I also noted that I received this message in dmesg command:
+On Thu, Jul 25, 2019 at 07:06:19PM +0200, Paolo Bonzini wrote:
+> On 25/07/19 18:39, Dan Rue wrote:
+> > To your point Paolo - reporting 'fail' because of a missing kernel
+> > feature is a generic problem we see across test suites, and causes tons
+> > of pain and misery for CI people. As a general rule, I'd avoid
+> > submodules, and even branches that track specific kernels. Rather, and I
+> > don't know if it's possible in this case, but the best way to manage it
+> > from both a test author and a test runner POV is to wrap the test in
+> > kernel feature checks, kernel version checks, kernel config checks, etc.
+> > Report 'skip' if the environment in which the test is running isn't
+> > sufficient to run the test. Then, you only have to maintain one version
+> > of the test suite, users can always use the latest, and critically: all
+> > failures are actual failures.
+> 
+> Note that kvm-unit-tests are not really testing new kernel features;
+> those are covered by tools/testing/selftests/kvm.  For some of these
+> kvm-unit-tests there are some CPU features that we can check from the
+> virtual machine, but those are easy to handle and they produce SKIP
+> results just fine.
+> 
+> The problematic ones are tests that cover emulation accuracy.  These are
+> effectively bugfixes, so the failures you see _are_ actual failures.  At
+> the same time, the bugs are usually inoffensive(*), while the fixes are
+> invasive and a bad source of cause conflicts in older Linux versions.
+> This combines so that backporting to stable is not feasible.
 
-[    2.492134] amdgpu: [powerplay] Voltage value looks like a Leakage
-ID but it's not patched
-[    2.492173] amdgpu: [powerplay] Voltage value looks like a Leakage
-ID but it's not patched
-[    2.492198] amdgpu: [powerplay] Voltage value looks like a Leakage
-ID but it's not patched
-[    2.492224] amdgpu: [powerplay] Voltage value looks like a Leakage
-ID but it's not patched
-[    2.492249] amdgpu: [powerplay] Voltage value looks like a Leakage
-ID but it's not patched
-[    2.492274] amdgpu: [powerplay] Voltage value looks like a Leakage
-ID but it's not patched
-[    2.492299] amdgpu: [powerplay] Voltage value looks like a Leakage
-ID but it's not patched
+In this case, a fail result seems correct then. The thing we're doing
+that we need to fix is to run against a pinned version of kvm-unit-tests
+and upgrade it independently so that we can identify such failures and
+mark them as known issues.
 
-It's look like just a warning and to no impact the system for now!
----
-Gilberto Nunes Ferreira
+> 
+> Passing the host kernel version would be really ugly because 1) the
+> tests can run on other hypervisor or emulators or even bare metal, and
+> of course the host kernel version has no bearing if you're using
+> userspace emulation 2) there are thousands of tests that would be
+> littered with kernel version checks of little significance.
+> 
+> So this is why I suggested a submodule: using a submodule effectively
+> ignores all tests that were added after a given Linus release, and thus
+> all the failures for which backports are just not going to happen.
+> However, if Sean's idea of creating a linux-M.N branch in
+> kvm-unit-tests.git works for you, we can also do that as a stopgap
+> measure to ease your testing.
 
-(47) 3025-5907
-(47) 99676-7530 - Whatsapp / Telegram
+I would still prefer to run the latest tests against all kernel versions
+(but better control when we upgrade it). Like I said, we can handle
+expected failures, and it would even help to validate backports for
+fixes that do get backported. I'm afraid on your behalf that snapping
+(and maintaining) branches per kernel branch is going to be a lot to
+manage.
 
-Skype: gilberto.nunes36
+In any case, _thank you so much_ for jumping on this and helping us run
+these tests. Is there anything else we can do to make this better for
+you?
 
+Dan
 
-Em qui, 25 de jul de 2019 =C3=A0s 17:02, Gilberto Nunes
-<gilberto.nunes32@gmail.com> escreveu:
->
-> Awesome, thanks for the update! I will wait for the next upstrem...
-> Besides this minor problem everything is wonderful!
-> Even retroarch works now!
-> With 4.18.x 5.1.x and 5.2.x freeze the entire system when access amdgpu..=
-.
->
-> Thanks a lot!
-> ---
-> Gilberto Nunes Ferreira
->
-> (47) 3025-5907
-> (47) 99676-7530 - Whatsapp / Telegram
->
-> Skype: gilberto.nunes36
->
->
->
->
-> Em qui, 25 de jul de 2019 =C3=A0s 16:50, Alex Deucher
-> <alexdeucher@gmail.com> escreveu:
-> >
-> > On Thu, Jul 25, 2019 at 3:29 PM Gilberto Nunes
-> > <gilberto.nunes32@gmail.com> wrote:
-> > >
-> > > Hi there!
-> > >
-> > > I try the kernel 5.3.0-050300rc1-generic and almost everything works
-> > > perfectly, except there's no sound in HDMI!!!
-> >
-> > Sounds is fixed with this patch:
-> > https://cgit.freedesktop.org/~agd5f/linux/commit/?h=3Ddrm-fixes-5.3&id=
-=3D92e6475ae0a0383b012eb21c1aaf0e5456b1a3d9
-> > which is on it's way upstream for rc2.
-> >
-> > Alex
-> >
-> > > Pavucontrol show me device unplugged!
-> > > But I have now work properly NIC and GPU!
-> > >
-> > >
-> > > lspci
-> > > 00:00.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > > (Models 60h-6fh) Processor Root Complex
-> > > 00:00.2 IOMMU: Advanced Micro Devices, Inc. [AMD] Family 15h (Models
-> > > 60h-6fh) I/O Memory Management Unit
-> > > 00:01.0 VGA compatible controller: Advanced Micro Devices, Inc.
-> > > [AMD/ATI] Wani [Radeon R5/R6/R7 Graphics] (rev c8)
-> > > 00:01.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Kabini
-> > > HDMI/DP Audio
-> > > 00:02.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > > (Models 60h-6fh) Host Bridge
-> > > 00:02.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > > (Models 60h-6fh) Processor Root Port
-> > > 00:02.3 PCI bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > > (Models 60h-6fh) Processor Root Port
-> > > 00:03.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > > (Models 60h-6fh) Host Bridge
-> > > 00:03.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > > (Models 60h-6fh) Processor Root Port
-> > > 00:08.0 Encryption controller: Advanced Micro Devices, Inc. [AMD] Dev=
-ice 1578
-> > > 00:09.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 157d
-> > > 00:09.2 Audio device: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > > (Models 60h-6fh) Audio Controller
-> > > 00:10.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB
-> > > XHCI Controller (rev 20)
-> > > 00:11.0 SATA controller: Advanced Micro Devices, Inc. [AMD] FCH SATA
-> > > Controller [AHCI mode] (rev 49)
-> > > 00:12.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB
-> > > EHCI Controller (rev 49)
-> > > 00:14.0 SMBus: Advanced Micro Devices, Inc. [AMD] FCH SMBus Controlle=
-r (rev 4a)
-> > > 00:14.3 ISA bridge: Advanced Micro Devices, Inc. [AMD] FCH LPC Bridge=
- (rev 11)
-> > > 00:18.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > > (Models 60h-6fh) Processor Function 0
-> > > 00:18.1 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > > (Models 60h-6fh) Processor Function 1
-> > > 00:18.2 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > > (Models 60h-6fh) Processor Function 2
-> > > 00:18.3 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > > (Models 60h-6fh) Processor Function 3
-> > > 00:18.4 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > > (Models 60h-6fh) Processor Function 4
-> > > 00:18.5 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > > (Models 60h-6fh) Processor Function 5
-> > > 01:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd.
-> > > RTL8411B PCI Express Card Reader (rev 01)
-> > > 01:00.1 Ethernet controller: Realtek Semiconductor Co., Ltd.
-> > > RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 12)
-> > > 02:00.0 Network controller: Qualcomm Atheros QCA9377 802.11ac Wireles=
-s
-> > > Network Adapter (rev 31)
-> > > 03:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI]
-> > > Lexa PRO [Radeon RX 550/550X] (rev c3)
-> > > ---
-> > > Gilberto Nunes Ferreira
-> > >
-> > > (47) 3025-5907
-> > > (47) 99676-7530 - Whatsapp / Telegram
-> > >
-> > > Skype: gilberto.nunes36
-> > >
-> > >
-> > > Em qui, 25 de jul de 2019 =C3=A0s 14:26, Alex Deucher
-> > > <alexdeucher@gmail.com> escreveu:
-> > > >
-> > > > On Thu, Jul 25, 2019 at 3:30 AM Enrico Weigelt, metux IT consult
-> > > > <lkml@metux.net> wrote:
-> > > > >
-> > > > > On 24.07.19 16:17, Gilberto Nunes wrote:
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > crossposting to dri-devel, as it smells like a problem w/ amdgpu =
-driver.
-> > > > >
-> > > > > > CPU - AMD A12-9720P RADEON R7, 12 COMPUTE CORES 4C+8G
-> > > > > > GPU - Wani [Radeon R5/R6/R7 Graphics] (amdgpu)
-> > > > > > Network Interface card:
-> > > > > > 01:00.1 Ethernet controller: Realtek Semiconductor Co., Ltd.
-> > > > > > RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev =
-12)
-> > > > > >
-> > > > > > When I install kernel 4.18.x or 5.x, the network doesn't work a=
-nymore...
-> > > > >
-> > > > > What about other versions (eg. v4.19) ?
-> > > > > Which is the last working version ?
-> > > > >
-> > > > > > I can loaded the modulo r8169 andr8168.
-> > > > > > I saw enp1s0f1 as well but there's no link at all!
-> > > > > > Even when I fixed the IP none link!
-> > > > > > I cannot ping the network gateway or any other IP inside LAN!
-> > > > > > Right now, I booted my laptop with kernel
-> > > > > > Linux version 5.2.2-050202-generic (kernel@kathleen) (gcc versi=
-on
-> > > > > > 9.1.0 (Ubuntu 9.1.0-9ubuntu2)) #201907231250 SMP Tue Jul 23 12:=
-53:21
-> > > > > > UTC 2019
-> > > > >
-> > > > > Could you also try 5.3 ?
-> > > > >
-> > > > > > The system boot slowly, and I have a SSD Samsung, which in kern=
-el
-> > > > > > 4.15, boot quickly.
-> > > > > > And there's many errors in dmesg command, like you can see in t=
-his pastbin
-> > > > > >
-> > > > > > https://paste.ubuntu.com/p/YhbjnzYYYh/
-> > > > >
-> > > > > looks like something's wrong w/ reading gpu registers (more preci=
-sely
-> > > > > waiting for some changing), that's causing the soft lockup. (mayb=
-e too
-> > > > > big timeout ?)
-> > > >
-> > > > It looks like the dGPU fails to power up properly when you attempt =
-to
-> > > > use it.  You can append amdgpu.runpm=3D0 to the kernel command line=
- in
-> > > > grub to disable dynamically powering down the dGPU.
-> > > >
-> > > > Alex
-> > > >
-> > > > >
-> > > > > > Oh! By the way, the network card r8169 are work wonderful!
-> > > > >
-> > > > > Didn't you say (above) that it does not work ?
-> > > > > Or is it just an immediate fail and later comes back ?
-> > > > >
-> > > > >
-> > > > > --mtx
-> > > > >
-> > > > >
-> > > > > --
-> > > > > Enrico Weigelt, metux IT consult
-> > > > > Free software and Linux embedded engineering
-> > > > > info@metux.net -- +49-151-27565287
-> > > > > _______________________________________________
-> > > > > dri-devel mailing list
-> > > > > dri-devel@lists.freedesktop.org
-> > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
+> Thanks,
+> 
+> Paolo
+> 
+> (*) if they aren't, we *do* mark them for backport!
+
+-- 
+Linaro - Kernel Validation
