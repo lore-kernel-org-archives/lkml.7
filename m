@@ -2,88 +2,94 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55596C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 038ECC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5FA22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:43:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564065828;
-	bh=WdVDLufKWW7fGdYQDWk/rYLodV3eL36Zpldc2S1tmNQ=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=B0Hgu/iR0mhJdEQUGwSb++OJMjKWp+UcoQf6WVZRbSm9rRayuibWAafd1E8ZOrU2V
-	 wpWaxEBxqSMEn+nsGDDgHaZ80ijp9n2ZK1NR9qEsk6GrsK0ZILBt1kVOMJGM04r8i2
-	 ySgoMGFz1k0YFygXLEG/qjqVgpKFMXpdfuJMQWA4=
+	by mail.kernel.org (Postfix) with ESMTP id D6C632173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:43:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbfGYOnr (ORCPT
+        id S1729213AbfGYOnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:43:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40788 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 10:43:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46230 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387957AbfGYOna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:43:30 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729173AbfGYOns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 10:43:48 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7780522C97;
-        Thu, 25 Jul 2019 14:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564065810;
-        bh=WdVDLufKWW7fGdYQDWk/rYLodV3eL36Zpldc2S1tmNQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=pAjfXr3HltIBn2757lv1RkMD/BRnzVWzP3wbhuggAlIeewuD9R1ZvdD+Dh/xBR5DF
-         vhKXVr7u71DydPjcJZ18y6SQyRyvuf5A/w2pPzFJwqCsvhBDlBDG9XzqoSbSk1cnnH
-         AEB/Hisp8Al5yq5tl55G6K1PtQcsmEOVjSuWcvYc=
-Subject: Re: [PATCH 4.19 000/271] 4.19.61-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190724191655.268628197@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <aaadf790-b5c9-c2ce-c687-e82b5eb393d8@kernel.org>
-Date:   Thu, 25 Jul 2019 08:43:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mx1.redhat.com (Postfix) with ESMTPS id 58F673092647;
+        Thu, 25 Jul 2019 14:43:48 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 93A205DE6F;
+        Thu, 25 Jul 2019 14:43:47 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     "zhangyi \(F\)" <yi.zhang@huawei.com>
+Cc:     <linux-aio@kvack.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bcrl@kvack.org>,
+        <viro@zeniv.linux.org.uk>, <wangkefeng.wang@huawei.com>
+Subject: Re: [PATCH] aio: add timeout validity check for io_[p]getevents
+References: <1564039289-7672-1-git-send-email-yi.zhang@huawei.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Thu, 25 Jul 2019 10:43:46 -0400
+In-Reply-To: <1564039289-7672-1-git-send-email-yi.zhang@huawei.com> (zhangyi's
+        message of "Thu, 25 Jul 2019 15:21:29 +0800")
+Message-ID: <x49imrqb2e5.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 25 Jul 2019 14:43:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/24/19 1:17 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.61 release.
-> There are 271 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 26 Jul 2019 07:13:35 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.61-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+"zhangyi (F)" <yi.zhang@huawei.com> writes:
 
-Compiled and booted on my test system. No dmesg regressions.
+> io_[p]getevents syscall should return -EINVAL if if timeout is out of
+> range, add this validity check.
+>
+> Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+> ---
+>  fs/aio.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/aio.c b/fs/aio.c
+> index 01e0fb9..dd967a0 100644
+> --- a/fs/aio.c
+> +++ b/fs/aio.c
+> @@ -2031,10 +2031,17 @@ static long do_io_getevents(aio_context_t ctx_id,
+>  		struct io_event __user *events,
+>  		struct timespec64 *ts)
+>  {
+> -	ktime_t until = ts ? timespec64_to_ktime(*ts) : KTIME_MAX;
+> -	struct kioctx *ioctx = lookup_ioctx(ctx_id);
+> +	ktime_t until = KTIME_MAX;
+> +	struct kioctx *ioctx = NULL;
+>  	long ret = -EINVAL;
+>  
+> +	if (ts) {
+> +		if (!timespec64_valid(ts))
+> +			return ret;
+> +		until = timespec64_to_ktime(*ts);
+> +	}
+> +
+> +	ioctx = lookup_ioctx(ctx_id);
+>  	if (likely(ioctx)) {
+>  		if (likely(min_nr <= nr && min_nr >= 0))
+>  			ret = read_events(ioctx, min_nr, nr, events, until);
 
-thanks,
--- Shuah
+Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
 
+The previous suggestion[1] of fixing the helpers never materialized, so
+let's just get this fixed, already.
+
+-Jeff
+
+[1] https://marc.info/?l=linux-fsdevel&m=152209450618587&w=2
