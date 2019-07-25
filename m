@@ -2,126 +2,371 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F29A4C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EBDC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D2C229F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:39:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MAEDyrQN"
+	by mail.kernel.org (Postfix) with ESMTP id BBB54229F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404122AbfGYLj3 (ORCPT
+        id S2404142AbfGYLkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:39:29 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35226 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389593AbfGYLj3 (ORCPT
+        Thu, 25 Jul 2019 07:40:16 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:59837 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404124AbfGYLkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:39:29 -0400
-Received: by mail-wm1-f66.google.com with SMTP id l2so44424059wmg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 04:39:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/KNocy2+ZfOQXTjSVoKpw5gYwyEUDk8UgKcJTP4ngYE=;
-        b=MAEDyrQNT8xSuX9iSr/7BWAuVtiFFg0r91vvdxT2++HHJS9g3J0YPwvOtkJtKUq8Jv
-         5iKmWqJK52t0LH1sXJk3PO+C21INeHi4V/ZYW7YuPXVIBflnQMtUHe6awRTT5dvD1DaE
-         WpfQIVfVij+bSGThMlicGuVLRiLpF6rqQwZpgSsW3OX9UHyDapWCYIrbuJner3poxc++
-         G0Bn8vzCLpCMRU3GuO3rYDre/AQ/pQH9pBaRn/BU0lkFmSiIGNMktCQBPARjaQkabMe+
-         GuF14I1ZfrdG7ZX9sunB4JjQ9JvX8MVHFeTldfj+sF04kvwCNlmOmMZTYqLm/phbk5K8
-         qnTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/KNocy2+ZfOQXTjSVoKpw5gYwyEUDk8UgKcJTP4ngYE=;
-        b=Kq8KajqyW7XTP8nrhGG3UT706FGX2E6AouLhtWogBBlBL4gP5JX145taREElR+C8W5
-         xBAosRxd0y5XV1dnj+jDXCxINztd01NDwQCf0xQ7Dz1Ij0B5qJcER2gY++MHqXKpVwrr
-         N26Pgx1rzXD3EjPpSpSz8/jd/fRCM7ZqWK3qJefR/qnprqG3caE8igDmVJGMQtiYthY+
-         ffwxVRfIW8izLVdLEJOeY+lwFbICqFBQye+ZDNd3lWVEvJbweYjQ7JI++ICHTBd7ZQU/
-         MvrPKUgVtSVvd0Q80Pmqct7bpQ+GgOkdIeQ0IX0D+WcB8ozuj/2/66yuvGI1FnJVHZts
-         K5bQ==
-X-Gm-Message-State: APjAAAUEe4GK4duVRL2hxn3+7Ec4dEpVkiZOv/CGJPyjqE+g9oUj1wMp
-        nqk4fUD77m/10UbFLpZGLy29xbeIta8=
-X-Google-Smtp-Source: APXvYqxKToM60L7WegP6mEG3X3RaqPtSEAUsT9RXfSRetFr+Hk/NVm3V8WF2BD26TvV4TjAbT9vnuA==
-X-Received: by 2002:a7b:c5c2:: with SMTP id n2mr77541522wmk.92.1564054766915;
-        Thu, 25 Jul 2019 04:39:26 -0700 (PDT)
-Received: from apalos (athedsl-373703.home.otenet.gr. [79.131.11.197])
-        by smtp.gmail.com with ESMTPSA id p6sm53195376wrq.97.2019.07.25.04.39.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 04:39:26 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 14:39:22 +0300
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        David Miller <davem@davemloft.net>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "lists@bofh.nu" <lists@bofh.nu>,
-        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
-        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "wens@csie.org" <wens@csie.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Message-ID: <20190725113922.GA1703@apalos>
-References: <20190723.115112.1824255524103179323.davem@davemloft.net>
- <20190724085427.GA10736@apalos>
- <BYAPR12MB3269AA9955844E317B62A239D3C60@BYAPR12MB3269.namprd12.prod.outlook.com>
- <20190724095310.GA12991@apalos>
- <BYAPR12MB3269C5766F553438ECFF2C9BD3C60@BYAPR12MB3269.namprd12.prod.outlook.com>
- <33de62bf-2f8a-bf00-9260-418b12bed24c@nvidia.com>
- <BYAPR12MB32696F0A2BFDF69F31C4311CD3C60@BYAPR12MB3269.namprd12.prod.outlook.com>
- <a07c3480-af03-a61b-4e9c-d9ceb29ce622@nvidia.com>
- <BYAPR12MB3269F4E62B64484B08F90998D3C10@BYAPR12MB3269.namprd12.prod.outlook.com>
- <d2658b7d-1f24-70f7-fafe-b60a0fd7d240@nvidia.com>
+        Thu, 25 Jul 2019 07:40:16 -0400
+Received: from [IPv6:2001:420:44c1:2579:64cb:e917:d1ce:4f27] ([IPv6:2001:420:44c1:2579:64cb:e917:d1ce:4f27])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id qc6RhDzVqLqASqc6UhTNZH; Thu, 25 Jul 2019 13:40:13 +0200
+Subject: Re: [PATCH v3 3/3] media: stm32-dcmi: add support of several
+ sub-devices
+To:     Hugues Fruchet <hugues.fruchet@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Mickael GUENE <mickael.guene@st.com>
+References: <1562082779-31165-1-git-send-email-hugues.fruchet@st.com>
+ <1562082779-31165-4-git-send-email-hugues.fruchet@st.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <81e1a94d-af25-302c-64a6-3cec096d4144@xs4all.nl>
+Date:   Thu, 25 Jul 2019 13:40:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d2658b7d-1f24-70f7-fafe-b60a0fd7d240@nvidia.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1562082779-31165-4-git-send-email-hugues.fruchet@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfD6zZs5Xe3b+Cna/lTQDRan8ATsxRHeJ7bRwfRroa/o2dWYrjaFm0sAsGST+vIhhzj6gPB6DoA25iIFlJhW/AFzMkB8B34TMfcYJMjqAzPAwsYuD70eP
+ DH3uremVITRXBeZgiNs7Y964Y7R8lrCwZ7SC8TRv80Y6OzUjXhnGlMkKScyXQ+dRIsK7FtmqK+yxiHyzUfLIVWudUgA/x0+lb7WcrC+qAyS7sgTcZUL3JRGy
+ bXQJFZc5K6mSbEi6hHYVR61Jp79NPX+UPT3CT5DG1lRY0cL02l7VF8D8w4fxCyWomIcIbz7M6IbxgN0wGIaeAyJmfkjWAPVI8p4wEGIH7FogcMKU6tdMPmUu
+ SnhveOX5cRDtwHVoZdRcQy7GreS3OoACS8Dw1h4AyoMktRv3srfYwt7XRHUguhVG2HBG25jFQBGiYSIZz0a4r8G5Hvb4mev1mRYj8mOZLMaXlMjf+rwatAti
+ e4YSglYv/OXPV39b6a7nFZVL/a8qf7BvLE4MTiPvWom/pUxrYGOMhwFV6RvlqSdfmNMSPaunYccoyrUdev1EeV9a4zFbsEgQXVCMbrrZC6VbBW/yNZBful1h
+ u6NGaXbQWk0F/0qOGY8Td2yL+jzAED6w+YbXMAZgsf6hmm9cEmWW2/HjglgYG2LV9+59P5L0LydUYseeedjZvpse0O5+xOWQ4XSk/s5cdqBL56dkR2evi4jt
+ wrSTdGFT+9U=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jon, Jose,
-On Thu, Jul 25, 2019 at 10:45:46AM +0100, Jon Hunter wrote:
+On 7/2/19 5:52 PM, Hugues Fruchet wrote:
+> Add support of several sub-devices within pipeline instead
+> of a single one.
+> This allows to support a CSI-2 camera sensor connected
+> through a CSI-2 to parallel bridge.
 > 
-> On 25/07/2019 08:44, Jose Abreu wrote:
+> Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+> ---
+>  drivers/media/platform/stm32/stm32-dcmi.c | 204 +++++++++++++++++++++++++++---
+>  1 file changed, 186 insertions(+), 18 deletions(-)
 > 
-> ...
-> 
-> > OK. Can you please test what Ilias mentioned ?
-> > 
-> > Basically you can hard-code the order to 0 in 
-> > alloc_dma_rx_desc_resources():
-> > - pp_params.order = DIV_ROUND_UP(priv->dma_buf_sz, PAGE_SIZE);
-> > + pp_params.order = 0;
-> > 
-> > Unless you use a MTU > PAGE_SIZE.
-> 
-> I made the change but unfortunately the issue persists.
+> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+> index 6f37617..6921e6b 100644
+> --- a/drivers/media/platform/stm32/stm32-dcmi.c
+> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
+> @@ -172,6 +172,7 @@ struct stm32_dcmi {
+>  
+>  	struct media_device		mdev;
+>  	struct media_pad		vid_cap_pad;
+> +	struct media_pipeline		pipeline;
+>  };
+>  
+>  static inline struct stm32_dcmi *notifier_to_dcmi(struct v4l2_async_notifier *n)
+> @@ -583,6 +584,131 @@ static void dcmi_buf_queue(struct vb2_buffer *vb)
+>  	spin_unlock_irq(&dcmi->irqlock);
+>  }
+>  
+> +static struct media_entity *dcmi_find_source(struct stm32_dcmi *dcmi)
+> +{
+> +	struct media_entity *entity = &dcmi->vdev->entity;
+> +	struct media_pad *pad;
+> +
+> +	/* Walk searching for entity having no sink */
+> +	while (1) {
+> +		pad = &entity->pads[0];
+> +		if (!(pad->flags & MEDIA_PAD_FL_SINK))
+> +			break;
+> +
+> +		pad = media_entity_remote_pad(pad);
+> +		if (!pad || !is_media_entity_v4l2_subdev(pad->entity))
+> +			break;
+> +
+> +		entity = pad->entity;
+> +	}
+> +
+> +	return entity;
+> +}
+> +
+> +static int dcmi_pipeline_s_fmt(struct stm32_dcmi *dcmi,
+> +			       struct v4l2_subdev_pad_config *pad_cfg,
+> +			       struct v4l2_subdev_format *format)
+> +{
+> +	struct media_entity *entity = &dcmi->entity.source->entity;
+> +	struct v4l2_subdev *subdev;
+> +	struct media_pad *sink_pad = NULL;
+> +	struct media_pad *src_pad = NULL;
+> +	struct media_pad *pad = NULL;
+> +	struct v4l2_subdev_format fmt = *format;
+> +	bool found = false;
+> +	int ret;
+> +
+> +	/*
+> +	 * Starting from sensor subdevice, walk within
+> +	 * pipeline and set format on each subdevice
+> +	 */
+> +	while (1) {
+> +		unsigned int i;
+> +
+> +		/* Search if current entity has a source pad */
+> +		for (i = 0; i < entity->num_pads; i++) {
+> +			pad = &entity->pads[i];
+> +			if (pad->flags & MEDIA_PAD_FL_SOURCE) {
+> +				src_pad = pad;
+> +				found = true;
+> +				break;
+> +			}
+> +		}
+> +		if (!found)
+> +			break;
+> +
+> +		subdev = media_entity_to_v4l2_subdev(entity);
+> +
+> +		/* Propagate format on sink pad if any, otherwise source pad */
+> +		if (sink_pad)
+> +			pad = sink_pad;
+> +
+> +		dev_dbg(dcmi->dev, "%s[%d] pad format set to 0x%x %ux%u\n",
+> +			subdev->name, pad->index, format->format.code,
+> +			format->format.width, format->format.height);
+> +
+> +		fmt.pad = pad->index;
+> +		ret = v4l2_subdev_call(subdev, pad, set_fmt, pad_cfg, &fmt);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		/* Walk to next entity */
+> +		sink_pad = media_entity_remote_pad(src_pad);
+> +		if (!sink_pad || !is_media_entity_v4l2_subdev(sink_pad->entity))
+> +			break;
+> +
+> +		entity = sink_pad->entity;
+> +	}
+> +	*format = fmt;
+> +
+> +	return 0;
+> +}
+> +
+> +static int dcmi_pipeline_s_stream(struct stm32_dcmi *dcmi, int state)
+> +{
+> +	struct media_entity *entity = &dcmi->vdev->entity;
+> +	struct v4l2_subdev *subdev;
+> +	struct media_pad *pad;
+> +	int ret;
+> +
+> +	/* Start/stop all entities within pipeline */
+> +	while (1) {
+> +		pad = &entity->pads[0];
+> +		if (!(pad->flags & MEDIA_PAD_FL_SINK))
+> +			break;
+> +
+> +		pad = media_entity_remote_pad(pad);
+> +		if (!pad || !is_media_entity_v4l2_subdev(pad->entity))
+> +			break;
+> +
+> +		entity = pad->entity;
+> +		subdev = media_entity_to_v4l2_subdev(entity);
+> +
+> +		ret = v4l2_subdev_call(subdev, video, s_stream, state);
+> +		if (ret < 0 && ret != -ENOIOCTLCMD) {
+> +			dev_err(dcmi->dev, "%s: %s failed to %s streaming (%d)\n",
+> +				__func__, subdev->name,
+> +				state ? "start" : "stop", ret);
+> +			return ret;
+> +		}
+> +
+> +		dev_dbg(dcmi->dev, "%s is %s\n",
+> +			subdev->name, state ? "started" : "stopped");
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int dcmi_pipeline_start(struct stm32_dcmi *dcmi)
+> +{
+> +	return dcmi_pipeline_s_stream(dcmi, 1);
+> +}
+> +
+> +static void dcmi_pipeline_stop(struct stm32_dcmi *dcmi)
+> +{
+> +	dcmi_pipeline_s_stream(dcmi, 0);
+> +}
+> +
+>  static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+>  {
+>  	struct stm32_dcmi *dcmi = vb2_get_drv_priv(vq);
+> @@ -597,14 +723,17 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+>  		goto err_release_buffers;
+>  	}
+>  
+> -	/* Enable stream on the sub device */
+> -	ret = v4l2_subdev_call(dcmi->entity.source, video, s_stream, 1);
+> -	if (ret && ret != -ENOIOCTLCMD) {
+> -		dev_err(dcmi->dev, "%s: Failed to start streaming, subdev streamon error",
+> -			__func__);
+> +	ret = media_pipeline_start(&dcmi->vdev->entity, &dcmi->pipeline);
+> +	if (ret < 0) {
+> +		dev_err(dcmi->dev, "%s: Failed to start streaming, media pipeline start error (%d)\n",
+> +			__func__, ret);
+>  		goto err_pm_put;
+>  	}
+>  
+> +	ret = dcmi_pipeline_start(dcmi);
+> +	if (ret)
+> +		goto err_media_pipeline_stop;
+> +
+>  	spin_lock_irq(&dcmi->irqlock);
+>  
+>  	/* Set bus width */
+> @@ -676,7 +805,7 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+>  	if (ret) {
+>  		dev_err(dcmi->dev, "%s: Start streaming failed, cannot start capture\n",
+>  			__func__);
+> -		goto err_subdev_streamoff;
+> +		goto err_pipeline_stop;
+>  	}
+>  
+>  	/* Enable interruptions */
+> @@ -687,8 +816,11 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+>  
+>  	return 0;
+>  
+> -err_subdev_streamoff:
+> -	v4l2_subdev_call(dcmi->entity.source, video, s_stream, 0);
+> +err_pipeline_stop:
+> +	dcmi_pipeline_stop(dcmi);
+> +
+> +err_media_pipeline_stop:
+> +	media_pipeline_stop(&dcmi->vdev->entity);
+>  
+>  err_pm_put:
+>  	pm_runtime_put(dcmi->dev);
+> @@ -713,13 +845,10 @@ static void dcmi_stop_streaming(struct vb2_queue *vq)
+>  {
+>  	struct stm32_dcmi *dcmi = vb2_get_drv_priv(vq);
+>  	struct dcmi_buf *buf, *node;
+> -	int ret;
+>  
+> -	/* Disable stream on the sub device */
+> -	ret = v4l2_subdev_call(dcmi->entity.source, video, s_stream, 0);
+> -	if (ret && ret != -ENOIOCTLCMD)
+> -		dev_err(dcmi->dev, "%s: Failed to stop streaming, subdev streamoff error (%d)\n",
+> -			__func__, ret);
+> +	dcmi_pipeline_stop(dcmi);
+> +
+> +	media_pipeline_stop(&dcmi->vdev->entity);
+>  
+>  	spin_lock_irq(&dcmi->irqlock);
+>  
+> @@ -937,8 +1066,7 @@ static int dcmi_set_fmt(struct stm32_dcmi *dcmi, struct v4l2_format *f)
+>  	mf->width = sd_framesize.width;
+>  	mf->height = sd_framesize.height;
+>  
+> -	ret = v4l2_subdev_call(dcmi->entity.source, pad,
+> -			       set_fmt, NULL, &format);
+> +	ret = dcmi_pipeline_s_fmt(dcmi, NULL, &format);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -1529,7 +1657,20 @@ static int dcmi_graph_notify_complete(struct v4l2_async_notifier *notifier)
+>  	struct stm32_dcmi *dcmi = notifier_to_dcmi(notifier);
+>  	int ret;
+>  
+> +	/*
+> +	 * Now that the graph is complete,
+> +	 * we search for the source subdevice
+> +	 * in order to expose it through V4L2 interface
+> +	 */
+> +	dcmi->entity.source =
+> +		media_entity_to_v4l2_subdev(dcmi_find_source(dcmi));
+> +	if (!dcmi->entity.source) {
+> +		dev_err(dcmi->dev, "Source subdevice not found\n");
+> +		return -ENODEV;
+> +	}
+> +
+>  	dcmi->vdev->ctrl_handler = dcmi->entity.source->ctrl_handler;
+> +
+>  	ret = dcmi_formats_init(dcmi);
+>  	if (ret) {
+>  		dev_err(dcmi->dev, "No supported mediabus format found\n");
+> @@ -1574,12 +1715,30 @@ static int dcmi_graph_notify_bound(struct v4l2_async_notifier *notifier,
+>  				   struct v4l2_async_subdev *asd)
+>  {
+>  	struct stm32_dcmi *dcmi = notifier_to_dcmi(notifier);
+> +	unsigned int ret;
+> +	int src_pad;
+>  
+>  	dev_dbg(dcmi->dev, "Subdev %s bound\n", subdev->name);
+>  
+> -	dcmi->entity.source = subdev;
+> +	/*
+> +	 * Link this sub-device to DCMI, it could be
+> +	 * a parallel camera sensor or a bridge
+> +	 */
+> +	src_pad = media_entity_get_fwnode_pad(&subdev->entity,
+> +					      subdev->fwnode,
+> +					      MEDIA_PAD_FL_SOURCE);
+> +
+> +	ret = media_create_pad_link(&subdev->entity, src_pad,
+> +				    &dcmi->vdev->entity, 0,
+> +				    MEDIA_LNK_FL_IMMUTABLE |
+> +				    MEDIA_LNK_FL_ENABLED);
+> +	if (ret)
+> +		dev_err(dcmi->dev, "Failed to create media pad link with subdev %s\n",
+> +			subdev->name);
+> +	else
+> +		dev_dbg(dcmi->dev, "DCMI is now linked to %s\n", subdev->name);
+>  
+> -	return 0;
+> +	return ret;
+>  }
+>  
+>  static const struct v4l2_async_notifier_operations dcmi_graph_notify_ops = {
+> @@ -1639,6 +1798,15 @@ static int dcmi_graph_init(struct stm32_dcmi *dcmi)
+>  		return ret;
+>  	}
+>  
+> +	/* Register all the subdev nodes */
+> +	ret = v4l2_device_register_subdev_nodes(&dcmi->v4l2_dev);
 
-Yea tbh i didn't expect this to fix it, since i think the mappings are fine, but
-it never hurts to verify.
-@Jose: Can we add some debugging prints on the driver?
-Ideally the pages the api allocates (on init), the page that the driver is
-trying to use before the crash and the size of the packet (right from the device
-descriptor). Maybe this will tell us where the erroneous access is
+This shouldn't be needed. Only MC-centric drivers (i.e. where the pipeline
+has to be configured by userspace) need to do this.
 
-Thanks
-/Ilias
+Otherwise this patch looks good.
+
+Regards,
+
+	Hans
+
+> +	if (ret) {
+> +		dev_err(dcmi->dev, "Failed to register subdev nodes\n");
+> +		v4l2_async_notifier_unregister(&dcmi->notifier);
+> +		of_node_put(dcmi->entity.remote_node);
+> +		return ret;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> 
+
