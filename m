@@ -2,93 +2,102 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A2BC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CDDC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6559B218EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:32:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4AxvAwo"
+	by mail.kernel.org (Postfix) with ESMTP id D1A58218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:34:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564083259;
+	bh=XmYuwxHf0VVKO+yWC7+GNQPhvgKyB5pGg9W5noBtV5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LW9S8GUM4umI1Sn8O89vabKPA+TQGxpLKkLLq3MjQ/att1BuQ8dbgDB2zVQLM3T2p
+	 CAqA7rM9PdZ9ndrNp5tA0m5Td7OcgaVCyqUMDgykeZsQVZNDyzXUrU5VZ9yOvIeWr7
+	 sCQWw0ZKVh6HlsedbAmai2AetJK44Y4BfEqRv54Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfGYTcc (ORCPT
+        id S1726307AbfGYTeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 15:32:32 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35613 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbfGYTcc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:32:32 -0400
-Received: by mail-lj1-f194.google.com with SMTP id x25so49175225ljh.2;
-        Thu, 25 Jul 2019 12:32:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kp0EWNt1hJYOLXDTYlF7zykP3Zq2TsBvXEhXEloAP6c=;
-        b=C4AxvAwobnSSddWK24zoACbWa2WjxylpFNge6tKlmOW+LLRo+AXD/ZpOa2ItZLWQ0V
-         rca8/YgVzcRihbJdusIc8NP6R3JF6C/L5frSIAc/ApkYxB0wzAc/FRwDJCtahPQgb0Hs
-         n6AYQKp2AyOCm6dUCMFiWExIrr7KlAr2OSGThds/zl6FzBQwutPcxhg8gmCHra/5nXrQ
-         IFypJzMVv81BoUmg/179zDv95k+wq9BmQCIE/v38M6QgpT2vp1mZDuyRiUPuPDsu6wJo
-         ThpgtWT10jqE3omLZRtngj0C7o/10Ew8qAXeJP224fMyanvN2BdJ790hY3vFN7KL3lgf
-         A13w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kp0EWNt1hJYOLXDTYlF7zykP3Zq2TsBvXEhXEloAP6c=;
-        b=koKc9XOcM/qE/rJBKkRGiU665hLLAf/2m4JxY+Qr22IMgHnZATzEh2bsWuD7K+aRvP
-         qzAx3zOx5ElDLPrfDCUUk7Bz9so2Pd7xMuGNVWCcKUqf+FSRRcZFJ3dc71lIAiXJEgtS
-         ASZxGOG/Ldvi3wPGWAhsBXSKm4+M2+pFPTNokPole8o4dkRxibndTpMJOKbi3tLdJnm4
-         TGIkOMkDhDjXxMJ7suqKuyAKdned6S4RVl/R0lgih14AIWmRpiIVW+tI+WmAEg49Y2pz
-         Nc3V+WrIG4e6My7Aw4h7psslC3U64B0QyqFzKaNk7FQ2iTRqvvtfGAXEe7itjTRF7L+o
-         sPWQ==
-X-Gm-Message-State: APjAAAVNCyA40QDw9r/LX/hfFJt1B2KDszVt9geKBCYr68gT/SNOq6qf
-        CNCZssJHH/cUVtWFkgoTPLDuNnn5Wxwl6z1Px0s=
-X-Google-Smtp-Source: APXvYqyDf3rdKYXqiXUlgdRjLq+Vaz3jmCLYtBCYErQSevesbRjPKuJmugaeK1C2zffMG++H1hJFxitGJxEZjTaH6lU=
-X-Received: by 2002:a2e:5dc6:: with SMTP id v67mr47345282lje.240.1564083149838;
- Thu, 25 Jul 2019 12:32:29 -0700 (PDT)
+        Thu, 25 Jul 2019 15:34:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43026 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726126AbfGYTeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 15:34:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1FDC218EA;
+        Thu, 25 Jul 2019 19:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564083257;
+        bh=XmYuwxHf0VVKO+yWC7+GNQPhvgKyB5pGg9W5noBtV5A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=d3PTiS9N52mYF5DGcUuY4yOnuzZS4zliBNIktBb8T/57DhVRGzhaH7j5HmmWgnryx
+         C9l2UR21v5CIglf+hjNiv28E1LxVTEO0pmbHVRsvvVILqePuJLvSGSQ2VGdYSU4UX3
+         7o7ICHpuPnOeHJyd0e42GVoe16EdvBsM6kt32IU8=
+Date:   Thu, 25 Jul 2019 21:34:15 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sagi Grimberg <sagi@grimberg.me>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
+Message-ID: <20190725193415.GA12117@kroah.com>
+References: <20190725172335.6825-1-logang@deltatee.com>
+ <20190725172335.6825-3-logang@deltatee.com>
+ <20190725174032.GA27818@kroah.com>
+ <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
+ <20190725180816.GA32305@kroah.com>
+ <da0eacb7-3738-ddf3-8c61-7ffc61aa41f4@deltatee.com>
+ <20190725182701.GA11547@kroah.com>
+ <a3262a7f-b78e-05ba-cda3-a7587946bd91@deltatee.com>
+ <5951e0f5-cc90-f3de-0083-088fecfd43bb@grimberg.me>
 MIME-Version: 1.0
-References: <20190712204316.16783-1-TheSven73@gmail.com> <CAGngYiVb_-A4Au749GD6SKi=UqKKBm4yxim8YOCbgVjfz7xtvg@mail.gmail.com>
-In-Reply-To: <CAGngYiVb_-A4Au749GD6SKi=UqKKBm4yxim8YOCbgVjfz7xtvg@mail.gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 25 Jul 2019 16:32:31 -0300
-Message-ID: <CAOMZO5CrUZ1C0i8ofuiG8thsPgfxPiY5XOnvUsmnkYYSKJBMNQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] bus: imx-weim: optionally enable burst clock mode
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5951e0f5-cc90-f3de-0083-088fecfd43bb@grimberg.me>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sven,
+On Thu, Jul 25, 2019 at 12:02:30PM -0700, Sagi Grimberg wrote:
+> 
+> > > > > Why do you have a "string" within the kernel and are not using the
+> > > > > normal open() call from userspace on the character device node on the
+> > > > > filesystem in your namespace/mount/whatever?
+> > > > 
+> > > > NVMe-OF is configured using configfs. The target is specified by the
+> > > > user writing a path to a configfs attribute. This is the way it works
+> > > > today but with blkdev_get_by_path()[1]. For the passthru code, we need
+> > > > to get a nvme_ctrl instead of a block_device, but the principal is the same.
+> > > 
+> > > Why isn't a fd being passed in there instead of a random string?
+> > 
+> > I wouldn't know the answer to this but I assume because once we decided
+> > to use configfs, there was no way for the user to pass the kernel an fd.
+> 
+> That's definitely not changing. But this is not different than how we
+> use the block device or file configuration, this just happen to need the
+> nvme controller chardev now to issue I/O.
 
-On Thu, Jul 25, 2019 at 11:30 AM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> On Fri, Jul 12, 2019 at 4:43 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
-> >
-> > To enable burst clock mode, add the fsl,burst-clk-enable
-> > property to the weim bus's devicetree node.
-> >
->
-> Any feedback on this patch, positive or negative?
+So, as was kind of alluded to in another part of the thread, what are
+you doing about permissions?  It seems that any user/group permissions
+are out the window when you have the kernel itself do the opening of the
+char device, right?  Why is that ok?  You can pass it _any_ character
+device node and away it goes?  What if you give it a "wrong" one?  Char
+devices are very different from block devices this way.
 
-Looks good to me:
+thanks,
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+greg k-h
