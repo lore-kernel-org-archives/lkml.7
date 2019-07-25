@@ -2,153 +2,196 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFFBC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A91C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C23522BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C072422BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="165J66KA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T3qvU+3T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388022AbfGYOXz (ORCPT
+        id S2388075AbfGYOYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:23:55 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:56227 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387415AbfGYOXy (ORCPT
+        Thu, 25 Jul 2019 10:24:24 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44475 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfGYOYY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:23:54 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PENhNo1037696
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 25 Jul 2019 07:23:43 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PENhNo1037696
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564064623;
-        bh=148jjYnmwYxq2fLtfOm/J5Td0xl/byJ87dy4YkJbQW4=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=165J66KANFk7eLoK2A6LGby7t3PWqnFK54DFW6kfYkK9gnQMl09HBjzkRxJ8rOzJc
-         8m3Hf6MCkb5+uXb03ujtigWXh+sy8Lc0+RQs6t4yg2hSs+5SEe2xX8PlzzbKXpV+xk
-         DznuyvPsrsR/XUFjRojnprU77614c81r+cpyQJRn3+rwqNyrqPv1nmNrwZjMrRGg9M
-         X2R4gkxH2DRmIaXsmjj0zo823OfHME72xIa82tkKtwDifp8NHdrbWJwf2P5mGGdX2H
-         1kJiTo1xo1Wng7guiazf3ksUzCHs4ZSKUF8+TaF27VlaitfbjCwh/A2QezGbNni3rk
-         MGT2nXJAZqDUg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PENgLd1037693;
-        Thu, 25 Jul 2019 07:23:42 -0700
-Date:   Thu, 25 Jul 2019 07:23:42 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-cdc86c9d1f825d13cef85d9ebd3e73572602fb48@git.kernel.org>
-Cc:     hpa@zytor.com, peterz@infradead.org, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de
-Reply-To: tglx@linutronix.de, peterz@infradead.org, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, mingo@kernel.org
-In-Reply-To: <20190722105219.252225936@linutronix.de>
-References: <20190722105219.252225936@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/apic] x86/apic: Move IPI inlines into ipi.c
-Git-Commit-ID: cdc86c9d1f825d13cef85d9ebd3e73572602fb48
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 25 Jul 2019 10:24:24 -0400
+Received: by mail-lj1-f193.google.com with SMTP id k18so48176513ljc.11;
+        Thu, 25 Jul 2019 07:24:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=QHpELRpBKO7EZIccXTfwOcj2Dzu6DQ0ve/foH0WRfeg=;
+        b=T3qvU+3Tb5TRK8AacfmISB0gOegIgKcyPLouaLtrAcRljhhQMWsVclxH8Ye/OGwc1y
+         FW2YGzEKdD4l66HhGY+YdLSQ8X+oqdu58DZ69ACt00NnHHlINMTc6fl2V135qEGPmGK5
+         0uFE1bOa4AGnDAAWD6z8Ffenp1fj4Ck9Ms5v3Octgp9x60b92ZroNI4RtI8FGyFwSM1F
+         UjlHmmCXXM5VscLwiEqZOxVTZkOyFuvgGmsOVHbeKx67sl7V3ZsaN9+VXQ+u1J3k7fwN
+         byklpgBBHHGjF74sTRKkgdpbOHNcsAgdwuwXRNJxxunkYoh6YblJ8RQ9E+jxzygshf5U
+         4LwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=QHpELRpBKO7EZIccXTfwOcj2Dzu6DQ0ve/foH0WRfeg=;
+        b=GzbbHEhhHBDVNnZfwq8PLnfZAhFt0mjqfy53m8vc8sJNddHGn8/Dehc+B/MawuMkmm
+         S4mSo/WRyHxXWGSTeigIiEdONi4FMo2P9HwdzylwuHvNXvgi89LYWmQlJG9VlCnuFWfY
+         Mzii7dd1gcXdGkp0jmVb8c2PyXw6y2Bi0/dWZwaEoKw2n5vRp0gQLSKmWYimcxVZhDzk
+         H8gX51aURa6zbzUmIXEdswyztoGJnZnbneb8Ffy+l/f4MdRYkp0BVEvhbveqzxkVMguR
+         dcRk25KtXGoIGOlH9SW/RNpQZBflkcGlHCWcTGSDctvVjXeRqc5pG+MPuSEMh1WH20id
+         HmYA==
+X-Gm-Message-State: APjAAAWcmGnokaKKhJbmISycyjsBwRppYOUb13LN7NcaBvYrdEj1pS5G
+        TPHiGS6MHRh7aD+Y0J9EtRRiVxHAaR+b+f1+38Y=
+X-Google-Smtp-Source: APXvYqwEmzwuMqkOxr0aEHUwLmVQUEfqpgOv3BdVEQRWVSDRdsMreLUPZUh2LA5quQUjw8nMqzF9mEmTZ8nQFxNF6Pc=
+X-Received: by 2002:a2e:3008:: with SMTP id w8mr47159184ljw.13.1564064661345;
+ Thu, 25 Jul 2019 07:24:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <cover.1563971855.git.leonard.crestez@nxp.com> <93df6e7d81a404a43af684e2f96bdb6561ed87fe.1563971855.git.leonard.crestez@nxp.com>
+In-Reply-To: <93df6e7d81a404a43af684e2f96bdb6561ed87fe.1563971855.git.leonard.crestez@nxp.com>
+Reply-To: cwchoi00@gmail.com
+From:   Chanwoo Choi <cwchoi00@gmail.com>
+Date:   Thu, 25 Jul 2019 23:23:44 +0900
+Message-ID: <CAGTfZH2UzvOVE-hKHLLGa7-ZF6DqsXvZiHcMy4O9qpohYLGbDA@mail.gmail.com>
+Subject: Re: [RFCv3 1/3] dt-bindings: devfreq: Add initial bindings for i.MX
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Will Deacon <will@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Frank Li <Frank.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  cdc86c9d1f825d13cef85d9ebd3e73572602fb48
-Gitweb:     https://git.kernel.org/tip/cdc86c9d1f825d13cef85d9ebd3e73572602fb48
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Mon, 22 Jul 2019 20:47:10 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 25 Jul 2019 16:11:57 +0200
+Hi,
 
-x86/apic: Move IPI inlines into ipi.c
+2019=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 10:36, =
+Leonard Crestez <leonard.crestez@nxp.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
+=B1:
+>
+> Add initial dt bindings for the interconnects inside i.MX chips.
+> Multiple external IPs are involved but SOC integration means the
+> software controllable interfaces are very similar.
+>
+> This is initially only for imx8mm but add an "fsl,imx-bus" fallback
+> similar to exynos-bus.
+>
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> ---
+>  .../devicetree/bindings/devfreq/imx.yaml      | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/imx.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/devfreq/imx.yaml b/Documen=
+tation/devicetree/bindings/devfreq/imx.yaml
+> new file mode 100644
+> index 000000000000..87f90cddfd29
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/devfreq/imx.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/devfreq/imx.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic i.MX bus frequency device
+> +
+> +maintainers:
+> +  - Leonard Crestez <leonard.crestez@nxp.com>
+> +
+> +description: |
+> +  The i.MX SoC family has multiple buses for which clock frequency (and =
+sometimes
+> +  voltage) can be adjusted.
+> +
+> +  Some of those buses expose register areas mentioned in the memory maps=
+ as GPV
+> +  ("Global Programmers View") but not all. Access to this area might be =
+denied for
+> +  normal world.
+> +
+> +  The buses are based on externally licensed IPs such as ARM NIC-301 and=
+ Arteris
+> +  FlexNOC but DT bindings are specific to the integration of these bus
+> +  interconnect IPs into imx SOCs.
+> +
+> +properties:
+> +  reg:
+> +    maxItems: 1
+> +    description: GPV area
+> +
+> +  compatible:
+> +    contains:
+> +      enum:
+> +       - fsl,imx8m-noc
+> +       - fsl,imx8m-nic
+> +       - fsl,imx8m-ddrc
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/imx8mm-clock.h>
+> +    ddrc: dram-controller@3d400000 {
+> +            compatible =3D "fsl,imx8mm-ddrc";
 
-No point in having them in an header file.
+s/imx8mm/imx8m
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190722105219.252225936@linutronix.de
+> +            reg =3D <0x3d400000 0x400000>;
+> +            clocks =3D <&clk IMX8MM_CLK_DRAM>;
+> +            operating-points-v2 =3D <&ddrc_opp_table>;
+> +    };
+> +
+> +  - |
+> +    noc: noc@32700000 {
+> +            compatible =3D "fsl,imx8mm-noc";
 
----
- arch/x86/include/asm/ipi.h | 19 -------------------
- arch/x86/kernel/apic/ipi.c | 16 +++++++++++++---
- 2 files changed, 13 insertions(+), 22 deletions(-)
+s/imx8mm/imx8m
 
-diff --git a/arch/x86/include/asm/ipi.h b/arch/x86/include/asm/ipi.h
-index f73076be546a..8d4911b122f3 100644
---- a/arch/x86/include/asm/ipi.h
-+++ b/arch/x86/include/asm/ipi.h
-@@ -71,27 +71,8 @@ extern void default_send_IPI_mask_sequence_phys(const struct cpumask *mask,
- extern void default_send_IPI_mask_allbutself_phys(const struct cpumask *mask,
- 							 int vector);
- 
--/* Avoid include hell */
--#define NMI_VECTOR 0x02
--
- extern int no_broadcast;
- 
--static inline void __default_local_send_IPI_allbutself(int vector)
--{
--	if (no_broadcast || vector == NMI_VECTOR)
--		apic->send_IPI_mask_allbutself(cpu_online_mask, vector);
--	else
--		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector, apic->dest_logical);
--}
--
--static inline void __default_local_send_IPI_all(int vector)
--{
--	if (no_broadcast || vector == NMI_VECTOR)
--		apic->send_IPI_mask(cpu_online_mask, vector);
--	else
--		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector, apic->dest_logical);
--}
--
- #ifdef CONFIG_X86_32
- extern void default_send_IPI_mask_sequence_logical(const struct cpumask *mask,
- 							 int vector);
-diff --git a/arch/x86/kernel/apic/ipi.c b/arch/x86/kernel/apic/ipi.c
-index 82f9244fe61f..de9764605d31 100644
---- a/arch/x86/kernel/apic/ipi.c
-+++ b/arch/x86/kernel/apic/ipi.c
-@@ -198,15 +198,25 @@ void default_send_IPI_allbutself(int vector)
- 	 * if there are no other CPUs in the system then we get an APIC send
- 	 * error if we try to broadcast, thus avoid sending IPIs in this case.
- 	 */
--	if (!(num_online_cpus() > 1))
-+	if (num_online_cpus() < 2)
- 		return;
- 
--	__default_local_send_IPI_allbutself(vector);
-+	if (no_broadcast || vector == NMI_VECTOR) {
-+		apic->send_IPI_mask_allbutself(cpu_online_mask, vector);
-+	} else {
-+		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector,
-+					    apic->dest_logical);
-+	}
- }
- 
- void default_send_IPI_all(int vector)
- {
--	__default_local_send_IPI_all(vector);
-+	if (no_broadcast || vector == NMI_VECTOR) {
-+		apic->send_IPI_mask(cpu_online_mask, vector);
-+	} else {
-+		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector,
-+					    apic->dest_logical);
-+	}
- }
- 
- void default_send_IPI_self(int vector)
+> +            reg =3D <0x32700000 0x100000>;
+> +            clocks =3D <&clk IMX8MM_CLK_NOC>;
+> +            operating-points-v2 =3D <&noc_opp_table>;
+> +    };
+> --
+> 2.17.1
+>
+
+
+--=20
+Best Regards,
+Chanwoo Choi
