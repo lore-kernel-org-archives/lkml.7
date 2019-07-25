@@ -2,98 +2,134 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18F1C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20750C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA5EC22BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79B6229F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:53:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TNR0nbQw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730096AbfGYRxk (ORCPT
+        id S1730106AbfGYRxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:53:40 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:40494 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730082AbfGYRxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:53:40 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hqhvg-0001pD-6S; Thu, 25 Jul 2019 11:53:25 -0600
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <20190725172335.6825-3-logang@deltatee.com>
- <20190725174032.GA27818@kroah.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
-Date:   Thu, 25 Jul 2019 11:53:20 -0600
+        Thu, 25 Jul 2019 13:53:54 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:57530 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729911AbfGYRxy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 13:53:54 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6PHnKbJ049589;
+        Thu, 25 Jul 2019 17:53:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=DskHihDhKZA/Fq49qJO0doPSez/fz+BiwP1T46flO+o=;
+ b=TNR0nbQwsPhmhhzkN0XUOm5DyKGABJasfZRd7Z3WKP6L/vhGuqsUMHlInDffuEh7W28Z
+ KIDc+dm+C3T+9II5FiOqa3IwgwVXtha/9m8rsk/+yatq4RDhFIZ4RJ7DdD5zmfDpvEx6
+ mjK126Mt2HCph8FaAipzai7ur36yOS7bBasUUtAhNgnS2R1lCSd1V1AYvEBt9JisQYPg
+ 7CZK3qM2LbHPH7ILg4tMxPgmeAzoyJVR3vUqGC7jPc/OR5SM/siA1YRGejnRuUFkeJV5
+ EzkFQ86fGGOcZ4fO1wBBbmb83ipXRzZIWN9TueKgFQ5C6D+M554PToE4ThICS1Pp42jW jg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2tx61c5n0c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jul 2019 17:53:49 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6PHrOv6172739;
+        Thu, 25 Jul 2019 17:53:48 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2tx60yf6jr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jul 2019 17:53:48 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6PHrl8Q017808;
+        Thu, 25 Jul 2019 17:53:48 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 25 Jul 2019 10:53:47 -0700
+Subject: Re: [PATCH] mm/hugetlb.c: check the failure case for find_vma
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>, emamd001@umn.edu
+Cc:     kjlu@umn.edu, smccaman@umn.edu, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190725013944.20661-1-navid.emamdoost@gmail.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <44c005c2-2b4f-d1da-0437-fe4c90f883ae@oracle.com>
+Date:   Thu, 25 Jul 2019 10:53:46 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190725174032.GA27818@kroah.com>
+In-Reply-To: <20190725013944.20661-1-navid.emamdoost@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: viro@zeniv.linux.org.uk, sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, hch@lst.de, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9329 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=910
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907250211
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9329 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=937 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907250210
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-07-25 11:40 a.m., Greg Kroah-Hartman wrote:
-> On Thu, Jul 25, 2019 at 11:23:21AM -0600, Logan Gunthorpe wrote:
->> cdev_get_by_path() attempts to retrieve a struct cdev from
->> a path name. It is analagous to blkdev_get_by_path().
->>
->> This will be necessary to create a nvme_ctrl_get_by_path()to
->> support NVMe-OF passthru.
+On 7/24/19 6:39 PM, Navid Emamdoost wrote:
+> find_vma may fail and return NULL. The null check is added.
 > 
-> Ick, why?  Why would a cdev have a "pathname"?
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+>  mm/hugetlb.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index ede7e7f5d1ab..9c5e8b7a6476 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -4743,6 +4743,9 @@ void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
+>  pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud)
+>  {
+>  	struct vm_area_struct *vma = find_vma(mm, addr);
+> +	if (!vma)
+> +		return (pte_t *)pmd_alloc(mm, pud, addr);
+> +
 
-So we can go from "/dev/nvme0" (which points to a char device) to its
-struct cdev and eventually it's struct nvme_ctrl. Doing it this way also
-allows supporting symlinks that might be created by udev rules.
+Hello Navid,
 
-This is very similar to blkdev_get_by_path() that lets regular NVMe-OF
-obtain the struct block_device from a path.
+You should not mix declarations and code like this.  I am surprised that your
+compiler did not issue a warning such as:
 
-I didn't think this would be all that controversial.
+mm/hugetlb.c: In function ‘huge_pmd_share’:
+mm/hugetlb.c:4815:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  struct address_space *mapping = vma->vm_file->f_mapping;
+  ^~~~~~
 
-> What is "NVMe-OF passthru"?  Why does a char device node have anything
-> to do with NVMe?
+While it is true that the routine find_vma can return NULL.  I do not
+believe it is possible here within the context of huge_pmd_share.  Why?
 
-NVME-OF passthru is support for NVME over fabrics to directly target a
-regular NVMe controller and thus export an entire NVMe device to a
-remote system. We need to be able to tell the kernel which controller to
-use and IMO a path to the device file is the best way as it allows us to
-support symlinks created by udev.
+huge_pmd_share is called from huge_pte_alloc to allocate a page table
+entry for a huge page.  So, the calling code is attempting to populate
+page tables.  There are three callers of huge_pte_alloc: hugetlb_fault,
+copy_hugetlb_page_range and __mcopy_atomic_hugetlb.  In each of these
+routines (or their callers) it has been verified that address is within
+a vma.  In addition, mmap_sem is held so that vmas can not change.
+Therefore, there should be no way for find_vma to return NULL here.
 
-> We have way too many ways to abuse cdevs today, my long-term-wish has
-> always been to clean this interface up to make it more sane and unified,
-> and get rid of the "outliers" (all created at the time for a good
-> reason, that's not the problem.)  But to add "just one more" seems
-> really odd to me.
+Please let me know if there is something I have overlooked.  Otherwise,
+there is no need for such a modification.
+-- 
+Mike Kravetz
 
-Well it doesn't seem all that much like an outlier to me.
-
-Logan
+>  	struct address_space *mapping = vma->vm_file->f_mapping;
+>  	pgoff_t idx = ((addr - vma->vm_start) >> PAGE_SHIFT) +
+>  			vma->vm_pgoff;
+> 
