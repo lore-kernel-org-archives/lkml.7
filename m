@@ -2,104 +2,119 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1B3C41517
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3D7C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 977CB22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BFFB229F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:16:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NZ/6dTsB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p11unN5m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404540AbfGYMPS (ORCPT
+        id S1729364AbfGYMQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:15:18 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39323 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404522AbfGYMPR (ORCPT
+        Thu, 25 Jul 2019 08:16:04 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38978 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbfGYMQE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:15:17 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b7so23393287pls.6;
-        Thu, 25 Jul 2019 05:15:17 -0700 (PDT)
+        Thu, 25 Jul 2019 08:16:04 -0400
+Received: by mail-wm1-f65.google.com with SMTP id u25so34177097wmc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 05:16:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=y+QIB4QdjKz71M1YxwynMWzO+rB27zsg8WKRIIdr3/c=;
-        b=NZ/6dTsBSydrACeiZGDz+T8flvtmaB7vfcVKnrl+A0m+HtjK/crLv0IxqiOQxBAQbL
-         WxF0sqbEatVfQFPK1FpBMgZ5WJnmz3CFAmxhteDbJ7IyIlJ6SU29kvwgUjdYdXY5FU+1
-         rqwhRgt9vSgLmCcJj9FSQtq8vQAILW5NWQas8VFEaWpJbNR3j1mbdI24sEu5hK7RA8YD
-         NN9hwU4Db0Vh4jyCE+TadqkpT9irNv9g3ultChqUEvEcuUnpTxALcwDQgttO9as3aeSa
-         YblICSsGdP9PDIXugRrTqX78FxA5locafHJeJse7BJGufMnTdBNynVp41vFZiEd5uEA/
-         2q5Q==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=qs1aAu41zoW26CjgOOHRgDBblEEN+sirOIuSdx2Qjmw=;
+        b=p11unN5mAIl6E/k8+BL+FL8i7hVlZcpFd0ltqnqKXQv88NUJ4TBugxdzqriPo4RPu1
+         FqYFCb6jQHxwXwE01qi+zrVjvz9FMsE5sxJJtHjAaadBhoiLRFxiUck3pF/0wiHSvknd
+         MwF2GNYx/0Vrxwc20WbyGSwvJ7/u46rfw0xFzoOyOhuRLiETXgQAJNLOdEMBeOoAPejp
+         Qnw7UPxf/vHBt3kmOS+T9HJToCG3E5w4tCqw42CgEaYPnpoT/gY/K+9Rb8SzgATSZRdl
+         +vm6hEpxNDA8JLnrUBkunmsLoFgw5bF9myLnjG0IVjK/w9H+DraPpIV7GKuX9gEABWHO
+         dTZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=y+QIB4QdjKz71M1YxwynMWzO+rB27zsg8WKRIIdr3/c=;
-        b=sI5gQDUdnurt74chtntJekfiTA0tA+F/1FI/GioF4g5kF+RKW4PtMOInWHdlZEPEX6
-         JdYX7Ww5J98oWaYBN5IVxnCQ/jXjculsodHvy05SX64rrxZqqhPTSLvHvNfCurcFvLD1
-         qI7adv2MHpss+gPut29cFFpegkFswzfzADNXe1zglC6aZzZDm/du2CjymLEF7ntET9wP
-         GBsGOqjRCwIBc9tjLt6HSKRoiB9LcrhMA36Z5DVr4IV8d1Yub4ZUl01ySem5HPEGOyvW
-         /+q6EZmh9Gf9V4LZd4e8GQZhZw4ApMM+t8UpOgyxIgGcQAqe4cBSrZnw1X9IdFHP1y8m
-         /M4A==
-X-Gm-Message-State: APjAAAUYjU3tOknyPBfTiDVglnjM2fo1xHBf7c7vhkE2zlD4bzINxRaY
-        vX1yGb5lnr7GXBdlEHw1wwYac5RlrZ8=
-X-Google-Smtp-Source: APXvYqyA9O1rHqPuadm47R5uEU2xLyoP0cGNOItpDz8NR0nwRgJ3eN1fmwaJQGIb90cwOIH1+y2y3Q==
-X-Received: by 2002:a17:902:3181:: with SMTP id x1mr88905993plb.135.1564056917207;
-        Thu, 25 Jul 2019 05:15:17 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id l1sm64449251pfl.9.2019.07.25.05.15.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 05:15:16 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     bharat@chelsio.com, dledford@redhat.com, jgg@ziepe.ca
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] infiniband: hw: cxgb3: Fix a possible null-pointer dereference in connect_reply_upcall()
-Date:   Thu, 25 Jul 2019 20:15:08 +0800
-Message-Id: <20190725121508.16352-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=qs1aAu41zoW26CjgOOHRgDBblEEN+sirOIuSdx2Qjmw=;
+        b=NgVj+rYKuo2FSAJzSxk/KfiICaLSkRF0TYLOj4GVo57vFVmHPwOOYjb3NdOUq6U5L0
+         OJfLpfbaRmS7iIBAy5HSOq3AmTkfJMc/QkXecPbkKX6MPo+WcCPTY9vTWamkizDhYwWY
+         TV4m4OIkZzeC63FcxdbCzn3L5CH7hP+IYQqmxzxnui1QWBegdIjrQN3/CGswugkfBm8M
+         iOWDTBM5rZxLdVcpIVDYuEB037Ok9rxT6MBSFlDFWAzzQtKckXIQPRB13+8phGpAxzPj
+         4Y0k8+Xf+I0Jp832d0vBIE3qh4GcpuA6650IUgBG4giCLt6W4U8vozoz0fRdG5e0y2Ca
+         M4Dg==
+X-Gm-Message-State: APjAAAWi9u1/t4Bqb4nrL3O4GuUFaApbXXYpjLeyKv1hDwgvLTXqOUv7
+        5JWnWKmY4D93dDYddWyLBTAsY6Fx0O0=
+X-Google-Smtp-Source: APXvYqxklzcEZdillbl8vOXs4v6DuegWy+CFi2t0wxe6mIA4plVhRhDElR3mL05JuymkvVzS8td/Eg==
+X-Received: by 2002:a1c:2302:: with SMTP id j2mr77135030wmj.174.1564056962149;
+        Thu, 25 Jul 2019 05:16:02 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id r123sm45524482wme.7.2019.07.25.05.15.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Jul 2019 05:16:01 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 13:15:52 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: max77620: Add of_node_put() before return
+Message-ID: <20190725121552.GG23883@dell>
+References: <20190709173132.13886-1-nishkadg.linux@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190709173132.13886-1-nishkadg.linux@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In connect_reply_upcall(), there is an if statement on line 730 to check
-whether ep->com.cm_id is NULL:
-    if (ep->com.cm_id)
+On Tue, 09 Jul 2019, Nishka Dasgupta wrote:
 
-When ep->com.cm_id is NULL, it is used on line 736:
-    ep->com.cm_id->rem_ref(ep->com.cm_id);
+> Each iteration of for_each_child_of_node puts the previous node, but in
+> the case of a return from the middle of the loop, there is no put, thus
+> causing a memory leak. Hence add an of_node_put before the return.
+> Issue found with Coccinelle.
+> 
+> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+> ---
+>  drivers/mfd/max77620.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thus, a possible null-pointer dereference may occur.
+Ah, I've just seen that you didn't send this to the list.
 
-To fix this bug, ep->com.cm_id is checked before being used.
+When submitting patches upstream, you must CC at least one list.
 
-This bug is found by a static analysis tool STCheck written by us.
+Usually people CC LKML as a matter of course.
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/infiniband/hw/cxgb3/iwch_cm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I've CC'ed LMKL here and applied the patch.
 
-diff --git a/drivers/infiniband/hw/cxgb3/iwch_cm.c b/drivers/infiniband/hw/cxgb3/iwch_cm.c
-index 0bca72cb4d9a..2b31c4726d3e 100644
---- a/drivers/infiniband/hw/cxgb3/iwch_cm.c
-+++ b/drivers/infiniband/hw/cxgb3/iwch_cm.c
-@@ -733,7 +733,8 @@ static void connect_reply_upcall(struct iwch_ep *ep, int status)
- 		ep->com.cm_id->event_handler(ep->com.cm_id, &event);
- 	}
- 	if (status < 0) {
--		ep->com.cm_id->rem_ref(ep->com.cm_id);
-+		if (ep->com.cm_id)
-+			ep->com.cm_id->rem_ref(ep->com.cm_id);
- 		ep->com.cm_id = NULL;
- 		ep->com.qp = NULL;
- 	}
+> diff --git a/drivers/mfd/max77620.c b/drivers/mfd/max77620.c
+> index 0c28965fcc6a..a851ff473a44 100644
+> --- a/drivers/mfd/max77620.c
+> +++ b/drivers/mfd/max77620.c
+> @@ -416,8 +416,10 @@ static int max77620_initialise_fps(struct max77620_chip *chip)
+>  
+>  	for_each_child_of_node(fps_np, fps_child) {
+>  		ret = max77620_config_fps(chip, fps_child);
+> -		if (ret < 0)
+> +		if (ret < 0) {
+> +			of_node_put(fps_child);
+>  			return ret;
+> +		}
+>  	}
+>  
+>  	config = chip->enable_global_lpm ? MAX77620_ONOFFCNFG2_SLP_LPM_MSK : 0;
+
 -- 
-2.17.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
