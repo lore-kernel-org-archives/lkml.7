@@ -2,155 +2,132 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2254AC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320B8C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F4E2238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071A02238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:04:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="zQpxCGRU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389885AbfGYQCd (ORCPT
+        id S2389184AbfGYQEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:02:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50114 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388481AbfGYQCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:02:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 57D71AFE1;
-        Thu, 25 Jul 2019 16:02:16 +0000 (UTC)
-From:   Oscar Salvador <osalvador@suse.de>
-To:     akpm@linux-foundation.org
-Cc:     dan.j.williams@intel.com, david@redhat.com,
-        pasha.tatashin@soleen.com, mhocko@suse.com,
-        anshuman.khandual@arm.com, Jonathan.Cameron@huawei.com,
-        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v3 3/5] mm,sparse: Add SECTION_USE_VMEMMAP flag
-Date:   Thu, 25 Jul 2019 18:02:05 +0200
-Message-Id: <20190725160207.19579-4-osalvador@suse.de>
-X-Mailer: git-send-email 2.13.7
-In-Reply-To: <20190725160207.19579-1-osalvador@suse.de>
-References: <20190725160207.19579-1-osalvador@suse.de>
+        Thu, 25 Jul 2019 12:04:09 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:48051 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388481AbfGYQEJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 12:04:09 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PG3RIM1071304
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 09:03:27 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PG3RIM1071304
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564070608;
+        bh=A2BsfU+o5G861v52udO74SU0jEv17wo3QrmMOENtt5c=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=zQpxCGRUVOg8hAlv+h5QNII9ja+fUS1rUoHFeUc7ceQRGtK/nTT6XEIJ+CsFroIyj
+         yF0OrcsxXGRGRzdKBisbEPLqjTnP+7U+SjFXMEsph/IWrxmB0ZeWqbfgzv+eHI19pC
+         OH/tsnhEwz+Z+T7WToymS7vxn9STHQuEJP7myscbVei0t8rOeK7Q6g6i+hMn5dKjEE
+         pSkt/1UhzXJkP4Yx75V8SUKi4hvN28kJhLz/WpMosyQawqIiWjzZjhu/1uj2vGFLcx
+         1lUgN+cgcCLuHI7GKLmA26i4f9Tlhjb9urkLnS1F1u7FnQmHiOq0vtNRSRJslJGnPC
+         GtUqgI1JVXn2Q==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PG3QZP1071300;
+        Thu, 25 Jul 2019 09:03:26 -0700
+Date:   Thu, 25 Jul 2019 09:03:26 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Arnd Bergmann <tipbot@zytor.com>
+Message-ID: <tip-68037aa78208f34bda4e5cd76c357f718b838cbb@git.kernel.org>
+Cc:     cai@lca.pw, akpm@linux-foundation.org, will@kernel.org,
+        tglx@linutronix.de, mingo@kernel.org, paulmck@linux.vnet.ibm.com,
+        bvanassche@acm.org, arnd@arndb.de, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, will.deacon@arm.com,
+        torvalds@linux-foundation.org, hpa@zytor.com, longman@redhat.com,
+        duyuyang@gmail.com
+Reply-To: will@kernel.org, paulmck@linux.vnet.ibm.com, mingo@kernel.org,
+          tglx@linutronix.de, akpm@linux-foundation.org, cai@lca.pw,
+          hpa@zytor.com, torvalds@linux-foundation.org, duyuyang@gmail.com,
+          longman@redhat.com, arnd@arndb.de, bvanassche@acm.org,
+          will.deacon@arm.com, peterz@infradead.org,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <20190715092809.736834-1-arnd@arndb.de>
+References: <20190715092809.736834-1-arnd@arndb.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:locking/core] locking/lockdep: Hide unused 'class' variable
+Git-Commit-ID: 68037aa78208f34bda4e5cd76c357f718b838cbb
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When hot-removing memory, we need to be careful about two things:
+Commit-ID:  68037aa78208f34bda4e5cd76c357f718b838cbb
+Gitweb:     https://git.kernel.org/tip/68037aa78208f34bda4e5cd76c357f718b838cbb
+Author:     Arnd Bergmann <arnd@arndb.de>
+AuthorDate: Mon, 15 Jul 2019 11:27:49 +0200
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Thu, 25 Jul 2019 15:39:25 +0200
 
-1) Memory range must be memory_block aligned. This is what
-   check_hotplug_memory_range() checks for.
+locking/lockdep: Hide unused 'class' variable
 
-2) If a range was hot-added using MHP_MEMMAP_ON_MEMORY, we need to check
-   whether the caller is removing memory with the same granularity that
-   it was added.
+The usage is now hidden in an #ifdef, so we need to move
+the variable itself in there as well to avoid this warning:
 
-So to check against case 2), we mark all sections used by vmemmap
-(not only the ones containing vmemmap pages, but all sections spanning
-the memory range) with SECTION_USE_VMEMMAP.
+  kernel/locking/lockdep_proc.c:203:21: error: unused variable 'class' [-Werror,-Wunused-variable]
 
-This will allow us to do some sanity checks when in hot-remove stage.
-
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Yuyang Du <duyuyang@gmail.com>
+Cc: frederic@kernel.org
+Fixes: 68d41d8c94a3 ("locking/lockdep: Fix lock used or unused stats error")
+Link: https://lkml.kernel.org/r/20190715092809.736834-1-arnd@arndb.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/memory_hotplug.h | 3 ++-
- include/linux/mmzone.h         | 8 +++++++-
- mm/memory_hotplug.c            | 2 +-
- mm/sparse.c                    | 9 +++++++--
- 4 files changed, 17 insertions(+), 5 deletions(-)
+ kernel/locking/lockdep_proc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index 45dece922d7c..6b20008d9297 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -366,7 +366,8 @@ extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
- 		unsigned long nr_pages, struct vmem_altmap *altmap);
- extern bool is_memblock_offlined(struct memory_block *mem);
- extern int sparse_add_section(int nid, unsigned long pfn,
--		unsigned long nr_pages, struct vmem_altmap *altmap);
-+		unsigned long nr_pages, struct vmem_altmap *altmap,
-+		bool vmemmap_section);
- extern void sparse_remove_section(struct mem_section *ms,
- 		unsigned long pfn, unsigned long nr_pages,
- 		unsigned long map_offset, struct vmem_altmap *altmap);
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index d77d717c620c..259c326962f5 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -1254,7 +1254,8 @@ extern size_t mem_section_usage_size(void);
- #define SECTION_HAS_MEM_MAP	(1UL<<1)
- #define SECTION_IS_ONLINE	(1UL<<2)
- #define SECTION_IS_EARLY	(1UL<<3)
--#define SECTION_MAP_LAST_BIT	(1UL<<4)
-+#define SECTION_USE_VMEMMAP	(1UL<<4)
-+#define SECTION_MAP_LAST_BIT	(1UL<<5)
- #define SECTION_MAP_MASK	(~(SECTION_MAP_LAST_BIT-1))
- #define SECTION_NID_SHIFT	3
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index 65b6a1600c8f..bda006f8a88b 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -200,7 +200,6 @@ static void lockdep_stats_debug_show(struct seq_file *m)
  
-@@ -1265,6 +1266,11 @@ static inline struct page *__section_mem_map_addr(struct mem_section *section)
- 	return (struct page *)map;
- }
- 
-+static inline int vmemmap_section(struct mem_section *section)
-+{
-+	return (section && (section->section_mem_map & SECTION_USE_VMEMMAP));
-+}
-+
- static inline int present_section(struct mem_section *section)
+ static int lockdep_stats_show(struct seq_file *m, void *v)
  {
- 	return (section && (section->section_mem_map & SECTION_MARKED_PRESENT));
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 3d97c3711333..c2338703ce80 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -314,7 +314,7 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
+-	struct lock_class *class;
+ 	unsigned long nr_unused = 0, nr_uncategorized = 0,
+ 		      nr_irq_safe = 0, nr_irq_unsafe = 0,
+ 		      nr_softirq_safe = 0, nr_softirq_unsafe = 0,
+@@ -211,6 +210,8 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ 		      sum_forward_deps = 0;
  
- 		pfns = min(nr_pages, PAGES_PER_SECTION
- 				- (pfn & ~PAGE_SECTION_MASK));
--		err = sparse_add_section(nid, pfn, pfns, altmap);
-+		err = sparse_add_section(nid, pfn, pfns, altmap, 0);
- 		if (err)
- 			break;
- 		pfn += pfns;
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 79355a86064f..09cac39e39d9 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -856,13 +856,18 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
-  * * -ENOMEM	- Out of memory.
-  */
- int __meminit sparse_add_section(int nid, unsigned long start_pfn,
--		unsigned long nr_pages, struct vmem_altmap *altmap)
-+		unsigned long nr_pages, struct vmem_altmap *altmap,
-+		bool vmemmap_section)
- {
- 	unsigned long section_nr = pfn_to_section_nr(start_pfn);
-+	unsigned long flags = 0;
- 	struct mem_section *ms;
- 	struct page *memmap;
- 	int ret;
- 
-+	if (vmemmap_section)
-+		flags = SECTION_USE_VMEMMAP;
+ #ifdef CONFIG_PROVE_LOCKING
++	struct lock_class *class;
 +
- 	ret = sparse_index_init(section_nr, nid);
- 	if (ret < 0)
- 		return ret;
-@@ -884,7 +889,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
- 	/* Align memmap to section boundary in the subsection case */
- 	if (section_nr_to_pfn(section_nr) != start_pfn)
- 		memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
--	sparse_init_one_section(ms, section_nr, memmap, ms->usage, 0);
-+	sparse_init_one_section(ms, section_nr, memmap, ms->usage, flags);
+ 	list_for_each_entry(class, &all_lock_classes, lock_entry) {
  
- 	return 0;
- }
--- 
-2.12.3
-
+ 		if (class->usage_mask == 0)
