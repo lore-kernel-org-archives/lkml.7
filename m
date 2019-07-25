@@ -2,322 +2,128 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3A5C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B906EC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88ED521851
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 861BE218DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:59:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gregn.net header.i=@gregn.net header.b="HB5lFApA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bgnhfItc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390178AbfGYDx6 (ORCPT
+        id S2390195AbfGYD7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 23:53:58 -0400
-Received: from vserver.gregn.net ([174.136.110.154]:43722 "EHLO
-        vserver.gregn.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726238AbfGYDx6 (ORCPT
+        Wed, 24 Jul 2019 23:59:12 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35801 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390182AbfGYD7L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 23:53:58 -0400
-Received: from vbox.gregn.net (71-32-121-108.eugn.qwest.net [71.32.121.108])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by vserver.gregn.net (Postfix) with ESMTPSA id F184B1D9C;
-        Wed, 24 Jul 2019 20:56:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=gregn.net; s=default;
-        t=1564026972; bh=Wql5eshMl2AYvQZTOGpiy3Xh++MGNGtCT7I1w3YaCuo=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=HB5lFApA0rThrYQuhbPZ3D5+q9Ad0SrBWBXl1I0IF4LReTM1s+CtXf651QvLC6X2A
-         kGpWSF3WBVRjaQtm83VtFewMsY9fcLC31Y/1g4hFxdLDtS5NFJ2TKQWOHYq1rfIuMr
-         7l1RbcVKmVjcTMO5gvAp9B03tcXqCl9JHUUDwHNJF26+6M2hXX53NvQTWD16w7agNL
-         ycTw0TMdzpHtGWDspCrM2806Tp4rm0EtN6Gpe90kxft7me/nbWJW3aSfPRT756pc6q
-         FS18GpzmyMgwSTil29PnRYR1GR5QSQXWCGiowZDLkwcjzTxhI8pIjrKK61Jf2Q+vAU
-         ISs6zWOYOMqqw==
-Received: from greg by vbox.gregn.net with local (Exim 4.84_2)
-        (envelope-from <greg@gregn.net>)
-        id 1hqUpE-0006IN-QC; Wed, 24 Jul 2019 20:53:53 -0700
-Date:   Wed, 24 Jul 2019 20:53:52 -0700
-From:   Gregory Nowak <greg@gregn.net>
-To:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        speakup@linux-speakup.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Okash Khawaja <okash.khawaja@gmail.com>,
-        devel@driverdev.osuosl.org, Kirk Reiser <kirk@reisers.ca>,
-        Simon Dickson <simonhdickson@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Christopher Brannon <chris@the-brannons.com>
-Subject: Re: [HELP REQUESTED from the community] Was: Staging status of
- speakup
-Message-ID: <20190725035352.GA7717@gregn.net>
-References: <20190315130035.6a8f16e9@narunkot>
- <20190316031831.GA2499@kroah.com>
- <20190706200857.22918345@narunkot>
- <20190707065710.GA5560@kroah.com>
- <20190712083819.GA8862@kroah.com>
- <20190712092319.wmke4i7zqzr26tly@function>
- <20190713004623.GA9159@gregn.net>
+        Wed, 24 Jul 2019 23:59:11 -0400
+Received: by mail-ot1-f66.google.com with SMTP id j19so11751426otq.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 20:59:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LRGlx92bpWtLeBvquF1LUYpvq1tNqGHaDGUio5tA0mo=;
+        b=bgnhfItcojaHLZxH7HxI1thzfwiCyqNQurpzmd/6WbSuuZVZt4gkrivXlHwXpPZE7D
+         R0fsL0AG3G2jt2u6AZdhn8id9aFbi+28AdOfmk/TGupLB9wH9e5NcvOU6O1pW5aVBWhY
+         kFRDQYxCswSwU2pUUgsSXgu3EDxjOWVnB+F2OyXNjeqa0BrLYj8mw4ES6PerKuD877BX
+         ksc7e/9s2lGxSMwwWuVnmQfXKJJ+IpNUj/qOuSAdEWbfwC6MkYyCR+H4omewB/Tz1j97
+         dqcC33kX6zxF1cjupa9m71cpTEykiTUqsCD6vAmwCm3lDIAomPJMFB6aCFx4ZvQ9idTR
+         H9gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LRGlx92bpWtLeBvquF1LUYpvq1tNqGHaDGUio5tA0mo=;
+        b=iWQAI16fDqGIY5GAbKEZKDZBMxNmT8SRE65nRmzm3dgQoJ29QuxOAyS7BEaLfgfcAB
+         2g6WjsDaBCiLXVRMKpwkPt8pUctPmrWtfOfZ8pInj96wEAbf518HTiZwnIpfHYHqVHuK
+         8d1clQTxx9gYps2B5vfzJXIycNkc/amB7UMpynHt4Gpsz9PL3CgPfN3k8VJ4FVQdtpQr
+         CSnuKDtEbKcnY6vdxObUg2jofdpiR6SZN6806JPe9fuJ7EwWekl0Di+InZOfK5ofhhSW
+         Qb86Uo9Y02+a66yyvdER2gibRnBqjoM/OETtDKVnX0L0X8mkXBOqZkocd+N/60V8Qkds
+         mbRQ==
+X-Gm-Message-State: APjAAAWaBLQwwK2obNygyx+MmTTvu093G5auNkfFper5aklH4RsU+BNF
+        RvsEEiPRWOhgbmDQgRY9NRb1tKSmQWpYsTZhBxLqfQ==
+X-Google-Smtp-Source: APXvYqwoE0K31LXMkZeawb0RjKZurAc85IFZM3xo7VZr7efw9t8djhPWa5CNHoNeJIS0Ji/qUc11lLo5ud6I02AW/rs=
+X-Received: by 2002:a9d:6d06:: with SMTP id o6mr12979042otp.225.1564027150345;
+ Wed, 24 Jul 2019 20:59:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190713004623.GA9159@gregn.net>
-X-PGP-Key: http://www.gregn.net/pubkey.asc
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Virus-Scanned: clamav-milter 0.100.3 at vserver
-X-Virus-Status: Clean
+References: <20190717222340.137578-1-saravanak@google.com> <20190717222340.137578-6-saravanak@google.com>
+ <20190723100406.7zchvflrmoaipxek@vireshk-i7> <CAGETcx89X0Xra+3HK+jbuCHXMgRL7QCwSShyMy7DY2Bg1eVjDQ@mail.gmail.com>
+ <20190725030137.uz22iwvdv37fsw56@vireshk-i7>
+In-Reply-To: <20190725030137.uz22iwvdv37fsw56@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 24 Jul 2019 20:58:34 -0700
+Message-ID: <CAGETcx_b96teeKoYpJoi8=jhMVrNCKCw9Ef10AU8=mVXGXVPHg@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] PM / devfreq: Add required OPPs support to passive governor
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 05:46:23PM -0700, Gregory Nowak wrote:
-> On Fri, Jul 12, 2019 at 11:23:19AM +0200, Samuel Thibault wrote:
-> > Hello,
-> > 
-> > To readers of the linux-speakup: could you help on this so we can get
-> > Speakup in mainline?  Neither Okash or I completely know what user
-> > consequences the files in /sys/accessibility/speakup/ have, so could
-> > people give brief explanations for each file (something like 3-6 lines
-> > of explanation)?
-> 
-> I have a recollection of documenting most of this on the speakup list
-> in response to a similar query a number of years ago. Unfortunately,
-> the speakup mailing list archives aren't easily searchable, and I
-> don't have a local copy of that mail.
-> 
-> Kirk, doing grep with a few of the file names in
-> /sys/accessibility/speakup against the list's mbox file archive should
-> find that message if it's in fact there. If you can please find it,
-> and post the date when it was sent, we can provide a URL to that
-> thread as a starting point. If my recollection is wrong, and such a
-> message isn't in the archives, I'll write up what I know about.
+On Wed, Jul 24, 2019 at 8:01 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 23-07-19, 17:26, Saravana Kannan wrote:
+> > On Tue, Jul 23, 2019 at 3:04 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > On 17-07-19, 15:23, Saravana Kannan wrote:
+> > > >       /*
+> > > > @@ -56,13 +56,20 @@ static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+> > > >        * list of parent device. Because in this case, *freq is temporary
+> > > >        * value which is decided by ondemand governor.
+> > > >        */
+> > > > -     opp = devfreq_recommended_opp(parent_devfreq->dev.parent, freq, 0);
+> > > > -     if (IS_ERR(opp)) {
+> > > > -             ret = PTR_ERR(opp);
+> > > > +     p_opp = devfreq_recommended_opp(parent_devfreq->dev.parent, freq, 0);
+> > > > +     if (IS_ERR(p_opp)) {
+> > > > +             ret = PTR_ERR(p_opp);
+> > > >               goto out;
+> > > >       }
+> > > >
+> > > > -     dev_pm_opp_put(opp);
+> > > > +     if (devfreq->opp_table && parent_devfreq->opp_table)
+> > > > +             opp = dev_pm_opp_xlate_opp(parent_devfreq->opp_table,
+> > > > +                                        devfreq->opp_table, p_opp);
+> > >
+> > > you put p_opp right here.
+>
+> What about this comment ?
 
-I've located the message I was thinking of in the archives, but that
-describes some speakup key commands, not
-/sys/accessibility/speakup. So, here's what I know, and hopefully
-someone else can fill in the rest.
+Sorry, mixed this up with the other comment. Good point. Fixed. This
+unintentionally fixed a copy-pasta bug I had in the "out" path.
 
-attrib_bleep
-Beeps the PC speaker when there is an attribute change such as
-foreground or background color when using speakup review commands. One
-= on, zero = off. I'm not currently at a machine with a working PC
-speaker, so can't test this right now.
+-Saravana
 
-bell_pos
-As far as I know, this works much like a typewriter bell. If for
-example 72 is echoed to bell_pos, it will beep the PC speaker when
-typing on a line past character 72. Again, no PC speaker at the moment
-here, so can't actually test this.
-
-bleeps
-Not 100% sure, but I believe this controls whether one hears beeps
-through the PC speaker when using speakup's review commands. If no one
-jumps in on this, I'll experiment when at a machine with a working PC
-speaker, and will reply back with details.
-
-bleep_time
-Again, not 100% sure, but I believe this controls the duration of the
-PC speaker beeps speakup produces. I'm not sure of the units this is
-in either, possibly jiffys. I'll come back with more details on this
-one if no one else does.
-
-cursor_time
-Don't know.
-
-delimiters
-Don't know. I've tried echoing various characters to this and looking
-for differences when reviewing the screen, but no luck.
-
-ex_num
-Don't know.
-
-key_echo
-Controls if speakup speaks keys when they are typed. One = on, zero =
-off or don't echo keys.
-
-keymap
-I believe this is the currently active kernel keymap. I'm not sure of
-the format, probably what dumpkeys(1) and showkey(1) use. Echoing
-different values here should allow for remapping speakup's review
-commands besides remapping the keyboard as a whole.
-
-no_interrupt
-Controls if typing interrupts output from speakup. With no_interrupt
-set to zero, typing on the keyboard will interrupt speakup if for
-example the say screen command is used before the entire screen is
-read. With no_interrupt set to one, if the say screen command is used,
-and one then types on the keyboard, speakup will continue to say the
-whole screen regardless until it finishes.
-
-punc_all
-This is a list of all the punctuation speakup should speak when
-punc_level is set to four.
-
-punc_level
-Controls the level of punctuation spoken as the screen is displayed,
-not reviewed. Levels range from zero no punctuation, to four, all
-punctuation. As far as I can tell, one corresponds to punc_some, two
-corresponds to punc_most, and three as well as four seem to both
-correspond to punc_all, though I do stand to be corrected. I am using
-the soft synthesizer driver, so it is possible that some hardware
-synthesizers have different levels each corresponding to three and four
-for punc_level. Also note that if punc_level is set to zero, and
-key_echo is set to one, typed punctuation is still spoken as it is
-typed.
-
-punc_most
-This is a list of all the punctuation speakup should speak when
-punc_level is set to two.
-
-punc_some
-This is a list of all the punctuation speakup should speak when
-punc_level is set to one.
-
-reading_punc
-Almost the same as punc_level, the differences being that reading_punc controls
-the level of punctuation when reviewing the screen with speakup's
-screen review commands. The other difference is that reading_punc set
-to three speaks punc_all, and reading_punc set to four speaks all
-punctuation, including spaces.
-
-repeats
-a list of characters speakup repeats. Normally, when there are
-more than three characters in a row, speakup just reads three of those
-characters. For example, "......" would be read as dot, dot, dot. If a
-. is added to the list of characters in repeats, "......" would be
-read as dot, dot, dot, times six.
-
-say_control
-If set to one, speakup speaks shift, alt and control when those keys are
-pressed. Perhaps more keys are spoken, but those three are the ones I
-found. If say_control is set to zero, shift, ctrl, and alt are not
-spoken when they are pressed.
-
-say_word_ctl
-Don't know.
-
-silent
-Don't know.
-
-spell_delay
-As far as I can tell, this controls how fast a word is spelled when
-speakup's say word review command is pressed twice quickly to speak
-the current word being reviewed. Zero just speaks the letters one
-after another, while values one through four seem to introduce more of
-a pause between the spelling of each letter by speakup.
-
-synth
-Gets or sets the synthesizer driver currently in use. Reading synth
-returns the synthesizer driver currently in use. Writing synth
-switches to the given synthesizer driver, provided it is either built
-into the kernel, or already loaded as a module.
-
-synth_direct
-Sends whatever is written to synth_direct
-directly to the speech synthesizer in use, bypassing speakup. This
-could be used to make the synthesizer speak a string, or to send
-control sequences to the synthesizer to change how the synthesizer
-behaves.
-
-version
-Reading version returns the version of speakup, and the version of the
-synthesizer driver currently in use.
-
-Synthesizer Driver Parameters
-In /sys/accessibility/speakup is a directory corresponding to the
-synthesizer driver currently in use (E.G) soft for the soft
-driver. This directory contains files which control the speech
-synthesizer itself, as opposed to controlling the speakup screen
-reader. As far as I know, the parameters in this directory have the
-same names and functions across all supported synthesizers. Also as
-far as I know, the range of values for freq, pitch, rate, and vol is
-the same for all supported synthesizers,
-with the given range being internally mapped by the driver to more or
-less fit the range of values supported for a given parameter by the
-individual synthesizer. I will below describe the values and
-parameters for the soft synthesizer, which I believe is the
-synthesizer currently most commonly in use.
-
-caps_start
-I believe this is the string that is sent to the synthesizer to cause
-it to start speaking uppercase letters. For the soft synthesizer and
-most others, this causes the pitch of the voice to rise above the
-currently set pitch.
-
-caps_stop
-I believe this is the string sent to the synthesizer to cause it to
-stop speaking uppercase letters. In the case of the soft synthesizer
-and most others, this returns the pitch of the voice down to the
-currently set pitch.
-
-delay_time
-Don't know.
-
-direct
-Controls if punctuation is spoken by speakup, or by the
-synthesizer. For example, speakup speaks ">" as "greater", while the
-espeak synthesizer used by the soft driver speaks "greater than". Zero
-lets speakup speak the punctuation. One lets the synthesizer itself
-speak punctuation.
-
-freq
-Gets or sets the frequency of the speech synthesizer. Range is 0-9.
-
-full_time
-Don't know.
-
-jiffy_delta
-As far as I know, this controls how many jiffys the kernel gives to
-the synthesizer. I seem to recall Kirk saying that setting this too
-high can make a system unstable, or even crash it.
-
-pitch
-Gets or sets the pitch of the synthesizer. The range is 0-9.
-
-punct
-Gets or sets the amount of punctuation spoken by the synthesizer. The
-range for the soft driver seems to be 0-2. I'm not exactly sure how
-this relates to speakup's punc_level, or reading_punc
-
-rate
-Gets or sets the rate of the synthesizer. Range is from zero slowest,
-to nine fastest.
-
-tone
-Gets or sets the tone of the speech synthesizer. The range for the
-soft driver seems to be 0-2. This seems to make no difference if using
-espeak and the espeakup connector. I'm not sure even if espeakup
-supports different tonalities.
-
-trigger_time
-Don't know.
-
-voice
-Gets or sets the voice used by the synthesizer if the synthesizer can
-speak in more than one voice. The range for the soft driver is
-0-7. Note that while espeak supports multiple voices, this parameter
-will not set the voice when the espeakup connector is used between
-speakup and espeak.
-
-vol
-Gets or sets the volume of the speech synthesizer. Range is 0-9, with
-zero being the softest, and nine being the loudest.
-
-Additions, clarifications, and corrections are welcome and
-appreciated.
-
-Greg
-
-
--- 
-web site: http://www.gregn.net
-gpg public key: http://www.gregn.net/pubkey.asc
-skype: gregn1
-(authorization required, add me to your contacts list first)
-If we haven't been in touch before, e-mail me before adding me to your contacts.
-
---
-Free domains: http://www.eu.org/ or mail dns-manager@EU.org
+>
+> > >
+> > > Also shouldn't you try to get p_opp under the above if block only? As
+> > > that is the only user of it ?
+> >
+> > No, p_opp (used to be called opp) was used even before my changes. If
+> > there's no required-opps mapping this falls back to assuming the slave
+> > device OPP to pick should be the same index as the master device's
+> > opp.
+> >
+> > So I believe this patch is correct as-is.
+>
+> Right.
+>
+> --
+> viresh
