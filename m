@@ -2,66 +2,106 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1808C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F03C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76BFE229F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 910DC22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:50:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564055454;
+	bh=lwTJPGPBO29LVdbB8De87KFPeekZCN4ZY7JPRWWWHhE=;
+	h=Subject:From:To:Date:In-Reply-To:References:List-ID:From;
+	b=0KUxY4cQty1EBzyl0fgaQ8bXGcRi/IpOa+k6vo5PhVhtgDRmfXBdCB2SETLe1EEbV
+	 sJKXyROv1j7klk0IcVkuj31/OpKHx4foJDjU9wUjxNV2u+yNCZedA4d3JHpCY7c4Vr
+	 KgIpvZEMVf2nuRnRtOV1SvqXBsMcjvA4ZabN7vUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbfGYLum (ORCPT
+        id S1729400AbfGYLux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:50:42 -0400
-Received: from verein.lst.de ([213.95.11.211]:60849 "EHLO verein.lst.de"
+        Thu, 25 Jul 2019 07:50:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbfGYLul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:50:41 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3990468BFE; Thu, 25 Jul 2019 13:50:40 +0200 (CEST)
-Date:   Thu, 25 Jul 2019 13:50:38 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-rdma@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH 14/14] PCI/P2PDMA: Introduce
- pci_p2pdma_[un]map_resource()
-Message-ID: <20190725115038.GC31065@lst.de>
-References: <20190722230859.5436-1-logang@deltatee.com> <20190722230859.5436-15-logang@deltatee.com> <20190724063235.GC1804@lst.de> <57e8fc1a-de70-fb65-5ef1-ffa2b95c73a6@deltatee.com>
+        id S1727116AbfGYLux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 07:50:53 -0400
+Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F478229F9;
+        Thu, 25 Jul 2019 11:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564055452;
+        bh=lwTJPGPBO29LVdbB8De87KFPeekZCN4ZY7JPRWWWHhE=;
+        h=Subject:From:To:Date:In-Reply-To:References:From;
+        b=I12g6neBh1MSkPKhwUky9LOYVn1xzVT3t+MiyxNF+zVDzqzi3tk7WqWfSKQuTf5gC
+         /ZUbsDT9Twod3CQp1y0LQGuCukbn0vpSwO/1+tP/mBT5y4fEPA/owmZM6kByzeavOc
+         CzfY5/0Q9UYBT75lnn+GnSXBDYZAEhK6wxia7vFg=
+Message-ID: <342087bebc5d1eebadafcda02de067294441cd0d.camel@kernel.org>
+Subject: Re: [PATCH 1/1] locks: Fix procfs output for file leases
+From:   Jeff Layton <jlayton@kernel.org>
+To:     "Pavel Begunkov (Silence)" <asml.silence@gmail.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 25 Jul 2019 07:50:50 -0400
+In-Reply-To: <68a58eb885e32c1d7be0b4a531709ba2f33a758e.1563988369.git.asml.silence@gmail.com>
+References: <68a58eb885e32c1d7be0b4a531709ba2f33a758e.1563988369.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <57e8fc1a-de70-fb65-5ef1-ffa2b95c73a6@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:06:22AM -0600, Logan Gunthorpe wrote:
-> Yes. This is the downside of dealing only with a phys_addr_t: we have to
-> look up against it. Unfortunately, I believe it's possible for different
-> BARs on a device to be in different windows, so something like this is
-> necessary unless we already know the BAR the phys_addr_t belongs to. It
-> might probably be sped up a bit by storing the offsets of each bar
-> instead of looping through all the bridge windows, but I don't think it
-> will get you *that* much.
+On Wed, 2019-07-24 at 20:16 +0300, Pavel Begunkov (Silence) wrote:
+> From: Pavel Begunkov <asml.silence@gmail.com>
 > 
-> As this is an example with no users, the answer here will really depend
-> on what the use-case is doing. If they can lookup, ahead of time, the
-> mapping type and offset then they don't have to do this work on the hot
-> path and it means that pci_p2pdma_map_resource() is simply not a
-> suitable API.
+> Since commit 778fc546f749c588aa2f ("locks: fix tracking of inprogress
+> lease breaks"), leases break don't change @fl_type but modifies
+> @fl_flags. However, procfs's part haven't been updated.
+> 
+> Previously, for a breaking lease the target type was printed (see
+> target_leasetype()), as returns fcntl(F_GETLEASE). But now it's always
+> "READ", as F_UNLCK no longer means "breaking". Unlike the previous
+> one, this behaviour don't provide a complete description of the lease.
+> 
+> There are /proc/pid/fdinfo/ outputs for a lease (the same for READ and
+> WRITE) breaked by O_WRONLY.
+> -- before:
+> lock:   1: LEASE  BREAKING  READ  2558 08:03:815793 0 EOF
+> -- after:
+> lock:   1: LEASE  BREAKING  UNLCK  2558 08:03:815793 0 EOF
+> 
+> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+> ---
+>  fs/locks.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/locks.c b/fs/locks.c
+> index 686eae21daf6..24d1db632f6c 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -2784,10 +2784,10 @@ static void lock_get_status(struct seq_file *f, struct file_lock *fl,
+>  			       ? (fl->fl_type & LOCK_WRITE) ? "RW   " : "READ "
+>  			       : (fl->fl_type & LOCK_WRITE) ? "WRITE" : "NONE ");
+>  	} else {
+> -		seq_printf(f, "%s ",
+> -			       (lease_breaking(fl))
+> -			       ? (fl->fl_type == F_UNLCK) ? "UNLCK" : "READ "
+> -			       : (fl->fl_type == F_WRLCK) ? "WRITE" : "READ ");
+> +		int type = IS_LEASE(fl) ? target_leasetype(fl) : fl->fl_type;
+> +
+> +		seq_printf(f, "%s ", (type == F_WRLCK) ? "WRITE" :
+> +				     (type == F_RDLCK) ? "READ" : "UNLCK");
+>  	}
+>  	if (inode) {
+>  		/* userspace relies on this representation of dev_t */
 
-Ok.  So lets just keep this out as an RFC and don't merge it until an
-actual concrete user shows up.
+Thanks! Merged for v5.4.
+-- 
+Jeff Layton <jlayton@kernel.org>
+
