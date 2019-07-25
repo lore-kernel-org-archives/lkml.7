@@ -2,123 +2,138 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7421CC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2C1C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9C72190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9318121734
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:52:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="B2IYRqLx"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z5lSewpC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388489AbfGYOuD (ORCPT
+        id S2388497AbfGYOw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:50:03 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33442 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388220AbfGYOuA (ORCPT
+        Thu, 25 Jul 2019 10:52:28 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35766 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387646AbfGYOw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:50:00 -0400
-Received: by mail-lj1-f195.google.com with SMTP id h10so48305169ljg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 07:49:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6wnAGGabQ71U78o4knoiSKA6pj8ghCt55D9V1wo+T0U=;
-        b=B2IYRqLxUH1+yV5JsUcKz1/ZA+iccTO0ufD34R4byQxZe7CXU3NbtHo9tyPuLSiW87
-         /jfTp7pPZqqDJkeWd7NyZU0KqqbvGv12Qr+Nb9kyskTiZuABrjsxV9cKcmjF0e72KdSm
-         MssRnvOCrLO36PJWr1KlgMV24aABKeJpQy0F7bW9yGhdrOwRAVhl/oeVFZ1SMIa1hpVr
-         kvMyCUIgqACnih1DZJmdmeCYCDSKcrIfvcmSb+yusMcEKryJ4A3mSswtgNW/useWALsE
-         owKKVrwkAuaR26qlCtSEa6R2rjFuZUqYzF0Azr5MdIJgXbtKRAwEu2UBb7m5rSvJ9ibc
-         vxQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=6wnAGGabQ71U78o4knoiSKA6pj8ghCt55D9V1wo+T0U=;
-        b=Jz3LlkdaTy7X0knFERvCd65twz5MaCzXRqDzLcf6WSBUOkoRWKTc0MLV0ombB10vcJ
-         r/XVC1XzAsrRZn0aYLuXaDd4Uw1CUF1tZI2Ynn+/y1zi8OetXd44378slBPaBDN0K3fS
-         D0S9MMTBXjQPtME/PmC1OMp923t3kl5lgZmfM8a/cCHVg2fdzxSNr1npn7+QQRMplGEy
-         E/+nVdCUa4Zncj464SsQH8N3NGOzPjTdtT++GNOB7KrmXGEQCXW5G2DlrrMmtT817cO8
-         QI/6mOxTIBmbG9p5+/L1VPnYPFeJwnKVl/VbH8Srh1ljYdn3aDR4UQcFgN+bJxXmUpTn
-         /WpQ==
-X-Gm-Message-State: APjAAAUDJhYBVO50i2kPpgwdGcTmLabJi28dL7g1DsABpqjxLOv2fUr0
-        Rza75HHdu1E9iksle1TahpQUPOYnCxaChQ==
-X-Google-Smtp-Source: APXvYqwrCKqf4m+8KV0D4fmENaffy3HRKJJq6mh6Y4FyQ1BPvI6qdmY0bGVRwsAXaiGfVrkPGRJQrw==
-X-Received: by 2002:a2e:a415:: with SMTP id p21mr46282699ljn.111.1564066197927;
-        Thu, 25 Jul 2019 07:49:57 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:669:e7fc:391:1b4e:d17c:23d6])
-        by smtp.gmail.com with ESMTPSA id z25sm7546587lfi.51.2019.07.25.07.49.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 07:49:57 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: fsl: enetc: Add
- bindings for the central MDIO PCIe endpoint
-To:     Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     andrew@lunn.ch, Rob Herring <robh+dt@kernel.org>,
-        Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1564053568-20522-1-git-send-email-claudiu.manoil@nxp.com>
- <1564053568-20522-4-git-send-email-claudiu.manoil@nxp.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <927717df-1a74-3253-f905-6a2f742fda63@cogentembedded.com>
-Date:   Thu, 25 Jul 2019 17:49:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Thu, 25 Jul 2019 10:52:28 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6PEpwLH089026;
+        Thu, 25 Jul 2019 09:51:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564066318;
+        bh=6eVBtz7pC5rPsO60ddc64kp9iSy+XJZAc+HuTFyJ08s=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Z5lSewpCrBq60eVRn9ewoGY9sYcen7BfsGC5Ryho9b2zDeuf6W4TBq4LtUXOClE7A
+         2oZ8CbyMXq+O9xHqPrGY9XK0VwlRgc3O8IvVZyPvOEUpCVodA9wMfpkYqkM/dhpr+2
+         kRdTvW4xMnTvzmLV1QF/PUFQ+0el5ryqp5Nfs74Q=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6PEpwex070194
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 25 Jul 2019 09:51:58 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 25
+ Jul 2019 09:51:58 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 25 Jul 2019 09:51:58 -0500
+Received: from [10.250.86.29] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6PEpucs096397;
+        Thu, 25 Jul 2019 09:51:57 -0500
+Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        butao <butao@hisilicon.com>,
+        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
+        Yudongbin <yudongbin@hisilicon.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+References: <20190718100840.GB19666@infradead.org>
+ <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
+ <20190724065958.GC16225@infradead.org>
+ <8e6f8e4f-20fc-1f1f-2228-f4fd7c7c5c1f@ti.com>
+ <20190725125014.GD20286@infradead.org>
+ <0eae0024-1fdf-bd06-a8ff-1a41f0af3c69@ti.com>
+ <20190725140448.GA25010@infradead.org>
+ <8e2ec315-5d18-68b2-8cb5-2bfb8a116d1b@ti.com>
+ <20190725141144.GA14609@infradead.org>
+ <b2170efd-df80-b54b-9ffe-8183befe5e00@ti.com>
+ <20190725143040.GA21894@infradead.org>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <ba731cf6-97cb-0499-e092-26031e202e55@ti.com>
+Date:   Thu, 25 Jul 2019 10:51:56 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1564053568-20522-4-git-send-email-claudiu.manoil@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
+In-Reply-To: <20190725143040.GA21894@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 07/25/2019 02:19 PM, Claudiu Manoil wrote:
-
-> The on-chip PCIe root complex that integrates the ENETC ethernet
-> controllers also integrates a PCIe enpoint for the MDIO controller
-> provinding for cetralized control of the ENETC mdio bus.
-
-   Providing, centralized.
-
-> Add bindings for this "central" MDIO Integrated PCIe Endpoit.
+On 7/25/19 10:30 AM, Christoph Hellwig wrote:
+> On Thu, Jul 25, 2019 at 10:25:50AM -0400, Andrew F. Davis wrote:
+>> On 7/25/19 10:11 AM, Christoph Hellwig wrote:
+>>> On Thu, Jul 25, 2019 at 10:10:08AM -0400, Andrew F. Davis wrote:
+>>>> Pages yes, but not "normal" pages from the kernel managed area.
+>>>> page_to_pfn() will return bad values on the pages returned by this
+>>>> allocator and so will any of the kernel sync/map functions. Therefor
+>>>> those operations cannot be common and need special per-heap handling.
+>>>
+>>> Well, that means this thing is buggy and abuses the scatterlist API
+>>> and we can't merge it anyway, so it is irrelevant.
+>>>
+>>
+>> Since when do scatterlists need to only have kernel virtual backed
+>> memory pages? Device memory is stored in scatterlists and
+>> dma_sync_sg_for_* would fail just the same when the cache ops were
+>> attempted.
 > 
-> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-> ---
-> v1 - none
-> v2 - none
+> I'm not sure what you mean with virtual backed memory pages, as we
+> don't really have that concept.
 > 
->  .../devicetree/bindings/net/fsl-enetc.txt     | 42 +++++++++++++++++--
->  1 file changed, 39 insertions(+), 3 deletions(-)
+> But a page in the scatterlist needs to be able to be used everywhere
+> we'd normally use a page, e.g. page_to_phys, page_to_pfn, kmap,
+> page_address (if !highmem) as consumers including the dma mapping
+> interface do all that.
 > 
-> diff --git a/Documentation/devicetree/bindings/net/fsl-enetc.txt b/Documentation/devicetree/bindings/net/fsl-enetc.txt
-> index 25fc687419db..c090f6df7a39 100644
-> --- a/Documentation/devicetree/bindings/net/fsl-enetc.txt
-> +++ b/Documentation/devicetree/bindings/net/fsl-enetc.txt
-[...]
-> @@ -47,8 +49,42 @@ Example:
->  		};
->  	};
->  
-> -2) The ENETC port is an internal port or has a fixed-link external
-> -connection:
-> +1.2. Using the central MDIO PCIe enpoint device
+> If you want to dma map memory that does not have page backing you
+> need to use dma_map_resource.
+> 
 
-   Endpoint. -ETOOMANYTYPOS. :-)
+I probably should have worded that better.
 
-[...]
+It does have page backing, what I meant by "page_to_pfn() will return
+bad values" is not that it won't give you the correct pfn, it will, but
+that then that pfn is not part of the normal memory space
+(lowmem/highmem) it's device memory, so cache ops won't work. But you
+should not be doing that on device memory anyway.
 
-MBR, Sergei
+That is a problem with Ion I want to avoid, it assumed all buffers were
+in DDR and so would do cache operations on them unconditionally, too
+many assumptions were made as too much was moved into the common core
+code and not enough was left for the heaps themselves to decide.
