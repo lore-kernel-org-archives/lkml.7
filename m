@@ -2,145 +2,111 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D9BC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7785EC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0D6216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:40:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564026011;
-	bh=9BMauwEy1lGIJ9pUkmok8zRfXwbOeUrTUzWPT9b+bsc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m18ZlLkJ01g6A4EyV0kRCIG/GJ8oZTlMtaM8e0zosA2yselKdIBn/wqaJrRtqqJnW
-	 zlu7iH/WjI+nnm7tpU7MDTvEE1ODsTfBDhIMFYamSJcve7Vg2tTQj1WF9hXusttBio
-	 V3XJx/jwo4/F2R4v47K4ZqHAh65j9E6KSLd3s5ag=
+	by mail.kernel.org (Postfix) with ESMTP id 51736216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:41:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vGP9PNjG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390054AbfGYDkJ (ORCPT
+        id S2390089AbfGYDl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 23:40:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389704AbfGYDkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 23:40:08 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75F2B216F4;
-        Thu, 25 Jul 2019 03:40:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564026006;
-        bh=9BMauwEy1lGIJ9pUkmok8zRfXwbOeUrTUzWPT9b+bsc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZQQBfNWmB3OCie57T2P6IO8YyrX+334Ql5pYpHjLHfQave82AuHEGJ4eFdEbDFUWw
-         kM6y05VA3zfnppuA8VXfrbriUHLw/BzVU6BPuxhbwM0jaLEs5MgBubJb7+fe8VIjop
-         vURvdDecRFjdfm+pFz7S3zVJNqwAvq8i6q81GuLM=
-Date:   Wed, 24 Jul 2019 20:39:51 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     tytso@mit.edu, jaegeuk@kernel.org, linux-fscrypt@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
-Subject: Re: [PATCH] fs: crypto: keyinfo: Fix a possible null-pointer
- dereference in derive_key_aes()
-Message-ID: <20190725033951.GA677@sol.localdomain>
-Mail-Followup-To: Jia-Ju Bai <baijiaju1990@gmail.com>, tytso@mit.edu,
-        jaegeuk@kernel.org, linux-fscrypt@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
-References: <20190724100204.2009-1-baijiaju1990@gmail.com>
- <20190724160711.GB673@sol.localdomain>
- <3d206c43-994e-6134-3f28-b4a500472760@gmail.com>
- <9740973d-6e59-e4df-7097-4e5d0da89235@gmail.com>
+        Wed, 24 Jul 2019 23:41:26 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43680 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389704AbfGYDlZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 23:41:25 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j11so25917362otp.10
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 20:41:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r50KNczYHsGrLVGWh6ZQQJCk+euz0u5D2BdOZkkJPZ4=;
+        b=vGP9PNjGPjrvV6Fp17JQsypCrE9DTKh2pkXmKyjXy2EaMuUVYCtUKcbSDIaL/jYjrg
+         H/LtngKQGANQ3RXBjJLSD3hszRFxmYmvEFNEtpA3NmXiNi4jODZx1M+Y5cU/mmStKJCV
+         tKk9elHbHNXo1TjqthSQpB3LUGgKjwpPdvLPSnfIy4fYfV+qLK5u01nGbDYWyhBI1Um8
+         adSFzkt0eSGlF+xQ54DII4RTfWqJ9TPW5uiXrzj16zGffl5++7xkOsWkomHu9qg1Bd7v
+         IPgGruwLxFy0GhyHUlrahUq8ofVWiKsywetB+kCYiBkyEsdlfg0iXjhdPR3SeEy+SDt9
+         vV1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r50KNczYHsGrLVGWh6ZQQJCk+euz0u5D2BdOZkkJPZ4=;
+        b=l7Wbg2tqAOxM7QULqprO92EoUsrjfQR4gVrjtOY/14A6wluNoRGxRd0VY1ojDQ7KRy
+         BdfTVC6hO/tDkWbxUGbNFgMUys256HF5KkYzO6Lu4Qd9eVx2UlFHcWgWELQqlkvB91fx
+         JCPDhZSZhPr+KnSk6zVVxZi9d0U1Gz1xWtN4nwEwHU9461Lyu0p2SQ/zV5LlQKweH9cr
+         HvIoTBgw0BcW4/hZD7iPjxk9JQhYi9gkUi7r+so8qk0eUHpZqWTssa9/FGYJyEYTqdw6
+         2YjEKFCJLNtTDeuIgLBNyWzDBzkopEXRLjYAnWi5+2KLEAzW+w4vrtWTzvczFVkRo+/+
+         JCoA==
+X-Gm-Message-State: APjAAAW5i2YYsbImOe8vI/uh5q4Q5uBSdIPOyLfruERDdwLRSqRmVCSv
+        0qw4XRUc6OpmxmNYGFocLKcyIrq/lPNWpafeBSQuMw==
+X-Google-Smtp-Source: APXvYqxygEL51qcrcdZob6n1E2VXGdJ4wPnev6GIEcEYTj6Lf1kgwRqEvEl2ham2F8ZP4KwLZgHvcNm3EjqcDDYtvq4=
+X-Received: by 2002:a9d:6256:: with SMTP id i22mr42328108otk.139.1564026084726;
+ Wed, 24 Jul 2019 20:41:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9740973d-6e59-e4df-7097-4e5d0da89235@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190724014222.110767-1-saravanak@google.com> <20190725023050.7ggjbwsthoxpkexv@vireshk-i7>
+In-Reply-To: <20190725023050.7ggjbwsthoxpkexv@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 24 Jul 2019 20:40:47 -0700
+Message-ID: <CAGETcx_ZHXkjZMBhO8YTW2fMyVqmsj8f9F8d6oJTn=NmRL1q=A@mail.gmail.com>
+Subject: Re: [PATCH v4 0/5] Add required-opps support to devfreq passive gov
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 11:33:53AM +0800, Jia-Ju Bai wrote:
-> Sorry, I forgot to send to Eric, so send it again.
-> 
-> On 2019/7/25 11:30, Jia-Ju Bai wrote:
-> > 
-> > 
-> > On 2019/7/25 0:07, Eric Biggers wrote:
-> > > [+Cc linux-crypto]
-> > > 
-> > > On Wed, Jul 24, 2019 at 06:02:04PM +0800, Jia-Ju Bai wrote:
-> > > > In derive_key_aes(), tfm is assigned to NULL on line 46, and then
-> > > > crypto_free_skcipher(tfm) is executed.
-> > > > 
-> > > > crypto_free_skcipher(tfm)
-> > > >      crypto_skcipher_tfm(tfm)
-> > > >          return &tfm->base;
-> > > > 
-> > > > Thus, a possible null-pointer dereference may occur.
-> > > This analysis is incorrect because only the address &tfm->base is taken.
-> > > There's no pointer dereference.
-> > > 
-> > > In fact all the crypto_free_*() functions are no-ops on NULL
-> > > pointers, and many
-> > > other callers rely on it.  So there's no bug here.
-> > 
-> > Thanks for the reply :)
-> > I admit that "&tfm->base" is not a null-pointer dereference when tfm is
-> > NULL.
-> > But I still think crypto_free_skcipher(tfm) can cause security problems
-> > when tfm is NULL.
-> > 
-> > Looking at the code:
-> > 
-> > static inline void crypto_free_skcipher(struct crypto_skcipher *tfm)
-> > {
-> >     crypto_destroy_tfm(tfm, crypto_skcipher_tfm(tfm));
-> > }
-> > 
-> > static inline struct crypto_tfm *crypto_skcipher_tfm(
-> >     struct crypto_skcipher *tfm)
-> > {
-> >     return &tfm->base;
-> > }
-> > 
-> > void crypto_destroy_tfm(void *mem, struct crypto_tfm *tfm)
-> > {
-> >     struct crypto_alg *alg;
-> > 
-> >     if (unlikely(!mem))
-> >         return;
+On Wed, Jul 24, 2019 at 7:30 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 23-07-19, 18:42, Saravana Kannan wrote:
+> > The devfreq passive governor scales the frequency of a "child" device based
+> > on the current frequency of a "parent" device (not parent/child in the
+> > sense of device hierarchy). As of today, the passive governor requires one
+> > of the following to work correctly:
+> > 1. The parent and child device have the same number of frequencies
+> > 2. The child device driver passes a mapping function to translate from
+> >    parent frequency to child frequency.
+>
+> > v3 -> v4:
+> > - Fixed documentation comments
+> > - Fixed order of functions in .h file
+> > - Renamed the new xlate API
+> > - Caused _set_required_opps() to fail if all required opps tables aren't
+> >   linked.
+>
+> We are already in the middle of a discussion for your previous version
+> and I haven't said yet that I am happy with what you suggested just 2
+> days back. Why send another version so soon ?
 
-When the original pointer is NULL, mem == NULL here so crypto_destroy_tfm() is a
-no-op.
+I wanted you to see how I addressed your comments. It didn't look like
+you were going to make more comments on the code.
 
-> > Besides, I also find that some kernel modules check tfm before calling
-> > crypto_free_*(), such as:
-> > 
-> > drivers/crypto/vmx/aes_xts.c:
-> >     if (ctx->fallback) {
-> >         crypto_free_skcipher(ctx->fallback);
-> >         ctx->fallback = NULL;
-> >     }
-> > 
-> > net/rxrpc/rxkad.c:
-> >     if (conn->cipher)
-> >         crypto_free_skcipher(conn->cipher);
-> > 
-> > drivers/crypto/chelsio/chcr_algo.c:
-> >     if (ablkctx->aes_generic)
-> >         crypto_free_cipher(ablkctx->aes_generic);
-> > 
-> > net/mac80211/wep.c:
-> >     if (!IS_ERR(local->wep_tx_tfm))
-> >         crypto_free_cipher(local->wep_tx_tfm);
-> > 
+> The next merge window is
+> also very far in time from now.
+>
+> Please wait for a few days before sending newer versions, I will
+> continue discussion on the previous version only for now.
 
-Well, people sometimes do that for kfree() too.  But that doesn't mean it's
-needed, or that it's the preferred style (it's not).
+Ok
 
-- Eric
+-Saravana
