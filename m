@@ -2,123 +2,99 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FC2C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8F2C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4726F21901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 472DB22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:33:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rSl543HC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbfGYOdc (ORCPT
+        id S1728806AbfGYOdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:33:32 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:46382 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728420AbfGYOdc (ORCPT
+        Thu, 25 Jul 2019 10:33:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48110 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728721AbfGYOdg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:33:32 -0400
-Received: by mail-qk1-f195.google.com with SMTP id r4so36493599qkm.13
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 07:33:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eKIsWU0npz6No63lujiEyyyNu0/XoWzsuOpOvxmHals=;
-        b=oHNZExrsfy++Oe6sHb9J8h3fI8605XTvBLn9PEPqYT+HSOR3yzVaP9SL/3YRHkku3A
-         9lSs6qTJqc++k7f7Cu28vTpdS6jffiGJ7xtyMJ8/EYnZFMebF45GR7wJ/eT50+nfv3n/
-         Tc3ENf6XmTFsX7vv8Q8PIekm+3F3ixW1BBDEcHYPjh/6hpsrSdWFJcJpiChv+RN3M1Ed
-         Z0edKyg3e/m+hMNe224cmn1f/9dsMRQQaUwlmm6liaFsEFKgc/KeMqIu2lq9aOBcn5wA
-         PFfW8L4pSlV0gyZHNrEe7NmtvltSdOKZKogS7CJ/1AGTxOAZfTAOS6pd9rpNJP3rDK3o
-         uxmQ==
-X-Gm-Message-State: APjAAAWDtPVMLtNGdv1uxcYuxYkPHcOVh39TmGoPiI97XKWW3oAoeZiY
-        uC+YZHdLbWTROM7BV8ZoLNVVmw==
-X-Google-Smtp-Source: APXvYqxuymRMR9PwjI/MnexZedK5auF5DqZvwLEybKqYcN9R+eg3mxGigkrHVwcv5rKEoznlC3TDrw==
-X-Received: by 2002:a37:a40f:: with SMTP id n15mr55380902qke.19.1564065211618;
-        Thu, 25 Jul 2019 07:33:31 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id j8sm21970801qki.85.2019.07.25.07.33.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 07:33:30 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 10:33:25 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Fam Zheng <zhengfeiran@bytedance.com>
-Cc:     Fei Li <lifei.shirley@bytedance.com>, linux-kernel@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>,
-        Pawel Moll <pawel.moll@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [External Email] Re: [PATCH 1/2] virtio-mmio: Process vrings
- more proactively
-Message-ID: <20190725103238-mutt-send-email-mst@kernel.org>
-References: <20190719133135.32418-1-lifei.shirley@bytedance.com>
- <20190719133135.32418-2-lifei.shirley@bytedance.com>
- <20190719111440-mutt-send-email-mst@kernel.org>
- <5b29804b-528b-61bd-1ab6-4e442d360cf9@bytedance.com>
+        Thu, 25 Jul 2019 10:33:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FZTjzooOQfdeIEKO6c7B0Q4Q39gStipSBPssv7rm1tw=; b=rSl543HC94I1WsxY4q6FwLykM
+        uOt0SEphra34W1vaXTw3cZj8K11hmmQm3EOjFcHVE0km8+dsyHdZcfjUHJJkT3SESQd5HnU5Gv+Kb
+        EgF31ARnFL3BQj1MBaJN59M5cJsLEqt5UNo2ei0djAiRo9Njkz0V5WzY6AuoRvk8R7nhQLxIRRlfU
+        L2JZkVs3KlmswNFZsUwtSA2r6+Mqgo4+B9CWjJP+LN62CiR8dGT6wB7Z9ck5gKdSgX7wmQSta54AG
+        8CWAptGhRQb0mfSCmnwGGe1jFrbSY/GlKRccFxKYAM6LczHExn5FrNaFPlc9aenfYk339k/PjJvBB
+        9TScD2FzA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hqeoJ-0007gg-VX; Thu, 25 Jul 2019 14:33:35 +0000
+Date:   Thu, 25 Jul 2019 07:33:35 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        butao <butao@hisilicon.com>,
+        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
+        Yudongbin <yudongbin@hisilicon.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
+Message-ID: <20190725143335.GB21894@infradead.org>
+References: <20190624194908.121273-1-john.stultz@linaro.org>
+ <20190624194908.121273-5-john.stultz@linaro.org>
+ <20190718100840.GB19666@infradead.org>
+ <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
+ <20190724065958.GC16225@infradead.org>
+ <CALAqxLUbsz+paJ=P2hwKecuN8DQjJt9Vj4MENCnFuEh6waxsXg@mail.gmail.com>
+ <20190725125206.GE20286@infradead.org>
+ <CA+M3ks52ADKVCw_pZP9=LSNt+vhiEFyrtB-Jm2x=p62kSV7qVA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5b29804b-528b-61bd-1ab6-4e442d360cf9@bytedance.com>
+In-Reply-To: <CA+M3ks52ADKVCw_pZP9=LSNt+vhiEFyrtB-Jm2x=p62kSV7qVA@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 10:28:30AM +0800, Fam Zheng wrote:
+On Thu, Jul 25, 2019 at 03:20:11PM +0200, Benjamin Gaignard wrote:
+> > But that just means we need a flag that memory needs to be contiguous,
+> > which totally makes sense at the API level.  But CMA is not the only
+> > source of contigous memory, so we should not conflate the two.
 > 
-> On 7/19/19 11:17 PM, Michael S. Tsirkin wrote:
-> > On Fri, Jul 19, 2019 at 09:31:34PM +0800, Fei Li wrote:
-> > > From: Fam Zheng <zhengfeiran@bytedance.com>
-> > > 
-> > > This allows the backend to _not_ trap mmio read of the status register
-> > > after injecting IRQ in the data path, which can improve the performance
-> > > significantly by avoiding a vmexit for each interrupt.
-> > > 
-> > > More importantly it also makes it possible for Firecracker to hook up
-> > > virtio-mmio with vhost-net, in which case there isn't a way to implement
-> > > proper status register handling.
-> > > 
-> > > For a complete backend that does set either INT_CONFIG bit or INT_VRING
-> > > bit upon generating irq, what happens hasn't changed.
-> > > 
-> > > Signed-off-by: Fam Zheng <zhengfeiran@bytedance.com>
-> > This has a side effect of skipping vring callbacks
-> > if they trigger at the same time with a config
-> > interrupt.
-> > I don't see why this is safe.
-> 
-> Good point! I think the block can be moved out from the else block and run
-> unconditionally then.
-> 
-> Fam
+> We have one file descriptor per heap to be able to add access control
+> on each heap.
+> That wasn't possible with ION because the heap was selected given the
+> flags in ioctl
+> structure and we can't do access control based on that. If we put flag
+> to select the
+> allocation mechanism (system, CMA, other) in ioctl we come back to ION status.
+> For me one allocation mechanism = one heap.
 
-
-Won't same callback run from multiple irq handlers then?
-Running multiple vring callbacks at the same time isn't
-a good idea either.
-
-> 
-> > 
-> > 
-> > > ---
-> > >   drivers/virtio/virtio_mmio.c | 4 +---
-> > >   1 file changed, 1 insertion(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
-> > > index e09edb5c5e06..9b42502b2204 100644
-> > > --- a/drivers/virtio/virtio_mmio.c
-> > > +++ b/drivers/virtio/virtio_mmio.c
-> > > @@ -295,9 +295,7 @@ static irqreturn_t vm_interrupt(int irq, void *opaque)
-> > >   	if (unlikely(status & VIRTIO_MMIO_INT_CONFIG)) {
-> > >   		virtio_config_changed(&vm_dev->vdev);
-> > >   		ret = IRQ_HANDLED;
-> > > -	}
-> > > -
-> > > -	if (likely(status & VIRTIO_MMIO_INT_VRING)) {
-> > > +	} else {
-> > >   		spin_lock_irqsave(&vm_dev->lock, flags);
-> > >   		list_for_each_entry(info, &vm_dev->virtqueues, node)
-> > >   			ret |= vring_interrupt(irq, info->vq);
-> > > -- 
-> > > 2.11.0
+Well, I agree with your split for different fundamentally different
+allocators.  But the point is that CMA (at least the system cma area)
+fundamentally isn't a different allocator.  The per-device CMA area
+still are kinda the same, but you can just have one fd for each
+per-device CMA area to make your life simple.
