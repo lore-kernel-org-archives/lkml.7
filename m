@@ -2,139 +2,171 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5984C41517
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D89C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0A322C7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7D92238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:00:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oqCfu2vZ"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Q4wed7lj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389688AbfGYP7a (ORCPT
+        id S2389700AbfGYQAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 11:59:30 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45093 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389660AbfGYP73 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 11:59:29 -0400
-Received: by mail-io1-f65.google.com with SMTP id g20so98292318ioc.12;
-        Thu, 25 Jul 2019 08:59:29 -0700 (PDT)
+        Thu, 25 Jul 2019 12:00:19 -0400
+Received: from mail-eopbgr820080.outbound.protection.outlook.com ([40.107.82.80]:16410
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387874AbfGYQAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 12:00:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RPAPTLW3KsxCML8bJ/61+NI4uSolhxSEwoTb/+GQUZSicHBUcGia1DFGDGN4O9HZVmLBDI9ebhD5ASGs4aPzscbxSGjLF/ZNGi6HqBvjLVCRXQXjpGvFfr3hCBOYe3M40Cv86qCcdWvFEicSrCNNErvqmcvG0fz3e2XqV+RtSMYDzf2owma3K0LvFWNMD0FQwPUqTrap8J0QzgHAw3NeisKddC90sLCh02sh8Dmgn2Uf+s/h3YK2MXKY5BMzcYRv1QCT7CVCk+Rb9HyDtWYu9+643sJ6etNNBElGM7coJci47C9b5Lb2MPjRCvJI8nybEbQPD9aJpKklOFj5eeJ6KQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tRUWLM56PlUrnuq+fb7CL2nxlt0rTOFxee7IjUxeNb8=;
+ b=hgmB+K+lDG3v1QW3fE87b9pFsLHRHksBA+Ia6coG8TarsSCxdhTnRFdQQUfxwLhwDeuiQBehyyEybJfqawwqzaUWte4HZ5L7/5ylegRGlnSMj5nXu1YHA6W+45l1NDPVAJbTWoA0VQSlm+t6GF6Dl9JeFzjL1AeISIJhUBy2jJecR8oClf+ocE/LpAPs6wYowFSukjK2qq2qi4dSKpsTtkqXuGi1fetH+YEnyQ9IEYiiuCviDIRWF1xE09qpjLov2/Ta2bSs9IIrzPDq6+4lfQUe+RYnraeEHw1n2wS6tX6//LQ+iIG6kYcuI0xTfUbOS76oahUHv53A4And6Z9/Iw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
+ header.d=amd.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qK60BCTTRu0Ys+kw65S0SEpX7dQ3Yakjf+W+ppKoJMM=;
-        b=oqCfu2vZEmKMr8jRkoBDSP/46uQ6yqxt8toi+TVwd67qyXZK0EBxRVYSpECs1dwMez
-         IcJIExjgCycm93oaDl70T2DnEn7kMwO14tnS8UtAuIfAxD0Ln5ChwW4wMj7sr+cqrW43
-         yqY55w0i6b+GOWyP7gKwmC458qQHUeDS97+wQoA3lDOdm/pWF1L93CK72iojAHynec/9
-         USk3f/L5BqSWz3PuRVIgj6ptLf1A1c1Acf4Il4Li+zceMw4N8A0Ba+Y37CdXImGl4IQJ
-         ZI5OmwkoV2oZAFYErftwgUqwAR1e1gcfGZxglhUJGt6g/ZSQJdEo/2T29phDR2gqyXky
-         nXCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qK60BCTTRu0Ys+kw65S0SEpX7dQ3Yakjf+W+ppKoJMM=;
-        b=J6uHgrbQLFbuEKGkO+w5vjWgPPDyj0W3U4ZfPvwq7FgqQyuCSPB86MzYOxDslX1goj
-         9BxOD99r2s0SGFyackYtCxSS7sF6QhNwPjZOqvECOs1hxVXTIoP5FD2Nw1jUduTiHxkM
-         w5a4y4VBONMRrPg1C/os1NW6dsimQtMuMIIBSYTVxYA/YE8J8DiSwv12pprArw9QWH7L
-         kY81nPIhk+6VYef1NxFtoXlTfoRdYe4dQvdLwq+4FfsE2Hpcn2/VzIKtxt4ueFyvtS9y
-         eUY0rLxrHwR/+uNPN0SQl9hUDXIMSRCJs2ZKjHQ6NT5x5FvePMTOAvn7qVfyydoNvL9W
-         ogyA==
-X-Gm-Message-State: APjAAAWs01ddsLYEeIXV7kQnyQY2hYFjmbeqeX9q0bM6IyRLnpcdY1sE
-        R04Zy4Kyn16LORLPLAyJCA6wK7tAHiFBPzIuAAU=
-X-Google-Smtp-Source: APXvYqykv1YdLQoWPp1mD51S3A7Q+qMzrIevwBDJOREyxPzWS4W+wUHAKx/78O4j5/nzoqGCrsWrL3POrUlIcbXB5S4=
-X-Received: by 2002:a5e:8c11:: with SMTP id n17mr15281210ioj.64.1564070368966;
- Thu, 25 Jul 2019 08:59:28 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tRUWLM56PlUrnuq+fb7CL2nxlt0rTOFxee7IjUxeNb8=;
+ b=Q4wed7ljdc6VBGfe134bdgbvreLG4z0znox3JtFNbjw7xccg2GmHKCohTZN9J4YfJ1UgOIosW9hWPjwI2SRX5TA23ujZIZ6XPWbmJwfijHSxABK+e1kAOjWY7oOdyHyZt5yAazVeLLOQgJwDJh4+xwfJ01PFf8pNbOHeQG6Sko4=
+Received: from BYAPR12MB2853.namprd12.prod.outlook.com (20.179.90.150) by
+ BYAPR12MB2790.namprd12.prod.outlook.com (20.177.126.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.13; Thu, 25 Jul 2019 16:00:10 +0000
+Received: from BYAPR12MB2853.namprd12.prod.outlook.com
+ ([fe80::dd9c:e1c8:face:eaa9]) by BYAPR12MB2853.namprd12.prod.outlook.com
+ ([fe80::dd9c:e1c8:face:eaa9%6]) with mapi id 15.20.2115.005; Thu, 25 Jul 2019
+ 16:00:10 +0000
+From:   "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>
+To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        Rex Zhu <rex.zhu@amd.com>, "Quan, Evan" <Evan.Quan@amd.com>
+CC:     Nathan Chancellor <natechancellor@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH 5/7] drm/amd/display: Use proper enum conversion functions
+Thread-Topic: [PATCH 5/7] drm/amd/display: Use proper enum conversion
+ functions
+Thread-Index: AQHVMiy9/HNyhezL/UaoUkOqlvXBhabRXHKAgApDQ4A=
+Date:   Thu, 25 Jul 2019 16:00:10 +0000
+Message-ID: <5f0e8332-50ae-cc9c-1a12-5a097c51297d@amd.com>
+References: <20190704055217.45860-1-natechancellor@gmail.com>
+ <20190704055217.45860-6-natechancellor@gmail.com>
+ <20190719031647.GA84028@archlinux-threadripper>
+In-Reply-To: <20190719031647.GA84028@archlinux-threadripper>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YTOPR0101CA0063.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:14::40) To BYAPR12MB2853.namprd12.prod.outlook.com
+ (2603:10b6:a03:12c::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Sunpeng.Li@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.55.250]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 784c5283-70bb-4892-f97b-08d711192be3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR12MB2790;
+x-ms-traffictypediagnostic: BYAPR12MB2790:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BYAPR12MB279071942B712369CC870DA682C10@BYAPR12MB2790.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:741;
+x-forefront-prvs: 0109D382B0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(39860400002)(366004)(346002)(396003)(189003)(199004)(25786009)(6246003)(6512007)(2906002)(316002)(36756003)(6306002)(53936002)(71190400001)(52116002)(71200400001)(229853002)(4326008)(6486002)(31686004)(66946007)(66476007)(66556008)(64756008)(66446008)(6636002)(81156014)(81166006)(305945005)(6116002)(8676002)(76176011)(66066001)(7736002)(31696002)(53546011)(102836004)(8936002)(3846002)(99286004)(86362001)(6506007)(386003)(14444005)(68736007)(478600001)(54906003)(476003)(486006)(11346002)(446003)(5660300002)(14454004)(6436002)(966005)(186003)(110136005)(26005)(256004)(2616005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB2790;H:BYAPR12MB2853.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: yRYj4CcKsZufXiKSZHSAI9XpmE+MXkJiVNm9eR1ySmR7zZQB8ObG1gRLtnBq9w9Zkt2PJcm6qH/ESue6sSkUr964Wj739yfP26CgxOsfsdTLuq6tWNuLq8BZkyga283E4fA2OQnC2/cyEwl6f0R5To+2G2kRbqwvbu3aqIOBL88giYB2npilHgSJH/F9zZ6+eM73rwjtbzSeOfZACfDjCB5B9XunGIvo77ykkmrZZl1t6MMkzWeEVOytgNNaQNKODqF4hKg9+x/vliyjetghlnn2F8PsefR0SkNsuFJTr0pXs002gNX8Pj5lX8n1XpjVplh+wXtYiU+3yrbQzLqTkcJN7JtF0rAWg1pK6EgA8AxO3Rod2s3Z3lXoDhYl5DKjmL9p6yzSI1myNEZ2u20mDd6bZ1pTzDp8tqZaaHELGSk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3C344A9FB9ABC84D8EE0493DC20FF21F@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
- <20190724170259.6685.18028.stgit@localhost.localdomain> <a9f52894-52df-cd0c-86ac-eea9fbe96e34@redhat.com>
-In-Reply-To: <a9f52894-52df-cd0c-86ac-eea9fbe96e34@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 25 Jul 2019 08:59:17 -0700
-Message-ID: <CAKgT0Ud-UNk0Mbef92hDLpWb2ppVHsmd24R9gEm2N8dujb4iLw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] mm: Introduce Hinted pages
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yang Zhang <yang.zhang.wz@gmail.com>, pagupta@redhat.com,
-        Rik van Riel <riel@surriel.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        lcapitulino@redhat.com, wei.w.wang@intel.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, dan.j.williams@intel.com,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 784c5283-70bb-4892-f97b-08d711192be3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2019 16:00:10.7158
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sunli1@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2790
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 1:53 AM David Hildenbrand <david@redhat.com> wrote:
->
-> On 24.07.19 19:03, Alexander Duyck wrote:
-> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-
-<snip>
-
-> >  /*
-> > + * PageHinted() is an alias for Offline, however it is not meant to be an
-> > + * exclusive value. It should be combined with PageBuddy() when seen as it
-> > + * is meant to indicate that the page has been scrubbed while waiting in
-> > + * the buddy system.
-> > + */
-> > +PAGE_TYPE_OPS(Hinted, offline)
->
->
-> CCing Matthew
->
-> I am still not sure if I like the idea of having two page types at a time.
->
-> 1. Once we run out of page type bits (which can happen easily looking at
-> it getting more and more user - e.g., maybe for vmmap pages soon), we
-> might want to convert again back to a value-based, not bit-based type
-> detection. This will certainly make this switch harder.
-
-Shouldn't we wait to cross that bridge until we get there? It wouldn't
-take much to look at either defining the buddy as 2 types for such a
-case, or if needed we could then look at the option of moving over to
-another bit.
-
-> 2. It will complicate the kexec/kdump handling. I assume it can be fixed
-> some way - e.g., making the elf interface aware of the exact notion of
-> page type bits compared to mapcount values we have right now (e.g.,
-> PAGE_BUDDY_MAPCOUNT_VALUE). Not addressed in this series yet.
-
-It does, but not by much. We were already exposing both the buddy and
-offline values. The cahnge could probably be in the executable that
-are accessing the interface to allow the combination of buddy and
-offline. That is one of the advantages of using the "offline" value to
-also mean hinted since then "hinted" is just a combination of the two
-known values.
-
-> Can't we reuse one of the traditional page flags for that, not used
-> along with buddy pages? E.g., PG_dirty: Pages that were not hinted yet
-> are dirty.
-
-Reusing something like the dirty bit would just be confusing in my
-opinion. In addition it looks like Xen has also re-purposed PG_dirty
-already for another purpose.
-
-If anything I could probably look at seeing if the PG_private flags
-are available when a page is in the buddy allocator which I suspect
-they probably are since the only users I currently see appear to be
-SLOB and compound pages. Either that or maybe something like PG_head
-might make sense since once we start allocating them we are popping
-the head off of the boundary list.
+DQoNCk9uIDIwMTktMDctMTggMTE6MTYgcC5tLiwgTmF0aGFuIENoYW5jZWxsb3Igd3JvdGU6DQo+
+IE9uIFdlZCwgSnVsIDAzLCAyMDE5IGF0IDEwOjUyOjE2UE0gLTA3MDAsIE5hdGhhbiBDaGFuY2Vs
+bG9yIHdyb3RlOg0KPj4gY2xhbmcgd2FybnM6DQo+Pg0KPj4gZHJpdmVycy9ncHUvZHJtL2FtZC9h
+bWRncHUvLi4vZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1X2RtX3BwX3NtdS5jOjMzNjo4Og0KPj4g
+d2FybmluZzogaW1wbGljaXQgY29udmVyc2lvbiBmcm9tIGVudW1lcmF0aW9uIHR5cGUgJ2VudW0g
+c211X2Nsa190eXBlJw0KPj4gdG8gZGlmZmVyZW50IGVudW1lcmF0aW9uIHR5cGUgJ2VudW0gYW1k
+X3BwX2Nsb2NrX3R5cGUnDQo+PiBbLVdlbnVtLWNvbnZlcnNpb25dDQo+PiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgZGNfdG9fc211X2Nsb2NrX3R5cGUoY2xrX3R5cGUp
+LA0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fn5+fn4NCj4+IGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1Ly4uL2Rp
+c3BsYXkvYW1kZ3B1X2RtL2FtZGdwdV9kbV9wcF9zbXUuYzo0MjE6MTQ6DQo+PiB3YXJuaW5nOiBp
+bXBsaWNpdCBjb252ZXJzaW9uIGZyb20gZW51bWVyYXRpb24gdHlwZSAnZW51bQ0KPj4gYW1kX3Bw
+X2Nsb2NrX3R5cGUnIHRvIGRpZmZlcmVudCBlbnVtZXJhdGlvbiB0eXBlICdlbnVtIHNtdV9jbGtf
+dHlwZScNCj4+IFstV2VudW0tY29udmVyc2lvbl0NCj4+ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBkY190b19wcF9jbG9ja190eXBlKGNsa190eXBlKSwNCj4+ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBefn5+fn5+fn5+fn5+fn5+fn5+fn5+
+fn5+fn5+fn4NCj4+DQo+PiBUaGVyZSBhcmUgZnVuY3Rpb25zIHRvIHByb3Blcmx5IGNvbnZlcnQg
+YmV0d2VlbiBhbGwgb2YgdGhlc2UgdHlwZXMsIHVzZQ0KPj4gdGhlbSBzbyB0aGVyZSBhcmUgbm8g
+bG9uZ2VyIGFueSB3YXJuaW5ncy4NCj4+DQo+PiBGaXhlczogYTQzOTEzZWE1MGE1ICgiZHJtL2Ft
+ZC9wb3dlcnBsYXk6IGFkZCBmdW5jdGlvbiBnZXRfY2xvY2tfYnlfdHlwZV93aXRoX2xhdGVuY3kg
+Zm9yIG5hdmkxMCIpDQo+PiBGaXhlczogZTVlNGUyMjM5MWMyICgiZHJtL2FtZC9wb3dlcnBsYXk6
+IGFkZCBpbnRlcmZhY2UgdG8gZ2V0IGNsb2NrIGJ5IHR5cGUgd2l0aCBsYXRlbmN5IGZvciBkaXNw
+bGF5ICh2MikiKQ0KPj4gTGluazogaHR0cHM6Ly9naXRodWIuY29tL0NsYW5nQnVpbHRMaW51eC9s
+aW51eC9pc3N1ZXMvNTg2DQo+PiBTaWduZWQtb2ZmLWJ5OiBOYXRoYW4gQ2hhbmNlbGxvciA8bmF0
+ZWNoYW5jZWxsb3JAZ21haWwuY29tPg0KPj4gLS0tDQo+PiAgZHJpdmVycy9ncHUvZHJtL2FtZC9k
+aXNwbGF5L2FtZGdwdV9kbS9hbWRncHVfZG1fcHBfc211LmMgfCA0ICsrLS0NCj4+ICAxIGZpbGUg
+Y2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvYW1kZ3B1X2RtL2FtZGdwdV9kbV9wcF9z
+bXUuYyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1X2RtX3Bw
+X3NtdS5jDQo+PiBpbmRleCBlYWMwOWJmZTNiZTIuLjBmNzZjZmZmOWQ5YiAxMDA2NDQNCj4+IC0t
+LSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1X2RtX3BwX3Nt
+dS5jDQo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvYW1kZ3B1X2RtL2FtZGdw
+dV9kbV9wcF9zbXUuYw0KPj4gQEAgLTMzMyw3ICszMzMsNyBAQCBib29sIGRtX3BwX2dldF9jbG9j
+a19sZXZlbHNfYnlfdHlwZSgNCj4+ICAJCX0NCj4+ICAJfSBlbHNlIGlmIChhZGV2LT5zbXUuZnVu
+Y3MgJiYgYWRldi0+c211LmZ1bmNzLT5nZXRfY2xvY2tfYnlfdHlwZSkgew0KPj4gIAkJaWYgKHNt
+dV9nZXRfY2xvY2tfYnlfdHlwZSgmYWRldi0+c211LA0KPj4gLQkJCQkJICBkY190b19zbXVfY2xv
+Y2tfdHlwZShjbGtfdHlwZSksDQo+PiArCQkJCQkgIGRjX3RvX3BwX2Nsb2NrX3R5cGUoY2xrX3R5
+cGUpLA0KDQpzbXVfZnVuY3MtPmdldF9jbG9ja19ieV90eXBlIGRvZXNuJ3Qgc2VlbSB0byBiZSBo
+b29rZWQgdXAgYW55d2hlcmUsDQpzbyB0aGlzIGxvb2tzIHRvIGJlIHRoZSBtb3N0IGNvcnJlY3Qu
+DQoNCkFsdGhvdWdoIGl0IG1ha2VzIG1vcmUgc2Vuc2UgdG8gdXNlIHNtdV9jbGtfdHlwZXMgaGVy
+ZSByYXRoZXIgdGhhbg0KYW1kX3BwX2Nsb2NrX3R5cGUgLSBhbnkgcmVhc29uIHdoeSB0aGlzIGlz
+bid0IHRoZSBjYXNlPw0KDQo+PiAgCQkJCQkgICZwcF9jbGtzKSkgew0KPj4gIAkJCWdldF9kZWZh
+dWx0X2Nsb2NrX2xldmVscyhjbGtfdHlwZSwgZGNfY2xrcyk7DQo+PiAgCQkJcmV0dXJuIHRydWU7
+DQo+PiBAQCAtNDE4LDcgKzQxOCw3IEBAIGJvb2wgZG1fcHBfZ2V0X2Nsb2NrX2xldmVsc19ieV90
+eXBlX3dpdGhfbGF0ZW5jeSgNCj4+ICAJCQlyZXR1cm4gZmFsc2U7DQo+PiAgCX0gZWxzZSBpZiAo
+YWRldi0+c211LnBwdF9mdW5jcyAmJiBhZGV2LT5zbXUucHB0X2Z1bmNzLT5nZXRfY2xvY2tfYnlf
+dHlwZV93aXRoX2xhdGVuY3kpIHsNCj4+ICAJCWlmIChzbXVfZ2V0X2Nsb2NrX2J5X3R5cGVfd2l0
+aF9sYXRlbmN5KCZhZGV2LT5zbXUsDQo+PiAtCQkJCQkJICAgICAgIGRjX3RvX3BwX2Nsb2NrX3R5
+cGUoY2xrX3R5cGUpLA0KPj4gKwkJCQkJCSAgICAgICBkY190b19zbXVfY2xvY2tfdHlwZShjbGtf
+dHlwZSksDQoNClRoaXMgaXMgc2xpZ2h0bHkgY29uY2VybmluZy4gVGhlIGZ1bmN0aW9ucyBhcmUg
+ZG9pbmcgdGhlIHJpZ2h0IHRoaW5nLA0KYnV0IGFtZF9wcF9jbG9ja190eXBlIGRvZXNuJ3QgbWFw
+IDEtMSB0byBzbXVfY2xrX3R5cGUuLi4gSW4gYW55IGNhc2UsDQp0aGlzIGxvb2tzIGdvb2QgdG8g
+bWUuDQoNClJldmlld2VkLWJ5OiBMZW8gTGkgPHN1bnBlbmcubGlAYW1kLmNvbT4NCg0KPj4gIAkJ
+CQkJCSAgICAgICAmcHBfY2xrcykpDQo+PiAgCQkJcmV0dXJuIGZhbHNlOw0KPj4gIAl9DQo+PiAt
+LSANCj4+IDIuMjIuMA0KPj4NCj4gDQo+IEdlbnRsZSBwaW5nIGZvciByZXZpZXcsIHRoaXMgaXMg
+dGhlIGxhc3QgcmVtYWluaW5nIHdhcm5pbmcgdGhhdCBJIHNlZQ0KPiBmcm9tIGFtZGdwdSBvbiBu
+ZXh0LTIwMTkwNzE4Lg0KPiANCj4gQ2hlZXJzLA0KPiBOYXRoYW4NCj4gDQo=
