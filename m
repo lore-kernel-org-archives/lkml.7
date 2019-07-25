@@ -2,179 +2,211 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C8CC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE32EC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47633218F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:20:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="VhwdTYOs"
+	by mail.kernel.org (Postfix) with ESMTP id 7CA25218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:20:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390225AbfGYQUA (ORCPT
+        id S2390263AbfGYQUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:20:00 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39197 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387564AbfGYQUA (ORCPT
+        Thu, 25 Jul 2019 12:20:32 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:46624 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387564AbfGYQUc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:20:00 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PGJjOX1075825
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 25 Jul 2019 09:19:45 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PGJjOX1075825
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564071586;
-        bh=3vavAncPZC5FEVF6GaaF5P3eu8gVu5cP7GVPBJ8PAEA=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=VhwdTYOs+m5EJdVWkwK6b0WelfaQF8vqbfmoeeBy+rAqTVpMPiBSXrY3jRkqhj7FI
-         pr7/sgW9AS+KdhzJxt4pmpliGV4xIV0E1IsJCcvD9S6VLsSJmKUBarMmyQRzzK9D2C
-         o8ehyINYG48kR1blLiQaf2EvHQdA6hEJy+oqLWLzbD1w4cutHYBf5/kYtNK6a0cSS/
-         ViG1EQGGSVZ47zHZd4sYWSoa9+ZGOc8EYk99p0eQmDVCORUggOiVYcPSQRSIfK89IS
-         kN2zHdD9bEuBaosdgX/+8adffzOa8qmYcUP6NdDxUhuQ2KEueBfnGYB/IBqJk4qTo7
-         eG8PVQZo7u/QA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PGJjCb1075822;
-        Thu, 25 Jul 2019 09:19:45 -0700
-Date:   Thu, 25 Jul 2019 09:19:45 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Mathieu Poirier <tipbot@zytor.com>
-Message-ID: <tip-c22645f4c8f021fb1c5e7189eb1f968132cc0844@git.kernel.org>
-Cc:     torvalds@linux-foundation.org, hpa@zytor.com, peterz@infradead.org,
-        tglx@linutronix.de, mingo@kernel.org, tj@kernel.org,
-        dietmar.eggemann@arm.com, linux-kernel@vger.kernel.org,
-        mathieu.poirier@linaro.org
-Reply-To: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
-          hpa@zytor.com, torvalds@linux-foundation.org, mingo@kernel.org,
-          peterz@infradead.org, tglx@linutronix.de,
-          dietmar.eggemann@arm.com, tj@kernel.org
-In-Reply-To: <20190719140000.31694-2-juri.lelli@redhat.com>
-References: <20190719140000.31694-2-juri.lelli@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/topology: Add
- partition_sched_domains_locked()
-Git-Commit-ID: c22645f4c8f021fb1c5e7189eb1f968132cc0844
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 25 Jul 2019 12:20:32 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 45vcrX3Qf0z1rC0W;
+        Thu, 25 Jul 2019 18:20:28 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 45vcrX2hWZz1qqkH;
+        Thu, 25 Jul 2019 18:20:28 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id HEUFb3dOTyW7; Thu, 25 Jul 2019 18:20:26 +0200 (CEST)
+X-Auth-Info: guacg1qZZv5IL0kMu20zrLv3McRfSpJVVlDWMBmdmbI=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Thu, 25 Jul 2019 18:20:26 +0200 (CEST)
+Date:   Thu, 25 Jul 2019 18:20:20 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] mfd: mc13xxx: Add mc34708 adc support
+Message-ID: <20190725182020.3948c8d9@jawa>
+In-Reply-To: <20190725123641.GJ23883@dell>
+References: <20190717222602.2912-1-lukma@denx.de>
+        <20190717222602.2912-2-lukma@denx.de>
+        <20190725123641.GJ23883@dell>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/tZkyfYhowXpRWsh0jAiSQ9/"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c22645f4c8f021fb1c5e7189eb1f968132cc0844
-Gitweb:     https://git.kernel.org/tip/c22645f4c8f021fb1c5e7189eb1f968132cc0844
-Author:     Mathieu Poirier <mathieu.poirier@linaro.org>
-AuthorDate: Fri, 19 Jul 2019 15:59:53 +0200
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Thu, 25 Jul 2019 15:51:57 +0200
+--Sig_/tZkyfYhowXpRWsh0jAiSQ9/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-sched/topology: Add partition_sched_domains_locked()
+Hi Lee,
 
-Introduce the partition_sched_domains_locked() function by taking
-the mutex locking code out of the original function.  That way
-the work done by partition_sched_domains_locked() can be reused
-without dropping the mutex lock.
+> On Thu, 18 Jul 2019, Lukasz Majewski wrote:
+>=20
+> > From: Sascha Hauer <s.hauer@pengutronix.de>
+> >=20
+> > The mc34708 has an improved adc. The older variants will always
+> > convert a fixed order of channels. The mc34708 can do up to eight
+> > conversions in arbitrary channel order. Currently this extended
+> > feature is not supported. We only support touchscreen conversions
+> > now, which will be sampled in a data format compatible to the older
+> > chips in order to keep the API between the mfd and the touchscreen
+> > driver.
+> >=20
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> >=20
+> > ---
+> > Changes for v4:
+> > - None
+> >=20
+> > Changes for v3:
+> > - None
+> >=20
+> > Changes for v2:
+> > - Change the return code patch when the mc13xxx ADC is performing
+> > conversion
+> > - Introduce new include/linux/mfd/mc34708.h header file for mc34708
+> > specific defines
+> >=20
+> > Changes from the original patches:
+> > - ADC conversion functions prototypes added to fix build error
+> > - Adjustments to make checkpatch clean (-ENOSYS, line over 80 char)
+> >=20
+> > This patch applies on top of v5.2 - SHA1:
+> > 0ecfebd2b52404ae0c54a878c872bb93363ada36 ---
+> >  drivers/mfd/mc13xxx-core.c  | 102
+> > +++++++++++++++++++++++++++++++++++++++++++-
+> > drivers/mfd/mc13xxx.h       |   3 ++ include/linux/mfd/mc34708.h |
+> > 37 ++++++++++++++++ 3 files changed, 141 insertions(+), 1
+> > deletion(-) create mode 100644 include/linux/mfd/mc34708.h
+> >=20
+> > diff --git a/drivers/mfd/mc13xxx-core.c b/drivers/mfd/mc13xxx-core.c
+> > index 1abe7432aad8..01473d6fda21 100644
+> > --- a/drivers/mfd/mc13xxx-core.c
+> > +++ b/drivers/mfd/mc13xxx-core.c
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/of_device.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/mfd/core.h>
+> > +#include <linux/mfd/mc34708.h>
+> > =20
+> >  #include "mc13xxx.h"
+> > =20
+> > @@ -45,6 +46,8 @@
+> > =20
+> >  #define MC13XXX_ADC2		45
+> > =20
+> > +#define MC13XXX_ADC_WORKING		(1 << 0) =20
+>=20
+> BIT(0) ?
 
-No change of functionality is introduced by this patch.
+The same convention - i.e. (1 << 0) is used in the rest of the file.
 
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bristot@redhat.com
-Cc: claudio@evidence.eu.com
-Cc: lizefan@huawei.com
-Cc: longman@redhat.com
-Cc: luca.abeni@santannapisa.it
-Cc: rostedt@goodmis.org
-Cc: tommaso.cucinotta@santannapisa.it
-Link: https://lkml.kernel.org/r/20190719140000.31694-2-juri.lelli@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- include/linux/sched/topology.h | 10 ++++++++++
- kernel/sched/topology.c        | 17 +++++++++++++----
- 2 files changed, 23 insertions(+), 4 deletions(-)
+>=20
+> >  void mc13xxx_lock(struct mc13xxx *mc13xxx)
+> >  {
+> >  	if (!mutex_trylock(&mc13xxx->lock)) {
+> > @@ -198,22 +201,30 @@ static void mc34708_print_revision(struct
+> > mc13xxx *mc13xxx, u32 revision) maskval(revision,
+> > MC34708_REVISION_FAB)); }
+> > =20
+> > +static int mc13xxx_adc_conversion(struct mc13xxx *, unsigned int,
+> > +				  unsigned int, u8, bool, unsigned
+> > int *); +static int mc34708_adc_conversion(struct mc13xxx *,
+> > unsigned int,
+> > +				  unsigned int, u8, bool, unsigned
+> > int *); +
+> >  /* These are only exported for mc13xxx-i2c and mc13xxx-spi */
+> >  struct mc13xxx_variant mc13xxx_variant_mc13783 =3D {
+> >  	.name =3D "mc13783",
+> >  	.print_revision =3D mc13xxx_print_revision,
+> > +	.adc_do_conversion =3D mc13xxx_adc_conversion,
+> >  };
+> >  EXPORT_SYMBOL_GPL(mc13xxx_variant_mc13783); =20
+>=20
+> I'd prefer to keep the call-back functions as close to zero as
+> possible.
 
-diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-index 7863bb62d2ab..f341163fedc9 100644
---- a/include/linux/sched/topology.h
-+++ b/include/linux/sched/topology.h
-@@ -150,6 +150,10 @@ static inline struct cpumask *sched_domain_span(struct sched_domain *sd)
- 	return to_cpumask(sd->span);
- }
- 
-+extern void partition_sched_domains_locked(int ndoms_new,
-+					   cpumask_var_t doms_new[],
-+					   struct sched_domain_attr *dattr_new);
-+
- extern void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
- 				    struct sched_domain_attr *dattr_new);
- 
-@@ -194,6 +198,12 @@ extern void set_sched_topology(struct sched_domain_topology_level *tl);
- 
- struct sched_domain_attr;
- 
-+static inline void
-+partition_sched_domains_locked(int ndoms_new, cpumask_var_t doms_new[],
-+			       struct sched_domain_attr *dattr_new)
-+{
-+}
-+
- static inline void
- partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
- 			struct sched_domain_attr *dattr_new)
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 4eea2c9bc732..5a174ae6ecf3 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -2169,16 +2169,16 @@ static int dattrs_equal(struct sched_domain_attr *cur, int idx_cur,
-  * ndoms_new == 0 is a special case for destroying existing domains,
-  * and it will not create the default domain.
-  *
-- * Call with hotplug lock held
-+ * Call with hotplug lock and sched_domains_mutex held
-  */
--void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
--			     struct sched_domain_attr *dattr_new)
-+void partition_sched_domains_locked(int ndoms_new, cpumask_var_t doms_new[],
-+				    struct sched_domain_attr *dattr_new)
- {
- 	bool __maybe_unused has_eas = false;
- 	int i, j, n;
- 	int new_topology;
- 
--	mutex_lock(&sched_domains_mutex);
-+	lockdep_assert_held(&sched_domains_mutex);
- 
- 	/* Always unregister in case we don't destroy any domains: */
- 	unregister_sched_domain_sysctl();
-@@ -2261,6 +2261,15 @@ match3:
- 	ndoms_cur = ndoms_new;
- 
- 	register_sched_domain_sysctl();
-+}
- 
-+/*
-+ * Call with hotplug lock held
-+ */
-+void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
-+			     struct sched_domain_attr *dattr_new)
-+{
-+	mutex_lock(&sched_domains_mutex);
-+	partition_sched_domains_locked(ndoms_new, doms_new, dattr_new);
- 	mutex_unlock(&sched_domains_mutex);
- }
+If I may ask - what is wrong with having per device callback(s) ?
+
+>=20
+> It would be better to turn mc13xxx_adc_conversion() in to the catch
+> function
+
+Could you share any example?=20
+
+> choose an execution route based on some platform matching.
+>=20
+
+Could you help me with giving a hint of how shall I do the "platform
+matching" in this particular driver ?=20
+
+The mc13xxx driver seems rather complex with SPI and I2C support and in
+which the subdevices are added (e.g. rtc, adc, etc).
+
+This particular patch just follows current driver design and fixes its
+usability for mc13708 drvice.
+
+> If you could do the same for print_revision too, that would be even
+> better.
+>=20
+
+I would prefer to fix the driver (for mc13708) without the need to
+change the working code.
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/tZkyfYhowXpRWsh0jAiSQ9/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl051sQACgkQAR8vZIA0
+zr37bQf/fihCUC7Q46ePMNU9EdKDchQOsRruvSq9D/fYgYY4ot4m+4tow5dIRu2q
+OoZFxYr5vv2PA+lk6Wy40PxI+9J8l0IUAlTe9pz00GMGIyO16yqqEsqVusrBfP6c
+tyqcF/cgnGwme66U+Zj5aQASfRX9HRn/SK7cy86YQL/i65wqmxkGKAPKdjWuaN9e
+QHYbgcPFogs0DdO8sdmo2iXCiZmwIpRiGtW2nFTEpl7t+WDzn5w94CLo4VGOWnb5
+CJGX5U4OCq7sRyjP+Sj9dkJTN7k4TAiYDlHH1pr+Y38RQv9ECGSA0y6J1T6FxwnK
+Qp/+1yTRLQsw4T3yLCHQAxPqcTOqng==
+=vXD0
+-----END PGP SIGNATURE-----
+
+--Sig_/tZkyfYhowXpRWsh0jAiSQ9/--
