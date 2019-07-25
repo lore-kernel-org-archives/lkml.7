@@ -2,90 +2,74 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B7BC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B49C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD1B722BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62D8922BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:46:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbfGYKo4 (ORCPT
+        id S1728545AbfGYKqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 06:44:56 -0400
-Received: from gofer.mess.org ([88.97.38.141]:41021 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726513AbfGYKoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 06:44:55 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id EA01460474; Thu, 25 Jul 2019 11:44:53 +0100 (BST)
-Date:   Thu, 25 Jul 2019 11:44:53 +0100
-From:   Sean Young <sean@mess.org>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] media: ir-kbd-i2c: prevent potential NULL pointer
- access
-Message-ID: <20190725104453.5kqusisyg44zbbcy@gofer.mess.org>
-References: <20190722172632.4402-1-wsa+renesas@sang-engineering.com>
- <20190722172632.4402-2-wsa+renesas@sang-engineering.com>
- <20190725051202.o47mz4unbn63z6uk@gofer.mess.org>
- <20190725075538.GB1323@kunai>
+        Thu, 25 Jul 2019 06:46:50 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43404 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728273AbfGYKqt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 06:46:49 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p13so50202193wru.10
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:46:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pjvXzHuYUakR2/Ani3ARG2fLWxvZAXWrrCuKN/oKrQA=;
+        b=uBtgK+U5+YfQsTjXfekFwJ7Z+ESqTgzkJMuxWw1vKqdhpx/6Z/auhLN4KhKgY7TZMd
+         jkZd8pTxgufYw37j7/hjEMMdVqvi7xMqJdHM2atOk3YkB5xOtAcMfWNXZVZzSEKrPUjT
+         BUKfz3jDTRZIDWLu/sMlWhD0JSsNfIwuc6CcMfI79JfkCerrXvumKzbhWHa6M0sXmgEy
+         t7spxvK9s1iYnSBy2SPvjHT3AjLAp9Q/vdEtzEYGMGWc25LfW5welfy3k2SidOrv32JI
+         ikZFWKjz1TjIfMGlG4YrGeqwn1sJmRCfY+SNUZkEr5w+8JYzynBt4NQU7y+tFzCvdwRV
+         WYqQ==
+X-Gm-Message-State: APjAAAUymizaserMTWlKXYI7C41f1qYazMbLTSUMaZVoRGCGsIi7VSCq
+        McvzVeL3WluHgDpMmbQbP6Zgvw==
+X-Google-Smtp-Source: APXvYqwoFxodO1E/5vAA3SDxtHGf23l+eqoIo+8ZfDDxQgcNNEAScxQXjmpGb4BGzRNs9hlgbhxRCQ==
+X-Received: by 2002:a5d:65c5:: with SMTP id e5mr46038769wrw.266.1564051607733;
+        Thu, 25 Jul 2019 03:46:47 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id f204sm72042696wme.18.2019.07.25.03.46.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 03:46:47 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     stable@vger.kernel.org
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH stable-4.19 0/2] KVM: nVMX: guest reset fixes
+Date:   Thu, 25 Jul 2019 12:46:43 +0200
+Message-Id: <20190725104645.30642-1-vkuznets@redhat.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725075538.GB1323@kunai>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+Few patches were recently marked for stable@ but commits are not
+backportable as-is and require a few tweaks. Here is 4.19 stable backport.
 
-On Thu, Jul 25, 2019 at 09:55:38AM +0200, Wolfram Sang wrote:
-> Hi Sean,
-> 
-> thanks for the review!
-> 
-> On Thu, Jul 25, 2019 at 06:12:02AM +0100, Sean Young wrote:
-> > On Mon, Jul 22, 2019 at 07:26:31PM +0200, Wolfram Sang wrote:
-> > > i2c_new_dummy() can fail returning a NULL pointer. The code does not
-> > > bail out in this case and the returned pointer is blindly used.
-> > 
-> > I don't see how. The existing code tries to set up the tx part; if
-> > i2c_new_dummy() return NULL then the rcdev is registered without tx,
-> > and tx_c is never used.
-> 
-> Yes, you are totally right. I missed that the send_block function is
-> also only called iff zilog_init succeeded. Thanks for the heads up and
-> sorry for the noise.
+Jan Kiszka (1):
+  KVM: nVMX: Clear pending KVM_REQ_GET_VMCS12_PAGES when leaving nested
 
-Not at all, thank you for the patch.
+Paolo Bonzini (1):
+  KVM: nVMX: do not use dangling shadow VMCS after guest reset
 
-> > > Convert
-> > > to devm_i2c_new_dummy_device() which returns an ERR_PTR and also bail
-> > > out when failing the validity check.
-> > 
-> > Possibly I was being overly cautious with not bailing out if tx can't
-> > be registered; moving to devm is probably a good idea. However the
-> > commit message is misleading, because the existing code has no
-> > NULL pointer access.
-> 
-> Yep, I will resend with a proper commit message. Technically, there is
-> no need to bail out anymore because there is no NULL pointer access. My
-> tendency is now to not bail out and keep the old behaviour (registering
-> without tx). What do you think?
+ arch/x86/kvm/vmx.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-Since I write this code I've got pretty much every model with this zilog
-transmitter/receiver, and they all work fine, including different firmware
-versions. If there is a problem it would be nice to hear about it, and
-not silently swallow the error. I think.
+-- 
+2.20.1
 
-Thanks,
-
-Sean
