@@ -2,109 +2,196 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB89C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0D7C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 934EA21901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 974B121901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:31:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mOvYBVlT"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YtkdmN63"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388412AbfGYOas (ORCPT
+        id S1728023AbfGYOb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:30:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47152 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387891AbfGYOar (ORCPT
+        Thu, 25 Jul 2019 10:31:27 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:37561 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfGYOb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:30:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=baZh7QxoKZtzw8ak6rup4hEOX7fMuLrzq9J4PcrZ70g=; b=mOvYBVlTj5Ruoi40lVB+P6p8c
-        BSMs1x4PNyBf5/bH1fPqYbbl92JXAbFFJ3JtYcPKrFFm4w/30w3ucN4eHwo+sYapNtsQ6r8heuRkP
-        ZUbJdT8J812sepTge4Kym3DuUiPmJ7R4ozti1mmyLqyPQ3vzEFq2dCfEHCVM0qMpyMtovsDSgoJFe
-        PUFgn+7MaKr+ltvbabYE8GJymn4TX+ge8HY5ZfLUrsM/eoZIbmqNnvMav8PBKk4HRXZk/AG04a4Jw
-        1MpkqxZslCmrNxHsCtYsJulc4S69QZptY0vySSBGZyjGl0t7RPott+cjAH5UKHjSn/ebCFlF7TYjg
-        O0X4qpARw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqelV-00077H-KE; Thu, 25 Jul 2019 14:30:43 +0000
-Date:   Thu, 25 Jul 2019 07:30:41 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
-Message-ID: <20190725143040.GA21894@infradead.org>
-References: <20190718100840.GB19666@infradead.org>
- <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
- <20190724065958.GC16225@infradead.org>
- <8e6f8e4f-20fc-1f1f-2228-f4fd7c7c5c1f@ti.com>
- <20190725125014.GD20286@infradead.org>
- <0eae0024-1fdf-bd06-a8ff-1a41f0af3c69@ti.com>
- <20190725140448.GA25010@infradead.org>
- <8e2ec315-5d18-68b2-8cb5-2bfb8a116d1b@ti.com>
- <20190725141144.GA14609@infradead.org>
- <b2170efd-df80-b54b-9ffe-8183befe5e00@ti.com>
+        Thu, 25 Jul 2019 10:31:26 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PEVElc1040831
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 07:31:15 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PEVElc1040831
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564065075;
+        bh=hoseGCWE5nMIXSVq0mNdzHmOWD35L03iUP5wIYTL/jg=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=YtkdmN63ZJ9s4m3XL5lBp/Eha7kDKzoPGAm13Qds45gaxBUNQTlCRK0t46zLsRx3L
+         jyZ4ZessYrD7V0cJogkTV4wDlyRemsUSWt1pIL5iTza7lj0IBHe4CLH7oCazabFF+G
+         ncj8Ip/QATTcRRlsTWGYVO/PdZoq5p/wn6exaCiqNtYwXrGY/owoi3cH6lVbIrir6R
+         fPD9pP92ud0U8vGzqa3Hxik0It50YZIdkPWAI+qDnP4O2oecWs8zq5/0cqCIWPgvQU
+         VCiplComLDR8ZVpxP+/9KzRQvVpKQIrHrRs31zT47KBKR2SIz0Jtz2mTOi/QV5r7Jc
+         QoSra8OfKKXEw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PEVEpG1040828;
+        Thu, 25 Jul 2019 07:31:14 -0700
+Date:   Thu, 25 Jul 2019 07:31:14 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-bdda3b93e66085abf0b2c16bcdf471176e3c816a@git.kernel.org>
+Cc:     mingo@kernel.org, peterz@infradead.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de
+Reply-To: mingo@kernel.org, hpa@zytor.com, peterz@infradead.org,
+          tglx@linutronix.de, linux-kernel@vger.kernel.org
+In-Reply-To: <20190722105220.278327940@linutronix.de>
+References: <20190722105220.278327940@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/apic] x86/apic: Move no_ipi_broadcast() out of 32bit
+Git-Commit-ID: bdda3b93e66085abf0b2c16bcdf471176e3c816a
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <b2170efd-df80-b54b-9ffe-8183befe5e00@ti.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 10:25:50AM -0400, Andrew F. Davis wrote:
-> On 7/25/19 10:11 AM, Christoph Hellwig wrote:
-> > On Thu, Jul 25, 2019 at 10:10:08AM -0400, Andrew F. Davis wrote:
-> >> Pages yes, but not "normal" pages from the kernel managed area.
-> >> page_to_pfn() will return bad values on the pages returned by this
-> >> allocator and so will any of the kernel sync/map functions. Therefor
-> >> those operations cannot be common and need special per-heap handling.
-> > 
-> > Well, that means this thing is buggy and abuses the scatterlist API
-> > and we can't merge it anyway, so it is irrelevant.
-> > 
-> 
-> Since when do scatterlists need to only have kernel virtual backed
-> memory pages? Device memory is stored in scatterlists and
-> dma_sync_sg_for_* would fail just the same when the cache ops were
-> attempted.
+Commit-ID:  bdda3b93e66085abf0b2c16bcdf471176e3c816a
+Gitweb:     https://git.kernel.org/tip/bdda3b93e66085abf0b2c16bcdf471176e3c816a
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Mon, 22 Jul 2019 20:47:21 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 25 Jul 2019 16:12:00 +0200
 
-I'm not sure what you mean with virtual backed memory pages, as we
-don't really have that concept.
+x86/apic: Move no_ipi_broadcast() out of 32bit
 
-But a page in the scatterlist needs to be able to be used everywhere
-we'd normally use a page, e.g. page_to_phys, page_to_pfn, kmap,
-page_address (if !highmem) as consumers including the dma mapping
-interface do all that.
+For the upcoming shorthand support for all APIC incarnations the command
+line option needs to be available for 64 bit as well.
 
-If you want to dma map memory that does not have page backing you
-need to use dma_map_resource.
+While at it, rename the control variable, make it static and mark it
+__ro_after_init.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105220.278327940@linutronix.de
+
+---
+ arch/x86/kernel/apic/ipi.c      | 29 +++++++++++++++++++++++++++--
+ arch/x86/kernel/apic/local.h    |  2 --
+ arch/x86/kernel/apic/probe_32.c | 25 -------------------------
+ 3 files changed, 27 insertions(+), 29 deletions(-)
+
+diff --git a/arch/x86/kernel/apic/ipi.c b/arch/x86/kernel/apic/ipi.c
+index 7236fefde396..ca3bcdb7c4a8 100644
+--- a/arch/x86/kernel/apic/ipi.c
++++ b/arch/x86/kernel/apic/ipi.c
+@@ -5,6 +5,31 @@
+ 
+ #include "local.h"
+ 
++#ifdef CONFIG_SMP
++#ifdef CONFIG_HOTPLUG_CPU
++#define DEFAULT_SEND_IPI	(1)
++#else
++#define DEFAULT_SEND_IPI	(0)
++#endif
++
++static int apic_ipi_shorthand_off __ro_after_init = DEFAULT_SEND_IPI;
++
++static __init int apic_ipi_shorthand(char *str)
++{
++	get_option(&str, &apic_ipi_shorthand_off);
++	return 1;
++}
++__setup("no_ipi_broadcast=", apic_ipi_shorthand);
++
++static int __init print_ipi_mode(void)
++{
++	pr_info("IPI shorthand broadcast: %s\n",
++		apic_ipi_shorthand_off ? "disabled" : "enabled");
++	return 0;
++}
++late_initcall(print_ipi_mode);
++#endif
++
+ static inline int __prepare_ICR2(unsigned int mask)
+ {
+ 	return SET_APIC_DEST_FIELD(mask);
+@@ -203,7 +228,7 @@ void default_send_IPI_allbutself(int vector)
+ 	if (num_online_cpus() < 2)
+ 		return;
+ 
+-	if (no_broadcast || vector == NMI_VECTOR) {
++	if (apic_ipi_shorthand_off || vector == NMI_VECTOR) {
+ 		apic->send_IPI_mask_allbutself(cpu_online_mask, vector);
+ 	} else {
+ 		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector);
+@@ -212,7 +237,7 @@ void default_send_IPI_allbutself(int vector)
+ 
+ void default_send_IPI_all(int vector)
+ {
+-	if (no_broadcast || vector == NMI_VECTOR) {
++	if (apic_ipi_shorthand_off || vector == NMI_VECTOR) {
+ 		apic->send_IPI_mask(cpu_online_mask, vector);
+ 	} else {
+ 		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector);
+diff --git a/arch/x86/kernel/apic/local.h b/arch/x86/kernel/apic/local.h
+index 47c43381b444..bd074e5997b0 100644
+--- a/arch/x86/kernel/apic/local.h
++++ b/arch/x86/kernel/apic/local.h
+@@ -51,8 +51,6 @@ void default_send_IPI_single_phys(int cpu, int vector);
+ void default_send_IPI_mask_sequence_phys(const struct cpumask *mask, int vector);
+ void default_send_IPI_mask_allbutself_phys(const struct cpumask *mask, int vector);
+ 
+-extern int no_broadcast;
+-
+ #ifdef CONFIG_X86_32
+ void default_send_IPI_mask_sequence_logical(const struct cpumask *mask, int vector);
+ void default_send_IPI_mask_allbutself_logical(const struct cpumask *mask, int vector);
+diff --git a/arch/x86/kernel/apic/probe_32.c b/arch/x86/kernel/apic/probe_32.c
+index 7cc961d4f51f..0ac9fd667c99 100644
+--- a/arch/x86/kernel/apic/probe_32.c
++++ b/arch/x86/kernel/apic/probe_32.c
+@@ -15,31 +15,6 @@
+ 
+ #include "local.h"
+ 
+-#ifdef CONFIG_HOTPLUG_CPU
+-#define DEFAULT_SEND_IPI	(1)
+-#else
+-#define DEFAULT_SEND_IPI	(0)
+-#endif
+-
+-int no_broadcast = DEFAULT_SEND_IPI;
+-
+-static __init int no_ipi_broadcast(char *str)
+-{
+-	get_option(&str, &no_broadcast);
+-	pr_info("Using %s mode\n",
+-		no_broadcast ? "No IPI Broadcast" : "IPI Broadcast");
+-	return 1;
+-}
+-__setup("no_ipi_broadcast=", no_ipi_broadcast);
+-
+-static int __init print_ipi_mode(void)
+-{
+-	pr_info("Using IPI %s mode\n",
+-		no_broadcast ? "No-Shortcut" : "Shortcut");
+-	return 0;
+-}
+-late_initcall(print_ipi_mode);
+-
+ static int default_x86_32_early_logical_apicid(int cpu)
+ {
+ 	return 1 << cpu;
