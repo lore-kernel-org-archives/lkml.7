@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB62C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E416C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0628822BE8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 214582084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564076628;
-	bh=15Pwxji75m8a2pWNCXDrphJIhXJzoIUOPER/P5x5RAM=;
+	s=default; t=1564076632;
+	bh=lfjWhSrmZWWzjsByTxj51j9uGijPRSl2jDHCgNkbg9Q=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=LiLkLNVofV0NLBJeNmkKCxaEF2eSFufUCAeZOOWjYMowjsKahzmtk9F2W0R7Niv3N
-	 4pRK3UAH1tgEeAdNRNdadhzbyyqWWN6D/h7aPs49CxfpBvGTzCDafZviD3wBrC4z88
-	 p0U+VzH7qClvMvhOjnuMpi9v6Qbx9QD+OpwGQsvU=
+	b=m5q7AS7BDppEXfOTQRiZpWKqAMXp2hFOo8vPH99hzuDiZ5I5F40a0dCVHTnwgLW9t
+	 A4aEBMD5apbV9ZekoxZSwhByE8LpSAJjyJvvoaoUnkxnbpXxAmJe1XaiAsUUqaKPKO
+	 2Fe8cpZ2m9M06epbY7GXRjk7dM6T3IVn3DVOkW7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388629AbfGYRnq (ORCPT
+        id S2388955AbfGYRnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:43:46 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36588 "EHLO
+        Thu, 25 Jul 2019 13:43:50 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36590 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730027AbfGYRnq (ORCPT
+        with ESMTP id S1726738AbfGYRnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:43:46 -0400
+        Thu, 25 Jul 2019 13:43:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=vJGclLg2/SizjBD0uAOxWAOde9Sqq4M2mnEoGMzJw7w=; b=Lys2mjZWqvWr
-        Hs817Rj0fgrtTWOrJhgUlHo165JjvMORPDK2B8fErlTc2L0VSjqEC/n0YKGevhLFGdQxthtntl+yb
-        D0jWSXgMEGqvVWKI0D4pEhwSABaz15QK7to7pa+G8QGRms8BAZXxZSxd5EYyrfXxR6Q/Lkaz9oit+
-        JkKEA=;
+        List-Archive; bh=3hutWYgyTBe2VUCgMXkh7pO498CqD2Amxaael5ohZis=; b=tlZl7MQqLsJ/
+        lQTNVWyixo4iVFlVzdZW4OfTzD2PA02QNv/6Bx9lhYkrcNB4/VMSIBRvBfEnO8a1tkFLVnQOBETm/
+        MrNfZjEouLs2e6PdYfYrTPKyw46hhEcxBwdYrpLQrFFZm4ikZyE/2Uty+isnTxsH6AbfgZBChg3cj
+        Cdu7U=;
 Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hqhmG-0003NI-Qc; Thu, 25 Jul 2019 17:43:41 +0000
+        id 1hqhmG-0003NH-QJ; Thu, 25 Jul 2019 17:43:40 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id F005E2742B63; Thu, 25 Jul 2019 18:43:39 +0100 (BST)
+        id 8B8752742B5F; Thu, 25 Jul 2019 18:43:39 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Jerome Brunet <jbrunet@baylibre.com>
 Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
@@ -52,10 +52,10 @@ Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: codec2codec: run callbacks in order" to the asoc tree
-In-Reply-To: <20190725165949.29699-2-jbrunet@baylibre.com>
+Subject: Applied "ASoC: codec2codec: deal with params when necessary" to the asoc tree
+In-Reply-To: <20190725165949.29699-4-jbrunet@baylibre.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190725174339.F005E2742B63@ypsilon.sirena.org.uk>
+Message-Id: <20190725174339.8B8752742B5F@ypsilon.sirena.org.uk>
 Date:   Thu, 25 Jul 2019 18:43:39 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: codec2codec: run callbacks in order
+   ASoC: codec2codec: deal with params when necessary
 
 has been applied to the asoc tree at
 
@@ -89,93 +89,238 @@ to this mail.
 Thanks,
 Mark
 
-From 68c907f10cd816cad2287167a1a1d77914a6d466 Mon Sep 17 00:00:00 2001
+From 3dcfb397dad2ad55bf50de3c5d5a57090d35a18a Mon Sep 17 00:00:00 2001
 From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu, 25 Jul 2019 18:59:44 +0200
-Subject: [PATCH] ASoC: codec2codec: run callbacks in order
+Date: Thu, 25 Jul 2019 18:59:46 +0200
+Subject: [PATCH] ASoC: codec2codec: deal with params when necessary
 
-When handling dai_link events on codec to codec links, run all .startup()
-callbacks on sinks and sources before running any .hw_params(). Same goes
-for hw_free() and shutdown(). This is closer to the behavior of regular
-dai links
+When there is an event on codec to codec dai_link, we only need to deal
+with params if the event is SND_SOC_DAPM_PRE_PMU, when .hw_params() is
+called. For the other events, it is useless.
+
+Also, dealing with the codec to codec params just before calling
+.hw_params() callbacks give change to either party on the link to alter
+params content in .startup(), which might be useful in some cases
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20190725165949.29699-2-jbrunet@baylibre.com
+Link: https://lore.kernel.org/r/20190725165949.29699-4-jbrunet@baylibre.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/soc-dapm.c | 36 +++++++++++++++++++++++++++---------
- 1 file changed, 27 insertions(+), 9 deletions(-)
+ sound/soc/soc-dapm.c | 159 +++++++++++++++++++++++++------------------
+ 1 file changed, 92 insertions(+), 67 deletions(-)
 
 diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index 1d04612601ad..034b31fd2ecb 100644
+index 7db4abd9a0a5..6dcaf9ff6eb5 100644
 --- a/sound/soc/soc-dapm.c
 +++ b/sound/soc/soc-dapm.c
-@@ -3835,11 +3835,6 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
- 				goto out;
- 			}
- 			source->active++;
+@@ -3764,25 +3764,59 @@ int snd_soc_dapm_new_controls(struct snd_soc_dapm_context *dapm,
+ }
+ EXPORT_SYMBOL_GPL(snd_soc_dapm_new_controls);
+ 
+-static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
+-				  struct snd_kcontrol *kcontrol, int event)
++static int
++snd_soc_dai_link_event_pre_pmu(struct snd_soc_dapm_widget *w,
++			       struct snd_pcm_substream *substream)
+ {
+ 	struct snd_soc_dapm_path *path;
+ 	struct snd_soc_dai *source, *sink;
+-	struct snd_soc_pcm_runtime *rtd = w->priv;
+-	const struct snd_soc_pcm_stream *config;
+-	struct snd_pcm_substream substream;
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+ 	struct snd_pcm_hw_params *params = NULL;
+-	struct snd_pcm_runtime *runtime = NULL;
++	const struct snd_soc_pcm_stream *config = NULL;
+ 	unsigned int fmt;
+-	int ret = 0;
++	int ret;
+ 
+-	config = rtd->dai_link->params + rtd->params_select;
++	params = kzalloc(sizeof(*params), GFP_KERNEL);
++	if (!params)
++		return -ENOMEM;
+ 
+-	if (WARN_ON(!config) ||
+-	    WARN_ON(list_empty(&w->edges[SND_SOC_DAPM_DIR_OUT]) ||
+-		    list_empty(&w->edges[SND_SOC_DAPM_DIR_IN])))
+-		return -EINVAL;
++	substream->stream = SNDRV_PCM_STREAM_CAPTURE;
++	snd_soc_dapm_widget_for_each_source_path(w, path) {
++		source = path->source->priv;
++
++		ret = snd_soc_dai_startup(source, substream);
++		if (ret < 0) {
++			dev_err(source->dev,
++				"ASoC: startup() failed: %d\n", ret);
++			goto out;
++		}
++		source->active++;
++	}
++
++	substream->stream = SNDRV_PCM_STREAM_PLAYBACK;
++	snd_soc_dapm_widget_for_each_sink_path(w, path) {
++		sink = path->sink->priv;
++
++		ret = snd_soc_dai_startup(sink, substream);
++		if (ret < 0) {
++			dev_err(sink->dev,
++				"ASoC: startup() failed: %d\n", ret);
++			goto out;
++		}
++		sink->active++;
++	}
++
++	/*
++	 * Note: getting the config after .startup() gives a chance to
++	 * either party on the link to alter the configuration if
++	 * necessary
++	 */
++	config = rtd->dai_link->params + rtd->params_select;
++	if (WARN_ON(!config)) {
++		dev_err(w->dapm->dev, "ASoC: link config missing\n");
++		ret = -EINVAL;
++		goto out;
++	}
+ 
+ 	/* Be a little careful as we don't want to overflow the mask array */
+ 	if (config->formats) {
+@@ -3790,27 +3824,62 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
+ 	} else {
+ 		dev_warn(w->dapm->dev, "ASoC: Invalid format %llx specified\n",
+ 			 config->formats);
+-		fmt = 0;
+-	}
+ 
+-	/* Currently very limited parameter selection */
+-	params = kzalloc(sizeof(*params), GFP_KERNEL);
+-	if (!params) {
+-		ret = -ENOMEM;
++		ret = -EINVAL;
+ 		goto out;
+ 	}
+-	snd_mask_set(hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT), fmt);
+ 
++	snd_mask_set(hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT), fmt);
+ 	hw_param_interval(params, SNDRV_PCM_HW_PARAM_RATE)->min =
+ 		config->rate_min;
+ 	hw_param_interval(params, SNDRV_PCM_HW_PARAM_RATE)->max =
+ 		config->rate_max;
+-
+ 	hw_param_interval(params, SNDRV_PCM_HW_PARAM_CHANNELS)->min
+ 		= config->channels_min;
+ 	hw_param_interval(params, SNDRV_PCM_HW_PARAM_CHANNELS)->max
+ 		= config->channels_max;
+ 
++	substream->stream = SNDRV_PCM_STREAM_CAPTURE;
++	snd_soc_dapm_widget_for_each_source_path(w, path) {
++		source = path->source->priv;
++
++		ret = snd_soc_dai_hw_params(source, substream, params);
++		if (ret < 0)
++			goto out;
++
++		dapm_update_dai_unlocked(substream, params, source);
++	}
++
++	substream->stream = SNDRV_PCM_STREAM_PLAYBACK;
++	snd_soc_dapm_widget_for_each_sink_path(w, path) {
++		sink = path->sink->priv;
++
++		ret = snd_soc_dai_hw_params(sink, substream, params);
++		if (ret < 0)
++			goto out;
++
++		dapm_update_dai_unlocked(substream, params, sink);
++	}
++
++out:
++	kfree(params);
++	return 0;
++}
++
++static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
++				  struct snd_kcontrol *kcontrol, int event)
++{
++	struct snd_soc_dapm_path *path;
++	struct snd_soc_dai *source, *sink;
++	struct snd_soc_pcm_runtime *rtd = w->priv;
++	struct snd_pcm_substream substream;
++	struct snd_pcm_runtime *runtime = NULL;
++	int ret = 0;
++
++	if (WARN_ON(list_empty(&w->edges[SND_SOC_DAPM_DIR_OUT]) ||
++		    list_empty(&w->edges[SND_SOC_DAPM_DIR_IN])))
++		return -EINVAL;
++
+ 	memset(&substream, 0, sizeof(substream));
+ 
+ 	/* Allocate a dummy snd_pcm_runtime for startup() and other ops() */
+@@ -3824,53 +3893,10 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_PRE_PMU:
+-		substream.stream = SNDRV_PCM_STREAM_CAPTURE;
+-		snd_soc_dapm_widget_for_each_source_path(w, path) {
+-			source = path->source->priv;
+-
+-			ret = snd_soc_dai_startup(source, &substream);
+-			if (ret < 0) {
+-				dev_err(source->dev,
+-					"ASoC: startup() failed: %d\n", ret);
+-				goto out;
+-			}
+-			source->active++;
+-		}
+-
+-		substream.stream = SNDRV_PCM_STREAM_PLAYBACK;
+-		snd_soc_dapm_widget_for_each_sink_path(w, path) {
+-			sink = path->sink->priv;
+-
+-			ret = snd_soc_dai_startup(sink, &substream);
+-			if (ret < 0) {
+-				dev_err(sink->dev,
+-					"ASoC: startup() failed: %d\n", ret);
+-				goto out;
+-			}
+-			sink->active++;
+-		}
+-
+-		substream.stream = SNDRV_PCM_STREAM_CAPTURE;
+-		snd_soc_dapm_widget_for_each_source_path(w, path) {
+-			source = path->source->priv;
+-
 -			ret = snd_soc_dai_hw_params(source, &substream, params);
 -			if (ret < 0)
 -				goto out;
 -
 -			dapm_update_dai_unlocked(&substream, params, source);
- 		}
+-		}
+-
+-		substream.stream = SNDRV_PCM_STREAM_PLAYBACK;
+-		snd_soc_dapm_widget_for_each_sink_path(w, path) {
+-			sink = path->sink->priv;
+-
+-			ret = snd_soc_dai_hw_params(sink, &substream, params);
+-			if (ret < 0)
+-				goto out;
++		ret = snd_soc_dai_link_event_pre_pmu(w, &substream);
++		if (ret < 0)
++			goto out;
  
- 		substream.stream = SNDRV_PCM_STREAM_PLAYBACK;
-@@ -3853,6 +3848,23 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
- 				goto out;
- 			}
- 			sink->active++;
-+		}
-+
-+		substream.stream = SNDRV_PCM_STREAM_CAPTURE;
-+		snd_soc_dapm_widget_for_each_source_path(w, path) {
-+			source = path->source->priv;
-+
-+			ret = snd_soc_dai_hw_params(source, &substream, params);
-+			if (ret < 0)
-+				goto out;
-+
-+			dapm_update_dai_unlocked(&substream, params, source);
-+		}
-+
-+		substream.stream = SNDRV_PCM_STREAM_PLAYBACK;
-+		snd_soc_dapm_widget_for_each_sink_path(w, path) {
-+			sink = path->sink->priv;
-+
- 			ret = snd_soc_dai_hw_params(sink, &substream, params);
- 			if (ret < 0)
- 				goto out;
-@@ -3889,9 +3901,18 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
- 		substream.stream = SNDRV_PCM_STREAM_CAPTURE;
- 		snd_soc_dapm_widget_for_each_source_path(w, path) {
- 			source = path->source->priv;
--
- 			snd_soc_dai_hw_free(source, &substream);
-+		}
-+
-+		substream.stream = SNDRV_PCM_STREAM_PLAYBACK;
-+		snd_soc_dapm_widget_for_each_sink_path(w, path) {
-+			sink = path->sink->priv;
-+			snd_soc_dai_hw_free(sink, &substream);
-+		}
+-			dapm_update_dai_unlocked(&substream, params, sink);
+-		}
+ 		break;
  
-+		substream.stream = SNDRV_PCM_STREAM_CAPTURE;
-+		snd_soc_dapm_widget_for_each_source_path(w, path) {
-+			source = path->source->priv;
- 			source->active--;
- 			snd_soc_dai_shutdown(source, &substream);
- 		}
-@@ -3899,9 +3920,6 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
- 		substream.stream = SNDRV_PCM_STREAM_PLAYBACK;
- 		snd_soc_dapm_widget_for_each_sink_path(w, path) {
- 			sink = path->sink->priv;
--
--			snd_soc_dai_hw_free(sink, &substream);
--
- 			sink->active--;
- 			snd_soc_dai_shutdown(sink, &substream);
- 		}
+ 	case SND_SOC_DAPM_POST_PMU:
+@@ -3932,7 +3958,6 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
+ 
+ out:
+ 	kfree(runtime);
+-	kfree(params);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
