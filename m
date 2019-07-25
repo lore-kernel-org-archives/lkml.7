@@ -2,111 +2,157 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697CFC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253BAC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F02E22C7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:26:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i+C6MOf2"
+	by mail.kernel.org (Postfix) with ESMTP id EF0D621901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388270AbfGYO0Z (ORCPT
+        id S2388321AbfGYO0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:26:25 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35188 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbfGYO0Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:26:24 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6PEPqXp117924;
-        Thu, 25 Jul 2019 09:25:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564064752;
-        bh=zz+4xc5f556ik5dVIHkOBcpiQhkWRlNhJiib+8wLNDI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=i+C6MOf2C+7Ox6ak0GFOM3KZf2HLv2JdwWowGGpw+dStFh3oI9YR29IsZmMcKGJ16
-         55xzh94E3MaN9HD/A3tuOnkgZzSxuozxGm0NTYUMknyRake0JaerdMNii1T6ymAUe5
-         +TfCzJqEuH4pYmTq43p5uTgnQ3GWvObrtEWtR+eg=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6PEPqDK099670
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 25 Jul 2019 09:25:52 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 25
- Jul 2019 09:25:52 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 25 Jul 2019 09:25:52 -0500
-Received: from [10.250.86.29] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6PEPobU051141;
-        Thu, 25 Jul 2019 09:25:51 -0500
-Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-References: <20190624194908.121273-1-john.stultz@linaro.org>
- <20190624194908.121273-5-john.stultz@linaro.org>
- <20190718100840.GB19666@infradead.org>
- <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
- <20190724065958.GC16225@infradead.org>
- <8e6f8e4f-20fc-1f1f-2228-f4fd7c7c5c1f@ti.com>
- <20190725125014.GD20286@infradead.org>
- <0eae0024-1fdf-bd06-a8ff-1a41f0af3c69@ti.com>
- <20190725140448.GA25010@infradead.org>
- <8e2ec315-5d18-68b2-8cb5-2bfb8a116d1b@ti.com>
- <20190725141144.GA14609@infradead.org>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <b2170efd-df80-b54b-9ffe-8183befe5e00@ti.com>
-Date:   Thu, 25 Jul 2019 10:25:50 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 10:26:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38346 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388214AbfGYO0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 10:26:31 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 890383083047;
+        Thu, 25 Jul 2019 14:26:30 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6FBA91001B09;
+        Thu, 25 Jul 2019 14:26:30 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 3132CE160;
+        Thu, 25 Jul 2019 14:26:30 +0000 (UTC)
+Date:   Thu, 25 Jul 2019 10:26:29 -0400 (EDT)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Suraj Sumangala <suraj@atheros.com>,
+        Frederic Danis <frederic.danis@linux.intel.com>,
+        Loic Poulain <loic.poulain@intel.com>,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        syzkaller@googlegroups.com
+Message-ID: <74627941.4546902.1564064789961.JavaMail.zimbra@redhat.com>
+In-Reply-To: <2E234F47-724D-4CFB-93B5-48E5BDA6F230@holtmann.org>
+References: <20190725120909.31235-1-vdronov@redhat.com> <2E234F47-724D-4CFB-93B5-48E5BDA6F230@holtmann.org>
+Subject: Re: [PATCH] Bluetooth: hci_uart: check for missing tty operations
+ in protocol handlers
 MIME-Version: 1.0
-In-Reply-To: <20190725141144.GA14609@infradead.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.43.2.29, 10.4.195.24]
+Thread-Topic: Bluetooth: hci_uart: check for missing tty operations in protocol handlers
+Thread-Index: gnD96eYXODpIBBKB1hw8FR4695NsjA==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 25 Jul 2019 14:26:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/25/19 10:11 AM, Christoph Hellwig wrote:
-> On Thu, Jul 25, 2019 at 10:10:08AM -0400, Andrew F. Davis wrote:
->> Pages yes, but not "normal" pages from the kernel managed area.
->> page_to_pfn() will return bad values on the pages returned by this
->> allocator and so will any of the kernel sync/map functions. Therefor
->> those operations cannot be common and need special per-heap handling.
-> 
-> Well, that means this thing is buggy and abuses the scatterlist API
-> and we can't merge it anyway, so it is irrelevant.
-> 
+Hello, Marcel,
 
-Since when do scatterlists need to only have kernel virtual backed
-memory pages? Device memory is stored in scatterlists and
-dma_sync_sg_for_* would fail just the same when the cache ops were
-attempted.
+> why is this one hidden behind CONFIG_PM? The general baud rate changes are
+> independent of runtime power management support.
+
+hci_bcm calls hci_uart_set_flow_control() only from functions hidden behind
+#ifdef-CONFIG_PM (surely this can change in the future), and so without
+CONFIG_PM set it cannot hit the bug (as of now). So I've hidden the check
+for tiocm[gs]et() behind #ifdef-CONFIG_PM too.
+
+If you tell me it is better to remove this #ifdef, I'll remove it.
+
+> And I would introduce a bool hci_uart_has_tiocm_support(struct hci_uart *)
+> helper.
+
+Great, I will add it to the v2 fix. I guess a good place for it is hci_ldisc.c,
+near hci_uart_set_flow_control(), isn't it?
+
+Best regards,
+Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
+
+----- Original Message -----
+> From: "Marcel Holtmann" <marcel@holtmann.org>
+> To: "Vladis Dronov" <vdronov@redhat.com>
+> Cc: "Johan Hedberg" <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, "Suraj
+> Sumangala" <suraj@atheros.com>, "Frederic Danis" <frederic.danis@linux.intel.com>, "Loic Poulain"
+> <loic.poulain@intel.com>, "Balakrishna Godavarthi" <bgodavar@codeaurora.org>, syzkaller@googlegroups.com
+> Sent: Thursday, July 25, 2019 2:59:42 PM
+> Subject: Re: [PATCH] Bluetooth: hci_uart: check for missing tty operations in protocol handlers
+> 
+> Hi Vladis,
+> 
+> > Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
+> > functions which are called by the certain HCI UART protocols (hci_ath,
+> > hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
+> > or directly. This leads to an execution at NULL and can be triggered by
+> > an unprivileged user. Fix this by adding a check for the missing tty
+> > operations to the protocols which use them.
+> > 
+> > This fixes CVE-2019-10207.
+> > 
+> > Link:
+> > https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
+> > Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
+> > Cc: stable@vger.kernel.org # v2.6.36+
+> > Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
+> > Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
+> > Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate
+> > configuration support")
+> > Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
+> > Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm
+> > Bluetooth chip wcn3990")
+> > Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+> > ---
+> > drivers/bluetooth/hci_ath.c   | 3 +++
+> > drivers/bluetooth/hci_bcm.c   | 5 +++++
+> > drivers/bluetooth/hci_intel.c | 3 +++
+> > drivers/bluetooth/hci_mrvl.c  | 3 +++
+> > drivers/bluetooth/hci_qca.c   | 4 ++++
+> > 5 files changed, 18 insertions(+)
+> > 
+> > diff --git a/drivers/bluetooth/hci_ath.c b/drivers/bluetooth/hci_ath.c
+> > index a55be205b91a..99df8a13e47e 100644
+> > --- a/drivers/bluetooth/hci_ath.c
+> > +++ b/drivers/bluetooth/hci_ath.c
+> > @@ -98,6 +98,9 @@ static int ath_open(struct hci_uart *hu)
+> > 
+> > 	BT_DBG("hu %p", hu);
+> > 
+> > +	if (!hu->tty->driver->ops->tiocmget || !hu->tty->driver->ops->tiocmset)
+> > +		return -ENOTSUPP;
+> > +
+> > 	ath = kzalloc(sizeof(*ath), GFP_KERNEL);
+> > 	if (!ath)
+> > 		return -ENOMEM;
+> > diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+> > index 8905ad2edde7..8c3e09cc341c 100644
+> > --- a/drivers/bluetooth/hci_bcm.c
+> > +++ b/drivers/bluetooth/hci_bcm.c
+> > @@ -406,6 +406,11 @@ static int bcm_open(struct hci_uart *hu)
+> > 
+> > 	bt_dev_dbg(hu->hdev, "hu %p", hu);
+> > 
+> > +#ifdef CONFIG_PM
+> > +	if (!hu->tty->driver->ops->tiocmget || !hu->tty->driver->ops->tiocmset)
+> > +		return -ENOTSUPP;
+> > +#endif
+> > +
+> 
+> why is this one hidden behind CONFIG_PM? The general baud rate changes are
+> independent of runtime power management support.
+> 
+> And I would introduce a bool hci_uart_has_tiocm_support(struct hci_uart *)
+> helper.
+> 
+> Regards
+> 
+> Marcel
