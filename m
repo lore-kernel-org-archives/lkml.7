@@ -2,60 +2,157 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AACBBC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798EBC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77975229F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5020422BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:55:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564095345;
+	bh=g812QekVhk9YTdEBM9x7cM1JCaC9kZOURpxH8pDFoBY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=G97xvqps1C3YMXYGX8gM2WbX5gdjn1ezE52wxH5nhWjlmIQB3kSCthKf7G5V0bhFG
+	 3KRKgBq69w1aEWKza5YdSWFf+7Q/gIwyou0r7BnrZRAHO0kqHSsUBuRjhwUSVL6YNJ
+	 EeHR7E08stu9C0wppGCN6Rrm0DXO7A+kbyMxPGQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbfGYWwy (ORCPT
+        id S1726908AbfGYWzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 18:52:54 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:40274 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbfGYWwx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 18:52:53 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A490012600856;
-        Thu, 25 Jul 2019 15:52:52 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 15:52:50 -0700 (PDT)
-Message-Id: <20190725.155250.1893960265343921681.davem@davemloft.net>
-To:     matorola@gmail.com
-Cc:     ldv@altlinux.org, hch@lst.de, khalid.aziz@oracle.com,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        sparclinux@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/16] sparc64: use the generic get_user_pages_fast code
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <CADxRZqw0oCpw=wKUrFTOJF1dUKrCU6k5MQXj3tVGachu4zPcgw@mail.gmail.com>
-References: <CADxRZqx-jEnm4U8oe=tJf5apbvcMuw5OYZUN8h4G68sXFvDsmQ@mail.gmail.com>
-        <20190724.131324.1545677795217357026.davem@davemloft.net>
-        <CADxRZqw0oCpw=wKUrFTOJF1dUKrCU6k5MQXj3tVGachu4zPcgw@mail.gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 25 Jul 2019 15:52:53 -0700 (PDT)
+        Thu, 25 Jul 2019 18:55:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726823AbfGYWzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 18:55:44 -0400
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D58222C7C;
+        Thu, 25 Jul 2019 22:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564095342;
+        bh=g812QekVhk9YTdEBM9x7cM1JCaC9kZOURpxH8pDFoBY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Dz09u9S+Y3r70TocpuCA7IhoTLlYKdq7e+lwmbq167Zr4gqovWvCkIFvioJzQc30E
+         UExAFN0EUnJRkGN7juvvECfcyT/2dxBkDeevZjvKHHIjF+P3AGjXUkTgj812rRiWOK
+         Eqxe4SYbimo13thxamdtxgOCzguesjyhhx+fJq8w=
+Received: by mail-qt1-f172.google.com with SMTP id h18so50763315qtm.9;
+        Thu, 25 Jul 2019 15:55:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAULM5dbKVfmFz8HHWJU32uUu7JoGoERmWGE3E4mjiQffKlxmz1X
+        5akBSq8CsoxPFEkfIJGKaZiV0Kl2rKw+f0Dt9w==
+X-Google-Smtp-Source: APXvYqz9DMpk570nuBSorqgYVEjSnP43DJEbGzpTBLg6Vx9QqBo6uQGIKBtq4PAJy2WytaI2Mv9aGYuTo7fmld4NaC4=
+X-Received: by 2002:a0c:b786:: with SMTP id l6mr65611308qve.148.1564095341588;
+ Thu, 25 Jul 2019 15:55:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <1564083776-20540-1-git-send-email-clabbe@baylibre.com> <1564083776-20540-2-git-send-email-clabbe@baylibre.com>
+In-Reply-To: <1564083776-20540-2-git-send-email-clabbe@baylibre.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 25 Jul 2019 16:55:30 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLbYwRpNWHGkYbomWLMpum_DXW4OjNNRrwTRM=w86dONw@mail.gmail.com>
+Message-ID: <CAL_JsqLbYwRpNWHGkYbomWLMpum_DXW4OjNNRrwTRM=w86dONw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: crypto: Add DT bindings documentation
+ for amlogic-crypto
+To:     Corentin Labbe <clabbe@baylibre.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        baylibre-upstreaming@groups.io
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anatoly Pugachev <matorola@gmail.com>
-Date: Thu, 25 Jul 2019 21:33:24 +0300
+On Thu, Jul 25, 2019 at 1:43 PM Corentin Labbe <clabbe@baylibre.com> wrote:
+>
+> This patch adds documentation for Device-Tree bindings for the
+> Amlogic GXL cryptographic offloader driver.
+>
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> ---
+>  .../bindings/crypto/amlogic-gxl-crypto.yaml   | 45 +++++++++++++++++++
 
-> http://u164.east.ru/kernel/
-> 
-> there's vmlinuz-5.3.0-rc1 kernel and archive 5.3.0-rc1-modules.tar.gz
-> of /lib/modules/5.3.0-rc1/
-> this is from oracle sparclinux LDOM , compiled with 7.4.0 gcc
+Follow the compatible string for the filename: amlogic,gxl-crypto.yaml
 
-Thank you, I'll take a look.
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml b/Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+> new file mode 100644
+> index 000000000000..41265e57c00b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+Dual (GPL-2.0 OR BSD-2-Clause) is preferred for new bindings. Not a
+requirement though.
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/crypto/amlogic-gxl-crypto.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic GXL Cryptographic Offloader
+> +
+> +maintainers:
+> +  - Corentin Labbe <clabbe@baylibre.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+
+Don't need 'oneOf' when there is only 1.
+
+> +      - const: amlogic,gxl-crypto
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: blkmv
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    crypto: crypto@c883e000 {
+> +        compatible = "amlogic,gxl-crypto";
+> +        reg = <0x0 0xc883e000 0x0 0x36>;
+
+This should throw errors because the default size on examples are 1
+cell. But validating the examples with the schema only just landed in
+5.3-rc1.
+
+> +        interrupts = <GIC_SPI 188 IRQ_TYPE_EDGE_RISING>,
+> +            <GIC_SPI 189 IRQ_TYPE_EDGE_RISING>;
+
+This doesn't match the schema.
+
+> +        clocks = <&clkc CLKID_BLKMV>;
+> +        clock-names = "blkmv";
+> +    };
+> --
+> 2.21.0
+>
