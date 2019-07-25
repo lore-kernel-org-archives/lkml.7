@@ -3,123 +3,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10271C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B29C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E28CA229F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 650E8229F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404176AbfGYLls (ORCPT
+        id S2404186AbfGYLnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:41:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58006 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404095AbfGYLlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:41:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5F5EBAD4C;
-        Thu, 25 Jul 2019 11:41:45 +0000 (UTC)
-Date:   Thu, 25 Jul 2019 13:41:37 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     cgroups@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Alessio Balsini <balsini@android.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Paul Turner <pjt@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v12 3/6] sched/core: uclamp: Propagate system defaults to
- root group
-Message-ID: <20190725114126.GA4130@blackbody.suse.cz>
-References: <20190718181748.28446-1-patrick.bellasi@arm.com>
- <20190718181748.28446-4-patrick.bellasi@arm.com>
+        Thu, 25 Jul 2019 07:43:53 -0400
+Received: from verein.lst.de ([213.95.11.211]:60769 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388154AbfGYLnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 07:43:52 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 137C168BFE; Thu, 25 Jul 2019 13:43:49 +0200 (CEST)
+Date:   Thu, 25 Jul 2019 13:43:48 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH v5 02/10] iommu/vt-d: Use per-device dma_ops
+Message-ID: <20190725114348.GA30957@lst.de>
+References: <20190725031717.32317-1-baolu.lu@linux.intel.com> <20190725031717.32317-3-baolu.lu@linux.intel.com> <20190725054413.GC24527@lst.de> <bc831f88-5b19-7531-00aa-a7577dd5c1ac@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wzJLGUyc3ArbnUjN"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190718181748.28446-4-patrick.bellasi@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bc831f88-5b19-7531-00aa-a7577dd5c1ac@linux.intel.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 25, 2019 at 03:18:03PM +0800, Lu Baolu wrote:
+>> Don't we need to keep this bit so that we still allow the IOMMU
+>> to act if the device has a too small DMA mask to address all memory in
+>> the system, even if if it should otherwise be identity mapped?
+>>
+>
+> This checking happens only when device is using an identity mapped
+> domain. If the device has a small DMA mask, swiotlb will be used for
+> high memory access.
+>
+> This is supposed to be handled in dma_direct_map_page():
+>
+>         if (unlikely(!dma_direct_possible(dev, dma_addr, size)) &&
+>             !swiotlb_map(dev, &phys, &dma_addr, size, dir, attrs)) {
+>                 report_addr(dev, dma_addr, size);
+>                 return DMA_MAPPING_ERROR;
+>         }
 
---wzJLGUyc3ArbnUjN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well, yes.  But the point is that the current code uses dynamic iommu
+mappings even if the devices is in the identity mapped domain when the
+dma mask іs too small to map all memory directly.  Your change means it
+will now use swiotlb which is most likely going to be a lot more
+expensive.  I don't think that this change is a good idea, and even if
+we decide that this is a good idea after all that should be done in a
+separate prep patch that explains the rationale.
 
-On Thu, Jul 18, 2019 at 07:17:45PM +0100, Patrick Bellasi <patrick.bellasi@=
-arm.com> wrote:
-> The clamp values are not tunable at the level of the root task group.
-> That's for two main reasons:
->=20
->  - the root group represents "system resources" which are always
->    entirely available from the cgroup standpoint.
->=20
->  - when tuning/restricting "system resources" makes sense, tuning must
->    be done using a system wide API which should also be available when
->    control groups are not.
->=20
-> When a system wide restriction is available, cgroups should be aware of
-> its value in order to know exactly how much "system resources" are
-> available for the subgroups.
-IIUC, the global default would apply in uclamp_eff_get(), so this
-propagation isn't strictly necessary in order to apply to tasks (that's
-how it works under !CONFIG_UCLAMP_TASK_GROUP).
-The reason is that effective value (which isn't exposed currently) in a
-group takes into account this global restriction, right?
-
-
-> @@ -1043,12 +1063,17 @@ int sysctl_sched_uclamp_handler(struct ctl_table =
-*table, int write,
-> [...]
-> +	if (update_root_tg)
-> +		uclamp_update_root_tg();
-> +
->  	/*
->  	 * Updating all the RUNNABLE task is expensive, keep it simple and do
->  	 * just a lazy update at each next enqueue time.
-Since uclamp_update_root_tg() traverses down to
-uclamp_update_active_tasks() is this comment half true now?
-
-
---wzJLGUyc3ArbnUjN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+amhwRV4jZeXdUhoK2l36XSZ9y4FAl05lXAACgkQK2l36XSZ
-9y5cgw//QQud17T2NvswG8hJs4iqq9hLqZdoEQh3auHGt5gBhY//Pre7fKieLaeQ
-twqmtcup1hN8T5n1s3J88mCC/Hl7uRlvQyHj2TrN5kFbRgrPRExi6desTMWU6hGp
-nyfsenwH7NvPPUWlO7RhIQtRJRc23cHen01DxTWDJZrg48oeZnoJV533Sj9Qf6tV
-qGTj1ZikLeyPzlVvHwnP1Vb+kBIQ1VTU8dZCkV+0RW4qFtnin7nmYca57/ARC8RV
-KnE/DZNVETsikE/J/3dyvxw/5cJGYoZssikqIjnSrmF9eoXvWzkEnUsg2WFO6Rtl
-UuFllWgrPScfjBlq1KfsD4WOCGgMtiuUtaOSe3SSnH2dVALsHfgmW5pqnMC38N3O
-kEV1abGka6x2VTX1HJyXW/buNP5WQY2fh2dWFm06oe1iC80NiLmIULpTKZYIVdtZ
-LWZfAOjcXU3fwdAu8daZOKnizG0mOfQxT7PiaX/A74ucc0DV0C2JnM+MszR3pWIp
-huSGQ3AU4V2+OGbJPO7/rht//Du47t77tzF1RXjpjONMq8ONGIeFQ4Ansp3hSQS3
-98shobgsl2Be0MUm7nWKHSOay48IoJJuZoKwvoi/rFE3Elnlbs6fcJE5IWdM3PW4
-EmmxngweF0LmvVlDGLZ4JP6utbdgvGEUpJ1DUfmkKOnE4bKT60o=
-=lOBr
------END PGP SIGNATURE-----
-
---wzJLGUyc3ArbnUjN--
+> Best regards,
+> Baolu
+---end quoted text---
