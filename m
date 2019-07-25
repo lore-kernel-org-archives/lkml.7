@@ -2,123 +2,163 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BDBC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BF1C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35F9A22C7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4AA8218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564072641;
-	bh=HvmbL0a4IPcOkUJ9Pp0wv3dUD1uBREBknPN3UfLuQ0w=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=OUawU9ZABjYJueQy2H/i0FqFk0HaEWEBIz/BEYq9YKQe4MN1TKKNB34mv6QpFEBE4
-	 2yUrYKHb9RMigL5ysBPZrKjXCjRneN2Idc6NdtEfFLosdhvIWNtNdsjSvwiPKy/l4q
-	 aQR7Nol1SgxLNLP+iyoBgTK2lhOarubvnOqExno4=
+	s=default; t=1564072711;
+	bh=qZ8UghbS60mDMJe5QbgJ8kO1NzUbcQ/OeUsBgknVAy0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SNomZc0xNSk4WR0hU0EWJsp0TYWHr2llmgoUKnvQLcPPtODPQfMjH4MWe3rLib2h1
+	 LKQet210k3yCzWkJB46BabSUuYKn6kkA+u0o6YDHVxjGh6/vkmPfaRP8k5aqwxr9mT
+	 LGGk0SZkEhMn+NNpMxIXax5NQp+ztlG9IOd/xSEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbfGYQhT (ORCPT
+        id S2388123AbfGYQia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:37:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729324AbfGYQhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:37:18 -0400
-Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15EFC218F0;
-        Thu, 25 Jul 2019 16:37:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564072638;
-        bh=HvmbL0a4IPcOkUJ9Pp0wv3dUD1uBREBknPN3UfLuQ0w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hfRR2nMFRQOGde3sXF2mPlmC6EMaSJQpQopNxdHNDjJcOSg8+9QcLItSUc961G061
-         tn0wuD2JOer/xmKw6Nw727MKHt3Ru4nnp9gfb3qMC8aAYZzvpidQjTGEjk+9qMHxru
-         gvyrU1U4ZgrVjilb4h9alS+M0zA7lnzmxswkvPh4=
-From:   Andy Lutomirski <luto@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH] x86/hw_breakpoint: Prevent data breakpoints on cpu_entry_area
-Date:   Thu, 25 Jul 2019 09:37:15 -0700
-Message-Id: <cf0ca526e3bc946766ab70bada2686c82e7da1ce.1564072590.git.luto@kernel.org>
-X-Mailer: git-send-email 2.21.0
+        Thu, 25 Jul 2019 12:38:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52488 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387886AbfGYQia (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 12:38:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ca9GbmqtM642n/T8uQzhp0j5BRMVMOK19wEQmvfzCLA=; b=rsthi9CNEKRZL/k8DUTxgU/2r
+        5foinMWImlH9SO35tcA70x2McVlxMzsq2cEZWUxAXjkbDJSoZuzSV8sf4Wqk/F4nsVDQqu/cp+Udj
+        rgq3ghwxG9Cjl7I/7GVqopCFmcEN87Yz+65QhmiozWWH4uPxNDfTxjmFPkjwW+N4c+k5UHRPr4PVb
+        ckk8iRHJ8Bf0mZROn3UnhFwnLjIV7+IKWSUgSAHsZR0JfTGUwtTSs998Q8IvtScvHBKpi9sMD3gwt
+        ksnlIzeVbhHzLWz38PeXnNulPXQ2OpbinyKHRU6MtrFncLKWac7PTCEJCC4YD/rUeifft2KSn/jox
+        tjiWISmfw==;
+Received: from [179.95.31.157] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hqgl7-0000nQ-CL; Thu, 25 Jul 2019 16:38:26 +0000
+Date:   Thu, 25 Jul 2019 13:38:19 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
+        kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/7] media: hantro: Move VP8 common code
+Message-ID: <20190725133819.16379d96@coco.lan>
+In-Reply-To: <92f197b5d45e5f250c001752b11749af2533f4c3.camel@collabora.com>
+References: <20190725141756.2518-1-ezequiel@collabora.com>
+        <20190725141756.2518-7-ezequiel@collabora.com>
+        <20190725132230.6e7f0c22@coco.lan>
+        <92f197b5d45e5f250c001752b11749af2533f4c3.camel@collabora.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A data breakpoint near the top of an IST stack will cause unresoverable
-recursion.  A data breakpoint on the GDT, IDT, or TSS is terrifying.
-Prevent either of these from happening.
+Em Thu, 25 Jul 2019 13:30:07 -0300
+Ezequiel Garcia <ezequiel@collabora.com> escreveu:
 
-Co-developed-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
----
+> On Thu, 2019-07-25 at 13:22 -0300, Mauro Carvalho Chehab wrote:
+> > Em Thu, 25 Jul 2019 11:17:55 -0300
+> > Ezequiel Garcia <ezequiel@collabora.com> escreveu:
+> >   
+> > > In order to introduce support for RK3399 VP8 decoding,
+> > > move some common VP8 code. This will be reused by
+> > > the RK3399 implementation, reducing code duplication.
+> > > 
+> > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > ---
+> > >  .../staging/media/hantro/hantro_g1_vp8_dec.c    | 17 -----------------
+> > >  drivers/staging/media/hantro/hantro_hw.h        |  4 ++++
+> > >  drivers/staging/media/hantro/hantro_vp8.c       | 15 +++++++++++++++
+> > >  3 files changed, 19 insertions(+), 17 deletions(-)
+> > > 
+> > > diff --git a/drivers/staging/media/hantro/hantro_g1_vp8_dec.c b/drivers/staging/media/hantro/hantro_g1_vp8_dec.c
+> > > index cd1fbd3a0d5f..181e2f76d8cb 100644
+> > > --- a/drivers/staging/media/hantro/hantro_g1_vp8_dec.c
+> > > +++ b/drivers/staging/media/hantro/hantro_g1_vp8_dec.c
+> > > @@ -16,8 +16,6 @@
+> > >  #include "hantro.h"
+> > >  #include "hantro_g1_regs.h"
+> > >  
+> > > -#define DEC_8190_ALIGN_MASK	0x07U
+> > > -
+> > >  /* DCT partition base address regs */
+> > >  static const struct hantro_reg vp8_dec_dct_base[8] = {
+> > >  	{ G1_REG_ADDR_STR, 0, 0xffffffff },
+> > > @@ -131,21 +129,6 @@ static const struct hantro_reg vp8_dec_pred_bc_tap[8][4] = {
+> > >  	},
+> > >  };
+> > >  
+> > > -/*
+> > > - * filter taps taken to 7-bit precision,
+> > > - * reference RFC6386#Page-16, filters[8][6]
+> > > - */
+> > > -static const u32 vp8_dec_mc_filter[8][6] = {
+> > > -	{ 0, 0, 128, 0, 0, 0 },
+> > > -	{ 0, -6, 123, 12, -1, 0 },
+> > > -	{ 2, -11, 108, 36, -8, 1 },
+> > > -	{ 0, -9, 93, 50, -6, 0 },
+> > > -	{ 3, -16, 77, 77, -16, 3 },
+> > > -	{ 0, -6, 50, 93, -9, 0 },
+> > > -	{ 1, -8, 36, 108, -11, 2 },
+> > > -	{ 0, -1, 12, 123, -6, 0 }
+> > > -};
+> > > -
+> > >  /*
+> > >   * Set loop filters
+> > >   */
+> > > diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
+> > > index 34ef24e3a9ef..185e27d47e47 100644
+> > > --- a/drivers/staging/media/hantro/hantro_hw.h
+> > > +++ b/drivers/staging/media/hantro/hantro_hw.h
+> > > @@ -15,6 +15,8 @@
+> > >  #include <media/vp8-ctrls.h>
+> > >  #include <media/videobuf2-core.h>
+> > >  
+> > > +#define DEC_8190_ALIGN_MASK	0x07U
+> > > +
+> > >  struct hantro_dev;
+> > >  struct hantro_ctx;
+> > >  struct hantro_buf;
+> > > @@ -93,6 +95,8 @@ extern const struct hantro_variant rk3399_vpu_variant;
+> > >  extern const struct hantro_variant rk3328_vpu_variant;
+> > >  extern const struct hantro_variant rk3288_vpu_variant;
+> > >  
+> > > +extern const u32 vp8_dec_mc_filter[8][6];  
+> > 
+> > Please don't do that, as a symbol like that can easily cause
+> > namespace clashes in the future. For all exported symbols,
+> > please prepend the driver name, like:
+> > 
+> > 	hantro_vp8_dec_mc_filter
+> >   
+> 
+> Right. Would you be OK, with taking Hans' PR and accept a follow-up
+> patch fixing this?
 
-The rest of my series is still in progress -- as we all know, idtentry
-is a morass.  But this is self-contained and is an obvious fix.
+No need. I went ahead and applied a fixup. Just remember about that
+next time, as we don't want to mess with Kernel export symbol
+namespace.
 
-arch/x86/include/asm/cpu_entry_area.h | 10 ++++++++++
- arch/x86/kernel/hw_breakpoint.c       | 17 +++++++++++++++++
- 2 files changed, 27 insertions(+)
-
-diff --git a/arch/x86/include/asm/cpu_entry_area.h b/arch/x86/include/asm/cpu_entry_area.h
-index e23e2d9a92d7..3f50d4738487 100644
---- a/arch/x86/include/asm/cpu_entry_area.h
-+++ b/arch/x86/include/asm/cpu_entry_area.h
-@@ -126,6 +126,16 @@ static inline struct entry_stack *cpu_entry_stack(int cpu)
- 	return &get_cpu_entry_area(cpu)->entry_stack_page.stack;
- }
- 
-+/*
-+ * Checks whether the range from addr to end, inclusive, overlaps the CPU
-+ * entry area range.
-+ */
-+static inline bool within_cpu_entry_area(unsigned long addr, unsigned long end)
-+{
-+	return end >= CPU_ENTRY_AREA_PER_CPU &&
-+		addr < (CPU_ENTRY_AREA_PER_CPU + CPU_ENTRY_AREA_TOT_SIZE);
-+}
-+
- #define __this_cpu_ist_top_va(name)					\
- 	CEA_ESTACK_TOP(__this_cpu_read(cea_exception_stacks), name)
- 
-diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-index 218c8917118e..dc4581fe4b4e 100644
---- a/arch/x86/kernel/hw_breakpoint.c
-+++ b/arch/x86/kernel/hw_breakpoint.c
-@@ -231,6 +231,23 @@ static int arch_build_bp_info(struct perf_event *bp,
- 			      const struct perf_event_attr *attr,
- 			      struct arch_hw_breakpoint *hw)
- {
-+	unsigned long bp_end;
-+
-+	/* Ensure that bp_end does not oveflow. */
-+	if (attr->bp_len >= ULONG_MAX - attr->bp_addr)
-+		return -EINVAL;
-+
-+	bp_end = attr->bp_addr + attr->bp_len - 1;
-+
-+	/*
-+	 * Prevent any breakpoint of any type that overlaps the
-+	 * cpu_entry_area.  This protects the IST stacks and also
-+	 * reduces the chance that we ever find out what happens if
-+	 * there's a data breakpoint on the GDT, IDT, or TSS.
-+	 */
-+	if (within_cpu_entry_area(attr->bp_addr, bp_end))
-+		return -EINVAL;
-+
- 	hw->address = attr->bp_addr;
- 	hw->mask = 0;
- 
--- 
-2.21.0
-
+Thanks,
+Mauro
