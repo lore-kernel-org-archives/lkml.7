@@ -2,225 +2,113 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 188A6C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AD9C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE58522BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBA4E22BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:40:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PY7ogkWJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388455AbfGYMkn (ORCPT
+        id S2391438AbfGYMk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:40:43 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43752 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388147AbfGYMkl (ORCPT
+        Thu, 25 Jul 2019 08:40:58 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39330 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388147AbfGYMk5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:40:41 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A27AE28AACA;
-        Thu, 25 Jul 2019 13:40:38 +0100 (BST)
-Date:   Thu, 25 Jul 2019 14:40:35 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        linux-media@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 1/9] lib/sort.c: implement sort() variant taking context
- argument
-Message-ID: <20190725144035.486a33ef@collabora.com>
-In-Reply-To: <20190619121540.29320-2-boris.brezillon@collabora.com>
-References: <20190619121540.29320-1-boris.brezillon@collabora.com>
-        <20190619121540.29320-2-boris.brezillon@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 25 Jul 2019 08:40:57 -0400
+Received: by mail-pf1-f195.google.com with SMTP id f17so18714567pfn.6;
+        Thu, 25 Jul 2019 05:40:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=J/ML/61niP752oM19bE97gL7v9QOrp5SMkL6UiNcqYE=;
+        b=PY7ogkWJSakBzZPZF4n2rjhfrfmSkjdugD/7CnQ2AqUGOsDzDMnWigVTfJnXOSd/nG
+         OHvI4U1bWrzJc10q0ELDmuahZITR4TYwVJ3U2w7H6z7M1oLchLHnOOLYol3n/ELqfIHN
+         +0MsLULuJdKSSZKIOOevgIyn+nmTJawaLgthP5bamahLF47jndtaNLyi+gIXTQobQVkL
+         BIoSjO7QJEgIPzV6C2CyBOvtdA8yhr4972R5ZnEwIgmCPjEarOszKBCWPqWlaGYKnNaa
+         yI1pmOeXcdlYxTV7oKBhiOVlLC7umlDnqTBUZOm4Z/uTcEkK6sKwX540uFSaK9HVZHFu
+         OWvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=J/ML/61niP752oM19bE97gL7v9QOrp5SMkL6UiNcqYE=;
+        b=YjYhDo3BE4SFpmr7ovwvKcdoCLIjldpREzmO76ZQUcZaR9HNPaTttkBl3rIKfYDAfA
+         TMIGl6TInS+Tu5nrbJHO8kAOjAM5YwXgLDNLOk+MPdlolsn9y21m6KCYDlQCYTNgtXqr
+         5E0V6KI1Nx7cFSkGphjWjOQn7t0/afJFD9GmrRBL5JjupMHmV6f7NJUH8KChPRabVF0y
+         x8F6GvlBb5AkKVxqR+HNbUW7tuqMiVTyKTfvOEyJRribVQJpTXJxTJnb59xDdZDAZ4sn
+         d3f+ilsO81DCyXY8vQYMAfAl6zibI6LpqEul26zb0h3xpomttGazBApKLiCmKMGa47qZ
+         EeuA==
+X-Gm-Message-State: APjAAAW2X71VreSNqLWvQGsb23pNn/zXDtCWk2c6DhpJ5wrtVYIGME9a
+        N7ty6BdjW34ZljQwAxGeCSE=
+X-Google-Smtp-Source: APXvYqzZVtmGtPxVfQ7kMqq6RGu0TK7XEyvGUo+ip6f/tN4SU+bt3iJP2qgOxVj7+4bnA9svqwtsOQ==
+X-Received: by 2002:aa7:9786:: with SMTP id o6mr16119807pfp.222.1564058456426;
+        Thu, 25 Jul 2019 05:40:56 -0700 (PDT)
+Received: from icarus ([2001:268:c144:ff3:774d:cc30:25fc:d4ac])
+        by smtp.gmail.com with ESMTPSA id n7sm57496320pff.59.2019.07.25.05.40.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Jul 2019 05:40:55 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 21:40:37 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     David Lechner <david@lechnology.com>
+Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 0/4] new driver for TI eQEP
+Message-ID: <20190725124037.GA4802@icarus>
+References: <20190722154538.5314-1-david@lechnology.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190722154538.5314-1-david@lechnology.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Mon, Jul 22, 2019 at 10:45:34AM -0500, David Lechner wrote:
+> This series adds device tree bindings and a new counter driver for the Texas
+> Instruments Enhanced Quadrature Encoder Pulse (eQEP).
+> 
+> As mentioned in one of the commit messages, to start with, the driver only
+> supports reading the current counter value and setting the min/max values.
+> Other features can be added on an as-needed basis.
+> 
+> The only other feature I am interested in is adding is getting time data in
+> order to calculate the rotational speed of a motor. However, there probably
+> needs to be a higher level discussion of how this can fit into the counter
+> subsystem in general first.
 
-On Wed, 19 Jun 2019 14:15:32 +0200
-Boris Brezillon <boris.brezillon@collabora.com> wrote:
+I believe exposing some sort of time data has merit. Quadrature counter
+devices in particular are commonly used for position tracking of
+automation systems, and such systems would benefit from velocity/speed
+information. So let's try to introduce that sort of functionality in this
+driver if possible.
 
-> From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> 
-> Our list_sort() utility has always supported a context argument that
-> is passed through to the comparison routine. Now there's a use case
-> for the similar thing for sort().
-> 
-> This implements sort_r by simply extending the existing sort function
-> in the obvious way. To avoid code duplication, we want to implement
-> sort() in terms of sort_r(). The naive way to do that is
-> 
-> static int cmp_wrapper(const void *a, const void *b, const void *ctx)
-> {
->   int (*real_cmp)(const void*, const void*) = ctx;
->   return real_cmp(a, b);
-> }
-> 
-> sort(..., cmp) { sort_r(..., cmp_wrapper, cmp) }
-> 
-> but this would do two indirect calls for each comparison. Instead, do
-> as is done for the default swap functions - that only adds a cost of a
-> single easily predicted branch to each comparison call.
-> 
-> Aside from introducing support for the context argument, this also
-> serves as preparation for patches that will eliminate the indirect
-> comparison calls in common cases.
-> 
-> Requested-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> ---
-> Hi all,
-> 
-> Andrew, you acked the first version of this patch, but Rasmus proposed
-> a better solution and posted a v2. Can you review/ack this version.
+First, let's discuss your specific use case and requirements, and hopefully we
+can generalize it enough to be of use for future drivers. From your description,
+it sounds like you're attaching some sort of rotary encoder to the eQEP device.
+Is that correct? What sort of time data are you hoping to use; does the eQEP
+device provide a clock value, or would you be grabbing a timestamp from the
+system?
 
-Hans is planning to take that patch soon. Would you mind adding your
-Ack back (assuming you're okay with the new version of course)?
+I'm not sure yet if it would make sense to expose rotational speed directly as
+an attribute. If we were to expose just the count value and timestamp since the
+last read, that should be enough for a user to compute the delta and derive
+speed. I'll think more about this since some devices may simplify that case if
+the hardware is able to compute the speed for us.
 
-Thanks,
-
-Boris
-
-> 
-> Hans, Mauro, Andrew suggested to have this patch applied along with
-> its first user (the H264 backend of the hantro codec), so here it is.
-> Note that, if possible, I'd like to have this patch queued for the next
-> release even if the H264 bits don't get accepted as is. The rationale
-> here being that Rasmus told me he was planning to further improve the
-> sort() logic after the next -rc1 is out, and I fear his changes will
-> conflict with this patch, which might involve some kind synchronisation
-> (a topic branch) between the media maintainers and Andrew.
-> 
-> Let me know how you want to proceed with that.
-> 
-> Regards,
-> 
-> Boris
-> ---
->  include/linux/sort.h |  5 +++++
->  lib/sort.c           | 34 ++++++++++++++++++++++++++++------
->  2 files changed, 33 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/sort.h b/include/linux/sort.h
-> index 2b99a5dd073d..61b96d0ebc44 100644
-> --- a/include/linux/sort.h
-> +++ b/include/linux/sort.h
-> @@ -4,6 +4,11 @@
->  
->  #include <linux/types.h>
->  
-> +void sort_r(void *base, size_t num, size_t size,
-> +	    int (*cmp)(const void *, const void *, const void *),
-> +	    void (*swap)(void *, void *, int),
-> +	    const void *priv);
-> +
->  void sort(void *base, size_t num, size_t size,
->  	  int (*cmp)(const void *, const void *),
->  	  void (*swap)(void *, void *, int));
-> diff --git a/lib/sort.c b/lib/sort.c
-> index cf408aec3733..d54cf97e9548 100644
-> --- a/lib/sort.c
-> +++ b/lib/sort.c
-> @@ -144,6 +144,18 @@ static void do_swap(void *a, void *b, size_t size, swap_func_t swap_func)
->  		swap_func(a, b, (int)size);
->  }
->  
-> +typedef int (*cmp_func_t)(const void *, const void *);
-> +typedef int (*cmp_r_func_t)(const void *, const void *, const void *);
-> +#define _CMP_WRAPPER ((cmp_r_func_t)0L)
-> +
-> +static int do_cmp(const void *a, const void *b,
-> +		  cmp_r_func_t cmp, const void *priv)
-> +{
-> +	if (cmp == _CMP_WRAPPER)
-> +		return ((cmp_func_t)(priv))(a, b);
-> +	return cmp(a, b, priv);
-> +}
-> +
->  /**
->   * parent - given the offset of the child, find the offset of the parent.
->   * @i: the offset of the heap element whose parent is sought.  Non-zero.
-> @@ -171,12 +183,13 @@ static size_t parent(size_t i, unsigned int lsbit, size_t size)
->  }
->  
->  /**
-> - * sort - sort an array of elements
-> + * sort_r - sort an array of elements
->   * @base: pointer to data to sort
->   * @num: number of elements
->   * @size: size of each element
->   * @cmp_func: pointer to comparison function
->   * @swap_func: pointer to swap function or NULL
-> + * @priv: third argument passed to comparison function
->   *
->   * This function does a heapsort on the given array.  You may provide
->   * a swap_func function if you need to do something more than a memory
-> @@ -188,9 +201,10 @@ static size_t parent(size_t i, unsigned int lsbit, size_t size)
->   * O(n*n) worst-case behavior and extra memory requirements that make
->   * it less suitable for kernel use.
->   */
-> -void sort(void *base, size_t num, size_t size,
-> -	  int (*cmp_func)(const void *, const void *),
-> -	  void (*swap_func)(void *, void *, int size))
-> +void sort_r(void *base, size_t num, size_t size,
-> +	    int (*cmp_func)(const void *, const void *, const void *),
-> +	    void (*swap_func)(void *, void *, int size),
-> +	    const void *priv)
->  {
->  	/* pre-scale counters for performance */
->  	size_t n = num * size, a = (num/2) * size;
-> @@ -238,12 +252,12 @@ void sort(void *base, size_t num, size_t size,
->  		 * average, 3/4 worst-case.)
->  		 */
->  		for (b = a; c = 2*b + size, (d = c + size) < n;)
-> -			b = cmp_func(base + c, base + d) >= 0 ? c : d;
-> +			b = do_cmp(base + c, base + d, cmp_func, priv) >= 0 ? c : d;
->  		if (d == n)	/* Special case last leaf with no sibling */
->  			b = c;
->  
->  		/* Now backtrack from "b" to the correct location for "a" */
-> -		while (b != a && cmp_func(base + a, base + b) >= 0)
-> +		while (b != a && do_cmp(base + a, base + b, cmp_func, priv) >= 0)
->  			b = parent(b, lsbit, size);
->  		c = b;			/* Where "a" belongs */
->  		while (b != a) {	/* Shift it into place */
-> @@ -252,4 +266,12 @@ void sort(void *base, size_t num, size_t size,
->  		}
->  	}
->  }
-> +EXPORT_SYMBOL(sort_r);
-> +
-> +void sort(void *base, size_t num, size_t size,
-> +	  int (*cmp_func)(const void *, const void *),
-> +	  void (*swap_func)(void *, void *, int size))
-> +{
-> +	return sort_r(base, num, size, _CMP_WRAPPER, swap_func, cmp_func);
-> +}
->  EXPORT_SYMBOL(sort);
-
+William Breathitt Gray
