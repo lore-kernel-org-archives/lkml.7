@@ -2,113 +2,176 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE14C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C570C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DDB522BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1487E22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:36:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UOm97Seb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387865AbfGYMg1 (ORCPT
+        id S2387978AbfGYMg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:36:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46288 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729381AbfGYMg0 (ORCPT
+        Thu, 25 Jul 2019 08:36:57 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55554 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387876AbfGYMg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:36:26 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hqcyn-0004iy-7h; Thu, 25 Jul 2019 14:36:17 +0200
-Date:   Thu, 25 Jul 2019 14:36:15 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Nadav Amit <namit@vmware.com>
-cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH v3 1/9] smp: Run functions concurrently in
- smp_call_function_many()
-In-Reply-To: <93A98E8B-764F-4E9F-B0B6-FDAABE822B2D@vmware.com>
-Message-ID: <alpine.DEB.2.21.1907251404060.1791@nanos.tec.linutronix.de>
-References: <20190719005837.4150-1-namit@vmware.com> <20190719005837.4150-2-namit@vmware.com> <20190722182159.GB6698@worktop.programming.kicks-ass.net> <alpine.DEB.2.21.1907222033200.1659@nanos.tec.linutronix.de> <91940019-826C-4F33-904B-0767D95A5E21@vmware.com>
- <alpine.DEB.2.21.1907222045101.1659@nanos.tec.linutronix.de> <93A98E8B-764F-4E9F-B0B6-FDAABE822B2D@vmware.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 25 Jul 2019 08:36:57 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a15so44847410wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 05:36:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Z0gdMKdD94PaZEiSEbq5FRYwspNf12+Jpdjrcz+igjs=;
+        b=UOm97SebxmPdgl0pmldZmg8Oz9EPHMw3MAJyv62yrULXqoG6qZx3HNBEb44nK+PtYT
+         UKisK4WiP+GY8up2suNgz7nly/rRahlg3SCAYRKIdQ/7fNota8uVgQ+n2VY6h0yamY/i
+         DA3+HiWbYtKHbLG+DEgWR9IIJFYe1xBF6iwYMcVdKGf6qTyrKFSBCYuES8Am+m9oKotX
+         AcZRUEkIM3Y/7mErgVtbn+lTm92UAzjQMqAyq9wEfc27OHOhws6lbv7NgaF0n6iw2SbT
+         hKmKHEs+KOQv/3NHjqn251CVQpIbUCNReGuh/xzsXk4eYp59INqz8sjz/dJ/5wjiywDM
+         foJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Z0gdMKdD94PaZEiSEbq5FRYwspNf12+Jpdjrcz+igjs=;
+        b=syWusqcHxN08MFcQNMhfuyJxdtYIdI2QGObM6ry8l0TtWlSA5kO/6sjCBk8zcvSCjl
+         nGcbvMYD8aSQtZWdY8y+xik2rqAL1qo0GGLIZUoCNJncs2It6/SWL/K0J2usKPoykZTH
+         yltCXgOxGLAs2QEH0r2OQZH4MFEddijP9Q2Zaf5+VpCYEZjGIPU/+tKGVypjKPLMjol7
+         IiQFANQB/A+mcAfdUb4TRw9TeUy6Ts+x4Mju0crNw6S1XJVuDnRF45KmW3Pg/249DFwg
+         hYXHiQvWGoZmnjfm93XwrhJqEqtkjav/v4K0JuquMcTwo2kO2KKFLb9ki+WfL6zvzUqR
+         x8cg==
+X-Gm-Message-State: APjAAAX6qyMea2sKvcp6JxWs9FtklCo5KJv+/JJpT9D85f1zrwBEilom
+        3JndpsqV8Jp5MSPb/vmgyesT2A==
+X-Google-Smtp-Source: APXvYqwCnApL6niVq29NHdbsI3OfsLXQ/OAqwUx7Tk9MTc7XOgQrdsvgvFZgo+WQ4jJrcugukz37gA==
+X-Received: by 2002:a1c:4054:: with SMTP id n81mr81170437wma.78.1564058215312;
+        Thu, 25 Jul 2019 05:36:55 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id o7sm22393999wru.58.2019.07.25.05.36.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Jul 2019 05:36:54 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 13:36:41 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Lukasz Majewski <lukma@denx.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] mfd: mc13xxx: Add mc34708 adc support
+Message-ID: <20190725123641.GJ23883@dell>
+References: <20190717222602.2912-1-lukma@denx.de>
+ <20190717222602.2912-2-lukma@denx.de>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1554082241-1564058177=:1791"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190717222602.2912-2-lukma@denx.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, 18 Jul 2019, Lukasz Majewski wrote:
 
---8323329-1554082241-1564058177=:1791
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-On Mon, 22 Jul 2019, Nadav Amit wrote:
-> > On Jul 22, 2019, at 11:51 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
-> > void on_each_cpu(void (*func) (void *info), void *info, int wait)
-> > {
-> >        unsigned long flags;
-> > 
-> >        preempt_disable();
-> > 	smp_call_function(func, info, wait);
-> > 
-> > smp_call_function() has another preempt_disable as it can be called
-> > separately and it does:
-> > 
-> >        preempt_disable();
-> >        smp_call_function_many(cpu_online_mask, func, info, wait);
-> > 
-> > Your new on_each_cpu() implementation does not. So there is a
-> > difference. Whether it matters or not is a different question, but that
-> > needs to be explained and documented.
+> From: Sascha Hauer <s.hauer@pengutronix.de>
 > 
-> Thanks for explaining - so your concern is for CPUs being offlined.
+> The mc34708 has an improved adc. The older variants will always convert
+> a fixed order of channels. The mc34708 can do up to eight conversions
+> in arbitrary channel order. Currently this extended feature is not
+> supported. We only support touchscreen conversions now, which will
+> be sampled in a data format compatible to the older chips in order
+> to keep the API between the mfd and the touchscreen driver.
 > 
-> But unless I am missing something: on_each_cpu() calls __on_each_cpu_mask(),
-> which disables preemption and calls __smp_call_function_many().
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
 > 
-> Then  __smp_call_function_many() runs:
+> ---
+> Changes for v4:
+> - None
 > 
-> 	cpumask_and(cfd->cpumask, mask, cpu_online_mask);
+> Changes for v3:
+> - None
 > 
-> … before choosing which remote CPUs should run the function. So the only
-> case that I was missing is if the current CPU goes away and the function is
-> called locally.
->
-> Can it happen? I can add documentation and a debug assertion for this case.
+> Changes for v2:
+> - Change the return code patch when the mc13xxx ADC is performing conversion
+> - Introduce new include/linux/mfd/mc34708.h header file for mc34708 specific
+>   defines
+> 
+> Changes from the original patches:
+> - ADC conversion functions prototypes added to fix build error
+> - Adjustments to make checkpatch clean (-ENOSYS, line over 80 char)
+> 
+> This patch applies on top of v5.2 - SHA1: 0ecfebd2b52404ae0c54a878c872bb93363ada36
+> ---
+>  drivers/mfd/mc13xxx-core.c  | 102 +++++++++++++++++++++++++++++++++++++++++++-
+>  drivers/mfd/mc13xxx.h       |   3 ++
+>  include/linux/mfd/mc34708.h |  37 ++++++++++++++++
+>  3 files changed, 141 insertions(+), 1 deletion(-)
+>  create mode 100644 include/linux/mfd/mc34708.h
+> 
+> diff --git a/drivers/mfd/mc13xxx-core.c b/drivers/mfd/mc13xxx-core.c
+> index 1abe7432aad8..01473d6fda21 100644
+> --- a/drivers/mfd/mc13xxx-core.c
+> +++ b/drivers/mfd/mc13xxx-core.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/mfd/core.h>
+> +#include <linux/mfd/mc34708.h>
+>  
+>  #include "mc13xxx.h"
+>  
+> @@ -45,6 +46,8 @@
+>  
+>  #define MC13XXX_ADC2		45
+>  
+> +#define MC13XXX_ADC_WORKING		(1 << 0)
 
-I don't think it can happen:
+BIT(0) ?
 
-  on_each_cpu()
-    on_each_cpu_mask(....)
-      preempt_disable()
-        __smp_call_function_many()
+>  void mc13xxx_lock(struct mc13xxx *mc13xxx)
+>  {
+>  	if (!mutex_trylock(&mc13xxx->lock)) {
+> @@ -198,22 +201,30 @@ static void mc34708_print_revision(struct mc13xxx *mc13xxx, u32 revision)
+>  			maskval(revision, MC34708_REVISION_FAB));
+>  }
+>  
+> +static int mc13xxx_adc_conversion(struct mc13xxx *, unsigned int,
+> +				  unsigned int, u8, bool, unsigned int *);
+> +static int mc34708_adc_conversion(struct mc13xxx *, unsigned int,
+> +				  unsigned int, u8, bool, unsigned int *);
+> +
+>  /* These are only exported for mc13xxx-i2c and mc13xxx-spi */
+>  struct mc13xxx_variant mc13xxx_variant_mc13783 = {
+>  	.name = "mc13783",
+>  	.print_revision = mc13xxx_print_revision,
+> +	.adc_do_conversion = mc13xxx_adc_conversion,
+>  };
+>  EXPORT_SYMBOL_GPL(mc13xxx_variant_mc13783);
 
-So if a CPU goes offline between on_each_cpu() and preempt_disable() then
-there is no damage. After the preempt_disable() it can't go away anymore
-and the task executing this cannot be migrated either.
+I'd prefer to keep the call-back functions as close to zero as
+possible.
 
-So yes, it's safe, but please add a big fat comment so future readers won't
-be puzzled.
+It would be better to turn mc13xxx_adc_conversion() in to the catch
+function choose an execution route based on some platform matching.
 
-Thanks,
+If you could do the same for print_revision too, that would be even
+better.
 
-	tglx
---8323329-1554082241-1564058177=:1791--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
