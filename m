@@ -2,138 +2,207 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A46FC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA39C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F34B12190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E6BF2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:22:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="QfISO/Ct"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kf3Z1S3r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730029AbfGYNWX (ORCPT
+        id S1729769AbfGYNWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:22:23 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55477 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfGYNWX (ORCPT
+        Thu, 25 Jul 2019 09:22:52 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41894 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfGYNWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:22:23 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a15so44990080wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:22:22 -0700 (PDT)
+        Thu, 25 Jul 2019 09:22:52 -0400
+Received: by mail-lj1-f195.google.com with SMTP id d24so47966558ljg.8;
+        Thu, 25 Jul 2019 06:22:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OrxrzHfdR2gckMKegx1yxVHO2Izu+Cmysz1TGZaUt4E=;
-        b=QfISO/Ct6slzzGV6lLrDhhZRemPsoiiqhiQTC3XaMtgSBNxZohmAqrUpq1jAFqR+dD
-         LCZ1ATz5sYQxONgBqCEHM1/VP+XZQEEJ0LyO1MRdBgSUcSDDheE+Ol+wdV0fLvJ8U+/3
-         6PpNnsAm6dMOefMHtl3Mwvyg2xHuuqeLDgNY/dcBT57jOGgT6JJrafHjBNNwOoZWUBSS
-         mSx7HDxx9q6W9FMW2j2zbTSL33IPhCuiNjNfwG8nl14aSurScQzrUHrWgekI66xDoe16
-         S6Jnfr09xGbs9+BOC+0nhP4Gbpjbr04cNA9lWG8MGsIGhcX2Qv8rsFtoJETIqp35Qh++
-         pZDw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=KgKbQn+sVtaYeJftRwYKqZockp8kTGU+oulqwixLW+w=;
+        b=Kf3Z1S3rHqrjO1JoxJdWnKuBq8hN1KQIwgSpoPR00GOKJL3nGmYGed+tcTpj8qr2GB
+         +v7HJMt9fxA+2jZBPUgP9hhAnYFR72DdyTp8/ATGS/ewqTcf0ASA7K9KfaJKhMZA4vZd
+         6vDFnnJDlMGVnajKl23G3fJSHXPaANDNf+UlcHmUe46sXRl5tpCzGSSsx6xF1L2sCMkw
+         pTKPI0gZ9GkMqW2QIEOv6uyth18zlsjxH3vH+AC/3Vi56ujnMtPqEd1M/9tFpNqVStkl
+         prodH09bb738Mr8sstAKfx6tK16+abbu1SV26muDqEUtaUc1ZzAraUZr13LdSnrKtafX
+         hyMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OrxrzHfdR2gckMKegx1yxVHO2Izu+Cmysz1TGZaUt4E=;
-        b=QzJB2ahiiKALc8m4oAQ7Tv5kGiYAvipe2IHXCgzecrIK4RilSnqSDz/90ba+4HFBUu
-         jAk3rkCyZTjNWBCgWK98AxUlRvp9c30IBdGfaykW40/96DvQuezqUldvq79+kydMq2Ag
-         Qh4FK4BmJN6kbl+Ds6mCCyPsaOYbj0NWUvkvg9wttJdVH3usoGrsgwmcIHQjzoUU1Wco
-         aZch3NBDnY3LF2tm4qm595V1oHvugL/w6LHLrtyypMsVl65/4Dupn7q899Yc5DkZtJBP
-         vrt88avBZgzNxEgcaU1efjwj304F2lS7pkNfQiS4niAWpGBfLuc7FBQfF3k+KeFI0Gea
-         +trQ==
-X-Gm-Message-State: APjAAAXL3ipQlt8F8y2d8/v/QRwi7cK/RodhFD5EvYg0wtugqi7/kOZ0
-        U867ozGpwBQAorW7ToegmiUKgrzk
-X-Google-Smtp-Source: APXvYqxYNPRyCf8Ng0zjZFemZwU2WdjjqfvvmBxyWwh8g64OsosMO2a7JphltDJDTF48NPsMJNvm0A==
-X-Received: by 2002:a7b:cbc6:: with SMTP id n6mr51283395wmi.14.1564060384593;
-        Thu, 25 Jul 2019 06:13:04 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id z7sm47119735wrh.67.2019.07.25.06.13.03
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 06:13:04 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Lechner <david@lechnology.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 2/5] media: davinci-vpbe: remove obsolete includes
-Date:   Thu, 25 Jul 2019 15:12:54 +0200
-Message-Id: <20190725131257.6142-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190725131257.6142-1-brgl@bgdev.pl>
-References: <20190725131257.6142-1-brgl@bgdev.pl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=KgKbQn+sVtaYeJftRwYKqZockp8kTGU+oulqwixLW+w=;
+        b=mBDAuogFJpRAq0OwaXa7oY5TQO9W7RgJyRL4hj9vGXoukf0aoPpfz33RQZvXOU77Qx
+         QXBABq4sJH8NBCUfZHOpxUtAfvIOUSuItYpq+g0JuC6gRqHB9glLk4ayHhPfjiKNxh5+
+         ckQbf63mAWHWq6QDe8I6/AT77i188XEae0JUcAROSEm1ECPUIti++4JB95R5Jx3Dg/Ux
+         FSvQkmse7CQUEJN9OQGjlzG2qF33hvsabBTMUyzWidUkCDSpkpPi4tS1McWj1z+SUA1b
+         O5UW55bzuUacFJ1zz/b7Esl6KsPWz5+l0k0DnEcp9rS9uLbHrHIyzGLfA4Bh4+RmGi4M
+         /MKg==
+X-Gm-Message-State: APjAAAVyhsrLMXBlFdXKoNFsd1Q6awHZYUSxuVJ4EPCSh9Lls5L36U1w
+        zosszob/x+XlLKOL4DCIsQONCsKUbt1Rpea4zwR/v/bg
+X-Google-Smtp-Source: APXvYqyTTtkZSLGybeBnj2BYoFqYLkzK/AMLxamssTlKXEad8A8gaXQC1+CN5OL/YGc0pcrVbBBEQ1iENKDqhDFdKKU=
+X-Received: by 2002:a2e:9198:: with SMTP id f24mr46939627ljg.221.1564060446021;
+ Thu, 25 Jul 2019 06:14:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CGME20190723122027eucas1p24b1d76e3139f7cc52614d7613ff9ba98@eucas1p2.samsung.com>
+ <20190723122016.30279-1-a.swigon@partner.samsung.com> <20190723122016.30279-9-a.swigon@partner.samsung.com>
+In-Reply-To: <20190723122016.30279-9-a.swigon@partner.samsung.com>
+Reply-To: cwchoi00@gmail.com
+From:   Chanwoo Choi <cwchoi00@gmail.com>
+Date:   Thu, 25 Jul 2019 22:13:29 +0900
+Message-ID: <CAGTfZH1_Qk+vNa_AJW_8OA8MJbnZa3yCTLLRs2w23bNTm72gyQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/11] arm: dts: exynos: Add parents and
+ #interconnect-cells to Exynos4412
+To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        georgi.djakov@linaro.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+2019=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EC=88=98) =EC=98=A4=EC=A0=84 8:07, A=
+rtur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>=EB=8B=98=EC=9D=B4 =EC=
+=9E=91=EC=84=B1:
+>
+> This patch adds two fields tp the Exynos4412 DTS:
+>   - parent: to declare connections between nodes that are not in a
+>     parent-child relation in devfreq;
+>   - #interconnect-cells: required by the interconnect framework.
+>
+> Please note that #interconnect-cells is always zero and node IDs are not
+> hardcoded anywhere.
+>
+> Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 1 +
+>  arch/arm/boot/dts/exynos4412.dtsi               | 9 +++++++++
+>  2 files changed, 10 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/b=
+oot/dts/exynos4412-odroid-common.dtsi
+> index ea55f377d17c..bdd61ae86103 100644
+> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> @@ -106,6 +106,7 @@
+>  &bus_leftbus {
+>         devfreq-events =3D <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
+>         vdd-supply =3D <&buck3_reg>;
+> +       parent =3D <&bus_dmc>;
 
-The driver builds fine without these.
+It is wrong. 'bus_leftbus' has not any h/w dependency of 'bus_dmc'
+and 'bus_leftbus' is not child of 'bus_dmc'.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/media/platform/davinci/vpbe_display.c | 4 ----
- drivers/media/platform/davinci/vpbe_osd.c     | 5 -----
- drivers/media/platform/davinci/vpbe_venc.c    | 5 -----
- 3 files changed, 14 deletions(-)
+Even it there are some PMQoS requirement between them,
+it it not proper to tie both 'bus_leftbus' and 'bus_dmc'.
 
-diff --git a/drivers/media/platform/davinci/vpbe_display.c b/drivers/media/platform/davinci/vpbe_display.c
-index 000b191c42d8..18f9408013d1 100644
---- a/drivers/media/platform/davinci/vpbe_display.c
-+++ b/drivers/media/platform/davinci/vpbe_display.c
-@@ -19,10 +19,6 @@
- 
- #include <asm/pgtable.h>
- 
--#ifdef CONFIG_ARCH_DAVINCI
--#include <mach/cputype.h>
--#endif
--
- #include <media/v4l2-dev.h>
- #include <media/v4l2-common.h>
- #include <media/v4l2-ioctl.h>
-diff --git a/drivers/media/platform/davinci/vpbe_osd.c b/drivers/media/platform/davinci/vpbe_osd.c
-index 491842ef33c5..91b571a0ac2c 100644
---- a/drivers/media/platform/davinci/vpbe_osd.c
-+++ b/drivers/media/platform/davinci/vpbe_osd.c
-@@ -16,11 +16,6 @@
- #include <linux/clk.h>
- #include <linux/slab.h>
- 
--#ifdef CONFIG_ARCH_DAVINCI
--#include <mach/cputype.h>
--#include <mach/hardware.h>
--#endif
--
- #include <media/davinci/vpss.h>
- #include <media/v4l2-device.h>
- #include <media/davinci/vpbe_types.h>
-diff --git a/drivers/media/platform/davinci/vpbe_venc.c b/drivers/media/platform/davinci/vpbe_venc.c
-index 425f91f07165..8caa084e5704 100644
---- a/drivers/media/platform/davinci/vpbe_venc.c
-+++ b/drivers/media/platform/davinci/vpbe_venc.c
-@@ -14,11 +14,6 @@
- #include <linux/videodev2.h>
- #include <linux/slab.h>
- 
--#ifdef CONFIG_ARCH_DAVINCI
--#include <mach/hardware.h>
--#include <mach/mux.h>
--#endif
--
- #include <linux/platform_data/i2c-davinci.h>
- 
- #include <linux/io.h>
--- 
-2.21.0
+>         status =3D "okay";
+>  };
+>
+> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos=
+4412.dtsi
+> index d20db2dfe8e2..a70a671acacd 100644
+> --- a/arch/arm/boot/dts/exynos4412.dtsi
+> +++ b/arch/arm/boot/dts/exynos4412.dtsi
+> @@ -390,6 +390,7 @@
+>                         clocks =3D <&clock CLK_DIV_DMC>;
+>                         clock-names =3D "bus";
+>                         operating-points-v2 =3D <&bus_dmc_opp_table>;
+> +                       #interconnect-cells =3D <0>;
+>                         status =3D "disabled";
+>                 };
+>
+> @@ -398,6 +399,7 @@
+>                         clocks =3D <&clock CLK_DIV_ACP>;
+>                         clock-names =3D "bus";
+>                         operating-points-v2 =3D <&bus_acp_opp_table>;
+> +                       #interconnect-cells =3D <0>;
+>                         status =3D "disabled";
+>                 };
+>
+> @@ -406,6 +408,7 @@
+>                         clocks =3D <&clock CLK_DIV_C2C>;
+>                         clock-names =3D "bus";
+>                         operating-points-v2 =3D <&bus_dmc_opp_table>;
+> +                       #interconnect-cells =3D <0>;
+>                         status =3D "disabled";
+>                 };
+>
+> @@ -459,6 +462,7 @@
+>                         clocks =3D <&clock CLK_DIV_GDL>;
+>                         clock-names =3D "bus";
+>                         operating-points-v2 =3D <&bus_leftbus_opp_table>;
+> +                       #interconnect-cells =3D <0>;
+>                         status =3D "disabled";
+>                 };
+>
+> @@ -467,6 +471,7 @@
+>                         clocks =3D <&clock CLK_DIV_GDR>;
+>                         clock-names =3D "bus";
+>                         operating-points-v2 =3D <&bus_leftbus_opp_table>;
+> +                       #interconnect-cells =3D <0>;
+>                         status =3D "disabled";
+>                 };
+>
+> @@ -475,6 +480,7 @@
+>                         clocks =3D <&clock CLK_ACLK160>;
+>                         clock-names =3D "bus";
+>                         operating-points-v2 =3D <&bus_display_opp_table>;
+> +                       #interconnect-cells =3D <0>;
+>                         status =3D "disabled";
+>                 };
+>
+> @@ -483,6 +489,7 @@
+>                         clocks =3D <&clock CLK_ACLK133>;
+>                         clock-names =3D "bus";
+>                         operating-points-v2 =3D <&bus_fsys_opp_table>;
+> +                       #interconnect-cells =3D <0>;
+>                         status =3D "disabled";
+>                 };
+>
+> @@ -491,6 +498,7 @@
+>                         clocks =3D <&clock CLK_ACLK100>;
+>                         clock-names =3D "bus";
+>                         operating-points-v2 =3D <&bus_peri_opp_table>;
+> +                       #interconnect-cells =3D <0>;
+>                         status =3D "disabled";
+>                 };
+>
+> @@ -499,6 +507,7 @@
+>                         clocks =3D <&clock CLK_SCLK_MFC>;
+>                         clock-names =3D "bus";
+>                         operating-points-v2 =3D <&bus_leftbus_opp_table>;
+> +                       #interconnect-cells =3D <0>;
+>                         status =3D "disabled";
+>                 };
+>
+> --
+> 2.17.1
+>
 
+
+--=20
+Best Regards,
+Chanwoo Choi
