@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66638C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94905C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D02620840
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6586E20840
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:57:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391047AbfGYJ5c (ORCPT
+        id S2391150AbfGYJ5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 05:57:32 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52132 "EHLO huawei.com"
+        Thu, 25 Jul 2019 05:57:41 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56236 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390941AbfGYJ51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 05:57:27 -0400
+        id S2391096AbfGYJ5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 05:57:39 -0400
 Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7DE4F7A03BE3F391A01F;
-        Thu, 25 Jul 2019 17:57:21 +0800 (CST)
+        by Forcepoint Email with ESMTP id BE4EC5D2581277359A7B;
+        Thu, 25 Jul 2019 17:57:36 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 25 Jul
- 2019 17:57:14 +0800
+ 2019 17:57:26 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -41,9 +41,9 @@ CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v4 03/24] erofs: add super block operations
-Date:   Thu, 25 Jul 2019 17:56:37 +0800
-Message-ID: <20190725095658.155779-4-gaoxiang25@huawei.com>
+Subject: [PATCH v4 12/24] erofs: introduce tagged pointer
+Date:   Thu, 25 Jul 2019 17:56:46 +0800
+Message-ID: <20190725095658.155779-13-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190725095658.155779-1-gaoxiang25@huawei.com>
 References: <20190725095658.155779-1-gaoxiang25@huawei.com>
@@ -56,458 +56,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds erofs super block operations, including (u)mount,
-remount_fs, show_options, statfs, in addition to some private
-icache management functions.
+Currently kernel has scattered tagged pointer usages
+hacked by hand in plain code, without a unique and
+portable functionset to highlight the tagged pointer
+itself and wrap these hacked code in order to clean up
+all over meaningless magic masks.
+
+This patch introduces simple generic methods to fold
+tags into a pointer integer. Currently it supports
+the last n bits of the pointer for tags, which can be
+selected by users.
+
+In addition, it will also be used for the upcoming EROFS
+filesystem, which heavily uses tagged pointer pproach
+ to reduce extra memory allocation.
+
+Link: https://en.wikipedia.org/wiki/Tagged_pointer
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/super.c | 437 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 437 insertions(+)
- create mode 100644 fs/erofs/super.c
+ fs/erofs/tagptr.h | 110 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
+ create mode 100644 fs/erofs/tagptr.h
 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+diff --git a/fs/erofs/tagptr.h b/fs/erofs/tagptr.h
 new file mode 100644
-index 000000000000..3f1096b368f3
+index 000000000000..f3a06c3a5b96
 --- /dev/null
-+++ b/fs/erofs/super.c
-@@ -0,0 +1,437 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/fs/erofs/tagptr.h
+@@ -0,0 +1,110 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
 +/*
-+ * linux/fs/erofs/super.c
++ * Tagged pointer implementation
 + *
-+ * Copyright (C) 2017-2018 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Gao Xiang <gaoxiang25@huawei.com>
++ * Copyright (C) 2018 Gao Xiang <gaoxiang25@huawei.com>
 + */
-+#include <linux/module.h>
-+#include <linux/buffer_head.h>
-+#include <linux/statfs.h>
-+#include <linux/parser.h>
-+#include <linux/seq_file.h>
-+#include "internal.h"
++#ifndef __EROFS_TAGPTR_H
++#define __EROFS_TAGPTR_H
 +
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/erofs.h>
-+
-+static struct kmem_cache *erofs_inode_cachep __read_mostly;
-+
-+static void init_once(void *ptr)
-+{
-+	struct erofs_vnode *vi = ptr;
-+
-+	inode_init_once(&vi->vfs_inode);
-+}
-+
-+static int __init erofs_init_inode_cache(void)
-+{
-+	erofs_inode_cachep = kmem_cache_create("erofs_inode",
-+					       sizeof(struct erofs_vnode), 0,
-+					       SLAB_RECLAIM_ACCOUNT,
-+					       init_once);
-+
-+	return erofs_inode_cachep ? 0 : -ENOMEM;
-+}
-+
-+static void erofs_exit_inode_cache(void)
-+{
-+	kmem_cache_destroy(erofs_inode_cachep);
-+}
-+
-+static struct inode *alloc_inode(struct super_block *sb)
-+{
-+	struct erofs_vnode *vi =
-+		kmem_cache_alloc(erofs_inode_cachep, GFP_KERNEL);
-+
-+	if (!vi)
-+		return NULL;
-+
-+	/* zero out everything except vfs_inode */
-+	memset(vi, 0, offsetof(struct erofs_vnode, vfs_inode));
-+	return &vi->vfs_inode;
-+}
-+
-+static void free_inode(struct inode *inode)
-+{
-+	struct erofs_vnode *vi = EROFS_V(inode);
-+
-+	/* be careful RCU symlink path (see ext4_inode_info->i_data)! */
-+	if (is_inode_fast_symlink(inode))
-+		kfree(inode->i_link);
-+
-+	kmem_cache_free(erofs_inode_cachep, vi);
-+}
-+
-+static bool check_layout_compatibility(struct super_block *sb,
-+				       struct erofs_super_block *layout)
-+{
-+	const unsigned int requirements = le32_to_cpu(layout->requirements);
-+
-+	EROFS_SB(sb)->requirements = requirements;
-+
-+	/* check if current kernel meets all mandatory requirements */
-+	if (requirements & (~EROFS_ALL_REQUIREMENTS)) {
-+		errln("unidentified requirements %x, please upgrade kernel version",
-+		      requirements & ~EROFS_ALL_REQUIREMENTS);
-+		return false;
-+	}
-+	return true;
-+}
-+
-+static int superblock_read(struct super_block *sb)
-+{
-+	struct erofs_sb_info *sbi;
-+	struct buffer_head *bh;
-+	struct erofs_super_block *layout;
-+	unsigned int blkszbits;
-+	int ret;
-+
-+	bh = sb_bread(sb, 0);
-+
-+	if (!bh) {
-+		errln("cannot read erofs superblock");
-+		return -EIO;
-+	}
-+
-+	sbi = EROFS_SB(sb);
-+	layout = (struct erofs_super_block *)((u8 *)bh->b_data
-+		 + EROFS_SUPER_OFFSET);
-+
-+	ret = -EINVAL;
-+	if (le32_to_cpu(layout->magic) != EROFS_SUPER_MAGIC_V1) {
-+		errln("cannot find valid erofs superblock");
-+		goto out;
-+	}
-+
-+	blkszbits = layout->blkszbits;
-+	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
-+	if (unlikely(blkszbits != LOG_BLOCK_SIZE)) {
-+		errln("blksize %u isn't supported on this platform",
-+		      1 << blkszbits);
-+		goto out;
-+	}
-+
-+	if (!check_layout_compatibility(sb, layout))
-+		goto out;
-+
-+	sbi->blocks = le32_to_cpu(layout->blocks);
-+	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
-+	sbi->islotbits = ffs(sizeof(struct erofs_inode_v1)) - 1;
-+	sbi->root_nid = le16_to_cpu(layout->root_nid);
-+	sbi->inos = le64_to_cpu(layout->inos);
-+
-+	sbi->build_time = le64_to_cpu(layout->build_time);
-+	sbi->build_time_nsec = le32_to_cpu(layout->build_time_nsec);
-+
-+	memcpy(&sb->s_uuid, layout->uuid, sizeof(layout->uuid));
-+	memcpy(sbi->volume_name, layout->volume_name,
-+	       sizeof(layout->volume_name));
-+
-+	ret = 0;
-+out:
-+	brelse(bh);
-+	return ret;
-+}
-+
-+#ifdef CONFIG_EROFS_FAULT_INJECTION
-+const char *erofs_fault_name[FAULT_MAX] = {
-+	[FAULT_KMALLOC]		= "kmalloc",
-+	[FAULT_READ_IO]		= "read IO error",
-+};
-+
-+static void __erofs_build_fault_attr(struct erofs_sb_info *sbi,
-+				     unsigned int rate)
-+{
-+	struct erofs_fault_info *ffi = &sbi->fault_info;
-+
-+	if (rate) {
-+		atomic_set(&ffi->inject_ops, 0);
-+		ffi->inject_rate = rate;
-+		ffi->inject_type = (1 << FAULT_MAX) - 1;
-+	} else {
-+		memset(ffi, 0, sizeof(struct erofs_fault_info));
-+	}
-+
-+	set_opt(sbi, FAULT_INJECTION);
-+}
-+
-+static int erofs_build_fault_attr(struct erofs_sb_info *sbi,
-+				  substring_t *args)
-+{
-+	int rate = 0;
-+
-+	if (args->from && match_int(args, &rate))
-+		return -EINVAL;
-+
-+	__erofs_build_fault_attr(sbi, rate);
-+	return 0;
-+}
-+
-+static unsigned int erofs_get_fault_rate(struct erofs_sb_info *sbi)
-+{
-+	return sbi->fault_info.inject_rate;
-+}
-+#else
-+static void __erofs_build_fault_attr(struct erofs_sb_info *sbi,
-+				     unsigned int rate)
-+{
-+}
-+
-+static int erofs_build_fault_attr(struct erofs_sb_info *sbi,
-+				  substring_t *args)
-+{
-+	infoln("fault_injection options not supported");
-+	return 0;
-+}
-+
-+static unsigned int erofs_get_fault_rate(struct erofs_sb_info *sbi)
-+{
-+	return 0;
-+}
-+#endif
-+
-+/* set up default EROFS parameters */
-+static void default_options(struct erofs_sb_info *sbi)
-+{
-+}
-+
-+enum {
-+	Opt_fault_injection,
-+	Opt_err
-+};
-+
-+static match_table_t erofs_tokens = {
-+	{Opt_fault_injection, "fault_injection=%u"},
-+	{Opt_err, NULL}
-+};
-+
-+static int parse_options(struct super_block *sb, char *options)
-+{
-+	substring_t args[MAX_OPT_ARGS];
-+	char *p;
-+	int err;
-+
-+	if (!options)
-+		return 0;
-+
-+	while ((p = strsep(&options, ","))) {
-+		int token;
-+
-+		if (!*p)
-+			continue;
-+
-+		args[0].to = args[0].from = NULL;
-+		token = match_token(p, erofs_tokens, args);
-+
-+		switch (token) {
-+		case Opt_fault_injection:
-+			err = erofs_build_fault_attr(EROFS_SB(sb), args);
-+			if (err)
-+				return err;
-+			break;
-+		default:
-+			errln("Unrecognized mount option \"%s\" or missing value", p);
-+			return -EINVAL;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int erofs_fill_super(struct super_block *sb, void *data, int silent)
-+{
-+	struct inode *inode;
-+	struct erofs_sb_info *sbi;
-+	int err;
-+
-+	infoln("read_super, device -> %s", sb->s_id);
-+	infoln("options -> %s", (char *)data);
-+
-+	sb->s_magic = EROFS_SUPER_MAGIC;
-+
-+	if (unlikely(!sb_set_blocksize(sb, EROFS_BLKSIZ))) {
-+		errln("failed to set erofs blksize");
-+		return -EINVAL;
-+	}
-+
-+	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-+	if (unlikely(!sbi))
-+		return -ENOMEM;
-+
-+	sb->s_fs_info = sbi;
-+	err = superblock_read(sb);
-+	if (err)
-+		return err;
-+
-+	sb->s_flags |= SB_RDONLY | SB_NOATIME;
-+	sb->s_maxbytes = MAX_LFS_FILESIZE;
-+	sb->s_time_gran = 1;
-+
-+	sb->s_op = &erofs_sops;
-+
-+	/* set erofs default mount options */
-+	default_options(sbi);
-+
-+	err = parse_options(sb, data);
-+	if (unlikely(err))
-+		return err;
-+
-+	if (!silent)
-+		infoln("root inode @ nid %llu", ROOT_NID(sbi));
-+
-+	/* get the root inode */
-+	inode = erofs_iget(sb, ROOT_NID(sbi), true);
-+	if (IS_ERR(inode))
-+		return PTR_ERR(inode);
-+
-+	if (unlikely(!S_ISDIR(inode->i_mode))) {
-+		errln("rootino(nid %llu) is not a directory(i_mode %o)",
-+		      ROOT_NID(sbi), inode->i_mode);
-+		iput(inode);
-+		return -EINVAL;
-+	}
-+
-+	sb->s_root = d_make_root(inode);
-+	if (unlikely(!sb->s_root))
-+		return -ENOMEM;
-+
-+	if (!silent)
-+		infoln("mounted on %s with opts: %s.", sb->s_id, (char *)data);
-+	return 0;
-+}
-+
-+static struct dentry *erofs_mount(struct file_system_type *fs_type, int flags,
-+				  const char *dev_name, void *data)
-+{
-+	return mount_bdev(fs_type, flags, dev_name, data, erofs_fill_super);
-+}
++#include <linux/types.h>
++#include <linux/build_bug.h>
 +
 +/*
-+ * could be triggered after deactivate_locked_super()
-+ * is called, thus including umount and failed to initialize.
++ * the name of tagged pointer types are tagptr{1, 2, 3...}_t
++ * avoid directly using the internal structs __tagptr{1, 2, 3...}
 + */
-+static void erofs_kill_sb(struct super_block *sb)
-+{
-+	struct erofs_sb_info *sbi;
++#define __MAKE_TAGPTR(n) \
++typedef struct __tagptr##n {	\
++	uintptr_t v;	\
++} tagptr##n##_t;
 +
-+	WARN_ON(sb->s_magic != EROFS_SUPER_MAGIC);
-+	infoln("unmounting erofs for %s", sb->s_id);
++__MAKE_TAGPTR(1)
++__MAKE_TAGPTR(2)
++__MAKE_TAGPTR(3)
++__MAKE_TAGPTR(4)
 +
-+	kill_block_super(sb);
++#undef __MAKE_TAGPTR
 +
-+	sbi = EROFS_SB(sb);
-+	if (!sbi)
-+		return;
-+	kfree(sbi);
-+	sb->s_fs_info = NULL;
-+}
++extern void __compiletime_error("bad tagptr tags")
++	__bad_tagptr_tags(void);
 +
-+static struct file_system_type erofs_fs_type = {
-+	.owner          = THIS_MODULE,
-+	.name           = "erofs",
-+	.mount          = erofs_mount,
-+	.kill_sb        = erofs_kill_sb,
-+	.fs_flags       = FS_REQUIRES_DEV,
-+};
-+MODULE_ALIAS_FS("erofs");
++extern void __compiletime_error("bad tagptr type")
++	__bad_tagptr_type(void);
 +
-+static int __init erofs_module_init(void)
-+{
-+	int err;
++/* fix the broken usage of "#define tagptr2_t tagptr3_t" by users */
++#define __tagptr_mask_1(ptr, n)	\
++	__builtin_types_compatible_p(typeof(ptr), struct __tagptr##n) ? \
++		(1UL << (n)) - 1 :
 +
-+	erofs_check_ondisk_layout_definitions();
-+	infoln("initializing erofs " EROFS_VERSION);
++#define __tagptr_mask(ptr)	(\
++	__tagptr_mask_1(ptr, 1) ( \
++	__tagptr_mask_1(ptr, 2) ( \
++	__tagptr_mask_1(ptr, 3) ( \
++	__tagptr_mask_1(ptr, 4) ( \
++	__bad_tagptr_type(), 0)))))
 +
-+	err = erofs_init_inode_cache();
-+	if (err)
-+		goto icache_err;
++/* generate a tagged pointer from a raw value */
++#define tagptr_init(type, val) \
++	((typeof(type)){ .v = (uintptr_t)(val) })
 +
-+	err = register_filesystem(&erofs_fs_type);
-+	if (err)
-+		goto fs_err;
++/*
++ * directly cast a tagged pointer to the native pointer type, which
++ * could be used for backward compatibility of existing code.
++ */
++#define tagptr_cast_ptr(tptr) ((void *)(tptr).v)
 +
-+	infoln("successfully to initialize erofs");
-+	return 0;
++/* encode tagged pointers */
++#define tagptr_fold(type, ptr, _tags) ({ \
++	const typeof(_tags) tags = (_tags); \
++	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(type))) \
++		__bad_tagptr_tags(); \
++tagptr_init(type, (uintptr_t)(ptr) | tags); })
 +
-+fs_err:
-+	erofs_exit_inode_cache();
-+icache_err:
-+	return err;
-+}
++/* decode tagged pointers */
++#define tagptr_unfold_ptr(tptr) \
++	((void *)((tptr).v & ~__tagptr_mask(tptr)))
 +
-+static void __exit erofs_module_exit(void)
-+{
-+	unregister_filesystem(&erofs_fs_type);
-+	erofs_exit_inode_cache();
-+	infoln("successfully finalize erofs");
-+}
++#define tagptr_unfold_tags(tptr) \
++	((tptr).v & __tagptr_mask(tptr))
 +
-+/* get filesystem statistics */
-+static int erofs_statfs(struct dentry *dentry, struct kstatfs *buf)
-+{
-+	struct super_block *sb = dentry->d_sb;
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
-+	u64 id = huge_encode_dev(sb->s_bdev->bd_dev);
++/* operations for the tagger pointer */
++#define tagptr_eq(_tptr1, _tptr2) ({ \
++	typeof(_tptr1) tptr1 = (_tptr1); \
++	typeof(_tptr2) tptr2 = (_tptr2); \
++	(void)(&tptr1 == &tptr2); \
++(tptr1).v == (tptr2).v; })
 +
-+	buf->f_type = sb->s_magic;
-+	buf->f_bsize = EROFS_BLKSIZ;
-+	buf->f_blocks = sbi->blocks;
-+	buf->f_bfree = buf->f_bavail = 0;
++/* lock-free CAS operation */
++#define tagptr_cmpxchg(_ptptr, _o, _n) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	typeof(_o) o = (_o); \
++	typeof(_n) n = (_n); \
++	(void)(&o == &n); \
++	(void)(&o == ptptr); \
++tagptr_init(o, cmpxchg(&ptptr->v, o.v, n.v)); })
 +
-+	buf->f_files = ULLONG_MAX;
-+	buf->f_ffree = ULLONG_MAX - sbi->inos;
++/* wrap WRITE_ONCE if atomic update is needed */
++#define tagptr_replace_tags(_ptptr, tags) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	*ptptr = tagptr_fold(*ptptr, tagptr_unfold_ptr(*ptptr), tags); \
++*ptptr; })
 +
-+	buf->f_namelen = EROFS_NAME_LEN;
++#define tagptr_set_tags(_ptptr, _tags) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	const typeof(_tags) tags = (_tags); \
++	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
++		__bad_tagptr_tags(); \
++	ptptr->v |= tags; \
++*ptptr; })
 +
-+	buf->f_fsid.val[0] = (u32)id;
-+	buf->f_fsid.val[1] = (u32)(id >> 32);
-+	return 0;
-+}
++#define tagptr_clear_tags(_ptptr, _tags) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	const typeof(_tags) tags = (_tags); \
++	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
++		__bad_tagptr_tags(); \
++	ptptr->v &= ~tags; \
++*ptptr; })
 +
-+static int erofs_show_options(struct seq_file *seq, struct dentry *root)
-+{
-+	struct erofs_sb_info *sbi __maybe_unused = EROFS_SB(root->d_sb);
-+
-+	if (test_opt(sbi, FAULT_INJECTION))
-+		seq_printf(seq, ",fault_injection=%u",
-+			   erofs_get_fault_rate(sbi));
-+	return 0;
-+}
-+
-+static int erofs_remount(struct super_block *sb, int *flags, char *data)
-+{
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
-+	unsigned int org_mnt_opt = sbi->mount_opt;
-+	unsigned int org_inject_rate = erofs_get_fault_rate(sbi);
-+	int err;
-+
-+	DBG_BUGON(!sb_rdonly(sb));
-+	err = parse_options(sb, data);
-+	if (err)
-+		goto out;
-+
-+	*flags |= SB_RDONLY;
-+	return 0;
-+out:
-+	__erofs_build_fault_attr(sbi, org_inject_rate);
-+	sbi->mount_opt = org_mnt_opt;
-+
-+	return err;
-+}
-+
-+const struct super_operations erofs_sops = {
-+	.alloc_inode = alloc_inode,
-+	.free_inode = free_inode,
-+	.statfs = erofs_statfs,
-+	.show_options = erofs_show_options,
-+	.remount_fs = erofs_remount,
-+};
-+
-+module_init(erofs_module_init);
-+module_exit(erofs_module_exit);
-+
-+MODULE_DESCRIPTION("Enhanced ROM File System");
-+MODULE_AUTHOR("Gao Xiang, Chao Yu, Miao Xie, CONSUMER BG, HUAWEI Inc.");
-+MODULE_LICENSE("GPL");
++#endif	/* __EROFS_TAGPTR_H */
 +
 -- 
 2.17.1
