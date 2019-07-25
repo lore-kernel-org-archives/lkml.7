@@ -6,80 +6,81 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5E0C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8CAC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8022322BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2486222BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391830AbfGYLYb (ORCPT
+        id S2391842AbfGYLZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:24:31 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:32873 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391812AbfGYLYa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:24:30 -0400
-Received: by mail-wm1-f67.google.com with SMTP id h19so35543226wme.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 04:24:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RjbdG3nViJvxOOUD7oJ8kV9hETSbuqoaOubZjfcu3IQ=;
-        b=MMhNtEuCDXJD143PC8e3AM5AP4GY40nNbKa4M/VB8Bvi+nOeCYFvYfFYm3lcZwp/MS
-         Zg49esBfwxAeAaDaMjk099JMv0XaRsbMINKBeijjvMS16KSR5nqPwfzzqTZDZfngnVc0
-         t/Nv7MsKyaXXJrSqCG5zYlaoW1ZzbFrFZyTBaEyudXwjpzfZnihma0ej/f4iB4oItfM0
-         Qy8+eqphNRg9Iww3mXfySZ/LT5NMzXjM8+L1phUmp7Pbk0q+itENoxDBcccY8pAqaQsb
-         QpK0QGvfU6bgg8giEJQVrGwr5Wg1nIH1GSqe5Z5pttESC61UccyWO3AtdQJtH6r4qhkS
-         aF6w==
-X-Gm-Message-State: APjAAAW/ONWZ2wNWOwsHLM0cZop0L0BAluoE4/SE3vaDyP9Sp0FIjhfZ
-        4cyG0ZwkuCo0HYhXr6cjQfffmOXRnzo=
-X-Google-Smtp-Source: APXvYqzdtuI6MnxEnBnPgCfGVAMefcNKRGR3/m2Mtw0Ia+Lfly9vb5NT90uj+luQR/pqs+tcN1zdRg==
-X-Received: by 2002:a1c:3:: with SMTP id 3mr80318202wma.6.1564053868317;
-        Thu, 25 Jul 2019 04:24:28 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:cc23:f353:392:d2ee? ([2001:b07:6468:f312:cc23:f353:392:d2ee])
-        by smtp.gmail.com with ESMTPSA id k124sm79155642wmk.47.2019.07.25.04.24.27
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 04:24:27 -0700 (PDT)
-Subject: Re: [PATCH stable-4.19 0/2] KVM: nVMX: guest reset fixes
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, stable@vger.kernel.org
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <20190725104645.30642-1-vkuznets@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <b0ca6477-ac1e-bf92-3e3a-902243707f54@redhat.com>
-Date:   Thu, 25 Jul 2019 13:24:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 07:25:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49411 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728468AbfGYLZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 07:25:11 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A6F122F8BD7;
+        Thu, 25 Jul 2019 11:25:10 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id A47D819D71;
+        Thu, 25 Jul 2019 11:25:04 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 25 Jul 2019 13:25:10 +0200 (CEST)
+Date:   Thu, 25 Jul 2019 13:25:03 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, ebiederm@xmission.com,
+        keescook@chromium.org, joel@joelfernandes.org, tglx@linutronix.de,
+        tj@kernel.org, dhowells@redhat.com, jannh@google.com,
+        luto@kernel.org, akpm@linux-foundation.org, cyphar@cyphar.com,
+        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        kernel-team@android.com, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH 4/5] pidfd: add CLONE_WAIT_PID
+Message-ID: <20190725112503.GG4707@redhat.com>
+References: <20190724144651.28272-1-christian@brauner.io>
+ <20190724144651.28272-5-christian@brauner.io>
+ <20190725103543.GF4707@redhat.com>
+ <20190725104006.7myahvjtnbcgu3in@brauner.io>
 MIME-Version: 1.0
-In-Reply-To: <20190725104645.30642-1-vkuznets@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725104006.7myahvjtnbcgu3in@brauner.io>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 25 Jul 2019 11:25:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/07/19 12:46, Vitaly Kuznetsov wrote:
-> Few patches were recently marked for stable@ but commits are not
-> backportable as-is and require a few tweaks. Here is 4.19 stable backport.
-> 
-> Jan Kiszka (1):
->   KVM: nVMX: Clear pending KVM_REQ_GET_VMCS12_PAGES when leaving nested
-> 
-> Paolo Bonzini (1):
->   KVM: nVMX: do not use dangling shadow VMCS after guest reset
-> 
->  arch/x86/kvm/vmx.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
+On 07/25, Christian Brauner wrote:
+>
+> On Thu, Jul 25, 2019 at 12:35:44PM +0200, Oleg Nesterov wrote:
+> >
+> > I have to admit this feature looks a bit exotic to me...
+>
+> It might look like it from the kernels perspective but from the feedback
+> on this when presenting on this userspace has real usecases for this.
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+OK...
 
-Thanks Vitaly for helping out.
+but then perhaps we can make PF_WAIT_PID more flexible.
 
-Paolo
+Say, we can add the new WXXX wait option and change eligible_child()
+
+	if ((p->flags & PF_WAIT_PID) && (wo->options & WXXX))
+		return 0;
+
+this way the parent can tell waitid() whether the PF_WAIT_PID tasks should
+be filtered or not.
+
+And if we do this we can even add PR_SET_WAIT_PID/PR_CLR_WAIT_PID instead
+of the new CLONE_ flag.
+
+Oleg.
+
