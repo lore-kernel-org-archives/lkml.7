@@ -2,211 +2,75 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE32EC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CE6C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA25218F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB97222BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390263AbfGYQUc (ORCPT
+        id S2390282AbfGYQUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:20:32 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:46624 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387564AbfGYQUc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:20:32 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 45vcrX3Qf0z1rC0W;
-        Thu, 25 Jul 2019 18:20:28 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 45vcrX2hWZz1qqkH;
-        Thu, 25 Jul 2019 18:20:28 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id HEUFb3dOTyW7; Thu, 25 Jul 2019 18:20:26 +0200 (CEST)
-X-Auth-Info: guacg1qZZv5IL0kMu20zrLv3McRfSpJVVlDWMBmdmbI=
-Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Thu, 25 Jul 2019 18:20:26 +0200 (CEST)
-Date:   Thu, 25 Jul 2019 18:20:20 +0200
-From:   Lukasz Majewski <lukma@denx.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] mfd: mc13xxx: Add mc34708 adc support
-Message-ID: <20190725182020.3948c8d9@jawa>
-In-Reply-To: <20190725123641.GJ23883@dell>
-References: <20190717222602.2912-1-lukma@denx.de>
-        <20190717222602.2912-2-lukma@denx.de>
-        <20190725123641.GJ23883@dell>
-Organization: denx.de
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        Thu, 25 Jul 2019 12:20:54 -0400
+Received: from mga05.intel.com ([192.55.52.43]:11854 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387564AbfGYQUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 12:20:54 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 09:20:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,307,1559545200"; 
+   d="scan'208";a="253978595"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.165])
+  by orsmga001.jf.intel.com with ESMTP; 25 Jul 2019 09:20:53 -0700
+Date:   Thu, 25 Jul 2019 09:20:53 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        wanpengli@tencent.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        patches@kernelci.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>, jmattson@google.com
+Subject: Re: [PATCH 5.2 000/413] 5.2.3-stable review
+Message-ID: <20190725162053.GD18612@linux.intel.com>
+References: <20190724191735.096702571@linuxfoundation.org>
+ <CADYN=9+WLxhmqX3JNL_s-kWSN97G=8WhD=TF=uAuKecJnKcj_Q@mail.gmail.com>
+ <20190725113437.GA27429@kroah.com>
+ <230a5b34-d23e-8318-0b1f-d23ada7318e0@redhat.com>
+ <CA+G9fYsWdmboyquZ=Bs3tkTwRFTzd1yuL0_EVpHOecNi4E_stA@mail.gmail.com>
+ <20190725160939.GC18612@linux.intel.com>
+ <33f1cfaa-525d-996a-4977-fda32dc368ee@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/tZkyfYhowXpRWsh0jAiSQ9/"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <33f1cfaa-525d-996a-4977-fda32dc368ee@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/tZkyfYhowXpRWsh0jAiSQ9/
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jul 25, 2019 at 06:10:37PM +0200, Paolo Bonzini wrote:
+> On 25/07/19 18:09, Sean Christopherson wrote:
+> >> This investigation confirms it is a new test code failure on stable-rc 5.2.3
+> > No, it only confirms that kvm-unit-tests/master fails on 5.2.*.  To confirm
+> > a new failure in 5.2.3 you would need to show a test that passes on 5.2.2
+> > and fails on 5.2.3.
+> 
+> I think he meant "a failure in new test code". :)
 
-Hi Lee,
-
-> On Thu, 18 Jul 2019, Lukasz Majewski wrote:
->=20
-> > From: Sascha Hauer <s.hauer@pengutronix.de>
-> >=20
-> > The mc34708 has an improved adc. The older variants will always
-> > convert a fixed order of channels. The mc34708 can do up to eight
-> > conversions in arbitrary channel order. Currently this extended
-> > feature is not supported. We only support touchscreen conversions
-> > now, which will be sampled in a data format compatible to the older
-> > chips in order to keep the API between the mfd and the touchscreen
-> > driver.
-> >=20
-> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> >=20
-> > ---
-> > Changes for v4:
-> > - None
-> >=20
-> > Changes for v3:
-> > - None
-> >=20
-> > Changes for v2:
-> > - Change the return code patch when the mc13xxx ADC is performing
-> > conversion
-> > - Introduce new include/linux/mfd/mc34708.h header file for mc34708
-> > specific defines
-> >=20
-> > Changes from the original patches:
-> > - ADC conversion functions prototypes added to fix build error
-> > - Adjustments to make checkpatch clean (-ENOSYS, line over 80 char)
-> >=20
-> > This patch applies on top of v5.2 - SHA1:
-> > 0ecfebd2b52404ae0c54a878c872bb93363ada36 ---
-> >  drivers/mfd/mc13xxx-core.c  | 102
-> > +++++++++++++++++++++++++++++++++++++++++++-
-> > drivers/mfd/mc13xxx.h       |   3 ++ include/linux/mfd/mc34708.h |
-> > 37 ++++++++++++++++ 3 files changed, 141 insertions(+), 1
-> > deletion(-) create mode 100644 include/linux/mfd/mc34708.h
-> >=20
-> > diff --git a/drivers/mfd/mc13xxx-core.c b/drivers/mfd/mc13xxx-core.c
-> > index 1abe7432aad8..01473d6fda21 100644
-> > --- a/drivers/mfd/mc13xxx-core.c
-> > +++ b/drivers/mfd/mc13xxx-core.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/of_device.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/mfd/core.h>
-> > +#include <linux/mfd/mc34708.h>
-> > =20
-> >  #include "mc13xxx.h"
-> > =20
-> > @@ -45,6 +46,8 @@
-> > =20
-> >  #define MC13XXX_ADC2		45
-> > =20
-> > +#define MC13XXX_ADC_WORKING		(1 << 0) =20
->=20
-> BIT(0) ?
-
-The same convention - i.e. (1 << 0) is used in the rest of the file.
-
->=20
-> >  void mc13xxx_lock(struct mc13xxx *mc13xxx)
-> >  {
-> >  	if (!mutex_trylock(&mc13xxx->lock)) {
-> > @@ -198,22 +201,30 @@ static void mc34708_print_revision(struct
-> > mc13xxx *mc13xxx, u32 revision) maskval(revision,
-> > MC34708_REVISION_FAB)); }
-> > =20
-> > +static int mc13xxx_adc_conversion(struct mc13xxx *, unsigned int,
-> > +				  unsigned int, u8, bool, unsigned
-> > int *); +static int mc34708_adc_conversion(struct mc13xxx *,
-> > unsigned int,
-> > +				  unsigned int, u8, bool, unsigned
-> > int *); +
-> >  /* These are only exported for mc13xxx-i2c and mc13xxx-spi */
-> >  struct mc13xxx_variant mc13xxx_variant_mc13783 =3D {
-> >  	.name =3D "mc13783",
-> >  	.print_revision =3D mc13xxx_print_revision,
-> > +	.adc_do_conversion =3D mc13xxx_adc_conversion,
-> >  };
-> >  EXPORT_SYMBOL_GPL(mc13xxx_variant_mc13783); =20
->=20
-> I'd prefer to keep the call-back functions as close to zero as
-> possible.
-
-If I may ask - what is wrong with having per device callback(s) ?
-
->=20
-> It would be better to turn mc13xxx_adc_conversion() in to the catch
-> function
-
-Could you share any example?=20
-
-> choose an execution route based on some platform matching.
->=20
-
-Could you help me with giving a hint of how shall I do the "platform
-matching" in this particular driver ?=20
-
-The mc13xxx driver seems rather complex with SPI and I2C support and in
-which the subdevices are added (e.g. rtc, adc, etc).
-
-This particular patch just follows current driver design and fixes its
-usability for mc13708 drvice.
-
-> If you could do the same for print_revision too, that would be even
-> better.
->=20
-
-I would prefer to fix the driver (for mc13708) without the need to
-change the working code.
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/tZkyfYhowXpRWsh0jAiSQ9/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl051sQACgkQAR8vZIA0
-zr37bQf/fihCUC7Q46ePMNU9EdKDchQOsRruvSq9D/fYgYY4ot4m+4tow5dIRu2q
-OoZFxYr5vv2PA+lk6Wy40PxI+9J8l0IUAlTe9pz00GMGIyO16yqqEsqVusrBfP6c
-tyqcF/cgnGwme66U+Zj5aQASfRX9HRn/SK7cy86YQL/i65wqmxkGKAPKdjWuaN9e
-QHYbgcPFogs0DdO8sdmo2iXCiZmwIpRiGtW2nFTEpl7t+WDzn5w94CLo4VGOWnb5
-CJGX5U4OCq7sRyjP+Sj9dkJTN7k4TAiYDlHH1pr+Y38RQv9ECGSA0y6J1T6FxwnK
-Qp/+1yTRLQsw4T3yLCHQAxPqcTOqng==
-=vXD0
------END PGP SIGNATURE-----
-
---Sig_/tZkyfYhowXpRWsh0jAiSQ9/--
+Ah, that does appear to be the case.  So just to be clear, we're good, right?
