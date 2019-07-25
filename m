@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0E0C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA4EC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66AC4229F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F9D229F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:08:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="RdMHbrqy"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gf2BrVqA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389970AbfGYQHg (ORCPT
+        id S1729160AbfGYQIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:07:36 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48291 "EHLO
+        Thu, 25 Jul 2019 12:08:14 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39527 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387533AbfGYQHf (ORCPT
+        with ESMTP id S1726696AbfGYQIO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:07:35 -0400
+        Thu, 25 Jul 2019 12:08:14 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PG78vP1073527
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PG7rgO1073608
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 25 Jul 2019 09:07:08 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PG78vP1073527
+        Thu, 25 Jul 2019 09:07:53 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PG7rgO1073608
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564070829;
-        bh=XMJIeMc2T0qsC7Un47MzeAIrlWD8BxGBxFjhbS1GqU8=;
+        s=2019071901; t=1564070874;
+        bh=yk5+Q4B6YbH8hj+rw74twQlCrgmpreye3zuxjVwLICE=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=RdMHbrqyHsXqf3+7g6Iop0pO9B6z/5DlQAZ0+Yp+GGMDzdaTZhpaC54Gqpl+HVro8
-         D18Ywwpnbvhi9G3XBNPM3J6nvDf8KEalExBTPRmw4XHDjtfc69Ggl8gX4vKO4YZD4U
-         VIrmlTaXKQsls9cYhsQIouNwBJmgmBejNvDkwbrHCcsoESP87jJyMNn4XfTuAu4qIG
-         OpI6XuVJvC6ncJ2rylBGvm8572GmidrKSG1tnqHKWDRMGuaGgelDQ36mnbVU59yLDj
-         Wm8BczmyTGw5Nufy1+MR9S5rBrQWviFvIr5BwauYqLIGYSwZ2bBSOW9JRMeAA1L7M4
-         PzhwZWhT7fEMg==
+        b=gf2BrVqAE/JA8ChWK4hhoyTJ+QUHCGiswHV6/hV4XaWGWVmKD7A0QchRO3PUKN9Mv
+         0pbc37i+jEuJzkeo7TtQPAK4u7PspHxxH9DCFNhAJebbcp/74QIo6emsTnJExX0vl5
+         BB3LqbMYo1LiBq6gizsteeC/QvnT2zKyWAhwGA104/bTQISHWmtXd8vVFaajQ77DLv
+         eHTtagPcYNMni1NU45Yin3/wWRQafpUfgXFktPhc34RzE4yO48IxpO4X7hfxyWnG4O
+         Iosbq//5vipFkTHZiv1lqKrPxEkCKxhHQkYb++gYXv+iELXDGS7M8BeXnjAaAEf696
+         NInDIk/W+w8Gg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PG77B71073524;
-        Thu, 25 Jul 2019 09:07:07 -0700
-Date:   Thu, 25 Jul 2019 09:07:07 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PG7qec1073605;
+        Thu, 25 Jul 2019 09:07:52 -0700
+Date:   Thu, 25 Jul 2019 09:07:52 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Zhenzhong Duan <tipbot@zytor.com>
-Message-ID: <tip-5ea3f6fb37b79da33ac9211df336fd2b9f47c39f@git.kernel.org>
-Cc:     jgross@suse.com, jolsa@redhat.com, zhenzhong.duan@oracle.com,
-        acme@kernel.org, alexander.shishkin@linux.intel.com,
-        peterz@infradead.org, torvalds@linux-foundation.org,
-        boris.ostrovsky@oracle.com, tglx@linutronix.de, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, bp@alien8.de, mingo@kernel.org,
-        namhyung@kernel.org
-Reply-To: peterz@infradead.org, torvalds@linux-foundation.org,
-          boris.ostrovsky@oracle.com, tglx@linutronix.de, hpa@zytor.com,
-          jgross@suse.com, acme@kernel.org, zhenzhong.duan@oracle.com,
-          jolsa@redhat.com, alexander.shishkin@linux.intel.com,
-          mingo@kernel.org, namhyung@kernel.org, bp@alien8.de,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <1564022366-18293-1-git-send-email-zhenzhong.duan@oracle.com>
-References: <1564022366-18293-1-git-send-email-zhenzhong.duan@oracle.com>
+From:   tip-bot for Leonard Crestez <tipbot@zytor.com>
+Message-ID: <tip-4ce54af8b33d3e21ca935fc1b89b58cbba956051@git.kernel.org>
+Cc:     tglx@linutronix.de, hpa@zytor.com, jolsa@redhat.com,
+        mingo@kernel.org, acme@kernel.org, linux-kernel@vger.kernel.org,
+        Frank.li@nxp.com, namhyung@kernel.org, peterz@infradead.org,
+        leonard.crestez@nxp.com, alexander.shishkin@linux.intel.com,
+        mark.rutland@arm.com, torvalds@linux-foundation.org,
+        will@kernel.org
+Reply-To: tglx@linutronix.de, jolsa@redhat.com, hpa@zytor.com,
+          mingo@kernel.org, acme@kernel.org, peterz@infradead.org,
+          leonard.crestez@nxp.com, linux-kernel@vger.kernel.org,
+          Frank.li@nxp.com, namhyung@kernel.org, will@kernel.org,
+          alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
+          torvalds@linux-foundation.org
+In-Reply-To: <c4ebe0503623066896d7046def4d6b1e06e0eb2e.1563972056.git.leonard.crestez@nxp.com>
+References: <c4ebe0503623066896d7046def4d6b1e06e0eb2e.1563972056.git.leonard.crestez@nxp.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf/x86: Apply more accurate check on hypervisor
- platform
-Git-Commit-ID: 5ea3f6fb37b79da33ac9211df336fd2b9f47c39f
+Subject: [tip:perf/urgent] perf/core: Fix creating kernel counters for PMUs
+ that override event->cpu
+Git-Commit-ID: 4ce54af8b33d3e21ca935fc1b89b58cbba956051
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -76,60 +76,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5ea3f6fb37b79da33ac9211df336fd2b9f47c39f
-Gitweb:     https://git.kernel.org/tip/5ea3f6fb37b79da33ac9211df336fd2b9f47c39f
-Author:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-AuthorDate: Thu, 25 Jul 2019 10:39:26 +0800
+Commit-ID:  4ce54af8b33d3e21ca935fc1b89b58cbba956051
+Gitweb:     https://git.kernel.org/tip/4ce54af8b33d3e21ca935fc1b89b58cbba956051
+Author:     Leonard Crestez <leonard.crestez@nxp.com>
+AuthorDate: Wed, 24 Jul 2019 15:53:24 +0300
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Thu, 25 Jul 2019 15:41:30 +0200
+CommitDate: Thu, 25 Jul 2019 15:41:31 +0200
 
-perf/x86: Apply more accurate check on hypervisor platform
+perf/core: Fix creating kernel counters for PMUs that override event->cpu
 
-check_msr is used to fix a bug report in guest where KVM doesn't support
-LBR MSR and cause #GP.
+Some hardware PMU drivers will override perf_event.cpu inside their
+event_init callback. This causes a lockdep splat when initialized through
+the kernel API:
 
-The msr check is bypassed on real HW to workaround a false failure,
-see commit d0e1a507bdc7 ("perf/x86/intel: Disable check_msr for real HW")
+ WARNING: CPU: 0 PID: 250 at kernel/events/core.c:2917 ctx_sched_out+0x78/0x208
+ pc : ctx_sched_out+0x78/0x208
+ Call trace:
+  ctx_sched_out+0x78/0x208
+  __perf_install_in_context+0x160/0x248
+  remote_function+0x58/0x68
+  generic_exec_single+0x100/0x180
+  smp_call_function_single+0x174/0x1b8
+  perf_install_in_context+0x178/0x188
+  perf_event_create_kernel_counter+0x118/0x160
 
-When running a guest with CONFIG_HYPERVISOR_GUEST not set or "nopv"
-enabled, current check isn't enough and #GP could trigger.
+Fix this by calling perf_install_in_context with event->cpu, just like
+perf_event_open
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Borislav Petkov <bp@alien8.de>
+Cc: Frank Li <Frank.li@nxp.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1564022366-18293-1-git-send-email-zhenzhong.duan@oracle.com
+Cc: Will Deacon <will@kernel.org>
+Link: https://lkml.kernel.org/r/c4ebe0503623066896d7046def4d6b1e06e0eb2e.1563972056.git.leonard.crestez@nxp.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/events/intel/core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index b35519cbc8b4..c9075fc75cb6 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -20,7 +20,6 @@
- #include <asm/intel-family.h>
- #include <asm/apic.h>
- #include <asm/cpu_device_id.h>
--#include <asm/hypervisor.h>
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 026a14541a38..0463c1151bae 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11274,7 +11274,7 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
+ 		goto err_unlock;
+ 	}
  
- #include "../perf_event.h"
+-	perf_install_in_context(ctx, event, cpu);
++	perf_install_in_context(ctx, event, event->cpu);
+ 	perf_unpin_context(ctx);
+ 	mutex_unlock(&ctx->mutex);
  
-@@ -4053,7 +4052,7 @@ static bool check_msr(unsigned long msr, u64 mask)
- 	 * Disable the check for real HW, so we don't
- 	 * mess with potentionaly enabled registers:
- 	 */
--	if (hypervisor_is_type(X86_HYPER_NATIVE))
-+	if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
- 		return true;
- 
- 	/*
