@@ -2,81 +2,161 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C918C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A214C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1AEF21901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2006B21901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:10:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="EXZ5L71u"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="282jotNi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbfGYOId (ORCPT
+        id S2387674AbfGYOK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:08:33 -0400
-Received: from vern.gendns.com ([98.142.107.122]:51174 "EHLO vern.gendns.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726802AbfGYOId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:08:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8iXF3z4I/1bFhPymp5brEezEOAt+VD8wjloraO/Zwfk=; b=EXZ5L71uP37YRG8OARqdv6Xg/0
-        RIycvmcz3YOUZ0lh/L7nIdAPHoDU74Ucg9nrvCgA6rkrGvJbgukLUmvm56LRBVfSsBHgf7sp+oGfg
-        P1n2E2cIznyFkE6WsIIUQe9Yb4A3ZOsTedEF5WXsXF8QEFGfQxPjH3z/cT2fi3Raj5YCuXmE3HsrQ
-        f6rylb6AqSyWzPSS4OQIu81FVjPKBUV7PBTjGtlvyMVvQEwkCFNZGbNzOAMIOm2VCVtJKaOI8wf+U
-        eVQUfi6Y4W9tptS0LJZSkugqoi8vNNwv16UNEmLySJwnwHcaeHb4gLyMF9+RtHQSdU75lO/vA9ECC
-        qUHojtRA==;
-Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:60968 helo=[192.168.0.134])
-        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <david@lechnology.com>)
-        id 1hqeQ1-00Givk-AR; Thu, 25 Jul 2019 10:08:29 -0400
-Subject: Re: [PATCH 1/1] power/supply/powersupply_sysfs: Add of_node name to
- uevent message if available
-To:     Richard Tresidder <rtresidd@electromag.com.au>, sre@kernel.org,
-        enric.balletbo@collabora.com, ncrews@chromium.org,
-        andrew.smirnov@gmail.com, groeck@chromium.org, tglx@linutronix.de,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1564040858-24202-1-git-send-email-rtresidd@electromag.com.au>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <9a10b934-e7f3-c95f-6250-8a857bdfa912@lechnology.com>
-Date:   Thu, 25 Jul 2019 09:08:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 25 Jul 2019 10:10:26 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43537 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387551AbfGYOKZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 10:10:25 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PEAA0T1034455
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 07:10:10 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PEAA0T1034455
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564063810;
+        bh=wDu+dk/cAqPch7gPml/O3THYEPTwUlxjV8lvrRGyTLk=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=282jotNiEriB7YTY7TL90x4+cdjgHNW7AEnEzXb/UbZvRPyj0Eszjeb3nP5k76NAy
+         s5r2zDq3d0Vqj/9uY5oBOhO2d8G2qhwt5c9zEB7bbzDhyE3aq51GdYuuRNBNZySTLK
+         NxAv/3COtUpKT7n/Ko50M/FcP1c2lUSSRpLyQcVB6WNz5Wl1LyuZj4cRnIc2KgXg/y
+         ySxzocUQA+WUQVcMjT4Ztzo5SPjOnTaoRHL93kGt9MD0paO9x/crx/jYBB370DSI54
+         cDnNERBEvX1OdOdOFf0G/sdNKWRZwBIMDrIEr6Xuy4LpAXSKC1W/KSm3vMjHW3DjpG
+         YM/klSSEvkPaA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PEA9nl1034452;
+        Thu, 25 Jul 2019 07:10:09 -0700
+Date:   Thu, 25 Jul 2019 07:10:09 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-e797bda3fd29137f6c151dfa10ea6a61c17895ce@git.kernel.org>
+Cc:     peterz@infradead.org, tglx@linutronix.de, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, mingo@kernel.org
+Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
+          tglx@linutronix.de, peterz@infradead.org
+In-Reply-To: <20190722105219.818822855@linutronix.de>
+References: <20190722105219.818822855@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:smp/hotplug] smp/hotplug: Track booted once CPUs in a cpumask
+Git-Commit-ID: e797bda3fd29137f6c151dfa10ea6a61c17895ce
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <1564040858-24202-1-git-send-email-rtresidd@electromag.com.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/25/19 2:47 AM, Richard Tresidder wrote:
-> If the of_node name of the supply is available from the devicetree binding
-> then include it under the var POWER_SUPPLY_OF_NODE_NAME.
-> This helps where a consistent name is known via the device tree binding
-> but it is hard to identify based on the usual enumeration process.
-> 
+Commit-ID:  e797bda3fd29137f6c151dfa10ea6a61c17895ce
+Gitweb:     https://git.kernel.org/tip/e797bda3fd29137f6c151dfa10ea6a61c17895ce
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Mon, 22 Jul 2019 20:47:16 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 25 Jul 2019 15:47:37 +0200
 
-Would it be possible to use of_device_uevent() instead of introducing a new
-property?
+smp/hotplug: Track booted once CPUs in a cpumask
 
+The booted once information which is required to deal with the MCE
+broadcast issue on X86 correctly is stored in the per cpu hotplug state,
+which is perfectly fine for the intended purpose.
+
+X86 needs that information for supporting NMI broadcasting via shortcuts,
+but retrieving it from per cpu data is cumbersome.
+
+Move it to a cpumask so the information can be checked against the
+cpu_present_mask quickly.
+
+No functional change intended.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105219.818822855@linutronix.de
+
+---
+ include/linux/cpumask.h |  2 ++
+ kernel/cpu.c            | 11 +++++++----
+ 2 files changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index 21755471b1c3..693124900f0a 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -115,6 +115,8 @@ extern struct cpumask __cpu_active_mask;
+ #define cpu_active(cpu)		((cpu) == 0)
+ #endif
+ 
++extern cpumask_t cpus_booted_once_mask;
++
+ static inline void cpu_max_bits_warn(unsigned int cpu, unsigned int bits)
+ {
+ #ifdef CONFIG_DEBUG_PER_CPU_MAPS
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index e84c0873559e..05778e32674a 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -62,7 +62,6 @@ struct cpuhp_cpu_state {
+ 	bool			rollback;
+ 	bool			single;
+ 	bool			bringup;
+-	bool			booted_once;
+ 	struct hlist_node	*node;
+ 	struct hlist_node	*last;
+ 	enum cpuhp_state	cb_state;
+@@ -76,6 +75,10 @@ static DEFINE_PER_CPU(struct cpuhp_cpu_state, cpuhp_state) = {
+ 	.fail = CPUHP_INVALID,
+ };
+ 
++#ifdef CONFIG_SMP
++cpumask_t cpus_booted_once_mask;
++#endif
++
+ #if defined(CONFIG_LOCKDEP) && defined(CONFIG_SMP)
+ static struct lockdep_map cpuhp_state_up_map =
+ 	STATIC_LOCKDEP_MAP_INIT("cpuhp_state-up", &cpuhp_state_up_map);
+@@ -433,7 +436,7 @@ static inline bool cpu_smt_allowed(unsigned int cpu)
+ 	 * CPU. Otherwise, a broadacasted MCE observing CR4.MCE=0b on any
+ 	 * core will shutdown the machine.
+ 	 */
+-	return !per_cpu(cpuhp_state, cpu).booted_once;
++	return !cpumask_test_cpu(cpu, &cpus_booted_once_mask);
+ }
+ #else
+ static inline bool cpu_smt_allowed(unsigned int cpu) { return true; }
+@@ -1066,7 +1069,7 @@ void notify_cpu_starting(unsigned int cpu)
+ 	int ret;
+ 
+ 	rcu_cpu_starting(cpu);	/* Enables RCU usage on this CPU. */
+-	st->booted_once = true;
++	cpumask_set_cpu(cpu, &cpus_booted_once_mask);
+ 	while (st->state < target) {
+ 		st->state++;
+ 		ret = cpuhp_invoke_callback(cpu, st->state, true, NULL, NULL);
+@@ -2334,7 +2337,7 @@ void __init boot_cpu_init(void)
+ void __init boot_cpu_hotplug_init(void)
+ {
+ #ifdef CONFIG_SMP
+-	this_cpu_write(cpuhp_state.booted_once, true);
++	cpumask_set_cpu(smp_processor_id(), &cpus_booted_once_mask);
+ #endif
+ 	this_cpu_write(cpuhp_state.state, CPUHP_ONLINE);
+ }
