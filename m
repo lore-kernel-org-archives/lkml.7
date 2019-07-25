@@ -2,212 +2,103 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063C0C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAC7C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C519A22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:53:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564062826;
-	bh=1RyZBeqHQzJ5r1QzsyTUC7ywOmtNXt1CFBQWsPSBtig=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aWG0Dw+v2y8iRoBqZOl1CdJgHduhMVgeeI4+iXOVGoEPahId3BwBur1LO00zDzjlK
-	 f1pCuRWDTwf8b7KuX8f0uSbHEpGObS4ylpyM9aKxbw+XLMkc+TfYytzC1kPKuXlDA+
-	 nz+hjOlWTgqyfKurZ8JIj4kYBb8tnXzFpYIdiIbs=
+	by mail.kernel.org (Postfix) with ESMTP id 058C922C7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:53:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="IuAAVnx3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404051AbfGYNxp (ORCPT
+        id S2404092AbfGYNxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:53:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403960AbfGYNxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:53:43 -0400
-Received: from localhost.localdomain (unknown [106.200.241.217])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDCF022BF5;
-        Thu, 25 Jul 2019 13:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564062822;
-        bh=1RyZBeqHQzJ5r1QzsyTUC7ywOmtNXt1CFBQWsPSBtig=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2GRz6dDHX64Jbz2OXilCwqVKtespEE6XKRiJAJqeHVfcgZgZ0opeVOG/uwwUgVCKv
-         paIIiJyX6aghmR4lk/7/lLyz4JOv/vinY8Fr6Q74FGFyFXI/69r8qyGALfK3yrMuQc
-         IqaX88hRLAB7NYFxkL2vpVTfiQhM3iY29hZznLAA=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Andy Gross <agross@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] arm64: dts: qcom: qcs404: remove unit name for thermal trip points
-Date:   Thu, 25 Jul 2019 19:21:50 +0530
-Message-Id: <20190725135150.9972-4-vkoul@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190725135150.9972-1-vkoul@kernel.org>
-References: <20190725135150.9972-1-vkoul@kernel.org>
+        Thu, 25 Jul 2019 09:53:47 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53636 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403804AbfGYNxo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 09:53:44 -0400
+Received: by mail-wm1-f66.google.com with SMTP id x15so45094940wmj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:53:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=/Kj7OdNc4vKrUG2qrwcQ6Gqjaaduh2n9Gif9XQMH8UI=;
+        b=IuAAVnx3OcBDhT6g4leu/5sG9eZM1cBIoX6wt1TOSKISjyQl+einalGKU9vDYedC+H
+         NHramEzlVMlvtdBrsFujHMulCkCxYkO4D6CeRj/thr/86rTSd9wthMwWDDzKs1oo02lD
+         6e1DzNHM5Sx0EbBmczfe4kELw1Nq1At1gaMYNaTNJAqi6TQYi2wUdBgRvPnIaWzVd7bs
+         tWHgSDDAxjtcpAWOvcJi1E7UncGTEt+3/WKiQLcedKCJ16B73XkkxyZiYPyGiTHbVxn1
+         kxU5hIOdKyY9AdJXjfQR++0ebLNEqJyjFf/Qbm6E6+RlqPSZNpSkL7rzHX2JncW5dOBq
+         5iVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=/Kj7OdNc4vKrUG2qrwcQ6Gqjaaduh2n9Gif9XQMH8UI=;
+        b=op/MISxFlzdFcdqj91kCmHbzNvrfYFQbHh2dEUQZwveAiYYcNmQen2BsYgnu/JT3Lh
+         YSCgbsPnyl9/gqPLoTC9vFn2sRosALSaxhIlpihlI1fWG0byFwU/2sHmt9mUTMnGuhaO
+         oypnsk/kjcjINRL5Ayo54rtqJAAM9PuK/knjtmK6wDkX8mxl/czRUWc0ueS1nscUlIMs
+         qwg+ls9a81Bv526LrBmbLO1PsxbFPgMK7wcOc/GnZzkuSQECsnumtHj+AJAagkrNYGQa
+         jgX4Wn9ZcGNv2DAcZqeYI/pW9Ip/RBcDkp5TkMoAtT2w0vXArWIUTr0oTBs0CpQi7Kyg
+         elUg==
+X-Gm-Message-State: APjAAAVu35mOB25/0BadgAnUOtwXvgP8a/OpQ1h7QU1WMb172bgC2jJ8
+        PoavdtxLlgOWxG2LNW1HqNidyQ==
+X-Google-Smtp-Source: APXvYqwct1CkXuw5g8BXaKHLcZz60COi0xZJyXahWLQI83KPuF5bOK5xMjTM5XOreuA3w1Q6MFP43g==
+X-Received: by 2002:a1c:f918:: with SMTP id x24mr76950829wmh.132.1564062822618;
+        Thu, 25 Jul 2019 06:53:42 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id c4sm39496984wrt.86.2019.07.25.06.53.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 06:53:41 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Alexandre Mergnat <amergnat@baylibre.com>, narmstrong@baylibre.com
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, baylibre-upstreaming@groups.io,
+        Alexandre Mergnat <amergnat@baylibre.com>
+Subject: Re: [PATCH] clk: meson: g12a: fix hifi typo in mali parent_names
+In-Reply-To: <20190524091532.28973-1-amergnat@baylibre.com>
+References: <20190524091532.28973-1-amergnat@baylibre.com>
+Date:   Thu, 25 Jul 2019 15:53:41 +0200
+Message-ID: <1jftmuxlsq.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The thermal trip points have unit name but no reg property, so we can
-remove them
+On Fri 24 May 2019 at 11:15, Alexandre Mergnat <amergnat@baylibre.com> wrote:
 
-arch/arm64/boot/dts/qcom/qcs404.dtsi:1080.31-1084.7: Warning (unit_address_vs_reg): /thermal-zones/aoss-thermal/trips/trip-point@0: node has a unit name, but no reg property
-arch/arm64/boot/dts/qcom/qcs404.dtsi:1095.33-1099.7: Warning (unit_address_vs_reg): /thermal-zones/q6-hvx-thermal/trips/trip-point@0: node has a unit name, but no reg property
-arch/arm64/boot/dts/qcom/qcs404.dtsi:1110.32-1114.7: Warning (unit_address_vs_reg): /thermal-zones/lpass-thermal/trips/trip-point@0: node has a unit name, but no reg property
-arch/arm64/boot/dts/qcom/qcs404.dtsi:1125.31-1129.7: Warning (unit_address_vs_reg): /thermal-zones/wlan-thermal/trips/trip-point@0: node has a unit name, but no reg property
-arch/arm64/boot/dts/qcom/qcs404.dtsi:1140.34-1144.7: Warning (unit_address_vs_reg): /thermal-zones/cluster-thermal/trips/trip-point@0: node has a unit name, but no reg property
-arch/arm64/boot/dts/qcom/qcs404.dtsi:1145.34-1149.7: Warning (unit_address_vs_reg): /thermal-zones/cluster-thermal/trips/trip-point@1: node has a unit name, but no reg property
-arch/arm64/boot/dts/qcom/qcs404.dtsi:1174.31-1178.7: Warning (unit_address_vs_reg): /thermal-zones/cpu0-thermal/trips/trip-point@0: node has a unit name, but no reg property
-arch/arm64/boot/dts/qcom/qcs404.dtsi:1179.31-1183.7: Warning (unit_address_vs_reg): /thermal-zones/cpu0-thermal/trips/trip-point@1: node has a unit name, but no reg property
-arch/arm64/boot/dts/qcom/qcs404.dtsi:1208.31-1212.7: Warning (unit_address_vs_reg): /thermal-zones/cpu1-thermal/trips/trip-point@0: node has a unit name, but no reg property
-arch/arm64/boot/dts/qcom/qcs404.dtsi:1213.31-1217.7: Warning (unit_address_vs_reg): /thermal-zones/cpu1-thermal/trips/trip-point@1: node has a unit name, but no reg property
-arch/arm64/boot/dts/qcom/qcs404.dtsi:1242.31-1246.7: Warning (unit_address_vs_reg): /thermal-zones/cpu2-thermal/trips/trip-point@0: node has a unit name, but no reg property
-arch/arm64/boot/dts/qcom/qcs404.dtsi:1247.31-1251.7: Warning (unit_address_vs_reg): /thermal-zones/cpu2-thermal/trips/trip-point@1: node has a unit name, but no reg property
-arch/arm64/boot/dts/qcom/qcs404.dtsi:1276.31-1280.7: Warning (unit_address_vs_reg): /thermal-zones/cpu3-thermal/trips/trip-point@0: node has a unit name, but no reg property
-arch/arm64/boot/dts/qcom/qcs404.dtsi:1281.31-1285.7: Warning (unit_address_vs_reg): /thermal-zones/cpu3-thermal/trips/trip-point@1: node has a unit name, but no reg property
-arch/arm64/boot/dts/qcom/qcs404.dtsi:1310.30-1314.7: Warning (unit_address_vs_reg): /thermal-zones/gpu-thermal/trips/trip-point@0: node has a unit name, but no reg property
+> Replace hihi by hifi in the mali parent_names of the g12a SoC family.
+>
+> Fixes: 085a4ea93d54 ("clk: meson: g12a: add peripheral clock controller")
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 30 ++++++++++++++--------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+Missed that one in the last cycle, sorry
+Applied for next
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 3d0789775009..6d91dae5aee0 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -1077,7 +1077,7 @@
- 			thermal-sensors = <&tsens 0>;
- 
- 			trips {
--				aoss_alert0: trip-point@0 {
-+				aoss_alert0: trip-point0 {
- 					temperature = <105000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -1092,7 +1092,7 @@
- 			thermal-sensors = <&tsens 1>;
- 
- 			trips {
--				q6_hvx_alert0: trip-point@0 {
-+				q6_hvx_alert0: trip-point0 {
- 					temperature = <105000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -1107,7 +1107,7 @@
- 			thermal-sensors = <&tsens 2>;
- 
- 			trips {
--				lpass_alert0: trip-point@0 {
-+				lpass_alert0: trip-point0 {
- 					temperature = <105000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -1122,7 +1122,7 @@
- 			thermal-sensors = <&tsens 3>;
- 
- 			trips {
--				wlan_alert0: trip-point@0 {
-+				wlan_alert0: trip-point0 {
- 					temperature = <105000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -1137,12 +1137,12 @@
- 			thermal-sensors = <&tsens 4>;
- 
- 			trips {
--				cluster_alert0: trip-point@0 {
-+				cluster_alert0: trip-point0 {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
--				cluster_alert1: trip-point@1 {
-+				cluster_alert1: trip-point1 {
- 					temperature = <105000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -1171,12 +1171,12 @@
- 			thermal-sensors = <&tsens 5>;
- 
- 			trips {
--				cpu0_alert0: trip-point@0 {
-+				cpu0_alert0: trip-point0 {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
--				cpu0_alert1: trip-point@1 {
-+				cpu0_alert1: trip-point1 {
- 					temperature = <105000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -1205,12 +1205,12 @@
- 			thermal-sensors = <&tsens 6>;
- 
- 			trips {
--				cpu1_alert0: trip-point@0 {
-+				cpu1_alert0: trip-point0 {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
--				cpu1_alert1: trip-point@1 {
-+				cpu1_alert1: trip-point1 {
- 					temperature = <105000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -1239,12 +1239,12 @@
- 			thermal-sensors = <&tsens 7>;
- 
- 			trips {
--				cpu2_alert0: trip-point@0 {
-+				cpu2_alert0: trip-point0 {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
--				cpu2_alert1: trip-point@1 {
-+				cpu2_alert1: trip-point1 {
- 					temperature = <105000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -1273,12 +1273,12 @@
- 			thermal-sensors = <&tsens 8>;
- 
- 			trips {
--				cpu3_alert0: trip-point@0 {
-+				cpu3_alert0: trip-point0 {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
--				cpu3_alert1: trip-point@1 {
-+				cpu3_alert1: trip-point1 {
- 					temperature = <105000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -1307,7 +1307,7 @@
- 			thermal-sensors = <&tsens 9>;
- 
- 			trips {
--				gpu_alert0: trip-point@0 {
-+				gpu_alert0: trip-point0 {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "hot";
--- 
-2.20.1
-
+> ---
+>  drivers/clk/meson/g12a.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+> index 739f64fdf1e3..e16fe882789e 100644
+> --- a/drivers/clk/meson/g12a.c
+> +++ b/drivers/clk/meson/g12a.c
+> @@ -2369,7 +2369,7 @@ static struct clk_regmap g12a_hdmi = {
+>   */
+>  
+>  static const char * const g12a_mali_0_1_parent_names[] = {
+> -	IN_PREFIX "xtal", "gp0_pll", "hihi_pll", "fclk_div2p5",
+> +	IN_PREFIX "xtal", "gp0_pll", "hifi_pll", "fclk_div2p5",
+>  	"fclk_div3", "fclk_div4", "fclk_div5", "fclk_div7"
+>  };
+>  
+> -- 
+> 2.17.1
