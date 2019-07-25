@@ -2,153 +2,92 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE5DC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B137FC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC9322238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E5A2238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:19:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="By2gD602";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YfAfVEyf"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="RPWbux+y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389149AbfGYPS5 (ORCPT
+        id S2389158AbfGYPTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 11:18:57 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46914 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388736AbfGYPS4 (ORCPT
+        Thu, 25 Jul 2019 11:19:19 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:57000 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388736AbfGYPTT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 11:18:56 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3CE77607DE; Thu, 25 Jul 2019 15:18:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564067935;
-        bh=hnHhbe9q2IRKMtnzCZ2ig0RS/AUD9YxThPnuMNlk9D8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=By2gD602wfGFKF5ttG1fS+NbvbHMmWaPI1sqfQ/NTN5FVQR8M0A/sRZFNOrqPSTgk
-         pcgvoVbrPbEJxxxPn0h+MrVXJaMWP32Zn7elvYxPJ724rVNtge4N+PO5m74WsUDiVE
-         wvxeLJkSmojIkK9x9VnIRVXAqbBrjFcRbhWsXGNY=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 15C5060312;
-        Thu, 25 Jul 2019 15:18:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564067934;
-        bh=hnHhbe9q2IRKMtnzCZ2ig0RS/AUD9YxThPnuMNlk9D8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YfAfVEyfyjHOH1K+e7WFQFs8oC4PxsyySdDgQxFsrZMPwEbKeSJAgETfScZ0dIa7V
-         K6ins/go/UOKVqrCBpwt5hzK3dFSPpUOf7+t9RtmiTjFmCJY1XMadJC0MV+9wTSDsz
-         A5vgV0iFLyRawDjGwXQhqn1HGJe0NeMNigtnIIsI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 15C5060312
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Thu, 25 Jul 2019 09:18:51 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>, mkshah@codeaurora.org
-Subject: Re: [PATCH V2 2/4] drivers: qcom: rpmh-rsc: avoid locking in the
- interrupt handler
-Message-ID: <20190725151851.GG18620@codeaurora.org>
-References: <20190722215340.3071-1-ilina@codeaurora.org>
- <20190722215340.3071-2-ilina@codeaurora.org>
- <5d3769df.1c69fb81.55d03.aa33@mx.google.com>
- <20190724145251.GB18620@codeaurora.org>
- <5d38b38e.1c69fb81.e8e5d.035b@mx.google.com>
- <20190724203610.GE18620@codeaurora.org>
- <CAD=FV=UYj55m99EcQXmkYhs257A46x8DaarE0DC-GRF_3dY3-Q@mail.gmail.com>
+        Thu, 25 Jul 2019 11:19:19 -0400
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x6PFJ2Cm028409;
+        Fri, 26 Jul 2019 00:19:02 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x6PFJ2Cm028409
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564067943;
+        bh=ybYKBy2jy2mNaj9dapjCxjrjOczwrfBem/VG0oV9nbc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RPWbux+yjMepS0eHBsNLg6KHVJNe8nyxRgAyeUBrPLRd3lkQ70KNqeCAl4/SFU1rA
+         KqBCIJnmWTt2dzLfUOdXeqg+NBM9I3lI8V+DKpydh+IeSPY5DNQ5WiA4bUBUSLIEkt
+         CwCTwUmJ/5Nte6KSXD0BHkytFeq93XGtPvEC8kcmddSm6NmhCaqhVNgH28OM66ukCr
+         lLHl4P5+M38HUeaBBTMOTcOcN9ExEtQDRXnM8pW4pA5bnQZzg00ryltINj4ovvWtKJ
+         oVvWb/xneF1qbgFz9QMY5BMTL9S8MZrPnS+NV0+3zfI6zHcHYFLOddfge1s6iJs6oe
+         p7abfWuOYSYfA==
+X-Nifty-SrcIP: [209.85.222.49]
+Received: by mail-ua1-f49.google.com with SMTP id j8so19975307uan.6;
+        Thu, 25 Jul 2019 08:19:02 -0700 (PDT)
+X-Gm-Message-State: APjAAAWG2hHadUBZSQoluo44Dern+wLF9J+iIOtiPh5fXNhrhPOBRKch
+        fia/qU5R4gKWuy7KXLSaniPkmUGLIChPUQFHcr0=
+X-Google-Smtp-Source: APXvYqzREwsVdqY9MpRLTcsyv3GQ7mTlG0gkpVTsr5J+UESJVcs/+a1yYujSjrS2p7W2Tw/dNRFWb+R1W2ZTVW6lnTQ=
+X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr56716853uag.40.1564067941791;
+ Thu, 25 Jul 2019 08:19:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=UYj55m99EcQXmkYhs257A46x8DaarE0DC-GRF_3dY3-Q@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190717061800.10018-1-yamada.masahiro@socionext.com>
+ <20190717061800.10018-8-yamada.masahiro@socionext.com> <230d2ca1-19cd-b60e-1b1b-6d7413eea9e2@siemens.com>
+In-Reply-To: <230d2ca1-19cd-b60e-1b1b-6d7413eea9e2@siemens.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 26 Jul 2019 00:18:12 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARu--p-tiJA2RGM5_KSQPSeo6-pkp-4GRd2AwM_1dtD7Q@mail.gmail.com>
+Message-ID: <CAK7LNARu--p-tiJA2RGM5_KSQPSeo6-pkp-4GRd2AwM_1dtD7Q@mail.gmail.com>
+Subject: Re: [PATCH v3 07/12] kbuild: modpost: read modules.order instead of $(MODVERDIR)/*.mod
+To:     Jan Kiszka <jan.kiszka@siemens.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24 2019 at 17:28 -0600, Doug Anderson wrote:
->Hi,
->
->On Wed, Jul 24, 2019 at 1:36 PM Lina Iyer <ilina@codeaurora.org> wrote:
->>
->> On Wed, Jul 24 2019 at 13:38 -0600, Stephen Boyd wrote:
->> >Quoting Lina Iyer (2019-07-24 07:52:51)
->> >> On Tue, Jul 23 2019 at 14:11 -0600, Stephen Boyd wrote:
->> >> >Quoting Lina Iyer (2019-07-22 14:53:38)
->> >> >> Avoid locking in the interrupt context to improve latency. Since we
->> >> >> don't lock in the interrupt context, it is possible that we now could
->> >> >> race with the DRV_CONTROL register that writes the enable register and
->> >> >> cleared by the interrupt handler. For fire-n-forget requests, the
->> >> >> interrupt may be raised as soon as the TCS is triggered and the IRQ
->> >> >> handler may clear the enable bit before the DRV_CONTROL is read back.
->> >> >>
->> >> >> Use the non-sync variant when enabling the TCS register to avoid reading
->> >> >> back a value that may been cleared because the interrupt handler ran
->> >> >> immediately after triggering the TCS.
->> >> >>
->> >> >> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> >> >> ---
->> >> >
->> >> >I have to read this patch carefully. The commit text isn't convincing me
->> >> >that it is actually safe to make this change. It mostly talks about the
->> >> >performance improvements and how we need to fix __tcs_trigger(), which
->> >> >is good, but I was hoping to be convinced that not grabbing the lock
->> >> >here is safe.
->> >> >
->> >> >How do we ensure that drv->tcs_in_use is cleared before we call
->> >> >tcs_write() and try to look for a free bit? Isn't it possible that we'll
->> >> >get into a situation where the bitmap is all used up but the hardware
->> >> >has just received an interrupt and is going to clear out a bit and then
->> >> >an rpmh write fails with -EBUSY?
->> >> >
->> >> If we have a situation where there are no available free bits, we retry
->> >> and that is part of the function. Since we have only 2 TCSes avaialble
->> >> to write to the hardware and there could be multiple requests coming in,
->> >> it is a very common situation. We try and acquire the drv->lock and if
->> >> there are free TCS available and if available mark them busy and send
->> >> our requests. If there are none available, we keep retrying.
->> >>
->> >
->> >Ok. I wonder if we need some sort of barriers here too, like an
->> >smp_mb__after_atomic()? That way we can make sure that the write to
->> >clear the bit is seen by another CPU that could be spinning forever
->> >waiting for that bit to be cleared? Before this change the spinlock
->> >would be guaranteed to make these barriers for us, but now that doesn't
->> >seem to be the case. I really hope that this whole thing can be changed
->> >to be a mutex though, in which case we can use the bit_wait() API, etc.
->> >to put tasks to sleep while RPMh is processing things.
->> >
->> We have drivers that want to send requests in atomic contexts and
->> therefore mutex locks would not work.
->
->Jumping in without reading all the context, but I saw this fly by and
->it seemed odd.  If I'm way off base then please ignore...
->
->Can you give more details?  Why are these drivers in atomic contexts?
->If they are in atomic contexts because they are running in the context
->of an interrupt then your next patch in the series isn't so correct.
->
->Also: when people submit requests in atomic context are they always
->submitting an asynchronous request?  In that case we could
->(presumably) just use a spinlock to protect the queue of async
->requests and a mutex for everything else?
-Yes, drivers only make async requests in interrupt contexts. They cannot
-use the sync variants. The async and sync variants are streamlined into
-the same code path. Hence the use of spinlocks instead of mutexes
-through the critical path.
+Hi Jan,
 
---Lina
+On Thu, Jul 25, 2019 at 5:39 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
+> >
+>
+> This affects also external modules builds: I have patterns here that do
+>
+> [Makefile]
+> subdir-y := some-module
+>
+> [some-module/Makefile]
+> obj-m := some-module.o
+>
+> and since this patch, the final some-module.ko is no longer built. Am I missing
+> something in the kbuild makefiles, or is this a regression?
 
+Thanks for the report.
+Interesting. I have never imagined that Makefiles were written like that.
+
+I just wrote a fix-up, but I have not determined to apply it.
+https://patchwork.kernel.org/patch/11059033/
+
+It is easy to fixup your Makefile, though.
+
+--
+Best Regards
+Masahiro Yamada
