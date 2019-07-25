@@ -2,110 +2,176 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41917C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD28EC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBBC2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E64222ADA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:39:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fPKwjp/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390589AbfGYJht (ORCPT
+        id S2390613AbfGYJjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 05:37:49 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45794 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbfGYJht (ORCPT
+        Thu, 25 Jul 2019 05:39:07 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:15441 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387533AbfGYJjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 05:37:49 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hqaC3-0002BV-8U; Thu, 25 Jul 2019 11:37:47 +0200
-Date:   Thu, 25 Jul 2019 11:37:46 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Rui Salvaterra <rsalvaterra@gmail.com>
-cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Daniel Drake <drake@endlessm.com>
-Subject: Re: [BUG] Linux 5.3-rc1: timer problem on x86-64 (Pentium D)
-In-Reply-To: <CALjTZvb6aiUEgLN9BxOxBZCBXHoFxOx4TpBxkRQbZjgCna4WUA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1907251127430.1791@nanos.tec.linutronix.de>
-References: <CALjTZvbrS3dGrTrMMkGRkk=hRL38rrGiYTZ4REX9rJ0T+wcGoQ@mail.gmail.com> <alpine.DEB.2.21.1907241257240.1791@nanos.tec.linutronix.de> <CALjTZvZtu8sSycu2soSXCEP1yZiVNFKkxs4JY_puFahwFuuRcQ@mail.gmail.com> <alpine.DEB.2.21.1907250810530.1791@nanos.tec.linutronix.de>
- <CALjTZvb6aiUEgLN9BxOxBZCBXHoFxOx4TpBxkRQbZjgCna4WUA@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 25 Jul 2019 05:39:07 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d3978b90005>; Thu, 25 Jul 2019 02:39:05 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 25 Jul 2019 02:39:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 02:39:04 -0700
+Received: from tbergstrom-lnx.Nvidia.com (172.20.13.39) by
+ HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Thu, 25 Jul 2019 09:36:47 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id 0DD6B4286D; Thu, 25 Jul 2019 12:36:45 +0300 (EEST)
+Date:   Thu, 25 Jul 2019 12:36:45 +0300
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] soc/tegra: pmc: Query PCLK clock rate at probe
+ time
+Message-ID: <20190725093644.GJ12715@pdeschrijver-desktop.Nvidia.com>
+References: <20190723023511.24542-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-442860888-1564047204=:1791"
-Content-ID: <alpine.DEB.2.21.1907251135370.1791@nanos.tec.linutronix.de>
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190723023511.24542-1-digetx@gmail.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564047545; bh=z/b91Cml6zDC1P2RGluPj308VR8sVHX0e0iaWNpGUCs=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=fPKwjp/lRhsKdu+dBZO6pu8ZZPEt5vCY9FkwWVxvN4RWBwU0Id0Anbl/+gCFgNfSQ
+         Abm09WhkGCW4pJZKM9JoEd74VuxajQDQ1VKMMtXOXwrGoDR5uIcx5uFGSaoVyHZjKR
+         bMh01N4dO0qp6hGp5bTjZ0m9Cr5cDKDd4lTZYGENZmMVKD9vpw3OCNlxguNOWDUVOo
+         65+eG+Xonm9gV3qd+wAQBUrfJOkVCcNugt7I1NuNXXEG5VGhCe5A/1I2rpvVXZXlsx
+         hMMVjKAadz9ZPNPsXPGgwxQmp7PRNkCjnh1MILJVatPox8hfkWZlSwq82osKtjETR9
+         DCkkxL21RYsgQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-442860888-1564047204=:1791
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: 8BIT
-Content-ID: <alpine.DEB.2.21.1907251135371.1791@nanos.tec.linutronix.de>
-
-Rui,
-
-On Thu, 25 Jul 2019, Rui Salvaterra wrote:
-> On Thu, 25 Jul 2019 at 07:28, Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > The only reason I can think of is that the HPET on that machine has a weird
-> > register state (it's not advertised by the BIOS ... )
-> >
-> > But that does not explain the boot failure completely. If the HPET is not
-> > available then the kernel should automatically do the right thing and fall
-> > back to something else.
+On Tue, Jul 23, 2019 at 05:35:10AM +0300, Dmitry Osipenko wrote:
+> The PCLK clock is running off SCLK, which is a critical clock that is
+> very unlikely to randomly change its rate. It's also a bit clumsy (and
+> apparently incorrect) to query the clock's rate with interrupts being
+> disabled because clk_get_rate() takes a mutex and that's the case during
+> suspend/cpuidle entering.
 > 
-> This may be a useful data point, the relevant part of the dmesg on a
-> pristine 5.3-rc1 with clocksource=jiffies:
 
-Duh. Yes, this explains it nicely.
+SCLK and PCLK certainly can change rate at runtime, although the code to
+handle this hasn't reached upstream yet.
 
-> [    1.123548] clocksource: timekeeping watchdog on CPU1: Marking
-> clocksource 'tsc-early' as unstable because the skew is too large:
-> [    1.123552] clocksource:                       'hpet' wd_now: 33
-> wd_last: 33 mask: ffffffff
+Peter.
 
-The HPET counter check succeeded, but the early enable and the following
-reconfiguration confused it completely. So the HPET is not counting:
-
-	'hpet' wd_now: 33 wd_last: 33 mask: ffffffff
-
-Which is a full explanation for the boot fail because if the counter is not
-working then the HPET timer is not expiring and the early boot is waiting
-for HPET to fire forever.
-
-> > Then boot these kernels with 'hpet=disable' on the command line and see
-> > whether they come up. If so please provide the same output.
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
 > 
-> Fortunately (as I'm doing this remotely) they did come up.
-> With hpet=disabled…
+> Changelog:
 > 
-> Linux 5.2:
-> available_clocksource: tsc acpi_pm
-> current_clocksource: tsc
+> v2: Addressed review comments that were made by Jon Hunter to v1 by
+>     not moving the memory barrier, replacing one missed clk_get_rate()
+>     with pmc->rate, handling possible clk_get_rate() error on probe and
+>     slightly adjusting the commits message.
 > 
-> Linux 5.3-rc1 patched:
-> available_clocksource: tsc acpi_pm
-> current_clocksource: tsc
-
-That's consistent with the above. 5.3-rc1 unpatched would of course boot as
-well with hpet=disable now that we know the root cause.
-
-I'll write a changelog and route it to Linus for -rc2.
-
-Thanks a lot for debugging this and providing all the information!
-
-       tglx
---8323329-442860888-1564047204=:1791--
+>  drivers/soc/tegra/pmc.c | 34 ++++++++++++++++------------------
+>  1 file changed, 16 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 9f9c1c677cf4..aba3396b2e73 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -1192,7 +1192,7 @@ static int tegra_io_pad_prepare(struct tegra_pmc *pmc, enum tegra_io_pad id,
+>  		return err;
+>  
+>  	if (pmc->clk) {
+> -		rate = clk_get_rate(pmc->clk);
+> +		rate = pmc->rate;
+>  		if (!rate) {
+>  			dev_err(pmc->dev, "failed to get clock rate\n");
+>  			return -ENODEV;
+> @@ -1433,6 +1433,7 @@ void tegra_pmc_set_suspend_mode(enum tegra_suspend_mode mode)
+>  void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
+>  {
+>  	unsigned long long rate = 0;
+> +	u64 ticks;
+>  	u32 value;
+>  
+>  	switch (mode) {
+> @@ -1441,31 +1442,22 @@ void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
+>  		break;
+>  
+>  	case TEGRA_SUSPEND_LP2:
+> -		rate = clk_get_rate(pmc->clk);
+> +		rate = pmc->rate;
+>  		break;
+>  
+>  	default:
+>  		break;
+>  	}
+>  
+> -	if (WARN_ON_ONCE(rate == 0))
+> -		rate = 100000000;
+> +	ticks = pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
+> +	do_div(ticks, USEC_PER_SEC);
+> +	tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
+>  
+> -	if (rate != pmc->rate) {
+> -		u64 ticks;
+> +	ticks = pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
+> +	do_div(ticks, USEC_PER_SEC);
+> +	tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
+>  
+> -		ticks = pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
+> -		do_div(ticks, USEC_PER_SEC);
+> -		tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
+> -
+> -		ticks = pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
+> -		do_div(ticks, USEC_PER_SEC);
+> -		tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
+> -
+> -		wmb();
+> -
+> -		pmc->rate = rate;
+> -	}
+> +	wmb();
+>  
+>  	value = tegra_pmc_readl(pmc, PMC_CNTRL);
+>  	value &= ~PMC_CNTRL_SIDE_EFFECT_LP0;
+> @@ -2082,8 +2074,14 @@ static int tegra_pmc_probe(struct platform_device *pdev)
+>  		pmc->clk = NULL;
+>  	}
+>  
+> +	pmc->rate = clk_get_rate(pmc->clk);
+>  	pmc->dev = &pdev->dev;
+>  
+> +	if (!pmc->rate) {
+> +		dev_err(&pdev->dev, "failed to get pclk rate\n");
+> +		pmc->rate = 100000000;
+> +	}
+> +
+>  	tegra_pmc_init(pmc);
+>  
+>  	tegra_pmc_init_tsense_reset(pmc);
+> -- 
+> 2.22.0
+> 
