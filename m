@@ -2,98 +2,180 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E861C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2E4C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCC4B218F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:21:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="T56ZL0tU"
+	by mail.kernel.org (Postfix) with ESMTP id B65B822BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:21:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbfGYNVo (ORCPT
+        id S1730018AbfGYNV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:21:44 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34958 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728887AbfGYNVo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:21:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id y4so50799469wrm.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:21:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=ZUGd2jspUiG+FAZ+7RGXuDLiEmYs11194A8ngHTeyP8=;
-        b=T56ZL0tUgVYFHxu5umztZcIPeZ+Y8EP8VLpHuXaydTQ2sRYjlSuJGRW7wGkv6BaLef
-         2rmXbB+mslBhrq6hpaJjKktJCFFSUwgbuDnRy2lrDzGwgtfptspfvaPBQlwIq9p1FT29
-         nEDaROkdDc+VuBxTand+b9z8uQVgKmntkAOI9EsNO9SJdWKJfFsxEvzyi7MTrxF58qg2
-         18CPs3hYcN08R3Q14dvUsVLIjfvne6Kh6IXf3qeU4yNgaxrJ5gWLu8IycArfQ+MP1U/v
-         z1wYqGOsp9S8aZ1vMY0UrW3uMRaq+kn1Lwz8zRr16qOkrdhgYj4LmulNozig/NxmAYNr
-         5gUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=ZUGd2jspUiG+FAZ+7RGXuDLiEmYs11194A8ngHTeyP8=;
-        b=CRXuStOIdiSMmsTEtR0FoxEIbxFxBObp5paoCaMaGV+9iydfC6lpEkF3TEUVo/LILX
-         0P+eeD2fbevLQ0l28LYF2m549xMDucBBXnoo7QVGbvQ69zla79du7FKUr2dqepKziU/l
-         qd68GHRr5fPa0SoX3izwhvLpSVL1BN/YGEJX3O9iXuTC/63dTOPqzSfbktRwAk32y+a+
-         YpJd3f++Aog57UbDHV3sb/UWwBrCQi43tXYBDQQazusWQ7uvGcauXAg6NVysiwM18xRW
-         kvkVSsMDkm2ySJrcrt5nAMo2BKT8JwYn5ccFfuXZHzYrAOSya+BuiAV4Jx4FNO8jUfaD
-         hK0Q==
-X-Gm-Message-State: APjAAAUOxdm4R/Z1X/7jsdMMjPH/0OoNer7C55pKpNBKnNrIURRs8/fh
-        /Tk0Wn7o2bttaEvhzlB8VR0hlA==
-X-Google-Smtp-Source: APXvYqwwDUYgCEVbqCOrCIRQ3IOn2d2MD6ZRphM4OAuYE08YMKhoSF7VOHW0dgqJ4VhM8pmfOrVkog==
-X-Received: by 2002:a5d:4108:: with SMTP id l8mr93347933wrp.113.1564060902228;
-        Thu, 25 Jul 2019 06:21:42 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id s2sm39836778wmj.33.2019.07.25.06.21.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 06:21:41 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH 1/6] ASoC: codec2codec: run callbacks in order
-In-Reply-To: <20190725130016.GC4213@sirena.org.uk>
-References: <20190724162405.6574-1-jbrunet@baylibre.com> <20190724162405.6574-2-jbrunet@baylibre.com> <20190725130016.GC4213@sirena.org.uk>
-Date:   Thu, 25 Jul 2019 15:21:40 +0200
-Message-ID: <1jlfwmxna3.fsf@starbuckisacylon.baylibre.com>
+        Thu, 25 Jul 2019 09:21:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56368 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727466AbfGYNV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 09:21:58 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3513730860BE;
+        Thu, 25 Jul 2019 13:21:57 +0000 (UTC)
+Received: from [10.72.12.18] (ovpn-12-18.pek2.redhat.com [10.72.12.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A59BD19723;
+        Thu, 25 Jul 2019 13:21:44 +0000 (UTC)
+Subject: Re: WARNING in __mmdrop
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+References: <20190723010019-mutt-send-email-mst@kernel.org>
+ <b4696f2e-678a-bdb2-4b7c-fb4ce040ec2a@redhat.com>
+ <20190723032024-mutt-send-email-mst@kernel.org>
+ <1d14de4d-0133-1614-9f64-3ded381de04e@redhat.com>
+ <20190723035725-mutt-send-email-mst@kernel.org>
+ <3f4178f1-0d71-e032-0f1f-802428ceca59@redhat.com>
+ <20190723051828-mutt-send-email-mst@kernel.org>
+ <caff362a-e208-3468-3688-63e1d093a9d3@redhat.com>
+ <20190725012149-mutt-send-email-mst@kernel.org>
+ <55e8930c-2695-365f-a07b-3ad169654d28@redhat.com>
+ <20190725042651-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <84bb2e31-0606-adff-cf2a-e1878225a847@redhat.com>
+Date:   Thu, 25 Jul 2019 21:21:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190725042651-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 25 Jul 2019 13:21:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 25 Jul 2019 at 14:00, Mark Brown <broonie@kernel.org> wrote:
 
-> On Wed, Jul 24, 2019 at 06:24:00PM +0200, Jerome Brunet wrote:
->> When handling dai_link events on codec to codec links, run all .startup()
->> callbacks on sinks and sources before running any .hw_params(). Same goes
->> for hw_free() and shutdown(). This is closer to the behavior of regular
->> dai links
+On 2019/7/25 下午4:28, Michael S. Tsirkin wrote:
+> On Thu, Jul 25, 2019 at 03:43:41PM +0800, Jason Wang wrote:
+>> On 2019/7/25 下午1:52, Michael S. Tsirkin wrote:
+>>> On Tue, Jul 23, 2019 at 09:31:35PM +0800, Jason Wang wrote:
+>>>> On 2019/7/23 下午5:26, Michael S. Tsirkin wrote:
+>>>>> On Tue, Jul 23, 2019 at 04:49:01PM +0800, Jason Wang wrote:
+>>>>>> On 2019/7/23 下午4:10, Michael S. Tsirkin wrote:
+>>>>>>> On Tue, Jul 23, 2019 at 03:53:06PM +0800, Jason Wang wrote:
+>>>>>>>> On 2019/7/23 下午3:23, Michael S. Tsirkin wrote:
+>>>>>>>>>>> Really let's just use kfree_rcu. It's way cleaner: fire and forget.
+>>>>>>>>>> Looks not, you need rate limit the fire as you've figured out?
+>>>>>>>>> See the discussion that followed. Basically no, it's good enough
+>>>>>>>>> already and is only going to be better.
+>>>>>>>>>
+>>>>>>>>>> And in fact,
+>>>>>>>>>> the synchronization is not even needed, does it help if I leave a comment to
+>>>>>>>>>> explain?
+>>>>>>>>> Let's try to figure it out in the mail first. I'm pretty sure the
+>>>>>>>>> current logic is wrong.
+>>>>>>>> Here is what the code what to achieve:
+>>>>>>>>
+>>>>>>>> - The map was protected by RCU
+>>>>>>>>
+>>>>>>>> - Writers are: MMU notifier invalidation callbacks, file operations (ioctls
+>>>>>>>> etc), meta_prefetch (datapath)
+>>>>>>>>
+>>>>>>>> - Readers are: memory accessor
+>>>>>>>>
+>>>>>>>> Writer are synchronized through mmu_lock. RCU is used to synchronized
+>>>>>>>> between writers and readers.
+>>>>>>>>
+>>>>>>>> The synchronize_rcu() in vhost_reset_vq_maps() was used to synchronized it
+>>>>>>>> with readers (memory accessors) in the path of file operations. But in this
+>>>>>>>> case, vq->mutex was already held, this means it has been serialized with
+>>>>>>>> memory accessor. That's why I think it could be removed safely.
+>>>>>>>>
+>>>>>>>> Anything I miss here?
+>>>>>>>>
+>>>>>>> So invalidate callbacks need to reset the map, and they do
+>>>>>>> not have vq mutex. How can they do this and free
+>>>>>>> the map safely? They need synchronize_rcu or kfree_rcu right?
+>>>>>> Invalidation callbacks need but file operations (e.g ioctl) not.
+>>>>>>
+>>>>>>
+>>>>>>> And I worry somewhat that synchronize_rcu in an MMU notifier
+>>>>>>> is a problem, MMU notifiers are supposed to be quick:
+>>>>>> Looks not, since it can allow to be blocked and lots of driver depends on
+>>>>>> this. (E.g mmu_notifier_range_blockable()).
+>>>>> Right, they can block. So why don't we take a VQ mutex and be
+>>>>> done with it then? No RCU tricks.
+>>>> This is how I want to go with RFC and V1. But I end up with deadlock between
+>>>> vq locks and some MM internal locks. So I decide to use RCU which is 100%
+>>>> under the control of vhost.
+>>>>
+>>>> Thanks
+>>> And I guess the deadlock is because GUP is taking mmu locks which are
+>>> taken on mmu notifier path, right?
+>>
+>> Yes, but it's not the only lock. I don't remember the details, but I can
+>> confirm I meet issues with one or two other locks.
+>>
+>>
+>>>     How about we add a seqlock and take
+>>> that in invalidate callbacks?  We can then drop the VQ lock before GUP,
+>>> and take it again immediately after.
+>>>
+>>> something like
+>>> 	if (!vq_meta_mapped(vq)) {
+>>> 		vq_meta_setup(&uaddrs);
+>>> 		mutex_unlock(vq->mutex)
+>>> 		vq_meta_map(&uaddrs);
+>>
+>> The problem is the vq address could be changed at this time.
+>>
+>>
+>>> 		mutex_lock(vq->mutex)
+>>>
+>>> 		/* recheck both sock->private_data and seqlock count. */
+>>> 		if changed - bail out
+>>> 	}
+>>>
+>>> And also requires that VQ uaddrs is defined like this:
+>>> - writers must have both vq mutex and dev mutex
+>>> - readers must have either vq mutex or dev mutex
+>>>
+>>>
+>>> That's a big change though. For now, how about switching to a per-vq SRCU?
+>>> That is only a little bit more expensive than RCU, and we
+>>> can use synchronize_srcu_expedited.
+>>>
+>> Consider we switch to use kfree_rcu(), what's the advantage of per-vq SRCU?
+>>
+>> Thanks
 >
-> This looks good but needs rebasing against -next due to Morimoto-san's
-> recent DAI changes:
->
->   CC      sound/soc/soc-dapm.o
-> sound/soc/soc-dapm.c: In function =E2=80=98snd_soc_dai_link_event=E2=80=
-=99:
-> sound/soc/soc-dapm.c:3857:10: error: implicit declaration of function =E2=
-=80=98soc_dai_hw_params=E2=80=99; did you mean =E2=80=98snd_soc_dai_hw_para=
-ms=E2=80=99? [-Werror=3Dimplicit-function-declaration]
->     ret =3D soc_dai_hw_params(&substream, params, source);
->           ^~~~~~~~~~~~~~~~~
->           snd_soc_dai_hw_params
+> I thought we established that notifiers must wait for
+> all readers to finish before they mark page dirty, to
+> prevent page from becoming dirty after address
+> has been invalidated.
+> Right?
 
-I did rebase against next and saw Morimoto-san's patchset. I must have
-messed up when formatting the patches, sorry about that. I'll resend.
+
+Exactly, and that's the reason actually I use synchronize_rcu() there.
+
+So the concern is still the possible synchronize_expedited()? Can I do 
+this on through another series on top of the incoming V2?
+
+Thanks
+
+
