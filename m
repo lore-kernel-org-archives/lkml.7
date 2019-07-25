@@ -2,147 +2,103 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18965C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159D5C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D222922BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:34:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564054484;
-	bh=nBOvUuzvC2p8gP+bnMWX3ZYG2Z6gx6IlHhzdXjtO114=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B4fOit1YdywJlEknxj2wk7ry7rEfAJsjOJV3W+0df4yx3upvg0l0QgWNU39W8mHgk
-	 prsFK8HdGgfqGE4EYs77qCSOmOVlbo4Na4HsA/XRXxpTQR80Lkms4j0S7e0RmSTvMu
-	 Thlf1MRjwasJWVoRgfDx/ESdwETwGLaT8i+a9KGM=
+	by mail.kernel.org (Postfix) with ESMTP id D47FF22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391937AbfGYLem (ORCPT
+        id S2391956AbfGYLeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:34:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388479AbfGYLem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:34:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A96052184B;
-        Thu, 25 Jul 2019 11:34:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564054480;
-        bh=nBOvUuzvC2p8gP+bnMWX3ZYG2Z6gx6IlHhzdXjtO114=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R3ux+oQifD81Ws9cfZ6N50zWTqufwQSDGIQzc8mXoZ2uVngZKcLpZuqlNWA/TjAuU
-         EMW+el1rV6aChQG+cZ8O6zuESdOAH8JSS6yS4sWck9c3DEtk3/XnSqPEycA+LUZ7B+
-         LuBpXKeY4NT2YrYKonQJlYRq+6ZQbNaZxtQZGxNg=
-Date:   Thu, 25 Jul 2019 13:34:37 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org, ben.hutchings@codethink.co.uk,
-        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, linux@roeck-us.net
-Subject: Re: [PATCH 5.2 000/413] 5.2.3-stable review
-Message-ID: <20190725113437.GA27429@kroah.com>
-References: <20190724191735.096702571@linuxfoundation.org>
- <CADYN=9+WLxhmqX3JNL_s-kWSN97G=8WhD=TF=uAuKecJnKcj_Q@mail.gmail.com>
+        Thu, 25 Jul 2019 07:34:46 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:22257
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391940AbfGYLep (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 07:34:45 -0400
+X-IronPort-AV: E=Sophos;i="5.64,306,1559512800"; 
+   d="scan'208";a="314683334"
+Received: from c-73-22-29-55.hsd1.il.comcast.net (HELO hadrien) ([73.22.29.55])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 13:34:40 +0200
+Date:   Thu, 25 Jul 2019 06:34:38 -0500 (CDT)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Joe Perches <joe@perches.com>, cocci@systeme.lip6.fr,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Laight <David.Laight@ACULAB.COM>
+Subject: Re: [PATCH 1/2] string: Add stracpy and stracpy_pad mechanisms
+In-Reply-To: <e3a37d93-0353-ebed-948a-991add184616@web.de>
+Message-ID: <alpine.DEB.2.21.1907250632500.2535@hadrien>
+References: <alpine.DEB.2.21.1907242040490.10108@hadrien> <e3a37d93-0353-ebed-948a-991add184616@web.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADYN=9+WLxhmqX3JNL_s-kWSN97G=8WhD=TF=uAuKecJnKcj_Q@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/mixed; boundary="8323329-2088688034-1564054482=:2535"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 01:16:19PM +0200, Anders Roxell wrote:
-> On Wed, 24 Jul 2019 at 21:25, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.2.3 release.
-> > There are 413 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Fri 26 Jul 2019 07:13:35 PM UTC.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.3-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Results from Linaro’s test farm.
-> Regressions detected.
-> 
-> Summary
-> ------------------------------------------------------------------------
-> 
-> kernel: 5.2.3-rc1
-> git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-> git branch: linux-5.2.y
-> git commit: db628fe0e67ff8c66e8c6ba76e5e4becfa75fe21
-> git describe: v5.2.2-414-gdb628fe0e67f
-> Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.2-oe/build/v5.2.2-414-gdb628fe0e67f
-> 
-> Regressions (compared to build v5.2.2)
-> ------------------------------------------------------------------------
-> 
-> x86:
->   kvm-unit-tests:
->     * vmx
-> 
-> 
-> TESTNAME=vmx TIMEOUT=90s ACCEL= ./x86/run x86/vmx.flat -smp 1 -cpu
-> host,+vmx -append \"-exit_monitor_from_l2_test -ept_access* -vmx_smp*
-> -vmx_vmcs_shadow_test\"
-> [  155.670748] kvm [6062]: vcpu0, guest rIP: 0x4050cb
-> kvm_set_msr_common: MSR_IA32_DEBUGCTLMSR 0x1, nop
-> [  155.681027] kvm [6062]: vcpu0, guest rIP: 0x408911
-> kvm_set_msr_common: MSR_IA32_DEBUGCTLMSR 0x3, nop
-> [  155.690749] kvm [6062]: vcpu0, guest rIP: 0x40bb39
-> kvm_set_msr_common: MSR_IA32_DEBUGCTLMSR 0x1, nop
-> [  155.700595] kvm [6062]: vcpu0, guest rIP: 0x4089b2
-> kvm_set_msr_common: MSR_IA32_DEBUGCTLMSR 0x3, nop
-> [  158.349308] nested_vmx_exit_reflected failed vm entry 7
-> [  158.363737] nested_vmx_exit_reflected failed vm entry 7
-> [  158.378010] nested_vmx_exit_reflected failed vm entry 7
-> [  158.392480] nested_vmx_exit_reflected failed vm entry 7
-> [  158.406920] nested_vmx_exit_reflected failed vm entry 7
-> [  158.421390] nested_vmx_exit_reflected failed vm entry 7
-> [  158.435795] nested_vmx_exit_reflected failed vm entry 7
-> [  158.450276] nested_vmx_exit_reflected failed vm entry 7
-> [  158.464674] nested_vmx_exit_reflected failed vm entry 7
-> [  158.479030] nested_vmx_exit_reflected failed vm entry 7
-> [  161.044379] set kvm_intel.dump_invalid_vmcs=1 to dump internal KVM state.
-> FAIL vmx (timeout; duration=90s)
-> 
-> kernel-config: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-stable-rc-5.2/14/config
-> Full log: https://lkft.validation.linaro.org/scheduler/job/836289#L1597
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Ick.
+--8323329-2088688034-1564054482=:2535
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-Any chance you can run 'git bisect' to find the offending patch?  Or
-just try reverting a few, you can ignore the ppc ones, so that only
-leaves you 7 different commits.
 
-Does this same test pass in 5.3-rc1?
 
-thanks,
+On Thu, 25 Jul 2019, Markus Elfring wrote:
 
-greg k-h
+> > New version.  I check for non-use of the return value of strlcpy and
+> > address some issues that affected the matching of the case where the first
+> > argument involves a pointer dereference.
+>
+> I suggest to take another look at corresponding implementation details
+> of the shown SmPL script.
+>
+>
+> > \(strscpy\|strlcpy\)(e1.f, e2, i2)@p
+>
+> Can the data access operator “->” (arrow) matter also here?
+
+What did my email say about isomorphisms?
+
+>
+>
+> > @@
+> > identifier r.i1,r.i2;
+> > type T;
+> > @@
+> > struct i1 { ... T i1[i2]; ... }
+>
+> Will an additional SmPL rule name be helpful for this part?
+
+Yes, sorry, it would seem that that is necessary.  I will fix and resend
+the results.
+
+>
+>
+> > @@
+> > (
+> > -x = strlcpy
+> > +stracpy
+> >   (e1.f, e2
+> > -    , i2
+> >   )@p;
+> >   ... when != x
+> >
+> > |
+>
+> I wonder about the deletion of the assignment target.
+> Should the setting of such a variable be usually preserved?
+
+If it is a local variable and never subsequently used, it doesn't seem
+very useful.
+
+julia
+--8323329-2088688034-1564054482=:2535--
