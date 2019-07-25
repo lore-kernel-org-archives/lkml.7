@@ -2,159 +2,153 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983EEC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE5DC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7507E2238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC9322238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:18:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="By2gD602";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YfAfVEyf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389118AbfGYPSe (ORCPT
+        id S2389149AbfGYPS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 11:18:34 -0400
-Received: from verein.lst.de ([213.95.11.211]:36197 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389047AbfGYPSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 11:18:33 -0400
-Received: by verein.lst.de (Postfix, from userid 2005)
-        id DC20968B02; Thu, 25 Jul 2019 17:18:29 +0200 (CEST)
-From:   Torsten Duwe <duwe@lst.de>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190722150414.9F97668B20@verein.lst.de>
-Subject: [PATCH v3 6a/7] dt-bindings: Add ANX6345 DP/eDP transmitter binding
-Message-Id: <20190725151829.DC20968B02@verein.lst.de>
-Date:   Thu, 25 Jul 2019 17:18:29 +0200 (CEST)
+        Thu, 25 Jul 2019 11:18:57 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46914 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388736AbfGYPS4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 11:18:56 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3CE77607DE; Thu, 25 Jul 2019 15:18:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564067935;
+        bh=hnHhbe9q2IRKMtnzCZ2ig0RS/AUD9YxThPnuMNlk9D8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=By2gD602wfGFKF5ttG1fS+NbvbHMmWaPI1sqfQ/NTN5FVQR8M0A/sRZFNOrqPSTgk
+         pcgvoVbrPbEJxxxPn0h+MrVXJaMWP32Zn7elvYxPJ724rVNtge4N+PO5m74WsUDiVE
+         wvxeLJkSmojIkK9x9VnIRVXAqbBrjFcRbhWsXGNY=
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 15C5060312;
+        Thu, 25 Jul 2019 15:18:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564067934;
+        bh=hnHhbe9q2IRKMtnzCZ2ig0RS/AUD9YxThPnuMNlk9D8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YfAfVEyfyjHOH1K+e7WFQFs8oC4PxsyySdDgQxFsrZMPwEbKeSJAgETfScZ0dIa7V
+         K6ins/go/UOKVqrCBpwt5hzK3dFSPpUOf7+t9RtmiTjFmCJY1XMadJC0MV+9wTSDsz
+         A5vgV0iFLyRawDjGwXQhqn1HGJe0NeMNigtnIIsI=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 15C5060312
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Thu, 25 Jul 2019 09:18:51 -0600
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>, mkshah@codeaurora.org
+Subject: Re: [PATCH V2 2/4] drivers: qcom: rpmh-rsc: avoid locking in the
+ interrupt handler
+Message-ID: <20190725151851.GG18620@codeaurora.org>
+References: <20190722215340.3071-1-ilina@codeaurora.org>
+ <20190722215340.3071-2-ilina@codeaurora.org>
+ <5d3769df.1c69fb81.55d03.aa33@mx.google.com>
+ <20190724145251.GB18620@codeaurora.org>
+ <5d38b38e.1c69fb81.e8e5d.035b@mx.google.com>
+ <20190724203610.GE18620@codeaurora.org>
+ <CAD=FV=UYj55m99EcQXmkYhs257A46x8DaarE0DC-GRF_3dY3-Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=UYj55m99EcQXmkYhs257A46x8DaarE0DC-GRF_3dY3-Q@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The anx6345 is an ultra-low power DisplayPort/eDP transmitter designed
-for portable devices.
+On Wed, Jul 24 2019 at 17:28 -0600, Doug Anderson wrote:
+>Hi,
+>
+>On Wed, Jul 24, 2019 at 1:36 PM Lina Iyer <ilina@codeaurora.org> wrote:
+>>
+>> On Wed, Jul 24 2019 at 13:38 -0600, Stephen Boyd wrote:
+>> >Quoting Lina Iyer (2019-07-24 07:52:51)
+>> >> On Tue, Jul 23 2019 at 14:11 -0600, Stephen Boyd wrote:
+>> >> >Quoting Lina Iyer (2019-07-22 14:53:38)
+>> >> >> Avoid locking in the interrupt context to improve latency. Since we
+>> >> >> don't lock in the interrupt context, it is possible that we now could
+>> >> >> race with the DRV_CONTROL register that writes the enable register and
+>> >> >> cleared by the interrupt handler. For fire-n-forget requests, the
+>> >> >> interrupt may be raised as soon as the TCS is triggered and the IRQ
+>> >> >> handler may clear the enable bit before the DRV_CONTROL is read back.
+>> >> >>
+>> >> >> Use the non-sync variant when enabling the TCS register to avoid reading
+>> >> >> back a value that may been cleared because the interrupt handler ran
+>> >> >> immediately after triggering the TCS.
+>> >> >>
+>> >> >> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>> >> >> ---
+>> >> >
+>> >> >I have to read this patch carefully. The commit text isn't convincing me
+>> >> >that it is actually safe to make this change. It mostly talks about the
+>> >> >performance improvements and how we need to fix __tcs_trigger(), which
+>> >> >is good, but I was hoping to be convinced that not grabbing the lock
+>> >> >here is safe.
+>> >> >
+>> >> >How do we ensure that drv->tcs_in_use is cleared before we call
+>> >> >tcs_write() and try to look for a free bit? Isn't it possible that we'll
+>> >> >get into a situation where the bitmap is all used up but the hardware
+>> >> >has just received an interrupt and is going to clear out a bit and then
+>> >> >an rpmh write fails with -EBUSY?
+>> >> >
+>> >> If we have a situation where there are no available free bits, we retry
+>> >> and that is part of the function. Since we have only 2 TCSes avaialble
+>> >> to write to the hardware and there could be multiple requests coming in,
+>> >> it is a very common situation. We try and acquire the drv->lock and if
+>> >> there are free TCS available and if available mark them busy and send
+>> >> our requests. If there are none available, we keep retrying.
+>> >>
+>> >
+>> >Ok. I wonder if we need some sort of barriers here too, like an
+>> >smp_mb__after_atomic()? That way we can make sure that the write to
+>> >clear the bit is seen by another CPU that could be spinning forever
+>> >waiting for that bit to be cleared? Before this change the spinlock
+>> >would be guaranteed to make these barriers for us, but now that doesn't
+>> >seem to be the case. I really hope that this whole thing can be changed
+>> >to be a mutex though, in which case we can use the bit_wait() API, etc.
+>> >to put tasks to sleep while RPMh is processing things.
+>> >
+>> We have drivers that want to send requests in atomic contexts and
+>> therefore mutex locks would not work.
+>
+>Jumping in without reading all the context, but I saw this fly by and
+>it seemed odd.  If I'm way off base then please ignore...
+>
+>Can you give more details?  Why are these drivers in atomic contexts?
+>If they are in atomic contexts because they are running in the context
+>of an interrupt then your next patch in the series isn't so correct.
+>
+>Also: when people submit requests in atomic context are they always
+>submitting an asynchronous request?  In that case we could
+>(presumably) just use a spinlock to protect the queue of async
+>requests and a mutex for everything else?
+Yes, drivers only make async requests in interrupt contexts. They cannot
+use the sync variants. The async and sync variants are streamlined into
+the same code path. Hence the use of spinlocks instead of mutexes
+through the critical path.
 
-Add a binding document for it.
+--Lina
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Torsten Duwe <duwe@suse.de>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- .../devicetree/bindings/display/bridge/anx6345.yaml |   90 ++++++++++
- 1 file changed, 90 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/anx6345.yaml b/Documentation/devicetree/bindings/display/bridge/anx6345.yaml
-new file mode 100644
-index 000000000000..0af092d101c5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/anx6345.yaml
-@@ -0,0 +1,90 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/anx6345.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analogix ANX6345 eDP Transmitter Device Tree Bindings
-+
-+maintainers:
-+  - Torsten Duwe <duwe@lst.de>
-+
-+description: |
-+  The ANX6345 is an ultra-low power Full-HD eDP transmitter designed for
-+  portable devices.
-+
-+properties:
-+  compatible:
-+    const: analogix,anx6345
-+
-+  reg:
-+    maxItems: 1
-+    description: I2C address of the device
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: active low GPIO to use for reset
-+
-+  dvdd12-supply:
-+    maxItems: 1
-+    description: Regulator for 1.2V digital core power.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  dvdd25-supply:
-+    maxItems: 1
-+    description: Regulator for 2.5V digital core power.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  ports:
-+    type: object
-+    minItems: 1
-+    maxItems: 2
-+    description: |
-+      Video port 0 for LVTTL input,
-+      Video port 1 for eDP output (panel or connector)
-+      using the DT bindings defined in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+required:
-+  - compatible
-+  - reg
-+  - reset-gpios
-+  - dvdd12-supply
-+  - dvdd25-supply
-+  - ports
-+
-+examples:
-+ - |
-+  anx6345: anx6345@38 {
-+      compatible = "analogix,anx6345";
-+      reg = <0x38>;
-+      reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
-+      dvdd25-supply = <&reg_dldo2>;
-+      dvdd12-supply = <&reg_fldo1>;
-+
-+      ports {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          anx6345_in: port@0 {
-+              #address-cells = <1>;
-+              #size-cells = <0>;
-+              reg = <0>;
-+              anx6345_in_tcon0: endpoint@0 {
-+                  reg = <0>;
-+                  remote-endpoint = <&tcon0_out_anx6345>;
-+              };
-+          };
-+
-+          anx6345_out: port@1 {
-+              #address-cells = <1>;
-+              #size-cells = <0>;
-+              reg = <1>;
-+
-+              anx6345_out_panel: endpoint@0 {
-+                  reg = <0>;
-+                  remote-endpoint = <&panel_in_edp>;
-+              };
-+          };
-+      };
-+  };
