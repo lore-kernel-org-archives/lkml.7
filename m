@@ -2,85 +2,59 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538A6C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B965C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28B40218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69A67218D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbfGYU5E (ORCPT
+        id S1726701AbfGYU5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 16:57:04 -0400
-Received: from mga12.intel.com ([192.55.52.136]:22260 "EHLO mga12.intel.com"
+        Thu, 25 Jul 2019 16:57:39 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:39726 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbfGYU5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 16:57:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 13:57:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,308,1559545200"; 
-   d="scan'208";a="254113350"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.165])
-  by orsmga001.jf.intel.com with ESMTP; 25 Jul 2019 13:57:01 -0700
-Date:   Thu, 25 Jul 2019 13:57:01 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        wanpengli@tencent.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        patches@kernelci.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>, jmattson@google.com
-Subject: Re: [PATCH 5.2 000/413] 5.2.3-stable review
-Message-ID: <20190725205701.GF18612@linux.intel.com>
-References: <20190725113437.GA27429@kroah.com>
- <230a5b34-d23e-8318-0b1f-d23ada7318e0@redhat.com>
- <CA+G9fYsWdmboyquZ=Bs3tkTwRFTzd1yuL0_EVpHOecNi4E_stA@mail.gmail.com>
- <20190725160939.GC18612@linux.intel.com>
- <33f1cfaa-525d-996a-4977-fda32dc368ee@redhat.com>
- <20190725162053.GD18612@linux.intel.com>
- <7bc207e0-0812-e41a-bfd5-e3fbfd43f242@redhat.com>
- <20190725163946.xt2p3pvxwuabzojj@xps.therub.org>
- <3e55414d-cb4f-8f3f-a359-e374b6298715@redhat.com>
- <20190725201933.aiqh6oj7bacdwact@xps.therub.org>
+        id S1726479AbfGYU5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 16:57:38 -0400
+Received: from d57e23da.static.ziggozakelijk.nl ([213.126.35.218] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hqknv-00022Z-8K; Thu, 25 Jul 2019 22:57:35 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 5/5] ARM: dts: rockchip: add veyron-tiger board
+Date:   Thu, 25 Jul 2019 22:57:34 +0200
+Message-ID: <2510720.JxzBTN3nyj@phil>
+In-Reply-To: <20190725162642.250709-6-mka@chromium.org>
+References: <20190725162642.250709-1-mka@chromium.org> <20190725162642.250709-6-mka@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725201933.aiqh6oj7bacdwact@xps.therub.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 03:19:33PM -0500, Dan Rue wrote:
-> I would still prefer to run the latest tests against all kernel versions
-> (but better control when we upgrade it). Like I said, we can handle
-> expected failures, and it would even help to validate backports for
-> fixes that do get backported. I'm afraid on your behalf that snapping
-> (and maintaining) branches per kernel branch is going to be a lot to
-> manage.
+Am Donnerstag, 25. Juli 2019, 18:26:42 CEST schrieb Matthias Kaehlcke:
+> Also known as the AOpen Chromebase Mini.
+> 
+> tiger and fievel are share the same board, tiger has a display and
+> touchscreen, fievel not. Use the fievel .dts as base and add the
+> extra bits.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 
-Having the branches would be beneficial for kernel developers as well,
-e.g. on multiple occasions I've spent time hunting down non-existent KVM
-bugs, only to realize my base kernel was stale with respect to kvm-unit-tests.
+applied for 5.4
 
-My thought was to have a mostly-unmaintained branch for each major kernel
-version, e.g. snapshot a working version of kvm_unit_tests when the KVM
-pull request for the merge window is sent, and for the most part leave it
-at that.  I don't think it would introduce much overhead, but then again,
-I'm not the person who would be maintaining this :-)
+Thanks
+Heiko
+
+
