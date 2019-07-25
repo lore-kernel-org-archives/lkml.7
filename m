@@ -2,103 +2,123 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42ACDC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7037C41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28B97218F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9547A218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:09:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZqEhfFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbfGYSIs (ORCPT
+        id S1728197AbfGYSJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 14:08:48 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:40804 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727619AbfGYSIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 14:08:43 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hqiAH-0002J3-9h; Thu, 25 Jul 2019 12:08:30 -0600
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <20190725172335.6825-3-logang@deltatee.com>
- <20190725174032.GA27818@kroah.com>
- <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
- <20190725175834.GB30641@bombadil.infradead.org>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <4bfbeaa7-9b81-b802-4cb6-ca141eb1a0c9@deltatee.com>
-Date:   Thu, 25 Jul 2019 12:08:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 14:09:19 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:44871 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfGYSJS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 14:09:18 -0400
+Received: by mail-vs1-f66.google.com with SMTP id v129so34289416vsb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 11:09:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yQkJfAq6w2vHWXCGY8CJlX7sAf5KrI5hGh5G/DWUbSE=;
+        b=nZqEhfFRSm0yhJHGECsERx8km+FW6sLeuBozoNXLRjEwXSQkj/j4YsA+L4+TVOTFy8
+         ZMlqrqE8BdCPn5504Lui8tNIIXrqzuoDpXFipkd7MrmCbOJ0EHdsYiBARVFk05UIDxRC
+         8dcGpYtkf3xgVrilvgs5mUAIPcS4h6BW0dsqz7woQ3R8UzzN9tylqY9SNtOkMu50tsJp
+         MY0920heANbwqrtwpmZofFxHb3Yb4NNcWBMhhETgETdbb7fjjlJH3jAvE3FWUfPniEsO
+         EH3oc+RUZL5c63fFpfL48Ex+/Nq7bNPe11l4tZddmkW3aewOmgRpiX2QqRnjJ1eOcpi4
+         JnmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yQkJfAq6w2vHWXCGY8CJlX7sAf5KrI5hGh5G/DWUbSE=;
+        b=kENR0wP1Cm51LxEI/hzUd6Au6oD8MYB66NQJpmWapamKucJeUGtqC2fpaj/Zy7JAzW
+         A2kob7XJCHN22/cqCwGV0ptUuCAGcEt/qika8qZ/e0MPHifq+2heyWUG/vSGC16djHj3
+         VEHSPf0pyT5RlCV7yrL0nA1HRPUAruuM79yXmEEtEvrJIv0YoIMDm6h9kk16oQYt9vAT
+         hzneHA/xpdZ+NMkU9gjpk8cQshtT9d6sfr/yrSGIZRFFqExNIog6hOF62CNkgzmWiRJG
+         cYhhdZTqPzRn7hujOCdgxZ0AlUipqfvoGYLyXG+MSgAzjKAnYxApI6vPB6Og1aSrMBWW
+         b6Gw==
+X-Gm-Message-State: APjAAAXD2f79wxjyoju/bg7zfIkKekkEzTh2nMOYEUzqlD/XWx9LZMSO
+        5xPNonhadqZthnKuRWHoBl2sEKcHsDmLle0zmjs=
+X-Google-Smtp-Source: APXvYqxrHq2+gGn17JuXE8+fJgfmZKHhv5dRuqNmbs504UKMlMZPJgnA5bVtfzJ2LHYPIaZ1PFVLHSc/4HCYmcyyUE4=
+X-Received: by 2002:a67:fc19:: with SMTP id o25mr57199329vsq.106.1564078157202;
+ Thu, 25 Jul 2019 11:09:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190725175834.GB30641@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: viro@zeniv.linux.org.uk, sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, hch@lst.de, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, willy@infradead.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <CACDBo56EoKca9FJCnbztWZAARdUQs+B=dmCs+UxW27yHNu5pzQ@mail.gmail.com>
+ <57f8aa35-d460-9933-a547-fbf578ea42d3@arm.com> <20190716121026.GB2388@lst.de>
+In-Reply-To: <20190716121026.GB2388@lst.de>
+From:   Pankaj Suryawanshi <pankajssuryawanshi@gmail.com>
+Date:   Thu, 25 Jul 2019 23:39:08 +0530
+Message-ID: <CACDBo56RWh=kjhEm_eOpzkTuZ+A-VEuCYPnVJW1BYAXrP6LERg@mail.gmail.com>
+Subject: Re: cma_remap when using dma_alloc_attr :- DMA_ATTR_NO_KERNEL_MAPPING
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        pankaj.suryawanshi@einfochips.com, minchan@kernel.org,
+        minchan.kim@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 16, 2019 at 5:40 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Tue, Jul 16, 2019 at 01:02:19PM +0100, Robin Murphy wrote:
+> >> Lets say 4k video allocation required 300MB cma memory but not required
+> >> virtual mapping for all the 300MB, its require only 20MB virtually mapped
+> >> at some specific use case/point of video, and unmap virtual mapping after
+> >> uses, at that time this functions will be useful, it works like ioremap()
+> >> for cma_alloc() using dma apis.
+> >
+> > Hmm, is there any significant reason that this case couldn't be handled
+> > with just get_vm_area() plus dma_mmap_attrs(). I know it's only *intended*
+> > for userspace mappings, but since the basic machinery is there...
+>
+> Because the dma helper really are a black box abstraction.
+>
+> That being said DMA_ATTR_NO_KERNEL_MAPPING and DMA_ATTR_NON_CONSISTENT
+> have been a constant pain in the b**t.  I've been toying with replacing
+> them with a dma_alloc_pages or similar abstraction that just returns
+> a struct page that is guaranteed to be dma addressable by the passed
+> in device.  Then the driver can call dma_map_page / dma_unmap_page /
+> dma_sync_* on it at well.  This would replace DMA_ATTR_NON_CONSISTENT
+> with a sensible API, and also DMA_ATTR_NO_KERNEL_MAPPING when called
+> with PageHighmem, while providing an easy to understand API and
+> something that can easily be fed into the various page based APIs
+> in the kernel.
+>
+> That being said until we get arm moved over the common dma direct
+> and dma-iommu code, and x86 fully moved over to dma-iommu it just
+> seems way too much work to even get it into the various architectures
+> that matter, never mind all the fringe IOMMUs.  So for now I've just
+> been trying to contain the DMA_ATTR_NON_CONSISTENT and
+> DMA_ATTR_NO_KERNEL_MAPPING in fewer places while also killing bogus
+> or pointless users of these APIs.
 
 
-On 2019-07-25 11:58 a.m., Matthew Wilcox wrote:
-> On Thu, Jul 25, 2019 at 11:53:20AM -0600, Logan Gunthorpe wrote:
->>
->>
->> On 2019-07-25 11:40 a.m., Greg Kroah-Hartman wrote:
->>> On Thu, Jul 25, 2019 at 11:23:21AM -0600, Logan Gunthorpe wrote:
->>>> cdev_get_by_path() attempts to retrieve a struct cdev from
->>>> a path name. It is analagous to blkdev_get_by_path().
->>>>
->>>> This will be necessary to create a nvme_ctrl_get_by_path()to
->>>> support NVMe-OF passthru.
->>>
->>> Ick, why?  Why would a cdev have a "pathname"?
->>
->> So we can go from "/dev/nvme0" (which points to a char device) to its
->> struct cdev and eventually it's struct nvme_ctrl. Doing it this way also
->> allows supporting symlinks that might be created by udev rules.
-> 
-> But you're not really trying to go from a string to a chardev.  You're
-> trying to go from a nvmet_subsys to a chardev.  Isn't there a better
-> way to link the two somewhere else?
-> 
-> (I must confess that once I would have known the answer to this, but
-> the NVMe subsystem has grown ridiculously complex and I can no longer
-> fit it in my head)
+I agree with you Christoph, users want page based api, which is useful
+in many scenarios, but
+As of now i think we have to move with this type of api which is
+useful when dma_alloc (for cma )call with DMA_ATTR_NO_KERNEL_MAPPING,
+and mapped again to kernel space, this api is useful mostly for 32-bit
+system which has 4GB of limited virtual memory (its very less for
+android devices) as we have already dma_mmap_attr() for user space
+mapping.
+This api is also useful for one who directly want to use cma_alloc()
+in their own drivers. For example ion-cma.c.
+Please let me know if any recommendation/suggestion/improvement required ?
 
-Well the nvmet_subsys isn't related to the nvme_ctrl (and thus char dev)
-at all. An nvmet_subsys is created via configfs and the user has to
-specify an NVMe controller for it to use (by writting a string to a
-config attribute). The best handle the user has is a path to the
-controller's cdev (/dev/nvmeX) so the fabrics code has to be able to
-lookup the corresponding struct nvme_ctrl from the path.
-
-This is directly analogous to the way NVMe-of works today: it uses
-blkdev_get_by_path() to translate a user provided path to a struct
-block_device. The only difference here is that, for passthru, we need a
-nvme_ctrl, not a block device.
-
-Logan
+Regards,
+Pankaj
