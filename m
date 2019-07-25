@@ -2,69 +2,151 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6612DC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBC4C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB6322BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB8B722BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:38:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QVIvWHfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403949AbfGYFiZ (ORCPT
+        id S2403964AbfGYFi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:38:25 -0400
-Received: from verein.lst.de ([213.95.11.211]:58122 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403937AbfGYFiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:38:24 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id B331868B20; Thu, 25 Jul 2019 07:38:21 +0200 (CEST)
-Date:   Thu, 25 Jul 2019 07:38:21 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v3 1/3] mm: document zone device struct page field usage
-Message-ID: <20190725053821.GA24527@lst.de>
-References: <20190724232700.23327-1-rcampbell@nvidia.com> <20190724232700.23327-2-rcampbell@nvidia.com>
+        Thu, 25 Jul 2019 01:38:28 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45281 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403951AbfGYFi0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:38:26 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y8so22941940plr.12
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 22:38:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9KbxETKIL10GKxcPRBcaESnVSFrDSXJGz52Sgbzz7TY=;
+        b=QVIvWHfpVoQwjxa/sbG+597puJK/8e4mjlXaInhXoeUlj86gGaA2JdXs7ym/gt6i0B
+         B4hBuxUbCKgnit1c2mY0EXEpoq40XwGdXtEjvj0JUFw0io5OWUfK2/B2sCW+o2RMIoRg
+         0SFhPVb8Gh0GPk8QBNiRwoG68RDyG+1UX8G1u/Q8TxzSyeU5VfgEYBTcTwvRoOhUuii3
+         piUEjzodony2/N3PvNdf1Gr7EWpLC/BBG+q1r3nfaurq2Thy6D+QHS0yDZHyqKURVOCl
+         IN4cbnD8wSlft20sXgkEuRpj64YfEqV0XR/ixrIsExBjkozjqgBTciqXMQTOeoB8751v
+         kvDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9KbxETKIL10GKxcPRBcaESnVSFrDSXJGz52Sgbzz7TY=;
+        b=cmC97BTguTMK5knV86ehnKOPSJ1qLDbzL6o1bOXsM8eZPCJeGQWwD2Fi2Sw4kAzJx6
+         LFTvT9ZaCFfQd2r/Y4yejJUUBkztgnYgyu9HzREZ7iO8dlDo81Vqf/eDocHIAe5ORQf3
+         vvksKKIZ4w/qG8HiSixg3BV1Ib14BDjq2VwpC0t9IU4BMWbsIDeSptXvAlZvav8ugist
+         4FL0hHi+V6w7ykrq+hW26GHkopnGFKVdh/9y6emRvHDq2tZjNKwJlrF11ZzcUocT+xps
+         zq1e1adD5BifCj4EcUBd9y4RRPr/4hpoTUG2wPEmusZOUsIlhW7dtplo07P76coJThX1
+         NsqQ==
+X-Gm-Message-State: APjAAAWEqHo3ohtL99rjcEB3w9JIbXkY+ZBMkgg4XPlbEi1L+W4xWbEu
+        rDs/iYxbhgp9Opv9T5VvZbMINQ==
+X-Google-Smtp-Source: APXvYqy2oP17uAmGByW/mG2EYEfPXeuWrnrPxGE0ocCWmuE/cKB+F9KVRpeYqx2tU6r6lDZnp0bQ3Q==
+X-Received: by 2002:a17:902:7c05:: with SMTP id x5mr90071191pll.321.1564033105968;
+        Wed, 24 Jul 2019 22:38:25 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id o11sm80515271pfh.114.2019.07.24.22.38.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 22:38:25 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 11:08:23 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/5] OPP: Add function to look up required OPP's for a
+ given OPP
+Message-ID: <20190725053823.yqaxnk2a7geebmqw@vireshk-i7>
+References: <20190717222340.137578-1-saravanak@google.com>
+ <20190717222340.137578-3-saravanak@google.com>
+ <20190723095316.t5ltprixxd5veuj7@vireshk-i7>
+ <CAGETcx-r6fZH0xYea-YXyXDwe33pimtfNerLzzBn4UHT2qQVvA@mail.gmail.com>
+ <20190725025849.y2xyxmqmgorrny6k@vireshk-i7>
+ <CAGETcx8r3C_=Y0vSwqekCZPUeYkNQ6EOUDK4bUJksDHG6zPUjA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190724232700.23327-2-rcampbell@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CAGETcx8r3C_=Y0vSwqekCZPUeYkNQ6EOUDK4bUJksDHG6zPUjA@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 04:26:58PM -0700, Ralph Campbell wrote:
-> Struct page for ZONE_DEVICE private pages uses the page->mapping and
-> and page->index fields while the source anonymous pages are migrated to
-> device private memory. This is so rmap_walk() can find the page when
-> migrating the ZONE_DEVICE private page back to system memory.
-> ZONE_DEVICE pmem backed fsdax pages also use the page->mapping and
-> page->index fields when files are mapped into a process address space.
-> 
-> Add comments to struct page and remove the unused "_zd_pad_1" field
-> to make this more clear.
+On 24-07-19, 20:46, Saravana Kannan wrote:
+> On Wed, Jul 24, 2019 at 7:58 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > On 23-07-19, 17:23, Saravana Kannan wrote:
 
-I still think we should also fix up the layout, and I haven't seen
-a reply from Matthew justifying his curses for your patch that makes
-the struct page layout actually match how it is used.
+> > > I almost said "not sure. Let me just compare pointers".
+> > > I think (not sure) it has to do with the same OPP table being used to
+> > > create multiple OPP table copies if the "shared OPP table" flag isn't
+> > > set?
+> > > Can you confirm if this makes sense? If so, I can add a comment patch
+> > > that adds comments to the existing code and then copies it into this
+> > > function in this patch.
+> >
+> > Right, that was the reason but we also need to fix ...
+> 
+> I know I gave that explanation but I'm still a bit confused by the
+> existing logic. If the same DT OPP table is used to create multiple in
+> memory OPP tables, how do you device which in memory OPP table is the
+> right one to point to?
+
+This is a bit broken actually, we don't see any problems right now but
+may eventually have to fix it someday.
+
+We pick the first in-memory OPP table that was created using the DT
+OPP table. This is done because the DT doesn't provide any explicit
+linking to the required-opp device right now.
+
+Right now the required-opps is only used for power domains and so it
+is working fine. It may work fine for your case as well. But once we
+have a case we want to use required-opps in a single OPP table for
+both power-domains and master/slave thing you are proposing, we may
+see more problems.
+
+> > > > > +                     break;
+> > > > > +     }
+> > > > > +
+> > > > > +     if (unlikely(i == src_table->required_opp_count)) {
+> > > > > +             pr_err("%s: Couldn't find matching OPP table (%p: %p)\n",
+> > > > > +                    __func__, src_table, dst_table);
+> > > > > +             return NULL;
+> > > > > +     }
+> > > > > +
+> > > > > +     mutex_lock(&src_table->lock);
+> > > > > +
+> > > > > +     list_for_each_entry(opp, &src_table->opp_list, node) {
+> > > > > +             if (opp == src_opp) {
+> >
+> > ... this as well. We must be comparing node pointers here as well.
+> 
+> Not really, if an in memory OPP entry is not part of an in memory OPP
+> table list, I don't think it should be considered part of the OPP
+> table just because the node pointer is the same. I think that's
+> explicitly wrong and the above code is correct as is.
+
+I understand what you are saying, but because we match the very first
+OPP table that was there in the list we need to match the DT node here
+as well.
+
+Or somehow we make sure to have the correct in-memory OPP table being
+pointed by the required-opp-table array. Then we don't need the node
+pointer anywhere here.
+
+-- 
+viresh
