@@ -2,109 +2,143 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27627C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8F9C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0830D22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E4821901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:34:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hYxvFG8N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbfGYOdw (ORCPT
+        id S1728927AbfGYOeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:33:52 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:36643 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725944AbfGYOdw (ORCPT
+        Thu, 25 Jul 2019 10:34:20 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:49345 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfGYOeU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:33:52 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0TXn-kBY_1564065224;
-Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TXn-kBY_1564065224)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 25 Jul 2019 22:33:46 +0800
-Date:   Thu, 25 Jul 2019 22:33:44 +0800
-From:   Aaron Lu <aaron.lu@linux.alibaba.com>
-To:     Aubrey Li <aubrey.intel@gmail.com>
-Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 3/3] temp hack to make tick based schedule happen
-Message-ID: <20190725143344.GD992@aaronlu>
-References: <20190531210816.GA24027@sinkpad>
- <20190606152637.GA5703@sinkpad>
- <20190612163345.GB26997@sinkpad>
- <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com>
- <20190613032246.GA17752@sinkpad>
- <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
- <20190619183302.GA6775@sinkpad>
- <20190718100714.GA469@aaronlu>
- <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
- <20190725143003.GA992@aaronlu>
+        Thu, 25 Jul 2019 10:34:20 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PEY9eC1041420
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 07:34:09 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PEY9eC1041420
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564065249;
+        bh=iYoUH19j4pwqA+H6m+3l13JhH+e6TQIKvuWIlwoBWgA=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=hYxvFG8NTf/S6vCeAMGhJWAVMiPfq4Xic7W0YGRBgTwvkJMUT1J/GoseF1meaLS/7
+         T2Q/Bv90n1fXAC1obtZHS20yo+efASSl6Mq3RWjr6ZJHQssWTMTyh3rULmCcsQSvFo
+         F0e5FLmMCXIRBi1WiGJ/rV+XGVvcJuJjuw11mRxwlMldMy9jFOerWRYCHeruyvKrqR
+         vTkHJ1rfv6N1WhM4dP+RKFZlCbjL4ySGvqFIvaBtE6vd/oUACdZGBeAZtdfePgfw57
+         3dezEwjTRMUxZCthiqfiSqpF/JSjM8p7pOfatgCGTP7j/AfjY7Y6tqiXAOUq+oAR//
+         Q37uufYMFXdAw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PEY8Yl1041416;
+        Thu, 25 Jul 2019 07:34:08 -0700
+Date:   Thu, 25 Jul 2019 07:34:08 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-832df3d47badcbc860aef617105b6bc1c9459304@git.kernel.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, namit@vmware.com,
+        peterz@infradead.org, hpa@zytor.com, tglx@linutronix.de
+Reply-To: linux-kernel@vger.kernel.org, mingo@kernel.org, namit@vmware.com,
+          peterz@infradead.org, tglx@linutronix.de, hpa@zytor.com
+In-Reply-To: <20190722105220.768238809@linutronix.de>
+References: <20190722105220.768238809@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/apic] x86/smp: Enhance native_send_call_func_ipi()
+Git-Commit-ID: 832df3d47badcbc860aef617105b6bc1c9459304
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190725143003.GA992@aaronlu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a hyperthread is forced idle and the other hyperthread has a single
-CPU intensive task running, the running task can occupy the hyperthread
-for a long time with no scheduling point and starve the other
-hyperthread.
+Commit-ID:  832df3d47badcbc860aef617105b6bc1c9459304
+Gitweb:     https://git.kernel.org/tip/832df3d47badcbc860aef617105b6bc1c9459304
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Mon, 22 Jul 2019 20:47:26 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 25 Jul 2019 16:12:01 +0200
 
-Fix this temporarily by always checking if the task has exceed its
-timeslice and if so, do a schedule.
+x86/smp: Enhance native_send_call_func_ipi()
 
-Signed-off-by: Aaron Lu <ziqian.lzq@antfin.com>
+Nadav noticed that the cpumask allocations in native_send_call_func_ipi()
+are noticeable in microbenchmarks.
+
+Use the new cpumask_or_equal() function to simplify the decision whether
+the supplied target CPU mask is either equal to cpu_online_mask or equal to
+cpu_online_mask except for the CPU on which the function is invoked.
+
+cpumask_or_equal() or's the target mask and the cpumask of the current CPU
+together and compares it to cpu_online_mask.
+
+If the result is false, use the mask based IPI function, otherwise check
+whether the current CPU is set in the target mask and invoke either the
+send_IPI_all() or the send_IPI_allbutselt() APIC callback.
+
+Make the shorthand decision also depend on the static key which enables
+shorthand mode. That allows to remove the extra cpumask comparison with
+cpu_callout_mask.
+
+Reported-by: Nadav Amit <namit@vmware.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105220.768238809@linutronix.de
+
 ---
- kernel/sched/fair.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/kernel/apic/ipi.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 43babc2a12a5..730c9359e9c9 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4093,6 +4093,9 @@ check_preempt_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr)
+diff --git a/arch/x86/kernel/apic/ipi.c b/arch/x86/kernel/apic/ipi.c
+index eaac65bf58f0..117ee2323f59 100644
+--- a/arch/x86/kernel/apic/ipi.c
++++ b/arch/x86/kernel/apic/ipi.c
+@@ -83,23 +83,21 @@ void native_send_call_func_single_ipi(int cpu)
+ 
+ void native_send_call_func_ipi(const struct cpumask *mask)
+ {
+-	cpumask_var_t allbutself;
++	if (static_branch_likely(&apic_use_ipi_shorthand)) {
++		unsigned int cpu = smp_processor_id();
+ 
+-	if (!alloc_cpumask_var(&allbutself, GFP_ATOMIC)) {
+-		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
++		if (!cpumask_or_equal(mask, cpumask_of(cpu), cpu_online_mask))
++			goto sendmask;
++
++		if (cpumask_test_cpu(cpu, mask))
++			apic->send_IPI_all(CALL_FUNCTION_VECTOR);
++		else if (num_online_cpus() > 1)
++			apic->send_IPI_allbutself(CALL_FUNCTION_VECTOR);
  		return;
  	}
  
-+	if (cfs_rq->nr_running <= 1)
-+		return;
-+
- 	/*
- 	 * Ensure that a task that missed wakeup preemption by a
- 	 * narrow margin doesn't have to wait for a full slice.
-@@ -4261,8 +4264,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
- 		return;
- #endif
- 
--	if (cfs_rq->nr_running > 1)
--		check_preempt_tick(cfs_rq, curr);
-+	check_preempt_tick(cfs_rq, curr);
+-	cpumask_copy(allbutself, cpu_online_mask);
+-	__cpumask_clear_cpu(smp_processor_id(), allbutself);
+-
+-	if (cpumask_equal(mask, allbutself) &&
+-	    cpumask_equal(cpu_online_mask, cpu_callout_mask))
+-		apic->send_IPI_allbutself(CALL_FUNCTION_VECTOR);
+-	else
+-		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
+-
+-	free_cpumask_var(allbutself);
++sendmask:
++	apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
  }
  
- 
--- 
-2.19.1.3.ge56e4f7
-
+ #endif /* CONFIG_SMP */
