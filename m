@@ -2,78 +2,109 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBBBC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA64C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA1422C7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B4CF22C7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:38:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564061935;
+	bh=jlsOsLLZzXiGnKWyHRln4ewYE4NqswfShzMVdsaJ5nM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K3JL5Op/HQ7vtggx/Iwi1VPf2e4PrTelmOa1bsOm0Lgs8D6KofwE5US4MoXT3LDtJ
+	 yWLpYPPc4Oy/curVVgfdJ0ncNU6AsFqpWi9AccIna/q9POCjcBcDmem1scwVJ5gCx4
+	 0FaQD6PRL7MiTKqv2iLIBeK4fir+eOD1H9TdvghA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389359AbfGYNhx (ORCPT
+        id S2389495AbfGYNiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:37:53 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2488 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387959AbfGYNhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:37:53 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 5CB8B7FCA28AA3ECAB45;
-        Thu, 25 Jul 2019 21:37:50 +0800 (CST)
-Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 25 Jul 2019 21:37:49 +0800
-Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
- (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Thu, 25
- Jul 2019 21:37:49 +0800
-Subject: Re: [PATCH net] net: hns: fix LED configuration for marvell phy
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     David Miller <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <shiju.jose@huawei.com>
-References: <1563775152-21369-1-git-send-email-liuyonglong@huawei.com>
- <20190722.181906.2225538844348045066.davem@davemloft.net>
- <72061222-411f-a58c-5873-ad873394cdb5@huawei.com>
- <20190725042829.GB14276@lunn.ch>
- <8017d9ff-2991-f94f-e611-4d1bac12e93b@huawei.com>
- <20190725130807.GB21952@lunn.ch>
-From:   liuyonglong <liuyonglong@huawei.com>
-Message-ID: <908373a2-68cd-51c4-df11-499c49d80ae3@huawei.com>
-Date:   Thu, 25 Jul 2019 21:37:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 25 Jul 2019 09:38:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387959AbfGYNix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 09:38:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 791B92238C;
+        Thu, 25 Jul 2019 13:38:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564061933;
+        bh=jlsOsLLZzXiGnKWyHRln4ewYE4NqswfShzMVdsaJ5nM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YOxSG8MN51AA/XDSj9b/sEo4PEpqypukfdcgUkrd8+BG/egBOOQlspkazTPJLMnpu
+         tqpdLl2QV1lDHi+uW19iEd80z5iMPSAEJnJs20zyqTiPFo6s6/s901fRwAoBV1Rh2P
+         bBBFWV86uWwo0cJ7aLh4s2xTJ+XUtXQk7DHyyvkw=
+Date:   Thu, 25 Jul 2019 15:38:50 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     junxiao.chang@intel.com
+Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org, lili.li@intel.com
+Subject: Re: [PATCH] platform: release resource itself instead of resource
+ tree
+Message-ID: <20190725133850.GB11115@kroah.com>
+References: <1556173458-9318-1-git-send-email-junxiao.chang@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190725130807.GB21952@lunn.ch>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.37.248]
-X-ClientProxiedBy: dggeme704-chm.china.huawei.com (10.1.199.100) To
- dggeme760-chm.china.huawei.com (10.3.19.106)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556173458-9318-1-git-send-email-junxiao.chang@intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 25, 2019 at 02:24:18PM +0800, junxiao.chang@intel.com wrote:
+> From: Junxiao Chang <junxiao.chang@intel.com>
+> 
+> When platform device is deleted or there is error in adding
+> device, platform device resources should be released. Currently
+> API release_resource is used to release platform device resources.
+> However, this API releases not only platform resource itself but
+> also its child resources. It might release resources which are
+> still in use. Calling remove_resource only releases current
+> resource itself, not resource tree, it moves its child resources
+> to up level.
+
+But shouldn't the parent device not get removed until all of the
+children are removed?  What is causing this "inversion" to happen?
+
+> 
+> For example, platform device 1 and device 2 are registered, then only
+> device 1 is unregistered in below code:
+> 
+>   ...
+>   // Register platform test device 1, resource 0xfed1a000 ~ 0xfed1afff
+>   pdev1 = platform_device_register_full(&pdevinfo1);
+> 
+>   // Register platform test device 2, resource 0xfed1a200 ~ 0xfed1a2ff
+>   pdev2 = platform_device_register_full(&pdevinfo2);
+> 
+>   // Now platform device 2 resource should be device 1 resource's child
+> 
+>   // Unregister device 1 only
+>   platform_device_unregister(pdev1);
+>   ...
+
+Don't do that.  :)
+
+You created this mess of platform devices, so you need to keep track of
+them.
 
 
-On 2019/7/25 21:08, Andrew Lunn wrote:
->> You are discussing about the DT configuration, is Matthias Kaehlcke's work
->> also provide a generic way to configure PHY LEDS using ACPI?
+> Platform device 2 resource will be released as well because its
+> parent resource(device 1's resource) is released, this is not expected.
+> If using API remove_resource, device 2 resource will not be released.
 > 
-> In general, you should be able to use the same properties in ACPI as
-> DT. If the device_property_read_X() API is used, it will try both ACPI
-> and OF to get the property.
-> 
->     Andrew
-> 
-> .
-> 
+> This change fixed an intel pmc platform device resource issue when
+> intel pmc ipc kernel module is inserted/removed for twice.
 
-OK, thanks very much!
+Why not fix that kernel module instead?  It seems like that is the real
+problem here, not a driver core issue.
 
+thanks,
+
+greg k-h
