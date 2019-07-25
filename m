@@ -2,114 +2,210 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A58C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D851AC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E327821951
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:33:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pq97gd7d"
+	by mail.kernel.org (Postfix) with ESMTP id A564321951
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:35:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbfGYRd4 (ORCPT
+        id S1729984AbfGYRf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:33:56 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35265 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728019AbfGYRd4 (ORCPT
+        Thu, 25 Jul 2019 13:35:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31710 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729029AbfGYRf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:33:56 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u14so23122876pfn.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 10:33:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=hZk0TqDrxTM1KdLxSkV0vH8ZC4HuTZk2jgm5Qa5W38s=;
-        b=pq97gd7dW3xHRFqRCYE8GJRT4eFN1Oj1H5if4i+6I+1XvKweGTnzQwHVsEJWNIOEJV
-         wFmglC/Y6anBzCmfBMAR2fd/ijMUAKRFXrLeW6T6Kd64u0grkGrKPE0COa2IlTXwgr1h
-         2qneSwBzA/J0tRwQyqPkKJYeHgpE0aRlUojIT43YH5zK1rw3QKRi9YbzJxY6ppFIVEj8
-         HFfKnXLyGnJ7imdQS0R3CNWcPb+tyE0ct79f1XvvZ2dnxgr9iKaBXiOVYOaZ26fmjo3u
-         SH3o6qzzN11S5tbchQDdLuP92OciyhnTVvxnyvfTMn2GYfmXLt56QsixUeBWtKHWfJMQ
-         Koqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=hZk0TqDrxTM1KdLxSkV0vH8ZC4HuTZk2jgm5Qa5W38s=;
-        b=H3K5dw2JR8EKStwyiAqcVELCygEuvK+Jp++AeRmCv3GqqiDsmRD+yDu8bxhkjya3Ya
-         a1R5BN9RjXYMXYM/2GoClEp8Yye8fZ4e1HB7+CvlNN/hzvKMJNMlItc87XG2RHQBZKBH
-         DgSt42Eb9pZIyn9lO+OsxP92gztLJhNYVvUXamP6sXFrqj3QbxXPap3Phn5mUjtdCoyH
-         mpPIlmLs+N9fhY0JEJnw+0/gzvuCDI+YRbsPN4R9BIggGDrQUugpQtCZ7eRStj1mSQP6
-         OpD1e1ZTYvUbK+8mX+UpYxZTXKvOT8ftpH9CHkeKGG7c30r8MSccddTXGbk+gxM+7T/v
-         UbMg==
-X-Gm-Message-State: APjAAAUvfoyLrHNmwYEbF3UTzQnv+3AYMJswEbacvyG77NQAFR2W5fMN
-        PtV/MaWYDfZFwba3ZBwiu2A=
-X-Google-Smtp-Source: APXvYqw6/wLL6u7WdrtkLm19PLdxm+noBmOPehGs2ypkQbAARYSFQNprz51nqVoNIQ8IT66oWN/mfg==
-X-Received: by 2002:a65:49cc:: with SMTP id t12mr81629192pgs.83.1564076035389;
-        Thu, 25 Jul 2019 10:33:55 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id t9sm25753094pgj.89.2019.07.25.10.33.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 10:33:54 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 23:03:49 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        hdegoede@redhat.com, Larry.Finger@lwfinger.net
-Subject: [PATCH] staging: rtl8723bs: os_dep: Remove function
- _rtw_regdomain_select
-Message-ID: <20190725173349.GA9894@hari-Inspiron-1545>
+        Thu, 25 Jul 2019 13:35:27 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6PFvFM0097485
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 13:35:26 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tyer2wvry-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 13:35:26 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Thu, 25 Jul 2019 18:35:24 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 25 Jul 2019 18:35:20 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6PHZJOf56951024
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jul 2019 17:35:19 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 535D35204F;
+        Thu, 25 Jul 2019 17:35:19 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id 6D34E5204E;
+        Thu, 25 Jul 2019 17:35:17 +0000 (GMT)
+Date:   Thu, 25 Jul 2019 23:05:16 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Rik van Riel <riel@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, jhladky@redhat.com,
+        lvenanci@redhat.com, Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH RESEND] autonuma: Fix scan period updating
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20190725080124.494-1-ying.huang@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190725080124.494-1-ying.huang@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19072517-0012-0000-0000-00000336397E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19072517-0013-0000-0000-0000216FD20C
+Message-Id: <20190725173516.GA16399@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-25_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907250188
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function simply returns &rtw_regdom_rd . So replace this function
-with actual code
+* Huang, Ying <ying.huang@intel.com> [2019-07-25 16:01:24]:
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/rtl8723bs/os_dep/wifi_regd.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+> From: Huang Ying <ying.huang@intel.com>
+> 
+> From the commit log and comments of commit 37ec97deb3a8 ("sched/numa:
+> Slow down scan rate if shared faults dominate"), the autonuma scan
+> period should be increased (scanning is slowed down) if the majority
+> of the page accesses are shared with other processes.  But in current
+> code, the scan period will be decreased (scanning is speeded up) in
+> that situation.
+> 
+> The commit log and comments make more sense.  So this patch fixes the
+> code to make it match the commit log and comments.  And this has been
+> verified via tracing the scan period changing and /proc/vmstat
+> numa_pte_updates counter when running a multi-threaded memory
+> accessing program (most memory areas are accessed by multiple
+> threads).
+> 
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/wifi_regd.c b/drivers/staging/rtl8723bs/os_dep/wifi_regd.c
-index aa2f62a..bbd83b2 100644
---- a/drivers/staging/rtl8723bs/os_dep/wifi_regd.c
-+++ b/drivers/staging/rtl8723bs/os_dep/wifi_regd.c
-@@ -115,13 +115,6 @@ static int _rtw_reg_notifier_apply(struct wiphy *wiphy,
- 	return 0;
- }
- 
--static const struct ieee80211_regdomain *_rtw_regdomain_select(struct
--							       rtw_regulatory
--							       *reg)
--{
--	return &rtw_regdom_rd;
--}
--
- static void _rtw_regd_init_wiphy(struct rtw_regulatory *reg,
- 				 struct wiphy *wiphy,
- 				 void (*reg_notifier)(struct wiphy *wiphy,
-@@ -137,7 +130,7 @@ static void _rtw_regd_init_wiphy(struct rtw_regulatory *reg,
- 	wiphy->regulatory_flags &= ~REGULATORY_STRICT_REG;
- 	wiphy->regulatory_flags &= ~REGULATORY_DISABLE_BEACON_HINTS;
- 
--	regd = _rtw_regdomain_select(reg);
-+	regd = &rtw_regdom_rd;
- 	wiphy_apply_custom_regulatory(wiphy, regd);
- 
- 	/* Hard code flags */
+Lets split into 4 modes.
+More Local and Private Page Accesses:
+We definitely want to scan slowly i.e increase the scan window.
+
+More Local and Shared Page Accesses:
+We still want to scan slowly because we have consolidated and there is no
+point in scanning faster. So scan slowly + increase the scan window.
+(Do remember access on any active node counts as local!!!)
+
+More Remote + Private page Accesses:
+Most likely the Private accesses are going to be local accesses.
+
+In the unlikely event of the private accesses not being local, we should
+scan faster so that the memory and task consolidates.
+
+More Remote + Shared page Accesses: This means the workload has not
+consolidated and needs to scan faster. So we need to scan faster.
+
+So I would think we should go back to before 37ec97deb3a8.
+
+i.e 
+
+	int slot = lr_ratio - NUMA_PERIOD_THRESHOLD;
+
+	if (!slot)
+		slot = 1;
+	diff = slot * period_slot;
+
+
+No?
+
+> Fixes: 37ec97deb3a8 ("sched/numa: Slow down scan rate if shared faults dominate")
+> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+> Cc: Rik van Riel <riel@redhat.com>
+> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: jhladky@redhat.com
+> Cc: lvenanci@redhat.com
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> ---
+>  kernel/sched/fair.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 036be95a87e9..468a1c5038b2 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -1940,7 +1940,7 @@ static void update_task_scan_period(struct task_struct *p,
+>  			unsigned long shared, unsigned long private)
+>  {
+>  	unsigned int period_slot;
+> -	int lr_ratio, ps_ratio;
+> +	int lr_ratio, sp_ratio;
+>  	int diff;
+>  
+>  	unsigned long remote = p->numa_faults_locality[0];
+> @@ -1971,22 +1971,22 @@ static void update_task_scan_period(struct task_struct *p,
+>  	 */
+>  	period_slot = DIV_ROUND_UP(p->numa_scan_period, NUMA_PERIOD_SLOTS);
+>  	lr_ratio = (local * NUMA_PERIOD_SLOTS) / (local + remote);
+> -	ps_ratio = (private * NUMA_PERIOD_SLOTS) / (private + shared);
+> +	sp_ratio = (shared * NUMA_PERIOD_SLOTS) / (private + shared);
+>  
+> -	if (ps_ratio >= NUMA_PERIOD_THRESHOLD) {
+> +	if (sp_ratio >= NUMA_PERIOD_THRESHOLD) {
+>  		/*
+> -		 * Most memory accesses are local. There is no need to
+> -		 * do fast NUMA scanning, since memory is already local.
+> +		 * Most memory accesses are shared with other tasks.
+> +		 * There is no point in continuing fast NUMA scanning,
+> +		 * since other tasks may just move the memory elsewhere.
+
+With this change, I would expect that with Shared page accesses,
+consolidation to take a hit.
+
+>  		 */
+> -		int slot = ps_ratio - NUMA_PERIOD_THRESHOLD;
+> +		int slot = sp_ratio - NUMA_PERIOD_THRESHOLD;
+>  		if (!slot)
+>  			slot = 1;
+>  		diff = slot * period_slot;
+>  	} else if (lr_ratio >= NUMA_PERIOD_THRESHOLD) {
+>  		/*
+> -		 * Most memory accesses are shared with other tasks.
+> -		 * There is no point in continuing fast NUMA scanning,
+> -		 * since other tasks may just move the memory elsewhere.
+> +		 * Most memory accesses are local. There is no need to
+> +		 * do fast NUMA scanning, since memory is already local.
+
+Comment wise this make sense.
+
+>  		 */
+>  		int slot = lr_ratio - NUMA_PERIOD_THRESHOLD;
+>  		if (!slot)
+> @@ -1998,7 +1998,7 @@ static void update_task_scan_period(struct task_struct *p,
+>  		 * yet they are not on the local NUMA node. Speed up
+>  		 * NUMA scanning to get the memory moved over.
+>  		 */
+> -		int ratio = max(lr_ratio, ps_ratio);
+> +		int ratio = max(lr_ratio, sp_ratio);
+>  		diff = -(NUMA_PERIOD_THRESHOLD - ratio) * period_slot;
+>  	}
+>  
+> -- 
+> 2.20.1
+> 
+
 -- 
-2.7.4
+Thanks and Regards
+Srikar Dronamraju
 
