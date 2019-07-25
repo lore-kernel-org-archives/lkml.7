@@ -2,178 +2,85 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB91C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D797DC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE9AC218F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:19:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JbeXsfGx"
+	by mail.kernel.org (Postfix) with ESMTP id B3CA2218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfGYUTh (ORCPT
+        id S1726678AbfGYUVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 16:19:37 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37182 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfGYUTh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 16:19:37 -0400
-Received: by mail-io1-f67.google.com with SMTP id q22so99945217iog.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 13:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t+P0HgQtVoSGPP4WNOjKgOLE6EijYeFIeYo8RF4X35w=;
-        b=JbeXsfGxZNECNWfw5yFkXZH+MNoz+D/swRQgzPMLghoyO2zRQSK3HbEdvUo4mJPIZ4
-         2U0Xtr3B76TNn1kn0lNgvsG8fEuIIBoZa/nkAPludlxPF2i9BiNbOLNsgHDSdqK97rVA
-         9NynPzqCCA/Blt6TUOOd/oqOyZ4koex1kH2dIYCg/9nu5CrFCyzlRjtGe/S4g4qlrwzG
-         Db+dSHml4qN+iuUobdMw12MnsiLzFQP5V/8KTf8BxnuVXrHHcTQumHbGKORyp+796Etb
-         SCRD4noYvRc0rK8mLYGPKD+EwN2waXezF9fLF/ik4NgVrMbxKjFcBUr3vkABM+p0i8mG
-         7v3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=t+P0HgQtVoSGPP4WNOjKgOLE6EijYeFIeYo8RF4X35w=;
-        b=i/shJzYLdBUTbrs8LTPE/4CJvv+FQwECzteYFn/LujuX0ZO82I8+rfZxkVOXoksJBE
-         wA4anvHlmlEPt9oIGlVucNIS7ciLVV4V4LfO55phSpCnP4ajDPz2zDWlzq5hWnuI5F5O
-         XB33rUUvbHUYizziIRkay23vGbNs59coURrEOR+6KB5pvDUsrzjNhz3x7Uk4gzyELeP4
-         Ms8dhJ/CAy3U2R7Cfj6QDZ/WTnr8nklhZCgCONqgSKRxZ9OEnLAcowhl0MVp0EDqcjst
-         Ibl1uqdv0S0QhvbtvD9FoktviNzobwnDCL3rjcrdJKg6ZMEkoI3DRV7T7DCgXcIcP983
-         EPdw==
-X-Gm-Message-State: APjAAAVvfGtJobNpTlYIplhLMdjvq9HLfMoxmNRGX3QLa8837yqWjBpO
-        ya8JUpc+NQWvIhPGo53JimV+HQ==
-X-Google-Smtp-Source: APXvYqwvkJxxV0fZpjkKga8Y+RaQMVdGjDc9o4hwMDRkD6Ki+prPp7J6OIqwAahJ8ly4GjoglrQxzA==
-X-Received: by 2002:a6b:7909:: with SMTP id i9mr52428090iop.8.1564085975985;
-        Thu, 25 Jul 2019 13:19:35 -0700 (PDT)
-Received: from localhost (c-24-7-195-109.hsd1.mn.comcast.net. [24.7.195.109])
-        by smtp.gmail.com with ESMTPSA id t19sm51448100iog.41.2019.07.25.13.19.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 13:19:35 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 15:19:33 -0500
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        wanpengli@tencent.com,
+        Thu, 25 Jul 2019 16:21:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:19700 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726166AbfGYUVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 16:21:17 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8A9D73086262;
+        Thu, 25 Jul 2019 20:21:17 +0000 (UTC)
+Received: from treble (ovpn-122-90.rdu2.redhat.com [10.10.122.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 53BCB6712C;
+        Thu, 25 Jul 2019 20:21:16 +0000 (UTC)
+Date:   Thu, 25 Jul 2019 15:21:14 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        patches@kernelci.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>, jmattson@google.com
-Subject: Re: [PATCH 5.2 000/413] 5.2.3-stable review
-Message-ID: <20190725201933.aiqh6oj7bacdwact@xps.therub.org>
-Mail-Followup-To: Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        wanpengli@tencent.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        patches@kernelci.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
-        jmattson@google.com
-References: <CADYN=9+WLxhmqX3JNL_s-kWSN97G=8WhD=TF=uAuKecJnKcj_Q@mail.gmail.com>
- <20190725113437.GA27429@kroah.com>
- <230a5b34-d23e-8318-0b1f-d23ada7318e0@redhat.com>
- <CA+G9fYsWdmboyquZ=Bs3tkTwRFTzd1yuL0_EVpHOecNi4E_stA@mail.gmail.com>
- <20190725160939.GC18612@linux.intel.com>
- <33f1cfaa-525d-996a-4977-fda32dc368ee@redhat.com>
- <20190725162053.GD18612@linux.intel.com>
- <7bc207e0-0812-e41a-bfd5-e3fbfd43f242@redhat.com>
- <20190725163946.xt2p3pvxwuabzojj@xps.therub.org>
- <3e55414d-cb4f-8f3f-a359-e374b6298715@redhat.com>
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/2] drm/i915: Remove redundant user_access_end() from
+ __copy_from_user() error path
+Message-ID: <20190725202114.hxwnnu4sihus53ci@treble>
+References: <cover.1564007838.git.jpoimboe@redhat.com>
+ <523b910e41a5cf856ee338b78ee36941034be142.1564007838.git.jpoimboe@redhat.com>
+ <CA+icZUUb0XVhYq6Y590UyKxEyvzP7_LWU6WZW6bi7tEu6=RzuQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3e55414d-cb4f-8f3f-a359-e374b6298715@redhat.com>
+In-Reply-To: <CA+icZUUb0XVhYq6Y590UyKxEyvzP7_LWU6WZW6bi7tEu6=RzuQ@mail.gmail.com>
 User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 25 Jul 2019 20:21:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 07:06:19PM +0200, Paolo Bonzini wrote:
-> On 25/07/19 18:39, Dan Rue wrote:
-> > To your point Paolo - reporting 'fail' because of a missing kernel
-> > feature is a generic problem we see across test suites, and causes tons
-> > of pain and misery for CI people. As a general rule, I'd avoid
-> > submodules, and even branches that track specific kernels. Rather, and I
-> > don't know if it's possible in this case, but the best way to manage it
-> > from both a test author and a test runner POV is to wrap the test in
-> > kernel feature checks, kernel version checks, kernel config checks, etc.
-> > Report 'skip' if the environment in which the test is running isn't
-> > sufficient to run the test. Then, you only have to maintain one version
-> > of the test suite, users can always use the latest, and critically: all
-> > failures are actual failures.
+On Thu, Jul 25, 2019 at 08:10:49AM +0200, Sedat Dilek wrote:
+> On Thu, Jul 25, 2019 at 12:48 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > Objtool reports:
+> >
+> >   drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x36: redundant UACCESS disable
+> >
+> > __copy_from_user() already does both STAC and CLAC, so the
+> > user_access_end() in its error path adds an extra unnecessary CLAC.
+> >
+> > Fixes: 0b2c8f8b6b0c ("i915: fix missing user_access_end() in page fault exception case")
+> > Reported-by: Thomas Gleixner <tglx@linutronix.de>
+> > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/617
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 > 
-> Note that kvm-unit-tests are not really testing new kernel features;
-> those are covered by tools/testing/selftests/kvm.  For some of these
-> kvm-unit-tests there are some CPU features that we can check from the
-> virtual machine, but those are easy to handle and they produce SKIP
-> results just fine.
+> Just for the records and ensuing ages:
 > 
-> The problematic ones are tests that cover emulation accuracy.  These are
-> effectively bugfixes, so the failures you see _are_ actual failures.  At
-> the same time, the bugs are usually inoffensive(*), while the fixes are
-> invasive and a bad source of cause conflicts in older Linux versions.
-> This combines so that backporting to stable is not feasible.
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
 
-In this case, a fail result seems correct then. The thing we're doing
-that we need to fix is to run against a pinned version of kvm-unit-tests
-and upgrade it independently so that we can identify such failures and
-mark them as known issues.
-
-> 
-> Passing the host kernel version would be really ugly because 1) the
-> tests can run on other hypervisor or emulators or even bare metal, and
-> of course the host kernel version has no bearing if you're using
-> userspace emulation 2) there are thousands of tests that would be
-> littered with kernel version checks of little significance.
-> 
-> So this is why I suggested a submodule: using a submodule effectively
-> ignores all tests that were added after a given Linus release, and thus
-> all the failures for which backports are just not going to happen.
-> However, if Sean's idea of creating a linux-M.N branch in
-> kvm-unit-tests.git works for you, we can also do that as a stopgap
-> measure to ease your testing.
-
-I would still prefer to run the latest tests against all kernel versions
-(but better control when we upgrade it). Like I said, we can handle
-expected failures, and it would even help to validate backports for
-fixes that do get backported. I'm afraid on your behalf that snapping
-(and maintaining) branches per kernel branch is going to be a lot to
-manage.
-
-In any case, _thank you so much_ for jumping on this and helping us run
-these tests. Is there anything else we can do to make this better for
-you?
-
-Dan
-
-> 
-> Thanks,
-> 
-> Paolo
-> 
-> (*) if they aren't, we *do* mark them for backport!
+Thanks Sedat.  Since the objtool fix already got merged separately I'll
+resend this patch to the drm folks.
 
 -- 
-Linaro - Kernel Validation
+Josh
