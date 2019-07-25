@@ -2,90 +2,193 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 742CEC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EDAC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47BFD22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0CBC22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:11:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ag0sWRS2"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="N6D12IZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387905AbfGYOLq (ORCPT
+        id S2387946AbfGYOLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:11:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34912 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfGYOLp (ORCPT
+        Thu, 25 Jul 2019 10:11:51 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59779 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfGYOLv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:11:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rVU3OdYVB/xxhc+Jxe+Jl0rvuIWAAmVPWnVC1lgwyac=; b=ag0sWRS2Qau6/riWg3p8KEakN
-        879W/vBUC7KhSFSuRmVrddLtdB+ukxtpMcsgoDdTk3iHr0s+Xw6ewyntMvp4Eerrw5vUjV2JrKI5+
-        BRjfvW0r7QfVyp4L8LfjZMW3yS+muIPpdCptG0YM8vfE7w7c9aPH0JHWs2QzvzBPt9loTWP1nyZ4T
-        58pi6b0FzZdPCa8JKojNGEy+/57NctfhMHMuztnzLcUMBqmfvwgUKmcGmX35Dsdb+f980RoRtTDht
-        H3JKkAp4EfelUoFFPn6BU18hLE2pz3Igtrej1ytLc6NVvgVgF5Y5yPGrJWBGTUr8c6pWpy1YdaLm2
-        LHbtTAczg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqeTA-0004Hq-RH; Thu, 25 Jul 2019 14:11:44 +0000
-Date:   Thu, 25 Jul 2019 07:11:44 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
-Message-ID: <20190725141144.GA14609@infradead.org>
-References: <20190624194908.121273-1-john.stultz@linaro.org>
- <20190624194908.121273-5-john.stultz@linaro.org>
- <20190718100840.GB19666@infradead.org>
- <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
- <20190724065958.GC16225@infradead.org>
- <8e6f8e4f-20fc-1f1f-2228-f4fd7c7c5c1f@ti.com>
- <20190725125014.GD20286@infradead.org>
- <0eae0024-1fdf-bd06-a8ff-1a41f0af3c69@ti.com>
- <20190725140448.GA25010@infradead.org>
- <8e2ec315-5d18-68b2-8cb5-2bfb8a116d1b@ti.com>
+        Thu, 25 Jul 2019 10:11:51 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PEBbs91034597
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 07:11:37 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PEBbs91034597
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564063897;
+        bh=7JGseR0bVy0xVqa8LExCGvzMWU7h3l1m9/yU+BJljzU=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=N6D12IZ87yjAA/ysG59sFH1qRyt7qphxB+MSQC23K6XfLB9IG0cr60XrjyDoxJx98
+         O1thNIetZtrzFkvIDYw48h8ITWkJDHdzXUZrlbMBHKR1H+W0Zi8EWPoiL8UJU4MJ6U
+         lhOCuG/e1sCE9HchRJznKeWICt1Mn+4VOya2HSPAYolFwDEgPpJU/bTpM6rrgTp1Zv
+         ARuG3VJisnCZMSlxdIevyrM4D2ij7bTR12pKIpoXI2Ng67MgymkMnozKi/9PJ1IDDE
+         fuG7o7tzvnYSyE4Qojg43A0IywxqvZr6nH+gGW61kpnMG2pDi/emE2yaKTCiVIXOnO
+         qdSCgVu/1njAQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PEBaAC1034594;
+        Thu, 25 Jul 2019 07:11:36 -0700
+Date:   Thu, 25 Jul 2019 07:11:36 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-0c09ab96fc820109d63097a2adcbbd20836b655f@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, tglx@linutronix.de,
+        hpa@zytor.com, mathieu.desnoyers@efficios.com
+Reply-To: mingo@kernel.org, tglx@linutronix.de, hpa@zytor.com,
+          mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org
+In-Reply-To: <alpine.DEB.2.21.1907091622590.1634@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907091622590.1634@nanos.tec.linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:smp/hotplug] cpu/hotplug: Cache number of online CPUs
+Git-Commit-ID: 0c09ab96fc820109d63097a2adcbbd20836b655f
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <8e2ec315-5d18-68b2-8cb5-2bfb8a116d1b@ti.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 10:10:08AM -0400, Andrew F. Davis wrote:
-> Pages yes, but not "normal" pages from the kernel managed area.
-> page_to_pfn() will return bad values on the pages returned by this
-> allocator and so will any of the kernel sync/map functions. Therefor
-> those operations cannot be common and need special per-heap handling.
+Commit-ID:  0c09ab96fc820109d63097a2adcbbd20836b655f
+Gitweb:     https://git.kernel.org/tip/0c09ab96fc820109d63097a2adcbbd20836b655f
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Tue, 9 Jul 2019 16:23:40 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 25 Jul 2019 15:48:01 +0200
 
-Well, that means this thing is buggy and abuses the scatterlist API
-and we can't merge it anyway, so it is irrelevant.
+cpu/hotplug: Cache number of online CPUs
+
+Re-evaluating the bitmap wheight of the online cpus bitmap in every
+invocation of num_online_cpus() over and over is a pretty useless
+exercise. Especially when num_online_cpus() is used in code paths
+like the IPI delivery of x86 or the membarrier code.
+
+Cache the number of online CPUs in the core and just return the cached
+variable. The accessor function provides only a snapshot when used without
+protection against concurrent CPU hotplug.
+
+The storage needs to use an atomic_t because the kexec and reboot code
+(ab)use set_cpu_online() in their 'shutdown' handlers without any form of
+serialization as pointed out by Mathieu. Regular CPU hotplug usage is
+properly serialized.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1907091622590.1634@nanos.tec.linutronix.de
+
+---
+ include/linux/cpumask.h | 25 ++++++++++++++++---------
+ kernel/cpu.c            | 24 ++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+), 9 deletions(-)
+
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index 0c7db5efe66c..b5a5a1ed9efd 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -10,6 +10,7 @@
+ #include <linux/kernel.h>
+ #include <linux/threads.h>
+ #include <linux/bitmap.h>
++#include <linux/atomic.h>
+ #include <linux/bug.h>
+ 
+ /* Don't assign or return these: may not be this big! */
+@@ -95,8 +96,21 @@ extern struct cpumask __cpu_active_mask;
+ #define cpu_present_mask  ((const struct cpumask *)&__cpu_present_mask)
+ #define cpu_active_mask   ((const struct cpumask *)&__cpu_active_mask)
+ 
++extern atomic_t __num_online_cpus;
++
+ #if NR_CPUS > 1
+-#define num_online_cpus()	cpumask_weight(cpu_online_mask)
++/**
++ * num_online_cpus() - Read the number of online CPUs
++ *
++ * Despite the fact that __num_online_cpus is of type atomic_t, this
++ * interface gives only a momentary snapshot and is not protected against
++ * concurrent CPU hotplug operations unless invoked from a cpuhp_lock held
++ * region.
++ */
++static inline unsigned int num_online_cpus(void)
++{
++	return atomic_read(&__num_online_cpus);
++}
+ #define num_possible_cpus()	cpumask_weight(cpu_possible_mask)
+ #define num_present_cpus()	cpumask_weight(cpu_present_mask)
+ #define num_active_cpus()	cpumask_weight(cpu_active_mask)
+@@ -821,14 +835,7 @@ set_cpu_present(unsigned int cpu, bool present)
+ 		cpumask_clear_cpu(cpu, &__cpu_present_mask);
+ }
+ 
+-static inline void
+-set_cpu_online(unsigned int cpu, bool online)
+-{
+-	if (online)
+-		cpumask_set_cpu(cpu, &__cpu_online_mask);
+-	else
+-		cpumask_clear_cpu(cpu, &__cpu_online_mask);
+-}
++void set_cpu_online(unsigned int cpu, bool online);
+ 
+ static inline void
+ set_cpu_active(unsigned int cpu, bool active)
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 05778e32674a..e1967e9eddc2 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2298,6 +2298,9 @@ EXPORT_SYMBOL(__cpu_present_mask);
+ struct cpumask __cpu_active_mask __read_mostly;
+ EXPORT_SYMBOL(__cpu_active_mask);
+ 
++atomic_t __num_online_cpus __read_mostly;
++EXPORT_SYMBOL(__num_online_cpus);
++
+ void init_cpu_present(const struct cpumask *src)
+ {
+ 	cpumask_copy(&__cpu_present_mask, src);
+@@ -2313,6 +2316,27 @@ void init_cpu_online(const struct cpumask *src)
+ 	cpumask_copy(&__cpu_online_mask, src);
+ }
+ 
++void set_cpu_online(unsigned int cpu, bool online)
++{
++	/*
++	 * atomic_inc/dec() is required to handle the horrid abuse of this
++	 * function by the reboot and kexec code which invoke it from
++	 * IPI/NMI broadcasts when shutting down CPUs. Invocation from
++	 * regular CPU hotplug is properly serialized.
++	 *
++	 * Note, that the fact that __num_online_cpus is of type atomic_t
++	 * does not protect readers which are not serialized against
++	 * concurrent hotplug operations.
++	 */
++	if (online) {
++		if (!cpumask_test_and_set_cpu(cpu, &__cpu_online_mask))
++			atomic_inc(&__num_online_cpus);
++	} else {
++		if (cpumask_test_and_clear_cpu(cpu, &__cpu_online_mask))
++			atomic_dec(&__num_online_cpus);
++	}
++}
++
+ /*
+  * Activate the first processor.
+  */
