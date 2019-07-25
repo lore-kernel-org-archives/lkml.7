@@ -2,139 +2,63 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0F9C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D617C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E50F220657
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:49:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033753;
-	bh=kkM3PYHvESHIAMs0LP+YjVPBtapyrJucRdUp2CIYp7o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r2eazFRu6KnySVULy7z0+QbvX6k86PiPjsYcbNCqCe0wGc5h5vMauoceCSPI07E1X
-	 3D6sBDQSa5QZ5Hi4r5NWNzC4GV9TaVqLGwkuZ3op1g4WTUM6zl3s8wi7d9sfNgcGU3
-	 Ee3vlgor06fC1ACsyvwJnWLD2Pz6n5omgNFv/pSI=
+	by mail.kernel.org (Postfix) with ESMTP id 4E92B20657
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbfGYFtL (ORCPT
+        id S2404996AbfGYFok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:49:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59998 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:44:40 -0400
+Received: from verein.lst.de ([213.95.11.211]:58199 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405032AbfGYFoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:44:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D87621850;
-        Thu, 25 Jul 2019 05:44:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033485;
-        bh=kkM3PYHvESHIAMs0LP+YjVPBtapyrJucRdUp2CIYp7o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JcqWml9YZR5MhY+UNsihMkVOEaXv7toL3ai5PeT0clCB68RbAaCz6sNRjARTi/SIW
-         4KK5hCitkJzhwakJi6rPaFArcuNrXUhuBqKZ+hNnDZ/QvVax8mwBS7NeggOhji/k5t
-         r5LCk1gz2IYqjs/qkj/eMFfqVXt6qlQQ/6D5b/dc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, Gary Hook <Gary.Hook@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Martin Liska <mliska@suse.cz>,
-        Namhyung Kim <namhyung@kernel.org>, Pu Wen <puwen@hygon.cn>,
-        Stephane Eranian <eranian@google.com>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 226/271] perf/x86/amd/uncore: Set the thread mask for F17h L3 PMCs
-Date:   Wed, 24 Jul 2019 21:21:35 +0200
-Message-Id: <20190724191714.528520010@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
-References: <20190724191655.268628197@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2404975AbfGYFoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:44:37 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 256AD68BFE; Thu, 25 Jul 2019 07:44:35 +0200 (CEST)
+Date:   Thu, 25 Jul 2019 07:44:34 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 04/10] PCI: Add dev_is_untrusted helper
+Message-ID: <20190725054434.GD24527@lst.de>
+References: <20190725031717.32317-1-baolu.lu@linux.intel.com> <20190725031717.32317-5-baolu.lu@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725031717.32317-5-baolu.lu@linux.intel.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+On Thu, Jul 25, 2019 at 11:17:11AM +0800, Lu Baolu wrote:
+> There are several places in the kernel where it is necessary to
+> check whether a device is a pci untrusted device. Add a helper
+> to simplify the callers.
 
-commit 2f217d58a8a086d3399fecce39fb358848e799c4 upstream.
+Looks good,
 
-Fill in the L3 performance event select register ThreadMask
-bitfield, to enable per hardware thread accounting.
-
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <stable@vger.kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Gary Hook <Gary.Hook@amd.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Martin Liska <mliska@suse.cz>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Pu Wen <puwen@hygon.cn>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lkml.kernel.org/r/20190628215906.4276-2-kim.phillips@amd.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/events/amd/uncore.c |   15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
-
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -210,15 +210,22 @@ static int amd_uncore_event_init(struct
- 	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
- 	hwc->idx = -1;
- 
-+	if (event->cpu < 0)
-+		return -EINVAL;
-+
- 	/*
- 	 * SliceMask and ThreadMask need to be set for certain L3 events in
- 	 * Family 17h. For other events, the two fields do not affect the count.
- 	 */
--	if (l3_mask && is_llc_event(event))
--		hwc->config |= (AMD64_L3_SLICE_MASK | AMD64_L3_THREAD_MASK);
-+	if (l3_mask && is_llc_event(event)) {
-+		int thread = 2 * (cpu_data(event->cpu).cpu_core_id % 4);
- 
--	if (event->cpu < 0)
--		return -EINVAL;
-+		if (smp_num_siblings > 1)
-+			thread += cpu_data(event->cpu).apicid & 1;
-+
-+		hwc->config |= (1ULL << (AMD64_L3_THREAD_SHIFT + thread) &
-+				AMD64_L3_THREAD_MASK) | AMD64_L3_SLICE_MASK;
-+	}
- 
- 	uncore = event_to_amd_uncore(event);
- 	if (!uncore)
-
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
