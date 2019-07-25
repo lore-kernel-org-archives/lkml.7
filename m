@@ -2,84 +2,99 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F427C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A931CC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F10C922BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CDFD21901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbfGYOM6 (ORCPT
+        id S1727043AbfGYOSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:12:58 -0400
-Received: from smtprelay0139.hostedemail.com ([216.40.44.139]:43583 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725843AbfGYOM6 (ORCPT
+        Thu, 25 Jul 2019 10:18:09 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44650 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbfGYOSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:12:58 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 10C05100E96EA;
-        Thu, 25 Jul 2019 14:12:57 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: army43_8e08c24f85a19
-X-Filterd-Recvd-Size: 2302
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 25 Jul 2019 14:12:55 +0000 (UTC)
-Message-ID: <eaef283741c0a6a718040f99a17bdb9882bde665.camel@perches.com>
-Subject: Re: [Fwd: [PATCH 1/2] string: Add stracpy and stracpy_pad
- mechanisms]
-From:   Joe Perches <joe@perches.com>
-To:     Julia Lawall <julia.lawall@lip6.fr>
-Cc:     David Laight <David.Laight@ACULAB.COM>,
-        cocci <cocci@systeme.lip6.fr>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 25 Jul 2019 07:12:54 -0700
-In-Reply-To: <alpine.DEB.2.21.1907250856450.2555@hadrien>
-References: <7ab8957eaf9b0931a59eff6e2bd8c5169f2f6c41.1563841972.git.joe@perches.com>
-           <66fcdbf607d7d0bea41edb39e5579d63b62b7d84.camel@perches.com>
-           <alpine.DEB.2.21.1907231546090.2551@hadrien>
-           <0f3ba090dfc956f5651e6c7c430abdba94ddcb8b.camel@perches.com>
-         <alpine.DEB.2.21.1907232252260.2539@hadrien>
-           <d5993902fd44ce89915fab94f4db03f5081c3c8e.camel@perches.com>
-           <alpine.DEB.2.21.1907232326360.2539@hadrien>
-           <f909b4b31f123c7d88535db397a04421077ed0ab.camel@perches.com>
-           <563222fbfdbb44daa98078db9d404972@AcuMS.aculab.com>
-         <d2b2b528b9f296dfeb1d92554be024245abd678e.camel@perches.com>
-          <alpine.DEB.2.21.1907242040490.10108@hadrien>
-         <a0e892c3522f4df2991119a2a30cd62ec14c76cc.camel@perches.com>
-         <alpine.DEB.2.21.1907250856450.2555@hadrien>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Thu, 25 Jul 2019 10:18:09 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 8094028B830
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v2 0/7] hantro: Add RK3399 VP8 decoding support
+Date:   Thu, 25 Jul 2019 11:17:49 -0300
+Message-Id: <20190725141756.2518-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-07-25 at 08:58 -0500, Julia Lawall wrote:
-> On Thu, 25 Jul 2019, Joe Perches wrote:
-[]
-> > Just for completeness and correctness, as I at
-> > least don't find an existing use:
-> > 
-> > Perhaps this "x =" should also include += and +
-> > and the various other operators that are possible
-> > or does SmPL grammar already do that?
-> 
-> I could do this.  One might though think that if someone went to the
-> trouble of computing +=, these would be cases that we don't want to
-> change?
+This series adds VP8 decoding support on RK3399 SoC.
 
-Maybe I quoted the wrong bit.  But exactly.
+I'm including a set of commits from Boris' recent H264 series [1].
+These commits add some helpers that are also useful for RK3399 VP8,
+and at the same time cleanup the driver nicely.
 
-Anywhere the return value of strlcpy is used, not just as
-an assignment, is an instance that should not be changed.
+Finally, there's a fix by Francois Buergisser from Chromium team.
 
-Thanks for doing this.
+VP8 and MPEG-2 tested on RK3399 RockPi and RK3288 Rock2 boards.
+
+[1] https://patchwork.kernel.org/cover/11003971/
+
+Changes from v1:
+
+ * Remove unused variables.
+ * Use buffer helpers in places missing in v1.
+
+Boris Brezillon (4):
+  media: hantro: Simplify the controls creation logic
+  media: hantro: Constify the control array
+  media: hantro: Add hantro_get_{src,dst}_buf() helpers
+  media: hantro: Add helpers to prepare/finish a run
+
+Ezequiel Garcia (1):
+  media: hantro: Move VP8 common code
+
+Francois Buergisser (1):
+  media: hantro: Set DMA max segment size
+
+Jeffy Chen (1):
+  media: hantro: Support RK3399 VP8 decoding
+
+ drivers/staging/media/hantro/Makefile         |   1 +
+ drivers/staging/media/hantro/hantro.h         |  15 +-
+ drivers/staging/media/hantro/hantro_drv.c     |  53 +-
+ .../media/hantro/hantro_g1_mpeg2_dec.c        |  14 +-
+ .../staging/media/hantro/hantro_g1_vp8_dec.c  |  34 +-
+ .../staging/media/hantro/hantro_h1_jpeg_enc.c |  11 +-
+ drivers/staging/media/hantro/hantro_hw.h      |   7 +
+ drivers/staging/media/hantro/hantro_vp8.c     |  15 +
+ drivers/staging/media/hantro/rk3399_vpu_hw.c  |  22 +-
+ .../media/hantro/rk3399_vpu_hw_jpeg_enc.c     |  12 +-
+ .../media/hantro/rk3399_vpu_hw_mpeg2_dec.c    |  14 +-
+ .../media/hantro/rk3399_vpu_hw_vp8_dec.c      | 595 ++++++++++++++++++
+ 12 files changed, 708 insertions(+), 85 deletions(-)
+ create mode 100644 drivers/staging/media/hantro/rk3399_vpu_hw_vp8_dec.c
+
+-- 
+2.22.0
 
