@@ -4,38 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BD5C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AEAC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1E022BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3741F21855
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389862AbfGYDLv (ORCPT
+        id S2389904AbfGYDMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 23:11:51 -0400
+        Wed, 24 Jul 2019 23:12:02 -0400
 Received: from mga11.intel.com ([192.55.52.93]:24587 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389769AbfGYDL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 23:11:28 -0400
+        id S2389727AbfGYDLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 23:11:22 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 20:11:27 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 20:11:22 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,305,1559545200"; 
-   d="scan'208";a="321537753"
+   d="scan'208";a="321537727"
 Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
-  by orsmga004.jf.intel.com with ESMTP; 24 Jul 2019 20:11:26 -0700
+  by orsmga004.jf.intel.com with ESMTP; 24 Jul 2019 20:11:20 -0700
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         sean.j.christopherson@intel.com, pbonzini@redhat.com
 Cc:     mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
         Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v6 5/8] KVM: VMX: Load Guest CET via VMCS when CET is enabled in Guest
-Date:   Thu, 25 Jul 2019 11:12:43 +0800
-Message-Id: <20190725031246.8296-6-weijiang.yang@intel.com>
+Subject: [PATCH v6 2/8] KVM: x86: Add a helper function for CPUID(0xD,n>=1) enumeration
+Date:   Thu, 25 Jul 2019 11:12:40 +0800
+Message-Id: <20190725031246.8296-3-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190725031246.8296-1-weijiang.yang@intel.com>
 References: <20190725031246.8296-1-weijiang.yang@intel.com>
@@ -44,56 +45,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Load Guest CET state" bit controls whether Guest CET states
-will be loaded at Guest entry. Before doing that, KVM needs
-to check if CPU CET feature is enabled on host and available
-to Guest.
+To make the code look clean, wrap CPUID(0xD,n>=1) enumeration
+code in a helper function now.
 
-Note: SHSTK and IBT features share one control MSR:
-MSR_IA32_{U,S}_CET, which means it's difficult to hide
-one feature from another in the case of SHSTK != IBT,
-after discussed in community, it's agreed to allow Guest
-control two features independently as it won't introduce
-security hole.
-
-Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/x86/kvm/cpuid.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index ce5d1e45b7a5..fbf9c335cf7b 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -44,6 +44,7 @@
- #include <asm/spec-ctrl.h>
- #include <asm/virtext.h>
- #include <asm/vmx.h>
-+#include <asm/cet.h>
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 4992e7c99588..29cbde7538a3 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -313,6 +313,50 @@ static int __do_cpuid_ent_emulated(struct kvm_cpuid_entry2 *entry,
+ 	return 0;
+ }
  
- #include "capabilities.h"
- #include "cpuid.h"
-@@ -2923,6 +2924,18 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- 		if (!nested_vmx_allowed(vcpu) || is_smm(vcpu))
- 			return 1;
- 	}
-+	if (cpu_x86_cet_enabled() &&
-+	    (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-+	    guest_cpuid_has(vcpu, X86_FEATURE_IBT))) {
-+		if (cr4 & X86_CR4_CET)
-+			vmcs_set_bits(VM_ENTRY_CONTROLS,
-+				      VM_ENTRY_LOAD_GUEST_CET_STATE);
-+		else
-+			vmcs_clear_bits(VM_ENTRY_CONTROLS,
-+					VM_ENTRY_LOAD_GUEST_CET_STATE);
-+	} else if (cr4 & X86_CR4_CET) {
-+		return 1;
++static inline int __do_cpuid_dx_leaf(struct kvm_cpuid_entry2 *entry, int *nent,
++				     int maxnent, u64 xss_mask, u64 xcr0_mask,
++				     u32 eax_mask)
++{
++	int idx, i;
++	u64 mask;
++	u64 supported;
++
++	for (idx = 1, i = 1; idx < 64; ++idx) {
++		mask = ((u64)1 << idx);
++		if (*nent >= maxnent)
++			return -EINVAL;
++
++		do_cpuid_1_ent(&entry[i], 0xD, idx);
++		if (idx == 1) {
++			entry[i].eax &= eax_mask;
++			cpuid_mask(&entry[i].eax, CPUID_D_1_EAX);
++			supported = xcr0_mask | xss_mask;
++			entry[i].ebx = 0;
++			entry[i].edx = 0;
++			entry[i].ecx &= xss_mask;
++			if (entry[i].eax & (F(XSAVES) | F(XSAVEC))) {
++				entry[i].ebx =
++					xstate_required_size(supported,
++							     true);
++			}
++		} else {
++			supported = (entry[i].ecx & 1) ? xss_mask :
++				     xcr0_mask;
++			if (entry[i].eax == 0 || !(supported & mask))
++				continue;
++			entry[i].ecx &= 1;
++			entry[i].edx = 0;
++			if (entry[i].ecx)
++				entry[i].ebx = 0;
++		}
++		entry[i].flags |=
++			KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
++		++*nent;
++		++i;
 +	}
- 
- 	if (to_vmx(vcpu)->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
- 		return 1;
++	return 0;
++}
++
+ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ 				 u32 index, int *nent, int maxnent)
+ {
 -- 
 2.17.2
 
