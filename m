@@ -2,78 +2,70 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2E5C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C403DC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D3FD22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8645B22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:42:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZLmJvOdi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dCQj9qKv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388333AbfGYKmH (ORCPT
+        id S2387840AbfGYKl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 06:42:07 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38554 "EHLO
+        Thu, 25 Jul 2019 06:41:57 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35233 "EHLO
         mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387895AbfGYKl7 (ORCPT
+        with ESMTP id S2387669AbfGYKl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 06:41:59 -0400
-Received: by mail-lj1-f194.google.com with SMTP id r9so47514860ljg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:41:57 -0700 (PDT)
+        Thu, 25 Jul 2019 06:41:56 -0400
+Received: by mail-lj1-f194.google.com with SMTP id x25so47584915ljh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:41:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HkR5c7pg+yPuBi2NQ0G3gtI0G9f3RBJtD6x7Jmgjehc=;
-        b=ZLmJvOdiUYFEJm4i4mbuyrMY2o6mclBz5DhrFLFaBKoorOt5B6ZiY2psz1JuTtwaFZ
-         5kxpMa2cjNwA8rRi8P5H/op90KLl/aDbsFG69P0RY+FnENSQN1Xf2mdDymrZHkplNyRg
-         uK5KguUErED95Wmi4b3Ok+n5HeY/cSZEjPm+UMupvLcjVs7VJadZySzkdqoJDY9DOSKA
-         LFk5vCN6UOEQ/tjgt/gFuQQdJMvCeLuja7fHjZm8GWioL6xwxmQMzVvNPskaG9fzT/0B
-         85I2zrX1TaqE8klv4DrcceVpijzG3OYw4sIEM5/16ijVOGfz0sZjxMakrjAc++87GIQP
-         EuGQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZvWgj2tLfjTT6ys9Fl+A1tAK7bl+2z+EbE4rGBPrBvM=;
+        b=dCQj9qKvNrgCsTaCAhdLP6um5sOud+ExpIRz6VRmcDO8V16e6auaDMKTZ2tCSiSptU
+         9hBUSdQkixtvhgOIgl9IEpDmuClhbvCh4PDL0JLajsCs9NL14NYe1SXF2p8TaXcg6OIu
+         yW+prw+GeE5FMOMXKxJjUuSsrwKg1U3s6jVFIBvnbvsCHAGkMhyCEIRnh0YZ+qqU73Gf
+         BHdPlBnaCbiLNsoPTDb32ZD1aPrtUTyqcozAZVbmfj+A3ebZSf1f3bWZPYsm00z1adXz
+         3URRMKTGWPlfwo8U2OkWuW6BTctxVU0ia1guMGp7pQ/45KEo0Au6PxYhKbiewwRANjBp
+         fSuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HkR5c7pg+yPuBi2NQ0G3gtI0G9f3RBJtD6x7Jmgjehc=;
-        b=InOnn6mFvRfM9QRRUgh2GnNh2eFNsamLRw1R32f5wLdRax2lQkB232TqRuCpPjBUuv
-         Fz4+SMkNABvdauYE7K8jmPCK9RRfcW/O04V0qCMiGwjprJk32+GhV6S6MCiAQyTl6kHw
-         RBhabN1dVbOG/0Qbd0Zx7xCSgpm3nAwFvtpp8ON16VaO42rzYOOXBlPiMIYGgBuoLKvr
-         syWZKJ2OifaUs7mgQdUfEf99yRQWTNdyGbTzIS92t7VCA2o/kazh/sXN6mmDHmo+hZof
-         9Zxjt4IWHiWtin1Q9zrxZc/TN7LB5a0WDkKBC7xFnkknhXaUs1Ya97AfBrlmukrP+r2s
-         CC0w==
-X-Gm-Message-State: APjAAAX1bO+vxAb9OIkTSyhZyZKQsTktHtvnycK+B5UkHKY0s3H1WmA+
-        Z/OAMf+SVJDhQ8xOGdh8Ui7j9g==
-X-Google-Smtp-Source: APXvYqwWe8bFQsIaLQgq5TXU6wZZZIiHgi37mSb0dZrMRLQLsCPq/8RZD9nqMFtCDrB3yErElssZRw==
-X-Received: by 2002:a2e:534a:: with SMTP id t10mr8150715ljd.109.1564051317095;
-        Thu, 25 Jul 2019 03:41:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZvWgj2tLfjTT6ys9Fl+A1tAK7bl+2z+EbE4rGBPrBvM=;
+        b=mOXmXlES1IB61fo7NBPmu6DerHY6chq0utju93+puTGMZ2C3stzACkfVTfdNdjhCvC
+         eyAkuEldSJ8Od+EUfJ/WHizUHlu8FkQX1/y/lKeGNdYnblgtwGZRtxXNKTagI/ctebja
+         BXtaBawqDjK6mcXeB7hIrJVPwjBbBh/HLJtF576M2uOw9hFBoxswCvHejOCnRynZPn1M
+         me4sVsGJkJWc1SvPJ2sCnVeWOvGzmlA/v0sYiDKDJDHZNVDw9Z1VfoNL8prJJ9crvI4B
+         FGQFS7UjBLSnKKiKPA2krgwgnnDUXHezDafORHpmqmuni42auN2grbB0eP70v1dFM5kP
+         pl0g==
+X-Gm-Message-State: APjAAAU5uU/C0HuxVBbrOdWiJHCl7Phvq0uWAbd/T7Gm4RlNvpc/s2Fa
+        4H/BJUxyz4DN8uCCSnGAecmJUg==
+X-Google-Smtp-Source: APXvYqwWCfA7jP+bmTsKQhvE+1uuPlEWbOWBEvxvWHwvWdM81cldd8ufDXpg1y89e7Zdre+X6cVTfg==
+X-Received: by 2002:a2e:8741:: with SMTP id q1mr45247025ljj.144.1564051314505;
+        Thu, 25 Jul 2019 03:41:54 -0700 (PDT)
 Received: from localhost.localdomain (ua-83-226-44-230.bbcust.telenor.se. [83.226.44.230])
-        by smtp.gmail.com with ESMTPSA id b6sm8268306lfa.54.2019.07.25.03.41.56
+        by smtp.gmail.com with ESMTPSA id b6sm8268306lfa.54.2019.07.25.03.41.53
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 03:41:56 -0700 (PDT)
+        Thu, 25 Jul 2019 03:41:54 -0700 (PDT)
 From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
-        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
-        Sricharan R <sricharan@codeaurora.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 02/14] dt-bindings: cpufreq: Re-organise kryo cpufreq to use it for other nvmem based qcom socs
-Date:   Thu, 25 Jul 2019 12:41:30 +0200
-Message-Id: <20190725104144.22924-3-niklas.cassel@linaro.org>
+To:     linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc:     jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org,
+        vireshk@kernel.org, bjorn.andersson@linaro.org,
+        ulf.hansson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 00/14] Add support for QCOM Core Power Reduction
+Date:   Thu, 25 Jul 2019 12:41:28 +0200
+Message-Id: <20190725104144.22924-1-niklas.cassel@linaro.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190725104144.22924-1-niklas.cassel@linaro.org>
-References: <20190725104144.22924-1-niklas.cassel@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,54 +73,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sricharan R <sricharan@codeaurora.org>
+This series adds support for Core Power Reduction (CPR), a form of
+Adaptive Voltage Scaling (AVS), found on certain Qualcomm SoCs.
 
-The kryo cpufreq driver reads the nvmem cell and uses that data to
-populate the opps. There are other qcom cpufreq socs like krait which
-does similar thing. Except for the interpretation of the read data,
-rest of the driver is same for both the cases. So pull the common things
-out for reuse.
+This series is based on top of the qcs404 cpufreq patch series that
+hasn't landed yet:
+https://patchwork.kernel.org/project/linux-arm-msm/list/?series=137809
 
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-[niklas.cassel@linaro.org: split dt-binding into a separate patch and
-do not rename the compatible string.]
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Reviewed-by: Ilia Lin <ilia.lin@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
+CPR is a technology that reduces core power on a CPU or on other device.
+It reads voltage settings from efuses (that have been written in
+production), it uses these voltage settings as initial values, for each
+OPP.
+
+After moving to a certain OPP, CPR monitors dynamic factors such as
+temperature, etc. and adjusts the voltage for that frequency accordingly
+to save power and meet silicon characteristic requirements.
+
+This driver has been developed together with Jorge Ramirez-Ortiz, and
+is based on an RFC by Stephen Boyd[1], which in turn is based on work
+by others on codeaurora.org[2].
+
+[1] https://lkml.org/lkml/2015/9/18/833
+[2] https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers/regulator/cpr-regulator.c?h=msm-3.10
+
 Changes since V1:
--Picked up tags.
+Added a new patch implementing dev_pm_opp_find_level_exact() in order to
+make the CPR OPP table in device tree cleaner.
+For more detailed changes, check the "Changes since V1" as comments in
+the individual patches, where applicable.
 
- .../opp/{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt}   | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
- rename Documentation/devicetree/bindings/opp/{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt} (98%)
+Jorge Ramirez-Ortiz (1):
+  cpufreq: Add qcs404 to cpufreq-dt-platdev blacklist
 
-diff --git a/Documentation/devicetree/bindings/opp/kryo-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-similarity index 98%
-rename from Documentation/devicetree/bindings/opp/kryo-cpufreq.txt
-rename to Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-index c2127b96805a..198441e80ba8 100644
---- a/Documentation/devicetree/bindings/opp/kryo-cpufreq.txt
-+++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-@@ -1,13 +1,13 @@
--Qualcomm Technologies, Inc. KRYO CPUFreq and OPP bindings
-+Qualcomm Technologies, Inc. NVMEM CPUFreq and OPP bindings
- ===================================
- 
--In Certain Qualcomm Technologies, Inc. SoCs like apq8096 and msm8996
--that have KRYO processors, the CPU ferequencies subset and voltage value
--of each OPP varies based on the silicon variant in use.
-+In Certain Qualcomm Technologies, Inc. SoCs like apq8096 and msm8996,
-+the CPU frequencies subset and voltage value of each OPP varies based on
-+the silicon variant in use.
- Qualcomm Technologies, Inc. Process Voltage Scaling Tables
- defines the voltage and frequency value based on the msm-id in SMEM
- and speedbin blown in the efuse combination.
--The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
-+The qcom-cpufreq-nvmem driver reads the msm-id and efuse value from the SoC
- to provide the OPP framework with required information (existing HW bitmap).
- This is used to determine the voltage and frequency value for each OPP of
- operating-points-v2 table when it is parsed by the OPP framework.
+Niklas Cassel (11):
+  opp: Add dev_pm_opp_find_level_exact()
+  dt-bindings: cpufreq: qcom-nvmem: Make speedbin related properties
+    optional
+  cpufreq: qcom: Refactor the driver to make it easier to extend
+  dt-bindings: cpufreq: qcom-nvmem: Support pstates provided by a power
+    domain
+  cpufreq: qcom: Add support for qcs404 on nvmem driver
+  dt-bindings: opp: Add qcom-opp bindings with properties needed for CPR
+  dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
+  power: avs: Add support for CPR (Core Power Reduction)
+  arm64: dts: qcom: qcs404: Add CPR and populate OPP table
+  arm64: defconfig: enable CONFIG_QCOM_CPR
+  arm64: defconfig: enable CONFIG_ARM_QCOM_CPUFREQ_NVMEM
+
+Sricharan R (2):
+  dt-bindings: cpufreq: Re-organise kryo cpufreq to use it for other
+    nvmem based qcom socs
+  cpufreq: qcom: Re-organise kryo cpufreq to use it for other nvmem
+    based qcom socs
+
+ ...ryo-cpufreq.txt => qcom-nvmem-cpufreq.txt} |  125 +-
+ .../devicetree/bindings/opp/qcom-opp.txt      |   19 +
+ .../bindings/power/avs/qcom,cpr.txt           |  193 ++
+ MAINTAINERS                                   |   13 +-
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |  142 +-
+ arch/arm64/configs/defconfig                  |    2 +
+ drivers/cpufreq/Kconfig.arm                   |    4 +-
+ drivers/cpufreq/Makefile                      |    2 +-
+ drivers/cpufreq/cpufreq-dt-platdev.c          |    1 +
+ drivers/cpufreq/qcom-cpufreq-kryo.c           |  249 ---
+ drivers/cpufreq/qcom-cpufreq-nvmem.c          |  352 +++
+ drivers/opp/core.c                            |   48 +
+ drivers/power/avs/Kconfig                     |   15 +
+ drivers/power/avs/Makefile                    |    1 +
+ drivers/power/avs/qcom-cpr.c                  | 1885 +++++++++++++++++
+ include/linux/pm_opp.h                        |    8 +
+ 16 files changed, 2792 insertions(+), 267 deletions(-)
+ rename Documentation/devicetree/bindings/opp/{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt} (87%)
+ create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
+ create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
+ delete mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
+ create mode 100644 drivers/cpufreq/qcom-cpufreq-nvmem.c
+ create mode 100644 drivers/power/avs/qcom-cpr.c
+
 -- 
 2.21.0
 
