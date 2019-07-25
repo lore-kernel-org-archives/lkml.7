@@ -2,202 +2,108 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A35CC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18013C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33BD822C7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE4E21951
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:48:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Oq3bWQYZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbfGYQsu (ORCPT
+        id S2387611AbfGYQs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:48:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35894 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbfGYQst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:48:49 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 934C430821F4;
-        Thu, 25 Jul 2019 16:48:48 +0000 (UTC)
-Received: from [10.36.116.67] (ovpn-116-67.ams2.redhat.com [10.36.116.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EA17D5E1B0;
-        Thu, 25 Jul 2019 16:48:36 +0000 (UTC)
-Subject: Re: [PATCH v2 4/5] mm: Introduce Hinted pages
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yang Zhang <yang.zhang.wz@gmail.com>, pagupta@redhat.com,
-        Rik van Riel <riel@surriel.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        lcapitulino@redhat.com, wei.w.wang@intel.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, dan.j.williams@intel.com,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
- <20190724170259.6685.18028.stgit@localhost.localdomain>
- <a9f52894-52df-cd0c-86ac-eea9fbe96e34@redhat.com>
- <CAKgT0Ud-UNk0Mbef92hDLpWb2ppVHsmd24R9gEm2N8dujb4iLw@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <f0ac7747-0e18-5039-d341-5dfda8d5780e@redhat.com>
-Date:   Thu, 25 Jul 2019 18:48:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 25 Jul 2019 12:48:56 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38313 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387552AbfGYQsz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 12:48:55 -0400
+Received: by mail-io1-f67.google.com with SMTP id j6so23508202ioa.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 09:48:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y98fApz06JAWtv7lUwUx5g2Y+VKbfux7cYr11jtX85M=;
+        b=Oq3bWQYZfePc311A34AbLZpfdLSyWQ9zAmOxY8w/LT5D3Z7amPYgg7slXVnLbaYT5s
+         dApXuC+dvlXm4a7wKv0nZdbyayoNVDZ4t5PoK8tbVG3OE7LmMafdc1Ctd/dWKEzxKHln
+         xwxF9Q7T9eZPyvnh7tT9vMxAjquvbNlDsV/PY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y98fApz06JAWtv7lUwUx5g2Y+VKbfux7cYr11jtX85M=;
+        b=mQhtQPc2ZZhj08ZBv8t4d4jIBndMRPyuHCifGOm7cBO7QK8x1vsrXbouv/356ufAEi
+         tuMkGorxyjEuQWpPF+CGlmz3e1l7PfcBv05gECvulP3cyRgVbMzY/MfVfZvhQ8e0CA/M
+         iNrdeByJJl7ux+Mgs534WyCZlem/xTLvvWluuWvHwFn3/bpqSwKCCRsvT1Rcfy3H9gvy
+         wo64ECwh78+cK1NrUGs8rWXs8j0xxH8mUxwn1bgIchUS1F1Q+tuHZEX2GZlOJgSBlrvF
+         XC8ycSWR0GVPv4jqg11WcaBgz3yKRBQaAvjGPUr2P/Fb2C4OKMbFDdvfwz8B2frmL+KY
+         se1Q==
+X-Gm-Message-State: APjAAAWYtcbk18qJqWQXqtfwk1oxhj+ECfsECcj2hZ/GMZibCggT/j+L
+        T3RUe8t+A9eoCpBHhiufd+Q54GY0etU=
+X-Google-Smtp-Source: APXvYqyC//IXmOT51l/MKfGcpu/ZEwFJVHIbgm8yZPiy6FRLyCkrm97d04F5zpKlMnPpquGvRdM+Sg==
+X-Received: by 2002:a6b:fb0f:: with SMTP id h15mr84612565iog.266.1564073334072;
+        Thu, 25 Jul 2019 09:48:54 -0700 (PDT)
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com. [209.85.166.54])
+        by smtp.gmail.com with ESMTPSA id t14sm41569976ioi.60.2019.07.25.09.48.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 09:48:53 -0700 (PDT)
+Received: by mail-io1-f54.google.com with SMTP id i10so98590226iol.13
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 09:48:52 -0700 (PDT)
+X-Received: by 2002:a02:ac03:: with SMTP id a3mr94891125jao.132.1564073332377;
+ Thu, 25 Jul 2019 09:48:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0Ud-UNk0Mbef92hDLpWb2ppVHsmd24R9gEm2N8dujb4iLw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 25 Jul 2019 16:48:48 +0000 (UTC)
+References: <20190725162642.250709-1-mka@chromium.org> <20190725162642.250709-2-mka@chromium.org>
+In-Reply-To: <20190725162642.250709-2-mka@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 25 Jul 2019 09:48:40 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=X85ACbN79foy_f4qQ=9a+8XFf0a3cE7S4BMn6pWvMmPA@mail.gmail.com>
+Message-ID: <CAD=FV=X85ACbN79foy_f4qQ=9a+8XFf0a3cE7S4BMn6pWvMmPA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] ARM: dts: rockchip: move rk3288-veryon display
+ settings into a separate file
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.07.19 17:59, Alexander Duyck wrote:
-> On Thu, Jul 25, 2019 at 1:53 AM David Hildenbrand <david@redhat.com> wrote:
->>
->> On 24.07.19 19:03, Alexander Duyck wrote:
->>> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> 
-> <snip>
-> 
->>>  /*
->>> + * PageHinted() is an alias for Offline, however it is not meant to be an
->>> + * exclusive value. It should be combined with PageBuddy() when seen as it
->>> + * is meant to indicate that the page has been scrubbed while waiting in
->>> + * the buddy system.
->>> + */
->>> +PAGE_TYPE_OPS(Hinted, offline)
->>
->>
->> CCing Matthew
->>
->> I am still not sure if I like the idea of having two page types at a time.
->>
->> 1. Once we run out of page type bits (which can happen easily looking at
->> it getting more and more user - e.g., maybe for vmmap pages soon), we
->> might want to convert again back to a value-based, not bit-based type
->> detection. This will certainly make this switch harder.
-> 
-> Shouldn't we wait to cross that bridge until we get there? It wouldn't
-> take much to look at either defining the buddy as 2 types for such a
-> case, or if needed we could then look at the option of moving over to
-> another bit.
+Hi,
 
-I'd rather clarify this now. I am not yet convinced that having multiple
-page types at a is a good idea.
+On Thu, Jul 25, 2019 at 9:26 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> The chromebook .dtsi file contains common settings for veyron
+> Chromebooks with eDP displays. Some veyron devices with a display
+> aren't Chromebooks (e.g. 'tiger' aka 'AOpen Chromebase Mini'), move
+> display related bits from the chromebook .dtsi into a separate file
+> to avoid redundant DT settings.
+>
+> The new file is included from the chromebook .dtsi and can be
+> included by non-Chromebook devices with a display.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Changes in v3:
+> - allow MIT license
+> - move pinctrl section to the bottom
+>
+> Changes in v2:
+> - rebased on v5.4-armsoc/dts32 (0d19541e3b45)
+> ---
+>  .../boot/dts/rk3288-veyron-chromebook.dtsi    | 115 +---------------
+>  arch/arm/boot/dts/rk3288-veyron-edp.dtsi      | 124 ++++++++++++++++++
+>  2 files changed, 125 insertions(+), 114 deletions(-)
 
-> 
->> 2. It will complicate the kexec/kdump handling. I assume it can be fixed
->> some way - e.g., making the elf interface aware of the exact notion of
->> page type bits compared to mapcount values we have right now (e.g.,
->> PAGE_BUDDY_MAPCOUNT_VALUE). Not addressed in this series yet.
-> 
-> It does, but not by much. We were already exposing both the buddy and
-> offline values. The cahnge could probably be in the executable that
-> are accessing the interface to allow the combination of buddy and
-> offline.
-
-We are exposing mapcount values, not bit values. So you would
-
-> That is one of the advantages of using the "offline" value to
-> also mean hinted since then "hinted" is just a combination of the two
-> known values.
-
-We are exposing mapcount values right now, not individual bits. Either
-expose the bits manually (and thereby the whole page type scheme) or a
-new mapcount value PAGE_BUDDY_OFFLINE_MAPCOUNT_VALUE.
-
-> 
->> Can't we reuse one of the traditional page flags for that, not used
->> along with buddy pages? E.g., PG_dirty: Pages that were not hinted yet
->> are dirty.
-> 
-> Reusing something like the dirty bit would just be confusing in my
-> opinion. In addition it looks like Xen has also re-purposed PG_dirty
-> already for another purpose.
-
-You brought up waste page management. A dirty bit for unprocessed pages
-fits perfectly in this context. Regarding XEN, as long as it's not used
-along with buddy pages, no issue.
-
-FWIW, I don't even thing PG_offline matches to what you are using it
-here for. The pages are not logically offline. They were simply buddy
-pages that were hinted. (I'd even prefer a separate page type for that
-instead - if we cannot simply reuse one of the other flags)
-
-"Offline pages" that are not actually offline in the context of the
-buddy is way more confusing.
-
-> 
-> If anything I could probably look at seeing if the PG_private flags
-> are available when a page is in the buddy allocator which I suspect
-> they probably are since the only users I currently see appear to be
-> SLOB and compound pages. Either that or maybe something like PG_head
-> might make sense since once we start allocating them we are popping
-> the head off of the boundary list.
-
-Would also be fine with me.
-
--- 
-
-Thanks,
-
-David / dhildenb
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
