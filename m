@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DBCC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3E7C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B86F522BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2919B22BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390487AbfGYNrg (ORCPT
+        id S2390514AbfGYNrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:47:36 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:47880 "EHLO inva021.nxp.com"
+        Thu, 25 Jul 2019 09:47:42 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:39508 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390433AbfGYNrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2390434AbfGYNrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jul 2019 09:47:32 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0CC3020071C;
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 51A841A0708;
         Thu, 25 Jul 2019 15:47:30 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F381920071A;
-        Thu, 25 Jul 2019 15:47:29 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 45A3C1A0703;
+        Thu, 25 Jul 2019 15:47:30 +0200 (CEST)
 Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id A8E2E205E8;
-        Thu, 25 Jul 2019 15:47:29 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0DAEE205E8;
+        Thu, 25 Jul 2019 15:47:30 +0200 (CEST)
 From:   Iuliana Prodan <iuliana.prodan@nxp.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>
 Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-imx <linux-imx@nxp.com>
-Subject: [PATCH 1/2] crypto: gcm - helper functions for assoclen/authsize check
-Date:   Thu, 25 Jul 2019 16:47:10 +0300
-Message-Id: <1564062431-8873-2-git-send-email-iuliana.prodan@nxp.com>
+Subject: [PATCH 2/2] crypto: aes - helper function to validate key length for AES algorithms
+Date:   Thu, 25 Jul 2019 16:47:11 +0300
+Message-Id: <1564062431-8873-3-git-send-email-iuliana.prodan@nxp.com>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1564062431-8873-1-git-send-email-iuliana.prodan@nxp.com>
 References: <1564062431-8873-1-git-send-email-iuliana.prodan@nxp.com>
@@ -45,111 +45,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added inline helper functions to check authsize and assoclen for
-gcm and rfc4106.
-These are used in the generic implementation of gcm and rfc4106.
+Add inline helper function to check key length for AES algorithms.
+The key can be 128, 192 or 256 bits size.
+This function is used in the generic aes and aes_ti implementations.
 
 Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
 ---
- crypto/gcm.c         | 41 +++++++++++++++-------------------------
- include/crypto/gcm.h | 53 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 68 insertions(+), 26 deletions(-)
+ crypto/aes_generic.c |  7 ++++---
+ crypto/aes_ti.c      |  8 ++++----
+ include/crypto/aes.h | 17 +++++++++++++++++
+ 3 files changed, 25 insertions(+), 7 deletions(-)
 
-diff --git a/crypto/gcm.c b/crypto/gcm.c
-index 33f45a9..f69c251 100644
---- a/crypto/gcm.c
-+++ b/crypto/gcm.c
-@@ -155,20 +155,7 @@ static int crypto_gcm_setkey(struct crypto_aead *aead, const u8 *key,
- static int crypto_gcm_setauthsize(struct crypto_aead *tfm,
- 				  unsigned int authsize)
+diff --git a/crypto/aes_generic.c b/crypto/aes_generic.c
+index f217568..f5b7cf6 100644
+--- a/crypto/aes_generic.c
++++ b/crypto/aes_generic.c
+@@ -1219,10 +1219,11 @@ int crypto_aes_expand_key(struct crypto_aes_ctx *ctx, const u8 *in_key,
+ 		unsigned int key_len)
  {
--	switch (authsize) {
--	case 4:
--	case 8:
--	case 12:
--	case 13:
--	case 14:
--	case 15:
--	case 16:
--		break;
--	default:
--		return -EINVAL;
--	}
--
--	return 0;
-+	return check_gcm_authsize(authsize);
- }
- 
- static void crypto_gcm_init_common(struct aead_request *req)
-@@ -765,15 +752,11 @@ static int crypto_rfc4106_setauthsize(struct crypto_aead *parent,
- 				      unsigned int authsize)
- {
- 	struct crypto_rfc4106_ctx *ctx = crypto_aead_ctx(parent);
+ 	u32 i, t, u, v, w, j;
 +	int err;
  
--	switch (authsize) {
--	case 8:
--	case 12:
--	case 16:
--		break;
--	default:
+-	if (key_len != AES_KEYSIZE_128 && key_len != AES_KEYSIZE_192 &&
+-			key_len != AES_KEYSIZE_256)
 -		return -EINVAL;
--	}
-+	err = check_rfc4106_authsize(authsize);
++	err = check_aes_keylen(key_len);
 +	if (err)
 +		return err;
  
- 	return crypto_aead_setauthsize(ctx->child, authsize);
- }
-@@ -821,8 +804,11 @@ static struct aead_request *crypto_rfc4106_crypt(struct aead_request *req)
+ 	ctx->key_length = key_len;
  
- static int crypto_rfc4106_encrypt(struct aead_request *req)
+diff --git a/crypto/aes_ti.c b/crypto/aes_ti.c
+index 1ff9785b..786311c 100644
+--- a/crypto/aes_ti.c
++++ b/crypto/aes_ti.c
+@@ -172,11 +172,11 @@ static int aesti_expand_key(struct crypto_aes_ctx *ctx, const u8 *in_key,
  {
--	if (req->assoclen != 16 && req->assoclen != 20)
--		return -EINVAL;
+ 	u32 kwords = key_len / sizeof(u32);
+ 	u32 rc, i, j;
 +	int err;
-+
-+	err = check_ipsec_assoclen(req->assoclen);
+ 
+-	if (key_len != AES_KEYSIZE_128 &&
+-	    key_len != AES_KEYSIZE_192 &&
+-	    key_len != AES_KEYSIZE_256)
+-		return -EINVAL;
++	err = check_aes_keylen(key_len);
 +	if (err)
 +		return err;
  
- 	req = crypto_rfc4106_crypt(req);
+ 	ctx->key_length = key_len;
  
-@@ -831,8 +817,11 @@ static int crypto_rfc4106_encrypt(struct aead_request *req)
- 
- static int crypto_rfc4106_decrypt(struct aead_request *req)
- {
--	if (req->assoclen != 16 && req->assoclen != 20)
--		return -EINVAL;
-+	int err;
-+
-+	err = check_ipsec_assoclen(req->assoclen);
-+	if (err)
-+		return err;
- 
- 	req = crypto_rfc4106_crypt(req);
- 
-diff --git a/include/crypto/gcm.h b/include/crypto/gcm.h
-index c50e057..9834b97 100644
---- a/include/crypto/gcm.h
-+++ b/include/crypto/gcm.h
-@@ -5,4 +5,57 @@
- #define GCM_RFC4106_IV_SIZE 8
- #define GCM_RFC4543_IV_SIZE 8
+diff --git a/include/crypto/aes.h b/include/crypto/aes.h
+index 0fdb542..c3a92ca 100644
+--- a/include/crypto/aes.h
++++ b/include/crypto/aes.h
+@@ -33,6 +33,23 @@ extern const u32 crypto_fl_tab[4][256] ____cacheline_aligned;
+ extern const u32 crypto_it_tab[4][256] ____cacheline_aligned;
+ extern const u32 crypto_il_tab[4][256] ____cacheline_aligned;
  
 +/*
-+ * validate authentication tag for GCM
++ * validate key length for AES algorithms
 + */
-+static inline int check_gcm_authsize(unsigned int authsize)
++static inline int check_aes_keylen(unsigned int keylen)
 +{
-+	switch (authsize) {
-+	case 4:
-+	case 8:
-+	case 12:
-+	case 13:
-+	case 14:
-+	case 15:
-+	case 16:
++	switch (keylen) {
++	case AES_KEYSIZE_128:
++	case AES_KEYSIZE_192:
++	case AES_KEYSIZE_256:
 +		break;
 +	default:
 +		return -EINVAL;
@@ -158,39 +120,9 @@ index c50e057..9834b97 100644
 +	return 0;
 +}
 +
-+/*
-+ * validate authentication tag for RFC4106
-+ */
-+static inline int check_rfc4106_authsize(unsigned int authsize)
-+{
-+	switch (authsize) {
-+	case 8:
-+	case 12:
-+	case 16:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * validate assoclen for RFC4106/RFC4543
-+ */
-+static inline int check_ipsec_assoclen(unsigned int assoclen)
-+{
-+	switch (assoclen) {
-+	case 16:
-+	case 20:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
- #endif
+ int crypto_aes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+ 		unsigned int key_len);
+ int crypto_aes_expand_key(struct crypto_aes_ctx *ctx, const u8 *in_key,
 -- 
 2.1.0
 
