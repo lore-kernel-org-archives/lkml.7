@@ -2,50 +2,50 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C733BC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A05C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE86217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D84218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:59:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="GlymzVHY"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="dIvRpJl2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388767AbfGYH7c (ORCPT
+        id S2388798AbfGYH7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 03:59:32 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:32844 "EHLO
+        Thu, 25 Jul 2019 03:59:35 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:32843 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388335AbfGYH7c (ORCPT
+        with ESMTP id S2388694AbfGYH7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 03:59:32 -0400
+        Thu, 25 Jul 2019 03:59:33 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x6P7wYiA029514;
+        by conuserg-12.nifty.com with ESMTP id x6P7wYi9029514;
         Thu, 25 Jul 2019 16:58:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x6P7wYiA029514
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x6P7wYi9029514
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564041516;
-        bh=1v752PISwpeCj8Aze3ypEj8GmNP9DdapaFZfYxvN23U=;
+        s=dec2015msa; t=1564041515;
+        bh=lIrW5vtmc7DwTZhq6UIbdwL3Vn2gApPP1gWH8+VwAuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GlymzVHYvuyGwQJuCUCEJrk+fjkK8HJCfV0vUWk2Wgn915j1qvTHsTI4VsuzdA/vP
-         0Wm+rDvAnG3vKTrHlp8AmpGCIZK43dpof5CwlklRuTjfJhjUyuei7DoTGRY6kgWZ9K
-         0WmImWu965GxnJaAtu2QENN7jAY0TADAa+9Rgf6Js4KCWjxOx1WA/ivpO6hNsHgsSt
-         /j3o4VxyX2FaDmr94JXVoF/NIk/bcTsAVIwbksiwbMuDAfO6D14rATGu49QlS/q4jW
-         2YFQShesNpMXgy1B+/nrVbBhBrtlSI+20z30aQc/AHb/iYi0NxvXPzRDvpw8unTZ2u
-         ivunlwdIvtxMw==
+        b=dIvRpJl2vulm1HaAfiZWmIigKCH0rBRPvUZYf9J2vEbeOQeqztF5JiRmz/r2Fr/Km
+         YMJDsqzdyym8NCkk0U6w1HehJxXB6IDQqCcozOHgUIMO9CO8neMim+V36ayGSPxMh/
+         y+subn8CPz16fJPSEHVvCycP3M2Fojp/DDToExMMtL1RWfAKYLevhwWtvvFdTNu/BO
+         IQNbQ9u0pc3ASjUXS/FoDcLT4XPB7InGsP48bf8mQxguUFQY7zWEm3E+isZsiNf8Lb
+         ojxp72IxlbzDauynxmpb9cZfXOY+xPvs34rYNiR/PRKZd1KixW32/XEbQHYmzYmFL0
+         eYRLyXLbT6tvg==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kernel@vger.kernel.org, linux-spdx@vger.kernel.org,
         Greg KH <gregkh@linuxfoundation.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, alsa-devel@alsa-project.org,
         Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v2 3/3] iomap: fix Invalid License ID
-Date:   Thu, 25 Jul 2019 16:58:33 +0900
-Message-Id: <20190725075833.3481-3-yamada.masahiro@socionext.com>
+Subject: [PATCH v2 2/3] treewide: remove SPDX "WITH Linux-syscall-note" from kernel-space headers again
+Date:   Thu, 25 Jul 2019 16:58:32 +0900
+Message-Id: <20190725075833.3481-2-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190725075833.3481-1-yamada.masahiro@socionext.com>
 References: <20190725075833.3481-1-yamada.masahiro@socionext.com>
@@ -54,31 +54,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Detected by:
+The "WITH Linux-syscall-note" exception exists for headers exported to
+user space. It is strange to add it to non-exported headers.
 
-  $ ./scripts/spdxcheck.py
-  fs/iomap/Makefile: 1:27 Invalid License ID: GPL-2.0-or-newer
+Commit 687a3e4d8e61 ("treewide: remove SPDX "WITH Linux-syscall-note"
+from kernel-space headers") did cleanups some months ago, but it looks
+like we need to do this periodically.
 
-Fixes: 1c230208f53d ("iomap: start moving code to fs/iomap/")
+This patch was generated by the following script:
+
+  git grep -l -e Linux-syscall-note \
+    -- :*.h :^arch/*/include/uapi/asm/*.h :^include/uapi/ :^tools |
+  while read file
+  do
+          sed -i -e 's/(\(GPL-[^[:space:]]*\) WITH Linux-syscall-note)/\1/g' \
+          -e 's/ WITH Linux-syscall-note//g' $file
+  done
+
+I did not commit drivers/staging/android/uapi/ion.h . This header is
+not currently exported, but somebody may plan to move it to include/uapi/
+when the time comes. I am not sure. Anyway, it will be better to check
+the license inconsistency in drivers/staging/android/uapi/.
+
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
-Changes in v2:
-  - New patch
+Changes in v2: None
 
- fs/iomap/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/sound/sof/control.h   | 2 +-
+ include/sound/sof/dai-intel.h | 2 +-
+ include/sound/sof/dai.h       | 2 +-
+ include/sound/sof/header.h    | 2 +-
+ include/sound/sof/info.h      | 2 +-
+ include/sound/sof/pm.h        | 2 +-
+ include/sound/sof/stream.h    | 2 +-
+ include/sound/sof/topology.h  | 2 +-
+ include/sound/sof/trace.h     | 2 +-
+ include/sound/sof/xtensa.h    | 2 +-
+ samples/vfio-mdev/mdpy-defs.h | 2 +-
+ 11 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/fs/iomap/Makefile b/fs/iomap/Makefile
-index 2d165388d952..93cd11938bf5 100644
---- a/fs/iomap/Makefile
-+++ b/fs/iomap/Makefile
+diff --git a/include/sound/sof/control.h b/include/sound/sof/control.h
+index bded69e696d4..6080ea0facd7 100644
+--- a/include/sound/sof/control.h
++++ b/include/sound/sof/control.h
 @@ -1,4 +1,4 @@
--# SPDX-License-Identifier: GPL-2.0-or-newer
-+# SPDX-License-Identifier: GPL-2.0-or-later
- #
- # Copyright (c) 2019 Oracle.
- # All Rights Reserved.
+-/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
++/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+ /*
+  * This file is provided under a dual BSD/GPLv2 license.  When using or
+  * redistributing this file, you may do so under either license.
+diff --git a/include/sound/sof/dai-intel.h b/include/sound/sof/dai-intel.h
+index 4bb8ee138ba7..65e4c20e567c 100644
+--- a/include/sound/sof/dai-intel.h
++++ b/include/sound/sof/dai-intel.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
++/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+ /*
+  * This file is provided under a dual BSD/GPLv2 license.  When using or
+  * redistributing this file, you may do so under either license.
+diff --git a/include/sound/sof/dai.h b/include/sound/sof/dai.h
+index 3d174e20aa53..5b8de1b1983c 100644
+--- a/include/sound/sof/dai.h
++++ b/include/sound/sof/dai.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
++/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+ /*
+  * This file is provided under a dual BSD/GPLv2 license.  When using or
+  * redistributing this file, you may do so under either license.
+diff --git a/include/sound/sof/header.h b/include/sound/sof/header.h
+index 12867bbd4372..10f00c08dbb7 100644
+--- a/include/sound/sof/header.h
++++ b/include/sound/sof/header.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
++/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+ /*
+  * This file is provided under a dual BSD/GPLv2 license.  When using or
+  * redistributing this file, you may do so under either license.
+diff --git a/include/sound/sof/info.h b/include/sound/sof/info.h
+index 16528d2b4a50..a9156b4a062c 100644
+--- a/include/sound/sof/info.h
++++ b/include/sound/sof/info.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
++/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+ /*
+  * This file is provided under a dual BSD/GPLv2 license.  When using or
+  * redistributing this file, you may do so under either license.
+diff --git a/include/sound/sof/pm.h b/include/sound/sof/pm.h
+index 8ae3ad45bdf7..003879401d63 100644
+--- a/include/sound/sof/pm.h
++++ b/include/sound/sof/pm.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
++/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+ /*
+  * This file is provided under a dual BSD/GPLv2 license.  When using or
+  * redistributing this file, you may do so under either license.
+diff --git a/include/sound/sof/stream.h b/include/sound/sof/stream.h
+index 643f175cb479..0b71b381b952 100644
+--- a/include/sound/sof/stream.h
++++ b/include/sound/sof/stream.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
++/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+ /*
+  * This file is provided under a dual BSD/GPLv2 license.  When using or
+  * redistributing this file, you may do so under either license.
+diff --git a/include/sound/sof/topology.h b/include/sound/sof/topology.h
+index 41dcabf89899..c47b36240920 100644
+--- a/include/sound/sof/topology.h
++++ b/include/sound/sof/topology.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
++/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+ /*
+  * This file is provided under a dual BSD/GPLv2 license.  When using or
+  * redistributing this file, you may do so under either license.
+diff --git a/include/sound/sof/trace.h b/include/sound/sof/trace.h
+index 9257d5473d97..fda6e8f6ead4 100644
+--- a/include/sound/sof/trace.h
++++ b/include/sound/sof/trace.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
++/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+ /*
+  * This file is provided under a dual BSD/GPLv2 license.  When using or
+  * redistributing this file, you may do so under either license.
+diff --git a/include/sound/sof/xtensa.h b/include/sound/sof/xtensa.h
+index d25c764b10e8..dd53d36b34e1 100644
+--- a/include/sound/sof/xtensa.h
++++ b/include/sound/sof/xtensa.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
++/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+ /*
+  * This file is provided under a dual BSD/GPLv2 license.  When using or
+  * redistributing this file, you may do so under either license.
+diff --git a/samples/vfio-mdev/mdpy-defs.h b/samples/vfio-mdev/mdpy-defs.h
+index 96b3b1b49d34..eb26421b6429 100644
+--- a/samples/vfio-mdev/mdpy-defs.h
++++ b/samples/vfio-mdev/mdpy-defs.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Simple pci display device.
+  *
 -- 
 2.17.1
 
