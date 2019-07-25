@@ -2,107 +2,109 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 857E4C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF316C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C2B22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:49:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564066159;
-	bh=w2m48S5hBD6xMNgWFaIjnAEL4n6W/YAcLr/Tg/RrQBY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AZpawaVdhafvcta8V9jyP1zMhBT2NbcYMyXLEYwcTyDyNkP8gQslmktNxBNDgVZtV
-	 wwvKC9E5PWphVQOrKbZ8TdQZiWE6twtpU11ZBQBv//BO2qp6NFH6sdF8o6fFJ1MprL
-	 egaotmociCtSHb0F3TQEMdcW5AcBUpHNBTUKlv7c=
+	by mail.kernel.org (Postfix) with ESMTP id A5AC32190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:49:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CYZF+ist"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbfGYOtS (ORCPT
+        id S2388125AbfGYOtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:49:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727437AbfGYOtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:49:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14462229F9;
-        Thu, 25 Jul 2019 14:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564066156;
-        bh=w2m48S5hBD6xMNgWFaIjnAEL4n6W/YAcLr/Tg/RrQBY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FS8YW7aAsciXRty67KBaUlHnGuFwkgHhA5ojo57vz4fDy2cMTKVn4PZrg4EjtPIuG
-         rlCAZrpvqsB6mFSORv9pg1XxuKHlRA76nriRktFLnpyTSXEMORpvGIqLceW15oD6zj
-         F6DQqWrpoeGqmXP3amThU978Ja3e1S4R5Ryuseok=
-Date:   Thu, 25 Jul 2019 16:49:13 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     eric@anholt.net, wahrenst@gmx.net, inf.braun@fau.de,
-        nishkadg.linux@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH -next] staging: vc04_services: fix used-but-set-variable
- warning
-Message-ID: <20190725144913.GC29688@kroah.com>
-References: <20190725142716.49276-1-yuehaibing@huawei.com>
+        Thu, 25 Jul 2019 10:49:55 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53084 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727437AbfGYOtz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 10:49:55 -0400
+Received: by mail-wm1-f67.google.com with SMTP id s3so45262383wms.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 07:49:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=3b3X8WfBqIW5LOW4V5TVp6ae4N5qP2OGB1HYZV9x7QM=;
+        b=CYZF+istrGEAPBiAE0ogP75C5buboZkGqyOM5L/9I/3bnu/dHopK+cjGrEHepiV3O1
+         dUVGk1Yy7Q9qNheRnqVKn48/a2KXDZytITvRzcqEuMieITUMWSIgvdJRQfn6gLPcgzS0
+         13hYrFFuvaFvCRF+jdMAMNQ4/z8lZ5Yc7n5FRgMzaGaytfwK5AuN5YrwW0PmR+Wtxayj
+         j47u0RHnSXMnk6ULmKR1KI1l1WQ94QMefCU+hXR8wr0f67iSfE3AYSCzjwXARHQFacIS
+         bHbwD5rxoMiymF86Mg2rubifTzBXk3vUicbHfk81Gg1anQrVWpmTJsYpRtTIWX1NvUi5
+         CGnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=3b3X8WfBqIW5LOW4V5TVp6ae4N5qP2OGB1HYZV9x7QM=;
+        b=Nnghfxf8rW2ViBQLHFY7QBn2xAbFLwMo+Io4P3Xf30JiuXXMfGWWprZC7eoBuf4p8L
+         ZraRsqSDmBJ4vw9vCIRhegISjUo4J4FO5cov/yYjaDQ0Qg0D8SKUOXvciD/XLeLsTW77
+         +PsVoU+HKttCd7uBdZZakAz/0ZZTFLIbis381yZAxnG2ybqRvNN7cpLrLinT4wJvRRBt
+         mKEmiY0ZhK9f6j0/s0RMBE9hd2TZ2sRCq3ebxcA6S3k0MsCHUQrxXXwReGHU7/N5ROEA
+         e1tR3l/2sUjgRR0XC3nJdINOg99yxcviubPpv0oMOfkLUh+h5YlmcZpl9h51UqBIJuu5
+         Py3g==
+X-Gm-Message-State: APjAAAWUn8Jt6wmyU39n8qX9ESFdZlJy7vUEN7vLwvD4H9vKabfgeB/7
+        JnOdGQIG5neQRPTZGroaYZtGiw==
+X-Google-Smtp-Source: APXvYqzIwsQJYuxzT5dWpKHmTvybHpnoxkfBrMYfdmTdr8KgCK9iYKnYda5Yubj39ML7jNr8yVrQ1A==
+X-Received: by 2002:a05:600c:da:: with SMTP id u26mr77769552wmm.108.1564066193002;
+        Thu, 25 Jul 2019 07:49:53 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id c11sm85376061wrq.45.2019.07.25.07.49.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 07:49:52 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Alexandre Mergnat <amergnat@baylibre.com>
+Cc:     khilman@baylibre.com, sboyd@kernel.org, narmstrong@baylibre.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        baylibre-upstreaming@groups.io,
+        Alexandre Mergnat <amergnat@baylibre.com>
+Subject: Re: [PATCH 3/8] clk: meson: gxbb: migrate to the new parent description method
+In-Reply-To: <20190722095425.14193-4-amergnat@baylibre.com>
+References: <20190722095425.14193-1-amergnat@baylibre.com> <20190722095425.14193-4-amergnat@baylibre.com>
+Date:   Thu, 25 Jul 2019 16:49:51 +0200
+Message-ID: <1j5znqxj74.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725142716.49276-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 10:27:16PM +0800, YueHaibing wrote:
-> use variables 'local_entity_uc' and 'local_uc',
-> mute gcc used-but-set-variable warning:
-> 
-> drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c: In function vchiq_release_internal:
-> drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c:2827:16: warning:
->  variable local_entity_uc set but not used [-Wunused-but-set-variable]
-> drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c:2827:6: warning:
->  variable local_uc set but not used [-Wunused-but-set-variable]
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-> index cc4383d..04e6427 100644
-> --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-> +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-> @@ -2861,15 +2861,13 @@ vchiq_release_internal(struct vchiq_state *state, struct vchiq_service *service)
->  		} else {
->  			vchiq_log_info(vchiq_susp_log_level,
->  				"%s %s count %d, state count %d - suspending",
-> -				__func__, entity, *entity_uc,
-> -				arm_state->videocore_use_count);
-> +				__func__, entity, local_entity_uc, local_uc);
->  			vchiq_arm_vcsuspend(state);
->  		}
->  	} else
->  		vchiq_log_trace(vchiq_susp_log_level,
->  			"%s %s count %d, state count %d",
-> -			__func__, entity, *entity_uc,
-> -			arm_state->videocore_use_count);
-> +			__func__, entity, local_entity_uc, local_uc);
+On Mon 22 Jul 2019 at 11:54, Alexandre Mergnat <amergnat@baylibre.com> wrote:
 
-Are you sure this is the correct way to solve this?
 
-Why not just remove the local variables instead, as obviously they are
-not being used.
+> @@ -1592,13 +1737,29 @@ static struct clk_regmap gxbb_vid_pll_div = {
+>  	.hw.init = &(struct clk_init_data) {
+>  		.name = "vid_pll_div",
+>  		.ops = &meson_vid_pll_div_ro_ops,
+> -		.parent_names = (const char *[]){ "hdmi_pll" },
+> +		.parent_data = &(const struct clk_parent_data) {
+> +			/*
+> +			 * This clock is declared here for GXL and GXBB SoC, so
+> +			 * we must use string name to set this parent to avoid
+> +			 * pointer issue.
+> +			 */
 
-thanks,
+I don't really get the issue with this comment.
 
-greg k-h
+How about:
+
+/*
+ * Note:
+ * gxl and gxbb have different hdmi_plls (with different struct clk_hw).
+ * We fallback to the global naming string mechanism so vid_pll_div picks
+ * up the appropriate one.
+ */
+
+> +			.name = "hdmi_pll",
+> +			.index = -1,
+> +		},
+>  		.num_parents = 1,
+>  		.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
+>  	},
+>  };
