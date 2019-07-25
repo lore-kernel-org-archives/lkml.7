@@ -2,145 +2,90 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2126C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B408EC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9232822BE8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89ACB22BE8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:46:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TL/rqBtf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEwcJavH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389317AbfGYCqT (ORCPT
+        id S2389340AbfGYCq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 22:46:19 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33042 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388165AbfGYCqT (ORCPT
+        Wed, 24 Jul 2019 22:46:28 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34131 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388165AbfGYCq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 22:46:19 -0400
-Received: by mail-pf1-f195.google.com with SMTP id g2so21919312pfq.0;
-        Wed, 24 Jul 2019 19:46:19 -0700 (PDT)
+        Wed, 24 Jul 2019 22:46:27 -0400
+Received: by mail-pl1-f193.google.com with SMTP id i2so22793904plt.1;
+        Wed, 24 Jul 2019 19:46:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fGb+53W3+gVi5IhRG8bYdezC8LvWPACMjaeRX6JLss8=;
-        b=TL/rqBtftf+PW2Gv4BMOCqIn5e5e8A/pFGqG6XXkzVseQ7n84Qn732l0EXBGS+pk2L
-         w0ijV3UB45+bYRzkNYlpyCv78lszpntKYjHidT7MvL2VwoeGoSXFFSm4gV819TsGTncD
-         Cx4brIDiumMiZLqDBo7eaZNBpDxRhj3DloMKkarUiIFMaoU2C1u62/GU+kQtOxtrBYCU
-         JqxJ7qMhLkAGEgQu6YmJWUzV0GIIUQH2a3V+VLZxcclf696iyxS0V+MLB3q0lSWNyFAi
-         RNiw1oEgCRM43EgZXqabZc8HqC8h6GuSulc2FMJlp2UvDBu7eODeejbo2Wn6Rtiv/+00
-         IJsg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aGeqbbaRQz52Mrxm18aXtkYJrSyeGJbcuPy0BL4Y1Vs=;
+        b=uEwcJavHy2kklEv19UdZJTg8zda6WO/bZLW9FDuWCcIXLJCQz1IYlkWkQFwiJXgaSr
+         z2Ew6K9ayMT6PYMIW8SaX0ASAjZHghbYNkPsc6zYcJylNVC2cFJYVyBxrvThd0xAp6gd
+         mOXZOpzhvGy+u0bar9h7GDanOG1NQXF6DrpbIrkKY6p9GfWTJKMzpNU30MODTgRYgVYj
+         6NnFwXJO0yrRfCuMqna6kieSCzG9sXYdgxPiZ6GPbUHeUmPnferi5Q+e9sarf2n7ayNS
+         8GHQXgSuGsTBk3nqdL42iyCJ6gsiSFaFa2E0C0L9Aqpz8JgrHjN2MEXEzATMO2fRfbe6
+         Ylrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=fGb+53W3+gVi5IhRG8bYdezC8LvWPACMjaeRX6JLss8=;
-        b=LJbLOarXYOoE9qcRJ9cAPLAruLKC/Xb7U/J7OjCN0nfRoplWnMfpzEA/wrMj4PcklS
-         FNGRBFKKj9x5z5+GyMWytPcFOBjRk4kRDsoThJIiHWHYE1wKTb2jNn2sb0oaVgscYNlQ
-         LOZp+4Oqr40k4ZV3xu5uPJPcBBOd+YAwcYLbgyGodN+/PEZbZypZ+9PEbmGECTqAuDr9
-         vKeRU886tP8rbODrWPGSkf2AK/h0l3vmP3cKDOKQKal7oLdoJ1fVsmEU7OBn1IiEwrPO
-         0OMS5phk5JzTGqh8MTVgzks5jQUYNaHleaGVYdb9NN+4X8/HTyfmBeA9X7Q+jvAwjt05
-         Z1LA==
-X-Gm-Message-State: APjAAAVt1KM0khgE8SHJo08yYkC0oNVXRjmIq7blwlvgDL3zYLvAXzpa
-        jh/+pfM1crBxUsapT2qIXMU=
-X-Google-Smtp-Source: APXvYqzCUCQN8nnmTYZHETQ9ZiqagR86HgVQISOEyQ0ACAhdNbK1st9YpRwV3J7qsO8BnlaI78/v+A==
-X-Received: by 2002:a62:e806:: with SMTP id c6mr14504052pfi.158.1564022778701;
-        Wed, 24 Jul 2019 19:46:18 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id e17sm38910176pgm.21.2019.07.24.19.46.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 19:46:17 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Adham Abozaeid <adham.abozaeid@microchip.com>,
-        Ajay Singh <ajay.kathat@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] staging: wilc1000: Merge memcpy + le32_to_cpus to get_unaligned_le32
-Date:   Thu, 25 Jul 2019 10:46:12 +0800
-Message-Id: <20190725024612.8604-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        bh=aGeqbbaRQz52Mrxm18aXtkYJrSyeGJbcuPy0BL4Y1Vs=;
+        b=kOoXG/DcrsWf77KLDYy3iP6e+4PFO7JtDFXKUoqrDYekE5fAM4ot2z9BoTuzyz4yXR
+         fTOFt0OMsl9E18UeTg6zWg2SK8ouWetrR+h7rdPG0Aa7Dja/hovaixMJx18oxxkofM8K
+         T+0ASSMIjJ8HBIMWvTohDpYLsHdKoR4EdfGY1c7Qc+rEIlaX/4xT+t/lFis+pZBT57v2
+         g3SsOd4/6PH/mfGpFehLPQYMW3Ost1aiub1lAYpv8M7nFhIzffP9sC4y4eAZ0vNQwdxu
+         5754nv311sTQ+MEY8DKyk5s2h03hzt9CJE7VK9TJxKl1HkHi1y+dJTgWVuEi3dEdR8sa
+         UEAA==
+X-Gm-Message-State: APjAAAWPjg0qeeYhhPm1NbFqpc+7UlrlvzDlUnibotSkRIQlKVhH77NT
+        tVddQ5R0vPvy7rAJ96A3ZU7MzsOkAEA=
+X-Google-Smtp-Source: APXvYqzn0eD2QRa02YoHPNpKVxuwggwW9Gwuz5NywLmQ8LRrbVXQiqMsn20cTsA7I4jVD5JgOr/2Sw==
+X-Received: by 2002:a17:902:8490:: with SMTP id c16mr90566604plo.1.1564022786580;
+        Wed, 24 Jul 2019 19:46:26 -0700 (PDT)
+Received: from [172.27.227.155] ([216.129.126.118])
+        by smtp.googlemail.com with ESMTPSA id 14sm46295162pfy.40.2019.07.24.19.46.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 19:46:25 -0700 (PDT)
+Subject: Re: [PATCH net-next v2 3/3] netlink: add validation of NLA_F_NESTED
+ flag
+To:     Thomas Haller <thaller@redhat.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+References: <cover.1556806084.git.mkubecek@suse.cz>
+ <6b6ead21c5d8436470b82ab40355f6bd7dbbf14b.1556806084.git.mkubecek@suse.cz>
+ <0fc58a4883f6656208b9250876e53d723919e342.camel@redhat.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <8e4ba571-de11-8448-c44c-cbc7024ab9a4@gmail.com>
+Date:   Wed, 24 Jul 2019 19:46:22 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <0fc58a4883f6656208b9250876e53d723919e342.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merge the combo use of memcpy and le32_to_cpus.
-Use get_unaligned_le32 instead.
-This simplifies the code.
+On 7/23/19 1:57 AM, Thomas Haller wrote:
+> Does this flag and strict validation really provide any value? Commonly a netlink message
+> is a plain TLV blob, and the meaning depends entirely on the policy.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/staging/wilc1000/wilc_mon.c               | 3 +--
- drivers/staging/wilc1000/wilc_wfi_cfgoperations.c | 3 +--
- drivers/staging/wilc1000/wilc_wlan.c              | 9 +++------
- 3 files changed, 5 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/staging/wilc1000/wilc_mon.c b/drivers/staging/wilc1000/wilc_mon.c
-index 7d7933d40924..d6f14f69ad64 100644
---- a/drivers/staging/wilc1000/wilc_mon.c
-+++ b/drivers/staging/wilc1000/wilc_mon.c
-@@ -35,8 +35,7 @@ void wilc_wfi_monitor_rx(struct net_device *mon_dev, u8 *buff, u32 size)
- 		return;
- 
- 	/* Get WILC header */
--	memcpy(&header, (buff - HOST_HDR_OFFSET), HOST_HDR_OFFSET);
--	le32_to_cpus(&header);
-+	header = get_unaligned_le32(buff - HOST_HDR_OFFSET);
- 	/*
- 	 * The packet offset field contain info about what type of management
- 	 * the frame we are dealing with and ack status
-diff --git a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-index d72fdd333050..12fb4add05ec 100644
---- a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-+++ b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-@@ -1038,8 +1038,7 @@ void wilc_wfi_p2p_rx(struct wilc_vif *vif, u8 *buff, u32 size)
- 	s32 freq;
- 	__le16 fc;
- 
--	memcpy(&header, (buff - HOST_HDR_OFFSET), HOST_HDR_OFFSET);
--	le32_to_cpus(&header);
-+	header = get_unaligned_le32(buff - HOST_HDR_OFFSET);
- 	pkt_offset = GET_PKT_OFFSET(header);
- 
- 	if (pkt_offset & IS_MANAGMEMENT_CALLBACK) {
-diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
-index d46876edcfeb..7d438ae90c3e 100644
---- a/drivers/staging/wilc1000/wilc_wlan.c
-+++ b/drivers/staging/wilc1000/wilc_wlan.c
-@@ -703,8 +703,7 @@ static void wilc_wlan_handle_rx_buff(struct wilc *wilc, u8 *buffer, int size)
- 
- 	do {
- 		buff_ptr = buffer + offset;
--		memcpy(&header, buff_ptr, 4);
--		le32_to_cpus(&header);
-+		header = get_unaligned_le32(buff_ptr);
- 
- 		is_cfg_packet = (header >> 31) & 0x1;
- 		pkt_offset = (header >> 22) & 0x1ff;
-@@ -874,10 +873,8 @@ int wilc_wlan_firmware_download(struct wilc *wilc, const u8 *buffer,
- 
- 	offset = 0;
- 	do {
--		memcpy(&addr, &buffer[offset], 4);
--		memcpy(&size, &buffer[offset + 4], 4);
--		le32_to_cpus(&addr);
--		le32_to_cpus(&size);
-+		addr = get_unaligned_le32(&buffer[offset]);
-+		size = get_unaligned_le32(&buffer[offset + 4]);
- 		acquire_bus(wilc, WILC_BUS_ACQUIRE_ONLY);
- 		offset += 8;
- 		while (((int)size) && (offset < buffer_size)) {
--- 
-2.20.1
-
+Strict checking enables kernel side filtering and other features that
+require passing attributes as part of the dump request - like address
+dumps in a specific namespace.
