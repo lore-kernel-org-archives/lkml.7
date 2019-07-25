@@ -2,204 +2,192 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F84C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2BBC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D1922CB8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:16:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="yg2Z6Kv3"
+	by mail.kernel.org (Postfix) with ESMTP id 1FEED22CB8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564042565;
+	bh=zvOD/NhJ1ppVzvGI+gKJSff+TbgtbifjjIqRMfaYbSw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GGIQcGyBLTZSKx249OA/OPYPwEdRh8PRVikIcGlccWfYqKF0v0pnk9qXY6kM7WOlj
+	 noniiaec6qcX9paBm+8z0kcD0AKGaJotyusCFn9+n9MhiSwnQFcXN9RwSpTMwwcN5c
+	 xI+3pnVRfM8lZrCLscZRhAw2wuq8nCBg5khxeGSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389293AbfGYIQA (ORCPT
+        id S2389311AbfGYIQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 04:16:00 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:34888 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388497AbfGYIQA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 04:16:00 -0400
-Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id CEA9A2E1546;
-        Thu, 25 Jul 2019 11:15:55 +0300 (MSK)
-Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
-        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id BHFOVffvkF-FsBKYq39;
-        Thu, 25 Jul 2019 11:15:55 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1564042555; bh=mqwyPL/Kvi4FlMJZMuuGgTLVmBANLSvlAgU95QJvMKg=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=yg2Z6Kv3kAo5EaGGy3G9RVrs92O5ikWA9VmdX0QpVDDSlO0VlBwqkO2pAkbukBQnn
-         J5OizK5Zp+57pK6J+mXCnOSs2NZMLzr+oqr3vj3KLBzIx55idigsymckEWqbyt6bei
-         kw1JkUxfveSV9/6Vmj8g1+t1A7++FSfjCZ7y2NpI=
-Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:38b3:1cdf:ad1a:1fe1])
-        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id QkVcPTjsve-FrIap0Me;
-        Thu, 25 Jul 2019 11:15:54 +0300
+        Thu, 25 Jul 2019 04:16:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389263AbfGYIQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 04:16:01 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH v1 1/2] mm/page_idle: Add support for per-pid page_idle
- using virtual indexing
-To:     Joel Fernandes <joel@joelfernandes.org>,
-        Minchan Kim <minchan@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, vdavydov.dev@gmail.com,
-        Brendan Gregg <bgregg@netflix.com>, kernel-team@android.com,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        carmenjackson@google.com, Christian Hansen <chansen3@cisco.com>,
-        Colin Ian King <colin.king@canonical.com>, dancol@google.com,
-        David Howells <dhowells@redhat.com>, fmayer@google.com,
-        joaodias@google.com, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>, namhyung@google.com,
-        sspatil@google.c
-References: <20190722213205.140845-1-joel@joelfernandes.org>
- <20190723061358.GD128252@google.com> <20190723142049.GC104199@google.com>
- <20190724042842.GA39273@google.com> <20190724141052.GB9945@google.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <c116f836-5a72-c6e6-498f-a904497ef557@yandex-team.ru>
-Date:   Thu, 25 Jul 2019 11:15:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB0C822BEF;
+        Thu, 25 Jul 2019 08:15:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564042559;
+        bh=zvOD/NhJ1ppVzvGI+gKJSff+TbgtbifjjIqRMfaYbSw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xuJVs+Bl5fZsnaeLJ5Ogn8iQitL7ImTW5M4la/vpTqCk0G1jhsQbZoVSIVqlwnZ1O
+         tT1b+sQqx2Q2ZP8NAm2NO/Q5wbzH7qt+VtNdrnCE9R6egArit5iUNmWRkFLARRf34R
+         jd3w+w5L+uX4PpBjahoidymviPGC3dn5Ff95kkZQ=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     mhiramat@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Dan Rue <dan.rue@linaro.org>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Daniel Diaz <daniel.diaz@linaro.org>,
+        James Morse <james.morse@arm.com>
+Subject: [PATCH v3 1/4] arm64: kprobes: Recover pstate.D in single-step exception handler
+Date:   Thu, 25 Jul 2019 17:15:54 +0900
+Message-Id: <156404255444.2020.3301023170351823334.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <156404254387.2020.886452004489353899.stgit@devnote2>
+References: <156404254387.2020.886452004489353899.stgit@devnote2>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <20190724141052.GB9945@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.07.2019 17:10, Joel Fernandes wrote:> On Wed, Jul 24, 2019 at 01:28:42PM +0900, Minchan Kim wrote:
- >> On Tue, Jul 23, 2019 at 10:20:49AM -0400, Joel Fernandes wrote:
- >>> On Tue, Jul 23, 2019 at 03:13:58PM +0900, Minchan Kim wrote:
- >>>> Hi Joel,
- >>>>
- >>>> On Mon, Jul 22, 2019 at 05:32:04PM -0400, Joel Fernandes (Google) wrote:
- >>>>> The page_idle tracking feature currently requires looking up the pagemap
- >>>>> for a process followed by interacting with /sys/kernel/mm/page_idle.
- >>>>> This is quite cumbersome and can be error-prone too. If between
- >>>>
- >>>> cumbersome: That's the fair tradeoff between idle page tracking and
- >>>> clear_refs because idle page tracking could check even though the page
- >>>> is not mapped.
- >>>
- >>> It is fair tradeoff, but could be made simpler. The userspace code got
- >>> reduced by a good amount as well.
- >>>
- >>>> error-prone: What's the error?
- >>>
- >>> We see in normal Android usage, that some of the times pages appear not to be
- >>> idle even when they really are idle. Reproducing this is a bit unpredictable
- >>> and happens at random occasions. With this new interface, we are seeing this
- >>> happen much much lesser.
- >>
- >> I don't know how you did test. Maybe that could be contributed by
- >> swapping out or shared pages touched by other processes or some kernel
- >> behavior not to keep access bit of their operation.
- >
- > It could be something along these lines is my thinking as well. So we know
- > its already has issues due to what you mentioned, I am not sure what else
- > needs investigation?
- >
- >> Please investigate more what's the root cause. That would be important
- >> point to justify for the patch motivation.
- >
- > The motivation is security. I am dropping the 'accuracy' factor I mentioned
- > from the patch description since it created a lot of confusion.
-If you are tracking idle working set for one process you could use degrading
-'accuracy' for good - just don't walk page rmap and play only with access
-bits in one process. Foreign access could be detected with arbitrary delay,
-but this does not important if main goal is heap profiling.
+kprobes manipulates the interrupted PSTATE for single step, and
+doesn't restore it. Thus, if we put a kprobe where the pstate.D
+(debug) masked, the mask will be cleared after the kprobe hits.
 
- >
- >>>>> More over looking up PFN from pagemap in Android devices is not
- >>>>> supported by unprivileged process and requires SYS_ADMIN and gives 0 for
- >>>>> the PFN.
- >>>>>
- >>>>> This patch adds support to directly interact with page_idle tracking at
- >>>>> the PID level by introducing a /proc/<pid>/page_idle file. This
- >>>>> eliminates the need for userspace to calculate the mapping of the page.
- >>>>> It follows the exact same semantics as the global
- >>>>> /sys/kernel/mm/page_idle, however it is easier to use for some usecases
- >>>>> where looking up PFN is not needed and also does not require SYS_ADMIN.
- >>>>
- >>>> Ah, so the primary goal is to provide convinience interface and it would
- >>>> help accurary, too. IOW, accuracy is not your main goal?
- >>>
- >>> There are a couple of primary goals: Security, conveience and also solving
- >>> the accuracy/reliability problem we are seeing. Do keep in mind looking up
- >>> PFN has security implications. The PFN field in pagemap is zeroed if the user
- >>> does not have CAP_SYS_ADMIN.
- >>
- >> Myaybe you don't need PFN. is it?
- >
- > With the traditional idle tracking, PFN is needed which has the mentioned
- > security issues. This patch solves it. And the interface is identical and
- > familiar to the existing page_idle bitmap interface.
- >
- >>>>> In Android, we are using this for the heap profiler (heapprofd) which
- >>>>> profiles and pin points code paths which allocates and leaves memory
- >>>>> idle for long periods of time.
- >>>>
- >>>> So the goal is to detect idle pages with idle memory tracking?
- >>>
- >>> Isn't that what idle memory tracking does?
- >>
- >> To me, it's rather misleading. Please read motivation section in document.
- >> The feature would be good to detect workingset pages, not idle pages
- >> because workingset pages are never freed, swapped out and even we could
- >> count on newly allocated pages.
- >>
- >> Motivation
- >> ==========
- >>
- >> The idle page tracking feature allows to track which memory pages are being
- >> accessed by a workload and which are idle. This information can be useful for
- >> estimating the workload's working set size, which, in turn, can be taken into
- >> account when configuring the workload parameters, setting memory cgroup limits,
- >> or deciding where to place the workload within a compute cluster.
- >
- > As we discussed by chat, we could collect additional metadata to check if
- > pages were swapped or freed ever since the time we marked them as idle.
- > However this can be incremental improvement.
- >
- >>>> It couldn't work well because such idle pages could finally swap out and
- >>>> lose every flags of the page descriptor which is working mechanism of
- >>>> idle page tracking. It should have named "workingset page tracking",
- >>>> not "idle page tracking".
- >>>
- >>> The heap profiler that uses page-idle tracking is not to measure working set,
- >>> but to look for pages that are idle for long periods of time.
- >>
- >> It's important part. Please include it in the description so that people
- >> understands what's the usecase. As I said above, if it aims for finding
- >> idle pages durting the period, current idle page tracking feature is not
- >> good ironically.
- >
- > Ok, I will mention.
- >
- >>> Thanks for bringing up the swapping corner case..  Perhaps we can improve
- >>> the heap profiler to detect this by looking at bits 0-4 in pagemap. While it
- >>
- >> Yeb, that could work but it could add overhead again what you want to remove?
- >> Even, userspace should keep metadata to identify that page was already swapped
- >> in last period or newly swapped in new period.
- >
- > Yep.
-Between samples page could be read from swap and swapped out back multiple times.
-For tracking this swap ptes could be marked with idle bit too.
-I believe it's not so hard to find free bit for this.
+Moreover, in the most complicated case, this can lead a kernel
+crash with below message when a nested kprobe hits.
 
-Refault\swapout will automatically clear this bit in pte even if
-page goes nowhere stays if swap-cache.
+[  152.118921] Unexpected kernel single-step exception at EL1
 
+When the 1st kprobe hits, do_debug_exception() will be called.
+At this point, debug exception (= pstate.D) must be masked (=1).
+But if another kprobes hits before single-step of the first kprobe
+(e.g. inside user pre_handler), it unmask the debug exception
+(pstate.D = 0) and return.
+Then, when the 1st kprobe setting up single-step, it saves current
+DAIF, mask DAIF, enable single-step, and restore DAIF.
+However, since "D" flag in DAIF is cleared by the 2nd kprobe, the
+single-step exception happens soon after restoring DAIF.
 
+This has been introduced by commit 7419333fa15e ("arm64: kprobe:
+Always clear pstate.D in breakpoint exception handler")
+
+To solve this issue, this stores all DAIF bits and restore it
+after single stepping.
+
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Fixes: commit 7419333fa15e ("arm64: kprobe: Always clear pstate.D in breakpoint exception handler")
+Reviewed-by: James Morse <james.morse@arm.com>
+Tested-by: James Morse <james.morse@arm.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+  Changes in v3:
+   - Update patch description
+   - move PSR_DAIF_MASK in daifflags.h
+  Changes in v2:
+   - Save and restore all DAIF flags.
+   - Operate pstate directly and remove spsr_set_debug_flag().
+---
+ arch/arm64/include/asm/daifflags.h |    2 ++
+ arch/arm64/kernel/probes/kprobes.c |   39 +++++-------------------------------
+ 2 files changed, 7 insertions(+), 34 deletions(-)
+
+diff --git a/arch/arm64/include/asm/daifflags.h b/arch/arm64/include/asm/daifflags.h
+index 987926ed535e..063c964af705 100644
+--- a/arch/arm64/include/asm/daifflags.h
++++ b/arch/arm64/include/asm/daifflags.h
+@@ -13,6 +13,8 @@
+ #define DAIF_PROCCTX		0
+ #define DAIF_PROCCTX_NOIRQ	PSR_I_BIT
+ #define DAIF_ERRCTX		(PSR_I_BIT | PSR_A_BIT)
++#define DAIF_MASK		(PSR_D_BIT | PSR_A_BIT | PSR_I_BIT | PSR_F_BIT)
++
+ 
+ /* mask/save/unmask/restore all exceptions, including interrupts. */
+ static inline void local_daif_mask(void)
+diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+index bd5dfffca272..bf2259651b67 100644
+--- a/arch/arm64/kernel/probes/kprobes.c
++++ b/arch/arm64/kernel/probes/kprobes.c
+@@ -167,33 +167,6 @@ static void __kprobes set_current_kprobe(struct kprobe *p)
+ 	__this_cpu_write(current_kprobe, p);
+ }
+ 
+-/*
+- * When PSTATE.D is set (masked), then software step exceptions can not be
+- * generated.
+- * SPSR's D bit shows the value of PSTATE.D immediately before the
+- * exception was taken. PSTATE.D is set while entering into any exception
+- * mode, however software clears it for any normal (none-debug-exception)
+- * mode in the exception entry. Therefore, when we are entering into kprobe
+- * breakpoint handler from any normal mode then SPSR.D bit is already
+- * cleared, however it is set when we are entering from any debug exception
+- * mode.
+- * Since we always need to generate single step exception after a kprobe
+- * breakpoint exception therefore we need to clear it unconditionally, when
+- * we become sure that the current breakpoint exception is for kprobe.
+- */
+-static void __kprobes
+-spsr_set_debug_flag(struct pt_regs *regs, int mask)
+-{
+-	unsigned long spsr = regs->pstate;
+-
+-	if (mask)
+-		spsr |= PSR_D_BIT;
+-	else
+-		spsr &= ~PSR_D_BIT;
+-
+-	regs->pstate = spsr;
+-}
+-
+ /*
+  * Interrupts need to be disabled before single-step mode is set, and not
+  * reenabled until after single-step mode ends.
+@@ -205,17 +178,17 @@ spsr_set_debug_flag(struct pt_regs *regs, int mask)
+ static void __kprobes kprobes_save_local_irqflag(struct kprobe_ctlblk *kcb,
+ 						struct pt_regs *regs)
+ {
+-	kcb->saved_irqflag = regs->pstate;
++	kcb->saved_irqflag = regs->pstate & DAIF_MASK;
+ 	regs->pstate |= PSR_I_BIT;
++	/* Unmask PSTATE.D for enabling software step exceptions. */
++	regs->pstate &= ~PSR_D_BIT;
+ }
+ 
+ static void __kprobes kprobes_restore_local_irqflag(struct kprobe_ctlblk *kcb,
+ 						struct pt_regs *regs)
+ {
+-	if (kcb->saved_irqflag & PSR_I_BIT)
+-		regs->pstate |= PSR_I_BIT;
+-	else
+-		regs->pstate &= ~PSR_I_BIT;
++	regs->pstate &= ~DAIF_MASK;
++	regs->pstate |= kcb->saved_irqflag;
+ }
+ 
+ static void __kprobes
+@@ -252,8 +225,6 @@ static void __kprobes setup_singlestep(struct kprobe *p,
+ 
+ 		set_ss_context(kcb, slot);	/* mark pending ss */
+ 
+-		spsr_set_debug_flag(regs, 0);
+-
+ 		/* IRQs and single stepping do not mix well. */
+ 		kprobes_save_local_irqflag(kcb, regs);
+ 		kernel_enable_single_step(regs);
 
