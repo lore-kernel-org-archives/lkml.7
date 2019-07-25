@@ -7,71 +7,74 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44282C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 444F4C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 171C422C7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C6B42238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:44:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pkaqfcmr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hSfaFMHL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390197AbfGYNnk (ORCPT
+        id S2390231AbfGYNoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:43:40 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35865 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390050AbfGYNnk (ORCPT
+        Thu, 25 Jul 2019 09:44:12 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35916 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389989AbfGYNoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:43:40 -0400
-Received: by mail-lj1-f193.google.com with SMTP id i21so48077949ljj.3;
-        Thu, 25 Jul 2019 06:43:38 -0700 (PDT)
+        Thu, 25 Jul 2019 09:44:11 -0400
+Received: by mail-lj1-f194.google.com with SMTP id i21so48079657ljj.3;
+        Thu, 25 Jul 2019 06:44:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aJQV5wvFWxsEuA/Ecdi9hNVYPovQXpFL/Apsqwx1hKU=;
-        b=PkaqfcmrxgjRX7D4Ljp7RvXLIukftgPjfTmhnC4QswnIm7GoiXVUgoGTPRRSBMbo11
-         tD5VY0NHDgoS2yLxOZswQJEkD9lNY2+S/IgW6x6+Xm6BNisZIesz9nCLW5eWdIzfDIfh
-         UxCZ9NqMNOJWTTxIMVyehmlGUFGQZnE6nbcbIpXD1iesVFvOcCc2fV7+AVoH6uh4fzJQ
-         cglg43lB1kN7gpDBmOoKms/jxFLp+JnH/4NaT4qIDgVPzqNrZ0mWNDelBFZCwCP2rp+f
-         TBDSmM+Mld3o06kHOZMtrj4VQvKL18moXn7gBAD0mOYImtkNaci2Ng1atv5/7VC2T1gS
-         EZ5g==
+        bh=Zzq0V46zGQJFFxV1hhNVXna2f5OC8OivFBS02+sNjMg=;
+        b=hSfaFMHLP3bpAZsdajQOfeEOf7tn9zZJSdN4l+ZCJ54jTkum1N8UB14d18rCvmuYMZ
+         JxuWirUK64kwTMKQZxpw2NYnEi6V/DW6ytMNFgw+WuGM57/2XW8gSP9Ufai7cpX/yjjV
+         IJatlpnlumVglK5tqgUl9IqN/y+KuP+4AjiRvGeVeb6zG4PZcofItZ/f9DxTPCXL5Uts
+         2dvGBuAI/+6hI5WtUPehu6e5LqmQuDqwH7vOMpXsxFLfK1vmVt97YuEPcGbMbXYHGdN9
+         so62rqOWM/nnu7uKzTEUCEAgh/MVkp1l9mhR61YIQgh7uTPfmGJ9TM//52IgxnccGWi5
+         J6/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=aJQV5wvFWxsEuA/Ecdi9hNVYPovQXpFL/Apsqwx1hKU=;
-        b=jKbiH2474lZi+Pwn74FrsdLfvvMHOEqbv2Y4IYN/BA3SQdMrjVSWqRIkvvhUHgIqi7
-         gRNUMTtos23HDaG5mu1ONpmpfYGJnIpqYKi7Lfq04kgumNJLfdXYbuDvDprBcATdhVkP
-         3U5hiWTyzg/wdXNzrs2dLeRHVONP192YtUCDpCrv+rEIicE+vfvJJcsA1QEjX/eV3Ig/
-         TnZwbeSnowflHJm8W1NQx36JZF7fq2x0+y5t3/46fA229esasZlxrJFVOWPlNO258UeW
-         ropsTHlXnGw99oraciuWkKN4Za6CpuiCM+lEfaCSmaghcMxdl8mQIEz41Vlj2O/Vheo2
-         L9gg==
-X-Gm-Message-State: APjAAAXsx1wselHBiZ9YhSn+a5YT+pT75/I/y6TJSJkN/gWAAduYWp3n
-        +NOvTEFD6HV12siRVfUO799iqdmh
-X-Google-Smtp-Source: APXvYqxNIhVKPq6SLEintV2aQtzJkc3L38e4rCfwaxFNPMShnVss+1iheYjghIUCBT/k7PsFbVLi5w==
-X-Received: by 2002:a2e:8741:: with SMTP id q1mr45713135ljj.144.1564062217787;
-        Thu, 25 Jul 2019 06:43:37 -0700 (PDT)
+        bh=Zzq0V46zGQJFFxV1hhNVXna2f5OC8OivFBS02+sNjMg=;
+        b=oir4mWSp8Mhabup7tSw0sFLsey1W75cxr2QgEytQIofB7y+q2oFsf2qAcJzHeMketR
+         Ihtchyg8fCThmz3X2caQYC0SyhuadNfq2zug3Lrcxt+kclXomuSuK3g2rh95tNm3DdQT
+         OjmFyyf56KvZh7foX+EIWsrYZe/655DMrl4Mb4J+xSUU5qXUpspCI2QaXhFCkWJo69I+
+         P57XVC0rfFpYDrSF1v5iv6XLj78FitaBwmgHczI1RyCPol3Xfvc0Fu9YXH24Fu77DoPK
+         7cMPyTT0WCsIAahkKq6Ej81rDs6L/NlZSru+RJh2fTpXb5qwySNBxZkLgC453IYoaDn6
+         bStA==
+X-Gm-Message-State: APjAAAWc3pxiuPu0VKREuLNKT06bOsAN7fWhOKF6JkMv2hLueSGpxTFA
+        ASRbif73/BGvOvcAO5EJd83wjW1h
+X-Google-Smtp-Source: APXvYqwJ+a86s+heHkK1HhGkllZIWeVy1ebTHF8Rvfu8Mx8SskthUAKh5juapodrki0bdDPCSESguw==
+X-Received: by 2002:a2e:a311:: with SMTP id l17mr44793518lje.214.1564062249353;
+        Thu, 25 Jul 2019 06:44:09 -0700 (PDT)
 Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id m5sm7431039lfa.47.2019.07.25.06.43.36
+        by smtp.googlemail.com with ESMTPSA id r5sm7554901lfn.89.2019.07.25.06.44.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 06:43:36 -0700 (PDT)
-Subject: Re: [PATCH v1 0/2] Tegra30+ CPU suspend-resume bug-fixes
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Thu, 25 Jul 2019 06:44:08 -0700 (PDT)
+Subject: Re: [PATCH v5] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190707230358.10672-1-digetx@gmail.com>
- <f81a974b-4e64-9b66-0399-519480f53c31@gmail.com>
- <20190725094010.GK12715@pdeschrijver-desktop.Nvidia.com>
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190705150519.18171-1-digetx@gmail.com>
+ <20190725102613.GT12733@vkoul-mobl.Dlink>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <03de1cbe-7f0d-a7f0-edca-ee3b6b8c8417@gmail.com>
-Date:   Thu, 25 Jul 2019 16:43:35 +0300
+Message-ID: <e8dc55b5-586c-02a5-ec30-67bf39c87dda@gmail.com>
+Date:   Thu, 25 Jul 2019 16:44:07 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190725094010.GK12715@pdeschrijver-desktop.Nvidia.com>
+In-Reply-To: <20190725102613.GT12733@vkoul-mobl.Dlink>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -80,32 +83,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-25.07.2019 12:40, Peter De Schrijver пишет:
-> On Tue, Jul 23, 2019 at 04:28:35AM +0300, Dmitry Osipenko wrote:
->> 08.07.2019 2:03, Dmitry Osipenko пишет:
->>> Hello,
->>>
->>> This small series addresses two suspend-resume bugs: one affects Tegra30+
->>> due to a typo in the code, other fixes CPU hang on Tegra30 specifically.
->>>
->>> Please review and apply, thanks!
->>>
->>> Dmitry Osipenko (2):
->>>   ARM: tegra: Fix FLOW_CTLR_HALT register clobbering by tegra_resume()
->>>   ARM: tegra: Use WFE for power-gating on Tegra30
->>>
->>>  arch/arm/mach-tegra/reset-handler.S |  6 +++---
->>>  arch/arm/mach-tegra/sleep-tegra30.S |  4 +++-
->>>  drivers/soc/tegra/flowctrl.c        | 19 +++++++++++++++++--
->>>  3 files changed, 23 insertions(+), 6 deletions(-)
->>>
->>
->> Hello Peter,
->>
->> We were talking about these fixes on the IRC not so long time ago, does
->> it look good to you? Care to give an ACK?
+25.07.2019 13:26, Vinod Koul пишет:
+> On 05-07-19, 18:05, Dmitry Osipenko wrote:
+>> Tegra's APB DMA engine updates words counter after each transferred burst
+>> of data, hence it can report transfer's residual with more fidelity which
+>> may be required in cases like audio playback. In particular this fixes
+>> audio stuttering during playback in a chromium web browser. The patch is
+>> based on the original work that was made by Ben Dooks and a patch from
+>> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
 > 
-> Acked-By Peter De Schrijver <pdeschrijver@nvidia.com>
+> Applied, thanks
 > 
 
 Thanks!
