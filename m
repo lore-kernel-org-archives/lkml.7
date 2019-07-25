@@ -2,132 +2,186 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D49C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5C6C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB93822BE8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8EC322BE8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:34:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="1Q6ULOyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfGYVdl (ORCPT
+        id S1726787AbfGYVep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 17:33:41 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:39940 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726524AbfGYVdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 17:33:41 -0400
-Received: from d57e23da.static.ziggozakelijk.nl ([213.126.35.218] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hqlMn-00029f-Ju; Thu, 25 Jul 2019 23:33:37 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] Revert "ARM: dts: rockchip: add startup delay to rk3288-veyron panel-regulators"
-Date:   Thu, 25 Jul 2019 23:33:36 +0200
-Message-ID: <3386344.sHu1S4gNag@phil>
-In-Reply-To: <CAD=FV=UhNfhVG422=huthFSptoV4FXED=xPtArO2KkyNb1U3Xw@mail.gmail.com>
-References: <20190620182056.61552-1-dianders@chromium.org> <CAD=FV=Wi21Emjg7CpCJfSRiKr_EisR20UO1tbPjAeJzdJNbSVw@mail.gmail.com> <CAD=FV=UhNfhVG422=huthFSptoV4FXED=xPtArO2KkyNb1U3Xw@mail.gmail.com>
+        Thu, 25 Jul 2019 17:34:45 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35430 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfGYVep (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 17:34:45 -0400
+Received: by mail-pf1-f195.google.com with SMTP id u14so23405807pfn.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 14:34:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BiYRj7E3Dy6V2t5m7sV8jSh+kJY2gTdBXaMARRXcvtk=;
+        b=1Q6ULOyUGM+dXIraIPHDKr1jbbBGlCFF5Wtucww7rlIh8qmfYsWyj1KuPu64Gxyscb
+         YPmC9wHQ72iksF1wY8Eckqd5wRPeSHMrImmA4fICv6x52bGcMcyAIaZUucKNHTYNt/tJ
+         TimAfRYm+v5T5W+DEVzXEA+sjFEiq4CG9oTFbqNR3k2f2xOM+Z4P0sxv/ou94ePbjYoa
+         xGPKMPghxQsbILuHftK99D/kC5LAIntF+tZWLoOj6M3FbFBWsyAceAywdln+aKqpZ1pm
+         CZWUSNVasPHJxemw1Plg0zhJ/qOzKAUDw/hp6S9/G/2Te3x77x006ZuPdhckbWmr3XKB
+         rw0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BiYRj7E3Dy6V2t5m7sV8jSh+kJY2gTdBXaMARRXcvtk=;
+        b=rWnd5rGrjtnWX5dnzjARFL1XQjpSDEzKbwRDqn4v+8XP4nkWQ5OqgDJ22N4EYc5gnx
+         8XDaCDzmFSbLX/AC/1n2LzhaArZ5yKjYi985PhH66Cj+iu4vlRA2ulUTDhLHcrpZrSyH
+         5NRIUCsoX8yiIcez6p4ZrKfvfr3iNsblJNWQjOF7bfmH2UNn7SwYG3KbrfKHK/Gg4g0s
+         wrFEstBWcbVNrT2Bb7sQmD/DKESnz9u1X3IT4aEd7pCtJydb5Z94AwHaXrRaf9BgpQTO
+         Zh3vTHFFfPlIRKpJvSnYQtT7KNc6F4hOEQNDV9MwaVVrFPDB+Vp9MZme4pibBsAYwXiA
+         LJ9Q==
+X-Gm-Message-State: APjAAAUymVzDbL6BKNioEobZeXSNCc3Bmg06OKAGXvs8Q1uguYRy+w1k
+        4CretzbfTZtA+ggL3afSusO/izAMdAlXWMjp56/23muM
+X-Google-Smtp-Source: APXvYqyCnT13NwDrcOJPEGqTyUcS5rkM5iWvbLxEEDHraXXR5SV9vV35zNL0WhOxkpVwu6FamU9JZP08/tMVNpqCQCk=
+X-Received: by 2002:a63:c203:: with SMTP id b3mr89265365pgd.450.1564090483811;
+ Thu, 25 Jul 2019 14:34:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <CAG=yYw=S197+2TzdPaiEaz-9MRuVtd+Q_L9W8GOf4jKwyppNjQ@mail.gmail.com>
+ <CAKwvOdmg2b2PMzuzNmutacFArBNagjtwG=_VZvKhb4okzSkdiA@mail.gmail.com>
+In-Reply-To: <CAKwvOdmg2b2PMzuzNmutacFArBNagjtwG=_VZvKhb4okzSkdiA@mail.gmail.com>
+From:   Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
+Date:   Fri, 26 Jul 2019 03:04:07 +0530
+Message-ID: <CAG=yYwkP34+uz2vVTdYyV8KJVj_Z26Mo3gUPqss6mk6tpFkWsw@mail.gmail.com>
+Subject: Re: BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
+To:     Nick Desaulniers <ndesaulniers@google.com>, axboe@kernel.dk
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        tobin@kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        linux-ide@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 3. Juli 2019, 06:54:58 CEST schrieb Doug Anderson:
-> Hi,
-> 
-> On Thu, Jun 20, 2019 at 1:31 PM Doug Anderson <dianders@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > On Thu, Jun 20, 2019 at 11:21 AM Douglas Anderson <dianders@chromium.org> wrote:
-> > >
-> > > This reverts commit 1f45e8c6d0161f044d679f242fe7514e2625af4a.
-> > >
-> > > This 100 ms mystery delay is not on downstream kernels and no longer
-> > > seems needed on upstream kernels either [1].  Presumably something in the
-> > > meantime has made things better.  A few possibilities for patches that
-> > > have landed in the meantime that could have made this better are
-> > > commit 3157694d8c7f ("pwm-backlight: Add support for PWM delays
-> > > proprieties."), commit 5fb5caee92ba ("pwm-backlight: Enable/disable
-> > > the PWM before/after LCD enable toggle."), and commit 6d5922dd0d60
-> > > ("ARM: dts: rockchip: set PWM delay backlight settings for Veyron")
-> > >
-> > > Let's revert and get our 100 ms back.
-> > >
-> > > [1] https://lkml.kernel.org/r/2226970.BAPq4liE1j@diego
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > ---
-> > >
-> > >  arch/arm/boot/dts/rk3288-veyron-jaq.dts    | 1 -
-> > >  arch/arm/boot/dts/rk3288-veyron-jerry.dts  | 1 -
-> > >  arch/arm/boot/dts/rk3288-veyron-minnie.dts | 1 -
-> > >  arch/arm/boot/dts/rk3288-veyron-speedy.dts | 1 -
-> > >  4 files changed, 4 deletions(-)
-> >
-> > Maybe wait before applying.  I've been running reboot tests now with
-> > this patch applied (among others) and with enough reboots I managed to
-> > see:
-> >
-> > [    5.682418] rockchip-dp ff970000.dp: eDP link training failed (-5)
-> >
-> > I'll see if I can confirm that it's this patch and why things are
-> > different compared to downstream.
-> 
-> OK, I finally got back to this and confirmed:
-> 
-> 1. The above error is actually somewhat harmless.  The eDP failure
-> will be retried automatically despite the scary message.  Specifically
-> see the loop in analogix_dp_bridge_enable().  I confirmed that after
-> seeing the error the screen came up just fine (I looked at the screen
-> in two actual instances but I believe it's pretty much always fine).
-> 
-> 2. I haven't seen any evidence that the eDP link training happens any
-> more often with this revert in place.  Specifically, I see the same
-> message in the logs (at what appears to be the same rate) with or
-> without this revert.
-> 
-> 3. Probably the link-training failures here are the same ones we
-> debugged for PSR for rk3399-gru-kevin that we fixed by making the eDP
-> PCLK rate exactly 24 MHz.  See <https://crrev.com/c/433393> for
-> details.  On rk3399-gru-kevin it was super important to resolve the
-> root cause of these errors because we had PSR (which meant we were
-> constantly taking to the eDP controller).  On rk3288-veyron devices
-> with no PSR the retry should be a fine solution and it doesn't seem
-> like a good idea to fully rejigger our clock plan to fix the root
-> cause.
-> 
-> 
-> NOTE: I saw _one_ case on rk3288-veyron-minnie where the screen looked
-> wonky at bootup and I saw the eDP link training error in the logs.
-> That's what originally made me cautious.  I haven't been able to
-> reproduce this, but presumably I just got super unlucky in that one
-> case.  I've left devices rebooting all day at work and haven't seen
-> the wonky screen since then.
-> 
-> 
-> Summary: I think this revert is just fine.
+hello Jens Axboe,
 
-it looks like by picking Matthias' cleanups of the veyron displays
-first I broke this patch. I guess we just need to remove the
-	startup-delay-us = <100000>;
-from the panel_regulator in the new rk3288-veyron-edp.dtsi ?
+Please can you take a look at related code and also patch from Kees ?
+
+On Tue, Jul 16, 2019 at 11:58 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Wed, Jul 10, 2019 at 10:44 AM Jeffrin Thalakkottoor
+> <jeffrin@rajagiritech.edu.in> wrote:
+> >
+> > hello all ,
+> >
+> > i encountered a KASAN bug related .    here are some related information...
+> >
+> >
+> > -------------------x-----------------------------x------------------
+> > [   30.037312] BUG: KASAN: global-out-of-bounds in
+> > ata_exec_internal_sg+0x50f/0xc70
+> > [   30.037447] Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
+> >
+> >
+> > [   30.039935] The buggy address belongs to the variable:
+> > [   30.040059]  cdb.48319+0x0/0x40
+> >
+> > [   30.040241] Memory state around the buggy address:
+> > [   30.040362]  ffffffff91f41e80: fa fa fa fa 00 00 fa fa fa fa fa fa
+> > 00 00 07 fa
+> > [   30.040498]  ffffffff91f41f00: fa fa fa fa 00 00 00 00 00 00 00 03
+> > fa fa fa fa
+> > [   30.040628] >ffffffff91f41f80: 00 04 fa fa fa fa fa fa 00 00 fa fa
+> > fa fa fa fa
+> > [   30.040755]                       ^
+> > [   30.040868]  ffffffff91f42000: 00 00 00 04 fa fa fa fa 00 fa fa fa
+> > fa fa fa fa
+> > [   30.041003]  ffffffff91f42080: 04 fa fa fa fa fa fa fa 00 04 fa fa
+> > fa fa fa fa
+> >
+> > ---------------------------x--------------------------x----------------
+> > $uname -a
+> > Linux debian 5.2.0-rc7+ #4 SMP Tue Jul 9 02:54:07 IST 2019 x86_64 GNU/Linux
+> > $
+> >
+> > --------------------x----------------------------x---------------------------
+> > (gdb) l *ata_exec_internal_sg+0x50f
+> > 0xffffffff81c7b59f is in ata_exec_internal_sg (./include/linux/string.h:359).
+>
+> So looks like ata_exec_internal_sg() is panic'ing when...
+>
+> > 354 if (q_size < size)
+> > 355 __read_overflow2();
+> > 356 }
+> > 357 if (p_size < size || q_size < size)
+> > 358 fortify_panic(__func__);
+> > 359 return __builtin_memcpy(p, q, size);
+> > 360 }
+> > 361
+> > 362 __FORTIFY_INLINE void *memmove(void *p, const void *q, __kernel_size_t size)
+>
+> ...a call to memmove is made? Without having looked at the source of
+> ata_exec_internal_sg(), it's possible that either through inlining, or
+> the compiler generating a memmove, that one of the arguments was not
+> quite right.  I suggest spending more time isolating where this is
+> coming from, if you can reliably reproduce, or CC whoever wrote or
+> maintains the code and ask them to take a look.
+>
+> The cited code looks like a check comparing that the pointer distance
+> is greater than the size of bytes being passed in.  I'd wager
+> someone's calling memmove with overlapping memory regions when they
+> really wanted memcpy.  Maybe a better question, is why was memmove
+> ever used; if there was some invariant that the memory regions
+> overlapped, why is that invariant no longer holding.
+>
+> Anyways, sorry I don't have more time to look into this.  Thank you
+> for the report.
+>
+> > 363 {
+> > (gdb)
+> > --------------------------x--------------------------
+> > GNU Make            4.2.1
+> > Binutils            2.31.1
+> > Util-linux          2.33.1
+> > Mount                2.33.1
+> > Linux C Library      2.28
+> > Dynamic linker (ldd) 2.28
+> > Procps              3.3.15
+> > Kbd                  2.0.4
+> > Console-tools        2.0.4
+> > Sh-utils            8.30
+> > Udev                241
+> > ---------------------x--------------------------------x
+> > Thread model: posix
+> > gcc version 8.3.0 (Debian 8.3.0-7)
+> > ---------------------x--------------------------------x
+> >
+> > Please ask if more information is needed.
+> >
+> > --
+> > software engineer
+> > rajagiri school of engineering and technology
+>
+>
+>
+> --
+> Thanks,
+> ~Nick Desaulniers
 
 
-Heiko
 
-
+-- 
+software engineer
+rajagiri school of engineering and technology
