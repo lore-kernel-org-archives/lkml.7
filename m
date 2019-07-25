@@ -2,101 +2,103 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD07C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 264C4C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12B552083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC5D62083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:21:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b2mAm1/h"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fZjQNeAl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389998AbfGYKRY (ORCPT
+        id S2390115AbfGYKVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 06:17:24 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:53689 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389964AbfGYKRY (ORCPT
+        Thu, 25 Jul 2019 06:21:00 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:7438 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389537AbfGYKVA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 06:17:24 -0400
-Received: by mail-qt1-f202.google.com with SMTP id h47so44084539qtc.20
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:17:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=rXX11AjyQuD935u7SKRoBuP7afkJ+xWzYBIlfHye+X8=;
-        b=b2mAm1/hRFViu1qAaAEr/is+f/ZvFExXE1GC8GPFxXM5Oh3xQjlD+bDi8P4DYJDIMH
-         1vCbJG3/ha9+WnyKjVvqkX4CRYI8hXsooTFW9JMRMkHZbt06bcaLV1UdlZ6WirW6Lrly
-         +lBEV0//qHx1iEW5x8Z1Xc/fmBOQp7ZxpGKH1JErRqEQrqEul4hMwSgldff37XrljF3s
-         QjKhnmtZvneDu4f831lT9fY06YbJe6KvxnmluQr2XvGOOUn0vZVsZcgpWkOW/Qrif/Nb
-         FXW4ToMoPhIX1OaMWTlFi/Sh/2hrwVK1MWV0uLePijkEJDJW4Pj3yidJj7WZLYZX4ICL
-         J75w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=rXX11AjyQuD935u7SKRoBuP7afkJ+xWzYBIlfHye+X8=;
-        b=MCgv7KTNMZAn8nPgQmeF0ejQMeYFxwhKpl1sg/TSRq++jDcHnMSbuiqbzZHX8yMPoi
-         2bSbTxNcul8whVtX3iYo00GyrHrqeJTBX5AYic2hsqrT4x+j7NHjbieiZnYEoC3KFKEu
-         qDEWIaZe/ig5Zx44FlX0HKbc3x01W9pCYlwKF6J2Fzwz8PDniHDed5JoTrtOFWsyw4vP
-         zEtjMeiViq2q6FQ8OGVUEYKEw2868FwZN9YL6Ew7SN8pABm1vUhMLLA7aBauH5FVzBUJ
-         bhqueherzb1th+eWiZDM80uwm6WyixPtvYzKngWAi4NNNwNXCizhw/gxvbr16EenVBnJ
-         lMRA==
-X-Gm-Message-State: APjAAAXlkZG5UBmHfba1x3Cyq/3Cws+H3OCs5jQDW1M1zqYuAKL8PFUS
-        3jFHzGs+Ri7Cgt2hp97GC/9OTwDl5FwP9AhoDi6vpWzNrqtxaGM55t6D6aCUBf5P/o2KyyxqZaR
-        +8CX87+A7y2vgFELg6tRA8f44xDLv1caIGcVSp9VPOToAJsmXwgTWBX5YvScynzTVEzidk0jQ/n
-        Y=
-X-Google-Smtp-Source: APXvYqxBkUx3OB9AnodCJLYXKAqemprxCeJzpAG2HhDupTNgGvR5sdJbJe0flZps2HFHPb8qf3AnWARdOAwZCA==
-X-Received: by 2002:a05:6214:1c5:: with SMTP id c5mr36521290qvt.97.1564049843229;
- Thu, 25 Jul 2019 03:17:23 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 11:17:04 +0100
-Message-Id: <20190725101705.179924-1-maennich@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
-Subject: [PATCH] coccinelle: api/atomic_as_refcounter: add SPDX License Identifier
-From:   Matthias Maennich <maennich@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org,
-        Matthias Maennich <maennich@google.com>,
-        linux-spdx@vger.kernel.org,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>, cocci@systeme.lip6.fr
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 25 Jul 2019 06:21:00 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6PAGBi3023124;
+        Thu, 25 Jul 2019 12:20:37 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=PuANcSYUEr2h1YiccGZF5KbI11ZnNfnGmreQcfFcH0U=;
+ b=fZjQNeAlzyROf+NRDgI5o941gWC5rqhiFUKF7WOkjv6ekb1mK3ZzaWnd1/9gHoh6QATr
+ Uv3RD3OZRTek5QmSeNEAXGDJtC8oKhB7JKmA5SlnhyQ3OSRsQzohm+xvNqnI27a5x7pR
+ CRcUDQNabZA9KPQIx772g8fVoy+K3aRz0j3WlxKo7ISAZEae0MeZOilBTh2007t1SRZ9
+ ddZ/1ThE/uKHHQv+y3tAwp7KLJTHXwtYiz0LXYsIFlv6eLK9dg5bZ5faKgjOXT3DdvYW
+ 9uifGSCOLaaal21dfTH3iSEA2XMbavAMEBTcEKXfvfn7ZKQld7PXHmt3pIUJBnKb4HT6 Fw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2tx60433ce-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 25 Jul 2019 12:20:37 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6B4223A;
+        Thu, 25 Jul 2019 10:20:36 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 31C672945;
+        Thu, 25 Jul 2019 10:20:36 +0000 (GMT)
+Received: from lmecxl0912.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 25 Jul
+ 2019 12:20:35 +0200
+Subject: Re: [PATCH 0/4] ARM: dts: stm32: enable FMC2 NAND controller on
+ stm32mp157c-ev1
+To:     Christophe Kerello <christophe.kerello@st.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <linux@armlinux.org.uk>, <olof@lixom.net>, <arnd@arndb.de>
+CC:     <mcoquelin.stm32@gmail.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1561128590-14621-1-git-send-email-christophe.kerello@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <cc4c56ca-c3cb-fc8c-e223-4b98754d3592@st.com>
+Date:   Thu, 25 Jul 2019 12:20:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1561128590-14621-1-git-send-email-christophe.kerello@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-25_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the missing GPLv2 SPDX license identifier.
+Hi Christophe
 
-It appears this single file was missing from 7f904d7e1f3e ("treewide:
-Replace GPLv2 boilerplate/reference with SPDX - rule 505"), which
-addressed all other files in scripts/coccinelle. Hence I added
-GPL-2.0-only consitently with the mentioned patch.
+On 6/21/19 4:49 PM, Christophe Kerello wrote:
+> This patchset adds and enables FMC2 NAND controller used on
+> stm32mp157c-ev1.
+> 
+> Christophe Kerello (4):
+>    ARM: dts: stm32: add FMC2 NAND controller support on stm32mp157c
+>    ARM: dts: stm32: add FMC2 NAND controller pins muxing on
+>      stm32mp157c-ev1
+>    ARM: dts: stm32: enable FMC2 NAND controller on stm32mp157c-ev1
+>    ARM: multi_v7_defconfig: add FMC2 NAND  controller support
+> 
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 44 +++++++++++++++++++++++++++++++
+>   arch/arm/boot/dts/stm32mp157c-ev1.dts     | 16 +++++++++++
+>   arch/arm/boot/dts/stm32mp157c.dtsi        | 19 +++++++++++++
+>   arch/arm/configs/multi_v7_defconfig       |  1 +
+>   4 files changed, 80 insertions(+)
+> 
 
-Cc: linux-spdx@vger.kernel.org
-Cc: Elena Reshetova <elena.reshetova@intel.com>
-Signed-off-by: Matthias Maennich <maennich@google.com>
----
- scripts/coccinelle/api/atomic_as_refcounter.cocci | 1 +
- 1 file changed, 1 insertion(+)
+Series applied on stm32-next.
+Note, I changed capital letter in patch1 directly (As I responded late).
 
-diff --git a/scripts/coccinelle/api/atomic_as_refcounter.cocci b/scripts/coccinelle/api/atomic_as_refcounter.cocci
-index 988120e0fd67..0f78d94abc35 100644
---- a/scripts/coccinelle/api/atomic_as_refcounter.cocci
-+++ b/scripts/coccinelle/api/atomic_as_refcounter.cocci
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0-only
- // Check if refcount_t type and API should be used
- // instead of atomic_t type when dealing with refcounters
- //
--- 
-2.22.0.657.g960e92d24f-goog
-
+Regards
+Alex
