@@ -2,106 +2,100 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4DBC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09877C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7969218DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4EE1218DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:42:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="uAZM9BM/"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="zVmqmbUB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfGYUm2 (ORCPT
+        id S1726804AbfGYUmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 16:42:28 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:34074 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbfGYUm1 (ORCPT
+        Thu, 25 Jul 2019 16:42:44 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:33919 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfGYUmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 16:42:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1564087345; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wd/8RY8QtDpKhjy989F9knR8y6y/xiYlDP4O6NQdYHE=;
-        b=uAZM9BM/qI0q0R0385qtFObwkPKHfE1FfrOEybVSU6F4cSubWFYk4SzfU+gQ3oXlhNKr95
-        GvmdIoBuDI3yn+PA1xHVNwsi/O307s4J6uyrgsXjWp8Rhy4uGzPsB2TeheIxAeR4Y5KaIv
-        GfwfboMFslZNsooUKr5k23NnF0HUVRo=
-Date:   Thu, 25 Jul 2019 16:42:11 -0400
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] MIPS: Add support for partial kernel mode on Xburst CPUs
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me
-Message-Id: <1564087331.1848.1@crapouillou.net>
-In-Reply-To: <20190725165930.yvlvmavcgqocl3nn@pburton-laptop>
-References: <20190724234654.16555-1-paul@crapouillou.net>
-        <20190725165930.yvlvmavcgqocl3nn@pburton-laptop>
+        Thu, 25 Jul 2019 16:42:44 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A080C8066C;
+        Fri, 26 Jul 2019 08:42:41 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1564087361;
+        bh=aT/iyaWbpw8kgdm9cLKA0xhryNej3v5jj3UD0yvK8Zs=;
+        h=From:To:Cc:Subject:Date;
+        b=zVmqmbUBUmMdOy3ZeYMaa5gK2nzPVwu7zg8u+2xXdfG4sQ367aks3wOC4ocKXn6Hn
+         DUIWdgzT1OhEGBV9DSYeaBtPpsl1GR25QER382fo74dckD38zSSVX2Did0M9TQBHNK
+         H8ieh9tJiK1J65CGEIRqtl/K9M/UVyrFdCmxMoXJFDcXx1gUqODVAeHtmFnpAktu6R
+         gP1OfGyicoEtrScYmxAyVkTPsb8+dRN3IJXdDwFCg5nL2A5IIww6dSH1KiDZoQBWTO
+         E2evh/NIP7yrCyiriW62EEqeVKVe5eHa5igOv4RtuUYKEJ5MGSbkhlMxvp+MndN9J+
+         xew0I0Ykxixtg==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d3a14410000>; Fri, 26 Jul 2019 08:42:41 +1200
+Received: from brodieg-dl.ws.atlnz.lc (brodieg-dl.ws.atlnz.lc [10.33.22.16])
+        by smtp (Postfix) with ESMTP id 373E413EECE;
+        Fri, 26 Jul 2019 08:42:43 +1200 (NZST)
+Received: by brodieg-dl.ws.atlnz.lc (Postfix, from userid 1718)
+        id 277AF502CCC; Fri, 26 Jul 2019 08:42:41 +1200 (NZST)
+From:   Brodie Greenfield <brodie.greenfield@alliedtelesis.co.nz>
+To:     davem@davemloft.net, stephen@networkplumber.org,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, chris.packham@alliedtelesis.co.nz,
+        luuk.paulussen@alliedtelesis.co.nz,
+        Brodie Greenfield <brodie.greenfield@alliedtelesis.co.nz>
+Subject: [PATCH 0/2] Make ipmr queue length configurable
+Date:   Fri, 26 Jul 2019 08:42:28 +1200
+Message-Id: <20190725204230.12229-1-brodie.greenfield@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We want to have some more space in our queue for processing incoming
+multicast packets, so we can process more of them without dropping
+them prematurely. It is useful to be able to increase this limit on
+higher-spec platforms that can handle more items.
 
+For the particular use case here at Allied Telesis, we have linux
+running on our switches and routers, with support for the number of
+multicast groups being increased. Basically, this queue length affects
+the time taken to fully learn all of the multicast streams.=20
 
-Le jeu. 25 juil. 2019 =E0 12:59, Paul Burton <paul.burton@mips.com> a=20
-=E9crit :
-> Hi Paul,
->=20
-> On Wed, Jul 24, 2019 at 07:46:54PM -0400, Paul Cercueil wrote:
->>  Support partial kernel mode of Xburst CPUs found in Ingenic SoCs.
->>  Partial kernel mode means the userspace applications have access to
->>  the TCSM0 banks of the VPU,
->=20
-> So far so (reasonably) good :)
->=20
->>  and can execute cache instructions.
->=20
-> Aaaah! Scary!
->=20
-> Does this allow *all* cache instructions? If so that's a big security=20
-> &
-> stability hole - if userland can invalidate kernel data or data from
-> other programs then it can create all sorts of chaos.
+Changes in v3:
+ - Corrected a v4 to v6 typo.
 
-It looked a bit fishy to me as well, but I couldn't point a finger to
-the exact problem. I don't exactly know what it allows and what it
-doesn't.
+Changes in v2:
+ - Tidy up a few unnecessary bits of code.
+ - Put the sysctl inside ip multicast ifdef.
+ - Included the IPv6 version.
 
-> Also do you know which Ingenic SoCs this is available on? I see it
-> documented in the JZ4780 Programming Manual, but Config7 bit 6 is=20
-> shown
-> as reserved in my copy of the XBurst1 CPU Core Programming Manual.
+Brodie Greenfield (2):
+  ipmr: Make cache queue length configurable
+  ip6mr: Make cache queue length configurable
 
-I have no idea. I assume all SoCs with a VPU. I know the JZ4770 has it.
+ Documentation/networking/ip-sysctl.txt | 16 ++++++++++++++++
+ include/net/netns/ipv4.h               |  1 +
+ include/net/netns/ipv6.h               |  1 +
+ net/ipv4/af_inet.c                     |  1 +
+ net/ipv4/ipmr.c                        |  4 +++-
+ net/ipv4/sysctl_net_ipv4.c             |  7 +++++++
+ net/ipv6/af_inet6.c                    |  1 +
+ net/ipv6/ip6mr.c                       |  4 +++-
+ net/ipv6/sysctl_net_ipv6.c             |  7 +++++++
+ 9 files changed, 40 insertions(+), 2 deletions(-)
 
-> I notice the JZ4780 documentation says it allows access "including=20
-> TCSM,
-> CACHE instructions" which is scary too since it doesn't say that's=20
-> *all*
-> it allows access to. Though just cache instructions by themselves are
-> enough to be game over for any notion of security as mentioned above.
->=20
-> What is it you want to do with this? I'm wondering if we could achieve
-> your goal is in a safer way.
-
-The plan was to be able to communicate with the firmware running on the
-VPU without going through expensive context switches all the time.
-
-I guess we could mmap() the TCSM memories, but we'd need to bypass the
-data cache (is there a flag for that?).
-
-> Thanks,
->     Paul
-
-=
+--=20
+2.21.0
 
