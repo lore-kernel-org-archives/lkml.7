@@ -2,132 +2,71 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B364EC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A06BC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938162238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C5E229F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388765AbfGYO5t (ORCPT
+        id S2388771AbfGYO62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:57:49 -0400
-Received: from mga17.intel.com ([192.55.52.151]:22392 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387834AbfGYO5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:57:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 07:57:48 -0700
-X-IronPort-AV: E=Sophos;i="5.64,307,1559545200"; 
-   d="scan'208";a="164199993"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 07:57:48 -0700
-Message-ID: <d9357c2b6ed9e1499703a562199cc28d1b57383e.camel@linux.intel.com>
-Subject: Re: [PATCH v2 QEMU] virtio-balloon: Provide a interface for "bubble
- hinting"
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org,
-        david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
-        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com
-Date:   Thu, 25 Jul 2019 07:57:47 -0700
-In-Reply-To: <bbfe0fbb-dd23-ed5c-01b3-493ae804942f@redhat.com>
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
-         <20190724171050.7888.62199.stgit@localhost.localdomain>
-         <20190724150224-mutt-send-email-mst@kernel.org>
-         <6218af96d7d55935f2cf607d47680edc9b90816e.camel@linux.intel.com>
-         <bbfe0fbb-dd23-ed5c-01b3-493ae804942f@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 25 Jul 2019 10:58:28 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2757 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387834AbfGYO61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 10:58:27 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4B80EB1E2C5037A78C66;
+        Thu, 25 Jul 2019 22:58:22 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 25 Jul 2019
+ 22:58:11 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <hdegoede@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] HID: logitech-dj: Fix check of logi_dj_recv_query_paired_devices()
+Date:   Thu, 25 Jul 2019 22:57:19 +0800
+Message-ID: <20190725145719.8344-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-07-25 at 07:57 -0400, Nitesh Narayan Lal wrote:
-> On 7/24/19 4:18 PM, Alexander Duyck wrote:
-> > On Wed, 2019-07-24 at 15:02 -0400, Michael S. Tsirkin wrote:
-> > > On Wed, Jul 24, 2019 at 10:12:10AM -0700, Alexander Duyck wrote:
-> > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > > > 
-> > > > Add support for what I am referring to as "bubble hinting". Basically the
-> > > > idea is to function very similar to how the balloon works in that we
-> > > > basically end up madvising the page as not being used. However we don't
-> > > > really need to bother with any deflate type logic since the page will be
-> > > > faulted back into the guest when it is read or written to.
-> > > > 
-> > > > This is meant to be a simplification of the existing balloon interface
-> > > > to use for providing hints to what memory needs to be freed. I am assuming
-> > > > this is safe to do as the deflate logic does not actually appear to do very
-> > > > much other than tracking what subpages have been released and which ones
-> > > > haven't.
-> > > > 
-> > > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > > > ---
-> > > >  hw/virtio/virtio-balloon.c                      |   40 +++++++++++++++++++++++
-> > > >  include/hw/virtio/virtio-balloon.h              |    2 +
-> > > >  include/standard-headers/linux/virtio_balloon.h |    1 +
-> > > >  3 files changed, 42 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
-> > > > index 2112874055fb..70c0004c0f88 100644
-> > > > --- a/hw/virtio/virtio-balloon.c
-> > > > +++ b/hw/virtio/virtio-balloon.c
-> > > > @@ -328,6 +328,39 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
-> > > >      balloon_stats_change_timer(s, 0);
-> > > >  }
-> > > >  
-> > > > +static void virtio_bubble_handle_output(VirtIODevice *vdev, VirtQueue *vq)
-> > > > +{
-> > > > +    VirtQueueElement *elem;
-> > > > +
-> > > > +    while ((elem = virtqueue_pop(vq, sizeof(VirtQueueElement)))) {
-> > > > +    	unsigned int i;
-> > > > +
-> > > > +        for (i = 0; i < elem->in_num; i++) {
-> > > > +            void *addr = elem->in_sg[i].iov_base;
-> > > > +            size_t size = elem->in_sg[i].iov_len;
-> > > > +            ram_addr_t ram_offset;
-> > > > +            size_t rb_page_size;
-> > > > +            RAMBlock *rb;
-> > > > +
-> > > > +            if (qemu_balloon_is_inhibited())
-> > > > +                continue;
-> > > > +
-> > > > +            rb = qemu_ram_block_from_host(addr, false, &ram_offset);
-> > > > +            rb_page_size = qemu_ram_pagesize(rb);
-> > > > +
-> > > > +            /* For now we will simply ignore unaligned memory regions */
-> > > > +            if ((ram_offset | size) & (rb_page_size - 1))
-> > > > +                continue;
-> > > > +
-> > > > +            ram_block_discard_range(rb, ram_offset, size);
-> > > I suspect this needs to do like the migration type of
-> > > hinting and get disabled if page poisoning is in effect.
-> > > Right?
-> > Shouldn't something like that end up getting handled via
-> > qemu_balloon_is_inhibited, or did I miss something there? I assumed cases
-> > like that would end up setting qemu_balloon_is_inhibited to true, if that
-> > isn't the case then I could add some additional conditions. I would do it
-> > in about the same spot as the qemu_balloon_is_inhibited check.
-> 
-> Just wondering if you have tried running these patches in an environment with
-> directly assigned devices? Ideally, I would expect qemu_balloon_is_inhibited()
-> to take care of it.
+In delayedwork_callback(), logi_dj_recv_query_paired_devices
+may return positive value while success now, so check it
+correctly.
 
-Yes, I have run that as a test to actually benchmark the effect of things
-without the madvise bits since it essentially disables the hinting in the
-hypervisor but not the guest.
+Fixes: dbcbabf7da92 ("HID: logitech-dj: fix return value of logi_dj_recv_query_hidpp_devices")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/hid/hid-logitech-dj.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
+index 8cdf373..bf6b289 100644
+--- a/drivers/hid/hid-logitech-dj.c
++++ b/drivers/hid/hid-logitech-dj.c
+@@ -793,7 +793,7 @@ static void delayedwork_callback(struct work_struct *work)
+ 		break;
+ 	case WORKITEM_TYPE_UNKNOWN:
+ 		retval = logi_dj_recv_query_paired_devices(djrcv_dev);
+-		if (retval) {
++		if (retval < 0) {
+ 			hid_err(djrcv_dev->hidpp, "%s: logi_dj_recv_query_paired_devices error: %d\n",
+ 				__func__, retval);
+ 		}
+-- 
+2.7.4
+
 
