@@ -3,170 +3,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D89C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5721C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7D92238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C8B22238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:00:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Q4wed7lj"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="TMx+XxKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389700AbfGYQAT (ORCPT
+        id S2389730AbfGYQAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:00:19 -0400
-Received: from mail-eopbgr820080.outbound.protection.outlook.com ([40.107.82.80]:16410
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387874AbfGYQAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:00:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RPAPTLW3KsxCML8bJ/61+NI4uSolhxSEwoTb/+GQUZSicHBUcGia1DFGDGN4O9HZVmLBDI9ebhD5ASGs4aPzscbxSGjLF/ZNGi6HqBvjLVCRXQXjpGvFfr3hCBOYe3M40Cv86qCcdWvFEicSrCNNErvqmcvG0fz3e2XqV+RtSMYDzf2owma3K0LvFWNMD0FQwPUqTrap8J0QzgHAw3NeisKddC90sLCh02sh8Dmgn2Uf+s/h3YK2MXKY5BMzcYRv1QCT7CVCk+Rb9HyDtWYu9+643sJ6etNNBElGM7coJci47C9b5Lb2MPjRCvJI8nybEbQPD9aJpKklOFj5eeJ6KQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tRUWLM56PlUrnuq+fb7CL2nxlt0rTOFxee7IjUxeNb8=;
- b=hgmB+K+lDG3v1QW3fE87b9pFsLHRHksBA+Ia6coG8TarsSCxdhTnRFdQQUfxwLhwDeuiQBehyyEybJfqawwqzaUWte4HZ5L7/5ylegRGlnSMj5nXu1YHA6W+45l1NDPVAJbTWoA0VQSlm+t6GF6Dl9JeFzjL1AeISIJhUBy2jJecR8oClf+ocE/LpAPs6wYowFSukjK2qq2qi4dSKpsTtkqXuGi1fetH+YEnyQ9IEYiiuCviDIRWF1xE09qpjLov2/Ta2bSs9IIrzPDq6+4lfQUe+RYnraeEHw1n2wS6tX6//LQ+iIG6kYcuI0xTfUbOS76oahUHv53A4And6Z9/Iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
- header.d=amd.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tRUWLM56PlUrnuq+fb7CL2nxlt0rTOFxee7IjUxeNb8=;
- b=Q4wed7ljdc6VBGfe134bdgbvreLG4z0znox3JtFNbjw7xccg2GmHKCohTZN9J4YfJ1UgOIosW9hWPjwI2SRX5TA23ujZIZ6XPWbmJwfijHSxABK+e1kAOjWY7oOdyHyZt5yAazVeLLOQgJwDJh4+xwfJ01PFf8pNbOHeQG6Sko4=
-Received: from BYAPR12MB2853.namprd12.prod.outlook.com (20.179.90.150) by
- BYAPR12MB2790.namprd12.prod.outlook.com (20.177.126.79) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.13; Thu, 25 Jul 2019 16:00:10 +0000
-Received: from BYAPR12MB2853.namprd12.prod.outlook.com
- ([fe80::dd9c:e1c8:face:eaa9]) by BYAPR12MB2853.namprd12.prod.outlook.com
- ([fe80::dd9c:e1c8:face:eaa9%6]) with mapi id 15.20.2115.005; Thu, 25 Jul 2019
- 16:00:10 +0000
-From:   "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>
-To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        Rex Zhu <rex.zhu@amd.com>, "Quan, Evan" <Evan.Quan@amd.com>
-CC:     Nathan Chancellor <natechancellor@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH 5/7] drm/amd/display: Use proper enum conversion functions
-Thread-Topic: [PATCH 5/7] drm/amd/display: Use proper enum conversion
- functions
-Thread-Index: AQHVMiy9/HNyhezL/UaoUkOqlvXBhabRXHKAgApDQ4A=
-Date:   Thu, 25 Jul 2019 16:00:10 +0000
-Message-ID: <5f0e8332-50ae-cc9c-1a12-5a097c51297d@amd.com>
-References: <20190704055217.45860-1-natechancellor@gmail.com>
- <20190704055217.45860-6-natechancellor@gmail.com>
- <20190719031647.GA84028@archlinux-threadripper>
-In-Reply-To: <20190719031647.GA84028@archlinux-threadripper>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YTOPR0101CA0063.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:14::40) To BYAPR12MB2853.namprd12.prod.outlook.com
- (2603:10b6:a03:12c::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Sunpeng.Li@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.55.250]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 784c5283-70bb-4892-f97b-08d711192be3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR12MB2790;
-x-ms-traffictypediagnostic: BYAPR12MB2790:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <BYAPR12MB279071942B712369CC870DA682C10@BYAPR12MB2790.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:741;
-x-forefront-prvs: 0109D382B0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(39860400002)(366004)(346002)(396003)(189003)(199004)(25786009)(6246003)(6512007)(2906002)(316002)(36756003)(6306002)(53936002)(71190400001)(52116002)(71200400001)(229853002)(4326008)(6486002)(31686004)(66946007)(66476007)(66556008)(64756008)(66446008)(6636002)(81156014)(81166006)(305945005)(6116002)(8676002)(76176011)(66066001)(7736002)(31696002)(53546011)(102836004)(8936002)(3846002)(99286004)(86362001)(6506007)(386003)(14444005)(68736007)(478600001)(54906003)(476003)(486006)(11346002)(446003)(5660300002)(14454004)(6436002)(966005)(186003)(110136005)(26005)(256004)(2616005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB2790;H:BYAPR12MB2853.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: yRYj4CcKsZufXiKSZHSAI9XpmE+MXkJiVNm9eR1ySmR7zZQB8ObG1gRLtnBq9w9Zkt2PJcm6qH/ESue6sSkUr964Wj739yfP26CgxOsfsdTLuq6tWNuLq8BZkyga283E4fA2OQnC2/cyEwl6f0R5To+2G2kRbqwvbu3aqIOBL88giYB2npilHgSJH/F9zZ6+eM73rwjtbzSeOfZACfDjCB5B9XunGIvo77ykkmrZZl1t6MMkzWeEVOytgNNaQNKODqF4hKg9+x/vliyjetghlnn2F8PsefR0SkNsuFJTr0pXs002gNX8Pj5lX8n1XpjVplh+wXtYiU+3yrbQzLqTkcJN7JtF0rAWg1pK6EgA8AxO3Rod2s3Z3lXoDhYl5DKjmL9p6yzSI1myNEZ2u20mDd6bZ1pTzDp8tqZaaHELGSk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3C344A9FB9ABC84D8EE0493DC20FF21F@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 25 Jul 2019 12:00:23 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:54399 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387874AbfGYQAW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 12:00:22 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PFxk5k1070359
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 08:59:46 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PFxk5k1070359
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564070386;
+        bh=jhfU9wj6Hs/ErzJsIso1O+0GflAsk+BWmP6CZX4GQmE=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=TMx+XxKtmbkxfkoi7MXjspwhRDjwoaGrJUO8b1PM3bF7hBf38RTxv8sv+wmzxMTs3
+         Z9BoQWahH8MH0kJHF4845lAXWpFgcC41SudAHldUrKs+NJICfo9CWXmKMzuK9YLto0
+         w7G+9HcJZ5gPsO/hITwQAjdZOd4zju89oHH0q9Vqc9k3EVku2DBExnG9hxE/rH+zNa
+         s1crhu+fulN5JkpvQS4HKDgjZK45GDzD9MRWp9tYS9w2o12s8xUQj137Sf7y0X5d59
+         5pEWGKRTSqwJ7OYrruMcNgXDhNiFgqbGvm0nrAWnvKASNrcQJR5WCzpF/IsQJd5oG2
+         EzfPkc79n6AKw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PFxj9A1070352;
+        Thu, 25 Jul 2019 08:59:45 -0700
+Date:   Thu, 25 Jul 2019 08:59:45 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Waiman Long <tipbot@zytor.com>
+Message-ID: <tip-78134300579a45f527ca173ec8fdb4701b69f16e@git.kernel.org>
+Cc:     tglx@linutronix.de, will.deacon@arm.com,
+        tim.c.chen@linux.intel.com, huang.ying.caritas@gmail.com,
+        linux-kernel@vger.kernel.org, lhenriques@suse.com, hpa@zytor.com,
+        longman@redhat.com, jlayton@kernel.org, bp@alien8.de,
+        peterz@infradead.org, mingo@kernel.org, dave@stgolabs.net,
+        torvalds@linux-foundation.org
+Reply-To: peterz@infradead.org, jlayton@kernel.org, bp@alien8.de,
+          longman@redhat.com, lhenriques@suse.com, hpa@zytor.com,
+          huang.ying.caritas@gmail.com, linux-kernel@vger.kernel.org,
+          tim.c.chen@linux.intel.com, will.deacon@arm.com,
+          tglx@linutronix.de, torvalds@linux-foundation.org,
+          mingo@kernel.org, dave@stgolabs.net
+In-Reply-To: <81e82d5b-5074-77e8-7204-28479bbe0df0@redhat.com>
+References: <81e82d5b-5074-77e8-7204-28479bbe0df0@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:locking/core] locking/rwsem: Don't call owner_on_cpu() on
+ read-owner
+Git-Commit-ID: 78134300579a45f527ca173ec8fdb4701b69f16e
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 784c5283-70bb-4892-f97b-08d711192be3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2019 16:00:10.7158
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sunli1@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2790
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDIwMTktMDctMTggMTE6MTYgcC5tLiwgTmF0aGFuIENoYW5jZWxsb3Igd3JvdGU6DQo+
-IE9uIFdlZCwgSnVsIDAzLCAyMDE5IGF0IDEwOjUyOjE2UE0gLTA3MDAsIE5hdGhhbiBDaGFuY2Vs
-bG9yIHdyb3RlOg0KPj4gY2xhbmcgd2FybnM6DQo+Pg0KPj4gZHJpdmVycy9ncHUvZHJtL2FtZC9h
-bWRncHUvLi4vZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1X2RtX3BwX3NtdS5jOjMzNjo4Og0KPj4g
-d2FybmluZzogaW1wbGljaXQgY29udmVyc2lvbiBmcm9tIGVudW1lcmF0aW9uIHR5cGUgJ2VudW0g
-c211X2Nsa190eXBlJw0KPj4gdG8gZGlmZmVyZW50IGVudW1lcmF0aW9uIHR5cGUgJ2VudW0gYW1k
-X3BwX2Nsb2NrX3R5cGUnDQo+PiBbLVdlbnVtLWNvbnZlcnNpb25dDQo+PiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgZGNfdG9fc211X2Nsb2NrX3R5cGUoY2xrX3R5cGUp
-LA0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fn5+
-fn5+fn5+fn5+fn5+fn5+fn5+fn4NCj4+IGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1Ly4uL2Rp
-c3BsYXkvYW1kZ3B1X2RtL2FtZGdwdV9kbV9wcF9zbXUuYzo0MjE6MTQ6DQo+PiB3YXJuaW5nOiBp
-bXBsaWNpdCBjb252ZXJzaW9uIGZyb20gZW51bWVyYXRpb24gdHlwZSAnZW51bQ0KPj4gYW1kX3Bw
-X2Nsb2NrX3R5cGUnIHRvIGRpZmZlcmVudCBlbnVtZXJhdGlvbiB0eXBlICdlbnVtIHNtdV9jbGtf
-dHlwZScNCj4+IFstV2VudW0tY29udmVyc2lvbl0NCj4+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBkY190b19wcF9jbG9ja190eXBlKGNsa190eXBlKSwNCj4+ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBefn5+fn5+fn5+fn5+fn5+fn5+fn5+
-fn5+fn5+fn4NCj4+DQo+PiBUaGVyZSBhcmUgZnVuY3Rpb25zIHRvIHByb3Blcmx5IGNvbnZlcnQg
-YmV0d2VlbiBhbGwgb2YgdGhlc2UgdHlwZXMsIHVzZQ0KPj4gdGhlbSBzbyB0aGVyZSBhcmUgbm8g
-bG9uZ2VyIGFueSB3YXJuaW5ncy4NCj4+DQo+PiBGaXhlczogYTQzOTEzZWE1MGE1ICgiZHJtL2Ft
-ZC9wb3dlcnBsYXk6IGFkZCBmdW5jdGlvbiBnZXRfY2xvY2tfYnlfdHlwZV93aXRoX2xhdGVuY3kg
-Zm9yIG5hdmkxMCIpDQo+PiBGaXhlczogZTVlNGUyMjM5MWMyICgiZHJtL2FtZC9wb3dlcnBsYXk6
-IGFkZCBpbnRlcmZhY2UgdG8gZ2V0IGNsb2NrIGJ5IHR5cGUgd2l0aCBsYXRlbmN5IGZvciBkaXNw
-bGF5ICh2MikiKQ0KPj4gTGluazogaHR0cHM6Ly9naXRodWIuY29tL0NsYW5nQnVpbHRMaW51eC9s
-aW51eC9pc3N1ZXMvNTg2DQo+PiBTaWduZWQtb2ZmLWJ5OiBOYXRoYW4gQ2hhbmNlbGxvciA8bmF0
-ZWNoYW5jZWxsb3JAZ21haWwuY29tPg0KPj4gLS0tDQo+PiAgZHJpdmVycy9ncHUvZHJtL2FtZC9k
-aXNwbGF5L2FtZGdwdV9kbS9hbWRncHVfZG1fcHBfc211LmMgfCA0ICsrLS0NCj4+ICAxIGZpbGUg
-Y2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvYW1kZ3B1X2RtL2FtZGdwdV9kbV9wcF9z
-bXUuYyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1X2RtX3Bw
-X3NtdS5jDQo+PiBpbmRleCBlYWMwOWJmZTNiZTIuLjBmNzZjZmZmOWQ5YiAxMDA2NDQNCj4+IC0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1X2RtX3BwX3Nt
-dS5jDQo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvYW1kZ3B1X2RtL2FtZGdw
-dV9kbV9wcF9zbXUuYw0KPj4gQEAgLTMzMyw3ICszMzMsNyBAQCBib29sIGRtX3BwX2dldF9jbG9j
-a19sZXZlbHNfYnlfdHlwZSgNCj4+ICAJCX0NCj4+ICAJfSBlbHNlIGlmIChhZGV2LT5zbXUuZnVu
-Y3MgJiYgYWRldi0+c211LmZ1bmNzLT5nZXRfY2xvY2tfYnlfdHlwZSkgew0KPj4gIAkJaWYgKHNt
-dV9nZXRfY2xvY2tfYnlfdHlwZSgmYWRldi0+c211LA0KPj4gLQkJCQkJICBkY190b19zbXVfY2xv
-Y2tfdHlwZShjbGtfdHlwZSksDQo+PiArCQkJCQkgIGRjX3RvX3BwX2Nsb2NrX3R5cGUoY2xrX3R5
-cGUpLA0KDQpzbXVfZnVuY3MtPmdldF9jbG9ja19ieV90eXBlIGRvZXNuJ3Qgc2VlbSB0byBiZSBo
-b29rZWQgdXAgYW55d2hlcmUsDQpzbyB0aGlzIGxvb2tzIHRvIGJlIHRoZSBtb3N0IGNvcnJlY3Qu
-DQoNCkFsdGhvdWdoIGl0IG1ha2VzIG1vcmUgc2Vuc2UgdG8gdXNlIHNtdV9jbGtfdHlwZXMgaGVy
-ZSByYXRoZXIgdGhhbg0KYW1kX3BwX2Nsb2NrX3R5cGUgLSBhbnkgcmVhc29uIHdoeSB0aGlzIGlz
-bid0IHRoZSBjYXNlPw0KDQo+PiAgCQkJCQkgICZwcF9jbGtzKSkgew0KPj4gIAkJCWdldF9kZWZh
-dWx0X2Nsb2NrX2xldmVscyhjbGtfdHlwZSwgZGNfY2xrcyk7DQo+PiAgCQkJcmV0dXJuIHRydWU7
-DQo+PiBAQCAtNDE4LDcgKzQxOCw3IEBAIGJvb2wgZG1fcHBfZ2V0X2Nsb2NrX2xldmVsc19ieV90
-eXBlX3dpdGhfbGF0ZW5jeSgNCj4+ICAJCQlyZXR1cm4gZmFsc2U7DQo+PiAgCX0gZWxzZSBpZiAo
-YWRldi0+c211LnBwdF9mdW5jcyAmJiBhZGV2LT5zbXUucHB0X2Z1bmNzLT5nZXRfY2xvY2tfYnlf
-dHlwZV93aXRoX2xhdGVuY3kpIHsNCj4+ICAJCWlmIChzbXVfZ2V0X2Nsb2NrX2J5X3R5cGVfd2l0
-aF9sYXRlbmN5KCZhZGV2LT5zbXUsDQo+PiAtCQkJCQkJICAgICAgIGRjX3RvX3BwX2Nsb2NrX3R5
-cGUoY2xrX3R5cGUpLA0KPj4gKwkJCQkJCSAgICAgICBkY190b19zbXVfY2xvY2tfdHlwZShjbGtf
-dHlwZSksDQoNClRoaXMgaXMgc2xpZ2h0bHkgY29uY2VybmluZy4gVGhlIGZ1bmN0aW9ucyBhcmUg
-ZG9pbmcgdGhlIHJpZ2h0IHRoaW5nLA0KYnV0IGFtZF9wcF9jbG9ja190eXBlIGRvZXNuJ3QgbWFw
-IDEtMSB0byBzbXVfY2xrX3R5cGUuLi4gSW4gYW55IGNhc2UsDQp0aGlzIGxvb2tzIGdvb2QgdG8g
-bWUuDQoNClJldmlld2VkLWJ5OiBMZW8gTGkgPHN1bnBlbmcubGlAYW1kLmNvbT4NCg0KPj4gIAkJ
-CQkJCSAgICAgICAmcHBfY2xrcykpDQo+PiAgCQkJcmV0dXJuIGZhbHNlOw0KPj4gIAl9DQo+PiAt
-LSANCj4+IDIuMjIuMA0KPj4NCj4gDQo+IEdlbnRsZSBwaW5nIGZvciByZXZpZXcsIHRoaXMgaXMg
-dGhlIGxhc3QgcmVtYWluaW5nIHdhcm5pbmcgdGhhdCBJIHNlZQ0KPiBmcm9tIGFtZGdwdSBvbiBu
-ZXh0LTIwMTkwNzE4Lg0KPiANCj4gQ2hlZXJzLA0KPiBOYXRoYW4NCj4gDQo=
+Commit-ID:  78134300579a45f527ca173ec8fdb4701b69f16e
+Gitweb:     https://git.kernel.org/tip/78134300579a45f527ca173ec8fdb4701b69f16e
+Author:     Waiman Long <longman@redhat.com>
+AuthorDate: Sat, 20 Jul 2019 11:04:10 -0400
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Thu, 25 Jul 2019 15:39:22 +0200
+
+locking/rwsem: Don't call owner_on_cpu() on read-owner
+
+For writer, the owner value is cleared on unlock. For reader, it is
+left intact on unlock for providing better debugging aid on crash dump
+and the unlock of one reader may not mean the lock is free.
+
+As a result, the owner_on_cpu() shouldn't be used on read-owner
+as the task pointer value may not be valid and it might have
+been freed. That is the case in rwsem_spin_on_owner(), but not in
+rwsem_can_spin_on_owner(). This can lead to use-after-free error from
+KASAN. For example,
+
+  BUG: KASAN: use-after-free in rwsem_down_write_slowpath
+  (/home/miguel/kernel/linux/kernel/locking/rwsem.c:669
+  /home/miguel/kernel/linux/kernel/locking/rwsem.c:1125)
+
+Fix this by checking for RWSEM_READER_OWNED flag before calling
+owner_on_cpu().
+
+Reported-by: Luis Henriques <lhenriques@suse.com>
+Tested-by: Luis Henriques <lhenriques@suse.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jeff Layton <jlayton@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: huang ying <huang.ying.caritas@gmail.com>
+Fixes: 94a9717b3c40e ("locking/rwsem: Make rwsem->owner an atomic_long_t")
+Link: https://lkml.kernel.org/r/81e82d5b-5074-77e8-7204-28479bbe0df0@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/locking/rwsem.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index 37524a47f002..bc91aacaab58 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -666,7 +666,11 @@ static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem,
+ 	preempt_disable();
+ 	rcu_read_lock();
+ 	owner = rwsem_owner_flags(sem, &flags);
+-	if ((flags & nonspinnable) || (owner && !owner_on_cpu(owner)))
++	/*
++	 * Don't check the read-owner as the entry may be stale.
++	 */
++	if ((flags & nonspinnable) ||
++	    (owner && !(flags & RWSEM_READER_OWNED) && !owner_on_cpu(owner)))
+ 		ret = false;
+ 	rcu_read_unlock();
+ 	preempt_enable();
