@@ -2,95 +2,116 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C834AC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75738C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8588621871
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:55:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDPYw9l9"
+	by mail.kernel.org (Postfix) with ESMTP id 420B921871
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbfGYGz2 (ORCPT
+        id S1729097AbfGYG4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 02:55:28 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34153 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbfGYGz2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 02:55:28 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b29so26460427lfq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 23:55:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=doVdfLdY6XR9A+JEkzRw69+rd1qNFdcI8alLf1BeFMQ=;
-        b=DDPYw9l99zR1XZovJFSnt522upDwMi7JmL2qDbhfn+7et68QwVQZJLIisvrA9CuFtd
-         YUc7N7+BmYU8vlZBsSpYRTX/R5xKbz3/yZufAfT8sup6l4SFUv0xXM70BDBB+5XQxf+d
-         v6dVmOx6hIvnC8CdAjHX3B02aoGgEnAaPoADaLbyDBbKC311RTZa9DU76bmEcW4twGRA
-         8yu3DmdSfBNKCqZbF0GF5NC4k5oVAWTilcRxRzP+jlVdDeh6X2NgSoIx3YI511mVmM2n
-         oHJyE0tlcQWPfd3fu4EfjIL0nkb8SIGOzQYkj8SSsTJWM/wrCM5YZQoIkRlXg/eJVtf/
-         76rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=doVdfLdY6XR9A+JEkzRw69+rd1qNFdcI8alLf1BeFMQ=;
-        b=m4JpJf7m1+iC98c2wgVYsoF1fKfRNhXNBh0SQXuGSrYfux5o4GxCp0Py1xbkCxU4cr
-         ywrEkzE9KbbEweo2A9CRFSXBk50bY3b8dbZzUKrlWVVZfeTORxPG6KhwnG++oUT5KWF9
-         EZjWUOHdD8DC/WJkUOOx/WQi8NiVBCMF+eFgEQ6W4QP94XrVEnIZWKyyxhlS54XEX7Cj
-         AjKQaDW/sbIJimknkVkqeEwTGLQiHMq/2bXvUttMx+Mz0IMv03eDh086t7MLajDR1NEE
-         uS82Y68GC024tKNKb4eVjY7RnZDRll3URooM3iODL8Bq8B4lj8k4KTo/Y3awgqirAhB5
-         auQg==
-X-Gm-Message-State: APjAAAWO5F5XGpSg9FPCPuXvMkI2Yb0OSJmTrEEQZ06WvLGO0jaNzzix
-        svwoqchpBE7CHr8MNEKstKQ=
-X-Google-Smtp-Source: APXvYqyQnGvQ1MwPeI1rcV0plex7dRzADD6Oyh8xIaY5SLhveif2UR6Fm/R6nnTcgkfiO9oVM1itwQ==
-X-Received: by 2002:a19:5e10:: with SMTP id s16mr39369443lfb.13.1564037726108;
-        Wed, 24 Jul 2019 23:55:26 -0700 (PDT)
-Received: from ul001888.eu.tieto.com ([91.198.246.10])
-        by smtp.gmail.com with ESMTPSA id o3sm7424291lfb.40.2019.07.24.23.55.24
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 23:55:25 -0700 (PDT)
-From:   Vasyl Gomonovych <gomonovych@gmail.com>
-To:     myungjoo.ham@samsung.com, cw00.choi@samsung.com
-Cc:     Vasyl Gomonovych <gomonovych@gmail.com>,
+        Thu, 25 Jul 2019 02:56:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:52672 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725808AbfGYG4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 02:56:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CCBE344;
+        Wed, 24 Jul 2019 23:56:18 -0700 (PDT)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.42.109])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4FEA03F71F;
+        Wed, 24 Jul 2019 23:58:17 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <Mark.Brown@arm.com>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] extcon: max77843: Add IRQ_ONESHOT mask
-Date:   Thu, 25 Jul 2019 08:55:15 +0200
-Message-Id: <20190725065515.8220-1-gomonovych@gmail.com>
-X-Mailer: git-send-email 2.17.1
+Subject: [RFC] mm/debug: Add tests for architecture exported page table helpers
+Date:   Thu, 25 Jul 2019 12:25:22 +0530
+Message-Id: <1564037723-26676-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not fire irq again until thread done
-This issue was found by code inspection
-Coccicheck irqf_oneshot.cocci
+This series adds a test validation for architecture exported page table
+helpers. Patch in the series add basic transformation tests at various
+level of the page table.
 
-Signed-off-by: Vasyl Gomonovych <gomonovych@gmail.com>
----
- drivers/extcon/extcon-max77843.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This test was originally suggested by Catalin during arm64 THP migration
+RFC discussion earlier. Going forward it can include more specific tests
+with respect to various generic MM functions like THP, HugeTLB etc and
+platform specific tests.
 
-diff --git a/drivers/extcon/extcon-max77843.c b/drivers/extcon/extcon-max77843.c
-index a343a6ef3506..42b14c333b1c 100644
---- a/drivers/extcon/extcon-max77843.c
-+++ b/drivers/extcon/extcon-max77843.c
-@@ -905,7 +905,8 @@ static int max77843_muic_probe(struct platform_device *pdev)
- 		muic_irq->virq = virq;
- 
- 		ret = devm_request_threaded_irq(&pdev->dev, virq, NULL,
--				max77843_muic_irq_handler, IRQF_NO_SUSPEND,
-+				max77843_muic_irq_handler,
-+				IRQF_NO_SUSPEND | IRQF_ONESHOT,
- 				muic_irq->name, info);
- 		if (ret) {
- 			dev_err(&pdev->dev,
+https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
+
+Issues:
+
+Does not build on arm64 as a module and fails with following errors. This
+is primarily caused by set_pgd() called from pgd_clear() and pgd_populate().
+
+ERROR: "set_swapper_pgd" [lib/test_arch_pgtable.ko] undefined!
+ERROR: "swapper_pg_dir" [lib/test_arch_pgtable.ko] undefined!
+
+These symbols need to be visible for driver usage or will have to disable
+loadable module option for this test on arm64 platform.
+
+Testing:
+
+Build and boot tested on arm64 and x86 platforms. While arm64 clears all
+these tests, following errors were reported on x86.
+
+1. WARN_ON(pud_bad(pud)) in pud_populate_tests()
+2. WARN_ON(p4d_bad(p4d)) in p4d_populate_tests()
+
+I would really appreciate if folks can help validate this test in other
+platforms and report back problems if any. Suggestions, comments and
+inputs welcome. Thank you.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Brown <Mark.Brown@arm.com>
+Cc: Steven Price <Steven.Price@arm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Sri Krishna chowdary <schowdary@nvidia.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Anshuman Khandual (1):
+  mm/pgtable/debug: Add test validating architecture page table helpers
+
+ lib/Kconfig.debug       |  14 +++
+ lib/Makefile            |   1 +
+ lib/test_arch_pgtable.c | 290 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 305 insertions(+)
+ create mode 100644 lib/test_arch_pgtable.c
+
 -- 
-2.17.1
+2.7.4
 
