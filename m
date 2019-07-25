@@ -6,75 +6,118 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD52FC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E9CC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 832F622C7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C994229F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:09:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbfGYQJL (ORCPT
+        id S2389977AbfGYQJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:09:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:60288 "EHLO foss.arm.com"
+        Thu, 25 Jul 2019 12:09:41 -0400
+Received: from mga05.intel.com ([192.55.52.43]:10970 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726087AbfGYQJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:09:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20645174E;
-        Thu, 25 Jul 2019 09:09:10 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4BCDE3F71A;
-        Thu, 25 Jul 2019 09:09:08 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 17:08:59 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Daniel Axtens <dja@axtens.net>
-Cc:     Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Subject: Re: [PATCH 1/2] kernel/fork: Add support for stack-end guard page
-Message-ID: <20190725160859.GA22830@lakrids.cambridge.arm.com>
-References: <20190719132818.40258-1-elver@google.com>
- <20190723164115.GB56959@lakrids.cambridge.arm.com>
- <CACT4Y+Y47_030eX-JiE1hFCyP5RiuTCSLZNKpTjuHwA5jQJ3+w@mail.gmail.com>
- <20190724112101.GB2624@lakrids.cambridge.arm.com>
- <CACT4Y+Zai+4VwNXS_a417M2m0DbtNhjTVdYga178ZDkvNnP4CQ@mail.gmail.com>
- <20190725101458.GC14347@lakrids.cambridge.arm.com>
- <87r26egn8t.fsf@dja-thinkpad.axtens.net>
+        id S1726087AbfGYQJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 12:09:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 09:09:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,307,1559545200"; 
+   d="scan'208";a="189348518"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.165])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Jul 2019 09:09:39 -0700
+Date:   Thu, 25 Jul 2019 09:09:39 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        wanpengli@tencent.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        patches@kernelci.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>, jmattson@google.com
+Subject: Re: [PATCH 5.2 000/413] 5.2.3-stable review
+Message-ID: <20190725160939.GC18612@linux.intel.com>
+References: <20190724191735.096702571@linuxfoundation.org>
+ <CADYN=9+WLxhmqX3JNL_s-kWSN97G=8WhD=TF=uAuKecJnKcj_Q@mail.gmail.com>
+ <20190725113437.GA27429@kroah.com>
+ <230a5b34-d23e-8318-0b1f-d23ada7318e0@redhat.com>
+ <CA+G9fYsWdmboyquZ=Bs3tkTwRFTzd1yuL0_EVpHOecNi4E_stA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87r26egn8t.fsf@dja-thinkpad.axtens.net>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <CA+G9fYsWdmboyquZ=Bs3tkTwRFTzd1yuL0_EVpHOecNi4E_stA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 01:14:26AM +1000, Daniel Axtens wrote:
-> Mark Rutland <mark.rutland@arm.com> writes:
-> > On Thu, Jul 25, 2019 at 09:53:08AM +0200, Dmitry Vyukov wrote:
-> >> FTR, Daniel just mailed:
-> >> 
-> >> [PATCH 0/3] kasan: support backing vmalloc space with real shadow memory
-> >> https://groups.google.com/forum/#!topic/kasan-dev/YuwLGJYPB4I
-> >> Which presumably will supersede this.
-> >
-> > Neat!
-> >
-> > I'll try to follow that, (and thanks for the Cc there), but I'm not on
-> > any of the lists it went to. IMO it would be nice if subsequent versions
-> > would be Cc'd to LKML, if that's possible. :)
+On Thu, Jul 25, 2019 at 07:35:13PM +0530, Naresh Kamboju wrote:
+> Paolo,
 > 
-> Will do - apologies for the oversight.
+> On Thu, 25 Jul 2019 at 19:17, Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >
+> > On 25/07/19 13:34, Greg Kroah-Hartman wrote:
+> > > Any chance you can run 'git bisect' to find the offending patch?  Or
+> > > just try reverting a few, you can ignore the ppc ones, so that only
+> > > leaves you 7 different commits.
+> > >
+> > > Does this same test pass in 5.3-rc1?
+> 
+> Yes. same test pass on 5.3-rc1
+> kvm unit test always fetching master branch and at tip
+> runs the latest test code on all branches
+> mainline 5.3-rc1 and stable-rc-5.2 branch
+> 
+> >
+> > Anders, are you running the same kvm-unit-tests commit that passed for
+> > 5.2.2?  My suspicion is that your previous test didn't have this commit
+> 
+> No.
+> I see two extra test code commits for 5.2.3
+> Re-tested 5.2.2 with tip of kvm unit tests sources and vmx test FAILED [1].
+> 
+> Greg,
+> This investigation confirms it is a new test code failure on stable-rc 5.2.3
 
-Nothing to apologize for, and thanks in advance!
+No, it only confirms that kvm-unit-tests/master fails on 5.2.*.  To confirm
+a new failure in 5.2.3 you would need to show a test that passes on 5.2.2
+and fails on 5.2.3.
 
-Mark.
+As Paolo suspected, kvm-unit-tests/master fails on 5.2.* and passes if
+commit 95d6d2c ("nVMX: Test Host Segment Registers and Descriptor Tables on
+vmentry of nested guests") is reverted (from kvm-unit-tests).
+
+The failures are quite clearly in the new test(s).
+
+  PASS: HOST_SEL_CS 8: vmlaunch succeeds
+  FAIL: HOST_SEL_CS 9: vmlaunch fails
+  FAIL: HOST_SEL_CS c: vmlaunch fails
+  PASS: HOST_SEL_SS 10: vmlaunch succeeds
+  FAIL: HOST_SEL_SS 11: vmlaunch fails
+  FAIL: HOST_SEL_SS 14: vmlaunch fails
+  PASS: HOST_SEL_DS 10: vmlaunch succeeds
+  FAIL: HOST_SEL_DS 11: vmlaunch fails
+  FAIL: HOST_SEL_DS 14: vmlaunch fails
+  PASS: HOST_SEL_ES 10: vmlaunch succeeds
+  FAIL: HOST_SEL_ES 11: vmlaunch fails
+  FAIL: HOST_SEL_ES 14: vmlaunch fails
+  PASS: HOST_SEL_FS 10: vmlaunch succeeds
+  FAIL: HOST_SEL_FS 11: vmlaunch fails
+  FAIL: HOST_SEL_FS 14: vmlaunch fails
+  PASS: HOST_SEL_GS 10: vmlaunch succeeds
+  FAIL: HOST_SEL_GS 11: vmlaunch fails
+  FAIL: HOST_SEL_GS 14: vmlaunch fails
+  PASS: HOST_SEL_TR 80: vmlaunch succeeds
+  FAIL: HOST_SEL_TR 81: vmlaunch fails
+  KVM: entry failed, hardware error 0x80000021
