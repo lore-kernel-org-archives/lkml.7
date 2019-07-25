@@ -2,110 +2,145 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C54C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D9BC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49F99216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C0D6216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:40:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564026011;
+	bh=9BMauwEy1lGIJ9pUkmok8zRfXwbOeUrTUzWPT9b+bsc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m18ZlLkJ01g6A4EyV0kRCIG/GJ8oZTlMtaM8e0zosA2yselKdIBn/wqaJrRtqqJnW
+	 zlu7iH/WjI+nnm7tpU7MDTvEE1ODsTfBDhIMFYamSJcve7Vg2tTQj1WF9hXusttBio
+	 V3XJx/jwo4/F2R4v47K4ZqHAh65j9E6KSLd3s5ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389940AbfGYDjd (ORCPT
+        id S2390054AbfGYDkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 23:39:33 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:36426 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389704AbfGYDjc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 23:39:32 -0400
-Received: from callcc.thunk.org ([66.31.38.53])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x6P3dEh0019029
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jul 2019 23:39:15 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id EEF544202F5; Wed, 24 Jul 2019 23:39:13 -0400 (EDT)
-Date:   Wed, 24 Jul 2019 23:39:13 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     David Miller <davem@davemloft.net>
-Cc:     ebiggers@kernel.org, eric.dumazet@gmail.com, dvyukov@google.com,
-        netdev@vger.kernel.org, fw@strlen.de, i.maximets@samsung.com,
-        edumazet@google.com, dsahern@gmail.com,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
-Message-ID: <20190725033913.GB13651@mit.edu>
-Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
-        David Miller <davem@davemloft.net>, ebiggers@kernel.org,
-        eric.dumazet@gmail.com, dvyukov@google.com, netdev@vger.kernel.org,
-        fw@strlen.de, i.maximets@samsung.com, edumazet@google.com,
-        dsahern@gmail.com, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <20190724163014.GC673@sol.localdomain>
- <20190724.111225.2257475150626507655.davem@davemloft.net>
- <20190724183710.GF213255@gmail.com>
- <20190724.130928.1854327585456756387.davem@davemloft.net>
+        Wed, 24 Jul 2019 23:40:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389704AbfGYDkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 23:40:08 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75F2B216F4;
+        Thu, 25 Jul 2019 03:40:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564026006;
+        bh=9BMauwEy1lGIJ9pUkmok8zRfXwbOeUrTUzWPT9b+bsc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZQQBfNWmB3OCie57T2P6IO8YyrX+334Ql5pYpHjLHfQave82AuHEGJ4eFdEbDFUWw
+         kM6y05VA3zfnppuA8VXfrbriUHLw/BzVU6BPuxhbwM0jaLEs5MgBubJb7+fe8VIjop
+         vURvdDecRFjdfm+pFz7S3zVJNqwAvq8i6q81GuLM=
+Date:   Wed, 24 Jul 2019 20:39:51 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     tytso@mit.edu, jaegeuk@kernel.org, linux-fscrypt@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH] fs: crypto: keyinfo: Fix a possible null-pointer
+ dereference in derive_key_aes()
+Message-ID: <20190725033951.GA677@sol.localdomain>
+Mail-Followup-To: Jia-Ju Bai <baijiaju1990@gmail.com>, tytso@mit.edu,
+        jaegeuk@kernel.org, linux-fscrypt@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+References: <20190724100204.2009-1-baijiaju1990@gmail.com>
+ <20190724160711.GB673@sol.localdomain>
+ <3d206c43-994e-6134-3f28-b4a500472760@gmail.com>
+ <9740973d-6e59-e4df-7097-4e5d0da89235@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190724.130928.1854327585456756387.davem@davemloft.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9740973d-6e59-e4df-7097-4e5d0da89235@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 01:09:28PM -0700, David Miller wrote:
-> From: Eric Biggers <ebiggers@kernel.org>
-> Date: Wed, 24 Jul 2019 11:37:12 -0700
+On Thu, Jul 25, 2019 at 11:33:53AM +0800, Jia-Ju Bai wrote:
+> Sorry, I forgot to send to Eric, so send it again.
 > 
-> > We can argue about what words to use to describe this situation, but
-> > it doesn't change the situation itself.
-> 
-> And we should argue about those words because it matters to humans and
-> effects how they feel, and humans ultimately fix these bugs.
-> 
-> So please stop with the hyperbole.
+> On 2019/7/25 11:30, Jia-Ju Bai wrote:
+> > 
+> > 
+> > On 2019/7/25 0:07, Eric Biggers wrote:
+> > > [+Cc linux-crypto]
+> > > 
+> > > On Wed, Jul 24, 2019 at 06:02:04PM +0800, Jia-Ju Bai wrote:
+> > > > In derive_key_aes(), tfm is assigned to NULL on line 46, and then
+> > > > crypto_free_skcipher(tfm) is executed.
+> > > > 
+> > > > crypto_free_skcipher(tfm)
+> > > >      crypto_skcipher_tfm(tfm)
+> > > >          return &tfm->base;
+> > > > 
+> > > > Thus, a possible null-pointer dereference may occur.
+> > > This analysis is incorrect because only the address &tfm->base is taken.
+> > > There's no pointer dereference.
+> > > 
+> > > In fact all the crypto_free_*() functions are no-ops on NULL
+> > > pointers, and many
+> > > other callers rely on it.  So there's no bug here.
+> > 
+> > Thanks for the reply :)
+> > I admit that "&tfm->base" is not a null-pointer dereference when tfm is
+> > NULL.
+> > But I still think crypto_free_skcipher(tfm) can cause security problems
+> > when tfm is NULL.
+> > 
+> > Looking at the code:
+> > 
+> > static inline void crypto_free_skcipher(struct crypto_skcipher *tfm)
+> > {
+> >     crypto_destroy_tfm(tfm, crypto_skcipher_tfm(tfm));
+> > }
+> > 
+> > static inline struct crypto_tfm *crypto_skcipher_tfm(
+> >     struct crypto_skcipher *tfm)
+> > {
+> >     return &tfm->base;
+> > }
+> > 
+> > void crypto_destroy_tfm(void *mem, struct crypto_tfm *tfm)
+> > {
+> >     struct crypto_alg *alg;
+> > 
+> >     if (unlikely(!mem))
+> >         return;
 
-Perhaps it would be better to call them, "syzbot reports".  Not all
-syzbot reports are bugs.  In fact, Dmitry has steadfastly refused to
-add features which any basic bug-tracking system would have, claiming
-that syzbot should not be a bug-tracking system, and something like
-bugzilla should be forcibly imposed on all kernel developers.  So I
-don't consider syzkaller reports as bugs --- they are just reports.
+When the original pointer is NULL, mem == NULL here so crypto_destroy_tfm() is a
+no-op.
 
-In order for developers to want to engage with "syzbot reports", we
-need to reduce developer toil which syzbot imposes on developers, such
-that it is a net benefit, instead of it being just a source of
-annoying e-mails, some of which are actionable, and some of which are
-noise.
+> > Besides, I also find that some kernel modules check tfm before calling
+> > crypto_free_*(), such as:
+> > 
+> > drivers/crypto/vmx/aes_xts.c:
+> >     if (ctx->fallback) {
+> >         crypto_free_skcipher(ctx->fallback);
+> >         ctx->fallback = NULL;
+> >     }
+> > 
+> > net/rxrpc/rxkad.c:
+> >     if (conn->cipher)
+> >         crypto_free_skcipher(conn->cipher);
+> > 
+> > drivers/crypto/chelsio/chcr_algo.c:
+> >     if (ablkctx->aes_generic)
+> >         crypto_free_cipher(ablkctx->aes_generic);
+> > 
+> > net/mac80211/wep.c:
+> >     if (!IS_ERR(local->wep_tx_tfm))
+> >         crypto_free_cipher(local->wep_tx_tfm);
+> > 
 
-In particular, asking developers to figure out which syzbot reports
-should be closed, because developers found the problem independently,
-and fixed it without hearing about from syzbot first, really isn't a
-fair thing to ask.  Especially if we can automate away the problem.
+Well, people sometimes do that for kfree() too.  But that doesn't mean it's
+needed, or that it's the preferred style (it's not).
 
-If there is a reproducer, it should be possible to automatically
-categorize the reproducer as a reliable reproducer or a flakey one.
-If it is a reliable reproducer on version X, and it fails to be
-reliably reproduce on version X+N, then it should be able to figure
-out that it has been fixed, instead of requesting that a human confirm
-it.  If you really want a human to look at it, now that syzkaller has
-a bisection feature, it should be possible to use the reliable
-reproducer to do a negative bisection search to report a candidate
-fix.  This would significantly reproduce the developer toil imposed as
-a tax on developers.  And if Dmitry doesn't want to auto-close those
-reports that appear to be fixed already, at the very least they should
-be down-prioritized on Eric's reports, so people who don't want to
-waste their time on "bureaucracy" can do so.
-
-Cheers,
-
-						- Ted
-
-P.S.  Another criteria I'd suggest down-prioritizing on is, "does it
-require root privileges?"  After all, since root has so many different
-ways of crashing a system already, and if we're all super-busy, we
-need to prioritize which reports should be addressed first.
+- Eric
