@@ -2,117 +2,132 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF47C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83090C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8619622BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:42:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DMvfoyob"
+	by mail.kernel.org (Postfix) with ESMTP id 5C79422BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:43:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564094588;
+	bh=lBESfuT3DmI+rgGQfA5Bgd1cqeRkqGQxNUSPLRT7J/w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HanOQ/bo4QMB8NEj922QS7TyladkgHaYQvuzpGr9IeE8ImGNYe+EeL+ZX9xac1qGk
+	 SqBlzYpK4T5yUC8db3x6aI18DcwjVi8B1mKkg/rnlSig+rWTHcXTOlRkkMNuMoGV0o
+	 gvDOvvcxAdVvGVPJHWfStQzHhhh4bdld5nxV49ew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfGYWmQ (ORCPT
+        id S1726941AbfGYWnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 18:42:16 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:5476 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfGYWmP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 18:42:15 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d3a30470000>; Thu, 25 Jul 2019 15:42:15 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 25 Jul 2019 15:42:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 25 Jul 2019 15:42:15 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 25 Jul
- 2019 22:42:12 +0000
-Subject: Re: [PATCH 1/1] x86/boot: clear some fields explicitly
-To:     "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     <john.hubbard@gmail.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190724231528.32381-1-jhubbard@nvidia.com>
- <20190724231528.32381-2-jhubbard@nvidia.com>
- <B7DC31CA-E378-445A-A937-1B99490C77B4@zytor.com>
- <alpine.DEB.2.21.1907250848050.1791@nanos.tec.linutronix.de>
- <345add60-de4a-73b1-0445-127738c268b4@nvidia.com>
- <alpine.DEB.2.21.1907252343180.1791@nanos.tec.linutronix.de>
- <3DFA2707-89A6-4DD2-8DFB-0C2D1ABA1B3C@zytor.com>
- <alpine.DEB.2.21.1907252358240.1791@nanos.tec.linutronix.de>
- <e080b061-562f-568f-782d-b014556acdba@zytor.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <ffd7a9b6-8017-2d2c-c4f7-65563094ccd0@nvidia.com>
-Date:   Thu, 25 Jul 2019 15:42:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 18:43:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726704AbfGYWnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 18:43:07 -0400
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E8BB22BF5;
+        Thu, 25 Jul 2019 22:43:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564094585;
+        bh=lBESfuT3DmI+rgGQfA5Bgd1cqeRkqGQxNUSPLRT7J/w=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Nv80oMNgEN71r3/BbqLh/q7zx+mZrVMhluqgvK4uigmTgyG2Qrpej99va5ARTRYqz
+         hNJlcDNZ5zVI3+fa4g9d0ZUUDegPlf28mUu6+eCDC/czkZ0H05t/GEVU1VfhMYABRd
+         1/+T5bnkyHC2A6g6LO4gPGxap4XYNjcZRILpeRwo=
+Received: by mail-qt1-f180.google.com with SMTP id z4so50787195qtc.3;
+        Thu, 25 Jul 2019 15:43:05 -0700 (PDT)
+X-Gm-Message-State: APjAAAX3lNwfuIZomWaUDY6UePS9LWFNB8ZwsoP68vLsCDLHse9OPlIg
+        q/gviR489Nggv9+Uu89u1gtUHUPhZN4ilTLH6Q==
+X-Google-Smtp-Source: APXvYqxdeWh9cmjbYBWJqGtuD2MR1ApRKd+If++ai9lKP0uWwFcRMyo2Qs/i7JSDX0ekJFmk7Df2ahT9V7pGKFBaufs=
+X-Received: by 2002:a0c:b627:: with SMTP id f39mr66634624qve.72.1564094584748;
+ Thu, 25 Jul 2019 15:43:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e080b061-562f-568f-782d-b014556acdba@zytor.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564094535; bh=RiX4mAJljdifPyVO6+7OzeB0bHDkhMJBTzl+9eHMa28=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=DMvfoyobPcPVCraAnzpgbILuaU8HrfhcrmSr+V5mGYQrIzrAKIXfIOMSgfVhoZHYE
-         6SblvQoZCReGUQYULsfPZLKHFfuyi/5ugQXjrWl4l+y3ipz/+RP9Sc19eDhHR+HvxA
-         yH51TjoWkJtDKJ3zOw+hxJf62Nc4MeV5Klh66PK+DLgFQ/Wd1fRfBmn2EtrUEXIwGe
-         3tfmQnw1Y+m450pn6vQsmu61cYSvj9LDd/tbjzXDPhe1Z7s/nuSY0tYz/f3Y5wudCl
-         wKkdYQiBzdjCs5HsDWL8Q9x5SWD1XwritDhBLJskBIEormYNeFxst0UMwD6v2zqRiL
-         R3PyOQK7A4/wg==
+References: <cover.1562597164.git.hns@goldelico.com> <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com>
+ <20190724194259.GA25847@bogus> <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com>
+In-Reply-To: <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 25 Jul 2019 16:42:53 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com>
+Message-ID: <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to make
+ display work again
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/25/19 3:28 PM, H. Peter Anvin wrote:
-> On 7/25/19 3:03 PM, Thomas Gleixner wrote:
->> On Thu, 25 Jul 2019, hpa@zytor.com wrote:
->>> On July 25, 2019 2:48:30 PM PDT, Thomas Gleixner <tglx@linutronix.de> wrote:
->>>>
->>>> But seriously I think it's not completely insane what they are doing
->>>> and the table based approach is definitely more readable and maintainable
->>>> than the existing stuff.
->>>
->>> Doing this table based does seem like a good idea.
->>
->> The question is whether we use a 'toclear' table or a 'preserve' table. I'd
->> argue that the 'preserve' approach is saner.
->>
-> 
-> I agree.
-> 
+On Thu, Jul 25, 2019 at 12:23 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>
+> Hi Rob,
+>
+> > Am 24.07.2019 um 21:42 schrieb Rob Herring <robh@kernel.org>:
+> >
+> > On Mon, Jul 08, 2019 at 04:46:05PM +0200, H. Nikolaus Schaller wrote:
+> >> commit 6953c57ab172 "gpio: of: Handle SPI chipselect legacy bindings"
+> >>
+> >> did introduce logic to centrally handle the legacy spi-cs-high property
+> >> in combination with cs-gpios. This assumes that the polarity
+> >> of the CS has to be inverted if spi-cs-high is missing, even
+> >> and especially if non-legacy GPIO_ACTIVE_HIGH is specified.
+> >>
+> >> The DTS for the GTA04 was orginally introduced under the assumption
+> >> that there is no need for spi-cs-high if the gpio is defined with
+> >> proper polarity GPIO_ACTIVE_HIGH.
+> >
+> > Given that spi-cs-high is called legacy, that would imply that DT's
+> > should not have to use spi-cs-high.
+>
+> Yes.
+>
+> >
+> >> This was not a problem until gpiolib changed the interpretation of
+> >> GPIO_ACTIVE_HIGH and missing spi-cs-high.
+> >
+> > Then we should fix gpiolib...
+>
+> I tried to convince Linus that this is the right way but he convinced
+> me that a fix that handles all cases does not exist.
+>
+> There seem to be embedded devices with older DTB (potentially in ROM)
+> which provide a plain 0 value for a gpios definition. And either with
+> or without spi-cs-high.
+>
+> Since "0" is the same as "GPIO_ACTIVE_HIGH", the absence of
+> spi-cs-high was and must be interpreted as active low for these
+> devices. This leads to the inversion logic in code.
+>
+> AFAIR it boils down to the question if gpiolib and the bindings
+> should still support such legacy devices with out-of tree DTB,
+> but force in-tree DTS to add the legacy spi-cs-high property.
+>
+> Or if we should fix the 2 or 3 cases of in-tree legacy cases
+> and potentially break out-of tree DTBs.
 
-OK, I can polish up something and post it, if you can help me with one more
-quick question: how did you want "to preserve" to work?
+If it is small number of platforms, then the kernel could handle those
+cases explicitly as needed.
 
-a) copy out fields to preserve, memset the area to zero, copy back preserved
-fields? This seems like it would have the same gcc warnings as we have now,
-due to the requirement to memset a range of a struct... 
+> IMHO it is more general to keep the out-of-tree DTBs working
+> and "fix" what we can control (in-tree DTS).
 
-b) Iterate through all fields, memsetting to zero items that are *not*
-marked "to preserve"?
+If we do this, then we need to not call spi-cs-high legacy because
+we're stuck with it forever.
 
-c) Something else? Sorry for the naivete here.  I really did read 
-Documentation/x86/boot.rst, honest. :)
-
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+Rob
