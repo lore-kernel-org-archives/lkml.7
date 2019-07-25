@@ -2,86 +2,115 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CA6C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CE1C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78A7022BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564076437;
-	bh=v5yXlm0ySbjH9KYVN6Nqcko2ymh4rZfsF2TdFPmyY7A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kjYpsqslNhPFKAf46C5PAewoTOz8mv8PVkatGPkU3mipZLMmKa5bo6v5hHpCj3Arr
-	 w+EOkyNMeULAAgj8U5D7hwtbGZl3641kqtJOzMpZNpwnVJ+X4pqM2hcKjG1GWi+IoE
-	 fTtwVCIz7qPzl5K6+iJXXC7x+eKH91bQOJOLruvM=
+	by mail.kernel.org (Postfix) with ESMTP id 50B7622BE8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:40:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I9VG6ezI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730031AbfGYRkg (ORCPT
+        id S2388291AbfGYRkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:40:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbfGYRkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:40:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79AF422BE8;
-        Thu, 25 Jul 2019 17:40:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564076435;
-        bh=v5yXlm0ySbjH9KYVN6Nqcko2ymh4rZfsF2TdFPmyY7A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cf0NrbzxwN1M9j7L43mP+u3u8SJKAyjDsM0cOYEdgJvIpWskctistAzocLZjDHkEN
-         ba/45n2CQ0Z0Vu5YE8bZ1WQSq7k3lFsVvFslO0EgJItOxPoN3cpbF0XLhnLZMiHACv
-         SqahQYWRTwQbD+2RwOPjk7Yu0qf8B7tBjUz8+4cA=
-Date:   Thu, 25 Jul 2019 19:40:32 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
-Message-ID: <20190725174032.GA27818@kroah.com>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <20190725172335.6825-3-logang@deltatee.com>
+        Thu, 25 Jul 2019 13:40:47 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38216 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387494AbfGYRkq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 13:40:46 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y15so23114369pfn.5;
+        Thu, 25 Jul 2019 10:40:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F+WexidVxLEGFt6DmVlRbFT099hsDOv39Z19dnK1H4o=;
+        b=I9VG6ezIbJHkOo0zTA1ccxSYyDWmkWeSGHUOKExB7AFL7dwrQGZQR27krq2gt710Zh
+         cpMjyvLBhMB+tKIbeY95cgCc49ZXL5uJmqkWeHYSUXh78KfmgN2G8+F6qoyuvXAJStS/
+         +ibl2WhrHMPdmGJoIc433Mv8yGXSVJH9tGz0vrhzjkabGcUhBQWqY8EtUNNJfyBoCQ+9
+         RrN4agk4dhu+pXvqGqG24C3GIoJlbn+5xcHSYZomts9l3Al0BFSO0nxTgEMUsuoujpsE
+         hVWVz3FmIqiqmOqvv8RK+4ouufG9dK6GyJaDbSoJ6oKQomyWuU6BMa+7swcVMKW6ivW+
+         Z4Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=F+WexidVxLEGFt6DmVlRbFT099hsDOv39Z19dnK1H4o=;
+        b=D49yb3vsEhyydz+iBJsjhnfp3NwPBOuOsf9I24aehuChdFy9trborL7506QYL8NkEU
+         eGXepsjqCVG3cPy3vq+XCQE3+rj5mTdSvxp1LPWUFRKbjjkrm9bWJbeUf2T2PkIUoriN
+         BybQIgqkOPkr1R19BgehWtT7gWkFUJ+3eeZy/e5NPHv67ENo5qagEpPoPhS6UM5jyoN6
+         xmzlfYQOiB5Okdj8nJkmwWVP31nDoSsV8SmxZoar4MvUYc3Yxa53XTFwtX5tW5f1H9iO
+         U3fd/BrthXsV+K2STETapuJhgzcxU/rWG9I7WvgLrETFBMJBg1ESbw0HvOq8Qx9/lyFG
+         E6Ww==
+X-Gm-Message-State: APjAAAWKdThTHeqxi8Jjrui9yAT+tWEraQvQXVh0EiMKnL04dnWIYEgm
+        dI+sRawEZ4fdiAq69lkQDxfFyQYL
+X-Google-Smtp-Source: APXvYqwvmNiwQBEDOOdvmUil2aU3A84KQW5PYHZF30NNW2i9/fksR6PhRwtE9hnzjLsKqW81ICv3hg==
+X-Received: by 2002:a17:90a:36e4:: with SMTP id t91mr90785262pjb.22.1564076445987;
+        Thu, 25 Jul 2019 10:40:45 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i126sm56090898pfb.32.2019.07.25.10.40.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 10:40:45 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] hwmon fixes for v5.3-rc2
+Date:   Thu, 25 Jul 2019 10:40:44 -0700
+Message-Id: <1564076444-24557-1-git-send-email-linux@roeck-us.net>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725172335.6825-3-logang@deltatee.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 11:23:21AM -0600, Logan Gunthorpe wrote:
-> cdev_get_by_path() attempts to retrieve a struct cdev from
-> a path name. It is analagous to blkdev_get_by_path().
-> 
-> This will be necessary to create a nvme_ctrl_get_by_path()to
-> support NVMe-OF passthru.
+Hi Linus,
 
-Ick, why?  Why would a cdev have a "pathname"?
+Please pull hwmon fixes for Linux v5.3-rc2 from signed tag:
 
-What is "NVMe-OF passthru"?  Why does a char device node have anything
-to do with NVMe?
+    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.3-rc2
 
-We have way too many ways to abuse cdevs today, my long-term-wish has
-always been to clean this interface up to make it more sane and unified,
-and get rid of the "outliers" (all created at the time for a good
-reason, that's not the problem.)  But to add "just one more" seems
-really odd to me.
+Thanks,
+Guenter
+------
 
-thanks,
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
-greg k-h
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v5.3-rc2
+
+for you to fetch changes up to 223b2b5030f370f219c23c2c4678b419a72434d9:
+
+  hwmon: (k8temp) documentation: update URL of datasheet (2019-07-21 19:18:45 -0700)
+
+----------------------------------------------------------------
+Couple of hwmon bug fixes
+
+Update k8temp documentation URL
+Register address fixes in nct6775 driver
+Fix potential division by zero in occ driver
+
+----------------------------------------------------------------
+Björn Gerhart (1):
+      hwmon: (nct6775) Fix register address and added missed tolerance for nct6106
+
+Lei YU (1):
+      hwmon: (occ) Fix division by zero issue
+
+Robert Karszniewicz (1):
+      hwmon: (k8temp) documentation: update URL of datasheet
+
+ Documentation/hwmon/k8temp.rst | 2 +-
+ drivers/hwmon/nct6775.c        | 3 ++-
+ drivers/hwmon/occ/common.c     | 6 ++++--
+ 3 files changed, 7 insertions(+), 4 deletions(-)
