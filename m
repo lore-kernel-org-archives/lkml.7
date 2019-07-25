@@ -2,98 +2,107 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EF1C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD49BC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04E32190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73EAA218EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:23:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564046580;
+	bh=uXFav+cXG4NWqs0iQV8n363k1ttpIX2p4MHTPgqZ58Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KIf+Ux+PlFOBzMxRfkdBR09VcYLVq8ww2+ja8mRS9pA8/5Ng5wJUxNtb14NhyPY5M
+	 wByinGpfIl7XvxdaynV2PCCCuq9eoUDMap9BmZmWSIBsldX7fvUbItDKsnYXtbF+Y8
+	 oYgBlJ+AuY1rAlgklSvUtyb0uF6fJ1uBncJUGe+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbfGYJWM (ORCPT
+        id S1729511AbfGYJW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 05:22:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57270 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725808AbfGYJWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 05:22:12 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C36A230917AF;
-        Thu, 25 Jul 2019 09:22:11 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-117-212.ams2.redhat.com [10.36.117.212])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D39D5C652;
-        Thu, 25 Jul 2019 09:22:07 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH RFC] mm/memory_hotplug: Don't take the cpu_hotplug_lock
-Date:   Thu, 25 Jul 2019 11:22:06 +0200
-Message-Id: <20190725092206.23712-1-david@redhat.com>
+        Thu, 25 Jul 2019 05:22:59 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43071 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbfGYJW7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 05:22:59 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j11so26666429otp.10;
+        Thu, 25 Jul 2019 02:22:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d6bXcLy59IZQ/jzA1KAA80JAzsTaXl85YCv6d26dui4=;
+        b=YgAFSsZl40uJsBLqBAa/nghfo9s3ZYbLXRRWsrusTWRysayxj+RGnjLJDggP7Gt1t5
+         ne/CM80G/EHak/AOqUTkFbdyN1288V0QaJBnGMjhqn9B6rgUbyMj52CFYMrXbDZ/9SSN
+         GlfW9VwAsXboGEAasWGr8pW8B0UWRygTUOP5/d6856JmhkYgk+RacMstHm3+toiXWkqs
+         Wzo0wSaHr5eG5caXjl2VGSEPCysPa3Gnzz9LVZJWHIFKpJwF+aCSMrHd4+Nej2tlIuw6
+         SU+AJ6/fSFxQInk9t+CQE0SklKj/lfoZi48ogleGfuP03NbkXG5J9czsx/2o/Ur3dpzu
+         74WQ==
+X-Gm-Message-State: APjAAAXOcZtnpxyix/hQNCfKqRXBm22pvgj69EAUYboOzezfh8ujthJ8
+        UIsWSXtflSf6r0n34jxmVluETiHh7uhn93NCAN4=
+X-Google-Smtp-Source: APXvYqxJ49+1aZ6N4TDMyBMfQsD/Uphq9/3dCsGS122VqG+v2Ww7f6i5dT2dazWN0C3ylFEI+mrm0iTK0F636Zu0+Q8=
+X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr59724305otp.189.1564046578263;
+ Thu, 25 Jul 2019 02:22:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 25 Jul 2019 09:22:11 +0000 (UTC)
+References: <20190724143017.12841-1-david@redhat.com> <20190725091625.GA15848@linux>
+In-Reply-To: <20190725091625.GA15848@linux>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 25 Jul 2019 11:22:46 +0200
+Message-ID: <CAJZ5v0iBntT1c7gKkXG-RJpabZne2n-Afq40GKeA6-tUViVZuQ@mail.gmail.com>
+Subject: Re: [PATCH v1] ACPI / scan: Acquire device_hotplug_lock in acpi_scan_init()
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 9852a7212324 ("mm: drop hotplug lock from lru_add_drain_all()")
-states that lru_add_drain_all() "Doesn't need any cpu hotplug locking
-because we do rely on per-cpu kworkers being shut down before our
-page_alloc_cpu_dead callback is executed on the offlined cpu."
+On Thu, Jul 25, 2019 at 11:18 AM Oscar Salvador <osalvador@suse.de> wrote:
+>
+> On Wed, Jul 24, 2019 at 04:30:17PM +0200, David Hildenbrand wrote:
+> > We end up calling __add_memory() without the device hotplug lock held.
+> > (I used a local patch to assert in __add_memory() that the
+> >  device_hotplug_lock is held - I might upstream that as well soon)
+> >
+> > [   26.771684]        create_memory_block_devices+0xa4/0x140
+> > [   26.772952]        add_memory_resource+0xde/0x200
+> > [   26.773987]        __add_memory+0x6e/0xa0
+> > [   26.775161]        acpi_memory_device_add+0x149/0x2b0
+> > [   26.776263]        acpi_bus_attach+0xf1/0x1f0
+> > [   26.777247]        acpi_bus_attach+0x66/0x1f0
+> > [   26.778268]        acpi_bus_attach+0x66/0x1f0
+> > [   26.779073]        acpi_bus_attach+0x66/0x1f0
+> > [   26.780143]        acpi_bus_scan+0x3e/0x90
+> > [   26.780844]        acpi_scan_init+0x109/0x257
+> > [   26.781638]        acpi_init+0x2ab/0x30d
+> > [   26.782248]        do_one_initcall+0x58/0x2cf
+> > [   26.783181]        kernel_init_freeable+0x1bd/0x247
+> > [   26.784345]        kernel_init+0x5/0xf1
+> > [   26.785314]        ret_from_fork+0x3a/0x50
+> >
+> > So perform the locking just like in acpi_device_hotplug().
+> >
+> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > Cc: Len Brown <lenb@kernel.org
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Oscar Salvador <osalvador@suse.de>
+> > Cc: Michal Hocko <mhocko@suse.com>
+> > Signed-off-by: David Hildenbrand <david@redhat.com>
+>
+> Given that that call comes from a __init function, so while booting, I wonder
+> how bad it is.
 
-And also "Calling this function with cpu hotplug locks held can actually
-lead to obscure indirect dependencies via WQ context.".
+Yes, it probably does not matter.
 
-Since commit 3f906ba23689 ("mm/memory-hotplug: switch locking to a percpu
-rwsem") we do a cpus_read_lock() in mem_hotplug_begin().
+> Anyway, let us be consistent:
 
-I don't see how that lock is still helpful, we already hold the
-device_hotplug_lock to protect try_offline_node(), which is AFAIK one
-problematic part that can race with CPU hotplug. If it is still
-necessary, we should document why.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/memory_hotplug.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index e7c3b219a305..43b8cd4b96f5 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -86,14 +86,12 @@ __setup("memhp_default_state=", setup_memhp_default_state);
- 
- void mem_hotplug_begin(void)
- {
--	cpus_read_lock();
- 	percpu_down_write(&mem_hotplug_lock);
- }
- 
- void mem_hotplug_done(void)
- {
- 	percpu_up_write(&mem_hotplug_lock);
--	cpus_read_unlock();
- }
- 
- u64 max_mem_size = U64_MAX;
--- 
-2.21.0
-
+Right.
