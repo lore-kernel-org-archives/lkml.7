@@ -2,151 +2,70 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB65C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA22C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB03229F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB9A122CBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:17:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389135AbfGYPQQ (ORCPT
+        id S2389019AbfGYPRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 11:16:16 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34403 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388549AbfGYPQQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 11:16:16 -0400
-Received: by mail-qt1-f194.google.com with SMTP id k10so49497868qtq.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 08:16:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZdiHhR4VNqoS2oGhLtlrAzJdPT34WmJrjIOqzk+fdxs=;
-        b=g5r/XPkTzsLX9wU1rRbU8X+XUFeKQW18Gv3C/x3wKfreqLkut2awwrdpfqN3UIgZi6
-         i8ZrHAkgPnp3jN031FVQvwqZRk+Lq0//Q/5jGiM93wukobDjvjtjH4D+mRZBhTbAfpGl
-         +UyMRLTrkHd164nbAFMH7wTTLMDtVXY6HEFtOQ5FuBhM6w3svBCw3Z0myYRVgp3K+A3Y
-         H32D3p59tAtdVy+q3Oa088YSR3oydCZvIGLO104TWEs7enJSssO1F1+2LlN+1gruR26X
-         ziv1uLyUAofqX0zThaWHhLDnUfA22uSHxyqmep9zGZ0Jp/k68PWDw66MTYrz61QUvX04
-         UgwQ==
-X-Gm-Message-State: APjAAAV0SOuqPNdfMfRCNAUgMZPKI+e514xUy6OG4npyXnqOxCeO1BxM
-        9xZcSdGsTCq8VRs8USD5aaEaHA==
-X-Google-Smtp-Source: APXvYqwFku9i4X43MNZ9lYKIh3Nr6w+4NA8mbRF4pCiLAscXi2J3VGACd6fYxy3mBTaTgPH5+LbeGA==
-X-Received: by 2002:a0c:96f3:: with SMTP id b48mr64327202qvd.80.1564067775207;
-        Thu, 25 Jul 2019 08:16:15 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id f133sm24309846qke.62.2019.07.25.08.16.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 08:16:14 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 11:16:06 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
-        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com
-Subject: Re: [PATCH v2 QEMU] virtio-balloon: Provide a interface for "bubble
- hinting"
-Message-ID: <20190725111303-mutt-send-email-mst@kernel.org>
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
- <20190724171050.7888.62199.stgit@localhost.localdomain>
- <20190724173403-mutt-send-email-mst@kernel.org>
- <ada4e7d932ebd436d00c46e8de699212e72fd989.camel@linux.intel.com>
- <fed474fe-93f4-a9f6-2e01-75e8903edd81@redhat.com>
- <bc162a5eaa58ac074c8ad20cb23d579aa04d0f43.camel@linux.intel.com>
+        Thu, 25 Jul 2019 11:17:48 -0400
+Received: from verein.lst.de ([213.95.11.211]:36175 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388457AbfGYPRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 11:17:47 -0400
+Received: by verein.lst.de (Postfix, from userid 2005)
+        id 532AC68B02; Thu, 25 Jul 2019 17:17:42 +0200 (CEST)
+Date:   Thu, 25 Jul 2019 17:17:42 +0200
+From:   Torsten Duwe <duwe@lst.de>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Harald Geyer <harald@ccbib.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 6/7] dt-bindings: Add ANX6345 DP/eDP transmitter
+ binding
+Message-ID: <20190725151742.GA4820@lst.de>
+References: <20190722151202.5506768B20@verein.lst.de> <CA+E=qVdu3Hf7ufst-t_CiWkquximGFX8B2RcoQ1x0m++cc8n8Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bc162a5eaa58ac074c8ad20cb23d579aa04d0f43.camel@linux.intel.com>
+In-Reply-To: <CA+E=qVdu3Hf7ufst-t_CiWkquximGFX8B2RcoQ1x0m++cc8n8Q@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 08:05:30AM -0700, Alexander Duyck wrote:
-> On Thu, 2019-07-25 at 07:35 -0400, Nitesh Narayan Lal wrote:
-> > On 7/24/19 6:03 PM, Alexander Duyck wrote:
-> > > On Wed, 2019-07-24 at 17:38 -0400, Michael S. Tsirkin wrote:
-> > > > On Wed, Jul 24, 2019 at 10:12:10AM -0700, Alexander Duyck wrote:
-> > > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > > > > 
-> > > > > Add support for what I am referring to as "bubble hinting". Basically the
-> > > > > idea is to function very similar to how the balloon works in that we
-> > > > > basically end up madvising the page as not being used. However we don't
-> > > > > really need to bother with any deflate type logic since the page will be
-> > > > > faulted back into the guest when it is read or written to.
-> > > > > 
-> > > > > This is meant to be a simplification of the existing balloon interface
-> > > > > to use for providing hints to what memory needs to be freed. I am assuming
-> > > > > this is safe to do as the deflate logic does not actually appear to do very
-> > > > > much other than tracking what subpages have been released and which ones
-> > > > > haven't.
-> > > > > 
-> > > > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > > > BTW I wonder about migration here.  When we migrate we lose all hints
-> > > > right?  Well destination could be smarter, detect that page is full of
-> > > > 0s and just map a zero page. Then we don't need a hint as such - but I
-> > > > don't think it's done like that ATM.
-> > > I was wondering about that a bit myself. If you migrate with a balloon
-> > > active what currently happens with the pages in the balloon? Do you
-> > > actually migrate them, or do you ignore them and just assume a zero page?
-> > > I'm just reusing the ram_block_discard_range logic that was being used for
-> > > the balloon inflation so I would assume the behavior would be the same.
-> > I agree, however, I think it is worth investigating to see if enabling hinting
-> > adds some sort of overhead specifically in this kind of scenarios. What do you
-> > think?
+On Mon, Jul 22, 2019 at 11:51:36AM -0700, Vasily Khoruzhick wrote:
+> On Mon, Jul 22, 2019 at 8:12 AM Torsten Duwe <duwe@lst.de> wrote:
+> >
+> > The anx6345 is an ultra-low power DisplayPort/eDP transmitter designed
+> > for portable devices.
+> >
+> > Add a binding document for it.
 > 
-> I suspect that the hinting/reporting would probably improve migration
-> times based on the fact that from the sound of things it would just be
-> migrated as a zero page.
-> 
-> I don't have a good setup for testing migration though and I am not that
-> familiar with trying to do a live migration. That is one of the reasons
-> why I didn't want to stray too far from the existing balloon code as that
-> has already been tested with migration so I would assume as long as I am
-> doing almost the exact same thing to hint the pages away it should behave
-> exactly the same.
-> 
-> > > > I also wonder about interaction with deflate.  ATM deflate will add
-> > > > pages to the free list, then balloon will come right back and report
-> > > > them as free.
-> > > I don't know how likely it is that somebody who is getting the free page
-> > > reporting is likely to want to also use the balloon to take up memory.
-> > I think it is possible. There are two possibilities:
-> > 1. User has a workload running, which is allocating and freeing the pages and at
-> > the same time, user deflates.
-> > If these new pages get used by this workload, we don't have to worry as you are
-> > already handling that by not hinting the free pages immediately.
-> > 2. Guest is idle and the user adds up some memory, for this situation what you
-> > have explained below does seems reasonable.
-> 
-> Us hinting on pages that are freed up via deflate wouldn't be too big of a
-> deal. I would think that is something we could look at addressing as more
-> of a follow-on if we ever needed to since it would just add more
-> complexity.
-> 
-> Really what I would like to see is the balloon itself get updated first to
-> perhaps work with variable sized pages first so that we could then have
-> pages come directly out of the balloon and go back into the freelist as
-> hinted, or visa-versa where hinted pages could be pulled directly into the
-> balloon without needing to notify the host.
+> I believe you'll have to convert it to yaml format.
 
-Right, I agree. At this point the main thing I worry about is that
-the interfaces only support one reporter, since a page flag is used.
-So if we ever rewrite existing hinting to use the new mm
-infrastructure then we can't e.g. enable both types of hinting.
+Right. Thanks for the reminder.
 
-FWIW Nitesh's RFC does not have this limitation.
+	Torsten
 
-I intend to think about this over the weekend.
-
--- 
-MST
