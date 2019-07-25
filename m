@@ -2,115 +2,115 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C17C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86FFC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D8521901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:52:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="VWLm7pb1"
+	by mail.kernel.org (Postfix) with ESMTP id A308A21901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389429AbfGYCwl (ORCPT
+        id S2389458AbfGYCym convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 22:52:41 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35269 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388165AbfGYCwk (ORCPT
+        Wed, 24 Jul 2019 22:54:42 -0400
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:38369 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389442AbfGYCym (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 22:52:40 -0400
-Received: by mail-qk1-f195.google.com with SMTP id r21so35417698qke.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 19:52:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TYbaU/RcXXoDnrZeMQ94CuW6JxA4bBgoJMHBj+E8c3U=;
-        b=VWLm7pb1QP2B0tihwP9USNElFOTjEp6/v4Hd70rru6K+fpcBLvsEDPhud9KTe7tp1C
-         gOYRrkbY5+tRQ2nBFGxx4CHJMbUfjVlQcbyTAYX2Zp31qb6KjaBAMSvULqFBUzF8Kb53
-         /HA80hSPJspYIH/79t0OEPIUrlEg+sessZKds=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TYbaU/RcXXoDnrZeMQ94CuW6JxA4bBgoJMHBj+E8c3U=;
-        b=TnejBTZYubFC8vVS7xuFj9vu1ClD+66Whurk3NJ0X+LUH6N/tAiXYOUMQFBFF+/EuX
-         DwEUpeHMa4iT0dA0oKnzNXVH4Go8mg4erN4Lr7FTud9qnBEavf/4qRtwfu91u07W9Z2e
-         bXmGckxvWu+9oNSJm4Sfe9f/1pLjpM4DV5pF7ZwNjBDRE4qiPCo+OkQGFDT3zNzgI9tt
-         M1z9Bsckb8ojUy5SwpGWX+VZd24CaKGUUzmXVdUx7GBKeRzUzM1Ng4yspSZ4h3hDjT13
-         X4CFP0T1H0+gR82sP7C1fxrNZahXxaeJ0kpSLKVGRD6XpUBcljzTqMHdOpFroezNUH9V
-         SS0w==
-X-Gm-Message-State: APjAAAWh/PAe1NO94H9P3cpKnt0FDhQzP/lN2aVZ/w/pOE51bkmm0F9A
-        lzBZy3j4vM4eeVSpSMFkFO26Mgzi8J15hjdL64A=
-X-Google-Smtp-Source: APXvYqyM3sqW/iwNxySOMbv+KfAtuOilJ1tOA6mmxNVc4AhyblxyzikTIraPFFcFyT9J6TSPJ9ksANxa4ctyvg2uzs8=
-X-Received: by 2002:a37:a1d6:: with SMTP id k205mr56474155qke.171.1564023159729;
- Wed, 24 Jul 2019 19:52:39 -0700 (PDT)
+        Wed, 24 Jul 2019 22:54:42 -0400
+X-Greylist: delayed 654 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Jul 2019 22:54:41 EDT
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x6P2hUwb018127
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 11:43:30 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x6P2hUXu005633;
+        Thu, 25 Jul 2019 11:43:30 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x6P2gRmC020128;
+        Thu, 25 Jul 2019 11:43:30 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.147] [10.38.151.147]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-2430492; Thu, 25 Jul 2019 11:31:13 +0900
+Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
+ BPXC19GP.gisp.nec.co.jp ([10.38.151.147]) with mapi id 14.03.0439.000; Thu,
+ 25 Jul 2019 11:31:12 +0900
+From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+To:     "linux-mm@kvack.org" <linux-mm@kvack.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "Naoya Horiguchi" <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+Subject: [PATCH 0/2] fix kernel panic due to use uninitialized struct pages
+Thread-Topic: [PATCH 0/2] fix kernel panic due to use uninitialized struct
+ pages
+Thread-Index: AQHVQpEGSdyTWH0GVESV/sMpt20Kgg==
+Date:   Thu, 25 Jul 2019 02:31:11 +0000
+Message-ID: <20190725023100.31141-1-t-fukasawa@vx.jp.nec.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.135]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <cover.1562734889.git.joe@perches.com> <cddd7ad7e9f81dec1e86c106f04229d21fc21920.1562734889.git.joe@perches.com>
- <2a0c5ef5c7e20b190156908991e4c964a501d80a.camel@perches.com>
- <4f6709f8-381f-415c-8569-798b074b66c5@www.fastmail.com> <4e5bc8d61436024a30a8fb6a1516e29e23a75ede.camel@perches.com>
-In-Reply-To: <4e5bc8d61436024a30a8fb6a1516e29e23a75ede.camel@perches.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 25 Jul 2019 02:52:27 +0000
-Message-ID: <CACPK8Xd3+iwkuw-Ofwf+Hy1Ez5-1pBvnk_G4xT72ZQdOVd7Sag@mail.gmail.com>
-Subject: Re: [PATCH 03/12] drm: aspeed_gfx: Fix misuse of GENMASK macro
-To:     Joe Perches <joe@perches.com>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-aspeed@lists.ozlabs.org,
-        dri-devel@lists.freedesktop.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jul 2019 at 01:18, Joe Perches <joe@perches.com> wrote:
->
-> On Thu, 2019-07-25 at 10:40 +0930, Andrew Jeffery wrote:
-> >
-> > On Thu, 25 Jul 2019, at 02:46, Joe Perches wrote:
-> > > On Tue, 2019-07-09 at 22:04 -0700, Joe Perches wrote:
-> > > > Arguments are supposed to be ordered high then low.
-> > > >
-> > > > Signed-off-by: Joe Perches <joe@perches.com>
-> > > > ---
-> > > >  drivers/gpu/drm/aspeed/aspeed_gfx.h | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/aspeed/aspeed_gfx.h b/drivers/gpu/drm/aspeed/aspeed_gfx.h
-> > > > index a10358bb61ec..095ea03e5833 100644
-> > > > --- a/drivers/gpu/drm/aspeed/aspeed_gfx.h
-> > > > +++ b/drivers/gpu/drm/aspeed/aspeed_gfx.h
-> > > > @@ -74,7 +74,7 @@ int aspeed_gfx_create_output(struct drm_device *drm);
-> > > >  /* CTRL2 */
-> > > >  #define CRT_CTRL_DAC_EN                  BIT(0)
-> > > >  #define CRT_CTRL_VBLANK_LINE(x)          (((x) << 20) & CRT_CTRL_VBLANK_LINE_MASK)
-> > > > -#define CRT_CTRL_VBLANK_LINE_MASK        GENMASK(20, 31)
-> > > > +#define CRT_CTRL_VBLANK_LINE_MASK        GENMASK(31, 20)
-> >
-> > Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
->
-> This hardly needs a review, it needs to be applied.
-> There's a nominal git tree for aspeed here:
->
-> T:      git git://git.kernel.org/pub/scm/linux/kernel/git/joel/aspeed.git
->
-> But who's going to do apply this?
+A kernel panic was observed during reading /proc/kpageflags for
+first few pfns allocated by pmem namespace:
 
-This is a DRM patch, so it goes through the DRM tree. I am a
-co-maintainer there and can apply it once I remember how to drive the
-tools.
+BUG: unable to handle page fault for address: fffffffffffffffe
+[  114.495280] #PF: supervisor read access in kernel mode
+[  114.495738] #PF: error_code(0x0000) - not-present page
+[  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
+[  114.496713] Oops: 0000 [#1] SMP PTI
+[  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1 #1
+[  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
+[  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
+[  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
+[  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
+[  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
+[  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
+[  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
+[  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
+[  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
+[  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
+[  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
+[  114.506401] Call Trace:
+[  114.506660]  kpageflags_read+0xb1/0x130
+[  114.507051]  proc_reg_read+0x39/0x60
+[  114.507387]  vfs_read+0x8a/0x140
+[  114.507686]  ksys_pread64+0x61/0xa0
+[  114.508021]  do_syscall_64+0x5f/0x1a0
+[  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  114.508844] RIP: 0033:0x7f0266ba426b
 
-(FYI, this macro is not used by the current driver).
+Earlier approach to fix this was discussed here:
+https://marc.info/?l=linux-mm&m=152964770000672&w=2
 
-Cheers,
+This patchset is another approach to fix it and also provide
+a fix for potential future bugs discovered in the process.
 
-Joel
+Toshiki Fukasawa (2):
+  /proc/kpageflags: prevent an integer overflow in stable_page_flags()
+  /proc/kpageflags: do not use uninitialized struct pages
+
+ fs/proc/page.c           | 40 +++++++++++++++++++++-------------------
+ include/linux/memremap.h |  6 ++++++
+ kernel/memremap.c        | 20 ++++++++++++++++++++
+ 3 files changed, 47 insertions(+), 19 deletions(-)
+
+-- 
+1.8.3.1
+
