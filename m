@@ -2,110 +2,145 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD82C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2126C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 288DF2238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9232822BE8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:46:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TL/rqBtf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389298AbfGYCmZ (ORCPT
+        id S2389317AbfGYCqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 22:42:25 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2718 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389268AbfGYCmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 22:42:23 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 92F071EC6B027ABCF126;
-        Thu, 25 Jul 2019 10:42:21 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 25 Jul
- 2019 10:42:19 +0800
-Subject: Re: [PATCH] f2fs: use EINVAL for invalid superblock
-To:     Icenowy Zheng <icenowy@aosc.io>, Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <20190724130656.29436-1-icenowy@aosc.io>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <eb0b1035-6554-61b6-a4c8-9c67b707c6a2@huawei.com>
-Date:   Thu, 25 Jul 2019 10:42:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 24 Jul 2019 22:46:19 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33042 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388165AbfGYCqT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 22:46:19 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g2so21919312pfq.0;
+        Wed, 24 Jul 2019 19:46:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fGb+53W3+gVi5IhRG8bYdezC8LvWPACMjaeRX6JLss8=;
+        b=TL/rqBtftf+PW2Gv4BMOCqIn5e5e8A/pFGqG6XXkzVseQ7n84Qn732l0EXBGS+pk2L
+         w0ijV3UB45+bYRzkNYlpyCv78lszpntKYjHidT7MvL2VwoeGoSXFFSm4gV819TsGTncD
+         Cx4brIDiumMiZLqDBo7eaZNBpDxRhj3DloMKkarUiIFMaoU2C1u62/GU+kQtOxtrBYCU
+         JqxJ7qMhLkAGEgQu6YmJWUzV0GIIUQH2a3V+VLZxcclf696iyxS0V+MLB3q0lSWNyFAi
+         RNiw1oEgCRM43EgZXqabZc8HqC8h6GuSulc2FMJlp2UvDBu7eODeejbo2Wn6Rtiv/+00
+         IJsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fGb+53W3+gVi5IhRG8bYdezC8LvWPACMjaeRX6JLss8=;
+        b=LJbLOarXYOoE9qcRJ9cAPLAruLKC/Xb7U/J7OjCN0nfRoplWnMfpzEA/wrMj4PcklS
+         FNGRBFKKj9x5z5+GyMWytPcFOBjRk4kRDsoThJIiHWHYE1wKTb2jNn2sb0oaVgscYNlQ
+         LOZp+4Oqr40k4ZV3xu5uPJPcBBOd+YAwcYLbgyGodN+/PEZbZypZ+9PEbmGECTqAuDr9
+         vKeRU886tP8rbODrWPGSkf2AK/h0l3vmP3cKDOKQKal7oLdoJ1fVsmEU7OBn1IiEwrPO
+         0OMS5phk5JzTGqh8MTVgzks5jQUYNaHleaGVYdb9NN+4X8/HTyfmBeA9X7Q+jvAwjt05
+         Z1LA==
+X-Gm-Message-State: APjAAAVt1KM0khgE8SHJo08yYkC0oNVXRjmIq7blwlvgDL3zYLvAXzpa
+        jh/+pfM1crBxUsapT2qIXMU=
+X-Google-Smtp-Source: APXvYqzCUCQN8nnmTYZHETQ9ZiqagR86HgVQISOEyQ0ACAhdNbK1st9YpRwV3J7qsO8BnlaI78/v+A==
+X-Received: by 2002:a62:e806:: with SMTP id c6mr14504052pfi.158.1564022778701;
+        Wed, 24 Jul 2019 19:46:18 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id e17sm38910176pgm.21.2019.07.24.19.46.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 19:46:17 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Adham Abozaeid <adham.abozaeid@microchip.com>,
+        Ajay Singh <ajay.kathat@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2] staging: wilc1000: Merge memcpy + le32_to_cpus to get_unaligned_le32
+Date:   Thu, 25 Jul 2019 10:46:12 +0800
+Message-Id: <20190725024612.8604-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190724130656.29436-1-icenowy@aosc.io>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Icenowy,
+Merge the combo use of memcpy and le32_to_cpus.
+Use get_unaligned_le32 instead.
+This simplifies the code.
 
-Yes, I can see that mount_block_root() calls ksys_mount(), however it handles 0,
-EACCES and EINVAL error code..., but as manual of mount(2) said that there are
-lots of error number it can return, so I suggest we'd better fix below error
-handling.
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/staging/wilc1000/wilc_mon.c               | 3 +--
+ drivers/staging/wilc1000/wilc_wfi_cfgoperations.c | 3 +--
+ drivers/staging/wilc1000/wilc_wlan.c              | 9 +++------
+ 3 files changed, 5 insertions(+), 10 deletions(-)
 
-		int err = do_mount_root(name, p, flags, root_mount_data);
-		switch (err) {
-			case 0:
-				goto out;
-			case -EACCES:
-			case -EINVAL:
-				continue;
-		}
+diff --git a/drivers/staging/wilc1000/wilc_mon.c b/drivers/staging/wilc1000/wilc_mon.c
+index 7d7933d40924..d6f14f69ad64 100644
+--- a/drivers/staging/wilc1000/wilc_mon.c
++++ b/drivers/staging/wilc1000/wilc_mon.c
+@@ -35,8 +35,7 @@ void wilc_wfi_monitor_rx(struct net_device *mon_dev, u8 *buff, u32 size)
+ 		return;
+ 
+ 	/* Get WILC header */
+-	memcpy(&header, (buff - HOST_HDR_OFFSET), HOST_HDR_OFFSET);
+-	le32_to_cpus(&header);
++	header = get_unaligned_le32(buff - HOST_HDR_OFFSET);
+ 	/*
+ 	 * The packet offset field contain info about what type of management
+ 	 * the frame we are dealing with and ack status
+diff --git a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
+index d72fdd333050..12fb4add05ec 100644
+--- a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
++++ b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
+@@ -1038,8 +1038,7 @@ void wilc_wfi_p2p_rx(struct wilc_vif *vif, u8 *buff, u32 size)
+ 	s32 freq;
+ 	__le16 fc;
+ 
+-	memcpy(&header, (buff - HOST_HDR_OFFSET), HOST_HDR_OFFSET);
+-	le32_to_cpus(&header);
++	header = get_unaligned_le32(buff - HOST_HDR_OFFSET);
+ 	pkt_offset = GET_PKT_OFFSET(header);
+ 
+ 	if (pkt_offset & IS_MANAGMEMENT_CALLBACK) {
+diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
+index d46876edcfeb..7d438ae90c3e 100644
+--- a/drivers/staging/wilc1000/wilc_wlan.c
++++ b/drivers/staging/wilc1000/wilc_wlan.c
+@@ -703,8 +703,7 @@ static void wilc_wlan_handle_rx_buff(struct wilc *wilc, u8 *buffer, int size)
+ 
+ 	do {
+ 		buff_ptr = buffer + offset;
+-		memcpy(&header, buff_ptr, 4);
+-		le32_to_cpus(&header);
++		header = get_unaligned_le32(buff_ptr);
+ 
+ 		is_cfg_packet = (header >> 31) & 0x1;
+ 		pkt_offset = (header >> 22) & 0x1ff;
+@@ -874,10 +873,8 @@ int wilc_wlan_firmware_download(struct wilc *wilc, const u8 *buffer,
+ 
+ 	offset = 0;
+ 	do {
+-		memcpy(&addr, &buffer[offset], 4);
+-		memcpy(&size, &buffer[offset + 4], 4);
+-		le32_to_cpus(&addr);
+-		le32_to_cpus(&size);
++		addr = get_unaligned_le32(&buffer[offset]);
++		size = get_unaligned_le32(&buffer[offset + 4]);
+ 		acquire_bus(wilc, WILC_BUS_ACQUIRE_ONLY);
+ 		offset += 8;
+ 		while (((int)size) && (offset < buffer_size)) {
+-- 
+2.20.1
 
-In another point, I agreed that we should not just return -EFSCORRUPTED for all
-failure cases of sanity_check_raw_super(), EINVAL should be returned correctly
-if the filesystem magic number is not f2fs' one, and EFSCORRUPTED for the other
-cases.
-
-Thanks,
-
-On 2019/7/24 21:06, Icenowy Zheng wrote:
-> The kernel mount_block_root() function expects -EACESS or -EINVAL for a
-> unmountable filesystem when trying to mount the root with different
-> filesystem types.
-> 
-> However, in 5.3-rc1 the behavior when F2FS code cannot find valid block
-> changed to return -EFSCORRUPTED(-EUCLEAN), and this error code makes
-> mount_block_root() fail when trying to probe F2FS. As invalid
-> superblocks mean the filesystem cannot be recognized as F2FS (it might
-> be another FS), returning -EINVAL seems more reasonable, and other
-> filesystems also do this.
-> 
-> Change back the return value to -EINVAL when no valid superblocks are
-> found.
-> 
-> Fixes: 10f966bbf521 ("f2fs: use generic EFSBADCRC/EFSCORRUPTED")
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> ---
-> This commit fixes a regression introduced in v5.3-rc1, which leads to
-> btrfs / cannot be mounted if no initrd is used and both f2fs and btrfs
-> are built-in.
-> 
->  fs/f2fs/super.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> index 6de6cda44031..949309b9f1b8 100644
-> --- a/fs/f2fs/super.c
-> +++ b/fs/f2fs/super.c
-> @@ -2873,7 +2873,7 @@ static int read_raw_super_block(struct f2fs_sb_info *sbi,
->  		if (sanity_check_raw_super(sbi, bh)) {
->  			f2fs_err(sbi, "Can't find valid F2FS filesystem in %dth superblock",
->  				 block + 1);
-> -			err = -EFSCORRUPTED;
-> +			err = -EINVAL;
->  			brelse(bh);
->  			continue;
->  		}
-> 
