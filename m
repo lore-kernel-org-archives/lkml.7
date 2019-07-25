@@ -2,133 +2,92 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B75C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA8DC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86F9E21851
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50CC421851
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:57:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a8C1w4JS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388173AbfGYQ5h (ORCPT
+        id S2388831AbfGYQ5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:57:37 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:33382 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbfGYQ5g (ORCPT
+        Thu, 25 Jul 2019 12:57:52 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37183 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388306AbfGYQ5v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:57:36 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hqh3a-0001sw-Mh; Thu, 25 Jul 2019 10:57:30 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hqh3W-00083e-6X; Thu, 25 Jul 2019 10:57:30 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Oleg Nesterov <oleg@redhat.com>, linux-kernel@vger.kernel.org,
-        arnd@arndb.de, keescook@chromium.org, joel@joelfernandes.org,
-        tglx@linutronix.de, tj@kernel.org, dhowells@redhat.com,
-        jannh@google.com, luto@kernel.org, akpm@linux-foundation.org,
-        cyphar@cyphar.com, torvalds@linux-foundation.org,
-        viro@zeniv.linux.org.uk, kernel-team@android.com,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-api@vger.kernel.org
-References: <20190724144651.28272-1-christian@brauner.io>
-        <20190724144651.28272-5-christian@brauner.io>
-        <20190725103543.GF4707@redhat.com>
-        <20190725104006.7myahvjtnbcgu3in@brauner.io>
-        <20190725112503.GG4707@redhat.com> <20190725114359.GH4707@redhat.com>
-        <20190725122650.4i3arct5rpchqmyt@brauner.io>
-Date:   Thu, 25 Jul 2019 11:57:19 -0500
-In-Reply-To: <20190725122650.4i3arct5rpchqmyt@brauner.io> (Christian Brauner's
-        message of "Thu, 25 Jul 2019 14:26:51 +0200")
-Message-ID: <878ssmuk5s.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Thu, 25 Jul 2019 12:57:51 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 19so23055726pfa.4;
+        Thu, 25 Jul 2019 09:57:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aKLAkdgGuztboXUQ231yrhN/tIPVnnEKocDh0muuJAI=;
+        b=a8C1w4JSufMm02r4M0vK4NHF0sBpZD/IvloJN8iutYssW7arHCkP8D6Ud992G9zZtb
+         YOZ+8y1QWU05CxYpRl/NJWKd6PHH0sjZJ+MCHcaBwPCvwRGHshlfG8hLK8ogG+vnBgTi
+         6J/pFhRXwPIX0aOfb5sBjkHnoaqlEO4fRA/pjl7+oh7ZKs/HgJcF7DnrsnpKelV5mmm5
+         fuE38wn3rrfM6YUBf01esfN2RFKNFQWYsgo45UMwP6rW1RAaiKmsppyzE5cc+uEr70g/
+         FbQ8K1c0+j9+Vx3KFKI1mLHK9U8jbvWZXJFz8lcn+k93JxyonCW2GEFoLYoVpdCNejQQ
+         zDQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aKLAkdgGuztboXUQ231yrhN/tIPVnnEKocDh0muuJAI=;
+        b=UrzS/k3mimUPrQ7gtweU3G7nwJEMd7GSCG1BMvZgY2oWleObi9LaG/F2cRFU/ehNzX
+         nAdjHDOTzyn4SOkSIffIyTA0UmMQkhW4cn0iSeX9Gy4aAzhOACzdjMd0Jpah8fN8z7LF
+         mhrHZm9aat7lqZtLoGiNty42ZIyP5/zOhkIWilzcd6l+dLnJjmBNMfybGy/KP5757Zvs
+         9wwV6GsTc2Oub0BUi8AmQjlx8iD1X+Gg5um4T0KFrNjq2MSyspfJBDc0en9Vdk1CbxAK
+         gJRl7Er8sM3k9gJdTmFYYeEsXb8wcfxtU3FM8dtIQy5HG3VMY08yfEAlJVqwmeuNbRQY
+         8chQ==
+X-Gm-Message-State: APjAAAVrLW24mHJHh+0P3r/vF+N4qpbNteH9UIpfKBd12LI/UelWcP/O
+        cisSgBf2h2wEMr7iDzBBOaISvXf0
+X-Google-Smtp-Source: APXvYqysSSuM1FUvn18dh50+Z4TMcS3HUBv9iJY0omiwVZj/KMvAWZzwbJ1sZ7SsN1WFTYaQ/HHTdg==
+X-Received: by 2002:a63:6c7:: with SMTP id 190mr86048967pgg.7.1564073870805;
+        Thu, 25 Jul 2019 09:57:50 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l1sm65188868pfl.9.2019.07.25.09.57.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 09:57:50 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 09:57:49 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.2 000/413] 5.2.3-stable review
+Message-ID: <20190725165749.GA12684@roeck-us.net>
+References: <20190724191735.096702571@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hqh3W-00083e-6X;;;mid=<878ssmuk5s.fsf@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18QSBD8aKgfkOI6Bh2C9GVbrFxs+FxUpU8=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 4/5] pidfd: add CLONE_WAIT_PID
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian@brauner.io> writes:
+On Wed, Jul 24, 2019 at 09:14:51PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.2.3 release.
+> There are 413 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 26 Jul 2019 07:13:35 PM UTC.
+> Anything received after that time might be too late.
+> 
 
-> On Thu, Jul 25, 2019 at 01:43:59PM +0200, Oleg Nesterov wrote:
->> Or. We can change wait_consider_task() to not clear ->notask_error if
->> WXXX and the child is PF_WAIT_PID.
->> 
->> This way you can "safely" use wait() without WNOHANG, it won't block if
->> all the children which can report an even are PF_WAIT_PID.
->> 
->> But I do not understand your use-cases, I have no idea if this can help
->
-> One usecase (among others listed in the commit message) are shared
-> libraries. P_ALL is usually something you can't really use in a shared
-> library because you have no idea what else might be fork()ed off. Only
-> the main program can use this but none of the auxiliary libraries that
-> it uses.
-> The other way around you want to be able fork() off something without
-> affecting P_ALL in the main program.
-> The key is that you want to be able to create child processes in a
-> shared library without the main programing having to know about this so
-> that it can use P_ALL and never get stuff from the library.
->
-> Assume you have a project with a main loop with a million things
-> happening in that mainloop like some gui app running an avi video. For
-> example, gtk uses gstreamer which forks off all codecs in child
-> processes which are sandboxed for security. So gstreamer is using helper
-> processes in the background which are my children now. Now I'm creating
-> four more additional helper processes as well. Now, in my (glib, qt
-> whatever) mainloop on SIGCHLD some part of the app is checking with
-> WNHOANG and finds a process has exited. It's cleaning this thing up now
-> but it's not a process it wanted to clean up. The other part of the app
-> is now doing waitid(P_PID, pid) but will find the process already gone
-> it wanted to reap.
->
-> I hope I'm expressing this well enough.
+Build results:
+	total: 159 pass: 159 fail: 0
+Qemu test results:
+	total: 364 pass: 364 fail: 0
 
-
-I think so.
-
-A) I think Oleg is correct that you should test the flag in
-   do_wait_thread rather than elsewhere.
-
-B) We have a deficiency in do_wait that should be addressed.  The
-   do_wait function does not have a fast path for waiting on a
-   particular process.  For adding this functionality I such a fast path
-   goes from a nice to have to a necessity for getting all of the
-   fiddly details correct.
-
-C) I believe the semantics should be that while such a file descriptor
-   is open, only that file descriptor can be used to reap the process.
-   And that it should be allowed to pass the file descriptor between
-   processes.  Which means the parent can die and the process be
-   reparted to init and we should still be able to reap the process with
-   the file descriptor.
-
-D) I think it is a toss up how we should deal with such a process when
-   the file descriptor is closed.  Setting the process to autoreap
-   or reparent to init and let init deal with it.  My inclination is
-   that autoreap is the correct behavior.
-   
-Eric
-
-  
-
-
-
+Guenter
