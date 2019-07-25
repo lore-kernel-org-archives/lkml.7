@@ -2,102 +2,94 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7F8C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A02FC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C827F21901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD8A21901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:05:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="aYQecNMD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389006AbfGYIEo (ORCPT
+        id S2389032AbfGYIFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 04:04:44 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:57013 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387586AbfGYIEo (ORCPT
+        Thu, 25 Jul 2019 04:05:42 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:60142 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387586AbfGYIFm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 04:04:44 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id qYjuhCFwXLqASqYjyhSAIU; Thu, 25 Jul 2019 10:04:42 +0200
-Subject: Re: [PATCH 2/2] Revert "media: vimc: propagate pixel format in the
- stream"
-To:     Helen Koike <helen.koike@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
-        skhan@linuxfoundation.org
-References: <e144e6f5aae4e3d932e464fbf741d7cbaaf55980.1562701396.git.helen.koike@collabora.com>
- <8450c879beff8c86dde7333f1f2d688eef380de4.1562701396.git.helen.koike@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <47703594-f336-3006-5ae0-7b459e48110f@xs4all.nl>
-Date:   Thu, 25 Jul 2019 10:04:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <8450c879beff8c86dde7333f1f2d688eef380de4.1562701396.git.helen.koike@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfF3+WuifdXyrzyLYdY3HGxRMUEXbkZCsnBqP3qn+DVu8FhP+gz5yphjZIyz/RMALPeO6z0qj7bpwMp/p1kjQSnaHYh7vpWZmrNJRSa/HoBBt0iSwUoAJ
- LItKK9F+uUfy3Vn7JVwc5aesNrZBGMacwTQfNgL6b5GzBHiLbg9KL/ecc1cZ28WUr9++ZQQyMTtOaTUTNLksnCZz90QtnfKAgM/F+wlibGQfU+rMqNk+3AFU
- lPTp2g7oSbqUqYvPe3ycnl67YCsRXOmBgAn43ZVRxdprGY05uMOR11dbkRg31ysS6SSRlB27d3/MSzJi7TmO2bK9wELo8+87IEihAR4MtqM=
+        Thu, 25 Jul 2019 04:05:42 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id x6P85GFC002747;
+        Thu, 25 Jul 2019 17:05:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x6P85GFC002747
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564041917;
+        bh=7BLg13CdKPhyaQ1kBrxCgb7bB9yny46HPZX8sZdYLjk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=aYQecNMDwtqd1VXqs9tx5rDiHj/U+GzMdzLvjkHp09Lhyt+3+n1+Fzxnd8Osq2jo4
+         cjFq75wNGYB8ayoOUlyika0wM2n9P6Mwt8YIjTH3IT2dR8Do84sZUL+20kfBsKm+Sk
+         wFhjJNEMleOQdjBa01v0NZ3eLw1euN8X0kO99KRYPrz9nSGA36rAy5zC1i5xWCSZjN
+         knADuTqBCKWDl17DXbwrSj9sl7ah0A/2leFfJbxY22ZfLENtR8ZDZf/ZKUdpDm7mlk
+         Pech/BCJJ0AYnYS1bFiN1Lc8tFFgD58+Xaw12pCxzYmUiAzUSULWRU710My0n5+cFo
+         MQYGvJTlU6RWw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: detect missing "WITH Linux-syscall-note" for uapi headers
+Date:   Thu, 25 Jul 2019 17:05:13 +0900
+Message-Id: <20190725080513.4071-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
+UAPI headers licensed under GPL are supposed to have exception
+"WITH Linux-syscall-note" so that they can be included into non-GPL
+user space application code.
 
-On 7/9/19 9:43 PM, Helen Koike wrote:
-> This reverts commit b6c61a6c37317efd7327199bfe24770af3d7e799.
-> 
-> The requested pixelformat is being propagated from the capture to the
-> tpg in the sensor.
-> 
-> This was a bad design choice, as we start having the following issues:
-> 
-> * We set a pixelformat in the capture;
-> * We set matching media bus formats in the subdevices pads;
-> * Link validate looks fine (sizes matches, media bus formats matches);
-> * Issue: if some of the subdevice doesn't know how to generate the
-> requested pixelformat in the capture, then stream_on fails. This is bad
-> because capture says it supports that pixelformat, everything looks
-> fine, but it is not, and there is no way to find it out through the
-> links.
-> 
-> This patch was implemented so we could request any pixelformat from the
-> pipeline regardeless of the media bus format configured between pads.
-> Not all pixelformat can be mapped into a media bus code (e.g.
-> multiplanar formats), so with this patch we could request those
-> pixelformats from the tpg.
-> 
-> Solution: map pixelformats to media bus codes as before, and implement
-> conversions to other pixelformats in the capture to support multiplanar.
-> 
-> So first step to this solution is to revert this patch.
-> 
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> ---
->  drivers/media/platform/vimc/vimc-capture.c  |  76 ++---
->  drivers/media/platform/vimc/vimc-common.c   | 309 ++++++++++++--------
->  drivers/media/platform/vimc/vimc-common.h   |  58 ++--
->  drivers/media/platform/vimc/vimc-debayer.c  |  83 ++----
->  drivers/media/platform/vimc/vimc-scaler.c   |  63 ++--
->  drivers/media/platform/vimc/vimc-sensor.c   |  51 +++-
->  drivers/media/platform/vimc/vimc-streamer.c |   2 -
->  drivers/media/platform/vimc/vimc-streamer.h |   6 -
->  8 files changed, 342 insertions(+), 306 deletions(-)
-> 
+Unfortunately, people often miss to add it. Break 'make headers'
+when any of exported headers lacks the exception note so that the
+0-day bot can easily catch it.
 
-Unfortunately this patch no longer applies.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Can you respin this series?
+This patch depends on the following:
 
-Also, should this be backported to 5.3 as well?
+https://lore.kernel.org/patchwork/patch/1105289/
 
-Regards,
+I will turn on the error after all headers are fixed.
 
-	Hans
+
+ scripts/headers_install.sh | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
+index 47f6f3ea0771..bbaf29386995 100755
+--- a/scripts/headers_install.sh
++++ b/scripts/headers_install.sh
+@@ -23,6 +23,12 @@ TMPFILE=$OUTFILE.tmp
+ 
+ trap 'rm -f $OUTFILE $TMPFILE' EXIT
+ 
++# SPDX-License-Identifier with GPL variants must have "WITH Linux-syscall-note"
++if [ -n "$(sed -n -e "/SPDX-License-Identifier:.*GPL-/{/WITH Linux-syscall-note/!p}" $INFILE)" ]; then
++	echo "error: $INFILE: missing \"WITH Linux-syscall-note\" for SPDX-License-Identifier" >&2
++	exit 1
++fi
++
+ sed -E -e '
+ 	s/([[:space:](])(__user|__force|__iomem)[[:space:]]/\1/g
+ 	s/__attribute_const__([[:space:]]|$)/\1/g
+-- 
+2.17.1
+
