@@ -2,113 +2,107 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E307FC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DFBC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE5B721951
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A8E21951
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:00:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564059623;
+	bh=g4RGUwZmu18nz57PaiTCIDlcJO5x7TAwfRHhxeooAXI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N7plhoL9uPZjRWfL12bvSCki6POFqwStX8L7JeKCHpolP7EvLmOaAJuANPgc06C88
+	 ogKpKLY2dv/E8yfglVtvtkHY8cDtnhqyCwHVL00UIZNsQqu3LQtya4lhFYImnBAzyI
+	 ehUuL57c1GKHMPy5wfhjim/3d+33heH+WIspBx7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729901AbfGYM7q convert rfc822-to-8bit (ORCPT
+        id S1729915AbfGYNAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:59:46 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:50657 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfGYM7q (ORCPT
+        Thu, 25 Jul 2019 09:00:22 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40332 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfGYNAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:59:46 -0400
-Received: from marcel-macbook.fritz.box (p5B3D2BA7.dip0.t-ipconnect.de [91.61.43.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id A8EA1CEC82;
-        Thu, 25 Jul 2019 15:08:20 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] Bluetooth: hci_uart: check for missing tty operations in
- protocol handlers
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20190725120909.31235-1-vdronov@redhat.com>
-Date:   Thu, 25 Jul 2019 14:59:42 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Suraj Sumangala <suraj@atheros.com>,
-        Frederic Danis <frederic.danis@linux.intel.com>,
-        Loic Poulain <loic.poulain@intel.com>,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        syzkaller@googlegroups.com
-Content-Transfer-Encoding: 8BIT
-Message-Id: <2E234F47-724D-4CFB-93B5-48E5BDA6F230@holtmann.org>
-References: <20190725120909.31235-1-vdronov@redhat.com>
-To:     Vladis Dronov <vdronov@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Thu, 25 Jul 2019 09:00:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cwFiHQ+8lVnRhkC8EwJXQy9RvFDx6GKVTnbtr172hKw=; b=ntrHtbgTrK5RrFAcAKNPtbEk3
+        hmGXUqTzSj2WgIAxbRXdUcV+DuGJBu9t7rYLai2X11kbG5uggytpi7YflTWu8UsY3LqosdntXd3Wu
+        1u8GqHV3tp6ykZ/SPq7OJ41vTJZnTEClmjCK8dyUsirsOJOYox59O+WG+UEWLn9xVTTzs=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hqdM1-0002p8-II; Thu, 25 Jul 2019 13:00:17 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 06E062742B52; Thu, 25 Jul 2019 14:00:16 +0100 (BST)
+Date:   Thu, 25 Jul 2019 14:00:16 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH 1/6] ASoC: codec2codec: run callbacks in order
+Message-ID: <20190725130016.GC4213@sirena.org.uk>
+References: <20190724162405.6574-1-jbrunet@baylibre.com>
+ <20190724162405.6574-2-jbrunet@baylibre.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="KDt/GgjP6HVcx58l"
+Content-Disposition: inline
+In-Reply-To: <20190724162405.6574-2-jbrunet@baylibre.com>
+X-Cookie: Jenkinson's Law:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vladis,
 
-> Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
-> functions which are called by the certain HCI UART protocols (hci_ath,
-> hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
-> or directly. This leads to an execution at NULL and can be triggered by
-> an unprivileged user. Fix this by adding a check for the missing tty
-> operations to the protocols which use them.
-> 
-> This fixes CVE-2019-10207.
-> 
-> Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
-> Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
-> Cc: stable@vger.kernel.org # v2.6.36+
-> Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
-> Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
-> Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate configuration support")
-> Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
-> Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
-> Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-> ---
-> drivers/bluetooth/hci_ath.c   | 3 +++
-> drivers/bluetooth/hci_bcm.c   | 5 +++++
-> drivers/bluetooth/hci_intel.c | 3 +++
-> drivers/bluetooth/hci_mrvl.c  | 3 +++
-> drivers/bluetooth/hci_qca.c   | 4 ++++
-> 5 files changed, 18 insertions(+)
-> 
-> diff --git a/drivers/bluetooth/hci_ath.c b/drivers/bluetooth/hci_ath.c
-> index a55be205b91a..99df8a13e47e 100644
-> --- a/drivers/bluetooth/hci_ath.c
-> +++ b/drivers/bluetooth/hci_ath.c
-> @@ -98,6 +98,9 @@ static int ath_open(struct hci_uart *hu)
-> 
-> 	BT_DBG("hu %p", hu);
-> 
-> +	if (!hu->tty->driver->ops->tiocmget || !hu->tty->driver->ops->tiocmset)
-> +		return -ENOTSUPP;
-> +
-> 	ath = kzalloc(sizeof(*ath), GFP_KERNEL);
-> 	if (!ath)
-> 		return -ENOMEM;
-> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-> index 8905ad2edde7..8c3e09cc341c 100644
-> --- a/drivers/bluetooth/hci_bcm.c
-> +++ b/drivers/bluetooth/hci_bcm.c
-> @@ -406,6 +406,11 @@ static int bcm_open(struct hci_uart *hu)
-> 
-> 	bt_dev_dbg(hu->hdev, "hu %p", hu);
-> 
-> +#ifdef CONFIG_PM
-> +	if (!hu->tty->driver->ops->tiocmget || !hu->tty->driver->ops->tiocmset)
-> +		return -ENOTSUPP;
-> +#endif
-> +
+--KDt/GgjP6HVcx58l
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-why is this one hidden behind CONFIG_PM? The general baud rate changes are independent of runtime power management support.
+On Wed, Jul 24, 2019 at 06:24:00PM +0200, Jerome Brunet wrote:
+> When handling dai_link events on codec to codec links, run all .startup()
+> callbacks on sinks and sources before running any .hw_params(). Same goes
+> for hw_free() and shutdown(). This is closer to the behavior of regular
+> dai links
 
-And I would introduce a bool hci_uart_has_tiocm_support(struct hci_uart *) helper.
+This looks good but needs rebasing against -next due to Morimoto-san's
+recent DAI changes:
 
-Regards
+  CC      sound/soc/soc-dapm.o
+sound/soc/soc-dapm.c: In function =E2=80=98snd_soc_dai_link_event=E2=80=99:
+sound/soc/soc-dapm.c:3857:10: error: implicit declaration of function =E2=
+=80=98soc_dai_hw_params=E2=80=99; did you mean =E2=80=98snd_soc_dai_hw_para=
+ms=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+    ret =3D soc_dai_hw_params(&substream, params, source);
+          ^~~~~~~~~~~~~~~~~
+          snd_soc_dai_hw_params
 
-Marcel
+--KDt/GgjP6HVcx58l
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl05p+AACgkQJNaLcl1U
+h9AP+gf+KYWXJgB5nW6jPKjIT4VghTppSU3QuuCdZrhY/sNBJSzzMz6wo1IPyz97
+fyMJDcDemoa6wbn2EdzxffFQKt7DlKNs8fNe1TSu6SaQaITcI5iGYaeeQ0U+t1ps
+bydYObp41RlNN66PWCqoObTjwrtmbT4KjZt6VVD/rpUA+TYVaT4lAlC43lYdGOwS
+s1U3cqK0UhnJ2tl7ijvp1GbohlH7hG+STTgSwMVHjnqTvDAnLJrQ7aXO4U39m4mc
+GKQ2VtknUOXH4SmQ/HCyLdKOHXSv2fWdEMSeD65MBUxRnfW9ivMoQabStIA39rk9
+m1xUbylnxDjw8hciPEbmbsQapqiavg==
+=HgG8
+-----END PGP SIGNATURE-----
+
+--KDt/GgjP6HVcx58l--
