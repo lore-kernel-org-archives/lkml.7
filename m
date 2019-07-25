@@ -2,124 +2,106 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F572C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 00:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD161C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 01:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 594802190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 00:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA762238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 01:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uPq/hUDV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oUVUoRjn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388149AbfGYA6c (ORCPT
+        id S1728506AbfGYBFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 20:58:32 -0400
-Received: from ozlabs.org ([203.11.71.1]:44507 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727364AbfGYA6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 20:58:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45vDNd2jmCz9sBt;
-        Thu, 25 Jul 2019 10:58:25 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564016309;
-        bh=PPuO+Wxvc09i2eFH/arezdXXxJeN18c0zhD/Fc+fE9o=;
-        h=Date:From:To:Cc:Subject:From;
-        b=uPq/hUDVxd2V4wrQ7uj6GvE5l52FsLbXrQJ+k1TKrN/sbZzrc+hgnRT69eWxmVDJQ
-         B+pXy87eaIndxIT7fhjP9PJkntL3Aaz0HrBiBCpgNyqxSiQ4zKo76ImraUM9byojNw
-         NRXEg/FBsWYfivX5xnbTpRMMmzLMYZvAiAGwPuOD3ZlU2GfXDv6RiOgEQDkNrKsEgo
-         AshuYYtmgQX3p3DYRftiYtrCSkE9MRmcvXtAZYG6qbWix7wDKcK9Q7zrjRulQ1xkxl
-         S3XkK+UhIPYyJX3P/VoQIowZ64EG+J1fn0EltsxG+H6qJlypPU5Xx6wU4UDJnulRF0
-         yBdbGJNJ/h+PQ==
-Date:   Thu, 25 Jul 2019 10:58:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Wen Yang <wen.yang99@zte.com.cn>,
-        Sean Nyekjaer <sean@geanix.com>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20190725105824.4e628c43@canb.auug.org.au>
+        Wed, 24 Jul 2019 21:05:00 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44455 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfGYBFA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 21:05:00 -0400
+Received: by mail-oi1-f194.google.com with SMTP id e189so36331939oib.11;
+        Wed, 24 Jul 2019 18:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MGhC6NZhOcJQTc6Z3cGfpdRL2TRfqyy0teXVcrSw7IE=;
+        b=oUVUoRjnZ1rgv56iP4UaAuxbEeOUpXlSQk5y+mGbudilenj33di8mVPd9HjqCXYwlr
+         BxvaNqpdLD+wHcDolTe2p47Kge8ZIVPaG/uxsCu9NeUD0K94p8KTgqxPHHXqkoaQAeTt
+         zVjAmKSzGmOsjmjtW6c+BAP8UU+m0Z+BXepqJEb4UDlKPiDN2UZhajl/RNk8PUWRHqaJ
+         mGbJAnop5HwRThUaIYs00OWL8Batt4bw4XSpCCm480nO85xvTbqfTcSLy7iUXUAlnglC
+         gwBq8bWNQlEgoYCUhgACYferc1H/CCefC3ZDhsu+0JDgaCQbRdQ+hY7/x2QegDoHxNRx
+         6D+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MGhC6NZhOcJQTc6Z3cGfpdRL2TRfqyy0teXVcrSw7IE=;
+        b=H9t6kF5TJp/xyBM+95McZZNkF0P+SzmqnpzvGjWQrgBl16KkCAbqXtItUzeF7UtuBX
+         6RKxiLU7MTEEWA5Oz9cQlET2pVwg0RfFOGb/s8QH0A0W/p2R9VZEOqt+R2xmglZGuG1C
+         BrU4LqEdkHssQ/MKd+ECRcHaB6R2nLY1cok5LjLULskDkvu1IoimP7pOeMn9vceSbH4V
+         9zUNZKbUySXacfjfGrjxQcgGZlCJhRFJoxAoiVWsmJKzRZRmV96NT8/lURycMCtjyNMP
+         d6y5QnWu7r0/BbPwl1yYSVVDVRvbfPJ+61yEC1kTzh3heJUhnOuF6f+1j5hsaQF6KpSm
+         njfg==
+X-Gm-Message-State: APjAAAXYGHW1X4ZA5aWJXtPdR5Gv/NM1zNu/0OyxCtz6EvZVmSV+op7p
+        oGhJtdZLCgmJFv/+aT/FX0k=
+X-Google-Smtp-Source: APXvYqwIYVsVsc/tlDJ+zFrTSRRpIZI6ROoGTG6oXu07Frd1LqpAWczvtTwsPH6whMr5wnwWTtJhlQ==
+X-Received: by 2002:aca:ab57:: with SMTP id u84mr40928096oie.61.1564016699117;
+        Wed, 24 Jul 2019 18:04:59 -0700 (PDT)
+Received: from rYz3n ([2600:1700:210:3790::18])
+        by smtp.gmail.com with ESMTPSA id 11sm17314621otc.45.2019.07.24.18.04.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 18:04:58 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 20:04:57 -0500
+From:   Jiunn Chang <c0d1n61at3@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.1 000/371] 5.1.20-stable review
+Message-ID: <20190725010455.w6houpa5i725fujz@rYz3n>
+References: <20190724191724.382593077@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/k5AIR+Ny/7Yd5oGlEAw1gLx";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/k5AIR+Ny/7Yd5oGlEAw1gLx
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 24, 2019 at 09:15:52PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.20 release.
+> There are 371 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 26 Jul 2019 07:13:35 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.20-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> -------------
 
-Hi all,
+Hello,
 
-Today's linux-next merge of the net-next tree got a conflict in:
+Compiled and booted.  No regressions on x86_64.
 
-  drivers/net/can/flexcan.c
+THX,
 
-between commit:
-
-  e9f2a856e102 ("can: flexcan: fix an use-after-free in flexcan_setup_stop_=
-mode()")
-
-from the net tree and commit:
-
-  915f9666421c ("can: flexcan: add support for DT property 'wakeup-source'")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/net/can/flexcan.c
-index fcec8bcb53d6,09d8e623dcf6..000000000000
---- a/drivers/net/can/flexcan.c
-+++ b/drivers/net/can/flexcan.c
-@@@ -1473,9 -1473,10 +1491,12 @@@ static int flexcan_setup_stop_mode(stru
- =20
-  	device_set_wakeup_capable(&pdev->dev, true);
- =20
-+ 	if (of_property_read_bool(np, "wakeup-source"))
-+ 		device_set_wakeup_enable(&pdev->dev, true);
-+=20
- -	return 0;
- +out_put_node:
- +	of_node_put(gpr_np);
- +	return ret;
-  }
- =20
-  static const struct of_device_id flexcan_of_match[] =3D {
-
---Sig_/k5AIR+Ny/7Yd5oGlEAw1gLx
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl04/rAACgkQAVBC80lX
-0GyiVAf+MH+vKU+Xk/7uRhw3NEVTbPL8rqUhF4NnbV/gg8TYjFUEgPCYmpi0XEMQ
-C5Irjn7+z2skP7HjrUqEx2XFesmYaD7zYibKTKBv2p22RFs5h00rs3OJIBYU6BKf
-6C0Y/+tczdwzGupkK5FZJOtXLlMItApFMthS2J/Ukua12TNo1p/TrzKZlaX4hEmm
-XYtMsXd/Qm4/5dDgCt1nc8LBpGVEGyoUos0YGxxke4uDLNbkv+X5ak6AQQu1U4Xq
-a4y9+lzaamtpNBIwNCzFUGLSlRSZPhlPFF73RBN7uVhD1TFxA3S4WZeLMWLb/dNr
-Oza9Twf+VCb1Q8beyRTVTQ7Vd/KYqA==
-=wiVc
------END PGP SIGNATURE-----
-
---Sig_/k5AIR+Ny/7Yd5oGlEAw1gLx--
+Jiunn
