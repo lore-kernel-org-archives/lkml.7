@@ -2,181 +2,488 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAC5C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13CDC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 189C822BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:14:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="M3t1O2gx"
+	by mail.kernel.org (Postfix) with ESMTP id 6CCA5229F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbfGYMOu (ORCPT
+        id S2404494AbfGYMPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:14:50 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34469 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbfGYMOu (ORCPT
+        Thu, 25 Jul 2019 08:15:02 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:43528 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbfGYMPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:14:50 -0400
-Received: by mail-ed1-f65.google.com with SMTP id s49so15203187edb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 05:14:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xBQlbxU4sIAkZTKOezDDuKJzUoBaUMJjzL90w1I4sJI=;
-        b=M3t1O2gx3+K3rmn/pg3IKsxF+wMha3/LFiBk1fJtQOwd8o0IqWLiVGplJsSGS0D56s
-         9xudBdZ2cfavEGGdm0BxzNjv7mYMR/gZDIdJDMJnpyWgil3kUhBR8OYvLmQzLxtkugQC
-         Fvqfzg4SzAyYVYQu3pyILKvHWBdT4P88aG3lU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=xBQlbxU4sIAkZTKOezDDuKJzUoBaUMJjzL90w1I4sJI=;
-        b=TUD1HSrBazMuMAiJPu4uAFGtOXGcb7CYWjFR9WxbiOOqMdeDjH38PZ+z+3jr08sbdR
-         GzHr6xPCgtYhPsO+7ADGoYw3DC12yvYhJRRL7zT44q5gbHw2skDTtCBZEhTJnR9k5t0T
-         kL43EqMVb/PSDv9G01RtjBdgE0zVl9LIuLnPBxkNlnMw4jZt+sE9BfLS6pFAueYe5z4f
-         /oKBWOyOb5blNRPx71KnASoWuAiKkZ9C2B18xNLs/j0tJ250jHZ+NCsJh0pGyTvmh43t
-         gozwx1upk76SD/vncFS8VAgnsRnKjPQxujd3JSBTFpwj4ELHxRRdNI4fmq2UIAUpoeFo
-         jn1g==
-X-Gm-Message-State: APjAAAX4mpmT1B1ljK9l1ifgSWxncSKcsSNzvm/w0/a89BvL4YTZe1Gg
-        XD/fFHyX0vxp4cZoOPqQUjM=
-X-Google-Smtp-Source: APXvYqxpjLksWwyG57A6QDgvk5QYVTO1S3Bu71l5am95Yyx/jOFyNfHhPMap/yiKB8fT77bOtSzaSQ==
-X-Received: by 2002:a50:e618:: with SMTP id y24mr76229999edm.142.1564056888257;
-        Thu, 25 Jul 2019 05:14:48 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id 34sm13374689eds.5.2019.07.25.05.14.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 05:14:47 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 14:14:45 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 1/1] drm/bridge: vga-dac: Fix detect of monitor connection
-Message-ID: <20190725121445.GD15868@phenom.ffwll.local>
-Mail-Followup-To: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>,
-        Jonas Karlman <jonas@kwiboo.se>, David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-References: <20190725110520.26848-1-oleksandr.suvorov@toradex.com>
- <20190725110520.26848-2-oleksandr.suvorov@toradex.com>
+        Thu, 25 Jul 2019 08:15:01 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id 6E42228618D
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+To:     dafna.hirschfeld@collabora.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, ezequiel@collabora.com,
+        kernel@collabora.com,
+        Gary Bisson <gary.bisson@boundarydevices.com>,
+        Troy Kisky <troy.kisky@boundarydevices.com>
+Subject: [PATCH v2 2/2] arm64: dts: imx: Add i.mx8mq nitrogen8m basic dts support
+Date:   Thu, 25 Jul 2019 14:14:51 +0200
+Message-Id: <20190725121452.16607-1-dafna.hirschfeld@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725110520.26848-2-oleksandr.suvorov@toradex.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 11:05:24AM +0000, Oleksandr Suvorov wrote:
-> DDC and VGA channels are independent, and therefore
-> we cannot decide whether the monitor is connected or not,
-> depending on the information from the DDC.
-> 
-> So the monitor should always be considered connected.
-> Thus there is no reason to use connector detect callback for this
-> driver.
-> 
-> Fixes DRM error of dumb monitor detection like:
-> ...
-> DRM: head 'VGA-1' found, connector 32 is disconnected.
-> ...
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 56fe8b6f4991 ("drm/bridge: Add RGB to VGA bridge support")
-> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+From: Gary Bisson <gary.bisson@boundarydevices.com>
 
-Uh nope :-)
+Add basic dts support for i.MX8MQ NITROGEN8M.
 
-Yes VGA monitors are broken, but the way to fix that is to either override
-that on the kernel cmdline, or in your userspace somewhere. Not hardcode
-this in the kernel for everyone. Because not everyone does have a broken
-VGA monitor, but if you do this _every_ desktop will try to light up that
-broken monitor. Which leads to lots of bug reports and regressions.
+Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
+Signed-off-by: Troy Kisky <troy.kisky@boundarydevices.com>
+[Dafna: porting vendor's code to mainline]
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+---
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../boot/dts/freescale/imx8mq-nitrogen8m.dts  | 411 ++++++++++++++++++
+ 2 files changed, 412 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-nitrogen8m.dts
 
-This case is exactly what connector_status_unknown is meant for: The
-kernel couldn't authoritatively figure out whether there is a monitor or
-not. Userspace should/can try this into account for autoconfiguration.
-
-Note a more proper fix would be to somehow wire up load detection. That
-will work even for dumb VGA monitors, and e.g. i915 then gives you an
-authoritative connector_status_disconnected if it could execute a load
-detect cycle (not always possible on some hw) and there's no screen
-detected with that.
-
-Maybe we should document this better somewhere in docs? Would be great if
-you can type a patch for this ...
--Daniel
-
-> ---
-> 
->  drivers/gpu/drm/bridge/dumb-vga-dac.c | 18 ------------------
->  1 file changed, 18 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c b/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> index d32885b906ae..e37c19356d12 100644
-> --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> @@ -73,25 +73,7 @@ static const struct drm_connector_helper_funcs dumb_vga_con_helper_funcs = {
->  	.get_modes	= dumb_vga_get_modes,
->  };
->  
-> -static enum drm_connector_status
-> -dumb_vga_connector_detect(struct drm_connector *connector, bool force)
-> -{
-> -	struct dumb_vga *vga = drm_connector_to_dumb_vga(connector);
-> -
-> -	/*
-> -	 * Even if we have an I2C bus, we can't assume that the cable
-> -	 * is disconnected if drm_probe_ddc fails. Some cables don't
-> -	 * wire the DDC pins, or the I2C bus might not be working at
-> -	 * all.
-> -	 */
-> -	if (!IS_ERR(vga->ddc) && drm_probe_ddc(vga->ddc))
-> -		return connector_status_connected;
-> -
-> -	return connector_status_unknown;
-> -}
-> -
->  static const struct drm_connector_funcs dumb_vga_con_funcs = {
-> -	.detect			= dumb_vga_connector_detect,
->  	.fill_modes		= drm_helper_probe_single_connector_modes,
->  	.destroy		= drm_connector_cleanup,
->  	.reset			= drm_atomic_helper_connector_reset,
-> -- 
-> 2.20.1
-> 
-
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index c043aca66572..54a5c18c5c30 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -26,3 +26,4 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
++dtb-$(CONFIG_ARCH_MXC) += imx8mq-nitrogen8m.dtb
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-nitrogen8m.dts b/arch/arm64/boot/dts/freescale/imx8mq-nitrogen8m.dts
+new file mode 100644
+index 000000000000..cfd4915d2916
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/imx8mq-nitrogen8m.dts
+@@ -0,0 +1,411 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright 2018 Boundary Devices
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/input/input.h>
++#include "imx8mq.dtsi"
++
++/ {
++	model = "Boundary Devices i.MX8MQ Nitrogen8M";
++	compatible = "boundary,imx8mq-nitrogen8m", "fsl,imx8mq";
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0x00000000 0x40000000 0 0x80000000>;
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_keys>;
++
++		power {
++			label = "Power Button";
++			gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_POWER>;
++			gpio-key,wakeup;
++		};
++	};
++
++	reg_vref_0v9: regulator-vref-0v9 {
++		compatible = "regulator-fixed";
++		regulator-name = "vref-0v9";
++		regulator-min-microvolt = <900000>;
++		regulator-max-microvolt = <900000>;
++	};
++
++	reg_vref_1v8: regulator-vref-1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "vref-1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	reg_vref_2v5: regulator-vref-2v5 {
++		compatible = "regulator-fixed";
++		regulator-name = "vref-2v5";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++	};
++
++	reg_vref_3v3: regulator-vref-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "vref-3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	reg_vref_5v: regulator-vref-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "vref-5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
++};
++
++&a53_opp_table {
++		opp-1500000000 {
++			opp-hz = /bits/ 64 <1500000000>;
++			opp-microvolt = <1000000>;
++		};
++
++		opp-1000000000 {
++			opp-hz = /bits/ 64 <1000000000>;
++			opp-microvolt = <900000>;
++		};
++};
++
++&iomuxc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hog>;
++	pinctrl_fec1: fec1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC			0x3
++			MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO		0x23
++			MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
++			MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC		0x1f
++			MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0		0x1f
++			MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1		0x1f
++			MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2		0x1f
++			MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3		0x1f
++			MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
++			MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC		0x91
++			MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0		0x91
++			MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1		0x91
++			MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2		0x91
++			MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3		0x91
++			MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9		0x19
++			MX8MQ_IOMUXC_GPIO1_IO11_GPIO1_IO11		0x59
++		>;
++	};
++
++	pinctrl_gpio_keys: gpio-keysgrp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_GPIO1_IO07_GPIO1_IO7		0x19
++		>;
++	};
++
++	pinctrl_hog: hoggrp {
++		fsl,pins = <
++			/* J17 connector, odd */
++			MX8MQ_IOMUXC_SAI1_RXFS_GPIO4_IO0		0x19	/* Pin 19 */
++			MX8MQ_IOMUXC_SAI1_RXC_GPIO4_IO1			0x19	/* Pin 21 */
++			MX8MQ_IOMUXC_SAI1_RXD1_GPIO4_IO3		0x19	/* Pin 23 */
++			MX8MQ_IOMUXC_SAI1_RXD2_GPIO4_IO4		0x19	/* Pin 25 */
++			MX8MQ_IOMUXC_SAI1_RXD3_GPIO4_IO5		0x19	/* Pin 27 */
++			MX8MQ_IOMUXC_SAI1_RXD4_GPIO4_IO6		0x19	/* Pin 29 */
++			MX8MQ_IOMUXC_SAI1_RXD5_GPIO4_IO7		0x19	/* Pin 31 */
++			MX8MQ_IOMUXC_SAI1_RXD6_GPIO4_IO8		0x19	/* Pin 33 */
++			MX8MQ_IOMUXC_SAI1_RXD7_GPIO4_IO9		0x19	/* Pin 35 */
++			MX8MQ_IOMUXC_SAI1_TXD1_GPIO4_IO13		0x19	/* Pin 39 */
++			MX8MQ_IOMUXC_SAI1_TXD2_GPIO4_IO14		0x19	/* Pin 41 */
++			MX8MQ_IOMUXC_SAI1_TXD3_GPIO4_IO15		0x19	/* Pin 43 */
++			MX8MQ_IOMUXC_SAI1_TXD4_GPIO4_IO16		0x19	/* Pin 45 */
++			MX8MQ_IOMUXC_SAI1_TXD5_GPIO4_IO17		0x19	/* Pin 47 */
++			MX8MQ_IOMUXC_SAI1_TXD6_GPIO4_IO18		0x19	/* Pin 49 */
++			MX8MQ_IOMUXC_SAI1_TXD7_GPIO4_IO19		0x19	/* Pin 51 */
++
++			/* J17 connector, even */
++			MX8MQ_IOMUXC_SAI3_RXFS_GPIO4_IO28		0x19	/* Pin 44 */
++			MX8MQ_IOMUXC_SAI3_RXC_GPIO4_IO29		0x19	/* Pin 48 */
++			MX8MQ_IOMUXC_GPIO1_IO10_GPIO1_IO10		0x19	/* Pin 50 */
++			MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3		0x19	/* Pin 54 */
++			MX8MQ_IOMUXC_GPIO1_IO05_GPIO1_IO5		0x19	/* Pin 56 */
++
++			/* J18 connector, odd */
++			MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4		0x19	/* Pin 41 */
++			MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5			0x19	/* Pin 43 */
++			MX8MQ_IOMUXC_NAND_READY_B_GPIO3_IO16		0x19	/* Pin 45 */
++			MX8MQ_IOMUXC_NAND_DATA05_GPIO3_IO11		0x19	/* Pin 47 */
++			MX8MQ_IOMUXC_NAND_WP_B_GPIO3_IO18		0x19	/* Pin 49 */
++			MX8MQ_IOMUXC_NAND_DQS_GPIO3_IO14		0x19	/* Pin 53 */
++
++			/* J18 connector, even */
++			MX8MQ_IOMUXC_NAND_ALE_GPIO3_IO0			0x19	/* Pin 32 */
++			MX8MQ_IOMUXC_NAND_CE0_B_GPIO3_IO1		0x19	/* Pin 36 */
++			MX8MQ_IOMUXC_NAND_DATA00_GPIO3_IO6		0x19	/* Pin 38 */
++			MX8MQ_IOMUXC_NAND_DATA01_GPIO3_IO7		0x19	/* Pin 40 */
++			MX8MQ_IOMUXC_NAND_DATA02_GPIO3_IO8		0x19	/* Pin 42 */
++			MX8MQ_IOMUXC_NAND_DATA03_GPIO3_IO9		0x19	/* Pin 44 */
++			MX8MQ_IOMUXC_NAND_DATA04_GPIO3_IO10		0x19	/* Pin 46 */
++
++			/* J13 Pin 2, WL_WAKE */
++			MX8MQ_IOMUXC_SAI5_RXD2_GPIO3_IO23		0xd6
++			/* J13 Pin 4, WL_IRQ, not needed for Silex */
++			MX8MQ_IOMUXC_SAI5_RXD0_GPIO3_IO21		0xd6
++			/* J13 pin 9, unused */
++			MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
++			/* J13 Pin 41, BT_CLK_REQ */
++			MX8MQ_IOMUXC_SAI5_RXD1_GPIO3_IO22		0xd6
++			/* J13 Pin 42, BT_HOST_WAKE */
++			MX8MQ_IOMUXC_SAI5_MCLK_GPIO3_IO25		0xd6
++
++			/* Clock for both CSI1 and CSI2 */
++			MX8MQ_IOMUXC_GPIO1_IO15_CCMSRCGPCMIX_CLKO2	0x07
++			/* test points */
++			MX8MQ_IOMUXC_GPIO1_IO04_GPIO1_IO4		0xc1	/* TP87 */
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
++			MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA			0x4000007f
++		>;
++	};
++
++	pinctrl_i2c1_pca9546: i2c1-pca9546grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8		0x49
++		>;
++	};
++
++	pinctrl_i2c1d_rv4162: i2c1d-rv4162grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_GPIO1_IO06_GPIO1_IO6		0x49
++		>;
++	};
++
++	pinctrl_reg_arm_dram: reg-arm-dram {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SAI5_RXD3_GPIO3_IO24	0x16
++		>;
++	};
++
++	pinctrl_reg_dram_1p1v: reg-dram-1p1v {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD1_STROBE_GPIO2_IO11	0x16
++		>;
++	};
++
++	pinctrl_reg_soc_gpu_vpu: reg-soc-gpu-vpu {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD2_WP_GPIO2_IO20		0x16
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX		0x45
++			MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX		0x45
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_UART2_RXD_UART2_DCE_RX		0x45
++			MX8MQ_IOMUXC_UART2_TXD_UART2_DCE_TX		0x45
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x83
++			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc3
++			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc3
++			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc3
++			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc3
++			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc3
++			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc3
++			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc3
++			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc3
++			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc3
++			MX8MQ_IOMUXC_SD1_RESET_B_GPIO2_IO10		0x41
++		>;
++	};
++
++	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x8d
++			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xcd
++			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xcd
++			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xcd
++			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xcd
++			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xcd
++			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xcd
++			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xcd
++			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xcd
++			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xcd
++		>;
++	};
++
++	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x9f
++			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xdf
++			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xdf
++			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xdf
++			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xdf
++			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xdf
++			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xdf
++			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xdf
++			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xdf
++			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xdf
++		>;
++	};
++
++	pinctrl_wdog: wdoggrp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B	0xc6
++		>;
++	};
++};
++
++&fec1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1>;
++	phy-mode = "rgmii-id";
++	phy-handle = <&ethphy0>;
++	fsl,magic-packet;
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy0: ethernet-phy@4 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <4>;
++			interrupts-extended = <&gpio1 11 IRQ_TYPE_LEVEL_LOW>;
++		};
++	};
++};
++
++&i2c1 {
++	clock-frequency = <400000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	i2cmux@70 {
++		compatible = "pca9546";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_i2c1_pca9546>;
++		reg = <0x70>;
++		reset-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		i2c1a: i2c1@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg_arm_dram: fan53555@60 {
++				compatible = "fcs,fan53555";
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_reg_arm_dram>;
++				reg = <0x60>;
++				regulator-min-microvolt =  <900000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-always-on;
++				vsel-gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>;
++			};
++		};
++
++		i2c1b: i2c1@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg_dram_1p1v: fan53555@60 {
++				compatible = "fcs,fan53555";
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_reg_dram_1p1v>;
++				reg = <0x60>;
++				regulator-min-microvolt = <1100000>;
++				regulator-max-microvolt = <1100000>;
++				regulator-always-on;
++				vsel-gpios = <&gpio2 11 GPIO_ACTIVE_HIGH>;
++			};
++		};
++
++		i2c1c: i2c1@2 {
++			reg = <2>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg_soc_gpu_vpu: fan53555@60 {
++				compatible = "fcs,fan53555";
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_reg_soc_gpu_vpu>;
++				reg = <0x60>;
++				regulator-min-microvolt =  <900000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-always-on;
++				vsel-gpios = <&gpio2 20 GPIO_ACTIVE_HIGH>;
++			};
++		};
++
++		i2c1d: i2c1@3 {
++			reg = <3>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			rtc@68 {
++				compatible = "microcrystal,rv4162";
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_i2c1d_rv4162>;
++				reg = <0x68>;
++				interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_LOW>;
++				wakeup-source;
++			};
++		};
++	};
++};
++
++&uart1 { /* console */
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	assigned-clocks = <&clk IMX8MQ_CLK_UART1>;
++	assigned-clock-parents = <&clk IMX8MQ_CLK_25M>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	assigned-clocks = <&clk IMX8MQ_CLK_UART2>;
++	assigned-clock-parents = <&clk IMX8MQ_CLK_25M>;
++	status = "okay";
++};
++
++&usdhc1 {
++	bus-width = <8>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	non-removable;
++	vqmmc-1-8-v;
++	vmmc-supply = <&reg_vref_1v8>;
++	status = "okay";
++};
++
++&wdog1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdog>;
++	fsl,ext-reset-output;
++	status = "okay";
++};
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.20.1
+
