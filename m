@@ -2,98 +2,81 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E461CC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04B4C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E10216C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77E5821951
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:39:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="VFMxkNkO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxsTZb5+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfGYXhW (ORCPT
+        id S1726932AbfGYXjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 19:37:22 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:34348 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbfGYXhV (ORCPT
+        Thu, 25 Jul 2019 19:39:19 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44343 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfGYXjS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 19:37:21 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 45FE98066C;
-        Fri, 26 Jul 2019 11:37:18 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1564097838;
-        bh=nLh8CaW4kdmpDJF6BplbubaAtEuBgr01eqwIgkMyJa4=;
-        h=From:To:CC:Subject:Date;
-        b=VFMxkNkOpvV7TPih+wfBJ9rkmklFFFXCCe5D0EuIq3AdAJsk4weRcLiAD7T610FYT
-         CcZ72oyJE7K99BEtGy7lLUoWgVck0aH0je/L66btKAclkbnHnX1P5pZ3Cfi3udFmAk
-         +anPtP4Id4pilHZgGtaIUcPuj3g2yjffie8vnu6S0R1llnW+Mi704rt82oqUTeVTdv
-         lEsXK4bV1WLUuPWerqZORkWeTwDUkD1SL71nBtOWVJh8wSxI1MrwUKIstNsaPNIz/g
-         zgbQk5b7g3kLSZsWU52oCMliqLI7lCtYjkmcko0Z9kVIqM63ZSHDOBGjFCpyDy4Fds
-         8jBBJVnwQ+/fA==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d3a3d2d0000>; Fri, 26 Jul 2019 11:37:17 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Fri, 26 Jul 2019 11:37:18 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Fri, 26 Jul 2019 11:37:17 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Slowness forming TIPC cluster with explicit node addresses
-Thread-Topic: Slowness forming TIPC cluster with explicit node addresses
-Thread-Index: AQHVQ0Hkw5M86TmlWkazctTgG4cJIQ==
-Date:   Thu, 25 Jul 2019 23:37:16 +0000
-Message-ID: <1564097836.11887.16.camel@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <729525783EC36B4DBBC1460562BCD8DF@atlnz.lc>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Thu, 25 Jul 2019 19:39:18 -0400
+Received: by mail-pf1-f194.google.com with SMTP id t16so23489882pfe.11
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 16:39:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HL3f1QKfq6e08jFTkT6R2/ZO1CAKghKslwWUsBfzlRE=;
+        b=fxsTZb5+9JjG5L78sk/u6L1+2uCXJaQQndxS0n8FFFMYFQlGUpOvCDNt6WowVMszs+
+         9Rsl+Txt4aPJPnLpB2Zzhyd7mKGBE8AxCUFnlo/ahAFDH9aDASN3JRwUNm4TQrYmMPd8
+         kG1T+/drikeEIkkLiM5R3z+/reVUS50ZPPG2klTvYg8dvOFTRqxg4oeUXm1icEL8wqgQ
+         2zCaMYFycC2/+0CyoSp50LAo24XS6VpktBsnBS2BGuyNhwDsjAayBWFG5qSl54OFgte0
+         mZa/twt+3yvDxUdy91GQc/as394cvZsJM4HM0JZD4sw4m5qWbKJr2KNKqitkb8rCrT0s
+         b6DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HL3f1QKfq6e08jFTkT6R2/ZO1CAKghKslwWUsBfzlRE=;
+        b=gdazu6J/MpmBzN9q1HTldmDm7wkx7Ug6rvxvQPvUA5gGyecFWWC16LVcxeo7cBS37O
+         RdFs2yQxFFn0Tmu2d70U9DcYnYYn0n8bxbNrjpzZuAM42MXMNND21Ll+4jZUrGYB0FQz
+         Epw4nMCvRp/LCK8G5i+xFYxU37xZWrdCnXxRjtOdgRIbkSWaAd+OraENO7SBKSz7Qf1Q
+         RXyXJcsoKjBbYkZkRYLDK5SFxgYMMm9wLwtJeirVxX5ywuiSQBc/aVB6yoxtRWsZPcGv
+         sQMhi0OcC+lXvcNtlojscVdBKXZnbpcMhVgharYYiHEsJISJ1rmIh/A8Iyf2AWtymTf0
+         ZH4g==
+X-Gm-Message-State: APjAAAUfAT0843HMVsIuJ6nrTMMCra8FIMu8g7E+hqG4Dl2noJMxldsg
+        kKGwZPF455xRZHblMfmlrGw=
+X-Google-Smtp-Source: APXvYqySg1O90lACAxj6zg8wg9D5yLpJeufx39qsSItUWsy1Uh2PwD3ZJMfh6e3dZqmI2hDs1eQYKw==
+X-Received: by 2002:a63:490a:: with SMTP id w10mr87122603pga.6.1564097957836;
+        Thu, 25 Jul 2019 16:39:17 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id f72sm70888203pjg.10.2019.07.25.16.39.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 16:39:17 -0700 (PDT)
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     dafna.hirschfeld@collabora.com, hch@lst.de,
+        m.szyprowski@samsung.com, robin.murphy@arm.com
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] dma-contiguous: two bug fixes for dma_{alloc,free}_contiguous()
+Date:   Thu, 25 Jul 2019 16:39:57 -0700
+Message-Id: <20190725233959.15129-1-nicoleotsuka@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCkknbSBoYXZpbmcgcHJvYmxlbXMgZm9ybWluZyBhIFRJUEMgY2x1c3RlciBiZXR3ZWVu
-IDIgbm9kZXMuDQoNClRoaXMgaXMgdGhlIGJhc2ljIHN0ZXBzIEknbSBnb2luZyB0aHJvdWdoIG9u
-IGVhY2ggbm9kZS4NCg0KbW9kcHJvYmUgdGlwYw0KaXAgbGluayBzZXQgZXRoMiB1cA0KdGlwYyBu
-b2RlIHNldCBhZGRyIDEuMS41ICMgb3IgMS4xLjYNCnRpcGMgYmVhcmVyIGVuYWJsZSBtZWRpYSBl
-dGggZGV2IGV0aDANCg0KVGhlbiB0byBjb25maXJtIGlmIHRoZSBjbHVzdGVyIGlzIGZvcm1lZCBJ
-IHVzZcKgdGlwYyBsaW5rIGxpc3QNCg0KW3Jvb3RAbm9kZS01IH5dIyB0aXBjIGxpbmsgbGlzdA0K
-YnJvYWRjYXN0LWxpbms6IHVwDQouLi4NCg0KTG9va2luZyBhdCB0Y3BkdW1wIHRoZSB0d28gbm9k
-ZXMgYXJlIHNlbmRpbmcgcGFja2V0c8KgDQoNCjIyOjMwOjA1Ljc4MjMyMCBUSVBDIHYyLjAgMS4x
-LjUgPiAwLjAuMCwgaGVhZGVybGVuZ3RoIDYwIGJ5dGVzLA0KTWVzc2FnZVNpemUgNzYgYnl0ZXMs
-IE5laWdoYm9yIERldGVjdGlvbiBQcm90b2NvbCBpbnRlcm5hbCwgbWVzc2FnZVR5cGUNCkxpbmsg
-cmVxdWVzdA0KMjI6MzA6MDUuODYzNTU1IFRJUEMgdjIuMCAxLjEuNiA+IDAuMC4wLCBoZWFkZXJs
-ZW5ndGggNjAgYnl0ZXMsDQpNZXNzYWdlU2l6ZSA3NiBieXRlcywgTmVpZ2hib3IgRGV0ZWN0aW9u
-IFByb3RvY29sIGludGVybmFsLCBtZXNzYWdlVHlwZQ0KTGluayByZXF1ZXN0DQoNCkV2ZW50dWFs
-bHkgKGFmdGVyIGEgZmV3IG1pbnV0ZXMpIHRoZSBsaW5rIGRvZXMgY29tZSB1cA0KDQpbcm9vdEBu
-b2RlLTbCoH5dIyB0aXBjIGxpbmsgbGlzdA0KYnJvYWRjYXN0LWxpbms6IHVwDQoxMDAxMDA2OmV0
-aDItMTAwMTAwNTpldGgyOiB1cA0KDQpbcm9vdEBub2RlLTXCoH5dIyB0aXBjIGxpbmsgbGlzdA0K
-YnJvYWRjYXN0LWxpbms6IHVwDQoxMDAxMDA1OmV0aDItMTAwMTAwNjpldGgyOiB1cA0KDQpXaGVu
-IEkgcmVtb3ZlIHRoZSAidGlwYyBub2RlIHNldCBhZGRyIiB0aGluZ3Mgc2VlbSB0byBraWNrIGlu
-dG8gbGlmZQ0Kc3RyYWlnaHQgYXdheQ0KDQpbcm9vdEBub2RlLTUgfl0jIHRpcGMgbGluayBsaXN0
-DQpicm9hZGNhc3QtbGluazogdXANCjAwNTBiNjFiZDJhYTpldGgyLTAwNTBiNjFlNmRmYTpldGgy
-OiB1cA0KDQpTbyB0aGVyZSBhcHBlYXJzIHRvIGJlIHNvbWUgZGlmZmVyZW5jZSBpbiBiZWhhdmlv
-dXIgYmV0d2VlbiBoYXZpbmcgYW4NCmV4cGxpY2l0IG5vZGUgYWRkcmVzcyBhbmQgdXNpbmcgdGhl
-IGRlZmF1bHQuIFVuZm9ydHVuYXRlbHkgb3VyDQphcHBsaWNhdGlvbiByZWxpZXMgb24gc2V0dGlu
-ZyB0aGUgbm9kZSBhZGRyZXNzZXMuDQoNCltyb290QG5vZGUtNSB+XSMgdW5hbWUgLWENCkxpbnV4
-IGxpbnV4Ym94IDUuMi4wLWF0MSsgIzggU01QIFRodSBKdWwgMjUgMjM6MjI6NDEgVVRDIDIwMTkg
-cHBjDQpHTlUvTGludXgNCg0KQW55IHRob3VnaHRzIG9uIHRoZSBwcm9ibGVtPw0K
+There are two obvious bugs in these two functions. So having
+two patches to fix them.
+
+Nicolin Chen (2):
+  dma-contiguous: do not overwrite align in dma_alloc_contiguous()
+  dma-contiguous: page-align the size in dma_free_contiguous()
+
+ kernel/dma/contiguous.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+-- 
+2.17.1
+
