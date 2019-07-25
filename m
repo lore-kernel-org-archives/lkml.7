@@ -2,128 +2,281 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54333C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 653AEC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2410420840
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:08:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="sgmvkbQd"
+	by mail.kernel.org (Postfix) with ESMTP id 2F7C520840
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:09:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729294AbfGYHIo (ORCPT
+        id S1729510AbfGYHJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 03:08:44 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:32890 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728097AbfGYHIo (ORCPT
+        Thu, 25 Jul 2019 03:09:08 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4378 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728097AbfGYHJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 03:08:44 -0400
-Received: by mail-io1-f68.google.com with SMTP id z3so95140710iog.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 00:08:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/NsOOSmmzO3ouZR79VA2X4x5+ipc/g1qgS9k4/NHDuE=;
-        b=sgmvkbQdmyOibpBn40shEi7rJ8z75kD/TJw4J/zmBkLGQbBcumdRr/jw7AU4Qe1HdE
-         VxOSYas/ddnTitzw7CuPr475G3Iv/U5FkwnNQN0mgC2724Hh4sPiBirLhkRFo3GYU/Ui
-         3TYE6l/tPmTYI5DEr22ddxutNfXGWrH90oltRH9pPpJoJ1Rp3LkCgkzjCdNMu+O833sN
-         4diqCBqPvG5lAOxqYhneGAN1Ygcm3O1G43SPbl/rjyBgoPpqqe8945BMFpQXZTeKXzJA
-         A6wH8/B6SZLbzgdTBFeIu6a6kRvNHBxvvzbp+N/ha+CYO6sT+btaSMT3vMeYhjA9O0eu
-         P+fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/NsOOSmmzO3ouZR79VA2X4x5+ipc/g1qgS9k4/NHDuE=;
-        b=YHwSp4qQQ7OLK/If8jWJBs2x7zLsFAzxrLm20ZOPSyOem2Xo4jmUbMn+pzzvJgVrRp
-         rwXaZGERG0H2RLP2G4FE7lDyDc0+wZgN35e28AodskwsVvJkSYMgFwyqxgWE9D1zH+RB
-         Z6ZyRBuE55vNYf2PXzXFKCu62GU+JWVwQlyKY+6fWbI+HsnG1HsR6DH5S/LRLCF+EdSa
-         2F6Uj5EbWQ3el0OEhHwrzW4CkXE4NeDi5wNfKSm3vGSkYZh3FlETJjlOU6EiIrEHO/zL
-         KdvuKS/rXzdpiofypp9CFlhDtPOWZNgPzDEckyMNi41zFNZelEf0LFDtDp34otfjn5NN
-         M6qw==
-X-Gm-Message-State: APjAAAXHdFeiNLEBKsEuiZxjHP6FEr64rkp2kOeB1tpvTADT3zA74miQ
-        sBG173YyvU5IB1+mbSZU9K1WgI8LdBPrMcrRAIA=
-X-Google-Smtp-Source: APXvYqxKH4PDW02MjrUEYrsbijTw06dTqNLUnz3NmDR96/L6oWDqsh3jFnolYCCZ/OBRD2LOhaYkBNKDynioFzWimvY=
-X-Received: by 2002:a5e:8b43:: with SMTP id z3mr78655086iom.287.1564038523269;
- Thu, 25 Jul 2019 00:08:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190724150156.28526-1-jeyu@kernel.org>
-In-Reply-To: <20190724150156.28526-1-jeyu@kernel.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 25 Jul 2019 09:08:32 +0200
-Message-ID: <CAMRc=MeZOgY=qHNZf635i1OOnrx6Rh2D1qTSBPQjk_CGrRo-Tg@mail.gmail.com>
-Subject: Re: [PATCH] modules: always page-align module section allocations
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Jian Cheng <cj.chengjian@huawei.com>,
-        Nadav Amit <namit@vmware.com>, Sekhar Nori <nsekhar@ti.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        David Lechner <david@lechnology.com>,
-        Adam Ford <aford173@gmail.com>, Martin Kaiser <lists@kaiser.cx>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 25 Jul 2019 03:09:08 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6P76XRF039755
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:09:07 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ty6ura3kn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:09:07 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Thu, 25 Jul 2019 08:09:05 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 25 Jul 2019 08:09:01 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6P790sH63176746
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jul 2019 07:09:00 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1EBFA4C04E;
+        Thu, 25 Jul 2019 07:09:00 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9A9B54C046;
+        Thu, 25 Jul 2019 07:08:58 +0000 (GMT)
+Received: from localhost.in.ibm.com (unknown [9.124.35.169])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jul 2019 07:08:58 +0000 (GMT)
+From:   Parth Shah <parth@linux.ibm.com>
+To:     peterz@infradead.org, mingo@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        patrick.bellasi@arm.com, dietmar.eggemann@arm.com,
+        daniel.lezcano@linaro.org, subhra.mazumdar@oracle.com
+Subject: [RFC v4 0/8] TurboSched: A scheduler for sustaining Turbo Frequencies for longer durations
+Date:   Thu, 25 Jul 2019 12:38:49 +0530
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19072507-0012-0000-0000-00000335FA95
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19072507-0013-0000-0000-0000216F910C
+Message-Id: <20190725070857.6639-1-parth@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-25_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907250085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 24 lip 2019 o 17:02 Jessica Yu <jeyu@kernel.org> napisa=C5=82(a):
->
-> Some arches (e.g., arm64, x86) have moved towards non-executable
-> module_alloc() allocations for security hardening reasons. That means
-> that the module loader will need to set the text section of a module to
-> executable, regardless of whether or not CONFIG_STRICT_MODULE_RWX is set.
->
-> When CONFIG_STRICT_MODULE_RWX=3Dy, module section allocations are always
-> page-aligned to handle memory rwx permissions. On some arches with
-> CONFIG_STRICT_MODULE_RWX=3Dn however, when setting the module text to
-> executable, the BUG_ON() in frob_text() gets triggered since module
-> section allocations are not page-aligned when CONFIG_STRICT_MODULE_RWX=3D=
-n.
-> Since the set_memory_* API works with pages, and since we need to call
-> set_memory_x() regardless of whether CONFIG_STRICT_MODULE_RWX is set, we
-> might as well page-align all module section allocations for ease of
-> managing rwx permissions of module sections (text, rodata, etc).
->
-> Fixes: 2eef1399a866 ("modules: fix BUG when load module with rodata=3Dn")
-> Reported-by: Martin Kaiser <lists@kaiser.cx>
-> Reported-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> Tested-by: David Lechner <david@lechnology.com>
-> Tested-by: Martin Kaiser <martin@kaiser.cx>
-> Signed-off-by: Jessica Yu <jeyu@kernel.org>
-> ---
->  kernel/module.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
->
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 5933395af9a0..cd8df516666d 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -64,14 +64,9 @@
->
->  /*
->   * Modules' sections will be aligned on page boundaries
-> - * to ensure complete separation of code and data, but
-> - * only when CONFIG_STRICT_MODULE_RWX=3Dy
-> + * to ensure complete separation of code and data
->   */
-> -#ifdef CONFIG_STRICT_MODULE_RWX
->  # define debug_align(X) ALIGN(X, PAGE_SIZE)
-> -#else
-> -# define debug_align(X) (X)
-> -#endif
->
->  /* If this is set, the section belongs in the init part of the module */
->  #define INIT_OFFSET_MASK (1UL << (BITS_PER_LONG-1))
-> --
-> 2.16.4
->
+This is the 4th version of the patchset to sustain Turbo frequencies for
+longer durations.
 
-Tested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+The previous versions can be found here:
+v3: https://lkml.org/lkml/2019/6/25/25
+v2: https://lkml.org/lkml/2019/5/15/1258
+v1: https://lwn.net/Articles/783959/
+
+The changes in this versions are:
+v[3] -> v[4]:
+- Based on Patrick Bellasi's comments, removed the use of UCLAMP based
+  mechanism to classify tasks as jitter
+- Added support to sched_setattr to mark the task as jitter by adding a new
+  flag to the existing task_struct->flags attribute. This is decided to not
+  have any new variable inside task_struct and thus get rid of size
+  bloating.
+- No functional changes
+
+v[2] -> v[3]:
+- Added a new attribute in task_struct to allow per task jitter
+  classification so that scheduler can use this as request to change wakeup
+  path for task packing
+- Use syscall for jitter classification, removed cgroup based task
+  classification
+- Use mutex over spinlock to get rid of task sleeping problem
+- Changed _Bool->int everywhere
+- Split few patches to have arch specific code separate from core scheduler
+  code
+ToDo:
+- Recompute core capacity only during CPU-Hotplug operation
+- Remove smt capacity 
+
+v[1] -> v[2]:
+- No CPU bound tasks' classification, only jitter tasks are classified from
+  the cpu cgroup controller
+- Use of Spinlock rather than mutex to count number of jitters in the
+  system classified from cgroup
+- Architecture specific implementation of Core capacity multiplication
+  factor changes dynamically based on the number of active threads in the
+  core
+- Selection of non idle core in the system is bounded by DIE domain
+- Use of UCLAMP mechanism to classify jitter tasks
+- Removed "highutil_cpu_mask", and rather uses sd for DIE domain to find
+  better fit
+
+
+
+Abstract
+========
+
+The modern servers allows multiple cores to run at range of frequencies
+higher than rated range of frequencies. But the power budget of the system
+inhibits sustaining these higher frequencies for longer durations.
+
+However when certain cores are put to idle states, the power can be
+effectively channelled to other busy cores, allowing them to sustain the
+higher frequency.
+
+One way to achieve this is to pack tasks onto fewer cores keeping others
+idle, but it may lead to performance penalty for such tasks and sustaining
+higher frequencies proves to be of no benefit. But if one can identify
+unimportant low utilization tasks which can be packed on the already active
+cores then waking up of new cores can be avoided. Such tasks are short
+and/or bursty "jitter tasks" and waking up new core is expensive for such
+case.
+
+Current CFS algorithm in kernel scheduler is performance oriented and hence
+tries to assign any idle CPU first for the waking up of new tasks. This
+policy is perfect for major categories of the workload, but for jitter
+tasks, one can save energy by packing them onto the active cores and allow
+those cores to run at higher frequencies.
+
+These patch-set tunes the task wake up logic in scheduler to pack
+exclusively classified jitter tasks onto busy cores. The work involves the
+jitter tasks classifications by using syscall based mechanisms.
+
+In brief, if we can pack jitter tasks on busy cores then we can save power
+by keeping other cores idle and allow busier cores to run at turbo
+frequencies, patch-set tries to meet this solution in simplest manner.
+Though, there are some challenges in implementing it(like smt_capacity,
+un-needed arch hooks, etc) and I'm trying to work around that, it would be
+great to have a discussion around this patches.
+
+
+Implementation
+==============
+
+These patches uses syscall based mechanism to classify the tasks as jitter.
+The task wakeup logic uses this information to pack such tasks onto cores
+which are already running busy with CPU intensive tasks. The task packing
+is done at `select_task_rq_fair` only so that in case of wrong decision
+load balancer may pull the classified jitter tasks for maximizing
+performance.
+
+We define a core to be non-idle if it is over 12.5% utilized of its
+capacity; the jitters are packed over these cores using First-fit approach.
+
+To demonstrate/benchmark, one can use a synthetic workload generator
+`turbo_bench.c`[1] available at
+https://github.com/parthsl/tools/blob/master/benchmarks/turbo_bench.c
+
+Following snippet demonstrates the use of TurboSched feature:
+```
+i=8; ./turbo_bench -t 30 -h $i -n $((i*2)) -j
+```
+This spawns 2*i total threads: of which i-CPU bound and i-jitter threads.
+
+Current implementation uses only jitter classified tasks to be packed on
+the first busy cores, but can be further optimized by getting userspace
+input of important tasks and keeping track of such tasks. This leads to
+optimized searching of non idle cores and also more accurate as userspace
+hints are safer than auto classified busy cores/tasks.
+
+
+Result
+======
+
+The patch-set proves to be useful for the system and the workload where
+frequency boost is found to be useful than packing tasks into cores. IBM
+POWER 9 system shows the benefit for a workload can be up to 13%.
+
+                Performance benefit of TurboSched w.r.t. CFS 
+   +--+--+--+--+--+--+-+--+--+--+--+--+--+--+--+--+--+--+-+--+--+--+--+--+
+   |  +  +  +  +  +  + +  +  +  +  +  +  +  +  +  +  +  + +  +  +  +  +  |
+15 +-+                                  Performance benefit in %       +-+
+   |                         **                                          |
+   |                         ** **                                       |
+10 +-+                       ** ** **                                  +-+
+   |                         ** ** **                                    |
+   |                         ** ** **                                    |
+ 5 +-+                 ** ** ** ** **    **                            +-+
+   |                   ** ** ** ** ** ** ** **                           |
+   |                   ** ** ** ** ** ** ** ** ** **                     |
+   |                 * ** ** ** ** ** ** ** ** ** ** ** *                |
+ 0 +-+** ** ** ** ** * ** ** ** ** ** ** ** ** ** ** ** * ** ** ** ** **-+
+   |  ** ** ** **                                                        |
+   |  **                                                                 |
+-5 +-+                                                                 +-+
+   |  +  +  +  +  +  + +  +  +  +  +  +  +  +  +  +  +  + +  +  +  +  +  |
+   +--+--+--+--+--+--+-+--+--+--+--+--+--+--+--+--+--+--+-+--+--+--+--+--+
+      2  3  4  5  6  7 8  9 10 11 12 13 14 15 16 17 18 1920 21 22 23 24   
+                           No. of workload threads                        
+
+
+                      Frequency benefit of TurboSched w.r.t. CFS
+   +--+--+--+--+--+--+-+--+--+--+--+--+--+--+--+--+--+--+-+--+--+--+--+--+
+   |  +  +  +  +  +  + +  +  +  +  +  +  +  +  +  +  +  + +  +  +  +  +  |
+15 +-+                                    Frequency benefit in %       +-+
+   |                         **                                          |
+   |                         **                                          |
+10 +-+            **         **                                        +-+
+   |              **         ** **                                       |
+   |        **    ** * **    ** **                                       |
+ 5 +-+      ** ** ** * ** ** ** **                                     +-+
+   |     ** ** ** ** * ** ** ** **    **                                 |
+   |  ** ** ** ** ** * ** ** ** ** ** **                                 |
+   |  ** ** ** ** ** * ** ** ** ** ** ** ** ** **                        |
+ 0 +-+** ** ** ** ** * ** ** ** ** ** ** ** ** ** ** ** * ** ** ** ** **-+
+   |                                                                     |
+   |                                                                     |
+-5 +-+                                                                 +-+
+   |  +  +  +  +  +  + +  +  +  +  +  +  +  +  +  +  +  + +  +  +  +  +  |
+   +--+--+--+--+--+--+-+--+--+--+--+--+--+--+--+--+--+--+-+--+--+--+--+--+
+      2  3  4  5  6  7 8  9 10 11 12 13 14 15 16 17 18 1920 21 22 23 24   
+                             No. of workload threads                      
+
+ 
+These numbers are w.r.t. `turbo_bench.c` multi-threaded test benchmark
+which can create two kinds of tasks: CPU bound (High Utilization) and
+Jitters (Low Utilization). N in X-axis represents N-CPU bound and N-Jitter
+tasks spawned.
+
+
+Series organization
+==============
+- Patches [01-03]: Jitter tasks classification using syscall
+- Patches [04-05]: Defines Core Capacity to limit task packing
+- Patches [06-08]: Tune CFS task wakeup logic to pack tasks onto busy
+  cores
+
+Series can be applied on the top of tip/sched/core at
+commit af24bde8df20 ("sched/uclamp: Add uclamp support to energy_compute()")
+
+
+Parth Shah (8):
+  sched/core: Add manual jitter classification using sched_setattr
+    syscall
+  sched: Introduce switch to enable TurboSched mode
+  sched/core: Update turbo_sched count only when required
+  sched/fair: Define core capacity to limit task packing
+  powerpc: Define Core Capacity for POWER systems
+  sched/fair: Tune task wake-up logic to pack jitter tasks
+  sched/fair: Bound non idle core search within LLC domain
+  powerpc: Set turbo domain to NUMA node for task packing
+
+ arch/powerpc/include/asm/topology.h |   7 ++
+ arch/powerpc/kernel/smp.c           |  38 ++++++++
+ include/linux/sched.h               |   1 +
+ include/uapi/linux/sched.h          |   4 +-
+ kernel/sched/core.c                 |  39 ++++++++
+ kernel/sched/fair.c                 | 135 +++++++++++++++++++++++++++-
+ kernel/sched/sched.h                |   9 ++
+ 7 files changed, 231 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
+
