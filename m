@@ -2,135 +2,361 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6998DC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACBAC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F2722BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49B3222BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:04:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390360AbfGYFEH (ORCPT
+        id S2390383AbfGYFE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:04:07 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:40251 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390312AbfGYFEG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:04:06 -0400
-Received: by mail-io1-f69.google.com with SMTP id v11so53576511iop.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 22:04:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=L3X65vZ3rUayuRUS9zN2GDw/XxLqoFgPS3n++Iwna6A=;
-        b=iSY8nr7IajD02C3DC3h+1UB31wyf7z0PAC6w1IgO3uZYEeSXHzsXyBhhZQ365QI8Cy
-         rscY7lS2fCQcsXjJRKPuqSh9cI7MUIDfSycFit/PY4JqiEqkLKP88ou9vAvPjVgA/xRF
-         snNmpXopJGKoEZxU/PAd7Q6Tc6kZQntxwuQgeiXDbHyB8YwwRUZ+2X+lMtRyAtQOxT5j
-         x+hyt7+N0s2F+VHw/VjuQamCuF1Twyz7xc3P/R4/nKww099lmz9298q4rDP7LKWzjdSs
-         tFrVYVF468Pj+GNCHmlP8aCSEIJaJS4F9CyH1WJ0b1rrlWaKE9bGyKtgNfjStX75Dj8D
-         Hi2A==
-X-Gm-Message-State: APjAAAUde2b1sdfybH9Tu7I4h64jJj4yAv/6M6y04kVk/PRsyF4RuSba
-        cxMcGUTpAwHsueSu7PeYEtpczX+IE6gONrzub+Z1ahQpuizR
-X-Google-Smtp-Source: APXvYqzY2yjxTZN7foDFPwt5tMSC/DMH88SCMokplXfOZycOYHM8wdRoZvOlXN32Jc9l/IU3X+nVJ88t3J/1E7NAJoWMPDLtLebS
+        Thu, 25 Jul 2019 01:04:27 -0400
+Received: from ja.ssi.bg ([178.16.129.10]:54472 "EHLO ja.ssi.bg"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390362AbfGYFE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:04:26 -0400
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id x6P53C2r004663;
+        Thu, 25 Jul 2019 08:03:12 +0300
+Date:   Thu, 25 Jul 2019 08:03:12 +0300 (EEST)
+From:   Julian Anastasov <ja@ssi.bg>
+To:     Arnd Bergmann <arnd@arndb.de>
+cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Jacky Hu <hengqing.hu@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCH] [v2 net-next] ipvs: reduce kernel stack usage
+In-Reply-To: <20190722113009.2704377-1-arnd@arndb.de>
+Message-ID: <alpine.LFD.2.21.1907250742420.2292@ja.home.ssi.bg>
+References: <20190722113009.2704377-1-arnd@arndb.de>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:b985:: with SMTP id j127mr27063494iof.186.1564031045859;
- Wed, 24 Jul 2019 22:04:05 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 22:04:05 -0700
-In-Reply-To: <0000000000003acc06058e6d6b70@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e80c0e058e7a5a31@google.com>
-Subject: Re: general protection fault in __pm_runtime_resume
-From:   syzbot <syzbot+3cbe5cd105d2ad56a1df@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        len.brown@intel.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, pavel@ucw.cz,
-        rjw@rjwysocki.net, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
 
-HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=108edb68600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
-dashboard link: https://syzkaller.appspot.com/bug?extid=3cbe5cd105d2ad56a1df
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13f0b4c8600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=172d8758600000
+	Hello,
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3cbe5cd105d2ad56a1df@syzkaller.appspotmail.com
+On Mon, 22 Jul 2019, Arnd Bergmann wrote:
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN
-CPU: 0 PID: 1740 Comm: syz-executor618 Not tainted 5.2.0-rc6+ #15
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:__pm_runtime_resume+0x49/0x180 drivers/base/power/runtime.c:1069
-Code: ed 74 d5 fe 45 85 ed 0f 85 9a 00 00 00 e8 6f 73 d5 fe 48 8d bd c1 02  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48  
-89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 fe 00 00 00
-RSP: 0018:ffff8881cf5878e0 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000020 RCX: ffffffff82676833
-RDX: 000000021d463be5 RSI: ffffffff82676841 RDI: 00000010ea31df2b
-RBP: 00000010ea31dc6a R08: ffff8881d1b7e000 R09: fffffbfff0e84c25
-R10: ffff8881cf587940 R11: ffffffff87426127 R12: 0000000000000004
-R13: 0000000000000000 R14: ffff8881cfd7a500 R15: ffffffff897f9040
-FS:  0000555555808880(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000043f760 CR3: 00000001d0f29000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  pm_runtime_get_sync include/linux/pm_runtime.h:226 [inline]
-  usb_autopm_get_interface+0x1b/0x50 drivers/usb/core/driver.c:1707
-  usbhid_power+0x7c/0xe0 drivers/hid/usbhid/hid-core.c:1234
-  hid_hw_power include/linux/hid.h:1038 [inline]
-  hidraw_open+0x20d/0x740 drivers/hid/hidraw.c:282
-  chrdev_open+0x219/0x5c0 fs/char_dev.c:413
-  do_dentry_open+0x497/0x1040 fs/open.c:778
-  do_last fs/namei.c:3416 [inline]
-  path_openat+0x1430/0x3ff0 fs/namei.c:3533
-  do_filp_open+0x1a1/0x280 fs/namei.c:3563
-  do_sys_open+0x3c0/0x580 fs/open.c:1070
-  do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x401ad0
-Code: 01 f0 ff ff 0f 83 c0 0b 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
-44 00 00 83 3d fd 5b 2d 00 00 75 14 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 94 0b 00 00 c3 48 83 ec 08 e8 fa 00 00 00
-RSP: 002b:00007ffed8d15738 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000401ad0
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007ffed8d15740
-RBP: 6666666666666667 R08: 000000000000000f R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402af0
-R13: 0000000000402b80 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 60987a9feed42828 ]---
-RIP: 0010:__pm_runtime_resume+0x49/0x180 drivers/base/power/runtime.c:1069
-Code: ed 74 d5 fe 45 85 ed 0f 85 9a 00 00 00 e8 6f 73 d5 fe 48 8d bd c1 02  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48  
-89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 fe 00 00 00
-RSP: 0018:ffff8881cf5878e0 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000020 RCX: ffffffff82676833
-RDX: 000000021d463be5 RSI: ffffffff82676841 RDI: 00000010ea31df2b
-RBP: 00000010ea31dc6a R08: ffff8881d1b7e000 R09: fffffbfff0e84c25
-R10: ffff8881cf587940 R11: ffffffff87426127 R12: 0000000000000004
-R13: 0000000000000000 R14: ffff8881cfd7a500 R15: ffffffff897f9040
-FS:  0000555555808880(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000043f760 CR3: 00000001d0f29000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> With the new CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL option, the stack
+> usage in the ipvs debug output grows because each instance of
+> IP_VS_DBG_BUF() now has its own buffer of 160 bytes that add up
+> rather than reusing the stack slots:
+> 
+> net/netfilter/ipvs/ip_vs_core.c: In function 'ip_vs_sched_persist':
+> net/netfilter/ipvs/ip_vs_core.c:427:1: error: the frame size of 1052 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+> net/netfilter/ipvs/ip_vs_core.c: In function 'ip_vs_new_conn_out':
+> net/netfilter/ipvs/ip_vs_core.c:1231:1: error: the frame size of 1048 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+> net/netfilter/ipvs/ip_vs_ftp.c: In function 'ip_vs_ftp_out':
+> net/netfilter/ipvs/ip_vs_ftp.c:397:1: error: the frame size of 1104 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+> net/netfilter/ipvs/ip_vs_ftp.c: In function 'ip_vs_ftp_in':
+> net/netfilter/ipvs/ip_vs_ftp.c:555:1: error: the frame size of 1200 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+> 
+> Since printk() already has a way to print IPv4/IPv6 addresses using
+> the %pISc format string, use that instead, combined with a macro that
+> creates a local sockaddr structure on the stack. These will still
+> add up, but the stack frames are now under 200 bytes.
+> 
+> So far I have also only added three files that caused the warning
+> messages to be reported. There are still a lot of other instances of
+> IP_VS_DBG_BUF() that could be converted the same way after the
+> basic idea is confirmed.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2:
+>  - use compressed ipv6 format
+>  - fix port number endianess
 
+	Thanks! Some comments below...
+
+> ---
+>  include/net/ip_vs.h             | 59 ++++++++++++++++-----------------
+>  net/netfilter/ipvs/ip_vs_core.c | 44 ++++++++++++------------
+>  net/netfilter/ipvs/ip_vs_ftp.c  | 20 +++++------
+>  3 files changed, 60 insertions(+), 63 deletions(-)
+> 
+> diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
+> index 3759167f91f5..eace4374e69f 100644
+> --- a/include/net/ip_vs.h
+> +++ b/include/net/ip_vs.h
+> @@ -227,6 +227,16 @@ static inline const char *ip_vs_dbg_addr(int af, char *buf, size_t buf_len,
+>  		       sizeof(ip_vs_dbg_buf), addr,			\
+>  		       &ip_vs_dbg_idx)
+>  
+> +#define IP_VS_DBG_SOCKADDR4(fam, addr, port)				\
+> +	(struct sockaddr*)&(struct sockaddr_in)				\
+> +	{ .sin_family = (fam), .sin_addr = (addr)->in, .sin_port = (port) }
+> +#define IP_VS_DBG_SOCKADDR6(fam, addr, port)				\
+> +	(struct sockaddr*)&(struct sockaddr_in6) \
+> +	{ .sin6_family = (fam), .sin6_addr = (addr)->in6, .sin6_port = (port) }
+> +#define IP_VS_DBG_SOCKADDR(fam, addr, port) (fam == AF_INET ?		\
+> +			IP_VS_DBG_SOCKADDR4(fam, addr, port) :		\
+> +			IP_VS_DBG_SOCKADDR6(fam, addr, port))
+> +
+>  #define IP_VS_DBG(level, msg, ...)					\
+>  	do {								\
+>  		if (level <= ip_vs_get_debug_level())			\
+> @@ -251,6 +261,7 @@ static inline const char *ip_vs_dbg_addr(int af, char *buf, size_t buf_len,
+>  #else	/* NO DEBUGGING at ALL */
+>  #define IP_VS_DBG_BUF(level, msg...)  do {} while (0)
+>  #define IP_VS_ERR_BUF(msg...)  do {} while (0)
+> +#define IP_VS_DBG_SOCKADDR(fam, addr, port) NULL
+>  #define IP_VS_DBG(level, msg...)  do {} while (0)
+>  #define IP_VS_DBG_RL(msg...)  do {} while (0)
+>  #define IP_VS_DBG_PKT(level, af, pp, skb, ofs, msg)	do {} while (0)
+> @@ -1244,31 +1255,23 @@ static inline void ip_vs_control_del(struct ip_vs_conn *cp)
+>  {
+>  	struct ip_vs_conn *ctl_cp = cp->control;
+>  	if (!ctl_cp) {
+> -		IP_VS_ERR_BUF("request control DEL for uncontrolled: "
+> -			      "%s:%d to %s:%d\n",
+> -			      IP_VS_DBG_ADDR(cp->af, &cp->caddr),
+> -			      ntohs(cp->cport),
+> -			      IP_VS_DBG_ADDR(cp->af, &cp->vaddr),
+> -			      ntohs(cp->vport));
+> +		pr_err("request control DEL for uncontrolled: "
+> +		       "%pISpc to %pISpcn",
+
+	Backslash was lost
+
+> +		       IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, cp->cport),
+> +		       IP_VS_DBG_SOCKADDR(cp->af, &cp->vaddr, cp->vport));
+>  
+>  		return;
+>  	}
+>  
+> -	IP_VS_DBG_BUF(7, "DELeting control for: "
+> -		      "cp.dst=%s:%d ctl_cp.dst=%s:%d\n",
+> -		      IP_VS_DBG_ADDR(cp->af, &cp->caddr),
+> -		      ntohs(cp->cport),
+> -		      IP_VS_DBG_ADDR(cp->af, &ctl_cp->caddr),
+> -		      ntohs(ctl_cp->cport));
+> +	IP_VS_DBG(7, "DELeting control for: cp.dst=%pISpc ctl_cp.dst=%pISpc\n",
+> +		  IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, cp->cport),
+> +		  IP_VS_DBG_SOCKADDR(cp->af, &ctl_cp->caddr, ctl_cp->cport));
+>  
+>  	cp->control = NULL;
+>  	if (atomic_read(&ctl_cp->n_control) == 0) {
+> -		IP_VS_ERR_BUF("BUG control DEL with n=0 : "
+> -			      "%s:%d to %s:%d\n",
+> -			      IP_VS_DBG_ADDR(cp->af, &cp->caddr),
+> -			      ntohs(cp->cport),
+> -			      IP_VS_DBG_ADDR(cp->af, &cp->vaddr),
+> -			      ntohs(cp->vport));
+> +		pr_err("BUG control DEL with n=0 : %pISpc to %pISpc\n",
+
+	We can remove the space before colon
+
+> +		       IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, cp->cport),
+> +		       IP_VS_DBG_SOCKADDR(cp->af, &cp->vaddr, cp->vport));
+>  
+>  		return;
+>  	}
+> @@ -1279,22 +1282,18 @@ static inline void
+>  ip_vs_control_add(struct ip_vs_conn *cp, struct ip_vs_conn *ctl_cp)
+>  {
+>  	if (cp->control) {
+> -		IP_VS_ERR_BUF("request control ADD for already controlled: "
+> -			      "%s:%d to %s:%d\n",
+> -			      IP_VS_DBG_ADDR(cp->af, &cp->caddr),
+> -			      ntohs(cp->cport),
+> -			      IP_VS_DBG_ADDR(cp->af, &cp->vaddr),
+> -			      ntohs(cp->vport));
+> +		pr_err("request control ADD for already controlled: "
+> +		       "%pISpc to %pISpc\n",
+> +		       IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, cp->cport),
+> +		       IP_VS_DBG_SOCKADDR(cp->af, &cp->vaddr, cp->vport));
+>  
+>  		ip_vs_control_del(cp);
+>  	}
+>  
+> -	IP_VS_DBG_BUF(7, "ADDing control for: "
+> -		      "cp.dst=%s:%d ctl_cp.dst=%s:%d\n",
+> -		      IP_VS_DBG_ADDR(cp->af, &cp->caddr),
+> -		      ntohs(cp->cport),
+> -		      IP_VS_DBG_ADDR(cp->af, &ctl_cp->caddr),
+> -		      ntohs(ctl_cp->cport));
+> +	IP_VS_DBG(7, "ADDing control for: "
+> +		  "cp.dst=%pISpc ctl_cp.dst=%pISpc\n",
+
+	May be we can join above lines
+
+> +		  IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, cp->cport),
+> +		  IP_VS_DBG_SOCKADDR(cp->af, &ctl_cp->caddr, ctl_cp->cport));
+>  
+>  	cp->control = ctl_cp;
+>  	atomic_inc(&ctl_cp->n_control);
+> diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+> index 46f06f92ab8f..06ab0bf9ae08 100644
+> --- a/net/netfilter/ipvs/ip_vs_core.c
+> +++ b/net/netfilter/ipvs/ip_vs_core.c
+> @@ -52,7 +52,6 @@
+>  #include <net/ip_vs.h>
+>  #include <linux/indirect_call_wrapper.h>
+>  
+> -
+>  EXPORT_SYMBOL(register_ip_vs_scheduler);
+>  EXPORT_SYMBOL(unregister_ip_vs_scheduler);
+>  EXPORT_SYMBOL(ip_vs_proto_name);
+> @@ -295,11 +294,11 @@ ip_vs_sched_persist(struct ip_vs_service *svc,
+>  #endif
+>  		snet.ip = src_addr->ip & svc->netmask;
+>  
+> -	IP_VS_DBG_BUF(6, "p-schedule: src %s:%u dest %s:%u "
+> -		      "mnet %s\n",
+> -		      IP_VS_DBG_ADDR(svc->af, src_addr), ntohs(src_port),
+> -		      IP_VS_DBG_ADDR(svc->af, dst_addr), ntohs(dst_port),
+> -		      IP_VS_DBG_ADDR(svc->af, &snet));
+> +	IP_VS_DBG(6, "p-schedule: src %pISpc dest %pISpc "
+> +		      "mnet %pIS\n",
+
+	Join? mnet %pISc ?
+
+> +		      IP_VS_DBG_SOCKADDR(svc->af, src_addr, src_port),
+> +		      IP_VS_DBG_SOCKADDR(svc->af, dst_addr, dst_port),
+> +		      IP_VS_DBG_SOCKADDR(svc->af, &snet, 0));
+>  
+>  	/*
+>  	 * As far as we know, FTP is a very complicated network protocol, and
+> @@ -567,12 +566,12 @@ ip_vs_schedule(struct ip_vs_service *svc, struct sk_buff *skb,
+>  		}
+>  	}
+>  
+> -	IP_VS_DBG_BUF(6, "Schedule fwd:%c c:%s:%u v:%s:%u "
+> -		      "d:%s:%u conn->flags:%X conn->refcnt:%d\n",
+> +	IP_VS_DBG(6, "Schedule fwd:%c c:%pISpc v:%pISpc "
+> +		      "d:%pISp conn->flags:%X conn->refcnt:%d\n",
+
+	d:%pISpc
+
+>  		      ip_vs_fwd_tag(cp),
+> -		      IP_VS_DBG_ADDR(cp->af, &cp->caddr), ntohs(cp->cport),
+> -		      IP_VS_DBG_ADDR(cp->af, &cp->vaddr), ntohs(cp->vport),
+> -		      IP_VS_DBG_ADDR(cp->daf, &cp->daddr), ntohs(cp->dport),
+> +		      IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, cp->cport),
+> +		      IP_VS_DBG_SOCKADDR(cp->af, &cp->vaddr, cp->vport),
+> +		      IP_VS_DBG_SOCKADDR(cp->daf, &cp->daddr, cp->dport),
+>  		      cp->flags, refcount_read(&cp->refcnt));
+>  
+>  	ip_vs_conn_stats(cp, svc);
+> @@ -886,8 +885,8 @@ static int handle_response_icmp(int af, struct sk_buff *skb,
+>  	/* Ensure the checksum is correct */
+>  	if (!skb_csum_unnecessary(skb) && ip_vs_checksum_complete(skb, ihl)) {
+>  		/* Failed checksum! */
+> -		IP_VS_DBG_BUF(1, "Forward ICMP: failed checksum from %s!\n",
+> -			      IP_VS_DBG_ADDR(af, snet));
+> +		IP_VS_DBG(1, "Forward ICMP: failed checksum from %pISc!\n",
+> +			      IP_VS_DBG_SOCKADDR(af, snet, 0));
+>  		goto out;
+>  	}
+>  
+> @@ -1220,13 +1219,13 @@ struct ip_vs_conn *ip_vs_new_conn_out(struct ip_vs_service *svc,
+>  	ip_vs_conn_stats(cp, svc);
+>  
+>  	/* return connection (will be used to handle outgoing packet) */
+> -	IP_VS_DBG_BUF(6, "New connection RS-initiated:%c c:%s:%u v:%s:%u "
+> -		      "d:%s:%u conn->flags:%X conn->refcnt:%d\n",
+> -		      ip_vs_fwd_tag(cp),
+> -		      IP_VS_DBG_ADDR(cp->af, &cp->caddr), ntohs(cp->cport),
+> -		      IP_VS_DBG_ADDR(cp->af, &cp->vaddr), ntohs(cp->vport),
+> -		      IP_VS_DBG_ADDR(cp->af, &cp->daddr), ntohs(cp->dport),
+> -		      cp->flags, refcount_read(&cp->refcnt));
+> +	IP_VS_DBG(6, "New connection RS-initiated:%c c:%pISpc v:%pISpc "
+> +		  "d:%pISp conn->flags:%X conn->refcnt:%d\n",
+
+	d:%pISpc
+
+> +		  ip_vs_fwd_tag(cp),
+> +		  IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, cp->cport),
+> +		  IP_VS_DBG_SOCKADDR(cp->af, &cp->vaddr, cp->vport),
+> +		  IP_VS_DBG_SOCKADDR(cp->af, &cp->daddr, cp->dport),
+> +		  cp->flags, refcount_read(&cp->refcnt));
+>  	LeaveFunction(12);
+>  	return cp;
+>  }
+> @@ -1969,7 +1968,6 @@ static int ip_vs_in_icmp_v6(struct netns_ipvs *ipvs, struct sk_buff *skb,
+>  }
+>  #endif
+>  
+> -
+>  /*
+>   *	Check if it's for virtual services, look it up,
+>   *	and send it on its way...
+> @@ -1998,10 +1996,10 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
+>  		      hooknum != NF_INET_LOCAL_OUT) ||
+>  		     !skb_dst(skb))) {
+>  		ip_vs_fill_iph_skb(af, skb, false, &iph);
+> -		IP_VS_DBG_BUF(12, "packet type=%d proto=%d daddr=%s"
+> +		IP_VS_DBG(12, "packet type=%d proto=%d daddr=%pISc"
+>  			      " ignored in hook %u\n",
+>  			      skb->pkt_type, iph.protocol,
+> -			      IP_VS_DBG_ADDR(af, &iph.daddr), hooknum);
+> +			      IP_VS_DBG_SOCKADDR(af, &iph.daddr, 0), hooknum);
+>  		return NF_ACCEPT;
+>  	}
+>  	/* ipvs enabled in this netns ? */
+> diff --git a/net/netfilter/ipvs/ip_vs_ftp.c b/net/netfilter/ipvs/ip_vs_ftp.c
+> index cf925906f59b..22099c42e184 100644
+> --- a/net/netfilter/ipvs/ip_vs_ftp.c
+> +++ b/net/netfilter/ipvs/ip_vs_ftp.c
+> @@ -306,9 +306,9 @@ static int ip_vs_ftp_out(struct ip_vs_app *app, struct ip_vs_conn *cp,
+>  					   &start, &end) != 1)
+>  			return 1;
+>  
+> -		IP_VS_DBG_BUF(7, "EPSV response (%s:%u) -> %s:%u detected\n",
+> -			      IP_VS_DBG_ADDR(cp->af, &from), ntohs(port),
+> -			      IP_VS_DBG_ADDR(cp->af, &cp->caddr), 0);
+> +		IP_VS_DBG(7, "EPSV response (%pISpc) -> %pISc detected\n",
+> +			  IP_VS_DBG_SOCKADDR(cp->af, &from, port),
+> +			  IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, 0));
+>  	} else {
+>  		return 1;
+>  	}
+> @@ -510,15 +510,15 @@ static int ip_vs_ftp_in(struct ip_vs_app *app, struct ip_vs_conn *cp,
+>  					  &to, &port, cp->af,
+>  					  &start, &end) == 1) {
+>  
+> -		IP_VS_DBG_BUF(7, "EPRT %s:%u detected\n",
+> -			      IP_VS_DBG_ADDR(cp->af, &to), ntohs(port));
+> +		IP_VS_DBG(7, "EPRT %pISpc detected\n",
+> +			  IP_VS_DBG_SOCKADDR(cp->af, &to, port));
+>  
+>  		/* Now update or create a connection entry for it */
+> -		IP_VS_DBG_BUF(7, "protocol %s %s:%u %s:%u\n",
+> -			      ip_vs_proto_name(ipvsh->protocol),
+> -			      IP_VS_DBG_ADDR(cp->af, &to), ntohs(port),
+> -			      IP_VS_DBG_ADDR(cp->af, &cp->vaddr),
+> -			      ntohs(cp->vport)-1);
+> +		IP_VS_DBG(7, "protocol %s %pISpc %pISpc\n",
+> +			  ip_vs_proto_name(ipvsh->protocol),
+> +			  IP_VS_DBG_SOCKADDR(cp->af, &to, port),
+> +			  IP_VS_DBG_SOCKADDR(cp->af, &cp->vaddr,
+> +					     htons(ntohs(cp->vport)-1)));
+>  	} else {
+>  		return 1;
+>  	}
+> -- 
+> 2.20.0
+
+Regards
+
+--
+Julian Anastasov <ja@ssi.bg>
