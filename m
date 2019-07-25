@@ -2,103 +2,164 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E60C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72718C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9927204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:52:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033979;
-	bh=rxnY3wrfDDLzY2Euytksiym4+Ent8PQJYLcAuC5pEYg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=awXQ8/dy04W7n2SNLJfmN1bTnZl4BTo+tpVCd4P52YfpmQFobPosVrW8sJqkWWN/E
-	 fi0ZPF5IWTdI+N/qPPRewnV9qsFQ/CJJuRQIlSUQHmwvzPht83l8o3nQQ7rBnagC4w
-	 4I1WslnbUEOX9eXi8kdRb/EW8MLuj0ZAXrRLuV9M=
+	by mail.kernel.org (Postfix) with ESMTP id 511AF204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:53:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404132AbfGYFjm (ORCPT
+        id S1728693AbfGYFxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:39:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404109AbfGYFjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:39:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3874522BF3;
-        Thu, 25 Jul 2019 05:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033176;
-        bh=rxnY3wrfDDLzY2Euytksiym4+Ent8PQJYLcAuC5pEYg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hddE4nEf2eOb1DQVYl70RpKg9hfr4nTKLuPL7QPFdXBbot6rpf31kdzzMssuuNTLw
-         nMS6/2gbSfMnr8MWnQhLK7jrJtAapTntCG3d0wOXU4jdtSLiHL1o1q5OwgbabdUq6r
-         Db8JIvyNG19B9f/sCpJS7zIYKOaitiuLJaLFPbRc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 117/271] rslib: Fix decoding of shortened codes
-Date:   Wed, 24 Jul 2019 21:19:46 +0200
-Message-Id: <20190724191705.277703963@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
-References: <20190724191655.268628197@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 25 Jul 2019 01:53:11 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41156 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727958AbfGYFxD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:53:03 -0400
+Received: by mail-qk1-f195.google.com with SMTP id v22so35578204qkj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 22:53:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=JO71JAUQG8v5NWS9aFNJS8lKMgEFxdUfgocNmFAYG40=;
+        b=XrVa0fKePRdW0HQjt2Bz+x0ipygoGSct+6oqoZt4RjCn2UddSrCpB2PoToJRaM23iS
+         tKVjz7hZ2gOypXnvjm+scD1xXVW4xo2avaK9HEpeg6jsqSqNXXSP768KbplTCOVz/M9k
+         96aHEKJpJdzVxbpTbD8zPI67CLIk6zJQiQrH/lHpv/wmIQFq9Em+sCmPJS7/BEaMbsl/
+         syTQTBxtIm2VZCifSABWJiRKOv71N8vcQcFhUu6kKZKagdLBdZYf7wUNdHmsKR/EH56d
+         59Qrmq/yCX6wm/FTm1M5YKubG2SIkgTxFzkXRSBik+p1lBCkcRCrYrpRf7enNgsoSFAS
+         /LCA==
+X-Gm-Message-State: APjAAAXYYPjr3w6YZC5zZc9KIpqaJgORWekOve0txvuYGXUVzXbPj+fO
+        4zN/8o91xI+6jssPWiM704HZgQ==
+X-Google-Smtp-Source: APXvYqzSdjCF8KfvPtVJQN/Fq3QA2lZs756ix2x+aw9grYNxhN50Gd3YATAXPDQIBe87A663Tz88jg==
+X-Received: by 2002:a37:91c2:: with SMTP id t185mr56548270qkd.193.1564033982538;
+        Wed, 24 Jul 2019 22:53:02 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id p3sm33849924qta.12.2019.07.24.22.52.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 22:53:01 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 01:52:53 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+Subject: Re: WARNING in __mmdrop
+Message-ID: <20190725012149-mutt-send-email-mst@kernel.org>
+References: <20190722040230-mutt-send-email-mst@kernel.org>
+ <4bd2ff78-6871-55f2-44dc-0982ffef3337@redhat.com>
+ <20190723010019-mutt-send-email-mst@kernel.org>
+ <b4696f2e-678a-bdb2-4b7c-fb4ce040ec2a@redhat.com>
+ <20190723032024-mutt-send-email-mst@kernel.org>
+ <1d14de4d-0133-1614-9f64-3ded381de04e@redhat.com>
+ <20190723035725-mutt-send-email-mst@kernel.org>
+ <3f4178f1-0d71-e032-0f1f-802428ceca59@redhat.com>
+ <20190723051828-mutt-send-email-mst@kernel.org>
+ <caff362a-e208-3468-3688-63e1d093a9d3@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <caff362a-e208-3468-3688-63e1d093a9d3@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2034a42d1747fc1e1eeef2c6f1789c4d0762cb9c ]
+On Tue, Jul 23, 2019 at 09:31:35PM +0800, Jason Wang wrote:
+> 
+> On 2019/7/23 下午5:26, Michael S. Tsirkin wrote:
+> > On Tue, Jul 23, 2019 at 04:49:01PM +0800, Jason Wang wrote:
+> > > On 2019/7/23 下午4:10, Michael S. Tsirkin wrote:
+> > > > On Tue, Jul 23, 2019 at 03:53:06PM +0800, Jason Wang wrote:
+> > > > > On 2019/7/23 下午3:23, Michael S. Tsirkin wrote:
+> > > > > > > > Really let's just use kfree_rcu. It's way cleaner: fire and forget.
+> > > > > > > Looks not, you need rate limit the fire as you've figured out?
+> > > > > > See the discussion that followed. Basically no, it's good enough
+> > > > > > already and is only going to be better.
+> > > > > > 
+> > > > > > > And in fact,
+> > > > > > > the synchronization is not even needed, does it help if I leave a comment to
+> > > > > > > explain?
+> > > > > > Let's try to figure it out in the mail first. I'm pretty sure the
+> > > > > > current logic is wrong.
+> > > > > Here is what the code what to achieve:
+> > > > > 
+> > > > > - The map was protected by RCU
+> > > > > 
+> > > > > - Writers are: MMU notifier invalidation callbacks, file operations (ioctls
+> > > > > etc), meta_prefetch (datapath)
+> > > > > 
+> > > > > - Readers are: memory accessor
+> > > > > 
+> > > > > Writer are synchronized through mmu_lock. RCU is used to synchronized
+> > > > > between writers and readers.
+> > > > > 
+> > > > > The synchronize_rcu() in vhost_reset_vq_maps() was used to synchronized it
+> > > > > with readers (memory accessors) in the path of file operations. But in this
+> > > > > case, vq->mutex was already held, this means it has been serialized with
+> > > > > memory accessor. That's why I think it could be removed safely.
+> > > > > 
+> > > > > Anything I miss here?
+> > > > > 
+> > > > So invalidate callbacks need to reset the map, and they do
+> > > > not have vq mutex. How can they do this and free
+> > > > the map safely? They need synchronize_rcu or kfree_rcu right?
+> > > Invalidation callbacks need but file operations (e.g ioctl) not.
+> > > 
+> > > 
+> > > > And I worry somewhat that synchronize_rcu in an MMU notifier
+> > > > is a problem, MMU notifiers are supposed to be quick:
+> > > Looks not, since it can allow to be blocked and lots of driver depends on
+> > > this. (E.g mmu_notifier_range_blockable()).
+> > Right, they can block. So why don't we take a VQ mutex and be
+> > done with it then? No RCU tricks.
+> 
+> 
+> This is how I want to go with RFC and V1. But I end up with deadlock between
+> vq locks and some MM internal locks. So I decide to use RCU which is 100%
+> under the control of vhost.
+> 
+> Thanks
 
-The decoding of shortenend codes is broken. It only works as expected if
-there are no erasures.
+And I guess the deadlock is because GUP is taking mmu locks which are
+taken on mmu notifier path, right?  How about we add a seqlock and take
+that in invalidate callbacks?  We can then drop the VQ lock before GUP,
+and take it again immediately after.
 
-When decoding with erasures, Lambda (the error and erasure locator
-polynomial) is initialized from the given erasure positions. The pad
-parameter is not accounted for by the initialisation code, and hence
-Lambda is initialized from incorrect erasure positions.
+something like
+	if (!vq_meta_mapped(vq)) {
+		vq_meta_setup(&uaddrs);
+		mutex_unlock(vq->mutex)
+		vq_meta_map(&uaddrs);
+		mutex_lock(vq->mutex)
 
-The fix is to adjust the erasure positions by the supplied pad.
+		/* recheck both sock->private_data and seqlock count. */
+		if changed - bail out
+	}
 
-Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190620141039.9874-3-ferdinand.blomqvist@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- lib/reed_solomon/decode_rs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+And also requires that VQ uaddrs is defined like this:
+- writers must have both vq mutex and dev mutex
+- readers must have either vq mutex or dev mutex
 
-diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
-index 1db74eb098d0..3313bf944ff1 100644
---- a/lib/reed_solomon/decode_rs.c
-+++ b/lib/reed_solomon/decode_rs.c
-@@ -99,9 +99,9 @@
- 	if (no_eras > 0) {
- 		/* Init lambda to be the erasure locator polynomial */
- 		lambda[1] = alpha_to[rs_modnn(rs,
--					      prim * (nn - 1 - eras_pos[0]))];
-+					prim * (nn - 1 - (eras_pos[0] + pad)))];
- 		for (i = 1; i < no_eras; i++) {
--			u = rs_modnn(rs, prim * (nn - 1 - eras_pos[i]));
-+			u = rs_modnn(rs, prim * (nn - 1 - (eras_pos[i] + pad)));
- 			for (j = i + 1; j > 0; j--) {
- 				tmp = index_of[lambda[j - 1]];
- 				if (tmp != nn) {
+
+That's a big change though. For now, how about switching to a per-vq SRCU?
+That is only a little bit more expensive than RCU, and we
+can use synchronize_srcu_expedited.
+
 -- 
-2.20.1
-
-
-
+MST
