@@ -2,106 +2,104 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07CEC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D671DC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA1C216C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B09E821734
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:31:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mcGQh8NX"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WVoAOy8a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389152AbfGYCax (ORCPT
+        id S2389167AbfGYCba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 22:30:53 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44624 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388525AbfGYCax (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 22:30:53 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t14so22725468plr.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 19:30:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Z8Xo9F35Jnjc9XijZCcQ2rozL9xIXtmpcSL+K8PquAE=;
-        b=mcGQh8NXcdBWu+xz3Gs/fefZAaR45ySwQq5ksz1Qk66f21qrMjSw+hhnQLd4PMLvVm
-         K13LBdP8SDpQBZX9ewSOSLZ5QOHv6ZruKGrlTEMfrSRyfa4e7Q7+5yGsN/WQNFJhV8t7
-         rmlwE1EQ93ETmdl7DM5hKnF281cbyZwDOG/r5qnr4u73daGEmENzLpRErgotT9gtUYHS
-         jN8MPYVUC9SCME4FkR8B0ZTTzExFg75UyYJA1ocZ0pYqfU4ngMdCAhcpI63ZM96Pc47F
-         ahxU51/X64iCjjKASFCbe1/3LGT5GL4Q7TmEn9QDxeQhaEV1wrzz+IBB6QSFDxrhtlZf
-         rSuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z8Xo9F35Jnjc9XijZCcQ2rozL9xIXtmpcSL+K8PquAE=;
-        b=gcdW1o9Td9R01VvPXLLE+yOtx1NDe/f3h9T6x8qOLmfEwKdcCzbUo7kCtl/T14WZqy
-         u5cv2H74zday1E/MMhOOogvaoyfKVKbxAzCIacQ9RrCSolwSF0nQsnyFb24ldLyOXik5
-         Co/FxuBykk7oziQpqk+J84jey85h+VVxojnJJFeCZsFpFbJGYtqIRb5MmhGvCjtDFqIX
-         ZYUk2l8OQWYv25j+P68g1porZ2RqX/jaJxIgZc8wxEwA4s/FE9N9fv16XxNOCYyVtGt+
-         lksk9jViDn9HbIZ69lfXnfvfC3yIopTRXnQAGY5O1ap+1BcqfG+pzzbOjNRbnM+bcwU9
-         0g7w==
-X-Gm-Message-State: APjAAAVQonC6fWSnlzLw3vtwMh9SopSLkopIx9ftq7OQd7QYLyWxUuHI
-        GeSFk+DJPuQJa4tx9E8lDBamjg==
-X-Google-Smtp-Source: APXvYqyQ+Idaqp2XOKlh2A+59UT3l7Es0V6fP+GpNTh+LEvHX5XPNjpHbZckqg4+pj1buEP+J8OsZA==
-X-Received: by 2002:a17:902:e40f:: with SMTP id ci15mr88979000plb.103.1564021852454;
-        Wed, 24 Jul 2019 19:30:52 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id 35sm49333089pgw.91.2019.07.24.19.30.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 19:30:51 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 08:00:50 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>, kernel-team@android.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] Add required-opps support to devfreq passive gov
-Message-ID: <20190725023050.7ggjbwsthoxpkexv@vireshk-i7>
-References: <20190724014222.110767-1-saravanak@google.com>
+        Wed, 24 Jul 2019 22:31:30 -0400
+Received: from ozlabs.org ([203.11.71.1]:35559 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388525AbfGYCba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 22:31:30 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45vGRz1SVtz9s00;
+        Thu, 25 Jul 2019 12:31:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564021887;
+        bh=fGSuBCeypp34E2NiCYSbcZpIny6NTqpcpaPHZ1wGKx4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WVoAOy8a6FjdDQD8p/SNOW6qghI97FPIFkaFATX5IkfOjEKxy0Sj6pieG4bXOp0wq
+         0lI2mg+DI80LqsFiRQ9YgMhD61vu6nZZJ9fd5CRPovBup20qFrhqf/Aldoy6ljH4Ob
+         72dzkapCzgKezLhYjRwb9YfO82eA3BnMcSnEtK2ydwo+2QA5aIiJdJu20uDipaYoLN
+         s7dapRv6+dYOJ7AHw1Lc3pKcJ1FmetDhYFfg/64cdCiVEUO6UPjjRYHJyhN3OyJL6P
+         x+5Qsr+eG9Uj46Kuufm+EsHKKh/puyPrpPtQ2FJ2HupOjds5EkKrul3u4+ylo+TOEK
+         Iwz1JIGZQE0uQ==
+Date:   Thu, 25 Jul 2019 12:31:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: linux-next: build failure after merge of the leds tree
+Message-ID: <20190725123126.725c77c8@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724014222.110767-1-saravanak@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: multipart/signed; boundary="Sig_/8_VVWf/7.doNQSjImMQe.Bq";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-07-19, 18:42, Saravana Kannan wrote:
-> The devfreq passive governor scales the frequency of a "child" device based
-> on the current frequency of a "parent" device (not parent/child in the
-> sense of device hierarchy). As of today, the passive governor requires one
-> of the following to work correctly:
-> 1. The parent and child device have the same number of frequencies
-> 2. The child device driver passes a mapping function to translate from
->    parent frequency to child frequency.
+--Sig_/8_VVWf/7.doNQSjImMQe.Bq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> v3 -> v4:
-> - Fixed documentation comments
-> - Fixed order of functions in .h file
-> - Renamed the new xlate API
-> - Caused _set_required_opps() to fail if all required opps tables aren't
->   linked.
+Hi all,
 
-We are already in the middle of a discussion for your previous version
-and I haven't said yet that I am happy with what you suggested just 2
-days back. Why send another version so soon ? The next merge window is
-also very far in time from now.
+After merging the leds tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Please wait for a few days before sending newer versions, I will
-continue discussion on the previous version only for now.
+drivers/leds/leds-max77650.c: In function 'max77650_led_probe':
+drivers/leds/leds-max77650.c:121:8: error: implicit declaration of function=
+ 'devm_of_led_classdev_register'; did you mean 'devm_led_classdev_register'=
+? [-Werror=3Dimplicit-function-declaration]
+   rv =3D devm_of_led_classdev_register(dev, child, &led->cdev);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        devm_led_classdev_register
 
--- 
-viresh
+Caused by commit
+
+  4eba5b82096e ("leds: class: Improve LED and LED flash class registration =
+API")
+
+interacting with commit
+
+  5be102eb161a ("leds: max77650: Add LEDs support")
+
+I have used the leds tree from next-20190724 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/8_VVWf/7.doNQSjImMQe.Bq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl05FH4ACgkQAVBC80lX
+0Gwxqgf/TAfUqalagcT4Xd9/W3PV4mTStwIBcWoeqn0gaCm/7GH8DzNKVIF79MKe
+4tlS2vrmhBBnGfNSoXRzhGGJ8SOKXGhbFm3wutv8ZYVxSsmfmavMk0Sz2m9tgXTN
+ZZ4c4vhy/mGkgbnQ/a42/Bjc7wHVpWCXI5FTwZpq+j9dUNJ8Ma+Xf8Oa8a1pNbev
+Mxh3c1rAExzN//K9JbA/s5jqhxRLA5PGmS5OtUL2Rt9vkBJEBvrQK6ggH55sS2vj
+eRMGg8xOmltZET8CStz15Sogv5m+85WBiYMbENNQMJ2VQq89SwFjN0/f6bMrarI+
+pXmrTTkoUIkYUysvcREThY+yH7dF6Q==
+=Gb3x
+-----END PGP SIGNATURE-----
+
+--Sig_/8_VVWf/7.doNQSjImMQe.Bq--
