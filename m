@@ -2,99 +2,79 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1EBC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46843C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEEA1214AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2130E214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:15:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfGYTPA (ORCPT
+        id S1726701AbfGYTPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 15:15:00 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:42188 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbfGYTPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:15:00 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hqjCQ-0003h1-UD; Thu, 25 Jul 2019 13:14:47 -0600
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190722230859.5436-1-logang@deltatee.com>
- <20190722230859.5436-7-logang@deltatee.com>
- <20190725185230.GG7450@mellanox.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <dc151716-d584-35df-0de6-d25c1267be6c@deltatee.com>
-Date:   Thu, 25 Jul 2019 13:14:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 15:15:24 -0400
+Received: from smtp07.smtpout.orange.fr ([80.12.242.129]:52144 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfGYTPX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 15:15:23 -0400
+Received: from localhost.localdomain ([92.140.204.221])
+        by mwinf5d13 with ME
+        id h7EX2000F4n7eLC037EpXF; Thu, 25 Jul 2019 21:15:21 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 25 Jul 2019 21:15:21 +0200
+X-ME-IP: 92.140.204.221
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     johannes@sipsolutions.net, kvalo@codeaurora.org,
+        davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] mac80211_hwsim: Fix a typo in the name of function 'mac80211_hswim_he_capab()'
+Date:   Thu, 25 Jul 2019 21:13:28 +0200
+Message-Id: <20190725191328.18010-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190725185230.GG7450@mellanox.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, epilmore@gigaio.com, dan.j.williams@intel.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, Christian.Koenig@amd.com, hch@lst.de, bhelgaas@google.com, linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, jgg@mellanox.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 06/14] PCI/P2PDMA: Add whitelist support for Intel Host
- Bridges
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This function name should be 'mac80211_hwsim_he_capab()' (s wand w
+switched) to be consistent with the rest of the file.
+Fix and use it.
 
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/net/wireless/mac80211_hwsim.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 2019-07-25 12:52 p.m., Jason Gunthorpe wrote:
-> On Mon, Jul 22, 2019 at 05:08:51PM -0600, Logan Gunthorpe wrote:
->> Intel devices do not have good support for P2P requests that span
->> different host bridges as the transactions will cross the QPI/UPI bus
->> and this does not perform well.
->>
->> Therefore, enable support for these devices only if the host bridges
->> match.
->>
->> Adds the Intel device's that have been tested to work. There are
->> likely many others out there that will need to be tested and added.
->>
->> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->>  drivers/pci/p2pdma.c | 36 ++++++++++++++++++++++++++++++++----
->>  1 file changed, 32 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
->> index dfb802afc8ca..143e11d2a5c3 100644
->> +++ b/drivers/pci/p2pdma.c
->> @@ -250,9 +250,28 @@ static void seq_buf_print_bus_devfn(struct seq_buf *buf, struct pci_dev *pdev)
->>  	seq_buf_printf(buf, "%s;", pci_name(pdev));
->>  }
->>  
->> -static bool __host_bridge_whitelist(struct pci_host_bridge *host)
->> +static const struct pci_p2pdma_whitelist_entry {
->> +	unsigned short vendor;
->> +	unsigned short device;
->> +	bool req_same_host_bridge;
-> 
-> This would be more readable in the initializer as a flags not a bool
+diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
+index b5274d1f30fa..64b0e51f8e8d 100644
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -2595,7 +2595,7 @@ static const struct ieee80211_sband_iftype_data he_capa_5ghz = {
+ 	},
+ };
+ 
+-static void mac80211_hswim_he_capab(struct ieee80211_supported_band *sband)
++static void mac80211_hwsim_he_capab(struct ieee80211_supported_band *sband)
+ {
+ 	if (sband->band == NL80211_BAND_2GHZ)
+ 		sband->iftype_data =
+@@ -2898,7 +2898,7 @@ static int mac80211_hwsim_new_radio(struct genl_info *info,
+ 		sband->ht_cap.mcs.rx_mask[1] = 0xff;
+ 		sband->ht_cap.mcs.tx_params = IEEE80211_HT_MCS_TX_DEFINED;
+ 
+-		mac80211_hswim_he_capab(sband);
++		mac80211_hwsim_he_capab(sband);
+ 
+ 		hw->wiphy->bands[band] = sband;
+ 	}
+-- 
+2.20.1
 
-Ok, will change for v2.
-
-Logan
