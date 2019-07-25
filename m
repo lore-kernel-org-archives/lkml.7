@@ -2,144 +2,151 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C91BC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2E8C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F27F2189F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:19:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dSjKX1JI"
+	by mail.kernel.org (Postfix) with ESMTP id 8839E2189F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390532AbfGYFTD (ORCPT
+        id S2390560AbfGYFVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:19:03 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36846 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387743AbfGYFTC (ORCPT
+        Thu, 25 Jul 2019 01:21:16 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:33565 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390542AbfGYFVQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:19:02 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g67so39336337wme.1;
-        Wed, 24 Jul 2019 22:19:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zlgmxtIQ7tw41jxv7w9g9WF1aiWMMHCySIjrTiYaOHk=;
-        b=dSjKX1JIzZpnMlaFrh/CO3sdeaVScMLkt8Wx+AlIAVKvl/cC9tct2KdsImmkW2kK1c
-         Uoi1pJiVxVcmh9qJaPousCT4W1abaso1QjQ8CGPpjmkBy1q+VdmItT1cGDIV5qJQNuMK
-         6StjQnuultYYg738hoHRY+RnV7K+dJS2sTNXNOPcQKzGAZwbVDITpXqLeQzDZ9ZIngGQ
-         ok6zdVLvDMhwdUMf+VTVUYO1/tgknhfwoHTnX9QJ0HNoWqR+2wnftXk0ewN93AiDw1u7
-         YpEOpuXfYhqByOG0VaKiMmsPBeCuUz4t6FtUK4I9glUfGMMj7rhfMk6JW7mu+18W2zYV
-         ANkg==
+        Thu, 25 Jul 2019 01:21:16 -0400
+Received: by mail-qt1-f195.google.com with SMTP id r6so43673252qtt.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 22:21:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zlgmxtIQ7tw41jxv7w9g9WF1aiWMMHCySIjrTiYaOHk=;
-        b=emuRvVvNGS7m8/z7BWSxFmvyxv67eye947h4Qb83zmHzfnEZ7RJs+cyv0nZrXDy/wh
-         rs28fyjMLgWV+coTj0bbWSwgwmfAkCz2lgRLXz45JU1ywwxRRNjs4zHPWY0HiyLOqw3o
-         9xm3QD2DkiLWGpApRpoTn1rbhT3JXVwKvpw0uvbrRHOj/jz4iWlwNFPvJU+NzFwaPQ2c
-         k8FAmNz4/vl2c5RAG9iQtgPAHSoOh+IHIqPk1dHxeHut+XWal3U7EOPdrPf2uN0AS6hp
-         WYae8btAgBr0Kw85ZE8VmKR0dkk5XbN2i4od5HFGRBl1UDqp12stgDHFDqxkMLygciCt
-         eQZw==
-X-Gm-Message-State: APjAAAUXtQGf0cG3FGAOt4w6M3O92ubaHsf/A1A1EdzE6SdC5e1SC7n5
-        u0WixVqDgub2Mg5fbEQVOdw=
-X-Google-Smtp-Source: APXvYqzuOOt6YOCN7JO4S9XH2013CNl3EfIISfBoeapn/uzHYRi3v9wg/nKnHCsAyhxiKfdChltkJg==
-X-Received: by 2002:a1c:a514:: with SMTP id o20mr79531810wme.149.1564031939881;
-        Wed, 24 Jul 2019 22:18:59 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id e19sm64916988wra.71.2019.07.24.22.18.58
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ij2gAdKa9zJFg927gRyeBU4x4qxEHqTLEtL3Pad0Y1Q=;
+        b=P1+BPfWKtzen/qFBCjj6ZhMZBpQmDcjnK9lAdh+jtLC3qGrKY+KJH1JjhW4S7yvY9P
+         Dboz9WHwUy9rl0fXqw8nWZtZV9tEHLre9rLiFc2NsOpu4qodPN/zRDI+ncuYrESz9q4B
+         ltRJrGlWTla088FMpd12OnijSdZAksBsVQxcdA7JnEfcDuQebvp23/uQPXDySJ/fvjQs
+         gxp5Qlym4W2amP367LPcKfKnfLhg4tK0Thn1M95eudvNm9cne25Alv+TXKXVt21nsU7q
+         0GGcXFBqOZLNquTyHMvhu0AU2Lh4E6D40pFAozOxVpuKK1SkiFUo9xCzwnjzyWS2RYRm
+         Lg6A==
+X-Gm-Message-State: APjAAAX+x2jiDy7/IJBTYUkwZH4b264xKqHA55GnXjLXlN2of36cCGEr
+        1Lv4FrPTKNJCardDuF/BQrdnu3obal2vag==
+X-Google-Smtp-Source: APXvYqyH+kPPC/RgJkqmP3mhZoKYk3W8Vnv5UNtxePT9Ese+Du9AfXK1iHcVJ8tRRtEs2NQhD73WwA==
+X-Received: by 2002:ac8:2409:: with SMTP id c9mr60774507qtc.145.1564032075057;
+        Wed, 24 Jul 2019 22:21:15 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id e1sm24011738qtb.52.2019.07.24.22.21.12
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 22:18:58 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 22:18:57 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Peter Smith <peter.smith@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] kbuild: Check for unknown options with cc-option and
- clang in Kbuild
-Message-ID: <20190725051857.GA53904@archlinux-threadripper>
-References: <20190724235030.131144-1-swboyd@chromium.org>
+        Wed, 24 Jul 2019 22:21:13 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 01:21:09 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] vhost: mark dirty pages during map uninit
+Message-ID: <20190725010944-mutt-send-email-mst@kernel.org>
+References: <20190723075718.6275-1-jasowang@redhat.com>
+ <20190723075718.6275-6-jasowang@redhat.com>
+ <20190723041702-mutt-send-email-mst@kernel.org>
+ <a670cd0d-581d-1aba-41bd-c643c19f9604@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190724235030.131144-1-swboyd@chromium.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a670cd0d-581d-1aba-41bd-c643c19f9604@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
-
-Was the second Kbuild in the subject line supposed to be Kconfig?
-
-On Wed, Jul 24, 2019 at 04:50:30PM -0700, Stephen Boyd wrote:
-> If the particular version of clang a user has doesn't enable
-> -Werror=unknown-warning-option by default, even though it is the
-> default[1], then make sure to pass the option to the Kconfig cc-option
-
-Hmmm interesting, I did not even know that was possible... Is that a
-clang configuration option or an out of tree patch? Looks like it has
-been on by default since clang 3.2: https://godbolt.org/z/mOmusu
-
-> command so that testing options from Kconfig files works properly.
-> Otherwise, depending on the default values setup in the clang toolchain
-> we will silently assume options such as -Wmaybe-uninitialized are
-> supported by clang, when they really aren't.
+On Tue, Jul 23, 2019 at 09:19:33PM +0800, Jason Wang wrote:
 > 
-> This issue only started happening for me once commit 589834b3a009
-> ("kbuild: Add -Werror=unknown-warning-option to CLANG_FLAGS") was
-> applied on top of commit b303c6df80c9 ("kbuild: compute false-positive
-> -Wmaybe-uninitialized cases in Kconfig"). This leads kbuild to try and
-
-Prior to 589834b3a009, how did cc-option work at all if
--Wunknown-warning-option wasn't enabled by default? I assume that clang
-would just eat any unknown flags while returning zero so it looked like
-the flag was supported?
-
-> test for the existence of the -Wmaybe-uninitialized flag with the
-> cc-option command in scripts/Kconfig.include, and it doesn't see an
-> error returned from the option test so it sets the config value to Y.
-
-It might be worth explicitly saying somewhere in here that clang will
-not error on unknown flags without -Werror + -Wunknown-warning-option.
-
-> Then the makefile tries to pass the unknown option on the command line
-> and -Werror=unknown-warning-option catches the invalid option and breaks
-> the build.
+> On 2019/7/23 下午5:17, Michael S. Tsirkin wrote:
+> > On Tue, Jul 23, 2019 at 03:57:17AM -0400, Jason Wang wrote:
+> > > We don't mark dirty pages if the map was teared down outside MMU
+> > > notifier. This will lead untracked dirty pages. Fixing by marking
+> > > dirty pages during map uninit.
+> > > 
+> > > Reported-by: Michael S. Tsirkin<mst@redhat.com>
+> > > Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
+> > > Signed-off-by: Jason Wang<jasowang@redhat.com>
+> > > ---
+> > >   drivers/vhost/vhost.c | 22 ++++++++++++++++------
+> > >   1 file changed, 16 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> > > index 89c9f08b5146..5b8821d00fe4 100644
+> > > --- a/drivers/vhost/vhost.c
+> > > +++ b/drivers/vhost/vhost.c
+> > > @@ -306,6 +306,18 @@ static void vhost_map_unprefetch(struct vhost_map *map)
+> > >   	kfree(map);
+> > >   }
+> > > +static void vhost_set_map_dirty(struct vhost_virtqueue *vq,
+> > > +				struct vhost_map *map, int index)
+> > > +{
+> > > +	struct vhost_uaddr *uaddr = &vq->uaddrs[index];
+> > > +	int i;
+> > > +
+> > > +	if (uaddr->write) {
+> > > +		for (i = 0; i < map->npages; i++)
+> > > +			set_page_dirty(map->pages[i]);
+> > > +	}
+> > > +}
+> > > +
+> > >   static void vhost_uninit_vq_maps(struct vhost_virtqueue *vq)
+> > >   {
+> > >   	struct vhost_map *map[VHOST_NUM_ADDRS];
+> > > @@ -315,8 +327,10 @@ static void vhost_uninit_vq_maps(struct vhost_virtqueue *vq)
+> > >   	for (i = 0; i < VHOST_NUM_ADDRS; i++) {
+> > >   		map[i] = rcu_dereference_protected(vq->maps[i],
+> > >   				  lockdep_is_held(&vq->mmu_lock));
+> > > -		if (map[i])
+> > > +		if (map[i]) {
+> > > +			vhost_set_map_dirty(vq, map[i], i);
+> > >   			rcu_assign_pointer(vq->maps[i], NULL);
+> > > +		}
+> > >   	}
+> > >   	spin_unlock(&vq->mmu_lock);
+> > > @@ -354,7 +368,6 @@ static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
+> > >   {
+> > >   	struct vhost_uaddr *uaddr = &vq->uaddrs[index];
+> > >   	struct vhost_map *map;
+> > > -	int i;
+> > >   	if (!vhost_map_range_overlap(uaddr, start, end))
+> > >   		return;
+> > > @@ -365,10 +378,7 @@ static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
+> > >   	map = rcu_dereference_protected(vq->maps[index],
+> > >   					lockdep_is_held(&vq->mmu_lock));
+> > >   	if (map) {
+> > > -		if (uaddr->write) {
+> > > -			for (i = 0; i < map->npages; i++)
+> > > -				set_page_dirty(map->pages[i]);
+> > > -		}
+> > > +		vhost_set_map_dirty(vq, map, index);
+> > >   		rcu_assign_pointer(vq->maps[index], NULL);
+> > >   	}
+> > >   	spin_unlock(&vq->mmu_lock);
+> > OK and the reason it's safe is because the invalidate counter
+> > got incremented so we know page will not get mapped again.
+> > 
+> > But we*do*  need to wait for page not to be mapped.
+> > And if that means waiting for VQ processing to finish,
+> > then I worry that is a very log time.
+> > 
 > 
-> Note: this doesn't change the cc-option tests in Makefiles, because
-> those use a different rule that includes KBUILD_CFLAGS by default, and
-> the KBUILD_CFLAGS already has -Werror=unknown-warning-option. Thanks to
-> Doug for pointing out the different rule.
+> I'm not sure I get you here. If we don't have such map, we will fall back to
+> normal uaccess helper. And in the memory accessor, the rcu critical section
+> is pretty small.
 > 
-> [1] https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
-> Cc: Peter Smith <peter.smith@linaro.org>
-> Cc: Nathan Chancellor <natechancellor@gmail.com>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Thanks
 > 
-> Change-Id: I3bb69d45bb062d1306acbf19bc0adfb60f706442
 
-I assume that shouldn't be there?
+OK. So the trick is that page_mkclean invokes mmu notifiers.
 
-Overall, seems okay to me (took me a sec to understand the bug,
-certainly a very specific one). It might make sense to explicitly add
-somewhere in the commit message that this syncs cc-option behavior
-between Kconfig and Kbuild as a whole, as I didn't understand that at
-first. Thanks for the triage and sorry for the breakage!
-
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+-- 
+MST
