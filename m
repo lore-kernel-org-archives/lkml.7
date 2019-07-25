@@ -2,191 +2,200 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC192C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC727C41517
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81DC022BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F5B2238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:00:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QpF6BdCi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388862AbfGYO7t (ORCPT
+        id S2388892AbfGYPAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:59:49 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33329 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387834AbfGYO7t (ORCPT
+        Thu, 25 Jul 2019 11:00:01 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38609 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388374AbfGYPAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:59:49 -0400
-Received: by mail-qt1-f196.google.com with SMTP id r6so45140140qtt.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 07:59:48 -0700 (PDT)
+        Thu, 25 Jul 2019 11:00:01 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r9so48317540ljg.5;
+        Thu, 25 Jul 2019 07:59:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=p9OR61FicIpVENd/71fr74aLBznslcDzFyCpkAgUAXc=;
+        b=QpF6BdCinO8sSU+WgwVqhTBRehdNQtib+EoE3soWMylfDlEr7ExQR6aPDum3wSyomO
+         YjvZHhKphEW9EvLI+saojKFniOHKA2wjO4m2MIh/dEBr82C/sZIL9KLeDDVlhcJaZjbU
+         4YMf32NobArfgLnsmOTI4uAUgcPoo9s12i65I023l8RYJ8s18KSHHdOQsaIsBRh3JEiA
+         TwZ55d1Eln05YRaSbpfpRcuQ8uLXh2ZNprhmG8BfsBxq/RjNvFhqBWGgW3vX7DKt3mtc
+         UqzbXF2+OgEuSmOr4S+gW1cA2J707vr1vY0nG1Ph5wxT5BKtVL5GBhYe94vSiSH7AWib
+         jLVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Rmm6yLiguxnk1HEaBFpodRlU5b5ba8DS6Z2s5rRsdl0=;
-        b=os08S6KpiXJ5DAQQEC2gwU8j1Lp3q7DuSQFh1rhSH4Q4xP/uiBs6lQHirKM/ISkH+f
-         Ojf3cuYFGBNps+zEIIL/nritLeU5/0JoXwsSKem0MFCXATZOiSbxBZW2GbmkKwFDKciK
-         v7FOuVModrFXyc4VxXhfug50rfp82D8Tz+ggN0QjpqQY3b4Sja/PLB64xtdkrUDOkDKL
-         v6SMNHH8wZPszLnGqLDosFcDWvCOCWESNi8GXLqMSuj/KKeIKIVUKd/eMf5aYTKgkAdN
-         Gdwrq28Uwv0TxKEu/9RcLJQawLVIlRpqkrSfsmYqNB0mTim0Qoj2mgTbn1Tx1tpZrv5Q
-         LqyA==
-X-Gm-Message-State: APjAAAUYkQqtsKag8EwZhZ4uNBWWG+qf41XSWGKVxu3/ixts8KUXbbmc
-        kngAu3ACHZD7kfmAy9iX4oeUCQ==
-X-Google-Smtp-Source: APXvYqzoIpindOeRtA1tCkHO4cy0qQv+nosyivtBgk+2pOYdPVUj3ArumomPLobNHAIjfwa4IloqWA==
-X-Received: by 2002:ac8:3907:: with SMTP id s7mr64407808qtb.374.1564066787847;
-        Thu, 25 Jul 2019 07:59:47 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id v75sm24506057qka.38.2019.07.25.07.59.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 07:59:47 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 10:59:40 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
-        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com
-Subject: Re: [PATCH v2 5/5] virtio-balloon: Add support for providing page
- hints to host
-Message-ID: <20190725105852-mutt-send-email-mst@kernel.org>
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
- <20190724170514.6685.17161.stgit@localhost.localdomain>
- <20190724143902-mutt-send-email-mst@kernel.org>
- <21cc88cd-3577-e8b4-376f-26c7848f5764@redhat.com>
- <d75ba86f0cab44562148f3ffd66684c167952079.camel@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=p9OR61FicIpVENd/71fr74aLBznslcDzFyCpkAgUAXc=;
+        b=EV2nrpFgfwE/A5uNlXmmEfV2W5d+tgps9I3gbSINEzYORttBaLGtSxBlTtqeL2rTwR
+         vYx4qLtUrWBtziST/ZkKCis+zix0lYpkBBCfwz0eROw51mQurC/v4iBOoXynONvl+V4u
+         Mk8ZikzGgooLFHcGC75wg7vxdevfHphZR01effMnClrs8swALoHnCHkeOi+nxJyFh11/
+         o3TUC7v7Nu4myO4tByom+Lsxy2+4zoqkVaT4VgEXXUVtvCnbmBrZRmCKuDOuqJkuNiwq
+         ZMpEL9jYnLJgubleojn2gE4mD+sFxxJVBb/L9jrFcQlpDCZrKlyD71Q5a+yumylFijM+
+         XImQ==
+X-Gm-Message-State: APjAAAXKmjtQN7svYtxPTBZjPt8NPcXg7DbWIm7uRF+Wuu4VOqbYalCb
+        AxVD0UwIRDcIpBcGdV75R37WaG2wd8gIYbsgoSw=
+X-Google-Smtp-Source: APXvYqwsM3OgAowPI5xaCfG8fdrn/hdgdcd4tyijHhC7H2G6DeZ7i8m+exE9TkNVLdcveFGTrpBdfmLVo4VyTFHuGTE=
+X-Received: by 2002:a2e:b0e6:: with SMTP id h6mr44378736ljl.18.1564066797851;
+ Thu, 25 Jul 2019 07:59:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d75ba86f0cab44562148f3ffd66684c167952079.camel@linux.intel.com>
+References: <CGME20190725144325eucas1p1463ecde90f9c93cb73d3c54c7cf3f1ff@eucas1p1.samsung.com>
+ <20190725144300.25014-1-k.konieczny@partner.samsung.com> <20190725144300.25014-2-k.konieczny@partner.samsung.com>
+In-Reply-To: <20190725144300.25014-2-k.konieczny@partner.samsung.com>
+Reply-To: cwchoi00@gmail.com
+From:   Chanwoo Choi <cwchoi00@gmail.com>
+Date:   Thu, 25 Jul 2019 23:59:21 +0900
+Message-ID: <CAGTfZH0=skWJ3Dny7voeRzDp5oRkbNO=Pf6j+PM03=epmX-86g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/5] devfreq: exynos-bus: correct clock enable sequence
+To:     Kamil Konieczny <k.konieczny@partner.samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 07:56:15AM -0700, Alexander Duyck wrote:
-> On Thu, 2019-07-25 at 10:44 -0400, Nitesh Narayan Lal wrote:
-> > On 7/24/19 3:02 PM, Michael S. Tsirkin wrote:
-> > > On Wed, Jul 24, 2019 at 10:05:14AM -0700, Alexander Duyck wrote:
-> > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > > > 
-> > > > Add support for the page hinting feature provided by virtio-balloon.
-> > > > Hinting differs from the regular balloon functionality in that is is
-> > > > much less durable than a standard memory balloon. Instead of creating a
-> > > > list of pages that cannot be accessed the pages are only inaccessible
-> > > > while they are being indicated to the virtio interface. Once the
-> > > > interface has acknowledged them they are placed back into their respective
-> > > > free lists and are once again accessible by the guest system.
-> > > > 
-> > > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > > Looking at the design, it seems that hinted pages can immediately be
-> > > reused. I wonder how we can efficiently support this
-> > > with kvm when poisoning is in effect. Of course we can just
-> > > ignore the poison. However it seems cleaner to
-> > > 1. verify page is poisoned with the correct value
-> > > 2. fill the page with the correct value on fault
-> > > 
-> > > Requirement 2 requires some kind of madvise that
-> > > will save the poison e.g. in the VMA.
-> > > 
-> > > Not a blocker for sure ... 
-> > > 
-> > > 
-> > > > ---
-> > > >  drivers/virtio/Kconfig              |    1 +
-> > > >  drivers/virtio/virtio_balloon.c     |   47 +++++++++++++++++++++++++++++++++++
-> > > >  include/uapi/linux/virtio_balloon.h |    1 +
-> > > >  3 files changed, 49 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-> > > > index 078615cf2afc..d45556ae1f81 100644
-> > > > --- a/drivers/virtio/Kconfig
-> > > > +++ b/drivers/virtio/Kconfig
-> > > > @@ -58,6 +58,7 @@ config VIRTIO_BALLOON
-> > > >  	tristate "Virtio balloon driver"
-> > > >  	depends on VIRTIO
-> > > >  	select MEMORY_BALLOON
-> > > > +	select PAGE_HINTING
-> > > >  	---help---
-> > > >  	 This driver supports increasing and decreasing the amount
-> > > >  	 of memory within a KVM guest.
-> > > > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> > > > index 226fbb995fb0..dee9f8f3ad09 100644
-> > > > --- a/drivers/virtio/virtio_balloon.c
-> > > > +++ b/drivers/virtio/virtio_balloon.c
-> > > > @@ -19,6 +19,7 @@
-> > > >  #include <linux/mount.h>
-> > > >  #include <linux/magic.h>
-> > > >  #include <linux/pseudo_fs.h>
-> > > > +#include <linux/page_hinting.h>
-> > > >  
-> > > >  /*
-> > > >   * Balloon device works in 4K page units.  So each page is pointed to by
-> > > > @@ -27,6 +28,7 @@
-> > > >   */
-> > > >  #define VIRTIO_BALLOON_PAGES_PER_PAGE (unsigned)(PAGE_SIZE >> VIRTIO_BALLOON_PFN_SHIFT)
-> > > >  #define VIRTIO_BALLOON_ARRAY_PFNS_MAX 256
-> > > > +#define VIRTIO_BALLOON_ARRAY_HINTS_MAX	32
-> > > >  #define VIRTBALLOON_OOM_NOTIFY_PRIORITY 80
-> > > >  
-> > > >  #define VIRTIO_BALLOON_FREE_PAGE_ALLOC_FLAG (__GFP_NORETRY | __GFP_NOWARN | \
-> > > > @@ -46,6 +48,7 @@ enum virtio_balloon_vq {
-> > > >  	VIRTIO_BALLOON_VQ_DEFLATE,
-> > > >  	VIRTIO_BALLOON_VQ_STATS,
-> > > >  	VIRTIO_BALLOON_VQ_FREE_PAGE,
-> > > > +	VIRTIO_BALLOON_VQ_HINTING,
-> > > >  	VIRTIO_BALLOON_VQ_MAX
-> > > >  };
-> > > >  
-> > > > @@ -113,6 +116,10 @@ struct virtio_balloon {
-> > > >  
-> > > >  	/* To register a shrinker to shrink memory upon memory pressure */
-> > > >  	struct shrinker shrinker;
-> > > > +
-> > > > +	/* Unused page hinting device */
-> > > > +	struct virtqueue *hinting_vq;
-> > > > +	struct page_hinting_dev_info ph_dev_info;
-> > > >  };
-> > > >  
-> > > >  static struct virtio_device_id id_table[] = {
-> > > > @@ -152,6 +159,22 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
-> > > >  
-> > > >  }
-> > > >  
-> > > > +void virtballoon_page_hinting_react(struct page_hinting_dev_info *ph_dev_info,
-> > > > +				    unsigned int num_hints)
-> > > > +{
-> > > > +	struct virtio_balloon *vb =
-> > > > +		container_of(ph_dev_info, struct virtio_balloon, ph_dev_info);
-> > > > +	struct virtqueue *vq = vb->hinting_vq;
-> > > > +	unsigned int unused;
-> > > > +
-> > > > +	/* We should always be able to add these buffers to an empty queue. */
-> > > 
-> > > can be an out of memory condition, and then ...
-> > 
-> > Do we need an error check here?
-> > 
-> > For situations where this fails we should disable hinting completely, maybe?
-> 
-> No. Instead I will just limit the capacity to no more than the vq size.
-> Doing that should allow us to avoid the out of memory issue here if I am
-> understanding things correctly.
-> 
-> I'm assuming the allocation being referred to is alloc_indirect_split(),
-> if so then it looks like it can fail and then we just fall back to using
-> the vring.desc directly which will work for my purposes as long as I limit
-> the capacity of the scatterlist to no more than the size of the vring.
-> 
+Hi,
+
+You are missing my Acked tag.
+
+2019=EB=85=84 7=EC=9B=94 25=EC=9D=BC (=EB=AA=A9) =EC=98=A4=ED=9B=84 11:44, =
+<k.konieczny@partner.samsung.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> Regulators should be enabled before clocks to avoid h/w hang. This
+> require change in exynos_bus_probe() to move exynos_bus_parse_of()
+> after exynos_bus_parent_parse_of() and change in error handling.
+> Similar change is needed in exynos_bus_exit() where clock should be
+> disabled before regulators.
+>
+> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+> ---
+> Changes:
+> v4:
+> - move regulator disable after clock disable
+> - remove unrelated changes
+> - add disabling regulators in error path in exynos_bus_probe()
+>
+> ---
+>  drivers/devfreq/exynos-bus.c | 31 +++++++++++++++++--------------
+>  1 file changed, 17 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+> index 486cc5b422f1..f34fa26f00d0 100644
+> --- a/drivers/devfreq/exynos-bus.c
+> +++ b/drivers/devfreq/exynos-bus.c
+> @@ -194,11 +194,10 @@ static void exynos_bus_exit(struct device *dev)
+>         if (ret < 0)
+>                 dev_warn(dev, "failed to disable the devfreq-event device=
+s\n");
+>
+> -       if (bus->regulator)
+> -               regulator_disable(bus->regulator);
+> -
+>         dev_pm_opp_of_remove_table(dev);
+>         clk_disable_unprepare(bus->clk);
+> +       if (bus->regulator)
+> +               regulator_disable(bus->regulator);
+>  }
+>
+>  /*
+> @@ -386,6 +385,7 @@ static int exynos_bus_probe(struct platform_device *p=
+dev)
+>         struct exynos_bus *bus;
+>         int ret, max_state;
+>         unsigned long min_freq, max_freq;
+> +       bool passive =3D false;
+>
+>         if (!np) {
+>                 dev_err(dev, "failed to find devicetree node\n");
+> @@ -399,27 +399,27 @@ static int exynos_bus_probe(struct platform_device =
+*pdev)
+>         bus->dev =3D &pdev->dev;
+>         platform_set_drvdata(pdev, bus);
+>
+> -       /* Parse the device-tree to get the resource information */
+> -       ret =3D exynos_bus_parse_of(np, bus);
+> -       if (ret < 0)
+> -               return ret;
+> -
+>         profile =3D devm_kzalloc(dev, sizeof(*profile), GFP_KERNEL);
+> -       if (!profile) {
+> -               ret =3D -ENOMEM;
+> -               goto err;
+> -       }
+> +       if (!profile)
+> +               return -ENOMEM;
+>
+>         node =3D of_parse_phandle(dev->of_node, "devfreq", 0);
+>         if (node) {
+>                 of_node_put(node);
+> -               goto passive;
+> +               passive =3D true;
+>         } else {
+>                 ret =3D exynos_bus_parent_parse_of(np, bus);
+> +               if (ret < 0)
+> +                       return ret;
+>         }
+>
+> +       /* Parse the device-tree to get the resource information */
+> +       ret =3D exynos_bus_parse_of(np, bus);
+>         if (ret < 0)
+> -               goto err;
+> +               goto err_reg;
+> +
+> +       if (passive)
+> +               goto passive;
+>
+>         /* Initialize the struct profile and governor data for parent dev=
+ice */
+>         profile->polling_ms =3D 50;
+> @@ -510,6 +510,9 @@ static int exynos_bus_probe(struct platform_device *p=
+dev)
+>  err:
+>         dev_pm_opp_of_remove_table(dev);
+>         clk_disable_unprepare(bus->clk);
+> +err_reg:
+> +       if (!passive)
+> +               regulator_disable(bus->regulator);
+>
+>         return ret;
+>  }
+> --
+> 2.22.0
+>
 
 
-Right. And maybe tweak the GFP mask - no reason to try to
-allocate memory aggressively with just 1 element in flight.
-
-> 
+--=20
+Best Regards,
+Chanwoo Choi
