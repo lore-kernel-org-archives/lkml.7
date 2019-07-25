@@ -2,153 +2,185 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7090C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FD4C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA9E72190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2092190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:30:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KhakXsdt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vlELcwN0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390628AbfGYF1g (ORCPT
+        id S2390652AbfGYFa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:27:36 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44636 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390562AbfGYF1f (ORCPT
+        Thu, 25 Jul 2019 01:30:27 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:32974 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390634AbfGYFa0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:27:35 -0400
-Received: by mail-lf1-f67.google.com with SMTP id r15so16556006lfm.11;
-        Wed, 24 Jul 2019 22:27:34 -0700 (PDT)
+        Thu, 25 Jul 2019 01:30:26 -0400
+Received: by mail-io1-f65.google.com with SMTP id z3so94695961iog.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 22:30:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=B1dzgBDqxDd22puO1aTj0L2Ad5IBjs7oPRfsYiUq1VE=;
-        b=KhakXsdtcjeWJe3Yj2rD3o2RePTZo94CcrXipiEIPqXAyb7r+uEZgDYDfdAK2w7PoR
-         izTwuXvDM31FraSELXo+9qmPIsE4zy7F7zkZ6+kZf8cyUvuRxKfFtrsesR4zjlHeknDT
-         wT4oxYuYAxzUA6WXvwxqWWQmjkTG8+OhXbRNXM6+95/TtLgKTuIpZp2A2UrjxYuci4h8
-         q0iqgJTW5bR8LCWqgRkdttXTP+chmfF1qJh8HR9aE8+BY7D8Llk9r58WjR8zO3aWunlj
-         QJeba9MQkjW+O7Ee77SkKDxduR39k6/zirwYT17y4Jm4pmYjPjFkf/r2uMmjCwsAz7wJ
-         kCtw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ITadV6CFhnplcKQPVP6Dq3xnzNRYWEtlbtOPd9yP6YU=;
+        b=vlELcwN0JDo9SB1YvwPdo56hUs0rDc/OPCv8LDqHpatSX5f1HdjAZAO9ZXAT6UsrvH
+         3qJCaQTQF7wrHtT0HKHbxBTACnK1Y51qT4Z2nHUekOg38QD/Q4fZ/N4Ag4hHQzP0irYs
+         M0yYxa/yJNQbtP9otwWPFsPgIsnnNqI/QYX6yyAGOBM/doGxg+jl3aPNhLmM2r6m9VDH
+         +VWrcR7XhRxbHlNz/ye5Lh3mYpY4n6Jh4qJ+h1xogXEH8wHKThz4i4qheSs3CROcDiK0
+         66IYdrbllSpyqps3dK6uGNXoILwXaCL8szkyDzP/7tFQk2udgDFQ+agGOPqWZtXRmMAB
+         KxwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B1dzgBDqxDd22puO1aTj0L2Ad5IBjs7oPRfsYiUq1VE=;
-        b=UX70vPWEUhaIVDio1WXPGKckQcLSS+C5gd3gChOmNEiOgjoOBcpi/PSCfzXIfXHCVu
-         zAaqDy0WW1FE71d+0x7VkpmZ6lxRNuhgYX1B9Fmfs7VeiqOZqXFxgw9P7il78zfg0EpS
-         JfYDxKFLixwdX4Hc6g4811jS6piuoKmPHvrwRJ0iUaZGIJDMGCg48o2FmLZApNz/GZMT
-         0zETpgnwdLF24cvUyvq3FkwWDMVxHjJ9Mcv1TT0w/qve/Q/xlJCd8FmGFywArY5BLgBP
-         i0x5XdhjPSLUmADsDTf/kFCPnnxydbcYANNlRiejhk+RfLtUlhhzVOKmFNF+j5sdTT4D
-         xvmw==
-X-Gm-Message-State: APjAAAVVp8sZW/8q+msQjqL+A69RIAvWpclCgJFOOZxZU8pB1/QQAeeL
-        lDIATxswK0CNp57HIl6r89w=
-X-Google-Smtp-Source: APXvYqw8v7oAfeqT04y3KKHYAxuaGlluJli4wZh7zK1xQWJsQbD5QEroZ9trHZa1fU+L9BzCM64CIQ==
-X-Received: by 2002:a19:8c56:: with SMTP id i22mr40141693lfj.105.1564032453499;
-        Wed, 24 Jul 2019 22:27:33 -0700 (PDT)
-Received: from localhost ([188.170.223.67])
-        by smtp.gmail.com with ESMTPSA id z23sm7322650lfq.77.2019.07.24.22.27.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jul 2019 22:27:31 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 08:27:28 +0300
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Atif Niyaz <atifniyaz@google.com>
-Cc:     Atif Niyaz <atifniyaz11@gmail.com>,
-        Siarhei Vishniakou <svv@google.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] input: API for Setting a Timestamp from a Driver
-Message-ID: <20190725052728.GA874@penguin>
-References: <20190718194133.64034-1-atifniyaz@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ITadV6CFhnplcKQPVP6Dq3xnzNRYWEtlbtOPd9yP6YU=;
+        b=lH2E0iX4bcs4WqoZ+xiauqL1VYo80hnPV56edTMGmceSQSjwnYugu/6e7e+3R1eqvq
+         3nH/EJyPFsvG0cdkLHFxiftkpBstI5Wk50rnRYSl3CPWXIAx1mF2Z3SXFfMf4AJ092Iv
+         3Q/dcRFY8aAi6hdcaFjE6GdC4doNwud6D60TkfjDC7AEi6YM0qx6qCJA3dBIre0M1NmI
+         9HyxZb7GW4AOMEAf00Nhm6Eb8xl7YRJtgbnuA/7IrAgPNBjbukicQWEx7Dnj5jFIA+B9
+         WvFsfIWMpECN2t3SU23mRYuCo4JbBILXpgqWsS8MEUvJmP67uecu77m3diDo1w/bUf6b
+         ThNg==
+X-Gm-Message-State: APjAAAWQjOUpGkAoHrtSfIT5F2XPXdZ5oSVnGVXnaYwldvmtsQk+XUJG
+        4X3kjczkB3RiOtWClzLlwKyddqRZzERc8oCbHiKE7w==
+X-Google-Smtp-Source: APXvYqyVMYH1CRAoDtQqi1IR00980eR5EjBeIzBnfl+IAawo2ptNuefIAo16lfD02FbQgIfq5r9p0qBlzJ0+qr1KGVE=
+X-Received: by 2002:a5d:80d6:: with SMTP id h22mr57374941ior.231.1564032625075;
+ Wed, 24 Jul 2019 22:30:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190718194133.64034-1-atifniyaz@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <0000000000004f0309058e722b24@google.com>
+In-Reply-To: <0000000000004f0309058e722b24@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 25 Jul 2019 07:30:13 +0200
+Message-ID: <CACT4Y+ZeeJCsabOcXoyDgr63rg8WFEwFyGhLTn30D2wAAjOK1Q@mail.gmail.com>
+Subject: Re: general protection fault in rose_transmit_clear_request
+To:     syzbot <syzbot+a1c743815982d9496393@syzkaller.appspotmail.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        David Miller <davem@davemloft.net>,
+        linux-hams <linux-hams@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Atif,
+On Wed, Jul 24, 2019 at 9:18 PM syzbot
+<syzbot+a1c743815982d9496393@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10656fa4600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=7937b718ddac333b
+> dashboard link: https://syzkaller.appspot.com/bug?extid=a1c743815982d9496393
+> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16f6d348600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12cad91fa00000
+>
+> Bisection is inconclusive: the bug happens on the oldest tested release.
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1164f2f4600000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1564f2f4600000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+a1c743815982d9496393@syzkaller.appspotmail.com
 
-On Thu, Jul 18, 2019 at 12:41:33PM -0700, Atif Niyaz wrote:
-> @@ -150,16 +143,19 @@ static void __evdev_flush_queue(struct evdev_client *client, unsigned int type)
->  static void __evdev_queue_syn_dropped(struct evdev_client *client)
->  {
->  	struct input_event ev;
-> -	ktime_t time;
->  	struct timespec64 ts;
-> +	ktime_t *time = input_get_timestamp(client->evdev->handle.dev);
->  
-> -	time = client->clk_type == EV_CLK_REAL ?
-> -			ktime_get_real() :
-> -			client->clk_type == EV_CLK_MONO ?
-> -				ktime_get() :
-> -				ktime_get_boottime();
-> +	switch (client->clk_type) {
-> +	case INPUT_CLK_REAL:
-> +	case INPUT_CLK_MONO:
-> +		ts = ktime_to_timespec64(time[client->clk_type]);
-> +		break;
-> +	default:
-> +		ts = ktime_to_timespec64(time[INPUT_CLK_BOOT]);
-> +		break;
++net/rose/rose_link.c maintainers
 
-Since we trust client->clk_type be valid in evdev_event() we can also
-trust it here. I replaced the switch statement with:
-
-	ts = ktime_to_timespec64(ev_time[client->clkk_type]);
-
-> +	}
->  
-> -	ts = ktime_to_timespec64(time);
->  	ev.input_event_sec = ts.tv_sec;
->  	ev.input_event_usec = ts.tv_nsec / NSEC_PER_USEC;
->  	ev.type = EV_SYN;
-> @@ -185,21 +181,21 @@ static void evdev_queue_syn_dropped(struct evdev_client *client)
->  	spin_unlock_irqrestore(&client->buffer_lock, flags);
->  }
->  
-> -static int evdev_set_clk_type(struct evdev_client *client, unsigned int clkid)
-> +static int evdev_set_clk_type(struct evdev_client *client, clockid_t clkid)
-
-The data passed to evdev_set_clk_type() is an integer with values that
-coincide with the enum's values, so I kept the type of parameter as it
-was.
-
-> +/**
-> + * input_set_timestamp - set timestamp for input events
-> + * @dev: input device to set timestamp for
-> + * @timestamp: the time at which the event has occurred
-> + *   in CLOCK_MONOTONIC
-> + *
-> + * This function is intended to provide to the input system a more
-> + * accurate time of when an event actually occurred. The driver should
-> + * call this function as soon as a timestamp is acquired ensuring
-> + * clock conversions in input_set_timestamp are done correctly.
-> + *
-> + * The system entering a suspend between timestamp acquisition and
-> + * calling input_set_timestamp can result in inaccurate conversions.
-> + *
-> + */
-> +static inline void input_set_timestamp(struct input_dev *dev,
-> +	ktime_t timestamp)
-> +{
-> +	dev->timestamp[INPUT_CLK_MONO] = timestamp;
-> +	dev->timestamp[INPUT_CLK_REAL] = ktime_mono_to_real(timestamp);
-> +	dev->timestamp[INPUT_CLK_BOOT] = ktime_mono_to_any(
-> +		timestamp, TK_OFFS_BOOT);
-> +}
-
-I moved this input input.c, together with input_get_timestamp().
-
-Applied, thank you.
-
--- 
-Dmitry
+> kasan: CONFIG_KASAN_INLINE enabled
+> kasan: GPF could be caused by NULL-ptr deref or user memory access
+> general protection fault: 0000 [#1] SMP KASAN
+> CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.2.0+ #37
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> RIP: 0010:rose_send_frame /net/rose/rose_link.c:101 [inline]
+> RIP: 0010:rose_transmit_clear_request+0x1ee/0x460 /net/rose/rose_link.c:255
+> Code: fc ff df 80 3c 08 00 74 12 4c 89 f7 e8 8b 57 dd fa 48 b9 00 00 00 00
+> 00 fc ff df bb 50 03 00 00 49 03 1e 48 89 d8 48 c1 e8 03 <80> 3c 08 00 74
+> 12 48 89 df e8 64 57 dd fa 48 b9 00 00 00 00 00 fc
+> RSP: 0018:ffff8880aeb09a28 EFLAGS: 00010206
+> RAX: 000000000000006a RBX: 0000000000000350 RCX: dffffc0000000000
+> RDX: 0000000080000101 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: ffff8880aeb09a70 R08: ffffffff86d3c4c5 R09: ffffed101255690d
+> R10: ffffed101255690d R11: 0000000000000000 R12: ffff8882167bec80
+> R13: ffff888092ab47dc R14: ffff8882167beca0 R15: ffff888092ab47de
+> FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000190 CR3: 000000009c1e1000 CR4: 00000000001406e0
+> Call Trace:
+>   <IRQ>
+>   rose_rx_call_request+0xadb/0x1b00 /net/rose/af_rose.c:998
+>   rose_loopback_timer+0x2f8/0x480 /net/rose/rose_loopback.c:100
+>   call_timer_fn+0xec/0x200 /kernel/time/timer.c:1322
+>   expire_timers /kernel/time/timer.c:1366 [inline]
+>   __run_timers+0x7cd/0x9c0 /kernel/time/timer.c:1685
+>   run_timer_softirq+0x1d/0x40 /kernel/time/timer.c:1698
+>   __do_softirq+0x307/0x774 /./arch/x86/include/asm/paravirt.h:778
+>   invoke_softirq /kernel/softirq.c:373 [inline]
+>   irq_exit+0x1e9/0x1f0 /kernel/softirq.c:413
+>   exiting_irq /./arch/x86/include/asm/apic.h:537 [inline]
+>   smp_apic_timer_interrupt+0xcc/0x220 /arch/x86/kernel/apic/apic.c:1095
+>   apic_timer_interrupt+0xf/0x20 /arch/x86/entry/entry_64.S:828
+>   </IRQ>
+> RIP: 0010:native_safe_halt+0xe/0x10 /./arch/x86/include/asm/irqflags.h:61
+> Code: 38 46 0a fa eb ae 89 d9 80 e1 07 80 c1 03 38 c1 7c ba 48 89 df e8 22
+> 46 0a fa eb b0 e9 07 00 00 00 0f 00 2d e6 b0 5b 00 fb f4 <c3> 90 e9 07 00
+> 00 00 0f 00 2d d6 b0 5b 00 f4 c3 90 90 55 48 89 e5
+> RSP: 0018:ffff8880a98c7d38 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
+> RAX: 1ffffffff11950f3 RBX: ffff8880a98bc340 RCX: dffffc0000000000
+> RDX: 0000000000000000 RSI: ffffffff812cd3ea RDI: ffff8880a98bcb38
+> RBP: ffff8880a98c7d40 R08: ffff8880a98bcb50 R09: ffffed1015317869
+> R10: ffffed1015317869 R11: 0000000000000000 R12: 1ffff11015317868
+> R13: 0000000000000001 R14: dffffc0000000000 R15: 1ffffffff11950f1
+>   arch_cpu_idle+0xa/0x10 /arch/x86/kernel/process.c:571
+>   default_idle_call+0x59/0xa0 /kernel/sched/idle.c:94
+>   cpuidle_idle_call /kernel/sched/idle.c:154 [inline]
+>   do_idle+0x174/0x770 /kernel/sched/idle.c:263
+>   cpu_startup_entry+0x25/0x30 /kernel/sched/idle.c:354
+>   start_secondary+0x3f4/0x490 /arch/x86/kernel/smpboot.c:264
+>   secondary_startup_64+0xa4/0xb0 /arch/x86/kernel/head_64.S:241
+> Modules linked in:
+> ---[ end trace fd2ad3b72484e5c3 ]---
+> RIP: 0010:rose_send_frame /net/rose/rose_link.c:101 [inline]
+> RIP: 0010:rose_transmit_clear_request+0x1ee/0x460 /net/rose/rose_link.c:255
+> Code: fc ff df 80 3c 08 00 74 12 4c 89 f7 e8 8b 57 dd fa 48 b9 00 00 00 00
+> 00 fc ff df bb 50 03 00 00 49 03 1e 48 89 d8 48 c1 e8 03 <80> 3c 08 00 74
+> 12 48 89 df e8 64 57 dd fa 48 b9 00 00 00 00 00 fc
+> RSP: 0018:ffff8880aeb09a28 EFLAGS: 00010206
+> RAX: 000000000000006a RBX: 0000000000000350 RCX: dffffc0000000000
+> RDX: 0000000080000101 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: ffff8880aeb09a70 R08: ffffffff86d3c4c5 R09: ffffed101255690d
+> R10: ffffed101255690d R11: 0000000000000000 R12: ffff8882167bec80
+> R13: ffff888092ab47dc R14: ffff8882167beca0 R15: ffff888092ab47de
+> FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000190 CR3: 000000009c1e1000 CR4: 00000000001406e0
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000004f0309058e722b24%40google.com.
