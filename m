@@ -7,56 +7,58 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBED6C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C8CC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93065218F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47633218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:20:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="jC+t14ua"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="VhwdTYOs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390067AbfGYQTO (ORCPT
+        id S2390225AbfGYQUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:19:14 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:36555 "EHLO
+        Thu, 25 Jul 2019 12:20:00 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39197 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387564AbfGYQTN (ORCPT
+        with ESMTP id S2387564AbfGYQUA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:19:13 -0400
+        Thu, 25 Jul 2019 12:20:00 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PGJ2ZM1075755
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PGJjOX1075825
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 25 Jul 2019 09:19:02 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PGJ2ZM1075755
+        Thu, 25 Jul 2019 09:19:45 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PGJjOX1075825
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564071543;
-        bh=PCGBS68QWBzGeNkONybLIbURoOoUu0zUOLvVOWcxqYE=;
+        s=2019071901; t=1564071586;
+        bh=3vavAncPZC5FEVF6GaaF5P3eu8gVu5cP7GVPBJ8PAEA=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=jC+t14uaWgKVOY/MzPU/p7OIsCoAT+r2Ofw/OkEWdoSYY9+2n3ECn2lY+nV9IEwyX
-         85yI6BcBjIL6TYEJ7jdw7VA5mc48CXSp7QsIPbDrU8/a1kHMq+SmDfc1xFSkhz/lR0
-         XRFdN0iUBrYzd+dJnQlIpvb/20CFI2QMFD9SnIsjAVzd0C9k6tPik56nQxjjL4z6rf
-         Z5nDfcBKUuuo555UOFWcjuEu5mPK/pY6IvvKiNYakqHUeRIsxlFaSmdwPTHFI0nGoF
-         Bf2lj/V5BGFOgkITJNPONAmDRQoHKNGz9oYFNjM4sxL5Ibt4OBL3rOhFmB9skEJKL6
-         4FAXOGYeKzfYw==
+        b=VhwdTYOs+m5EJdVWkwK6b0WelfaQF8vqbfmoeeBy+rAqTVpMPiBSXrY3jRkqhj7FI
+         pr7/sgW9AS+KdhzJxt4pmpliGV4xIV0E1IsJCcvD9S6VLsSJmKUBarMmyQRzzK9D2C
+         o8ehyINYG48kR1blLiQaf2EvHQdA6hEJy+oqLWLzbD1w4cutHYBf5/kYtNK6a0cSS/
+         ViG1EQGGSVZ47zHZd4sYWSoa9+ZGOc8EYk99p0eQmDVCORUggOiVYcPSQRSIfK89IS
+         kN2zHdD9bEuBaosdgX/+8adffzOa8qmYcUP6NdDxUhuQ2KEueBfnGYB/IBqJk4qTo7
+         eG8PVQZo7u/QA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PGJ0o51075750;
-        Thu, 25 Jul 2019 09:19:00 -0700
-Date:   Thu, 25 Jul 2019 09:19:00 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PGJjCb1075822;
+        Thu, 25 Jul 2019 09:19:45 -0700
+Date:   Thu, 25 Jul 2019 09:19:45 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Viresh Kumar <tipbot@zytor.com>
-Message-ID: <tip-60e17f5cef838e9ca7946ced208ceddcec6c315d@git.kernel.org>
-Cc:     mingo@kernel.org, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com,
-        vincent.guittot@linaro.org, tglx@linutronix.de,
-        viresh.kumar@linaro.org, peterz@infradead.org
-Reply-To: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-          mingo@kernel.org, vincent.guittot@linaro.org, hpa@zytor.com,
-          viresh.kumar@linaro.org, tglx@linutronix.de, peterz@infradead.org
-In-Reply-To: <b477ac75a2b163048bdaeb37f57b4c3f04f75a31.1559631700.git.viresh.kumar@linaro.org>
-References: <b477ac75a2b163048bdaeb37f57b4c3f04f75a31.1559631700.git.viresh.kumar@linaro.org>
+From:   tip-bot for Mathieu Poirier <tipbot@zytor.com>
+Message-ID: <tip-c22645f4c8f021fb1c5e7189eb1f968132cc0844@git.kernel.org>
+Cc:     torvalds@linux-foundation.org, hpa@zytor.com, peterz@infradead.org,
+        tglx@linutronix.de, mingo@kernel.org, tj@kernel.org,
+        dietmar.eggemann@arm.com, linux-kernel@vger.kernel.org,
+        mathieu.poirier@linaro.org
+Reply-To: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
+          hpa@zytor.com, torvalds@linux-foundation.org, mingo@kernel.org,
+          peterz@infradead.org, tglx@linutronix.de,
+          dietmar.eggemann@arm.com, tj@kernel.org
+In-Reply-To: <20190719140000.31694-2-juri.lelli@redhat.com>
+References: <20190719140000.31694-2-juri.lelli@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/fair: Introduce fits_capacity()
-Git-Commit-ID: 60e17f5cef838e9ca7946ced208ceddcec6c315d
+Subject: [tip:sched/core] sched/topology: Add
+ partition_sched_domains_locked()
+Git-Commit-ID: c22645f4c8f021fb1c5e7189eb1f968132cc0844
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,100 +72,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  60e17f5cef838e9ca7946ced208ceddcec6c315d
-Gitweb:     https://git.kernel.org/tip/60e17f5cef838e9ca7946ced208ceddcec6c315d
-Author:     Viresh Kumar <viresh.kumar@linaro.org>
-AuthorDate: Tue, 4 Jun 2019 12:31:52 +0530
+Commit-ID:  c22645f4c8f021fb1c5e7189eb1f968132cc0844
+Gitweb:     https://git.kernel.org/tip/c22645f4c8f021fb1c5e7189eb1f968132cc0844
+Author:     Mathieu Poirier <mathieu.poirier@linaro.org>
+AuthorDate: Fri, 19 Jul 2019 15:59:53 +0200
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Thu, 25 Jul 2019 15:51:56 +0200
+CommitDate: Thu, 25 Jul 2019 15:51:57 +0200
 
-sched/fair: Introduce fits_capacity()
+sched/topology: Add partition_sched_domains_locked()
 
-The same formula to check utilization against capacity (after
-considering capacity_margin) is already used at 5 different locations.
+Introduce the partition_sched_domains_locked() function by taking
+the mutex locking code out of the original function.  That way
+the work done by partition_sched_domains_locked() can be reused
+without dropping the mutex lock.
 
-This patch creates a new macro, fits_capacity(), which can be used from
-all these locations without exposing the details of it and hence
-simplify code.
+No change of functionality is introduced by this patch.
 
-All the 5 code locations are updated as well to use it..
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Tejun Heo <tj@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/b477ac75a2b163048bdaeb37f57b4c3f04f75a31.1559631700.git.viresh.kumar@linaro.org
+Cc: bristot@redhat.com
+Cc: claudio@evidence.eu.com
+Cc: lizefan@huawei.com
+Cc: longman@redhat.com
+Cc: luca.abeni@santannapisa.it
+Cc: rostedt@goodmis.org
+Cc: tommaso.cucinotta@santannapisa.it
+Link: https://lkml.kernel.org/r/20190719140000.31694-2-juri.lelli@redhat.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/fair.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ include/linux/sched/topology.h | 10 ++++++++++
+ kernel/sched/topology.c        | 17 +++++++++++++----
+ 2 files changed, 23 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 52564e050062..fb75c0bea80f 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -96,12 +96,12 @@ int __weak arch_asym_cpu_priority(int cpu)
+diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
+index 7863bb62d2ab..f341163fedc9 100644
+--- a/include/linux/sched/topology.h
++++ b/include/linux/sched/topology.h
+@@ -150,6 +150,10 @@ static inline struct cpumask *sched_domain_span(struct sched_domain *sd)
+ 	return to_cpumask(sd->span);
  }
  
- /*
-- * The margin used when comparing utilization with CPU capacity:
-- * util * margin < capacity * 1024
-+ * The margin used when comparing utilization with CPU capacity.
-  *
-  * (default: ~20%)
-  */
--static unsigned int capacity_margin			= 1280;
-+#define fits_capacity(cap, max)	((cap) * 1280 < (max) * 1024)
++extern void partition_sched_domains_locked(int ndoms_new,
++					   cpumask_var_t doms_new[],
++					   struct sched_domain_attr *dattr_new);
 +
- #endif
+ extern void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
+ 				    struct sched_domain_attr *dattr_new);
  
- #ifdef CONFIG_CFS_BANDWIDTH
-@@ -3808,7 +3808,7 @@ util_est_dequeue(struct cfs_rq *cfs_rq, struct task_struct *p, bool task_sleep)
+@@ -194,6 +198,12 @@ extern void set_sched_topology(struct sched_domain_topology_level *tl);
  
- static inline int task_fits_capacity(struct task_struct *p, long capacity)
+ struct sched_domain_attr;
+ 
++static inline void
++partition_sched_domains_locked(int ndoms_new, cpumask_var_t doms_new[],
++			       struct sched_domain_attr *dattr_new)
++{
++}
++
+ static inline void
+ partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
+ 			struct sched_domain_attr *dattr_new)
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 4eea2c9bc732..5a174ae6ecf3 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -2169,16 +2169,16 @@ static int dattrs_equal(struct sched_domain_attr *cur, int idx_cur,
+  * ndoms_new == 0 is a special case for destroying existing domains,
+  * and it will not create the default domain.
+  *
+- * Call with hotplug lock held
++ * Call with hotplug lock and sched_domains_mutex held
+  */
+-void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
+-			     struct sched_domain_attr *dattr_new)
++void partition_sched_domains_locked(int ndoms_new, cpumask_var_t doms_new[],
++				    struct sched_domain_attr *dattr_new)
  {
--	return capacity * 1024 > task_util_est(p) * capacity_margin;
-+	return fits_capacity(task_util_est(p), capacity);
+ 	bool __maybe_unused has_eas = false;
+ 	int i, j, n;
+ 	int new_topology;
+ 
+-	mutex_lock(&sched_domains_mutex);
++	lockdep_assert_held(&sched_domains_mutex);
+ 
+ 	/* Always unregister in case we don't destroy any domains: */
+ 	unregister_sched_domain_sysctl();
+@@ -2261,6 +2261,15 @@ match3:
+ 	ndoms_cur = ndoms_new;
+ 
+ 	register_sched_domain_sysctl();
++}
+ 
++/*
++ * Call with hotplug lock held
++ */
++void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
++			     struct sched_domain_attr *dattr_new)
++{
++	mutex_lock(&sched_domains_mutex);
++	partition_sched_domains_locked(ndoms_new, doms_new, dattr_new);
+ 	mutex_unlock(&sched_domains_mutex);
  }
- 
- static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
-@@ -5235,7 +5235,7 @@ static inline unsigned long cpu_util(int cpu);
- 
- static inline bool cpu_overutilized(int cpu)
- {
--	return (capacity_of(cpu) * 1024) < (cpu_util(cpu) * capacity_margin);
-+	return !fits_capacity(cpu_util(cpu), capacity_of(cpu));
- }
- 
- static inline void update_overutilized_status(struct rq *rq)
-@@ -6456,7 +6456,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
- 			/* Skip CPUs that will be overutilized. */
- 			util = cpu_util_next(cpu, p, cpu);
- 			cpu_cap = capacity_of(cpu);
--			if (cpu_cap * 1024 < util * capacity_margin)
-+			if (!fits_capacity(util, cpu_cap))
- 				continue;
- 
- 			/* Always use prev_cpu as a candidate. */
-@@ -8011,8 +8011,7 @@ group_is_overloaded(struct lb_env *env, struct sg_lb_stats *sgs)
- static inline bool
- group_smaller_min_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
- {
--	return sg->sgc->min_capacity * capacity_margin <
--						ref->sgc->min_capacity * 1024;
-+	return fits_capacity(sg->sgc->min_capacity, ref->sgc->min_capacity);
- }
- 
- /*
-@@ -8022,8 +8021,7 @@ group_smaller_min_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
- static inline bool
- group_smaller_max_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
- {
--	return sg->sgc->max_capacity * capacity_margin <
--						ref->sgc->max_capacity * 1024;
-+	return fits_capacity(sg->sgc->max_capacity, ref->sgc->max_capacity);
- }
- 
- static inline enum
