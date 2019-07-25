@@ -2,99 +2,164 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC42C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B954FC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2291C2238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BBC22238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:18:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="k7AKJfvT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RiPttf3V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404004AbfGYLSX (ORCPT
+        id S2404016AbfGYLSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:18:23 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:27299 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403940AbfGYLSX (ORCPT
+        Thu, 25 Jul 2019 07:18:44 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35019 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390493AbfGYLSo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:18:23 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x6PBHwWF009905;
-        Thu, 25 Jul 2019 20:17:58 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x6PBHwWF009905
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564053478;
-        bh=O99g3Q92gg15AVvJroWDS691IzdWx4FzeR+mRv04QGU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=k7AKJfvT1vp+mEb24/fVQdxbQh+Am+/duUmK4cEfMp/Wk5fD5S5JgFn1u6o+q2h7T
-         vgOWUxseNf9Xb4rK/VJrjj50hFFYi9ouQH04nKCgrZeZorbPMiFIacxufxDhw/7WSE
-         uy/9/aDfS4uO6j9APQObmH8Z5AnTluPcMGtN/tg1iDYTTlVLhQu8Gd1fT0pIovCzET
-         j5MPIsRiIzpXMOs8qJ9rOL7Na4wL+0913MwFK4344KdhrgO9o9XEuigK3e+4B3xxda
-         BydSudCMqbrsvDP0SGgAMyjGqo+Rj1qagmWWuh26dlXISawG2epuIUMmE7IeNwrcEd
-         xmjoSa4Hh13lg==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id 2so33420957vso.8;
-        Thu, 25 Jul 2019 04:17:58 -0700 (PDT)
-X-Gm-Message-State: APjAAAWmI9wIzQHkkARTHvkPTaGm/2eWKigMarZKqAXmMjxe+XuxORmW
-        oTKSCKvWT4Kuk9mF3GYf4ZThjCoyEPsCLjk5OgE=
-X-Google-Smtp-Source: APXvYqx210g/x+mN1qIDcqKttYDPVJy8/xhLB8dcLLlGrZ0UyGcV7aFyeOxz1KL+5IklRsyYam3rr6gAuZ0GvNSVnr0=
-X-Received: by 2002:a67:d46:: with SMTP id 67mr55994217vsn.181.1564053477415;
- Thu, 25 Jul 2019 04:17:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190725080513.4071-1-yamada.masahiro@socionext.com> <20190725111256.GA30958@kroah.com>
-In-Reply-To: <20190725111256.GA30958@kroah.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 25 Jul 2019 20:17:21 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATcRXT8ptGpPhc4kods65AQsRbz2wmnq5=df35S2aWn7w@mail.gmail.com>
-Message-ID: <CAK7LNATcRXT8ptGpPhc4kods65AQsRbz2wmnq5=df35S2aWn7w@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: detect missing "WITH Linux-syscall-note" for uapi headers
+        Thu, 25 Jul 2019 07:18:44 -0400
+Received: by mail-pg1-f196.google.com with SMTP id s1so16578989pgr.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 04:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1FbnKtI3LwQwgUsr/g3MUa9Py+KRgg38b6IrILFDUhU=;
+        b=RiPttf3VULytvTV1gQCGGIofaH3cmMvvcLlShfvYsVeKFzWjG/kfl/UguNaNy7/Dfo
+         FVmH2PIQAE2iC69ldXu5sNi9yS2z2PuKCOKbuswCunkNuJwrNoEzBk2cOmbgVNaQZsql
+         vWiZsd67ciYl95JIzgVUAExNBHZtC8mivPnxWK78M7nMNjVgpYOHWMOxtXNNo0v9cqC2
+         r/T/+iTbpnJX5k7uurmQUrJ54neQWBfYxzH6kvGeSJ+H2ILyhbfMSTjrInxG6dRzsZPQ
+         t9CzL6qva/lkcI8XGhVlO+HAbtcciB4SanHFtxVMYgiTsIzVps4/IUCTGBW581LK8m7v
+         GkAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1FbnKtI3LwQwgUsr/g3MUa9Py+KRgg38b6IrILFDUhU=;
+        b=iMGZBn2JHnv2wC6U9ZqHFt2je5tZYGomkvjXQYqPHMR834kadU2j+CAXEx95h1EIOq
+         YZlAsyYfN/OddyhgWccDaavcfA+xfox8gkS8FEF6QcXTjRstQa9pbKIn/ygcq8mQCx0d
+         J46j2mvbZkbLUBb9dZ71DLrfcW4k1aHG8KrlmcNTCblrC69jA6szCZ3dNXPnkarvhNZn
+         zgjXttSCj9ipYvwn258NhPvkblC9yPsXsW8Ltpc95fHdbeQ/eYO1U4AnC9yHPvKQvAuP
+         aX0iBv34ovOiCfzp1g13+/3e8r7T2XwzpqCMfk6hZJZTlTG6dr/o06grd4V1aknHc5oK
+         Vgxg==
+X-Gm-Message-State: APjAAAUDejFJfMY4e6yDvUFaYRL1j6+g2sfxIuq3sR5bkHtEKfDGPK01
+        3xbXEPsffQxNWDtfvnlsmyY=
+X-Google-Smtp-Source: APXvYqwWrdl5FJRCm09CQlypUGpElLXPTtXQhNRGvN4DIQ3ybEer3KGwJh1GSg+qHIHbIRJ+x3Bfug==
+X-Received: by 2002:a63:121b:: with SMTP id h27mr70608971pgl.335.1564053523202;
+        Thu, 25 Jul 2019 04:18:43 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.34])
+        by smtp.gmail.com with ESMTPSA id s15sm48874992pfd.183.2019.07.25.04.18.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 04:18:42 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 16:48:35 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
 To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     ira.weiny@intel.com, jglisse@redhat.com,
+        Matt.Sickler@daktronics.com, jhubbard@nvidia.com,
+        devel@driverdev.osuosl.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] staging: kpc2000: Convert put_page to put_user_page*()
+Message-ID: <20190725111834.GA12517@bharath12345-Inspiron-5559>
+References: <20190720173214.GA4250@bharath12345-Inspiron-5559>
+ <20190725074634.GB15090@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190725074634.GB15090@kroah.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 8:13 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jul 25, 2019 at 05:05:13PM +0900, Masahiro Yamada wrote:
-> > UAPI headers licensed under GPL are supposed to have exception
-> > "WITH Linux-syscall-note" so that they can be included into non-GPL
-> > user space application code.
-> >
-> > Unfortunately, people often miss to add it. Break 'make headers'
-> > when any of exported headers lacks the exception note so that the
-> > 0-day bot can easily catch it.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+On Thu, Jul 25, 2019 at 09:46:34AM +0200, Greg KH wrote:
+> On Sat, Jul 20, 2019 at 11:02:14PM +0530, Bharath Vedartham wrote:
+> > For pages that were retained via get_user_pages*(), release those pages
+> > via the new put_user_page*() routines, instead of via put_page().
+> > 
+> > This is part a tree-wide conversion, as described in commit fc1d8e7cca2d ("mm: introduce put_user_page*(), placeholder versions").
+> 
+> Please line-wrap this line.
+> 
+> > 
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: Jérôme Glisse <jglisse@redhat.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Matt Sickler <Matt.Sickler@daktronics.com>
+> > Cc: devel@driverdev.osuosl.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-mm@kvack.org
+> > Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+> > Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
 > > ---
-> >
-> > This patch depends on the following:
-> >
-> > https://lore.kernel.org/patchwork/patch/1105289/
-> >
-> > I will turn on the error after all headers are fixed.
->
-> I've taken the dependancy here in the spdx tree and will send it to
-> Linus for 5.3-rc2.
-
-Thanks!
-
->  I can also take this now through that tree, or you
-> can add it to yours afterward, which ever is easier for you.
-
-I will create a branch on top 5.3-rc2
-and queue this patch by myself.
-
-Thank you.
-
-
--- 
-Best Regards
-Masahiro Yamada
+> > Changes since v1
+> >        - Improved changelog by John's suggestion.
+> >        - Moved logic to dirty pages below sg_dma_unmap
+> >        and removed PageReserved check.
+> > Changes since v2
+> >        - Added back PageResevered check as suggested by John Hubbard.
+> > Changes since v3
+> >        - Changed the commit log as suggested by John.
+> >        - Added John's Reviewed-By tag
+> > 
+> > ---
+> >  drivers/staging/kpc2000/kpc_dma/fileops.c | 17 ++++++-----------
+> >  1 file changed, 6 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
+> > index 6166587..75ad263 100644
+> > --- a/drivers/staging/kpc2000/kpc_dma/fileops.c
+> > +++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
+> > @@ -198,9 +198,7 @@ int  kpc_dma_transfer(struct dev_private_data *priv, struct kiocb *kcb, unsigned
+> >  	sg_free_table(&acd->sgt);
+> >   err_dma_map_sg:
+> >   err_alloc_sg_table:
+> > -	for (i = 0 ; i < acd->page_count ; i++){
+> > -		put_page(acd->user_pages[i]);
+> > -	}
+> > +	put_user_pages(acd->user_pages, acd->page_count);
+> >   err_get_user_pages:
+> >  	kfree(acd->user_pages);
+> >   err_alloc_userpages:
+> > @@ -221,16 +219,13 @@ void  transfer_complete_cb(struct aio_cb_data *acd, size_t xfr_count, u32 flags)
+> >  	
+> >  	dev_dbg(&acd->ldev->pldev->dev, "transfer_complete_cb(acd = [%p])\n", acd);
+> >  	
+> > -	for (i = 0 ; i < acd->page_count ; i++){
+> > -		if (!PageReserved(acd->user_pages[i])){
+> > -			set_page_dirty(acd->user_pages[i]);
+> > -		}
+> > -	}
+> > -	
+> >  	dma_unmap_sg(&acd->ldev->pldev->dev, acd->sgt.sgl, acd->sgt.nents, acd->ldev->dir);
+> >  	
+> > -	for (i = 0 ; i < acd->page_count ; i++){
+> > -		put_page(acd->user_pages[i]);
+> > +	for (i = 0; i < acd->page_count; i++) {
+> > +		if (!PageReserved(acd->user_pages[i]))
+> > +			put_user_pages_dirty(&acd->user_pages[i], 1);
+> > +		else
+> > +			put_user_page(acd->user_pages[i]);
+> >  	}
+> >  	
+> >  	sg_free_table(&acd->sgt);
+> > -- 
+> > 2.7.4
+> 
+> This patch can not be applied at all :(
+> 
+> Can you redo it against the latest staging-next branch and resend?
+> 
+> thanks,
+Yup. Will do that!
+> greg k-h
