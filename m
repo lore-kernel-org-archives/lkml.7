@@ -2,91 +2,295 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F388EC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E965DC41517
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2490217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B804B2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:51:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tBE4Mbdj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrxMTzFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389281AbfGYMuP (ORCPT
+        id S2389382AbfGYMve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:50:15 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42088 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389217AbfGYMuP (ORCPT
+        Thu, 25 Jul 2019 08:51:34 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40955 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388100AbfGYMve (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:50:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sCZEIVmVGag1Egj1E+yjyGvhHi5tCLTiY1ZkJsuHwvg=; b=tBE4MbdjsLwKSWHwdDkl8lvuY
-        tAV5UcM6qphIcUwSQ6Khdv9Zq/EZ3oHJE9NET/SGaC+MDSuNoaSt6dM2Ye2A9fAJ4YgluQdLcBG3A
-        xq56UM26WYZaH9sW9w350wSbtwvPthQ6ZA6xBFEobEMzHmnKhpb80Xr+++7NGfPTEKxwuE55l/g5C
-        CamGc8MssEw5/YxIQvh2/GrQsDOQk3pqfnSo1vZ0cWFM1fzk6JmExZpCcjClGowpLZ+DtlUUTWvXY
-        dt8IhP29tBwk91T3dpey/JmJ5Remdd9VUUCZHwb2/N8gVCk7f2UWYSL2Hu6M3BZ8gQ66MsQpPRYEk
-        V9CeIx+9g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqdCI-000294-6E; Thu, 25 Jul 2019 12:50:14 +0000
-Date:   Thu, 25 Jul 2019 05:50:14 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
-Message-ID: <20190725125014.GD20286@infradead.org>
-References: <20190624194908.121273-1-john.stultz@linaro.org>
- <20190624194908.121273-5-john.stultz@linaro.org>
- <20190718100840.GB19666@infradead.org>
- <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
- <20190724065958.GC16225@infradead.org>
- <8e6f8e4f-20fc-1f1f-2228-f4fd7c7c5c1f@ti.com>
+        Thu, 25 Jul 2019 08:51:34 -0400
+Received: by mail-lf1-f68.google.com with SMTP id b17so34470432lff.7;
+        Thu, 25 Jul 2019 05:51:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=/Xsj00ljhBsEGtdT+wj7N34Rn+B2eibrc+3bGLHtXVM=;
+        b=KrxMTzFAhzWFqULF0MbgezdmTCddBLW97aZPw3roEOocGi9PDJFCSZH+TnwulnpeHu
+         3dXe6bI5xxyAEbMIqJ7cE0SM5Oidx/BetTLPcq2iPyBBaZJUK4Fu316uFx+7yYEtQspd
+         7Wd9dy9MMx4pEro5eP9OpYcYTFB+yFEDUswcHd8NvJXkH/qh9HqcXpCcPo98DeGgu+Fz
+         yDYtoOYw+cgpWw0MTtZg/sSmqRJkcceW1Rw7N/o+FwuIIM4y7hjxM6d7sVHRcrlWfviM
+         tdoCkMRczvDnAkzxE4hW0IdrhEwqrpzzmBZ/wdXyF8q8+hkBo2kecS8AtzQnc4HOXUYY
+         4dAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=/Xsj00ljhBsEGtdT+wj7N34Rn+B2eibrc+3bGLHtXVM=;
+        b=ZVT5j4lZyHk5Z290cj99uRQ/hFuvQxsCgrVSyhSPiJCGNkpyrgoJjkAZRyP5dpZT1/
+         xvl78D10Oy9T9PwldTjVHarvnYvqn6eubZSBFntjLpBZMeS17NUaXlkYsumQ3S1tDMoa
+         ajzNHvwXoEZQRd43Clx1Lxs/IVCDbnLknCwQpYUnrBmraqDu0I0ea9vxCtRlim5uZyZe
+         SEdss2eYWVJgEPtNNHeFiMVS/ZdsfFP7BMZOI3PpQGd/Xxw9ZuynVwgNyf10P0xuc3ox
+         FZQ5bU9Chfm/xeUFOJexF/a1HWxPx1j6aXhd0MQNM6ME8IMUi/OVy5fpcn1ZJwbzmU+S
+         EbeA==
+X-Gm-Message-State: APjAAAU/W3x1jCfafWxhbgGHssldwjF631wi5GrBr4utXSsmuTGULu4t
+        cb0iZwLSP5tKuWQFtb7dmd/UOSmVnxd8Zl5uXkE=
+X-Google-Smtp-Source: APXvYqxevdANPfOlkVtzMQ882vgwBXm0Jbm6vzvza8p7XXpVnciz9Vl5i1ZzZxjAhKyc6EfZHmf4aPb+4/23UDQiUlw=
+X-Received: by 2002:a19:914c:: with SMTP id y12mr41019898lfj.108.1564059090602;
+ Thu, 25 Jul 2019 05:51:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e6f8e4f-20fc-1f1f-2228-f4fd7c7c5c1f@ti.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <CGME20190723122024eucas1p25a480ccddaa69ee1d0f1a07960ca3f22@eucas1p2.samsung.com>
+ <20190723122016.30279-1-a.swigon@partner.samsung.com> <20190723122016.30279-5-a.swigon@partner.samsung.com>
+In-Reply-To: <20190723122016.30279-5-a.swigon@partner.samsung.com>
+Reply-To: cwchoi00@gmail.com
+From:   Chanwoo Choi <cwchoi00@gmail.com>
+Date:   Thu, 25 Jul 2019 21:50:53 +0900
+Message-ID: <CAGTfZH3Z334D3OKpBOGSfS9RoHkOX-s_2M858z1Ye2NoMtVh4g@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/11] devfreq: exynos-bus: Clean up code
+To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        georgi.djakov@linaro.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 11:46:01AM -0400, Andrew F. Davis wrote:
-> https://patchwork.kernel.org/patch/10863957/
-> 
-> It's actually a more simple heap type IMHO, but the logic inside is
-> incompatible with the system/CMA heaps, if you move any of their code
-> into the core framework then this heap stops working. Leading to out of
-> tree hacks on the core to get it back functional. I see the same for the
-> "complex" heaps with ION.
+2019=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EC=88=98) =EC=98=A4=EC=A0=84 8:07, A=
+rtur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>=EB=8B=98=EC=9D=B4 =EC=
+=9E=91=EC=84=B1:
+>
+> This patch adds minor improvements to the exynos-bus driver.
+>
+> Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>
+> ---
+>  drivers/devfreq/exynos-bus.c | 49 ++++++++++++++++--------------------
+>  1 file changed, 22 insertions(+), 27 deletions(-)
+>
+> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+> index 4bb83b945bf7..412511ca7703 100644
+> --- a/drivers/devfreq/exynos-bus.c
+> +++ b/drivers/devfreq/exynos-bus.c
+> @@ -15,11 +15,10 @@
+>  #include <linux/device.h>
+>  #include <linux/export.h>
+>  #include <linux/module.h>
+> -#include <linux/of_device.h>
+> +#include <linux/of.h>
+>  #include <linux/pm_opp.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regulator/consumer.h>
+> -#include <linux/slab.h>
+>
+>  #define DEFAULT_SATURATION_RATIO       40
+>  #define DEFAULT_VOLTAGE_TOLERANCE      2
+> @@ -256,7 +255,7 @@ static int exynos_bus_parent_parse_of(struct device_n=
+ode *np,
+>                                         struct exynos_bus *bus)
+>  {
+>         struct device *dev =3D bus->dev;
+> -       int i, ret, count, size;
+> +       int i, ret, count;
+>
+>         /* Get the regulator to provide each bus with the power */
+>         bus->regulator =3D devm_regulator_get(dev, "vdd");
+> @@ -283,8 +282,7 @@ static int exynos_bus_parent_parse_of(struct device_n=
+ode *np,
+>         }
+>         bus->edev_count =3D count;
+>
+> -       size =3D sizeof(*bus->edev) * count;
+> -       bus->edev =3D devm_kzalloc(dev, size, GFP_KERNEL);
+> +       bus->edev =3D devm_kcalloc(dev, count, sizeof(*bus->edev), GFP_KE=
+RNEL);
+>         if (!bus->edev) {
+>                 ret =3D -ENOMEM;
+>                 goto err_regulator;
+> @@ -388,7 +386,7 @@ static int exynos_bus_profile_init(struct exynos_bus =
+*bus,
+>         ondemand_data =3D devm_kzalloc(dev, sizeof(*ondemand_data), GFP_K=
+ERNEL);
+>         if (!ondemand_data) {
+>                 ret =3D -ENOMEM;
+> -               goto err;
+> +               goto out;
+>         }
+>         ondemand_data->upthreshold =3D 40;
+>         ondemand_data->downdifferential =3D 5;
+> @@ -400,14 +398,14 @@ static int exynos_bus_profile_init(struct exynos_bu=
+s *bus,
+>         if (IS_ERR(bus->devfreq)) {
+>                 dev_err(dev, "failed to add devfreq device\n");
+>                 ret =3D PTR_ERR(bus->devfreq);
+> -               goto err;
+> +               goto out;
+>         }
+>
+>         /* Register opp_notifier to catch the change of OPP  */
+>         ret =3D devm_devfreq_register_opp_notifier(dev, bus->devfreq);
+>         if (ret < 0) {
+>                 dev_err(dev, "failed to register opp notifier\n");
+> -               goto err;
+> +               goto out;
+>         }
+>
+>         /*
+> @@ -417,16 +415,16 @@ static int exynos_bus_profile_init(struct exynos_bu=
+s *bus,
+>         ret =3D exynos_bus_enable_edev(bus);
+>         if (ret < 0) {
+>                 dev_err(dev, "failed to enable devfreq-event devices\n");
+> -               goto err;
+> +               goto out;
+>         }
+>
+>         ret =3D exynos_bus_set_event(bus);
+>         if (ret < 0) {
+>                 dev_err(dev, "failed to set event to devfreq-event device=
+s\n");
+> -               goto err;
+> +               goto out;
+>         }
+>
+> -err:
+> +out:
+>         return ret;
+>  }
+>
+> @@ -446,27 +444,28 @@ static int exynos_bus_profile_init_passive(struct e=
+xynos_bus *bus,
+>         parent_devfreq =3D devfreq_get_devfreq_by_phandle(dev, 0);
+>         if (IS_ERR(parent_devfreq)) {
+>                 ret =3D -EPROBE_DEFER;
+> -               goto err;
+> +               goto out;
+>         }
+>
+>         passive_data =3D devm_kzalloc(dev, sizeof(*passive_data), GFP_KER=
+NEL);
+>         if (!passive_data) {
+>                 ret =3D -ENOMEM;
+> -               goto err;
+> +               goto out;
+>         }
+>         passive_data->parent =3D parent_devfreq;
+>
+>         /* Add devfreq device for exynos bus with passive governor */
+> -       bus->devfreq =3D devm_devfreq_add_device(dev, profile, DEVFREQ_GO=
+V_PASSIVE,
+> +       bus->devfreq =3D devm_devfreq_add_device(dev, profile,
+> +                                               DEVFREQ_GOV_PASSIVE,
+>                                                 passive_data);
+>         if (IS_ERR(bus->devfreq)) {
+>                 dev_err(dev,
+>                         "failed to add devfreq dev with passive governor\=
+n");
+>                 ret =3D PTR_ERR(bus->devfreq);
+> -               goto err;
+> +               goto out;
+>         }
+>
+> -err:
+> +out:
+>         return ret;
+>  }
+>
+> @@ -484,11 +483,11 @@ static int exynos_bus_probe(struct platform_device =
+*pdev)
+>                 return -EINVAL;
+>         }
+>
+> -       bus =3D devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
+> +       bus =3D devm_kzalloc(dev, sizeof(*bus), GFP_KERNEL);
+>         if (!bus)
+>                 return -ENOMEM;
+>         mutex_init(&bus->lock);
+> -       bus->dev =3D &pdev->dev;
+> +       bus->dev =3D dev;
+>         platform_set_drvdata(pdev, bus);
+>
+>         /* Parse the device-tree to get the resource information */
+> @@ -502,7 +501,7 @@ static int exynos_bus_probe(struct platform_device *p=
+dev)
+>                 goto err;
+>         }
+>
+> -       node =3D of_parse_phandle(dev->of_node, "devfreq", 0);
+> +       node =3D of_parse_phandle(np, "devfreq", 0);
+>         if (node) {
+>                 of_node_put(node);
+>                 ret =3D exynos_bus_profile_init_passive(bus, profile);
+> @@ -547,12 +546,10 @@ static int exynos_bus_resume(struct device *dev)
+>         int ret;
+>
+>         ret =3D exynos_bus_enable_edev(bus);
+> -       if (ret < 0) {
+> +       if (ret < 0)
+>                 dev_err(dev, "failed to enable the devfreq-event devices\=
+n");
+> -               return ret;
+> -       }
+>
+> -       return 0;
+> +       return ret;
+>  }
+>
+>  static int exynos_bus_suspend(struct device *dev)
+> @@ -561,12 +558,10 @@ static int exynos_bus_suspend(struct device *dev)
+>         int ret;
+>
 
-Well, this mostly is just another allocator (gen_pool).  And given that
-the whole dma-buf infrastucture assumes things are backed by pages we
-really shouldn't need much more than an alloc and a free callback (and
-maybe the pgprot to map it) and handle the rest in common code.
+NACK.
+>         ret =3D exynos_bus_disable_edev(bus);
+> -       if (ret < 0) {
+> +       if (ret < 0)
+>                 dev_err(dev, "failed to disable the devfreq-event devices=
+\n");
+> -               return ret;
+> -       }
+>
+> -       return 0;
+> +       return ret;
+>  }
+>  #endif
+>
+> --
+> 2.17.1
+>
+
+NACK.
+
+As I already commented, It has never any benefit.
+I think that it is not usful. Please drop it.
+
+
+
+--=20
+Best Regards,
+Chanwoo Choi
