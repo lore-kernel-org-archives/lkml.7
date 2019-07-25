@@ -2,225 +2,118 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6EAC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EB9C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B209122BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17CA3206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:26:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="HzJjnq8I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729867AbfGYM01 (ORCPT
+        id S1729875AbfGYM04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:26:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbfGYM01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:26:27 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 248B6206BA;
-        Thu, 25 Jul 2019 12:26:23 +0000 (UTC)
-Date:   Thu, 25 Jul 2019 08:26:21 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH v5 09/10] iommu/vt-d: Add trace events for device dma
- map/unmap
-Message-ID: <20190725082621.2878936a@gandalf.local.home>
-In-Reply-To: <20190725031717.32317-10-baolu.lu@linux.intel.com>
-References: <20190725031717.32317-1-baolu.lu@linux.intel.com>
-        <20190725031717.32317-10-baolu.lu@linux.intel.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 25 Jul 2019 08:26:56 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38118 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727890AbfGYM0z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 08:26:55 -0400
+Received: by mail-ed1-f65.google.com with SMTP id r12so15268213edo.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 05:26:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9aKNcQbqtSEQ2QLViWMxlIXutxeIxOIYk6E7Syx9R3M=;
+        b=HzJjnq8ICgDrR/7Xt9pOiXw5RVUlib1TORuUxu71HvMJqO65/Ux6jTfikdMemxdpXs
+         xFB0F/XS/GROuLQWSgIn2x9kn5aWhHaQWsS8cmP+5v21cBaEOV391x1lc/EP2gfOdFwM
+         2Vuhy4xdru8Z3/6rvFqVnx0F+ShoAKvnJmHJYKdk+CK2Q2zSwzDo4NAg0J83Vn8RKwMO
+         napUZgvr/ZqSc5Sm4vU5FKroJjmMGEn/1ctbCa8Iqi0bp+cKh5D5l2TQuhfESD+ZlwLy
+         DjgBv9l3jBj+1KHDP9CQEXJ0x9Pml9WH+WdNCariBSFYNSwP3XuzOvmrukVquHywW4nl
+         K0ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9aKNcQbqtSEQ2QLViWMxlIXutxeIxOIYk6E7Syx9R3M=;
+        b=HKwqok0J0C9PEQl/KxiSw0sbTkZcFOrltY8LumPmzV93pjQTRkkUCM/naw2QJa5fbC
+         4nw1Uv5vTD2LpTmquYrGe7QNLSqe+DOKcWV13n08Kq/t5X54ZhF4/rtIaOLmOkic+Rtb
+         6yZ4RRR5bocACeb1L32EG2MFLyYKk+29+myCh3buo2rbwzngcm7h2Db88U8uLTy/3Ckq
+         hgTiDY074RYwUhEiB9TR4GngpDlRL+2vhsKwLSYb7u6kkh4faVkpLuc7H1Ssiv/nSS7z
+         Zg3Rowv/OIXgSUE1i8VjEUBZnJ+h5LzqdXBwAaiv5R3lXINRbLV7VGimEMVA0tLBGk8O
+         ZNvg==
+X-Gm-Message-State: APjAAAUzBrv7Ug+aOn5ENZSy//u4ft8bOMn0VpweStf98bIq/lg984sF
+        oyZcQ8F0q/NEdRloEYR7RQs=
+X-Google-Smtp-Source: APXvYqypQMriHbVL4iQKojOec0aGpscsAqpWxtIHGIkJrv+ZbpQN6mKWH0jWKzkROfrq+kgYvpd7Bg==
+X-Received: by 2002:a17:906:28c4:: with SMTP id p4mr68122099ejd.181.1564057613670;
+        Thu, 25 Jul 2019 05:26:53 -0700 (PDT)
+Received: from brauner.io (ip5b40f7ec.dynamic.kabel-deutschland.de. [91.64.247.236])
+        by smtp.gmail.com with ESMTPSA id t13sm13350326edd.13.2019.07.25.05.26.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 05:26:52 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 14:26:51 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, ebiederm@xmission.com,
+        keescook@chromium.org, joel@joelfernandes.org, tglx@linutronix.de,
+        tj@kernel.org, dhowells@redhat.com, jannh@google.com,
+        luto@kernel.org, akpm@linux-foundation.org, cyphar@cyphar.com,
+        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        kernel-team@android.com, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH 4/5] pidfd: add CLONE_WAIT_PID
+Message-ID: <20190725122650.4i3arct5rpchqmyt@brauner.io>
+References: <20190724144651.28272-1-christian@brauner.io>
+ <20190724144651.28272-5-christian@brauner.io>
+ <20190725103543.GF4707@redhat.com>
+ <20190725104006.7myahvjtnbcgu3in@brauner.io>
+ <20190725112503.GG4707@redhat.com>
+ <20190725114359.GH4707@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190725114359.GH4707@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jul 2019 11:17:16 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
-
-> This adds trace support for the Intel IOMMU driver. It
-> also declares some events which could be used to trace
-> the events when an IOVA is being mapped or unmapped in
-> a domain.
+On Thu, Jul 25, 2019 at 01:43:59PM +0200, Oleg Nesterov wrote:
+> Or. We can change wait_consider_task() to not clear ->notask_error if
+> WXXX and the child is PF_WAIT_PID.
 > 
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  drivers/iommu/Makefile             |  1 +
->  drivers/iommu/intel-trace.c        | 14 +++++
->  include/trace/events/intel_iommu.h | 95 ++++++++++++++++++++++++++++++
->  3 files changed, 110 insertions(+)
->  create mode 100644 drivers/iommu/intel-trace.c
->  create mode 100644 include/trace/events/intel_iommu.h
-
-This patch looks fine, but I don't see the use cases for anything but
-trace_bounce_map_single() and trace_bounce_unmap_single() used.
-
-Other than that.
-
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
-
+> This way you can "safely" use wait() without WNOHANG, it won't block if
+> all the children which can report an even are PF_WAIT_PID.
 > 
-> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-> index f13f36ae1af6..bfe27b2755bd 100644
-> --- a/drivers/iommu/Makefile
-> +++ b/drivers/iommu/Makefile
-> @@ -17,6 +17,7 @@ obj-$(CONFIG_ARM_SMMU) += arm-smmu.o
->  obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
->  obj-$(CONFIG_DMAR_TABLE) += dmar.o
->  obj-$(CONFIG_INTEL_IOMMU) += intel-iommu.o intel-pasid.o
-> +obj-$(CONFIG_INTEL_IOMMU) += intel-trace.o
->  obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) += intel-iommu-debugfs.o
->  obj-$(CONFIG_INTEL_IOMMU_SVM) += intel-svm.o
->  obj-$(CONFIG_IPMMU_VMSA) += ipmmu-vmsa.o
-> diff --git a/drivers/iommu/intel-trace.c b/drivers/iommu/intel-trace.c
-> new file mode 100644
-> index 000000000000..bfb6a6e37a88
-> --- /dev/null
-> +++ b/drivers/iommu/intel-trace.c
-> @@ -0,0 +1,14 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Intel IOMMU trace support
-> + *
-> + * Copyright (C) 2019 Intel Corporation
-> + *
-> + * Author: Lu Baolu <baolu.lu@linux.intel.com>
-> + */
-> +
-> +#include <linux/string.h>
-> +#include <linux/types.h>
-> +
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/intel_iommu.h>
-> diff --git a/include/trace/events/intel_iommu.h b/include/trace/events/intel_iommu.h
-> new file mode 100644
-> index 000000000000..3fdeaad93b2e
-> --- /dev/null
-> +++ b/include/trace/events/intel_iommu.h
-> @@ -0,0 +1,95 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Intel IOMMU trace support
-> + *
-> + * Copyright (C) 2019 Intel Corporation
-> + *
-> + * Author: Lu Baolu <baolu.lu@linux.intel.com>
-> + */
-> +#ifdef CONFIG_INTEL_IOMMU
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM intel_iommu
-> +
-> +#if !defined(_TRACE_INTEL_IOMMU_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_INTEL_IOMMU_H
-> +
-> +#include <linux/tracepoint.h>
-> +#include <linux/intel-iommu.h>
-> +
-> +DECLARE_EVENT_CLASS(dma_map,
-> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, phys_addr_t phys_addr,
-> +		 size_t size),
-> +
-> +	TP_ARGS(dev, dev_addr, phys_addr, size),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(dev_name, dev_name(dev))
-> +		__field(dma_addr_t, dev_addr)
-> +		__field(phys_addr_t, phys_addr)
-> +		__field(size_t,	size)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(dev_name, dev_name(dev));
-> +		__entry->dev_addr = dev_addr;
-> +		__entry->phys_addr = phys_addr;
-> +		__entry->size = size;
-> +	),
-> +
-> +	TP_printk("dev=%s dev_addr=0x%llx phys_addr=0x%llx size=%zu",
-> +		  __get_str(dev_name),
-> +		  (unsigned long long)__entry->dev_addr,
-> +		  (unsigned long long)__entry->phys_addr,
-> +		  __entry->size)
-> +);
-> +
-> +DEFINE_EVENT(dma_map, bounce_map_single,
-> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, phys_addr_t phys_addr,
-> +		 size_t size),
-> +	TP_ARGS(dev, dev_addr, phys_addr, size)
-> +);
-> +
-> +DEFINE_EVENT(dma_map, bounce_map_sg,
-> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, phys_addr_t phys_addr,
-> +		 size_t size),
-> +	TP_ARGS(dev, dev_addr, phys_addr, size)
-> +);
-> +
-> +DECLARE_EVENT_CLASS(dma_unmap,
-> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
-> +
-> +	TP_ARGS(dev, dev_addr, size),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(dev_name, dev_name(dev))
-> +		__field(dma_addr_t, dev_addr)
-> +		__field(size_t,	size)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(dev_name, dev_name(dev));
-> +		__entry->dev_addr = dev_addr;
-> +		__entry->size = size;
-> +	),
-> +
-> +	TP_printk("dev=%s dev_addr=0x%llx size=%zu",
-> +		  __get_str(dev_name),
-> +		  (unsigned long long)__entry->dev_addr,
-> +		  __entry->size)
-> +);
-> +
-> +DEFINE_EVENT(dma_unmap, bounce_unmap_single,
-> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
-> +	TP_ARGS(dev, dev_addr, size)
-> +);
-> +
-> +DEFINE_EVENT(dma_unmap, bounce_unmap_sg,
-> +	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
-> +	TP_ARGS(dev, dev_addr, size)
-> +);
-> +
-> +#endif /* _TRACE_INTEL_IOMMU_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> +#endif /* CONFIG_INTEL_IOMMU */
+> But I do not understand your use-cases, I have no idea if this can help
 
+One usecase (among others listed in the commit message) are shared
+libraries. P_ALL is usually something you can't really use in a shared
+library because you have no idea what else might be fork()ed off. Only
+the main program can use this but none of the auxiliary libraries that
+it uses.
+The other way around you want to be able fork() off something without
+affecting P_ALL in the main program.
+The key is that you want to be able to create child processes in a
+shared library without the main programing having to know about this so
+that it can use P_ALL and never get stuff from the library.
+
+Assume you have a project with a main loop with a million things
+happening in that mainloop like some gui app running an avi video. For
+example, gtk uses gstreamer which forks off all codecs in child
+processes which are sandboxed for security. So gstreamer is using helper
+processes in the background which are my children now. Now I'm creating
+four more additional helper processes as well. Now, in my (glib, qt
+whatever) mainloop on SIGCHLD some part of the app is checking with
+WNHOANG and finds a process has exited. It's cleaning this thing up now
+but it's not a process it wanted to clean up. The other part of the app
+is now doing waitid(P_PID, pid) but will find the process already gone
+it wanted to reap.
+
+I hope I'm expressing this well enough.
