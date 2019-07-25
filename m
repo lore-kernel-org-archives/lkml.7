@@ -2,152 +2,132 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED9CC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D532C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 855B12238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41C9622BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:17:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="g6aBzlx7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PFlEvXsH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391727AbfGYLRK (ORCPT
+        id S2403911AbfGYLRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:17:10 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:53548 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388479AbfGYLRJ (ORCPT
+        Thu, 25 Jul 2019 07:17:47 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42952 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403888AbfGYLRp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:17:09 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6PBGKKY029109;
-        Thu, 25 Jul 2019 13:16:58 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=0lUCfEK3ONxg/NNCAgs3L5jocem76yi9BMRZQfOjHd8=;
- b=g6aBzlx7Y1CVz3yBYoHW1xxxNxME/UDCiStUnlGjRhsSgI7bvyFBjW8FB3wcLdmrn3vz
- U2J7wnY4KUQlV5VBdpvS10TpiOxVof2XFfk4EbPYBjPOF4SKu39HtaGv+LQGxGKpS+Yt
- BBqT8W3tARzEbisvSkYqvoyirPYOSAye/Us9g/sXuYoIgCUCORQtx86d4lXpg9rhk4Lw
- 1JBEft1YrX7uMXGGYl9Jq/5TqDd8rCCqKOkHIzENSaMlaeFGnIXZevOPhAzRoPPEa9g4
- wKcJLNdnjawSPsZ/ZfiovRzdS/5LDNEXd24lDmRtAp3yOKJYu2iXS1J+g/G9yrZioZ82 Eg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2tx6083kb5-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 25 Jul 2019 13:16:58 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CE3FC31;
-        Thu, 25 Jul 2019 11:16:57 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AB4142AC2;
-        Thu, 25 Jul 2019 11:16:57 +0000 (GMT)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 25 Jul
- 2019 13:16:57 +0200
-Received: from localhost (10.201.20.5) by Webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 25 Jul 2019 13:16:56 +0200
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH] pinctrl: stmfx: update pinconf settings
-Date:   Thu, 25 Jul 2019 13:16:56 +0200
-Message-ID: <1564053416-32192-1-git-send-email-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 25 Jul 2019 07:17:45 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t132so22874257pgb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 04:17:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ceQemw0wuGQ3uiCqTlyBUwO60vemC2ljY3rBL1bAUvc=;
+        b=PFlEvXsHYv4lFKGCCfXZ2BH9B+e/+FJBGpnFm58EL07XzmLkrfPE7grKe+lK7OJ+3q
+         abjryupEyT3OpTe6vXeYbGcL1BUr5elNwdNVi9kwG5uLVwrmRNAlILwAOBEDWE3BDhoL
+         wa/mA/jPR9b/azqkL/67D+Mm2vUNeUnKTr67F6b6zVcvZzUWDrGmaUvbPo48izoM48MU
+         N0VWZj0yxfEFkbETpli1M4tpWnMK/JyQnFJyyMLRYouRu9gpM1Vf3XJFNTnOwCnTu9Ld
+         itsx5ZgymWeM6DKM8q2cX7rBLN4FseRE3aGipc8TJcBEDMtdp1GaAUz+JB2Q86Y09iS0
+         iOkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ceQemw0wuGQ3uiCqTlyBUwO60vemC2ljY3rBL1bAUvc=;
+        b=ntkU+OfoJV1GoRVFj1h1UWPTynWcQ+tA4QKo8IM/MwJ9/ImQs1sW8BbB0a4/Shyu7c
+         XGjnAPw4h7v3N8YCR9dd0IlHMPZtIF27Q+3FyeXkNqyymUzIQXUef+ME6jKDJg5cnXfl
+         UF2ojIkLPKJDN13S+iox2KjA/NibLh/nRSWz6d2CWSpYsHCrjUYmYAByuMzQeVNhCuKw
+         jJW52CmNQffJles+L+NlJRZiVI5Knmxwcrf9/euSBUFlOPJVrcNKT3tZJQgLYFB3L2WD
+         U22srQzzsaLhI5NOb31d089pu9pSR/vePfKym8IVvChsDteyf5GNBfvKErRR9TS0ZHTP
+         M5GQ==
+X-Gm-Message-State: APjAAAVTDhqiJbem6VyVOlfWbiAm8ZKkYJ6dozsghlWeJ2DnYZLlKxZw
+        Yd2OD/5dtipee19NyzIVRvMfjw+GdOYBNm+IoIDpC9uUIQ0=
+X-Google-Smtp-Source: APXvYqzUlCi07nILNklNsNS4HJ/lH+Efr4GjVTNZTHkDEiuYwLiGivIelhkfNGv3x1TCnih2kaTB3NQT1G7052KvmkQ=
+X-Received: by 2002:a17:90a:a116:: with SMTP id s22mr91662102pjp.47.1564053464334;
+ Thu, 25 Jul 2019 04:17:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.20.5]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-25_04:,,
- signatures=0
+References: <cover.1563904656.git.andreyknvl@google.com> <7969018013a67ddbbf784ac7afeea5a57b1e2bcb.1563904656.git.andreyknvl@google.com>
+ <20190724192504.GA5716@ziepe.ca>
+In-Reply-To: <20190724192504.GA5716@ziepe.ca>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 25 Jul 2019 13:17:32 +0200
+Message-ID: <CAAeHK+x5JFgkLLzhrkQBfa78pkyQXLhgOfXOGuHK=AfwFLHntg@mail.gmail.com>
+Subject: Re: [PATCH v19 11/15] IB/mlx4: untag user pointers in mlx4_get_umem_mr
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Torgue <alexandre.torgue@st.com>
+On Wed, Jul 24, 2019 at 9:25 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Tue, Jul 23, 2019 at 07:58:48PM +0200, Andrey Konovalov wrote:
+> > This patch is a part of a series that extends kernel ABI to allow to pass
+> > tagged user pointers (with the top byte set to something else other than
+> > 0x00) as syscall arguments.
+> >
+> > mlx4_get_umem_mr() uses provided user pointers for vma lookups, which can
+> > only by done with untagged pointers.
+> >
+> > Untag user pointers in this function.
+> >
+> > Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+> > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > ---
+> >  drivers/infiniband/hw/mlx4/mr.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> Applied to rdma-for next, please don't sent it via other trees :)
 
-According to the following tab (coming from STMFX datasheet), updates
-have to done in stmfx_pinconf_set function:
+Sure, thanks!
 
--"type" has to be set when "bias" is configured as "pull-up or pull-down"
--PIN_CONFIG_DRIVE_PUSH_PULL should only be used when gpio is configured as
- output. There is so no need to check direction.
-
-DIR | TYPE | PUPD | MFX GPIO configuration
-----|------|------|---------------------------------------------------
-1   | 1    | 1    | OUTPUT open drain with internal pull-up resistor
-----|------|------|---------------------------------------------------
-1   | 1    | 0    | OUTPUT open drain with internal pull-down resistor
-----|------|------|---------------------------------------------------
-1   | 0    | 0/1  | OUTPUT push pull no pull
-----|------|------|---------------------------------------------------
-0   | 1    | 1    | INPUT with internal pull-up resistor
-----|------|------|---------------------------------------------------
-0   | 1    | 0    | INPUT with internal pull-down resistor
-----|------|------|---------------------------------------------------
-0   | 0    | 1    | INPUT floating
-----|------|------|---------------------------------------------------
-0   | 0    | 0    | analog (GPIO not used, default setting)
-
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
- drivers/pinctrl/pinctrl-stmfx.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
-index d3332da..31b6e51 100644
---- a/drivers/pinctrl/pinctrl-stmfx.c
-+++ b/drivers/pinctrl/pinctrl-stmfx.c
-@@ -296,29 +296,29 @@ static int stmfx_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 		switch (param) {
- 		case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
- 		case PIN_CONFIG_BIAS_DISABLE:
-+		case PIN_CONFIG_DRIVE_PUSH_PULL:
-+			ret = stmfx_pinconf_set_type(pctl, pin, 0);
-+			if (ret)
-+				return ret;
-+			break;
- 		case PIN_CONFIG_BIAS_PULL_DOWN:
-+			ret = stmfx_pinconf_set_type(pctl, pin, 1);
-+			if (ret)
-+				return ret;
- 			ret = stmfx_pinconf_set_pupd(pctl, pin, 0);
- 			if (ret)
- 				return ret;
- 			break;
- 		case PIN_CONFIG_BIAS_PULL_UP:
--			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
-+			ret = stmfx_pinconf_set_type(pctl, pin, 1);
- 			if (ret)
- 				return ret;
--			break;
--		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
--			if (!dir)
--				ret = stmfx_pinconf_set_type(pctl, pin, 1);
--			else
--				ret = stmfx_pinconf_set_type(pctl, pin, 0);
-+			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
- 			if (ret)
- 				return ret;
- 			break;
--		case PIN_CONFIG_DRIVE_PUSH_PULL:
--			if (!dir)
--				ret = stmfx_pinconf_set_type(pctl, pin, 0);
--			else
--				ret = stmfx_pinconf_set_type(pctl, pin, 1);
-+		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-+			ret = stmfx_pinconf_set_type(pctl, pin, 1);
- 			if (ret)
- 				return ret;
- 			break;
--- 
-2.7.4
-
+>
+> Thanks,
+> Jason
