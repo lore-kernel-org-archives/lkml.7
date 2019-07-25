@@ -2,638 +2,338 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8661BC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD06C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35ECD21880
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:14:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OaynYNNp"
+	by mail.kernel.org (Postfix) with ESMTP id CA79421850
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729433AbfGYGOy (ORCPT
+        id S1728507AbfGYGRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 02:14:54 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:43445 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfGYGOx (ORCPT
+        Thu, 25 Jul 2019 02:17:10 -0400
+Received: from pta-smg1.csir.co.za ([146.64.81.180]:64555 "EHLO
+        pta-smg1.csir.co.za" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727455AbfGYGRK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 02:14:53 -0400
-Received: by mail-yw1-f67.google.com with SMTP id n205so18885001ywb.10;
-        Wed, 24 Jul 2019 23:14:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/Cj9pMq7E8zJdOASmqSJwkgasTayw6DdcPpkwLVc5oI=;
-        b=OaynYNNp6ePN5oqL9uLhf4dRo+2AezO/nBwB+tHI9khwdExsLcSXpXHsms+Fdobw3t
-         n+a4SwYcnsyJQZHa5/FwlsMeJ/ExtpHAGjiL/rcyujMEM9ULcFUnx5dcJ9iXWmiuK7mA
-         Z3fvtBgQECl6Xc4te32u+8zL2BVxjFFj7zwD0ntWW2dtVx+t++egjmx+bDijddK0GS47
-         1Bj0EK7tv2T/U8TC98jW3Ja9phIqETIKTbVGQwGrX0JPcXufbfKG44o4DJEGYfZ2y9Rs
-         6U3/1Vh3yF1IOZ4J2mNE4lzTL+eGLJ5L8jQEEUgCy/pfO1l17mp+Ah6Us6/z07XtPwGL
-         AYng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/Cj9pMq7E8zJdOASmqSJwkgasTayw6DdcPpkwLVc5oI=;
-        b=Dg5xrjcujK9mbzOaO6zt+6W+KmtCdRt1k2ebY6RrkGlQgZSbguce3otEgXUyuUM6wx
-         hFae1TWJe41HP4LYcqe+B5r6Rp3eTN6hCoZ6rWUOkx4aUYILQxdbXyeyhAGmPm2Y1NGO
-         UDZRw9SixfNp/nuix1iHmpI0r3h1Gw0xeEwxqk43+LD/pz0bI7G5UnMlR23mmHKsakny
-         685PAXQXTaXaTZ0tmD0C6DQmw7UcDobOn1IJIneMXTJMajIAMu2XT31shUNAtfM7Grau
-         Zr1ZaFf5EgvY2XTaOpBNOfJ2rE8XXYsRhCTDHBXqFIdeR95NPSmJfBLGYuy+o3ks0EuY
-         Cyew==
-X-Gm-Message-State: APjAAAVEXxl3lC5+MI1aEJTpgA6IJHpNLFTOZr4Gqw08dAyEIWDFrAoq
-        V69xDs8micS+kKaGNgy4VIrOoIrSrdySxvkp8xo=
-X-Google-Smtp-Source: APXvYqxaHDnwKVg832w6Gr4xGW1kyc5jsuFa50uJbSnPIAHpRnKk+HHOiHs8iFS6RSaqlPGUn2Z9Pb/7J4hu29KWNLE=
-X-Received: by 2002:a81:49c3:: with SMTP id w186mr51930831ywa.31.1564035292038;
- Wed, 24 Jul 2019 23:14:52 -0700 (PDT)
+        Thu, 25 Jul 2019 02:17:10 -0400
+X-Greylist: delayed 358 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Jul 2019 02:17:07 EDT
+Received: from pta-smg1.csir.co.za (localhost.localdomain [127.0.0.1])
+        by localhost (Email Security Appliance) with SMTP id 9F8222979437_D3947F9B;
+        Thu, 25 Jul 2019 06:11:05 +0000 (GMT)
+Received: from willempc.meraka.csir.co.za (unknown [146.64.217.138])
+        by pta-smg1.csir.co.za (Sophos Email Appliance) with ESMTP id 228D22978B73_D3947F9F;
+        Thu, 25 Jul 2019 06:11:05 +0000 (GMT)
+Received: from [127.0.0.1] (helo=localhost)
+        by willempc.meraka.csir.co.za with esmtp (Exim 4.90_1)
+        (envelope-from <wvdwalt@csir.co.za>)
+        id 1hqWy0-0002Y8-VE; Thu, 25 Jul 2019 08:11:05 +0200
+Date:   Thu, 25 Jul 2019 08:11:04 +0200 (SAST)
+From:   Willem van der Walt <wvdwalt@csir.co.za>
+X-X-Sender: wvdwalt@willempc.meraka.csir.co.za
+To:     "Speakup is a screen review system for Linux." 
+        <speakup@linux-speakup.org>
+cc:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Okash Khawaja <okash.khawaja@gmail.com>,
+        devel@driverdev.osuosl.org, Kirk Reiser <kirk@reisers.ca>,
+        Simon Dickson <simonhdickson@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Christopher Brannon <chris@the-brannons.com>
+Subject: Re: [HELP REQUESTED from the community] Was: Staging status of
+ speakup
+In-Reply-To: <20190725035352.GA7717@gregn.net>
+Message-ID: <alpine.DEB.2.21.1.1907250724490.6623@willempc.meraka.csir.co.za>
+References: <20190315130035.6a8f16e9@narunkot> <20190316031831.GA2499@kroah.com> <20190706200857.22918345@narunkot> <20190707065710.GA5560@kroah.com> <20190712083819.GA8862@kroah.com> <20190712092319.wmke4i7zqzr26tly@function> <20190713004623.GA9159@gregn.net>
+ <20190725035352.GA7717@gregn.net>
+User-Agent: Alpine 2.21.1 (DEB 211 2017-05-04)
 MIME-Version: 1.0
-References: <20190724195719.218307-1-salyzyn@android.com> <20190724195719.218307-6-salyzyn@android.com>
-In-Reply-To: <20190724195719.218307-6-salyzyn@android.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Thu, 25 Jul 2019 09:14:40 +0300
-Message-ID: <CAOQ4uxim8zZN5YHZs2OJz5A=3B0U10wyf371yadpe2B7hA8pZw@mail.gmail.com>
-Subject: Re: [PATCH v10 5/5] overlayfs: override_creds=off option bypass creator_cred
-To:     Mark Salyzyn <salyzyn@android.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-team@android.com, Miklos Szeredi <miklos@szeredi.hu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-SASI-RCODE: 200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:57 PM Mark Salyzyn <salyzyn@android.com> wrote:
->
-> By default, all access to the upper, lower and work directories is the
-> recorded mounter's MAC and DAC credentials.  The incoming accesses are
-> checked against the caller's credentials.
->
-> If the principles of least privilege are applied, the mounter's
-> credentials might not overlap the credentials of the caller's when
-> accessing the overlayfs filesystem.  For example, a file that a lower
-> DAC privileged caller can execute, is MAC denied to the generally
-> higher DAC privileged mounter, to prevent an attack vector.
->
-> We add the option to turn off override_creds in the mount options; all
-> subsequent operations after mount on the filesystem will be only the
-> caller's credentials.  The module boolean parameter and mount option
-> override_creds is also added as a presence check for this "feature",
-> existence of /sys/module/overlay/parameters/override_creds.
->
-> It was not always this way.  Circa 4.6 there was no recorded mounter's
-> credentials, instead privileged access to upper or work directories
-> were temporarily increased to perform the operations.  The MAC
-> (selinux) policies were caller's in all cases.  override_creds=off
-> partially returns us to this older access model minus the insecure
-> temporary credential increases.  This is to permit use in a system
-> with non-overlapping security models for each executable including
-> the agent that mounts the overlayfs filesystem.  In Android
-> this is the case since init, which performs the mount operations,
-> has a minimal MAC set of privileges to reduce any attack surface,
-> and services that use the content have a different set of MAC
-> privileges (eg: read, for vendor labelled configuration, execute for
-> vendor libraries and modules).  The caveats are not a problem in
-> the Android usage model, however they should be fixed for
-> completeness and for general use in time.
->
-> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
-> Cc: Miklos Szeredi <miklos@szeredi.hu>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: Eric W. Biederman <ebiederm@xmission.com>
-> Cc: Amir Goldstein <amir73il@gmail.com>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Stephen Smalley <sds@tycho.nsa.gov>
-> Cc: linux-unionfs@vger.kernel.org
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kernel-team@android.com
-> ---
-> v10:
-> - Rebase (and expand because of increased revert_cred usage)
->
-> v9:
-> - Add to the caveats
->
-> v8:
-> - drop pr_warn message after straw poll to remove it.
-> - added a use case in the commit message
->
-> v7:
-> - change name of internal parameter to ovl_override_creds_def
-> - report override_creds only if different than default
->
-> v6:
-> - Drop CONFIG_OVERLAY_FS_OVERRIDE_CREDS.
-> - Do better with the documentation.
-> - pr_warn message adjusted to report consequences.
->
-> v5:
-> - beefed up the caveats in the Documentation
-> - Is dependent on
->   "overlayfs: check CAP_DAC_READ_SEARCH before issuing exportfs_decode_fh"
->   "overlayfs: check CAP_MKNOD before issuing vfs_whiteout"
-> - Added prwarn when override_creds=off
->
-> v4:
-> - spelling and grammar errors in text
->
-> v3:
-> - Change name from caller_credentials / creator_credentials to the
->   boolean override_creds.
-> - Changed from creator to mounter credentials.
-> - Updated and fortified the documentation.
-> - Added CONFIG_OVERLAY_FS_OVERRIDE_CREDS
->
-> v2:
-> - Forward port changed attr to stat, resulting in a build error.
-> - altered commit message.
->
-> a
-> ---
->  Documentation/filesystems/overlayfs.txt | 23 +++++++++++++++++++++++
->  fs/overlayfs/copy_up.c                  |  2 +-
->  fs/overlayfs/dir.c                      | 11 ++++++-----
->  fs/overlayfs/file.c                     | 20 ++++++++++----------
->  fs/overlayfs/inode.c                    | 18 +++++++++---------
->  fs/overlayfs/namei.c                    |  6 +++---
->  fs/overlayfs/overlayfs.h                |  1 +
->  fs/overlayfs/ovl_entry.h                |  1 +
->  fs/overlayfs/readdir.c                  |  4 ++--
->  fs/overlayfs/super.c                    | 22 +++++++++++++++++++++-
->  fs/overlayfs/util.c                     | 12 ++++++++++--
->  11 files changed, 87 insertions(+), 33 deletions(-)
->
-> diff --git a/Documentation/filesystems/overlayfs.txt b/Documentation/filesystems/overlayfs.txt
-> index 1da2f1668f08..d48125076602 100644
-> --- a/Documentation/filesystems/overlayfs.txt
-> +++ b/Documentation/filesystems/overlayfs.txt
-> @@ -102,6 +102,29 @@ Only the lists of names from directories are merged.  Other content
->  such as metadata and extended attributes are reported for the upper
->  directory only.  These attributes of the lower directory are hidden.
->
-> +credentials
-> +-----------
-> +
-> +By default, all access to the upper, lower and work directories is the
-> +recorded mounter's MAC and DAC credentials.  The incoming accesses are
-> +checked against the caller's credentials.
-> +
-> +In the case where caller MAC or DAC credentials do not overlap, a
-> +use case available in older versions of the driver, the
-> +override_creds mount flag can be turned off and help when the use
-> +pattern has caller with legitimate credentials where the mounter
-> +does not.  Several unintended side effects will occur though.  The
-> +caller without certain key capabilities or lower privilege will not
-> +always be able to delete files or directories, create nodes, or
-> +search some restricted directories.  The ability to search and read
-> +a directory entry is spotty as a result of the cache mechanism not
-> +retesting the credentials because of the assumption, a privileged
-> +caller can fill cache, then a lower privilege can read the directory
-> +cache.  The uneven security model where cache, upperdir and workdir
-> +are opened at privilege, but accessed without creating a form of
-> +privilege escalation, should only be used with strict understanding
-> +of the side effects and of the security policies.
-> +
->  whiteouts and opaque directories
->  --------------------------------
->
-> diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
-> index b801c6353100..1311ab4aea00 100644
-> --- a/fs/overlayfs/copy_up.c
-> +++ b/fs/overlayfs/copy_up.c
-> @@ -886,7 +886,7 @@ int ovl_copy_up_flags(struct dentry *dentry, int flags)
->                 dput(parent);
->                 dput(next);
->         }
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         return err;
->  }
-> diff --git a/fs/overlayfs/dir.c b/fs/overlayfs/dir.c
-> index 702aa63f6774..c4b061c3a6ef 100644
-> --- a/fs/overlayfs/dir.c
-> +++ b/fs/overlayfs/dir.c
-> @@ -563,7 +563,8 @@ static int ovl_create_or_link(struct dentry *dentry, struct inode *inode,
->                 override_cred->fsgid = inode->i_gid;
->                 if (!attr->hardlink) {
->                         err = security_dentry_create_files_as(dentry,
-> -                                       attr->mode, &dentry->d_name, old_cred,
-> +                                       attr->mode, &dentry->d_name,
-> +                                       old_cred ? old_cred : current_cred(),
->                                         override_cred);
->                         if (err) {
->                                 put_cred(override_cred);
-> @@ -579,7 +580,7 @@ static int ovl_create_or_link(struct dentry *dentry, struct inode *inode,
->                         err = ovl_create_over_whiteout(dentry, inode, attr);
->         }
->  out_revert_creds:
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->         return err;
->  }
->
-> @@ -655,7 +656,7 @@ static int ovl_set_link_redirect(struct dentry *dentry)
->
->         old_cred = ovl_override_creds(dentry->d_sb);
->         err = ovl_set_redirect(dentry, false);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         return err;
->  }
-> @@ -851,7 +852,7 @@ static int ovl_do_remove(struct dentry *dentry, bool is_dir)
->                 err = ovl_remove_upper(dentry, is_dir, &list);
->         else
->                 err = ovl_remove_and_whiteout(dentry, &list);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->         if (!err) {
->                 if (is_dir)
->                         clear_nlink(dentry->d_inode);
-> @@ -1221,7 +1222,7 @@ static int ovl_rename(struct inode *olddir, struct dentry *old,
->  out_unlock:
->         unlock_rename(new_upperdir, old_upperdir);
->  out_revert_creds:
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->         if (update_nlink)
->                 ovl_nlink_end(new);
->  out_drop_write:
-> diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
-> index e235a635d9ec..39a50fad9f7f 100644
-> --- a/fs/overlayfs/file.c
-> +++ b/fs/overlayfs/file.c
-> @@ -32,7 +32,7 @@ static struct file *ovl_open_realfile(const struct file *file,
->         old_cred = ovl_override_creds(inode->i_sb);
->         realfile = open_with_fake_path(&file->f_path, flags, realinode,
->                                        current_cred());
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         pr_debug("open(%p[%pD2/%c], 0%o) -> (%p, 0%o)\n",
->                  file, file, ovl_whatisit(inode, realinode), file->f_flags,
-> @@ -176,7 +176,7 @@ static loff_t ovl_llseek(struct file *file, loff_t offset, int whence)
->
->         old_cred = ovl_override_creds(inode->i_sb);
->         ret = vfs_llseek(real.file, offset, whence);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         file->f_pos = real.file->f_pos;
->         inode_unlock(inode);
-> @@ -242,7 +242,7 @@ static ssize_t ovl_read_iter(struct kiocb *iocb, struct iov_iter *iter)
->         old_cred = ovl_override_creds(file_inode(file)->i_sb);
->         ret = vfs_iter_read(real.file, iter, &iocb->ki_pos,
->                             ovl_iocb_to_rwf(iocb));
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         ovl_file_accessed(file);
->
-> @@ -278,7 +278,7 @@ static ssize_t ovl_write_iter(struct kiocb *iocb, struct iov_iter *iter)
->         ret = vfs_iter_write(real.file, iter, &iocb->ki_pos,
->                              ovl_iocb_to_rwf(iocb));
->         file_end_write(real.file);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         /* Update size */
->         ovl_copyattr(ovl_inode_real(inode), inode);
-> @@ -305,7 +305,7 @@ static int ovl_fsync(struct file *file, loff_t start, loff_t end, int datasync)
->         if (file_inode(real.file) == ovl_inode_upper(file_inode(file))) {
->                 old_cred = ovl_override_creds(file_inode(file)->i_sb);
->                 ret = vfs_fsync_range(real.file, start, end, datasync);
-> -               revert_creds(old_cred);
-> +               ovl_revert_creds(old_cred);
->         }
->
->         fdput(real);
-> @@ -329,7 +329,7 @@ static int ovl_mmap(struct file *file, struct vm_area_struct *vma)
->
->         old_cred = ovl_override_creds(file_inode(file)->i_sb);
->         ret = call_mmap(vma->vm_file, vma);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         if (ret) {
->                 /* Drop reference count from new vm_file value */
-> @@ -357,7 +357,7 @@ static long ovl_fallocate(struct file *file, int mode, loff_t offset, loff_t len
->
->         old_cred = ovl_override_creds(file_inode(file)->i_sb);
->         ret = vfs_fallocate(real.file, mode, offset, len);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         /* Update size */
->         ovl_copyattr(ovl_inode_real(inode), inode);
-> @@ -379,7 +379,7 @@ static int ovl_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
->
->         old_cred = ovl_override_creds(file_inode(file)->i_sb);
->         ret = vfs_fadvise(real.file, offset, len, advice);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         fdput(real);
->
-> @@ -399,7 +399,7 @@ static long ovl_real_ioctl(struct file *file, unsigned int cmd,
->
->         old_cred = ovl_override_creds(file_inode(file)->i_sb);
->         ret = vfs_ioctl(real.file, cmd, arg);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         fdput(real);
->
-> @@ -589,7 +589,7 @@ static loff_t ovl_copyfile(struct file *file_in, loff_t pos_in,
->                                                 flags);
->                 break;
->         }
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         /* Update size */
->         ovl_copyattr(ovl_inode_real(inode_out), inode_out);
-> diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
-> index d3b53849615c..6c11c7af5157 100644
-> --- a/fs/overlayfs/inode.c
-> +++ b/fs/overlayfs/inode.c
-> @@ -61,7 +61,7 @@ int ovl_setattr(struct dentry *dentry, struct iattr *attr)
->                 inode_lock(upperdentry->d_inode);
->                 old_cred = ovl_override_creds(dentry->d_sb);
->                 err = notify_change(upperdentry, attr, NULL);
-> -               revert_creds(old_cred);
-> +               ovl_revert_creds(old_cred);
->                 if (!err)
->                         ovl_copyattr(upperdentry->d_inode, dentry->d_inode);
->                 inode_unlock(upperdentry->d_inode);
-> @@ -257,7 +257,7 @@ int ovl_getattr(const struct path *path, struct kstat *stat,
->                 stat->nlink = dentry->d_inode->i_nlink;
->
->  out:
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         return err;
->  }
-> @@ -291,7 +291,7 @@ int ovl_permission(struct inode *inode, int mask)
->                 mask |= MAY_READ;
->         }
->         err = inode_permission(realinode, mask);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         return err;
->  }
-> @@ -308,7 +308,7 @@ static const char *ovl_get_link(struct dentry *dentry,
->
->         old_cred = ovl_override_creds(dentry->d_sb);
->         p = vfs_get_link(ovl_dentry_real(dentry), done);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->         return p;
->  }
->
-> @@ -351,7 +351,7 @@ int ovl_xattr_set(struct dentry *dentry, struct inode *inode, const char *name,
->                 WARN_ON(flags != XATTR_REPLACE);
->                 err = vfs_removexattr(realdentry, name);
->         }
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         /* copy c/mtime */
->         ovl_copyattr(d_inode(realdentry), inode);
-> @@ -387,7 +387,7 @@ int ovl_xattr_get(struct dentry *dentry, struct inode *inode, const char *name,
->
->         old_cred = ovl_override_creds(dentry->d_sb);
->         res = vfs_getxattr(realdentry, name, value, size);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->         return res;
->  }
->
-> @@ -411,7 +411,7 @@ ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size)
->
->         old_cred = ovl_override_creds(dentry->d_sb);
->         res = vfs_listxattr(realdentry, list, size);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->         if (res <= 0 || size == 0)
->                 return res;
->
-> @@ -446,7 +446,7 @@ struct posix_acl *ovl_get_acl(struct inode *inode, int type)
->
->         old_cred = ovl_override_creds(inode->i_sb);
->         acl = get_acl(realinode, type);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         return acl;
->  }
-> @@ -484,7 +484,7 @@ static int ovl_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
->                 filemap_write_and_wait(realinode->i_mapping);
->
->         err = realinode->i_op->fiemap(realinode, fieinfo, start, len);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         return err;
->  }
-> diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
-> index fb6c0cd7b65f..12627018b00a 100644
-> --- a/fs/overlayfs/namei.c
-> +++ b/fs/overlayfs/namei.c
-> @@ -1079,7 +1079,7 @@ struct dentry *ovl_lookup(struct inode *dir, struct dentry *dentry,
->                         goto out_free_oe;
->         }
->
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->         if (origin_path) {
->                 dput(origin_path->dentry);
->                 kfree(origin_path);
-> @@ -1106,7 +1106,7 @@ struct dentry *ovl_lookup(struct inode *dir, struct dentry *dentry,
->         kfree(upperredirect);
->  out:
->         kfree(d.redirect);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->         return ERR_PTR(err);
->  }
->
-> @@ -1160,7 +1160,7 @@ bool ovl_lower_positive(struct dentry *dentry)
->                         dput(this);
->                 }
->         }
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         return positive;
->  }
-> diff --git a/fs/overlayfs/overlayfs.h b/fs/overlayfs/overlayfs.h
-> index 82574684a9b6..cdbdb533d3bd 100644
-> --- a/fs/overlayfs/overlayfs.h
-> +++ b/fs/overlayfs/overlayfs.h
-> @@ -205,6 +205,7 @@ int ovl_want_write(struct dentry *dentry);
->  void ovl_drop_write(struct dentry *dentry);
->  struct dentry *ovl_workdir(struct dentry *dentry);
->  const struct cred *ovl_override_creds(struct super_block *sb);
-> +void ovl_revert_creds(const struct cred *oldcred);
->  ssize_t ovl_vfs_getxattr(struct dentry *dentry, const char *name, void *buf,
->                          size_t size);
->  struct super_block *ovl_same_sb(struct super_block *sb);
-> diff --git a/fs/overlayfs/ovl_entry.h b/fs/overlayfs/ovl_entry.h
-> index 28a2d12a1029..2637c5aadf7f 100644
-> --- a/fs/overlayfs/ovl_entry.h
-> +++ b/fs/overlayfs/ovl_entry.h
-> @@ -17,6 +17,7 @@ struct ovl_config {
->         bool nfs_export;
->         int xino;
->         bool metacopy;
-> +       bool override_creds;
->  };
->
->  struct ovl_sb {
-> diff --git a/fs/overlayfs/readdir.c b/fs/overlayfs/readdir.c
-> index 47a91c9733a5..f31ef39e5afa 100644
-> --- a/fs/overlayfs/readdir.c
-> +++ b/fs/overlayfs/readdir.c
-> @@ -286,7 +286,7 @@ static int ovl_check_whiteouts(struct dentry *dir, struct ovl_readdir_data *rdd)
->                 }
->                 inode_unlock(dir->d_inode);
->         }
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->
->         return err;
->  }
-> @@ -918,7 +918,7 @@ int ovl_check_empty_dir(struct dentry *dentry, struct list_head *list)
->
->         old_cred = ovl_override_creds(dentry->d_sb);
->         err = ovl_dir_read_merged(dentry, list, &root);
-> -       revert_creds(old_cred);
-> +       ovl_revert_creds(old_cred);
->         if (err)
->                 return err;
->
-> diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-> index 82e1130de206..c2ddce5d488c 100644
-> --- a/fs/overlayfs/super.c
-> +++ b/fs/overlayfs/super.c
-> @@ -53,6 +53,11 @@ module_param_named(xino_auto, ovl_xino_auto_def, bool, 0644);
->  MODULE_PARM_DESC(xino_auto,
->                  "Auto enable xino feature");
->
-> +static bool __read_mostly ovl_override_creds_def = true;
-> +module_param_named(override_creds, ovl_override_creds_def, bool, 0644);
-> +MODULE_PARM_DESC(ovl_override_creds_def,
-> +                "Use mounter's credentials for accesses");
-> +
->  static void ovl_entry_stack_free(struct ovl_entry *oe)
->  {
->         unsigned int i;
-> @@ -362,6 +367,9 @@ static int ovl_show_options(struct seq_file *m, struct dentry *dentry)
->         if (ofs->config.metacopy != ovl_metacopy_def)
->                 seq_printf(m, ",metacopy=%s",
->                            ofs->config.metacopy ? "on" : "off");
-> +       if (ofs->config.override_creds != ovl_override_creds_def)
-> +               seq_show_option(m, "override_creds",
-> +                               ofs->config.override_creds ? "on" : "off");
->         return 0;
->  }
->
-> @@ -402,6 +410,8 @@ enum {
->         OPT_XINO_AUTO,
->         OPT_METACOPY_ON,
->         OPT_METACOPY_OFF,
-> +       OPT_OVERRIDE_CREDS_ON,
-> +       OPT_OVERRIDE_CREDS_OFF,
->         OPT_ERR,
->  };
->
-> @@ -420,6 +430,8 @@ static const match_table_t ovl_tokens = {
->         {OPT_XINO_AUTO,                 "xino=auto"},
->         {OPT_METACOPY_ON,               "metacopy=on"},
->         {OPT_METACOPY_OFF,              "metacopy=off"},
-> +       {OPT_OVERRIDE_CREDS_ON,         "override_creds=on"},
-> +       {OPT_OVERRIDE_CREDS_OFF,        "override_creds=off"},
->         {OPT_ERR,                       NULL}
->  };
->
-> @@ -478,6 +490,7 @@ static int ovl_parse_opt(char *opt, struct ovl_config *config)
->         config->redirect_mode = kstrdup(ovl_redirect_mode_def(), GFP_KERNEL);
->         if (!config->redirect_mode)
->                 return -ENOMEM;
-> +       config->override_creds = ovl_override_creds_def;
->
->         while ((p = ovl_next_opt(&opt)) != NULL) {
->                 int token;
-> @@ -558,6 +571,14 @@ static int ovl_parse_opt(char *opt, struct ovl_config *config)
->                         config->metacopy = false;
->                         break;
->
-> +               case OPT_OVERRIDE_CREDS_ON:
-> +                       config->override_creds = true;
-> +                       break;
-> +
-> +               case OPT_OVERRIDE_CREDS_OFF:
-> +                       config->override_creds = false;
-> +                       break;
-> +
->                 default:
->                         pr_err("overlayfs: unrecognized mount option \"%s\" or missing value\n", p);
->                         return -EINVAL;
-> @@ -1690,7 +1711,6 @@ static int ovl_fill_super(struct super_block *sb, void *data, int silent)
->                        ovl_dentry_lower(root_dentry), NULL);
->
->         sb->s_root = root_dentry;
-> -
->         return 0;
->
->  out_free_oe:
-> diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
-> index 672459c3cff7..320aad599bcd 100644
-> --- a/fs/overlayfs/util.c
-> +++ b/fs/overlayfs/util.c
-> @@ -37,9 +37,17 @@ const struct cred *ovl_override_creds(struct super_block *sb)
->  {
->         struct ovl_fs *ofs = sb->s_fs_info;
->
-> +       if (!ofs->config.override_creds)
-> +               return NULL;
->         return override_creds(ofs->creator_cred);
->  }
->
-> +void ovl_revert_creds(const struct cred *old_cred)
-> +{
-> +       if (old_cred)
-> +               revert_creds(old_cred);
-> +}
-> +
+Hi,
+I have added a few things inline in Greg's message, mainly regarding the 
+bleeps and cursor_time.
+FWIW, Willem
 
-Mark,
+On Wed, 24 Jul 2019, Gregory Nowak wrote:
 
-Not sure if you have seen my "shutdown" patches:
-https://lore.kernel.org/linux-fsdevel/20190715133839.9878-4-amir73il@gmail.com/
+> [The e-mail server of the sender could not be verified (SPF Record)]
+>
+> On Fri, Jul 12, 2019 at 05:46:23PM -0700, Gregory Nowak wrote:
+>> On Fri, Jul 12, 2019 at 11:23:19AM +0200, Samuel Thibault wrote:
+>>> Hello,
+>>>
+>>> To readers of the linux-speakup: could you help on this so we can get
+>>> Speakup in mainline?  Neither Okash or I completely know what user
+>>> consequences the files in /sys/accessibility/speakup/ have, so could
+>>> people give brief explanations for each file (something like 3-6 lines
+>>> of explanation)?
+>>
+>> I have a recollection of documenting most of this on the speakup list
+>> in response to a similar query a number of years ago. Unfortunately,
+>> the speakup mailing list archives aren't easily searchable, and I
+>> don't have a local copy of that mail.
+>>
+>> Kirk, doing grep with a few of the file names in
+>> /sys/accessibility/speakup against the list's mbox file archive should
+>> find that message if it's in fact there. If you can please find it,
+>> and post the date when it was sent, we can provide a URL to that
+>> thread as a starting point. If my recollection is wrong, and such a
+>> message isn't in the archives, I'll write up what I know about.
+>
+> I've located the message I was thinking of in the archives, but that
+> describes some speakup key commands, not
+> /sys/accessibility/speakup. So, here's what I know, and hopefully
+> someone else can fill in the rest.
+>
+> attrib_bleep
+> Beeps the PC speaker when there is an attribute change such as
+> foreground or background color when using speakup review commands. One
+> = on, zero = off. I'm not currently at a machine with a working PC
+> speaker, so can't test this right now.
+>
+> bell_pos
+> As far as I know, this works much like a typewriter bell. If for
+> example 72 is echoed to bell_pos, it will beep the PC speaker when
+> typing on a line past character 72. Again, no PC speaker at the moment
+> here, so can't actually test this.
+Yes, it works as you  say, a verry short beep happens at the echoed 
+position.
+>
+> bleeps
+> Not 100% sure, but I believe this controls whether one hears beeps
+> through the PC speaker when using speakup's review commands. If no one
+> jumps in on this, I'll experiment when at a machine with a working PC
+> speaker, and will reply back with details.
+>
+Yes, when 0 is echoed to /sys/accessibility/speakup/bleeps, review beeps 
+stop. the default seem to be 3, so I suppose it controls more than just on 
+or off. When set to zero, the bell still sounds when, e.g. in a terminal 
+at a bash prompt, one press backspace.
+  > bleep_time
+> Again, not 100% sure, but I believe this controls the duration of the
+> PC speaker beeps speakup produces. I'm not sure of the units this is
+> in either, possibly jiffys. I'll come back with more details on this
+> one if no one else does.
+Yes, it seems to control the time as you say, verry small units though.
+It was 30 and I could set it to 180, but  not 360. At 180, the bleeps are 
+clearly a little longer, but not much.
 
-I am fine with this patch, but would like to request that you add @sb arg
-to the ovl_revert_creds() helper, so it is more useful for other things in the
-future that scope the underlying layers access (like shutdown).
+>
+> cursor_time
+> Don't know.
+As far as I know, one can set cursor_time to a higher value when working 
+e.g. over a slow connection.
+When a connection is very slow, with the default setting, when moving with 
+the arrows, or backspacing etc. speakup says the incorrect characters.
+I am not 100% sure though, but seem to recall having used such a setting 
+in the past when working over dialup.
 
-Thanks,
-Amir.
+>
+> delimiters
+> Don't know. I've tried echoing various characters to this and looking
+> for differences when reviewing the screen, but no luck.
+>
+> ex_num
+> Don't know.
+>
+> key_echo
+> Controls if speakup speaks keys when they are typed. One = on, zero =
+> off or don't echo keys.
+>
+> keymap
+> I believe this is the currently active kernel keymap. I'm not sure of
+> the format, probably what dumpkeys(1) and showkey(1) use. Echoing
+> different values here should allow for remapping speakup's review
+> commands besides remapping the keyboard as a whole.
+>
+> no_interrupt
+> Controls if typing interrupts output from speakup. With no_interrupt
+> set to zero, typing on the keyboard will interrupt speakup if for
+> example the say screen command is used before the entire screen is
+> read. With no_interrupt set to one, if the say screen command is used,
+> and one then types on the keyboard, speakup will continue to say the
+> whole screen regardless until it finishes.
+>
+> punc_all
+> This is a list of all the punctuation speakup should speak when
+> punc_level is set to four.
+>
+> punc_level
+> Controls the level of punctuation spoken as the screen is displayed,
+> not reviewed. Levels range from zero no punctuation, to four, all
+> punctuation. As far as I can tell, one corresponds to punc_some, two
+> corresponds to punc_most, and three as well as four seem to both
+> correspond to punc_all, though I do stand to be corrected. I am using
+> the soft synthesizer driver, so it is possible that some hardware
+> synthesizers have different levels each corresponding to three and four
+> for punc_level. Also note that if punc_level is set to zero, and
+> key_echo is set to one, typed punctuation is still spoken as it is
+> typed.
+>
+> punc_most
+> This is a list of all the punctuation speakup should speak when
+> punc_level is set to two.
+>
+> punc_some
+> This is a list of all the punctuation speakup should speak when
+> punc_level is set to one.
+>
+> reading_punc
+> Almost the same as punc_level, the differences being that reading_punc controls
+> the level of punctuation when reviewing the screen with speakup's
+> screen review commands. The other difference is that reading_punc set
+> to three speaks punc_all, and reading_punc set to four speaks all
+> punctuation, including spaces.
+>
+> repeats
+> a list of characters speakup repeats. Normally, when there are
+> more than three characters in a row, speakup just reads three of those
+> characters. For example, "......" would be read as dot, dot, dot. If a
+> . is added to the list of characters in repeats, "......" would be
+> read as dot, dot, dot, times six.
+>
+> say_control
+> If set to one, speakup speaks shift, alt and control when those keys are
+> pressed. Perhaps more keys are spoken, but those three are the ones I
+> found. If say_control is set to zero, shift, ctrl, and alt are not
+> spoken when they are pressed.
+>
+> say_word_ctl
+> Don't know.
+>
+> silent
+> Don't know.
+>
+> spell_delay
+> As far as I can tell, this controls how fast a word is spelled when
+> speakup's say word review command is pressed twice quickly to speak
+> the current word being reviewed. Zero just speaks the letters one
+> after another, while values one through four seem to introduce more of
+> a pause between the spelling of each letter by speakup.
+>
+> synth
+> Gets or sets the synthesizer driver currently in use. Reading synth
+> returns the synthesizer driver currently in use. Writing synth
+> switches to the given synthesizer driver, provided it is either built
+> into the kernel, or already loaded as a module.
+>
+> synth_direct
+> Sends whatever is written to synth_direct
+> directly to the speech synthesizer in use, bypassing speakup. This
+> could be used to make the synthesizer speak a string, or to send
+> control sequences to the synthesizer to change how the synthesizer
+> behaves.
+>
+> version
+> Reading version returns the version of speakup, and the version of the
+> synthesizer driver currently in use.
+>
+> Synthesizer Driver Parameters
+> In /sys/accessibility/speakup is a directory corresponding to the
+> synthesizer driver currently in use (E.G) soft for the soft
+> driver. This directory contains files which control the speech
+> synthesizer itself, as opposed to controlling the speakup screen
+> reader. As far as I know, the parameters in this directory have the
+> same names and functions across all supported synthesizers. Also as
+> far as I know, the range of values for freq, pitch, rate, and vol is
+> the same for all supported synthesizers,
+> with the given range being internally mapped by the driver to more or
+> less fit the range of values supported for a given parameter by the
+> individual synthesizer. I will below describe the values and
+> parameters for the soft synthesizer, which I believe is the
+> synthesizer currently most commonly in use.
+>
+> caps_start
+> I believe this is the string that is sent to the synthesizer to cause
+> it to start speaking uppercase letters. For the soft synthesizer and
+> most others, this causes the pitch of the voice to rise above the
+> currently set pitch.
+>
+> caps_stop
+> I believe this is the string sent to the synthesizer to cause it to
+> stop speaking uppercase letters. In the case of the soft synthesizer
+> and most others, this returns the pitch of the voice down to the
+> currently set pitch.
+>
+> delay_time
+> Don't know.
+>
+> direct
+> Controls if punctuation is spoken by speakup, or by the
+> synthesizer. For example, speakup speaks ">" as "greater", while the
+> espeak synthesizer used by the soft driver speaks "greater than". Zero
+> lets speakup speak the punctuation. One lets the synthesizer itself
+> speak punctuation.
+>
+> freq
+> Gets or sets the frequency of the speech synthesizer. Range is 0-9.
+>
+> full_time
+> Don't know.
+>
+> jiffy_delta
+> As far as I know, this controls how many jiffys the kernel gives to
+> the synthesizer. I seem to recall Kirk saying that setting this too
+> high can make a system unstable, or even crash it.
+>
+> pitch
+> Gets or sets the pitch of the synthesizer. The range is 0-9.
+>
+> punct
+> Gets or sets the amount of punctuation spoken by the synthesizer. The
+> range for the soft driver seems to be 0-2. I'm not exactly sure how
+> this relates to speakup's punc_level, or reading_punc
+>
+> rate
+> Gets or sets the rate of the synthesizer. Range is from zero slowest,
+> to nine fastest.
+>
+> tone
+> Gets or sets the tone of the speech synthesizer. The range for the
+> soft driver seems to be 0-2. This seems to make no difference if using
+> espeak and the espeakup connector. I'm not sure even if espeakup
+> supports different tonalities.
+>
+> trigger_time
+> Don't know.
+>
+> voice
+> Gets or sets the voice used by the synthesizer if the synthesizer can
+> speak in more than one voice. The range for the soft driver is
+> 0-7. Note that while espeak supports multiple voices, this parameter
+> will not set the voice when the espeakup connector is used between
+> speakup and espeak.
+>
+> vol
+> Gets or sets the volume of the speech synthesizer. Range is 0-9, with
+> zero being the softest, and nine being the loudest.
+>
+> Additions, clarifications, and corrections are welcome and
+> appreciated.
+>
+> Greg
+>
+>
+> -- 
+> web site: http://www.gregn.net
+> gpg public key: http://www.gregn.net/pubkey.asc
+> skype: gregn1
+> (authorization required, add me to your contacts list first)
+> If we haven't been in touch before, e-mail me before adding me to your contacts.
+>
+> --
+> Free domains: http://www.eu.org/ or mail dns-manager@EU.org
+> _______________________________________________
+> Speakup mailing list
+> Speakup@linux-speakup.org
+> http://linux-speakup.org/cgi-bin/mailman/listinfo/speakup
+>
