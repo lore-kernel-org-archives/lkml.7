@@ -2,141 +2,156 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B1DC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8798C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E504721901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:55:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aWkhP88S"
+	by mail.kernel.org (Postfix) with ESMTP id 8AFB5204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:56:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfGYSzi (ORCPT
+        id S1726447AbfGYS4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 14:55:38 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33368 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfGYSzi (ORCPT
+        Thu, 25 Jul 2019 14:56:21 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:49977 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfGYS4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 14:55:38 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6PItKrR068465;
-        Thu, 25 Jul 2019 13:55:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564080920;
-        bh=YdD4zfwHqas8CGYaDHj00S3Kucs0PertaKix+qVtXhs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=aWkhP88SJ+JihgtMm+qXvbf7KClTa71shnT1YZAIw2q4EWJRI4ZMnCY1gEzuQ3DXT
-         mhSEWSyeceD8dvlPBHscPTGZRkI9wQz245CDz311a/fxMR8qeAM1c8f4zZRvKafssZ
-         dkYO6HhX2MyLkLRlpEJTvjE7Jp8CMxM4fDUWKN1s=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6PItKaw062605
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 25 Jul 2019 13:55:20 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 25
- Jul 2019 13:55:20 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 25 Jul 2019 13:55:20 -0500
-Received: from [10.250.86.29] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6PItJWc043305;
-        Thu, 25 Jul 2019 13:55:19 -0500
-Subject: Re: [PATCH v7 3/5] dma-buf: heaps: Add system heap to dmabuf heaps
-To:     Christoph Hellwig <hch@infradead.org>,
-        John Stultz <john.stultz@linaro.org>
-CC:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        <dri-devel@lists.freedesktop.org>
-References: <20190724003656.59780-1-john.stultz@linaro.org>
- <20190724003656.59780-4-john.stultz@linaro.org>
- <20190725130204.GG20286@infradead.org>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <e64aae4c-ec54-2507-cc78-a27d5093f793@ti.com>
-Date:   Thu, 25 Jul 2019 14:55:18 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 14:56:21 -0400
+X-Originating-IP: 93.29.109.196
+Received: from localhost.localdomain (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 5372E40007;
+        Thu, 25 Jul 2019 18:56:14 +0000 (UTC)
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v7 0/4] HEVC/H.265 stateless support for V4L2 and Cedrus
+Date:   Thu, 25 Jul 2019 20:55:58 +0200
+Message-Id: <20190725185602.22522-1-paul.kocialkowski@bootlin.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20190725130204.GG20286@infradead.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/25/19 9:02 AM, Christoph Hellwig wrote:
->> +struct system_heap {
->> +	struct dma_heap *heap;
->> +} sys_heap;
-> 
-> It seems like this structure could be removed and if would improve
-> the code flow.
-> 
->> +static struct dma_heap_ops system_heap_ops = {
->> +	.allocate = system_heap_allocate,
->> +};
->> +
->> +static int system_heap_create(void)
->> +{
->> +	struct dma_heap_export_info exp_info;
->> +	int ret = 0;
->> +
->> +	exp_info.name = "system_heap";
->> +	exp_info.ops = &system_heap_ops;
->> +	exp_info.priv = &sys_heap;
->> +
->> +	sys_heap.heap = dma_heap_add(&exp_info);
->> +	if (IS_ERR(sys_heap.heap))
->> +		ret = PTR_ERR(sys_heap.heap);
->> +
->> +	return ret;
-> 
-> The data structures here seem a little odd.  I think you want to:
-> 
->  - mark all dma_heap_ops instanes consts, as we generally do that for
->    all structures containing function pointers
->  - move the name into dma_heap_ops.
->  - remove the dma_heap_export_info structure, which is a bit pointless
+HEVC/H.265 stateless support for V4L2 and Cedrus
 
+This is early support for HEVC/H.265 stateless decoding in V4L2,
+including both definitions and driver support for the Cedrus VPU
+driver, which concerns Allwinner devices.
 
-The idea here is to keep the struct dma_heap as an opaque pointer for
-everyone but the core framework. No one should be touching the guts of
-that struct (would be 'private' if we were using C++ but this is the
-best we can do with C), exposing it to the exporters or the importers
-will break this isolation.
+A specific pixel format is introduced for the HEVC slice format and
+controls are provided to pass the bitstream metadata to the decoder.
+Some bitstream extensions are intentionally not supported at this point.
 
-This export style also matches DMA-BUF: you pass in a filled out _export
-struct and it passes back a dma_buf handle. DMA-BUF unfortunately made
-the internals of that struct public so they are widely used directly
-(and abused in some cases) and that prevents the internals from being
-easily refactored when needed.
+Since this is the first proposal for stateless HEVC/H.265 support in
+V4L2, reviews and comments about the controls definitions are
+particularly welcome.
 
-Andrew
+On the Cedrus side, the H.265 implementation covers frame pictures
+with both uni-directional and bi-direction prediction modes (P/B
+slices). Field pictures (interleaved), scaling lists and 10-bit output
+are not supported at this point.
 
+Changes since v6:
+* Rebased on latest media tree from Hans;
+* Reordered some fields to avoid holes and multi-padding;
+* Updated the documentation.
 
->  - don't bother setting a private data, as you don't need it.
->    If other heaps need private data I'd suggest to switch to embedding
->    the dma_heap structure into containing structure insted so that you
->    can use container_of to get at it.
->  - also why is the free callback passed as a callback rather than
->    kept in dma_heap_ops, next to the paired alloc one?
-> 
+Changes since v5:
+* Rebased atop latest next media tree;
+* Moved to flags instead of u8 fields;
+* Added padding to ensure 64-bit alignment
+  (tested with GDB on 32 and 64-bit architectures);
+* Reworked cedrus H.265 driver support a bit for flags;
+* Split off codec-specific control validation and init;
+* Added HEVC controls fields cleanup at std_validate to allow reliable
+  control comparison with memcmp;
+* Fixed various misc reported mistakes.
+
+Changes since v4:
+* Rebased atop latest H.254 series.
+
+Changes since v3:
+* Updated commit messages;
+* Updated CID base to avoid conflicts;
+* Used cpu_to_le32 for packed le32 data;
+* Fixed misc minor issues in the drive code;
+* Made it clear in the docs that the API will evolve;
+* Made the pixfmt private and split commits about it.
+
+Changes since v2:
+* Moved headers to non-public API;
+* Added H265 capability for A64 and H5;
+* Moved docs to ext-ctrls-codec.rst;
+* Mentionned sections of the spec in the docs;
+* Added padding to control structures for 32-bit alignment;
+* Made write function use void/size in bytes;
+* Reduced the number of arguments to helpers when possible;
+* Removed PHYS_OFFSET since we already set PFN_OFFSET;
+* Added comments where suggested;
+* Moved to timestamp for references instead of index;
+* Fixed some style issues reported by checkpatch.
+
+Changes since v1:
+* Added a H.265 capability to whitelist relevant platforms;
+* Switched over to tags instead of buffer indices in the DPB
+* Declared variable in their reduced scope as suggested;
+* Added the H.265/HEVC spec to the biblio;
+* Used in-doc references to the spec and the required APIs;
+* Removed debugging leftovers.
+
+Cheers!
+
+Paul Kocialkowski (4):
+  media: v4l2-ctrl: Add a comment on why we zero out compound controls
+    fields
+  media: v4l: Add definitions for the HEVC slice controls
+  media: pixfmt: Document the HEVC slice pixel format
+  media: cedrus: Add HEVC/H.265 decoding support
+
+ Documentation/media/uapi/v4l/biblio.rst       |   9 +
+ .../media/uapi/v4l/ext-ctrls-codec.rst        | 486 +++++++++++++-
+ .../media/uapi/v4l/pixfmt-compressed.rst      |  21 +
+ .../media/uapi/v4l/vidioc-queryctrl.rst       |  18 +
+ .../media/videodev2.h.rst.exceptions          |   3 +
+ drivers/media/v4l2-core/v4l2-ctrls.c          |  93 +++
+ drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
+ drivers/staging/media/sunxi/cedrus/Makefile   |   2 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.c   |  31 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.h   |  18 +
+ .../staging/media/sunxi/cedrus/cedrus_dec.c   |   9 +
+ .../staging/media/sunxi/cedrus/cedrus_h265.c  | 616 ++++++++++++++++++
+ .../staging/media/sunxi/cedrus/cedrus_hw.c    |   4 +
+ .../staging/media/sunxi/cedrus/cedrus_regs.h  | 271 ++++++++
+ .../staging/media/sunxi/cedrus/cedrus_video.c |  10 +
+ include/media/hevc-ctrls.h                    | 198 ++++++
+ include/media/v4l2-ctrls.h                    |   7 +
+ 17 files changed, 1789 insertions(+), 8 deletions(-)
+ create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+ create mode 100644 include/media/hevc-ctrls.h
+
+-- 
+2.22.0
+
