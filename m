@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A02C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FD1C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79CFA21901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B809C21901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:08:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391637AbfGYLIJ (ORCPT
+        id S2391648AbfGYLIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:08:09 -0400
-Received: from shell.v3.sk ([90.176.6.54]:37747 "EHLO shell.v3.sk"
+        Thu, 25 Jul 2019 07:08:11 -0400
+Received: from shell.v3.sk ([90.176.6.54]:37740 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391547AbfGYLHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2391545AbfGYLHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jul 2019 07:07:52 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id B3546D4F43;
-        Thu, 25 Jul 2019 13:07:50 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id 16C57D4F3E;
+        Thu, 25 Jul 2019 13:07:49 +0200 (CEST)
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id k3u98JEmK3Kv; Thu, 25 Jul 2019 13:07:37 +0200 (CEST)
+        with ESMTP id xl6BCVRBb8JB; Thu, 25 Jul 2019 13:07:38 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id DE16AD4F49;
-        Thu, 25 Jul 2019 13:07:36 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id 21677D4F4A;
+        Thu, 25 Jul 2019 13:07:37 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at zimbra.v3.sk
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id lo4HyBrm9MMu; Thu, 25 Jul 2019 13:07:34 +0200 (CEST)
+        with ESMTP id dAnTxLggJr3w; Thu, 25 Jul 2019 13:07:34 +0200 (CEST)
 Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 1CE3DD4F3D;
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 4B460D4F3E;
         Thu, 25 Jul 2019 13:07:34 +0200 (CEST)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Olof Johansson <olof@lixom.net>
@@ -41,9 +41,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 2/5] ARM: dts: mmp2: fix the SPI nodes
-Date:   Thu, 25 Jul 2019 13:07:28 +0200
-Message-Id: <20190725110731.3294411-3-lkundrak@v3.sk>
+Subject: [PATCH 3/5] ARM: dts: mmp2: rename the USB PHY node
+Date:   Thu, 25 Jul 2019 13:07:29 +0200
+Message-Id: <20190725110731.3294411-4-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190725110731.3294411-1-lkundrak@v3.sk>
 References: <20190725110731.3294411-1-lkundrak@v3.sk>
@@ -54,68 +54,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SPI bus has a single address cell and not size cells.
-
-Also, dtc thinks the SPI nodes are preferrably called "spi" and it is
-right to think so.
+This device is not an OTG phy, it's a regular USB HS phy. Follow the
+generic node name recommendation, and rename it to "usb-phy".
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/boot/dts/mmp2.dtsi | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/mmp2.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index 50b6c38b39cc3..e64639ce57a91 100644
+index e64639ce57a91..21432cb9143f7 100644
 --- a/arch/arm/boot/dts/mmp2.dtsi
 +++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -346,35 +346,43 @@
- 				status =3D "disabled";
+@@ -117,7 +117,7 @@
+ 				mrvl,intc-nr-irqs =3D <2>;
  			};
 =20
--			ssp1: ssp@d4035000 {
-+			ssp1: spi@d4035000 {
- 				compatible =3D "marvell,mmp2-ssp";
- 				reg =3D <0xd4035000 0x1000>;
- 				clocks =3D <&soc_clocks MMP2_CLK_SSP0>;
- 				interrupts =3D <0>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
+-			usb_otg_phy0: usb-otg-phy@d4207000 {
++			usb_phy0: usb-phy@d4207000 {
+ 				compatible =3D "marvell,mmp2-usb-phy";
+ 				reg =3D <0xd4207000 0x40>;
+ 				#phy-cells =3D <0>;
+@@ -130,7 +130,7 @@
+ 				interrupts =3D <44>;
+ 				clocks =3D <&soc_clocks MMP2_CLK_USB>;
+ 				clock-names =3D "USBCLK";
+-				phys =3D <&usb_otg_phy0>;
++				phys =3D <&usb_phy0>;
+ 				phy-names =3D "usb";
  				status =3D "disabled";
  			};
-=20
--			ssp2: ssp@d4036000 {
-+			ssp2: spi@d4036000 {
- 				compatible =3D "marvell,mmp2-ssp";
- 				reg =3D <0xd4036000 0x1000>;
- 				clocks =3D <&soc_clocks MMP2_CLK_SSP1>;
- 				interrupts =3D <1>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
- 				status =3D "disabled";
- 			};
-=20
--			ssp3: ssp@d4037000 {
-+			ssp3: spi@d4037000 {
- 				compatible =3D "marvell,mmp2-ssp";
- 				reg =3D <0xd4037000 0x1000>;
- 				clocks =3D <&soc_clocks MMP2_CLK_SSP2>;
- 				interrupts =3D <20>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
- 				status =3D "disabled";
- 			};
-=20
--			ssp4: ssp@d4039000 {
-+			ssp4: spi@d4039000 {
- 				compatible =3D "marvell,mmp2-ssp";
- 				reg =3D <0xd4039000 0x1000>;
- 				clocks =3D <&soc_clocks MMP2_CLK_SSP3>;
- 				interrupts =3D <21>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
- 				status =3D "disabled";
- 			};
- 		};
 --=20
 2.21.0
 
