@@ -2,66 +2,101 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF94C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4234C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E54B2238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:08:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="WQ3X6wSt"
+	by mail.kernel.org (Postfix) with ESMTP id C05782238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:08:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729939AbfGYNIM (ORCPT
+        id S1729957AbfGYNIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:08:12 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:37050 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726802AbfGYNIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:08:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Um9HOmZgnXVVQVKGE6OESVzPLL37//DOWNy4+nthSFo=; b=WQ3X6wStXGAfOB1hhX7gCcT2xJ
-        B5zI5SsXb9PX0pepOt1V2YcDWwPD23vS/6D3Qsy7yivWWUVvmhfK0Dbpka5u9kWZtDUmIsph3SDb+
-        rTYakGPXpEZwjxSzn+b2JmkpX4XiZ62nrl6PUwxDrlPxdVlHe2YDzJGkMVfu6BM8IrW0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hqdTb-0005nm-Q4; Thu, 25 Jul 2019 15:08:07 +0200
-Date:   Thu, 25 Jul 2019 15:08:07 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     liuyonglong <liuyonglong@huawei.com>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
-        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
-        shiju.jose@huawei.com
-Subject: Re: [PATCH net] net: hns: fix LED configuration for marvell phy
-Message-ID: <20190725130807.GB21952@lunn.ch>
-References: <1563775152-21369-1-git-send-email-liuyonglong@huawei.com>
- <20190722.181906.2225538844348045066.davem@davemloft.net>
- <72061222-411f-a58c-5873-ad873394cdb5@huawei.com>
- <20190725042829.GB14276@lunn.ch>
- <8017d9ff-2991-f94f-e611-4d1bac12e93b@huawei.com>
+        Thu, 25 Jul 2019 09:08:49 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:45235 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726282AbfGYNIt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 09:08:49 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-32-vGb2MjMAN-6m5tWQ8A3mXQ-1; Thu, 25 Jul 2019 14:08:46 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 25 Jul 2019 14:08:45 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 25 Jul 2019 14:08:45 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Numfor Mbiziwo-Tiapo' <nums@google.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "songliubraving@fb.com" <songliubraving@fb.com>,
+        "mbd@fb.com" <mbd@fb.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "irogers@google.com" <irogers@google.com>,
+        "eranian@google.com" <eranian@google.com>
+Subject: RE: [PATCH 1/3] Fix backward-ring-buffer.c format-truncation error
+Thread-Topic: [PATCH 1/3] Fix backward-ring-buffer.c format-truncation error
+Thread-Index: AQHVQk/6xV2ERLHHO0iFjViscX/1mKbbTykw
+Date:   Thu, 25 Jul 2019 13:08:45 +0000
+Message-ID: <8ec2cbb1bb2a4aceab09ca685255119a@AcuMS.aculab.com>
+References: <20190724184512.162887-1-nums@google.com>
+ <20190724184512.162887-2-nums@google.com>
+In-Reply-To: <20190724184512.162887-2-nums@google.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8017d9ff-2991-f94f-e611-4d1bac12e93b@huawei.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-MC-Unique: vGb2MjMAN-6m5tWQ8A3mXQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> You are discussing about the DT configuration, is Matthias Kaehlcke's work
-> also provide a generic way to configure PHY LEDS using ACPI?
+RnJvbTogTnVtZm9yIE1iaXppd28tVGlhcG8NCj4gU2VudDogMjQgSnVseSAyMDE5IDE5OjQ1DQo+
+DQo+IFBlcmYgZG9lcyBub3QgYnVpbGQgd2l0aCB0aGUgdWJzYW4gKHVuZGVmaW5lZCBiZWhhdmlv
+ciBzYW5pdGl6ZXIpDQo+IGFuZCB0aGVyZSBpcyBhbiBlcnJvciB0aGF0IHNheXM6DQo+IA0KPiB0
+ZXN0cy9iYWNrd2FyZC1yaW5nLWJ1ZmZlci5jOjIzOjQ1OiBlcnJvcjog4oCYJWTigJkgZGlyZWN0
+aXZlIG91dHB1dA0KPiBtYXkgYmUgdHJ1bmNhdGVkIHdyaXRpbmcgYmV0d2VlbiAxIGFuZCAxMCBi
+eXRlcyBpbnRvIGEgcmVnaW9uIG9mDQo+IHNpemUgOCBbLVdlcnJvcj1mb3JtYXQtdHJ1bmNhdGlv
+bj1dDQo+ICAgIHNucHJpbnRmKHByb2NfbmFtZSwgc2l6ZW9mKHByb2NfbmFtZSksICJwOiVkXG4i
+LCBpKTsNCj4gDQo+IFRoaXMgY2FuIGJlIHJlcHJvZHVjZWQgYnkgcnVubmluZyAoZnJvbSB0aGUg
+dGlwIGRpcmVjdG9yeSk6DQo+IG1ha2UgLUMgdG9vbHMvcGVyZiBVU0VfQ0xBTkc9MSBFWFRSQV9D
+RkxBR1M9Ii1mc2FuaXRpemU9dW5kZWZpbmVkIg0KPiANCj4gVGggZXJyb3Igb2NjdXJzIGJlY2F1
+c2UgdGhleSBhcmUgd3JpdGluZyB0byB0aGUgMTAgYnl0ZSBidWZmZXIgLSB0aGUNCj4gaW5kZXgg
+J2knIG9mIHRoZSBmb3IgbG9vcCBhbmQgdGhlIDIgYnl0ZSBoYXJkY29kZWQgc3RyaW5nLiBJZiBz
+b21laG93ICdpJw0KPiB3YXMgZ3JlYXRlciB0aGFuIDggYnl0ZXMgKDEwIC0gMiksIHRoZW4gdGhl
+IHNucHJpbnRmIGZ1bmN0aW9uIHdvdWxkDQo+IHRydW5jYXRlIHRoZSBzdHJpbmcuIEluY3JlYXNp
+bmcgdGhlIHNpemUgb2YgdGhlIGJ1ZmZlciBmaXhlcyB0aGUgZXJyb3IuDQoNCkdldCB0aGUgY29t
+cGlsZXIgZml4ZWQgc28gdGhhdCBpdCBrbm93cyB0aGUgZG9tYWluIG9mIHRoZSB2YWx1ZSBjYW4g
+bmV2ZXINCmV4Y2VlZCB0aGUgY29tcGlsZS10aW1lIGNvbnN0YW50IE5SX0lURVJTLg0KDQo+IFNp
+Z25lZC1vZmYtYnk6IE51bWZvciBNYml6aXdvLVRpYXBvIDxudW1zQGdvb2dsZS5jb20+DQo+IC0t
+LQ0KPiAgdG9vbHMvcGVyZi90ZXN0cy9iYWNrd2FyZC1yaW5nLWJ1ZmZlci5jIHwgMiArLQ0KPiAg
+MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZm
+IC0tZ2l0IGEvdG9vbHMvcGVyZi90ZXN0cy9iYWNrd2FyZC1yaW5nLWJ1ZmZlci5jIGIvdG9vbHMv
+cGVyZi90ZXN0cy9iYWNrd2FyZC1yaW5nLWJ1ZmZlci5jDQo+IGluZGV4IDZkNTk4Y2MwNzFhZS4u
+MWE5YzNiZWNmNWZmIDEwMDY0NA0KPiAtLS0gYS90b29scy9wZXJmL3Rlc3RzL2JhY2t3YXJkLXJp
+bmctYnVmZmVyLmMNCj4gKysrIGIvdG9vbHMvcGVyZi90ZXN0cy9iYWNrd2FyZC1yaW5nLWJ1ZmZl
+ci5jDQo+IEBAIC0xOCw3ICsxOCw3IEBAIHN0YXRpYyB2b2lkIHRlc3RjYXNlKHZvaWQpDQo+ICAJ
+aW50IGk7DQo+IA0KPiAgCWZvciAoaSA9IDA7IGkgPCBOUl9JVEVSUzsgaSsrKSB7DQo+IC0JCWNo
+YXIgcHJvY19uYW1lWzEwXTsNCj4gKwkJY2hhciBwcm9jX25hbWVbMTVdOw0KDQpBdCBsZWFzdCB1
+c2UgWzE2XQ0KDQo+IA0KPiAgCQlzbnByaW50Zihwcm9jX25hbWUsIHNpemVvZihwcm9jX25hbWUp
+LCAicDolZFxuIiwgaSk7DQo+ICAJCXByY3RsKFBSX1NFVF9OQU1FLCBwcm9jX25hbWUpOw0KPiAt
+LQ0KPiAyLjIyLjAuNjU3Lmc5NjBlOTJkMjRmLWdvb2cNCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVy
+ZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5
+bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
-In general, you should be able to use the same properties in ACPI as
-DT. If the device_property_read_X() API is used, it will try both ACPI
-and OF to get the property.
-
-    Andrew
