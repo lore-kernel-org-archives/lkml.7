@@ -2,149 +2,85 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16457C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D322BC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E766E21901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E55921901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:30:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKteIHvN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387706AbfGYOaT (ORCPT
+        id S2388361AbfGYOa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:30:19 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:42316 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727167AbfGYOaQ (ORCPT
+        Thu, 25 Jul 2019 10:30:28 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43201 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbfGYOa1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:30:16 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0TXn-jI9_1564065003;
-Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TXn-jI9_1564065003)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 25 Jul 2019 22:30:11 +0800
-Date:   Thu, 25 Jul 2019 22:30:03 +0800
-From:   Aaron Lu <aaron.lu@linux.alibaba.com>
-To:     Aubrey Li <aubrey.intel@gmail.com>
-Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-Message-ID: <20190725143003.GA992@aaronlu>
-References: <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com>
- <20190531210816.GA24027@sinkpad>
- <20190606152637.GA5703@sinkpad>
- <20190612163345.GB26997@sinkpad>
- <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com>
- <20190613032246.GA17752@sinkpad>
- <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
- <20190619183302.GA6775@sinkpad>
- <20190718100714.GA469@aaronlu>
- <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
+        Thu, 25 Jul 2019 10:30:27 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w79so37828422oif.10;
+        Thu, 25 Jul 2019 07:30:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pHJuI0wfvLr45CJw/k6BParVKLuhWxWvzs6WoKiu60g=;
+        b=NKteIHvNZvctxJ61hGchvTbcOO2iicgFxCeETIGC78Gt9DZ4G+UeyNfAmQjFvlaTtc
+         ClUT0btd2oT9sGhYe6mql72tZYnzXwOcOzO0d8X7nf+c1aTE3/expGEGovRbPVfCFEDd
+         DBBOYo/WpMnrov5HRjPXZN7DwHQuGlg6MCaA51vbG0vGFBSj9FXbMnLXLIQ/txUgrKle
+         UUNkgKuUQDEqB9jiQNLnCz9XR3JLjPhGGeBHEYhBszrmSbzV3fpQmkoh2Lb+f5CLw8Z/
+         56zvYIXUf5X6YofoUl2sQkyrkeZhJFtMUgLgrKyvh/hnQBzMxg8iWqCzoBYfVY8toY5R
+         8ySg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pHJuI0wfvLr45CJw/k6BParVKLuhWxWvzs6WoKiu60g=;
+        b=m11S31jn9jvVKuq/r6sqHukCM2QjXySmnms2iqoLQpr61MG1MwleRI4ORCK/Ak6gXh
+         ivgHnUuIythEfyZH5WLbt7qM31xeMqrOrFvgGGLTcQS//CH5ggi6c6z8JpYShzzyuXjf
+         AkJ3JGymF93taLNc0TINkk5/Zoq+Evrp7iYaitUTKs2QPPMHr15CxaSwV5/yE/XqSYz+
+         WvRwre8lY5A3DEWtDfEhCFNKih+N4o/L0Xz/2IcEKZYwoOBtwV0uSpImXblSFg/lxrVB
+         AAUL1fuCaFP+kG705RaFNaXlueRqC7VuC0vf3ZtnAX6NVfsH0KdAurSQ4hl8Q7GdLa55
+         +XXA==
+X-Gm-Message-State: APjAAAWPF9xrESznqFR5yjcHulT291z/GZk6OLneeAFQEvdXCB0aIg2k
+        gLSTRQz/bbErxTKh3aGjeCXpT5CKl2JxDAxUhGU=
+X-Google-Smtp-Source: APXvYqwX23r4z7p2EwocpDavX+sBENQpUDF1tiS32O0SWRa7BbF96aycupZRCgHisT2KjQOuzYQoCmQ+TX2ScLUPPjc=
+X-Received: by 2002:aca:bb08:: with SMTP id l8mr7381468oif.92.1564065026058;
+ Thu, 25 Jul 2019 07:30:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190712204316.16783-1-TheSven73@gmail.com>
+In-Reply-To: <20190712204316.16783-1-TheSven73@gmail.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Thu, 25 Jul 2019 10:30:14 -0400
+Message-ID: <CAGngYiVb_-A4Au749GD6SKi=UqKKBm4yxim8YOCbgVjfz7xtvg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] bus: imx-weim: optionally enable burst clock mode
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     NXP Linux Team <linux-imx@nxp.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 06:26:46PM +0800, Aubrey Li wrote:
-> The granularity period of util_avg seems too large to decide task priority
-> during pick_task(), at least it is in my case, cfs_prio_less() always picked
-> core max task, so pick_task() eventually picked idle, which causes this change
-> not very helpful for my case.
-> 
->  <idle>-0     [057] dN..    83.716973: __schedule: max: sysbench/2578
-> ffff889050f68600
->  <idle>-0     [057] dN..    83.716974: __schedule:
-> (swapper/5/0;140,0,0) ?< (mysqld/2511;119,1042118143,0)
->  <idle>-0     [057] dN..    83.716975: __schedule:
-> (sysbench/2578;119,96449836,0) ?< (mysqld/2511;119,1042118143,0)
->  <idle>-0     [057] dN..    83.716975: cfs_prio_less: picked
-> sysbench/2578 util_avg: 20 527 -507 <======= here===
->  <idle>-0     [057] dN..    83.716976: __schedule: pick_task cookie
-> pick swapper/5/0 ffff889050f68600
+On Fri, Jul 12, 2019 at 4:43 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
+>
+> To enable burst clock mode, add the fsl,burst-clk-enable
+> property to the weim bus's devicetree node.
+>
 
-I tried a different approach based on vruntime with 3 patches following.
-
-When the two tasks are on the same CPU, no change is made, I still route
-the two sched entities up till they are in the same group(cfs_rq) and
-then do the vruntime comparison.
-
-When the two tasks are on differen threads of the same core, the root
-level sched_entities to which the two tasks belong will be used to do
-the comparison.
-
-An ugly illustration for the cross CPU case:
-
-   cpu0         cpu1
- /   |  \     /   |  \
-se1 se2 se3  se4 se5 se6
-    /  \            /   \
-  se21 se22       se61  se62
-
-Assume CPU0 and CPU1 are smt siblings and task A's se is se21 while
-task B's se is se61. To compare priority of task A and B, we compare
-priority of se2 and se6. The smaller vruntime wins.
-
-To make this work, the root level ses on both CPU should have a common
-cfs_rq min vuntime, which I call it the core cfs_rq min vruntime.
-
-This is mostly done in patch2/3.
-
-Test:
-1 wrote an cpu intensive program that does nothing but while(1) in
-  main(), let's call it cpuhog;
-2 start 2 cgroups, with one cgroup's cpuset binding to CPU2 and the
-  other binding to cpu3. cpu2 and cpu3 are smt siblings on the test VM;
-3 enable cpu.tag for the two cgroups;
-4 start one cpuhog task in each cgroup;
-5 kill both cpuhog tasks after 10 seconds;
-6 check each cgroup's cpu usage.
-
-If the task is scheduled fairly, then each cgroup's cpu usage should be
-around 5s.
-
-With v3, the cpu usage of both cgroups are sometimes 3s, 7s; sometimes
-1s, 9s.
-
-With the 3 patches applied, the numbers are mostly around 5s, 5s.
-
-Another test is starting two cgroups simultaneously with cpu.tag set,
-with one cgroup running: will-it-scale/page_fault1_processes -t 16 -s 30,
-the other running: will-it-scale/page_fault2_processes -t 16 -s 30.
-With v3, like I said last time, the later started page_fault processes
-can't start running. With the 3 patches applied, both running at the
-same time with each CPU having a relatively fair score:
-
-output line of 16 page_fault1 processes in 1 second interval:
-min:105225 max:131716 total:1872322
-
-output line of 16 page_fault2 processes in 1 second interval:
-min:86797 max:110554 total:1581177
-
-Note the value in min and max, the smaller the gap is, the better the
-faireness is.
-
-Aubrey,
-
-I haven't been able to run your workload yet...
+Any feedback on this patch, positive or negative?
