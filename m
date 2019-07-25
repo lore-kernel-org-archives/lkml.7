@@ -2,72 +2,197 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10135C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 01:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F4BC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 01:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC272190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 01:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B192190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 01:42:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iRxxgKeR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388249AbfGYBli (ORCPT
+        id S2388361AbfGYBmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 21:41:38 -0400
-Received: from mga14.intel.com ([192.55.52.115]:63498 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388173AbfGYBli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 21:41:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 18:41:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,305,1559545200"; 
-   d="scan'208";a="181303696"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 24 Jul 2019 18:41:35 -0700
-Cc:     baolu.lu@linux.intel.com,
-        Alex Williamson <alex.williamson@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>, kevin.tian@intel.com,
-        ashok.raj@intel.com, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, cai@lca.pw,
-        jacob.jun.pan@intel.com
-Subject: Re: [PATCH v2 7/7] iommu/vt-d: Consolidate domain_init() to avoid
- duplication
-To:     Joerg Roedel <joro@8bytes.org>
-References: <20190612002851.17103-1-baolu.lu@linux.intel.com>
- <20190612002851.17103-8-baolu.lu@linux.intel.com>
- <20190718171615.2ed56280@x1.home>
- <f56599a6-77ac-e1ef-4843-51167b1284b3@linux.intel.com>
- <20190719091952.58255c47@x1.home>
- <13294960-c040-c501-c279-aa61d780d25e@linux.intel.com>
- <20190722142238.GA12009@8bytes.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <db69a425-2ab7-c4e6-80fe-a48069ceef0e@linux.intel.com>
-Date:   Thu, 25 Jul 2019 09:41:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 24 Jul 2019 21:42:14 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32901 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388281AbfGYBmO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 21:42:14 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f20so12888005pgj.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 18:42:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LQf41Qf2MyEcGAlnCF9Sv7hDI8pxvRaGA0CXobFrUw4=;
+        b=iRxxgKeR7cr+V++hP1PTKFiQqoGu3lDyaG67Q0HbnfgYus3nbKzY8UIizGiF8seN/s
+         0dTw+JALQRKOo5V/c79A7FAzTuvukc6HS084DxljNZnDNvQYCEQl+ZAM3LLzrmIFHE0Q
+         aVcrWaCeV/JSeAvEpzfBdPjfFtVje3wxxiMGaZWBT4tX+ncANg2SCZI06EEVlPQKvF1x
+         YJzk590XLIcO2HI+ITddTp0jDw70V4DUthCzlqltJVRifpa1wd7tLS2zBULSKBW/5ex7
+         vIC97zr6Lf8YuFtzgj9B79bTm7wpknpPZ0sokurfH/ebOcGmM5a2k/oqIVU41TrU+plQ
+         pz3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LQf41Qf2MyEcGAlnCF9Sv7hDI8pxvRaGA0CXobFrUw4=;
+        b=Wq4VJtxynuKNIA3kr9/rgRd99hLW2q6rxejVVDNhkFv35kS1dmhGUabiGUEPeiWvni
+         poClelVH4LstU9wFXwLWtqkQAgC6FSVNQVBQPy+zG6vJwk8lpkh9uZJmvauV+jBp5aKY
+         ye6GyMpv1XhRC7ITKf1qITW4AjFKdySvru2sedmRKPxnVBDjwgdKcVQ5NHDhTCYuRnzj
+         Aif17xD6ILfhNIv4ehjbHow2REBNjG2niAVcNIz381NIFfYmWolXsZgNyDYQhK/IyRrR
+         RIpQMgPHlZPFeaFox1C+mdF9Zt0Owf94TbQqDjXQcQIVU6Ej0kzDR4VzjPZ1ImMWdOlO
+         kdaA==
+X-Gm-Message-State: APjAAAVFO2KX8ow41sW5e1h2HrufWxvSr0A0QQ+g5hL8Z+wGwxTSRJxP
+        IHVcjZgc3pnakHO6V4tCvrrD3g==
+X-Google-Smtp-Source: APXvYqz7SxCnEnIwWDcY0tdro2KnRSLcWW6rNVOtl8l+IZj11PjrZsuZgMe9kckvrBuNewHBVXBgnA==
+X-Received: by 2002:a63:9318:: with SMTP id b24mr73280689pge.31.1564018933093;
+        Wed, 24 Jul 2019 18:42:13 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([116.232.252.231])
+        by smtp.gmail.com with ESMTPSA id o11sm79923453pfh.114.2019.07.24.18.42.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jul 2019 18:42:12 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 09:42:04 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Russell King <linux@armlinux.org.uk>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Justin He <Justin.He@arm.com>
+Subject: Re: [PATCH 1/2] arm64: Add support for function error injection
+Message-ID: <20190725014125.GB6764@leoy-ThinkPad-X240s>
+References: <20190716111301.1855-1-leo.yan@linaro.org>
+ <20190716111301.1855-2-leo.yan@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190722142238.GA12009@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716111301.1855-2-leo.yan@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 7/22/19 10:22 PM, Joerg Roedel wrote:
-> On Sat, Jul 20, 2019 at 09:15:58AM +0800, Lu Baolu wrote:
->> Okay. I agree wit you. Let's revert this commit first.
+On Tue, Jul 16, 2019 at 07:13:00PM +0800, Leo Yan wrote:
+> This patch implement regs_set_return_value() and
+> override_function_with_return() to support function error injection
+> for arm64.
 > 
-> Reverted the patch and queued it to my iommu/fixes branch.
+> In the exception flow, arm64's general register x30 contains the value
+> for the link register; so we can just update pt_regs::pc with it rather
+> than redirecting execution to a dummy function that returns.
+> 
+> This patch is heavily inspired by the commit 7cd01b08d35f ("powerpc:
+> Add support for function error injection").
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-Thank you! Joerg.
+Catalin, Will:  Gentle ping ...
 
-Best regards,
-Baolu
+> ---
+>  arch/arm64/Kconfig                       |  1 +
+>  arch/arm64/include/asm/error-injection.h | 13 +++++++++++++
+>  arch/arm64/include/asm/ptrace.h          |  5 +++++
+>  arch/arm64/lib/Makefile                  |  2 ++
+>  arch/arm64/lib/error-inject.c            | 19 +++++++++++++++++++
+>  5 files changed, 40 insertions(+)
+>  create mode 100644 arch/arm64/include/asm/error-injection.h
+>  create mode 100644 arch/arm64/lib/error-inject.c
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 697ea0510729..a6d9e622977d 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -142,6 +142,7 @@ config ARM64
+>  	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+>  	select HAVE_FTRACE_MCOUNT_RECORD
+>  	select HAVE_FUNCTION_TRACER
+> +	select HAVE_FUNCTION_ERROR_INJECTION
+>  	select HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_GCC_PLUGINS
+>  	select HAVE_HW_BREAKPOINT if PERF_EVENTS
+> diff --git a/arch/arm64/include/asm/error-injection.h b/arch/arm64/include/asm/error-injection.h
+> new file mode 100644
+> index 000000000000..da057e8ed224
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/error-injection.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +
+> +#ifndef __ASM_ERROR_INJECTION_H_
+> +#define __ASM_ERROR_INJECTION_H_
+> +
+> +#include <linux/compiler.h>
+> +#include <linux/linkage.h>
+> +#include <asm/ptrace.h>
+> +#include <asm-generic/error-injection.h>
+> +
+> +void override_function_with_return(struct pt_regs *regs);
+> +
+> +#endif /* __ASM_ERROR_INJECTION_H_ */
+> diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
+> index dad858b6adc6..3aafbbe218a2 100644
+> --- a/arch/arm64/include/asm/ptrace.h
+> +++ b/arch/arm64/include/asm/ptrace.h
+> @@ -294,6 +294,11 @@ static inline unsigned long regs_return_value(struct pt_regs *regs)
+>  	return regs->regs[0];
+>  }
+>  
+> +static inline void regs_set_return_value(struct pt_regs *regs, unsigned long rc)
+> +{
+> +	regs->regs[0] = rc;
+> +}
+> +
+>  /**
+>   * regs_get_kernel_argument() - get Nth function argument in kernel
+>   * @regs:	pt_regs of that context
+> diff --git a/arch/arm64/lib/Makefile b/arch/arm64/lib/Makefile
+> index 33c2a4abda04..f182ccb0438e 100644
+> --- a/arch/arm64/lib/Makefile
+> +++ b/arch/arm64/lib/Makefile
+> @@ -33,3 +33,5 @@ UBSAN_SANITIZE_atomic_ll_sc.o	:= n
+>  lib-$(CONFIG_ARCH_HAS_UACCESS_FLUSHCACHE) += uaccess_flushcache.o
+>  
+>  obj-$(CONFIG_CRC32) += crc32.o
+> +
+> +obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
+> diff --git a/arch/arm64/lib/error-inject.c b/arch/arm64/lib/error-inject.c
+> new file mode 100644
+> index 000000000000..35661c2de4b0
+> --- /dev/null
+> +++ b/arch/arm64/lib/error-inject.c
+> @@ -0,0 +1,19 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/error-injection.h>
+> +#include <linux/kprobes.h>
+> +
+> +void override_function_with_return(struct pt_regs *regs)
+> +{
+> +	/*
+> +	 * 'regs' represents the state on entry of a predefined function in
+> +	 * the kernel/module and which is captured on a kprobe.
+> +	 *
+> +	 * 'regs->regs[30]' contains the the link register for the probed
+> +	 * function and assign it to 'regs->pc', so when kprobe returns
+> +	 * back from exception it will override the end of probed function
+> +	 * and drirectly return to the predefined function's caller.
+> +	 */
+> +	regs->pc = regs->regs[30];
+> +}
+> +NOKPROBE_SYMBOL(override_function_with_return);
+> -- 
+> 2.17.1
+> 
