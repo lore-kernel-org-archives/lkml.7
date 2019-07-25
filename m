@@ -2,49 +2,59 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE66C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A64AC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9CD21951
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9B1C21951
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564068556;
+	bh=4b/v1t/uy+XmaW0ZZ73dYU2Gh8zC6RvGBbrrPU0NvKQ=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=rdWg/peqRyOXBFVr7QDM22tEMW5ZNb0S9WV0vAEba8RXBZnNVBmcfC5rLengUb8wQ
+	 q3wHJ5UziAReN1CmPobNbS9X/UCpjI9KVFsgcVgvg0SYFSUCFxX1DSunROICESHC3Z
+	 rC46inrQtXimY8i2+/Min5FoSrHEsZ4uPr8jMBBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389116AbfGYP1L (ORCPT
+        id S2389011AbfGYP3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 11:27:11 -0400
-Received: from gecko.sbs.de ([194.138.37.40]:59964 "EHLO gecko.sbs.de"
+        Thu, 25 Jul 2019 11:29:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388457AbfGYP1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 11:27:11 -0400
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id x6PFR12c018059
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jul 2019 17:27:01 +0200
-Received: from [139.23.76.89] ([139.23.76.89])
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id x6PFR1oM018756;
-        Thu, 25 Jul 2019 17:27:01 +0200
-Subject: Re: [PATCH v3 07/12] kbuild: modpost: read modules.order instead of
- $(MODVERDIR)/*.mod
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190717061800.10018-1-yamada.masahiro@socionext.com>
- <20190717061800.10018-8-yamada.masahiro@socionext.com>
- <230d2ca1-19cd-b60e-1b1b-6d7413eea9e2@siemens.com>
- <CAK7LNARu--p-tiJA2RGM5_KSQPSeo6-pkp-4GRd2AwM_1dtD7Q@mail.gmail.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <0ee802e1-5563-3615-d08f-c936d4e96ebc@siemens.com>
-Date:   Thu, 25 Jul 2019 17:27:00 +0200
-User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
- Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
+        id S2387422AbfGYP3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 11:29:14 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B33C9229F3;
+        Thu, 25 Jul 2019 15:29:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564068553;
+        bh=4b/v1t/uy+XmaW0ZZ73dYU2Gh8zC6RvGBbrrPU0NvKQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=iQ09zGeCmxuSE7Ik2RlYoh7Ve3o1g6mdZ6jxIjVzNSfVkVJbeJpI8hQRmO8+ORbF3
+         YEUtiBMujJIfOdo5jtj2qqOXinqt8SM9JkPqO4l88C/ryWxQCLsNOzIrKJZU2gKOhe
+         8oAC5CkT15FuWsda6b4tJRNOQm8m36AmAn4bxrIk=
+Subject: Re: [PATCH 5.1 000/371] 5.1.20-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190724191724.382593077@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <6af97ebd-9c0e-ee56-c26f-2a4f06dca1cb@kernel.org>
+Date:   Thu, 25 Jul 2019 09:29:11 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNARu--p-tiJA2RGM5_KSQPSeo6-pkp-4GRd2AwM_1dtD7Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,39 +62,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.07.19 17:18, Masahiro Yamada wrote:
-> Hi Jan,
+On 7/24/19 1:15 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.20 release.
+> There are 371 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> On Thu, Jul 25, 2019 at 5:39 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
->>>
->>
->> This affects also external modules builds: I have patterns here that do
->>
->> [Makefile]
->> subdir-y := some-module
->>
->> [some-module/Makefile]
->> obj-m := some-module.o
->>
->> and since this patch, the final some-module.ko is no longer built. Am I missing
->> something in the kbuild makefiles, or is this a regression?
+> Responses should be made by Fri 26 Jul 2019 07:13:35 PM UTC.
+> Anything received after that time might be too late.
 > 
-> Thanks for the report.
-> Interesting. I have never imagined that Makefiles were written like that.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.20-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
 > 
-> I just wrote a fix-up, but I have not determined to apply it.
-> https://patchwork.kernel.org/patch/11059033/
+> thanks,
 > 
-> It is easy to fixup your Makefile, though.
+> greg k-h
+> 
 
-Thanks for addressing this quickly! I'm happy to adjust our code [1]. Is the
-suggested pattern usable with recent stable kernels as well, say down to 4.4 at
-least?
+Compiled and booted on my test system. No dmesg regressions.
 
-Jan
-
-[1] https://github.com/siemens/jailhouse/blob/master/Kbuild#L54
-
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+thanks,
+-- Shuah
