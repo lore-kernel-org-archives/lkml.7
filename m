@@ -2,145 +2,151 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E14FBC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE49C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5FEB206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F326A2238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:41:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LRA93SCm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cR1Wx3yv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387663AbfGYKkg (ORCPT
+        id S2387950AbfGYKl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 06:40:36 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35422 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387602AbfGYKkg (ORCPT
+        Thu, 25 Jul 2019 06:41:58 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]:45799 "EHLO
+        mail-qt1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387725AbfGYKl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 06:40:36 -0400
-Received: by mail-lf1-f68.google.com with SMTP id p197so34142658lfa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:40:35 -0700 (PDT)
+        Thu, 25 Jul 2019 06:41:57 -0400
+Received: by mail-qt1-f182.google.com with SMTP id x22so43625010qtp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:41:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+UWD3xYaSGOyTzdv6esnqt7Upp+zoX6rMbyHIp+AOY4=;
-        b=LRA93SCm5QQuPJ6N6Qfi90MXp6KuO+w3c8jbPxdOZFNgztdWErMFHqN1EcFYyzYdQ0
-         sdGMNhKOvpnrS7wxjtdCQ9gS/PLfXOSadeZmRLRHME9HvGUcD322RyALyQz8Nfs9gTGG
-         03/kqLr99SEtkpPoneETS/y65I8m7nXrcLzBPWSDVZ3PCFaN4sz9qfW2AUUqHSHcA/+4
-         hFH4jiEmQ2Zr/KglfFp1AAzrXuYxAJc6TBJ2ZkdT+6gPezz77i6h2ywYNKzCIFySlgCD
-         bTGifd4WQ01KI/JL7q5k7o0MF941I1LgbPdR0NrwaULx/yiFm2IQ/rAX2FbHlcHo8jYk
-         a7uw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pGiwvfWNKHPPhL2m3Y+ZU+k11VBWGFXZIJf18IlQWnc=;
+        b=cR1Wx3yvjSP8ftL5qjLwcS3bydYdNBb9LbMe98teK2F5ipD3Njxpjc7WU14tCHa32d
+         olU+kyMW/5PV5LF0V8BHY+d+2QN4JMTFkqIKMZNHmcQOsOUpXsfpNaqugUI6P6qqnLVN
+         5BDvwdKYjwcce2Bi8hrccNAjjgyyPSqbYxPU3am29d9+SKZRD5W56rcmEpAzl4TmmQho
+         XL+Wg2/j6LrxODMkDuMKvZw8v9yyHBkF+lhQx/lDcDWs/em7ghOKmCigO9HlPJbBWRyl
+         wnFYR8QDShBTVHXs5YR6QywYgqUW9QOHLAv2on2+xBups8afqm9xjI3CS63d3SvrNq6R
+         m9+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+UWD3xYaSGOyTzdv6esnqt7Upp+zoX6rMbyHIp+AOY4=;
-        b=OiHd8tFh8e6g6twBd81ZngJpMJ+ZPzzWiPtX6+Bmc8AiPHeeGwCfnnoSjZVjmM38b1
-         rHmsm+mnaUIGWxQHSrEwFaHKTyW9bAvAyph4DeEIldHMHSVKMoSHdml3l88qPRFq2+3q
-         C3wEssTuSBiQfg//vd0uM6uI9Y6TjoWB3IXbTeTscJcx+TOaUCSeC3bNX7ELpxYPG+EN
-         +/iSVW+1LxMPVaKmDJzPHCWSIxQDo4JdsMTsZ+Y1w6hYtwcata8qyxtg8aduN48yxyhh
-         eW6D1sR8ZA+9T5T3o8FZmyqgc1nZq8llIeMy12U4zuyLfeZ4YEFtAIFsLczfC6VSj6XO
-         v2CA==
-X-Gm-Message-State: APjAAAXT9uTLWsqXg20lGl/0XVqBP+JAdZe035gswQqQHQG8W6P0q4xX
-        GRdOsPrM+lFWssRajIcN3RjIVw==
-X-Google-Smtp-Source: APXvYqzGbt4oOeH84QtqSxX8UF4CG2N1aap1JmO0v04H5OhO70HwR0JJTLr+iTx4GIfqRX7wfRqMZQ==
-X-Received: by 2002:ac2:414d:: with SMTP id c13mr2229756lfi.47.1564051234400;
-        Thu, 25 Jul 2019 03:40:34 -0700 (PDT)
-Received: from centauri (ua-83-226-44-230.bbcust.telenor.se. [83.226.44.230])
-        by smtp.gmail.com with ESMTPSA id b17sm9057244ljf.34.2019.07.25.03.40.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 03:40:33 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 12:40:31 +0200
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org,
-        vireshk@kernel.org, bjorn.andersson@linaro.org,
-        ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/13] arm64: dts: qcom: qcs404: Add CPR and populate OPP
- table
-Message-ID: <20190725104031.GA21998@centauri>
-References: <20190705095726.21433-1-niklas.cassel@linaro.org>
- <20190705095726.21433-12-niklas.cassel@linaro.org>
- <20190710090303.tb5ue3wq6r7ofyev@vireshk-i7>
- <20190715132405.GA5040@centauri>
- <20190716103436.az5rdk6f3yoa3apz@vireshk-i7>
- <20190716105318.GA26592@centauri>
- <20190717044923.ccmebeewbinlslkm@vireshk-i7>
- <20190719154558.GA32518@centauri>
- <20190723015635.rl5a2isjnjn23fzh@vireshk-i7>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pGiwvfWNKHPPhL2m3Y+ZU+k11VBWGFXZIJf18IlQWnc=;
+        b=ovHsXHmhXFP50TfLHTELhJhkio7isQ3wOazrokD/QO0aimShQNX38iFZBk3nT3UyQM
+         S3SuoKU8WmjOlzjzQdyjBzEPLI/Jf2N0KirhpTrnaom4BDcRTdOI5gF4xnEVA3jD5krz
+         h3hLISoTNOPWSRNJas+NUCGT9NTlsGCfaPi7pXTeIPho1WJqQiE0FbJjti/IZk99ZpW3
+         jQRZeQKVvxkxvLIJ8BDB9AiGftIbQLFlwQU6GLHMZivYaEWBP2+W/ntsLdlP8x3sc3JA
+         wrmdtdtUiXC54AwI82wVzLU8BSEWMXltTLlhjQWzxThklHZhXZwyil8BN+7gXScsgU+Y
+         PUAQ==
+X-Gm-Message-State: APjAAAU1aW8WDxlEUqox5XSjAICgfz2n3Zc66+RuGBsLC4Im5lZU8Nwr
+        on0wBhEkja0Zn/oFVRRMnC69SmRW5t2vOcyfVbyP/tBP
+X-Google-Smtp-Source: APXvYqwaHdM+e7GM8T7UVUIfXaFJJXhhorDT6t3/u3D3jbmoxQUBcTM6AGxPfcCuVwnDboRA1w3b6OlNCMC+IJaVLBo=
+X-Received: by 2002:ac8:540e:: with SMTP id b14mr56392763qtq.134.1564051316047;
+ Thu, 25 Jul 2019 03:41:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723015635.rl5a2isjnjn23fzh@vireshk-i7>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <CAOKSTBs-cHMr7xbJVVUjZ9C3__bY6jZU-_TZ0RmMRMJ3dBk3PA@mail.gmail.com>
+ <0c3f445d-1e37-1531-d3d5-f7ad75c58343@metux.net>
+In-Reply-To: <0c3f445d-1e37-1531-d3d5-f7ad75c58343@metux.net>
+From:   Gilberto Nunes <gilberto.nunes32@gmail.com>
+Date:   Thu, 25 Jul 2019 07:41:19 -0300
+Message-ID: <CAOKSTBsYLKGMDC8noaTVHf=S4U8UnXB0HfJpD5YRjVPHw8rEXA@mail.gmail.com>
+Subject: Re: AMD Drivers
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     linux-kernel@vger.kernel.org,
+        dri devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 07:26:35AM +0530, Viresh Kumar wrote:
-> On 19-07-19, 17:45, Niklas Cassel wrote:
-> > Hello Viresh,
-> > 
-> > Could you please have a look at the last two patches here:
-> > https://git.linaro.org/people/niklas.cassel/kernel.git/log/?h=cpr-opp-hz
-> 
-> There is no sane way of providing review comments with a link to the
-> git tree :)
-> 
-> I still had a look and I see that you don't search for max frequency
-> but just any OPP that has required-opps set to the level u want. Also,
-> can't there be multiple phandles in required-opps in your case ?
+Hi there
 
-For each OPP in the CPR OPP table, we need three things,
-opp-level, qcom,fuse-level and opp-hz.
-The first two can simply be parsed from the OPP node
-itself while iterating the CPR OPP table.
-The opp-hz has to be fetched from the CPU OPP table.
+> What about other versions (eg. v4.19) ?
+> Which is the last working version ?
 
-Several OPPs might have the same qcom,fuse-level value.
-However, they will have unique opp-level values and unique
-opp-hz values. Each opp-level has a matching opp-hz.
+The only series that works properly is 4.15.x
 
-required-opps is basically a connection between a opp-hz
-(CPU OPP table) and and a opp-level (CPR OPP table).
+> Could you also try 5.3 ?
+I will, ASAP!
 
-So there will be only one match. No need to search for
-max frequency.
+>> Oh! By the way, the network card r8169 are work wonderful!
+>Didn't you say (above) that it does not work ?
+>Or is it just an immediate fail and later comes back ?
 
-I think you are confusing this with something else.
-The CPR hardware has to be programmed with the highest
-frequency for each qcom,fuse-corner.
-This is done here:
-https://git.linaro.org/people/niklas.cassel/kernel.git/tree/drivers/power/avs/qcom-cpr.c?h=cpr-full#n1219
-by saving the highest frequency for each fuse level
-while iterating the OPP table.
+Well... I installed 5.2 and after reboot NIC works fine, but get stuck
+with amdgpu again...
+It's seems 5.x is in the right path... But still amdgpu has some bugs,
+I think...
+
+Thanks a lot for your coments
 
 
-There can be only one phandle in the required-opps in my case,
-this is one of the reasons why I prefer implementing it in the
-CPR driver. If it were to be implemented in OPP core, it probably
-has to handle multiple phandles.
+Best regards
 
-> 
-> > If you like my proposal then I could send out the first patch (the one to
-> > OPP core) as a real patch (with an improved commit message), and
-> > incorporate the second patch into my CPR patch series when I send out a V2.
-> 
-> Send them both in your series only, otherwise the first one is useless
-> anyway.
-
-Ok, will do.
-
-
-Kind regards,
-Niklas
+Em qui, 25 de jul de 2019 =C3=A0s 04:22, Enrico Weigelt, metux IT consult
+<lkml@metux.net> escreveu:
+>
+> On 24.07.19 16:17, Gilberto Nunes wrote:
+>
+> Hi,
+>
+> crossposting to dri-devel, as it smells like a problem w/ amdgpu driver.
+>
+> > CPU - AMD A12-9720P RADEON R7, 12 COMPUTE CORES 4C+8G
+> > GPU - Wani [Radeon R5/R6/R7 Graphics] (amdgpu)
+> > Network Interface card:
+> > 01:00.1 Ethernet controller: Realtek Semiconductor Co., Ltd.
+> > RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 12)
+> >
+> > When I install kernel 4.18.x or 5.x, the network doesn't work anymore..=
+.
+>
+> What about other versions (eg. v4.19) ?
+> Which is the last working version ?
+>
+> > I can loaded the modulo r8169 andr8168.
+> > I saw enp1s0f1 as well but there's no link at all!
+> > Even when I fixed the IP none link!
+> > I cannot ping the network gateway or any other IP inside LAN!
+> > Right now, I booted my laptop with kernel
+> > Linux version 5.2.2-050202-generic (kernel@kathleen) (gcc version
+> > 9.1.0 (Ubuntu 9.1.0-9ubuntu2)) #201907231250 SMP Tue Jul 23 12:53:21
+> > UTC 2019
+>
+> Could you also try 5.3 ?
+>
+> > The system boot slowly, and I have a SSD Samsung, which in kernel
+> > 4.15, boot quickly.
+> > And there's many errors in dmesg command, like you can see in this past=
+bin
+> >
+> > https://paste.ubuntu.com/p/YhbjnzYYYh/
+>
+> looks like something's wrong w/ reading gpu registers (more precisely
+> waiting for some changing), that's causing the soft lockup. (maybe too
+> big timeout ?)
+>
+> > Oh! By the way, the network card r8169 are work wonderful!
+>
+> Didn't you say (above) that it does not work ?
+> Or is it just an immediate fail and later comes back ?
+>
+>
+> --mtx
+>
+>
+> --
+> Enrico Weigelt, metux IT consult
+> Free software and Linux embedded engineering
+> info@metux.net -- +49-151-27565287
