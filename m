@@ -2,149 +2,115 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 249B3C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C17C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7AB722AED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87D8521901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:52:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="my3er5fJ"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="VWLm7pb1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389410AbfGYCwK (ORCPT
+        id S2389429AbfGYCwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 22:52:10 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40898 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388165AbfGYCwK (ORCPT
+        Wed, 24 Jul 2019 22:52:41 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35269 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388165AbfGYCwk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 22:52:10 -0400
-Received: by mail-pl1-f193.google.com with SMTP id a93so22732107pla.7;
-        Wed, 24 Jul 2019 19:52:09 -0700 (PDT)
+        Wed, 24 Jul 2019 22:52:40 -0400
+Received: by mail-qk1-f195.google.com with SMTP id r21so35417698qke.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 19:52:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m7uFTn+wdUyY6FftVjNKnXfk6vSQHgFo0Xy22iR7DoA=;
-        b=my3er5fJAwtBvMUkVZV+AWlRF3hSSlzyMPmRDPSBe4xkSXH28IHLlhXMwODJAWVKqd
-         A9u3ZVhULFzLu7Q+7Vi1TI/AlWes2deS6zaTOPf+A+YQQegUddfE8RbvmXzA3tiO7bLS
-         Zv+J8ea9u7pbGVOi8oqHvSpwWzRTsL2eByOqxxbhRPn5UwnBJqP98eBrg496MRa3DNTr
-         gni8hyzZmLmZBoygCAdlPZKSeWgUEHmnpaNYye/4oou5enGlHh1Ko84piaS+1gBIp5R8
-         q/Lxx26+4ihmrt6w4De3X7dw42ek++Htl5KCuEksCzS0lM2RGGm1eLLZYRbDmPkpt5xy
-         QKFQ==
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TYbaU/RcXXoDnrZeMQ94CuW6JxA4bBgoJMHBj+E8c3U=;
+        b=VWLm7pb1QP2B0tihwP9USNElFOTjEp6/v4Hd70rru6K+fpcBLvsEDPhud9KTe7tp1C
+         gOYRrkbY5+tRQ2nBFGxx4CHJMbUfjVlQcbyTAYX2Zp31qb6KjaBAMSvULqFBUzF8Kb53
+         /HA80hSPJspYIH/79t0OEPIUrlEg+sessZKds=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m7uFTn+wdUyY6FftVjNKnXfk6vSQHgFo0Xy22iR7DoA=;
-        b=K+8+K9XUuhr4yPds2xkHZO5wKu1SyUjYPGWlroz3+C3vazcrfqbOZNX1LPTFlmMZU1
-         ncLaji4hwcodzAYnbjXhy5HHpHjVdWGjGsXGNvBYVnUA3cc6TSvoaHBZtDXjhKc5/wX+
-         nVbvZE8VyhHFyP/nFrvnQEclCn4gILavDfN7nogCP0rlGnsZffRW5GEBqBypzY9l4lhL
-         1KL5bTFfMwb1rE19K9+5Dvv6jTZy2GFhOYMdcLZ7tAFZMhYnbMTLM1eAqYqIH8y3gMF+
-         kXtLHj+R6lgu3kQBuOYTUAzbRVo3ofpm8gasXZCVydc79sko5AAmLqripDrvHM+0XayA
-         uKUw==
-X-Gm-Message-State: APjAAAV+104sAqRO2bGyKIpSF0FzJB/fVQfqaZtOBicpezF6gIEyVQDj
-        M9heEvC1eEIku++yMe8i368=
-X-Google-Smtp-Source: APXvYqyrUO7NZ2PJ3hkWF7aJ8vDZzi9nuamErbVVvaw17u++wG3U88xnYdPJeVfQ+mpCWuJn0aSu0Q==
-X-Received: by 2002:a17:902:549:: with SMTP id 67mr88439874plf.86.1564023129477;
-        Wed, 24 Jul 2019 19:52:09 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id k64sm29362195pge.65.2019.07.24.19.52.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 19:52:08 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Adham Abozaeid <adham.abozaeid@microchip.com>,
-        Ajay Singh <ajay.kathat@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] staging: wilc1000: Merge memcpy + le32_to_cpus to get_unaligned_le32
-Date:   Thu, 25 Jul 2019 10:52:03 +0800
-Message-Id: <20190725025203.8772-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TYbaU/RcXXoDnrZeMQ94CuW6JxA4bBgoJMHBj+E8c3U=;
+        b=TnejBTZYubFC8vVS7xuFj9vu1ClD+66Whurk3NJ0X+LUH6N/tAiXYOUMQFBFF+/EuX
+         DwEUpeHMa4iT0dA0oKnzNXVH4Go8mg4erN4Lr7FTud9qnBEavf/4qRtwfu91u07W9Z2e
+         bXmGckxvWu+9oNSJm4Sfe9f/1pLjpM4DV5pF7ZwNjBDRE4qiPCo+OkQGFDT3zNzgI9tt
+         M1z9Bsckb8ojUy5SwpGWX+VZd24CaKGUUzmXVdUx7GBKeRzUzM1Ng4yspSZ4h3hDjT13
+         X4CFP0T1H0+gR82sP7C1fxrNZahXxaeJ0kpSLKVGRD6XpUBcljzTqMHdOpFroezNUH9V
+         SS0w==
+X-Gm-Message-State: APjAAAWh/PAe1NO94H9P3cpKnt0FDhQzP/lN2aVZ/w/pOE51bkmm0F9A
+        lzBZy3j4vM4eeVSpSMFkFO26Mgzi8J15hjdL64A=
+X-Google-Smtp-Source: APXvYqyM3sqW/iwNxySOMbv+KfAtuOilJ1tOA6mmxNVc4AhyblxyzikTIraPFFcFyT9J6TSPJ9ksANxa4ctyvg2uzs8=
+X-Received: by 2002:a37:a1d6:: with SMTP id k205mr56474155qke.171.1564023159729;
+ Wed, 24 Jul 2019 19:52:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <cover.1562734889.git.joe@perches.com> <cddd7ad7e9f81dec1e86c106f04229d21fc21920.1562734889.git.joe@perches.com>
+ <2a0c5ef5c7e20b190156908991e4c964a501d80a.camel@perches.com>
+ <4f6709f8-381f-415c-8569-798b074b66c5@www.fastmail.com> <4e5bc8d61436024a30a8fb6a1516e29e23a75ede.camel@perches.com>
+In-Reply-To: <4e5bc8d61436024a30a8fb6a1516e29e23a75ede.camel@perches.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 25 Jul 2019 02:52:27 +0000
+Message-ID: <CACPK8Xd3+iwkuw-Ofwf+Hy1Ez5-1pBvnk_G4xT72ZQdOVd7Sag@mail.gmail.com>
+Subject: Re: [PATCH 03/12] drm: aspeed_gfx: Fix misuse of GENMASK macro
+To:     Joe Perches <joe@perches.com>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-aspeed@lists.ozlabs.org,
+        dri-devel@lists.freedesktop.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merge the combo use of memcpy and le32_to_cpus.
-Use get_unaligned_le32 instead.
-This simplifies the code.
+On Thu, 25 Jul 2019 at 01:18, Joe Perches <joe@perches.com> wrote:
+>
+> On Thu, 2019-07-25 at 10:40 +0930, Andrew Jeffery wrote:
+> >
+> > On Thu, 25 Jul 2019, at 02:46, Joe Perches wrote:
+> > > On Tue, 2019-07-09 at 22:04 -0700, Joe Perches wrote:
+> > > > Arguments are supposed to be ordered high then low.
+> > > >
+> > > > Signed-off-by: Joe Perches <joe@perches.com>
+> > > > ---
+> > > >  drivers/gpu/drm/aspeed/aspeed_gfx.h | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/aspeed/aspeed_gfx.h b/drivers/gpu/drm/aspeed/aspeed_gfx.h
+> > > > index a10358bb61ec..095ea03e5833 100644
+> > > > --- a/drivers/gpu/drm/aspeed/aspeed_gfx.h
+> > > > +++ b/drivers/gpu/drm/aspeed/aspeed_gfx.h
+> > > > @@ -74,7 +74,7 @@ int aspeed_gfx_create_output(struct drm_device *drm);
+> > > >  /* CTRL2 */
+> > > >  #define CRT_CTRL_DAC_EN                  BIT(0)
+> > > >  #define CRT_CTRL_VBLANK_LINE(x)          (((x) << 20) & CRT_CTRL_VBLANK_LINE_MASK)
+> > > > -#define CRT_CTRL_VBLANK_LINE_MASK        GENMASK(20, 31)
+> > > > +#define CRT_CTRL_VBLANK_LINE_MASK        GENMASK(31, 20)
+> >
+> > Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+>
+> This hardly needs a review, it needs to be applied.
+> There's a nominal git tree for aspeed here:
+>
+> T:      git git://git.kernel.org/pub/scm/linux/kernel/git/joel/aspeed.git
+>
+> But who's going to do apply this?
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Merge the previous two patches which
-    have the same subject line.
+This is a DRM patch, so it goes through the DRM tree. I am a
+co-maintainer there and can apply it once I remember how to drive the
+tools.
 
- drivers/staging/wilc1000/wilc_mon.c               | 3 +--
- drivers/staging/wilc1000/wilc_wfi_cfgoperations.c | 3 +--
- drivers/staging/wilc1000/wilc_wlan.c              | 9 +++------
- 3 files changed, 5 insertions(+), 10 deletions(-)
+(FYI, this macro is not used by the current driver).
 
-diff --git a/drivers/staging/wilc1000/wilc_mon.c b/drivers/staging/wilc1000/wilc_mon.c
-index 7d7933d40924..d6f14f69ad64 100644
---- a/drivers/staging/wilc1000/wilc_mon.c
-+++ b/drivers/staging/wilc1000/wilc_mon.c
-@@ -35,8 +35,7 @@ void wilc_wfi_monitor_rx(struct net_device *mon_dev, u8 *buff, u32 size)
- 		return;
- 
- 	/* Get WILC header */
--	memcpy(&header, (buff - HOST_HDR_OFFSET), HOST_HDR_OFFSET);
--	le32_to_cpus(&header);
-+	header = get_unaligned_le32(buff - HOST_HDR_OFFSET);
- 	/*
- 	 * The packet offset field contain info about what type of management
- 	 * the frame we are dealing with and ack status
-diff --git a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-index d72fdd333050..12fb4add05ec 100644
---- a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-+++ b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-@@ -1038,8 +1038,7 @@ void wilc_wfi_p2p_rx(struct wilc_vif *vif, u8 *buff, u32 size)
- 	s32 freq;
- 	__le16 fc;
- 
--	memcpy(&header, (buff - HOST_HDR_OFFSET), HOST_HDR_OFFSET);
--	le32_to_cpus(&header);
-+	header = get_unaligned_le32(buff - HOST_HDR_OFFSET);
- 	pkt_offset = GET_PKT_OFFSET(header);
- 
- 	if (pkt_offset & IS_MANAGMEMENT_CALLBACK) {
-diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
-index d46876edcfeb..7d438ae90c3e 100644
---- a/drivers/staging/wilc1000/wilc_wlan.c
-+++ b/drivers/staging/wilc1000/wilc_wlan.c
-@@ -703,8 +703,7 @@ static void wilc_wlan_handle_rx_buff(struct wilc *wilc, u8 *buffer, int size)
- 
- 	do {
- 		buff_ptr = buffer + offset;
--		memcpy(&header, buff_ptr, 4);
--		le32_to_cpus(&header);
-+		header = get_unaligned_le32(buff_ptr);
- 
- 		is_cfg_packet = (header >> 31) & 0x1;
- 		pkt_offset = (header >> 22) & 0x1ff;
-@@ -874,10 +873,8 @@ int wilc_wlan_firmware_download(struct wilc *wilc, const u8 *buffer,
- 
- 	offset = 0;
- 	do {
--		memcpy(&addr, &buffer[offset], 4);
--		memcpy(&size, &buffer[offset + 4], 4);
--		le32_to_cpus(&addr);
--		le32_to_cpus(&size);
-+		addr = get_unaligned_le32(&buffer[offset]);
-+		size = get_unaligned_le32(&buffer[offset + 4]);
- 		acquire_bus(wilc, WILC_BUS_ACQUIRE_ONLY);
- 		offset += 8;
- 		while (((int)size) && (offset < buffer_size)) {
--- 
-2.20.1
+Cheers,
 
+Joel
