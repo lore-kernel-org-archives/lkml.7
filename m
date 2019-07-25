@@ -2,443 +2,156 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,WEIRD_QUOTING autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D73BC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6B4C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61851218EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABF0F218EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:16:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="1SAhat64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfGYVNF (ORCPT
+        id S1726702AbfGYVQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 17:13:05 -0400
-Received: from ms.lwn.net ([45.79.88.28]:45052 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726524AbfGYVNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 17:13:04 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 6DEB8867;
-        Thu, 25 Jul 2019 21:13:03 +0000 (UTC)
-Date:   Thu, 25 Jul 2019 15:13:02 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, security@kernel.org,
-        linux-doc@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Kosina <jkosina@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: [PATCH] Documentation/admin-guide: Embargoed hardware security
- issues
-Message-ID: <20190725151302.16a3e0e3@lwn.net>
-In-Reply-To: <20190725130113.GA12932@kroah.com>
-References: <20190725130113.GA12932@kroah.com>
-Organization: LWN.net
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 25 Jul 2019 17:16:14 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40615 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbfGYVQO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 17:16:14 -0400
+Received: by mail-pf1-f195.google.com with SMTP id p184so23355610pfp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 14:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=bhC4e3admbOzYmGrcN4oFgwKI6Wn4sdHTAoRFihNQE0=;
+        b=1SAhat64PbY6KHcExLCsKEef8DxUvSHk1Bo0Eq+uHaEsT/wxfp7URRpimiZV1bNMEt
+         xrAWOI7rkUz7TOmeJK+7NK35NR9Qp03JoeuhgRcBnMQ/zDYoV3tid2xiz6JX9gCv4hwm
+         AigeWNKZLnsUe0CY2E6fnhJ+q+qgHhEcDrzCZb4BK9uz8/WV0qYsBAPsYnr4bYRetHlO
+         6aR99FyqNimlesckirp7nxviutkDxJIH0DufT6WVYo6PaxAixh5F8rAic2zbJXzWBdLO
+         xQ2frM4w0fBZvwM3CseCRvlQrZeYq1Tjcl1V+eKD8wZ1wzEa/XFmqP7Uk2lC+BOFAil1
+         VJlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=bhC4e3admbOzYmGrcN4oFgwKI6Wn4sdHTAoRFihNQE0=;
+        b=gyQRp9tab9n+8EUs8Bo7TE54WnzZvC94nUXPpbxDl7slvsns7m7o86NBm0L9F3neuu
+         ikwqNuRksgJMFqKdboVgSVHD7vkpERlb+qIjMQiz18itClDezYcuceZRvfhu4GBcPVrz
+         2w65gImzPorR+Qq74zsMKWxmWmxuMxzU9fmX2BDuzRhqcip1aabLTFDABKV83FgjR6U0
+         vSqL+B/mPqS/W19R0QbTcijF5m0ybTZpLuueihV9V6baz3LL6lqhBQoXCcVwXburrn63
+         XpeIjIe1ONRRGvTudx6hQg31W7lA0+38lJEVixm2yzSqAu5GC7nyba98GSwxuFzHYXFj
+         M3kg==
+X-Gm-Message-State: APjAAAV3OflAzE3zOlyOMx4mdQbDkVgTjXdliAHBXshCwyApfLkkCWiH
+        nzyyibbT00E/igvoQCYjFds=
+X-Google-Smtp-Source: APXvYqwNu2chnXPziksH7iPaGWziZhQQfIP7hDob3QOMYt+K5yVpEqJO4DQQg3zHzrzIxKqRqZeTAg==
+X-Received: by 2002:a17:90a:3590:: with SMTP id r16mr95560441pjb.44.1564089373404;
+        Thu, 25 Jul 2019 14:16:13 -0700 (PDT)
+Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id z4sm40116652pgp.80.2019.07.25.14.16.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 14:16:12 -0700 (PDT)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <028BF9CD-2E43-47DF-9373-A2D6EA7A3CF5@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_7D235CBA-60A1-49A6-B812-08865E719A4F";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH] mbcache: Speed up cache entry creation
+Date:   Thu, 25 Jul 2019 15:16:04 -0600
+In-Reply-To: <20190724040118.GA31214@sultan-box.localdomain>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+To:     Sultan Alsawaf <sultan@kerneltoast.com>
+References: <20190723053549.14465-1-sultan@kerneltoast.com>
+ <5EDDA127-031C-4F16-9B9B-8DBC94C7E471@dilger.ca>
+ <20190724040118.GA31214@sultan-box.localdomain>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jul 2019 15:01:13 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> To address the requirements of embargoed hardware issues, like Meltdown,
-> Spectre, L1TF, etc. it is necessary to define and document a process for
-> handling embargoed hardware security issues.
-> 
-> Following the discussion at the maintainer summit 2018 in Edinburgh
-> (https://lwn.net/Articles/769417/) the volunteered people have worked
-> out a process and a Memorandum of Understanding.  The latter addresses
-> the fact that the Linux kernel community cannot sign NDAs for various
-> reasons.
-> 
+--Apple-Mail=_7D235CBA-60A1-49A6-B812-08865E719A4F
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-[...]
+On Jul 23, 2019, at 10:01 PM, Sultan Alsawaf <sultan@kerneltoast.com> =
+wrote:
+>=20
+> On Tue, Jul 23, 2019 at 10:56:05AM -0600, Andreas Dilger wrote:
+>> Do you have any kind of performance metrics that show this is an =
+actual
+>> improvement in performance?  This would be either macro-level =
+benchmarks
+>> (e.g. fio, but this seems unlikely to show any benefit), or =
+micro-level
+>> measurements (e.g. flame graph) that show a net reduction in CPU =
+cycles,
+>> lock contention, etc. in this part of the code.
+>=20
+> Hi Andreas,
+>=20
+> Here are some basic micro-benchmark results:
+>=20
+> Before:
+> [    3.162896] mb_cache_entry_create: AVG cycles: 75
+> [    3.054701] mb_cache_entry_create: AVG cycles: 78
+> [    3.152321] mb_cache_entry_create: AVG cycles: 77
+>=20
+> After:
+> [    3.043380] mb_cache_entry_create: AVG cycles: 68
+> [    3.194321] mb_cache_entry_create: AVG cycles: 71
+> [    3.038100] mb_cache_entry_create: AVG cycles: 69
 
->  Documentation/admin-guide/embargoed-hardware-issues.rst |  281 ++++++++++++++++
->  Documentation/admin-guide/index.rst                     |    1 
->  2 files changed, 282 insertions(+)
+This information should be included in the patch description, since that
+allows making a decision on whether the patch is worthwhile to land or =
+not.
 
-So I would argue that the admin guide (which is aimed at sysadmins) is the
-wrong place for this document.  It's process information and is best placed
-in the process manual (Documentation/process) IMO.  (Yes, I know
-security-bugs.rst is in the admin guide; I remember there was a discussion
-at the time and it ended up there, but I'm not really sure that's right
-either).
+> The performance difference is probably more drastic when free memory =
+is low,
+> since an unnecessary call to kmem_cache_alloc() can result in a long =
+wait for
+> pages to be freed.
 
-> Note, this document has gone through numerous reviews by a number of
-> kernel developers, developers at some of the Linux distros, as well as
-> all of the lawyers from almost all open source-related companies.  It's
-> been sitting on my local drive with no comments for a few months now,
-> and it's about time to get this out and merged properly.
-> 
-> If anyone has any final comments, please let me know.
+Cheers, Andreas
 
-I do think it could benefit from a pass for basic language issues; I can do
-that if such an effort would be welcome.
 
-> If anyone from any company listed below wishes to add their name to the
-> document, please send a follow-on patch and I will be glad to add it to
-> the series.  I had a number of "I'll sign up" type comments from
-> different people, but I want something with a "s-o-b" to keep people on
-> the hook for this, so I did not add their name to the file without that.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> 
-> 
-> --- /dev/null
-> +++ b/Documentation/admin-guide/embargoed-hardware-issues.rst
-> @@ -0,0 +1,281 @@
-> +.. _embargoedhardwareissues:
 
-This label isn't used anywhere.
 
-> +Embargoed hardware issues
-> +=========================
-> +
-> +Scope
-> +-----
-> +
-> +Hardware issues which result in security problems are a different category
-> +of security bugs than pure software bugs which  only affect the Linux
-> +kernel.
-> +
-> +Hardware issues like Meltdown, Spectre, L1TF etc. must be treated
-> +differently because they usually affect all Operating Systems (“OS“) and
 
-Somebody may well complain about the "smart quotes" here; non-ascii stuff
-has led to unhappiness in the past.
 
-> +therefore need coordination across different OS vendors, distributions,
-> +hardware vendors and other parties. For some of the issues, software
-> +mitigations can depend on microcode or firmware updates, which need further
-> +coordination.
-> +
-> +.. _Contact:
-> +
-> +Contact
-> +-------
-> +
-> +The Linux kernel hardware security team is separate from the regular Linux
-> +kernel security team.
-> +
-> +The team is only handling the coordination of embargoed hardware security
+--Apple-Mail=_7D235CBA-60A1-49A6-B812-08865E719A4F
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
 
-s/is only handling/only handles/
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
 
-> +issues. Reports of pure software security bugs in the Linux kernel are not
-> +handled by this team and the reporter will be guided to contact the regular
-> +Linux kernel security team (:ref:`Documentation/admin-guide/
-> +<securitybugs>`) instead.
-> +
-> +The team can be contacted by email at <hardware-security@kernel.org>. This
-> +is a private list of security officers who will help you to coordinate an
-> +issue according to our documented process.
-> +
-> +The list is encrypted and email to the list can be sent by either PGP or
-> +S/MIME encrypted and must be signed with the reporter's PGP key or S/MIME
-> +certificate. The list's PGP key and S/MIME certificate are available from
-> +https://www.kernel.org/....
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl06HBUACgkQcqXauRfM
+H+BTaxAAmAY56dH5kUnhb2CvlFHBG3O3aJdXZd77YAuX2cm3kAfgJ6C8moViAvI5
+3X/FcF5nUpZGWxgahTtv7FIDYXjfYrPlcyL/kFWjzWVrGexWAAFieYsuyGKc5k5s
+N5LrFnM4XtKv82FulX92etwArsP0U/LhUaoxS/+o6LioisyuY50LYvjYFnLbqKcj
+ODd51+sjCSoc10n+v+aWZN7Wi/bMemTa6kKifUKI3hskiOshQtpb14Bvxrq57Dsc
+H1xRLE9bwT3aM0y9wY0xK0nsBP2igS+AsL5X+sIlY25J+JzSSDcwIpzZ18BtBOod
+JqSwvjpILUdS9hJXS8SkE7GKUNNPDh3zQKeFlcNzInF1P7/ghJcjy4CQZlY3lQsK
+WbvHV/pIjPFhgZxzo/iDgg2gpliEF9XxAikIxD13eiq/HKpoog1vZD4lpa+hg8mo
+nIW4XJfhZ/IBl1AMIr0LzgWyWUnZL9KrFJ9hBAtNNgBFNC8tRc+W8hGtbNG7mvQB
+SiDo1oka0fU2B1CyR/8I92nLesnVggwyWJZFKvLFFLoGJ1O1AjAsuD2N9DZS7Tlm
+U9U8Ripl4nspIsy0UZ6vdVs+sUqnZnV3ryHfVh+khkx3GyWVNjQtevBgnf4DKaG4
+JHvLWHMQQ1Drwdrf0exkitnXrDU6LEfsxo2MI6RTWNk5O4hufPI=
+=3yFi
+-----END PGP SIGNATURE-----
 
-Somebody needs to fill in some dots there...:)
-
-> +While hardware security issues are often handled by the affected hardware
-> +vendor, we welcome contact from researchers or individuals who identified a
-
-who *have* identified
-
-> +potential hardware flaw.
-> +
-> +Hardware security officers
-> +^^^^^^^^^^^^^^^^^^^^^^^^^^
-> +
-> +The current team of hardware security officers:
-> +
-> +  - Linus Torvalds (Linux Foundation Fellow)
-> +  - Greg Kroah-Hartman (Linux Foundation Fellow)
-> +  - Thomas Gleixner (Linux Foundation Fellow)
-> +
-> +Operation of mailing-lists
-> +^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-I would de-hyphenate "mailing list" throughout.  But that's me.
-
-> +The encrypted mailing-lists which are used in our process are hosted on
-> +Linux Foundation's IT infrastructure. By providing this service Linux
-> +Foundation's director of IT Infrastructure security technically has the
-> +ability to access the embargoed information, but is obliged to
-> +confidentiality by his employment contract. Linux Foundation's director of
-> +IT Infrastructure security is also responsible for the kernel.org
-> +infrastructure.
-> +
-> +The Linux Foundation's current director of IT Infrastructure security is
-> +Konstantin Ryabitsev.
-> +
-> +
-> +Non-disclosure agreements
-> +-------------------------
-> +
-> +The Linux kernel hardware security team is not a formal body and therefore
-> +unable to enter into any non-disclosure agreements.  The kernel community
-> +is aware of the sensitive nature of such issues and offers a Memorandum of
-> +Understanding instead.
-> +
-> +
-> +Memorandum of Understanding
-> +---------------------------
-> +
-> +The Linux kernel community has a deep understanding of the requirement to
-> +keep hardware security issues under embargo for coordination between
-> +different OS vendors, distributors, hardware vendors and other parties.
-> +
-> +The Linux kernel community has successfully handled hardware security
-> +issues in the past and has the necessary mechanisms in place to allow
-> +community compliant development under embargo restrictions.
-> +
-> +The Linux kernel community has a dedicated hardware security team for
-> +initial contact, which oversees the process of handling such issues under
-> +embargo rules.
-> +
-> +The hardware security team identifies the developers (domain experts) which
-> +form the initial response team for a particular issue. The initial response
-
-s/which form/who will form/
-
-> +team can bring in further developers (domain experts) to address the issue
-> +in the best technical way.
-
-Does the reporter get any say in who can be in this group?  That should
-probably be made explicit either way.
-
-> +All involved developers pledge to adhere to the embargo rules and to keep
-> +the received information confidential. Violation of the pledge will lead to
-> +immediate exclusion from the current issue and removal from all related
-> +mailing-lists. In addition, the hardware security team will also exclude
-> +the offender from future issues. The impact of this consequence is a highly
-> +effective deterrent in our community. In case a violation happens the
-> +hardware security team will inform the involved parties immediately. If you
-> +or anyone becomes aware of a potential violation, please report it
-> +immediately to the Hardware security officers.
-> +
-> +
-> +Process
-> +^^^^^^^
-> +
-> +Due to the globally distributed nature of Linux kernel development, face to
-> +face meetings are almost impossible to address hardware security issues.
-
-face-to-face
-
-> +Phone conferences are hard to coordinate due to time zones and other
-> +factors and should be only used when absolutely necessary. Encrypted email
-> +has been proven to be the most effective and secure communication method
-> +for these types of issues.
-> +
-> +Start of Disclosure
-> +"""""""""""""""""""
-> +
-> +Disclosure starts by contacting the Linux kernel hardware security team by
-> +email. This initial contact should contain a description of the problem and
-> +a list of any known affected hardware. If your organization builds or
-> +distributes the affected hardware, we encourage you to also consider what
-> +other hardware could be affected.
-> +
-> +The hardware security team will provide a per incident specific encrypted
-
-s/per incident specific/incident-specific/
-
-> +mailing-list which will be used for initial discussion with the reporter,
-> +further disclosure and coordination.
-> +
-> +The hardware security team will provide the disclosing party a list of
-> +developers (domain experts) who should be informed initially about the
-> +issue after confirming with the developers  that they will adhere to this
-> +Memorandum of Understanding and the documented process. These developers
-> +form the initial response team and will be responsible for handling the
-> +issue after initial contact. The hardware security team is supporting the
-> +response team, but is not necessarily involved in the mitigation
-> +development process.
-
-Again, "should be informed" is conditional, suggesting that the reporter
-might have some sort of veto power.  But the actual policy is not clear.
-
-> +While individual developers might be covered by a non-disclosure agreement
-> +via their employer, they cannot enter individual non-disclosure agreements
-> +in their role as Linux kernel developers. They will, however, adhere to
-> +this documented process and the Memorandum of Understanding.
-
-They will *agree to* adhere ...  We expect that actual adherence will be
-the case but there is no way (even if an NDA were involved) to guarantee
-that.
-
-> +Disclosure
-> +""""""""""
-> +
-> +The disclosing party provides detailed information to the initial response
-> +team via the specific encrypted mailing-list.
-> +
-> +From our experience the technical documentation of these issues is usually
-> +a sufficient starting point and further technical clarification is best
-> +done via email.
-> +
-> +Mitigation development
-> +""""""""""""""""""""""
-> +
-> +The initial response team sets up an encrypted mailing-list or repurposes
-> +an existing one if appropriate. The disclosing party should provide a list
-> +of contacts for all other parties who have already been, or should be
-> +informed about the issue. The response team contacts these parties so they
-> +can name experts who should be subscribed to the mailing-list.
-> +
-> +Using a mailing-list is close to the normal Linux development process and
-> +has been successfully used in developing mitigations for various hardware
-> +security issues in the past.
-> +
-> +The mailing-list operates in the same way as normal Linux development.
-> +Patches are posted, discussed and reviewed and if agreed on applied to a
-> +non-public git repository which is only accessible to the participating
-> +developers via a secure connection. The repository contains the main
-> +development branch against the mainline kernel and backport branches for
-> +stable kernel versions as necessary.
-
-Do we want to envision a KPTI-like situation where the mitigation can be
-developed publicly?  Or perhaps just handle any such case if and when it
-ever arises?
-
-> +The initial response team will identify further experts from the Linux
-> +kernel developer community as needed and inform the disclosing party about
-> +their participation. Bringing in experts can happen at any time of the
-> +development process and often needs to be handled in a timely manner.
-> +
-> +Coordinated release
-> +"""""""""""""""""""
-> +
-> +The involved parties will negotiate the date and time where the embargo
-> +ends. At that point the prepared mitigations are integrated into the
-> +relevant kernel trees and published.
-> +
-> +While we understand that hardware security issues need coordinated embargo
-> +time, the embargo time should be constrained to the minimum time which is
-> +required for all involved parties to develop, test and prepare the
-> +mitigations. Extending embargo time artificially to meet conference talk
-> +dates or other non-technical reasons is creating more work and burden for
-> +the involved developers and response teams as the patches need to be kept
-> +up to date in order to follow the ongoing upstream kernel development,
-> +which might create conflicting changes.
-> +
-> +CVE assignment
-> +""""""""""""""
-> +
-> +Neither the hardware security team nor the initial response team assign
-> +CVEs, nor are CVEs required for the development process. If CVEs are
-> +provided by the disclosing party they can be used for documentation
-> +purposes.
-> +
-> +Process ambassadors
-> +-------------------
-> +
-> +For assistance with this process we have established ambassadors in various
-> +organizations, who can answer questions about or provide guidance on the
-> +reporting process and further handling. Ambassadors are not involved in the
-> +disclosure of a particular issue, unless requested by a response team or by
-> +an involved disclosed party. The current ambassadors list:
-> +
-> +  ============== ========================================================
-> +  ARM
-> +  AMD
-> +  IBM
-> +  Intel
-> +  Qualcomm
-> +
-> +  Microsoft
-> +  VMware
-> +  XEN
-> +
-> +  Canonical
-> +  Debian
-> +  Oracle
-> +  Redhat
-> +  Suse           Jiri Kosina <jkosina@suse.com>
-> +
-> +  Amazon
-> +  Google
-> +  ============== ========================================================
-
-Having companies without names seems a little weird.  Unless perhaps you
-have people teed up to add their names in follow-on patches?
-
-> +If you want your organization to be added to the ambassadors list, please
-> +contact the hardware security team. The nominated ambassador has to
-> +understand and support our process fully and is ideally well connected in
-> +the Linux kernel community.
-> +
-> +Encrypted mailing-lists
-> +-----------------------
-> +
-> +We use encrypted mailing-lists for communication. The operating principle
-> +of these lists is that email sent to the list is encrypted either with the
-> +list's PGP key or with the list's S/MIME certificate. The mailing-list
-> +software decrypts the email and re-encrypts it individually for each
-> +subscriber with the subscriber's PGP key or S/MIME certificate. Details
-> +about the mailing-list software and the setup which is used to ensure the
-> +security of the lists and protection of the data can be found here:
-> +https://www.kernel.org/....
-
-That URL is also in need of completion.
-
-The topic of encrypted mailing lists is visited several times in this
-document; I wonder if that could be coalesced somehow?
-
-> +List keys
-> +^^^^^^^^^
-> +
-> +For initial contact see :ref:`Contact`. For incident specific mailing-lists
-> +the key and S/MIME certificate are conveyed to the subscribers by email
-> +sent from the specific list.
-> +
-> +Subscription to incident specific lists
-> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> +
-> +Subscription is handled by the response teams. Disclosed parties who want
-> +to participate in the communication send a list of potential subscribers to
-> +the response team so the response team can validate subscription requests.
-> +
-> +Each subscriber needs to send a subscription request to the response team
-> +by email. The email must be signed with the subscriber's PGP key or S/MIME
-> +certificate. If a PGP key is used, it must be available from a public key
-> +server and is ideally connected to the Linux kernel's PGP web of trust. See
-> +also: https://www.kernel.org/signature.html.
-
-The "public key server" thing isn't working quite as well as it was; does
-this requirement need to be revisited?
-
-> +The response team verifies that the subscriber request is valid and adds
-> +the subscriber to the list. After subscription the subscriber will receive
-> +email from the mailing-list which is signed either with the list's PGP key
-> +or the list's S/MIME certificate. The subscriber's email client can extract
-> +the PGP key or the S/MIME certificate from the signature so the subscriber
-> +can send encrypted email to the list.
-> +
-> --- a/Documentation/admin-guide/index.rst
-> +++ b/Documentation/admin-guide/index.rst
-> @@ -33,6 +33,7 @@ problems and bugs in particular.
->  
->     reporting-bugs
->     security-bugs
-> +   embargoed-hardware-issues
->     bug-hunting
->     bug-bisect
->     tainted-kernels
-
-jon
+--Apple-Mail=_7D235CBA-60A1-49A6-B812-08865E719A4F--
