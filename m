@@ -2,86 +2,92 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2D8C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F98C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC7DA2238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E402238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:54:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L1ggSMIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbfGYLyB (ORCPT
+        id S2391271AbfGYLyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:54:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49732 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbfGYLyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:54:01 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7331D300CA39;
-        Thu, 25 Jul 2019 11:54:00 +0000 (UTC)
-Received: from [10.36.116.102] (ovpn-116-102.ams2.redhat.com [10.36.116.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 45E2960C05;
-        Thu, 25 Jul 2019 11:53:51 +0000 (UTC)
-Subject: Re: [PATCH 2/2] virtio/virtio_ring: Fix the dma_max_mapping_size call
-To:     Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>
-Cc:     eric.auger.pro@gmail.com, m.szyprowski@samsung.com, mst@redhat.com,
-        jasowang@redhat.com, virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-References: <20190722145509.1284-1-eric.auger@redhat.com>
- <20190722145509.1284-3-eric.auger@redhat.com>
- <e4a288f2-a93a-5ce4-32da-f5434302551f@arm.com> <20190723153851.GE720@lst.de>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <fa0fbad5-9b44-d937-e0fd-65fb20c90666@redhat.com>
-Date:   Thu, 25 Jul 2019 13:53:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 25 Jul 2019 07:54:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55668 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbfGYLyp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 07:54:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Vft2ETrgGQMFjnBPVXnK+szXAKyWSwkuzQojY/OB7mk=; b=L1ggSMImEzygnsESy11qvIbQD
+        qW34SLS9Z6cvIvcVNgL99uNJUh0dqkIO5BPDr41LX/WyBOfrnAnOXpiHBTIyTTHEPAFRM7zfw1Kt7
+        JHhZjMhgQrxFBxKfbMqAT5zx1RI9GrLS//QQ0Ykp5uGtsg/Y0m9DScZjRv7GM6tngHHTowdVpNANh
+        n8Q4A4FYHvCdfOHYGyTbEAslF3ZdNNVHDcCS68O9tAH9xOc4tk7HcXkaaei2iv/HJ5HOGWjbEesrA
+        kkfZnUKVHMAcuaEqK+bffCLSBU2KhN+F3EoRtItQ3hj4rpiWL2Nfmd96uaJ5fMmgBZXYZvWMqAOi6
+        IN+Iskzng==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hqcKY-0004Ea-Uf; Thu, 25 Jul 2019 11:54:42 +0000
+Date:   Thu, 25 Jul 2019 04:54:42 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Masato Suzuki <masato.suzuki@wdc.com>
+Subject: Re: [PATCH] ext4: Fix deadlock on page reclaim
+Message-ID: <20190725115442.GA15733@infradead.org>
+References: <20190725093358.30679-1-damien.lemoal@wdc.com>
 MIME-Version: 1.0
-In-Reply-To: <20190723153851.GE720@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 25 Jul 2019 11:54:00 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725093358.30679-1-damien.lemoal@wdc.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Jul 25, 2019 at 06:33:58PM +0900, Damien Le Moal wrote:
+> +	gfp_t gfp_mask;
+> +
+>  	switch (ext4_inode_journal_mode(inode)) {
+>  	case EXT4_INODE_ORDERED_DATA_MODE:
+>  	case EXT4_INODE_WRITEBACK_DATA_MODE:
+> @@ -4019,6 +4019,14 @@ void ext4_set_aops(struct inode *inode)
+>  		inode->i_mapping->a_ops = &ext4_da_aops;
+>  	else
+>  		inode->i_mapping->a_ops = &ext4_aops;
+> +
+> +	/*
+> +	 * Ensure all page cache allocations are done from GFP_NOFS context to
+> +	 * prevent direct reclaim recursion back into the filesystem and blowing
+> +	 * stacks or deadlocking.
+> +	 */
+> +	gfp_mask = mapping_gfp_mask(inode->i_mapping);
+> +	mapping_set_gfp_mask(inode->i_mapping, (gfp_mask & ~(__GFP_FS)));
 
-On 7/23/19 5:38 PM, Christoph Hellwig wrote:
-> On Mon, Jul 22, 2019 at 04:36:09PM +0100, Robin Murphy wrote:
->>> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
->>> index c8be1c4f5b55..37c143971211 100644
->>> --- a/drivers/virtio/virtio_ring.c
->>> +++ b/drivers/virtio/virtio_ring.c
->>> @@ -262,7 +262,7 @@ size_t virtio_max_dma_size(struct virtio_device *vdev)
->>>   {
->>>   	size_t max_segment_size = SIZE_MAX;
->>>   -	if (vring_use_dma_api(vdev))
->>> +	if (vring_use_dma_api(vdev) && vdev->dev.dma_mask)
->>
->> Hmm, might it make sense to roll that check up into vring_use_dma_api() 
->> itself? After all, if the device has no mask then it's likely that other 
->> DMA API ops wouldn't really work as expected either.
+This looks like something that could hit every file systems, so
+shouldn't we fix this in common code?  We could also look into
+just using memalloc_nofs_save for the page cache allocation path
+instead of the per-mapping gfp_mask.
+
+>  }
+>  
+>  static int __ext4_block_zero_page_range(handle_t *handle,
+> -- 
+> 2.21.0
 > 
-> Makes sense to me.
-> 
-
-I am confused: if vring_use_dma_api() returns false if the dma_mask is
-unset (ie. vring_use_dma_api() returns false), the virtio-blk-pci device
-will not be able to get translated addresses and won't work properly.
-
-The patch above allows the dma api to be used and only influences the
-max_segment_size and it works properly.
-
-So is it normal the dma_mask is unset in my case?
-
-Thanks
-
-Eric
+---end quoted text---
