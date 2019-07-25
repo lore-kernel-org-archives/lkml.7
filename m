@@ -2,239 +2,451 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE62C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38693C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7417322BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E32F0229F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:31:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X6qjt3oH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHlOM0Qy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfGYS3A (ORCPT
+        id S1726087AbfGYSbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 14:29:00 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:33764 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfGYS2Z (ORCPT
+        Thu, 25 Jul 2019 14:31:55 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38804 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfGYSbz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 14:28:25 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6PISMFg047417;
-        Thu, 25 Jul 2019 13:28:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564079302;
-        bh=d2Um8NUSqmU41wh2Qu83Hg9Gzg2ws/jWIFwu+itt4hs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=X6qjt3oHTK2bmMx+wnm99p3LKnQjIzDkt5y0jwRdNUfkVzgKJwmI4/JIv2/r7dmk0
-         2cF7/NrAgyDVJJlnBs92LbMZq1k/6ByaR4X/rYOwWYsvzQniJovYm677HfitCicHUG
-         1zPPIDJ2NLj0vT6VxqoYMcfG7ztXnOMD9We1zJ5s=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6PISMWu123624
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 25 Jul 2019 13:28:22 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 25
- Jul 2019 13:28:21 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 25 Jul 2019 13:28:21 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6PISL72006548;
-        Thu, 25 Jul 2019 13:28:21 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v4 2/9] documention: leds: Add multicolor class documentation
-Date:   Thu, 25 Jul 2019 13:28:11 -0500
-Message-ID: <20190725182818.29556-3-dmurphy@ti.com>
-X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
-In-Reply-To: <20190725182818.29556-1-dmurphy@ti.com>
-References: <20190725182818.29556-1-dmurphy@ti.com>
+        Thu, 25 Jul 2019 14:31:55 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f5so14632192pgu.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 11:31:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=qPt6GSvNaRNxnnTu6bRMZgg7HoSbPOn74FTRNXInFbk=;
+        b=EHlOM0QygTwzmZQvs33/voY6md2Kl/JmHanGKPu3dGDQcFuBknI63q591sKbcgB/kN
+         haIXUpg22a8h+wmcHTm7QdT5jsPM3YAW/TsCCXITTyAHAwNieSUSmdcCYh2lJm+uBs3B
+         FXiQ9BbpQYr0FykEF5Rz0Ey3tXfKRVY6hHjGEGxxkJw+Sa1aHY87qoVAMGMEgDbopUS5
+         EnlM6FKEB4s1ipS30YgMF+CjlMkzD0L7nit1nsqvAbUmrOKCHfaD4aC26gVvPJRlA7iI
+         KuGbouX5yZC+elOjkG87SlwQCpajKOBv//vIUD0BG72KXkyw04QJ5OW0TKZAJCqGTv8Q
+         Tfig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=qPt6GSvNaRNxnnTu6bRMZgg7HoSbPOn74FTRNXInFbk=;
+        b=IMmuljcSLdNfyAT112exHruwfvu+pxM1acngpWXEPZeZcuSBbxWvyn05Kc68KyL/aY
+         xCS8Ar26rIUM60OhapO66V8oFWwQmGpeKUKJvmfFBva1CHMvuBzNBBmy9jLOr3G93xjI
+         tt/Ctvuu2iMOzkV3ia+Xkwjl7whlkUeXfZMtwMPLf4/W5/bj/dy46lOV5qLqMyF3M8/O
+         aOm9SboBooos5JIlkh8KC98+pDS28neFa6N3ytGMUGxBbzUVSvo+VXYHNS2pGuwBiRwQ
+         dkZrSWxMJaRNTnnKzXaMs5G3KM1ZNO6WJw8cmXXoa8VNZHHxAX/0DZuC8/lXOmN/yM/H
+         2fUQ==
+X-Gm-Message-State: APjAAAViOmB/DwmtO0AON/ZuF+16lwSs9ZTgOacp3sMrUlhp9lF2+KwW
+        habZVKQYrDEjLlGoJ8eFXxg=
+X-Google-Smtp-Source: APXvYqxvm1fX7QjHkQM2xD11QPpwhO6OXzuaDSdDN5yGVIeR7nIoZK+NOr8aXEWhiMrP7Og03UtJ+Q==
+X-Received: by 2002:a63:5f09:: with SMTP id t9mr54149080pgb.351.1564079514119;
+        Thu, 25 Jul 2019 11:31:54 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id a5sm43583407pjv.21.2019.07.25.11.31.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 11:31:53 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 00:01:47 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shobhit Kukreti <shobhitkukreti@gmail.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        hdegoede@redhat.com, Larry.Finger@lwfinger.net
+Subject: [PATCH] staging: rtl8723bs: os_dep: Move common code to func
+Message-ID: <20190725183147.GA15303@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support documentation on the multicolor LED framework.
-This document defines the directores and file generated by the
-multicolor framework.  It also documents usage.
+Inthis file all functions has below common functionality
+1.Check flag padapter->bSurpriseRemoved
+2.Get sdio_func structure from intf_hdl.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+This patch introduces two new APIs
+rtw_isadapter_removed,rtw_sdio_get_func which helps to do above common
+functionality.
+
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
- Documentation/leds/leds-class-multicolor.txt | 152 +++++++++++++++++++
- 1 file changed, 152 insertions(+)
- create mode 100644 Documentation/leds/leds-class-multicolor.txt
+ drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c | 149 ++++++----------------
+ 1 file changed, 41 insertions(+), 108 deletions(-)
 
-diff --git a/Documentation/leds/leds-class-multicolor.txt b/Documentation/leds/leds-class-multicolor.txt
-new file mode 100644
-index 000000000000..3b354e523660
---- /dev/null
-+++ b/Documentation/leds/leds-class-multicolor.txt
-@@ -0,0 +1,152 @@
+diff --git a/drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c b/drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c
+index 50b8934..126429e 100644
+--- a/drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c
++++ b/drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c
+@@ -26,26 +26,38 @@ inline void rtw_sdio_set_irq_thd(struct dvobj_priv *dvobj, void *thd_hdl)
+ 	sdio_data->sys_sdio_irq_thd = thd_hdl;
+ }
+ 
+-u8 sd_f0_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
++static s32 rtw_isadapter_removed(struct intf_hdl *pintfhdl)
+ {
+ 	struct adapter *padapter;
 +
-+Multi Color LED handling under Linux
-+=================================================
++	padapter = pintfhdl->padapter;
++	return padapter->bSurpriseRemoved;
++}
 +
-+Author: Dan Murphy <dmurphy@ti.com>
++static struct sdio_func *rtw_sdio_get_func(struct intf_hdl *pintfhdl)
++{
+ 	struct dvobj_priv *psdiodev;
+ 	struct sdio_data *psdio;
+ 
++	psdiodev = pintfhdl->pintf_dev;
++	psdio = &psdiodev->intf_data;
 +
-+Description
-+-----------
-+There are varying monochrome LED colors available for application.  These
-+LEDs can be used as a single use case LED or can be mixed with other color
-+LEDs to produce the full spectrum of color.  Color LEDs that are grouped
-+can be presented under a single LED node with individual color control.
-+The multicolor class groups these LEDs and allows dynamically setting the value
-+of a single LED or setting the intensity values of the LEDs in the group and
-+updating the LEDs virtually simultaneously.
++	return psdio->func;
++}
 +
-+Multicolor Class Control
-+-------------------------
-+The multicolor class presents the LED groups under a directory called "colors".
-+This directory is a child under the LED parent node created by the led_class
-+framework.  The led_class framework is documented in led-class.txt within this
-+documentation directory.
++u8 sd_f0_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
++{
+ 	u8 v = 0;
+ 	struct sdio_func *func;
+ 	bool claim_needed;
+ 
+-	padapter = pintfhdl->padapter;
+-	psdiodev = pintfhdl->pintf_dev;
+-	psdio = &psdiodev->intf_data;
+ 
+-	if (padapter->bSurpriseRemoved) {
++	if (rtw_isadapter_removed(pintfhdl)) {
+ 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
+ 		return v;
+ 	}
+ 
+-	func = psdio->func;
++	func = rtw_sdio_get_func(pintfhdl);
+ 	claim_needed = rtw_sdio_claim_host_needed(func);
+ 
+ 	if (claim_needed)
+@@ -65,23 +77,15 @@ u8 sd_f0_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
+  */
+ s32 _sd_cmd52_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
+ {
+-	struct adapter *padapter;
+-	struct dvobj_priv *psdiodev;
+-	struct sdio_data *psdio;
+-
+ 	int err = 0, i;
+ 	struct sdio_func *func;
+ 
+-	padapter = pintfhdl->padapter;
+-	psdiodev = pintfhdl->pintf_dev;
+-	psdio = &psdiodev->intf_data;
+-
+-	if (padapter->bSurpriseRemoved) {
++	if (rtw_isadapter_removed(pintfhdl)) {
+ 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
+ 		return err;
+ 	}
+ 
+-	func = psdio->func;
++	func = rtw_sdio_get_func(pintfhdl);
+ 
+ 	for (i = 0; i < cnt; i++) {
+ 		pdata[i] = sdio_readb(func, addr+i, &err);
+@@ -100,24 +104,16 @@ s32 _sd_cmd52_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
+  */
+ s32 sd_cmd52_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
+ {
+-	struct adapter *padapter;
+-	struct dvobj_priv *psdiodev;
+-	struct sdio_data *psdio;
+-
+ 	int err = 0;
+ 	struct sdio_func *func;
+ 	bool claim_needed;
+ 
+-	padapter = pintfhdl->padapter;
+-	psdiodev = pintfhdl->pintf_dev;
+-	psdio = &psdiodev->intf_data;
+-
+-	if (padapter->bSurpriseRemoved) {
++	if (rtw_isadapter_removed(pintfhdl)) {
+ 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
+ 		return err;
+ 	}
+ 
+-	func = psdio->func;
++	func = rtw_sdio_get_func(pintfhdl);
+ 	claim_needed = rtw_sdio_claim_host_needed(func);
+ 
+ 	if (claim_needed)
+@@ -135,23 +131,15 @@ s32 sd_cmd52_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
+  */
+ s32 _sd_cmd52_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
+ {
+-	struct adapter *padapter;
+-	struct dvobj_priv *psdiodev;
+-	struct sdio_data *psdio;
+-
+ 	int err = 0, i;
+ 	struct sdio_func *func;
+ 
+-	padapter = pintfhdl->padapter;
+-	psdiodev = pintfhdl->pintf_dev;
+-	psdio = &psdiodev->intf_data;
+-
+-	if (padapter->bSurpriseRemoved) {
++	if (rtw_isadapter_removed(pintfhdl)) {
+ 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
+ 		return err;
+ 	}
+ 
+-	func = psdio->func;
++	func = rtw_sdio_get_func(pintfhdl);
+ 
+ 	for (i = 0; i < cnt; i++) {
+ 		sdio_writeb(func, pdata[i], addr+i, &err);
+@@ -170,24 +158,16 @@ s32 _sd_cmd52_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
+  */
+ s32 sd_cmd52_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
+ {
+-	struct adapter *padapter;
+-	struct dvobj_priv *psdiodev;
+-	struct sdio_data *psdio;
+-
+ 	int err = 0;
+ 	struct sdio_func *func;
+ 	bool claim_needed;
+ 
+-	padapter = pintfhdl->padapter;
+-	psdiodev = pintfhdl->pintf_dev;
+-	psdio = &psdiodev->intf_data;
+-
+-	if (padapter->bSurpriseRemoved) {
++	if (rtw_isadapter_removed(pintfhdl)) {
+ 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
+ 		return err;
+ 	}
+ 
+-	func = psdio->func;
++	func = rtw_sdio_get_func(pintfhdl);
+ 	claim_needed = rtw_sdio_claim_host_needed(func);
+ 
+ 	if (claim_needed)
+@@ -200,24 +180,16 @@ s32 sd_cmd52_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
+ 
+ u8 sd_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
+ {
+-	struct adapter *padapter;
+-	struct dvobj_priv *psdiodev;
+-	struct sdio_data *psdio;
+-
+ 	u8 v = 0;
+ 	struct sdio_func *func;
+ 	bool claim_needed;
+ 
+-	padapter = pintfhdl->padapter;
+-	psdiodev = pintfhdl->pintf_dev;
+-	psdio = &psdiodev->intf_data;
+-
+-	if (padapter->bSurpriseRemoved) {
++	if (rtw_isadapter_removed(pintfhdl)) {
+ 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
+ 		return v;
+ 	}
+ 
+-	func = psdio->func;
++	func = rtw_sdio_get_func(pintfhdl);
+ 	claim_needed = rtw_sdio_claim_host_needed(func);
+ 
+ 	if (claim_needed)
+@@ -234,21 +206,19 @@ u32 sd_read32(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
+ {
+ 	struct adapter *padapter;
+ 	struct dvobj_priv *psdiodev;
+-	struct sdio_data *psdio;
+ 	u32 v = 0;
+ 	struct sdio_func *func;
+ 	bool claim_needed;
+ 
+ 	padapter = pintfhdl->padapter;
+ 	psdiodev = pintfhdl->pintf_dev;
+-	psdio = &psdiodev->intf_data;
+ 
+ 	if (padapter->bSurpriseRemoved) {
+ 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
+ 		return v;
+ 	}
+ 
+-	func = psdio->func;
++	func = rtw_sdio_get_func(pintfhdl);
+ 	claim_needed = rtw_sdio_claim_host_needed(func);
+ 
+ 	if (claim_needed)
+@@ -295,22 +265,15 @@ u32 sd_read32(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
+ 
+ void sd_write8(struct intf_hdl *pintfhdl, u32 addr, u8 v, s32 *err)
+ {
+-	struct adapter *padapter;
+-	struct dvobj_priv *psdiodev;
+-	struct sdio_data *psdio;
+ 	struct sdio_func *func;
+ 	bool claim_needed;
+ 
+-	padapter = pintfhdl->padapter;
+-	psdiodev = pintfhdl->pintf_dev;
+-	psdio = &psdiodev->intf_data;
+-
+-	if (padapter->bSurpriseRemoved) {
++	if (rtw_isadapter_removed(pintfhdl)) {
+ 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
+ 		return;
+ 	}
+ 
+-	func = psdio->func;
++	func = rtw_sdio_get_func(pintfhdl);
+ 	claim_needed = rtw_sdio_claim_host_needed(func);
+ 
+ 	if (claim_needed)
+@@ -326,20 +289,18 @@ void sd_write32(struct intf_hdl *pintfhdl, u32 addr, u32 v, s32 *err)
+ {
+ 	struct adapter *padapter;
+ 	struct dvobj_priv *psdiodev;
+-	struct sdio_data *psdio;
+ 	struct sdio_func *func;
+ 	bool claim_needed;
+ 
+ 	padapter = pintfhdl->padapter;
+ 	psdiodev = pintfhdl->pintf_dev;
+-	psdio = &psdiodev->intf_data;
+ 
+ 	if (padapter->bSurpriseRemoved) {
+ 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
+ 		return;
+ 	}
+ 
+-	func = psdio->func;
++	func = rtw_sdio_get_func(pintfhdl);
+ 	claim_needed = rtw_sdio_claim_host_needed(func);
+ 
+ 	if (claim_needed)
+@@ -398,23 +359,15 @@ void sd_write32(struct intf_hdl *pintfhdl, u32 addr, u32 v, s32 *err)
+  */
+ s32 _sd_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
+ {
+-	struct adapter *padapter;
+-	struct dvobj_priv *psdiodev;
+-	struct sdio_data *psdio;
+-
+ 	int err = -EPERM;
+ 	struct sdio_func *func;
+ 
+-	padapter = pintfhdl->padapter;
+-	psdiodev = pintfhdl->pintf_dev;
+-	psdio = &psdiodev->intf_data;
+-
+-	if (padapter->bSurpriseRemoved) {
++	if (rtw_isadapter_removed(pintfhdl)) {
+ 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
+ 		return err;
+ 	}
+ 
+-	func = psdio->func;
++	func = rtw_sdio_get_func(pintfhdl);
+ 
+ 	if (unlikely((cnt == 1) || (cnt == 2))) {
+ 		int i;
+@@ -453,23 +406,18 @@ s32 _sd_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
+  */
+ s32 sd_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
+ {
+-	struct adapter *padapter;
+-	struct dvobj_priv *psdiodev;
+-	struct sdio_data *psdio;
+ 
+ 	struct sdio_func *func;
+ 	bool claim_needed;
+ 	s32 err = -EPERM;
+ 
+-	padapter = pintfhdl->padapter;
+-	psdiodev = pintfhdl->pintf_dev;
+-	psdio = &psdiodev->intf_data;
+ 
+-	if (padapter->bSurpriseRemoved) {
++	if (rtw_isadapter_removed(pintfhdl)) {
+ 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
+ 		return err;
+ 	}
+-	func = psdio->func;
 +
-+Each colored LED is given its own directory.  These directories can be, but not
-+limited to red, green, blue, white, amber, yellow and violet.  Under these
-+directories the intensity and max_intensity files are presented for each LED.
-+
-+
-+Directory Layout Example
-+------------------------
-+root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
-+colors/:
-+drwxr-xr-x    2 root     root             0 Jun 28 20:21 blue
-+drwxr-xr-x    2 root     root             0 Jun 28 20:21 green
-+drwxr-xr-x    2 root     root             0 Jun 28 20:21 red
-+-rw-------    1 root     root          4096 Jun 28 20:21 color_mix
-+
-+colors/blue:
-+-rw-------    1 root     root          4096 Jun 28 20:21 intensity
-+-r--------    1 root     root          4096 Jun 28 20:27 max_intensity
-+-r--------    1 root     root          4096 Jun 28 20:21 color_id
-+
-+colors/green:
-+-rw-------    1 root     root          4096 Jun 28 20:22 intensity
-+-r--------    1 root     root          4096 Jun 28 20:27 max_intensity
-+-r--------    1 root     root          4096 Jun 28 20:21 color_id
-+
-+colors/red:
-+-rw-------    1 root     root          4096 Jun 28 20:21 intensity
-+-r--------    1 root     root          4096 Jun 28 20:27 max_intensity
-+-r--------    1 root     root          4096 Jun 28 20:21 color_id
-+
-+Multicolor Color Mixing
-+-----------------------
-+Multicolor monochrome LEDs intensity can be modified and mixed to produce a
-+varying array of colors.  The color_mix file gives the user the ability to write
-+all the monochrome LEDs registered in the directory with a single call.
-+To create a specific color from monochrome LEDs the color_mix file needs to be
-+written with each color's intensity.  The order in which the monochrome LEDs
-+should be written is based on the colors color_id.
-+
-+For example:
-+cat /sys/class/leds/rgb:grouped_leds/red/color_id
-+0
-+cat /sys/class/leds/rgb:grouped_leds/green/color_id
-+1
-+cat /sys/class/leds/rgb:grouped_leds/blue/color_id
-+2
-+
-+red - color_id = 0
-+green - color_id = 1
-+blue - color_id = 2
-+
-+These id's are the order in which to write the color_mix file.
-+
-+echo "<red> <green> <blue>" > color_mix
-+
-+echo "80 00 80" > color_mix
-+
-+The order of the monochrome LEDs are determined during multicolor class
-+registration and will not change unless unregistered and re-registered.
-+
-+Other example with amber monochrome LED:
-+blue - color_id = 0
-+amber - color_id = 1
-+
-+In this exampe blue is at ID 0 and amber ID is 1 so the user would write
-+echo "<blue> <amber>" > color_mix
-+
-+echo "38 80" > color_mix
-+
-+If a single monochrome LED needs to be modified then the user would write the
-+colors/<color>/intensity file.
-+
-+
-+Multicolor Class Brightness Control
-+-----------------------------------
-+The multiclor class framework will calculate each monochrome LEDs intensity.
-+
-+The brightness level for each LED is calculated based on the color LED
-+intensity setting divided by the color LED max intensity setting multiplied by
-+the requested value.
-+
-+led_brightness = requested_value * led_color_intensity/led_color_max_intensity
-+
-+Example:
-+Three LEDs are present in the group as defined in "Directory Layout Example"
-+within this document.
-+
-+A user first writes the color LED brightness file with the brightness level that
-+is necessary to achieve a blueish violet output from the RGB LED group.
-+
-+echo 138 > /sys/class/leds/rgb:grouped_leds/red/intensity
-+echo 43 > /sys/class/leds/rgb:grouped_leds/green/intensity
-+echo 226 > /sys/class/leds/rgb:grouped_leds/blue/intensity
-+
-+red -
-+	intensity = 138
-+	max_intensity = 255
-+green -
-+	intensity = 43
-+	max_intensity = 255
-+blue -
-+	intensity = 226
-+	max_intensity = 255
-+
-+The user can control the brightness of that RGB group by writing the parent
-+'brightness' control.  Assuming a parent max_brightness of 255 the user may want
-+to dim the LED color group to half.  The user would write a value of 128 to the
-+parent brightness file then the values written to each LED will be adjusted
-+base on this value
-+
-+cat /sys/class/leds/rgb:grouped_leds/max_brightness
-+255
-+echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
-+
-+adjusted_red_value = 128 * 138/255 = 69
-+adjusted_green_value = 128 * 43/255 = 21
-+adjusted_blue_value = 128 * 226/255 = 113
-+
-+Reading the parent brightness file will return the current brightness value of
-+the color LED group.
-+
-+cat /sys/class/leds/rgb:grouped_leds/max_brightness
-+255
-+
-+echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
-+
-+cat /sys/class/leds/rgb:grouped_leds/max_brightness
-+128
-+
-+
++	func = rtw_sdio_get_func(pintfhdl);
+ 	claim_needed = rtw_sdio_claim_host_needed(func);
+ 
+ 	if (claim_needed)
+@@ -497,24 +445,16 @@ s32 sd_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
+  */
+ s32 _sd_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
+ {
+-	struct adapter *padapter;
+-	struct dvobj_priv *psdiodev;
+-	struct sdio_data *psdio;
+-
+ 	struct sdio_func *func;
+ 	u32 size;
+ 	s32 err =  -EPERM;
+ 
+-	padapter = pintfhdl->padapter;
+-	psdiodev = pintfhdl->pintf_dev;
+-	psdio = &psdiodev->intf_data;
+-
+-	if (padapter->bSurpriseRemoved) {
++	if (rtw_isadapter_removed(pintfhdl)) {
+ 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
+ 		return err;
+ 	}
+ 
+-	func = psdio->func;
++	func = rtw_sdio_get_func(pintfhdl);
+ /*	size = sdio_align_size(func, cnt); */
+ 
+ 	if (unlikely((cnt == 1) || (cnt == 2))) {
+@@ -555,23 +495,16 @@ s32 _sd_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
+  */
+ s32 sd_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
+ {
+-	struct adapter *padapter;
+-	struct dvobj_priv *psdiodev;
+-	struct sdio_data *psdio;
+ 	struct sdio_func *func;
+ 	bool claim_needed;
+ 	s32 err =  -EPERM;
+ 
+-	padapter = pintfhdl->padapter;
+-	psdiodev = pintfhdl->pintf_dev;
+-	psdio = &psdiodev->intf_data;
+-
+-	if (padapter->bSurpriseRemoved) {
++	if (rtw_isadapter_removed(pintfhdl)) {
+ 		/* DBG_871X(" %s (padapter->bSurpriseRemoved ||adapter->pwrctrlpriv.pnp_bstop_trx)!!!\n", __func__); */
+ 		return err;
+ 	}
+ 
+-	func = psdio->func;
++	func = rtw_sdio_get_func(pintfhdl);
+ 	claim_needed = rtw_sdio_claim_host_needed(func);
+ 
+ 	if (claim_needed)
 -- 
-2.22.0.214.g8dca754b1e
+2.7.4
 
