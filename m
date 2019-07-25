@@ -2,129 +2,158 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50B1C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 049AFC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81F8521901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA8822BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:37:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="lk2NGtx5"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="F8Fcu2KB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbfGYOhK (ORCPT
+        id S1729079AbfGYOhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:37:10 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42309 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbfGYOhJ (ORCPT
+        Thu, 25 Jul 2019 10:37:19 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:54213 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729056AbfGYOhT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:37:09 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so22854985pff.9
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 07:37:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=eR9Hp6lNdSYA3Q9LS12AuwAXP6EgUTReBDkxImpX5hM=;
-        b=lk2NGtx5FqgD81SxeWV7cc9gi6gUfxxPm8Vw1C2fRjdvKVT415jdlNqzYMMC+aB53l
-         HwC2FGD/kd+ot31j2TND04GQNCilJniBlkulcKaqjUc/gkYJYPjxtUEahs9Tfiia9r/f
-         ifHMuSLRXja1h4Ebug5DXIxxSVErvU4Qc7l2QtRmAakLP2bzsJA0fFxy0FgkLoyGOkZU
-         uz/Tt9gAr/tWmFDWcmjY7BGQa3KSxFWBeRxU60dXJk7/1RTrjIdlZGF4Vgh4XYpHWBgJ
-         6WiE6PpzpvtvLlv6P7wF0jyo34sn9Ir3Le7yN/XJnJ3JO2yIUXc+8OSRzdcOObHAxN/I
-         b94w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=eR9Hp6lNdSYA3Q9LS12AuwAXP6EgUTReBDkxImpX5hM=;
-        b=WKoofYzaFlu4suP4a/tOCUjNFV7kklQ5nYbl3LCDM///gDCOHyrzNJwqDRXs4CDj/y
-         QUpzrCj9+bIh8CGiaBUiAd8MVvXpzdGrpkmxyD6p9CEE3eNbdtdcGVr90eX0WMLotPv/
-         +ceGcZ2hgpAa5hCayZN+f2lXuWSexDSniaC1iQV/R8Akb7CXGQ/14F/XFlnofLlQju+v
-         9475h312r0XhjWqOu+a9kN/8KOwpeHEYtuDyf1z+Tm6d7hphc25vwAkRgSqbxoOyTiE3
-         3x6DJdNh2AwJObD89KhoW0LrlnjqKNTlieMDvvAIxJ6tGniM4nEFAxiGc4g9EdneX36C
-         TsTg==
-X-Gm-Message-State: APjAAAX1dw+2U/P8abexAW0FqWe2vpPZb9D3rUMLZNacjf/CDmoDWtA4
-        VDinL2/eHz2Kxa8+wpyIE3Q=
-X-Google-Smtp-Source: APXvYqyM+b0LIhHKU6UawP/Xg2Yu8CVrpTZWWVwOYd0IcNAxs1f6VsdAVX4Xa08OWBMpPtwJXLywcw==
-X-Received: by 2002:a62:e20b:: with SMTP id a11mr17216612pfi.0.1564065428842;
-        Thu, 25 Jul 2019 07:37:08 -0700 (PDT)
-Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
-        by smtp.googlemail.com with ESMTPSA id k3sm35749356pgq.92.2019.07.25.07.37.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 07:37:08 -0700 (PDT)
-Subject: Re: [PATCH v10 4/5] overlayfs: internal getxattr operations without
- sepolicy checking
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-team@android.com, Miklos Szeredi <miklos@szeredi.hu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-doc@vger.kernel.org
-References: <20190724195719.218307-1-salyzyn@android.com>
- <20190724195719.218307-5-salyzyn@android.com>
- <CAOQ4uxhtASSymEOdh4XByXbxWO2_ZivzqjBrgK7jB3fWXLqr_w@mail.gmail.com>
-From:   Mark Salyzyn <salyzyn@android.com>
-Message-ID: <20df8497-17ea-27db-43c8-fcd73633e7f3@android.com>
-Date:   Thu, 25 Jul 2019 07:37:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 25 Jul 2019 10:37:19 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PEb5mL1041989
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 07:37:06 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PEb5mL1041989
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564065426;
+        bh=u9lxvqAFP1MFrDEx8AitCxDJoiaz7jD7cA5B1dM0L4I=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=F8Fcu2KBtPmilh4JvAdB9g/WXSAuHkhODL1mhydGunOm1hGvKDHp0A71GpgJqi7rR
+         Wz/5nCAdH4D+HII57K8O4x42Qgy3aG7ZSiJj6C/cYfhWt8CspofzUNxomM5S9iHomI
+         s40eRfVLnSPjSmiC+ito1j3U+/nk0bqFdGsRGKFBHqP3ilqoImZioNbaZooqG0sqcg
+         jdHgypIlTCBLNvf3GdPw8d3pMZkPsCTZHBpCxp0ccj3cRqntMBPPkmuuFrp6Hjfytc
+         iANlZYfEaWQ5wtDKHd8JEngrEBHrDzwTs1OMhKUPbD76V5Ce8/07sgL9jKQIvVRRP8
+         s+7ydq/lshorA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PEb5Kn1041986;
+        Thu, 25 Jul 2019 07:37:05 -0700
+Date:   Thu, 25 Jul 2019 07:37:05 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-43931d350f30c6cd8c2f498d54ef7d65750abc92@git.kernel.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, peterz@infradead.org,
+        hpa@zytor.com, linux-kernel@vger.kernel.org
+Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com,
+          peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org
+In-Reply-To: <20190722105221.134696837@linutronix.de>
+References: <20190722105221.134696837@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/apic] x86/apic/x2apic: Implement IPI shorthands support
+Git-Commit-ID: 43931d350f30c6cd8c2f498d54ef7d65750abc92
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <CAOQ4uxhtASSymEOdh4XByXbxWO2_ZivzqjBrgK7jB3fWXLqr_w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the review.
+Commit-ID:  43931d350f30c6cd8c2f498d54ef7d65750abc92
+Gitweb:     https://git.kernel.org/tip/43931d350f30c6cd8c2f498d54ef7d65750abc92
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Mon, 22 Jul 2019 20:47:30 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 25 Jul 2019 16:12:02 +0200
 
-On 7/25/19 4:00 AM, Amir Goldstein wrote:
-> On Wed, Jul 24, 2019 at 10:57 PM Mark Salyzyn <salyzyn@android.com> wrote:
->> Check impure, opaque, origin & meta xattr with no sepolicy audit
->> (using __vfs_getxattr) since these operations are internal to
->> overlayfs operations and do not disclose any data.  This became
->> an issue for credential override off since sys_admin would have
->> been required by the caller; whereas would have been inherently
->> present for the creator since it performed the mount.
->>
->> This is a change in operations since we do not check in the new
->> ovl_vfs_getxattr function if the credential override is off or
->> not.  Reasoning is that the sepolicy check is unnecessary overhead,
->> especially since the check can be expensive.
-> I don't know that this reasoning suffice to skip the sepolicy checks
-> for overlayfs private xattrs.
-> Can't sepolicy be defined to allow get access to trusted.overlay.*?
+x86/apic/x2apic: Implement IPI shorthands support
 
-Because for override credentials off, _everyone_ would need it (at least 
-on Android, the sole user AFAIK, and only on userdebug builds, not user 
-builds), and if everyone is special, and possibly including the random 
-applications we add from the play store, then no one is ...
+All callers of apic->send_IPI_all() and apic->send_IPI_allbutself() contain
+the decision logic for shorthand invocation already and invoke
+send_IPI_mask() if the prereqisites are not satisfied.
 
-For the override credentials on, the sepolicy would be required to add 
-to init or other mounters so that callers can actually use overlayfs. 
-Without the sepolicy for init, overlayfs will not function. the xattr 
-are in the backing storage and the details are not exported outside of 
-the driver. This would represent an imbalance since none of the callers 
-would require the sepolicy adjustment for the ;normal' case, but for 
-override credentials off as stated above, _everyone_ would require it.
+Implement shorthand support for x2apic.
 
-Not against adding the sepolicy in Android, it is how we roll with only 
-opening up credentials on an as-need basis. We could deny it on user 
-(customer) builds and that closes a door that gains security. However 
-our people are starting to resist userdebug being different from user so 
-it may be a door I can not shut. Again felt like an imbalance for a 
-trusted driver read only operation.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105221.134696837@linutronix.de
 
-Sincerely -- Mark Salyzyn
+---
+ arch/x86/kernel/apic/local.h          |  1 +
+ arch/x86/kernel/apic/x2apic_cluster.c |  4 ++--
+ arch/x86/kernel/apic/x2apic_phys.c    | 12 ++++++++++--
+ 3 files changed, 13 insertions(+), 4 deletions(-)
 
+diff --git a/arch/x86/kernel/apic/local.h b/arch/x86/kernel/apic/local.h
+index 69ba777cef98..04797f05ce94 100644
+--- a/arch/x86/kernel/apic/local.h
++++ b/arch/x86/kernel/apic/local.h
+@@ -23,6 +23,7 @@ unsigned int x2apic_get_apic_id(unsigned long id);
+ u32 x2apic_set_apic_id(unsigned int id);
+ int x2apic_phys_pkg_id(int initial_apicid, int index_msb);
+ void x2apic_send_IPI_self(int vector);
++void __x2apic_send_IPI_shorthand(int vector, u32 which);
+ 
+ /* IPI */
+ 
+diff --git a/arch/x86/kernel/apic/x2apic_cluster.c b/arch/x86/kernel/apic/x2apic_cluster.c
+index d0a13c88f777..45e92cba92f5 100644
+--- a/arch/x86/kernel/apic/x2apic_cluster.c
++++ b/arch/x86/kernel/apic/x2apic_cluster.c
+@@ -82,12 +82,12 @@ x2apic_send_IPI_mask_allbutself(const struct cpumask *mask, int vector)
+ 
+ static void x2apic_send_IPI_allbutself(int vector)
+ {
+-	__x2apic_send_IPI_mask(cpu_online_mask, vector, APIC_DEST_ALLBUT);
++	__x2apic_send_IPI_shorthand(vector, APIC_DEST_ALLBUT);
+ }
+ 
+ static void x2apic_send_IPI_all(int vector)
+ {
+-	__x2apic_send_IPI_mask(cpu_online_mask, vector, APIC_DEST_ALLINC);
++	__x2apic_send_IPI_shorthand(vector, APIC_DEST_ALLINC);
+ }
+ 
+ static u32 x2apic_calc_apicid(unsigned int cpu)
+diff --git a/arch/x86/kernel/apic/x2apic_phys.c b/arch/x86/kernel/apic/x2apic_phys.c
+index 5d50e1f9d4bf..bc9693841353 100644
+--- a/arch/x86/kernel/apic/x2apic_phys.c
++++ b/arch/x86/kernel/apic/x2apic_phys.c
+@@ -75,12 +75,12 @@ static void
+ 
+ static void x2apic_send_IPI_allbutself(int vector)
+ {
+-	__x2apic_send_IPI_mask(cpu_online_mask, vector, APIC_DEST_ALLBUT);
++	__x2apic_send_IPI_shorthand(vector, APIC_DEST_ALLBUT);
+ }
+ 
+ static void x2apic_send_IPI_all(int vector)
+ {
+-	__x2apic_send_IPI_mask(cpu_online_mask, vector, APIC_DEST_ALLINC);
++	__x2apic_send_IPI_shorthand(vector, APIC_DEST_ALLINC);
+ }
+ 
+ static void init_x2apic_ldr(void)
+@@ -112,6 +112,14 @@ void __x2apic_send_IPI_dest(unsigned int apicid, int vector, unsigned int dest)
+ 	native_x2apic_icr_write(cfg, apicid);
+ }
+ 
++void __x2apic_send_IPI_shorthand(int vector, u32 which)
++{
++	unsigned long cfg = __prepare_ICR(which, vector, 0);
++
++	x2apic_wrmsr_fence();
++	native_x2apic_icr_write(cfg, 0);
++}
++
+ unsigned int x2apic_get_apic_id(unsigned long id)
+ {
+ 	return id;
