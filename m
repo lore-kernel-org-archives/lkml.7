@@ -2,214 +2,174 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086BEC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A45C41517
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C57B9218DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D760D218DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:29:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OjPF1rzG"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="KCdQPQo9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfGYT3w (ORCPT
+        id S1726804AbfGYT35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 15:29:52 -0400
-Received: from mail-qk1-f174.google.com ([209.85.222.174]:43157 "EHLO
-        mail-qk1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbfGYT3w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:29:52 -0400
-Received: by mail-qk1-f174.google.com with SMTP id m14so11644912qka.10
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 12:29:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=si1Bg5d4DG/siyTiXvmamj/8p+ZxXVSJ3UQi4yT7UUs=;
-        b=OjPF1rzG6j00lyx9qskWReDCQZ4A335Yk6oMrrcwap2n+dj1NcZUPBuK0tsSPF+y7E
-         Kv9L8jcA4TpdUf8UG95Pyeo69nZO1kzFOGsC2of/qgrFKUH8uJQNZFTQVUaWGsDRfa2D
-         noanR1FhbaOdRTKNuRw76Agsiv61gjkwZOGT75g6QFs8RUKPSMoYXDEe2FLAQewUPDNM
-         lDWrMlIi+YnDFuYC3Ootmy8nO4DeTF1s9wmVJhAORZImjXMXP0oDMAcp938dZp4CDBan
-         IfH7PNa4bGY/vYhSy/BsA6kHLFrl9zQRen9ZIAk6ikxl1v9hzkmzxIi/cbg19fG84TKt
-         VgqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=si1Bg5d4DG/siyTiXvmamj/8p+ZxXVSJ3UQi4yT7UUs=;
-        b=GueA3rDW8S57CAa4tmLPElT7yM5YQpiJAJqA0nyM4v0ZkdqdfdV+3M/mc8AOqzMn/g
-         SeP4vgwf/8GYbPlOl+tX/OxeUtvd195bcFfSw6Sb7DeQmtUJ6iPZXgDrCt3M5E11xh05
-         cPgMqCr6d9QRG22uIj9kehF/7+lxTTuktLDwnkClCOOdwEZoWkCbhE56SyrAqSBcfsPz
-         +obJ/LzcxIQW29owvzVXalyHIww0aDvdC0+HfG6/F/ejhRUoXjAr2iBSQAAcRP1uHd3U
-         QIT3Gyq8aYCG3ROtOTHeCQaNTl30n4+NsLFe/IG6F2jLFbGvyE+e59IWczYQTrsHrA4m
-         kH2A==
-X-Gm-Message-State: APjAAAU+WAAM+km/kaVpPLv9E5R4a06TrKuX+oaCQdjId8dVb092q2GD
-        u7/qgl/78ferDrv9uizg5RhHlZpcKO7k8geEBzI=
-X-Google-Smtp-Source: APXvYqzHXGhtFa/wQAPpmBiS/0sdVeAOWcBceZoWIjzA6wYqKPid+xvQH9ep5xOPrm7Hdowc7CFgFdh6rmrwTjLrU3w=
-X-Received: by 2002:ae9:f017:: with SMTP id l23mr60057787qkg.457.1564082990063;
- Thu, 25 Jul 2019 12:29:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAOKSTBs-cHMr7xbJVVUjZ9C3__bY6jZU-_TZ0RmMRMJ3dBk3PA@mail.gmail.com>
- <0c3f445d-1e37-1531-d3d5-f7ad75c58343@metux.net> <CADnq5_NqDNLzZW6h3cXBUfTMsBe6isvE6YQH=9Op6Gews=ubGg@mail.gmail.com>
-In-Reply-To: <CADnq5_NqDNLzZW6h3cXBUfTMsBe6isvE6YQH=9Op6Gews=ubGg@mail.gmail.com>
-From:   Gilberto Nunes <gilberto.nunes32@gmail.com>
-Date:   Thu, 25 Jul 2019 16:29:14 -0300
-Message-ID: <CAOKSTBvjJ+3he9AJoRGkxQfQLoG_T9jY+H8p0o6A6FdmnisSJA@mail.gmail.com>
-Subject: Re: AMD Drivers
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 25 Jul 2019 15:29:57 -0400
+Received: from mail-eopbgr140079.outbound.protection.outlook.com ([40.107.14.79]:24827
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726683AbfGYT35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 15:29:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RVLAgQj6bKLI6GEfpekdTNGYTfbZy0hKh1j5UZY2ePS2JqbIpmn0ao0nTlVq9TUycU1wEOQOp0bZRQErBQ/xtVl6Hoam2pKT3FOrqMZ0T/61YKyLTrD/F73j1s0BiewB7P0DXXlsqPf3/lHFqTdt9CFIkiWxv5qGzbDNUi7WYoxxtN1A0O11MIv9cWyHT14vxvoJHAWe5g64a3Ygus1rUjFT689nq9pjvnPEMrwq80TU/ZX9dN9/sIgM19rXACdfEctgvAurHEuWsyaAbR7bgPY1Cpz3QqxOPALw6fCKDoEPuT//E3Raeu23SYw6UgRJVS7DIB22xQ4rgluxfTkAnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A3FPLuUAvLzM5ewABe3sLYB5sEaP6QaCe81llyV3ZY4=;
+ b=Ntfu2BdUM27671y4mOyakooSZN1qzijET7gps30S0xu4gLvpEWev9+wKmZrCXRuu85IiH28EMXg2SdlAHOsfPSMPbczImRHqRN3rOChT2zhPsgDG5a/92Y3uUcOQTtjZ2VtRtMgwqxbSNNhjUg0bKbfB1yPfy6ktSHG7MfdgwC6LOk951jckRAjH8h0HDzyfNmmIhULS4z4/Pf4iEJ7+clYxtoKl6+ohuQW7sx3mtfAdHF+RP4Tm42LiBaeiebcv4z2zTuJpJPRSbBrW0DHC1aK1CH5/oVGWvlQSTBZ3VdckQBXgknLRWNd9HcFwp0TdhNYJi4dzW3q9ckrK7iy8Lg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=mellanox.com;dmarc=pass action=none
+ header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A3FPLuUAvLzM5ewABe3sLYB5sEaP6QaCe81llyV3ZY4=;
+ b=KCdQPQo9HC4jix3JU4ykc8GRBDv8FOYQBfUV+Uvudcu9jxtpkbq8qicye8lMKDnOtpoqn0trtNJIS6yXk6hFa+MZZ4yQ9mARrU669+craQjycDXEMw09nSsczjzlDPng8VcjnO5uKFR+5xqyu9LCprn1PCLPkTHCFTThOugCrgo=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5294.eurprd05.prod.outlook.com (20.178.12.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.16; Thu, 25 Jul 2019 19:29:49 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880%4]) with mapi id 15.20.2115.005; Thu, 25 Jul 2019
+ 19:29:49 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Logan Gunthorpe <logang@deltatee.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [PATCH 11/14] PCI/P2PDMA: dma_map P2PDMA map requests that
+ traverse the host bridge
+Thread-Topic: [PATCH 11/14] PCI/P2PDMA: dma_map P2PDMA map requests that
+ traverse the host bridge
+Thread-Index: AQHVQOKBSj2t7d2fJ0uM7qhfiZtzFqbbtCAAgAAFLgCAAAOMAA==
+Date:   Thu, 25 Jul 2019 19:29:49 +0000
+Message-ID: <20190725192944.GI7450@mellanox.com>
+References: <20190722230859.5436-1-logang@deltatee.com>
+ <20190722230859.5436-12-logang@deltatee.com>
+ <20190725185830.GH7450@mellanox.com>
+ <cf61d237-8a8a-e3ac-a9df-466f20b63020@deltatee.com>
+In-Reply-To: <cf61d237-8a8a-e3ac-a9df-466f20b63020@deltatee.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YT1PR01CA0035.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::48)
+ To VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 39e2b66d-9e1a-4780-bfde-08d711367594
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5294;
+x-ms-traffictypediagnostic: VI1PR05MB5294:
+x-microsoft-antispam-prvs: <VI1PR05MB52947BE15707CB8D96AADCF5CFC10@VI1PR05MB5294.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0109D382B0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(396003)(366004)(376002)(199004)(189003)(478600001)(316002)(3846002)(52116002)(8676002)(6512007)(54906003)(5660300002)(53936002)(26005)(86362001)(4326008)(7416002)(66556008)(305945005)(36756003)(102836004)(6486002)(386003)(66446008)(6246003)(6116002)(256004)(66476007)(7736002)(68736007)(25786009)(99286004)(486006)(14454004)(81166006)(1076003)(33656002)(81156014)(6916009)(11346002)(66946007)(64756008)(2616005)(476003)(2906002)(8936002)(186003)(53546011)(71190400001)(66066001)(71200400001)(446003)(6506007)(229853002)(6436002)(76176011)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5294;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 7CJuxVXM3aH6BJJy7/HN/xKPxqEsqiz4Mxew2hDrOr4rwoltOuAmHU4Hb6e8kbVFaNVeI782napI8huUhrwGdRs4kzZNvKoRGTg7bNO8TuQSKSWwTY31E0H8tJxxYpkorfxCZY9sirsloN9aEN07N6Pw1+577iRSbimOhDUZTzUGTb62MLp84dcWscpptQrRrXfW6f7ipbCz9gttZaKZohN7OWR5oPM7UDnEEK9b/tJ1KUndTKcxAviBdLs63goubEuUULvkANRAl6b+i6d4UFvYhYcamoaN1IgR9qkLOAFFZuWC5IRzIQ6PtWJhQHePXVCubTgei4yWEK689vUoWJVOEhx7J9JC11CuTed1X08+TA1vkVzKMdmgYI2FPBm85kLsCm+0ZG3t+zYAaGMcOGLM7coJ4gkKaR1/sBjM0iU=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <BF60765BC6FB194DA911DEB33C20BF68@eurprd05.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 39e2b66d-9e1a-4780-bfde-08d711367594
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2019 19:29:49.6632
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5294
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi there!
+On Thu, Jul 25, 2019 at 01:17:02PM -0600, Logan Gunthorpe wrote:
+>=20
+>=20
+> On 2019-07-25 12:58 p.m., Jason Gunthorpe wrote:
+> > On Mon, Jul 22, 2019 at 05:08:56PM -0600, Logan Gunthorpe wrote:
+> >> Any requests that traverse the host bridge will need to be mapped into
+> >> the IOMMU, so call dma_map_sg() inside pci_p2pdma_map_sg() when
+> >> appropriate.
+> >>
+> >> Similarly, call dma_unmap_sg() inside pci_p2pdma_unmap_sg().
+> >>
+> >> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> >>  drivers/pci/p2pdma.c | 31 ++++++++++++++++++++++++++++++-
+> >>  1 file changed, 30 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> >> index 5f43f92f9336..76f51678342c 100644
+> >> +++ b/drivers/pci/p2pdma.c
+> >> @@ -830,8 +830,22 @@ int pci_p2pdma_map_sg_attrs(struct device *dev, s=
+truct scatterlist *sg,
+> >>  		int nents, enum dma_data_direction dir, unsigned long attrs)
+> >>  {
+> >>  	struct dev_pagemap *pgmap =3D sg_page(sg)->pgmap;
+> >> +	struct pci_dev *client;
+> >> +	int dist;
+> >> +
+> >> +	client =3D find_parent_pci_dev(dev);
+> >> +	if (WARN_ON_ONCE(!client))
+> >> +		return 0;
+> >> =20
+> >> -	return __pci_p2pdma_map_sg(pgmap, dev, sg, nents);
+> >> +	dist =3D upstream_bridge_distance(pgmap->pci_p2pdma_provider,
+> >> +					client, NULL);
 
-I try the kernel 5.3.0-050300rc1-generic and almost everything works
-perfectly, except there's no sound in HDMI!!!
-Pavucontrol show me device unplugged!
-But I have now work properly NIC and GPU!
+Isn't is a bit of a leap to assume that the pgmap is uniform across
+all the sgs?
 
+> >> +	if (WARN_ON_ONCE(dist & P2PDMA_NOT_SUPPORTED))
+> >> +		return 0;
+> >> +
+> >> +	if (dist & P2PDMA_THRU_HOST_BRIDGE)
+> >> +		return dma_map_sg_attrs(dev, sg, nents, dir, attrs);
+> >=20
+> > IIRC at this point the SG will have struct page references to the BAR
+> > memory - so (all?) the IOMMU drivers are able to handle P2P setup in
+> > this case?
+>=20
+> Yes. The IOMMU drivers refer to the physical address for BAR which they
+> can get from the struct page. And this works fine today.
 
-lspci
-00:00.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-(Models 60h-6fh) Processor Root Complex
-00:00.2 IOMMU: Advanced Micro Devices, Inc. [AMD] Family 15h (Models
-60h-6fh) I/O Memory Management Unit
-00:01.0 VGA compatible controller: Advanced Micro Devices, Inc.
-[AMD/ATI] Wani [Radeon R5/R6/R7 Graphics] (rev c8)
-00:01.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Kabini
-HDMI/DP Audio
-00:02.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-(Models 60h-6fh) Host Bridge
-00:02.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-(Models 60h-6fh) Processor Root Port
-00:02.3 PCI bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-(Models 60h-6fh) Processor Root Port
-00:03.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-(Models 60h-6fh) Host Bridge
-00:03.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-(Models 60h-6fh) Processor Root Port
-00:08.0 Encryption controller: Advanced Micro Devices, Inc. [AMD] Device 15=
-78
-00:09.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 157d
-00:09.2 Audio device: Advanced Micro Devices, Inc. [AMD] Family 15h
-(Models 60h-6fh) Audio Controller
-00:10.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB
-XHCI Controller (rev 20)
-00:11.0 SATA controller: Advanced Micro Devices, Inc. [AMD] FCH SATA
-Controller [AHCI mode] (rev 49)
-00:12.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB
-EHCI Controller (rev 49)
-00:14.0 SMBus: Advanced Micro Devices, Inc. [AMD] FCH SMBus Controller (rev=
- 4a)
-00:14.3 ISA bridge: Advanced Micro Devices, Inc. [AMD] FCH LPC Bridge (rev =
-11)
-00:18.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-(Models 60h-6fh) Processor Function 0
-00:18.1 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-(Models 60h-6fh) Processor Function 1
-00:18.2 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-(Models 60h-6fh) Processor Function 2
-00:18.3 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-(Models 60h-6fh) Processor Function 3
-00:18.4 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-(Models 60h-6fh) Processor Function 4
-00:18.5 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-(Models 60h-6fh) Processor Function 5
-01:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd.
-RTL8411B PCI Express Card Reader (rev 01)
-01:00.1 Ethernet controller: Realtek Semiconductor Co., Ltd.
-RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 12)
-02:00.0 Network controller: Qualcomm Atheros QCA9377 802.11ac Wireless
-Network Adapter (rev 31)
-03:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI]
-Lexa PRO [Radeon RX 550/550X] (rev c3)
----
-Gilberto Nunes Ferreira
+Interesting.
 
-(47) 3025-5907
-(47) 99676-7530 - Whatsapp / Telegram
+So, for the places where we already map BAR memory to userspace, if I
+were to make struct pages for those BARs and use vm_insert_page()
+instead of io_remap_pfn_range(), then the main thing missing in RDMA
+to actually do P2P DMA is a way to get those struct pages out of
+get_user_pages and know to call the pci_p2pdma_map_sg version (ie in
+ib_umem_get())?
 
-Skype: gilberto.nunes36
-
-
-Em qui, 25 de jul de 2019 =C3=A0s 14:26, Alex Deucher
-<alexdeucher@gmail.com> escreveu:
->
-> On Thu, Jul 25, 2019 at 3:30 AM Enrico Weigelt, metux IT consult
-> <lkml@metux.net> wrote:
-> >
-> > On 24.07.19 16:17, Gilberto Nunes wrote:
-> >
-> > Hi,
-> >
-> > crossposting to dri-devel, as it smells like a problem w/ amdgpu driver=
-.
-> >
-> > > CPU - AMD A12-9720P RADEON R7, 12 COMPUTE CORES 4C+8G
-> > > GPU - Wani [Radeon R5/R6/R7 Graphics] (amdgpu)
-> > > Network Interface card:
-> > > 01:00.1 Ethernet controller: Realtek Semiconductor Co., Ltd.
-> > > RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 12)
-> > >
-> > > When I install kernel 4.18.x or 5.x, the network doesn't work anymore=
-...
-> >
-> > What about other versions (eg. v4.19) ?
-> > Which is the last working version ?
-> >
-> > > I can loaded the modulo r8169 andr8168.
-> > > I saw enp1s0f1 as well but there's no link at all!
-> > > Even when I fixed the IP none link!
-> > > I cannot ping the network gateway or any other IP inside LAN!
-> > > Right now, I booted my laptop with kernel
-> > > Linux version 5.2.2-050202-generic (kernel@kathleen) (gcc version
-> > > 9.1.0 (Ubuntu 9.1.0-9ubuntu2)) #201907231250 SMP Tue Jul 23 12:53:21
-> > > UTC 2019
-> >
-> > Could you also try 5.3 ?
-> >
-> > > The system boot slowly, and I have a SSD Samsung, which in kernel
-> > > 4.15, boot quickly.
-> > > And there's many errors in dmesg command, like you can see in this pa=
-stbin
-> > >
-> > > https://paste.ubuntu.com/p/YhbjnzYYYh/
-> >
-> > looks like something's wrong w/ reading gpu registers (more precisely
-> > waiting for some changing), that's causing the soft lockup. (maybe too
-> > big timeout ?)
->
-> It looks like the dGPU fails to power up properly when you attempt to
-> use it.  You can append amdgpu.runpm=3D0 to the kernel command line in
-> grub to disable dynamically powering down the dGPU.
->
-> Alex
->
-> >
-> > > Oh! By the way, the network card r8169 are work wonderful!
-> >
-> > Didn't you say (above) that it does not work ?
-> > Or is it just an immediate fail and later comes back ?
-> >
-> >
-> > --mtx
-> >
-> >
-> > --
-> > Enrico Weigelt, metux IT consult
-> > Free software and Linux embedded engineering
-> > info@metux.net -- +49-151-27565287
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Jason
