@@ -2,213 +2,131 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 469CEC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06717C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15BAC2238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF618229F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:20:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="isQLuIiS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mtl8aXY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389907AbfGYNUR (ORCPT
+        id S2389954AbfGYNUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:20:17 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:18063 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389776AbfGYNUO (ORCPT
+        Thu, 25 Jul 2019 09:20:24 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40260 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389884AbfGYNUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:20:14 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d39ac940000>; Thu, 25 Jul 2019 06:20:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 25 Jul 2019 06:20:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 06:20:12 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 25 Jul
- 2019 13:20:09 +0000
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-To:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "wens@csie.org" <wens@csie.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <7a79be5d-7ba2-c457-36d3-1ccef6572181@nvidia.com>
-Date:   Thu, 25 Jul 2019 14:20:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 09:20:23 -0400
+Received: by mail-qt1-f196.google.com with SMTP id a15so48978620qtn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:20:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hksOcYMTFsQQXxPG74pF4Ev5omBJ6BpaQhz1gWRfnWA=;
+        b=mtl8aXY6om467I/IRPDfWhsEihgtMKaOYEz8QL8yLJvBwx9xKAmAQPrkOp1Vo38B9/
+         aQ9vOKurZmrzM8ZpTDLNbxQyxjavPEGh6EErSqOnbi8Nb6NihoL2oXkGjD5xpSAVAID6
+         KjtwDJ3aVfk5Sbm9+llQAEo+pjUNBXgC3xcgI995HebYCYdNc4igLjlGb74aR6k0tuD3
+         W+3FF2JHUzwCx9wpYbINO+Ons8sA/FNu226bVz+6xWI1igdZGir0lIFg+5siubDUKTBv
+         9I+pykPeBgve2ZbuvF8QNefQzEEQwQ0i7ERiaS+D1vKyhdhwlu99yOb2iuPsy3gvS5bF
+         H34g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hksOcYMTFsQQXxPG74pF4Ev5omBJ6BpaQhz1gWRfnWA=;
+        b=gVSrtbn+sbYFM3TxfP2hAv5uZfb18sQg2/OLmNcq9OhJZXfpgrtbV31qbhW4RNrlVq
+         shKXOE8L+dyBp/7I9VN5q7sJTMRM6tCke+pkTAv4ru6gXBGVULnzIENNHcowZpx+eX69
+         JzqesdQ/kMPvcP6USKPYMnPL4a/160vG8xJQWA6qMKlo7hBS3X6gNnFAc0R6yS72twfv
+         rsQ9AXZBIFQ+6acw7duuwr+p8TX4HNOoS5NwDh4hMX2OpOhNIm6uWY5hkw2Lq2hidrpN
+         5pWcNOFUV/qvnx5lVXXRJAcBFZ6JOhuUq+oJwf80WGUOqaklEqJvYFYG+DxT5Mozxx1f
+         Jzxw==
+X-Gm-Message-State: APjAAAX7mMySeSd/Y9mnt0AexRsTIcjtXN+uVGi7m/eJ3g5YpnlFi+/s
+        EllpBP1VO/3IlDBge/bv+2Y9qM8QM9699OMWHivayg==
+X-Google-Smtp-Source: APXvYqzbohpFc3U6eGc+1t9EcQe7Xduc50XTK8rY2fyUI8XmNmk8NGB9t9ex3V+pUZPDY5hCm9tEx+NwkrM8pQoP8Kg=
+X-Received: by 2002:ac8:7219:: with SMTP id a25mr61991427qtp.234.1564060822527;
+ Thu, 25 Jul 2019 06:20:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564060820; bh=0UU4p4fjSvuq+XgEx2myYMcD6cODEFOXywbe+DQR42Y=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=isQLuIiSVeLw7cn+/BRLZrFTRMXNgmPPF16oiSOHPfNeyumjr63w6TZtNtKuV1T2e
-         P17wS19TRokQFI5cvZJ76VRFyYk7PuYIqQjQ5Bf68HgOB/N7gSId073r5SUhZ+ASVS
-         chMa2uQjJG6MDZl06C5fOdJvC3ytWA9s1ol0J3TuqoRgBPNbialMHD/+1CuqvUbnsi
-         HhVtgM7YnBPHMqCIwicc16LgQL5ZUS7eyJFoNwjIOpHsrj1W40KMJevK4K5a89qYSK
-         91RNn6AJCz70A6CHt+WcnSBkGdCPktYqRFL5wxve7j99z5Jnoy5X1Bj2WS6Ikm5F2R
-         5SFgMFTGGbZjg==
+References: <20190624194908.121273-1-john.stultz@linaro.org>
+ <20190624194908.121273-5-john.stultz@linaro.org> <20190718100840.GB19666@infradead.org>
+ <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
+ <20190724065958.GC16225@infradead.org> <CALAqxLUbsz+paJ=P2hwKecuN8DQjJt9Vj4MENCnFuEh6waxsXg@mail.gmail.com>
+ <20190725125206.GE20286@infradead.org>
+In-Reply-To: <20190725125206.GE20286@infradead.org>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Thu, 25 Jul 2019 15:20:11 +0200
+Message-ID: <CA+M3ks52ADKVCw_pZP9=LSNt+vhiEFyrtB-Jm2x=p62kSV7qVA@mail.gmail.com>
+Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        butao <butao@hisilicon.com>,
+        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
+        Yudongbin <yudongbin@hisilicon.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Le jeu. 25 juil. 2019 =C3=A0 14:52, Christoph Hellwig <hch@infradead.org> a=
+ =C3=A9crit :
+>
+> On Wed, Jul 24, 2019 at 11:46:24AM -0700, John Stultz wrote:
+> > I'm still not understanding how this would work. Benjamin and Laura
+> > already commented on this point, but for a simple example, with the
+> > HiKey boards, the DRM driver requires contiguous memory for the
+> > framebuffer, but the GPU can handle non-contiguous. Thus the target
+> > framebuffers that we pass to the display has to be CMA allocated, but
+> > all the other graphics buffers that the GPU will render to and
+> > composite can be system.
 
-On 03/07/2019 11:37, Jose Abreu wrote:
-> Mapping and unmapping DMA region is an high bottleneck in stmmac driver,
-> specially in the RX path.
-> 
-> This commit introduces support for Page Pool API and uses it in all RX
-> queues. With this change, we get more stable troughput and some increase
-> of banwidth with iperf:
-> 	- MAC1000 - 950 Mbps
-> 	- XGMAC: 9.22 Gbps
-> 
-> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-> Cc: Joao Pinto <jpinto@synopsys.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> ---
->  drivers/net/ethernet/stmicro/stmmac/Kconfig       |   1 +
->  drivers/net/ethernet/stmicro/stmmac/stmmac.h      |  10 +-
->  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 196 ++++++----------------
->  3 files changed, 63 insertions(+), 144 deletions(-)
+No we have uses cases where graphic buffers can go directly to display with=
+out
+using GPU. For example we can grab frames from the camera and send them dir=
+ectly
+in display (same for video decoder) because we have planes for that.
 
-...
+>
+> But that just means we need a flag that memory needs to be contiguous,
+> which totally makes sense at the API level.  But CMA is not the only
+> source of contigous memory, so we should not conflate the two.
 
-> @@ -3306,49 +3295,22 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
->  		else
->  			p = rx_q->dma_rx + entry;
->  
-> -		if (likely(!rx_q->rx_skbuff[entry])) {
-> -			struct sk_buff *skb;
-> -
-> -			skb = netdev_alloc_skb_ip_align(priv->dev, bfsize);
-> -			if (unlikely(!skb)) {
-> -				/* so for a while no zero-copy! */
-> -				rx_q->rx_zeroc_thresh = STMMAC_RX_THRESH;
-> -				if (unlikely(net_ratelimit()))
-> -					dev_err(priv->device,
-> -						"fail to alloc skb entry %d\n",
-> -						entry);
-> -				break;
-> -			}
-> -
-> -			rx_q->rx_skbuff[entry] = skb;
-> -			rx_q->rx_skbuff_dma[entry] =
-> -			    dma_map_single(priv->device, skb->data, bfsize,
-> -					   DMA_FROM_DEVICE);
-> -			if (dma_mapping_error(priv->device,
-> -					      rx_q->rx_skbuff_dma[entry])) {
-> -				netdev_err(priv->dev, "Rx DMA map failed\n");
-> -				dev_kfree_skb(skb);
-> +		if (!buf->page) {
-> +			buf->page = page_pool_dev_alloc_pages(rx_q->page_pool);
-> +			if (!buf->page)
->  				break;
-> -			}
-> -
-> -			stmmac_set_desc_addr(priv, p, rx_q->rx_skbuff_dma[entry]);
-> -			stmmac_refill_desc3(priv, rx_q, p);
-> -
-> -			if (rx_q->rx_zeroc_thresh > 0)
-> -				rx_q->rx_zeroc_thresh--;
-> -
-> -			netif_dbg(priv, rx_status, priv->dev,
-> -				  "refill entry #%d\n", entry);
->  		}
-> -		dma_wmb();
-> +
-> +		buf->addr = buf->page->dma_addr;
-> +		stmmac_set_desc_addr(priv, p, buf->addr);
-> +		stmmac_refill_desc3(priv, rx_q, p);
->  
->  		rx_q->rx_count_frames++;
->  		rx_q->rx_count_frames %= priv->rx_coal_frames;
->  		use_rx_wd = priv->use_riwt && rx_q->rx_count_frames;
->  
-> -		stmmac_set_rx_owner(priv, p, use_rx_wd);
-> -
->  		dma_wmb();
-> +		stmmac_set_rx_owner(priv, p, use_rx_wd);
->  
->  		entry = STMMAC_GET_ENTRY(entry, DMA_RX_SIZE);
->  	}
+We have one file descriptor per heap to be able to add access control
+on each heap.
+That wasn't possible with ION because the heap was selected given the
+flags in ioctl
+structure and we can't do access control based on that. If we put flag
+to select the
+allocation mechanism (system, CMA, other) in ioctl we come back to ION stat=
+us.
+For me one allocation mechanism =3D one heap.
 
-I was looking at this change in a bit closer detail and one thing that
-stuck out to me was the above where the barrier had been moved from
-after the stmmac_set_rx_owner() call to before. 
-
-So I moved this back and I no longer saw the crash. However, then I
-recalled I had the patch to enable the debug prints for the buffer
-address applied but after reverting that, the crash occurred again. 
-
-In other words, what works for me is moving the above barrier and adding
-the debug print, which appears to suggest that there is some
-timing/coherency issue here. Anyway, maybe this is clue to what is going
-on?
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index a7486c2f3221..2f016397231b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3303,8 +3303,8 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
-                rx_q->rx_count_frames %= priv->rx_coal_frames;
-                use_rx_wd = priv->use_riwt && rx_q->rx_count_frames;
- 
--               dma_wmb();
-                stmmac_set_rx_owner(priv, p, use_rx_wd);
-+               dma_wmb();
- 
-                entry = STMMAC_GET_ENTRY(entry, DMA_RX_SIZE);
-        }
-@@ -3438,6 +3438,10 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
-                        dma_sync_single_for_device(priv->device, buf->addr,
-                                                   frame_len, DMA_FROM_DEVICE);
- 
-+                       pr_info("%s: paddr=0x%llx, vaddr=0x%llx, len=%d", __func__,
-+                                       buf->addr, page_address(buf->page),
-+                                       frame_len);
-+
-                        if (netif_msg_pktdata(priv)) {
-                                netdev_dbg(priv->dev, "frame received (%dbytes)",
-                                           frame_len);
-
-Cheers
-Jon
-
--- 
-nvpublic
+>
+> > Laura already touched on this, but similar logic can be used for
+> > camera buffers, which can make sure we allocate from a specifically
+> > reserved CMA region that is only used for the camera so we can always
+> > be sure to have N free buffers immediately to capture with, etc.
+>
+> And for that we already have per-device CMA areas hanging off struct
+> device, which this should reuse instead of adding another duplicate
+> CMA area lookup scheme.
