@@ -2,151 +2,88 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6ECC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C25CC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01246218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:37:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sLakc87r"
+	by mail.kernel.org (Postfix) with ESMTP id 47C5D218D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:37:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564090660;
+	bh=DEqG5QVpqjFk6fDTKmZueo9OEbXtd2kkOwCkB9pcwsw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Rutr/p0qlfd+E7UfnMDRbzQZXTXtjiB1apLXrUpCd7eg2LrxXaItWp3e+8hgOJoZx
+	 rov6ggMmlKLcZnONLQxnTPYHZydETkUI0TJzDibof3ktdZVzLmsPWSXSP5FLIsYcb8
+	 2Z2MyP0/xCAma1jx5GZ+JOcEbQqMh24T4vMQIPsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfGYVhU (ORCPT
+        id S1726757AbfGYVhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 17:37:20 -0400
-Received: from mail-vs1-f41.google.com ([209.85.217.41]:44094 "EHLO
-        mail-vs1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfGYVhS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 17:37:18 -0400
-Received: by mail-vs1-f41.google.com with SMTP id v129so34702549vsb.11;
-        Thu, 25 Jul 2019 14:37:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lTd7Gz7s5jeydJlwaOBlP9FrkJ567NK9DmXJEKGyG6M=;
-        b=sLakc87rb4hOGU1OSbrdA/rxHkU9VGvNHdokH17C0h+S/MM4VZc22b26ghLIFXfFqF
-         de2J6+4XQ/o0MCoT1uWQ6MX03H3gRKcPVqpJNZdeiw4/Q52YetknhBxXemjFBbGHRhCj
-         aomsoPv7lp/6pQGfHThsX8QT/eGb/1SfmjxYxJS/8JXEefNPaUrvDJvRHNtFeuLwvnd3
-         if4beGnXXlchmVW/GPpaYGwYW2IKBnzu7mM6C194XzIh+sg6NIxslUy8O58cI5macwJN
-         x4zhKLVJDz657AjIgfXPFqq0+4X8q6lnyOKRAB9+VazOaJX/nal9r3X6UJ1yZn07OVor
-         9a+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lTd7Gz7s5jeydJlwaOBlP9FrkJ567NK9DmXJEKGyG6M=;
-        b=toPmCzCZRAKUr0Df5ibVzcQJVPAH+zVJlsFQtEt5FyySDUdzQIW3RkKW6qUr3oiaqH
-         BLb7/+nVxnCQqKm68yOhC5mXMIXWfdLtrF8G+4Jr6bNbhbRLEOSErK+oIOyyQa4AQV0M
-         /dTMdT8GTbMps4UNB7tHLlnfKXpyQNa08l9f0Z/rF31ubUW4soWlGzQNi+DAlhcOL2wa
-         gy6DNx+CiOTbwTXcQqC7+NDdIe+9DKXslZxsEp28GJ0FblPKYPw0zLgX8zJaMPWSSehe
-         U3fsCtDJI66uTMJeK6b27JxRmpVrI4M5milfjjUtg/0ZTWZEsEAjP2f9T1Qb9l7kcBnp
-         iDwA==
-X-Gm-Message-State: APjAAAWoEpb6bUzIig+LS+xZgTPLXOJYjGejsSluLI8P9wNGMz/bPiRc
-        J9nDlX7pkcdKjch1czU6fUgU/uiaEicylH720Gc3kQ==
-X-Google-Smtp-Source: APXvYqz3a02ATq/pR9r7nMgVe4KmjnjpMVrJmVLsq5f/GDIc7uwqG508wbsHkpB2z864qpcXIi3M0dFsAqAN7UUavVg=
-X-Received: by 2002:a67:edcf:: with SMTP id e15mr57616507vsp.75.1564090636593;
- Thu, 25 Jul 2019 14:37:16 -0700 (PDT)
+        Thu, 25 Jul 2019 17:37:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726524AbfGYVhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 17:37:38 -0400
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7024522C7C;
+        Thu, 25 Jul 2019 21:37:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564090657;
+        bh=DEqG5QVpqjFk6fDTKmZueo9OEbXtd2kkOwCkB9pcwsw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ChBuyG/zLWJRz7CNaa1J+2pTEKGQ5mPVZxhgAryltV3xIru5iRsalCt70Lgc+2swf
+         OaUz0nXNxLffPqB602194PwAB1rEqPC8bnnh+EmKVVt2iF2akDyn7gCayH3wQD+9Gp
+         1QMBZQQe+ocmwqbpkCawFcUezrKhOamAIJS4HUdo=
+Received: by mail-qt1-f179.google.com with SMTP id y26so50588637qto.4;
+        Thu, 25 Jul 2019 14:37:37 -0700 (PDT)
+X-Gm-Message-State: APjAAAVFqEB/IMriJV2MXTLzv2Frktdgt07eRlzyGioKA7wE3jCbagb6
+        IQ5edU5ewexGZmyhiyaRcMJedLBIZJ8gRkarXQ==
+X-Google-Smtp-Source: APXvYqwh/T3W6Tp6QVzMKguGCdgOPe7mHm3zxACkzb6VLbhzRa4V1o3Vyr0DiCBcMEJFji5FQ4vwo8d9PagXgK58joc=
+X-Received: by 2002:ac8:368a:: with SMTP id a10mr63961851qtc.143.1564090656611;
+ Thu, 25 Jul 2019 14:37:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAOGqxeVeEq803rrtGrnubRA8cP3dRCXsU15ss3pS1q6ik+k8Bw@mail.gmail.com>
- <7610bbc9-83d8-ee98-1425-07bb65448541@intel.com> <CAOGqxeVR3XzAQ-yTH35hyT3KpL11nTwMY1Ca96ZW=K=PiWMnHA@mail.gmail.com>
- <23ce5519-cb4b-4d85-4bfc-3e438212ec7f@intel.com>
-In-Reply-To: <23ce5519-cb4b-4d85-4bfc-3e438212ec7f@intel.com>
-From:   Alan Cooper <alcooperx@gmail.com>
-Date:   Thu, 25 Jul 2019 17:37:47 -0400
-Message-ID: <CAOGqxeVjj9Leok-Oph-kNA92fKhdBHzwJZ643uND8GV_8VaHCw@mail.gmail.com>
-Subject: Re: Issue with sequence to switch to HS400
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190725020551.27034-1-Anson.Huang@nxp.com> <20190725210619.5EB94218D4@mail.kernel.org>
+In-Reply-To: <20190725210619.5EB94218D4@mail.kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 25 Jul 2019 15:37:24 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKZHG-y_cKitU0=EksgyVU-YLOi1gAcFXx4ve21CMki1g@mail.gmail.com>
+Message-ID: <CAL_JsqKZHG-y_cKitU0=EksgyVU-YLOi1gAcFXx4ve21CMki1g@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: clock: imx8mn: Fix tab indentation for yaml file
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-That's an even better solution and it gets my HS400 mode working.
-Will you add this change or should I?
+On Thu, Jul 25, 2019 at 3:06 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Anson.Huang@nxp.com (2019-07-24 19:05:51)
+> > From: Anson Huang <Anson.Huang@nxp.com>
+> >
+> > YAML file can NOT contain tab as indentation, fix it.
+> >
+>
+> Would be nice if checkpatch could check for this.
 
-Thanks
-Al
+Would be nice if folks just ran 'make dt_binding_check'. :) It
+wouldn't be hard to add a tab check to checkpatch, but that's just one
+potential problem.
 
-On Thu, Jul 25, 2019 at 3:33 AM Adrian Hunter <adrian.hunter@intel.com> wro=
-te:
->
-> On 23/07/19 3:34 PM, Alan Cooper wrote:
-> > On Tue, Jul 23, 2019 at 1:21 AM Adrian Hunter <adrian.hunter@intel.com>=
- wrote:
-> >>
-> >> On 23/07/19 1:31 AM, Alan Cooper wrote:
-> >>> I'm having a problem with a new SD/MMC controller and PHY in our
-> >>> latest SoC's. The issue I'm seeing is that I can't switch into HS400
-> >>> mode. This looks like something the driver is doing that doesn't meet
-> >>> the JEDEC spec. In the "HS400 timing mode selection" section of the
-> >>> JEDEC spec , in step 7 it states:
-> >>>
-> >>> 7) Set the =E2=80=9CTiming Interface=E2=80=9D parameter in the HS_TIM=
-ING [185] field
-> >>> of the Extended CSD register to 0x1 to switch to High Speed mode and
-> >>> then set the clock frequency to a value not greater than 52 MHz.
-> >>>
-> >>> In the function mmc_select_hs400() in mmc.c, I see that a switch
-> >>> command is done to set the eMMC device to HS mode and then
-> >>> mmc_set_timing(card->host, MMC_TIMING_MMC_HS) is used to change the
-> >>> controller to HS mode. The problem is that the "SD Host Controller
-> >>> Standard Specification" states that "UHS Mode Select" field of the
-> >>> "Host Control 2 Register" controls the mode when the "1.8V Signaling
-> >>> Enable" bit in the same register is set, so mmc_set_timing() is
-> >>> actually leaving the controller in SDR12 mode and mmc_select_hs400()
-> >>> will then set the clock to 52MHz. This causes our PHY to detect an
-> >>> illegal combination and return an error.
-> >>>
-> >>> I think the easiest fix would be to change mmc_set_timing(card->host,
-> >>> MMC_TIMING_MMC_HS) to mmc_set_timing(card->host,
-> >>> MMC_TIMING_UHS_SDR25). The other possibility would be to change
-> >>> mmc_set_timing to handle the "1.8V Signaling Enable" bit properly.
-> >>> I'll submit a patch based on the feedback I get.
-> >>
-> >> eMMC is governed by JEDEC specs not SD specs.
-> >
-> > My understanding is that JEDEC does not have a host controller spec so
-> > this driver uses the "SD Host Controller Standard Specification".
->
-> There is no spec for using eMMC with SDHCI.
->
-> >
-> >>
-> >> Please consider making a change in your driver instead.  For example, =
-hook
-> >> ->set_ios() and if 1.8V is enabled and timing is set to MMC_TIMING_MMC=
-_HS
-> >> then change it to MMC_TIMING_UHS_SDR25.
-> >
-> > That's an easy fix, but it still leaves all other drivers/systems
-> > temporarily using SDR12 at 52MHz during the switch to HS400.
->
-> Yes, I changed my mind.  Does this work:
->
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 59acf8e3331e..f9d241458dcd 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1849,7 +1849,9 @@ void sdhci_set_uhs_signaling(struct sdhci_host *hos=
-t, unsigned timing)
->                 ctrl_2 |=3D SDHCI_CTRL_UHS_SDR104;
->         else if (timing =3D=3D MMC_TIMING_UHS_SDR12)
->                 ctrl_2 |=3D SDHCI_CTRL_UHS_SDR12;
-> -       else if (timing =3D=3D MMC_TIMING_UHS_SDR25)
-> +       else if (timing =3D=3D MMC_TIMING_SD_HS ||
-> +                timing =3D=3D MMC_TIMING_MMC_HS ||
-> +                timing =3D=3D MMC_TIMING_UHS_SDR25)
->                 ctrl_2 |=3D SDHCI_CTRL_UHS_SDR25;
->         else if (timing =3D=3D MMC_TIMING_UHS_SDR50)
->                 ctrl_2 |=3D SDHCI_CTRL_UHS_SDR50;
+Rob
