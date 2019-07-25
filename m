@@ -2,105 +2,86 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9076C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 008F4C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8345622BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:48:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564022919;
-	bh=YWxaVqhUBxhNakctl9Qk/YX4ee0cDSELqHl7XG/98z0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ujqsb+6iQcyjKvvfgys39SDD27/pp9MiC5xUmzzyVCtdjcVdjHeFfEB3LbMANgeWN
-	 xMDXIoQhBPkyD5W/eDxIrIGlbIlCBk2uuYDf+2L3QAjLvihT2QZLSbvIGZwUtf4N8N
-	 hEnXdGW9m58h+LqFetHUhHoX9uuIkPKrRFJT2HcE=
+	by mail.kernel.org (Postfix) with ESMTP id CACBB2238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389357AbfGYCsi (ORCPT
+        id S2389392AbfGYCvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 22:48:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388165AbfGYCsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 22:48:37 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7990F22BE8;
-        Thu, 25 Jul 2019 02:48:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564022916;
-        bh=YWxaVqhUBxhNakctl9Qk/YX4ee0cDSELqHl7XG/98z0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JnzxG+M3g1veiHLMx35BlJ7hi4YjM+QUckJY7zP4n5e9rvPCtvpWqldrs7tU3huZs
-         hZOBCxuM8mEGlJRvz3bg3AO7O+QhhzX0By2Aw3ys0sPHaSLDvv1YFxOVg8B9xrErpp
-         1krPoi09vQ1iDFBWz29WXlNbysr39DZYUzdfWAFo=
-Date:   Wed, 24 Jul 2019 19:48:35 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     mhocko@suse.com, dvyukov@google.com, catalin.marinas@arm.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: page_alloc: document kmemleak's non-blockable
- __GFP_NOFAIL case
-Message-Id: <20190724194835.59947a6b4df3c2ae7816470d@linux-foundation.org>
-In-Reply-To: <1562964544-59519-1-git-send-email-yang.shi@linux.alibaba.com>
-References: <1562964544-59519-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 24 Jul 2019 22:51:02 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:60106 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388165AbfGYCvC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 22:51:02 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x6P2oiaj008827, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x6P2oiaj008827
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 25 Jul 2019 10:50:45 +0800
+Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
+ RTITCAS12.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Thu, 25 Jul
+ 2019 10:50:44 +0800
+From:   Pkshih <pkshih@realtek.com>
+To:     "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "kvalo@codeaurora.org" <kvalo@codeaurora.org>
+CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>
+Subject: Re: [PATCH] rtlwifi: remove unneeded function _rtl_dump_channel_map()
+Thread-Topic: [PATCH] rtlwifi: remove unneeded function
+ _rtl_dump_channel_map()
+Thread-Index: AQHVQimXNtK+8JDVlEmdFowIZ+3GJKbaHRGA
+Date:   Thu, 25 Jul 2019 02:50:43 +0000
+Message-ID: <1564023043.5006.0.camel@realtek.com>
+References: <20190724141020.58800-1-yuehaibing@huawei.com>
+In-Reply-To: <20190724141020.58800-1-yuehaibing@huawei.com>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.69.114]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6C8C70C85334E94D81DDDDACE9D684A6@realtek.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 13 Jul 2019 04:49:04 +0800 Yang Shi <yang.shi@linux.alibaba.com> wrote:
-
-> When running ltp's oom test with kmemleak enabled, the below warning was
-> triggerred since kernel detects __GFP_NOFAIL & ~__GFP_DIRECT_RECLAIM is
-> passed in:
-> 
-> ...
->
-> The mempool_alloc_slab() clears __GFP_DIRECT_RECLAIM, kmemleak has
-> __GFP_NOFAIL set all the time due to commit
-> d9570ee3bd1d4f20ce63485f5ef05663866fe6c0 ("kmemleak: allow to coexist
-> with fault injection").
-> 
-> The fault-injection would not try to fail slab or page allocation if
-> __GFP_NOFAIL is used and that commit tries to turn off fault injection
-> for kmemleak allocation.  Although __GFP_NOFAIL doesn't guarantee no
-> failure for all the cases (i.e. non-blockable allocation may fail), it
-> still makes sense to the most cases.  Kmemleak is also a debugging tool,
-> so it sounds not worth changing the behavior.
-> 
-> It also meaks sense to keep the warning, so just document the special
-> case in the comment.
-> 
-> ...
->
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -4531,8 +4531,14 @@ bool gfp_pfmemalloc_allowed(gfp_t gfp_mask)
->  	 */
->  	if (gfp_mask & __GFP_NOFAIL) {
->  		/*
-> -		 * All existing users of the __GFP_NOFAIL are blockable, so warn
-> -		 * of any new users that actually require GFP_NOWAIT
-> +		 * The users of the __GFP_NOFAIL are expected be blockable,
-> +		 * and this is true for the most cases except for kmemleak.
-> +		 * The kmemleak pass in __GFP_NOFAIL to skip fault injection,
-> +		 * however kmemleak may allocate object at some non-blockable
-> +		 * context to trigger this warning.
-> +		 *
-> +		 * Keep this warning since it is still useful for the most
-> +		 * normal cases.
->  		 */
-
-Comment has rather a lot of typos.  I'd normally fix them but I think
-I'll duck this patch until the kmemleak situation is addressed, so we
-can add a kmemleakless long-term comment, if desired.
-
+T24gV2VkLCAyMDE5LTA3LTI0IGF0IDIyOjEwICswODAwLCBZdWVIYWliaW5nIHdyb3RlOg0KPiBO
+b3cgX3J0bF9kdW1wX2NoYW5uZWxfbWFwKCkgZG9lcyBub3QgZG8gYW55IGFjdHVhbA0KPiB0aGlu
+ZyB1c2luZyB0aGUgY2hhbm5lbC4gU28gcmVtb3ZlIGl0Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
+WXVlSGFpYmluZyA8eXVlaGFpYmluZ0BodWF3ZWkuY29tPg0KPiAtLS0NCj4gwqBkcml2ZXJzL25l
+dC93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvcmVnZC5jIHwgMTggLS0tLS0tLS0tLS0tLS0tLS0t
+DQo+IMKgMSBmaWxlIGNoYW5nZWQsIDE4IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnRsd2lmaS9yZWdkLmMNCj4gYi9kcml2ZXJz
+L25ldC93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvcmVnZC5jDQo+IGluZGV4IDZjY2I1YjkuLmMx
+MDQzMmMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnRsd2lm
+aS9yZWdkLmMNCj4gKysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3Jl
+Z2QuYw0KPiBAQCAtMjc2LDIyICsyNzYsNiBAQCBzdGF0aWMgdm9pZCBfcnRsX3JlZ19hcHBseV93
+b3JsZF9mbGFncyhzdHJ1Y3Qgd2lwaHkNCj4gKndpcGh5LA0KPiDCoAlyZXR1cm47DQo+IMKgfQ0K
+PiDCoA0KPiAtc3RhdGljIHZvaWQgX3J0bF9kdW1wX2NoYW5uZWxfbWFwKHN0cnVjdCB3aXBoeSAq
+d2lwaHkpDQo+IC17DQo+IC0JZW51bSBubDgwMjExX2JhbmQgYmFuZDsNCj4gLQlzdHJ1Y3QgaWVl
+ZTgwMjExX3N1cHBvcnRlZF9iYW5kICpzYmFuZDsNCj4gLQlzdHJ1Y3QgaWVlZTgwMjExX2NoYW5u
+ZWwgKmNoOw0KPiAtCXVuc2lnbmVkIGludCBpOw0KPiAtDQo+IC0JZm9yIChiYW5kID0gMDsgYmFu
+ZCA8IE5VTV9OTDgwMjExX0JBTkRTOyBiYW5kKyspIHsNCj4gLQkJaWYgKCF3aXBoeS0+YmFuZHNb
+YmFuZF0pDQo+IC0JCQljb250aW51ZTsNCj4gLQkJc2JhbmQgPSB3aXBoeS0+YmFuZHNbYmFuZF07
+DQo+IC0JCWZvciAoaSA9IDA7IGkgPCBzYmFuZC0+bl9jaGFubmVsczsgaSsrKQ0KPiAtCQkJY2gg
+PSAmc2JhbmQtPmNoYW5uZWxzW2ldOw0KPiAtCX0NCj4gLX0NCj4gLQ0KPiDCoHN0YXRpYyBpbnQg
+X3J0bF9yZWdfbm90aWZpZXJfYXBwbHkoc3RydWN0IHdpcGh5ICp3aXBoeSwNCj4gwqAJCQkJwqDC
+oMKgc3RydWN0IHJlZ3VsYXRvcnlfcmVxdWVzdCAqcmVxdWVzdCwNCj4gwqAJCQkJwqDCoMKgc3Ry
+dWN0IHJ0bF9yZWd1bGF0b3J5ICpyZWcpDQo+IEBAIC0zMDksOCArMjkzLDYgQEAgc3RhdGljIGlu
+dCBfcnRsX3JlZ19ub3RpZmllcl9hcHBseShzdHJ1Y3Qgd2lwaHkgKndpcGh5LA0KPiDCoAkJYnJl
+YWs7DQo+IMKgCX0NCj4gwqANCj4gLQlfcnRsX2R1bXBfY2hhbm5lbF9tYXAod2lwaHkpOw0KPiAt
+DQo+IMKgCXJldHVybiAwOw0KPiDCoH0NCj4gwqANCg0KQWNrZWQtYnk6IFBpbmctS2UgU2hpaCA8
+cGtzaGloQHJlYWx0ZWsuY29tPg0KDQoNCg==
