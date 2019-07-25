@@ -2,83 +2,93 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98487C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A2BC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1FB218EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6559B218EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:32:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4AxvAwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfGYTbb (ORCPT
+        id S1726845AbfGYTcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 15:31:31 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:42550 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726597AbfGYTbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:31:31 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hqjSU-00040j-4r; Thu, 25 Jul 2019 13:31:22 -0600
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Stephen Bates <sbates@raithlin.com>,
-        linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190725172335.6825-3-logang@deltatee.com>
- <20190725174032.GA27818@kroah.com>
- <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
- <20190725180816.GA32305@kroah.com>
- <da0eacb7-3738-ddf3-8c61-7ffc61aa41f4@deltatee.com>
- <20190725182701.GA11547@kroah.com>
- <20190725190024.GD30641@bombadil.infradead.org>
- <27943e06-a503-162e-356b-abb9e106ab2e@grimberg.me>
- <20190725191124.GE30641@bombadil.infradead.org>
- <425dd2ac-333d-a8c4-ce49-870c8dadf436@deltatee.com>
- <20190725192613.GF30641@bombadil.infradead.org>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <a4bb9e66-9165-3557-ae43-02a916b4fa0e@deltatee.com>
-Date:   Thu, 25 Jul 2019 13:31:20 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 15:32:32 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35613 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbfGYTcc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 15:32:32 -0400
+Received: by mail-lj1-f194.google.com with SMTP id x25so49175225ljh.2;
+        Thu, 25 Jul 2019 12:32:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Kp0EWNt1hJYOLXDTYlF7zykP3Zq2TsBvXEhXEloAP6c=;
+        b=C4AxvAwobnSSddWK24zoACbWa2WjxylpFNge6tKlmOW+LLRo+AXD/ZpOa2ItZLWQ0V
+         rca8/YgVzcRihbJdusIc8NP6R3JF6C/L5frSIAc/ApkYxB0wzAc/FRwDJCtahPQgb0Hs
+         n6AYQKp2AyOCm6dUCMFiWExIrr7KlAr2OSGThds/zl6FzBQwutPcxhg8gmCHra/5nXrQ
+         IFypJzMVv81BoUmg/179zDv95k+wq9BmQCIE/v38M6QgpT2vp1mZDuyRiUPuPDsu6wJo
+         ThpgtWT10jqE3omLZRtngj0C7o/10Ew8qAXeJP224fMyanvN2BdJ790hY3vFN7KL3lgf
+         A13w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kp0EWNt1hJYOLXDTYlF7zykP3Zq2TsBvXEhXEloAP6c=;
+        b=koKc9XOcM/qE/rJBKkRGiU665hLLAf/2m4JxY+Qr22IMgHnZATzEh2bsWuD7K+aRvP
+         qzAx3zOx5ElDLPrfDCUUk7Bz9so2Pd7xMuGNVWCcKUqf+FSRRcZFJ3dc71lIAiXJEgtS
+         ASZxGOG/Ldvi3wPGWAhsBXSKm4+M2+pFPTNokPole8o4dkRxibndTpMJOKbi3tLdJnm4
+         TGIkOMkDhDjXxMJ7suqKuyAKdned6S4RVl/R0lgih14AIWmRpiIVW+tI+WmAEg49Y2pz
+         Nc3V+WrIG4e6My7Aw4h7psslC3U64B0QyqFzKaNk7FQ2iTRqvvtfGAXEe7itjTRF7L+o
+         sPWQ==
+X-Gm-Message-State: APjAAAVNCyA40QDw9r/LX/hfFJt1B2KDszVt9geKBCYr68gT/SNOq6qf
+        CNCZssJHH/cUVtWFkgoTPLDuNnn5Wxwl6z1Px0s=
+X-Google-Smtp-Source: APXvYqyDf3rdKYXqiXUlgdRjLq+Vaz3jmCLYtBCYErQSevesbRjPKuJmugaeK1C2zffMG++H1hJFxitGJxEZjTaH6lU=
+X-Received: by 2002:a2e:5dc6:: with SMTP id v67mr47345282lje.240.1564083149838;
+ Thu, 25 Jul 2019 12:32:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190725192613.GF30641@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: hch@lst.de, maxg@mellanox.com, linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk, kbusch@kernel.org, linux-block@vger.kernel.org, sbates@raithlin.com, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, gregkh@linuxfoundation.org, sagi@grimberg.me, willy@infradead.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20190712204316.16783-1-TheSven73@gmail.com> <CAGngYiVb_-A4Au749GD6SKi=UqKKBm4yxim8YOCbgVjfz7xtvg@mail.gmail.com>
+In-Reply-To: <CAGngYiVb_-A4Au749GD6SKi=UqKKBm4yxim8YOCbgVjfz7xtvg@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 25 Jul 2019 16:32:31 -0300
+Message-ID: <CAOMZO5CrUZ1C0i8ofuiG8thsPgfxPiY5XOnvUsmnkYYSKJBMNQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] bus: imx-weim: optionally enable burst clock mode
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sven,
 
+On Thu, Jul 25, 2019 at 11:30 AM Sven Van Asbroeck <thesven73@gmail.com> wrote:
+>
+> On Fri, Jul 12, 2019 at 4:43 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
+> >
+> > To enable burst clock mode, add the fsl,burst-clk-enable
+> > property to the weim bus's devicetree node.
+> >
+>
+> Any feedback on this patch, positive or negative?
 
-On 2019-07-25 1:26 p.m., Matthew Wilcox wrote:
-> On Thu, Jul 25, 2019 at 01:24:22PM -0600, Logan Gunthorpe wrote:
->>>> Assuming that there is a open handle somewhere out there...
->>
->> Yes, that would be a step backwards from an interface. The user would
->> then need a special process to open the fd and pass it through configfs.
->> They couldn't just do it with basic bash commands.
-> 
-> echo 3 3</dev/nvme3 >/configfs/foor/bar/whatever
+Looks good to me:
 
-Neat. I didn't know you could do that.
-
-Logan
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
