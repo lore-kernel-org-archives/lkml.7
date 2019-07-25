@@ -2,80 +2,75 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D653BC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E08FC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17B821850
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59AFE21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:28:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NyE5E5aZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbfGYEYB (ORCPT
+        id S1728837AbfGYE2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 00:24:01 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:55128 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbfGYEYB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 00:24:01 -0400
-Received: by mail-io1-f71.google.com with SMTP id n8so53452226ioo.21
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 21:24:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=4ykhyuiBMEbxqBLsBHdyDvPAOtbB9E2k09FumAP9piY=;
-        b=SBlvJhUxv0QbAEkvNq9y1ylIdy2/eveBjk/2qyKIkMmJlI1HMUPy4v5DmoNmeuxM1g
-         U0/0bDM9wT6jb7xTcNwKPu5hmOLr/wzf1p4HqEu2UnBMJiDr4+KtaBBabQIp9dx8x6qy
-         OjtY3YaZ+3IkFa8HFkOwt1ogXRyCqBWMFiswXoq96eXkhWKCD2TMNpqve3/LZe433meT
-         71GmZYJkgZuYEe4IdhHnY5KtCZVE5oSifHnUb2x6bWca94ZbxUDsGe7uFKdV/CpSGWna
-         v6b+PY0VUXv/NyAzkYuO7ZcBmInRfni89UA9iDlj+qxJ56mKXceMvWA+oTnJ7JjKCySO
-         txiA==
-X-Gm-Message-State: APjAAAXW0IiaJTTjo6eFch6ab6ge3ps949dRiHJmVUpyfIbDJfCPOZnB
-        j/8nJXBQRYkLhUcIL3vw7eyatq3l8+gME4ZbH5SjDtkOwLVw
-X-Google-Smtp-Source: APXvYqzisP9svwAdUk2M7vpsY1nwZNJ9MmjI4tHYq0ELgBH3s/kK/fffQN/IDt9aWlEkMTECMVVjYMhh99FscjT9fYsgt99Ef1Bm
+        Thu, 25 Jul 2019 00:28:34 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:36210 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726102AbfGYE2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 00:28:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=jKhXcUdntY6Kwmna1uxpMklTyH3FF24TBvWH/eu+/sA=; b=NyE5E5aZ/tNNCzt/6j3ciTVIJJ
+        sE9MqNNNBBLxs1jP26Sxnc42Z1GWWo+p01ImUET1uuIbE3c5E+43nnWRlkhz0LFCRnH2ks8rtNy7T
+        luOTL11l43uUzycaypkhH7V06u0jAswkcVbbUNil/PcoGQxchHHXUdlvYMj8wU02w4Ck=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hqVMj-0003sl-94; Thu, 25 Jul 2019 06:28:29 +0200
+Date:   Thu, 25 Jul 2019 06:28:29 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     liuyonglong <liuyonglong@huawei.com>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
+        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
+        shiju.jose@huawei.com
+Subject: Re: [PATCH net] net: hns: fix LED configuration for marvell phy
+Message-ID: <20190725042829.GB14276@lunn.ch>
+References: <1563775152-21369-1-git-send-email-liuyonglong@huawei.com>
+ <20190722.181906.2225538844348045066.davem@davemloft.net>
+ <72061222-411f-a58c-5873-ad873394cdb5@huawei.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:94d0:: with SMTP id y16mr43188529ior.123.1564028640346;
- Wed, 24 Jul 2019 21:24:00 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 21:24:00 -0700
-In-Reply-To: <0000000000004a3a63058e722b94@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000086c732058e79cb59@google.com>
-Subject: Re: WARNING in ovl_real_fdget_meta
-From:   syzbot <syzbot+032bc63605089a199d30@syzkaller.appspotmail.com>
-To:     amir73il@gmail.com, bfields@fieldses.org, jlayton@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-unionfs@vger.kernel.org, miklos@szeredi.hu,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <72061222-411f-a58c-5873-ad873394cdb5@huawei.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Thu, Jul 25, 2019 at 11:00:08AM +0800, liuyonglong wrote:
+> > Revert "net: hns: fix LED configuration for marvell phy"
+> > This reverts commit f4e5f775db5a4631300dccd0de5eafb50a77c131.
+> >
+> > Andrew Lunn says this should be handled another way.
+> >
+> > Signed-off-by: David S. Miller <davem@davemloft.net>
+> 
+> 
+> Hi Andrew:
+> 
+> I see this patch have been reverted, can you tell me the better way to do this?
+> Thanks very much!
 
-commit 387e3746d01c34457d6a73688acd90428725070b
-Author: Amir Goldstein <amir73il@gmail.com>
-Date:   Fri Jun 7 14:24:38 2019 +0000
+Please take a look at the work Matthias Kaehlcke is doing. It has not
+got too far yet, but when it is complete, it should define a generic
+way to configure PHY LEDs.
 
-     locks: eliminate false positive conflicts for write lease
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15a79594600000
-start commit:   c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=17a79594600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=13a79594600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3c8985c08e1f9727
-dashboard link: https://syzkaller.appspot.com/bug?extid=032bc63605089a199d30
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15855334600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17fcc4c8600000
-
-Reported-by: syzbot+032bc63605089a199d30@syzkaller.appspotmail.com
-Fixes: 387e3746d01c ("locks: eliminate false positive conflicts for write  
-lease")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+    Andrew
