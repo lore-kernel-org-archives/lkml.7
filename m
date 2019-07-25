@@ -2,136 +2,125 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A747C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69247C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D70F4229F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 394B7229F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:19:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZgU8NX20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404591AbfGYMSG (ORCPT
+        id S2404597AbfGYMTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:18:06 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:43724 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387492AbfGYMSG (ORCPT
+        Thu, 25 Jul 2019 08:19:32 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35345 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfGYMTb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:18:06 -0400
-Received: by mail-io1-f69.google.com with SMTP id q26so54650865ioi.10
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 05:18:05 -0700 (PDT)
+        Thu, 25 Jul 2019 08:19:31 -0400
+Received: by mail-wm1-f65.google.com with SMTP id l2so44540885wmg.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 05:19:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=LTAelRykTcQsMGZiOD2meawU2MXWXjMpurunnVZ0OLs=;
+        b=ZgU8NX20SnrH4JTyQkdwQsJijQ4lrxhmhV1VvRzqnyzVG94k9thoc7CqtqDOyytybv
+         Oo/mD+ynA48dpK5RKUim4K+Jj5tEO+kSi7T5Y4J6SFAS2DUgXobCGMWNVMUzIDOpSB+6
+         xpRHG7bY4hcqy9LQDfS5C7nhfQQ1cJxDimTnw97cYWbt94oSwTeOPzo0IAUBqEQJ4tZy
+         MqfbovAX3n47iMNT2kQ66tzQ5c60WVbSSO2oMdqo++MaQDXKACN9lIwnHd9giYrp9B1a
+         fLSx4Sbu6iHk5vOiZ6OvZIrGP5fvUsZuDANwEWWEynmCjGneRlggmpXnHlckatzFVYSm
+         JR2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=qrE9ah+MjGSmMicXx9vPsiTpT3sSnUl52kXsY/JR2Ro=;
-        b=L7g1ZDuKcBxW8vWhnK3Upruydg9ztMBNeP4QUAdHJqrEvYf2Cy+YaqFuw5Tv+eZJ5P
-         st/EPjphCcrnb0sbBe1yKj/i5gpEDVZOuQx1pCbuIezlEpqYtoPj9JMe9jqqZdIVp0EE
-         P5OXo1HB31kzD+NN36iXEwrkHETcDWiKSpv/P7N4jdJ8XV7JiRa9bVsvG/kHRuGHk860
-         P3/P5n7q3pHjgq93b0l988AVuEZNzP4Ub4698im0iD6OZ1XgSsHK2CRjlAubjwh0XWxg
-         VwiRtuOez10Cews+PeP5zJ/k5nyNSVcIKbzLZtTI8W0cuIIvFpDmW8aftKfm8KkfkG+4
-         zvkQ==
-X-Gm-Message-State: APjAAAU6A4jIuuJnWFHkanVL81/YLPcwYYzE1LCGEnMVskQ6It1KzDWN
-        xK5u/lW3OKALHZT7nfZ2FJ69cElAZ+3+jF3P8Fx28OlNqK1C
-X-Google-Smtp-Source: APXvYqwJq+2EfA9s4jgQrrZZM8SkDKgC2emG6GmvtPMcLjIihb3Oak28gXeGEXZ03VLa2Dqdm8DhvpCVSM0c41/66jkczl+PhZEO
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=LTAelRykTcQsMGZiOD2meawU2MXWXjMpurunnVZ0OLs=;
+        b=jQPf7P8NTC27AMla4LBNrcX55IeDaj7+aR5lqJvoTpReqczKM+SkuwKeouP+V4MnyU
+         t3wg2stHIGcaX0q4pLhYyGc1WfDzNuM1CTH4S2mWJioYiRm+/BtILR5gnS0J/Aw5H6pn
+         fWWh6j4yg29BamF/fKZqCW9+Z8NlIjgSvOXwXHx0j5soveGhDeJNBylZD/t9aWswj2yI
+         GcTz5iqXUcHSJFkEpkvCw3PPJW/9BumKQi4yrMM2Upr0Sgb+4nPQKyrzakz3So196G59
+         T6/FFBoO5LuOKlPsvwB9rJljIckhTCTn7DZEQrk0TlvehICtuh+dhAl3g2XwQqlSrlju
+         EQ6Q==
+X-Gm-Message-State: APjAAAU8PhP2wVyWFWLrsi8A789kIZWfXqvl/K6PhSwsvrgViUpWqvqK
+        5LVsaQ9mtI+QAqZfiLf57toUqYMsQaE=
+X-Google-Smtp-Source: APXvYqyzNZrg7xg4CbziCpPXUm4u/iD59jJI+9EAM99K1GccLpzVlSzH0hKdtOJtJenWbAvRF+JYEw==
+X-Received: by 2002:a7b:c215:: with SMTP id x21mr79962509wmi.38.1564057169615;
+        Thu, 25 Jul 2019 05:19:29 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id y2sm40416390wrl.4.2019.07.25.05.19.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Jul 2019 05:19:29 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 13:19:17 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     tony.xie@rock-chips.com, stefan@olimex.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] mfd: rk808: Mark rk8xx_resume and rk8xx_suspend as
+ __maybe_unused
+Message-ID: <20190725121917.GH23883@dell>
+References: <20190711033006.55320-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8a46:: with SMTP id o6mr48553383iom.36.1564057085298;
- Thu, 25 Jul 2019 05:18:05 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 05:18:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fa5443058e806a1d@google.com>
-Subject: general protection fault in gigaset_probe
-From:   syzbot <syzbot+35b1c403a14f5c89eba7@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190711033006.55320-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, 11 Jul 2019, YueHaibing wrote:
 
-syzbot found the following crash on:
+> Fix build warning:
+> 
+> drivers/mfd/rk808.c:752:12: warning: 'rk8xx_resume' defined but not used [-Wunused-function]
+> drivers/mfd/rk808.c:732:12: warning: 'rk8xx_suspend' defined but not used [-Wunused-function]
+> 
+> The function is declared unconditionally but only called
+> while CONFIG_PM_SLEEP is set.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/mfd/rk808.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=11865a5c600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
-dashboard link: https://syzkaller.appspot.com/bug?extid=35b1c403a14f5c89eba7
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14004a7c600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=139068cc600000
+Arnd already fixed this.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+35b1c403a14f5c89eba7@syzkaller.appspotmail.com
+> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+> index 601cefb..9a9e631 100644
+> --- a/drivers/mfd/rk808.c
+> +++ b/drivers/mfd/rk808.c
+> @@ -729,7 +729,7 @@ static int rk808_remove(struct i2c_client *client)
+>  	return 0;
+>  }
+>  
+> -static int rk8xx_suspend(struct device *dev)
+> +static int __maybe_unused rk8xx_suspend(struct device *dev)
+>  {
+>  	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+>  	int ret = 0;
+> @@ -749,7 +749,7 @@ static int rk8xx_suspend(struct device *dev)
+>  	return ret;
+>  }
+>  
+> -static int rk8xx_resume(struct device *dev)
+> +static int __maybe_unused rk8xx_resume(struct device *dev)
+>  {
+>  	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+>  	int ret = 0;
 
-usb 1-1: new high-speed USB device number 2 using dummy_hcd
-usb 1-1: New USB device found, idVendor=0681, idProduct=0009,  
-bcdDevice=ed.98
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: config 0 descriptor??
-usb 1-1: gigaset_probe: Device matched ... !
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc6+ #15
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:gigaset_probe.cold+0x25d/0xd31  
-drivers/isdn/gigaset/usb-gigaset.c:707
-Code: e0 2a 80 3c 02 00 74 0a 48 8b 7c 24 08 e8 26 e6 1c fd 4d 8b 6f 18 ba  
-ff ff 37 00 48 c1 e2 2a 49 8d 7d 04 48 89 f8 48 c1 e8 03 <0f> b6 0c 10 49  
-8d 45 05 48 89 c6 48 c1 ee 03 0f b6 14 16 48 89 fe
-RSP: 0018:ffff8881d9e0f2e0 EFLAGS: 00010247
-RAX: 0000000000000000 RBX: ffff8881c6820880 RCX: ffffffff81ddae1d
-RDX: dffffc0000000000 RSI: ffffffff83456ce6 RDI: 0000000000000004
-RBP: ffff8881c68200a0 R08: ffff8881d9df9800 R09: ffffed103b3c1e43
-R10: ffffed103b3c1e42 R11: 0000000000000003 R12: ffff8881d0f4df00
-R13: 0000000000000000 R14: ffff8881d41aa100 R15: ffff8881d244f488
-FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f52a049b000 CR3: 00000001d342f000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_new_device.cold+0x6a4/0xe61 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1abd/0x3550 drivers/usb/core/hub.c:5441
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
