@@ -6,147 +6,76 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 789A5C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 408A3C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B8F22C7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE6E2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390671AbfGYJkj (ORCPT
+        id S2390685AbfGYJk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 05:40:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54376 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387533AbfGYJkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 05:40:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5B419ABE9;
-        Thu, 25 Jul 2019 09:40:37 +0000 (UTC)
-Date:   Thu, 25 Jul 2019 11:40:34 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/5] mm,memory_hotplug: Introduce MHP_VMEMMAP_FLAGS
-Message-ID: <20190725094030.GA16069@linux>
-References: <20190625075227.15193-1-osalvador@suse.de>
- <20190625075227.15193-3-osalvador@suse.de>
- <CAPcyv4hvu+wp4tJJNW70jp2G_rNabyvzGMvDTS3PzkDCAFztYg@mail.gmail.com>
- <20190725092751.GA15964@linux>
- <71a30086-b093-48a4-389f-7e407898718f@redhat.com>
+        Thu, 25 Jul 2019 05:40:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56325 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387533AbfGYJk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 05:40:57 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C3F9830C62A4;
+        Thu, 25 Jul 2019 09:40:56 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 5084160BEC;
+        Thu, 25 Jul 2019 09:40:53 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 25 Jul 2019 11:40:56 +0200 (CEST)
+Date:   Thu, 25 Jul 2019 11:40:52 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, ebiederm@xmission.com,
+        keescook@chromium.org, joel@joelfernandes.org, tglx@linutronix.de,
+        tj@kernel.org, dhowells@redhat.com, jannh@google.com,
+        luto@kernel.org, akpm@linux-foundation.org, cyphar@cyphar.com,
+        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        kernel-team@android.com
+Subject: Re: [RFC][PATCH 1/5] exit: kill struct waitid_info
+Message-ID: <20190725094051.GC4707@redhat.com>
+References: <20190724144651.28272-1-christian@brauner.io>
+ <20190724144651.28272-2-christian@brauner.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <71a30086-b093-48a4-389f-7e407898718f@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190724144651.28272-2-christian@brauner.io>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 25 Jul 2019 09:40:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 11:30:23AM +0200, David Hildenbrand wrote:
-> On 25.07.19 11:27, Oscar Salvador wrote:
-> > On Wed, Jul 24, 2019 at 01:11:52PM -0700, Dan Williams wrote:
-> >> On Tue, Jun 25, 2019 at 12:53 AM Oscar Salvador <osalvador@suse.de> wrote:
-> >>>
-> >>> This patch introduces MHP_MEMMAP_DEVICE and MHP_MEMMAP_MEMBLOCK flags,
-> >>> and prepares the callers that add memory to take a "flags" parameter.
-> >>> This "flags" parameter will be evaluated later on in Patch#3
-> >>> to init mhp_restrictions struct.
-> >>>
-> >>> The callers are:
-> >>>
-> >>> add_memory
-> >>> __add_memory
-> >>> add_memory_resource
-> >>>
-> >>> Unfortunately, we do not have a single entry point to add memory, as depending
-> >>> on the requisites of the caller, they want to hook up in different places,
-> >>> (e.g: Xen reserve_additional_memory()), so we have to spread the parameter
-> >>> in the three callers.
-> >>>
-> >>> The flags are either MHP_MEMMAP_DEVICE or MHP_MEMMAP_MEMBLOCK, and only differ
-> >>> in the way they allocate vmemmap pages within the memory blocks.
-> >>>
-> >>> MHP_MEMMAP_MEMBLOCK:
-> >>>         - With this flag, we will allocate vmemmap pages in each memory block.
-> >>>           This means that if we hot-add a range that spans multiple memory blocks,
-> >>>           we will use the beginning of each memory block for the vmemmap pages.
-> >>>           This strategy is good for cases where the caller wants the flexiblity
-> >>>           to hot-remove memory in a different granularity than when it was added.
-> >>>
-> >>>           E.g:
-> >>>                 We allocate a range (x,y], that spans 3 memory blocks, and given
-> >>>                 memory block size = 128MB.
-> >>>                 [memblock#0  ]
-> >>>                 [0 - 511 pfns      ] - vmemmaps for section#0
-> >>>                 [512 - 32767 pfns  ] - normal memory
-> >>>
-> >>>                 [memblock#1 ]
-> >>>                 [32768 - 33279 pfns] - vmemmaps for section#1
-> >>>                 [33280 - 65535 pfns] - normal memory
-> >>>
-> >>>                 [memblock#2 ]
-> >>>                 [65536 - 66047 pfns] - vmemmap for section#2
-> >>>                 [66048 - 98304 pfns] - normal memory
-> >>>
-> >>> MHP_MEMMAP_DEVICE:
-> >>>         - With this flag, we will store all vmemmap pages at the beginning of
-> >>>           hot-added memory.
-> >>>
-> >>>           E.g:
-> >>>                 We allocate a range (x,y], that spans 3 memory blocks, and given
-> >>>                 memory block size = 128MB.
-> >>>                 [memblock #0 ]
-> >>>                 [0 - 1533 pfns    ] - vmemmap for section#{0-2}
-> >>>                 [1534 - 98304 pfns] - normal memory
-> >>>
-> >>> When using larger memory blocks (1GB or 2GB), the principle is the same.
-> >>>
-> >>> Of course, MHP_MEMMAP_DEVICE is nicer when it comes to have a large contigous
-> >>> area, while MHP_MEMMAP_MEMBLOCK allows us to have flexibility when removing the
-> >>> memory.
-> >>
-> >> Concept and patch looks good to me, but I don't quite like the
-> >> proliferation of the _DEVICE naming, in theory it need not necessarily
-> >> be ZONE_DEVICE that is the only user of that flag. I also think it
-> >> might be useful to assign a flag for the default 'allocate from RAM'
-> >> case, just so the code is explicit. So, how about:
-> > 
-> > Well, MHP_MEMMAP_DEVICE is not tied to ZONE_DEVICE.
-> > MHP_MEMMAP_DEVICE was chosen to make a difference between:
-> > 
-> >  * allocate memmap pages for the whole memory-device
-> >  * allocate memmap pages on each memoryblock that this memory-device spans
-> 
-> I agree that DEVICE is misleading here, you are assuming a one-to-one
-> mapping between a device and add_memory(). You are actually taliing
-> about "allocate a single chunk of mmap pages for the whole memory range
-> that is added - which could consist of multiple memory blocks".
+On 07/24, Christian Brauner wrote:
+>
+> Note that this changes how struct siginfo is filled in for users of
+> waitid.
 
-Well, I could not come up with a better name.
+Namely, copy_siginfo_to_user() will nullify the extra SI_EXPANSION_SIZE
+bytes + 2*sizeof(__ARCH_SI_CLOCK_T) from _sigchld (waitid doesn't report
+utime/stime in siginfo).
 
-MHP_MEMMAP_ALL?
-MHP_MEMMAP_WHOLE?
+Looks correct... even the compat case, but please double-check
+copy_siginfo_to_user32/siginfo_layout. Looks like both SIL_KILL and
+SIL_CHLD cases are fine in that this patch can't add other user-visible
+changes, but I could easily miss something.
 
-I will send v3 shortly and then we can think of a better name.
+> In case
+> anyone relies on the old behavior we can just revert
 
-> 
-> -- 
-> 
-> Thanks,
-> 
-> David / dhildenb
-> 
+we won't need to rever the whole patch, we can just replace
+copy_siginfo_to_user() with copy_to_user(offsetof(si_utime)).
 
--- 
-Oscar Salvador
-SUSE L3
+I see you are going to update the changelog and resend, feel free to add
+my reviewed-by.
+
+Oleg.
+
