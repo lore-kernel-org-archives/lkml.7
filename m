@@ -2,88 +2,99 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AE6C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E51C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5CB217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C365A22C7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbfGYQ2c (ORCPT
+        id S1729266AbfGYQaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:28:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:60622 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726950AbfGYQ2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:28:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D9F9174E;
-        Thu, 25 Jul 2019 09:28:31 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 158293F71A;
-        Thu, 25 Jul 2019 09:28:29 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 17:28:28 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, james.morse@arm.com,
-        marc.zyngier@arm.com, julien.thierry@arm.com,
-        suzuki.poulose@arm.com, will.deacon@arm.com
-Subject: Re: [PATCH v3 09/15] arm64/mm: Split the function
- check_and_switch_context in 3 parts
-Message-ID: <20190725162827.GE4113@arrakis.emea.arm.com>
-References: <20190724162534.7390-1-julien.grall@arm.com>
- <20190724162534.7390-10-julien.grall@arm.com>
+        Thu, 25 Jul 2019 12:30:14 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50305 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbfGYQaO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 12:30:14 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v15so45589847wml.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 09:30:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TJee9iv3dQfcDC0wZilFBJPLTspmLKcTYUWHZ1YT3mc=;
+        b=aO/9to+ETgpgGDszchqQmlCeaXubjuHsW9eWZMJW3Yo9kBi3eRCzeSKBgzbOFOVRuk
+         OOa/42lNED94lIXmKsRSQc9zmIR7ebmNPHt15dMmcVfxmr2Kz///3zLx6san+KqWEmYe
+         7oR+jZzVnay5IE7q645OyV6fRXsAfXRwKFtPfD08zap+UGWonQLKmhOu0aHGWiAn3lVY
+         0v257MZoyaGkS8C+JTDcRRICz4ew2B4UDVesdcH/5eqoXPPEf4GBwEwTU32X7tsPbgYH
+         FllAVl6nnu3+VPhLWj5gjYOcHYnASDh3MDtAQt7M3AUO5yYtNXrSkeKPLydz7zLJPJch
+         IxKg==
+X-Gm-Message-State: APjAAAW8wSQV2SLB2B2+gZd97iepb6OUXqVAH+4RYEeNEAjTE+UZ9SOJ
+        Buk0S/S+uEIxbt8w2i46m9it9Q==
+X-Google-Smtp-Source: APXvYqz9H3fBrmL3D9ICTqPd7Cn3mBSxvMw7jKETUjOZrtGbOupCF836qSCXTQ6/2qzyFiNuDh5JjQ==
+X-Received: by 2002:a1c:200a:: with SMTP id g10mr75279624wmg.160.1564072212129;
+        Thu, 25 Jul 2019 09:30:12 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:cc23:f353:392:d2ee? ([2001:b07:6468:f312:cc23:f353:392:d2ee])
+        by smtp.gmail.com with ESMTPSA id v18sm54143073wrs.80.2019.07.25.09.30.11
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 09:30:11 -0700 (PDT)
+Subject: Re: [PATCH 5.2 000/413] 5.2.3-stable review
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        wanpengli@tencent.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        patches@kernelci.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>, jmattson@google.com
+References: <20190724191735.096702571@linuxfoundation.org>
+ <CADYN=9+WLxhmqX3JNL_s-kWSN97G=8WhD=TF=uAuKecJnKcj_Q@mail.gmail.com>
+ <20190725113437.GA27429@kroah.com>
+ <230a5b34-d23e-8318-0b1f-d23ada7318e0@redhat.com>
+ <CA+G9fYsWdmboyquZ=Bs3tkTwRFTzd1yuL0_EVpHOecNi4E_stA@mail.gmail.com>
+ <20190725160939.GC18612@linux.intel.com>
+ <33f1cfaa-525d-996a-4977-fda32dc368ee@redhat.com>
+ <20190725162053.GD18612@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <7bc207e0-0812-e41a-bfd5-e3fbfd43f242@redhat.com>
+Date:   Thu, 25 Jul 2019 18:30:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724162534.7390-10-julien.grall@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190725162053.GD18612@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 05:25:28PM +0100, Julien Grall wrote:
-> The function check_and_switch_context is used to:
->     1) Check whether the ASID is still valid
->     2) Generate a new one if it is not valid
->     3) Switch the context
+On 25/07/19 18:20, Sean Christopherson wrote:
+> On Thu, Jul 25, 2019 at 06:10:37PM +0200, Paolo Bonzini wrote:
+>> On 25/07/19 18:09, Sean Christopherson wrote:
+>>>> This investigation confirms it is a new test code failure on stable-rc 5.2.3
+>>> No, it only confirms that kvm-unit-tests/master fails on 5.2.*.  To confirm
+>>> a new failure in 5.2.3 you would need to show a test that passes on 5.2.2
+>>> and fails on 5.2.3.
+>>
+>> I think he meant "a failure in new test code". :)
 > 
-> While the latter is specific to the MM subsystem, the rest could be part
-> of the generic ASID allocator.
-> 
-> After this patch, the function is now split in 3 parts which corresponds
-> to the use of the functions:
->     1) asid_check_context: Check if the ASID is still valid
->     2) asid_new_context: Generate a new ASID for the context
->     3) check_and_switch_context: Call 1) and 2) and switch the context
-> 
-> 1) and 2) have not been merged in a single function because we want to
-> avoid to add a branch in when the ASID is still valid. This will matter
-> when the code will be moved in separate file later on as 1) will reside
-> in the header as a static inline function.
-> 
-> Signed-off-by: Julien Grall <julien.grall@arm.com>
-> 
-> ---
->     Will wants to avoid to add a branch when the ASID is still valid. So
->     1) and 2) are in separates function. The former will move to a new
->     header and make static inline.
+> Ah, that does appear to be the case.  So just to be clear, we're good, right?
 
-Was this discussion logged somewhere, just to get the context?
+Yes.  I'm happy to gather ideas on how to avoid this (i.e. 1) if a
+submodule would be useful; 2) where to stick it).
 
-I presume by "branch" you meant the function call to
-asid_check_context(). Personally, I don't like the duplication of this
-function in patch 13. This is part of the ASID allocation algorithm and
-I prefer to keep them together (we even had a bug in here with the xchg
-use).
-
-Do you have any numbers to show how non-inlining this function affects
-the performance (hackbench -P would do).
-
--- 
-Catalin
+Paolo
