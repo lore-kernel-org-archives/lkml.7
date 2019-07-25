@@ -2,175 +2,97 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5857C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 349EFC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 982D2217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B97217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:48:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q/tA4mT0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389235AbfGYMrG (ORCPT
+        id S2389245AbfGYMsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:47:06 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:44761 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387824AbfGYMrF (ORCPT
+        Thu, 25 Jul 2019 08:48:23 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40706 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388497AbfGYMsX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:47:05 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hqd9C-0004AP-9n; Thu, 25 Jul 2019 06:47:02 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hqd9B-0003uL-6T; Thu, 25 Jul 2019 06:47:02 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tejun Heo <tj@kernel.org>, David Howells <dhowells@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Android Kernel Team <kernel-team@android.com>
-References: <20190724144651.28272-1-christian@brauner.io>
-        <20190724144651.28272-2-christian@brauner.io>
-        <CAHk-=wjOLjnZdZBSDwNbaWp3uGLGQkgxe-2HmNG5gE4TLbED_w@mail.gmail.com>
-Date:   Thu, 25 Jul 2019 07:46:50 -0500
-In-Reply-To: <CAHk-=wjOLjnZdZBSDwNbaWp3uGLGQkgxe-2HmNG5gE4TLbED_w@mail.gmail.com>
-        (Linus Torvalds's message of "Wed, 24 Jul 2019 10:37:34 -0700")
-Message-ID: <87zhl2wabp.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Thu, 25 Jul 2019 08:48:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=05xwHelLjSHHBuReW+EIr66fHPltEo6bHo2T1pZhDCg=; b=Q/tA4mT0PXt+o9525krpx7Q7B
+        zuIKWtu8R3tg8EuI2BRFi4bwQ/bBDfZgR2BOsraAY6TDYT7CQcExzTW7WgqRcRKS0ElmcHclHcxpy
+        jHZB2p/o8KKMODwWQdjcxX7n5sQXs5BJfDe3OI7KOd/Z69BRd39yfyhAbPnfE4s7ScMJeuuPP1xe1
+        Ijj8fw4A3Gx9s3oLKRbrN7CYJQAdl7lfBfrLgPdzj3WiiY14YAnWy6VGHCEeT0/UFL/ssx+cmQDAr
+        QHCahuSme8WRIkn7skl0W0g+F4m7ygHjF4rdrGQJhNGZUgfTKpFJVUbGmXKDj2J6Y+lMrx9HHo05J
+        TGNY1nDeA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hqdAS-0000dx-3H; Thu, 25 Jul 2019 12:48:20 +0000
+Date:   Thu, 25 Jul 2019 05:48:20 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Laura Abbott <labbott@redhat.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        butao <butao@hisilicon.com>,
+        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
+        Yudongbin <yudongbin@hisilicon.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
+Message-ID: <20190725124820.GC20286@infradead.org>
+References: <20190624194908.121273-1-john.stultz@linaro.org>
+ <20190624194908.121273-5-john.stultz@linaro.org>
+ <20190718100840.GB19666@infradead.org>
+ <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
+ <20190724065958.GC16225@infradead.org>
+ <25353c4f-5389-0352-b34e-78698b35e588@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hqd9B-0003uL-6T;;;mid=<87zhl2wabp.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18nF5KW5veMCAros5c3iAikNdUWJfnC4t0=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [RFC][PATCH 1/5] exit: kill struct waitid_info
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <25353c4f-5389-0352-b34e-78698b35e588@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+On Wed, Jul 24, 2019 at 07:38:07AM -0400, Laura Abbott wrote:
+> It's not just an optimization for Ion though. Ion was designed to
+> let the callers choose between system and multiple CMA heaps.
 
-> On Wed, Jul 24, 2019 at 7:47 AM Christian Brauner <christian@brauner.io> wrote:
->>
->> The code here uses a struct waitid_info to catch basic information about
->> process exit including the pid, uid, status, and signal that caused the
->> process to exit. This information is then stuffed into a struct siginfo
->> for the waitid() syscall. That seems like an odd thing to do. We can
->> just pass down a siginfo_t struct directly which let's us cleanup and
->> simplify the whole code quite a bit.
->
-> Ack. Except I'd like the commit message to explain where this comes
-> from instead of that "That seems like an odd thing to do".
->
-> The _original_ reason for "struct waitid_info" was that "siginfo_t" is
-> huge because of all the insane padding that various architectures do.
->
-> So it was introduced by commit 67d7ddded322 ("waitid(2): leave copyout
-> of siginfo to syscall itself") very much to avoid stack usage issues.
-> And I quote:
->
->     collect the information needed for siginfo into
->     a small structure (waitid_info)
->
-> simply because "sigset_t" was big.
->
-> But that size came from the explicit "pad it out to 128 bytes for
-> future expansion that will never happen", and the kernel using the
-> same exact sigset_t that was exposed to user space.
->
-> Then in commit 4ce5f9c9e754 ("signal: Use a smaller struct siginfo in
-> the kernel") we got rid of the insane padding for in-kernel use,
-> exactly because it causes issues like this.
->
-> End result: that "struct waitid_info" no longer makes sense. It's not
-> appreciably smaller than kernel_siginfo_t is today, but it made sense
-> at the time.
+Who cares about ion?  That some out of tree android crap that should
+not be relevant for upstream except as an example for how not to design
+things..
 
-Apologies.  I meant to reply yesterday but I was preempted by baby
-issues.
+> On other
+> systems there may be multiple CMA regions dedicated to a specific
+> purpose or placed at a specific address. The callers need to
+> be able to choose exactly whether they want a particular CMA region
+> or discontiguous regions.
 
-I strongly disagree that this direction makes sense.  The largest
-value that I see from struct waitid_info is that it makes it possible to
-reason about which values are returned where struct kernel_siginfo does
-not.
-
-One of the details the existence of struct waitid_info makes clear is
-that unlike the related child death path the wait code does not
-fillin si_utime and si_stime.  Which is very important to know when you
-are dealing with y2038 issues and Arnd Bergmann is.
-
-The most egregious example I know of using siginfo wrong is:
-70f1b0d34bdf ("signal/usb: Replace kill_pid_info_as_cred with
-kill_pid_usb_asyncio").  But just by moving struct siginfo out of the
-program logic and into dedicated little functions that just deal with
-the craziness of struct siginfo I have found lots of little bugs.
-
-We don't need that kind of invitation to bugs in the wait logic.
-Especially since it is already known that the wait logic is subtely
-wrong in corner cases dealing with threads.  Especially since we have
-not fixed those bugs since we don't have enough people who understand
-the code well enough to review those fixes.
-
-I think a better direction for cleanups would be to merge struct
-waitid_info into struct wait_opts so that we could remove unnecessary
-conditionals from the wait code, and maybe make the whole thing less
-subtle.
-
-
-
-I took a look at this change and the only reduction in code size
-or complexity comes from using copy_siginfo_to_user instead of
-multiple lines of unsafe_put_user.  That seems to be a worth while
-change.  However that can be done by just modifying waitid and
-compat_waitid.
-
-
-There is also a bug in these changes.  The issue is using structure
-initializers of struct kernel_siginfo and then copying the structure to
-userspace.  I believe KASAN can warn about that now but it might be
-sensitive to the architecture specific details of struct kernel_siginfo.
-
-So instead of doing:
-
-+	kernel_siginfo_t kinfo = {
-+		.si_signo = 0,
-+	};
-...
-+	if (infop && copy_siginfo_to_user(infop, &kinfo))
- 		return -EFAULT;
-
-The code should do:
-+	kernel_siginfo_t kinfo;
-+	clear_siginfo(&kinfo);
-...
-+	if (infop && copy_siginfo_to_user(infop, &kinfo))
- 		return -EFAULT;
-
-
-Oleg raised a valid concern about copy_signfo_to_user32 when WNOHANG is
-specified.   In that case all of the the siginfo fields should be
-set to 0.  Although posix only requires si_pid and si_signo to be zero.
-
-Return without a process due to WNOHANG would probably be clearer if the
-code just called clear_user on the whole of the user siginfo.
-
-Eric
+At least in cma is only used either with the global pool or a per-device
+cma pool.  I think if you want to make this new dma-buf API fit in with
+the rest with the kernel you follow that model, and pass in a struct
+device to select the particular cma area, similar how the DMA allocator
+works.
