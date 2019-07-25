@@ -2,111 +2,122 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2097C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E838DC41517
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B34222C7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:57:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564063071;
-	bh=3/gSn8ciWx/Rc0CKt8m5Ivb1PTazc8jVyqJ+l93TB24=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GUxkCkxfDkKn6RLooJSrOzOQTeO/BbJCXGpEEITv5Us2URKa5F1Vj7p0JowzwtstB
-	 /Dt1+Qirc9rUtgYScYMykT3QXUG7AZrH3qbLwvsWLRO2K/EH3hlgXZXf97P0700UlB
-	 +Yi+KaBatuUzPtU9/iq0YDyj2CUZJDHXgs1NhhSw=
+	by mail.kernel.org (Postfix) with ESMTP id CC1C82075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404171AbfGYN5t (ORCPT
+        id S2404254AbfGYN6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:57:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39800 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727498AbfGYN5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:57:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A79ACAFCE;
-        Thu, 25 Jul 2019 13:57:47 +0000 (UTC)
-Date:   Thu, 25 Jul 2019 15:57:47 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v1] ACPI / scan: Acquire device_hotplug_lock in
- acpi_scan_init()
-Message-ID: <20190725135747.GB3582@dhcp22.suse.cz>
-References: <20190724143017.12841-1-david@redhat.com>
- <20190725125636.GA3582@dhcp22.suse.cz>
- <6dc566c2-faf6-565d-4ef1-2ac3a366bc76@redhat.com>
+        Thu, 25 Jul 2019 09:58:39 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:58250 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404172AbfGYN6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 09:58:39 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D0706200710;
+        Thu, 25 Jul 2019 15:58:36 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C3540200053;
+        Thu, 25 Jul 2019 15:58:36 +0200 (CEST)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 78783205E8;
+        Thu, 25 Jul 2019 15:58:36 +0200 (CEST)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: [PATCH v3 01/14] crypto: caam/qi - fix error handling in ERN handler
+Date:   Thu, 25 Jul 2019 16:58:13 +0300
+Message-Id: <1564063106-9552-2-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1564063106-9552-1-git-send-email-iuliana.prodan@nxp.com>
+References: <1564063106-9552-1-git-send-email-iuliana.prodan@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6dc566c2-faf6-565d-4ef1-2ac3a366bc76@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 25-07-19 15:05:02, David Hildenbrand wrote:
-> On 25.07.19 14:56, Michal Hocko wrote:
-> > On Wed 24-07-19 16:30:17, David Hildenbrand wrote:
-> >> We end up calling __add_memory() without the device hotplug lock held.
-> >> (I used a local patch to assert in __add_memory() that the
-> >>  device_hotplug_lock is held - I might upstream that as well soon)
-> >>
-> >> [   26.771684]        create_memory_block_devices+0xa4/0x140
-> >> [   26.772952]        add_memory_resource+0xde/0x200
-> >> [   26.773987]        __add_memory+0x6e/0xa0
-> >> [   26.775161]        acpi_memory_device_add+0x149/0x2b0
-> >> [   26.776263]        acpi_bus_attach+0xf1/0x1f0
-> >> [   26.777247]        acpi_bus_attach+0x66/0x1f0
-> >> [   26.778268]        acpi_bus_attach+0x66/0x1f0
-> >> [   26.779073]        acpi_bus_attach+0x66/0x1f0
-> >> [   26.780143]        acpi_bus_scan+0x3e/0x90
-> >> [   26.780844]        acpi_scan_init+0x109/0x257
-> >> [   26.781638]        acpi_init+0x2ab/0x30d
-> >> [   26.782248]        do_one_initcall+0x58/0x2cf
-> >> [   26.783181]        kernel_init_freeable+0x1bd/0x247
-> >> [   26.784345]        kernel_init+0x5/0xf1
-> >> [   26.785314]        ret_from_fork+0x3a/0x50
-> >>
-> >> So perform the locking just like in acpi_device_hotplug().
-> > 
-> > While playing with the device_hotplug_lock, can we actually document
-> > what it is protecting please? I have a bad feeling that we are adding
-> > this lock just because some other code path does rather than with a good
-> > idea why it is needed. This patch just confirms that. What exactly does
-> > the lock protect from here in an early boot stage.
-> 
-> We have plenty of documentation already
-> 
-> mm/memory_hotplug.c
-> 
-> git grep -C5 device_hotplug mm/memory_hotplug.c
-> 
-> Also see
-> 
-> Documentation/core-api/memory-hotplug.rst
+From: Horia Geantă <horia.geanta@nxp.com>
 
-OK, fair enough. I was more pointing to a documentation right there
-where the lock is declared because that is the place where people
-usually check for documentation. The core-api documentation looks quite
-nice. And based on that doc it seems that this patch is actually not
-needed because neither the online/offline or cpu hotplug should be
-possible that early unless I am missing something.
+ERN handler calls the caam/qi frontend "done" callback with a status
+of -EIO. This is incorrect, since the callback expects a status value
+meaningful for the crypto engine - hence the cryptic messages
+like the one below:
+platform caam_qi: 15: unknown error source
 
-> Regarding the early stage: primarily lockdep as I mentioned.
+Fix this by providing the callback with:
+-the status returned by the crypto engine (fd[status]) in case
+it contains an error, OR
+-a QI "No error" code otherwise; this will trigger the message:
+platform caam_qi: 50000000: Queue Manager Interface: No error
+which is fine, since QMan driver provides details about the cause of
+failure
 
-Could you add a lockdep splat that would be fixed by this patch to the
-changelog for reference?
+Cc: <stable@vger.kernel.org> # v5.1+
+Fixes: 67c2315d ("crypto: caam - add Queue Interface (QI) backend support")
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+---
+Changes since v2:
+-update stable version
+---
+ drivers/crypto/caam/error.c | 1 +
+ drivers/crypto/caam/qi.c    | 5 ++++-
+ drivers/crypto/caam/regs.h  | 1 +
+ 3 files changed, 6 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/crypto/caam/error.c b/drivers/crypto/caam/error.c
+index 4f0d458..95da6ae 100644
+--- a/drivers/crypto/caam/error.c
++++ b/drivers/crypto/caam/error.c
+@@ -118,6 +118,7 @@ static const struct {
+ 	u8 value;
+ 	const char *error_text;
+ } qi_error_list[] = {
++	{ 0x00, "No error" },
+ 	{ 0x1F, "Job terminated by FQ or ICID flush" },
+ 	{ 0x20, "FD format error"},
+ 	{ 0x21, "FD command format error"},
+diff --git a/drivers/crypto/caam/qi.c b/drivers/crypto/caam/qi.c
+index 0fe618e..19a378b 100644
+--- a/drivers/crypto/caam/qi.c
++++ b/drivers/crypto/caam/qi.c
+@@ -163,7 +163,10 @@ static void caam_fq_ern_cb(struct qman_portal *qm, struct qman_fq *fq,
+ 	dma_unmap_single(drv_req->drv_ctx->qidev, qm_fd_addr(fd),
+ 			 sizeof(drv_req->fd_sgt), DMA_BIDIRECTIONAL);
+ 
+-	drv_req->cbk(drv_req, -EIO);
++	if (fd->status)
++		drv_req->cbk(drv_req, be32_to_cpu(fd->status));
++	else
++		drv_req->cbk(drv_req, JRSTA_SSRC_QI);
+ }
+ 
+ static struct qman_fq *create_caam_req_fq(struct device *qidev,
+diff --git a/drivers/crypto/caam/regs.h b/drivers/crypto/caam/regs.h
+index 8591914..7c7ea8a 100644
+--- a/drivers/crypto/caam/regs.h
++++ b/drivers/crypto/caam/regs.h
+@@ -641,6 +641,7 @@ struct caam_job_ring {
+ #define JRSTA_SSRC_CCB_ERROR        0x20000000
+ #define JRSTA_SSRC_JUMP_HALT_USER   0x30000000
+ #define JRSTA_SSRC_DECO             0x40000000
++#define JRSTA_SSRC_QI               0x50000000
+ #define JRSTA_SSRC_JRERROR          0x60000000
+ #define JRSTA_SSRC_JUMP_HALT_CC     0x70000000
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.1.0
+
