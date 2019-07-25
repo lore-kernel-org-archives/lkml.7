@@ -2,155 +2,151 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E25C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800D6C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FDFA2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 530B42190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:58:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="K2gtNxpc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kTg+uBtB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfGYT5l (ORCPT
+        id S1726543AbfGYT6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 15:57:41 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38583 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfGYT5l (ORCPT
+        Thu, 25 Jul 2019 15:58:15 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41388 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfGYT6O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:57:41 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f5so14731598pgu.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 12:57:40 -0700 (PDT)
+        Thu, 25 Jul 2019 15:58:14 -0400
+Received: by mail-pf1-f195.google.com with SMTP id m30so23286400pff.8
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 12:58:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=z3gfabpCWUVaGAUSw0MxCoyTFf/o84kvoKmk3SIMZvA=;
-        b=K2gtNxpcP3C/BgmzOANgjBnuKx5KSsCbq7QzQltttoKuFeZ0em5jBbDKng2lPJ/WYW
-         ISjRcGhFIKq/2BkW4+uBt3yK7wFtMuG7w52gbRMuo9KVzxP9MmUAnVEYpiAurBhS/mA5
-         zDy74FjHoiuSLMDMdOw1UeqqYdUNPoHuq4PdKkGx7H6poyLpNEgyuxHdM4kE6MgvJpSt
-         Fic4XLXvGB+PpyCXQV25ENxp7x715QdczjG+a7l295x3U+NTvzm8m75i/ORfjSfUwtWH
-         4hF1UAOq+UYSWpdkjgjKalpnpLSku/ktz80r1nK6eo4Ue2blX1THfIlJg0gS/X3exbtK
-         q/8Q==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=q1zzi7FPBij/o2TB0V49FOYnUapYVtCOQBftk4jb7sM=;
+        b=kTg+uBtB6pkMq/6M/tQANEdWidFy2aefELMOif8PvLwgECwcyrC2zXjcwjgLlAi8Fz
+         s7pTNL5y8A2nYSHbXn/N8xMd6pyNrmK2VwGLW6cdqGMbpN2zbbLXlPV1LkaBp1LNk1dh
+         O+h3f82uEi68q0ambxJr76CBOQDpdvSbTowFQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=z3gfabpCWUVaGAUSw0MxCoyTFf/o84kvoKmk3SIMZvA=;
-        b=KdMyQeqJDhPymSNhpfiNES9M5u0ZixHC31nyHwhCkGKZmg3sMiD2hiW1lagp3yzJQj
-         LiSyYTweJIKHOpm7WYkS9nOWAOPGwedq9o1h6UG+SJV2udYfk8jcLc46utwYMVXypzhP
-         EP8GqcM5nDhaPHb9wYheiCpKJ7xuFsOVUtfaFcwcnakBs0OZ7fLluUJkHgsZeqFha63n
-         4yyT+MerigDGDpJ7JMEieEa2aDkkaLCK8eVr0uENM2u70UFyxF6fqKHrTYzesNOXOYiR
-         X7+gXjhv3r18d+6HO+1sUv6Nc0yXzTd+uFS/tdLrPG0/wvQHrmomORyfBI2U4Qrsla+4
-         pkxg==
-X-Gm-Message-State: APjAAAXDD38/MJClLNMf4UwxXcXVK+YVX8/gqHo8iNPz1lzos8HTSWnH
-        eNOATsBs87pEnIHL7UUTr3M=
-X-Google-Smtp-Source: APXvYqwYaMiTEGEtbwKQafsmqY9x5kvnOWkZbNXQJl6iHr/oj4El5MucyK05NulANRdNAcxCwG9Ajg==
-X-Received: by 2002:a17:90a:cb97:: with SMTP id a23mr92544764pju.67.1564084660336;
-        Thu, 25 Jul 2019 12:57:40 -0700 (PDT)
-Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id s12sm51165811pgr.79.2019.07.25.12.57.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 12:57:39 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <F7AD868F-D88A-49BC-8E7C-0E2A7416695A@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_5609791F-2055-446D-B1FA-F1348E9ACB53";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH] ext4: Fix deadlock on page reclaim
-Date:   Thu, 25 Jul 2019 13:57:36 -0600
-In-Reply-To: <20190725115442.GA15733@infradead.org>
-Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Masato Suzuki <masato.suzuki@wdc.com>
-To:     Christoph Hellwig <hch@infradead.org>
-References: <20190725093358.30679-1-damien.lemoal@wdc.com>
- <20190725115442.GA15733@infradead.org>
-X-Mailer: Apple Mail (2.3273)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=q1zzi7FPBij/o2TB0V49FOYnUapYVtCOQBftk4jb7sM=;
+        b=YE1hsdqnpwMBco4abt8ExtNQcyZ2se2CSYMMFL+Z9JMANf7wconxawNndjhpq3gJSc
+         GFNM8vnv1Jcqb8BDomNKyReyDPxSU5qSC7NDR/EunI+0yLeE6mF6w8SDiZOP7QGI7vzr
+         Cues4fKiFqQF9RJK9glU8z5a79Bk+HvsfnarUys1MIwslLSgwYnh+ArkabwFKt5diB34
+         cb9A8eO1xwYkzdnhh7np9/3iJuG4GCR0j/neofPIB3vETceUR/r8QOiBG7Aey7lG+3mB
+         yV+f4ttqvTaxwfmoYVKmZGKqt1e1V3qhMbsCeJfP9HbYl89Cdsr6A2E0LYzZPCd779+3
+         I68A==
+X-Gm-Message-State: APjAAAU4KXO63l6nNhU915UMKApUAyaVDLJnmwnSNGLyme50+P78EdVd
+        KKmAUyuMoIe/KoeBo+N7vh/f4w==
+X-Google-Smtp-Source: APXvYqwWG4tnTtE/YPrDLHwEnE9csORMu/zIiO8Sy+jOPLxKiii0cWDG8jMtv435J0IMQF5f3NraUQ==
+X-Received: by 2002:a17:90a:270f:: with SMTP id o15mr94434828pje.56.1564084694036;
+        Thu, 25 Jul 2019 12:58:14 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f197sm49936596pfa.161.2019.07.25.12.58.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Jul 2019 12:58:13 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 12:58:12 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
+        diana.craciun@nxp.com, christophe.leroy@c-s.fr,
+        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        wangkefeng.wang@huawei.com, yebin10@huawei.com,
+        thunder.leizhen@huawei.com, jingxiangfeng@huawei.com,
+        fanchengyang@huawei.com
+Subject: Re: [RFC PATCH 00/10] implement KASLR for powerpc/fsl_booke/32
+Message-ID: <201907251252.0C58037@keescook>
+References: <20190717080621.40424-1-yanaijie@huawei.com>
+ <e6ad41bc-5d5a-cf3f-b308-e1863b4fef99@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e6ad41bc-5d5a-cf3f-b308-e1863b4fef99@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 25, 2019 at 03:16:28PM +0800, Jason Yan wrote:
+> Hi all, any comments?
 
---Apple-Mail=_5609791F-2055-446D-B1FA-F1348E9ACB53
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=us-ascii
+I'm a fan of it, but I don't know ppc internals well enough to sanely
+review the code. :) Some comments below on design...
 
-On Jul 25, 2019, at 5:54 AM, Christoph Hellwig <hch@infradead.org> wrote:
 > 
-> On Thu, Jul 25, 2019 at 06:33:58PM +0900, Damien Le Moal wrote:
->> +	gfp_t gfp_mask;
->> +
->> 	switch (ext4_inode_journal_mode(inode)) {
->> 	case EXT4_INODE_ORDERED_DATA_MODE:
->> 	case EXT4_INODE_WRITEBACK_DATA_MODE:
->> @@ -4019,6 +4019,14 @@ void ext4_set_aops(struct inode *inode)
->> 		inode->i_mapping->a_ops = &ext4_da_aops;
->> 	else
->> 		inode->i_mapping->a_ops = &ext4_aops;
->> +
->> +	/*
->> +	 * Ensure all page cache allocations are done from GFP_NOFS context to
->> +	 * prevent direct reclaim recursion back into the filesystem and blowing
->> +	 * stacks or deadlocking.
->> +	 */
->> +	gfp_mask = mapping_gfp_mask(inode->i_mapping);
->> +	mapping_set_gfp_mask(inode->i_mapping, (gfp_mask & ~(__GFP_FS)));
 > 
-> This looks like something that could hit every file systems, so
-> shouldn't we fix this in common code?
+> On 2019/7/17 16:06, Jason Yan wrote:
+> > This series implements KASLR for powerpc/fsl_booke/32, as a security
+> > feature that deters exploit attempts relying on knowledge of the location
+> > of kernel internals.
+> > 
+> > Since CONFIG_RELOCATABLE has already supported, what we need to do is
+> > map or copy kernel to a proper place and relocate. Freescale Book-E
+> > parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
+> > entries are not suitable to map the kernel directly in a randomized
+> > region, so we chose to copy the kernel to a proper place and restart to
+> > relocate.
+> > 
+> > Entropy is derived from the banner and timer base, which will change every
+> > build and boot. This not so much safe so additionally the bootloader may
+> > pass entropy via the /chosen/kaslr-seed node in device tree.
 
-It also has the drawback that it prevents __GFP_FS reclaim when ext4
-is *not* at the bottom of the IO stack.
+Good: adding kaslr-seed is a good step here. Are there any x86-like
+RDRAND or RDTSC to use? (Or maybe timer base here is similar to x86
+RDTSC here?)
 
-> We could also look into just using memalloc_nofs_save for the page
-> cache allocation path instead of the per-mapping gfp_mask.
+> > 
+> > We will use the first 512M of the low memory to randomize the kernel
+> > image. The memory will be split in 64M zones. We will use the lower 8
+> > bit of the entropy to decide the index of the 64M zone. Then we chose a
+> > 16K aligned offset inside the 64M zone to put the kernel in.
 
-That makes more sense.
+Does this 16K granularity have any page table performance impact? My
+understanding was that x86 needed to have 2M granularity due to its page
+table layouts.
 
-Cheers, Andreas
+Why the 64M zones instead of just 16K granularity across the entire low
+512M?
 
+> > 
+> >      KERNELBASE
+> > 
+> >          |-->   64M   <--|
+> >          |               |
+> >          +---------------+    +----------------+---------------+
+> >          |               |....|    |kernel|    |               |
+> >          +---------------+    +----------------+---------------+
+> >          |                         |
+> >          |----->   offset    <-----|
+> > 
+> >                                kimage_vaddr
+> > 
+> > We also check if we will overlap with some areas like the dtb area, the
+> > initrd area or the crashkernel area. If we cannot find a proper area,
+> > kaslr will be disabled and boot from the original kernel.
+> > 
+> > Jason Yan (10):
+> >    powerpc: unify definition of M_IF_NEEDED
+> >    powerpc: move memstart_addr and kernstart_addr to init-common.c
+> >    powerpc: introduce kimage_vaddr to store the kernel base
+> >    powerpc/fsl_booke/32: introduce create_tlb_entry() helper
+> >    powerpc/fsl_booke/32: introduce reloc_kernel_entry() helper
+> >    powerpc/fsl_booke/32: implement KASLR infrastructure
+> >    powerpc/fsl_booke/32: randomize the kernel image offset
+> >    powerpc/fsl_booke/kaslr: clear the original kernel if randomized
+> >    powerpc/fsl_booke/kaslr: support nokaslr cmdline parameter
+> >    powerpc/fsl_booke/kaslr: dump out kernel offset information on panic
 
+Is there anything planned for other fixed-location things, like x86's
+CONFIG_RANDOMIZE_MEMORY?
 
-
-
-
---Apple-Mail=_5609791F-2055-446D-B1FA-F1348E9ACB53
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl06CbAACgkQcqXauRfM
-H+Cc4RAAwDIi92Jq5bJgWNXpycrtCx0w4VV1jgbWb0fohPV0RRgmI1OYmfN4y2nq
-7Qlp7dmpJpPphqkGmPIEfapybg18Vdv2ZYI6kWr66EME7PXsRO8MpGTNznx9C68Z
-tWRnIxQcmZGKRDX208oWaHazar7dPtE5CIzYvn9tIr6rORYuyZ9dpKMddBlEMI2V
-+ZDUqRgS1lI+BEbeMXD+/oyVUykaGlR0JnkJhzIylkHGRfbzpKaKfxfNgY37Cccv
-En+GiMLzu/2W3L7si95fqEKu/OGFmiKLfDZg0OfhfZUIwNrbief7pemmsfA9XaZH
-sqloaIYVTtLo4pzU7Hmc4eBzsHHMxQjtQFv0jVXQYljzJK8fDsl016Mg6Z+ZB5YK
-HGafAYK391Mi+1x68SndtIloIf+PJV9EJljieeyPQgF1x9PtQdqIfBmLSwPV0Uo9
-0eFhEBcF96xIsLrMnN1bThGDRTzM9i7kfHCEVlu/3VTLeG9ml1C93jbujh9zbwqy
-rhxt6FmzV03KBAoMgVJrdyK+B49WVIPeI0xXOVKGGJATK7qutC+Nu1qy808mSvmS
-QIbXEPqRzAuIAb8pRPdje+59BBUmDDvT4lhBdlNTLrxqpzLm+ClSbIMBSOg/pKET
-LE7e+ZTsQzx0ZitVjjf7DO8In9CoTzhexgwrUT3gP7dwIFpS+2M=
-=9Xt0
------END PGP SIGNATURE-----
-
---Apple-Mail=_5609791F-2055-446D-B1FA-F1348E9ACB53--
+-- 
+Kees Cook
