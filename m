@@ -2,334 +2,105 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BEDC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71FEC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C18221951
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:02:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ejWQUWNE"
+	by mail.kernel.org (Postfix) with ESMTP id B31C421901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:02:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388944AbfGYICH (ORCPT
+        id S2388960AbfGYICT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 04:02:07 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42604 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388596AbfGYICH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 04:02:07 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q10so22322025pff.9;
-        Thu, 25 Jul 2019 01:02:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yJ0esR3gqyjabjnRdkv3xq8sELXYTmCusEQ+i32vrcQ=;
-        b=ejWQUWNE/qfPXJAbUOv1iSK/jBAEsTxBG7WHLr+jBvLhnFCl2Wn8FqmDwIWiwvm+PS
-         JrW0EU3VVY/weHtzAy1FOLU1HNs1jqXOS3bTX2m+yMk3tFxAcxrlu2cd/rjrGrxwMfsV
-         8PNLURtPsJfIeKBwQFbxx6UY6VtW1G8BuO/ySnnZ4Jvn7VkuIiRd7CcbPQ7ZdzWDIagl
-         Yb1+i7FufmI8y6PrFrWzVsf7O7gXRorMJlN3qjibgF7cqwoUIEptILF5jUfswOERuT2t
-         RrPnHheuxAhCN8Frphy8iH3cSOhwZ1WU+iMBZN46lHz0nKVrsAqf7jHeW24Z/r/BY9sd
-         Wz5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yJ0esR3gqyjabjnRdkv3xq8sELXYTmCusEQ+i32vrcQ=;
-        b=FfiQ1nWOpht5ltjpIqGPqPEop9JWCDYv75tBN7XByoHyJ+9/om8TA6Eh8tqiGt0aP5
-         62trkM0rZlslgAU+qHDQzcA6o8CYpjYkIsYu/zImTnY12mjfbg/xtQPQ2qTP//Vm/bjW
-         +SdgazCgrh8qU1BpgawX8x+2d+uOBGnqtmv1zcLzSTxfqzHVUrDFePYNjaZSegvTfPmn
-         Ur8AarR56piuYd9BuN7MUE1WAmbwkOyTzvgtcyy9KKJTYWLkgRlEfSfSf/ymTf0AlcCm
-         M+mNYTOiEZl5V7RjEypD/zCGZ/ut0z/tsa0YRKFjj5VrWCj0b5OXNeq4G+6itp3Li/Z9
-         PuNA==
-X-Gm-Message-State: APjAAAWZ3qpFSjNcDBzdG+rH1jZiQm3gMpN+P5ytCOBIxEoA/xv3+CHL
-        TnH0lA4KPMoRa0+tGkNfTCE=
-X-Google-Smtp-Source: APXvYqwrO63J65nlVcYLjmqxh6lIEg38q2Kxx1VcwpM359myqL+zdL88hj1oGtrgK48MaYQXJeZIdA==
-X-Received: by 2002:a62:483:: with SMTP id 125mr15831288pfe.245.1564041725605;
-        Thu, 25 Jul 2019 01:02:05 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id p27sm73176877pfq.136.2019.07.25.01.01.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 01:02:04 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Deepak Saxena <dsaxena@plexity.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] hwrng: Use device-managed registration API
-Date:   Thu, 25 Jul 2019 16:01:55 +0800
-Message-Id: <20190725080155.19875-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 25 Jul 2019 04:02:19 -0400
+Received: from mga02.intel.com ([134.134.136.20]:62083 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388596AbfGYICT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 04:02:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 01:02:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,306,1559545200"; 
+   d="scan'208";a="170171070"
+Received: from rbhardw1-mobl.gar.corp.intel.com (HELO [10.66.75.233]) ([10.66.75.233])
+  by fmsmga008.fm.intel.com with ESMTP; 25 Jul 2019 01:02:15 -0700
+Subject: Re: [PATCH] platform/x86: intel_pmc_core: Add ICL-NNPI support to PMC
+ Core
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+References: <20190614080940.13640-1-rajneesh.bhardwaj@linux.intel.com>
+ <CAHp75VfMdKqpC3_gF-VzcJQqiWM9E0irORr60KLXyu8HuQg9KA@mail.gmail.com>
+From:   "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
+Message-ID: <37653b30-7a76-0896-ecb7-2fbeab4308ec@linux.intel.com>
+Date:   Thu, 25 Jul 2019 13:32:15 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <CAHp75VfMdKqpC3_gF-VzcJQqiWM9E0irORr60KLXyu8HuQg9KA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_hwrng_register to simplify the implementation.
-Manual unregistration and some remove functions can be
-removed now.
+Hi Andy
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/char/hw_random/atmel-rng.c     |  3 +--
- drivers/char/hw_random/cavium-rng-vf.c | 11 +----------
- drivers/char/hw_random/exynos-trng.c   |  3 +--
- drivers/char/hw_random/n2-drv.c        |  4 +---
- drivers/char/hw_random/nomadik-rng.c   |  3 +--
- drivers/char/hw_random/omap-rng.c      |  3 +--
- drivers/char/hw_random/powernv-rng.c   | 10 +---------
- drivers/char/hw_random/st-rng.c        |  4 +---
- drivers/char/hw_random/xgene-rng.c     |  4 +---
- 9 files changed, 9 insertions(+), 36 deletions(-)
+On 29-Jun-19 6:48 PM, Andy Shevchenko wrote:
+> On Fri, Jun 14, 2019 at 11:14 AM Rajneesh Bhardwaj
+> <rajneesh.bhardwaj@linux.intel.com> wrote:
+>> Ice Lake Neural Network Processor for deep learning inference a.k.a.
+>> ICL-NNPI can re-use Ice Lake Mobile regmap to enable Intel PMC Core
+>> driver on it.
+>>
+> This will be postponed till next cycle since the CPU model will not
+> appear before merge window.
+> So, please, resend than (I guess somewhat in a month).
 
-diff --git a/drivers/char/hw_random/atmel-rng.c b/drivers/char/hw_random/atmel-rng.c
-index 433426242b87..e55705745d5e 100644
---- a/drivers/char/hw_random/atmel-rng.c
-+++ b/drivers/char/hw_random/atmel-rng.c
-@@ -86,7 +86,7 @@ static int atmel_trng_probe(struct platform_device *pdev)
- 	trng->rng.name = pdev->name;
- 	trng->rng.read = atmel_trng_read;
- 
--	ret = hwrng_register(&trng->rng);
-+	ret = devm_hwrng_register(&pdev->dev, &trng->rng);
- 	if (ret)
- 		goto err_register;
- 
-@@ -103,7 +103,6 @@ static int atmel_trng_remove(struct platform_device *pdev)
- {
- 	struct atmel_trng *trng = platform_get_drvdata(pdev);
- 
--	hwrng_unregister(&trng->rng);
- 
- 	atmel_trng_disable(trng);
- 	clk_disable_unprepare(trng->clk);
-diff --git a/drivers/char/hw_random/cavium-rng-vf.c b/drivers/char/hw_random/cavium-rng-vf.c
-index 2d1352b67168..3de4a6a443ef 100644
---- a/drivers/char/hw_random/cavium-rng-vf.c
-+++ b/drivers/char/hw_random/cavium-rng-vf.c
-@@ -67,7 +67,7 @@ static int cavium_rng_probe_vf(struct	pci_dev		*pdev,
- 
- 	pci_set_drvdata(pdev, rng);
- 
--	ret = hwrng_register(&rng->ops);
-+	ret = devm_hwrng_register(&pdev->dev, &rng->ops);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Error registering device as HWRNG.\n");
- 		return ret;
-@@ -76,14 +76,6 @@ static int cavium_rng_probe_vf(struct	pci_dev		*pdev,
- 	return 0;
- }
- 
--/* Remove the VF */
--static void  cavium_rng_remove_vf(struct pci_dev *pdev)
--{
--	struct cavium_rng *rng;
--
--	rng = pci_get_drvdata(pdev);
--	hwrng_unregister(&rng->ops);
--}
- 
- static const struct pci_device_id cavium_rng_vf_id_table[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, 0xa033), 0, 0, 0},
-@@ -95,7 +87,6 @@ static struct pci_driver cavium_rng_vf_driver = {
- 	.name		= "cavium_rng_vf",
- 	.id_table	= cavium_rng_vf_id_table,
- 	.probe		= cavium_rng_probe_vf,
--	.remove		= cavium_rng_remove_vf,
- };
- module_pci_driver(cavium_rng_vf_driver);
- 
-diff --git a/drivers/char/hw_random/exynos-trng.c b/drivers/char/hw_random/exynos-trng.c
-index 94235761955c..b4b52ab23b6b 100644
---- a/drivers/char/hw_random/exynos-trng.c
-+++ b/drivers/char/hw_random/exynos-trng.c
-@@ -153,7 +153,7 @@ static int exynos_trng_probe(struct platform_device *pdev)
- 		goto err_clock;
- 	}
- 
--	ret = hwrng_register(&trng->rng);
-+	ret = devm_hwrng_register(&pdev->dev, &trng->rng);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Could not register hwrng device.\n");
- 		goto err_register;
-@@ -179,7 +179,6 @@ static int exynos_trng_remove(struct platform_device *pdev)
- {
- 	struct exynos_trng_dev *trng =  platform_get_drvdata(pdev);
- 
--	hwrng_unregister(&trng->rng);
- 	clk_disable_unprepare(trng->clk);
- 
- 	pm_runtime_put_sync(&pdev->dev);
-diff --git a/drivers/char/hw_random/n2-drv.c b/drivers/char/hw_random/n2-drv.c
-index d4cab105796f..2d256b3470db 100644
---- a/drivers/char/hw_random/n2-drv.c
-+++ b/drivers/char/hw_random/n2-drv.c
-@@ -768,7 +768,7 @@ static int n2rng_probe(struct platform_device *op)
- 	np->hwrng.data_read = n2rng_data_read;
- 	np->hwrng.priv = (unsigned long) np;
- 
--	err = hwrng_register(&np->hwrng);
-+	err = devm_hwrng_register(&pdev->dev, &np->hwrng);
- 	if (err)
- 		goto out_hvapi_unregister;
- 
-@@ -793,8 +793,6 @@ static int n2rng_remove(struct platform_device *op)
- 
- 	cancel_delayed_work_sync(&np->work);
- 
--	hwrng_unregister(&np->hwrng);
--
- 	sun4v_hvapi_unregister(HV_GRP_RNG);
- 
- 	return 0;
-diff --git a/drivers/char/hw_random/nomadik-rng.c b/drivers/char/hw_random/nomadik-rng.c
-index fc0f6b0cb80d..74ed29f42e4f 100644
---- a/drivers/char/hw_random/nomadik-rng.c
-+++ b/drivers/char/hw_random/nomadik-rng.c
-@@ -57,7 +57,7 @@ static int nmk_rng_probe(struct amba_device *dev, const struct amba_id *id)
- 	if (!base)
- 		goto out_release;
- 	nmk_rng.priv = (unsigned long)base;
--	ret = hwrng_register(&nmk_rng);
-+	ret = devm_hwrng_register(&dev->dev, &nmk_rng);
- 	if (ret)
- 		goto out_release;
- 	return 0;
-@@ -71,7 +71,6 @@ static int nmk_rng_probe(struct amba_device *dev, const struct amba_id *id)
- 
- static int nmk_rng_remove(struct amba_device *dev)
- {
--	hwrng_unregister(&nmk_rng);
- 	amba_release_regions(dev);
- 	clk_disable(rng_clk);
- 	return 0;
-diff --git a/drivers/char/hw_random/omap-rng.c b/drivers/char/hw_random/omap-rng.c
-index e9b6ac61fb7f..b27f39688b5e 100644
---- a/drivers/char/hw_random/omap-rng.c
-+++ b/drivers/char/hw_random/omap-rng.c
-@@ -500,7 +500,7 @@ static int omap_rng_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_register;
- 
--	ret = hwrng_register(&priv->rng);
-+	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
- 	if (ret)
- 		goto err_register;
- 
-@@ -525,7 +525,6 @@ static int omap_rng_remove(struct platform_device *pdev)
- {
- 	struct omap_rng_dev *priv = platform_get_drvdata(pdev);
- 
--	hwrng_unregister(&priv->rng);
- 
- 	priv->pdata->cleanup(priv);
- 
-diff --git a/drivers/char/hw_random/powernv-rng.c b/drivers/char/hw_random/powernv-rng.c
-index f2e8272e276a..8da1d7917bdc 100644
---- a/drivers/char/hw_random/powernv-rng.c
-+++ b/drivers/char/hw_random/powernv-rng.c
-@@ -33,18 +33,11 @@ static struct hwrng powernv_hwrng = {
- 	.read = powernv_rng_read,
- };
- 
--static int powernv_rng_remove(struct platform_device *pdev)
--{
--	hwrng_unregister(&powernv_hwrng);
--
--	return 0;
--}
--
- static int powernv_rng_probe(struct platform_device *pdev)
- {
- 	int rc;
- 
--	rc = hwrng_register(&powernv_hwrng);
-+	rc = devm_hwrng_register(&pdev->dev, &powernv_hwrng);
- 	if (rc) {
- 		/* We only register one device, ignore any others */
- 		if (rc == -EEXIST)
-@@ -70,7 +63,6 @@ static struct platform_driver powernv_rng_driver = {
- 		.of_match_table = powernv_rng_match,
- 	},
- 	.probe	= powernv_rng_probe,
--	.remove = powernv_rng_remove,
- };
- module_platform_driver(powernv_rng_driver);
- 
-diff --git a/drivers/char/hw_random/st-rng.c b/drivers/char/hw_random/st-rng.c
-index bd6a98b3479b..863448360a7d 100644
---- a/drivers/char/hw_random/st-rng.c
-+++ b/drivers/char/hw_random/st-rng.c
-@@ -102,7 +102,7 @@ static int st_rng_probe(struct platform_device *pdev)
- 
- 	dev_set_drvdata(&pdev->dev, ddata);
- 
--	ret = hwrng_register(&ddata->ops);
-+	ret = devm_hwrng_register(&pdev->dev, &ddata->ops);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to register HW RNG\n");
- 		clk_disable_unprepare(clk);
-@@ -118,8 +118,6 @@ static int st_rng_remove(struct platform_device *pdev)
- {
- 	struct st_rng_data *ddata = dev_get_drvdata(&pdev->dev);
- 
--	hwrng_unregister(&ddata->ops);
--
- 	clk_disable_unprepare(ddata->clk);
- 
- 	return 0;
-diff --git a/drivers/char/hw_random/xgene-rng.c b/drivers/char/hw_random/xgene-rng.c
-index 8c6f9f63da5e..7e568db87ae2 100644
---- a/drivers/char/hw_random/xgene-rng.c
-+++ b/drivers/char/hw_random/xgene-rng.c
-@@ -361,7 +361,7 @@ static int xgene_rng_probe(struct platform_device *pdev)
- 
- 	xgene_rng_func.priv = (unsigned long) ctx;
- 
--	rc = hwrng_register(&xgene_rng_func);
-+	rc = devm_hwrng_register(&pdev->dev, &xgene_rng_func);
- 	if (rc) {
- 		dev_err(&pdev->dev, "RNG registering failed error %d\n", rc);
- 		if (!IS_ERR(ctx->clk))
-@@ -375,7 +375,6 @@ static int xgene_rng_probe(struct platform_device *pdev)
- 			rc);
- 		if (!IS_ERR(ctx->clk))
- 			clk_disable_unprepare(ctx->clk);
--		hwrng_unregister(&xgene_rng_func);
- 		return rc;
- 	}
- 
-@@ -392,7 +391,6 @@ static int xgene_rng_remove(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "RNG init wakeup failed error %d\n", rc);
- 	if (!IS_ERR(ctx->clk))
- 		clk_disable_unprepare(ctx->clk);
--	hwrng_unregister(&xgene_rng_func);
- 
- 	return rc;
- }
--- 
-2.20.1
 
+The dependent CPUID Patch is now upstream, 
+https://github.com/torvalds/linux/blob/bed38c3e2dca01b358a62b5e73b46e875742fd75/arch/x86/include/asm/intel-family.h#L59 
+so can you please apply this one?
+
+
+Thank you
+
+Rajneesh
+
+
+>
+>> Cc: Darren Hart <dvhart@infradead.org>
+>> Cc: Andy Shevchenko <andy@infradead.org>
+>> Cc: platform-driver-x86@vger.kernel.org
+>> Link: https://lkml.org/lkml/2019/6/5/1034
+>> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+>> ---
+>>   drivers/platform/x86/intel_pmc_core.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+>> index 1d902230ba61..be6cda89dcf5 100644
+>> --- a/drivers/platform/x86/intel_pmc_core.c
+>> +++ b/drivers/platform/x86/intel_pmc_core.c
+>> @@ -815,6 +815,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+>>          INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
+>>          INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
+>>          INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
+>> +       INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
+>>          {}
+>>   };
+>>
+>> --
+>> 2.17.1
+>>
+>
