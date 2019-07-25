@@ -2,74 +2,93 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1A0C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0076C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F20621901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:27:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564050450;
-	bh=yIW36v6BxYIlCrKZEEkenceCjMmchU/hjIQC0JWlt2w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gv/l2NMNRU+KY2l6NnV4uC/TCcA/reRvtfNeaVJ/KAwNnXVG/RqaZBXldKMpwm9pr
-	 F71X8tAaHzplsLsTCN/AXm1HAEUQzMe4JtUNk/L18gyclHz/bQfczQfJrqoglnn5Ax
-	 jJpuhEMnswWrOAUucRZPMOoH3Ds+qC40oINdvHkM=
+	by mail.kernel.org (Postfix) with ESMTP id 7ECCD21901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:30:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729853AbfGYK13 (ORCPT
+        id S1727269AbfGYKa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 06:27:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48804 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 06:30:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38568 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728603AbfGYK11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 06:27:27 -0400
-Received: from localhost (unknown [106.200.241.217])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726504AbfGYKaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 06:30:55 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB5CF2190F;
-        Thu, 25 Jul 2019 10:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564050446;
-        bh=yIW36v6BxYIlCrKZEEkenceCjMmchU/hjIQC0JWlt2w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VnjJ+w7vveNogrQ+DajuMqa6r0vuSfC8fxf2AegJEBwFQSMTqsEIQrwAZoTAvV2nf
-         9b1UcA68LP207iBHUcnx1MlXMqZ/GxOwFVpSu9O223mHVtKriQhlqdpdmLCbdIgViI
-         clegjpyuCGGN+fIAM8IczxNWh1hJqiE1uETDIC/A=
-Date:   Thu, 25 Jul 2019 15:56:13 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] dmaengine: tegra-apb: Support per-burst residue
- granularity
-Message-ID: <20190725102613.GT12733@vkoul-mobl.Dlink>
-References: <20190705150519.18171-1-digetx@gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 4F88085362;
+        Thu, 25 Jul 2019 10:30:55 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B8B845C8A4;
+        Thu, 25 Jul 2019 10:30:49 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 25 Jul 2019 12:30:55 +0200 (CEST)
+Date:   Thu, 25 Jul 2019 12:30:48 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tejun Heo <tj@kernel.org>, David Howells <dhowells@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        kernel-team <kernel-team@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [PATCH 4/5] pidfd: add CLONE_WAIT_PID
+Message-ID: <20190725103048.GE4707@redhat.com>
+References: <20190724144651.28272-1-christian@brauner.io>
+ <20190724144651.28272-5-christian@brauner.io>
+ <CAG48ez3nuY__qvctoOnX7mQbjjP4chEs4K-OPxSQficiPLS18w@mail.gmail.com>
+ <CFB4D39F-24B9-4AD9-B19C-E2D14D38A808@brauner.io>
+ <CAG48ez1vd4Yhd3DqHVjTWM-N0MaNnX9n8MNV7MEyU5m3XDu+kQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190705150519.18171-1-digetx@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAG48ez1vd4Yhd3DqHVjTWM-N0MaNnX9n8MNV7MEyU5m3XDu+kQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 25 Jul 2019 10:30:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05-07-19, 18:05, Dmitry Osipenko wrote:
-> Tegra's APB DMA engine updates words counter after each transferred burst
-> of data, hence it can report transfer's residual with more fidelity which
-> may be required in cases like audio playback. In particular this fixes
-> audio stuttering during playback in a chromium web browser. The patch is
-> based on the original work that was made by Ben Dooks and a patch from
-> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
+On 07/24, Jann Horn wrote:
+>
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1902,6 +1902,10 @@ static __latent_entropy struct task_struct *copy_process(
+>         delayacct_tsk_init(p);  /* Must remain after dup_task_struct() */
+>         p->flags &= ~(PF_SUPERPRIV | PF_WQ_WORKER | PF_IDLE);
+>         p->flags |= PF_FORKNOEXEC;
+> +       if (!(clone_flags & CLONE_THREAD))
+> +               p->flags &= ~PF_PF_WAIT_PID;
+> +       if (clone_flags & CLONE_WAIT_PID)
+> +               p->flags |= PF_PF_WAIT_PID;
 
-Applied, thanks
+agreed, but then the "if (!thread_group_leader(tsk))" block in de_thread()
+should also copy PF_PF_WAIT_PID.
 
--- 
-~Vinod
+> An alternative would be to not use p->flags at all, but instead make
+> this a property of the signal_struct - since the property is shared by
+> all threads, that might make more sense?
+
+I tend to agree.
+
+Oleg.
+
