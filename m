@@ -2,90 +2,136 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F1BC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C13C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6917221871
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E022081B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:48:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="apZ2uSsK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388489AbfGYHrr (ORCPT
+        id S2388512AbfGYHsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 03:47:47 -0400
-Received: from icp-osb-irony-out1.external.iinet.net.au ([203.59.1.210]:4099
-        "EHLO icp-osb-irony-out1.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388187AbfGYHrq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 03:47:46 -0400
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2C8BgA+XTld/1/rO8tcCoIZg3YSFxO?=
- =?us-ascii?q?NGYgXAYJDAYNZhVOJfoUggXsJAQEBAQEBAQEBGxwBAYQ6BIMBNgcOAQMBAQE?=
- =?us-ascii?q?EAQEBAQUBbYRlRYV4L3JwEoMigXcTrj4zhAYBhGyBSIE0hwmEboFAP4RhhBk?=
- =?us-ascii?q?PhX8ElBqBHZU1CYEld5QSGZgLLYszgViZVAcqgVhNHxmDJ4J5jVZENTCOSgE?=
- =?us-ascii?q?B?=
-X-IPAS-Result: =?us-ascii?q?A2C8BgA+XTld/1/rO8tcCoIZg3YSFxONGYgXAYJDAYNZh?=
- =?us-ascii?q?VOJfoUggXsJAQEBAQEBAQEBGxwBAYQ6BIMBNgcOAQMBAQEEAQEBAQUBbYRlR?=
- =?us-ascii?q?YV4L3JwEoMigXcTrj4zhAYBhGyBSIE0hwmEboFAP4RhhBkPhX8ElBqBHZU1C?=
- =?us-ascii?q?YEld5QSGZgLLYszgViZVAcqgVhNHxmDJ4J5jVZENTCOSgEB?=
-X-IronPort-AV: E=Sophos;i="5.64,306,1559491200"; 
-   d="scan'208";a="228541455"
-Received: from 203-59-235-95.perm.iinet.net.au (HELO rtcentos7.electromag.com.au) ([203.59.235.95])
-  by icp-osb-irony-out1.iinet.net.au with ESMTP; 25 Jul 2019 15:47:42 +0800
-From:   Richard Tresidder <rtresidd@electromag.com.au>
-To:     sre@kernel.org, enric.balletbo@collabora.com, ncrews@chromium.org,
-        andrew.smirnov@gmail.com, groeck@chromium.org,
-        david@lechnology.com, rtresidd@electromag.com.au,
-        tglx@linutronix.de, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] power/supply/powersupply_sysfs: Add of_node name to uevent message if available
-Date:   Thu, 25 Jul 2019 15:47:38 +0800
-Message-Id: <1564040858-24202-1-git-send-email-rtresidd@electromag.com.au>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 25 Jul 2019 03:48:08 -0400
+Received: from mail-eopbgr760059.outbound.protection.outlook.com ([40.107.76.59]:14926
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387988AbfGYHsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 03:48:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bgyHD0Gon2ZbYuCN4hMNDk4jd7wlpZV5U2Njd8QMjdi9LMO1XFCwoGvvkhQtqs9ZBrUnM01RE/8K2NRoaBdhiJ36utLNX2wNtk0d2I6DnobTFq0X4E1DzEbOa0FynXcy6XTCTzDnmKoyj+R0rikEmcogz82Nrx5ZPCQudoqVzwAaP0D5KsRQJSlshkr0wFzZX1YTnHk85bEuryDvKO6ZN0s6BuEEGQg4zGL+Rn0mcNlOR8xk3uEDZC6rQixklNQJ/gzgGJ6rximCzfXaPrN+pYScKoE6D70zQN19BHipFNi+HHOrDE9L5aXmPI2zb1+TBPFHboqRdFYH5ahz+dc7TQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UsM8VQ0xTqdnKApzDidJKuNiZlYnz4Jl+SqrFE69dZ0=;
+ b=VTGOEE8nCyKlc9JKF4l19aVLenff0dCWJGYZYlzmRkbs2GlNdchbCmuvkRDPefXaOGzj78VyiuxJiw8+1YdBo89ki1oqIExAhpv1lYdj+5ktToJJPLJLQUJGPh9/0oxeJrSRoO5ORbKTuEmTKL4+y4wt7d447JWcU61j0P64P/ENLhNArxaMO16yjleguz4jKwlMiWSITkDW1MX9GbFcxEvWO88BrkFooyMJsfEoMPZVm/3NeKM/UzMYiXsV/JCacIHr23/zUUby27Ky3uO/q2sWxqLjZVIFlBeAKOC0suKu4TD83uDChyU9cFhz47vCmcm5G+iMZX0wfCrKh4y2Xg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=synaptics.com;dmarc=pass action=none
+ header.from=synaptics.com;dkim=pass header.d=synaptics.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector1-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UsM8VQ0xTqdnKApzDidJKuNiZlYnz4Jl+SqrFE69dZ0=;
+ b=apZ2uSsKfOdN6t5M87E/GWaGjXx+JCwYnengfnuN5Yb1hgmAjukN/FSWKazdc39yL2jduskq6sXMGW0qWtu+Jt+oel3L/vXl80jyR97ckbz/roAMQkEcmqM5WyPqhN9Pkj8I2cjyTaSD+rPDBpsYc897u7Vp5vTGJq42t00B97g=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB3864.namprd03.prod.outlook.com (20.176.254.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.16; Thu, 25 Jul 2019 07:48:05 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::b1e6:c114:bea7:6763]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::b1e6:c114:bea7:6763%7]) with mapi id 15.20.2115.005; Thu, 25 Jul 2019
+ 07:48:05 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] net: mvneta: use devm_platform_ioremap_resource() to
+ simplify code
+Thread-Topic: [PATCH net-next] net: mvneta: use
+ devm_platform_ioremap_resource() to simplify code
+Thread-Index: AQHVQr1KREBZw2F/xka/2h+o7XnfwA==
+Date:   Thu, 25 Jul 2019 07:48:04 +0000
+Message-ID: <20190725153741.095dca99@xhacker.debian>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: TYAPR01CA0024.jpnprd01.prod.outlook.com (2603:1096:404::36)
+ To BYAPR03MB4773.namprd03.prod.outlook.com (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c9c5ba3d-a911-4cb2-0bf7-08d710d46d36
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB3864;
+x-ms-traffictypediagnostic: BYAPR03MB3864:
+x-microsoft-antispam-prvs: <BYAPR03MB386480B038AF0BD1CAA8FE01EDC10@BYAPR03MB3864.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-forefront-prvs: 0109D382B0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(39850400004)(366004)(136003)(376002)(199004)(189003)(478600001)(256004)(476003)(8936002)(81166006)(1076003)(6486002)(50226002)(81156014)(102836004)(2906002)(6506007)(486006)(71200400001)(99286004)(14454004)(6436002)(186003)(71190400001)(53936002)(5660300002)(64756008)(25786009)(9686003)(86362001)(66066001)(386003)(66446008)(26005)(54906003)(8676002)(3846002)(4326008)(110136005)(316002)(7736002)(66946007)(66476007)(6116002)(66556008)(68736007)(305945005)(6512007)(52116002)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3864;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: nK6Sw5xLABX2nj7RxPeWW+OjyPZ8MHhgKe5ISZgzSgUB16oD97CHZf+ZkJHgWY2az/SPwPKDq1bXYLTLuhAYzOXST8cM7q+XaL5nUCPSvQGpDHS5g5NpVIk0RSVbfNMSqyeb6Xf/EZcz+lEZsKFyd8FReZdiuL116F0DNpmHN7WscKnqKKwxFxoDiLj7kVBwQleOVjZ0vvUANEN0gFpdCuua6DTB1eUazC8SXrzCTabw2qPYhBS6N7eKL0h5g2VL6AN7xmICswsttnRmoBNa3cUzcxftdlW7VPM2RMIPnkbhH0fFS1t12XsT9SMprBT3+6IR4TZJZJD1S00drSIxmUHW3J/7darQa4AKfMq6ArugeG7VZgti57oeABlMzDvHIdvUEH4E5hnwC693hHIt8JgUshSsy1QMRX811aVsZPw=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A10877E47AE88F4EA2053740BC0534C7@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9c5ba3d-a911-4cb2-0bf7-08d710d46d36
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2019 07:48:04.9423
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jiszha@synaptics.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3864
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the of_node name of the supply is available from the devicetree binding
-then include it under the var POWER_SUPPLY_OF_NODE_NAME.
-This helps where a consistent name is known via the device tree binding
-but it is hard to identify based on the usual enumeration process.
+devm_platform_ioremap_resource() wraps platform_get_resource() and
+devm_ioremap_resource() in a single helper, let's use that helper to
+simplify the code.
 
-Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 ---
+ drivers/net/ethernet/marvell/mvneta.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Notes:
-    power/supply/powersupply_sysfs: Add of_node name to uevent message if available
-    
-    If the of_node name of the supply is available from the devicetree binding
-    then include it under the var POWER_SUPPLY_OF_NODE_NAME.
-    This helps where a consistent name is known via the device tree binding
-    but it is hard to identify based on the usual enumeration process.
-
- drivers/power/supply/power_supply_sysfs.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index f37ad4e..ce6671c 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -395,6 +395,13 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 	if (ret)
- 		return ret;
- 
-+	if (psy->of_node) {
-+		ret = add_uevent_var(env, "POWER_SUPPLY_OF_NODE_NAME=%s",
-+				     psy->of_node->name);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	prop_buf = (char *)get_zeroed_page(GFP_KERNEL);
- 	if (!prop_buf)
- 		return -ENOMEM;
--- 
-1.8.3.1
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/m=
+arvell/mvneta.c
+index 15cc678f5e5b..e49820675c8c 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -4469,7 +4469,6 @@ static int mvneta_port_power_up(struct mvneta_port *p=
+p, int phy_mode)
+ /* Device initialization routine */
+ static int mvneta_probe(struct platform_device *pdev)
+ {
+-	struct resource *res;
+ 	struct device_node *dn =3D pdev->dev.of_node;
+ 	struct device_node *bm_node;
+ 	struct mvneta_port *pp;
+@@ -4553,8 +4552,7 @@ static int mvneta_probe(struct platform_device *pdev)
+ 	if (!IS_ERR(pp->clk_bus))
+ 		clk_prepare_enable(pp->clk_bus);
+=20
+-	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pp->base =3D devm_ioremap_resource(&pdev->dev, res);
++	pp->base =3D devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pp->base)) {
+ 		err =3D PTR_ERR(pp->base);
+ 		goto err_clk;
+--=20
+2.22.0
 
