@@ -2,115 +2,95 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873AFC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2BFC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5266522C7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:08:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2rRvE5M"
+	by mail.kernel.org (Postfix) with ESMTP id E1287218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfGYUIc (ORCPT
+        id S1726633AbfGYUMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 16:08:32 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36649 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbfGYUIb (ORCPT
+        Thu, 25 Jul 2019 16:12:40 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42354 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfGYUMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 16:08:31 -0400
-Received: by mail-qk1-f196.google.com with SMTP id g18so37398003qkl.3;
-        Thu, 25 Jul 2019 13:08:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gi1xORrbzPoL0P3xPYkOl5Y2rSsp/Jx6024caSGqLbc=;
-        b=Y2rRvE5ML/E8Tlq84Z1huVevhH9eQd35xkxh5VpYtwFN1GRP10UJPdKNoIWHgG9NTs
-         pnWqXYULMSpdnsLqPFb9J6/8Ufr/h73V4lMr+Bb+w0U8PshoeJP/rGMqaV6HMaT7yQaZ
-         734g1NfpQYXL/Ae0Np/+pkbLC5bedj8kyO5Tb4hYVnqpT2Z6U/mnxqz89Ab+U0cQFQN1
-         P073EZf8ZvsieTXyA/Y6f4iEGGXZXwtnODuCsSb+R3a+RGNttupIjqfSstgcrCoQMGRX
-         Ye9q5Z5+DXVcJqT5BwMszpFWzMUek1dCicCYyssryRAX39fcZDfi2ODUh9bOcNTu9WlS
-         sLaQ==
+        Thu, 25 Jul 2019 16:12:40 -0400
+Received: by mail-ot1-f67.google.com with SMTP id l15so52962159otn.9;
+        Thu, 25 Jul 2019 13:12:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=gi1xORrbzPoL0P3xPYkOl5Y2rSsp/Jx6024caSGqLbc=;
-        b=eIzSCZvu042a5JUH/rOZITV+KkJW3PsSDrdu9Z71ezzmSdXTJgZLHU8F3CUu20YXNV
-         4sDmQpEl+TN7KBvDcxVtA5BLjdBJf5FlU1w/bP7NZcqdy1RJZgg1wsl6pziTGetzx9Es
-         GQxLVnq0F4cvb7/jXpmt+JPxfe2RcPVGS2LgdH6UfA6St1jVWYEuSv+y3CglAKoZpLaH
-         K6M2LKPfkn7hqsn5m6emFVl9Lh8Ijvt2np0gmV/wiX3EOxqBS9cYU6RXF/h1Hgt5hDr1
-         IscB/freTQli/1AtfOVhpICv/7RhWimWTTBmXubCUVJG+fHOKLKtGAo+N6bSlhrAWNYZ
-         WJKw==
-X-Gm-Message-State: APjAAAUwLTNkDIuIVrJki00YYr4NwLYLkpvDl8Fm8M4DhXBbGFQTWzkf
-        c3nWXOpzosH0A+yZ+kPpLnU=
-X-Google-Smtp-Source: APXvYqyghEfRUVyXaqFOtoJAxuf9vIQUldSnA+RxPc5VnJNH/jGwK5LyWk/4fl8Jqa4AbDDPhBwR4Q==
-X-Received: by 2002:ae9:ed4b:: with SMTP id c72mr55914956qkg.404.1564085310644;
-        Thu, 25 Jul 2019 13:08:30 -0700 (PDT)
-Received: from karz-laptop.vlan96.localdomain ([200.17.97.58])
-        by smtp.gmail.com with ESMTPSA id a67sm23870493qkg.131.2019.07.25.13.08.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 13:08:30 -0700 (PDT)
-From:   Kartik Kulkarni <kartik.koolks@gmail.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com,
-        Kartik Kulkarni <kartik.koolks@gmail.com>,
-        Matheus Tavares <matheus.bernardino@usp.br>
-Subject: [PATCH] staging:iio:adc:ad7280a: add of_match_table entry
-Date:   Fri, 26 Jul 2019 01:38:17 +0530
-Message-Id: <20190725200817.31277-1-kartik.koolks@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        bh=upMmfHcaeRgVvK81CCV//tdiGx+ZtNGeUUY24jsfROs=;
+        b=gvQtENRn5rpL/dvfsFbVIQjibLT2YJy1FT/4/LYeVG0ahJ+hKL02+pLi+aGuJ8A1FO
+         Xwz7wmutD74ykaWjS2fPLsa4LmjlIkHouoyn0jvvADggoldar5AZeeAqxWvpzkrR0Bja
+         Dn9j1pdVC+gvo+33qYzQ4o4TIZ7WX32eciF4jeSkKVj7sIsvYAjvEY+gBZlQ5/QLVtC/
+         70Fe6ldmc4qdA8Y+cbK9noaIh3xQpJfTRJnGYYM7Hf4z3fenNh8aIWTC1OPsO6NBe2nZ
+         ylIHKI5XWaG49w4kiKUV49dUgrU/8ln5cSwujFGPexrNu9xUHC87JuzFqh5Mu2E3HrB0
+         nerA==
+X-Gm-Message-State: APjAAAXSNq1om+lgTfoKAlCxsUbD1aWbVnJBvCydXlkT68ls2Mf47+SO
+        C42tDcNjHspMFSFmyHFYV6Q=
+X-Google-Smtp-Source: APXvYqwoBViFnDcf+6pZDHGyFoMwEdvzaHQEty7ZB96NCnpf03fgmpW+suC4/aEJXauiaGWPDAcRcQ==
+X-Received: by 2002:a05:6830:6:: with SMTP id c6mr3006263otp.14.1564085559039;
+        Thu, 25 Jul 2019 13:12:39 -0700 (PDT)
+Received: from [192.168.1.114] (162-195-240-247.lightspeed.sntcca.sbcglobal.net. [162.195.240.247])
+        by smtp.gmail.com with ESMTPSA id 20sm8615958oth.43.2019.07.25.13.12.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 13:12:38 -0700 (PDT)
+Subject: Re: [PATCH v6 04/16] nvme-core: introduce nvme_get_by_path()
+To:     Keith Busch <kbusch@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190725172335.6825-1-logang@deltatee.com>
+ <20190725172335.6825-5-logang@deltatee.com>
+ <20190725175023.GA30641@bombadil.infradead.org>
+ <da58f91e-6cfa-02e0-dd89-3cfa23764a0e@deltatee.com>
+ <20190725195835.GA7317@localhost.localdomain>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <0b7e5d9f-207c-ee4e-a992-024c178cdd49@grimberg.me>
+Date:   Thu, 25 Jul 2019 13:12:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190725195835.GA7317@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the of_device_id struct and the respective
-of_match_device entry to complete device tree support.
 
-Signed-off-by: Kartik Kulkarni <kartik.koolks@gmail.com>
-Reviewed-by: Matheus Tavares <matheus.bernardino@usp.br>
----
- drivers/staging/iio/adc/ad7280a.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+>>>> nvme_get_by_path() is analagous to blkdev_get_by_path() except it
+>>>> gets a struct nvme_ctrl from the path to its char dev (/dev/nvme0).
+>>>>
+>>>> The purpose of this function is to support NVMe-OF target passthru.
+>>>
+>>> I can't find anywhere that you use this in this patchset.
+>>>
+>>
+>> Oh sorry, the commit message is out of date the function was actually
+>> called nvme_ctrl_get_by_path() and it's used in Patch 10.
+> 
+> Instead of by path, could we have configfs take something else, like
+> the unique controller instance or serial number? I know that's different
+> than how we handle blocks and files, but that way nvme core can lookup
+> the cooresponding controller without adding new cdev dependencies.
 
-diff --git a/drivers/staging/iio/adc/ad7280a.c b/drivers/staging/iio/adc/ad7280a.c
-index 19a5f244dcae..ded0ba093a28 100644
---- a/drivers/staging/iio/adc/ad7280a.c
-+++ b/drivers/staging/iio/adc/ad7280a.c
-@@ -1027,9 +1027,16 @@ static const struct spi_device_id ad7280_id[] = {
- };
- MODULE_DEVICE_TABLE(spi, ad7280_id);
- 
-+static const struct of_device_id ad7280_of_match[] = {
-+	{ .compatible = "adi,ad7280a", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ad7280_of_match);
-+
- static struct spi_driver ad7280_driver = {
- 	.driver = {
--		.name	= "ad7280",
-+		.name	= "ad7280a",
-+		.of_match_table = ad7280_of_match,
- 	},
- 	.probe		= ad7280_probe,
- 	.id_table	= ad7280_id,
--- 
-2.20.1
+We could... but did we find sufficient justification to have the user
+handle passthru devices differently than any other backend?
+once we commit to an interface its very hard to change.
 
