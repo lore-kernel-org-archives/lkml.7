@@ -2,135 +2,126 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE88C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD19C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82942229F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 360B622BE8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:36:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JbPcWjQi"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="edh9Q/nT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfGYWdE (ORCPT
+        id S1726907AbfGYWge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 18:33:04 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:41200 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfGYWdD (ORCPT
+        Thu, 25 Jul 2019 18:36:34 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36199 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbfGYWge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 18:33:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jssmfKZvvecRupRISlMgLXb+1mp99rJbmBQCtx9m1Y4=; b=JbPcWjQiZIeGbgUt8dvIirT/R
-        APbfD5i7kBy+LUZztNOZWOzad3p22qKiLN4wicyDFoXmBFlgqcDQ7WDQt1qQU+ezehZvzWOtRR6gh
-        89I3k0jiHzWmqNLOT/unjyGwjQPeZbIaQht9b7Bto+GZyIX5X7Y95Cuk2N2D3sH8BoA8wfGKVFhj2
-        S03cfMTz8f01Q3z5TNubu0dimWllLwLPn7V9cJa8krxgbWiPpHE/hum7IpLToqQOCWQpt5mqqsZhw
-        JU3W8Yxx9XPwm2DSunA3rxodmZk31ibQOQ6AJCpoaEvc4ASo2dnO+YL3OdEf2Lcr5L06Y7SbWlY4p
-        2ED5bl16A==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:37158)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hqmI7-0002i9-LP; Thu, 25 Jul 2019 23:32:51 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hqmI5-000649-1S; Thu, 25 Jul 2019 23:32:49 +0100
-Date:   Thu, 25 Jul 2019 23:32:49 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     "George G. Davis" <george_davis@mentor.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: Fix null die() string for unhandled data and
- prefetch abort cases
-Message-ID: <20190725223248.GO1330@shell.armlinux.org.uk>
-References: <1563589976-19004-1-git-send-email-george_davis@mentor.com>
- <20190720123023.GA1330@shell.armlinux.org.uk>
- <20190725213754.GA29898@mam-gdavis-lt>
- <20190725215540.GM1330@shell.armlinux.org.uk>
- <20190725222401.GB29898@mam-gdavis-lt>
+        Thu, 25 Jul 2019 18:36:34 -0400
+Received: by mail-io1-f65.google.com with SMTP id o9so100810342iom.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 15:36:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=nlrgc3XP///cXkj+Yu47zEDSpxWwFMEQoIXOJqQtEs8=;
+        b=edh9Q/nTB28aapBqaGJrUwVC4YldhLZQXUdWG9P/jholJQh/T7dI2MsA9ti5OewBbT
+         pSwVbNxTaKDukE/FZzdQq2iXTb9jRPKE3ZY0b8wxbIBQ//o5KFIYKBevGAc1x9wewtVB
+         tXcw5RyIZrJMUZAGiNNtVQUNXx1qEzHdpQ1Atp+PdW1W6bxPFS08ksjS6kxLbIPzMhjw
+         6wr7giY2zxeaOye0oLuRwr8gvrNn2vfJIMw6xaVocjRlUCC0TBf610nIAoTz4OgRGlFe
+         5eP84GWop+APeaGrjKkSnv4YNvcZXPluVxak1Z2nCmrzT4MvkjoBpjlF0iW00rgLLwXA
+         5lqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=nlrgc3XP///cXkj+Yu47zEDSpxWwFMEQoIXOJqQtEs8=;
+        b=WBPy2Qg1j+u1y/SGWz49q+Oa3DQyP6o5gFfovRCtYsSNfmXi28LjwZoJUnHWzKYXE+
+         kc5tbJ0l9W4Rq00XIYNfnTSqwKjA7x6+0tiDskB0wRYcKtM/yzyLKkWr4yCEAfNJn+Tl
+         HX8+sFcBiFrVaspneF8FJtRZLGQL2D8Lli+1h6AImToGAx45H9s0asesGUshYkGMG7PR
+         7bAdmQI4BWctkKaPnns5LPr3++j4E9RAupHcFTJTwEy8nMVWRo6NOHBGIJhD4COO775m
+         Xk8z8Ie+KHUcT9Ln1fJnr7i6Y/6VlevB5FsJb75w19HKP9pMt/5MJuyc1wujejnlmyOD
+         k7Pw==
+X-Gm-Message-State: APjAAAUSUVMbLxj/3lMHsnsO6V/ycfLHRer9sfWrdLtNznutIxNAV1cm
+        x7XFZ6t8vJCfwAFZ3fyYk3tJdQ==
+X-Google-Smtp-Source: APXvYqwGdKrLMK8/VhIuZJOtHErkOj9DQrk7CUrGldHTNrmyITpvd7CaE15zTO/7L/PhzJX7ULSyLw==
+X-Received: by 2002:a5d:9bc6:: with SMTP id d6mr14846311ion.160.1564094193396;
+        Thu, 25 Jul 2019 15:36:33 -0700 (PDT)
+Received: from localhost (67-0-24-96.albq.qwest.net. [67.0.24.96])
+        by smtp.gmail.com with ESMTPSA id n26sm37422886ioc.74.2019.07.25.15.36.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 15:36:32 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 15:36:31 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     linux-riscv@lists.infradead.org
+cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] riscv: defconfig: align RV64 defconfig to the output of
+ "make savedefconfig"
+Message-ID: <alpine.DEB.2.21.9999.1907251535421.32766@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725222401.GB29898@mam-gdavis-lt>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 06:24:01PM -0400, George G. Davis wrote:
-> Hello Russell,
-> 
-> On Thu, Jul 25, 2019 at 10:55:40PM +0100, Russell King - ARM Linux admin wrote:
-> > On Thu, Jul 25, 2019 at 05:37:54PM -0400, George G. Davis wrote:
-> > > Hello Russell,
-> > > 
-> > > Thanks for your prompt reply!
-> > > 
-> > > On Sat, Jul 20, 2019 at 01:30:23PM +0100, Russell King - ARM Linux admin wrote:
-> > > > On Fri, Jul 19, 2019 at 10:32:55PM -0400, George G. Davis wrote:
-> > > > > When an unhandled data or prefetch abort occurs, the die() string
-> > > > > is empty resulting in backtrace messages similar to the following:
-> > > > > 
-> > > > > 	Internal error: : 1 [#1] PREEMPT SMP ARM
-> > > > > 
-> > > > > Replace the null string with the name of the abort handler in order
-> > > > > to provide more meaningful hints as to the cause of the fault.
-> > > > 
-> > > > NAK.
-> > > > 
-> > > > We already print the cause of the abort earlier in the dump, and we've
-> > > > also added a "cut here" marker to help people include all the necessary
-> > > > information when reporting a problem.
-> > > 
-> > > For what it's worth, I often receive crash dumps which lack the pr_alert
-> > > messages and only include the pr_emerg messages which this change would at
-> > > least provide extra hints, since the "Internal error" as at EMERG level
-> > > wereas the initial messages are only at ALERT level. It's subtle but for
-> > > cases where the end user has set loglevel such that they only see EMERG
-> > > messages, the change is helpful, to me at least.
-> > > 
-> > > > It's unfortunate that we have the additional colon in the oops dump,
-> > > 
-> > > Agreed, it's rather unfortunate that the string is NULL in these cases.
-> > > 
-> > > > but repeating the information that we've printed on one of the previous
-> > > > two lines is really not necessary.
-> > > 
-> > > It depends on the loglevel the user has set. So perhaps it's not such a
-> > > bad thing to repeat the information?
-> > 
-> > Or maybe we should arrange for consistent usage of the log levels?
-> 
-> Unfortunately, some of the users that I work with have very specific limits
-> and requirements for kernel error message logging which are driven by
-> performance and/or storage limitations. So it's not always possible to "arrange
-> for consistent usage of the log levels" with some users. Meanwhile, these
-> messages do show up in logs without the pre-able headers, lacking the string
-> which is already available. It's hardly a big deal to re-use the same string,
-> especially for the !user_mode(regs) case, where the kernel will oops at
-> EMERG loglevel, leaving the NULL string as the reason. I can assure you that
-> I've tried to convince these users to change the loglevel but they have their
-> reasons for keeping it as they do and I'm unable to convince them otherwise.
 
-Sorry, but I really don't buy this.
+Align the RV64 defconfig to the output of "make savedefconfig" to
+avoid unnecessary deltas for future defconfig patches.  This patch
+should have no runtime functional impact.
 
-By your argument, we should get rid of the pre-amble headers because
-they're "not useful" in your eyes...
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+---
+ arch/riscv/configs/defconfig | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index b7b749b18853..93205c0bf71d 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -34,6 +34,7 @@ CONFIG_PCIEPORTBUS=y
+ CONFIG_PCI_HOST_GENERIC=y
+ CONFIG_PCIE_XILINX=y
+ CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
+ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_VIRTIO_BLK=y
+ CONFIG_BLK_DEV_SD=y
+@@ -53,6 +54,8 @@ CONFIG_SERIAL_8250_CONSOLE=y
+ CONFIG_SERIAL_OF_PLATFORM=y
+ CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
+ CONFIG_HVC_RISCV_SBI=y
++CONFIG_SPI=y
++CONFIG_SPI_SIFIVE=y
+ # CONFIG_PTP_1588_CLOCK is not set
+ CONFIG_DRM=y
+ CONFIG_DRM_RADEON=y
+@@ -66,8 +69,9 @@ CONFIG_USB_OHCI_HCD=y
+ CONFIG_USB_OHCI_HCD_PLATFORM=y
+ CONFIG_USB_STORAGE=y
+ CONFIG_USB_UAS=y
++CONFIG_MMC=y
++CONFIG_MMC_SPI=y
+ CONFIG_VIRTIO_MMIO=y
+-CONFIG_SPI_SIFIVE=y
+ CONFIG_EXT4_FS=y
+ CONFIG_EXT4_FS_POSIX_ACL=y
+ CONFIG_AUTOFS4_FS=y
+@@ -83,8 +87,4 @@ CONFIG_ROOT_NFS=y
+ CONFIG_CRYPTO_USER_API_HASH=y
+ CONFIG_CRYPTO_DEV_VIRTIO=y
+ CONFIG_PRINTK_TIME=y
+-CONFIG_SPI=y
+-CONFIG_MMC_SPI=y
+-CONFIG_MMC=y
+-CONFIG_DEVTMPFS_MOUNT=y
+ # CONFIG_RCU_TRACE is not set
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.22.0
+
