@@ -2,114 +2,140 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C68BC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75F1C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5FD21852
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 818C021852
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:28:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hc0q+KhA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbfGYX1E (ORCPT
+        id S1726986AbfGYX2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 19:27:04 -0400
-Received: from mga17.intel.com ([192.55.52.151]:56731 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726822AbfGYX1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 19:27:03 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 16:27:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,308,1559545200"; 
-   d="scan'208";a="194036500"
-Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
-  by fmsmga004.fm.intel.com with ESMTP; 25 Jul 2019 16:27:03 -0700
-Reply-To: thor.thayer@linux.intel.com
-Subject: Re: [PATCHv2] EDAC, altera: Move Stratix10 SDRAM ECC to peripheral
-To:     James Morse <james.morse@arm.com>
-Cc:     bp@alien8.de, mchehab@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1562956123-23640-1-git-send-email-thor.thayer@linux.intel.com>
- <eb7a1e75-2de9-cb60-bf8f-77cd1e71255f@arm.com>
-From:   Thor Thayer <thor.thayer@linux.intel.com>
-Message-ID: <e88c9dd7-13af-4696-c5c1-653aaa13e805@linux.intel.com>
-Date:   Thu, 25 Jul 2019 18:29:04 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 19:28:04 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41110 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726870AbfGYX2E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 19:28:04 -0400
+Received: by mail-lf1-f65.google.com with SMTP id 62so30879284lfa.8;
+        Thu, 25 Jul 2019 16:28:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IvQXzyeCa3p3byzTKli2BP4z8dHBMqmq8NdHFvVh0U8=;
+        b=hc0q+KhAY1GRDsuGFoP13QGQ0nPLcs7EGSQZzF/lWDFSSuQkONUofveTolVejME0tq
+         +X47CHVvzb91H8m2pkKFBUSmPAU60WtxJgFQEreRcffGWG2DmJfNYEAs2J1vJELGFohJ
+         yz73EspzniZo5zvmvEU5QHTdnkiNeIDP54MhZQMLirGTP22nea/hhVKtaqIkh4C8e/lN
+         CF8sBkCAlRYgVFydqet9ya9LtCmwpe5a7sgIdJftZbZbknnZUR6+gC8YUlT3LPZiCx81
+         X6t0Ao9YDe2U7t9biE3XjZhJ62b7Pgb1MfXZFrVKAXr5VBCrD1pnaEKKLqbsMli6VHoP
+         Gi9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IvQXzyeCa3p3byzTKli2BP4z8dHBMqmq8NdHFvVh0U8=;
+        b=aF0uTNDG1yvqjos8lvg39A9kbvjQVTcEjaBzi+jG0SooqUyikzHKtXrifGpOG5GFgP
+         jSYxzNlT3zG79ZFpq+5FJdVzqX6W9tN97nBMETA+WTUwoVukloXyG4ntMVTwB8ub+8Mc
+         n2g6aT8vUPeiC2YJ4+53YTsjroflvujvj56NUWFoBtW+jpg5Z9QphFCDudXxSbrHadZs
+         j4Q6RTFOvjZN8v3EYtmhGIBbX7Z/2xT1MkLU4/qX/2CPk05+66LtHzsERbb5r+vyogSB
+         PNWr9xRXLrLnwAcEn7IvhrQSKY5IxNT0x22DQdCUP345lELw1AlOHoI/x4OAeCr1ccK5
+         bNbA==
+X-Gm-Message-State: APjAAAWDgq+k5eehZOpt4fTmmq40SuK2tRr9PmpaiTyLQWv9uMK9c21+
+        BZe4hzvyh/mLA9uIaug4DiHfSuZZZnAdaFNCOWA=
+X-Google-Smtp-Source: APXvYqwvvhfAjdJijFNp+iGRcHsIzZ7JbiZ1gfiM9Gp9IzOtUIqtGmCW2TJUHg5F214INMamEyCizCrxRRfVgbqIFYs=
+X-Received: by 2002:a05:6512:288:: with SMTP id j8mr46403495lfp.181.1564097282215;
+ Thu, 25 Jul 2019 16:28:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <eb7a1e75-2de9-cb60-bf8f-77cd1e71255f@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190724165803.87470-1-brianvv@google.com> <20190724165803.87470-4-brianvv@google.com>
+ <CAEf4BzaCUBA40DKUYm6rSa0v-jQMK7aPu867oYkZhfZGB4wiSA@mail.gmail.com>
+In-Reply-To: <CAEf4BzaCUBA40DKUYm6rSa0v-jQMK7aPu867oYkZhfZGB4wiSA@mail.gmail.com>
+From:   Brian Vazquez <brianvv.kernel@gmail.com>
+Date:   Thu, 25 Jul 2019 16:27:51 -0700
+Message-ID: <CABCgpaVVO=6yRDpgs9wqsb7uj8qOw-X1xL16eEqCtiJh0B77dg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 3/6] bpf: keep bpf.h in sync with tools/
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+On Wed, Jul 24, 2019 at 4:10 PM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Wed, Jul 24, 2019 at 10:10 AM Brian Vazquez <brianvv@google.com> wrote:
+> >
+> > Adds bpf_attr.dump structure to libbpf.
+> >
+> > Suggested-by: Stanislav Fomichev <sdf@google.com>
+> > Signed-off-by: Brian Vazquez <brianvv@google.com>
+> > ---
+> >  tools/include/uapi/linux/bpf.h | 9 +++++++++
+> >  tools/lib/bpf/libbpf.map       | 2 ++
+> >  2 files changed, 11 insertions(+)
+> >
+> > diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+> > index 4e455018da65f..e127f16e4e932 100644
+> > --- a/tools/include/uapi/linux/bpf.h
+> > +++ b/tools/include/uapi/linux/bpf.h
+> > @@ -106,6 +106,7 @@ enum bpf_cmd {
+> >         BPF_TASK_FD_QUERY,
+> >         BPF_MAP_LOOKUP_AND_DELETE_ELEM,
+> >         BPF_MAP_FREEZE,
+> > +       BPF_MAP_DUMP,
+> >  };
+> >
+> >  enum bpf_map_type {
+> > @@ -388,6 +389,14 @@ union bpf_attr {
+> >                 __u64           flags;
+> >         };
+> >
+> > +       struct { /* struct used by BPF_MAP_DUMP command */
+> > +               __aligned_u64   prev_key;
+> > +               __aligned_u64   buf;
+> > +               __aligned_u64   buf_len; /* input/output: len of buf */
+> > +               __u64           flags;
+> > +               __u32           map_fd;
+> > +       } dump;
+> > +
+> >         struct { /* anonymous struct used by BPF_PROG_LOAD command */
+> >                 __u32           prog_type;      /* one of enum bpf_prog_type */
+> >                 __u32           insn_cnt;
+> > diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
+> > index f9d316e873d8d..cac3723d5c45c 100644
+> > --- a/tools/lib/bpf/libbpf.map
+> > +++ b/tools/lib/bpf/libbpf.map
+> > @@ -183,4 +183,6 @@ LIBBPF_0.0.4 {
+>
+> LIBBPF_0.0.4 is closed, this needs to go into LIBBPF_0.0.5.
 
-On 7/25/19 7:46 AM, James Morse wrote:
-> Hi Thor,
-> 
-> On 12/07/2019 19:28, thor.thayer@linux.intel.com wrote:
->> From: Thor Thayer <thor.thayer@linux.intel.com>
->>
->> ARM32 SoCFPGAs had separate IRQs for SDRAM. ARM64 SoCFPGAs
->> send all DBEs to SError so filtering by source is necessary.
->>
->> The Stratix10 SDRAM ECC is a better match with the generic
->> Altera peripheral ECC framework because the linked list can
->> be searched to find the ECC block offset and printout
->> the DBE Address.
-> 
-> 
->> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
->> index c2e693e34d43..09a80b53acea 100644
->> --- a/drivers/edac/altera_edac.c
->> +++ b/drivers/edac/altera_edac.c
-> 
->> @@ -2231,13 +2275,15 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
->>   		    of_device_is_compatible(child, "altr,socfpga-dma-ecc") ||
->>   		    of_device_is_compatible(child, "altr,socfpga-usb-ecc") ||
->>   		    of_device_is_compatible(child, "altr,socfpga-qspi-ecc") ||
->> +#ifdef CONFIG_EDAC_ALTERA_SDRAM
->> +		    of_device_is_compatible(child, "altr,sdram-edac-s10") ||
->> +#endif
->>   		    of_device_is_compatible(child, "altr,socfpga-sdmmc-ecc"))
-> 
-> I'm just curious: This list looks suspiciously like the altr_edac_a10_device_of_match[]
-> list. Is there a reason it can't use of_match_device() here?
-> 
-Good point. Yes, it does look very much like the match list. Although 
-of_match_device() doesn't fit with the available parameters (device 
-pointer), your question prompted me to look closer and I noticed 
-of_match_node() is perfect.
+Sorry my bad, I didn't closely look at the rebase so this got it wrong.
 
-I'll create a version 3 with this change.
+>
+> >                 perf_buffer__new;
+> >                 perf_buffer__new_raw;
+> >                 perf_buffer__poll;
+> > +               bpf_map_dump;
+> > +               bpf_map_dump_flags;
+>
+> As the general rule, please keep those lists of functions in alphabetical order.
 
-Thanks for reviewing!
+right.
 
->>   
->>   			altr_edac_a10_device_add(edac, child);
->>   
->>   #ifdef CONFIG_EDAC_ALTERA_SDRAM
->> -		else if ((of_device_is_compatible(child, "altr,sdram-edac-a10")) ||
->> -			 (of_device_is_compatible(child, "altr,sdram-edac-s10")))
->> +		else if (of_device_is_compatible(child, "altr,sdram-edac-a10"))
->>   			of_platform_populate(pdev->dev.of_node,
->>   					     altr_sdram_ctrl_of_match,
->>   					     NULL, &pdev->dev);
-> 
-> 
-> Acked-by: James Morse <james.morse@arm.com>
-> 
-> 
-> Thanks,
-> 
-> James
-> 
-
+I will fix it in next version, thanks for reviewing it!
