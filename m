@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94905C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E40C761A8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6586E20840
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C12421871
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391150AbfGYJ5l (ORCPT
+        id S2391125AbfGYJ5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 05:57:41 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56236 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391096AbfGYJ5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jul 2019 05:57:39 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id BE4EC5D2581277359A7B;
-        Thu, 25 Jul 2019 17:57:36 +0800 (CST)
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2723 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391056AbfGYJ5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 05:57:37 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D0E56EA9E4F2D1F4173B;
+        Thu, 25 Jul 2019 17:57:31 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 25 Jul
- 2019 17:57:26 +0800
+ 2019 17:57:21 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -41,9 +41,9 @@ CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v4 12/24] erofs: introduce tagged pointer
-Date:   Thu, 25 Jul 2019 17:56:46 +0800
-Message-ID: <20190725095658.155779-13-gaoxiang25@huawei.com>
+Subject: [PATCH v4 08/24] erofs: add namei functions
+Date:   Thu, 25 Jul 2019 17:56:42 +0800
+Message-ID: <20190725095658.155779-9-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190725095658.155779-1-gaoxiang25@huawei.com>
 References: <20190725095658.155779-1-gaoxiang25@huawei.com>
@@ -56,144 +56,265 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently kernel has scattered tagged pointer usages
-hacked by hand in plain code, without a unique and
-portable functionset to highlight the tagged pointer
-itself and wrap these hacked code in order to clean up
-all over meaningless magic masks.
-
-This patch introduces simple generic methods to fold
-tags into a pointer integer. Currently it supports
-the last n bits of the pointer for tags, which can be
-selected by users.
-
-In addition, it will also be used for the upcoming EROFS
-filesystem, which heavily uses tagged pointer pproach
- to reduce extra memory allocation.
-
-Link: https://en.wikipedia.org/wiki/Tagged_pointer
+This commit adds functions that transfer names to inodes.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/tagptr.h | 110 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 110 insertions(+)
- create mode 100644 fs/erofs/tagptr.h
+ fs/erofs/namei.c | 246 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 246 insertions(+)
+ create mode 100644 fs/erofs/namei.c
 
-diff --git a/fs/erofs/tagptr.h b/fs/erofs/tagptr.h
+diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
 new file mode 100644
-index 000000000000..f3a06c3a5b96
+index 000000000000..9620dd602317
 --- /dev/null
-+++ b/fs/erofs/tagptr.h
-@@ -0,0 +1,110 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
++++ b/fs/erofs/namei.c
+@@ -0,0 +1,246 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Tagged pointer implementation
++ * linux/fs/erofs/namei.c
 + *
-+ * Copyright (C) 2018 Gao Xiang <gaoxiang25@huawei.com>
++ * Copyright (C) 2017-2018 HUAWEI, Inc.
++ *             http://www.huawei.com/
++ * Created by Gao Xiang <gaoxiang25@huawei.com>
 + */
-+#ifndef __EROFS_TAGPTR_H
-+#define __EROFS_TAGPTR_H
++#include "internal.h"
 +
-+#include <linux/types.h>
-+#include <linux/build_bug.h>
++#include <trace/events/erofs.h>
 +
-+/*
-+ * the name of tagged pointer types are tagptr{1, 2, 3...}_t
-+ * avoid directly using the internal structs __tagptr{1, 2, 3...}
-+ */
-+#define __MAKE_TAGPTR(n) \
-+typedef struct __tagptr##n {	\
-+	uintptr_t v;	\
-+} tagptr##n##_t;
++struct erofs_qstr {
++	const unsigned char *name;
++	const unsigned char *end;
++};
 +
-+__MAKE_TAGPTR(1)
-+__MAKE_TAGPTR(2)
-+__MAKE_TAGPTR(3)
-+__MAKE_TAGPTR(4)
++/* based on the end of qn is accurate and it must have the trailing '\0' */
++static inline int dirnamecmp(const struct erofs_qstr *qn,
++			     const struct erofs_qstr *qd,
++			     unsigned int *matched)
++{
++	unsigned int i = *matched;
 +
-+#undef __MAKE_TAGPTR
++	/*
++	 * on-disk error, let's only BUG_ON in the debugging mode.
++	 * otherwise, it will return 1 to just skip the invalid name
++	 * and go on (in consideration of the lookup performance).
++	 */
++	DBG_BUGON(qd->name > qd->end);
 +
-+extern void __compiletime_error("bad tagptr tags")
-+	__bad_tagptr_tags(void);
++	/* qd could not have trailing '\0' */
++	/* However it is absolutely safe if < qd->end */
++	while (qd->name + i < qd->end && qd->name[i] != '\0') {
++		if (qn->name[i] != qd->name[i]) {
++			*matched = i;
++			return qn->name[i] > qd->name[i] ? 1 : -1;
++		}
++		++i;
++	}
++	*matched = i;
++	/* See comments in __d_alloc on the terminating NUL character */
++	return qn->name[i] == '\0' ? 0 : 1;
++}
 +
-+extern void __compiletime_error("bad tagptr type")
-+	__bad_tagptr_type(void);
++#define nameoff_from_disk(off, sz)	(le16_to_cpu(off) & ((sz) - 1))
 +
-+/* fix the broken usage of "#define tagptr2_t tagptr3_t" by users */
-+#define __tagptr_mask_1(ptr, n)	\
-+	__builtin_types_compatible_p(typeof(ptr), struct __tagptr##n) ? \
-+		(1UL << (n)) - 1 :
++static struct erofs_dirent *find_target_dirent(struct erofs_qstr *name,
++					       u8 *data,
++					       unsigned int dirblksize,
++					       const int ndirents)
++{
++	int head, back;
++	unsigned int startprfx, endprfx;
++	struct erofs_dirent *const de = (struct erofs_dirent *)data;
 +
-+#define __tagptr_mask(ptr)	(\
-+	__tagptr_mask_1(ptr, 1) ( \
-+	__tagptr_mask_1(ptr, 2) ( \
-+	__tagptr_mask_1(ptr, 3) ( \
-+	__tagptr_mask_1(ptr, 4) ( \
-+	__bad_tagptr_type(), 0)))))
++	/* since the 1st dirent has been evaluated previously */
++	head = 1;
++	back = ndirents - 1;
++	startprfx = endprfx = 0;
 +
-+/* generate a tagged pointer from a raw value */
-+#define tagptr_init(type, val) \
-+	((typeof(type)){ .v = (uintptr_t)(val) })
++	while (head <= back) {
++		const int mid = head + (back - head) / 2;
++		const int nameoff = nameoff_from_disk(de[mid].nameoff,
++						      dirblksize);
++		unsigned int matched = min(startprfx, endprfx);
++		struct erofs_qstr dname = {
++			.name = data + nameoff,
++			.end = unlikely(mid >= ndirents - 1) ?
++				data + dirblksize :
++				data + nameoff_from_disk(de[mid + 1].nameoff,
++							 dirblksize)
++		};
 +
-+/*
-+ * directly cast a tagged pointer to the native pointer type, which
-+ * could be used for backward compatibility of existing code.
-+ */
-+#define tagptr_cast_ptr(tptr) ((void *)(tptr).v)
++		/* string comparison without already matched prefix */
++		int ret = dirnamecmp(name, &dname, &matched);
 +
-+/* encode tagged pointers */
-+#define tagptr_fold(type, ptr, _tags) ({ \
-+	const typeof(_tags) tags = (_tags); \
-+	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(type))) \
-+		__bad_tagptr_tags(); \
-+tagptr_init(type, (uintptr_t)(ptr) | tags); })
++		if (unlikely(!ret)) {
++			return de + mid;
++		} else if (ret > 0) {
++			head = mid + 1;
++			startprfx = matched;
++		} else {
++			back = mid - 1;
++			endprfx = matched;
++		}
++	}
++	return ERR_PTR(-ENOENT);
++}
 +
-+/* decode tagged pointers */
-+#define tagptr_unfold_ptr(tptr) \
-+	((void *)((tptr).v & ~__tagptr_mask(tptr)))
++static struct page *find_target_block_classic(struct inode *dir,
++					      struct erofs_qstr *name,
++					      int *_ndirents)
++{
++	unsigned int startprfx, endprfx;
++	int head, back;
++	struct address_space *const mapping = dir->i_mapping;
++	struct page *candidate = ERR_PTR(-ENOENT);
 +
-+#define tagptr_unfold_tags(tptr) \
-+	((tptr).v & __tagptr_mask(tptr))
++	startprfx = endprfx = 0;
++	head = 0;
++	back = inode_datablocks(dir) - 1;
 +
-+/* operations for the tagger pointer */
-+#define tagptr_eq(_tptr1, _tptr2) ({ \
-+	typeof(_tptr1) tptr1 = (_tptr1); \
-+	typeof(_tptr2) tptr2 = (_tptr2); \
-+	(void)(&tptr1 == &tptr2); \
-+(tptr1).v == (tptr2).v; })
++	while (head <= back) {
++		const int mid = head + (back - head) / 2;
++		struct page *page = read_mapping_page(mapping, mid, NULL);
 +
-+/* lock-free CAS operation */
-+#define tagptr_cmpxchg(_ptptr, _o, _n) ({ \
-+	typeof(_ptptr) ptptr = (_ptptr); \
-+	typeof(_o) o = (_o); \
-+	typeof(_n) n = (_n); \
-+	(void)(&o == &n); \
-+	(void)(&o == ptptr); \
-+tagptr_init(o, cmpxchg(&ptptr->v, o.v, n.v)); })
++		if (!IS_ERR(page)) {
++			struct erofs_dirent *de = kmap_atomic(page);
++			const int nameoff = nameoff_from_disk(de->nameoff,
++							      EROFS_BLKSIZ);
++			const int ndirents = nameoff / sizeof(*de);
++			int diff;
++			unsigned int matched;
++			struct erofs_qstr dname;
 +
-+/* wrap WRITE_ONCE if atomic update is needed */
-+#define tagptr_replace_tags(_ptptr, tags) ({ \
-+	typeof(_ptptr) ptptr = (_ptptr); \
-+	*ptptr = tagptr_fold(*ptptr, tagptr_unfold_ptr(*ptptr), tags); \
-+*ptptr; })
++			if (unlikely(!ndirents)) {
++				DBG_BUGON(1);
++				kunmap_atomic(de);
++				put_page(page);
++				page = ERR_PTR(-EIO);
++				goto out;
++			}
 +
-+#define tagptr_set_tags(_ptptr, _tags) ({ \
-+	typeof(_ptptr) ptptr = (_ptptr); \
-+	const typeof(_tags) tags = (_tags); \
-+	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
-+		__bad_tagptr_tags(); \
-+	ptptr->v |= tags; \
-+*ptptr; })
++			matched = min(startprfx, endprfx);
 +
-+#define tagptr_clear_tags(_ptptr, _tags) ({ \
-+	typeof(_ptptr) ptptr = (_ptptr); \
-+	const typeof(_tags) tags = (_tags); \
-+	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
-+		__bad_tagptr_tags(); \
-+	ptptr->v &= ~tags; \
-+*ptptr; })
++			dname.name = (u8 *)de + nameoff;
++			if (ndirents == 1)
++				dname.end = (u8 *)de + EROFS_BLKSIZ;
++			else
++				dname.end = (u8 *)de +
++					nameoff_from_disk(de[1].nameoff,
++							  EROFS_BLKSIZ);
 +
-+#endif	/* __EROFS_TAGPTR_H */
++			/* string comparison without already matched prefix */
++			diff = dirnamecmp(name, &dname, &matched);
++			kunmap_atomic(de);
++
++			if (unlikely(!diff)) {
++				*_ndirents = 0;
++				goto out;
++			} else if (diff > 0) {
++				head = mid + 1;
++				startprfx = matched;
++
++				if (!IS_ERR(candidate))
++					put_page(candidate);
++				candidate = page;
++				*_ndirents = ndirents;
++			} else {
++				put_page(page);
++
++				back = mid - 1;
++				endprfx = matched;
++			}
++			continue;
++		}
++out:		/* free if the candidate is valid */
++		if (!IS_ERR(candidate))
++			put_page(candidate);
++		return page;
++	}
++	return candidate;
++}
++
++int erofs_namei(struct inode *dir,
++		struct qstr *name,
++		erofs_nid_t *nid, unsigned int *d_type)
++{
++	int ndirents;
++	struct page *page;
++	void *data;
++	struct erofs_dirent *de;
++	struct erofs_qstr qn;
++
++	if (unlikely(!dir->i_size))
++		return -ENOENT;
++
++	qn.name = name->name;
++	qn.end = name->name + name->len;
++
++	ndirents = 0;
++	page = find_target_block_classic(dir, &qn, &ndirents);
++
++	if (IS_ERR(page))
++		return PTR_ERR(page);
++
++	data = kmap_atomic(page);
++	/* the target page has been mapped */
++	if (ndirents)
++		de = find_target_dirent(&qn, data, EROFS_BLKSIZ, ndirents);
++	else
++		de = (struct erofs_dirent *)data;
++
++	if (!IS_ERR(de)) {
++		*nid = le64_to_cpu(de->nid);
++		*d_type = de->file_type;
++	}
++
++	kunmap_atomic(data);
++	put_page(page);
++
++	return PTR_ERR_OR_ZERO(de);
++}
++
++/* NOTE: i_mutex is already held by vfs */
++static struct dentry *erofs_lookup(struct inode *dir,
++				   struct dentry *dentry,
++				   unsigned int flags)
++{
++	int err;
++	erofs_nid_t nid;
++	unsigned int d_type;
++	struct inode *inode;
++
++	DBG_BUGON(!d_really_is_negative(dentry));
++	/* dentry must be unhashed in lookup, no need to worry about */
++	DBG_BUGON(!d_unhashed(dentry));
++
++	trace_erofs_lookup(dir, dentry, flags);
++
++	/* file name exceeds fs limit */
++	if (unlikely(dentry->d_name.len > EROFS_NAME_LEN))
++		return ERR_PTR(-ENAMETOOLONG);
++
++	/* false uninitialized warnings on gcc 4.8.x */
++	err = erofs_namei(dir, &dentry->d_name, &nid, &d_type);
++
++	if (err == -ENOENT) {
++		/* negative dentry */
++		inode = NULL;
++	} else if (unlikely(err)) {
++		inode = ERR_PTR(err);
++	} else {
++		debugln("%s, %s (nid %llu) found, d_type %u", __func__,
++			dentry->d_name.name, nid, d_type);
++		inode = erofs_iget(dir->i_sb, nid, d_type == EROFS_FT_DIR);
++	}
++	return d_splice_alias(inode, dentry);
++}
++
++const struct inode_operations erofs_dir_iops = {
++	.lookup = erofs_lookup,
++	.getattr = erofs_getattr,
++};
 +
 -- 
 2.17.1
