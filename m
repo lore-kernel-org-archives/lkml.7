@@ -2,107 +2,106 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D47AC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 513E8C41517
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CECA21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA4F218EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:43:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UQg/tDmQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfGYTla (ORCPT
+        id S1726542AbfGYTnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 15:41:30 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:42782 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfGYTla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:41:30 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hqjc6-0004BV-00; Thu, 25 Jul 2019 13:41:18 -0600
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sagi Grimberg <sagi@grimberg.me>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <20190725172335.6825-3-logang@deltatee.com>
- <20190725174032.GA27818@kroah.com>
- <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
- <20190725180816.GA32305@kroah.com>
- <da0eacb7-3738-ddf3-8c61-7ffc61aa41f4@deltatee.com>
- <20190725182701.GA11547@kroah.com>
- <a3262a7f-b78e-05ba-cda3-a7587946bd91@deltatee.com>
- <5951e0f5-cc90-f3de-0083-088fecfd43bb@grimberg.me>
- <20190725193415.GA12117@kroah.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <77a3e81d-2542-6782-0fc1-1d25bcc75598@deltatee.com>
-Date:   Thu, 25 Jul 2019 13:41:16 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190725193415.GA12117@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: viro@zeniv.linux.org.uk, sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, hch@lst.de, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, sagi@grimberg.me, gregkh@linuxfoundation.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+        Thu, 25 Jul 2019 15:43:09 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52562 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726262AbfGYTnI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 15:43:08 -0400
+Received: by mail-wm1-f66.google.com with SMTP id s3so45984442wms.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 12:43:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=HpwqwqbOJStimlLPjV2WsSVvFoS5zR7dipevAmhXn+I=;
+        b=UQg/tDmQSfp9ChPaHt8EGlDQzZ6S/EdbxNg82he/Mzh8kwJ1qDpcDDkFMwLldt0cJc
+         lCF8BYMyw+DpR0ybV0yCoNWYL08yFyuTbTqO6aSQREaMO43xW88KfpTm8GecjxL8rJGw
+         GyauPYbXAUfd+wepxHqkp3tFKGMm0w8zorbYNjo6KTprUZWLwZ/Fo8VRDIu+/lxrhFXM
+         eDgKBYvOFPyY6b3EkW8UL0kebH0JQ+M7KxuybGZKYAD/kf7iDXT6S2sTLL26ra0MIe4W
+         Qa6E4+gr7U08eq2pNnQbGEPANNHi3nhHnEMX5iaonM8eETL+dQ37+c+wg0iR530FfwHU
+         Nk5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HpwqwqbOJStimlLPjV2WsSVvFoS5zR7dipevAmhXn+I=;
+        b=rLpwwbDWO+6YFwFfzoA6GKd+DvWdoG96ftl5JGz+Ha1BtWUGY0Ade+zLG95gdGZlXx
+         z/198wc3Ebkql/1xUv7iqUzDTE+Zh+PF0Zl89sfy6HdUnqWVSIAfqxEeexJ2nsuaHkK/
+         ByCp8dtY9Gyg6VUEp/ASnOq3EUVizteBRSw9wCnPVbNoLiTDOMQaUaM1XNQ2Mp1tUxxd
+         TDw33iRLx/ryHlipOi0fexceXIIKoTbu83OLpN6yiqUQ1Uup+hgOzUn5hYCxPIudXMFH
+         REGAltWLY+ILtaZLHRqzthpUIozHOqOUMVnQVOEp2hYr+T7+gednybDXmyNaLsopCYOO
+         Aw9A==
+X-Gm-Message-State: APjAAAXo2qroGp10eeoBOE6YjMRykMJNhDQGFxeD42COFxxGnRa85K3w
+        C6CwHvz3yvtvF2xkvN+s7hzijg==
+X-Google-Smtp-Source: APXvYqxpAh0jfU//NVh88rL1qSwss1rtJWAjuYNhw8soBe0yFJ+ERG4l4cq/Ofn+pyhmxoEsDSGiRA==
+X-Received: by 2002:a1c:cb43:: with SMTP id b64mr82451700wmg.86.1564083786567;
+        Thu, 25 Jul 2019 12:43:06 -0700 (PDT)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id y16sm103410662wrg.85.2019.07.25.12.43.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 25 Jul 2019 12:43:05 -0700 (PDT)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        khilman@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, baylibre-upstreaming@groups.io,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH 0/4] crypto: add amlogic crypto offloader driver
+Date:   Thu, 25 Jul 2019 19:42:52 +0000
+Message-Id: <1564083776-20540-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello
 
+This serie adds support for the crypto offloader present on amlogic GXL
+SoCs.
 
-On 2019-07-25 1:34 p.m., Greg Kroah-Hartman wrote:
-> On Thu, Jul 25, 2019 at 12:02:30PM -0700, Sagi Grimberg wrote:
->>
->>>>>> Why do you have a "string" within the kernel and are not using the
->>>>>> normal open() call from userspace on the character device node on the
->>>>>> filesystem in your namespace/mount/whatever?
->>>>>
->>>>> NVMe-OF is configured using configfs. The target is specified by the
->>>>> user writing a path to a configfs attribute. This is the way it works
->>>>> today but with blkdev_get_by_path()[1]. For the passthru code, we need
->>>>> to get a nvme_ctrl instead of a block_device, but the principal is the same.
->>>>
->>>> Why isn't a fd being passed in there instead of a random string?
->>>
->>> I wouldn't know the answer to this but I assume because once we decided
->>> to use configfs, there was no way for the user to pass the kernel an fd.
->>
->> That's definitely not changing. But this is not different than how we
->> use the block device or file configuration, this just happen to need the
->> nvme controller chardev now to issue I/O.
-> 
-> So, as was kind of alluded to in another part of the thread, what are
-> you doing about permissions?  It seems that any user/group permissions
-> are out the window when you have the kernel itself do the opening of the
-> char device, right?  Why is that ok?  You can pass it _any_ character
-> device node and away it goes?  What if you give it a "wrong" one?  Char
-> devices are very different from block devices this way.
+Tested on meson-gxl-s905x-khadas-vim and meson-gxl-s905x-libretech-cc
 
-Well the permission question is no different from the block-device case
-we already have. The user has to be root to configure a target so it has
-access to the block/char device. Containers and NVMe-of are really not
-designed to mix and would take a lot of work to make this make any sense
-(And that's way out of scope of what I'm trying to do here and doesn't
-change the need for a the cdev_get_by_path()).
+Regards
 
-If the user specifies a non-nvme char device, it is rejected by the code
-in nvme_ctrl_get_by_path() when it compares the fops. See patch 4.
+Corentin Labbe (4):
+  dt-bindings: crypto: Add DT bindings documentation for amlogic-crypto
+  crypto: amlogic: Add crypto accelerator for amlogic GXL
+  MAINTAINERS: Add myself as maintainer of amlogic crypto
+  ARM64: dts: amlogic: adds crypto hardware node
 
-Logan
+ .../bindings/crypto/amlogic-gxl-crypto.yaml   |  45 +++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |  11 +
+ drivers/crypto/Kconfig                        |   2 +
+ drivers/crypto/Makefile                       |   1 +
+ drivers/crypto/amlogic/Kconfig                |  24 ++
+ drivers/crypto/amlogic/Makefile               |   2 +
+ drivers/crypto/amlogic/amlogic-cipher.c       | 358 ++++++++++++++++++
+ drivers/crypto/amlogic/amlogic-core.c         | 326 ++++++++++++++++
+ drivers/crypto/amlogic/amlogic.h              | 172 +++++++++
+ 10 files changed, 948 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+ create mode 100644 drivers/crypto/amlogic/Kconfig
+ create mode 100644 drivers/crypto/amlogic/Makefile
+ create mode 100644 drivers/crypto/amlogic/amlogic-cipher.c
+ create mode 100644 drivers/crypto/amlogic/amlogic-core.c
+ create mode 100644 drivers/crypto/amlogic/amlogic.h
+
+-- 
+2.21.0
+
