@@ -2,129 +2,92 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C31C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE07C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FDA521871
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B52021871
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 08:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389728AbfGYIjZ (ORCPT
+        id S2389758AbfGYIkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 04:39:25 -0400
-Received: from david.siemens.de ([192.35.17.14]:52653 "EHLO david.siemens.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389705AbfGYIjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 04:39:24 -0400
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id x6P8dEDt000362
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jul 2019 10:39:15 +0200
-Received: from [139.25.68.37] (md1q0hnc.ad001.siemens.net [139.25.68.37] (may be forged))
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id x6P8dEl8022937;
-        Thu, 25 Jul 2019 10:39:14 +0200
-Subject: Re: [PATCH v3 07/12] kbuild: modpost: read modules.order instead of
- $(MODVERDIR)/*.mod
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org
-Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-References: <20190717061800.10018-1-yamada.masahiro@socionext.com>
- <20190717061800.10018-8-yamada.masahiro@socionext.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <230d2ca1-19cd-b60e-1b1b-6d7413eea9e2@siemens.com>
-Date:   Thu, 25 Jul 2019 10:39:13 +0200
-User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
- Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
+        Thu, 25 Jul 2019 04:40:10 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45595 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389213AbfGYIkK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 04:40:10 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hqZIF-0001Gq-Ge; Thu, 25 Jul 2019 10:40:07 +0200
+Date:   Thu, 25 Jul 2019 10:40:06 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+cc:     linux-kernel@vger.kernel.org, linux-spdx@vger.kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH v2 1/3] treewide: add "WITH Linux-syscall-note" to SPDX
+ tag of uapi headers
+In-Reply-To: <20190725075833.3481-1-yamada.masahiro@socionext.com>
+Message-ID: <alpine.DEB.2.21.1907251039410.1791@nanos.tec.linutronix.de>
+References: <20190725075833.3481-1-yamada.masahiro@socionext.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190717061800.10018-8-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.07.19 08:17, Masahiro Yamada wrote:
-> Towards the goal of removing MODVERDIR, read out modules.order to get
-> the list of modules to be processed. This is simpler than parsing *.mod
-> files in $(MODVERDIR).
+On Thu, 25 Jul 2019, Masahiro Yamada wrote:
+
+> UAPI headers licensed under GPL are supposed to have exception
+> "WITH Linux-syscall-note" so that they can be included into non-GPL
+> user space application code.
 > 
-> For external modules, $(KBUILD_EXTMOD)/modules.order should be read.
+> The exception note is missing in some UAPI headers.
+> 
+> Some of them slipped in by the treewide conversion commit b24413180f56
+> ("License cleanup: add SPDX GPL-2.0 license identifier to files with
+> no license"). Just run:
+> 
+>   $ git show --oneline b24413180f56 -- arch/x86/include/uapi/asm/
+> 
+> I believe they are not intentional, and should be fixed too.
+> 
+> This patch was generated by the following script:
+> 
+>   git grep -l --not -e Linux-syscall-note --and -e SPDX-License-Identifier \
+>     -- :arch/*/include/uapi/asm/*.h :include/uapi/ :^*/Kbuild |
+>   while read file
+>   do
+>           sed -i -e '/[[:space:]]OR[[:space:]]/s/\(GPL-[^[:space:]]*\)/(\1 WITH Linux-syscall-note)/g' \
+>           -e '/[[:space:]]or[[:space:]]/s/\(GPL-[^[:space:]]*\)/(\1 WITH Linux-syscall-note)/g' \
+>           -e '/[[:space:]]OR[[:space:]]/!{/[[:space:]]or[[:space:]]/!s/\(GPL-[^[:space:]]*\)/\1 WITH Linux-syscall-note/g}' $file
+>   done
+> 
+> After this patch is applied, there are 5 UAPI headers that do not contain
+> "WITH Linux-syscall-note". They are kept untouched since this exception
+> applies only to GPL variants.
+> 
+>   $ git grep --not -e Linux-syscall-note --and -e SPDX-License-Identifier \
+>     -- :arch/*/include/uapi/asm/*.h :include/uapi/ :^*/Kbuild
+>   include/uapi/drm/panfrost_drm.h:/* SPDX-License-Identifier: MIT */
+>   include/uapi/linux/batman_adv.h:/* SPDX-License-Identifier: MIT */
+>   include/uapi/linux/qemu_fw_cfg.h:/* SPDX-License-Identifier: BSD-3-Clause */
+>   include/uapi/linux/vbox_err.h:/* SPDX-License-Identifier: MIT */
+>   include/uapi/linux/virtio_iommu.h:/* SPDX-License-Identifier: BSD-3-Clause */
 > 
 > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
-> Changes in v3:
->   - Add ifdef CONFIG_MODULES to avoid warning
-> 
-> Changes in v2: None
-> 
->  scripts/Makefile.modpost | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-> index fec6ec2ffa47..5841508ffca9 100644
-> --- a/scripts/Makefile.modpost
-> +++ b/scripts/Makefile.modpost
-> @@ -8,9 +8,10 @@
->  # b) A <module>.o file which is the .o files above linked together
->  # c) A <module>.mod file in $(MODVERDIR)/, listing the name of the
->  #    the preliminary <module>.o file, plus all .o files
-> +# d) modules.order, which lists all the modules
->  
->  # Stage 2 is handled by this file and does the following
-> -# 1) Find all modules from the files listed in $(MODVERDIR)/
-> +# 1) Find all modules listed in modules.order
->  # 2) modpost is then used to
->  # 3)  create one <module>.mod.c file pr. module
->  # 4)  create one Module.symvers file with CRC for all exported symbols
-> @@ -60,10 +61,12 @@ include scripts/Makefile.lib
->  kernelsymfile := $(objtree)/Module.symvers
->  modulesymfile := $(firstword $(KBUILD_EXTMOD))/Module.symvers
->  
-> -# Step 1), find all modules listed in $(MODVERDIR)/
-> -MODLISTCMD := find $(MODVERDIR) -name '*.mod' | xargs -r grep -h '\.ko$$' | sort -u
-> -__modules := $(shell $(MODLISTCMD))
-> -modules   := $(patsubst %.o,%.ko, $(wildcard $(__modules:.ko=.o)))
-> +modorder := $(if $(KBUILD_EXTMOD),$(KBUILD_EXTMOD)/)modules.order
-> +
-> +# Step 1), find all modules listed in modules.order
-> +ifdef CONFIG_MODULES
-> +modules := $(sort $(shell cat $(modorder)))
-> +endif
->  
->  # Stop after building .o files if NOFINAL is set. Makes compile tests quicker
->  _modpost: $(if $(KBUILD_MODPOST_NOFINAL), $(modules:.ko:.o),$(modules))
-> @@ -84,7 +87,7 @@ MODPOST_OPT=$(subst -i,-n,$(filter -i,$(MAKEFLAGS)))
->  
->  # We can go over command line length here, so be careful.
->  quiet_cmd_modpost = MODPOST $(words $(filter-out vmlinux FORCE, $^)) modules
-> -      cmd_modpost = $(MODLISTCMD) | sed 's/\.ko$$/.o/' | $(modpost) $(MODPOST_OPT) -s -T -
-> +      cmd_modpost = sed 's/ko$$/o/' $(modorder) | $(modpost) $(MODPOST_OPT) -s -T -
->  
->  PHONY += __modpost
->  __modpost: $(modules:.ko=.o) FORCE
-> 
 
-This affects also external modules builds: I have patterns here that do
+Thanks for cleaning this up!
 
-[Makefile]
-subdir-y := some-module
-
-[some-module/Makefile]
-obj-m := some-module.o
-
-and since this patch, the final some-module.ko is no longer built. Am I missing
-something in the kbuild makefiles, or is this a regression?
-
-Jan
-
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
