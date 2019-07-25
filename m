@@ -2,166 +2,147 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2A4C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BAAC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A07218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491B0218D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:41:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="he8sVU6r"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="m9ZUKMR2";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="m9ZUKMR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfGYVji (ORCPT
+        id S1726763AbfGYVlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 17:39:38 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37618 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfGYVjh (ORCPT
+        Thu, 25 Jul 2019 17:41:50 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44918 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbfGYVlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 17:39:37 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y26so50593684qto.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 14:39:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=CSygOM7YhBnAy6MsNYv6TaOG2ZVJz0P5wm8bU+ygO/4=;
-        b=he8sVU6r0LuORP3V5bECPCNh4zTrWW+c+9YByWiA/m4wVPzKwS4rxcjYhtNb8XAtCr
-         vPhn6X9s1m9Ea721keeZtJtM6n6D0w70kDoKdR2eXi7pykvlO3oDfajbvt21kgOXIyGm
-         A6wer3iU+3tejiUzRkwfva1C7JpiU9qVgnqDbvw67NKyV8AlfL00gNGijmy61Q6m+CDe
-         +J86Y/mXfWPrI/ewTSTpr6yeebWZTELAR6B8EWA6I1CyIafedvBEDfCDTVJyy/aiP3hW
-         pGbDNqi5ZJe8rms1lBSBS8vg1Lt8dAaSeB8qhTDq+z4AWvhEKkggpKF3dSELmZ2IW5g8
-         WkSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=CSygOM7YhBnAy6MsNYv6TaOG2ZVJz0P5wm8bU+ygO/4=;
-        b=XsFIq24cLh7GOkIAW2VQyfOZjrShJndm1YRGmKX0V0TTze3m/1C1TJzhrCb+Cv7URm
-         uTXXVA1BA0FtM7aamrsu+c4g1axFzV7sNvNI2Oi+gPtzrQerJpQ+N8AlaOiQuONNRayQ
-         yEzRvHWOXmE1Nea4MY2sO6898378tnAGWKur3UuwOtlabgF1It5eOBIOXoXBuNXA/iRX
-         w5ObeRmYyCA1eUmu8sb2bR7K5z15IL6+JgiBLLRqzI79suAfepkmhwDVI+YWur7BSmFZ
-         U0MexB19arrGqVwgjeQe/GUYExqHB0EDn3xlO4VNBDCfA8GwEMWNfqXwxB33xjKUiRDe
-         Ntqg==
-X-Gm-Message-State: APjAAAWvkYFbqhpC5U6Sfu+IqvFbJmrk0YG2hRYloHHwNg7pmvhl5ye7
-        N6odezq9SHNLcO0ci/G7DlLPYA==
-X-Google-Smtp-Source: APXvYqyYasGQHoqJBwR2mvO8Ts9j5uUl2Sqix4ffDGoTkQFRVGfQzVPXJ95YOGNCYmaWD71TU8x+Dg==
-X-Received: by 2002:a0c:c93c:: with SMTP id r57mr49389143qvj.226.1564090776809;
-        Thu, 25 Jul 2019 14:39:36 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id z33sm23385643qtc.56.2019.07.25.14.39.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 14:39:36 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 14:39:32 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     syzbot <syzbot+0e0fedcad708d12d3032@syzkaller.appspotmail.com>
-Cc:     ast@kernel.org, aviadye@mellanox.com, borisp@mellanox.com,
-        bpf@vger.kernel.org, daniel@iogearbox.net, davejwatson@fb.com,
-        davem@davemloft.net, john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Subject: Re: general protection fault in tls_trim_both_msgs
-Message-ID: <20190725143932.78705103@cakuba.netronome.com>
-In-Reply-To: <0000000000002b4896058e7abf78@google.com>
-References: <0000000000002b4896058e7abf78@google.com>
-Organization: Netronome Systems, Ltd.
+        Thu, 25 Jul 2019 17:41:49 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 93BDD60386; Thu, 25 Jul 2019 21:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564090908;
+        bh=jqzrQBVq8lBiAxe0oBWB4NzMopTX5KV8rFKZCzdTySI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=m9ZUKMR2bmgnO0VU73/7N6pitQWuXk5awOMdwtiw8/aZ8J7Lne0OiwQstf9b+oyfo
+         2GOHhrejNCyojn4oCOm6XWmaDah5HfN8TNanUKgWZUEIDkRMQM25WiB+UQp6XaxjuZ
+         AQXLkO1WGVDYqa/xWCcXjwRYnUbPXO72x8RvlHZs=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 249BE6021A;
+        Thu, 25 Jul 2019 21:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564090908;
+        bh=jqzrQBVq8lBiAxe0oBWB4NzMopTX5KV8rFKZCzdTySI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=m9ZUKMR2bmgnO0VU73/7N6pitQWuXk5awOMdwtiw8/aZ8J7Lne0OiwQstf9b+oyfo
+         2GOHhrejNCyojn4oCOm6XWmaDah5HfN8TNanUKgWZUEIDkRMQM25WiB+UQp6XaxjuZ
+         AQXLkO1WGVDYqa/xWCcXjwRYnUbPXO72x8RvlHZs=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Thu, 25 Jul 2019 14:41:48 -0700
+From:   pheragu@codeaurora.org
+To:     Marc Zyngier <marc.zyngier@arm.com>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux-arm Msm <linux-arm-msm@vger.kernel.org>,
+        psodagud@codeaurora.org, Tsoni <tsoni@codeaurora.org>,
+        rananta@codeaurora.org, mnalajal@codeaurora.org
+Subject: Re: Warning seen when removing a module using irqdomain framework
+In-Reply-To: <20190724075103.00ae5924@why>
+References: <aa6a66a7671f12f19d0364755e76de0d@codeaurora.org>
+ <20190724075103.00ae5924@why>
+Message-ID: <db46690929f70536ea4d391275471131@codeaurora.org>
+X-Sender: pheragu@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jul 2019 22:32:07 -0700, syzbot wrote:
-> Hello,
+On 2019-07-23 23:51, Marc Zyngier wrote:
+> On Tue, 23 Jul 2019 14:52:34 -0700
+> pheragu@codeaurora.org wrote:
 > 
-> syzbot found the following crash on:
+> Hi Prakruthi,
 > 
-> HEAD commit:    9e6dfe80 Add linux-next specific files for 20190724
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1046971fa00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=6cbb8fc2cf2842d7
-> dashboard link: https://syzkaller.appspot.com/bug?extid=0e0fedcad708d12d3032
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>> Hi,
+>> 
+>> I have been working on a interrupt controller driver that uses tree
+>> based mapping for its domain (irq_domain_add_tree(..)).
+>> If I understand correctly, the clients get a mapping when they call
+>> platform_get_irq(..). However, after these clients are removed
+>> (rmmod), when I try to remove the interrupt controller driver where
+>> it calls irq_domain_remove(..), I hit this warning from
+>> kernel/kernel/irq/irqdomain.c:: irq_domain_remove(..)
+>> [WARN_ON(!radix_tree_empty(&domain->revmap_tree));]-
+>> WARNING: CPU: 0 PID: 238 at /kernel/kernel/irq/irqdomain.c:246 
+>> irq_domain_remove+0x84/0x98
+>> 
+>> Also, I see that the requested IRQs by the clients are still present
+>> (in /proc/interrupts) even after they had been removed. Hence, I just
+>> wanted to know how to handle this warning. Should the client clean up
+>> by calling irq_dispose_mapping(..) or is it the responsibility of the
+>> interrupt controller driver to dispose the mappings one by one?
 > 
-> Unfortunately, I don't have any reproducer for this crash yet.
+> In general, building interrupt controller drivers as a module is a
+> pretty difficult thing to do in a safe manner. As you found out, this
+> relies on the irq_domain being "emptied" before it can be freed. There
+> are some other gotchas in the rest of the IRQ stack as well.
+> 
+> Doing that is hard. One of the reasons is that the OF subsystem will
+> happily allocate all the interrupts it can even if there is no driver
+> having requested them (see of_platform_populate). This means that you
+> cannot track whether a client driver is using one of the interrupt your
+> irqchip is in charge of. You can apply some heuristics, but they are in
+> general all wrong.
+> 
+> Fixing the OF subsystem is possible, but will break a lot of platforms
+> that will have to be identified and fixed one by one.  Another
+> possibility would be to refcount irqdescs, and make sure the irqdomain
+> directly holds pointers to them. Doable, but may create overhead.
+> 
+> To sum it up, don't build your irqchip driver as a module if you can
+> avoid it. If you can't, you'll have to be very careful about how the
+> mapping is established (make sure it is not created by
+> of_platform_populate), and use irq_dispose_mapping in the client
+> drivers.
+> 
+As per your suggestion I tried making this driver a statically compiled 
+one.
+I tried various approaches with this -
 
-Looks very like the issue we mentioned in the cover letter for unhash
-fixes. TX is waiting for mem, the connection dies, we free ctx, TX
-wakes up with a now stale ctx pointer. I'm testing a fix for this,
-Netronome team was actually able to trigger a NULL-deref on the RX
-side, because there ctx is reloaded but not NULL-checked.
+1. Using arch_inticall(..) - When I used this call, I saw that once the
+clients were removed, I don't see the IRQs requested by them (in 
+/proc/interrupts).
 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+0e0fedcad708d12d3032@syzkaller.appspotmail.com
-> 
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 1 PID: 15517 Comm: syz-executor.4 Not tainted 5.3.0-rc1-next-20190724  
-> #50
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> RIP: 0010:tls_trim_both_msgs+0x54/0x130 net/tls/tls_sw.c:268
-> Code: 48 c1 ea 03 80 3c 02 00 0f 85 e3 00 00 00 4d 8b b5 b0 06 00 00 48 b8  
-> 00 00 00 00 00 fc ff df 49 8d 7e 28 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-> 85 b3 00 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b
-> RSP: 0018:ffff8880612cfac0 EFLAGS: 00010206
-> RAX: dffffc0000000000 RBX: ffff8880a8794340 RCX: ffffc9000e7b9000
-> RDX: 0000000000000005 RSI: ffffffff86298656 RDI: 0000000000000028
-> RBP: ffff8880612cfae0 R08: ffff88805ae4c580 R09: fffffbfff14a8155
-> R10: fffffbfff14a8154 R11: ffffffff8a540aa7 R12: 0000000000000000
-> R13: ffff888061d82e00 R14: 0000000000000000 R15: 00000000ffffffe0
-> FS:  00007f7d33516700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000001b2fa2f000 CR3: 000000009fcf1000 CR4: 00000000001406e0
-> Call Trace:
->   tls_sw_sendmsg+0xe38/0x17b0 net/tls/tls_sw.c:1057
->   inet6_sendmsg+0x9e/0xe0 net/ipv6/af_inet6.c:576
->   sock_sendmsg_nosec net/socket.c:637 [inline]
->   sock_sendmsg+0xd7/0x130 net/socket.c:657
->   __sys_sendto+0x262/0x380 net/socket.c:1952
->   __do_sys_sendto net/socket.c:1964 [inline]
->   __se_sys_sendto net/socket.c:1960 [inline]
->   __x64_sys_sendto+0xe1/0x1a0 net/socket.c:1960
->   do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x459829
-> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f7d33515c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-> RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 0000000000459829
-> RDX: ffffffffffffffc1 RSI: 00000000200005c0 RDI: 0000000000000003
-> RBP: 000000000075bf20 R08: 0000000000000000 R09: 1201000000003618
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7d335166d4
-> R13: 00000000004c7669 R14: 00000000004dcc70 R15: 00000000ffffffff
-> Modules linked in:
-> ---[ end trace 2dd728cceb39a185 ]---
-> RIP: 0010:tls_trim_both_msgs+0x54/0x130 net/tls/tls_sw.c:268
-> Code: 48 c1 ea 03 80 3c 02 00 0f 85 e3 00 00 00 4d 8b b5 b0 06 00 00 48 b8  
-> 00 00 00 00 00 fc ff df 49 8d 7e 28 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-> 85 b3 00 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b
-> RSP: 0018:ffff8880612cfac0 EFLAGS: 00010206
-> RAX: dffffc0000000000 RBX: ffff8880a8794340 RCX: ffffc9000e7b9000
-> RDX: 0000000000000005 RSI: ffffffff86298656 RDI: 0000000000000028
-> RBP: ffff8880612cfae0 R08: ffff88805ae4c580 R09: fffffbfff14a8155
-> R10: fffffbfff14a8154 R11: ffffffff8a540aa7 R12: 0000000000000000
-> R13: ffff888061d82e00 R14: 0000000000000000 R15: 00000000ffffffe0
-> FS:  00007f7d33516700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000019dbe80 CR3: 000000009fcf1000 CR4: 00000000001406e0
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+2. Using module_init(..) (statically compiled) - When I used this call, 
+I saw that
+even after the clients were removed, I do see their requested IRQs in 
+/proc/interrupts.
+This behavior in #2 is the same as the one I saw when I compiled my 
+driver as a module
+and used arch_initcall(..).
+
+Is there any reason why this is seen only with arch_initcall(..) used 
+statically?
+
+
+Regards,
+Prakruthi Deepak
+
+
+
+
+
+
+
+
+
+
 
