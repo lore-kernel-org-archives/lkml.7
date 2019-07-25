@@ -2,100 +2,128 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A790AC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D9CC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3AF21901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:06:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="pZKEqbGP"
+	by mail.kernel.org (Postfix) with ESMTP id 84BCD217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:06:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387912AbfGYRGR (ORCPT
+        id S2388262AbfGYRGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:06:17 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:44620 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727530AbfGYRGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:06:17 -0400
-Received: from nazgul.tnic (87-126-252-198.ip.btc-net.bg [87.126.252.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 209211EC02FF;
-        Thu, 25 Jul 2019 19:06:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1564074374;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=w+jFzT2f4YGeZrmB1rH4+Ej+CuRW6q4gExi/M8QmW6w=;
-        b=pZKEqbGPSX71PWGXI4/P61BNkGCy1p9/E/7KagLSnvhJ1hvdYOQr3VduXTJwAA4P/Om9By
-        0Ga8vxrAQKnBOUuLjiC/90pZuCVz0ZL4iPHpgvb3Fz+E/VdAR4KDdLoyrHzOOiVm5iYstI
-        Ps+xeqVPirDSThEh0Elw8chwb4pLB50=
-Date:   Thu, 25 Jul 2019 19:06:13 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org,
-        gustavo@embeddedor.com, torvalds@linux-foundation.org,
-        acme@kernel.org, kan.liang@linux.intel.com, namhyung@kernel.org,
-        jolsa@redhat.com, linux-kernel@vger.kernel.org,
-        alexander.shishkin@linux.intel.com, keescook@chromium.org,
-        peterz@infradead.org
-Cc:     linux-tip-commits@vger.kernel.org
-Subject: Re: [tip:perf/urgent] perf/x86/intel: Mark expected switch
- fall-throughs
-Message-ID: <20190725170613.GC27348@nazgul.tnic>
-References: <20190624161913.GA32270@embeddedor>
- <tip-289a2d22b5b611d85030795802a710e9f520df29@git.kernel.org>
+        Thu, 25 Jul 2019 13:06:25 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50832 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388079AbfGYRGY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 13:06:24 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v15so45680120wml.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 10:06:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CYZmvdyjmQ9Y20lUl3LbpkZAg1UJeTYKaJ8xSu9KeRU=;
+        b=r5OS9LczrbLyxXnogLx4yhfY/HoYRK1CnL/1LHGS6Tz4HffdYfSouuIWvxm+hGWXxO
+         q4cmTAZl/A9mYDdBcJZMAGied7U1HsBF6Z5uyjCHoDG2Wals2XMa3ZxKFPy5o/2PevLm
+         deLi1wFNYlPOXv37ZdCuJVLOPFW3KEtAcjImzshlWlcnsXV7JJXLZTh/NMzuY2kcPyT7
+         L3+PKEsgbyfLsqR3QJKiB1tx9d/Lnng6Vu4k0e1KINtjfgio9YUp+WiOfUgOS2Rfsr+y
+         sBoEDFvQfPP3xzzHcg0bgDiL1Apeav4iYvLGbwlZ80CT5JW7vXLW2wSPnm5JLc7fFFZU
+         CBcA==
+X-Gm-Message-State: APjAAAXY2ZjSLZPq6GSgmEezAyIjni9B2OB/9dFzWEu4jf8XMZCAsJ9c
+        eYMf4lc3KlZy4j+07musf3pniw==
+X-Google-Smtp-Source: APXvYqwbvdA1XCrnqMaxgyn3o22zds3kQexwwJkjRqOZdIaK3sdDC0Fu9DQ32DUvi/qqPCP70bshLg==
+X-Received: by 2002:a7b:c7d8:: with SMTP id z24mr81271885wmk.10.1564074381887;
+        Thu, 25 Jul 2019 10:06:21 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:cc23:f353:392:d2ee? ([2001:b07:6468:f312:cc23:f353:392:d2ee])
+        by smtp.gmail.com with ESMTPSA id y16sm102602666wrg.85.2019.07.25.10.06.20
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 10:06:21 -0700 (PDT)
+Subject: Re: [PATCH 5.2 000/413] 5.2.3-stable review
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        wanpengli@tencent.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        patches@kernelci.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>, jmattson@google.com
+References: <20190724191735.096702571@linuxfoundation.org>
+ <CADYN=9+WLxhmqX3JNL_s-kWSN97G=8WhD=TF=uAuKecJnKcj_Q@mail.gmail.com>
+ <20190725113437.GA27429@kroah.com>
+ <230a5b34-d23e-8318-0b1f-d23ada7318e0@redhat.com>
+ <CA+G9fYsWdmboyquZ=Bs3tkTwRFTzd1yuL0_EVpHOecNi4E_stA@mail.gmail.com>
+ <20190725160939.GC18612@linux.intel.com>
+ <33f1cfaa-525d-996a-4977-fda32dc368ee@redhat.com>
+ <20190725162053.GD18612@linux.intel.com>
+ <7bc207e0-0812-e41a-bfd5-e3fbfd43f242@redhat.com>
+ <20190725163946.xt2p3pvxwuabzojj@xps.therub.org>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <3e55414d-cb4f-8f3f-a359-e374b6298715@redhat.com>
+Date:   Thu, 25 Jul 2019 19:06:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190725163946.xt2p3pvxwuabzojj@xps.therub.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <tip-289a2d22b5b611d85030795802a710e9f520df29@git.kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 09:27:10AM -0700, tip-bot for Gustavo A. R. Silva wrote:
-> Commit-ID:  289a2d22b5b611d85030795802a710e9f520df29
-> Gitweb:     https://git.kernel.org/tip/289a2d22b5b611d85030795802a710e9f520df29
-> Author:     Gustavo A. R. Silva <gustavo@embeddedor.com>
-> AuthorDate: Mon, 24 Jun 2019 11:19:13 -0500
-> Committer:  Ingo Molnar <mingo@kernel.org>
-> CommitDate: Thu, 25 Jul 2019 15:57:03 +0200
-> 
-> perf/x86/intel: Mark expected switch fall-throughs
-> 
-> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> cases where we are expecting to fall through.
-> 
-> This patch fixes the following warnings:
+On 25/07/19 18:39, Dan Rue wrote:
+> To your point Paolo - reporting 'fail' because of a missing kernel
+> feature is a generic problem we see across test suites, and causes tons
+> of pain and misery for CI people. As a general rule, I'd avoid
+> submodules, and even branches that track specific kernels. Rather, and I
+> don't know if it's possible in this case, but the best way to manage it
+> from both a test author and a test runner POV is to wrap the test in
+> kernel feature checks, kernel version checks, kernel config checks, etc.
+> Report 'skip' if the environment in which the test is running isn't
+> sufficient to run the test. Then, you only have to maintain one version
+> of the test suite, users can always use the latest, and critically: all
+> failures are actual failures.
 
-"This patch"
+Note that kvm-unit-tests are not really testing new kernel features;
+those are covered by tools/testing/selftests/kvm.  For some of these
+kvm-unit-tests there are some CPU features that we can check from the
+virtual machine, but those are easy to handle and they produce SKIP
+results just fine.
 
-> 
->   arch/x86/events/intel/core.c: In function ‘intel_pmu_init’:
->   arch/x86/events/intel/core.c:4959:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   arch/x86/events/intel/core.c:5008:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
-> 
-> Warning level 3 was used: -Wimplicit-fallthrough=3
-> 
-> This patch is part of the ongoing efforts to enable -Wimplicit-fallthrough.
+The problematic ones are tests that cover emulation accuracy.  These are
+effectively bugfixes, so the failures you see _are_ actual failures.  At
+the same time, the bugs are usually inoffensive(*), while the fixes are
+invasive and a bad source of cause conflicts in older Linux versions.
+This combines so that backporting to stable is not feasible.
 
-Another "This patch"
+Passing the host kernel version would be really ugly because 1) the
+tests can run on other hypervisor or emulators or even bare metal, and
+of course the host kernel version has no bearing if you're using
+userspace emulation 2) there are thousands of tests that would be
+littered with kernel version checks of little significance.
 
-I think it is clear about which patch the commit message is talking
-about, without stating it explicitly.
+So this is why I suggested a submodule: using a submodule effectively
+ignores all tests that were added after a given Linus release, and thus
+all the failures for which backports are just not going to happen.
+However, if Sean's idea of creating a linux-M.N branch in
+kvm-unit-tests.git works for you, we can also do that as a stopgap
+measure to ease your testing.
 
--- 
-Regards/Gruss,
-    Boris.
+Thanks,
 
-ECO tip #101: Trim your mails when you reply.
---
+Paolo
+
+(*) if they aren't, we *do* mark them for backport!
