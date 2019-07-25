@@ -2,169 +2,322 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B03C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3A5C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA8A622BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88ED521851
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDriAVm9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gregn.net header.i=@gregn.net header.b="HB5lFApA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390165AbfGYDwG (ORCPT
+        id S2390178AbfGYDx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 23:52:06 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33148 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390150AbfGYDwG (ORCPT
+        Wed, 24 Jul 2019 23:53:58 -0400
+Received: from vserver.gregn.net ([174.136.110.154]:43722 "EHLO
+        vserver.gregn.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726238AbfGYDx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 23:52:06 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f20so13041663pgj.0;
-        Wed, 24 Jul 2019 20:52:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Q/98t+M2Y8cT5VRhI3CXJllAGvqhT13uQ4iFZGPeAKQ=;
-        b=TDriAVm9iNGKXqNyY9jNLT67/TAZxSgx1zvErjGKOnYp4i3vmCPs51kg4wyBv5sNXW
-         9u2ToLoPJcyMJOK0cH/VvWhw+kgFLrV5aSlaYpmYgnipRFVBF7VSK6bhuw/b5D3ESIVe
-         wm6hsZ+L1oM8SP6oh7Tb6MfHOWQf/yyKO6UvInwdgQCj0YneqYLajq6kyiqvJbC5oKyk
-         n0e7Moam56yuIoMHnwIjnH3LeRU+85F65f4vzHfGFmII8JI+rYPldKP29ADzahfh8rgY
-         7ARHhdqfQM7JxIhPnTm8k/wTb7OxKhT2tkWb9n8nK0TrVLzCOg7HayVmr2y2KHuXpDzN
-         Em7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Q/98t+M2Y8cT5VRhI3CXJllAGvqhT13uQ4iFZGPeAKQ=;
-        b=hx3Opncb8LwrB8OBPOKNtc4rRTRtB/9CssEPkxTjASyloNVrI1y3L367Nf1aMOoMy8
-         zk8S4Q78GOHN2/nxF4KTVdOu7TAI2nB3C+uFn2VfR0qVir0ljQNToWyrXG1PSsJrXOr2
-         DZX7swVULjZVVqXORWot+CeNZrOETEuELAX5gt2BqdWYDupPZk3HztJihQR4CBb+nwJD
-         HwuY97T/VFQx+OoiM1sdb0B10GbqoosKnO3nWJG1H39TN1pEEm1r3ubCvleL9vqInygJ
-         s9OxJeqaSsFot5Op8y+EeQwQb12AhS3FXHwt5dP0RM0RGcAjlIYxGFR+7gttvC6r1P2+
-         xvhA==
-X-Gm-Message-State: APjAAAXt2Wud2xmm545EFv512fpK0TFd+pwlIvlKW91pRiEVZfPJ1f+F
-        X31XuUudgprYurhwKXpQ0gFeYW27WqU=
-X-Google-Smtp-Source: APXvYqxPCChHRFanP/sFGlhVTRTI3yWFc7fZq6TDXEsUJclACOL+YZ7jSqEE28G9RJ/P3W29GbPl0Q==
-X-Received: by 2002:a65:6108:: with SMTP id z8mr53000362pgu.289.1564026725425;
-        Wed, 24 Jul 2019 20:52:05 -0700 (PDT)
-Received: from ?IPv6:2402:f000:4:72:808::177e? ([2402:f000:4:72:808::177e])
-        by smtp.gmail.com with ESMTPSA id z6sm19026125pgk.18.2019.07.24.20.52.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 20:52:05 -0700 (PDT)
-Subject: Re: [PATCH] fs: crypto: keyinfo: Fix a possible null-pointer
- dereference in derive_key_aes()
-To:     tytso@mit.edu, jaegeuk@kernel.org, ebiggers@kernel.org
-References: <20190724100204.2009-1-baijiaju1990@gmail.com>
- <20190724160711.GB673@sol.localdomain>
- <3d206c43-994e-6134-3f28-b4a500472760@gmail.com>
- <9740973d-6e59-e4df-7097-4e5d0da89235@gmail.com>
- <20190725033951.GA677@sol.localdomain>
-Cc:     linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <33ae3693-9792-a793-5e9e-aca845c427a5@gmail.com>
-Date:   Thu, 25 Jul 2019 11:52:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 24 Jul 2019 23:53:58 -0400
+Received: from vbox.gregn.net (71-32-121-108.eugn.qwest.net [71.32.121.108])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by vserver.gregn.net (Postfix) with ESMTPSA id F184B1D9C;
+        Wed, 24 Jul 2019 20:56:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=gregn.net; s=default;
+        t=1564026972; bh=Wql5eshMl2AYvQZTOGpiy3Xh++MGNGtCT7I1w3YaCuo=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=HB5lFApA0rThrYQuhbPZ3D5+q9Ad0SrBWBXl1I0IF4LReTM1s+CtXf651QvLC6X2A
+         kGpWSF3WBVRjaQtm83VtFewMsY9fcLC31Y/1g4hFxdLDtS5NFJ2TKQWOHYq1rfIuMr
+         7l1RbcVKmVjcTMO5gvAp9B03tcXqCl9JHUUDwHNJF26+6M2hXX53NvQTWD16w7agNL
+         ycTw0TMdzpHtGWDspCrM2806Tp4rm0EtN6Gpe90kxft7me/nbWJW3aSfPRT756pc6q
+         FS18GpzmyMgwSTil29PnRYR1GR5QSQXWCGiowZDLkwcjzTxhI8pIjrKK61Jf2Q+vAU
+         ISs6zWOYOMqqw==
+Received: from greg by vbox.gregn.net with local (Exim 4.84_2)
+        (envelope-from <greg@gregn.net>)
+        id 1hqUpE-0006IN-QC; Wed, 24 Jul 2019 20:53:53 -0700
+Date:   Wed, 24 Jul 2019 20:53:52 -0700
+From:   Gregory Nowak <greg@gregn.net>
+To:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        speakup@linux-speakup.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Okash Khawaja <okash.khawaja@gmail.com>,
+        devel@driverdev.osuosl.org, Kirk Reiser <kirk@reisers.ca>,
+        Simon Dickson <simonhdickson@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Christopher Brannon <chris@the-brannons.com>
+Subject: Re: [HELP REQUESTED from the community] Was: Staging status of
+ speakup
+Message-ID: <20190725035352.GA7717@gregn.net>
+References: <20190315130035.6a8f16e9@narunkot>
+ <20190316031831.GA2499@kroah.com>
+ <20190706200857.22918345@narunkot>
+ <20190707065710.GA5560@kroah.com>
+ <20190712083819.GA8862@kroah.com>
+ <20190712092319.wmke4i7zqzr26tly@function>
+ <20190713004623.GA9159@gregn.net>
 MIME-Version: 1.0
-In-Reply-To: <20190725033951.GA677@sol.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190713004623.GA9159@gregn.net>
+X-PGP-Key: http://www.gregn.net/pubkey.asc
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Virus-Scanned: clamav-milter 0.100.3 at vserver
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 12, 2019 at 05:46:23PM -0700, Gregory Nowak wrote:
+> On Fri, Jul 12, 2019 at 11:23:19AM +0200, Samuel Thibault wrote:
+> > Hello,
+> > 
+> > To readers of the linux-speakup: could you help on this so we can get
+> > Speakup in mainline?  Neither Okash or I completely know what user
+> > consequences the files in /sys/accessibility/speakup/ have, so could
+> > people give brief explanations for each file (something like 3-6 lines
+> > of explanation)?
+> 
+> I have a recollection of documenting most of this on the speakup list
+> in response to a similar query a number of years ago. Unfortunately,
+> the speakup mailing list archives aren't easily searchable, and I
+> don't have a local copy of that mail.
+> 
+> Kirk, doing grep with a few of the file names in
+> /sys/accessibility/speakup against the list's mbox file archive should
+> find that message if it's in fact there. If you can please find it,
+> and post the date when it was sent, we can provide a URL to that
+> thread as a starting point. If my recollection is wrong, and such a
+> message isn't in the archives, I'll write up what I know about.
+
+I've located the message I was thinking of in the archives, but that
+describes some speakup key commands, not
+/sys/accessibility/speakup. So, here's what I know, and hopefully
+someone else can fill in the rest.
+
+attrib_bleep
+Beeps the PC speaker when there is an attribute change such as
+foreground or background color when using speakup review commands. One
+= on, zero = off. I'm not currently at a machine with a working PC
+speaker, so can't test this right now.
+
+bell_pos
+As far as I know, this works much like a typewriter bell. If for
+example 72 is echoed to bell_pos, it will beep the PC speaker when
+typing on a line past character 72. Again, no PC speaker at the moment
+here, so can't actually test this.
+
+bleeps
+Not 100% sure, but I believe this controls whether one hears beeps
+through the PC speaker when using speakup's review commands. If no one
+jumps in on this, I'll experiment when at a machine with a working PC
+speaker, and will reply back with details.
+
+bleep_time
+Again, not 100% sure, but I believe this controls the duration of the
+PC speaker beeps speakup produces. I'm not sure of the units this is
+in either, possibly jiffys. I'll come back with more details on this
+one if no one else does.
+
+cursor_time
+Don't know.
+
+delimiters
+Don't know. I've tried echoing various characters to this and looking
+for differences when reviewing the screen, but no luck.
+
+ex_num
+Don't know.
+
+key_echo
+Controls if speakup speaks keys when they are typed. One = on, zero =
+off or don't echo keys.
+
+keymap
+I believe this is the currently active kernel keymap. I'm not sure of
+the format, probably what dumpkeys(1) and showkey(1) use. Echoing
+different values here should allow for remapping speakup's review
+commands besides remapping the keyboard as a whole.
+
+no_interrupt
+Controls if typing interrupts output from speakup. With no_interrupt
+set to zero, typing on the keyboard will interrupt speakup if for
+example the say screen command is used before the entire screen is
+read. With no_interrupt set to one, if the say screen command is used,
+and one then types on the keyboard, speakup will continue to say the
+whole screen regardless until it finishes.
+
+punc_all
+This is a list of all the punctuation speakup should speak when
+punc_level is set to four.
+
+punc_level
+Controls the level of punctuation spoken as the screen is displayed,
+not reviewed. Levels range from zero no punctuation, to four, all
+punctuation. As far as I can tell, one corresponds to punc_some, two
+corresponds to punc_most, and three as well as four seem to both
+correspond to punc_all, though I do stand to be corrected. I am using
+the soft synthesizer driver, so it is possible that some hardware
+synthesizers have different levels each corresponding to three and four
+for punc_level. Also note that if punc_level is set to zero, and
+key_echo is set to one, typed punctuation is still spoken as it is
+typed.
+
+punc_most
+This is a list of all the punctuation speakup should speak when
+punc_level is set to two.
+
+punc_some
+This is a list of all the punctuation speakup should speak when
+punc_level is set to one.
+
+reading_punc
+Almost the same as punc_level, the differences being that reading_punc controls
+the level of punctuation when reviewing the screen with speakup's
+screen review commands. The other difference is that reading_punc set
+to three speaks punc_all, and reading_punc set to four speaks all
+punctuation, including spaces.
+
+repeats
+a list of characters speakup repeats. Normally, when there are
+more than three characters in a row, speakup just reads three of those
+characters. For example, "......" would be read as dot, dot, dot. If a
+. is added to the list of characters in repeats, "......" would be
+read as dot, dot, dot, times six.
+
+say_control
+If set to one, speakup speaks shift, alt and control when those keys are
+pressed. Perhaps more keys are spoken, but those three are the ones I
+found. If say_control is set to zero, shift, ctrl, and alt are not
+spoken when they are pressed.
+
+say_word_ctl
+Don't know.
+
+silent
+Don't know.
+
+spell_delay
+As far as I can tell, this controls how fast a word is spelled when
+speakup's say word review command is pressed twice quickly to speak
+the current word being reviewed. Zero just speaks the letters one
+after another, while values one through four seem to introduce more of
+a pause between the spelling of each letter by speakup.
+
+synth
+Gets or sets the synthesizer driver currently in use. Reading synth
+returns the synthesizer driver currently in use. Writing synth
+switches to the given synthesizer driver, provided it is either built
+into the kernel, or already loaded as a module.
+
+synth_direct
+Sends whatever is written to synth_direct
+directly to the speech synthesizer in use, bypassing speakup. This
+could be used to make the synthesizer speak a string, or to send
+control sequences to the synthesizer to change how the synthesizer
+behaves.
+
+version
+Reading version returns the version of speakup, and the version of the
+synthesizer driver currently in use.
+
+Synthesizer Driver Parameters
+In /sys/accessibility/speakup is a directory corresponding to the
+synthesizer driver currently in use (E.G) soft for the soft
+driver. This directory contains files which control the speech
+synthesizer itself, as opposed to controlling the speakup screen
+reader. As far as I know, the parameters in this directory have the
+same names and functions across all supported synthesizers. Also as
+far as I know, the range of values for freq, pitch, rate, and vol is
+the same for all supported synthesizers,
+with the given range being internally mapped by the driver to more or
+less fit the range of values supported for a given parameter by the
+individual synthesizer. I will below describe the values and
+parameters for the soft synthesizer, which I believe is the
+synthesizer currently most commonly in use.
+
+caps_start
+I believe this is the string that is sent to the synthesizer to cause
+it to start speaking uppercase letters. For the soft synthesizer and
+most others, this causes the pitch of the voice to rise above the
+currently set pitch.
+
+caps_stop
+I believe this is the string sent to the synthesizer to cause it to
+stop speaking uppercase letters. In the case of the soft synthesizer
+and most others, this returns the pitch of the voice down to the
+currently set pitch.
+
+delay_time
+Don't know.
+
+direct
+Controls if punctuation is spoken by speakup, or by the
+synthesizer. For example, speakup speaks ">" as "greater", while the
+espeak synthesizer used by the soft driver speaks "greater than". Zero
+lets speakup speak the punctuation. One lets the synthesizer itself
+speak punctuation.
+
+freq
+Gets or sets the frequency of the speech synthesizer. Range is 0-9.
+
+full_time
+Don't know.
+
+jiffy_delta
+As far as I know, this controls how many jiffys the kernel gives to
+the synthesizer. I seem to recall Kirk saying that setting this too
+high can make a system unstable, or even crash it.
+
+pitch
+Gets or sets the pitch of the synthesizer. The range is 0-9.
+
+punct
+Gets or sets the amount of punctuation spoken by the synthesizer. The
+range for the soft driver seems to be 0-2. I'm not exactly sure how
+this relates to speakup's punc_level, or reading_punc
+
+rate
+Gets or sets the rate of the synthesizer. Range is from zero slowest,
+to nine fastest.
+
+tone
+Gets or sets the tone of the speech synthesizer. The range for the
+soft driver seems to be 0-2. This seems to make no difference if using
+espeak and the espeakup connector. I'm not sure even if espeakup
+supports different tonalities.
+
+trigger_time
+Don't know.
+
+voice
+Gets or sets the voice used by the synthesizer if the synthesizer can
+speak in more than one voice. The range for the soft driver is
+0-7. Note that while espeak supports multiple voices, this parameter
+will not set the voice when the espeakup connector is used between
+speakup and espeak.
+
+vol
+Gets or sets the volume of the speech synthesizer. Range is 0-9, with
+zero being the softest, and nine being the loudest.
+
+Additions, clarifications, and corrections are welcome and
+appreciated.
+
+Greg
 
 
-On 2019/7/25 11:39, Eric Biggers wrote:
-> On Thu, Jul 25, 2019 at 11:33:53AM +0800, Jia-Ju Bai wrote:
->> Sorry, I forgot to send to Eric, so send it again.
->>
->> On 2019/7/25 11:30, Jia-Ju Bai wrote:
->>>
->>> On 2019/7/25 0:07, Eric Biggers wrote:
->>>> [+Cc linux-crypto]
->>>>
->>>> On Wed, Jul 24, 2019 at 06:02:04PM +0800, Jia-Ju Bai wrote:
->>>>> In derive_key_aes(), tfm is assigned to NULL on line 46, and then
->>>>> crypto_free_skcipher(tfm) is executed.
->>>>>
->>>>> crypto_free_skcipher(tfm)
->>>>>       crypto_skcipher_tfm(tfm)
->>>>>           return &tfm->base;
->>>>>
->>>>> Thus, a possible null-pointer dereference may occur.
->>>> This analysis is incorrect because only the address &tfm->base is taken.
->>>> There's no pointer dereference.
->>>>
->>>> In fact all the crypto_free_*() functions are no-ops on NULL
->>>> pointers, and many
->>>> other callers rely on it.  So there's no bug here.
->>> Thanks for the reply :)
->>> I admit that "&tfm->base" is not a null-pointer dereference when tfm is
->>> NULL.
->>> But I still think crypto_free_skcipher(tfm) can cause security problems
->>> when tfm is NULL.
->>>
->>> Looking at the code:
->>>
->>> static inline void crypto_free_skcipher(struct crypto_skcipher *tfm)
->>> {
->>>      crypto_destroy_tfm(tfm, crypto_skcipher_tfm(tfm));
->>> }
->>>
->>> static inline struct crypto_tfm *crypto_skcipher_tfm(
->>>      struct crypto_skcipher *tfm)
->>> {
->>>      return &tfm->base;
->>> }
->>>
->>> void crypto_destroy_tfm(void *mem, struct crypto_tfm *tfm)
->>> {
->>>      struct crypto_alg *alg;
->>>
->>>      if (unlikely(!mem))
->>>          return;
-> When the original pointer is NULL, mem == NULL here so crypto_destroy_tfm() is a
-> no-op.
+-- 
+web site: http://www.gregn.net
+gpg public key: http://www.gregn.net/pubkey.asc
+skype: gregn1
+(authorization required, add me to your contacts list first)
+If we haven't been in touch before, e-mail me before adding me to your contacts.
 
-I overlooked this if statement, thanks for the pointer.
-
->
->>> Besides, I also find that some kernel modules check tfm before calling
->>> crypto_free_*(), such as:
->>>
->>> drivers/crypto/vmx/aes_xts.c:
->>>      if (ctx->fallback) {
->>>          crypto_free_skcipher(ctx->fallback);
->>>          ctx->fallback = NULL;
->>>      }
->>>
->>> net/rxrpc/rxkad.c:
->>>      if (conn->cipher)
->>>          crypto_free_skcipher(conn->cipher);
->>>
->>> drivers/crypto/chelsio/chcr_algo.c:
->>>      if (ablkctx->aes_generic)
->>>          crypto_free_cipher(ablkctx->aes_generic);
->>>
->>> net/mac80211/wep.c:
->>>      if (!IS_ERR(local->wep_tx_tfm))
->>>          crypto_free_cipher(local->wep_tx_tfm);
->>>
-> Well, people sometimes do that for kfree() too.  But that doesn't mean it's
-> needed, or that it's the preferred style (it's not).
-
-Okay.
-
-
-Best wishes,
-Jia-Ju Bai
+--
+Free domains: http://www.eu.org/ or mail dns-manager@EU.org
