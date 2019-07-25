@@ -2,151 +2,129 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2E8C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A04C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8839E2189F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1446B2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:22:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rSsfQjeJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390560AbfGYFVQ (ORCPT
+        id S2390574AbfGYFWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:21:16 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33565 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390542AbfGYFVQ (ORCPT
+        Thu, 25 Jul 2019 01:22:33 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34646 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390562AbfGYFWd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:21:16 -0400
-Received: by mail-qt1-f195.google.com with SMTP id r6so43673252qtt.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 22:21:15 -0700 (PDT)
+        Thu, 25 Jul 2019 01:22:33 -0400
+Received: by mail-pl1-f195.google.com with SMTP id i2so22944345plt.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 22:22:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/xZxGXc0Ivxqr92bf1BipffjFV4zTI0LPpEMDctA4sg=;
+        b=rSsfQjeJREPnV1Zd0y8XVUwIPaLW1Mk6hoim+fB9ibMquuACj+uIFH7x/+VzUt7CrZ
+         2HDtB9T4fLvxla0hXbinFc02wCSXsdSPMKZl3kvALhMtFnskG7Q2pOeZIgEQG0EcRJcO
+         W4TPnwHjb9Z6z4YqYfry9+yDoNPMkTOVJPuamGW/LGaddBvDctGgZ9Y28ozdwu98yWLv
+         bL4ul3ZDkofYEDajqCyMmSUP0aNFNZtV7tVcBvh4JCElexCsucFGb4YJqcpEFBkqoBsN
+         shJ5FfukcfpaHy05XzzxmqamcvmTPcP0/jphlSUIZBOlbzVzVqP8yGwyRfEznpWcfo9l
+         obnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ij2gAdKa9zJFg927gRyeBU4x4qxEHqTLEtL3Pad0Y1Q=;
-        b=P1+BPfWKtzen/qFBCjj6ZhMZBpQmDcjnK9lAdh+jtLC3qGrKY+KJH1JjhW4S7yvY9P
-         Dboz9WHwUy9rl0fXqw8nWZtZV9tEHLre9rLiFc2NsOpu4qodPN/zRDI+ncuYrESz9q4B
-         ltRJrGlWTla088FMpd12OnijSdZAksBsVQxcdA7JnEfcDuQebvp23/uQPXDySJ/fvjQs
-         gxp5Qlym4W2amP367LPcKfKnfLhg4tK0Thn1M95eudvNm9cne25Alv+TXKXVt21nsU7q
-         0GGcXFBqOZLNquTyHMvhu0AU2Lh4E6D40pFAozOxVpuKK1SkiFUo9xCzwnjzyWS2RYRm
-         Lg6A==
-X-Gm-Message-State: APjAAAX+x2jiDy7/IJBTYUkwZH4b264xKqHA55GnXjLXlN2of36cCGEr
-        1Lv4FrPTKNJCardDuF/BQrdnu3obal2vag==
-X-Google-Smtp-Source: APXvYqyH+kPPC/RgJkqmP3mhZoKYk3W8Vnv5UNtxePT9Ese+Du9AfXK1iHcVJ8tRRtEs2NQhD73WwA==
-X-Received: by 2002:ac8:2409:: with SMTP id c9mr60774507qtc.145.1564032075057;
-        Wed, 24 Jul 2019 22:21:15 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id e1sm24011738qtb.52.2019.07.24.22.21.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 22:21:13 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 01:21:09 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] vhost: mark dirty pages during map uninit
-Message-ID: <20190725010944-mutt-send-email-mst@kernel.org>
-References: <20190723075718.6275-1-jasowang@redhat.com>
- <20190723075718.6275-6-jasowang@redhat.com>
- <20190723041702-mutt-send-email-mst@kernel.org>
- <a670cd0d-581d-1aba-41bd-c643c19f9604@redhat.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/xZxGXc0Ivxqr92bf1BipffjFV4zTI0LPpEMDctA4sg=;
+        b=B3/fL3531OfEGaEYtnnOQcolkfL1vKd0ntpVWKnEdjwBdhQyoSuXHc2ubz0w81wy7r
+         ZeUlrS+nn3Qto+DPOFR87efSDnoPEXFMd6Q6cRl2rMicH02U0jjeiyfZOu/VMiJvwzEM
+         fXvTvOjNh1oOgznvjpayzgaveft98Ygr3Mq4vkk5WVA72lN7ZUeLR2xJMNJd9MMtUdP6
+         fJmpazWjFRPhcZqihUBS3WGziiwlDusH/WPL5iHcX51ONkH8ta4s/os/I2TxGN0aihV1
+         LZQQAUnHNWxq4qqWE/rLHgxUQC0PJbLkEXdhbqXpavUh0ulu3pKlvG50ibm++jQjkXXA
+         K9mQ==
+X-Gm-Message-State: APjAAAWFwsC43oXmwg1OFolpAJZsY9MJeYi5HVRczuVyCZEo+RvF5X1o
+        d33VLDisCSg5f1Kx9Zj8K4570Q==
+X-Google-Smtp-Source: APXvYqzsumr0UqkwlGeOG7n6Wk6nxVjmT7yfiqwz9Ib4PjshFHVHMFgbschdLdFDiNL9McSo8p6NTg==
+X-Received: by 2002:a17:902:2ac8:: with SMTP id j66mr85115769plb.273.1564032152747;
+        Wed, 24 Jul 2019 22:22:32 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id u134sm45825640pfc.19.2019.07.24.22.22.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 22:22:31 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 10:52:29 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 0/5] Add required-opps support to devfreq passive gov
+Message-ID: <20190725052229.znf6asnvl44rjqxg@vireshk-i7>
+References: <20190724014222.110767-1-saravanak@google.com>
+ <20190725023050.7ggjbwsthoxpkexv@vireshk-i7>
+ <CAGETcx_ZHXkjZMBhO8YTW2fMyVqmsj8f9F8d6oJTn=NmRL1q=A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a670cd0d-581d-1aba-41bd-c643c19f9604@redhat.com>
+In-Reply-To: <CAGETcx_ZHXkjZMBhO8YTW2fMyVqmsj8f9F8d6oJTn=NmRL1q=A@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 09:19:33PM +0800, Jason Wang wrote:
+On 24-07-19, 20:40, Saravana Kannan wrote:
+> On Wed, Jul 24, 2019 at 7:30 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > On 23-07-19, 18:42, Saravana Kannan wrote:
+> > > The devfreq passive governor scales the frequency of a "child" device based
+> > > on the current frequency of a "parent" device (not parent/child in the
+> > > sense of device hierarchy). As of today, the passive governor requires one
+> > > of the following to work correctly:
+> > > 1. The parent and child device have the same number of frequencies
+> > > 2. The child device driver passes a mapping function to translate from
+> > >    parent frequency to child frequency.
+> >
+> > > v3 -> v4:
+> > > - Fixed documentation comments
+> > > - Fixed order of functions in .h file
+> > > - Renamed the new xlate API
+> > > - Caused _set_required_opps() to fail if all required opps tables aren't
+> > >   linked.
+> >
+> > We are already in the middle of a discussion for your previous version
+> > and I haven't said yet that I am happy with what you suggested just 2
+> > days back. Why send another version so soon ?
 > 
-> On 2019/7/23 下午5:17, Michael S. Tsirkin wrote:
-> > On Tue, Jul 23, 2019 at 03:57:17AM -0400, Jason Wang wrote:
-> > > We don't mark dirty pages if the map was teared down outside MMU
-> > > notifier. This will lead untracked dirty pages. Fixing by marking
-> > > dirty pages during map uninit.
-> > > 
-> > > Reported-by: Michael S. Tsirkin<mst@redhat.com>
-> > > Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
-> > > Signed-off-by: Jason Wang<jasowang@redhat.com>
-> > > ---
-> > >   drivers/vhost/vhost.c | 22 ++++++++++++++++------
-> > >   1 file changed, 16 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> > > index 89c9f08b5146..5b8821d00fe4 100644
-> > > --- a/drivers/vhost/vhost.c
-> > > +++ b/drivers/vhost/vhost.c
-> > > @@ -306,6 +306,18 @@ static void vhost_map_unprefetch(struct vhost_map *map)
-> > >   	kfree(map);
-> > >   }
-> > > +static void vhost_set_map_dirty(struct vhost_virtqueue *vq,
-> > > +				struct vhost_map *map, int index)
-> > > +{
-> > > +	struct vhost_uaddr *uaddr = &vq->uaddrs[index];
-> > > +	int i;
-> > > +
-> > > +	if (uaddr->write) {
-> > > +		for (i = 0; i < map->npages; i++)
-> > > +			set_page_dirty(map->pages[i]);
-> > > +	}
-> > > +}
-> > > +
-> > >   static void vhost_uninit_vq_maps(struct vhost_virtqueue *vq)
-> > >   {
-> > >   	struct vhost_map *map[VHOST_NUM_ADDRS];
-> > > @@ -315,8 +327,10 @@ static void vhost_uninit_vq_maps(struct vhost_virtqueue *vq)
-> > >   	for (i = 0; i < VHOST_NUM_ADDRS; i++) {
-> > >   		map[i] = rcu_dereference_protected(vq->maps[i],
-> > >   				  lockdep_is_held(&vq->mmu_lock));
-> > > -		if (map[i])
-> > > +		if (map[i]) {
-> > > +			vhost_set_map_dirty(vq, map[i], i);
-> > >   			rcu_assign_pointer(vq->maps[i], NULL);
-> > > +		}
-> > >   	}
-> > >   	spin_unlock(&vq->mmu_lock);
-> > > @@ -354,7 +368,6 @@ static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
-> > >   {
-> > >   	struct vhost_uaddr *uaddr = &vq->uaddrs[index];
-> > >   	struct vhost_map *map;
-> > > -	int i;
-> > >   	if (!vhost_map_range_overlap(uaddr, start, end))
-> > >   		return;
-> > > @@ -365,10 +378,7 @@ static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
-> > >   	map = rcu_dereference_protected(vq->maps[index],
-> > >   					lockdep_is_held(&vq->mmu_lock));
-> > >   	if (map) {
-> > > -		if (uaddr->write) {
-> > > -			for (i = 0; i < map->npages; i++)
-> > > -				set_page_dirty(map->pages[i]);
-> > > -		}
-> > > +		vhost_set_map_dirty(vq, map, index);
-> > >   		rcu_assign_pointer(vq->maps[index], NULL);
-> > >   	}
-> > >   	spin_unlock(&vq->mmu_lock);
-> > OK and the reason it's safe is because the invalidate counter
-> > got incremented so we know page will not get mapped again.
-> > 
-> > But we*do*  need to wait for page not to be mapped.
-> > And if that means waiting for VQ processing to finish,
-> > then I worry that is a very log time.
-> > 
-> 
-> I'm not sure I get you here. If we don't have such map, we will fall back to
-> normal uaccess helper. And in the memory accessor, the rcu critical section
-> is pretty small.
-> 
-> Thanks
-> 
+> I wanted you to see how I addressed your comments.
 
-OK. So the trick is that page_mkclean invokes mmu notifiers.
+Sure, but that is just half the comments.
+
+> It didn't look like
+> you were going to make more comments on the code.
+
+I posted some queries and you posted your opinions on them. Now
+shouldn't I get a chance to reply again to see if I agree with your
+replies or if we can settle to something else ? I only got one day in
+between where I was busy with other stuff and so couldn't come back to
+it. Please wait a little longer specially when the comments aren't
+minor in nature.
+
+Anyway, lets get over it now. Lets continue our discussion on V3 and
+then we can have a V5 :)
+
+Have a good day Saravana.
 
 -- 
-MST
+viresh
