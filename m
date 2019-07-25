@@ -2,139 +2,101 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1CCC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2639C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7887920823
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BADD120823
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:21:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pOq4jwIH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfGYXTl (ORCPT
+        id S1726910AbfGYXVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 19:19:41 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37090 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbfGYXTl (ORCPT
+        Thu, 25 Jul 2019 19:21:13 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46516 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbfGYXVM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 19:19:41 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n9so27338636wrr.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 16:19:40 -0700 (PDT)
+        Thu, 25 Jul 2019 19:21:12 -0400
+Received: by mail-ot1-f65.google.com with SMTP id z23so25108886ote.13
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 16:21:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=38jxRDTFNsBuvXEWmRhAENl7Dn2UdsUzhcb9070VNP0=;
+        b=pOq4jwIH28H2b1iSOQrWo32IdYYxXTbBo3q1WI1pQZh+wScKbCT6GcyOW+Ai5qId/E
+         WxRSp38HTlhmMKBUZhyHF0kthb3Hfu2IAtovYxX3MB+9XmSpeRl3KStvol8PJTMEdu98
+         hfSx+yBsxsA8MEwwx5UZKvguuEmqulFrDiDgOS9bu0eF0HJwBpIX5ATf10OuETHiSiW0
+         UcL1d3XJrzlfQSNNKQdj9XZ5ne/2qHm4vgh5tNIsqfI47F60RJfLOYSn3N8WDyA4V3iR
+         ko3LLIDAbctiv1VW95oe08P4AR2xba15afj1ayy+/picFE4mCeH95DA03AoDUFwzchv8
+         f83Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=K3wHkemLb3xaCpDEOIj/woHJAbVwLsLkHjzsKdx3mpc=;
-        b=iE5fP78vQJNNEpUlj/w8P2zd5lVYcK/GEEYtKmli/8t6+RClly+os1sCsFVr101z+C
-         lIzlpGPn/Gl9nXDANPZkWRXrzCGBOp3T70eTP22I1HqfCIA4w4eNsdYzqj03gwUsrWEM
-         J9abwSF0pjCC68oM4q4Cp6BjWdHnLTVwTNnz7ktmQjdoDVyEWr+VAwgOA0Xt1hHpKxEj
-         oz7OoKZNi2qKsd00cC3PYQ9zJzCWIuv1p8jOFZSKqwtF5AXfanTFXY4bV5kYCba0E5IK
-         6kI4iejG2G/5AYMnRFwjzeqIe1QHqFejq/jyA6EzVsjOLBQcSwvHmXOIctE77p0ypJm6
-         PNZw==
-X-Gm-Message-State: APjAAAV9CL/duv4rOgSIWP2LdkdtgtZ+QlxkQlPVJ26Ksqy4QIxu2hAg
-        Cp1PFGB4WacGy6kHDmsJToD8MA==
-X-Google-Smtp-Source: APXvYqzjWT4ow6D0N4ysM5JtU6bPrYkvp6eH3dlpaBKFdVmxlLFewHnONQ5vX0oLS8HYmV85Lf7nuA==
-X-Received: by 2002:a05:6000:1203:: with SMTP id e3mr20306951wrx.300.1564096779690;
-        Thu, 25 Jul 2019 16:19:39 -0700 (PDT)
-Received: from mcroce-redhat.homenet.telecomitalia.it (host21-50-dynamic.21-87-r.retail.telecomitalia.it. [87.21.50.21])
-        by smtp.gmail.com with ESMTPSA id y1sm38206717wma.32.2019.07.25.16.19.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 16:19:38 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH net] mvpp2: refactor MTU change code
-Date:   Fri, 26 Jul 2019 01:19:31 +0200
-Message-Id: <20190725231931.24073-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=38jxRDTFNsBuvXEWmRhAENl7Dn2UdsUzhcb9070VNP0=;
+        b=d1mK9K14U/h/+F2EHSVbfcg3oVU7rGn2JQz2apK5NFlLFHzM2O6BFgi7xXUqcJEV0N
+         X9NMVm4610pwGZdVeE9FVBRlLBtRfdmCf36lCSu4JL3FU53y5TTxikryr2QstECbBC9C
+         eJu32BMsk1asVfr0iDgDL7EWQL0lgCz47bB79f6wkeZGXYkjRHkbleNtxitJcfYd0eLO
+         Tnjulz2z3F4zJBXDDSehJxUJF8Lmn4pG1ia+DJGnZjGfm2blB0sy3OGBXfit3w6VhIIR
+         Tr4IYTWdEzgxcWpFK2NVUkujAwxz0XouSmkxPSA1929/TvMae0sOi+i4AXC4Tbby2tk7
+         4fEw==
+X-Gm-Message-State: APjAAAWyE8Y5zaqVBX7P92HwvN+QybbXHGVKMdc44k31zhwcLknkS0zJ
+        JrVJNLuglMOHwRRr+k/n3FKzTZAAUmYXmQkSB08=
+X-Google-Smtp-Source: APXvYqzQt9JrA2rxwFLAC9k6gQgnEsbS5znL3NvqMmP5TLvNTgxwXAFj1N37C1EmlQjCItCvjUiFYydQVj6azSLq8fk=
+X-Received: by 2002:a05:6830:2098:: with SMTP id y24mr25146806otq.173.1564096871998;
+ Thu, 25 Jul 2019 16:21:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190725184253.21160-1-lpf.vector@gmail.com> <20190725184253.21160-2-lpf.vector@gmail.com>
+ <20190725185800.GC30641@bombadil.infradead.org>
+In-Reply-To: <20190725185800.GC30641@bombadil.infradead.org>
+From:   Pengfei Li <lpf.vector@gmail.com>
+Date:   Fri, 26 Jul 2019 07:21:00 +0800
+Message-ID: <CAD7_sbG+nv-PxnMAxsU25BWQz1EMQx3V0CT7W9XTdfY1HvZfFw@mail.gmail.com>
+Subject: Re: [PATCH 01/10] mm/page_alloc: use unsigned int for "order" in should_compact_retry()
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        mgorman@techsingularity.net, mhocko@suse.com, vbabka@suse.cz,
+        cai@lca.pw, aryabinin@virtuozzo.com, osalvador@suse.de,
+        rostedt@goodmis.org, mingo@redhat.com,
+        pavel.tatashin@microsoft.com, rppt@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MTU change code can call napi_disable() with the device already down,
-leading to a deadlock. Also, lot of code is duplicated unnecessarily.
+On Fri, Jul 26, 2019 at 2:58 AM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Fri, Jul 26, 2019 at 02:42:44AM +0800, Pengfei Li wrote:
+> >  static inline bool
+> > -should_compact_retry(struct alloc_context *ac, int order, int alloc_flags,
+> > -                  enum compact_result compact_result,
+> > -                  enum compact_priority *compact_priority,
+> > -                  int *compaction_retries)
+> > +should_compact_retry(struct alloc_context *ac, unsigned int order,
+> > +     int alloc_flags, enum compact_result compact_result,
+> > +     enum compact_priority *compact_priority, int *compaction_retries)
+> >  {
+> >       int max_retries = MAX_COMPACT_RETRIES;
+>
+> One tab here is insufficient indentation.  It should be at least two.
 
-Rework mvpp2_change_mtu() to avoid the deadlock and remove duplicated code.
+Thanks for your comments.
 
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 41 ++++++-------------
- 1 file changed, 13 insertions(+), 28 deletions(-)
+> Some parts of the kernel insist on lining up arguments with the opening
+> parenthesis of the function; I don't know if mm really obeys this rule,
+> but you're indenting function arguments to the same level as the opening
+> variables of the function, which is confusing.
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 2f7286bd203b..60eb98f99571 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -3612,6 +3612,7 @@ static int mvpp2_set_mac_address(struct net_device *dev, void *p)
- static int mvpp2_change_mtu(struct net_device *dev, int mtu)
- {
- 	struct mvpp2_port *port = netdev_priv(dev);
-+	bool running = netif_running(dev);
- 	int err;
- 
- 	if (!IS_ALIGNED(MVPP2_RX_PKT_SIZE(mtu), 8)) {
-@@ -3620,40 +3621,24 @@ static int mvpp2_change_mtu(struct net_device *dev, int mtu)
- 		mtu = ALIGN(MVPP2_RX_PKT_SIZE(mtu), 8);
- 	}
- 
--	if (!netif_running(dev)) {
--		err = mvpp2_bm_update_mtu(dev, mtu);
--		if (!err) {
--			port->pkt_size =  MVPP2_RX_PKT_SIZE(mtu);
--			return 0;
--		}
--
--		/* Reconfigure BM to the original MTU */
--		err = mvpp2_bm_update_mtu(dev, dev->mtu);
--		if (err)
--			goto log_error;
--	}
--
--	mvpp2_stop_dev(port);
-+	if (running)
-+		mvpp2_stop_dev(port);
- 
- 	err = mvpp2_bm_update_mtu(dev, mtu);
--	if (!err) {
-+	if (err) {
-+		netdev_err(dev, "failed to change MTU\n");
-+		/* Reconfigure BM to the original MTU */
-+		mvpp2_bm_update_mtu(dev, dev->mtu);
-+	} else {
- 		port->pkt_size =  MVPP2_RX_PKT_SIZE(mtu);
--		goto out_start;
- 	}
- 
--	/* Reconfigure BM to the original MTU */
--	err = mvpp2_bm_update_mtu(dev, dev->mtu);
--	if (err)
--		goto log_error;
--
--out_start:
--	mvpp2_start_dev(port);
--	mvpp2_egress_enable(port);
--	mvpp2_ingress_enable(port);
-+	if (running) {
-+		mvpp2_start_dev(port);
-+		mvpp2_egress_enable(port);
-+		mvpp2_ingress_enable(port);
-+	}
- 
--	return 0;
--log_error:
--	netdev_err(dev, "failed to change MTU\n");
- 	return err;
- }
- 
--- 
-2.21.0
+I will use two tabs in the next version.
 
+--
+Pengfei
