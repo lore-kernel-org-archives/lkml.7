@@ -2,100 +2,142 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25D8C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A30C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B015218F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D25C822BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:31:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KLn+NGOI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L1PQzO25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfGYVa4 (ORCPT
+        id S1726762AbfGYVbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 17:30:56 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36605 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbfGYVa4 (ORCPT
+        Thu, 25 Jul 2019 17:31:04 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34877 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbfGYVbE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 17:30:56 -0400
-Received: by mail-io1-f65.google.com with SMTP id o9so100489048iom.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 14:30:55 -0700 (PDT)
+        Thu, 25 Jul 2019 17:31:04 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w24so23890210plp.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 14:31:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=R34sE2QqEpGg+rOjPwslaDj/217UdV8AQ+/1Q6RrkTc=;
-        b=KLn+NGOIueZ8ofrUSfHzFju02ajAJkkF2J8Q2OptIXHTJRh/RqWGa/B1iIT9/yd3LF
-         14UOzf7MlJvZg0zZGEUYTLO2Bb3n01EPo5k4Q5W9dmFcg+/YM/KraPaLk3d3zhYCBPtE
-         20dQoIBbfsEEpAtgOPFWksLy8ZODBrCDnc/vb8jr3lD1mKu/abGriNWaV/6QKlWmM7+v
-         VUnDwSKeDtSNJJODGK2mt0EW5xpIm/9K3RCq0CV7XpCKw0pofYBRjKrFmsARi52b6Axf
-         JM2XkL5qr3m3gZHe5jn36yfOe5dxDuO2I1fCNKy5eXpjshNf5zJr65zb9e/UjZQC++Jt
-         f2Ig==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mfaBZ71hrJPdlZeMC578OQz4LN6coQODfHCSFL4DY30=;
+        b=L1PQzO25HSmegQlGogBRTDRVTJihGQ8nW9Pn1vU/pcEljVrJpCDHdb5G5+wUOZRaji
+         zXIIf53eCREsVmf57JKSXVPPLdRqtrwWoKl74voeX8/y2vPEEjikuw990cW8pTWz42n3
+         ABhie+Ty3rfGMfWkgYDzV8jMxGv16NOkmEN3RYHdennsIIwff6Z3ZxELWILi6yjguG51
+         EDfK+J1awSDH2gdNIicNi7/QO22SW1WjMemBbfQb+Qy6tBUGqaqNEO5LyOMHRj8dwaxK
+         OgaNX6VSDa5tUrSrABbZy9yBQmccK4Hs8OK2TQ3ZC78A1yP4XhW9aJYEbXDQnsQXinQb
+         Etyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=R34sE2QqEpGg+rOjPwslaDj/217UdV8AQ+/1Q6RrkTc=;
-        b=hXFiGv9ME/QF4QSuG8YbEi56/jaSaNCdM1jKXahev0+0uMfzFXrhBIPl7D9vdF76cV
-         b9bcQ6ynOncHSlaY3UQ9v5KTeF8RsXQKtgFtrbjr40vuOR8UYaDjZa5UzYvDQzDOCtEU
-         QviaMavDbFTVs91ZFMfgdnUELRX9+gvWo5S9XFVjIX3xWxCGan3Y/7+/0+L84FNni5gF
-         b2WhE3+CT7qdIcgDzQvvlEZpK1HbqjYO0uanI/g5dEqbS82Nwn0r4iWRfAvcUzt8kS7O
-         y3yJK15qhss422fZxEoQLFwKQa4xolzUU7N45LAj3lCipcmjXOO/d+d9aEIWhSRP1u7L
-         rbJw==
-X-Gm-Message-State: APjAAAVu0jUuM+XQ02Wr+kZxNJ97+NUQaN5dcCxWo/CUdTkSzUQdj/5t
-        jbA1Yj7qFf6Xk7yle/uJmrXTAQ==
-X-Google-Smtp-Source: APXvYqwVgEhvXkeqHfsRpK6JJQkcVYIip6G1SiuqcOLAHGGxZ9wHsmUDxl5+2sM2lJCAvov5rFgrGA==
-X-Received: by 2002:a6b:f216:: with SMTP id q22mr44503183ioh.65.1564090255407;
-        Thu, 25 Jul 2019 14:30:55 -0700 (PDT)
-Received: from localhost (67-0-24-96.albq.qwest.net. [67.0.24.96])
-        by smtp.gmail.com with ESMTPSA id d25sm40703267iom.52.2019.07.25.14.30.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 14:30:54 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 14:30:54 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     linux-riscv@lists.infradead.org
-cc:     linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, palmer@sifive.com, devicetree@vger.kernel.org
-Subject: [PATCH] riscv: dts: fu540-c000: drop "timebase-frequency"
-Message-ID: <alpine.DEB.2.21.9999.1907251429420.32766@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mfaBZ71hrJPdlZeMC578OQz4LN6coQODfHCSFL4DY30=;
+        b=d8TjaAGTBthAF3HwmHpkML6Dfrh/a2qeQ7zSsgYP51mkjKZ4EGLZi8cn7jb07MD3QT
+         8aQfha57RL/oJKjMODaAKVXZhBTEjvIdtcMbUIqkOBMzlc0/t5A/20+GyOc3StZ+LKg2
+         nVUcjFqiO1vcwUXSfI3em9A9QavtKWtpGgyTSMTEA+pzRVV3pNFBECCqzxENPKsDkyQj
+         ppCYJhgV7PK/IE86VPIlYpk97Wj18doYsEwanVBkpto90Sr1iDWJLR+QAJ13CRMAPHJu
+         p6TiqKeqXUGvvTj/MjXGMZWrFk6Wp/qok9cQK9Pxf3nYZOyrIxM67N7SBeiIKRU9pEfL
+         CnMQ==
+X-Gm-Message-State: APjAAAXjdwLICrXDSjFpksnkIKQKqLLBT38BhejuTSDGLzkSvl6296a2
+        N941CvDI2q3bY+SBQizrFnUKJe4Qx86rnEF1DLzsEg==
+X-Google-Smtp-Source: APXvYqzjunthGBlYQvAXo+D4K5dU893NIP2cgPdwJ1VeZyB0ObEP3a74b4CPfy0ldYRUMBT3J8r5CPg4PIfODOfyOYc=
+X-Received: by 2002:a17:902:b944:: with SMTP id h4mr16697787pls.179.1564090262638;
+ Thu, 25 Jul 2019 14:31:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <a5864549-40c3-badd-8c41-d5b7bf3c4f3c@c-s.fr> <20190709064952.GA40851@archlinux-threadripper>
+ <20190719032456.GA14108@archlinux-threadripper> <20190719152303.GA20882@gate.crashing.org>
+ <20190719160455.GA12420@archlinux-threadripper> <20190721075846.GA97701@archlinux-threadripper>
+ <20190721180150.GN20882@gate.crashing.org> <20190722024140.GA55142@archlinux-threadripper>
+ <20190722061940.GZ20882@gate.crashing.org> <CAKwvOd=KRVsFkT8dLFoitky9OF8tKmbn00-OPi6kBygyx4QwHg@mail.gmail.com>
+ <20190722175817.GE20882@gate.crashing.org>
+In-Reply-To: <20190722175817.GE20882@gate.crashing.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 25 Jul 2019 14:30:51 -0700
+Message-ID: <CAKwvOdkzBt=tTk+26dp+QsCStMUJ0_v5Mpjy2TOXPw1mu71itg@mail.gmail.com>
+Subject: Re: [PATCH v2] powerpc: slightly improve cache helpers
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        James Y Knight <jyknight@google.com>,
+        Joel Stanley <joel@jms.id.au>, dja@axtens.net
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 22, 2019 at 10:58 AM Segher Boessenkool
+<segher@kernel.crashing.org> wrote:
+>
+> On Mon, Jul 22, 2019 at 10:21:07AM -0700, Nick Desaulniers wrote:
+> > On Sun, Jul 21, 2019 at 11:19 PM Segher Boessenkool
+> > <segher@kernel.crashing.org> wrote:
+> > > On Sun, Jul 21, 2019 at 07:41:40PM -0700, Nathan Chancellor wrote:
+> > > > On Sun, Jul 21, 2019 at 01:01:50PM -0500, Segher Boessenkool wrote:
+> > > > > On Sun, Jul 21, 2019 at 12:58:46AM -0700, Nathan Chancellor wrote:
+> > > > > > 0000017c clear_user_page:
+> > > > > >      17c: 94 21 ff f0                     stwu 1, -16(1)
+> > > > > >      180: 38 80 00 80                     li 4, 128
+> > > > > >      184: 38 63 ff e0                     addi 3, 3, -32
+> > > > > >      188: 7c 89 03 a6                     mtctr 4
+> > > > > >      18c: 38 81 00 0f                     addi 4, 1, 15
+> > > > > >      190: 8c c3 00 20                     lbzu 6, 32(3)
+> > > > > >      194: 98 c1 00 0f                     stb 6, 15(1)
+> > > > > >      198: 7c 00 27 ec                     dcbz 0, 4
+> > > > > >      19c: 42 00 ff f4                     bdnz .+65524
+> > > > >
+> > > > > Uh, yeah, well, I have no idea what clang tried here, but that won't
+> > > > > work.  It's copying a byte from each target cache line to the stack,
+> > > > > and then does clears the cache line containing that byte on the stack.
+> > > > >
+> > > > > I *guess* this is about "Z" and not about "%y", but you'll have to ask
+> > > > > the clang people.
+> > > > >
+> > > > > Or it may be that they do not treat inline asm operands as lvalues
+> > > > > properly?  That rings some bells.  Yeah that looks like it.
+> > >
+> > > The code is
+> > >   __asm__ __volatile__ ("dcbz %y0" : : "Z"(*(u8 *)addr) : "memory");
+> > >
+> > > so yeah it looks like clang took that  *(u8 *)addr  as rvalue, and
+> > > stored that in stack, and then used *that* as memory.
+> >
+> > What's the %y modifier supposed to mean here?
+>
+> It prints a memory address for an indexed operand.
+>
+> If you write just "%0" it prints addresses that are a single register
+> as "0(r3)" instead of "0,r3".  Some instructions do not allow offset
+> form.
+>
+> > addr is in the list of
+> > inputs, so what's wrong with using it as an rvalue?
+>
+> It seems to use *(u8 *)addr as rvalue.  Asm operands are lvalues.  It
+> matters a lot for memory operands.
 
-On FU540-based systems, the "timebase-frequency" (RTCCLK) is sourced
-from an external crystal located on the PCB.  Thus the
-timebase-frequency DT property should be defined by the board that
-uses the SoC, not the SoC itself.  Drop the superfluous
-timebase-frequency property from the SoC DT data.  (It's already
-present in the board DT data.)
+Hmm...not sure that's specified behavior.  Anyways, I've filed:
+https://bugs.llvm.org/show_bug.cgi?id=42762
+to see if folks more familiar with LLVM's ppc backend have some more thoughts.
 
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
----
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index 9bf63f0ab253..42b5ec223100 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -21,7 +21,6 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		timebase-frequency = <1000000>;
- 		cpu0: cpu@0 {
- 			compatible = "sifive,e51", "sifive,rocket0", "riscv";
- 			device_type = "cpu";
+I recommend considering reverting commit 6c5875843b87 ("powerpc:
+slightly improve cache helpers") until the issue is resolved in clang,
+otherwise I'll probably just turn off our CI builds of PPC32 for the
+time being.
 -- 
-2.22.0
-
+Thanks,
+~Nick Desaulniers
