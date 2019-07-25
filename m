@@ -2,210 +2,152 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21858C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED9CC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D88062238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855B12238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:17:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sPTFxew2"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="g6aBzlx7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391717AbfGYLQd (ORCPT
+        id S2391727AbfGYLRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:16:33 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37862 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388479AbfGYLQd (ORCPT
+        Thu, 25 Jul 2019 07:17:10 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:53548 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388479AbfGYLRJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:16:33 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c9so34202265lfh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 04:16:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0U3JNBmNGYy0aqS1fsdwYku9ZRDxCCZwgG78ptzr3/s=;
-        b=sPTFxew2HVdu5JYRV5YO/NUgdrasvKQ+2+/g+OQiWM2wL6nRSGlCQdjNlv1qdjFNwI
-         nVadL2bFBk8wbP2jGGsefYXpmS8Xw2647+VU+WAklkXrHqbX3KjgeISof/YsyX8QRRFk
-         wqTB+ipAZ0PL6X20wB2XEuyKPU3oDVcmZDYFu1qPNIuFCAq5JahdkrYK2ct3wVY6FlA3
-         ffAVw9/DVvSNcO1RJv7qlBl4cBle25tgkCZaR1k9379tRO4UqLbk5Lv5FDq65yaPRE9z
-         PuI4h7yCkEBODiN8cnW468URr2Jl/l8/zcHo3tGkx5Kmab4NT6kafF1zLKRA6wJBQZXz
-         s+tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0U3JNBmNGYy0aqS1fsdwYku9ZRDxCCZwgG78ptzr3/s=;
-        b=STJYYUZs7LIZQJOgiTIiVa1jf5KqxKmqXUKXlUDKgS0KljTomySAFUH4tCQqB/pslD
-         Eo2jsGVMssGpyeU1Dz1MW7uI0p5fDP8Dk3+NRQUU2X/XrQWNMCmteME/yxUe6VhvhMVN
-         yauNm65uc4msvIuUoGZ0cYOlvt+Uo/ded9AjJDCE5mS2Smf6uVFclDzXll1ozsYrnE6J
-         jyDt6MTrVP+s5fBR8TRleT89DPGQIEoAEdaWCjAxSGbnJVOXHhOrWRE0h1VpiOEusMPL
-         F012mL+AMDESKgrrgTVH9m5JWXmSAnTxVmi8SwgjGpadixZ+5r4fKQjRzNSxasPt4mxK
-         PBmw==
-X-Gm-Message-State: APjAAAW6E2n/a7mYq26EA1CmNK2bV3NkACMw4jf6CcPXY8fYxcU3BXTb
-        ICC9EaIDMcwJHHSE47Uvvqbw6+aL3O+6NS3EUd3SNg==
-X-Google-Smtp-Source: APXvYqz5PSnz2vtWF1fvHXLKMELKN6t99rqUeay6/XuKtapo4XVBKVhmMFaoEsJ4IbsO3WUWJ9kwszBYIGRHqcGtcL4=
-X-Received: by 2002:a19:c514:: with SMTP id w20mr41342873lfe.182.1564053390533;
- Thu, 25 Jul 2019 04:16:30 -0700 (PDT)
+        Thu, 25 Jul 2019 07:17:09 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6PBGKKY029109;
+        Thu, 25 Jul 2019 13:16:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=0lUCfEK3ONxg/NNCAgs3L5jocem76yi9BMRZQfOjHd8=;
+ b=g6aBzlx7Y1CVz3yBYoHW1xxxNxME/UDCiStUnlGjRhsSgI7bvyFBjW8FB3wcLdmrn3vz
+ U2J7wnY4KUQlV5VBdpvS10TpiOxVof2XFfk4EbPYBjPOF4SKu39HtaGv+LQGxGKpS+Yt
+ BBqT8W3tARzEbisvSkYqvoyirPYOSAye/Us9g/sXuYoIgCUCORQtx86d4lXpg9rhk4Lw
+ 1JBEft1YrX7uMXGGYl9Jq/5TqDd8rCCqKOkHIzENSaMlaeFGnIXZevOPhAzRoPPEa9g4
+ wKcJLNdnjawSPsZ/ZfiovRzdS/5LDNEXd24lDmRtAp3yOKJYu2iXS1J+g/G9yrZioZ82 Eg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2tx6083kb5-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 25 Jul 2019 13:16:58 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CE3FC31;
+        Thu, 25 Jul 2019 11:16:57 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AB4142AC2;
+        Thu, 25 Jul 2019 11:16:57 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 25 Jul
+ 2019 13:16:57 +0200
+Received: from localhost (10.201.20.5) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 25 Jul 2019 13:16:56 +0200
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH] pinctrl: stmfx: update pinconf settings
+Date:   Thu, 25 Jul 2019 13:16:56 +0200
+Message-ID: <1564053416-32192-1-git-send-email-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190724191735.096702571@linuxfoundation.org>
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Thu, 25 Jul 2019 13:16:19 +0200
-Message-ID: <CADYN=9+WLxhmqX3JNL_s-kWSN97G=8WhD=TF=uAuKecJnKcj_Q@mail.gmail.com>
-Subject: Re: [PATCH 5.2 000/413] 5.2.3-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org, ben.hutchings@codethink.co.uk,
-        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, linux@roeck-us.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.5]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-25_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jul 2019 at 21:25, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.2.3 release.
-> There are 413 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri 26 Jul 2019 07:13:35 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.2.3-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.2.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+From: Alexandre Torgue <alexandre.torgue@st.com>
 
-Results from Linaro=E2=80=99s test farm.
-Regressions detected.
+According to the following tab (coming from STMFX datasheet), updates
+have to done in stmfx_pinconf_set function:
 
-Summary
-------------------------------------------------------------------------
+-"type" has to be set when "bias" is configured as "pull-up or pull-down"
+-PIN_CONFIG_DRIVE_PUSH_PULL should only be used when gpio is configured as
+ output. There is so no need to check direction.
 
-kernel: 5.2.3-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.2.y
-git commit: db628fe0e67ff8c66e8c6ba76e5e4becfa75fe21
-git describe: v5.2.2-414-gdb628fe0e67f
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.2-oe/bui=
-ld/v5.2.2-414-gdb628fe0e67f
+DIR | TYPE | PUPD | MFX GPIO configuration
+----|------|------|---------------------------------------------------
+1   | 1    | 1    | OUTPUT open drain with internal pull-up resistor
+----|------|------|---------------------------------------------------
+1   | 1    | 0    | OUTPUT open drain with internal pull-down resistor
+----|------|------|---------------------------------------------------
+1   | 0    | 0/1  | OUTPUT push pull no pull
+----|------|------|---------------------------------------------------
+0   | 1    | 1    | INPUT with internal pull-up resistor
+----|------|------|---------------------------------------------------
+0   | 1    | 0    | INPUT with internal pull-down resistor
+----|------|------|---------------------------------------------------
+0   | 0    | 1    | INPUT floating
+----|------|------|---------------------------------------------------
+0   | 0    | 0    | analog (GPIO not used, default setting)
 
-Regressions (compared to build v5.2.2)
-------------------------------------------------------------------------
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ drivers/pinctrl/pinctrl-stmfx.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-x86:
-  kvm-unit-tests:
-    * vmx
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index d3332da..31b6e51 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -296,29 +296,29 @@ static int stmfx_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 		switch (param) {
+ 		case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
+ 		case PIN_CONFIG_BIAS_DISABLE:
++		case PIN_CONFIG_DRIVE_PUSH_PULL:
++			ret = stmfx_pinconf_set_type(pctl, pin, 0);
++			if (ret)
++				return ret;
++			break;
+ 		case PIN_CONFIG_BIAS_PULL_DOWN:
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
++			if (ret)
++				return ret;
+ 			ret = stmfx_pinconf_set_pupd(pctl, pin, 0);
+ 			if (ret)
+ 				return ret;
+ 			break;
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+-			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+-			break;
+-		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+-			if (!dir)
+-				ret = stmfx_pinconf_set_type(pctl, pin, 1);
+-			else
+-				ret = stmfx_pinconf_set_type(pctl, pin, 0);
++			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+ 			break;
+-		case PIN_CONFIG_DRIVE_PUSH_PULL:
+-			if (!dir)
+-				ret = stmfx_pinconf_set_type(pctl, pin, 0);
+-			else
+-				ret = stmfx_pinconf_set_type(pctl, pin, 1);
++		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+ 			break;
+-- 
+2.7.4
 
-
-TESTNAME=3Dvmx TIMEOUT=3D90s ACCEL=3D ./x86/run x86/vmx.flat -smp 1 -cpu
-host,+vmx -append \"-exit_monitor_from_l2_test -ept_access* -vmx_smp*
--vmx_vmcs_shadow_test\"
-[  155.670748] kvm [6062]: vcpu0, guest rIP: 0x4050cb
-kvm_set_msr_common: MSR_IA32_DEBUGCTLMSR 0x1, nop
-[  155.681027] kvm [6062]: vcpu0, guest rIP: 0x408911
-kvm_set_msr_common: MSR_IA32_DEBUGCTLMSR 0x3, nop
-[  155.690749] kvm [6062]: vcpu0, guest rIP: 0x40bb39
-kvm_set_msr_common: MSR_IA32_DEBUGCTLMSR 0x1, nop
-[  155.700595] kvm [6062]: vcpu0, guest rIP: 0x4089b2
-kvm_set_msr_common: MSR_IA32_DEBUGCTLMSR 0x3, nop
-[  158.349308] nested_vmx_exit_reflected failed vm entry 7
-[  158.363737] nested_vmx_exit_reflected failed vm entry 7
-[  158.378010] nested_vmx_exit_reflected failed vm entry 7
-[  158.392480] nested_vmx_exit_reflected failed vm entry 7
-[  158.406920] nested_vmx_exit_reflected failed vm entry 7
-[  158.421390] nested_vmx_exit_reflected failed vm entry 7
-[  158.435795] nested_vmx_exit_reflected failed vm entry 7
-[  158.450276] nested_vmx_exit_reflected failed vm entry 7
-[  158.464674] nested_vmx_exit_reflected failed vm entry 7
-[  158.479030] nested_vmx_exit_reflected failed vm entry 7
-[  161.044379] set kvm_intel.dump_invalid_vmcs=3D1 to dump internal KVM sta=
-te.
-FAIL vmx (timeout; duration=3D90s)
-
-kernel-config: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/inte=
-l-corei7-64/lkft/linux-stable-rc-5.2/14/config
-Full log: https://lkft.validation.linaro.org/scheduler/job/836289#L1597
-
-No fixes (compared to build v5.2.2)
-
-Ran 22506 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
