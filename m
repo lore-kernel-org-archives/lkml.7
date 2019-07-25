@@ -2,95 +2,113 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D97C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE14C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8641D22C7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:34:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564058079;
-	bh=AInVxhE3Idi0ugTvrzFKIapKo+bdLWUILig2EoSAw7c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H1FGLlJt1YG56mN9sMgWOH0sxwfEtXG9xriDLmd7MK7iw1rlHfNGHtxdPW672wdPL
-	 ngJ74PdrLTVVPiY+u+P2fg1j2F+VUg6caAYM+6qhYpa+ZkQ8h8LWGmsxf0RQMQxRQo
-	 cewtFfvCZ9eSK64yO0sw24oRzcxb4Bml1tGJUEK4=
+	by mail.kernel.org (Postfix) with ESMTP id 6DDB522BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbfGYMei (ORCPT
+        id S2387865AbfGYMg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:34:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729381AbfGYMeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:34:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C55A218D4;
-        Thu, 25 Jul 2019 12:34:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564058077;
-        bh=AInVxhE3Idi0ugTvrzFKIapKo+bdLWUILig2EoSAw7c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jbIqz6838IiuZYE6lauTyoR24nT8i2QDmjfRC9EXlKOkiQ5bemEHUuIr2f9kEbbsc
-         18vvIrcChurvx3ekHkc4/gjsJTTokPpgZQpnt9Z/6Ztfe4ljd+3SRKlqKK/09zxRmT
-         wqhH7p7A+o+3IMMktwP4JutVkoaF3if19UQbeRXY=
-Date:   Thu, 25 Jul 2019 14:34:34 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     Clemens Ladisch <clemens@ladisch.de>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hpet: Drop unused variable 'm' in hpet_interrupt()
-Message-ID: <20190725123434.GA16355@kroah.com>
-References: <20190711133238.131602-1-wangkefeng.wang@huawei.com>
+        Thu, 25 Jul 2019 08:36:27 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46288 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729381AbfGYMg0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 08:36:26 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hqcyn-0004iy-7h; Thu, 25 Jul 2019 14:36:17 +0200
+Date:   Thu, 25 Jul 2019 14:36:15 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Nadav Amit <namit@vmware.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH v3 1/9] smp: Run functions concurrently in
+ smp_call_function_many()
+In-Reply-To: <93A98E8B-764F-4E9F-B0B6-FDAABE822B2D@vmware.com>
+Message-ID: <alpine.DEB.2.21.1907251404060.1791@nanos.tec.linutronix.de>
+References: <20190719005837.4150-1-namit@vmware.com> <20190719005837.4150-2-namit@vmware.com> <20190722182159.GB6698@worktop.programming.kicks-ass.net> <alpine.DEB.2.21.1907222033200.1659@nanos.tec.linutronix.de> <91940019-826C-4F33-904B-0767D95A5E21@vmware.com>
+ <alpine.DEB.2.21.1907222045101.1659@nanos.tec.linutronix.de> <93A98E8B-764F-4E9F-B0B6-FDAABE822B2D@vmware.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190711133238.131602-1-wangkefeng.wang@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/mixed; boundary="8323329-1554082241-1564058177=:1791"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 09:32:38PM +0800, Kefeng Wang wrote:
-> ../drivers/char/hpet.c:159:17: warning: variable ‘m’ set but not used
-> [-Wunused-but-set-variable]
->    unsigned long m, t, mc, base, k;
->                  ^
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  drivers/char/hpet.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-1554082241-1564058177=:1791
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+
+On Mon, 22 Jul 2019, Nadav Amit wrote:
+> > On Jul 22, 2019, at 11:51 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > void on_each_cpu(void (*func) (void *info), void *info, int wait)
+> > {
+> >        unsigned long flags;
+> > 
+> >        preempt_disable();
+> > 	smp_call_function(func, info, wait);
+> > 
+> > smp_call_function() has another preempt_disable as it can be called
+> > separately and it does:
+> > 
+> >        preempt_disable();
+> >        smp_call_function_many(cpu_online_mask, func, info, wait);
+> > 
+> > Your new on_each_cpu() implementation does not. So there is a
+> > difference. Whether it matters or not is a different question, but that
+> > needs to be explained and documented.
 > 
-> diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-> index 9ac6671bb514..039398cb14aa 100644
-> --- a/drivers/char/hpet.c
-> +++ b/drivers/char/hpet.c
-> @@ -156,12 +156,11 @@ static irqreturn_t hpet_interrupt(int irq, void *data)
->  	 * This has the effect of treating non-periodic like periodic.
->  	 */
->  	if ((devp->hd_flags & (HPET_IE | HPET_PERIODIC)) == HPET_IE) {
-> -		unsigned long m, t, mc, base, k;
-> +		unsigned long t, mc, base, k;
->  		struct hpet __iomem *hpet = devp->hd_hpet;
->  		struct hpets *hpetp = devp->hd_hpets;
->  
->  		t = devp->hd_ireqfreq;
-> -		m = read_counter(&devp->hd_timer->hpet_compare);
+> Thanks for explaining - so your concern is for CPUs being offlined.
+> 
+> But unless I am missing something: on_each_cpu() calls __on_each_cpu_mask(),
+> which disables preemption and calls __smp_call_function_many().
+> 
+> Then  __smp_call_function_many() runs:
+> 
+> 	cpumask_and(cfd->cpumask, mask, cpu_online_mask);
+> 
+> … before choosing which remote CPUs should run the function. So the only
+> case that I was missing is if the current CPU goes away and the function is
+> called locally.
+>
+> Can it happen? I can add documentation and a debug assertion for this case.
 
-Are you sure this is ok to remove?  You are reading from the hardware
-here, and often times that is required in order to achive something
-else.
+I don't think it can happen:
 
-So this function does not "do nothing", be careful and you will have to
-test this before I can take it.
+  on_each_cpu()
+    on_each_cpu_mask(....)
+      preempt_disable()
+        __smp_call_function_many()
 
-thanks,
+So if a CPU goes offline between on_each_cpu() and preempt_disable() then
+there is no damage. After the preempt_disable() it can't go away anymore
+and the task executing this cannot be migrated either.
 
-greg k-h
+So yes, it's safe, but please add a big fat comment so future readers won't
+be puzzled.
+
+Thanks,
+
+	tglx
+--8323329-1554082241-1564058177=:1791--
