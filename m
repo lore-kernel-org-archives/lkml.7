@@ -2,109 +2,130 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 581D0C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD657C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A7072189F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D0D2189F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:12:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564031531;
+	bh=RJx0tQJaHsgZz3uNM7Y4xe3/5UUxbIkhNcUrubFqGjU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ashXkPe2zV1XyP5MMNlBxEfMVd/4HCDY4+4oVWeizL/B0+RvqD1ZlYriR/1AbqWRP
+	 bl7/+nQ0T4ZQYwZawyxHmf3OVdtSe9qxKhI5Y69qWnbD/AwPrsXUAnYMDaF8civsUA
+	 KfYs2uuNQI+x9fqeFk4dAYcCbFl0PBsVxuT2DWuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390486AbfGYFMF (ORCPT
+        id S2390502AbfGYFMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:12:05 -0400
-Received: from gofer.mess.org ([88.97.38.141]:34441 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390362AbfGYFME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:12:04 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id AFB1C60474; Thu, 25 Jul 2019 06:12:02 +0100 (BST)
-Date:   Thu, 25 Jul 2019 06:12:02 +0100
-From:   Sean Young <sean@mess.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] media: ir-kbd-i2c: prevent potential NULL pointer
- access
-Message-ID: <20190725051202.o47mz4unbn63z6uk@gofer.mess.org>
-References: <20190722172632.4402-1-wsa+renesas@sang-engineering.com>
- <20190722172632.4402-2-wsa+renesas@sang-engineering.com>
+        Thu, 25 Jul 2019 01:12:10 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38849 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390362AbfGYFMI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:12:08 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y15so22097598pfn.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 22:12:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KSVES4Di2vK/QdofzjdERnWb+kHxNc5zqBfVZ7xWzIg=;
+        b=ExyQTREpJfPmp7vJJ2Y1yGisU8EG2uYGosxo5RZHBLokzfppj53F61F1dorQZkWp4L
+         1u86lScc0D9LhTdytlPOQoxRM6tw17QDqBS2daquIH4r/ZiHEgkp5YC4rNfWJ7q0nEYZ
+         jBQySMe9zOntgtD8mgrOdqsUitUnzzhex3OyfDVVQ4FDOazw5yPVqSQSFA6GVai0TVAg
+         vS7ToBS9H80ao1cVZiEbreO1AypmHBqcHzVsDbI7WHPG5Tg+xrl6J5fStZkg4X02FJzr
+         J9WrD4s8anQnCFv8ON43mpqzu5no7Lmk9m9UdgdG6IaKHG36YrWvYEo7GwbroRraM//A
+         tLXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KSVES4Di2vK/QdofzjdERnWb+kHxNc5zqBfVZ7xWzIg=;
+        b=Pjb+o2fBZyJBXbJAjcJmNqbx086oxayxe4mRZqVR+6tQThDj5KLtV8bC+CgsS1JFnl
+         dMNBzxdXwGX2333dZtI5Ru+D8qYo/uDTChsWK1kI6ulqN4gdlAKlUnexS1ff+1sGE3xG
+         x58ldmZnn3VwSf+TY7d46sRXzc5iUAvsetf0W8H4w1GAhSNWR7o01/CjtdSDyQPTzuky
+         edWhJg6izO/HLDbInVUJrXmpqatKpmccs3x1hKxnLnvzq8Rdi+cuqhcsdbMjO+6MF/Yh
+         Rz2qZYQ7VOkbKM4n37YcgYtUBodAF7uKu4+4POO978xWTlX+ASTrYouNEizkmGQCUMoQ
+         hElw==
+X-Gm-Message-State: APjAAAWDcMwhbkO+QPjHobge509QXU6G79Jwznqh5Xx9IgGAE7lhYicl
+        r+vcgtjL2QZ0ATo2UbVUezI=
+X-Google-Smtp-Source: APXvYqxKwc0wBeIkkfcXVdrRwVawpYOlqn58OtEpJPbVKg5TevIqJAnENN5egvEYfpctwul3xCGz2Q==
+X-Received: by 2002:a17:90a:b104:: with SMTP id z4mr90704862pjq.102.1564031527596;
+        Wed, 24 Jul 2019 22:12:07 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id g2sm62427425pfb.95.2019.07.24.22.12.03
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 22:12:06 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 14:12:00 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Yu Zhao <yuzhao@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peng Fan <peng.fan@nxp.com>, Ira Weiny <ira.weiny@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: replace list_move_tail() with
+ add_page_to_lru_list_tail()
+Message-ID: <20190725051200.GA65392@google.com>
+References: <20190716212436.7137-1-yuzhao@google.com>
+ <20190724193249.00875235c4fa2495e0098451@linux-foundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190722172632.4402-2-wsa+renesas@sang-engineering.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190724193249.00875235c4fa2495e0098451@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 07:26:31PM +0200, Wolfram Sang wrote:
-> i2c_new_dummy() can fail returning a NULL pointer. The code does not
-> bail out in this case and the returned pointer is blindly used.
+Hi Andrew,
 
-I don't see how. The existing code tries to set up the tx part; if
-i2c_new_dummy() return NULL then the rcdev is registered without tx,
-and tx_c is never used.
-
-> Convert
-> to devm_i2c_new_dummy_device() which returns an ERR_PTR and also bail
-> out when failing the validity check.
-
-Possibly I was being overly cautious with not bailing out if tx can't
-be registered; moving to devm is probably a good idea. However the
-commit message is misleading, because the existing code has no
-NULL pointer access.
-
-Sean
-
+On Wed, Jul 24, 2019 at 07:32:49PM -0700, Andrew Morton wrote:
+> On Tue, 16 Jul 2019 15:24:36 -0600 Yu Zhao <yuzhao@google.com> wrote:
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  drivers/media/i2c/ir-kbd-i2c.c | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
+> > This is a cleanup patch that replaces two historical uses of
+> > list_move_tail() with relatively recent add_page_to_lru_list_tail().
+> > 
 > 
-> diff --git a/drivers/media/i2c/ir-kbd-i2c.c b/drivers/media/i2c/ir-kbd-i2c.c
-> index 876d7587a1da..f46717052efc 100644
-> --- a/drivers/media/i2c/ir-kbd-i2c.c
-> +++ b/drivers/media/i2c/ir-kbd-i2c.c
-> @@ -885,9 +885,12 @@ static int ir_probe(struct i2c_client *client, const struct i2c_device_id *id)
->  	INIT_DELAYED_WORK(&ir->work, ir_work);
->  
->  	if (probe_tx) {
-> -		ir->tx_c = i2c_new_dummy(client->adapter, 0x70);
-> -		if (!ir->tx_c) {
-> +		ir->tx_c = devm_i2c_new_dummy_device(&client->dev,
-> +						     client->adapter, 0x70);
-> +		if (IS_ERR(ir->tx_c)) {
->  			dev_err(&client->dev, "failed to setup tx i2c address");
-> +			err = PTR_ERR(ir->tx_c);
-> +			goto err_out_free;
->  		} else if (!zilog_init(ir)) {
->  			ir->carrier = 38000;
->  			ir->duty_cycle = 40;
-> @@ -904,9 +907,6 @@ static int ir_probe(struct i2c_client *client, const struct i2c_device_id *id)
->  	return 0;
->  
->   err_out_free:
-> -	if (ir->tx_c)
-> -		i2c_unregister_device(ir->tx_c);
-> -
->  	/* Only frees rc if it were allocated internally */
->  	rc_free_device(rc);
->  	return err;
-> @@ -919,9 +919,6 @@ static int ir_remove(struct i2c_client *client)
->  	/* kill outstanding polls */
->  	cancel_delayed_work_sync(&ir->work);
->  
-> -	if (ir->tx_c)
-> -		i2c_unregister_device(ir->tx_c);
-> -
->  	/* unregister device */
->  	rc_unregister_device(ir->rc);
->  
-> -- 
-> 2.20.1
+> Looks OK to me.
+> 
+> > --- a/mm/swap.c
+> > +++ b/mm/swap.c
+> > @@ -515,7 +515,6 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
+> >  	del_page_from_lru_list(page, lruvec, lru + active);
+> >  	ClearPageActive(page);
+> >  	ClearPageReferenced(page);
+> > -	add_page_to_lru_list(page, lruvec, lru);
+> >  
+> >  	if (PageWriteback(page) || PageDirty(page)) {
+> >  		/*
+> > @@ -523,13 +522,14 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
+> >  		 * It can make readahead confusing.  But race window
+> >  		 * is _really_ small and  it's non-critical problem.
+> >  		 */
+> > +		add_page_to_lru_list(page, lruvec, lru);
+> >  		SetPageReclaim(page);
+> >  	} else {
+> >  		/*
+> >  		 * The page's writeback ends up during pagevec
+> >  		 * We moves tha page into tail of inactive.
+> >  		 */
+> 
+> That comment is really hard to follow.  Minchan, can you please explain
+> the first sentence?
+
+It meant "normal deactivation from the pagevec full". The sentence is
+very odd to me, too. ;-( 
+Let's remove the weird comment in this chance.
+
+Thanks.
+
