@@ -2,186 +2,226 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E01CC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14378C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2407421850
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:30:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FzHCkuX/"
+	by mail.kernel.org (Postfix) with ESMTP id D830822BEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:40:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564029615;
+	bh=8oxT8xgyNUwuwFXTPBDPfAgyusjMHHhLLfJMiVh45oI=;
+	h=Date:From:To:Subject:List-ID:From;
+	b=MCrNsmpUt7vYqveW7LiDUvYf6e3uxfqd9Y5KILDvTTi+904QTsTRlvB6WQ14Eu0k/
+	 hOsGFCd/xWgsp1GOZZO+6vspC4FXLegUlnNW2qSJR7anWka75f2Jl/IrvuXCU1S8VB
+	 L1naSzf8CdzUZgP/JTcsSBgbQzfRuNIt7RBolRoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389220AbfGYEal (ORCPT
+        id S2389595AbfGYEkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 00:30:41 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38707 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbfGYEal (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 00:30:41 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f5so13499631pgu.5;
-        Wed, 24 Jul 2019 21:30:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=2OOipR6ExT2jNJi4jbCkya5oL8OY5qKBVN4HVC3rk40=;
-        b=FzHCkuX/yPdx2rB65HPx3xPsnFpinwzY8xUPsFsNkqk20Pd9KYCc5MaZH8/4FR6wFc
-         kY09+WnE+PA3hkaSW+6kt+6bFZje6pzjOciyxjiU+lglVJQStTJBJ3sV61VRB12o/p3C
-         vogzuNi4N2XHLc5CPnNK/DfXwEbV7aUUF2Oae75AtiRF1SavbX9uV3x45t2CP+XneUWp
-         HLaEj/3kH5bKi0h7uonSPVeEeGs+DBI/smg/WZ/OJOvMHAI/hB2Whwfidn2GQA2pmy9h
-         x8ITDWxZEmw9mpEqKBezniQDW7OkNvxkeCOjEZ2EDWim8qeaUsl417pwYiildxpDArjw
-         HI7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=2OOipR6ExT2jNJi4jbCkya5oL8OY5qKBVN4HVC3rk40=;
-        b=md9B0ChXfNkBdrL5/D9KNdNryY5+VG61Ko43DI4STp42VUrc4HvmdhxLXcASEX2gTY
-         gXw0dzP5hrlukribNsyPsY+tvDx/6+dvZCmLrBj2XBVvLD68AW933yf+bp5synhZOv5E
-         aQlJvqpWhi8REONZQ9VNX6oDQTwp4dyNaNTIUvq9MQaxi9ISkVPwESOLtwjy3V7kXwD/
-         V27RL6/kV3vLi7t/oDXnvHreXmB1Dtm37gRtqkrOGM0+r28gr8TLpi3xQOn4XC9NyCom
-         acFne6LurcFOFRwKR8DafGJ9E+kUTNWZ2h364Rstn8PrDS56VYDRqsKDtC+3DjWK+4wt
-         33ig==
-X-Gm-Message-State: APjAAAWm7eZYSnxxtPjGqZODjzv9IrZCbNu2B+J+kwoWaItMCnPHI/ef
-        VNATtemQpN7z0SeY4ryi+txwADVC
-X-Google-Smtp-Source: APXvYqxZPyLC+zW4PLVN9gRsznLhYfP5lFVWO1Mywd6VzjZseDLRdCth8ccSI0PNWuDWNK7ePiBjxA==
-X-Received: by 2002:a17:90a:cb18:: with SMTP id z24mr39609687pjt.108.1564029040397;
-        Wed, 24 Jul 2019 21:30:40 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id t9sm48380995pji.18.2019.07.24.21.30.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 21:30:39 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Douglas Gilbert <dgilbert@interlog.com>
-Subject: [RFC PATCH] usb: typec: tcpm: Ignore unsupported/unknown alternate mode requests
-Date:   Wed, 24 Jul 2019 21:30:37 -0700
-Message-Id: <1564029037-22929-1-git-send-email-linux@roeck-us.net>
-X-Mailer: git-send-email 2.7.4
+        Thu, 25 Jul 2019 00:40:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389297AbfGYEkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 00:40:13 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 710F3218DA;
+        Thu, 25 Jul 2019 04:40:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564029611;
+        bh=8oxT8xgyNUwuwFXTPBDPfAgyusjMHHhLLfJMiVh45oI=;
+        h=Date:From:To:Subject:From;
+        b=ox0dlalhd8kPMMrPqsYYxIH76KrkpBJDavG47yS5iy2z9gbiy+dEZnZDDWXTPJ9Dq
+         LWfefQ4d+nCJ+BItBanHurqGjqU11IEhTe/DuclzOMq/pwC0hVJQZM8+6uScAFeXiH
+         Dpapju0lUDZi8paPRlNtUsTbRb8N/8sOrU6RZJT4=
+Date:   Wed, 24 Jul 2019 21:40:10 -0700
+From:   akpm@linux-foundation.org
+To:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
+Subject:  mmotm 2019-07-24-21-39 uploaded
+Message-ID: <20190725044010.4tE0dhrji%akpm@linux-foundation.org>
+User-Agent: s-nail v14.8.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TCPM may receive PD messages associated with unknown or unsupported
-alternate modes. If that happens, calls to typec_match_altmode()
-will return NULL. The tcpm code does not currently take this into
-account. This results in crashes.
+The mm-of-the-moment snapshot 2019-07-24-21-39 has been uploaded to
 
-Unable to handle kernel NULL pointer dereference at virtual address 000001f0
-pgd = 41dad9a1
-[000001f0] *pgd=00000000
-Internal error: Oops: 5 [#1] THUMB2
-Modules linked in: tcpci tcpm
-CPU: 0 PID: 2338 Comm: kworker/u2:0 Not tainted 5.1.18-sama5-armv7-r2 #6
-Hardware name: Atmel SAMA5
-Workqueue: 2-0050 tcpm_pd_rx_handler [tcpm]
-PC is at typec_altmode_attention+0x0/0x14
-LR is at tcpm_pd_rx_handler+0xa3b/0xda0 [tcpm]
-...
-[<c03fbee8>] (typec_altmode_attention) from [<bf8030fb>]
-				(tcpm_pd_rx_handler+0xa3b/0xda0 [tcpm])
-[<bf8030fb>] (tcpm_pd_rx_handler [tcpm]) from [<c012082b>]
-				(process_one_work+0x123/0x2a8)
-[<c012082b>] (process_one_work) from [<c0120a6d>]
-				(worker_thread+0xbd/0x3b0)
-[<c0120a6d>] (worker_thread) from [<c012431f>] (kthread+0xcf/0xf4)
-[<c012431f>] (kthread) from [<c01010f9>] (ret_from_fork+0x11/0x38)
+   http://www.ozlabs.org/~akpm/mmotm/
 
-Ignore PD messages if the asociated alternate mode is not supported.
+mmotm-readme.txt says
 
-Reported-by: Douglas Gilbert <dgilbert@interlog.com>
-Cc: Douglas Gilbert <dgilbert@interlog.com>
-Fixes: e9576fe8e605c ("usb: typec: tcpm: Support for Alternate Modes")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-Taking a stab at the problem. I don't really know if this is the correct
-fix, or even if my understanding of the problem is correct, thus marking
-the patch as RFC.
+README for mm-of-the-moment:
 
- drivers/usb/typec/tcpm/tcpm.c | 38 ++++++++++++++++++++++++--------------
- 1 file changed, 24 insertions(+), 14 deletions(-)
+http://www.ozlabs.org/~akpm/mmotm/
 
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index 77f71f602f73..1df2844469aa 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -1096,7 +1096,8 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
- 			break;
- 		case CMD_ATTENTION:
- 			/* Attention command does not have response */
--			typec_altmode_attention(adev, p[1]);
-+			if (adev)
-+				typec_altmode_attention(adev, p[1]);
- 			return 0;
- 		default:
- 			break;
-@@ -1148,20 +1149,26 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
- 			}
- 			break;
- 		case CMD_ENTER_MODE:
--			typec_altmode_update_active(pdev, true);
--
--			if (typec_altmode_vdm(adev, p[0], &p[1], cnt)) {
--				response[0] = VDO(adev->svid, 1, CMD_EXIT_MODE);
--				response[0] |= VDO_OPOS(adev->mode);
--				return 1;
-+			if (adev && pdev) {
-+				typec_altmode_update_active(pdev, true);
-+
-+				if (typec_altmode_vdm(adev, p[0], &p[1], cnt)) {
-+					response[0] = VDO(adev->svid, 1,
-+							  CMD_EXIT_MODE);
-+					response[0] |= VDO_OPOS(adev->mode);
-+					return 1;
-+				}
- 			}
- 			return 0;
- 		case CMD_EXIT_MODE:
--			typec_altmode_update_active(pdev, false);
-+			if (adev && pdev) {
-+				typec_altmode_update_active(pdev, false);
- 
--			/* Back to USB Operation */
--			WARN_ON(typec_altmode_notify(adev, TYPEC_STATE_USB,
--						     NULL));
-+				/* Back to USB Operation */
-+				WARN_ON(typec_altmode_notify(adev,
-+							     TYPEC_STATE_USB,
-+							     NULL));
-+			}
- 			break;
- 		default:
- 			break;
-@@ -1171,8 +1178,10 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
- 		switch (cmd) {
- 		case CMD_ENTER_MODE:
- 			/* Back to USB Operation */
--			WARN_ON(typec_altmode_notify(adev, TYPEC_STATE_USB,
--						     NULL));
-+			if (adev)
-+				WARN_ON(typec_altmode_notify(adev,
-+							     TYPEC_STATE_USB,
-+							     NULL));
- 			break;
- 		default:
- 			break;
-@@ -1183,7 +1192,8 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
- 	}
- 
- 	/* Informing the alternate mode drivers about everything */
--	typec_altmode_vdm(adev, p[0], &p[1], cnt);
-+	if (adev)
-+		typec_altmode_vdm(adev, p[0], &p[1], cnt);
- 
- 	return rlen;
- }
--- 
-2.7.4
+This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+more than once a week.
 
+You will need quilt to apply these patches to the latest Linus release (5.x
+or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+http://ozlabs.org/~akpm/mmotm/series
+
+The file broken-out.tar.gz contains two datestamp files: .DATE and
+.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+followed by the base kernel version against which this patch series is to
+be applied.
+
+This tree is partially included in linux-next.  To see which patches are
+included in linux-next, consult the `series' file.  Only the patches
+within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
+linux-next.
+
+
+A full copy of the full kernel tree with the linux-next and mmotm patches
+already applied is available through git within an hour of the mmotm
+release.  Individual mmotm releases are tagged.  The master branch always
+points to the latest release, so it's constantly rebasing.
+
+http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/
+
+
+
+The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
+contains daily snapshots of the -mm tree.  It is updated more frequently
+than mmotm, and is untested.
+
+A git copy of this tree is available at
+
+	http://git.cmpxchg.org/cgit.cgi/linux-mmots.git/
+
+and use of this tree is similar to
+http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/, described above.
+
+
+This mmotm tree contains the following patches against 5.3-rc1:
+(patches marked "*" will be included in linux-next)
+
+  origin.patch
+* docs-signal-fix-a-kernel-doc-markup.patch
+* revert-kmemleak-allow-to-coexist-with-fault-injection.patch
+* ocfs2-remove-set-but-not-used-variable-last_hash.patch
+* mm-vmscan-check-if-mem-cgroup-is-disabled-or-not-before-calling-memcg-slab-shrinker.patch
+* mm-migrate-fix-reference-check-race-between-__find_get_block-and-migration.patch
+* mm-compaction-avoid-100%-cpu-usage-during-compaction-when-a-task-is-killed.patch
+* kasan-remove-clang-version-check-for-kasan_stack.patch
+* proc-kpageflags-prevent-an-integer-overflow-in-stable_page_flags.patch
+* proc-kpageflags-do-not-use-uninitialized-struct-pages.patch
+* mm-document-zone-device-struct-page-field-usage.patch
+* mm-hmm-fix-zone_device-anon-page-mapping-reuse.patch
+* mm-hmm-fix-bad-subpage-pointer-in-try_to_unmap_one.patch
+* mm-hmm-fix-bad-subpage-pointer-in-try_to_unmap_one-v3.patch
+* ubsan-build-ubsanc-more-conservatively.patch
+* page-flags-prioritize-kasan-bits-over-last-cpuid.patch
+* coredump-split-pipe-command-whitespace-before-expanding-template.patch
+* mm-migrate-initialize-pud_entry-in-migrate_vma.patch
+* mm-hotplug-remove-unneeded-return-for-void-function.patch
+* cgroup-kselftest-relax-fs_spec-checks.patch
+* asm-generic-fix-wtype-limits-compiler-warnings.patch
+* asm-generic-fix-wtype-limits-compiler-warnings-fix.patch
+* asm-generic-fix-wtype-limits-compiler-warnings-v2.patch
+* acpi-scan-acquire-device_hotplug_lock-in-acpi_scan_init.patch
+* mm-mempolicy-make-the-behavior-consistent-when-mpol_mf_move-and-mpol_mf_strict-were-specified.patch
+* mm-mempolicy-make-the-behavior-consistent-when-mpol_mf_move-and-mpol_mf_strict-were-specified-v4.patch
+* mm-mempolicy-handle-vma-with-unmovable-pages-mapped-correctly-in-mbind.patch
+* mm-mempolicy-handle-vma-with-unmovable-pages-mapped-correctly-in-mbind-v4.patch
+* kbuild-clean-compressed-initramfs-image.patch
+* ocfs2-use-jbd2_inode-dirty-range-scoping.patch
+* jbd2-remove-jbd2_journal_inode_add_.patch
+* ocfs2-clear-zero-in-unaligned-direct-io.patch
+* ocfs2-clear-zero-in-unaligned-direct-io-checkpatch-fixes.patch
+* ocfs2-wait-for-recovering-done-after-direct-unlock-request.patch
+* ocfs2-checkpoint-appending-truncate-log-transaction-before-flushing.patch
+* ramfs-support-o_tmpfile.patch
+  mm.patch
+* mm-slab-extend-slab-shrink-to-shrink-all-memcg-caches.patch
+* mm-slab-move-memcg_cache_params-structure-to-mm-slabh.patch
+* memremap-move-from-kernel-to-mm.patch
+* mm-page_poison-fix-a-typo-in-a-comment.patch
+* mm-rmapc-remove-set-but-not-used-variable-cstart.patch
+* mm-introduce-page_size.patch
+* mm-introduce-page_shift.patch
+* mm-introduce-page_shift-fix.patch
+* mm-introduce-compound_nr.patch
+* mm-replace-list_move_tail-with-add_page_to_lru_list_tail.patch
+* mm-filemap-rewrite-mapping_needs_writeback-in-less-fancy-manner.patch
+* mm-throttle-allocators-when-failing-reclaim-over-memoryhigh.patch
+* mm-throttle-allocators-when-failing-reclaim-over-memoryhigh-fix.patch
+* mm-vmscan-expose-cgroup_ino-for-memcg-reclaim-tracepoints.patch
+* mm-gup-add-make_dirty-arg-to-put_user_pages_dirty_lock.patch
+* drivers-gpu-drm-via-convert-put_page-to-put_user_page.patch
+* net-xdp-convert-put_page-to-put_user_page.patch
+* mm-remove-redundant-assignment-of-entry.patch
+* mm-mmap-fix-the-adjusted-length-error.patch
+* mm-memory_hotplug-remove-move_pfn_range.patch
+* mm-memory_hotplug-remove-move_pfn_range-fix.patch
+* drivers-base-nodec-simplify-unregister_memory_block_under_nodes.patch
+* mm-sparse-fix-memory-leak-of-sparsemap_buf-in-aliged-memory.patch
+* mm-sparse-fix-memory-leak-of-sparsemap_buf-in-aliged-memory-fix.patch
+* mm-sparse-fix-align-without-power-of-2-in-sparse_buffer_alloc.patch
+* mm-vmalloc-do-not-keep-unpurged-areas-in-the-busy-tree.patch
+* mm-vmalloc-modify-struct-vmap_area-to-reduce-its-size.patch
+* mm-compaction-clear-total_migratefree_scanned-before-scanning-a-new-zone.patch
+* mm-compaction-clear-total_migratefree_scanned-before-scanning-a-new-zone-fix.patch
+* mm-compaction-clear-total_migratefree_scanned-before-scanning-a-new-zone-fix-fix.patch
+* mm-compaction-clear-total_migratefree_scanned-before-scanning-a-new-zone-fix-2.patch
+* mm-compaction-clear-total_migratefree_scanned-before-scanning-a-new-zone-fix-2-fix.patch
+* mm-oom-avoid-printk-iteration-under-rcu.patch
+* mm-oom-avoid-printk-iteration-under-rcu-fix.patch
+* mm-oom_killer-add-task-uid-to-info-message-on-an-oom-kill.patch
+* mm-oom_killer-add-task-uid-to-info-message-on-an-oom-kill-fix.patch
+* psi-annotate-refault-stalls-from-io-submission.patch
+* psi-annotate-refault-stalls-from-io-submission-fix.patch
+* psi-annotate-refault-stalls-from-io-submission-fix-2.patch
+* mm-introduce-madv_cold.patch
+* mm-change-pageref_reclaim_clean-with-page_refreclaim.patch
+* mm-account-nr_isolated_xxx-in-_lru_page.patch
+* mm-introduce-madv_pageout.patch
+* mm-factor-out-common-parts-between-madv_cold-and-madv_pageout.patch
+* zpool-add-malloc_support_movable-to-zpool_driver.patch
+* zswap-use-movable-memory-if-zpool-support-allocate-movable-memory.patch
+* mm-proportional-memorylowmin-reclaim.patch
+* mm-make-memoryemin-the-baseline-for-utilisation-determination.patch
+* mm-make-memoryemin-the-baseline-for-utilisation-determination-fix.patch
+* mm-vmscan-remove-unused-lru_pages-argument.patch
+* mm-dont-expose-page-to-fast-gup-before-its-ready.patch
+* info-task-hung-in-generic_file_write_iter.patch
+* info-task-hung-in-generic_file_write-fix.patch
+* kernel-hung_taskc-monitor-killed-tasks.patch
+* hung_task-allow-printing-warnings-every-check-interval.patch
+* lib-genallocc-export-symbol-addr_in_gen_pool.patch
+* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr.patch
+* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr-fix.patch
+* string-add-stracpy-and-stracpy_pad-mechanisms.patch
+* kernel-doc-core-api-include-stringh-into-core-api.patch
+* kernel-doc-core-api-include-stringh-into-core-api-v2.patch
+* lib-fix-possible-incorrect-result-from-rational-fractions-helper.patch
+* checkpatch-dont-interpret-stack-dumps-as-commit-ids.patch
+* checkpatch-improve-spdx-license-checking.patch
+* checkpatchpl-warn-on-invalid-commit-id.patch
+* checkpatch-add-_notifier_head-as-var-definition.patch
+* fat-add-nobarrier-to-workaround-the-strange-behavior-of-device.patch
+* cpumask-nicer-for_each_cpumask_and-signature.patch
+* kexec-bail-out-upon-sigkill-when-allocating-memory.patch
+* aio-simplify-read_events.patch
+* kgdb-dont-use-a-notifier-to-enter-kgdb-at-panic-call-directly.patch
+* ipc-consolidate-all-xxxctl_down-functions.patch
+  linux-next.patch
+  diff-sucks.patch
+* pinctrl-fix-pxa2xxc-build-warnings.patch
+* mm-treewide-clarify-pgtable_page_ctordtor-naming.patch
+* drivers-tty-serial-sh-scic-suppress-warning.patch
+* fix-read-buffer-overflow-in-delta-ipc.patch
+  make-sure-nobodys-leaking-resources.patch
+  releasing-resources-with-children.patch
+  mutex-subsystem-synchro-test-module.patch
+  kernel-forkc-export-kernel_thread-to-modules.patch
+  workaround-for-a-pci-restoring-bug.patch
