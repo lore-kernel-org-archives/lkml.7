@@ -2,122 +2,92 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE4FC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D86BC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C109822BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:38:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gmAiEXeM"
+	by mail.kernel.org (Postfix) with ESMTP id 5EC06206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387454AbfGYKiS (ORCPT
+        id S2387508AbfGYKi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 06:38:18 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:3506 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfGYKiR (ORCPT
+        Thu, 25 Jul 2019 06:38:58 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:52122 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfGYKi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 06:38:17 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d3986960000>; Thu, 25 Jul 2019 03:38:14 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 25 Jul 2019 03:38:16 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 03:38:16 -0700
-Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 25 Jul
- 2019 10:38:16 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id 0BD124286E; Thu, 25 Jul 2019 13:38:14 +0300 (EEST)
-Date:   Thu, 25 Jul 2019 13:38:14 +0300
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-Message-ID: <20190725103813.GO12715@pdeschrijver-desktop.Nvidia.com>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
- <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
- <20190725095502.GM12715@pdeschrijver-desktop.Nvidia.com>
- <dd01be5d-bab9-1329-c7ac-c3c893d49dd1@gmail.com>
- <20190725103348.GN12715@pdeschrijver-desktop.Nvidia.com>
+        Thu, 25 Jul 2019 06:38:57 -0400
+Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x6PAcHRM014383;
+        Thu, 25 Jul 2019 19:38:17 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp);
+ Thu, 25 Jul 2019 19:38:17 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x6PAcH6I014372
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Thu, 25 Jul 2019 19:38:17 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] hung_task: Allow printing warnings every check interval
+To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20190724170249.9644-1-dima@arista.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <2964b430-63d6-e172-84e2-cb269cf43443@i-love.sakura.ne.jp>
+Date:   Thu, 25 Jul 2019 19:38:13 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190725103348.GN12715@pdeschrijver-desktop.Nvidia.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564051094; bh=8atxpgUUE7s0o3aVODCbIbQya4DrDoFmnAvE9OLg7S8=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:
-         Content-Transfer-Encoding:In-Reply-To:X-NVConfidentiality:
-         User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=gmAiEXeMK31lqMuyOlsg8JxkSrXrl5EJ4BuPSBE8I+4FouPnlCzCJRPP1GUUrTgBh
-         2jJy0xjm5dLQ66WUgf5MAxStSikZg9qrTRlw9kdrtJTrFXi6e4OEstoFzp/3UGrESz
-         +Y8+eem1kXUph3/4sBObFx8oMJSvEp3k7V90VnXkqjl2DzS72ntjVr1NOX3OaI2Ryw
-         +iNoX355EvcS03RZ2zPMecVn4+YXrLCOpegifeNCODWwMz4wdK0Y5/xT93ITzGTLke
-         F9HSf55EsyTDxVsTsB00OsVH7jIIk/ZEDAePAoYoNUEcHC0Tz/cv9NpBlyLjvLZm9c
-         3hilrLCdZznhw==
+In-Reply-To: <20190724170249.9644-1-dima@arista.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 01:33:48PM +0300, Peter De Schrijver wrote:
-> On Thu, Jul 25, 2019 at 01:05:13PM +0300, Dmitry Osipenko wrote:
-> > 25.07.2019 12:55, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > > On Mon, Jul 22, 2019 at 12:54:51PM +0300, Dmitry Osipenko wrote:
-> > >>
-> > >> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
-> > >> doesn't sound correct to me. Something like 'firmware_sc7' should su=
-it
-> > >> better here.
-> > >>
-> > >>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
-> > >>
-> > >> Secondly, I'm also not sure why COP interrupts need to be disabled f=
-or
-> > >> pre-T210 at all, since COP is unused. This looks to me like it was
-> > >> cut-n-pasted from downstream kernel without a good reason and could =
-be
-> > >> simply removed.
-> > >=20
-> > > I don't think we can rely on the fact that COP is unused. People can
-> > > write their own code to run on COP.
-> >=20
-> > 1. Not upstream - doesn't matter.
-> >=20
->=20
-> The code is not part of the kernel, so obviously it's not upstream?
->=20
-> > 2. That's not very good if something unknown is running on COP and then
-> > kernel suddenly intervenes, don't you think so?
->=20
-> Unless the code was written with this in mind.
->=20
+On 2019/07/25 2:02, Dmitry Safonov wrote:
+> Hung task detector has one timeout and has two associated actions on it:
+> - issuing warnings with names and stacks of blocked tasks
+> - panic()
+> 
+> We want switches to panic (and reboot) if there's a task
+> in uninterruptible sleep for some minutes - at that moment something
+> ugly has happened and the box needs a reboot.
+> But we also want to detect conditions that are "out of range"
+> or approaching the point of failure. Under such conditions we want
+> to issue an "early warning" of an impending failure, minutes before
+> the switch is going to panic.
 
-Looking at this again, I don't think we need to enable the IRQ at all.
+Can't we do it by extending sysctl_hung_task_panic to accept values larger
+than 1, and decrease by one when at least one thread was reported by each
+check_hung_uninterruptible_tasks() check, and call panic() when
+sysctl_hung_task_panic reached to 0 (or maybe 1 is simpler) ?
 
-Peter.
+Hmm, might have the same problem regarding how/when to reset the counter.
+If some userspace process can reset the counter, such process can trigger
+SysRq-c when some period expired...
+
+> It seems rather easy to add printing tasks and their stacks for
+> notification and debugging purposes into hung task detector without
+> complicating the code or major cost (prints are with KERN_INFO loglevel
+> and so don't go on console, only into dmesg log).
+
+Well, I don't think so. Might be noisy for systems without "quiet" kernel
+command line option, and we can't pass KERN_DEBUG to e.g. sched_show_task()...
+
