@@ -2,76 +2,92 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A53AC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49874C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 298D0229F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E018229F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:56:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHtrZSte"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390086AbfGYRyh (ORCPT
+        id S1730057AbfGYR4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:54:37 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:40520 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726894AbfGYRyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:54:36 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hqhwZ-0001q5-DZ; Thu, 25 Jul 2019 11:54:20 -0600
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <20190725172335.6825-5-logang@deltatee.com>
- <20190725175023.GA30641@bombadil.infradead.org>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <da58f91e-6cfa-02e0-dd89-3cfa23764a0e@deltatee.com>
-Date:   Thu, 25 Jul 2019 11:54:18 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 13:56:14 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46643 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727038AbfGYR4O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 13:56:14 -0400
+Received: by mail-pg1-f193.google.com with SMTP id k189so4366417pgk.13;
+        Thu, 25 Jul 2019 10:56:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5o9SYGWI02yoZmuJQOfnNmowQ/BEMSNThozEVCK1W6U=;
+        b=CHtrZSteUVJksZ4LtPuDpqcyROVaKvpnfL88qHsGq+Mc9L/PdbU7RA4x7LrYSC9v6x
+         10ZegfC9qCUfu+S64mlXYcK3DtMQmmu9EXWI/XSMzmIuOXQuZ6N+M6+Ezdu7Wbye6nER
+         /uhu4ac9O1MVeKrAN2fpGAhjXiTYh9KdhtRMCPEuaAlkuxpJwxaZeP79SMc1igXgDGi4
+         Ba06lNwli7sc0rtxh3gO+BsFoajwYSf0ab+Xy3OSNRwxX4e8ps1KxvQNeO/EA5xnVCPI
+         ulrXgPoZrrV3oh65T/Z3C0Xos5HWSDeY/zjvTeC9ZhpQKoyO46SPurFYcjFNHmP16qKd
+         Ffag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5o9SYGWI02yoZmuJQOfnNmowQ/BEMSNThozEVCK1W6U=;
+        b=r8+X5RavpbNWrzR94l6KCZPMFHySGm4vxzW3g2W5k4OE/m3SxlKe8cdf4eq0Fwceb2
+         kR50XiOhulJAPbVPU23sSFWDSUiUZThLq4Jw1wCuYt2B0NY4mNov1tLSpHo8pDjhM81N
+         wCuyD3ESrXtB80e6oiDMUURPIaE5LY3m99sZY+B6SU+vQLF9IVGIUghzjCs/ATgnZrXE
+         x+1pOzS/iCBgjBNdGMvIvbMMDL1U81J/pf9JS0fAB/SJoRr87rfi2sHekOm/fPFza5cA
+         abQi/h4N4z34xYKgoA2Bzi1X34UMwaB3URqiW+Ih8+yVqqdVrMHpOnYgjdGlptdsysO9
+         csyg==
+X-Gm-Message-State: APjAAAXd/zlmfNm4mZpv7Fq9rVkdo8C53Rmct3jwyPpJYvg8ygzC2azr
+        w2XGLILxbuPi1TnnddDTES4=
+X-Google-Smtp-Source: APXvYqxQt4HKtU+mhTRODf4SoAxaQDHF0I/aUHtP9fs5nk899u2krgegn8ajeLFv89fnU61AdhzHfQ==
+X-Received: by 2002:a63:4b02:: with SMTP id y2mr86185042pga.135.1564077373464;
+        Thu, 25 Jul 2019 10:56:13 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l124sm50834686pgl.54.2019.07.25.10.56.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 10:56:12 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 10:56:11 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 000/271] 4.19.61-stable review
+Message-ID: <20190725175611.GA29814@roeck-us.net>
+References: <20190724191655.268628197@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20190725175023.GA30641@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, hch@lst.de, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, willy@infradead.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v6 04/16] nvme-core: introduce nvme_get_by_path()
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-07-25 11:50 a.m., Matthew Wilcox wrote:
-> On Thu, Jul 25, 2019 at 11:23:23AM -0600, Logan Gunthorpe wrote:
->> nvme_get_by_path() is analagous to blkdev_get_by_path() except it
->> gets a struct nvme_ctrl from the path to its char dev (/dev/nvme0).
->>
->> The purpose of this function is to support NVMe-OF target passthru.
+On Wed, Jul 24, 2019 at 09:17:49PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.61 release.
+> There are 271 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> I can't find anywhere that you use this in this patchset.
+> Responses should be made by Fri 26 Jul 2019 07:13:35 PM UTC.
+> Anything received after that time might be too late.
 > 
 
-Oh sorry, the commit message is out of date the function was actually
-called nvme_ctrl_get_by_path() and it's used in Patch 10.
+Build results:
+	total: 156 pass: 156 fail: 0
+Qemu test results:
+	total: 364 pass: 364 fail: 0
 
-I'll fix the commit message for the next version.
-
-Logan
+Guenter
