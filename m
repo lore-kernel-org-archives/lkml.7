@@ -2,73 +2,125 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F30E0C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A5EC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C860A229F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:04:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564059850;
-	bh=kSsOkcHxhfceNWz39WywJ4n4fvDw4GrpNDBcNBi5atk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GQsVPkNt1SOVoU6KBCcd8bWyLllDWX8UPGkEpnqMKPyrPQqbhKJJ7327UUYJpXosj
-	 nQTATpaNQuK6cxaPOBFgx/tesGzCvgtxxn8QyKshkvsRGw9vcssfL+bJ7/6zuxKiHD
-	 35o8TfRHfZRGoEI5Rj08dWFKQmIj24fC8dv6SuZ8=
+	by mail.kernel.org (Postfix) with ESMTP id 6362A229F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729697AbfGYNEJ (ORCPT
+        id S1729938AbfGYNEN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:04:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727031AbfGYNEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:04:09 -0400
-Received: from localhost (unknown [49.207.58.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFF1621951;
-        Thu, 25 Jul 2019 13:04:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564059848;
-        bh=kSsOkcHxhfceNWz39WywJ4n4fvDw4GrpNDBcNBi5atk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mYWb44sRe5vsbI54z5fqDTLZGkSwc7EA1hHQjfmUOoLz/jaDt+q/f43pu6Huy+8D+
-         IwbXfYpn/yQhksV4T8sCULCu0DqhzyI51sgKoP7uPa7LPrTOivQrPMN29eDniN36b9
-         uHtTNowvayu/cHaT4vNp+44ueswPc8y8/gQG4moQ=
-Date:   Thu, 25 Jul 2019 18:32:55 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     ldewangan@nvidia.com, jonathanh@nvidia.com,
-        dan.j.williams@intel.com, thierry.reding@gmail.com,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: tegra210-adma: Fix unused function warnings
-Message-ID: <20190725130255.GV12733@vkoul-mobl.Dlink>
-References: <20190709083258.57112-1-yuehaibing@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190709083258.57112-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Thu, 25 Jul 2019 09:04:13 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:42108 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbfGYNEL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 09:04:11 -0400
+Received: from marcel-macbook.fritz.box (p5B3D2BA7.dip0.t-ipconnect.de [91.61.43.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 03654CECA3;
+        Thu, 25 Jul 2019 15:12:46 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: KASAN: use-after-free Read in h5_rx_3wire_hdr
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CACT4Y+bdU4O4zux4NAxqX5kVgcppDuLAiVxHpJ8TzLEXfAFvTQ@mail.gmail.com>
+Date:   Thu, 25 Jul 2019 15:04:09 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        syzbot <syzbot+0abbda0523882250a97a@syzkaller.appspotmail.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <5A513494-AAFC-4AF6-9A0E-9271971A67C2@holtmann.org>
+References: <0000000000003fd4ab058e46951f@google.com>
+ <CACT4Y+YLqSt34ka5kQQNBeo+GvGZ0dzNFL3Rb8_1Cid_C75_2w@mail.gmail.com>
+ <500EB100-0253-4934-80FD-689C32ED310C@holtmann.org>
+ <CACT4Y+aRxn2Wgr7OuZRMb-PbvpJqbeLVUAkygUd_2y6+4u_5Jg@mail.gmail.com>
+ <9F8A3279-E5BE-4852-B099-7CD94A08C1CE@holtmann.org>
+ <CACT4Y+bdU4O4zux4NAxqX5kVgcppDuLAiVxHpJ8TzLEXfAFvTQ@mail.gmail.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-07-19, 16:32, YueHaibing wrote:
-> If CONFIG_PM is not set, build warnings:
-> 
-> drivers/dma/tegra210-adma.c:747:12: warning: tegra_adma_runtime_resume defined but not used [-Wunused-function]
->  static int tegra_adma_runtime_resume(struct device *dev)
-> drivers/dma/tegra210-adma.c:715:12: warning: tegra_adma_runtime_suspend defined but not used [-Wunused-function]
->  static int tegra_adma_runtime_suspend(struct device *dev)
-> 
-> Mark the two function as __maybe_unused.
+Hi Dmitry,
 
-Applied, thanks
+>>>>>> syzbot found the following crash on:
+>>>>>> 
+>>>>>> HEAD commit:    6d21a41b Add linux-next specific files for 20190718
+>>>>>> git tree:       linux-next
+>>>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=1377958fa00000
+>>>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
+>>>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=0abbda0523882250a97a
+>>>>>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>>>>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=113e2bb7a00000
+>>>>> 
+>>>>> +drivers/bluetooth/hci_h5.c maintainers
+>>>>> 
+>>>>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>>>>>> Reported-by: syzbot+0abbda0523882250a97a@syzkaller.appspotmail.com
+>>>>>> 
+>>>>>> ==================================================================
+>>>>>> BUG: KASAN: use-after-free in h5_rx_3wire_hdr+0x35d/0x3c0
+>>>>>> /drivers/bluetooth/hci_h5.c:438
+>>>>>> Read of size 1 at addr ffff8880a161d1c8 by task syz-executor.4/12040
+>>>>>> 
+>>>>>> CPU: 1 PID: 12040 Comm: syz-executor.4 Not tainted 5.2.0-next-20190718 #41
+>>>>>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+>>>>>> Google 01/01/2011
+>>>>>> Call Trace:
+>>>>>> __dump_stack /lib/dump_stack.c:77 [inline]
+>>>>>> dump_stack+0x172/0x1f0 /lib/dump_stack.c:113
+>>>>>> print_address_description.cold+0xd4/0x306 /mm/kasan/report.c:351
+>>>>>> __kasan_report.cold+0x1b/0x36 /mm/kasan/report.c:482
+>>>>>> kasan_report+0x12/0x17 /mm/kasan/common.c:612
+>>>>>> __asan_report_load1_noabort+0x14/0x20 /mm/kasan/generic_report.c:129
+>>>>>> h5_rx_3wire_hdr+0x35d/0x3c0 /drivers/bluetooth/hci_h5.c:438
+>>>>>> h5_recv+0x32f/0x500 /drivers/bluetooth/hci_h5.c:563
+>>>>>> hci_uart_tty_receive+0x279/0x790 /drivers/bluetooth/hci_ldisc.c:600
+>>>>>> tiocsti /drivers/tty/tty_io.c:2197 [inline]
+>>>>>> tty_ioctl+0x949/0x14f0 /drivers/tty/tty_io.c:2573
+>>>>>> vfs_ioctl /fs/ioctl.c:46 [inline]
+>>>>>> file_ioctl /fs/ioctl.c:509 [inline]
+>>>>>> do_vfs_ioctl+0xdb6/0x13e0 /fs/ioctl.c:696
+>>>>>> ksys_ioctl+0xab/0xd0 /fs/ioctl.c:713
+>>>>>> __do_sys_ioctl /fs/ioctl.c:720 [inline]
+>>>>>> __se_sys_ioctl /fs/ioctl.c:718 [inline]
+>>>>>> __x64_sys_ioctl+0x73/0xb0 /fs/ioctl.c:718
+>>>>>> do_syscall_64+0xfd/0x6a0 /arch/x86/entry/common.c:296
+>>>>>> entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>>>>>> RIP: 0033:0x459819
+>>>>>> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
+>>>>>> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+>>>>>> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+>>>>>> RSP: 002b:00007f7a3b459c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+>>>>>> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459819
+>>>>>> RDX: 0000000020000080 RSI: 0000000000005412 RDI: 0000000000000003
+>>>>>> RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+>>>>>> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7a3b45a6d4
+>>>>>> R13: 00000000004c408a R14: 00000000004d7ff0 R15: 00000000ffffffff
+>>>> 
+>>>> Is this happening on specific hardware?
+>>> 
+>>>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+>> 
+>> funny ;)
+>> 
+>> I meant the Bluetooth chip on this machine.
+> 
+> I don't think there are any Bluetooth chips exposed in GCE VMs. I
+> would expect that this bug does not require any hardware to trigger.
 
--- 
-~Vinod
+then this might be also the same bug as the other missing drivers->ops checking. See https://lore.kernel.org/linux-bluetooth/2E234F47-724D-4CFB-93B5-48E5BDA6F230@holtmann.org/ for a proposed patch. However I have the feeling that hci_h5.c needs to be added to this as well.
+
+Regards
+
+Marcel
+
