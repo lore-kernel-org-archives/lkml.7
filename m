@@ -2,122 +2,136 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E9CC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8417C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C994229F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91890229F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:09:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="u8MhPja8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389977AbfGYQJl (ORCPT
+        id S2390001AbfGYQJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:09:41 -0400
-Received: from mga05.intel.com ([192.55.52.43]:10970 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726087AbfGYQJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:09:40 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 09:09:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,307,1559545200"; 
-   d="scan'208";a="189348518"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.165])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Jul 2019 09:09:39 -0700
-Date:   Thu, 25 Jul 2019 09:09:39 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        wanpengli@tencent.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        patches@kernelci.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>, jmattson@google.com
-Subject: Re: [PATCH 5.2 000/413] 5.2.3-stable review
-Message-ID: <20190725160939.GC18612@linux.intel.com>
-References: <20190724191735.096702571@linuxfoundation.org>
- <CADYN=9+WLxhmqX3JNL_s-kWSN97G=8WhD=TF=uAuKecJnKcj_Q@mail.gmail.com>
- <20190725113437.GA27429@kroah.com>
- <230a5b34-d23e-8318-0b1f-d23ada7318e0@redhat.com>
- <CA+G9fYsWdmboyquZ=Bs3tkTwRFTzd1yuL0_EVpHOecNi4E_stA@mail.gmail.com>
+        Thu, 25 Jul 2019 12:09:45 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:50457 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389618AbfGYQJn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 12:09:43 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PG9OeX1073997
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 09:09:24 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PG9OeX1073997
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564070965;
+        bh=9SG7t/RY018saHj3Z1m4ZVOailUC1xrgcrB5xVaf+Hg=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=u8MhPja8rUqGbbPrt0vFgWJbo2rPzCZ4Crew2zA+00w2KdhK5w4eGcYyqx+Tt63zf
+         WgDUHX0lQ+2lOFifbhqWIY5Q1Kr/H/6/V2JenILYAmOuZc7GY4qOwGVGSLiJ+htjoP
+         cTu8PWYTZbbGfKDt6odzPm0WW7/3DAqaHUx8NAd5Gvm/hy5KCS5vDqwJ49oYYNOoQU
+         h5r4Tv0CcTfIdhaD5SQbPGsZgjTs/11puwwww1c0LFd6cFQP3JgnJ0C+h49su8MQ4y
+         2vaAP+KWDpcKoTQbtD+7zIfEEeJRqkdnu7BlAAi3ZJCd8IeAB6KyLd7Fl10ksdSnSp
+         VdaH0YmNGDtMg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PG9Ofm1073994;
+        Thu, 25 Jul 2019 09:09:24 -0700
+Date:   Thu, 25 Jul 2019 09:09:24 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Bart Van Assche <tipbot@zytor.com>
+Message-ID: <tip-a2970421640bd9b6a78f2685d7750a791abdfd4e@git.kernel.org>
+Cc:     mingo@kernel.org, will.deacon@arm.com, bvanassche@acm.org,
+        linux-kernel@vger.kernel.org, longman@redhat.com,
+        tglx@linutronix.de, torvalds@linux-foundation.org,
+        peterz@infradead.org, hpa@zytor.com
+Reply-To: longman@redhat.com, tglx@linutronix.de,
+          torvalds@linux-foundation.org, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, bvanassche@acm.org,
+          will.deacon@arm.com, hpa@zytor.com, peterz@infradead.org
+In-Reply-To: <20190722182443.216015-3-bvanassche@acm.org>
+References: <20190722182443.216015-3-bvanassche@acm.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:locking/core] stacktrace: Constify 'entries' arguments
+Git-Commit-ID: a2970421640bd9b6a78f2685d7750a791abdfd4e
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYsWdmboyquZ=Bs3tkTwRFTzd1yuL0_EVpHOecNi4E_stA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 07:35:13PM +0530, Naresh Kamboju wrote:
-> Paolo,
-> 
-> On Thu, 25 Jul 2019 at 19:17, Paolo Bonzini <pbonzini@redhat.com> wrote:
-> >
-> > On 25/07/19 13:34, Greg Kroah-Hartman wrote:
-> > > Any chance you can run 'git bisect' to find the offending patch?  Or
-> > > just try reverting a few, you can ignore the ppc ones, so that only
-> > > leaves you 7 different commits.
-> > >
-> > > Does this same test pass in 5.3-rc1?
-> 
-> Yes. same test pass on 5.3-rc1
-> kvm unit test always fetching master branch and at tip
-> runs the latest test code on all branches
-> mainline 5.3-rc1 and stable-rc-5.2 branch
-> 
-> >
-> > Anders, are you running the same kvm-unit-tests commit that passed for
-> > 5.2.2?  My suspicion is that your previous test didn't have this commit
-> 
-> No.
-> I see two extra test code commits for 5.2.3
-> Re-tested 5.2.2 with tip of kvm unit tests sources and vmx test FAILED [1].
-> 
-> Greg,
-> This investigation confirms it is a new test code failure on stable-rc 5.2.3
+Commit-ID:  a2970421640bd9b6a78f2685d7750a791abdfd4e
+Gitweb:     https://git.kernel.org/tip/a2970421640bd9b6a78f2685d7750a791abdfd4e
+Author:     Bart Van Assche <bvanassche@acm.org>
+AuthorDate: Mon, 22 Jul 2019 11:24:41 -0700
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Thu, 25 Jul 2019 15:43:26 +0200
 
-No, it only confirms that kvm-unit-tests/master fails on 5.2.*.  To confirm
-a new failure in 5.2.3 you would need to show a test that passes on 5.2.2
-and fails on 5.2.3.
+stacktrace: Constify 'entries' arguments
 
-As Paolo suspected, kvm-unit-tests/master fails on 5.2.* and passes if
-commit 95d6d2c ("nVMX: Test Host Segment Registers and Descriptor Tables on
-vmentry of nested guests") is reverted (from kvm-unit-tests).
+Make it clear to humans and to the compiler that the stack trace
+('entries') arguments are not modified.
 
-The failures are quite clearly in the new test(s).
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Link: https://lkml.kernel.org/r/20190722182443.216015-3-bvanassche@acm.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ include/linux/stacktrace.h | 4 ++--
+ kernel/stacktrace.c        | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-  PASS: HOST_SEL_CS 8: vmlaunch succeeds
-  FAIL: HOST_SEL_CS 9: vmlaunch fails
-  FAIL: HOST_SEL_CS c: vmlaunch fails
-  PASS: HOST_SEL_SS 10: vmlaunch succeeds
-  FAIL: HOST_SEL_SS 11: vmlaunch fails
-  FAIL: HOST_SEL_SS 14: vmlaunch fails
-  PASS: HOST_SEL_DS 10: vmlaunch succeeds
-  FAIL: HOST_SEL_DS 11: vmlaunch fails
-  FAIL: HOST_SEL_DS 14: vmlaunch fails
-  PASS: HOST_SEL_ES 10: vmlaunch succeeds
-  FAIL: HOST_SEL_ES 11: vmlaunch fails
-  FAIL: HOST_SEL_ES 14: vmlaunch fails
-  PASS: HOST_SEL_FS 10: vmlaunch succeeds
-  FAIL: HOST_SEL_FS 11: vmlaunch fails
-  FAIL: HOST_SEL_FS 14: vmlaunch fails
-  PASS: HOST_SEL_GS 10: vmlaunch succeeds
-  FAIL: HOST_SEL_GS 11: vmlaunch fails
-  FAIL: HOST_SEL_GS 14: vmlaunch fails
-  PASS: HOST_SEL_TR 80: vmlaunch succeeds
-  FAIL: HOST_SEL_TR 81: vmlaunch fails
-  KVM: entry failed, hardware error 0x80000021
+diff --git a/include/linux/stacktrace.h b/include/linux/stacktrace.h
+index f0cfd12cb45e..83bd8cb475d7 100644
+--- a/include/linux/stacktrace.h
++++ b/include/linux/stacktrace.h
+@@ -9,9 +9,9 @@ struct task_struct;
+ struct pt_regs;
+ 
+ #ifdef CONFIG_STACKTRACE
+-void stack_trace_print(unsigned long *trace, unsigned int nr_entries,
++void stack_trace_print(const unsigned long *trace, unsigned int nr_entries,
+ 		       int spaces);
+-int stack_trace_snprint(char *buf, size_t size, unsigned long *entries,
++int stack_trace_snprint(char *buf, size_t size, const unsigned long *entries,
+ 			unsigned int nr_entries, int spaces);
+ unsigned int stack_trace_save(unsigned long *store, unsigned int size,
+ 			      unsigned int skipnr);
+diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+index f5440abb7532..6d1f68b7e528 100644
+--- a/kernel/stacktrace.c
++++ b/kernel/stacktrace.c
+@@ -20,7 +20,7 @@
+  * @nr_entries:	Number of entries in the storage array
+  * @spaces:	Number of leading spaces to print
+  */
+-void stack_trace_print(unsigned long *entries, unsigned int nr_entries,
++void stack_trace_print(const unsigned long *entries, unsigned int nr_entries,
+ 		       int spaces)
+ {
+ 	unsigned int i;
+@@ -43,7 +43,7 @@ EXPORT_SYMBOL_GPL(stack_trace_print);
+  *
+  * Return: Number of bytes printed.
+  */
+-int stack_trace_snprint(char *buf, size_t size, unsigned long *entries,
++int stack_trace_snprint(char *buf, size_t size, const unsigned long *entries,
+ 			unsigned int nr_entries, int spaces)
+ {
+ 	unsigned int generated, i, total = 0;
