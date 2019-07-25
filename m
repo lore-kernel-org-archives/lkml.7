@@ -2,140 +2,105 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B187CC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74571C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E77217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D5E22C7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:44:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qL7vPBlK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388954AbfGYMoP (ORCPT
+        id S2389000AbfGYMoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:44:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:56502 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387824AbfGYMoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:44:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7ACC728;
-        Thu, 25 Jul 2019 05:44:14 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BAE2E3F71F;
-        Thu, 25 Jul 2019 05:44:12 -0700 (PDT)
-Subject: Re: [PATCH 1/1] efi: cper: print AER info of PCIe fatal error
-To:     Xiaofei Tan <tanxiaofei@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-efi@vger.kernel.org, rjw@rjwysocki.net, lenb@kernel.org,
-        tony.luck@intel.com, bp@alien8.de, ying.huang@intel.com,
-        ross.lagerwall@citrix.com, ard.biesheuvel@linaro.org,
-        lance.ortiz@hp.com
-References: <1562898017-27166-1-git-send-email-tanxiaofei@huawei.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <e596aec8-1239-0a46-39cf-e682fada9945@arm.com>
-Date:   Thu, 25 Jul 2019 13:44:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 25 Jul 2019 08:44:22 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38944 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388964AbfGYMoV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 08:44:21 -0400
+Received: by mail-wm1-f67.google.com with SMTP id u25so34259485wmc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 05:44:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=b4dDvUYUcaoedc7hESwQnb90HFz1PUes4aKbZ6RFIAI=;
+        b=qL7vPBlK/NHpG6iycR8FLizvf8abUgpmI4yWcLO/wCtRtkNGDJ+soLR78PZAbWyA6q
+         8yV8W8GlayV9AAi8ufsdR9vvtyZ2ev6tpVkQ/CwtVUSgYmJuxVOd88T2WKyUW1FTy8FY
+         QLb4vVbp0V3nPa3O76E71goPwejCMBU+rHbOTJGhHtlcsMyrIsSyg9fSAntZk3GnJu7m
+         H/ROJJ4G+y5EhMruULrt4+xc3jwgJRlNMD08Lb3yi0WqWKlf9KpqbeU0/WRVzh/wArKc
+         eCsvTTyJSWjx0yTIWt8FxdRdLLJA555VrbV0JzN6k3tFgSCln3HPTO7KaM9oDrBNEiRN
+         wUJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=b4dDvUYUcaoedc7hESwQnb90HFz1PUes4aKbZ6RFIAI=;
+        b=rQpAmR/dJcgLKBMq31SDU2fWsh4HUxziiavYH3Qt2jZz/xEz1dRAiCZ//eCu1KhbPL
+         /3q48M8L6gyhixoz8sUAgfJUSaiO6Q4KgxTwAgTpao1TI2ul6Msv+FSFCvACTGs0c+bD
+         Ey3PjA8zEu2+xX/NXIblaC3D94vdiM1/VkWVE4sN2LffP66l0+YOIDl6vK+QRCC/xLty
+         mPUfwBRtSY34zrmEes76WHDuGWAnMhcItXq0VV7dalipKAfgoDZ4I3UW/8kvTk99INhq
+         yg3zSks72ywzrvb8uan6r+6f3cyLWDPTdfBjp6fDA+Z8MbnwKdvBdQaUiWaHTYirrhTJ
+         9e9A==
+X-Gm-Message-State: APjAAAUgEVgZY944/mgZ0CuIYMxuxgyhZdj1wymNgMuk+b+ITiH+FzrM
+        MKhwTn0batk4J1jkaGyPJDBarA==
+X-Google-Smtp-Source: APXvYqzEY7p6szi6Fgq7aooYpYSyCQ5B1QdXU+zpKCgz2y49Djc7L4JnFgX3xHviFk7Zg4ULnMyw4Q==
+X-Received: by 2002:a1c:96c7:: with SMTP id y190mr73668487wmd.87.1564058659005;
+        Thu, 25 Jul 2019 05:44:19 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id u1sm44979830wml.14.2019.07.25.05.44.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Jul 2019 05:44:18 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 13:44:08 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [RESEND] mfd: davinci_voicecodec: remove pointless
+ #include
+Message-ID: <20190725124408.GK23883@dell>
+References: <20190722114725.3398694-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <1562898017-27166-1-git-send-email-tanxiaofei@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190722114725.3398694-1-arnd@arndb.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, 22 Jul 2019, Arnd Bergmann wrote:
 
-On 12/07/2019 03:20, Xiaofei Tan wrote:
-> AER info of PCIe fatal error is not printed in the current driver.
-> Because APEI driver will panic directly for fatal error, and can't
-> run to the place of printing AER info.
+> When building davinci as multiplatform, we get a build error
+> in this file:
 > 
-> An example log is as following:
-> [ 3157.655028] {763}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 11
-> [ 3157.663610] {763}[Hardware Error]: event severity: fatal
-> [ 3157.663612] {763}[Hardware Error]:  Error 0, type: fatal
-> [ 3157.663614] {763}[Hardware Error]:   section_type: PCIe error
-> [ 3157.680328] {763}[Hardware Error]:   port_type: 0, PCIe end point
-> [ 3157.680329] {763}[Hardware Error]:   version: 4.0
-> [ 3157.680332] {763}[Hardware Error]:   command: 0x0000, status: 0x0010
-> [ 3157.698757] {763}[Hardware Error]:   device_id: 0000:82:00.0
-> [ 3157.698758] {763}[Hardware Error]:   slot: 0
-> [ 3157.698759] {763}[Hardware Error]:   secondary_bus: 0x00
-> [ 3157.698760] {763}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10fb
-> [ 3157.698761] {763}[Hardware Error]:   class_code: 000002
-> [ 3157.698825] Kernel panic - not syncing: Fatal hardware error!
+> drivers/mfd/davinci_voicecodec.c:22:10: fatal error: 'mach/hardware.h' file not found
 > 
-> This issue was imported by the patch, '37448adfc7ce ("aerdrv: Move
-> cper_print_aer() call out of interrupt context")'. To fix this issue,
-> this patch adds print of AER info in cper_print_pcie() for fatal error.
+> The header is only used to access the io_v2p() macro, but the
+> result is already known because that comes from the resource
+> a little bit earlier.
 > 
-> Here is the example log after this patch applied:
-> [ 7032.893566] {24}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 10
-> [ 7032.901965] {24}[Hardware Error]: event severity: fatal
-> [ 7032.907166] {24}[Hardware Error]:  Error 0, type: fatal
-> [ 7032.912366] {24}[Hardware Error]:   section_type: PCIe error
-> [ 7032.917998] {24}[Hardware Error]:   port_type: 0, PCIe end point
-> [ 7032.923974] {24}[Hardware Error]:   version: 4.0
-> [ 7032.928569] {24}[Hardware Error]:   command: 0x0546, status: 0x4010
-> [ 7032.934806] {24}[Hardware Error]:   device_id: 0000:01:00.0
-> [ 7032.940352] {24}[Hardware Error]:   slot: 0
-> [ 7032.944514] {24}[Hardware Error]:   secondary_bus: 0x00
-> [ 7032.949714] {24}[Hardware Error]:   vendor_id: 0x15b3, device_id: 0x1019
-> [ 7032.956381] {24}[Hardware Error]:   class_code: 000002
-> [ 7032.961495] {24}[Hardware Error]:   aer_uncor_status: 0x00040000, aer_uncor_mask: 0x00000000
-> [ 7032.969891] {24}[Hardware Error]:   aer_uncor_severity: 0x00062010
-> [ 7032.976042] {24}[Hardware Error]:   TLP Header: 000000c0 01010000 00000001 00000000
-> [ 7032.983663] Kernel panic - not syncing: Fatal hardware error!
+> Acked-by: Sekhar Nori <nsekhar@ti.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> I sent this in June, but it did not get picked up into the mfd
+> tree. Sending the same one again in case it got lost.
+> ---
+>  drivers/mfd/davinci_voicecodec.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 
-> Fixes: 37448adfc7ce ("aerdrv: Move cper_print_aer() call out of
-> interrupt context")
+Applied, thanks.
 
-(Please put this all on one line)
-
-
-> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-> index 8fa977c..bf8600d 100644
-> --- a/drivers/firmware/efi/cper.c
-> +++ b/drivers/firmware/efi/cper.c
-> @@ -390,6 +390,19 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
->  		printk(
->  	"%s""bridge: secondary_status: 0x%04x, control: 0x%04x\n",
->  	pfx, pcie->bridge.secondary_status, pcie->bridge.control);
-
-It may be worth a comment explaining why we only do this for fatal errors. Something like:
-| /* Fatal errors call __ghes_panic() before the AER handler gets to print this */
-
-
-> +	if (pcie->validation_bits & CPER_PCIE_VALID_AER_INFO &&
-> +	    gdata->error_severity & CPER_SEV_FATAL) {
-> +		struct aer_capability_regs *aer;
-> +
-> +		aer = (struct aer_capability_regs *)pcie->aer_info;
-> +		printk("%saer_uncor_status: 0x%08x, aer_uncor_mask: 0x%08x\n",
-
-The convention in the rest of the file is for the prefix format string to be separate. i.e:
-| "%s""aer_uncor_status: ..."
-
-Could it be the same for consistency?
-
-> +		       pfx, aer->uncor_status, aer->uncor_mask);
-> +		printk("%saer_uncor_severity: 0x%08x\n",
-> +		       pfx, aer->uncor_severity);
-> +		printk("%sTLP Header: %08x %08x %08x %08x\n", pfx,
-> +		       aer->header_log.dw0, aer->header_log.dw1,
-> +		       aer->header_log.dw2, aer->header_log.dw3);
-> +	}
->  }
-
-Regardless,
-Reviewed-by; James Morse <james.morse@arm.com>
-
-
-Thanks,
-
-James
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
