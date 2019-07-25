@@ -2,229 +2,86 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0A5C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB49EC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23DA6218EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:50:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BcFtG2aZ"
+	by mail.kernel.org (Postfix) with ESMTP id 88B78218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfGYTug (ORCPT
+        id S1726333AbfGYTyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 15:50:36 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54235 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfGYTug (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:50:36 -0400
-Received: by mail-wm1-f67.google.com with SMTP id x15so46017863wmj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 12:50:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FV1xDJoP9a0vwOXDEvXEM+/RPFrYOHva7RrN0TOy9Co=;
-        b=BcFtG2aZ5PiXakx2S5FN3AxBrs99PwJIjVKFkTjJZ6C2jOdIPihUCqzwIGvHbtZUQM
-         tCK8oys1Ol7MIJal/tIi8TvSd64AW1nOci+wJpEUZhyqsDETYxeujipYE9oAMV30P1ZD
-         +h9U87DwcQhHyn6EBXqWEodnu9MPIrDLGqt7tkScq3ir7jCni7BfgtgJMnjlcwWqp1C7
-         eHyJz5Wy+TFj0gMTYNBKX9GksLbZn9UCcdD/LrRGZjn1YUzi0HwZtGMX2seREvCk9+SS
-         Dn8krF19Eh/NuTnnp7Gawygl0x+dSCmwmy8HvPbl2bZud0Fx51Qo6XiREHYIh+phPIM+
-         6uuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FV1xDJoP9a0vwOXDEvXEM+/RPFrYOHva7RrN0TOy9Co=;
-        b=SVHqME83/3mBOlOjoa3Dd5J4ItgpPNJTO/hnLDeC1PSRhfGzquxBmT51ihvC38VbIz
-         knE9I7jSBWMVhkEcDjPTuM+Y2yrXtXZmcrlJ7OBSoEBgkdG4MpJ5KLrdk5RKQteS1t3c
-         PnsMJ1ycGbWm1saQzsbuRammqD5/ghX+7gU7Yd2T1NNGk1PBtH8NyQZ7k1arXTKLA7vr
-         Ha6IDytsaFn8cvtTevAWSnaFV5dob5S9exrhvZzEt+YdkL0Z3ziUvO7TnAPDaaBoKuk6
-         PW1JNhoDWfB4PlHksGJG7n/ozMY7T243fn4zZBd0iHfdmUuz8kf6bhXJ82YefwQXm6Y5
-         hhxg==
-X-Gm-Message-State: APjAAAVQbzpouRGjh/3YI8657Zy6lpkxxeXlpx20CsyRS1c54Jv1Jtpa
-        v7F0jEXbOOMj5/pmj/Kh7L11gWajDpASodC4XDU=
-X-Google-Smtp-Source: APXvYqxM6VipCe3Akez4fcovXOfIwBfjz8dYtJ9asbenHiKkND5es85mKjTFXB+UyLkAzeKCoVwOMutAaAWzItLyzSE=
-X-Received: by 2002:a7b:c751:: with SMTP id w17mr84979969wmk.127.1564084233178;
- Thu, 25 Jul 2019 12:50:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAOKSTBs-cHMr7xbJVVUjZ9C3__bY6jZU-_TZ0RmMRMJ3dBk3PA@mail.gmail.com>
- <0c3f445d-1e37-1531-d3d5-f7ad75c58343@metux.net> <CADnq5_NqDNLzZW6h3cXBUfTMsBe6isvE6YQH=9Op6Gews=ubGg@mail.gmail.com>
- <CAOKSTBvjJ+3he9AJoRGkxQfQLoG_T9jY+H8p0o6A6FdmnisSJA@mail.gmail.com>
-In-Reply-To: <CAOKSTBvjJ+3he9AJoRGkxQfQLoG_T9jY+H8p0o6A6FdmnisSJA@mail.gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 25 Jul 2019 15:50:20 -0400
-Message-ID: <CADnq5_Mjq9GxeO3m3F2bEjfmWr7k2KbGkNVJ7k7YKNdVsyMb5Q@mail.gmail.com>
-Subject: Re: AMD Drivers
-To:     Gilberto Nunes <gilberto.nunes32@gmail.com>
-Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri devel <dri-devel@lists.freedesktop.org>
+        Thu, 25 Jul 2019 15:54:23 -0400
+Received: from mga07.intel.com ([134.134.136.100]:62331 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725923AbfGYTyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 15:54:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 12:54:22 -0700
+X-IronPort-AV: E=Sophos;i="5.64,307,1559545200"; 
+   d="scan'208";a="175354533"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 12:54:21 -0700
+Message-ID: <0530d9d32a7316adee62e067cb0fb8048f97da84.camel@linux.intel.com>
+Subject: Re: [PATCH v2 5/5] virtio-balloon: Add support for providing page
+ hints to host
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
+        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com
+Date:   Thu, 25 Jul 2019 12:54:21 -0700
+In-Reply-To: <fc99b28d-2efd-cd05-59e4-99f35bd37cac@redhat.com>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+         <20190724170514.6685.17161.stgit@localhost.localdomain>
+         <fc99b28d-2efd-cd05-59e4-99f35bd37cac@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 3:29 PM Gilberto Nunes
-<gilberto.nunes32@gmail.com> wrote:
->
-> Hi there!
->
-> I try the kernel 5.3.0-050300rc1-generic and almost everything works
-> perfectly, except there's no sound in HDMI!!!
+On Thu, 2019-07-25 at 13:42 -0400, Nitesh Narayan Lal wrote:
+> On 7/24/19 1:05 PM, Alexander Duyck wrote:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > 
+> > 
 
-Sounds is fixed with this patch:
-https://cgit.freedesktop.org/~agd5f/linux/commit/?h=3Ddrm-fixes-5.3&id=3D92=
-e6475ae0a0383b012eb21c1aaf0e5456b1a3d9
-which is on it's way upstream for rc2.
+<snip>
 
-Alex
+> > @@ -924,12 +956,24 @@ static int virtballoon_probe(struct virtio_device *vdev)
+> >  		if (err)
+> >  			goto out_del_balloon_wq;
+> >  	}
+> > +
+> > +	vb->ph_dev_info.react = virtballoon_page_hinting_react;
+> > +	vb->ph_dev_info.capacity = VIRTIO_BALLOON_ARRAY_HINTS_MAX;
+> > +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING)) {
+> > +		err = page_hinting_startup(&vb->ph_dev_info);
+> > +		if (err)
+> > +			goto out_unregister_shrinker;
+> > +	}
+> Any reason why you have kept vb->ph_dev_info.react & vb->ph_dev_info.capacity
+> initialization outside the feature check?
 
-> Pavucontrol show me device unplugged!
-> But I have now work properly NIC and GPU!
->
->
-> lspci
-> 00:00.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> (Models 60h-6fh) Processor Root Complex
-> 00:00.2 IOMMU: Advanced Micro Devices, Inc. [AMD] Family 15h (Models
-> 60h-6fh) I/O Memory Management Unit
-> 00:01.0 VGA compatible controller: Advanced Micro Devices, Inc.
-> [AMD/ATI] Wani [Radeon R5/R6/R7 Graphics] (rev c8)
-> 00:01.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Kabini
-> HDMI/DP Audio
-> 00:02.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> (Models 60h-6fh) Host Bridge
-> 00:02.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> (Models 60h-6fh) Processor Root Port
-> 00:02.3 PCI bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> (Models 60h-6fh) Processor Root Port
-> 00:03.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> (Models 60h-6fh) Host Bridge
-> 00:03.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> (Models 60h-6fh) Processor Root Port
-> 00:08.0 Encryption controller: Advanced Micro Devices, Inc. [AMD] Device =
-1578
-> 00:09.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 157d
-> 00:09.2 Audio device: Advanced Micro Devices, Inc. [AMD] Family 15h
-> (Models 60h-6fh) Audio Controller
-> 00:10.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB
-> XHCI Controller (rev 20)
-> 00:11.0 SATA controller: Advanced Micro Devices, Inc. [AMD] FCH SATA
-> Controller [AHCI mode] (rev 49)
-> 00:12.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB
-> EHCI Controller (rev 49)
-> 00:14.0 SMBus: Advanced Micro Devices, Inc. [AMD] FCH SMBus Controller (r=
-ev 4a)
-> 00:14.3 ISA bridge: Advanced Micro Devices, Inc. [AMD] FCH LPC Bridge (re=
-v 11)
-> 00:18.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> (Models 60h-6fh) Processor Function 0
-> 00:18.1 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> (Models 60h-6fh) Processor Function 1
-> 00:18.2 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> (Models 60h-6fh) Processor Function 2
-> 00:18.3 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> (Models 60h-6fh) Processor Function 3
-> 00:18.4 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> (Models 60h-6fh) Processor Function 4
-> 00:18.5 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> (Models 60h-6fh) Processor Function 5
-> 01:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd.
-> RTL8411B PCI Express Card Reader (rev 01)
-> 01:00.1 Ethernet controller: Realtek Semiconductor Co., Ltd.
-> RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 12)
-> 02:00.0 Network controller: Qualcomm Atheros QCA9377 802.11ac Wireless
-> Network Adapter (rev 31)
-> 03:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI]
-> Lexa PRO [Radeon RX 550/550X] (rev c3)
-> ---
-> Gilberto Nunes Ferreira
->
-> (47) 3025-5907
-> (47) 99676-7530 - Whatsapp / Telegram
->
-> Skype: gilberto.nunes36
->
->
-> Em qui, 25 de jul de 2019 =C3=A0s 14:26, Alex Deucher
-> <alexdeucher@gmail.com> escreveu:
-> >
-> > On Thu, Jul 25, 2019 at 3:30 AM Enrico Weigelt, metux IT consult
-> > <lkml@metux.net> wrote:
-> > >
-> > > On 24.07.19 16:17, Gilberto Nunes wrote:
-> > >
-> > > Hi,
-> > >
-> > > crossposting to dri-devel, as it smells like a problem w/ amdgpu driv=
-er.
-> > >
-> > > > CPU - AMD A12-9720P RADEON R7, 12 COMPUTE CORES 4C+8G
-> > > > GPU - Wani [Radeon R5/R6/R7 Graphics] (amdgpu)
-> > > > Network Interface card:
-> > > > 01:00.1 Ethernet controller: Realtek Semiconductor Co., Ltd.
-> > > > RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 12)
-> > > >
-> > > > When I install kernel 4.18.x or 5.x, the network doesn't work anymo=
-re...
-> > >
-> > > What about other versions (eg. v4.19) ?
-> > > Which is the last working version ?
-> > >
-> > > > I can loaded the modulo r8169 andr8168.
-> > > > I saw enp1s0f1 as well but there's no link at all!
-> > > > Even when I fixed the IP none link!
-> > > > I cannot ping the network gateway or any other IP inside LAN!
-> > > > Right now, I booted my laptop with kernel
-> > > > Linux version 5.2.2-050202-generic (kernel@kathleen) (gcc version
-> > > > 9.1.0 (Ubuntu 9.1.0-9ubuntu2)) #201907231250 SMP Tue Jul 23 12:53:2=
-1
-> > > > UTC 2019
-> > >
-> > > Could you also try 5.3 ?
-> > >
-> > > > The system boot slowly, and I have a SSD Samsung, which in kernel
-> > > > 4.15, boot quickly.
-> > > > And there's many errors in dmesg command, like you can see in this =
-pastbin
-> > > >
-> > > > https://paste.ubuntu.com/p/YhbjnzYYYh/
-> > >
-> > > looks like something's wrong w/ reading gpu registers (more precisely
-> > > waiting for some changing), that's causing the soft lockup. (maybe to=
-o
-> > > big timeout ?)
-> >
-> > It looks like the dGPU fails to power up properly when you attempt to
-> > use it.  You can append amdgpu.runpm=3D0 to the kernel command line in
-> > grub to disable dynamically powering down the dGPU.
-> >
-> > Alex
-> >
-> > >
-> > > > Oh! By the way, the network card r8169 are work wonderful!
-> > >
-> > > Didn't you say (above) that it does not work ?
-> > > Or is it just an immediate fail and later comes back ?
-> > >
-> > >
-> > > --mtx
-> > >
-> > >
-> > > --
-> > > Enrico Weigelt, metux IT consult
-> > > Free software and Linux embedded engineering
-> > > info@metux.net -- +49-151-27565287
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+I just had them on the outside because it didn't really matter if I
+initialized them or not if the feature was not present. So I just
+defaulted to initializing them in all cases.
+
+Since I will be updating capacity to be based on the size of the hinting
+queue in the next patch set I will move capacity initialization inside of
+the check.
+
