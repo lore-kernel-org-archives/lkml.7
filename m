@@ -2,123 +2,166 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8957C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CA5C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96FCD2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17D3D2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:59:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390968AbfGYN7g (ORCPT
+        id S2391045AbfGYN7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:59:36 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:48974 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404261AbfGYN6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:58:40 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 39A5F1A071A;
-        Thu, 25 Jul 2019 15:58:39 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2C9A51A0715;
-        Thu, 25 Jul 2019 15:58:39 +0200 (CEST)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D66C4205E8;
-        Thu, 25 Jul 2019 15:58:38 +0200 (CEST)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>
-Subject: [PATCH v3 07/14] crypto: caam - check zero-length input
-Date:   Thu, 25 Jul 2019 16:58:19 +0300
-Message-Id: <1564063106-9552-8-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1564063106-9552-1-git-send-email-iuliana.prodan@nxp.com>
-References: <1564063106-9552-1-git-send-email-iuliana.prodan@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 25 Jul 2019 09:59:44 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2727 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391013AbfGYN7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 09:59:42 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EE0BFC6FEE3286AEA0B4;
+        Thu, 25 Jul 2019 21:59:32 +0800 (CST)
+Received: from [127.0.0.1] (10.74.184.86) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 25 Jul 2019
+ 21:59:32 +0800
+Subject: Re: [PATCH 1/1] efi: cper: print AER info of PCIe fatal error
+To:     James Morse <james.morse@arm.com>
+References: <1562898017-27166-1-git-send-email-tanxiaofei@huawei.com>
+ <e596aec8-1239-0a46-39cf-e682fada9945@arm.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-efi@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <lenb@kernel.org>, <tony.luck@intel.com>, <bp@alien8.de>,
+        <ying.huang@intel.com>, <ross.lagerwall@citrix.com>,
+        <ard.biesheuvel@linaro.org>, <lance.ortiz@hp.com>
+From:   tanxiaofei <tanxiaofei@huawei.com>
+Message-ID: <5D39B5C1.6040707@huawei.com>
+Date:   Thu, 25 Jul 2019 21:59:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
+MIME-Version: 1.0
+In-Reply-To: <e596aec8-1239-0a46-39cf-e682fada9945@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.184.86]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check zero-length input, for skcipher algorithm, to solve the extra
-tests. This is a valid operation, therefore the API will return no error.
+Hi James,
+Thanks for the review.
 
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
----
- drivers/crypto/caam/caamalg.c     | 6 ++++++
- drivers/crypto/caam/caamalg_qi.c  | 3 +++
- drivers/crypto/caam/caamalg_qi2.c | 5 +++++
- 3 files changed, 14 insertions(+)
+On 2019/7/25 20:44, James Morse wrote:
+> Hi,
+> 
+> On 12/07/2019 03:20, Xiaofei Tan wrote:
+>> AER info of PCIe fatal error is not printed in the current driver.
+>> Because APEI driver will panic directly for fatal error, and can't
+>> run to the place of printing AER info.
+>>
+>> An example log is as following:
+>> [ 3157.655028] {763}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 11
+>> [ 3157.663610] {763}[Hardware Error]: event severity: fatal
+>> [ 3157.663612] {763}[Hardware Error]:  Error 0, type: fatal
+>> [ 3157.663614] {763}[Hardware Error]:   section_type: PCIe error
+>> [ 3157.680328] {763}[Hardware Error]:   port_type: 0, PCIe end point
+>> [ 3157.680329] {763}[Hardware Error]:   version: 4.0
+>> [ 3157.680332] {763}[Hardware Error]:   command: 0x0000, status: 0x0010
+>> [ 3157.698757] {763}[Hardware Error]:   device_id: 0000:82:00.0
+>> [ 3157.698758] {763}[Hardware Error]:   slot: 0
+>> [ 3157.698759] {763}[Hardware Error]:   secondary_bus: 0x00
+>> [ 3157.698760] {763}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10fb
+>> [ 3157.698761] {763}[Hardware Error]:   class_code: 000002
+>> [ 3157.698825] Kernel panic - not syncing: Fatal hardware error!
+>>
+>> This issue was imported by the patch, '37448adfc7ce ("aerdrv: Move
+>> cper_print_aer() call out of interrupt context")'. To fix this issue,
+>> this patch adds print of AER info in cper_print_pcie() for fatal error.
+>>
+>> Here is the example log after this patch applied:
+>> [ 7032.893566] {24}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 10
+>> [ 7032.901965] {24}[Hardware Error]: event severity: fatal
+>> [ 7032.907166] {24}[Hardware Error]:  Error 0, type: fatal
+>> [ 7032.912366] {24}[Hardware Error]:   section_type: PCIe error
+>> [ 7032.917998] {24}[Hardware Error]:   port_type: 0, PCIe end point
+>> [ 7032.923974] {24}[Hardware Error]:   version: 4.0
+>> [ 7032.928569] {24}[Hardware Error]:   command: 0x0546, status: 0x4010
+>> [ 7032.934806] {24}[Hardware Error]:   device_id: 0000:01:00.0
+>> [ 7032.940352] {24}[Hardware Error]:   slot: 0
+>> [ 7032.944514] {24}[Hardware Error]:   secondary_bus: 0x00
+>> [ 7032.949714] {24}[Hardware Error]:   vendor_id: 0x15b3, device_id: 0x1019
+>> [ 7032.956381] {24}[Hardware Error]:   class_code: 000002
+>> [ 7032.961495] {24}[Hardware Error]:   aer_uncor_status: 0x00040000, aer_uncor_mask: 0x00000000
+>> [ 7032.969891] {24}[Hardware Error]:   aer_uncor_severity: 0x00062010
+>> [ 7032.976042] {24}[Hardware Error]:   TLP Header: 000000c0 01010000 00000001 00000000
+>> [ 7032.983663] Kernel panic - not syncing: Fatal hardware error!
+> 
+>> Fixes: 37448adfc7ce ("aerdrv: Move cper_print_aer() call out of
+>> interrupt context")
+> 
+> (Please put this all on one line)
+> 
 
-diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index a5fcc31..b14a13b 100644
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -1884,6 +1884,9 @@ static int skcipher_encrypt(struct skcipher_request *req)
- 	u32 *desc;
- 	int ret = 0;
- 
-+	if (!req->cryptlen)
-+		return 0;
-+
- 	/* allocate extended descriptor */
- 	edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ);
- 	if (IS_ERR(edesc))
-@@ -1918,6 +1921,9 @@ static int skcipher_decrypt(struct skcipher_request *req)
- 	u32 *desc;
- 	int ret = 0;
- 
-+	if (!req->cryptlen)
-+		return 0;
-+
- 	/* allocate extended descriptor */
- 	edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ);
- 	if (IS_ERR(edesc))
-diff --git a/drivers/crypto/caam/caamalg_qi.c b/drivers/crypto/caam/caamalg_qi.c
-index b8de0a8..452467c 100644
---- a/drivers/crypto/caam/caamalg_qi.c
-+++ b/drivers/crypto/caam/caamalg_qi.c
-@@ -1443,6 +1443,9 @@ static inline int skcipher_crypt(struct skcipher_request *req, bool encrypt)
- 	struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
- 	int ret;
- 
-+	if (!req->cryptlen)
-+		return 0;
-+
- 	if (unlikely(caam_congested))
- 		return -EAGAIN;
- 
-diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
-index fb6c757..c1eca99 100644
---- a/drivers/crypto/caam/caamalg_qi2.c
-+++ b/drivers/crypto/caam/caamalg_qi2.c
-@@ -1498,6 +1498,9 @@ static int skcipher_encrypt(struct skcipher_request *req)
- 	struct caam_request *caam_req = skcipher_request_ctx(req);
- 	int ret;
- 
-+	if (!req->cryptlen)
-+		return 0;
-+
- 	/* allocate extended descriptor */
- 	edesc = skcipher_edesc_alloc(req);
- 	if (IS_ERR(edesc))
-@@ -1526,6 +1529,8 @@ static int skcipher_decrypt(struct skcipher_request *req)
- 	struct caam_request *caam_req = skcipher_request_ctx(req);
- 	int ret;
- 
-+	if (!req->cryptlen)
-+		return 0;
- 	/* allocate extended descriptor */
- 	edesc = skcipher_edesc_alloc(req);
- 	if (IS_ERR(edesc))
+OK.
+
+>> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+>> index 8fa977c..bf8600d 100644
+>> --- a/drivers/firmware/efi/cper.c
+>> +++ b/drivers/firmware/efi/cper.c
+>> @@ -390,6 +390,19 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
+>>  		printk(
+>>  	"%s""bridge: secondary_status: 0x%04x, control: 0x%04x\n",
+>>  	pfx, pcie->bridge.secondary_status, pcie->bridge.control);
+> 
+> It may be worth a comment explaining why we only do this for fatal errors. Something like:
+> | /* Fatal errors call __ghes_panic() before the AER handler gets to print this */
+> 
+
+OK. I will add this comment.
+
+> 
+>> +	if (pcie->validation_bits & CPER_PCIE_VALID_AER_INFO &&
+>> +	    gdata->error_severity & CPER_SEV_FATAL) {
+>> +		struct aer_capability_regs *aer;
+>> +
+>> +		aer = (struct aer_capability_regs *)pcie->aer_info;
+>> +		printk("%saer_uncor_status: 0x%08x, aer_uncor_mask: 0x%08x\n",
+> 
+> The convention in the rest of the file is for the prefix format string to be separate. i.e:
+> | "%s""aer_uncor_status: ..."
+> 
+> Could it be the same for consistency?
+>
+
+That way is not accepted by checkpatch.pl anymore, and was not used in some new commit.
+Such as :
+printk("%ssection_type: ARM processor error\n", newpfx);
+and
+printk("%ssection_type: IA32/X64 processor error\n", newpfx);
+
+>> +		       pfx, aer->uncor_status, aer->uncor_mask);
+>> +		printk("%saer_uncor_severity: 0x%08x\n",
+>> +		       pfx, aer->uncor_severity);
+>> +		printk("%sTLP Header: %08x %08x %08x %08x\n", pfx,
+>> +		       aer->header_log.dw0, aer->header_log.dw1,
+>> +		       aer->header_log.dw2, aer->header_log.dw3);
+>> +	}
+>>  }
+> 
+> Regardless,
+> Reviewed-by; James Morse <james.morse@arm.com>
+> 
+> 
+> Thanks,
+> 
+> James
+> 
+> .
+> 
+
 -- 
-2.1.0
+ thanks
+tanxiaofei
 
