@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E04D8C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCDEC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C8522BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B9D020840
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:09:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729658AbfGYHJh (ORCPT
+        id S1729588AbfGYHJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 03:09:37 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39266 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729608AbfGYHJS (ORCPT
+        Thu, 25 Jul 2019 03:09:15 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40808 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729527AbfGYHJL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 03:09:18 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6P76hu0004266
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:09:17 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ty58n67v5-1
+        Thu, 25 Jul 2019 03:09:11 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6P76ZEB067170
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:09:10 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ty4tpq2nv-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:09:17 -0400
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:09:09 -0400
 Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Thu, 25 Jul 2019 08:09:14 +0100
+        Thu, 25 Jul 2019 08:09:07 +0100
 Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 25 Jul 2019 08:09:11 +0100
+        Thu, 25 Jul 2019 08:09:04 +0100
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6P79AFj26935304
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6P793t939387256
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jul 2019 07:09:10 GMT
+        Thu, 25 Jul 2019 07:09:03 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8BF64C040;
-        Thu, 25 Jul 2019 07:09:10 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 980924C058;
+        Thu, 25 Jul 2019 07:09:03 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A13C4C046;
-        Thu, 25 Jul 2019 07:09:09 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 2CD544C040;
+        Thu, 25 Jul 2019 07:09:02 +0000 (GMT)
 Received: from localhost.in.ibm.com (unknown [9.124.35.169])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 25 Jul 2019 07:09:09 +0000 (GMT)
+        Thu, 25 Jul 2019 07:09:01 +0000 (GMT)
 From:   Parth Shah <parth@linux.ibm.com>
 To:     peterz@infradead.org, mingo@redhat.com
 Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
         patrick.bellasi@arm.com, dietmar.eggemann@arm.com,
         daniel.lezcano@linaro.org, subhra.mazumdar@oracle.com
-Subject: [RFC v4 6/8] sched/fair: Tune task wake-up logic to pack jitter tasks
-Date:   Thu, 25 Jul 2019 12:38:55 +0530
+Subject: [RFC v4 2/8] sched: Introduce switch to enable TurboSched mode
+Date:   Thu, 25 Jul 2019 12:38:51 +0530
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190725070857.6639-1-parth@linux.ibm.com>
 References: <20190725070857.6639-1-parth@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19072507-4275-0000-0000-000003505E58
+x-cbid: 19072507-0008-0000-0000-00000300961B
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19072507-4276-0000-0000-0000386088A7
-Message-Id: <20190725070857.6639-7-parth@linux.ibm.com>
+x-cbparentid: 19072507-0009-0000-0000-0000226E2951
+Message-Id: <20190725070857.6639-3-parth@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-25_03:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -75,200 +75,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The algorithm finds the first non idle core in the system and tries to
-place a task in the least utilized CPU in the chosen core. To maintain
-cache hotness, work of finding non idle core starts from the prev_cpu,
-which also reduces task ping-pong behaviour inside of the core.
+Create a static key which allows to enable or disable TurboSched feature at
+runtime.
 
-This is defined with a new method named core_underutilized() which will
-determine if the core utilization is less than 12.5% of its capacity.
-Since core with low utilization should not be selected for packing, the
-margin of under-utilization is kept at 12.5% of core capacity.
+This key is added in order to enable the TurboSched feature only when
+required. This helps in optimizing the scheduler fast-path when the
+TurboSched feature is disabled.
 
-12.5% is an experimental number which identifies whether the core is
-considered to be idle or not.  For task packing, the algorithm should
-select the best core where the task can be accommodated such that it does
-not wake up an idle core. But the jitter tasks should not be placed on the
-core which is about to go idle. If the core has aggregated utilization of
-<12.5%, it may go idle soon and hence packing on such core should be
-ignored. The experiment showed that keeping this threshold to 12.5% gives
-better decision capability on not selecting the core which will idle out
-soon.
+Also provide get/put methods to keep track of the tasks using the
+TurboSched feature and also refcount jitter tasks. This allows to enable
+the feature on setting first task classified as jitter, similarly disable
+the feature on unsetting of such last task.
 
 Signed-off-by: Parth Shah <parth@linux.ibm.com>
 ---
- kernel/sched/core.c |   3 ++
- kernel/sched/fair.c | 108 +++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 110 insertions(+), 1 deletion(-)
+ kernel/sched/core.c  | 20 ++++++++++++++++++++
+ kernel/sched/sched.h |  9 +++++++++
+ 2 files changed, 29 insertions(+)
 
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 60340fa18abb..fcfd0ab187ae 100644
+index e7cda4aa8696..ee5980b4e150 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -6402,6 +6402,7 @@ static struct kmem_cache *task_group_cache __read_mostly;
+@@ -72,6 +72,26 @@ __read_mostly int scheduler_running;
+  */
+ int sysctl_sched_rt_runtime = 950000;
  
- DECLARE_PER_CPU(cpumask_var_t, load_balance_mask);
- DECLARE_PER_CPU(cpumask_var_t, select_idle_mask);
-+DECLARE_PER_CPU(cpumask_var_t, turbo_sched_mask);
- 
- void __init sched_init(void)
- {
-@@ -6442,6 +6443,8 @@ void __init sched_init(void)
- 			cpumask_size(), GFP_KERNEL, cpu_to_node(i));
- 		per_cpu(select_idle_mask, i) = (cpumask_var_t)kzalloc_node(
- 			cpumask_size(), GFP_KERNEL, cpu_to_node(i));
-+		per_cpu(turbo_sched_mask, i) = (cpumask_var_t)kzalloc_node(
-+			cpumask_size(), GFP_KERNEL, cpu_to_node(i));
- 	}
- #endif /* CONFIG_CPUMASK_OFFSTACK */
- 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 793e1172afc7..3ba2dc44cba4 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5353,6 +5353,8 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- /* Working cpumask for: load_balance, load_balance_newidle. */
- DEFINE_PER_CPU(cpumask_var_t, load_balance_mask);
- DEFINE_PER_CPU(cpumask_var_t, select_idle_mask);
-+/* A cpumask to find active cores in the system. */
-+DEFINE_PER_CPU(cpumask_var_t, turbo_sched_mask);
- 
- #ifdef CONFIG_NO_HZ_COMMON
- 
-@@ -5964,6 +5966,14 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- 	return cpu;
- }
- 
-+static inline bool is_task_jitter(struct task_struct *p)
-+{
-+	if (p->flags & PF_CAN_BE_PACKED)
-+		return true;
++DEFINE_STATIC_KEY_FALSE(__turbo_sched_enabled);
++static DEFINE_MUTEX(turbo_sched_lock);
++static int turbo_sched_count;
 +
-+	return false;
++void turbo_sched_get(void)
++{
++	mutex_lock(&turbo_sched_lock);
++	if (!turbo_sched_count++)
++		static_branch_enable(&__turbo_sched_enabled);
++	mutex_unlock(&turbo_sched_lock);
 +}
 +
- #ifdef CONFIG_SCHED_SMT
- 
- #ifndef arch_scale_core_capacity
-@@ -5981,6 +5991,81 @@ static inline unsigned long arch_scale_core_capacity(int first_thread,
- }
- #endif
- 
-+/*
-+ * Core is defined as under-utilized in case if the aggregated utilization of a
-+ * all the CPUs in a core is less than 12.5%
-+ */
-+#define UNDERUTILIZED_THRESHOLD 3
-+static inline bool core_underutilized(unsigned long core_util,
-+				      unsigned long core_capacity)
++void turbo_sched_put(void)
 +{
-+	return core_util < (core_capacity >> UNDERUTILIZED_THRESHOLD);
++	mutex_lock(&turbo_sched_lock);
++	if (!--turbo_sched_count)
++		static_branch_disable(&__turbo_sched_enabled);
++	mutex_unlock(&turbo_sched_lock);
 +}
-+
-+/*
-+ * Try to find a non idle core in the system  with spare capacity
-+ * available for task packing, thereby keeping minimal cores active.
-+ * Uses first fit algorithm to pack low util jitter tasks on active cores.
-+ */
-+static int select_non_idle_core(struct task_struct *p, int prev_cpu, int target)
-+{
-+	struct cpumask *cpus = this_cpu_cpumask_var_ptr(turbo_sched_mask);
-+	int iter_cpu, sibling;
-+
-+	cpumask_and(cpus, cpu_online_mask, p->cpus_ptr);
-+
-+	for_each_cpu_wrap(iter_cpu, cpus, prev_cpu) {
-+		unsigned long core_util = 0;
-+		unsigned long core_cap = arch_scale_core_capacity(iter_cpu,
-+				capacity_of(iter_cpu));
-+		unsigned long est_util = 0, est_util_enqueued = 0;
-+		unsigned long util_best_cpu = ULONG_MAX;
-+		int best_cpu = iter_cpu;
-+		struct cfs_rq *cfs_rq;
-+
-+		for_each_cpu(sibling, cpu_smt_mask(iter_cpu)) {
-+			__cpumask_clear_cpu(sibling, cpus);
-+			core_util += cpu_util(sibling);
-+
-+			/*
-+			 * Keep track of least utilized CPU in the core
-+			 */
-+			if (cpu_util(sibling) < util_best_cpu) {
-+				util_best_cpu = cpu_util(sibling);
-+				best_cpu = sibling;
-+			}
-+		}
-+
-+		/*
-+		 * Find if the selected task will fit into this core or not by
-+		 * estimating the utilization of the core.
-+		 */
-+		if (!core_underutilized(core_util, core_cap)) {
-+			cfs_rq = &cpu_rq(best_cpu)->cfs;
-+			est_util =
-+				READ_ONCE(cfs_rq->avg.util_avg) + task_util(p);
-+			est_util_enqueued =
-+				READ_ONCE(cfs_rq->avg.util_est.enqueued);
-+			est_util_enqueued += _task_util_est(p);
-+			est_util = max(est_util, est_util_enqueued);
-+			est_util = core_util - util_best_cpu + est_util;
-+
-+			if (est_util < core_cap) {
-+				/*
-+				 * Try to bias towards prev_cpu to avoid task
-+				 * ping-pong behaviour inside the core.
-+				 */
-+				if (cpumask_test_cpu(prev_cpu,
-+						     cpu_smt_mask(iter_cpu)))
-+					return prev_cpu;
-+
-+				return best_cpu;
-+			}
-+		}
-+	}
-+
-+	return select_idle_sibling(p, prev_cpu, target);
-+}
- #endif
- 
- /*
-@@ -6437,6 +6522,23 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
- 	return -1;
- }
- 
-+#ifdef CONFIG_SCHED_SMT
-+/*
-+ * Select all jittersfor task packing
-+ */
-+static inline int turbosched_select_non_idle_core(struct task_struct *p,
-+						  int prev_cpu, int target)
-+{
-+	return select_non_idle_core(p, prev_cpu, target);
-+}
-+#else
-+static inline int turbosched_select_non_idle_core(struct task_struct *p,
-+						  int prev_cpu, int target)
-+{
-+	return select_idle_sibling(p, prev_cpu, target);
-+}
-+#endif
 +
  /*
-  * select_task_rq_fair: Select target runqueue for the waking task in domains
-  * that have the 'sd_flag' flag set. In practice, this is SD_BALANCE_WAKE,
-@@ -6502,7 +6604,11 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int sd_flag, int wake_f
- 	} else if (sd_flag & SD_BALANCE_WAKE) { /* XXX always ? */
- 		/* Fast path */
+  * __task_rq_lock - lock the rq @p resides on.
+  */
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 802b1f3405f2..4a0b90ea8652 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2423,3 +2423,12 @@ static inline bool sched_energy_enabled(void)
+ static inline bool sched_energy_enabled(void) { return false; }
  
--		new_cpu = select_idle_sibling(p, prev_cpu, new_cpu);
-+		if (is_turbosched_enabled() && unlikely(is_task_jitter(p)))
-+			new_cpu = turbosched_select_non_idle_core(p, prev_cpu,
-+								  new_cpu);
-+		else
-+			new_cpu = select_idle_sibling(p, prev_cpu, new_cpu);
- 
- 		if (want_affine)
- 			current->recent_used_cpu = cpu;
+ #endif /* CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
++
++void turbo_sched_get(void);
++void turbo_sched_put(void);
++DECLARE_STATIC_KEY_FALSE(__turbo_sched_enabled);
++
++static inline bool is_turbosched_enabled(void)
++{
++	return static_branch_unlikely(&__turbo_sched_enabled);
++}
 -- 
 2.17.1
 
