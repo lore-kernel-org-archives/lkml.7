@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD540C41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07DDC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7789722BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C33FC22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:44:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itn+ATRx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tJBS9eBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfGYSor (ORCPT
+        id S1726585AbfGYSoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 14:44:47 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34495 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfGYSoq (ORCPT
+        Thu, 25 Jul 2019 14:44:55 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41454 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfGYSoy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 14:44:46 -0400
-Received: by mail-pl1-f195.google.com with SMTP id i2so23763496plt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 11:44:46 -0700 (PDT)
+        Thu, 25 Jul 2019 14:44:54 -0400
+Received: by mail-pg1-f196.google.com with SMTP id x15so13123912pgg.8
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 11:44:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NhwngYDbvri5ejmcM0XgYmhjUBSSl/buGnAbDPDI9EI=;
-        b=itn+ATRxnc66FvQMYJryteL+cOXPgFskNlezDWkecZsggx+jExRT3w/o6Zozs9r4lG
-         7p+nYoCch1hfycj2Nee5j56Dal/g7Fchu2Bo2iHKtJuZT1VJX80T3oUPlIJFK8zFzP3l
-         fLnG1YQh79ExZFmGg3Vdh4sIhJXUvwotn0Rdca8RSEGgBD61h9ckWIZGcKP63fnc4DeU
-         NtdzrRSRiFo6iIaf5S09Z1w1VIWf47s6ZRjqMN/SQet0AgUstkkV0e/If8ZBqHwuVvZw
-         n7UJO9EjWtc94vpUjFu23209ncO9R4sRtMWsUI649YSjzndG72fY/mV2qUIliSKCqnrP
-         qPng==
+        bh=p7anoNZvbE1SmPE7vSkzLr+EkemuOAJ6vumDZVqMY6I=;
+        b=tJBS9eBYwj5uFnvpYiOFMVcvakA/gNlpWBLT8ABmrbAMIlcvS5T5oRS5m3dKEQ25Bl
+         8AusFNV4/jIOLj3fBavzY82wfCx5RoXf+dE20Nnnt0xXpvKquTSMiItJLWgEOoXsjt7Y
+         ehfj3CQf43o371r/d1vAi+eeSeWV++2ZZLt+1LdWwluIeWLw4/IzgQy0a4pGLmLGhYiP
+         IwGkgvsELiIEgxhha6sbuvNuy18XtzADZ4I90Aa5Rn1QRu8q7RPpr/KsyDRof+JXMBOT
+         J1XUbuzl4K3hgKDfOEBKjMXC1MSMvMyfGeUljO6JpN+OJqdSyd/zp5ddzuqhZmKN42C2
+         kfFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NhwngYDbvri5ejmcM0XgYmhjUBSSl/buGnAbDPDI9EI=;
-        b=Bxp4PF7MwYKVLH4gOrHPICVAzLtZL/tqqDbSYLfXbF3+7+Ebqe6nV4TGFxbeooqg0v
-         ca9hwOdXFVdSYJUZN53aklU3jq8tKp/wu9g8tGL2MBFZ1ELX7TihvLgIrq2vI0sQnIpu
-         pOL1EjnZUe8OvfH+Xlb9iJxgM2udR0TKkpEtxWX1TXUuTaoVFN82CC1eHYpO5vQkJ2ar
-         gj07nMB768lfBUaXlYuJEIOV/vsJ8FTvnV9zIXeJwkUkb5huee9tExEeWsXioGoHzRsR
-         JayM8L7TN0pfiNVZDhJa05a30SZb1DWumT/sIC8Y84dpOyS07480RyTD09XLIsfB8RZk
-         pR0g==
-X-Gm-Message-State: APjAAAVo0/bt7H1uEMS0fWO6QSbTRt8ie8nw277eMfgZyGD/LOskspUx
-        kGkf6XaJ7jGO3p9ZuIZjl2M=
-X-Google-Smtp-Source: APXvYqxd1avMi033AmybLadPo/1ryj1iZmvCPadNNWuTSgJQuR4oMLhBqyYbEtyoNYRC9tLu3admKA==
-X-Received: by 2002:a17:902:28e9:: with SMTP id f96mr88604969plb.114.1564080285671;
-        Thu, 25 Jul 2019 11:44:45 -0700 (PDT)
+        bh=p7anoNZvbE1SmPE7vSkzLr+EkemuOAJ6vumDZVqMY6I=;
+        b=MfKBuccB5xCnRiqZo+1RxnLtRTRsjD9MbUF8s7LK8764cwnF5ZjNaw/xOfn2hx4bWn
+         UvHTfTGZ+DDD5g/v/N4s3fIxahqbYzbRlTd22AZ1mpDj7iBH4CZRjRhCAabJr3k8BMGS
+         JuN/uq8aktfIiKasATD8FoT5536+OEf9FsCF9SaJvqYkyuX/RNBE1C6Ftmc9Atl1NKDS
+         7y1FBBZdyfLA+Dl+Bitl1Vsp3x7m3nC3myvB2w6wGCQyEELa5ncjPbvTUypEuiG5JEBx
+         W2ynOF3Nb1cuBm/SeRPux5viY5FpZCASHr5RhciJ4l43VpQw24vM77AiIEzT98q2eIL2
+         xonA==
+X-Gm-Message-State: APjAAAUveRbn8CJo6rZ1pP+5JA1JcGB7tlAL8LP+D9ZoDGwSvwG10cAq
+        0QhvxoDqQ9P73Bu8u0iYC/c=
+X-Google-Smtp-Source: APXvYqwZbtVPZxFGTdpe3wuAozXuab4sqkGSpbGjI1Hce0XSqcULaSlK3GMHEQ89iHU3g+UWizUZYQ==
+X-Received: by 2002:a62:1444:: with SMTP id 65mr17795430pfu.145.1564080293985;
+        Thu, 25 Jul 2019 11:44:53 -0700 (PDT)
 Received: from localhost.localdomain.localdomain ([2408:823c:c11:624:b8c3:8577:bf2f:3])
-        by smtp.gmail.com with ESMTPSA id w3sm43818257pgl.31.2019.07.25.11.44.37
+        by smtp.gmail.com with ESMTPSA id w3sm43818257pgl.31.2019.07.25.11.44.46
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 11:44:45 -0700 (PDT)
+        Thu, 25 Jul 2019 11:44:53 -0700 (PDT)
 From:   Pengfei Li <lpf.vector@gmail.com>
 To:     akpm@linux-foundation.org
 Cc:     mgorman@techsingularity.net, mhocko@suse.com, vbabka@suse.cz,
@@ -65,9 +65,9 @@ Cc:     mgorman@techsingularity.net, mhocko@suse.com, vbabka@suse.cz,
         pavel.tatashin@microsoft.com, rppt@linux.ibm.com,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Pengfei Li <lpf.vector@gmail.com>
-Subject: [PATCH 09/10] mm/compaction: use unsigned int for "kcompactd_max_order" in struct pglist_data
-Date:   Fri, 26 Jul 2019 02:42:52 +0800
-Message-Id: <20190725184253.21160-10-lpf.vector@gmail.com>
+Subject: [PATCH 10/10] mm/vmscan: use unsigned int for "kswapd_order" in struct pglist_data
+Date:   Fri, 26 Jul 2019 02:42:53 +0800
+Message-Id: <20190725184253.21160-11-lpf.vector@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190725184253.21160-1-lpf.vector@gmail.com>
 References: <20190725184253.21160-1-lpf.vector@gmail.com>
@@ -78,66 +78,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because "kcompactd_max_order" will never be negative, so just
-make it unsigned int.
+Because "kswapd_order" will never be negative, so just make it
+unsigned int. And modify wakeup_kswapd(), kswapd_try_to_sleep()
+and trace_mm_vmscan_kswapd_wake() accordingly.
+
+Besides, make "order" unsigned int in two related trace functions.
 
 Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
 ---
- include/linux/compaction.h | 6 ++++--
- include/linux/mmzone.h     | 2 +-
- mm/compaction.c            | 2 +-
- 3 files changed, 6 insertions(+), 4 deletions(-)
+ include/linux/mmzone.h            |  4 ++--
+ include/trace/events/compaction.h | 10 +++++-----
+ include/trace/events/vmscan.h     |  4 ++--
+ mm/vmscan.c                       |  6 +++---
+ 4 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/include/linux/compaction.h b/include/linux/compaction.h
-index a8049d582265..1b296de6efef 100644
---- a/include/linux/compaction.h
-+++ b/include/linux/compaction.h
-@@ -175,7 +175,8 @@ bool compaction_zonelist_suitable(struct alloc_context *ac,
- 
- extern int kcompactd_run(int nid);
- extern void kcompactd_stop(int nid);
--extern void wakeup_kcompactd(pg_data_t *pgdat, int order, int classzone_idx);
-+extern void wakeup_kcompactd(pg_data_t *pgdat, unsigned int order,
-+				int classzone_idx);
- 
- #else
- static inline void reset_isolation_suitable(pg_data_t *pgdat)
-@@ -220,7 +221,8 @@ static inline void kcompactd_stop(int nid)
- {
- }
- 
--static inline void wakeup_kcompactd(pg_data_t *pgdat, int order, int classzone_idx)
-+static inline void wakeup_kcompactd(pg_data_t *pgdat, unsigned int order,
-+					int classzone_idx)
- {
- }
- 
 diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 0947e7cb4214..60bebdf47661 100644
+index 60bebdf47661..1196ed0cee67 100644
 --- a/include/linux/mmzone.h
 +++ b/include/linux/mmzone.h
-@@ -723,7 +723,7 @@ typedef struct pglist_data {
- 	int kswapd_failures;		/* Number of 'reclaimed == 0' runs */
+@@ -717,7 +717,7 @@ typedef struct pglist_data {
+ 	wait_queue_head_t pfmemalloc_wait;
+ 	struct task_struct *kswapd;	/* Protected by
+ 					   mem_hotplug_begin/end() */
+-	int kswapd_order;
++	unsigned int kswapd_order;
+ 	enum zone_type kswapd_classzone_idx;
  
- #ifdef CONFIG_COMPACTION
--	int kcompactd_max_order;
-+	unsigned int kcompactd_max_order;
- 	enum zone_type kcompactd_classzone_idx;
- 	wait_queue_head_t kcompactd_wait;
- 	struct task_struct *kcompactd;
-diff --git a/mm/compaction.c b/mm/compaction.c
-index aad638ad2cc6..909ead244cff 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -2607,7 +2607,7 @@ static void kcompactd_do_work(pg_data_t *pgdat)
- 		pgdat->kcompactd_classzone_idx = pgdat->nr_zones - 1;
+ 	int kswapd_failures;		/* Number of 'reclaimed == 0' runs */
+@@ -802,7 +802,7 @@ static inline bool pgdat_is_empty(pg_data_t *pgdat)
+ #include <linux/memory_hotplug.h>
+ 
+ void build_all_zonelists(pg_data_t *pgdat);
+-void wakeup_kswapd(struct zone *zone, gfp_t gfp_mask, int order,
++void wakeup_kswapd(struct zone *zone, gfp_t gfp_mask, unsigned int order,
+ 		   enum zone_type classzone_idx);
+ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
+ 			 int classzone_idx, unsigned int alloc_flags,
+diff --git a/include/trace/events/compaction.h b/include/trace/events/compaction.h
+index f83ba40f9614..34a9fac3b4d6 100644
+--- a/include/trace/events/compaction.h
++++ b/include/trace/events/compaction.h
+@@ -314,13 +314,13 @@ TRACE_EVENT(mm_compaction_kcompactd_sleep,
+ 
+ DECLARE_EVENT_CLASS(kcompactd_wake_template,
+ 
+-	TP_PROTO(int nid, int order, enum zone_type classzone_idx),
++	TP_PROTO(int nid, unsigned int order, enum zone_type classzone_idx),
+ 
+ 	TP_ARGS(nid, order, classzone_idx),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(int, nid)
+-		__field(int, order)
++		__field(unsigned int, order)
+ 		__field(enum zone_type, classzone_idx)
+ 	),
+ 
+@@ -330,7 +330,7 @@ DECLARE_EVENT_CLASS(kcompactd_wake_template,
+ 		__entry->classzone_idx = classzone_idx;
+ 	),
+ 
+-	TP_printk("nid=%d order=%d classzone_idx=%-8s",
++	TP_printk("nid=%d order=%u classzone_idx=%-8s",
+ 		__entry->nid,
+ 		__entry->order,
+ 		__print_symbolic(__entry->classzone_idx, ZONE_TYPE))
+@@ -338,14 +338,14 @@ DECLARE_EVENT_CLASS(kcompactd_wake_template,
+ 
+ DEFINE_EVENT(kcompactd_wake_template, mm_compaction_wakeup_kcompactd,
+ 
+-	TP_PROTO(int nid, int order, enum zone_type classzone_idx),
++	TP_PROTO(int nid, unsigned int order, enum zone_type classzone_idx),
+ 
+ 	TP_ARGS(nid, order, classzone_idx)
+ );
+ 
+ DEFINE_EVENT(kcompactd_wake_template, mm_compaction_kcompactd_wake,
+ 
+-	TP_PROTO(int nid, int order, enum zone_type classzone_idx),
++	TP_PROTO(int nid, unsigned int order, enum zone_type classzone_idx),
+ 
+ 	TP_ARGS(nid, order, classzone_idx)
+ );
+diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
+index c37e2280e6dd..13c214f3750b 100644
+--- a/include/trace/events/vmscan.h
++++ b/include/trace/events/vmscan.h
+@@ -74,7 +74,7 @@ TRACE_EVENT(mm_vmscan_kswapd_wake,
+ 
+ TRACE_EVENT(mm_vmscan_wakeup_kswapd,
+ 
+-	TP_PROTO(int nid, int zid, int order, gfp_t gfp_flags),
++	TP_PROTO(int nid, int zid, unsigned int order, gfp_t gfp_flags),
+ 
+ 	TP_ARGS(nid, zid, order, gfp_flags),
+ 
+@@ -92,7 +92,7 @@ TRACE_EVENT(mm_vmscan_wakeup_kswapd,
+ 		__entry->gfp_flags	= gfp_flags;
+ 	),
+ 
+-	TP_printk("nid=%d order=%d gfp_flags=%s",
++	TP_printk("nid=%d order=%u gfp_flags=%s",
+ 		__entry->nid,
+ 		__entry->order,
+ 		show_gfp_flags(__entry->gfp_flags))
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index f4fd02ae233e..9d98a2e5f736 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -3781,8 +3781,8 @@ static enum zone_type kswapd_classzone_idx(pg_data_t *pgdat,
+ 	return pgdat->kswapd_classzone_idx;
  }
  
--void wakeup_kcompactd(pg_data_t *pgdat, int order, int classzone_idx)
-+void wakeup_kcompactd(pg_data_t *pgdat, unsigned int order, int classzone_idx)
+-static void kswapd_try_to_sleep(pg_data_t *pgdat, int alloc_order, int reclaim_order,
+-				unsigned int classzone_idx)
++static void kswapd_try_to_sleep(pg_data_t *pgdat, unsigned int alloc_order,
++			unsigned int reclaim_order, unsigned int classzone_idx)
  {
- 	if (!order)
- 		return;
+ 	long remaining = 0;
+ 	DEFINE_WAIT(wait);
+@@ -3956,7 +3956,7 @@ static int kswapd(void *p)
+  * has failed or is not needed, still wake up kcompactd if only compaction is
+  * needed.
+  */
+-void wakeup_kswapd(struct zone *zone, gfp_t gfp_flags, int order,
++void wakeup_kswapd(struct zone *zone, gfp_t gfp_flags, unsigned int order,
+ 		   enum zone_type classzone_idx)
+ {
+ 	pg_data_t *pgdat;
 -- 
 2.21.0
 
