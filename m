@@ -2,250 +2,140 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6168C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B187CC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84807217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:44:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SGrHQnGa"
+	by mail.kernel.org (Postfix) with ESMTP id 93E77217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:44:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388802AbfGYMoM (ORCPT
+        id S2388954AbfGYMoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:44:12 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41688 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387824AbfGYMoM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:44:12 -0400
-Received: by mail-lf1-f65.google.com with SMTP id 62so29561915lfa.8;
-        Thu, 25 Jul 2019 05:44:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=eknW/TOhMypD0xkCLP+fL/Yr6TV2yqEhmiGmkOzq3EY=;
-        b=SGrHQnGamBfhL9h2LIZhaX7f9KvB10ttFxb277iUL+BvpuX19DWhTckbrOHBS4+bB+
-         m9YetynEB8y7ypr4B8nFLVAGyapGKxWjoZxUPkuSEeDirKOx+jYujLjma9zqPA4jRlS3
-         GqwZ7gFTVqcgMYaMp5hSI+XykjFFYKDAt78k+JUDX26g+tebTeWpVj7PKL3tuV7FVjHN
-         JuE8XfOXKZUJ/QTUpnBfsy4KGo+SEGF8wT74VSYK0JXj9TD9qMCge0cJS9XqIsPcrFd7
-         r8QfBLlVMx5sLRIa7z3M/0UhksbtUTCZ/ao0mZ7+K907kG9CK9zFquLPd5PxSCf8UdbU
-         grbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=eknW/TOhMypD0xkCLP+fL/Yr6TV2yqEhmiGmkOzq3EY=;
-        b=mfTzABfxm8CpRRZbTq1wgaJ85AiA/btb6CDHTVLj03ucLhZVkcRTJ1s8s3/6sgsHU8
-         0TdKoaxbyEBLAnVH66usqEuCBtvOfXq3EBHYp49w3w/6ac+yROVlr8iwAgW78x6yLM7x
-         qdomT6yrbCfCjndaoC/kdkriaMD3WcCse5NXsR93fF/RGWEoQlL5r7ScqrJ++bW8CTHP
-         JVJTVwkQ00zO+V9ioJHi8Koywc7OJwFWlwWqBUEitQkn+uM7fQDMO6D7wVBB2/pdPu2B
-         gnePJJLy/bmB1t5F5eqVFwPbj+AUekWlt2c672DCJmX3LMnsJ5M3cnMmc0QDixGXLCFC
-         GOTQ==
-X-Gm-Message-State: APjAAAVsMZmJPDOmCPg6Rhp77vtzy/eIA2GjsiouLt/XgUK6VoxuScod
-        QpMsbKio7TvVtlptZc9KtkHvclMbTuHsWkPwmF8=
-X-Google-Smtp-Source: APXvYqwpmD94AweNs5qa5XTy4hbRxs01Hq1+o+UpAxFYnCbprWQUIs8wQla3LFmrbYj8sb8whiJOm8JPZnPJaxTAFyo=
-X-Received: by 2002:a19:7f17:: with SMTP id a23mr44348217lfd.49.1564058649021;
- Thu, 25 Jul 2019 05:44:09 -0700 (PDT)
+        Thu, 25 Jul 2019 08:44:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:56502 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387824AbfGYMoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 08:44:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7ACC728;
+        Thu, 25 Jul 2019 05:44:14 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BAE2E3F71F;
+        Thu, 25 Jul 2019 05:44:12 -0700 (PDT)
+Subject: Re: [PATCH 1/1] efi: cper: print AER info of PCIe fatal error
+To:     Xiaofei Tan <tanxiaofei@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-efi@vger.kernel.org, rjw@rjwysocki.net, lenb@kernel.org,
+        tony.luck@intel.com, bp@alien8.de, ying.huang@intel.com,
+        ross.lagerwall@citrix.com, ard.biesheuvel@linaro.org,
+        lance.ortiz@hp.com
+References: <1562898017-27166-1-git-send-email-tanxiaofei@huawei.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <e596aec8-1239-0a46-39cf-e682fada9945@arm.com>
+Date:   Thu, 25 Jul 2019 13:44:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <CGME20190723122022eucas1p1266d90873d564894bd852c20140f8474@eucas1p1.samsung.com>
- <20190723122016.30279-1-a.swigon@partner.samsung.com> <20190723122016.30279-2-a.swigon@partner.samsung.com>
-In-Reply-To: <20190723122016.30279-2-a.swigon@partner.samsung.com>
-Reply-To: cwchoi00@gmail.com
-From:   Chanwoo Choi <cwchoi00@gmail.com>
-Date:   Thu, 25 Jul 2019 21:43:31 +0900
-Message-ID: <CAGTfZH0JE0PmiCHaT3vMrDaP0-8eZ3afyHy_zT9aFmMOGNTR8g@mail.gmail.com>
-Subject: Re: [RFC PATCH 01/11] devfreq: exynos-bus: Extract exynos_bus_profile_init()
-To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        georgi.djakov@linaro.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1562898017-27166-1-git-send-email-tanxiaofei@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EC=88=98) =EC=98=A4=EC=A0=84 8:09, A=
-rtur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>=EB=8B=98=EC=9D=B4 =EC=
-=9E=91=EC=84=B1:
->
-> This patch adds a new static function, exynos_bus_profile_init(), extract=
-ed
-> from exynos_bus_probe().
->
-> Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>
-> ---
->  drivers/devfreq/exynos-bus.c | 106 ++++++++++++++++++++---------------
->  1 file changed, 60 insertions(+), 46 deletions(-)
->
-> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-> index d9f377912c10..d8f1efaf2d49 100644
-> --- a/drivers/devfreq/exynos-bus.c
-> +++ b/drivers/devfreq/exynos-bus.c
-> @@ -372,12 +372,69 @@ static int exynos_bus_parse_of(struct device_node *=
-np,
->         return ret;
+Hi,
+
+On 12/07/2019 03:20, Xiaofei Tan wrote:
+> AER info of PCIe fatal error is not printed in the current driver.
+> Because APEI driver will panic directly for fatal error, and can't
+> run to the place of printing AER info.
+> 
+> An example log is as following:
+> [ 3157.655028] {763}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 11
+> [ 3157.663610] {763}[Hardware Error]: event severity: fatal
+> [ 3157.663612] {763}[Hardware Error]:  Error 0, type: fatal
+> [ 3157.663614] {763}[Hardware Error]:   section_type: PCIe error
+> [ 3157.680328] {763}[Hardware Error]:   port_type: 0, PCIe end point
+> [ 3157.680329] {763}[Hardware Error]:   version: 4.0
+> [ 3157.680332] {763}[Hardware Error]:   command: 0x0000, status: 0x0010
+> [ 3157.698757] {763}[Hardware Error]:   device_id: 0000:82:00.0
+> [ 3157.698758] {763}[Hardware Error]:   slot: 0
+> [ 3157.698759] {763}[Hardware Error]:   secondary_bus: 0x00
+> [ 3157.698760] {763}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10fb
+> [ 3157.698761] {763}[Hardware Error]:   class_code: 000002
+> [ 3157.698825] Kernel panic - not syncing: Fatal hardware error!
+> 
+> This issue was imported by the patch, '37448adfc7ce ("aerdrv: Move
+> cper_print_aer() call out of interrupt context")'. To fix this issue,
+> this patch adds print of AER info in cper_print_pcie() for fatal error.
+> 
+> Here is the example log after this patch applied:
+> [ 7032.893566] {24}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 10
+> [ 7032.901965] {24}[Hardware Error]: event severity: fatal
+> [ 7032.907166] {24}[Hardware Error]:  Error 0, type: fatal
+> [ 7032.912366] {24}[Hardware Error]:   section_type: PCIe error
+> [ 7032.917998] {24}[Hardware Error]:   port_type: 0, PCIe end point
+> [ 7032.923974] {24}[Hardware Error]:   version: 4.0
+> [ 7032.928569] {24}[Hardware Error]:   command: 0x0546, status: 0x4010
+> [ 7032.934806] {24}[Hardware Error]:   device_id: 0000:01:00.0
+> [ 7032.940352] {24}[Hardware Error]:   slot: 0
+> [ 7032.944514] {24}[Hardware Error]:   secondary_bus: 0x00
+> [ 7032.949714] {24}[Hardware Error]:   vendor_id: 0x15b3, device_id: 0x1019
+> [ 7032.956381] {24}[Hardware Error]:   class_code: 000002
+> [ 7032.961495] {24}[Hardware Error]:   aer_uncor_status: 0x00040000, aer_uncor_mask: 0x00000000
+> [ 7032.969891] {24}[Hardware Error]:   aer_uncor_severity: 0x00062010
+> [ 7032.976042] {24}[Hardware Error]:   TLP Header: 000000c0 01010000 00000001 00000000
+> [ 7032.983663] Kernel panic - not syncing: Fatal hardware error!
+
+> Fixes: 37448adfc7ce ("aerdrv: Move cper_print_aer() call out of
+> interrupt context")
+
+(Please put this all on one line)
+
+
+> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+> index 8fa977c..bf8600d 100644
+> --- a/drivers/firmware/efi/cper.c
+> +++ b/drivers/firmware/efi/cper.c
+> @@ -390,6 +390,19 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
+>  		printk(
+>  	"%s""bridge: secondary_status: 0x%04x, control: 0x%04x\n",
+>  	pfx, pcie->bridge.secondary_status, pcie->bridge.control);
+
+It may be worth a comment explaining why we only do this for fatal errors. Something like:
+| /* Fatal errors call __ghes_panic() before the AER handler gets to print this */
+
+
+> +	if (pcie->validation_bits & CPER_PCIE_VALID_AER_INFO &&
+> +	    gdata->error_severity & CPER_SEV_FATAL) {
+> +		struct aer_capability_regs *aer;
+> +
+> +		aer = (struct aer_capability_regs *)pcie->aer_info;
+> +		printk("%saer_uncor_status: 0x%08x, aer_uncor_mask: 0x%08x\n",
+
+The convention in the rest of the file is for the prefix format string to be separate. i.e:
+| "%s""aer_uncor_status: ..."
+
+Could it be the same for consistency?
+
+> +		       pfx, aer->uncor_status, aer->uncor_mask);
+> +		printk("%saer_uncor_severity: 0x%08x\n",
+> +		       pfx, aer->uncor_severity);
+> +		printk("%sTLP Header: %08x %08x %08x %08x\n", pfx,
+> +		       aer->header_log.dw0, aer->header_log.dw1,
+> +		       aer->header_log.dw2, aer->header_log.dw3);
+> +	}
 >  }
->
-> +static int exynos_bus_profile_init(struct exynos_bus *bus,
-> +                                  struct devfreq_dev_profile *profile)
-> +{
-> +       struct device *dev =3D bus->dev;
-> +       struct devfreq_simple_ondemand_data *ondemand_data;
-> +       int ret;
-> +
-> +       /* Initialize the struct profile and governor data for parent dev=
-ice */
-> +       profile->polling_ms =3D 50;
-> +       profile->target =3D exynos_bus_target;
-> +       profile->get_dev_status =3D exynos_bus_get_dev_status;
-> +       profile->exit =3D exynos_bus_exit;
-> +
-> +       ondemand_data =3D devm_kzalloc(dev, sizeof(*ondemand_data), GFP_K=
-ERNEL);
-> +       if (!ondemand_data) {
-> +               ret =3D -ENOMEM;
-> +               goto err;
-> +       }
-> +       ondemand_data->upthreshold =3D 40;
-> +       ondemand_data->downdifferential =3D 5;
-> +
-> +       /* Add devfreq device to monitor and handle the exynos bus */
-> +       bus->devfreq =3D devm_devfreq_add_device(dev, profile,
-> +                                               DEVFREQ_GOV_SIMPLE_ONDEMA=
-ND,
-> +                                               ondemand_data);
-> +       if (IS_ERR(bus->devfreq)) {
-> +               dev_err(dev, "failed to add devfreq device\n");
-> +               ret =3D PTR_ERR(bus->devfreq);
-> +               goto err;
-> +       }
-> +
-> +       /* Register opp_notifier to catch the change of OPP  */
-> +       ret =3D devm_devfreq_register_opp_notifier(dev, bus->devfreq);
-> +       if (ret < 0) {
-> +               dev_err(dev, "failed to register opp notifier\n");
-> +               goto err;
-> +       }
-> +
-> +       /*
-> +        * Enable devfreq-event to get raw data which is used to determin=
-e
-> +        * current bus load.
-> +        */
-> +       ret =3D exynos_bus_enable_edev(bus);
-> +       if (ret < 0) {
-> +               dev_err(dev, "failed to enable devfreq-event devices\n");
-> +               goto err;
-> +       }
-> +
-> +       ret =3D exynos_bus_set_event(bus);
-> +       if (ret < 0) {
-> +               dev_err(dev, "failed to set event to devfreq-event device=
-s\n");
-> +               goto err;
-> +       }
-> +
-> +err:
-> +       return ret;
-> +}
-> +
->  static int exynos_bus_probe(struct platform_device *pdev)
->  {
->         struct device *dev =3D &pdev->dev;
->         struct device_node *np =3D dev->of_node, *node;
->         struct devfreq_dev_profile *profile;
-> -       struct devfreq_simple_ondemand_data *ondemand_data;
->         struct devfreq_passive_data *passive_data;
->         struct devfreq *parent_devfreq;
->         struct exynos_bus *bus;
-> @@ -418,52 +475,9 @@ static int exynos_bus_probe(struct platform_device *=
-pdev)
->         if (ret < 0)
->                 goto err;
->
-> -       /* Initialize the struct profile and governor data for parent dev=
-ice */
-> -       profile->polling_ms =3D 50;
-> -       profile->target =3D exynos_bus_target;
-> -       profile->get_dev_status =3D exynos_bus_get_dev_status;
-> -       profile->exit =3D exynos_bus_exit;
-> -
-> -       ondemand_data =3D devm_kzalloc(dev, sizeof(*ondemand_data), GFP_K=
-ERNEL);
-> -       if (!ondemand_data) {
-> -               ret =3D -ENOMEM;
-> +       ret =3D exynos_bus_profile_init(bus, profile);
-> +       if (ret < 0)
->                 goto err;
-> -       }
-> -       ondemand_data->upthreshold =3D 40;
-> -       ondemand_data->downdifferential =3D 5;
-> -
-> -       /* Add devfreq device to monitor and handle the exynos bus */
-> -       bus->devfreq =3D devm_devfreq_add_device(dev, profile,
-> -                                               DEVFREQ_GOV_SIMPLE_ONDEMA=
-ND,
-> -                                               ondemand_data);
-> -       if (IS_ERR(bus->devfreq)) {
-> -               dev_err(dev, "failed to add devfreq device\n");
-> -               ret =3D PTR_ERR(bus->devfreq);
-> -               goto err;
-> -       }
-> -
-> -       /* Register opp_notifier to catch the change of OPP  */
-> -       ret =3D devm_devfreq_register_opp_notifier(dev, bus->devfreq);
-> -       if (ret < 0) {
-> -               dev_err(dev, "failed to register opp notifier\n");
-> -               goto err;
-> -       }
-> -
-> -       /*
-> -        * Enable devfreq-event to get raw data which is used to determin=
-e
-> -        * current bus load.
-> -        */
-> -       ret =3D exynos_bus_enable_edev(bus);
-> -       if (ret < 0) {
-> -               dev_err(dev, "failed to enable devfreq-event devices\n");
-> -               goto err;
-> -       }
-> -
-> -       ret =3D exynos_bus_set_event(bus);
-> -       if (ret < 0) {
-> -               dev_err(dev, "failed to set event to devfreq-event device=
-s\n");
-> -               goto err;
-> -       }
->
->         goto out;
->  passive:
-> --
-> 2.17.1
->
 
-NACK.
+Regardless,
+Reviewed-by; James Morse <james.morse@arm.com>
 
-It has not any benefit and I don't understand reason why it is necessary.
-I don't agree. Please drop it.
 
---=20
-Best Regards,
-Chanwoo Choi
+Thanks,
+
+James
