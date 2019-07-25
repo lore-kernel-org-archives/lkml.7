@@ -2,189 +2,140 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D03BFC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2324DC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F7721880
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:24:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564035884;
-	bh=ncW/68XK5c9cQCbKoGP5zby1jJDeNvVhZPLDGjRekFM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=INR3UrvhnvkbRDta5xou7hyVWo6TvCmM554V8itQ5IfPD6ufXGaT0aDcVYSjZmqbH
-	 K4fXJTOn6hh/XuF5YCj4OXserUwuHVJY1QPXIcrM9nyQ/VCJlCS0ao5r8o+R+D/w30
-	 yGtJsp0g9bLOeRdMeWPzKSwrEnylkzaVZvjAX7m4=
+	by mail.kernel.org (Postfix) with ESMTP id F1114217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:28:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbfGYGYn (ORCPT
+        id S1728571AbfGYG2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 02:24:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49414 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729159AbfGYGYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 02:24:43 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A220B206B8;
-        Thu, 25 Jul 2019 06:24:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564035882;
-        bh=ncW/68XK5c9cQCbKoGP5zby1jJDeNvVhZPLDGjRekFM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Yrg+fRs630IVn/OcuIQ5CzQG7jp5KvX8vYi7b3sPDNeRowFMphGnIETaVsXc2bK7B
-         CsTRjfn4aF3nWunCw6c4Di1pzqEe6IhgXVHwfEKh2QT2p/yPznkjdWgtFxfxU5qdJ4
-         yBbhRd4gWr2ZZRDrQUlav524sux9jH4WWvLfby3M=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: [PATCH] kprobes: Allow kprobes coexist with livepatch
-Date:   Thu, 25 Jul 2019 15:24:37 +0900
-Message-Id: <156403587671.30117.5233558741694155985.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-User-Agent: StGit/0.17.1-dirty
+        Thu, 25 Jul 2019 02:28:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45232 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfGYG2u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 02:28:50 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hqXF9-0007qn-56; Thu, 25 Jul 2019 08:28:47 +0200
+Date:   Thu, 25 Jul 2019 08:28:45 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Rui Salvaterra <rsalvaterra@gmail.com>
+cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Daniel Drake <drake@endlessm.com>
+Subject: Re: [BUG] Linux 5.3-rc1: timer problem on x86-64 (Pentium D)
+In-Reply-To: <CALjTZvZtu8sSycu2soSXCEP1yZiVNFKkxs4JY_puFahwFuuRcQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1907250810530.1791@nanos.tec.linutronix.de>
+References: <CALjTZvbrS3dGrTrMMkGRkk=hRL38rrGiYTZ4REX9rJ0T+wcGoQ@mail.gmail.com> <alpine.DEB.2.21.1907241257240.1791@nanos.tec.linutronix.de> <CALjTZvZtu8sSycu2soSXCEP1yZiVNFKkxs4JY_puFahwFuuRcQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323329-1596934924-1564036127=:1791"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow kprobes which do not modify regs->ip, coexist with livepatch
-by dropping FTRACE_OPS_FL_IPMODIFY from ftrace_ops.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-User who wants to modify regs->ip (e.g. function fault injection)
-must set a dummy post_handler to its kprobes when registering.
-However, if such regs->ip modifying kprobes is set on a function,
-that function can not be livepatched.
+--8323329-1596934924-1564036127=:1791
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- kernel/kprobes.c |   56 +++++++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 40 insertions(+), 16 deletions(-)
+Rui,
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 9873fc627d61..29065380dad0 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -961,9 +961,16 @@ static struct kprobe *alloc_aggr_kprobe(struct kprobe *p)
+On Thu, 25 Jul 2019, Rui Salvaterra wrote:
+> Looks like we have a winner. Actually, I did a full bisection between
+> 5.2 and 5.3-rc1. Full log follows:
+> 
+> git bisect start
+> # good: [0ecfebd2b52404ae0c54a878c872bb93363ada36] Linux 5.2
+> git bisect good 0ecfebd2b52404ae0c54a878c872bb93363ada36
+>
+> # first bad commit: [3222daf970f30133cc4c639cbecdc29c4ae91b2b]
+> x86/hpet: Separate counter check out of clocksource register code
+> 
+> I haven't tried reverting this commit and recompiling (it's already
+
+'Revert' on top of Linus tree below.
+
+> past 1:00 here, need to sleep), but I'll try it tomorrow, if required.
+> Note that on this machine (i945G) the HPET is disabled at boot and is
+> forcefully enabled by the kernel…
  
- #ifdef CONFIG_KPROBES_ON_FTRACE
- static struct ftrace_ops kprobe_ftrace_ops __read_mostly = {
-+	.func = kprobe_ftrace_handler,
-+	.flags = FTRACE_OPS_FL_SAVE_REGS,
-+};
-+
-+static struct ftrace_ops kprobe_ipmodify_ops __read_mostly = {
- 	.func = kprobe_ftrace_handler,
- 	.flags = FTRACE_OPS_FL_SAVE_REGS | FTRACE_OPS_FL_IPMODIFY,
- };
-+
-+static int kprobe_ipmodify_enabled;
- static int kprobe_ftrace_enabled;
+> [    0.147527] pci 0000:00:1f.0: Force enabled HPET at 0xfed00000
+
+Ok. 
+
+> … and the commit message reads…
+> 
+> "The init code checks whether the HPET counter works late in the init
+> function when the clocksource is registered. That should happen right
+> with the other sanity checks."
+> 
+> … maybe now the check is happening a bit too early…?
+
+The only reason I can think of is that the HPET on that machine has a weird
+register state (it's not advertised by the BIOS ... )
+
+But that does not explain the boot failure completely. If the HPET is not
+available then the kernel should automatically do the right thing and fall
+back to something else.
+
+Can you please provide the output of:
+
+ cat /sys/devices/system/clocksource/clocksource0/available_clocksource
+and
+ cat /sys/devices/system/clocksource/clocksource0/current_clocksource
+
+from a successful boot with 5.2 and 5.3 head with the 'fix' applied?
+
+Then boot these kernels with 'hpet=disable' on the command line and see
+whether they come up. If so please provide the same output.
+
+The dmesg output of each boot would be useful as well.
+
+Thanks,
+
+	tglx
+
+8<--------------------
+--- a/arch/x86/kernel/hpet.c
++++ b/arch/x86/kernel/hpet.c
+@@ -827,10 +827,6 @@ int __init hpet_enable(void)
+ 	if (!hpet_cfg_working())
+ 		goto out_nohpet;
  
- /* Must ensure p->addr is really on ftrace */
-@@ -976,58 +983,75 @@ static int prepare_kprobe(struct kprobe *p)
- }
- 
- /* Caller must lock kprobe_mutex */
--static int arm_kprobe_ftrace(struct kprobe *p)
-+static int __arm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
-+			       int *cnt)
- {
- 	int ret = 0;
- 
--	ret = ftrace_set_filter_ip(&kprobe_ftrace_ops,
--				   (unsigned long)p->addr, 0, 0);
-+	ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 0, 0);
- 	if (ret) {
- 		pr_debug("Failed to arm kprobe-ftrace at %pS (%d)\n",
- 			 p->addr, ret);
- 		return ret;
- 	}
- 
--	if (kprobe_ftrace_enabled == 0) {
--		ret = register_ftrace_function(&kprobe_ftrace_ops);
-+	if (*cnt == 0) {
-+		ret = register_ftrace_function(ops);
- 		if (ret) {
- 			pr_debug("Failed to init kprobe-ftrace (%d)\n", ret);
- 			goto err_ftrace;
- 		}
- 	}
- 
--	kprobe_ftrace_enabled++;
-+	(*cnt)++;
- 	return ret;
- 
- err_ftrace:
+-	/* Validate that the counter is counting */
+-	if (!hpet_counting())
+-		goto out_nohpet;
+-
  	/*
--	 * Note: Since kprobe_ftrace_ops has IPMODIFY set, and ftrace requires a
--	 * non-empty filter_hash for IPMODIFY ops, we're safe from an accidental
--	 * empty filter_hash which would undesirably trace all functions.
-+	 * At this point, sinec ops is not registered, we should be sefe from
-+	 * registering empty filter.
+ 	 * Read the period and check for a sane value:
  	 */
--	ftrace_set_filter_ip(&kprobe_ftrace_ops, (unsigned long)p->addr, 1, 0);
-+	ftrace_set_filter_ip(ops, (unsigned long)p->addr, 1, 0);
- 	return ret;
- }
- 
-+static int arm_kprobe_ftrace(struct kprobe *p)
-+{
-+	bool ipmodify = (p->post_handler != NULL);
-+
-+	return __arm_kprobe_ftrace(p,
-+		ipmodify ? &kprobe_ipmodify_ops : &kprobe_ftrace_ops,
-+		ipmodify ? &kprobe_ipmodify_enabled : &kprobe_ftrace_enabled);
-+}
-+
- /* Caller must lock kprobe_mutex */
--static int disarm_kprobe_ftrace(struct kprobe *p)
-+static int __disarm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
-+				  int *cnt)
- {
- 	int ret = 0;
- 
--	if (kprobe_ftrace_enabled == 1) {
--		ret = unregister_ftrace_function(&kprobe_ftrace_ops);
-+	if (*cnt == 1) {
-+		ret = unregister_ftrace_function(ops);
- 		if (WARN(ret < 0, "Failed to unregister kprobe-ftrace (%d)\n", ret))
- 			return ret;
+@@ -896,6 +892,14 @@ int __init hpet_enable(void)
  	}
+ 	hpet_print_config();
  
--	kprobe_ftrace_enabled--;
-+	(*cnt)--;
++	/*
++	 * Validate that the counter is counting. This needs to be done
++	 * after sanitizing the config registers to properly deal with
++	 * force enabled HPETs.
++	 */
++	if (!hpet_counting())
++		goto out_nohpet;
++
+ 	clocksource_register_hz(&clocksource_hpet, (u32)hpet_freq);
  
--	ret = ftrace_set_filter_ip(&kprobe_ftrace_ops,
--			   (unsigned long)p->addr, 1, 0);
-+	ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 1, 0);
- 	WARN_ONCE(ret < 0, "Failed to disarm kprobe-ftrace at %pS (%d)\n",
- 		  p->addr, ret);
- 	return ret;
- }
-+
-+static int disarm_kprobe_ftrace(struct kprobe *p)
-+{
-+	bool ipmodify = (p->post_handler != NULL);
-+
-+	return __disarm_kprobe_ftrace(p,
-+		ipmodify ? &kprobe_ipmodify_ops : &kprobe_ftrace_ops,
-+		ipmodify ? &kprobe_ipmodify_enabled : &kprobe_ftrace_enabled);
-+}
- #else	/* !CONFIG_KPROBES_ON_FTRACE */
- #define prepare_kprobe(p)	arch_prepare_kprobe(p)
- #define arm_kprobe_ftrace(p)	(-ENODEV)
-
+ 	if (id & HPET_ID_LEGSUP) {
+--8323329-1596934924-1564036127=:1791--
