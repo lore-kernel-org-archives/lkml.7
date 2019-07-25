@@ -2,190 +2,155 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96308C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCB7C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73DDA2084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3498229F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:53:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uHKrJgmw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ciww8qYZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbfGYRvv (ORCPT
+        id S1730081AbfGYRxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:51:51 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41839 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbfGYRvv (ORCPT
+        Thu, 25 Jul 2019 13:53:08 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44487 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727100AbfGYRxI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:51:51 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p15so50968824eds.8;
-        Thu, 25 Jul 2019 10:51:49 -0700 (PDT)
+        Thu, 25 Jul 2019 13:53:08 -0400
+Received: by mail-pf1-f195.google.com with SMTP id t16so23097711pfe.11
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 10:53:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=97fri+3r1FAcvuw8LVzrovOMIcXnR72VCH8YJtIr1e4=;
-        b=uHKrJgmwlIqEoDxjOTUzBLc9kAllmjkLF55HjS+IWQAUT2Hmn5Bf6fgZMGGw8zO44i
-         RGnxbfYx6wMkmks5bSIN4Ir+PC8ozBlGTduhMNEdOcCie0+rd7bHsAt94tSG23hM0aft
-         TO0m37zjBXbWRnzJZOQ4WxHjZ2XnGjVso0jvTmuP7mIBFHcdsCUyxyB+WwE6anT9Mfi8
-         0gBNq6eBMd3Y8OAmvgMo7vOIRTWLzOSXPJBvQN6ktPLPi5New4ARNM6lAeL4poBe/xGi
-         8TGHofNVbm8q7vWoU/c2AmvuOW/95bnbWtut38SEXw2n+wMe2GokuZzwkKnm61QvBa+3
-         3W6Q==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=x+3BFyzp7D/vPI4eYVBwW0OZVm0O0+MUXJZpdTJS7yk=;
+        b=ciww8qYZU3JjNb3Aq1dK4VO+0r3eFfGv8fv2UUIvYZfMGK/O9pj4NkBvbJ4pIGLiHT
+         Nhlo0mKTPWNZP0AJC2tLZR5vrGSYghGKPaD6s92SU67gaD0wGJ/fjnQmlsDKoInfmwFf
+         s4+5ZPv7SkM86xKq4fpaeq/pW2npHzZ/GWtag=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=97fri+3r1FAcvuw8LVzrovOMIcXnR72VCH8YJtIr1e4=;
-        b=Yre61KuH3oi84YFLl6dwuShKOSEDn/2skmKXpOW0HB1X/+UMFbLhjm61wxxvnOx9z8
-         lEMqBd/O53z/koDaKI2EF02BSeU8NqvGvW25oguC2XbAanA+SFQniBBh74JYbtnEEfCS
-         Q7abhGzhntvBxIlaTIGvhGFy/BmCEuUvLeHWsGfP7nAT6/RHlO5HCo1oyDBMpUg8b/rM
-         flteSXfpQPi44KD2nRj6eF4WpDvUZ1kiUN8HIK8JbLErDbiaypKfb2oVEd8svynumRie
-         ju480BevwFELwhg1wNpbPbnjtoNIB3AyzP1JRjtwDX1dwSfy2LvtriSt0p/8aZqr5+uu
-         lvuQ==
-X-Gm-Message-State: APjAAAX6vv9Yi1h4JV/mMt/zWUP/X2YH7FkCfho5NY1ALG13xetGO8hI
-        wKhjE3O9BMKLxW+ryyoV/tmcZoboMV4fsfKrpKHb4sUY
-X-Google-Smtp-Source: APXvYqx2kvyqKBVqw6NG0DNxrRYhDsWU4ao7mYS8G/wN3qwn0j5rHe8GcTS1YqPynQt7nyC73VUNukd1Q0EcQMrO0Qs=
-X-Received: by 2002:a50:9177:: with SMTP id f52mr78488871eda.294.1564077109052;
- Thu, 25 Jul 2019 10:51:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x+3BFyzp7D/vPI4eYVBwW0OZVm0O0+MUXJZpdTJS7yk=;
+        b=LChwa0X9RVk3N/r2ll2rsqiVNr/x+h33U7xzvdL8WsSp0O43GTpjk+rUtY7M7bnAFb
+         B/xFLxD3EDIeaz6UxgyXpyI/Sx2gxEyGt+37Oeor3jsrgLhBx/wIlHQtaCc2yLvgw+Im
+         kd2ZMVFX5+AAgVftrHRm0IjeWWy8gX6EZo04e9KWQzKoPWqy5ig06q3syVBuolVste6c
+         J/R0YnqSXlNsR8KA/KtmyvHhRUzeN40co/ddY4SvleLdvGZxNI3RDofKDjwbJNrIYzDz
+         tCf8m5tDZFAUhXim0pQ+ZqXFvgbNMRE50fVPoiQXWN9qsKY4gCz9TlZ//RhLzsdhLRca
+         o5tg==
+X-Gm-Message-State: APjAAAXx5+L4RhBZbxrpERX1jrqA9tV9D6sJQ2aoTqsh2h9pFFxHvLW8
+        u0VMokHsbdYbZRduKEAuBD+r8Q==
+X-Google-Smtp-Source: APXvYqzUxAOwJ6wOw4ygsDnCgRPH1p4MKEK+ioEao6peJecQrhFdUdXjMC+z7alvRtjH+qI16qh7/g==
+X-Received: by 2002:a62:87c8:: with SMTP id i191mr17939790pfe.133.1564077187553;
+        Thu, 25 Jul 2019 10:53:07 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id s43sm64364749pjb.10.2019.07.25.10.53.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 10:53:06 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 10:52:58 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [RFC] dt-bindings: net: phy: Add subnode for LED configuration
+Message-ID: <20190725175258.GE250418@google.com>
+References: <20190722223741.113347-1-mka@chromium.org>
+ <20190724180430.GB28488@lunn.ch>
 MIME-Version: 1.0
-References: <1564073635-27998-1-git-send-email-jcrouse@codeaurora.org>
-In-Reply-To: <1564073635-27998-1-git-send-email-jcrouse@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 25 Jul 2019 10:51:38 -0700
-Message-ID: <CAF6AEGvGWWZz718AAyQmKr7fVoi4EU_tj6xVC7JsvfY+ZvMO0Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm: Use generic bulk clock function
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190724180430.GB28488@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 9:54 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> Remove the homebrewed bulk clock get function and replace it with
-> devm_clk_bulk_get_all().
->
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+Hi Andrew,
 
-nice cleanup
+On Wed, Jul 24, 2019 at 08:04:30PM +0200, Andrew Lunn wrote:
+> On Mon, Jul 22, 2019 at 03:37:41PM -0700, Matthias Kaehlcke wrote:
+> > The LED behavior of some Ethernet PHYs is configurable. Add an
+> > optional 'leds' subnode with a child node for each LED to be
+> > configured. The binding aims to be compatible with the common
+> > LED binding (see devicetree/bindings/leds/common.txt).
+> > 
+> > A LED can be configured to be 'on' when a link with a certain speed
+> > is active, or to blink on RX/TX activity. For the configuration to
+> > be effective it needs to be supported by the hardware and the
+> > corresponding PHY driver.
+> > 
+> > Suggested-by: Andrew Lunn <andrew@lunn.ch>
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > This RFC is a follow up of the discussion on "[PATCH v2 6/7]
+> > dt-bindings: net: realtek: Add property to configure LED mode"
+> > (https://lore.kernel.org/patchwork/patch/1097185/).
+> > 
+> > For now posting as RFC to get a basic agreement on the bindings
+> > before proceding with the implementation in phylib and a specific
+> > driver.
+> > ---
+> >  Documentation/devicetree/bindings/net/phy.txt | 33 +++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+> > index 9b9e5b1765dd..ad495d3abbbb 100644
+> > --- a/Documentation/devicetree/bindings/net/phy.txt
+> > +++ b/Documentation/devicetree/bindings/net/phy.txt
+> > @@ -46,6 +46,25 @@ Optional Properties:
+> >    Mark the corresponding energy efficient ethernet mode as broken and
+> >    request the ethernet to stop advertising it.
+> >  
+> > +- leds: A sub-node which is a container of only LED nodes. Each child
+> > +    node represents a PHY LED.
+> > +
+> > +  Required properties for LED child nodes:
+> > +  - reg: The ID number of the LED, typically corresponds to a hardware ID.
+> > +
+> > +  Optional properties for child nodes:
+> > +  - label: The label for this LED. If omitted, the label is taken from the node
+> > +    name (excluding the unit address). It has to uniquely identify a device,
+> > +    i.e. no other LED class device can be assigned the same label.
+> 
+> Hi Matthias
+> 
+> I've thought about label a bit more. 
+> 
+> > +			label = "ethphy0:left:green";
+> 
+> We need to be careful with names here. systemd etc renames
+> interfaces. ethphy0 could in fact be connected to enp3s0, or eth0
+> might get renamed to eth1, etc. So i think we should avoid things like
+> ethphy0.
 
-Reviewed-by: Rob Clark <robdclark@gmail.com>
+Agreed, this could be problematic.
 
-> ---
->
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c |  2 +-
->  drivers/gpu/drm/msm/msm_drv.c         | 40 -----------------------------------
->  drivers/gpu/drm/msm/msm_drv.h         |  1 -
->  drivers/gpu/drm/msm/msm_gpu.c         |  2 +-
->  4 files changed, 2 insertions(+), 43 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> index 2ca470e..85f14fe 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> @@ -1172,7 +1172,7 @@ static int a6xx_gmu_pwrlevels_probe(struct a6xx_gmu *gmu)
->
->  static int a6xx_gmu_clocks_probe(struct a6xx_gmu *gmu)
->  {
-> -       int ret = msm_clk_bulk_get(gmu->dev, &gmu->clocks);
-> +       int ret = devm_clk_bulk_get_all(gmu->dev, &gmu->clocks);
->
->         if (ret < 1)
->                 return ret;
-> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-> index 0e0fca1..96fe24c 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.c
-> +++ b/drivers/gpu/drm/msm/msm_drv.c
-> @@ -75,46 +75,6 @@ module_param(modeset, bool, 0600);
->   * Util/helpers:
->   */
->
-> -int msm_clk_bulk_get(struct device *dev, struct clk_bulk_data **bulk)
-> -{
-> -       struct property *prop;
-> -       const char *name;
-> -       struct clk_bulk_data *local;
-> -       int i = 0, ret, count;
-> -
-> -       count = of_property_count_strings(dev->of_node, "clock-names");
-> -       if (count < 1)
-> -               return 0;
-> -
-> -       local = devm_kcalloc(dev, sizeof(struct clk_bulk_data *),
-> -               count, GFP_KERNEL);
-> -       if (!local)
-> -               return -ENOMEM;
-> -
-> -       of_property_for_each_string(dev->of_node, "clock-names", prop, name) {
-> -               local[i].id = devm_kstrdup(dev, name, GFP_KERNEL);
-> -               if (!local[i].id) {
-> -                       devm_kfree(dev, local);
-> -                       return -ENOMEM;
-> -               }
-> -
-> -               i++;
-> -       }
-> -
-> -       ret = devm_clk_bulk_get(dev, count, local);
-> -
-> -       if (ret) {
-> -               for (i = 0; i < count; i++)
-> -                       devm_kfree(dev, (void *) local[i].id);
-> -               devm_kfree(dev, local);
-> -
-> -               return ret;
-> -       }
-> -
-> -       *bulk = local;
-> -       return count;
-> -}
-> -
->  struct clk *msm_clk_bulk_get_clock(struct clk_bulk_data *bulk, int count,
->                 const char *name)
->  {
-> diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-> index ee7b512..843c68f 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.h
-> +++ b/drivers/gpu/drm/msm/msm_drv.h
-> @@ -399,7 +399,6 @@ static inline void msm_perf_debugfs_cleanup(struct msm_drm_private *priv) {}
->  #endif
->
->  struct clk *msm_clk_get(struct platform_device *pdev, const char *name);
-> -int msm_clk_bulk_get(struct device *dev, struct clk_bulk_data **bulk);
->
->  struct clk *msm_clk_bulk_get_clock(struct clk_bulk_data *bulk, int count,
->         const char *name);
-> diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-> index 4edb874..445a9f8 100644
-> --- a/drivers/gpu/drm/msm/msm_gpu.c
-> +++ b/drivers/gpu/drm/msm/msm_gpu.c
-> @@ -783,7 +783,7 @@ static irqreturn_t irq_handler(int irq, void *data)
->
->  static int get_clocks(struct platform_device *pdev, struct msm_gpu *gpu)
->  {
-> -       int ret = msm_clk_bulk_get(&pdev->dev, &gpu->grp_clks);
-> +       int ret = devm_clk_bulk_get_all(&pdev->dev, &gpu->grp_clks);
->
->         if (ret < 1) {
->                 gpu->nr_clocks = 0;
-> --
-> 2.7.4
->
+> Also, i'm not sure we actually need a label, at least not to
+> start with.Do we have any way to expose it to the user?
+
+As of now I don't plan to expose the label to userspace by the PHY
+driver/framework itself.
+
+From my side we can omit the label for now and add it later if needed.
+
+> If we do ever make it part of the generic LED framework, we can then
+> use the label. At that point, i would probably combine the label with
+> the interface name in a dynamic way to avoid issues like this.
+
+Sounds good.
+
+Thanks
+
+Matthias
