@@ -2,318 +2,264 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 075EBC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9E1C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C114B21901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C71821901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:34:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cyR1V4LD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GTb92mvF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729516AbfGYGeW (ORCPT
+        id S1729531AbfGYGeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 02:34:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60944 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729430AbfGYGeT (ORCPT
+        Thu, 25 Jul 2019 02:34:23 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44539 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727645AbfGYGeS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 02:34:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ExZhdM1UHu57MIHolwY1h/5Id6++hihVRHXGruO7a6Q=; b=cyR1V4LDu0wHTwAVK8KD9woC4/
-        /GPziovh/5dK+4R2fPtwdg2QBSldSGvsP7t049Bqbtjf+nMYCf4K7RONxDp1c2Fjbf0Ab59qZYrFo
-        Dx11XGm7NjzsB9rwXYvUZnKDy5OdVUY3whG4E0KkmUcgceTeCcdfLdq10TThkIhWXs8YvfOw2ZnCH
-        Gg6OP9pyqFpjM7GA7TZ5QY4IPhwI+XtO3R5i/z/U1/VR3oxbz87ak3DYBzyGm5lBPn2vIVRvrhyj9
-        EDkwxj4z0gdP24gL8DSeP92ar95dgguHLSFGvznVTAUXJvapE0SIJ5dZKZ6pX1YC7b3h6998vVDUo
-        TTHv2A3g==;
-Received: from p57b3f613.dip0.t-ipconnect.de ([87.179.246.19] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqXKO-0000IS-N7; Thu, 25 Jul 2019 06:34:13 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     iommu@lists.linux-foundation.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Takashi Iwai <tiwai@suse.de>, Robin Murphy <robin.murphy@arm.com>,
-        Michal Simek <monstr@monstr.eu>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
+        Thu, 25 Jul 2019 02:34:18 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t14so22966106plr.11
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 23:34:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=dlVS9wrL3Ud7T0+1eB3/cbuxzq2FNswQPzy/JeSfgyo=;
+        b=GTb92mvFVJ+XqMAuo0hSQ52CQEiKhH6k0ygsgBjwYIu1KAV6Ar4Wh6Syq1oy33lL1w
+         KCZ/5kMmhXSwPq7ZLDVoSVIvP2NkkCOMylaUszovQObgNwlrgy2LP4YU3qpemN5kYk5X
+         vCRwZJnK5timEjLq4RXmoVpDIdD9cS5BRdb17ynBGuSBRokd/ZZDYlYfGabuj6PkoMW7
+         Z9gJR0i0IgNdsrrc+syUXjF6A90o5EpBjvH+uM0pl13KrBYDvo5VkxrmCIGKDbMpscT3
+         ePIj49uUO06xDNSIMYTqst/Mqt2Pga61KxjukQH9VqDYVL8/yLxYN+F8xMKfl6yIRQ7T
+         eKaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dlVS9wrL3Ud7T0+1eB3/cbuxzq2FNswQPzy/JeSfgyo=;
+        b=dOthcZALsJkhussBGOjU/FlMXRWvw5YAZS1rfdJpXuPybqNsfnoqzsJngK5n0NZBci
+         9ejpeRMQu83SqJ0EYXsxVTfXa/ipUx1SSaRuAWExtpzGoF/Uz8fhKDYH6OBSY8dDq6bG
+         87P+FL5BHHZaNkx6YsJnogP4h9MInXGjHlenWC87ahHe4qIu4XhFdRMQNeeZdL04nZVa
+         6fUZ/cD8WADujMgmYm/VoEXtBFDBjpX3aTHsDmeee85fl9DlQwzbYgehmS7jw0ejExyc
+         RbY0idPmyNqmAfy4q3qLek7Wqbhywm5m+D9LDb/dWWMNFE1bobdq6akRlX639T3fBf0K
+         WjIA==
+X-Gm-Message-State: APjAAAVhKK8da0fr67g//DI0Ee9GRKMF/gR+43uHqHW7+KLKgJJri14c
+        ZLLMuqiLExca6TBk8q8fu6GmtA==
+X-Google-Smtp-Source: APXvYqyJ++EoPykdk2pIM3XvADy9ZWwV3mqWxefi5d6b190vSrTtW2216BSqfPUHUsDB2YEJo8ZHjA==
+X-Received: by 2002:a17:902:ff05:: with SMTP id f5mr86662809plj.116.1564036458081;
+        Wed, 24 Jul 2019 23:34:18 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id 81sm43010327pfa.86.2019.07.24.23.34.15
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 24 Jul 2019 23:34:17 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net
+Cc:     freeman.liu@unisoc.com, baolin.wang@linaro.org,
+        vincent.guittot@linaro.org, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] dma-mapping: explicitly wire up ->mmap and ->get_sgtable
-Date:   Thu, 25 Jul 2019 08:33:59 +0200
-Message-Id: <20190725063401.29904-4-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190725063401.29904-1-hch@lst.de>
-References: <20190725063401.29904-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Subject: [PATCH] iio: adc: sc27xx: Change to polling mode to read data
+Date:   Thu, 25 Jul 2019 14:33:50 +0800
+Message-Id: <1870ea18729f93fb36694affaf7e9443733dd988.1564035575.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the default ->mmap and ->get_sgtable implementations work for the
-majority of our dma_map_ops impementations they are inherently safe
-for others that don't use the page allocator or CMA and/or use their
-own way of remapping not covered by the common code.  So remove the
-defaults if these methods are not wired up, but instead wire up the
-default implementations for all safe instances.
+From: Freeman Liu <freeman.liu@unisoc.com>
 
-Fixes: e1c7e324539a ("dma-mapping: always provide the dma_map_ops based implementation")
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Spreadtrum platform, the headphone will read one ADC channel multiple
+times to identify the headphone type, and the headphone identification is
+sensitive of the ADC reading time. And we found it will take longer time
+to reading ADC data by using interrupt mode comparing with the polling
+mode, thus we should change to polling mode to improve the efficiency
+of reading data, which can identify the headphone type successfully.
+
+Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- arch/alpha/kernel/pci_iommu.c           |  2 ++
- arch/ia64/hp/common/sba_iommu.c         |  2 ++
- arch/ia64/sn/pci/pci_dma.c              |  2 ++
- arch/mips/jazz/jazzdma.c                |  2 ++
- arch/powerpc/kernel/dma-iommu.c         |  2 ++
- arch/powerpc/platforms/ps3/system-bus.c |  4 ++++
- arch/powerpc/platforms/pseries/vio.c    |  2 ++
- arch/s390/pci/pci_dma.c                 |  2 ++
- arch/sparc/kernel/iommu.c               |  2 ++
- arch/sparc/kernel/pci_sun4v.c           |  2 ++
- arch/x86/kernel/amd_gart_64.c           |  2 ++
- arch/x86/kernel/pci-calgary_64.c        |  2 ++
- drivers/iommu/amd_iommu.c               |  2 ++
- drivers/iommu/intel-iommu.c             |  2 ++
- kernel/dma/mapping.c                    | 20 ++++++++++++--------
- 15 files changed, 42 insertions(+), 8 deletions(-)
+ drivers/iio/adc/sc27xx_adc.c |   81 ++++++++++++++----------------------------
+ 1 file changed, 27 insertions(+), 54 deletions(-)
 
-diff --git a/arch/alpha/kernel/pci_iommu.c b/arch/alpha/kernel/pci_iommu.c
-index 242108439f42..7f1925a32c99 100644
---- a/arch/alpha/kernel/pci_iommu.c
-+++ b/arch/alpha/kernel/pci_iommu.c
-@@ -955,5 +955,7 @@ const struct dma_map_ops alpha_pci_ops = {
- 	.map_sg			= alpha_pci_map_sg,
- 	.unmap_sg		= alpha_pci_unmap_sg,
- 	.dma_supported		= alpha_pci_supported,
-+	.mmap			= dma_common_mmap,
-+	.get_sgtable		= dma_common_get_sgtable,
- };
- EXPORT_SYMBOL(alpha_pci_ops);
-diff --git a/arch/ia64/hp/common/sba_iommu.c b/arch/ia64/hp/common/sba_iommu.c
-index 3d24cc43385b..4c0ea6c2833d 100644
---- a/arch/ia64/hp/common/sba_iommu.c
-+++ b/arch/ia64/hp/common/sba_iommu.c
-@@ -2183,6 +2183,8 @@ const struct dma_map_ops sba_dma_ops = {
- 	.map_sg			= sba_map_sg_attrs,
- 	.unmap_sg		= sba_unmap_sg_attrs,
- 	.dma_supported		= sba_dma_supported,
-+	.mmap			= dma_common_mmap,
-+	.get_sgtable		= dma_common_get_sgtable,
+diff --git a/drivers/iio/adc/sc27xx_adc.c b/drivers/iio/adc/sc27xx_adc.c
+index f7f7a189..ea864290 100644
+--- a/drivers/iio/adc/sc27xx_adc.c
++++ b/drivers/iio/adc/sc27xx_adc.c
+@@ -3,7 +3,6 @@
+ 
+ #include <linux/hwspinlock.h>
+ #include <linux/iio/iio.h>
+-#include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/nvmem-consumer.h>
+ #include <linux/of.h>
+@@ -46,14 +45,18 @@
+ /* Bits definitions for SC27XX_ADC_INT_CLR registers */
+ #define SC27XX_ADC_IRQ_CLR		BIT(0)
+ 
++/* Bits definitions for SC27XX_ADC_INT_RAW registers */
++#define SC27XX_ADC_IRQ_RAW		BIT(0)
++
+ /* Mask definition for SC27XX_ADC_DATA register */
+ #define SC27XX_ADC_DATA_MASK		GENMASK(11, 0)
+ 
+ /* Timeout (ms) for the trylock of hardware spinlocks */
+ #define SC27XX_ADC_HWLOCK_TIMEOUT	5000
+ 
+-/* Timeout (ms) for ADC data conversion according to ADC datasheet */
+-#define SC27XX_ADC_RDY_TIMEOUT		100
++/* Timeout (us) for ADC data conversion according to ADC datasheet */
++#define SC27XX_ADC_RDY_TIMEOUT		1000000
++#define SC27XX_ADC_POLL_RAW_STATUS	500
+ 
+ /* Maximum ADC channel number */
+ #define SC27XX_ADC_CHANNEL_MAX		32
+@@ -72,10 +75,8 @@ struct sc27xx_adc_data {
+ 	 * subsystems which will access the unique ADC controller.
+ 	 */
+ 	struct hwspinlock *hwlock;
+-	struct completion completion;
+ 	int channel_scale[SC27XX_ADC_CHANNEL_MAX];
+ 	u32 base;
+-	int value;
+ 	int irq;
  };
  
- void sba_dma_init(void)
-diff --git a/arch/ia64/sn/pci/pci_dma.c b/arch/ia64/sn/pci/pci_dma.c
-index b7d42e4edc1f..12ffb9c0d738 100644
---- a/arch/ia64/sn/pci/pci_dma.c
-+++ b/arch/ia64/sn/pci/pci_dma.c
-@@ -438,6 +438,8 @@ static struct dma_map_ops sn_dma_ops = {
- 	.unmap_sg		= sn_dma_unmap_sg,
- 	.dma_supported		= sn_dma_supported,
- 	.get_required_mask	= sn_dma_get_required_mask,
-+	.mmap			= dma_common_mmap,
-+	.get_sgtable		= dma_common_get_sgtable,
- };
- 
- void sn_dma_init(void)
-diff --git a/arch/mips/jazz/jazzdma.c b/arch/mips/jazz/jazzdma.c
-index 1804dc9d8136..a01e14955187 100644
---- a/arch/mips/jazz/jazzdma.c
-+++ b/arch/mips/jazz/jazzdma.c
-@@ -682,5 +682,7 @@ const struct dma_map_ops jazz_dma_ops = {
- 	.sync_sg_for_device	= jazz_dma_sync_sg_for_device,
- 	.dma_supported		= dma_direct_supported,
- 	.cache_sync		= arch_dma_cache_sync,
-+	.mmap			= dma_common_mmap,
-+	.get_sgtable		= dma_common_get_sgtable,
- };
- EXPORT_SYMBOL(jazz_dma_ops);
-diff --git a/arch/powerpc/kernel/dma-iommu.c b/arch/powerpc/kernel/dma-iommu.c
-index a0879674a9c8..2f5a53874f6d 100644
---- a/arch/powerpc/kernel/dma-iommu.c
-+++ b/arch/powerpc/kernel/dma-iommu.c
-@@ -208,4 +208,6 @@ const struct dma_map_ops dma_iommu_ops = {
- 	.sync_single_for_device	= dma_iommu_sync_for_device,
- 	.sync_sg_for_cpu	= dma_iommu_sync_sg_for_cpu,
- 	.sync_sg_for_device	= dma_iommu_sync_sg_for_device,
-+	.mmap			= dma_common_mmap,
-+	.get_sgtable		= dma_common_get_sgtable,
- };
-diff --git a/arch/powerpc/platforms/ps3/system-bus.c b/arch/powerpc/platforms/ps3/system-bus.c
-index 98410119c47b..70fcc9736a8c 100644
---- a/arch/powerpc/platforms/ps3/system-bus.c
-+++ b/arch/powerpc/platforms/ps3/system-bus.c
-@@ -700,6 +700,8 @@ static const struct dma_map_ops ps3_sb_dma_ops = {
- 	.get_required_mask = ps3_dma_get_required_mask,
- 	.map_page = ps3_sb_map_page,
- 	.unmap_page = ps3_unmap_page,
-+	.mmap = dma_common_mmap,
-+	.get_sgtable = dma_common_get_sgtable,
- };
- 
- static const struct dma_map_ops ps3_ioc0_dma_ops = {
-@@ -711,6 +713,8 @@ static const struct dma_map_ops ps3_ioc0_dma_ops = {
- 	.get_required_mask = ps3_dma_get_required_mask,
- 	.map_page = ps3_ioc0_map_page,
- 	.unmap_page = ps3_unmap_page,
-+	.mmap = dma_common_mmap,
-+	.get_sgtable = dma_common_get_sgtable,
- };
- 
- /**
-diff --git a/arch/powerpc/platforms/pseries/vio.c b/arch/powerpc/platforms/pseries/vio.c
-index 6601b9d404dc..3473eef7628c 100644
---- a/arch/powerpc/platforms/pseries/vio.c
-+++ b/arch/powerpc/platforms/pseries/vio.c
-@@ -605,6 +605,8 @@ static const struct dma_map_ops vio_dma_mapping_ops = {
- 	.unmap_page        = vio_dma_iommu_unmap_page,
- 	.dma_supported     = dma_iommu_dma_supported,
- 	.get_required_mask = dma_iommu_get_required_mask,
-+	.mmap		   = dma_common_mmap,
-+	.get_sgtable	   = dma_common_get_sgtable,
- };
- 
- /**
-diff --git a/arch/s390/pci/pci_dma.c b/arch/s390/pci/pci_dma.c
-index 9e52d1527f71..03d8c1c9f82f 100644
---- a/arch/s390/pci/pci_dma.c
-+++ b/arch/s390/pci/pci_dma.c
-@@ -668,6 +668,8 @@ const struct dma_map_ops s390_pci_dma_ops = {
- 	.unmap_sg	= s390_dma_unmap_sg,
- 	.map_page	= s390_dma_map_pages,
- 	.unmap_page	= s390_dma_unmap_pages,
-+	.mmap		= dma_common_mmap,
-+	.get_sgtable	= dma_common_get_sgtable,
- 	/* dma_supported is unconditionally true without a callback */
- };
- EXPORT_SYMBOL_GPL(s390_pci_dma_ops);
-diff --git a/arch/sparc/kernel/iommu.c b/arch/sparc/kernel/iommu.c
-index 4ae7388b1bff..c915a7cbcc91 100644
---- a/arch/sparc/kernel/iommu.c
-+++ b/arch/sparc/kernel/iommu.c
-@@ -763,6 +763,8 @@ static const struct dma_map_ops sun4u_dma_ops = {
- 	.sync_single_for_cpu	= dma_4u_sync_single_for_cpu,
- 	.sync_sg_for_cpu	= dma_4u_sync_sg_for_cpu,
- 	.dma_supported		= dma_4u_supported,
-+	.mmap			= dma_common_mmap,
-+	.get_sgtable		= dma_common_get_sgtable,
- };
- 
- const struct dma_map_ops *dma_ops = &sun4u_dma_ops;
-diff --git a/arch/sparc/kernel/pci_sun4v.c b/arch/sparc/kernel/pci_sun4v.c
-index 14b93c5564e3..ab6909642ae1 100644
---- a/arch/sparc/kernel/pci_sun4v.c
-+++ b/arch/sparc/kernel/pci_sun4v.c
-@@ -692,6 +692,8 @@ static const struct dma_map_ops sun4v_dma_ops = {
- 	.map_sg				= dma_4v_map_sg,
- 	.unmap_sg			= dma_4v_unmap_sg,
- 	.dma_supported			= dma_4v_supported,
-+	.mmap				= dma_common_mmap,
-+	.get_sgtable			= dma_common_get_sgtable,
- };
- 
- static void pci_sun4v_scan_bus(struct pci_pbm_info *pbm, struct device *parent)
-diff --git a/arch/x86/kernel/amd_gart_64.c b/arch/x86/kernel/amd_gart_64.c
-index a585ea6f686a..a65b4a9c7f87 100644
---- a/arch/x86/kernel/amd_gart_64.c
-+++ b/arch/x86/kernel/amd_gart_64.c
-@@ -678,6 +678,8 @@ static const struct dma_map_ops gart_dma_ops = {
- 	.alloc				= gart_alloc_coherent,
- 	.free				= gart_free_coherent,
- 	.dma_supported			= dma_direct_supported,
-+	.mmap				= dma_common_mmap,
-+	.get_sgtable			= dma_common_get_sgtable,
- };
- 
- static void gart_iommu_shutdown(void)
-diff --git a/arch/x86/kernel/pci-calgary_64.c b/arch/x86/kernel/pci-calgary_64.c
-index 9d4343aa481b..23fdec030c37 100644
---- a/arch/x86/kernel/pci-calgary_64.c
-+++ b/arch/x86/kernel/pci-calgary_64.c
-@@ -468,6 +468,8 @@ static const struct dma_map_ops calgary_dma_ops = {
- 	.map_page = calgary_map_page,
- 	.unmap_page = calgary_unmap_page,
- 	.dma_supported = dma_direct_supported,
-+	.mmap = dma_common_mmap,
-+	.get_sgtable = dma_common_get_sgtable,
- };
- 
- static inline void __iomem * busno_to_bbar(unsigned char num)
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index b607a92791d3..2e74ad659985 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2722,6 +2722,8 @@ static const struct dma_map_ops amd_iommu_dma_ops = {
- 	.map_sg		= map_sg,
- 	.unmap_sg	= unmap_sg,
- 	.dma_supported	= amd_iommu_dma_supported,
-+	.mmap		= dma_common_mmap,
-+	.get_sgtable	= dma_common_get_sgtable,
- };
- 
- static int init_reserved_iova_ranges(void)
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index ac4172c02244..f6776b359977 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -3737,6 +3737,8 @@ static const struct dma_map_ops intel_dma_ops = {
- 	.map_resource = intel_map_resource,
- 	.unmap_resource = intel_unmap_resource,
- 	.dma_supported = dma_direct_supported,
-+	.mmap = dma_common_mmap,
-+	.get_sgtable = dma_common_get_sgtable,
- };
- 
- static inline int iommu_domain_cache_init(void)
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 4ceb5b9016d8..cdb157cd70e7 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -153,11 +153,12 @@ int dma_get_sgtable_attrs(struct device *dev, struct sg_table *sgt,
+@@ -188,9 +189,7 @@ static int sc27xx_adc_read(struct sc27xx_adc_data *data, int channel,
+ 			   int scale, int *val)
  {
- 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 	int ret;
+-	u32 tmp;
+-
+-	reinit_completion(&data->completion);
++	u32 tmp, value, status;
  
--	if (!dma_is_direct(ops) && ops->get_sgtable)
--		return ops->get_sgtable(dev, sgt, cpu_addr, dma_addr, size,
--					attrs);
--	return dma_common_get_sgtable(dev, sgt, cpu_addr, dma_addr, size,
--			attrs);
-+	if (dma_is_direct(ops))
-+		return dma_common_get_sgtable(dev, sgt, cpu_addr, dma_addr,
-+				size, attrs);
-+	if (!ops->get_sgtable)
-+		return -ENXIO;
-+	return ops->get_sgtable(dev, sgt, cpu_addr, dma_addr, size, attrs);
+ 	ret = hwspin_lock_timeout_raw(data->hwlock, SC27XX_ADC_HWLOCK_TIMEOUT);
+ 	if (ret) {
+@@ -203,6 +202,11 @@ static int sc27xx_adc_read(struct sc27xx_adc_data *data, int channel,
+ 	if (ret)
+ 		goto unlock_adc;
+ 
++	ret = regmap_update_bits(data->regmap, data->base + SC27XX_ADC_INT_CLR,
++				 SC27XX_ADC_IRQ_CLR, SC27XX_ADC_IRQ_CLR);
++	if (ret)
++		goto disable_adc;
++
+ 	/* Configure the channel id and scale */
+ 	tmp = (scale << SC27XX_ADC_SCALE_SHIFT) & SC27XX_ADC_SCALE_MASK;
+ 	tmp |= channel & SC27XX_ADC_CHN_ID_MASK;
+@@ -226,15 +230,22 @@ static int sc27xx_adc_read(struct sc27xx_adc_data *data, int channel,
+ 	if (ret)
+ 		goto disable_adc;
+ 
+-	ret = wait_for_completion_timeout(&data->completion,
+-				msecs_to_jiffies(SC27XX_ADC_RDY_TIMEOUT));
+-	if (!ret) {
+-		dev_err(data->dev, "read ADC data timeout\n");
+-		ret = -ETIMEDOUT;
+-	} else {
+-		ret = 0;
++	ret = regmap_read_poll_timeout(data->regmap,
++				       data->base + SC27XX_ADC_INT_RAW,
++				       status, (status & SC27XX_ADC_IRQ_RAW),
++				       SC27XX_ADC_POLL_RAW_STATUS,
++				       SC27XX_ADC_RDY_TIMEOUT);
++	if (ret) {
++		dev_err(data->dev, "read adc timeout, status = 0x%x\n", status);
++		goto disable_adc;
+ 	}
+ 
++	ret = regmap_read(data->regmap, data->base + SC27XX_ADC_DATA, &value);
++	if (ret)
++		goto disable_adc;
++
++	value &= SC27XX_ADC_DATA_MASK;
++
+ disable_adc:
+ 	regmap_update_bits(data->regmap, data->base + SC27XX_ADC_CTL,
+ 			   SC27XX_ADC_EN, 0);
+@@ -242,32 +253,11 @@ static int sc27xx_adc_read(struct sc27xx_adc_data *data, int channel,
+ 	hwspin_unlock_raw(data->hwlock);
+ 
+ 	if (!ret)
+-		*val = data->value;
++		*val = value;
+ 
+ 	return ret;
  }
- EXPORT_SYMBOL(dma_get_sgtable_attrs);
  
-@@ -221,9 +222,12 @@ int dma_mmap_attrs(struct device *dev, struct vm_area_struct *vma,
+-static irqreturn_t sc27xx_adc_isr(int irq, void *dev_id)
+-{
+-	struct sc27xx_adc_data *data = dev_id;
+-	int ret;
+-
+-	ret = regmap_update_bits(data->regmap, data->base + SC27XX_ADC_INT_CLR,
+-				 SC27XX_ADC_IRQ_CLR, SC27XX_ADC_IRQ_CLR);
+-	if (ret)
+-		return IRQ_RETVAL(ret);
+-
+-	ret = regmap_read(data->regmap, data->base + SC27XX_ADC_DATA,
+-			  &data->value);
+-	if (ret)
+-		return IRQ_RETVAL(ret);
+-
+-	data->value &= SC27XX_ADC_DATA_MASK;
+-	complete(&data->completion);
+-
+-	return IRQ_HANDLED;
+-}
+-
+ static void sc27xx_adc_volt_ratio(struct sc27xx_adc_data *data,
+ 				  int channel, int scale,
+ 				  u32 *div_numerator, u32 *div_denominator)
+@@ -454,11 +444,6 @@ static int sc27xx_adc_enable(struct sc27xx_adc_data *data)
+ 	if (ret)
+ 		goto disable_adc;
+ 
+-	ret = regmap_update_bits(data->regmap, data->base + SC27XX_ADC_INT_EN,
+-				 SC27XX_ADC_IRQ_EN, SC27XX_ADC_IRQ_EN);
+-	if (ret)
+-		goto disable_clk;
+-
+ 	/* ADC channel scales' calibration from nvmem device */
+ 	ret = sc27xx_adc_scale_calibration(data, true);
+ 	if (ret)
+@@ -484,9 +469,6 @@ static void sc27xx_adc_disable(void *_data)
  {
- 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 	struct sc27xx_adc_data *data = _data;
  
--	if (!dma_is_direct(ops) && ops->mmap)
--		return ops->mmap(dev, vma, cpu_addr, dma_addr, size, attrs);
--	return dma_common_mmap(dev, vma, cpu_addr, dma_addr, size, attrs);
-+	if (dma_is_direct(ops))
-+		return dma_common_mmap(dev, vma, cpu_addr, dma_addr, size,
-+				attrs);
-+	if (!ops->mmap)
-+		return -ENXIO;
-+	return ops->mmap(dev, vma, cpu_addr, dma_addr, size, attrs);
- }
- EXPORT_SYMBOL(dma_mmap_attrs);
+-	regmap_update_bits(data->regmap, data->base + SC27XX_ADC_INT_EN,
+-			   SC27XX_ADC_IRQ_EN, 0);
+-
+ 	/* Disable ADC work clock and controller clock */
+ 	regmap_update_bits(data->regmap, SC27XX_ARM_CLK_EN,
+ 			   SC27XX_CLK_ADC_EN | SC27XX_CLK_ADC_CLK_EN, 0);
+@@ -553,7 +535,6 @@ static int sc27xx_adc_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
  
+-	init_completion(&sc27xx_data->completion);
+ 	sc27xx_data->dev = &pdev->dev;
+ 
+ 	ret = sc27xx_adc_enable(sc27xx_data);
+@@ -569,14 +550,6 @@ static int sc27xx_adc_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	ret = devm_request_threaded_irq(&pdev->dev, sc27xx_data->irq, NULL,
+-					sc27xx_adc_isr, IRQF_ONESHOT,
+-					pdev->name, sc27xx_data);
+-	if (ret) {
+-		dev_err(&pdev->dev, "failed to request ADC irq\n");
+-		return ret;
+-	}
+-
+ 	indio_dev->dev.parent = &pdev->dev;
+ 	indio_dev->name = dev_name(&pdev->dev);
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
 -- 
-2.20.1
+1.7.9.5
 
