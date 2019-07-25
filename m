@@ -4,29 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3C5C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39282C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E22229F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1284322C7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391136AbfGYRXy (ORCPT
+        id S2391232AbfGYRYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:23:54 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:39680 "EHLO ale.deltatee.com"
+        Thu, 25 Jul 2019 13:24:15 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:39726 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390913AbfGYRXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:23:51 -0400
+        id S2391127AbfGYRXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 13:23:54 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hqhSw-0001Jl-MH; Thu, 25 Jul 2019 11:23:50 -0600
+        id 1hqhSv-0001JG-V8; Thu, 25 Jul 2019 11:23:53 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hqhSw-0001no-Gu; Thu, 25 Jul 2019 11:23:42 -0600
+        id 1hqhSv-0001nB-48; Thu, 25 Jul 2019 11:23:41 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
@@ -35,18 +36,20 @@ Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
         Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
         Max Gurtovoy <maxg@mellanox.com>,
         Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 25 Jul 2019 11:23:35 -0600
-Message-Id: <20190725172335.6825-17-logang@deltatee.com>
+        Logan Gunthorpe <logang@deltatee.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Date:   Thu, 25 Jul 2019 11:23:22 -0600
+Message-Id: <20190725172335.6825-4-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190725172335.6825-1-logang@deltatee.com>
 References: <20190725172335.6825-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com, gregkh@linuxfoundation.org, viro@zeniv.linux.org.uk
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v6 16/16] nvmet-passthru: support block accounting
+Subject: [PATCH v6 03/16] chardev: export cdev_put()
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,40 +57,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support block disk accounting by setting the RQF_IO_STAT flag
-and gendisk in the request.
-
-After this change, IO counts will be reflected correctly in
-/proc/diskstats for drives being used by passthru.
+In order to use the new cdev_get_by_path() helper in a module,
+cdev_put() must be exported as well.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
 ---
- drivers/nvme/target/io-cmd-passthru.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/char_dev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvme/target/io-cmd-passthru.c b/drivers/nvme/target/io-cmd-passthru.c
-index aefdd534cb4a..0a3f1249341a 100644
---- a/drivers/nvme/target/io-cmd-passthru.c
-+++ b/drivers/nvme/target/io-cmd-passthru.c
-@@ -439,6 +439,9 @@ static struct request *nvmet_passthru_blk_make_request(struct nvmet_req *req,
- 	if (unlikely(IS_ERR(rq)))
- 		return rq;
- 
-+	if (blk_queue_io_stat(q) && cmd->common.opcode != nvme_cmd_flush)
-+		rq->rq_flags |= RQF_IO_STAT;
-+
- 	if (req->sg_cnt) {
- 		ret = nvmet_passthru_map_sg(req, rq);
- 		if (unlikely(ret)) {
-@@ -503,7 +506,7 @@ static void nvmet_passthru_execute_cmd(struct nvmet_req *req)
- 
- 	rq->end_io_data = req;
- 	if (req->sq->qid != 0) {
--		blk_execute_rq_nowait(rq->q, NULL, rq, 0,
-+		blk_execute_rq_nowait(rq->q, ns->disk, rq, 0,
- 				      nvmet_passthru_req_done);
- 	} else {
- 		req->p.rq = rq;
+diff --git a/fs/char_dev.c b/fs/char_dev.c
+index 25037d642ff8..5ab5d7da29bf 100644
+--- a/fs/char_dev.c
++++ b/fs/char_dev.c
+@@ -724,5 +724,6 @@ EXPORT_SYMBOL(cdev_set_parent);
+ EXPORT_SYMBOL(cdev_device_add);
+ EXPORT_SYMBOL(cdev_device_del);
+ EXPORT_SYMBOL(cdev_get_by_path);
++EXPORT_SYMBOL(cdev_put);
+ EXPORT_SYMBOL(__register_chrdev);
+ EXPORT_SYMBOL(__unregister_chrdev);
 -- 
 2.20.1
 
