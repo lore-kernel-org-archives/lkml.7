@@ -2,106 +2,114 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56578C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A28C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23A1A2238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:36:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564022201;
-	bh=D1/XAZeml+GaFLf+eOsik3qb0TT1TCoXAkWbdZi4Uk0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bpa910gvrdlb/0AROTvFXN1kgaGMr+MZQcdikMNXaU3b8Ze8nC7wSzvfXlqrbMH/M
-	 4JKc8QM7pSq2HVA3UNvjraA8wnJ1MKlOwA8S8ottZT/KzPlq/tKgUsNCSO8uq48yg/
-	 HrgXSiJ3g3a7/IE9+cmsKB+T20A81WJXox4u3NvQ=
+	by mail.kernel.org (Postfix) with ESMTP id 96D7F21951
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:39:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YoaPlEPH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389221AbfGYCgj (ORCPT
+        id S2389246AbfGYCjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 22:36:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387562AbfGYCgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 22:36:39 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EA0B21852;
-        Thu, 25 Jul 2019 02:36:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564022198;
-        bh=D1/XAZeml+GaFLf+eOsik3qb0TT1TCoXAkWbdZi4Uk0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=i0fC83ypNVUKB9EVai4LXo+v9ARw5Eyade7UDcE4YL+6sCTYavtEvzFa0Tykazaz+
-         SsLvMemZaTAs++xQk83lBYn2Grm5YGG3xvnbO7/nLnU1R+78CB5s67GOwvl1L5kqIO
-         uj/fRVIsKke3L1aYxS/VQVMNN28hRjeKuFm2wTWM=
-Date:   Wed, 24 Jul 2019 19:36:37 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Pengfei Li <lpf.vector@gmail.com>
-Cc:     willy@infradead.org, urezki@gmail.com, rpenyaev@suse.de,
-        peterz@infradead.org, guro@fb.com, rick.p.edgecombe@intel.com,
-        rppt@linux.ibm.com, aryabinin@virtuozzo.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] mm/vmalloc: do not keep unpurged areas in the
- busy tree
-Message-Id: <20190724193637.44ced3b82dd76649df28ecf5@linux-foundation.org>
-In-Reply-To: <20190716152656.12255-2-lpf.vector@gmail.com>
-References: <20190716152656.12255-1-lpf.vector@gmail.com>
-        <20190716152656.12255-2-lpf.vector@gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 24 Jul 2019 22:39:52 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52414 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389231AbfGYCjv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 22:39:51 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6P2d6IF144674;
+        Thu, 25 Jul 2019 02:39:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=DoOlx7Bs8FWXcpT9rGgF3z2qAmuOUqP4xx6Szs32ofE=;
+ b=YoaPlEPHQ0GAkXTDvnkBBp5WEhIr9KlWZGHsXtADch114Kx2Hyhq8QGqnQEL26dKbosy
+ KyZEEQFMvogIvkooclwfIP/SmiDnCdGblvAyaE/aVpOluEUevuXb36MwB8wChzqqLuLR
+ 9v/i099w+/vzvLcVT5PfEsvtBVxVuHyBPMNalasQU/yrS0/wyqOQE8mnoRQfqZBv129x
+ V2xW7OcNBxIC+sHKOd9vyPjtAx1oqGM+dhUHRqNBolKMNtwUg5SvPJhDQRAHcyr96V/S
+ zRuCHo6qVazZ/ozWBgK0AShE7ibTBCP7kly6qsuioOb3zMqfj2ejKuuRQaWK4OQcJT2T TQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2tx61c0v6b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jul 2019 02:39:20 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6P2cDUd172489;
+        Thu, 25 Jul 2019 02:39:20 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2tx60xj3g4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jul 2019 02:39:19 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6P2dHnm017163;
+        Thu, 25 Jul 2019 02:39:17 GMT
+Received: from z2.cn.oracle.com (/10.182.71.205)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 24 Jul 2019 19:39:16 -0700
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: [PATCH] x86/speculation/mds: Apply more accurate check on hypervisor platform
+Date:   Thu, 25 Jul 2019 10:39:09 +0800
+Message-Id: <1564022349-17338-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9328 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907250029
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9328 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907250029
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jul 2019 23:26:55 +0800 Pengfei Li <lpf.vector@gmail.com> wrote:
+X86_HYPER_NATIVE isn't accurate for checking if running on native
+platform, e.g. CONFIG_HYPERVISOR_GUEST isn't set or "nopv" is enabled.
 
-> From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-> 
-> The busy tree can be quite big, even though the area is freed
-> or unmapped it still stays there until "purge" logic removes
-> it.
-> 
-> 1) Optimize and reduce the size of "busy" tree by removing a
-> node from it right away as soon as user triggers free paths.
-> It is possible to do so, because the allocation is done using
-> another augmented tree.
-> 
-> The vmalloc test driver shows the difference, for example the
-> "fix_size_alloc_test" is ~11% better comparing with default
-> configuration:
-> 
-> sudo ./test_vmalloc.sh performance
-> 
-> <default>
-> Summary: fix_size_alloc_test loops: 1000000 avg: 993985 usec
-> Summary: full_fit_alloc_test loops: 1000000 avg: 973554 usec
-> Summary: long_busy_list_alloc_test loops: 1000000 avg: 12617652 usec
-> <default>
-> 
-> <this patch>
-> Summary: fix_size_alloc_test loops: 1000000 avg: 882263 usec
-> Summary: full_fit_alloc_test loops: 1000000 avg: 973407 usec
-> Summary: long_busy_list_alloc_test loops: 1000000 avg: 12593929 usec
-> <this patch>
-> 
-> 2) Since the busy tree now contains allocated areas only and does
-> not interfere with lazily free nodes, introduce the new function
-> show_purge_info() that dumps "unpurged" areas that is propagated
-> through "/proc/vmallocinfo".
-> 
-> 3) Eliminate VM_LAZY_FREE flag.
-> 
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Checking cpu flag X86_FEATURE_HYPERVISOR to determine if it's running
+on native platform is more accurate.
 
-This should have included your signed-off-by, since you were on the
-patch delivery path.  (Documentation/process/submitting-patches.rst,
-section 11).
+This still doesn't consider the old platform where even
+X86_FEATURE_HYPERVISOR is unsupported, e.g. vmware.
 
-Please send along your signed-off-by?
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+---
+ arch/x86/kernel/cpu/bugs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 66ca906..801ecd1 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1226,7 +1226,7 @@ static ssize_t l1tf_show_state(char *buf)
+ 
+ static ssize_t mds_show_state(char *buf)
+ {
+-	if (!hypervisor_is_type(X86_HYPER_NATIVE)) {
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+ 		return sprintf(buf, "%s; SMT Host state unknown\n",
+ 			       mds_strings[mds_mitigation]);
+ 	}
+-- 
+1.8.3.1
+
