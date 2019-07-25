@@ -3,186 +3,294 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E42C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EE7C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E12221871
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:55:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564048521;
-	bh=Ejulvgb0tI7ID1t79B5eo5UmboBBOaMW9xK/DcYbYns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vc6xZcbFIDMeJ+X24CAPRkl8iKOS5pbx4JUguXbOGAU0sBD/36wdxe6FVhmg0YSAm
-	 7t8Z2liixuYg7f827S0UpzbmBhrJ18YSAHUquhvHpewYlDYCWnWa+sE8llJ+OYeQ22
-	 vkueiHB9ZK/I7quv7fx4Ou+Fk4uW0vwRLbMnXCo8=
+	by mail.kernel.org (Postfix) with ESMTP id CF0A421871
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:55:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="h29K8wMH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729185AbfGYJzU (ORCPT
+        id S2390832AbfGYJzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 05:55:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725808AbfGYJzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 05:55:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1047520840;
-        Thu, 25 Jul 2019 09:55:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564048518;
-        bh=Ejulvgb0tI7ID1t79B5eo5UmboBBOaMW9xK/DcYbYns=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WGXDbCg10wSMc/9w83f6nT4WgtO7u3o1QbfNZR9maGnrM0V+5dYwoh7cYK8ZZSQU0
-         DzicvhyssfYwiYyjEpvq3wLvQajrqro1OZFJfShuvbcBlUkn7YhLU6ku4y69uPmq2x
-         MYAvH+5KpwsyMShJjLDZVkxblOs/R2BuHJ4rDfME=
-Date:   Thu, 25 Jul 2019 11:55:15 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Martin =?iso-8859-1?Q?Hundeb=F8ll?= <martin@geanix.com>
-Cc:     Jiri Slaby <jslaby@suse.com>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        linux-kernel@vger.kernel.org,
-        Sean =?iso-8859-1?Q?Nyekj=E6r?= <sean@geanix.com>,
-        Esben Haabendal <esben@geanix.com>
-Subject: Re: [PATCHv3 4/4] tty: n_gsm: add ioctl to map serial device to
- mux'ed tty
-Message-ID: <20190725095515.GC31845@kroah.com>
-References: <20190710192656.60381-1-martin@geanix.com>
- <20190710192656.60381-4-martin@geanix.com>
+        Thu, 25 Jul 2019 05:55:48 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:47872 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729271AbfGYJzp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 05:55:45 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190725095542epoutp031b8cfe1801fccaca41bf13ccd5c91e20~0ndzW5FPg2080620806epoutp03f
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 09:55:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190725095542epoutp031b8cfe1801fccaca41bf13ccd5c91e20~0ndzW5FPg2080620806epoutp03f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1564048542;
+        bh=APvyhy0eQAA2wXp8WTSoXGWXI9/At5nyAp+5gePsgVg=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=h29K8wMHJjYi+fuUrkwfTfFMLgzeOV52qOxzjXWKSsnMJrADIsNojY5pZWFLpkVCh
+         StoScMhnOUGugLejS72qOZp0f2ch+GHsv8oJlIs91Mbm7wLD5QgOGftC7/lA1UrkXt
+         5jBkEm65QeP9piuf1D2JSzmTjGAHWXiD4U/4gDFs=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190725095541epcas1p23ae99ffd69957e3dd1bbbd877aacb535~0ndytmimj0831308313epcas1p2C;
+        Thu, 25 Jul 2019 09:55:41 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.157]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 45vSJW2gBtzMqYkY; Thu, 25 Jul
+        2019 09:55:39 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        15.22.04075.B9C793D5; Thu, 25 Jul 2019 18:55:39 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190725095538epcas1p323a4e0d70b4a906ffb5927b2e43dc00f~0ndwDjd_B0042800428epcas1p3T;
+        Thu, 25 Jul 2019 09:55:38 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190725095538epsmtrp2fc287fb53405ebd9e0d5370c0341322b~0ndv-668u1824718247epsmtrp2a;
+        Thu, 25 Jul 2019 09:55:38 +0000 (GMT)
+X-AuditID: b6c32a36-b49ff70000000feb-5f-5d397c9baee1
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F9.7C.03706.A9C793D5; Thu, 25 Jul 2019 18:55:38 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190725095538epsmtip2f38872b5e416bf14678ccd1a705babdf~0ndvtvIEv1344113441epsmtip26;
+        Thu, 25 Jul 2019 09:55:38 +0000 (GMT)
+Subject: Re: [PATCH v3 1/5] devfreq: exynos-bus: correct clock enable
+ sequence
+To:     k.konieczny@partner.samsung.com
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <9c29db92-2452-0ff3-3ffa-d861e4327bc9@samsung.com>
+Date:   Thu, 25 Jul 2019 18:58:43 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20190719150535.15501-2-k.konieczny@partner.samsung.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190710192656.60381-4-martin@geanix.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIJsWRmVeSWpSXmKPExsWy7bCmge7sGstYg/0XRCw2zljPajH/yDlW
+        i759/xkt+h+/ZrY4f34Du8XZpjfsFpseX2O1uLxrDpvF594jjBYzzu9jslh75C67xdLrF5ks
+        bjeuYLN48+Msk0Xr3iPsFv+ubWSx2PzgGJuDoMeaeWsYPTat6mTz2Lyk3uPguz1MHn1bVjF6
+        HL+xncnj8ya5APaobJuM1MSU1CKF1Lzk/JTMvHRbJe/geOd4UzMDQ11DSwtzJYW8xNxUWyUX
+        nwBdt8wcoA+UFMoSc0qBQgGJxcVK+nY2RfmlJakKGfnFJbZKqQUpOQWWBXrFibnFpXnpesn5
+        uVaGBgZGpkCFCdkZ/S9XMxVcU6n4e/YqUwPjZZkuRg4OCQETiQ+T5bsYuTiEBHYwSix5eZYV
+        wvnEKDHxyzZmCOcbo0T/1MVAGU6wjjmrVzBCJPYySrw+fxzKec8o8f7fU7AqYYEAiV8LtjKB
+        2CICyhKT700HG8UscJlFYtqjSWBFbAJaEvtf3GADsfkFFCWu/njMCGLzCthJ7H61BizOIqAq
+        0bLmK9ggUYEIiU8PDrNC1AhKnJz5hAXE5hRwlfi/FGIxs4C4xK0n85kgbHmJ5q2zwRZLCJxj
+        l9je3Qz1g4vEvHkwtrDEq+Nb2CFsKYnP7/ayQdjVEitPHmGDaO5glNiy/wJUg7HE/qWTmUDB
+        xyygKbF+lz5EWFFi5++5jBCL+STefe1hhYQwr0RHmxBEibLE5Qd3mSBsSYnF7Z1sExiVZiF5
+        ZxaSF2YheWEWwrIFjCyrGMVSC4pz01OLDQuMkKN7EyM4eWuZ7WBcdM7nEKMAB6MSDy9HkkWs
+        EGtiWXFl7iFGCQ5mJRHewAazWCHelMTKqtSi/Pii0pzU4kOMpsDQnsgsJZqcD8wseSXxhqZG
+        xsbGFiaGZqaGhkrivAt/AM0RSE8sSc1OTS1ILYLpY+LglGpglGZ5qzav4bVdHE9+2RHfqdcs
+        P/X85C35yV7r8cS9e59A0uRDG3gld9d++KvwrY3nV+uUytJczkK/v8/+rhVl27Yg7PPFPRll
+        xb47uBbqPih2TgizOudXxF0ft8utrcFzwdQtsqssDx/mlTsZdNat02Kuk3bx7VC9LOkvZ6M7
+        U6/809i+yyZZiaU4I9FQi7moOBEAFCo0ovQDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsWy7bCSvO6sGstYgy/PNC02zljPajH/yDlW
+        i759/xkt+h+/ZrY4f34Du8XZpjfsFpseX2O1uLxrDpvF594jjBYzzu9jslh75C67xdLrF5ks
+        bjeuYLN48+Msk0Xr3iPsFv+ubWSx2PzgGJuDoMeaeWsYPTat6mTz2Lyk3uPguz1MHn1bVjF6
+        HL+xncnj8ya5APYoLpuU1JzMstQifbsEroz+l6uZCq6pVPw9e5WpgfGyTBcjJ4eEgInEnNUr
+        GLsYuTiEBHYzSrxd38oKkZCUmHbxKHMXIweQLSxx+HAxRM1bRonfy2Yxg9QIC/hJ3JryF6xe
+        REBZYvK96cwgRcwCV1kkzm+cwwbRcZlRYumt+ewgVWwCWhL7X9xgA7H5BRQlrv54zAhi8wrY
+        Sex+tQYsziKgKtGy5isTiC0qECFxeMcsqBpBiZMzn7CA2JwCrhL/lz4F28wsoC7xZ94lZghb
+        XOLWk/lMELa8RPPW2cwTGIVnIWmfhaRlFpKWWUhaFjCyrGKUTC0ozk3PLTYsMMxLLdcrTswt
+        Ls1L10vOz93ECI5jLc0djJeXxB9iFOBgVOLh3RBvESvEmlhWXJl7iFGCg1lJhDewwSxWiDcl
+        sbIqtSg/vqg0J7X4EKM0B4uSOO/TvGORQgLpiSWp2ampBalFMFkmDk6pBkauuJ+VcxmmnDwX
+        w/aWc1G75f1F/YzuHxVSxHK2FCmrea0/W7TwbvPB5SVPKn+ILHa7wMt77tGLwD1Gk1UrPC8U
+        eu6OPeZ7f4VRqGZ98aHzzG75yzLy38ka6Hpvfu67dcd32asffl1aYhprkXdYSmm9yWnBDbe+
+        /Ky3Eqo6n/hM+431tDMTbT8rsRRnJBpqMRcVJwIAF0CQiN8CAAA=
+X-CMS-MailID: 20190725095538epcas1p323a4e0d70b4a906ffb5927b2e43dc00f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190719150553eucas1p1665462f3fc0e06fc9c082e258be3a851
+References: <20190719150535.15501-1-k.konieczny@partner.samsung.com>
+        <CGME20190719150553eucas1p1665462f3fc0e06fc9c082e258be3a851@eucas1p1.samsung.com>
+        <20190719150535.15501-2-k.konieczny@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 09:26:56PM +0200, Martin Hundebøll wrote:
-> Guessing the first tty for a gsm0710 multiplexed serial device is not
-> currently possible, which makes it racy to use with multiple modems.
+Hi Kamil,
+
+On 19. 7. 20. ì˜¤ì „ 12:05, k.konieczny@partner.samsung.com wrote:
+> Regulators should be enabled before clocks to avoid h/w hang. This
+> require change in exynos_bus_probe() to move exynos_bus_parse_of()
+> after exynos_bus_parent_parse_of() and change in enabling sequence
+> of regulator and clock in exynos_bus_parse_of(). Similar change is
+> needed in exynos_bus_exit() where clock should be disabled first.
 > 
-> Add a way to map the physical serial tty to its related mux devices
-> using an ioctl.
-> 
-> Signed-off-by: Martin Hundebøll <martin@geanix.com>
+> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
 > ---
+> This patch is new to this series.
 > 
-> Changes since v2:
->  * rename IOCTL from GSMIOC_GETBASE to GSMIOC_GETFIRST
->  * return first usable line instead of private control line
->  * return uint32_t instead of int
+> ---
+>  drivers/devfreq/exynos-bus.c | 58 ++++++++++++++++++++----------------
+>  1 file changed, 32 insertions(+), 26 deletions(-)
 > 
-> Changes since v1:
->  * use put_user() instead of copy_to_user()
->  * add missing opening quote
-> 
->  Documentation/serial/n_gsm.rst | 11 +++++++++--
->  drivers/tty/n_gsm.c            |  4 ++++
->  include/uapi/linux/gsmmux.h    |  2 ++
->  3 files changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/serial/n_gsm.rst b/Documentation/serial/n_gsm.rst
-> index 0ba731ab00b2..286e7ff4d2d9 100644
-> --- a/Documentation/serial/n_gsm.rst
-> +++ b/Documentation/serial/n_gsm.rst
-> @@ -18,10 +18,13 @@ How to use it
->  2. switch the serial line to using the n_gsm line discipline by using
->     TIOCSETD ioctl,
->  3. configure the mux using GSMIOC_GETCONF / GSMIOC_SETCONF ioctl,
-> +4. obtain base gsmtty number for the used serial port,
-
-As this file is in .rst format, do we need the enumerated list anymore?
-
-Just a meta-comment...
-
+> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+> index 486cc5b422f1..f391044aa39d 100644
+> --- a/drivers/devfreq/exynos-bus.c
+> +++ b/drivers/devfreq/exynos-bus.c
+> @@ -194,11 +194,11 @@ static void exynos_bus_exit(struct device *dev)
+>  	if (ret < 0)
+>  		dev_warn(dev, "failed to disable the devfreq-event devices\n");
 >  
->  Major parts of the initialization program :
->  (a good starting point is util-linux-ng/sys-utils/ldattach.c)::
+> +	clk_disable_unprepare(bus->clk);
+>  	if (bus->regulator)
+>  		regulator_disable(bus->regulator);
 >  
-> +  #include <stdio.h>
-> +  #include <stdint.h>
->    #include <linux/gsmmux.h>
->    #include <linux/tty.h>
->    #define DEFAULT_SPEED	B115200
-> @@ -30,6 +33,7 @@ Major parts of the initialization program :
->  	int ldisc = N_GSM0710;
->  	struct gsm_config c;
->  	struct termios configuration;
-> +	uint32_t first;
+>  	dev_pm_opp_of_remove_table(dev);
+> -	clk_disable_unprepare(bus->clk);
+>  }
 >  
->  	/* open the serial port connected to the modem */
->  	fd = open(SERIAL_PORT, O_RDWR | O_NOCTTY | O_NDELAY);
-> @@ -58,19 +62,22 @@ Major parts of the initialization program :
->  	c.mtu = 127;
->  	/* set the new configuration */
->  	ioctl(fd, GSMIOC_SETCONF, &c);
-> +	/* get first gsmtty device node */
-> +	ioctl(fd, GSMIOC_GETFIRST, &first);
-> +	printf("first muxed line: /dev/gsmtty%i\n", first);
+>  /*
+> @@ -326,8 +326,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+>  	return ret;
+>  }
 >  
->  	/* and wait for ever to keep the line discipline enabled */
->  	daemon(0,0);
->  	pause();
->  
-> -4. use these devices as plain serial ports.
-> +5. use these devices as plain serial ports.
->  
->     for example, it's possible:
->  
->     - and to use gnokii to send / receive SMS on ttygsm1
->     - to use ppp to establish a datalink on ttygsm2
->  
-> -5. first close all virtual ports before closing the physical port.
-> +6. first close all virtual ports before closing the physical port.
->  
->     Note that after closing the physical port the modem is still in multiplexing
->     mode. This may prevent a successful re-opening of the port later. To avoid
-> diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-> index a60be591f1fc..dac98f3ead3d 100644
-> --- a/drivers/tty/n_gsm.c
-> +++ b/drivers/tty/n_gsm.c
-> @@ -2613,6 +2613,7 @@ static int gsmld_ioctl(struct tty_struct *tty, struct file *file,
+> -static int exynos_bus_parse_of(struct device_node *np,
+> -			      struct exynos_bus *bus)
+> +static int exynos_bus_parse_of(struct exynos_bus *bus)
 >  {
->  	struct gsm_config c;
->  	struct gsm_mux *gsm = tty->disc_data;
-> +	unsigned int base;
->  
->  	switch (cmd) {
->  	case GSMIOC_GETCONF:
-> @@ -2624,6 +2625,9 @@ static int gsmld_ioctl(struct tty_struct *tty, struct file *file,
->  		if (copy_from_user(&c, (void *)arg, sizeof(c)))
->  			return -EFAULT;
->  		return gsm_config(gsm, &c);
-> +	case GSMIOC_GETFIRST:
-> +		base = mux_num_to_base(gsm);
-> +		return put_user(base + 1, (uint32_t __user *)arg);
-
-
-
-
->  	default:
->  		return n_tty_ioctl_helper(tty, file, cmd, arg);
+>  	struct device *dev = bus->dev;
+>  	struct dev_pm_opp *opp;
+> @@ -341,36 +340,35 @@ static int exynos_bus_parse_of(struct device_node *np,
+>  		return PTR_ERR(bus->clk);
 >  	}
-> diff --git a/include/uapi/linux/gsmmux.h b/include/uapi/linux/gsmmux.h
-> index 101d3c469acb..e292869245dc 100644
-> --- a/include/uapi/linux/gsmmux.h
-> +++ b/include/uapi/linux/gsmmux.h
-> @@ -37,5 +37,7 @@ struct gsm_netconfig {
->  #define GSMIOC_ENABLE_NET      _IOW('G', 2, struct gsm_netconfig)
->  #define GSMIOC_DISABLE_NET     _IO('G', 3)
 >  
-> +/* get the base tty number for a configured gsmmux tty */
-> +#define GSMIOC_GETFIRST		_IOR('G', 4, uint32_t)
+> -	ret = clk_prepare_enable(bus->clk);
+> +	/* Get the freq and voltage from OPP table to scale the bus freq */
+> +	ret = dev_pm_opp_of_add_table(dev);
+>  	if (ret < 0) {
+> -		dev_err(dev, "failed to get enable clock\n");
+> +		dev_err(dev, "failed to get OPP table\n");
+>  		return ret;
+>  	}
+>  
+> -	/* Get the freq and voltage from OPP table to scale the bus freq */
+> -	ret = dev_pm_opp_of_add_table(dev);
+> +	ret = clk_prepare_enable(bus->clk);
+>  	if (ret < 0) {
+> -		dev_err(dev, "failed to get OPP table\n");
+> +		dev_err(dev, "failed to enable clock\n");
+>  		goto err_clk;
+>  	}
+> -
+>  	rate = clk_get_rate(bus->clk);
+>  
+>  	opp = devfreq_recommended_opp(dev, &rate, 0);
+>  	if (IS_ERR(opp)) {
+>  		dev_err(dev, "failed to find dev_pm_opp\n");
+>  		ret = PTR_ERR(opp);
+> -		goto err_opp;
+> +		goto err;
+>  	}
+>  	bus->curr_freq = dev_pm_opp_get_freq(opp);
+>  	dev_pm_opp_put(opp);
+>  
+>  	return 0;
+>  
+> -err_opp:
+> -	dev_pm_opp_of_remove_table(dev);
+> -err_clk:
+> +err:
+>  	clk_disable_unprepare(bus->clk);
+> +err_clk:
+> +	dev_pm_opp_of_remove_table(dev);
+>  
+>  	return ret;
+>  }
+> @@ -386,6 +384,7 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>  	struct exynos_bus *bus;
+>  	int ret, max_state;
+>  	unsigned long min_freq, max_freq;
+> +	bool passive = false;
+>  
+>  	if (!np) {
+>  		dev_err(dev, "failed to find devicetree node\n");
+> @@ -399,27 +398,31 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>  	bus->dev = &pdev->dev;
+>  	platform_set_drvdata(pdev, bus);
+>  
+> -	/* Parse the device-tree to get the resource information */
+> -	ret = exynos_bus_parse_of(np, bus);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	profile = devm_kzalloc(dev, sizeof(*profile), GFP_KERNEL);
+> -	if (!profile) {
+> -		ret = -ENOMEM;
+> -		goto err;
+> -	}
+> +	if (!profile)
+> +		return -ENOMEM;
+>  
+>  	node = of_parse_phandle(dev->of_node, "devfreq", 0);
+>  	if (node) {
+>  		of_node_put(node);
+> -		goto passive;
+> +		passive = true;
+>  	} else {
+>  		ret = exynos_bus_parent_parse_of(np, bus);
+> +		if (ret < 0)
+> +			return ret;
+>  	}
+>  
+> -	if (ret < 0)
+> -		goto err;
+> +	/* Parse the device-tree to get the resource information */
+> +	ret = exynos_bus_parse_of(bus);
+> +	if (ret < 0) {
+> +		if (!passive)
+> +			regulator_disable(bus->regulator);
+> +
+> +		return ret;
+> +	}
+> +
+> +	if (passive)
+> +		goto passive;
+>  
+>  	/* Initialize the struct profile and governor data for parent device */
+>  	profile->polling_ms = 50;
+> @@ -508,8 +511,11 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>  	return 0;
+>  
+>  err:
+> -	dev_pm_opp_of_remove_table(dev);
+>  	clk_disable_unprepare(bus->clk);
+> +	if (!passive)
+> +		regulator_disable(bus->regulator);
+> +
+> +	dev_pm_opp_of_remove_table(dev);
+>  
+>  	return ret;
+>  }
+> 
 
-Variables that cross the boundry from user/kernel should use the correct
-type.  That would be "__u32" here.
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-thanks.
-
-greg k-h
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
