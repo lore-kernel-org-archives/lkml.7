@@ -2,105 +2,136 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C292C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B161C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A77E22BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51CB322CBD
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:26:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="aZFlfwYl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbfGYOZ7 (ORCPT
+        id S2388074AbfGYO0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:25:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37208 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727937AbfGYOZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:25:58 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0E40A335E8;
-        Thu, 25 Jul 2019 14:25:58 +0000 (UTC)
-Received: from [10.72.12.18] (ovpn-12-18.pek2.redhat.com [10.72.12.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 910435D71A;
-        Thu, 25 Jul 2019 14:25:48 +0000 (UTC)
-Subject: Re: WARNING in __mmdrop
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
-        keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-References: <20190723032024-mutt-send-email-mst@kernel.org>
- <1d14de4d-0133-1614-9f64-3ded381de04e@redhat.com>
- <20190723035725-mutt-send-email-mst@kernel.org>
- <3f4178f1-0d71-e032-0f1f-802428ceca59@redhat.com>
- <20190723051828-mutt-send-email-mst@kernel.org>
- <caff362a-e208-3468-3688-63e1d093a9d3@redhat.com>
- <20190725012149-mutt-send-email-mst@kernel.org>
- <55e8930c-2695-365f-a07b-3ad169654d28@redhat.com>
- <20190725042651-mutt-send-email-mst@kernel.org>
- <84bb2e31-0606-adff-cf2a-e1878225a847@redhat.com>
- <20190725092332-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <11802a8a-ce41-f427-63d5-b6a4cf96bb3f@redhat.com>
-Date:   Thu, 25 Jul 2019 22:25:25 +0800
+        Thu, 25 Jul 2019 10:26:03 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39106 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbfGYO0A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 10:26:00 -0400
+Received: by mail-wr1-f67.google.com with SMTP id x4so50971718wrt.6
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 07:25:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=a4yNVultYze7PPpy5cvYCGPl+Bxml2Gu2G9EV6OVJFI=;
+        b=aZFlfwYl11ZfalVK9HQXiK6psS8etYrq9MwdgKIeCJ3kUwwzXuJGup6sST8vFdvBKQ
+         rkCcwECT04sJ7YhwAYxBq5jy2/UpsoS5q5OXFn8Ok8EH6a6wWiUESNyzJIs0r2rnNini
+         RX9AZbR1bJNbiqsydTo0QFCdo45Ml3jX2A9h03zVGZ+LxvCTOYzFpq2ls8Ngtu1BX49r
+         nsz/wBb4QJ6Y5MZ2ETI4GCfJuw76lG1feSBfo2lb+mpXmxfmQXsXEm536srR+dvDubLo
+         /w/peoDdqwFNa85L1h2g5AMrXUdpIFtsNgZYkqVRcW+LTelShFbzpDXHPBotrl1euBKw
+         YPpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=a4yNVultYze7PPpy5cvYCGPl+Bxml2Gu2G9EV6OVJFI=;
+        b=elB8u2J9qpptqwt1yPaWHQ1PuDIONVBUmF242w3N/Kiw23/HdycoaiceBM7eXn7cNW
+         oDo0oLxpoWUkr1XDLlvaLALHQEX8LybSB8p16YyxPodK72IuyTT/u73VhK9cXr+kqmtK
+         QBNuQGEDdyAUqSIuyS8r7V+l1q5Dy5Xbo7ukRoA5Xa7I66CR66GGDwuUwS4NOl2Tvnpc
+         Uc2idt3K/1LcsgnMaWKSuYLRWSCwYzboodXaEvYJYkYpUAyklCpqrXDJvguJwqyPKNBX
+         e3QomNeQbPHaDYc1Pcp+M5iHT55kDKjWcyZp/HmXSuZURYtO4mL+RpT1mUKn09kh/dbr
+         HQKw==
+X-Gm-Message-State: APjAAAUOnqPceLtbYvuslS0GaAu66lz0J73JTJL65syEW0dkuUvX/7Bk
+        M4c9RGITffhdBHDmzjyfTJUhNaSdxRYSsh2zz1OSwmPSznXyfGeTFiXx8OJSGZCpE+51qXgbnG7
+        dgbJ0qHsAPFviGOZgWKpbziC0xbFtuZvruGvoR+sUy01/WFob50YpZlwZv6WOolgzgtDwgt81Ws
+        dNrFPo3vn5OPNjm8o/gQln3xjBWquJBa7hjDUNBjU=
+X-Google-Smtp-Source: APXvYqxabH00r2hqqNGEp5to49iVTGmcAndrlBJ4BpORlLoVXwrBhNSWz9rDUPc4MdkiwTekqVtyvw==
+X-Received: by 2002:adf:eb4e:: with SMTP id u14mr95315821wrn.168.1564064758809;
+        Thu, 25 Jul 2019 07:25:58 -0700 (PDT)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id 4sm115262930wro.78.2019.07.25.07.25.57
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 07:25:58 -0700 (PDT)
+Subject: Re: [PATCH] hung_task: Allow printing warnings every check interval
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20190724170249.9644-1-dima@arista.com>
+ <2964b430-63d6-e172-84e2-cb269cf43443@i-love.sakura.ne.jp>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <aa151251-d271-1e65-1cae-0d9da9764d56@arista.com>
+Date:   Thu, 25 Jul 2019 15:25:57 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190725092332-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <2964b430-63d6-e172-84e2-cb269cf43443@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 25 Jul 2019 14:25:58 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-CLOUD-SEC-AV-Info: arista,google_mail,monitor
+X-CLOUD-SEC-AV-Sent: true
+X-Gm-Spam: 0
+X-Gm-Phishy: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/7/25 下午9:26, Michael S. Tsirkin wrote:
->> Exactly, and that's the reason actually I use synchronize_rcu() there.
+On 7/25/19 11:38 AM, Tetsuo Handa wrote:
+> On 2019/07/25 2:02, Dmitry Safonov wrote:
+>> Hung task detector has one timeout and has two associated actions on it:
+>> - issuing warnings with names and stacks of blocked tasks
+>> - panic()
 >>
->> So the concern is still the possible synchronize_expedited()?
-> I think synchronize_srcu_expedited.
->
-> synchronize_expedited sends lots of IPI and is bad for realtime VMs.
->
->> Can I do this
->> on through another series on top of the incoming V2?
->>
->> Thanks
->>
-> The question is this: is this still a gain if we switch to the
-> more expensive srcu? If yes then we can keep the feature on,
+>> We want switches to panic (and reboot) if there's a task
+>> in uninterruptible sleep for some minutes - at that moment something
+>> ugly has happened and the box needs a reboot.
+>> But we also want to detect conditions that are "out of range"
+>> or approaching the point of failure. Under such conditions we want
+>> to issue an "early warning" of an impending failure, minutes before
+>> the switch is going to panic.
+> 
+> Can't we do it by extending sysctl_hung_task_panic to accept values larger
+> than 1, and decrease by one when at least one thread was reported by each
+> check_hung_uninterruptible_tasks() check, and call panic() when
+> sysctl_hung_task_panic reached to 0 (or maybe 1 is simpler) ?
+> 
+> Hmm, might have the same problem regarding how/when to reset the counter.
+> If some userspace process can reset the counter, such process can trigger
+> SysRq-c when some period expired...
 
+Yes, also current distributions already using the counter to print
+warnings number of times and then silently ignore. I.e., on my Arch
+Linux setup:
+hung_task_warnings:10
 
-I think we only care about the cost on srcu_read_lock() which looks 
-pretty tiny form my point of view. Which is basically a READ_ONCE() + 
-WRITE_ONCE().
+>> It seems rather easy to add printing tasks and their stacks for
+>> notification and debugging purposes into hung task detector without
+>> complicating the code or major cost (prints are with KERN_INFO loglevel
+>> and so don't go on console, only into dmesg log).
+> 
+> Well, I don't think so. Might be noisy for systems without "quiet" kernel
+> command line option, and we can't pass KERN_DEBUG to e.g. sched_show_task()...
 
-Of course I can benchmark to see the difference.
+Yes, that's why it's disabled by default (=0).
+I tend to agree that printing with KERN_DEBUG may be better, but in my
+point of view the patch isn't enough justification for patching
+sched_show_task() and show_stack().
 
-
-> if not we'll put it off until next release and think
-> of better solutions. rcu->srcu is just a find and replace,
-> don't see why we need to defer that. can be a separate patch
-> for sure, but we need to know how well it works.
-
-
-I think I get here, let me try to do that in V2 and let's see the numbers.
-
-Thanks
-
+Thanks,
+          Dmitry
