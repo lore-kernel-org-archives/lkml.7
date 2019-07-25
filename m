@@ -2,467 +2,286 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CDCC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFCAC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 539F521734
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:53:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HG2pDyTR"
+	by mail.kernel.org (Postfix) with ESMTP id 24D6421734
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:54:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388636AbfGYOxx (ORCPT
+        id S2388616AbfGYOyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:53:53 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41222 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388154AbfGYOxx (ORCPT
+        Thu, 25 Jul 2019 10:54:54 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38664 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387834AbfGYOyy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:53:53 -0400
-Received: by mail-lj1-f194.google.com with SMTP id d24so48286212ljg.8;
-        Thu, 25 Jul 2019 07:53:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=Ves/f9tu6TtsBtCLUNP0b3bzM2Uf2Nm5yMFDA1GMfbc=;
-        b=HG2pDyTRovEm831xHNuDvkOmfNDjfVyGi7YHw8mNl2rJFTexXNySjqL3AQU7gG++nA
-         YumFFeHF+YJb1HdS24FkHcsFf4eBVJCWuFDEozd3CogY5M+yTH9pe7VVp4qRiOjXcoIN
-         ox1LooMmzJInds5EPvwIAlk6waCNsXQEiJexOMi8vwxmOR4TPQKm0OgUInSejtmUgfDX
-         iLLZrw/vrgXWa6pIIRZ8BGmtudCYUEpD8cspX7XSrfId29ivDbtE97Dn1/vZ5LjobIg3
-         kKnz/SxlfDjbqsy/2AdyPS3HauLvRRZQclGhoKvg5gRbSDwvg2JE2l1PqwYFHR2rXEva
-         WOnQ==
+        Thu, 25 Jul 2019 10:54:54 -0400
+Received: by mail-qk1-f193.google.com with SMTP id a27so36645482qkk.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 07:54:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ves/f9tu6TtsBtCLUNP0b3bzM2Uf2Nm5yMFDA1GMfbc=;
-        b=C5XBAvwuULBI48m6kNhvFIcmz/bkIoXb073LymS4odhLiXTbPwx/mEMj9ne/epRUbZ
-         i71HCmf2gLS/4U843KKp4GBCqns86jZdAITjX8ZITOyHVyF9Lieebq38+icLAxn56kHY
-         KxPrs6ALlp7JVX65BWyzI+dfdWOqUnBLYAU/UC/1lGEq78eAzgVxMTmWj8+WmcZ/PbeS
-         YFFkPvNyIflF0wG8I46FUNtyXEFO1uX5msyhiDK1GQK2+q6MstfS5sG4Wl7c+k5DleuP
-         OFwHeVbXNfRl4g6BxPR5Ol/B0fh+qnQrTh0R0zyvQVkJ5dwz/lPSAz8yPh8Wh6ehhQBx
-         9TUA==
-X-Gm-Message-State: APjAAAXFuCVXvfJhJRzFkkaf5CehNhIrGOsByjo0uHlvFvgWM2XKB9sO
-        jNOnxIg91ZYQlPjcPqFBoPNh9E8aIEUUTEepVv5McciArS18jg==
-X-Google-Smtp-Source: APXvYqzVmr7UP05OBJQtGyEZORBSpchwZjW+8PdCNUf63yxd2z8ra0kx21UJnTKmsVClJloNyb8Wp6Nr4X+DpxTxpzc=
-X-Received: by 2002:a2e:85d4:: with SMTP id h20mr46715537ljj.142.1564066429035;
- Thu, 25 Jul 2019 07:53:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CcgVTFTJMOOveKpatdedshRmvTZJnKJaf5zjvcK1rE0=;
+        b=RFskH8h7yvNqiJvFShg9W3VUwarB7HM5p+mJpBbgbvVjgqtdVylVSNV2HvdERujucq
+         JTEHlwW7L7bmfyqRNJhvs9dC/aBJTteZnDTkOjTcWRFTdHLd3JxCCRKT3QWLF3OW4V1T
+         uGQUWUowRNdDam2dwvKinE/VmvgIYRX1YQc1ZCPRjQZHYmAx4vHjfFmTSl/UFZNZliRK
+         LnuaIQr4fjXv5/lwBGMVOyjhq0r/3HMVrj6IgHjunjFyJrhvdH5gOfCyqltY97Ouoefl
+         Oj4xJzyV70PjAZGIQWK1fF41USFIQVNUnk6JUlwQ+yQseg/DEkbOHR8hxQYCBN1lZpEL
+         I2eA==
+X-Gm-Message-State: APjAAAVGalmWLLulICjKCpNseDptuvYihN2AbY21TCDeNmL0L7DRoIDZ
+        uqM4howAyfOUsFmiYDeGZd+hMw==
+X-Google-Smtp-Source: APXvYqzjeyV7dxTsscokLIiuSfFooVi6LnhPvO3yvAtF8NiqaOjbZbFDFHvnj/MfmLBA0jTFNhbBWg==
+X-Received: by 2002:a37:6086:: with SMTP id u128mr59476377qkb.270.1564066493306;
+        Thu, 25 Jul 2019 07:54:53 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id p32sm25527072qtb.67.2019.07.25.07.54.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 07:54:52 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 10:54:45 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
+        david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com
+Subject: Re: [PATCH v2 5/5] virtio-balloon: Add support for providing page
+ hints to host
+Message-ID: <20190725105415-mutt-send-email-mst@kernel.org>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+ <20190724170514.6685.17161.stgit@localhost.localdomain>
+ <20190724143902-mutt-send-email-mst@kernel.org>
+ <21cc88cd-3577-e8b4-376f-26c7848f5764@redhat.com>
 MIME-Version: 1.0
-References: <20190719150535.15501-1-k.konieczny@partner.samsung.com>
- <CGME20190719150555eucas1p197adc3c58e45c53137fd70cadbfae60e@eucas1p1.samsung.com>
- <20190719150535.15501-4-k.konieczny@partner.samsung.com> <beb2455b-7f9e-35df-d524-01f4f51a1c62@samsung.com>
- <ed80b6e3-5b40-18ce-ca1e-65520edf516e@partner.samsung.com>
-In-Reply-To: <ed80b6e3-5b40-18ce-ca1e-65520edf516e@partner.samsung.com>
-Reply-To: cwchoi00@gmail.com
-From:   Chanwoo Choi <cwchoi00@gmail.com>
-Date:   Thu, 25 Jul 2019 23:53:12 +0900
-Message-ID: <CAGTfZH1OaYpTheQxWQs7Fs4qcJEGtXQHESLg0CJSsL=dmROpQw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] devfreq: exynos-bus: convert to use dev_pm_opp_set_rate()
-To:     Kamil Konieczny <k.konieczny@partner.samsung.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <21cc88cd-3577-e8b4-376f-26c7848f5764@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=EB=85=84 7=EC=9B=94 25=EC=9D=BC (=EB=AA=A9) =EC=98=A4=ED=9B=84 11:19, =
-Kamil Konieczny
-<k.konieczny@partner.samsung.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> Hi Chanwoo,
->
-> On 25.07.2019 12:17, Chanwoo Choi wrote:
-> > Hi Kamil,
-> >
-> > Looks good to me. But, I have some comment. Please check them.
->
-> Thank you for review, please see answers below.
->
-> > After this patch, exynos_bus_target is perfectly same with
-> > exynos_bus_passive_target. The exynos_bus_passive_target() could be rem=
-oved.
->
-> Ok, I will make it in separate patch to simplify review process.
-
-I think you can just modify this patch without any separate patch.
-
-> > On 19. 7. 20. =EC=98=A4=EC=A0=84 12:05, k.konieczny@partner.samsung.com=
- wrote:
-> >> Reuse opp core code for setting bus clock and voltage. As a side
-> >> effect this allow useage of coupled regulators feature (required
-> >
-> > s/useage/usage ?
->
-> Good catch, I will change it.
->
-> >> for boards using Exynos5422/5800 SoCs) because dev_pm_opp_set_rate()
-> >> uses regulator_set_voltage_triplet() for setting regulator voltage
-> >> while the old code used regulator_set_voltage_tol() with fixed
-> >> tolerance. This patch also removes no longer needed parsing of DT
-> >> property "exynos,voltage-tolerance" (no Exynos devfreq DT node uses
-> >> it).
+On Thu, Jul 25, 2019 at 10:44:01AM -0400, Nitesh Narayan Lal wrote:
+> 
+> On 7/24/19 3:02 PM, Michael S. Tsirkin wrote:
+> > On Wed, Jul 24, 2019 at 10:05:14AM -0700, Alexander Duyck wrote:
+> >> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 > >>
-> >> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+> >> Add support for the page hinting feature provided by virtio-balloon.
+> >> Hinting differs from the regular balloon functionality in that is is
+> >> much less durable than a standard memory balloon. Instead of creating a
+> >> list of pages that cannot be accessed the pages are only inaccessible
+> >> while they are being indicated to the virtio interface. Once the
+> >> interface has acknowledged them they are placed back into their respective
+> >> free lists and are once again accessible by the guest system.
+> >>
+> >> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > Looking at the design, it seems that hinted pages can immediately be
+> > reused. I wonder how we can efficiently support this
+> > with kvm when poisoning is in effect. Of course we can just
+> > ignore the poison. However it seems cleaner to
+> > 1. verify page is poisoned with the correct value
+> > 2. fill the page with the correct value on fault
+> >
+> > Requirement 2 requires some kind of madvise that
+> > will save the poison e.g. in the VMA.
+> >
+> > Not a blocker for sure ... 
+> >
+> >
 > >> ---
-> >>  drivers/devfreq/exynos-bus.c | 143 +++++++++-------------------------=
--
-> >>  1 file changed, 37 insertions(+), 106 deletions(-)
+> >>  drivers/virtio/Kconfig              |    1 +
+> >>  drivers/virtio/virtio_balloon.c     |   47 +++++++++++++++++++++++++++++++++++
+> >>  include/uapi/linux/virtio_balloon.h |    1 +
+> >>  3 files changed, 49 insertions(+)
 > >>
-> >> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus=
-.c
-> >> index f391044aa39d..c2147b0912a0 100644
-> >> --- a/drivers/devfreq/exynos-bus.c
-> >> +++ b/drivers/devfreq/exynos-bus.c
-> >> @@ -25,7 +25,6 @@
-> >>  #include <linux/slab.h>
-> >>
-> >>  #define DEFAULT_SATURATION_RATIO    40
-> >> -#define DEFAULT_VOLTAGE_TOLERANCE   2
-> >>
-> >>  struct exynos_bus {
-> >>      struct device *dev;
-> >> @@ -37,9 +36,9 @@ struct exynos_bus {
-> >>
-> >>      unsigned long curr_freq;
-> >>
-> >> -    struct regulator *regulator;
-> >> +    struct opp_table *opp_table;
-> >> +
-> >>      struct clk *clk;
-> >> -    unsigned int voltage_tolerance;
-> >>      unsigned int ratio;
+> >> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+> >> index 078615cf2afc..d45556ae1f81 100644
+> >> --- a/drivers/virtio/Kconfig
+> >> +++ b/drivers/virtio/Kconfig
+> >> @@ -58,6 +58,7 @@ config VIRTIO_BALLOON
+> >>  	tristate "Virtio balloon driver"
+> >>  	depends on VIRTIO
+> >>  	select MEMORY_BALLOON
+> >> +	select PAGE_HINTING
+> >>  	---help---
+> >>  	 This driver supports increasing and decreasing the amount
+> >>  	 of memory within a KVM guest.
+> >> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> >> index 226fbb995fb0..dee9f8f3ad09 100644
+> >> --- a/drivers/virtio/virtio_balloon.c
+> >> +++ b/drivers/virtio/virtio_balloon.c
+> >> @@ -19,6 +19,7 @@
+> >>  #include <linux/mount.h>
+> >>  #include <linux/magic.h>
+> >>  #include <linux/pseudo_fs.h>
+> >> +#include <linux/page_hinting.h>
+> >>  
+> >>  /*
+> >>   * Balloon device works in 4K page units.  So each page is pointed to by
+> >> @@ -27,6 +28,7 @@
+> >>   */
+> >>  #define VIRTIO_BALLOON_PAGES_PER_PAGE (unsigned)(PAGE_SIZE >> VIRTIO_BALLOON_PFN_SHIFT)
+> >>  #define VIRTIO_BALLOON_ARRAY_PFNS_MAX 256
+> >> +#define VIRTIO_BALLOON_ARRAY_HINTS_MAX	32
+> >>  #define VIRTBALLOON_OOM_NOTIFY_PRIORITY 80
+> >>  
+> >>  #define VIRTIO_BALLOON_FREE_PAGE_ALLOC_FLAG (__GFP_NORETRY | __GFP_NOWARN | \
+> >> @@ -46,6 +48,7 @@ enum virtio_balloon_vq {
+> >>  	VIRTIO_BALLOON_VQ_DEFLATE,
+> >>  	VIRTIO_BALLOON_VQ_STATS,
+> >>  	VIRTIO_BALLOON_VQ_FREE_PAGE,
+> >> +	VIRTIO_BALLOON_VQ_HINTING,
+> >>  	VIRTIO_BALLOON_VQ_MAX
 > >>  };
-> >>
-> >> @@ -99,56 +98,23 @@ static int exynos_bus_target(struct device *dev, u=
-nsigned long *freq, u32 flags)
-> >>  {
-> >>      struct exynos_bus *bus =3D dev_get_drvdata(dev);
-> >>      struct dev_pm_opp *new_opp;
-> >> -    unsigned long old_freq, new_freq, new_volt, tol;
-> >>      int ret =3D 0;
-> >>
-> >> -    /* Get new opp-bus instance according to new bus clock */
-> >> +    /* Get correct frequency for bus. */
-> >>      new_opp =3D devfreq_recommended_opp(dev, freq, flags);
-> >>      if (IS_ERR(new_opp)) {
-> >>              dev_err(dev, "failed to get recommended opp instance\n");
-> >>              return PTR_ERR(new_opp);
-> >>      }
-> >>
-> >> -    new_freq =3D dev_pm_opp_get_freq(new_opp);
-> >> -    new_volt =3D dev_pm_opp_get_voltage(new_opp);
-> >>      dev_pm_opp_put(new_opp);
-> >>
-> >> -    old_freq =3D bus->curr_freq;
-> >> -
-> >> -    if (old_freq =3D=3D new_freq)
-> >> -            return 0;
-> >> -    tol =3D new_volt * bus->voltage_tolerance / 100;
-> >> -
-> >>      /* Change voltage and frequency according to new OPP level */
-> >>      mutex_lock(&bus->lock);
-> >> +    ret =3D dev_pm_opp_set_rate(dev, *freq);
-> >> +    if (!ret)
-> >> +            bus->curr_freq =3D *freq;
-> >>
-> >> -    if (old_freq < new_freq) {
-> >> -            ret =3D regulator_set_voltage_tol(bus->regulator, new_vol=
-t, tol);
-> >> -            if (ret < 0) {
-> >> -                    dev_err(bus->dev, "failed to set voltage\n");
-> >> -                    goto out;
-> >> -            }
-> >> -    }
-> >> -
-> >> -    ret =3D clk_set_rate(bus->clk, new_freq);
-> >> -    if (ret < 0) {
-> >> -            dev_err(dev, "failed to change clock of bus\n");
-> >> -            clk_set_rate(bus->clk, old_freq);
-> >> -            goto out;
-> >> -    }
-> >> -
-> >> -    if (old_freq > new_freq) {
-> >> -            ret =3D regulator_set_voltage_tol(bus->regulator, new_vol=
-t, tol);
-> >> -            if (ret < 0) {
-> >> -                    dev_err(bus->dev, "failed to set voltage\n");
-> >> -                    goto out;
-> >> -            }
-> >> -    }
-> >> -    bus->curr_freq =3D new_freq;
-> >> -
-> >> -    dev_dbg(dev, "Set the frequency of bus (%luHz -> %luHz, %luHz)\n"=
-,
-> >> -                    old_freq, new_freq, clk_get_rate(bus->clk));
-> >> -out:
-> >>      mutex_unlock(&bus->lock);
-> >>
-> >>      return ret;
-> >> @@ -195,8 +161,8 @@ static void exynos_bus_exit(struct device *dev)
-> >>              dev_warn(dev, "failed to disable the devfreq-event device=
-s\n");
-> >>
-> >>      clk_disable_unprepare(bus->clk);
-> >> -    if (bus->regulator)
-> >> -            regulator_disable(bus->regulator);
-> >> +    if (bus->opp_table)
-> >> +            dev_pm_opp_put_regulators(bus->opp_table);
-> >>
-> >>      dev_pm_opp_of_remove_table(dev);
-> >>  }
-> >> @@ -209,39 +175,23 @@ static int exynos_bus_passive_target(struct devi=
-ce *dev, unsigned long *freq,
-> >>  {
-> >>      struct exynos_bus *bus =3D dev_get_drvdata(dev);
-> >>      struct dev_pm_opp *new_opp;
-> >> -    unsigned long old_freq, new_freq;
-> >> -    int ret =3D 0;
-> >> +    int ret;
-> >>
-> >> -    /* Get new opp-bus instance according to new bus clock */
-> >> +    /* Get correct frequency for bus. */
-> >>      new_opp =3D devfreq_recommended_opp(dev, freq, flags);
-> >>      if (IS_ERR(new_opp)) {
-> >>              dev_err(dev, "failed to get recommended opp instance\n");
-> >>              return PTR_ERR(new_opp);
-> >>      }
-> >>
-> >> -    new_freq =3D dev_pm_opp_get_freq(new_opp);
-> >>      dev_pm_opp_put(new_opp);
-> >>
-> >> -    old_freq =3D bus->curr_freq;
-> >> -
-> >> -    if (old_freq =3D=3D new_freq)
-> >> -            return 0;
-> >> -
-> >>      /* Change the frequency according to new OPP level */
-> >>      mutex_lock(&bus->lock);
-> >> +    ret =3D dev_pm_opp_set_rate(dev, *freq);
-> >> +    if (!ret)
-> >> +            bus->curr_freq =3D *freq;
-> >>
-> >> -    ret =3D clk_set_rate(bus->clk, new_freq);
-> >> -    if (ret < 0) {
-> >> -            dev_err(dev, "failed to set the clock of bus\n");
-> >> -            goto out;
-> >> -    }
-> >> -
-> >> -    *freq =3D new_freq;
-> >> -    bus->curr_freq =3D new_freq;
-> >> -
-> >> -    dev_dbg(dev, "Set the frequency of bus (%luHz -> %luHz, %luHz)\n"=
-,
-> >> -                    old_freq, new_freq, clk_get_rate(bus->clk));
-> >> -out:
-> >>      mutex_unlock(&bus->lock);
-> >>
-> >>      return ret;
-> >> @@ -259,20 +209,9 @@ static int exynos_bus_parent_parse_of(struct devi=
-ce_node *np,
-> >>                                      struct exynos_bus *bus)
-> >>  {
-> >>      struct device *dev =3D bus->dev;
-> >> -    int i, ret, count, size;
-> >> -
-> >> -    /* Get the regulator to provide each bus with the power */
-> >> -    bus->regulator =3D devm_regulator_get(dev, "vdd");
-> >> -    if (IS_ERR(bus->regulator)) {
-> >> -            dev_err(dev, "failed to get VDD regulator\n");
-> >> -            return PTR_ERR(bus->regulator);
-> >> -    }
-> >> -
-> >> -    ret =3D regulator_enable(bus->regulator);
-> >> -    if (ret < 0) {
-> >> -            dev_err(dev, "failed to enable VDD regulator\n");
-> >> -            return ret;
-> >> -    }
-> >> +    struct opp_table *opp_table;
-> >> +    const char *vdd =3D "vdd";
-> >> +    int i, count, size;
-> >>
-> >>      /*
-> >>       * Get the devfreq-event devices to get the current utilization o=
-f
-> >> @@ -281,26 +220,29 @@ static int exynos_bus_parent_parse_of(struct dev=
-ice_node *np,
-> >>      count =3D devfreq_event_get_edev_count(dev);
-> >>      if (count < 0) {
-> >>              dev_err(dev, "failed to get the count of devfreq-event de=
-v\n");
-> >> -            ret =3D count;
-> >> -            goto err_regulator;
-> >> +            return count;
-> >>      }
-> >> -    bus->edev_count =3D count;
-> >>
-> >> +    bus->edev_count =3D count;
-> >>      size =3D sizeof(*bus->edev) * count;
-> >>      bus->edev =3D devm_kzalloc(dev, size, GFP_KERNEL);
-> >> -    if (!bus->edev) {
-> >> -            ret =3D -ENOMEM;
-> >> -            goto err_regulator;
-> >> -    }
-> >> +    if (!bus->edev)
-> >> +            return -ENOMEM;
-> >>
-> >>      for (i =3D 0; i < count; i++) {
-> >>              bus->edev[i] =3D devfreq_event_get_edev_by_phandle(dev, i=
-);
-> >> -            if (IS_ERR(bus->edev[i])) {
-> >> -                    ret =3D -EPROBE_DEFER;
-> >> -                    goto err_regulator;
-> >> -            }
-> >> +            if (IS_ERR(bus->edev[i]))
-> >> +                    return -EPROBE_DEFER;
-> >> +    }
+> >>  
+> >> @@ -113,6 +116,10 @@ struct virtio_balloon {
+> >>  
+> >>  	/* To register a shrinker to shrink memory upon memory pressure */
+> >>  	struct shrinker shrinker;
 > >> +
-> >> +    opp_table =3D dev_pm_opp_set_regulators(dev, &vdd, 1);
-> >> +    if (IS_ERR(opp_table)) {
-> >> +            i =3D PTR_ERR(opp_table);
-> >> +            dev_err(dev, "failed to set regulators %d\n", i);
-> >> +            return i;
-> >
-> > Maybe, you just used the 'i' defined variable instead of adding
-> > new variable. But, I think that you better to add new variable
-> > like 'err' for the readability. Or, jut use the 'PTR_ERR(opp_table)'
-> > directly without any additional variable.
->
-> I will remove not related changes, so here I will reuse 'ret' variable.
->
-> >>      }
-> >>
-> >> +    bus->opp_table =3D opp_table;
-> >
-> > Add blank line.
->
-> OK
->
-> >>      /*
-> >>       * Optionally, Get the saturation ratio according to Exynos SoC
-> >>       * When measuring the utilization of each AXI bus with devfreq-ev=
-ent
-> >> @@ -314,16 +256,7 @@ static int exynos_bus_parent_parse_of(struct devi=
-ce_node *np,
-> >>      if (of_property_read_u32(np, "exynos,saturation-ratio", &bus->rat=
-io))
-> >>              bus->ratio =3D DEFAULT_SATURATION_RATIO;
-> >>
-> >> -    if (of_property_read_u32(np, "exynos,voltage-tolerance",
-> >> -                                    &bus->voltage_tolerance))
-> >> -            bus->voltage_tolerance =3D DEFAULT_VOLTAGE_TOLERANCE;
-> >> -
-> >>      return 0;
-> >> -
-> >> -err_regulator:
-> >> -    regulator_disable(bus->regulator);
-> >> -
-> >> -    return ret;
+> >> +	/* Unused page hinting device */
+> >> +	struct virtqueue *hinting_vq;
+> >> +	struct page_hinting_dev_info ph_dev_info;
+> >>  };
+> >>  
+> >>  static struct virtio_device_id id_table[] = {
+> >> @@ -152,6 +159,22 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
+> >>  
 > >>  }
-> >>
-> >>  static int exynos_bus_parse_of(struct exynos_bus *bus)
-> >> @@ -414,12 +347,8 @@ static int exynos_bus_probe(struct platform_devic=
-e *pdev)
-> >>
-> >>      /* Parse the device-tree to get the resource information */
-> >>      ret =3D exynos_bus_parse_of(bus);
-> >> -    if (ret < 0) {
-> >> -            if (!passive)
-> >> -                    regulator_disable(bus->regulator);
-> >> -
-> >> -            return ret;
-> >> -    }
-> >> +    if (ret < 0)
-> >> +            goto err_reg;
-> >>
-> >>      if (passive)
-> >>              goto passive;
-> >> @@ -512,10 +441,12 @@ static int exynos_bus_probe(struct platform_devi=
-ce *pdev)
-> >>
-> >>  err:
-> >>      clk_disable_unprepare(bus->clk);
-> >> -    if (!passive)
-> >> -            regulator_disable(bus->regulator);
-> >> -
-> >>      dev_pm_opp_of_remove_table(dev);
+> >>  
+> >> +void virtballoon_page_hinting_react(struct page_hinting_dev_info *ph_dev_info,
+> >> +				    unsigned int num_hints)
+> >> +{
+> >> +	struct virtio_balloon *vb =
+> >> +		container_of(ph_dev_info, struct virtio_balloon, ph_dev_info);
+> >> +	struct virtqueue *vq = vb->hinting_vq;
+> >> +	unsigned int unused;
+> >> +
+> >> +	/* We should always be able to add these buffers to an empty queue. */
 > >
-> > This function removes the 'opp_table'. But, the below code
-> > uses the 'opp_table' variable by dev_pm_opp_put_regulators().
+> > can be an out of memory condition, and then ...
+> 
+> Do we need an error check here?
+> 
+> For situations where this fails we should disable hinting completely, maybe?
+
+I would just limit this to vq size, then you know it won't fail.
+
+> 
 > >
-> > To disable the regulator, you have to call dev_pm_opp_of_remove_table(d=
-ev)
-> > after dev_pm_opp_put_regulators(bus->opp_table).
->
-> Regulators should be set before dev_pm_opp_add_table(), so exit sequence
-> should be in reverse order,
->
-> init order:
->
-> exynos_bus_parent_parse_of()
->         dev_pm_opp_set_regulators()
-> exynos_bus_parse_of()
->         clk_prepare_enable()
->         dev_pm_opp_of_add_table()
->
-> exit or error order:
->
-> dev_pm_opp_of_remove_table()
-> clk_disable_unprepare()
-> if (bus->opp_table)
->         dev_pm_opp_put_regulators(bus->opp_table);
-
-dev_pm_opp_of_remove_table() have to be called at the end of exit sequence
-after disabling clock and put regulators. Because dev_pm_opp_of_remove_tabl=
-e()
-frees the 'opp_table' pointer of device.
-
-clk_disable_unprepare()
-if (bus->opp_table)
-          dev_pm_opp_put_regulators(bus->opp_table);
-dev_pm_opp_of_remove_table()
-
->
-> I will send v4 soon.
->
-> >> +err_reg:
-> >> +    if (bus->opp_table) {
-> >> +            dev_pm_opp_put_regulators(bus->opp_table);
-> >> +            bus->opp_table =3D NULL;
-> >> +    }
-> >>
-> >>      return ret;
-> >>  }
->
-> --
-> Best regards,
-> Kamil Konieczny
-> Samsung R&D Institute Poland
->
-
-
---=20
-Best Regards,
-Chanwoo Choi
+> >> +	virtqueue_add_inbuf(vq, ph_dev_info->sg, num_hints, vb, GFP_KERNEL);
+> >> +	virtqueue_kick(vq);
+> > ... this will block forever.
+> >
+> >> +	/* When host has read buffer, this completes via balloon_ack */
+> >> +	wait_event(vb->acked, virtqueue_get_buf(vq, &unused));
+> > However below I suggest limiting capacity which will solve
+> > this problem for you.
+> >
+> >
+> >
+> >> +}
+> >> +
+> >>  static void set_page_pfns(struct virtio_balloon *vb,
+> >>  			  __virtio32 pfns[], struct page *page)
+> >>  {
+> >> @@ -476,6 +499,7 @@ static int init_vqs(struct virtio_balloon *vb)
+> >>  	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
+> >>  	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
+> >>  	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+> >> +	names[VIRTIO_BALLOON_VQ_HINTING] = NULL;
+> >>  
+> >>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+> >>  		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
+> >> @@ -487,11 +511,19 @@ static int init_vqs(struct virtio_balloon *vb)
+> >>  		callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+> >>  	}
+> >>  
+> >> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING)) {
+> >> +		names[VIRTIO_BALLOON_VQ_HINTING] = "hinting_vq";
+> >> +		callbacks[VIRTIO_BALLOON_VQ_HINTING] = balloon_ack;
+> >> +	}
+> >> +
+> >>  	err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
+> >>  					 vqs, callbacks, names, NULL, NULL);
+> >>  	if (err)
+> >>  		return err;
+> >>  
+> >> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING))
+> >> +		vb->hinting_vq = vqs[VIRTIO_BALLOON_VQ_HINTING];
+> >> +
+> >>  	vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
+> >>  	vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
+> >>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+> >> @@ -924,12 +956,24 @@ static int virtballoon_probe(struct virtio_device *vdev)
+> >>  		if (err)
+> >>  			goto out_del_balloon_wq;
+> >>  	}
+> >> +
+> >> +	vb->ph_dev_info.react = virtballoon_page_hinting_react;
+> >> +	vb->ph_dev_info.capacity = VIRTIO_BALLOON_ARRAY_HINTS_MAX;
+> > As explained above I think you should limit this by vq size.
+> > Otherwise virtqueue add buf might fail.
+> > In fact by struct spec reading you need to limit it
+> > anyway otherwise it will fail unconditionally.
+> > In practice on most hypervisors it will typically work ...
+> >
+> >> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING)) {
+> >> +		err = page_hinting_startup(&vb->ph_dev_info);
+> >> +		if (err)
+> >> +			goto out_unregister_shrinker;
+> >> +	}
+> >> +
+> >>  	virtio_device_ready(vdev);
+> >>  
+> >>  	if (towards_target(vb))
+> >>  		virtballoon_changed(vdev);
+> >>  	return 0;
+> >>  
+> >> +out_unregister_shrinker:
+> >> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+> >> +		virtio_balloon_unregister_shrinker(vb);
+> >>  out_del_balloon_wq:
+> >>  	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+> >>  		destroy_workqueue(vb->balloon_wq);
+> >> @@ -958,6 +1002,8 @@ static void virtballoon_remove(struct virtio_device *vdev)
+> >>  {
+> >>  	struct virtio_balloon *vb = vdev->priv;
+> >>  
+> >> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING))
+> >> +		page_hinting_shutdown(&vb->ph_dev_info);
+> >>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+> >>  		virtio_balloon_unregister_shrinker(vb);
+> >>  	spin_lock_irq(&vb->stop_update_lock);
+> >> @@ -1027,6 +1073,7 @@ static int virtballoon_validate(struct virtio_device *vdev)
+> >>  	VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
+> >>  	VIRTIO_BALLOON_F_FREE_PAGE_HINT,
+> >>  	VIRTIO_BALLOON_F_PAGE_POISON,
+> >> +	VIRTIO_BALLOON_F_HINTING,
+> >>  };
+> >>  
+> >>  static struct virtio_driver virtio_balloon_driver = {
+> >> diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
+> >> index a1966cd7b677..2b0f62814e22 100644
+> >> --- a/include/uapi/linux/virtio_balloon.h
+> >> +++ b/include/uapi/linux/virtio_balloon.h
+> >> @@ -36,6 +36,7 @@
+> >>  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
+> >>  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
+> >>  #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
+> >> +#define VIRTIO_BALLOON_F_HINTING	5 /* Page hinting virtqueue */
+> >>  
+> >>  /* Size of a PFN in the balloon interface. */
+> >>  #define VIRTIO_BALLOON_PFN_SHIFT 12
+> -- 
+> Thanks
+> Nitesh
