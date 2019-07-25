@@ -4,144 +4,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B030AC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 01:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528A5C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 01:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D62121951
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 01:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A3342190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 01:40:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387755AbfGYB24 (ORCPT
+        id S2387961AbfGYBkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 21:28:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbfGYB24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 21:28:56 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EA4521901;
-        Thu, 25 Jul 2019 01:28:54 +0000 (UTC)
-Date:   Wed, 24 Jul 2019 21:28:52 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] trace: fix header include guards
-Message-ID: <20190724212852.070641d4@oasis.local.home>
-In-Reply-To: <20190720103943.16982-1-yamada.masahiro@socionext.com>
-References: <20190720103943.16982-1-yamada.masahiro@socionext.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 24 Jul 2019 21:40:41 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35876 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726808AbfGYBkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 21:40:41 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8A9CB1451149D3AC8C95;
+        Thu, 25 Jul 2019 09:40:38 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Thu, 25 Jul 2019
+ 09:40:30 +0800
+Subject: Re: [PATCH] carl9170: remove set but not used variable 'udev'
+To:     Christian Lamparter <chunkeey@gmail.com>
+References: <20190724015411.66525-1-yuehaibing@huawei.com>
+ <CAAd0S9BvTfRyUVkQzcczyNkU_oeU5hNdK3KVQzLsU21b4JGNTQ@mail.gmail.com>
+CC:     Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <1cfbfe67-e931-029b-1836-a6b796283c2c@huawei.com>
+Date:   Thu, 25 Jul 2019 09:40:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAAd0S9BvTfRyUVkQzcczyNkU_oeU5hNdK3KVQzLsU21b4JGNTQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 20 Jul 2019 19:39:43 +0900
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
-
-> These include guards are broken.
+On 2019/7/25 3:42, Christian Lamparter wrote:
+> On Wed, Jul 24, 2019 at 3:48 AM YueHaibing <yuehaibing@huawei.com> wrote:
+>>
+>> Fixes gcc '-Wunused-but-set-variable' warning:
+>>
+>> drivers/net/wireless/ath/carl9170/usb.c: In function 'carl9170_usb_disconnect':
+>> drivers/net/wireless/ath/carl9170/usb.c:1110:21: warning:
+>>  variable 'udev' set but not used [-Wunused-but-set-variable]
+>>
+>> It is not used, so can be removed.
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+> Isn't this the same patch you sent earlier:
 > 
-> Match the #if !define() and #define lines so that they work correctly.
+> https://patchwork.kernel.org/patch/11027909/
+> 
+>>From what I can tell, it's the same but with an extra [-next], I
+> remember that I've acked that one
+> but your patch now does not have it? Is this an oversight, because I'm
+> the maintainer for this
+> driver. So, in my opinion at least the "ack" should have some value
+> and shouldn't be "ignored".
+> 
+> Look, from what I know, Kalle is not ignoring you, It's just that
+> carl9170 is no longer top priority.
+> So please be patient. As long as its queued in the patchwork it will
+> get considered.
 
-Thanks, this all looks legit to me. I'll pull this in through my tree.
+Thank you for reminder. I forget the previous patch，and our CI robot
+report it again, So I do it again, sorry for confusion.
 
--- Steve
+Just pls drop this and use previous one.
 
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+> Cheers,
+> Christian
 > 
->  include/trace/events/dma_fence.h     | 2 +-
->  include/trace/events/napi.h          | 4 ++--
->  include/trace/events/qdisc.h         | 4 ++--
->  include/trace/events/tegra_apb_dma.h | 4 ++--
->  4 files changed, 7 insertions(+), 7 deletions(-)
+>>  drivers/net/wireless/ath/carl9170/usb.c | 2 --
+>>  1 file changed, 2 deletions(-)
+>>
+>> diff --git a/drivers/net/wireless/ath/carl9170/usb.c b/drivers/net/wireless/ath/carl9170/usb.c
+>> index 99f1897a775d..486957a04bd1 100644
+>> --- a/drivers/net/wireless/ath/carl9170/usb.c
+>> +++ b/drivers/net/wireless/ath/carl9170/usb.c
+>> @@ -1107,12 +1107,10 @@ static int carl9170_usb_probe(struct usb_interface *intf,
+>>  static void carl9170_usb_disconnect(struct usb_interface *intf)
+>>  {
+>>         struct ar9170 *ar = usb_get_intfdata(intf);
+>> -       struct usb_device *udev;
+>>
+>>         if (WARN_ON(!ar))
+>>                 return;
+>>
+>> -       udev = ar->udev;
+>>         wait_for_completion(&ar->fw_load_wait);
+>>
+>>         if (IS_INITIALIZED(ar)) {
+>>
+>>
+>>
 > 
-> diff --git a/include/trace/events/dma_fence.h b/include/trace/events/dma_fence.h
-> index 2212adda8f77..64e92d56c6a8 100644
-> --- a/include/trace/events/dma_fence.h
-> +++ b/include/trace/events/dma_fence.h
-> @@ -2,7 +2,7 @@
->  #undef TRACE_SYSTEM
->  #define TRACE_SYSTEM dma_fence
->  
-> -#if !defined(_TRACE_FENCE_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#if !defined(_TRACE_DMA_FENCE_H) || defined(TRACE_HEADER_MULTI_READ)
->  #define _TRACE_DMA_FENCE_H
->  
->  #include <linux/tracepoint.h>
-> diff --git a/include/trace/events/napi.h b/include/trace/events/napi.h
-> index f3a12566bed0..6678cf8b235b 100644
-> --- a/include/trace/events/napi.h
-> +++ b/include/trace/events/napi.h
-> @@ -3,7 +3,7 @@
->  #define TRACE_SYSTEM napi
->  
->  #if !defined(_TRACE_NAPI_H) || defined(TRACE_HEADER_MULTI_READ)
-> -#define _TRACE_NAPI_H_
-> +#define _TRACE_NAPI_H
->  
->  #include <linux/netdevice.h>
->  #include <linux/tracepoint.h>
-> @@ -38,7 +38,7 @@ TRACE_EVENT(napi_poll,
->  
->  #undef NO_DEV
->  
-> -#endif /* _TRACE_NAPI_H_ */
-> +#endif /* _TRACE_NAPI_H */
->  
->  /* This part must be outside protection */
->  #include <trace/define_trace.h>
-> diff --git a/include/trace/events/qdisc.h b/include/trace/events/qdisc.h
-> index 60d0d8bd336d..0d1a9ebf55ba 100644
-> --- a/include/trace/events/qdisc.h
-> +++ b/include/trace/events/qdisc.h
-> @@ -2,7 +2,7 @@
->  #define TRACE_SYSTEM qdisc
->  
->  #if !defined(_TRACE_QDISC_H) || defined(TRACE_HEADER_MULTI_READ)
-> -#define _TRACE_QDISC_H_
-> +#define _TRACE_QDISC_H
->  
->  #include <linux/skbuff.h>
->  #include <linux/netdevice.h>
-> @@ -44,7 +44,7 @@ TRACE_EVENT(qdisc_dequeue,
->  		  __entry->txq_state, __entry->packets, __entry->skbaddr )
->  );
->  
-> -#endif /* _TRACE_QDISC_H_ */
-> +#endif /* _TRACE_QDISC_H */
->  
->  /* This part must be outside protection */
->  #include <trace/define_trace.h>
-> diff --git a/include/trace/events/tegra_apb_dma.h b/include/trace/events/tegra_apb_dma.h
-> index 0818f6286110..971cd02d2daf 100644
-> --- a/include/trace/events/tegra_apb_dma.h
-> +++ b/include/trace/events/tegra_apb_dma.h
-> @@ -1,5 +1,5 @@
->  #if !defined(_TRACE_TEGRA_APB_DMA_H) || defined(TRACE_HEADER_MULTI_READ)
-> -#define _TRACE_TEGRA_APM_DMA_H
-> +#define _TRACE_TEGRA_APB_DMA_H
->  
->  #include <linux/tracepoint.h>
->  #include <linux/dmaengine.h>
-> @@ -55,7 +55,7 @@ TRACE_EVENT(tegra_dma_isr,
->  	TP_printk("%s: irq %d\n",  __get_str(chan), __entry->irq)
->  );
->  
-> -#endif /*  _TRACE_TEGRADMA_H */
-> +#endif /* _TRACE_TEGRA_APB_DMA_H */
->  
->  /* This part must be outside protection */
->  #include <trace/define_trace.h>
+> .
+> 
 
