@@ -2,109 +2,88 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA64C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71017C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4CF22C7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564061935;
-	bh=jlsOsLLZzXiGnKWyHRln4ewYE4NqswfShzMVdsaJ5nM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K3JL5Op/HQ7vtggx/Iwi1VPf2e4PrTelmOa1bsOm0Lgs8D6KofwE5US4MoXT3LDtJ
-	 yWLpYPPc4Oy/curVVgfdJ0ncNU6AsFqpWi9AccIna/q9POCjcBcDmem1scwVJ5gCx4
-	 0FaQD6PRL7MiTKqv2iLIBeK4fir+eOD1H9TdvghA=
+	by mail.kernel.org (Postfix) with ESMTP id 44D482238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:39:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389495AbfGYNiy (ORCPT
+        id S2389867AbfGYNjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:38:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387959AbfGYNix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:38:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 791B92238C;
-        Thu, 25 Jul 2019 13:38:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564061933;
-        bh=jlsOsLLZzXiGnKWyHRln4ewYE4NqswfShzMVdsaJ5nM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YOxSG8MN51AA/XDSj9b/sEo4PEpqypukfdcgUkrd8+BG/egBOOQlspkazTPJLMnpu
-         tqpdLl2QV1lDHi+uW19iEd80z5iMPSAEJnJs20zyqTiPFo6s6/s901fRwAoBV1Rh2P
-         bBBFWV86uWwo0cJ7aLh4s2xTJ+XUtXQk7DHyyvkw=
-Date:   Thu, 25 Jul 2019 15:38:50 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     junxiao.chang@intel.com
-Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org, lili.li@intel.com
-Subject: Re: [PATCH] platform: release resource itself instead of resource
- tree
-Message-ID: <20190725133850.GB11115@kroah.com>
-References: <1556173458-9318-1-git-send-email-junxiao.chang@intel.com>
+        Thu, 25 Jul 2019 09:39:15 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44170 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387959AbfGYNjO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 09:39:14 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id F10C728B644
+Message-ID: <4f0d0390057195da326354da2343c98c93d86669.camel@collabora.com>
+Subject: Re: [PATCH 0/7] hantro: Add RK3399 VP8 decoding support
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        Hans Verkuil <hans.verkuil@cisco.com>
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Date:   Thu, 25 Jul 2019 10:38:47 -0300
+In-Reply-To: <b0cd9a4f-4bf9-a48c-6d7c-7147b13fa0b2@xs4all.nl>
+References: <20190724171702.9449-1-ezequiel@collabora.com>
+         <b0cd9a4f-4bf9-a48c-6d7c-7147b13fa0b2@xs4all.nl>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556173458-9318-1-git-send-email-junxiao.chang@intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 02:24:18PM +0800, junxiao.chang@intel.com wrote:
-> From: Junxiao Chang <junxiao.chang@intel.com>
+On Thu, 2019-07-25 at 14:59 +0200, Hans Verkuil wrote:
+> On 7/24/19 7:16 PM, Ezequiel Garcia wrote:
+> > This series adds VP8 decoding support on RK3399 SoC.
+> > 
+> > I'm including a set of commits from Boris' recent H264 series [1].
+> > These commits add some helpers that are also useful for RK3399 VP8,
+> > and at the same time cleanup the driver nicely.
+> > 
+> > Finally, there's a fix by Francois Buergisser from Chromium team.
+> > 
+> > VP8 and MPEG-2 tested on RK3399 RockPi and RK3288 Rock2 boards.
 > 
-> When platform device is deleted or there is error in adding
-> device, platform device resources should be released. Currently
-> API release_resource is used to release platform device resources.
-> However, this API releases not only platform resource itself but
-> also its child resources. It might release resources which are
-> still in use. Calling remove_resource only releases current
-> resource itself, not resource tree, it moves its child resources
-> to up level.
-
-But shouldn't the parent device not get removed until all of the
-children are removed?  What is causing this "inversion" to happen?
-
+> I get this when compiling:
 > 
-> For example, platform device 1 and device 2 are registered, then only
-> device 1 is unregistered in below code:
+> /home/hans/work/build/media-git/drivers/staging/media/hantro/hantro_g1_vp8_dec.c: In function 'hantro_g1_vp8_dec_run':
+> /home/hans/work/build/media-git/drivers/staging/media/hantro/hantro_g1_vp8_dec.c:435:26: warning: variable 'vb2_src' set but not used [-Wunused-but-
+> set-variable]
+>   struct vb2_v4l2_buffer *vb2_src;
+>                           ^~~~~~~
+>   CC      drivers/staging/media/omap4iss/iss_csiphy.o
+> /home/hans/work/build/media-git/drivers/staging/media/hantro/rk3399_vpu_hw_vp8_dec.c: In function 'rk3399_vpu_vp8_dec_run':
+> /home/hans/work/build/media-git/drivers/staging/media/hantro/rk3399_vpu_hw_vp8_dec.c:515:26: warning: variable 'vb2_src' set but not used [-Wunused-
+> but-set-variable]
+>   struct vb2_v4l2_buffer *vb2_src;
+>                           ^~~~~~~
 > 
->   ...
->   // Register platform test device 1, resource 0xfed1a000 ~ 0xfed1afff
->   pdev1 = platform_device_register_full(&pdevinfo1);
+> Can you take a look?
 > 
->   // Register platform test device 2, resource 0xfed1a200 ~ 0xfed1a2ff
->   pdev2 = platform_device_register_full(&pdevinfo2);
-> 
->   // Now platform device 2 resource should be device 1 resource's child
-> 
->   // Unregister device 1 only
->   platform_device_unregister(pdev1);
->   ...
 
-Don't do that.  :)
+Oops, I missed these warnings. I'll fix them and post a new version.
 
-You created this mess of platform devices, so you need to keep track of
-them.
+Thanks,
+Eze
 
-
-> Platform device 2 resource will be released as well because its
-> parent resource(device 1's resource) is released, this is not expected.
-> If using API remove_resource, device 2 resource will not be released.
-> 
-> This change fixed an intel pmc platform device resource issue when
-> intel pmc ipc kernel module is inserted/removed for twice.
-
-Why not fix that kernel module instead?  It seems like that is the real
-problem here, not a driver core issue.
-
-thanks,
-
-greg k-h
