@@ -2,61 +2,61 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F46C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D746C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9D2922BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB8122BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:43:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dlyJ1Kob"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ebzZdKnq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbfGYSns (ORCPT
+        id S1726384AbfGYSn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 14:43:48 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45454 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfGYSns (ORCPT
+        Thu, 25 Jul 2019 14:43:56 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34444 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfGYSn4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 14:43:48 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r1so23180865pfq.12
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 11:43:47 -0700 (PDT)
+        Thu, 25 Jul 2019 14:43:56 -0400
+Received: by mail-pl1-f195.google.com with SMTP id i2so23762797plt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 11:43:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=75v+7kFOX3fDCU6QmGh0HhSEpSdixRD3VTEDmH00T24=;
-        b=dlyJ1KobmoWLtFv7IcNUQJNez9fMahwQ5BinTISnEvaeniV2pgG2noG7Q17DcQHHhe
-         kv1BWR9vH2jTvOCKHrFyHl2Z7FSzGX7IPCY1DtjJnKYZr9ao4LPqqwI/qzKZUmlfxxj9
-         gWoQjCwtrBIwL1CotH8OwPNZxE9sm3Gals+8TapRsll0joD1XmNmjoyhW2vel99FHMLl
-         +v2xNA2JhyFRoDDtSggDSTjUFy4qrEY7KYIupvhwaByb4Y46kYtK2z4ns4C1yqY7zYyU
-         ILNBVtcrVmOqkgkdWurIguRB5tzt0l1D6fPe1Y8dpyE5iGLmrtcwqAub4syvDoI9McrV
-         GsEQ==
+        bh=AtweZa/Z6F63u6BGDtxfZL6SRwzo4lD4iM0Os9b2INA=;
+        b=ebzZdKnqccWwtZwsMRzf5dLs66cvT47cvTOupG9sQ1axgMouSlzYHllw4szdTYKBLZ
+         g1ZdTZFw13XszJ8qE73aGeFFYM9pYIQp0NuxgO9EsQRc3FzxGTfLaEsE4okN2DEJ/qPp
+         EkDOEF4pFgN3/5zsqMjEbEEPGEC0m2PX8a34iW8qlMgG7H6agaEA6RhAZCNH6g1bykps
+         spfRDwLfZ+HmDgav54rp1H6iQtsTLsasHxY8gAzelL0nEZVqJKai88jeAcPoipuzNpSX
+         RkKnjcl/A8ILOT+tgjQRkDU3dMJP35QLW0U6+NNwyOEHJZIyo9bIhlH2buli4LdQrTMI
+         9IXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=75v+7kFOX3fDCU6QmGh0HhSEpSdixRD3VTEDmH00T24=;
-        b=D6mmz8LRM3hMnPH9l/XNH2cCLrToXxxDrHVvuPMXZFGnIQQM8z/mLOf1+NaDtiRZ4n
-         xoS0llY4wC9clqO75+mkrzMV2wi5tFha81OYgZjuUx1Xpx+zNT3KvHny3eKKLmtbYMMB
-         KUXxTQTrVaR2yB4rTMC0lOq2Vo0+pUIqda3jqle6MRwJTI2WPN+jqfS4wZ0NMptZOmtR
-         3RBJm3jYSpal0iyffpJjzj3pHdqzQPK5zOm7syxMTsM1RWBYjgLDj10GqAu4SM2r/Jem
-         9VZLLSqkJEqty/nuKvOOGPdm/Tz54pkxHT6bJpAFSqfQIjyZRJu1HQDJhsqht83PuOKT
-         HEfw==
-X-Gm-Message-State: APjAAAXx9d3u3V3/0Uipo7awE7Si1ZkVtOT99y6wx2SFLiOboKu91XSV
-        hmE6szmbgEgx0MllpUuNyUI=
-X-Google-Smtp-Source: APXvYqyJ16tErcZCd6V50Gl8u2liDc4czpUPjNQ0NEfS8/hL14rWy3Alcf4zsPe/54zld/LC6CpQZw==
-X-Received: by 2002:a63:b555:: with SMTP id u21mr89025235pgo.222.1564080227314;
-        Thu, 25 Jul 2019 11:43:47 -0700 (PDT)
+        bh=AtweZa/Z6F63u6BGDtxfZL6SRwzo4lD4iM0Os9b2INA=;
+        b=eoF7bc/uHKqPxB+ZRwf36nU6vbShC65pTot3b2rVXvdrg51nkW3nmobbxWjpUzCx5J
+         +WVgRd1tbcNDn5red3EAfITWvCdQbsaiohF276wWmNg3MF33S5f8jasb9AgPcWy+1x0s
+         U/jj0yFR8c39ZPnxUIHAdnkEYGV+sXV8twVeKu8s3upS6K8jkTuj69vqqe9Wrw4cUfs/
+         nXLRRXN5BFFxYZci8M3om1bmhJgXARfO7KL+q5/0P5cQ4E1jdEb3oHR4biw4T6Wobtx4
+         3oD/XThXndqb2JZjgslQ+mCBeVH6mzoBhfPZuamT98aO0AEwr0P9ayHKzbed1iM473dy
+         QsNA==
+X-Gm-Message-State: APjAAAVWf3LGRGwDl02BWSGQG5I/jcBw9TbdIYuMQLiC3IvhPZY6v+oQ
+        4F0WoWt0J0Yp3IKTSaeoEaU=
+X-Google-Smtp-Source: APXvYqzc9P14nGXtvX/LEuC0l4T+N/irxzGOcvtRr7MZQhPIkaH8tJw5GEjVuz0DSjvlv5/7QxHJ7g==
+X-Received: by 2002:a17:902:8a87:: with SMTP id p7mr91805919plo.124.1564080235858;
+        Thu, 25 Jul 2019 11:43:55 -0700 (PDT)
 Received: from localhost.localdomain.localdomain ([2408:823c:c11:624:b8c3:8577:bf2f:3])
-        by smtp.gmail.com with ESMTPSA id w3sm43818257pgl.31.2019.07.25.11.43.39
+        by smtp.gmail.com with ESMTPSA id w3sm43818257pgl.31.2019.07.25.11.43.47
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 11:43:46 -0700 (PDT)
+        Thu, 25 Jul 2019 11:43:55 -0700 (PDT)
 From:   Pengfei Li <lpf.vector@gmail.com>
 To:     akpm@linux-foundation.org
 Cc:     mgorman@techsingularity.net, mhocko@suse.com, vbabka@suse.cz,
@@ -65,9 +65,9 @@ Cc:     mgorman@techsingularity.net, mhocko@suse.com, vbabka@suse.cz,
         pavel.tatashin@microsoft.com, rppt@linux.ibm.com,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Pengfei Li <lpf.vector@gmail.com>
-Subject: [PATCH 02/10] mm/page_alloc: use unsigned int for "order" in __rmqueue_fallback()
-Date:   Fri, 26 Jul 2019 02:42:45 +0800
-Message-Id: <20190725184253.21160-3-lpf.vector@gmail.com>
+Subject: [PATCH 03/10] mm/page_alloc: use unsigned int for "order" in should_compact_retry()
+Date:   Fri, 26 Jul 2019 02:42:46 +0800
+Message-Id: <20190725184253.21160-4-lpf.vector@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190725184253.21160-1-lpf.vector@gmail.com>
 References: <20190725184253.21160-1-lpf.vector@gmail.com>
@@ -78,62 +78,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because "order" will never be negative in __rmqueue_fallback(),
+Because "order" will never be negative in should_compact_retry(),
 so just make "order" unsigned int.
-And modify trace_mm_page_alloc_extfrag() accordingly.
 
 Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
 ---
- include/trace/events/kmem.h | 6 +++---
- mm/page_alloc.c             | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ mm/page_alloc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-index eb57e3037deb..31f4d09aa31f 100644
---- a/include/trace/events/kmem.h
-+++ b/include/trace/events/kmem.h
-@@ -277,7 +277,7 @@ TRACE_EVENT(mm_page_pcpu_drain,
- TRACE_EVENT(mm_page_alloc_extfrag,
- 
- 	TP_PROTO(struct page *page,
--		int alloc_order, int fallback_order,
-+		unsigned int alloc_order, int fallback_order,
- 		int alloc_migratetype, int fallback_migratetype),
- 
- 	TP_ARGS(page,
-@@ -286,7 +286,7 @@ TRACE_EVENT(mm_page_alloc_extfrag,
- 
- 	TP_STRUCT__entry(
- 		__field(	unsigned long,	pfn			)
--		__field(	int,		alloc_order		)
-+		__field(	unsigned int,	alloc_order		)
- 		__field(	int,		fallback_order		)
- 		__field(	int,		alloc_migratetype	)
- 		__field(	int,		fallback_migratetype	)
-@@ -303,7 +303,7 @@ TRACE_EVENT(mm_page_alloc_extfrag,
- 					get_pageblock_migratetype(page));
- 	),
- 
--	TP_printk("page=%p pfn=%lu alloc_order=%d fallback_order=%d pageblock_order=%d alloc_migratetype=%d fallback_migratetype=%d fragmenting=%d change_ownership=%d",
-+	TP_printk("page=%p pfn=%lu alloc_order=%u fallback_order=%d pageblock_order=%d alloc_migratetype=%d fallback_migratetype=%d fragmenting=%d change_ownership=%d",
- 		pfn_to_page(__entry->pfn),
- 		__entry->pfn,
- 		__entry->alloc_order,
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 75c18f4fd66a..1432cbcd87cd 100644
+index 1432cbcd87cd..7d47af09461f 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
-@@ -2631,8 +2631,8 @@ static bool unreserve_highatomic_pageblock(const struct alloc_context *ac,
-  * condition simpler.
-  */
- static __always_inline bool
--__rmqueue_fallback(struct zone *zone, int order, int start_migratetype,
--						unsigned int alloc_flags)
-+__rmqueue_fallback(struct zone *zone, unsigned int order,
-+		int start_migratetype, unsigned int alloc_flags)
+@@ -839,7 +839,7 @@ static inline struct capture_control *task_capc(struct zone *zone)
+ 
+ static inline bool
+ compaction_capture(struct capture_control *capc, struct page *page,
+-		   int order, int migratetype)
++		   unsigned int order, int migratetype)
  {
- 	struct free_area *area;
- 	int current_order;
+ 	if (!capc || order != capc->cc->order)
+ 		return false;
+@@ -870,7 +870,7 @@ static inline struct capture_control *task_capc(struct zone *zone)
+ 
+ static inline bool
+ compaction_capture(struct capture_control *capc, struct page *page,
+-		   int order, int migratetype)
++		   unsigned int order, int migratetype)
+ {
+ 	return false;
+ }
 -- 
 2.21.0
 
