@@ -2,150 +2,91 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBFAC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472BEC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81FBF218F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:39:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fnAdnCZ8"
+	by mail.kernel.org (Postfix) with ESMTP id 188C1218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:40:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbfGYQjt (ORCPT
+        id S2388137AbfGYQkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:39:49 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33773 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727957AbfGYQjt (ORCPT
+        Thu, 25 Jul 2019 12:40:47 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:2359 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727957AbfGYQkq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:39:49 -0400
-Received: by mail-io1-f67.google.com with SMTP id z3so98667423iog.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 09:39:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=obR63h1i9BTxqQDmE4djGLMnXZRaUmocRF7TA6/FFLU=;
-        b=fnAdnCZ8mXjzi0Ez/WAImfwe0mh8dxrf0Mm/NKM0Ak4rUX1VniWZ9VJa2C581rfCit
-         omI2LoEHf2D597gUyoqvqACH/9hmAQYqnoWQxJnw+t+qr3WPKZA4r/H7lmsvCQE+a7Zt
-         EkCVsZx7FrGEWzQvrM9ArMdWPmYvJqwksiwuIXxYDwCNtar+IuffKBqvh87Hcobrth6h
-         +Qg/PqYq/xNeaUKy4cOV1aZr/t0yRG18uHIbykOmPlycWmoZWXriQsiNeWVKzRCLQs48
-         sRnoNeu4Rf3F64YDT+Kvjew3fssi/LsU6UaQwIvbdW6KA/Tmhmr5mHJsyQjLmuSs8nI5
-         GYdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=obR63h1i9BTxqQDmE4djGLMnXZRaUmocRF7TA6/FFLU=;
-        b=bH6Q3kvCTbY7V66R0gUmeJ7G+ke2XmFC9AhhrEzFvs66hlSoFwDa9c+mGpTZA9VHAh
-         C8aKCNAx+bjMOVnWW1CFHBvOEDw+fkT9kxdGWXkRZAQhkTkWv1RYZysCufM5oK5hlYxl
-         uCzap6Uo3N6qafzGLxpHXT0855PgIqidBdulXy0aMLu3Gb+5vdGSj8lChlSGVC+FaLti
-         emRjF3Sqa7Odh0/IxWIP492vLJXMa6QWRpG2v4NZ6u5lw7KzuPUm3mQf27wuHgZ0Ix4N
-         pmOVe1Cgex0jjEvFDabr8aXEtLOr1XKcebxdDpuCWJIyMTzz5MlSyBNQ6rdugX9zUkhB
-         zSew==
-X-Gm-Message-State: APjAAAUn0caU8MT0Szfks4vR9vhVmOCfv2dnz56dLubJkP3UIho+RpYs
-        NLVTAL2zpe6m1q++VmBhcI9+Iw==
-X-Google-Smtp-Source: APXvYqwmaCog90kSDSaqWIR64tr1c51dMxcgT/Z5zkYX4lANAr+lfcC8+kobCHL+WrjIQz22GD+p1A==
-X-Received: by 2002:a5d:8497:: with SMTP id t23mr57365077iom.298.1564072787932;
-        Thu, 25 Jul 2019 09:39:47 -0700 (PDT)
-Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
-        by smtp.gmail.com with ESMTPSA id q22sm41603613ioj.56.2019.07.25.09.39.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 09:39:47 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 11:39:46 -0500
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        wanpengli@tencent.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        patches@kernelci.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>, jmattson@google.com
-Subject: Re: [PATCH 5.2 000/413] 5.2.3-stable review
-Message-ID: <20190725163946.xt2p3pvxwuabzojj@xps.therub.org>
-Mail-Followup-To: Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        wanpengli@tencent.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        patches@kernelci.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
-        jmattson@google.com
-References: <20190724191735.096702571@linuxfoundation.org>
- <CADYN=9+WLxhmqX3JNL_s-kWSN97G=8WhD=TF=uAuKecJnKcj_Q@mail.gmail.com>
- <20190725113437.GA27429@kroah.com>
- <230a5b34-d23e-8318-0b1f-d23ada7318e0@redhat.com>
- <CA+G9fYsWdmboyquZ=Bs3tkTwRFTzd1yuL0_EVpHOecNi4E_stA@mail.gmail.com>
- <20190725160939.GC18612@linux.intel.com>
- <33f1cfaa-525d-996a-4977-fda32dc368ee@redhat.com>
- <20190725162053.GD18612@linux.intel.com>
- <7bc207e0-0812-e41a-bfd5-e3fbfd43f242@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7bc207e0-0812-e41a-bfd5-e3fbfd43f242@redhat.com>
-User-Agent: NeoMutt/20180716
+        Thu, 25 Jul 2019 12:40:46 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.17]) by rmmx-syy-dmz-app10-12010 (RichMail) with SMTP id 2eea5d39db803aa-2e984; Fri, 26 Jul 2019 00:40:32 +0800 (CST)
+X-RM-TRANSID: 2eea5d39db803aa-2e984
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost (unknown[223.105.0.241])
+        by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee95d39db7fe7d-57bd5;
+        Fri, 26 Jul 2019 00:40:32 +0800 (CST)
+X-RM-TRANSID: 2ee95d39db7fe7d-57bd5
+From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Subject: [PATCH] ip6_tunnel: fix possible use-after-free on xmit
+Date:   Fri, 26 Jul 2019 00:40:17 +0800
+Message-Id: <1564072817-13240-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 06:30:10PM +0200, Paolo Bonzini wrote:
-> On 25/07/19 18:20, Sean Christopherson wrote:
-> > On Thu, Jul 25, 2019 at 06:10:37PM +0200, Paolo Bonzini wrote:
-> >> On 25/07/19 18:09, Sean Christopherson wrote:
-> >>>> This investigation confirms it is a new test code failure on stable-rc 5.2.3
-> >>> No, it only confirms that kvm-unit-tests/master fails on 5.2.*.  To confirm
-> >>> a new failure in 5.2.3 you would need to show a test that passes on 5.2.2
-> >>> and fails on 5.2.3.
-> >>
-> >> I think he meant "a failure in new test code". :)
-> > 
-> > Ah, that does appear to be the case.  So just to be clear, we're good, right?
-> 
-> Yes.  I'm happy to gather ideas on how to avoid this (i.e. 1) if a
-> submodule would be useful; 2) where to stick it).
+ip4ip6/ip6ip6 tunnels run iptunnel_handle_offloads on xmit which
+can cause a possible use-after-free accessing iph/ipv6h pointer
+since the packet will be 'uncloned' running pskb_expand_head if
+it is a cloned gso skb.
 
-Hi!
+Fixes: 0e9a709560db ("ip6_tunnel, ip6_gre: fix setting of DSCP on encapsulated packets")
+Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+---
+ net/ipv6/ip6_tunnel.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-First, to be clear: from LKFT perspective there are no kernel
-regressions here.
-
-To your point Paolo - reporting 'fail' because of a missing kernel
-feature is a generic problem we see across test suites, and causes tons
-of pain and misery for CI people. As a general rule, I'd avoid
-submodules, and even branches that track specific kernels. Rather, and I
-don't know if it's possible in this case, but the best way to manage it
-from both a test author and a test runner POV is to wrap the test in
-kernel feature checks, kernel version checks, kernel config checks, etc.
-Report 'skip' if the environment in which the test is running isn't
-sufficient to run the test. Then, you only have to maintain one version
-of the test suite, users can always use the latest, and critically: all
-failures are actual failures.
-
-Dan
-
-> 
-> Paolo
-
+diff --git a/net/ipv6/ip6_tunnel.c b/net/ipv6/ip6_tunnel.c
+index 3134fbb..754a484 100644
+--- a/net/ipv6/ip6_tunnel.c
++++ b/net/ipv6/ip6_tunnel.c
+@@ -1278,12 +1278,11 @@ int ip6_tnl_xmit(struct sk_buff *skb, struct net_device *dev, __u8 dsfield,
+ 	}
+ 
+ 	fl6.flowi6_uid = sock_net_uid(dev_net(dev), NULL);
++	dsfield = INET_ECN_encapsulate(dsfield, ipv4_get_dsfield(iph));
+ 
+ 	if (iptunnel_handle_offloads(skb, SKB_GSO_IPXIP6))
+ 		return -1;
+ 
+-	dsfield = INET_ECN_encapsulate(dsfield, ipv4_get_dsfield(iph));
+-
+ 	skb_set_inner_ipproto(skb, IPPROTO_IPIP);
+ 
+ 	err = ip6_tnl_xmit(skb, dev, dsfield, &fl6, encap_limit, &mtu,
+@@ -1367,12 +1366,11 @@ int ip6_tnl_xmit(struct sk_buff *skb, struct net_device *dev, __u8 dsfield,
+ 	}
+ 
+ 	fl6.flowi6_uid = sock_net_uid(dev_net(dev), NULL);
++	dsfield = INET_ECN_encapsulate(dsfield, ipv6_get_dsfield(ipv6h));
+ 
+ 	if (iptunnel_handle_offloads(skb, SKB_GSO_IPXIP6))
+ 		return -1;
+ 
+-	dsfield = INET_ECN_encapsulate(dsfield, ipv6_get_dsfield(ipv6h));
+-
+ 	skb_set_inner_ipproto(skb, IPPROTO_IPV6);
+ 
+ 	err = ip6_tnl_xmit(skb, dev, dsfield, &fl6, encap_limit, &mtu,
 -- 
-Linaro - Kernel Validation
+1.8.3.1
+
+
+
