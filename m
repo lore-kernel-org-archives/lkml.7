@@ -2,121 +2,161 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4107C41517
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FB0C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83EA3229F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:56:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564059399;
-	bh=F/FsA+e4Dd8Scx3bQFdthOpfRrhA8DdCEIxJU7+kOf0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r00E7AKH6mTVS6DxneeZpKBc/JM2PSWtMrA/gJZzSH1KGfUsK/OaXjFw9kHQlj3vv
-	 68bH8+X2RA0MVK+ls5lAs+TSo7RVUyCQdgGgbjxBdqN7AtfL6lDw4A4gYM2CqAtCIs
-	 Q92OE9de98ZZkFWpMArM3cgdKBUyJ27BZOXevUq4=
+	by mail.kernel.org (Postfix) with ESMTP id 0B03F21951
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:57:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXpK0Ruy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389608AbfGYM4i (ORCPT
+        id S2389644AbfGYM52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:56:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49480 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387901AbfGYM4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:56:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D02BCAF05;
-        Thu, 25 Jul 2019 12:56:36 +0000 (UTC)
-Date:   Thu, 25 Jul 2019 14:56:36 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v1] ACPI / scan: Acquire device_hotplug_lock in
- acpi_scan_init()
-Message-ID: <20190725125636.GA3582@dhcp22.suse.cz>
-References: <20190724143017.12841-1-david@redhat.com>
+        Thu, 25 Jul 2019 08:57:28 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37839 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387901AbfGYM52 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 08:57:28 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c9so34421524lfh.4;
+        Thu, 25 Jul 2019 05:57:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=xM6KrE+i6GTD27vbYKn5cqDmPVp4Sc2Sjq00mSvmh2U=;
+        b=XXpK0Ruyln89lB3FtPJQlFIHzkNrM+OFf+i4hux201WJ2ZQ8HIQVoKrEtlgpvzYKl8
+         oMsc2mWrk11bd2G5oHFfJO1z+s0WY7Dl0onn1RinPh3VwNrcKIGFzJOq9Qe6lhWUu3O7
+         Q//XStbzPtGgslB+AyFj7C9tNlGfnBI+gRo9FIMgyx0jEwMeLn2x4F8wKA6r5N3IX9ub
+         wCJNweqMuL6PuOwrtsjlvREok7Xhb1Sh6VxWtKC+zMYOCm8oUvl5uU6BQ/NfWo+uDRP7
+         UjdD/7nLSbX5rRAp8Cy+mf/717jZ4SR7ewR9CiHXWoYJNISCHqvUACA5Bth2MyT6Bu1t
+         9G8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=xM6KrE+i6GTD27vbYKn5cqDmPVp4Sc2Sjq00mSvmh2U=;
+        b=XxTcQPNy++k2IO6C3G3CX+gEGk1N8U/xxazqUq49qorA+iMWQc5rKPiPK1cgESQ+ZM
+         kLQFVtwyP68qwJ/f/DEjqUzaPooFc7nVD78L+JqfYCQEK+Kqqdv0moF/vSxU8K5Uy4Kn
+         HxHxA1NFrjDUGMnl+XGYR25bHRyOcOIfwmCoNVVmXpqZiW9HN5XADNiVkvy+/ZZ8WVSZ
+         4PiM97tJnHNt4EI4p9P+Gk5/MMXAjrSYLJFIcrxTe7Y3vx+IY/TD/cJK1QL4z/HjKKNt
+         fTokDp41UpypVFLKWKAbkFDUPLbKibODRdcVgSycfIPVQEFK7INH3kn+bUKFV+CHJtGq
+         RvTw==
+X-Gm-Message-State: APjAAAX+x8tKlm9QyLFv4pNS9rVbz0UXpF+LdJYvp0oMwREua9lRS9mH
+        H+fPMirdox3+JTC1lAT5jwj+gDBLJqwde/YCsmo=
+X-Google-Smtp-Source: APXvYqy87nc1SZfVl4oFMMftjXVfgZz3Rbm0BYNTg4fKAWIu9Eqqr7bor/GS6c2HKFxbPTv05+jyugcTeGyUoK+wC+g=
+X-Received: by 2002:ac2:42ca:: with SMTP id n10mr23728905lfl.121.1564059445077;
+ Thu, 25 Jul 2019 05:57:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724143017.12841-1-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CGME20190723122024eucas1p1ff060d072132bfbc8a8a1d10fa1f90f8@eucas1p1.samsung.com>
+ <20190723122016.30279-1-a.swigon@partner.samsung.com> <20190723122016.30279-4-a.swigon@partner.samsung.com>
+In-Reply-To: <20190723122016.30279-4-a.swigon@partner.samsung.com>
+Reply-To: cwchoi00@gmail.com
+From:   Chanwoo Choi <cwchoi00@gmail.com>
+Date:   Thu, 25 Jul 2019 21:56:48 +0900
+Message-ID: <CAGTfZH09n9UOLMwNrCvcdeRCHYFO4TiB-YG2rMVuxA4bxuLCVw@mail.gmail.com>
+Subject: Re: [RFC PATCH 03/11] devfreq: exynos-bus: Change goto-based logic to
+ if-else logic
+To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        georgi.djakov@linaro.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 24-07-19 16:30:17, David Hildenbrand wrote:
-> We end up calling __add_memory() without the device hotplug lock held.
-> (I used a local patch to assert in __add_memory() that the
->  device_hotplug_lock is held - I might upstream that as well soon)
-> 
-> [   26.771684]        create_memory_block_devices+0xa4/0x140
-> [   26.772952]        add_memory_resource+0xde/0x200
-> [   26.773987]        __add_memory+0x6e/0xa0
-> [   26.775161]        acpi_memory_device_add+0x149/0x2b0
-> [   26.776263]        acpi_bus_attach+0xf1/0x1f0
-> [   26.777247]        acpi_bus_attach+0x66/0x1f0
-> [   26.778268]        acpi_bus_attach+0x66/0x1f0
-> [   26.779073]        acpi_bus_attach+0x66/0x1f0
-> [   26.780143]        acpi_bus_scan+0x3e/0x90
-> [   26.780844]        acpi_scan_init+0x109/0x257
-> [   26.781638]        acpi_init+0x2ab/0x30d
-> [   26.782248]        do_one_initcall+0x58/0x2cf
-> [   26.783181]        kernel_init_freeable+0x1bd/0x247
-> [   26.784345]        kernel_init+0x5/0xf1
-> [   26.785314]        ret_from_fork+0x3a/0x50
-> 
-> So perform the locking just like in acpi_device_hotplug().
-
-While playing with the device_hotplug_lock, can we actually document
-what it is protecting please? I have a bad feeling that we are adding
-this lock just because some other code path does rather than with a good
-idea why it is needed. This patch just confirms that. What exactly does
-the lock protect from here in an early boot stage.
-
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Len Brown <lenb@kernel.org
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+2019=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EC=88=98) =EC=98=A4=EC=A0=84 8:08, A=
+rtur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>=EB=8B=98=EC=9D=B4 =EC=
+=9E=91=EC=84=B1:
+>
+> This patch improves code readability by changing the following construct:
+>
+> >    if (cond)
+> >        goto passive;
+> >    foo();
+> >    goto out;
+> >passive:
+> >    bar();
+> >out:
+>
+> into this:
+>
+> >    if (cond)
+> >        bar();
+> >    else
+> >        foo();
+>
+> Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>
 > ---
->  drivers/acpi/scan.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 0e28270b0fd8..cbc9d64b48dd 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -2204,7 +2204,9 @@ int __init acpi_scan_init(void)
->  	acpi_gpe_apply_masked_gpes();
->  	acpi_update_all_gpes();
->  
-> +	lock_device_hotplug();
->  	mutex_lock(&acpi_scan_lock);
+>  drivers/devfreq/exynos-bus.c | 24 +++++++++---------------
+>  1 file changed, 9 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+> index cf6f6cbd0f55..4bb83b945bf7 100644
+> --- a/drivers/devfreq/exynos-bus.c
+> +++ b/drivers/devfreq/exynos-bus.c
+> @@ -505,25 +505,19 @@ static int exynos_bus_probe(struct platform_device =
+*pdev)
+>         node =3D of_parse_phandle(dev->of_node, "devfreq", 0);
+>         if (node) {
+>                 of_node_put(node);
+> -               goto passive;
+> +               ret =3D exynos_bus_profile_init_passive(bus, profile);
+> +               if (ret < 0)
+> +                       goto err;
+>         } else {
+>                 ret =3D exynos_bus_parent_parse_of(np, bus);
+> +               if (ret < 0)
+> +                       goto err;
 > +
->  	/*
->  	 * Enumerate devices in the ACPI namespace.
->  	 */
-> @@ -2232,6 +2234,7 @@ int __init acpi_scan_init(void)
->  
->   out:
->  	mutex_unlock(&acpi_scan_lock);
-> +	unlock_device_hotplug();
->  	return result;
->  }
->  
-> -- 
-> 2.21.0
+> +               ret =3D exynos_bus_profile_init(bus, profile);
+> +               if (ret < 0)
+> +                       goto err;
+>         }
+>
+> -       if (ret < 0)
+> -               goto err;
+> -
+> -       ret =3D exynos_bus_profile_init(bus, profile);
+> -       if (ret < 0)
+> -               goto err;
+> -
+> -       goto out;
+> -passive:
+> -       ret =3D exynos_bus_profile_init_passive(bus, profile);
+> -       if (ret < 0)
+> -               goto err;
+> -
+> -out:
+>         max_state =3D bus->devfreq->profile->max_state;
+>         min_freq =3D (bus->devfreq->profile->freq_table[0] / 1000);
+>         max_freq =3D (bus->devfreq->profile->freq_table[max_state - 1] / =
+1000);
+> --
+> 2.17.1
+>
 
--- 
-Michal Hocko
-SUSE Labs
+It seems more simple than before.
+Instead, please merge patch1/2/3 to one patch. and drop the patch4.
+
+--=20
+Best Regards,
+Chanwoo Choi
