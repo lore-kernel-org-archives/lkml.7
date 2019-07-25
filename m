@@ -2,155 +2,463 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7937AC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49A3C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50E8621901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:04:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564074243;
-	bh=G7gvFcYApmp1l9C8rLZ9WKSMZGAiimXV8gLo9SGW9rs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YDnNHsxlAPYNJq7KekFy6eCYE1oliM3OCiuSAbled60wctpAAaQ7G9gKtX6xv68oR
-	 jwuEVUCborhxACJGEs+SHXKdsiva+Nnc2a30B5AF5qa/rjfsVKc6900T/nnvXs7ZGj
-	 eWLUDJ4j1dXK/kH3hYy3Eg08a2rJ4zVAo5FOSCUs=
+	by mail.kernel.org (Postfix) with ESMTP id 46B2621901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:04:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="H9YaX4r9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbfGYREC convert rfc822-to-8bit (ORCPT
+        id S1729693AbfGYREG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:04:02 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34822 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfGYREB (ORCPT
+        Thu, 25 Jul 2019 13:04:06 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:53719 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727530AbfGYRED (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:04:01 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j19so13930055otq.2;
-        Thu, 25 Jul 2019 10:04:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8G44gacPmRhlcyhu/6GsJIvVHd40YjenVn8zxXxswWA=;
-        b=QhyhihXv1Z6618u6WrfSQOsJUEj4xGAumxOXRlowwIxbGkbrB0xlgI8xjcHk2tfIfZ
-         0sGaQayYy5ZNrZqO/xuNTYWUWHPwNoZ+JTeh0vZetVk3nqvD8uDtFyxfdizRany0RNli
-         S2Bw3WJy+KuYiVMVLeBOi0ETsnpZ2o4D7r9Q50MeiSNCKVyOa9Oux5M/IwQKo9uzrCGF
-         sF3GOOoRPu3Ovni32v2cJ3+vrJfgbZ5m+tKpAvekTcAxb0ZEkAlZ1wIeRah/TtnIkUm8
-         pergCe4dbNAW2+wPkBijaKqHKXgvTCRlh/Pq1GFjrfsFo6DzBJLKo5EcNVcvhqNUWXH0
-         E1CA==
-X-Gm-Message-State: APjAAAXLoVfhpMb+18SVF8Xj/e5pHu8YR6JIlwyj/2IVABD7G7MOzeup
-        GuVEo0u1UtMPUrzp+3t8Aiu60h2jGzZs6iWJqco=
-X-Google-Smtp-Source: APXvYqwDu0+fLy73J2/Flv6Watu3GrPu0mjMjW7YrikgMdZCMbyar08W0Nzg9Q45z6Y+GkpP0x1DenMgNvH1tT0T2QU=
-X-Received: by 2002:a9d:6b96:: with SMTP id b22mr67539409otq.262.1564074240786;
- Thu, 25 Jul 2019 10:04:00 -0700 (PDT)
+        Thu, 25 Jul 2019 13:04:03 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190725170401euoutp014228c2117d408b4f2ea41433136703b4~0tTxF8SpK2644426444euoutp01W
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 17:04:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190725170401euoutp014228c2117d408b4f2ea41433136703b4~0tTxF8SpK2644426444euoutp01W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1564074241;
+        bh=Mfpey/ruic/j+xAgZYV+W+8HKX6JD3HnjEmysLsec0A=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=H9YaX4r9TM/XIbUPp9XUUvV8blgYa3L2rWwus4ljK8IE6bVw56OiXR0ww24Kr8lLL
+         6OrowiwdtUvQr2HuuyXSQrSyrann6W8odC7q+rzAYGRRZg2jEp7r21UDOpb/8yWoFv
+         qyaywhkFQ6WjUQ55BWzsTO9/svDJoQTW+cGAYK4k=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190725170400eucas1p2cd4eba15ea1365fda5c0096771768303~0tTwRUnV-1556315563eucas1p2S;
+        Thu, 25 Jul 2019 17:04:00 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 06.62.04298.FF0E93D5; Thu, 25
+        Jul 2019 18:03:59 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190725170359eucas1p271187268f749869088f60bf961194169~0tTvZQkWi1556415564eucas1p2P;
+        Thu, 25 Jul 2019 17:03:59 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190725170359eusmtrp228d3b640ebddfaee1d50055c3938f886~0tTvYwT4n1001810018eusmtrp2K;
+        Thu, 25 Jul 2019 17:03:59 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-39-5d39e0ff1b29
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id AD.E7.04146.FF0E93D5; Thu, 25
+        Jul 2019 18:03:59 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190725170358eusmtip28483f35892b31283a8babd485bcf48ee~0tTu-DRP32161621616eusmtip2c;
+        Thu, 25 Jul 2019 17:03:58 +0000 (GMT)
+Subject: Re: [PATCH v2] ata/pata_buddha: Probe via modalias instead of
+ initcall
+To:     Max Staudt <max@enpas.org>
+Cc:     linux-ide@vger.kernel.org, linux-m68k@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <01cfe282-6ce6-ff40-9e85-e23724f9d50f@samsung.com>
+Date:   Thu, 25 Jul 2019 19:03:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <2332799.izEFUvJP67@kreacher> <E62786E4-5DA9-4542-899A-658D0E021190@canonical.com>
- <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
-In-Reply-To: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 25 Jul 2019 19:03:49 +0200
-Message-ID: <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
-Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-To:     Mario Limonciello <Mario.Limonciello@dell.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190725102211.8526-1-max@enpas.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFKsWRmVeSWpSXmKPExsWy7djPc7r/H1jGGjw7bGrx7NZeJovZ75Ut
+        ju14xGRxedccNovd7+8zWjxs+sBkMbd1OrsDu8fhr5vZPHbOusvucehwB6PHwXPnGD0+b5IL
+        YI3isklJzcksSy3St0vgyliy5T5rwdHgipsT3BoYL9l3MXJySAiYSNzqmMbexcjFISSwglHi
+        1LJrbBDOF0aJA5f/MUI4nxklWpfuYIJpebjoNVTVckaJn3cOQzlvGSVezn3FBlIlLBAocf3E
+        R3YQW0RATuJj61VGEJtZ4BWjxK1uDhCbTcBKYmL7KrA4r4CdxN6P11lAbBYBVYnDf26DzREV
+        iJC4f2wDK0SNoMTJmU/AajgFjCROTDrCCjFTXOLWk/lMELa8xPa3c5hBDpIQ2MUusXHmFmaI
+        s10knv48zQ5hC0u8Or4FypaR+L8TpBmkYR2jxN+OF1Dd2xkllk/+xwZRZS1x+PhFoHUcQCs0
+        Jdbv0ocIO0pMXw7yGQeQzSdx460gxBF8EpO2TWeGCPNKdLQJQVSrSWxYtoENZm3XzpXMExiV
+        ZiF5bRaSd2YheWcWwt4FjCyrGMVTS4tz01OLDfNSy/WKE3OLS/PS9ZLzczcxAlPQ6X/HP+1g
+        /Hop6RCjAAejEg/vheWWsUKsiWXFlbmHGCU4mJVEeLfuAArxpiRWVqUW5ccXleakFh9ilOZg
+        URLnrWZ4EC0kkJ5YkpqdmlqQWgSTZeLglGpgTDr4dW3vj9e7g9P2bJ7brzpJxlEuI+LkTLek
+        6GClO79mP1pVcUMyde4nt40XvzboaEteTQjb//fd0el2qcqzVestY2TL+S/KWtkd5n7dZeeQ
+        WTeTyeHynUfp/AIPS1Ui1p958UV+i/OJ5qlRLo9dHSPfl2y4urdR16itdqnq6v1HHflYz92c
+        rMRSnJFoqMVcVJwIAIHUvtY9AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJIsWRmVeSWpSXmKPExsVy+t/xe7r/H1jGGkzYxmXx7NZeJovZ75Ut
+        ju14xGRxedccNovd7+8zWjxs+sBkMbd1OrsDu8fhr5vZPHbOusvucehwB6PHwXPnGD0+b5IL
+        YI3SsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy1iy
+        5T5rwdHgipsT3BoYL9l3MXJySAiYSDxc9Jqti5GLQ0hgKaPE6wMr2bsYOYASMhLH15dB1AhL
+        /LnWxQZiCwm8ZpQ49csAxBYWCJS4fuIjO4gtIiAn8bH1KiPIHGaBN4wSWw/MYgKZIyRgKLH/
+        WA1IDZuAlcTE9lWMIDavgJ3E3o/XWUBsFgFVicN/boPNFxWIkDjzfgULRI2gxMmZT8BsTgEj
+        iROTjrCC2MwC6hJ/5l1ihrDFJW49mc8EYctLbH87h3kCo9AsJO2zkLTMQtIyC0nLAkaWVYwi
+        qaXFuem5xYZ6xYm5xaV56XrJ+bmbGIHRtu3Yz807GC9tDD7EKMDBqMTDe2G5ZawQa2JZcWXu
+        IUYJDmYlEd6tO4BCvCmJlVWpRfnxRaU5qcWHGE2BnpvILCWanA9MBHkl8YamhuYWlobmxubG
+        ZhZK4rwdAgdjhATSE0tSs1NTC1KLYPqYODilGhhL/gtJdDV1LxOxkvDz2GpxjvX2tQmXVVct
+        dn89m6HzttPts305V1WUKv4xn9gfLpP5gTnrReHknTacO6IEvP1O6G7hvfz94Pp/IfViPNuf
+        95f/2eDhLZLjaPlV58Oqv0pnXJOVuz/e/Se2uaH6sNxJE5Vn73rvaHp/5Z+ld3DCz/qnwbNW
+        ZHEpsRRnJBpqMRcVJwIAWpZViswCAAA=
+X-CMS-MailID: 20190725170359eucas1p271187268f749869088f60bf961194169
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190725170359eucas1p271187268f749869088f60bf961194169
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190725170359eucas1p271187268f749869088f60bf961194169
+References: <20190725102211.8526-1-max@enpas.org>
+        <CGME20190725170359eucas1p271187268f749869088f60bf961194169@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 6:24 PM <Mario.Limonciello@dell.com> wrote:
->
-> +Rajat
->
-> > -----Original Message-----
-> > From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > Sent: Thursday, July 25, 2019 9:03 AM
-> > To: Rafael J. Wysocki
-> > Cc: Keith Busch; Christoph Hellwig; Sagi Grimberg; linux-
-> > nvme@lists.infradead.org; Limonciello, Mario; Linux PM; LKML
-> > Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
-> > suspend" has problems
-> >
-> >
-> > [EXTERNAL EMAIL]
-> >
-> > Hi Rafael,
-> >
-> > at 17:51, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >
-> > > Hi Keith,
-> > >
-> > > Unfortunately,
-> > >
-> > > commit d916b1be94b6dc8d293abed2451f3062f6af7551
-> > > Author: Keith Busch <keith.busch@intel.com>
-> > > Date:   Thu May 23 09:27:35 2019 -0600
-> > >
-> > >     nvme-pci: use host managed power state for suspend
-> > >
-> > > doesn't universally improve things.  In fact, in some cases it makes
-> > > things worse.
-> > >
-> > > For example, on the Dell XPS13 9380 I have here it prevents the processor
-> > > package
-> > > from reaching idle states deeper than PC2 in suspend-to-idle (which, of
-> > > course, also
-> > > prevents the SoC from reaching any kind of S0ix).
-> > >
-> > > That can be readily explained too.  Namely, with the commit above the
-> > > NVMe device
-> > > stays in D0 over suspend/resume, so the root port it is connected to also
-> > > has to stay in
-> > > D0 and that "blocks" package C-states deeper than PC2.
-> > >
-> > > In order for the root port to be able to go to D3, the device connected
-> > > to it also needs
-> > > to go into D3, so it looks like (at least on this particular machine, but
-> > > maybe in
-> > > general), both D3 and the NVMe-specific PM are needed.
->
-> Well this is really unfortunate to hear.  I recall that with some disks we were
-> seeing problems where NVME specific PM wasn't working when the disk was in D3.
->
-> On your specific disk, it would be good to know if just removing the pci_save_state(pdev)
-> call helps.
 
-Yes, it does help.
+Hi Max,
 
-> If so, :
-> * that might be a better option to add as a parameter.
-> * maybe we should double check all the disks one more time with that tweak.
+On 7/25/19 12:22 PM, Max Staudt wrote:
+> Up until now, the pata_buddha driver would only check for cards on
+> initcall time. Now, the kernel will call its probe function as soon
+> as a compatible card is detected.
+> 
+> Device removal remains unimplemented. A WARN_ONCE() serves as a
+> reminder.
+> 
+> v2: Rename 'zdev' to 'z' to make the patch easy to analyse with
+>     git diff --ignore-space-change
+> 
+> Tested-by: Max Staudt <max@enpas.org>
+> Signed-off-by: Max Staudt <max@enpas.org>
+> ---
+>  drivers/ata/pata_buddha.c | 240 ++++++++++++++++++++++++++++------------------
+>  1 file changed, 146 insertions(+), 94 deletions(-)
+> 
+> diff --git a/drivers/ata/pata_buddha.c b/drivers/ata/pata_buddha.c
+> index 11a8044ff..76804a4c1 100644
+> --- a/drivers/ata/pata_buddha.c
+> +++ b/drivers/ata/pata_buddha.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/libata.h>
+>  #include <linux/mm.h>
+>  #include <linux/module.h>
+> +#include <linux/types.h>
+>  #include <linux/zorro.h>
+>  #include <scsi/scsi_cmnd.h>
+>  #include <scsi/scsi_host.h>
+> @@ -29,7 +30,7 @@
+>  #include <asm/setup.h>
+>  
+>  #define DRV_NAME "pata_buddha"
+> -#define DRV_VERSION "0.1.0"
+> +#define DRV_VERSION "0.1.1"
+>  
+>  #define BUDDHA_BASE1	0x800
+>  #define BUDDHA_BASE2	0xa00
+> @@ -47,11 +48,11 @@ enum {
+>  	BOARD_XSURF
+>  };
+>  
+> -static unsigned int buddha_bases[3] __initdata = {
+> +static unsigned int buddha_bases[3] = {
+>  	BUDDHA_BASE1, BUDDHA_BASE2, BUDDHA_BASE3
+>  };
+>  
+> -static unsigned int xsurf_bases[2] __initdata = {
+> +static unsigned int xsurf_bases[2] = {
+>  	XSURF_BASE1, XSURF_BASE2
+>  };
+>  
+> @@ -145,111 +146,162 @@ static struct ata_port_operations pata_xsurf_ops = {
+>  	.set_mode	= pata_buddha_set_mode,
+>  };
+>  
+> -static int __init pata_buddha_init_one(void)
+> +static int pata_buddha_probe(struct zorro_dev *z,
+> +			     const struct zorro_device_id *ent)
+>  {
+> -	struct zorro_dev *z = NULL;
+> -
+> -	while ((z = zorro_find_device(ZORRO_WILDCARD, z))) {
+> -		static const char *board_name[]
+> -			= { "Buddha", "Catweasel", "X-Surf" };
+> -		struct ata_host *host;
+> -		void __iomem *buddha_board;
+> -		unsigned long board;
+> -		unsigned int type, nr_ports = 2;
+> -		int i;
+> -
+> -		if (z->id == ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA) {
+> -			type = BOARD_BUDDHA;
+> -		} else if (z->id == ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL) {
+> -			type = BOARD_CATWEASEL;
+> -			nr_ports++;
+> -		} else if (z->id == ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF) {
+> -			type = BOARD_XSURF;
+> -		} else
+> -			continue;
+> -
+> -		dev_info(&z->dev, "%s IDE controller\n", board_name[type]);
+> -
+> -		board = z->resource.start;
+> +	static const char * const board_name[]
+> +		= { "Buddha", "Catweasel", "X-Surf" };
+> +	struct ata_host *host;
+> +	void __iomem *buddha_board;
+> +	unsigned long board;
+> +	unsigned int type, nr_ports = 2;
+> +	int i;
+> +
+> +	switch (z->id) {
+> +	case ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA:
+> +	default:
+> +		type = BOARD_BUDDHA;
+> +		break;
+> +	case ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL:
+> +		type = BOARD_CATWEASEL;
+> +		nr_ports++;
+> +		break;
+> +	case ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF:
+> +		type = BOARD_XSURF;
+> +		break;
+> +	}
+> +
+> +	dev_info(&z->dev, "%s IDE controller\n", board_name[type]);
+> +
+> +	board = z->resource.start;
+> +
+> +	if (type != BOARD_XSURF) {
+> +		if (!devm_request_mem_region(&z->dev,
+> +					     board + BUDDHA_BASE1,
+> +					     0x800, DRV_NAME))
+> +			return -ENXIO;
+> +	} else {
+> +		if (!devm_request_mem_region(&z->dev,
+> +					     board + XSURF_BASE1,
+> +					     0x1000, DRV_NAME))
+> +			return -ENXIO;
+> +		if (!devm_request_mem_region(&z->dev,
+> +					     board + XSURF_BASE2,
+> +					     0x1000, DRV_NAME)) {
+> +			devm_release_mem_region(&z->dev,
+> +						board + XSURF_BASE1,
+> +						0x1000);
+> +			return -ENXIO;
+> +		}
+> +	}
+> +
+> +	/* allocate host */
+> +	host = ata_host_alloc(&z->dev, nr_ports);
+> +	if (!host)
+> +		goto err_ata_host_alloc;
+> +
+> +	buddha_board = ZTWO_VADDR(board);
+> +
+> +	/* enable the board IRQ on Buddha/Catweasel */
+> +	if (type != BOARD_XSURF)
+> +		z_writeb(0, buddha_board + BUDDHA_IRQ_MR);
+> +
+> +	for (i = 0; i < nr_ports; i++) {
+> +		struct ata_port *ap = host->ports[i];
+> +		void __iomem *base, *irqport;
+> +		unsigned long ctl = 0;
+>  
+>  		if (type != BOARD_XSURF) {
+> -			if (!devm_request_mem_region(&z->dev,
+> -						     board + BUDDHA_BASE1,
+> -						     0x800, DRV_NAME))
+> -				continue;
+> +			ap->ops = &pata_buddha_ops;
+> +			base = buddha_board + buddha_bases[i];
+> +			ctl = BUDDHA_CONTROL;
+> +			irqport = buddha_board + BUDDHA_IRQ + i * 0x40;
+>  		} else {
+> -			if (!devm_request_mem_region(&z->dev,
+> -						     board + XSURF_BASE1,
+> -						     0x1000, DRV_NAME))
+> -				continue;
+> -			if (!devm_request_mem_region(&z->dev,
+> -						     board + XSURF_BASE2,
+> -						     0x1000, DRV_NAME))
+> -				continue;
+> +			ap->ops = &pata_xsurf_ops;
+> +			base = buddha_board + xsurf_bases[i];
+> +			/* X-Surf has no CS1* (Control/AltStat) */
+> +			irqport = buddha_board + XSURF_IRQ;
+>  		}
+>  
+> -		/* allocate host */
+> -		host = ata_host_alloc(&z->dev, nr_ports);
+> -		if (!host)
+> -			continue;
+> -
+> -		buddha_board = ZTWO_VADDR(board);
+> -
+> -		/* enable the board IRQ on Buddha/Catweasel */
+> -		if (type != BOARD_XSURF)
+> -			z_writeb(0, buddha_board + BUDDHA_IRQ_MR);
+> -
+> -		for (i = 0; i < nr_ports; i++) {
+> -			struct ata_port *ap = host->ports[i];
+> -			void __iomem *base, *irqport;
+> -			unsigned long ctl = 0;
+> -
+> -			if (type != BOARD_XSURF) {
+> -				ap->ops = &pata_buddha_ops;
+> -				base = buddha_board + buddha_bases[i];
+> -				ctl = BUDDHA_CONTROL;
+> -				irqport = buddha_board + BUDDHA_IRQ + i * 0x40;
+> -			} else {
+> -				ap->ops = &pata_xsurf_ops;
+> -				base = buddha_board + xsurf_bases[i];
+> -				/* X-Surf has no CS1* (Control/AltStat) */
+> -				irqport = buddha_board + XSURF_IRQ;
+> -			}
+> -
+> -			ap->pio_mask = ATA_PIO4;
+> -			ap->flags |= ATA_FLAG_SLAVE_POSS | ATA_FLAG_NO_IORDY;
+> -
+> -			ap->ioaddr.data_addr		= base;
+> -			ap->ioaddr.error_addr		= base + 2 + 1 * 4;
+> -			ap->ioaddr.feature_addr		= base + 2 + 1 * 4;
+> -			ap->ioaddr.nsect_addr		= base + 2 + 2 * 4;
+> -			ap->ioaddr.lbal_addr		= base + 2 + 3 * 4;
+> -			ap->ioaddr.lbam_addr		= base + 2 + 4 * 4;
+> -			ap->ioaddr.lbah_addr		= base + 2 + 5 * 4;
+> -			ap->ioaddr.device_addr		= base + 2 + 6 * 4;
+> -			ap->ioaddr.status_addr		= base + 2 + 7 * 4;
+> -			ap->ioaddr.command_addr		= base + 2 + 7 * 4;
+> -
+> -			if (ctl) {
+> -				ap->ioaddr.altstatus_addr = base + ctl;
+> -				ap->ioaddr.ctl_addr	  = base + ctl;
+> -			}
+> -
+> -			ap->private_data = (void *)irqport;
+> -
+> -			ata_port_desc(ap, "cmd 0x%lx ctl 0x%lx", board,
+> -				      ctl ? board + buddha_bases[i] + ctl : 0);
+> +		ap->pio_mask = ATA_PIO4;
+> +		ap->flags |= ATA_FLAG_SLAVE_POSS | ATA_FLAG_NO_IORDY;
+> +
+> +		ap->ioaddr.data_addr		= base;
+> +		ap->ioaddr.error_addr		= base + 2 + 1 * 4;
+> +		ap->ioaddr.feature_addr		= base + 2 + 1 * 4;
+> +		ap->ioaddr.nsect_addr		= base + 2 + 2 * 4;
+> +		ap->ioaddr.lbal_addr		= base + 2 + 3 * 4;
+> +		ap->ioaddr.lbam_addr		= base + 2 + 4 * 4;
+> +		ap->ioaddr.lbah_addr		= base + 2 + 5 * 4;
+> +		ap->ioaddr.device_addr		= base + 2 + 6 * 4;
+> +		ap->ioaddr.status_addr		= base + 2 + 7 * 4;
+> +		ap->ioaddr.command_addr		= base + 2 + 7 * 4;
+> +
+> +		if (ctl) {
+> +			ap->ioaddr.altstatus_addr = base + ctl;
+> +			ap->ioaddr.ctl_addr	  = base + ctl;
+>  		}
+>  
+> -		ata_host_activate(host, IRQ_AMIGA_PORTS, ata_sff_interrupt,
+> -				  IRQF_SHARED, &pata_buddha_sht);
+> +		ap->private_data = (void *)irqport;
+>  
+> +		ata_port_desc(ap, "cmd 0x%lx ctl 0x%lx", board,
+> +			      ctl ? board + buddha_bases[i] + ctl : 0);
+>  	}
+>  
+> +	ata_host_activate(host, IRQ_AMIGA_PORTS, ata_sff_interrupt,
+> +			  IRQF_SHARED, &pata_buddha_sht);
+> +
+> +
+>  	return 0;
+> +
+> +err_ata_host_alloc:
+> +	switch (type) {
+> +	case BOARD_BUDDHA:
+> +	case BOARD_CATWEASEL:
+> +	default:
+> +		devm_release_mem_region(&z->dev,
+> +					board + BUDDHA_BASE1,
+> +					0x800);
 
-At this point it seems so.
+Could you please explain why this is needed now?
 
-> > > I'm not sure what to do here, because evidently there are systems where
-> > > that commit
-> > > helps.  I was thinking about adding a module option allowing the user to
-> > > override the
-> > > default behavior which in turn should be compatible with 5.2 and earlier
-> > > kernels.
-> >
-> > I just briefly tested s2i on XPS 9370, and the power meter shows a 0.8~0.9W
-> > power consumption so at least I don’t see the issue on XPS 9370.
-> >
->
-> To me that confirms NVME is down, but it still seems higher than I would have
-> expected.  We should be more typically in the order of ~0.3W I think.
+[ The whole idea of using devm_* helpers is to not have to release
+  resources explicitly. ]
 
-It may go to PC10, but not reach S0ix.
+> +		break;
+> +	case BOARD_XSURF:
+> +		devm_release_mem_region(&z->dev,
+> +					board + XSURF_BASE1,
+> +					0x1000);
+> +		devm_release_mem_region(&z->dev,
+> +					board + XSURF_BASE2,
+> +					0x1000);
+> +		break;
+> +	}
+> +
+> +	return -ENXIO;
+> +}
+> +
+> +static void pata_buddha_remove(struct zorro_dev *zdev)
+> +{
+> +	/* NOT IMPLEMENTED */
+> +
+> +	WARN_ONCE(1, "pata_buddha: Attempted to remove driver. This is not implemented yet.\n");
 
-Anyway, I run the s2idle tests under turbostat which then tells me
-what has happened more precisely.
+Please try to implement it, should be as simple as:
+
+static void pata_buddha_remove(struct zorro_dev *zdev)
+{
+	struct ata_host *host = dev_get_drvdata(&zdev->dev);
+
+	ata_host_detach(host);
+}
+
+[ ata_host_alloc() in pata_buddha_probe() sets drvdata to host ]
+
+The rest of the patch looks fine, thanks for working on this driver.
+
+>  }
+>  
+> -module_init(pata_buddha_init_one);
+> +static const struct zorro_device_id pata_buddha_zorro_tbl[] = {
+> +	{ ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA, },
+> +	{ ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL, },
+> +	{ ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, },
+> +	{ 0 }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(zorro, pata_buddha_zorro_tbl);
+> +
+> +static struct zorro_driver pata_buddha_driver = {
+> +	.name           = "pata_buddha",
+> +	.id_table       = pata_buddha_zorro_tbl,
+> +	.probe          = pata_buddha_probe,
+> +	.remove         = pata_buddha_remove,
+> +};
+> +
+> +module_driver(pata_buddha_driver,
+> +	      zorro_register_driver,
+> +	      zorro_unregister_driver);
+>  
+>  MODULE_AUTHOR("Bartlomiej Zolnierkiewicz");
+>  MODULE_DESCRIPTION("low-level driver for Buddha/Catweasel/X-Surf PATA");
+
+PS Next time please also use scripts/get_maintainer.pl script to get
+   the list of people that should be added to Cc:, i.e.:
+
+$ ./scripts/get_maintainer.pl -f drivers/ata/pata_buddha.c
+Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com> (maintainer:LIBATA PATA DRIVERS)
+Jens Axboe <axboe@kernel.dk> (maintainer:LIBATA PATA DRIVERS)
+linux-ide@vger.kernel.org (open list:LIBATA PATA DRIVERS)
+linux-kernel@vger.kernel.org (open list)
+
+[ I've also added John, Michael & Geert to Cc: (as they were all
+  involved in the development of the initial driver version). ]
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
