@@ -2,110 +2,86 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96795C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F920C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 572AE2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE1E22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:25:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UpD8rDzo"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="D5N9xFES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbfGYNXv (ORCPT
+        id S1729829AbfGYNZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:23:51 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:47084 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfGYNXu (ORCPT
+        Thu, 25 Jul 2019 09:25:14 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52173 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727320AbfGYNZN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:23:50 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 65so37620284oid.13
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:23:50 -0700 (PDT)
+        Thu, 25 Jul 2019 09:25:13 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 207so45007992wma.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:25:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KwM2+qYHt0UEBA6UJDkeQDcGwUyIPjkorh2VTV9IDzw=;
-        b=UpD8rDzoKa7CF0RszwEp2yu+B1fDuQVKouFsCxQnA5dTxpou+Ba3K9lVpz2jMPqq/1
-         sxeFNJK6Sf38cQGqrVLHeAQfBsqpgOTYVX12hsupalkh+KnDYymBDvqA/45etUsKBwvZ
-         0Ab4Z822WfZQm+okMa5x6zu0rnY+sVZpRjGRLe4ekSilG1jJLTHwNCG57S00SQJ5TMeq
-         FkIBGCDmkRRu2QfHuvfH0DHb8rHjKJn2RvtTKU2M76OnXw1kYCVoK5OQljlokqn7EnmN
-         6P5kJri4WNNlZJ+Uj/pSGWD+8m6are5chNBp4JvdEWWOhAaKh9LZB24sZiuH7WT7DHK/
-         kCJA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=6aDJ94uyyhxgWSyExse9QYlquEyyOJ9JE7SxUePnMhA=;
+        b=D5N9xFESPh6uCOxGlZuTzAA4mb7oWHRhDyTjlYtFlwi6bJdhcbNT5E59VtjKhctWnn
+         WdkJDf7qZM6dH8RhDOONw43oJBVvhk44/kZjXkF71AncceV6SsngmzIu48GsS/b2XqQo
+         l6JJY+duWSKVwsmsptTyrXnzjpENPoQ2DL8Q3TcuNpihHyUaeSlxw+onu3zGEpFbnT91
+         hHoJO8pSkk7svMhzZo2foJg5rEyD2QvGIQJTsJJXuAkUenK4O9J3vG1S7kxcH7aX10j8
+         FPkQCcXcehBkj79s3Upnry4gyUmatXOHp1WPmbIHRGmmXDWYeBwwQWKnqvK30Z9kbiR3
+         eQYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KwM2+qYHt0UEBA6UJDkeQDcGwUyIPjkorh2VTV9IDzw=;
-        b=m9gLTcsVv/IGOn1YWKQXSjHEOZ2k8bQx81SaoOdAT9SShvJ1CwXR66c5WL0o1DideF
-         CE+nSLPujMYk9DmMftLfq5exe3dR/2uCJRNjSUnWr9lZd9+xCdUtkL3QRL+yICiRVFaD
-         gynuPXERo9Ag/5ct/21RB/g4lvLElRutG40s+n0Fap4ber9/DGTToKocPW/d0ZPaO6ea
-         rfNebM7hzw8Wz/JkNsZkCMDq1zZ9TV79brEobZeKvO6zrDGOKSXVHq1H/H3MHY46lEYU
-         z8E30nZy47a2xEP6Ngwxf7PuOx/RMRtStbtz6dBtHWe7be5dDl5jFACipA7PuGdTtrHJ
-         VI7w==
-X-Gm-Message-State: APjAAAUzmFSYzJMs4ryZ95sNf//VF3G7QRMiRThYHl6iFE33QQtv+Nwl
-        7fPnWUUgdR5zXkSyfMIabTjK2sYuZJD+rJKOJb+gB3m9
-X-Google-Smtp-Source: APXvYqypjRf2awMQdztO7PYDu9Rw91aR4GcRmWVCqGbM344Dbhlb0mEkUpz8ySSDsEuabMZWkpRRW0tnWgt9tzqllw0=
-X-Received: by 2002:ac5:c2d2:: with SMTP id i18mr33137975vkk.36.1564060526687;
- Thu, 25 Jul 2019 06:15:26 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=6aDJ94uyyhxgWSyExse9QYlquEyyOJ9JE7SxUePnMhA=;
+        b=BKv/Fx/9UQetXox4u63cZUauPIPqfJkYCXSaIH2OGGASmkXWodT59h49YjRmgsgNcD
+         jLQGItRSL5e5lUZHSEf6G9wcWbXPMAwUnFv8JcH8l0J4hda323gDF4aIo6DT6xYxS9Hk
+         DtW0SBZJnrmfrHW+8GcIz/B3LJoIOB+P+NwIRI/G0uJyYpxDTCeIGcWOxGLAKimhlypY
+         K6IHchdNKwhQyq0L9GqL+ee9HkOw88Gz7ddGD/wcXT1/bIG7tSi3jL5iZT0NkQAMqSQ2
+         3UjCEhxq83CrZPs/tTjXhTEdpEZadyoHVEMNiDeTvcVL8mqXyX9JQWsyEFAigcS7NPLm
+         vo6Q==
+X-Gm-Message-State: APjAAAXhn0m9af7lpy00JP4RArlUNTwJmYofdjIGLTluIr5QZZzUYhhy
+        34uaSjhLEvCgMMGjOp5LwLz0Ag==
+X-Google-Smtp-Source: APXvYqzkB7UJ5b3t6lNCXexFXjlZMe0BgyF3qfh59IwBeXFA97QLF/U3xl/ncqsPvbVWUg8lQVWfpA==
+X-Received: by 2002:a7b:c8c3:: with SMTP id f3mr15113128wml.124.1564061111601;
+        Thu, 25 Jul 2019 06:25:11 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id h1sm35852177wrt.20.2019.07.25.06.25.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 06:25:11 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH 3/6] ASoC: codec2codec: deal with params when necessary
+In-Reply-To: <20190725125534.GB4213@sirena.org.uk>
+References: <20190724162405.6574-1-jbrunet@baylibre.com> <20190724162405.6574-4-jbrunet@baylibre.com> <20190725125534.GB4213@sirena.org.uk>
+Date:   Thu, 25 Jul 2019 15:25:10 +0200
+Message-ID: <1jimrqxn49.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-References: <20190725151748.1a59b1ba@xhacker.debian>
-In-Reply-To: <20190725151748.1a59b1ba@xhacker.debian>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 25 Jul 2019 15:14:50 +0200
-Message-ID: <CAPDyKFpwOaa-8GxkWnXoyoC8nLyGMGE8moyEJr4a7TVBSiw6mw@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhci-pltfm: Use devm_platform_ioremap_resource() to
- simplify code
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jul 2019 at 09:28, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
->
-> devm_platform_ioremap_resource() wraps platform_get_resource() and
-> devm_ioremap_resource() in a single helper, let's use that helper to
-> simplify the code.
->
-> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+On Thu 25 Jul 2019 at 13:55, Mark Brown <broonie@kernel.org> wrote:
 
-Applied for next, thanks!
-
-Kind regards
-Uffe
-
-
-> ---
->  drivers/mmc/host/sdhci-pltfm.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> On Wed, Jul 24, 2019 at 06:24:02PM +0200, Jerome Brunet wrote:
 >
-> diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
-> index d268b3b8850a..11ecff9e998d 100644
-> --- a/drivers/mmc/host/sdhci-pltfm.c
-> +++ b/drivers/mmc/host/sdhci-pltfm.c
-> @@ -118,12 +118,10 @@ struct sdhci_host *sdhci_pltfm_init(struct platform_device *pdev,
->                                     size_t priv_size)
->  {
->         struct sdhci_host *host;
-> -       struct resource *iomem;
->         void __iomem *ioaddr;
->         int irq, ret;
+>> Also, params does not need to be dynamically allocated as it does not
+>> need to survive the event.
 >
-> -       iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -       ioaddr = devm_ioremap_resource(&pdev->dev, iomem);
-> +       ioaddr = devm_platform_ioremap_resource(pdev, 0);
->         if (IS_ERR(ioaddr)) {
->                 ret = PTR_ERR(ioaddr);
->                 goto err;
-> --
-> 2.22.0
->
+> It's dynamically allocated because it's a pretty large structure and so
+> the limited stack sizes the kernel has make it a bit uncomfortable to
+> put it on the stack.
+
+Ok, I'll revert this in v2
