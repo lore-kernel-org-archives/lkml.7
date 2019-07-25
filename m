@@ -2,90 +2,98 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C1AC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5C8C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E30021850
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:11:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k6oy9kzv"
+	by mail.kernel.org (Postfix) with ESMTP id BBD01214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:12:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfGYTLb (ORCPT
+        id S1726655AbfGYTMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 15:11:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33104 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfGYTLa (ORCPT
+        Thu, 25 Jul 2019 15:12:49 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:50557 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfGYTMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:11:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NZgArJ4A0rpRQ2joOKkTtaW1dVOFPQo4qCltbvtRjM0=; b=k6oy9kzv+K54qnV0e8oy+G/G+
-        1D2KwDE/vwlTF/3p+8yfyLo5EYeB5rWN7JTp/UCF5yw8ni5L76UvzuQp7ukje5XUPRDiX+Odgz5sf
-        PN9Rjw8eL0qYyLSCy/nX6alOZy3oFHlWDt3MTE2kyU86O0PL6nuQkDXJS0CJoC0ffOVm0pkVe5687
-        LXpoSDmF4mHpFgp8FtWIewV7cTVpNEFVJLLm9Ivg00/D4nuJSBcsX1vgCAkyGoiSPyFFFO1tqGYIN
-        9g9HwW+d/0J0Zy7HB6HtHV+biDDu/DX7tsSA1TbElJ0S/I3CaP/9v477akFFDlHppKjEsbuOq2Wsg
-        DmLS72UuQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqj9B-0005NS-Ma; Thu, 25 Jul 2019 19:11:25 +0000
-Date:   Thu, 25 Jul 2019 12:11:25 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Sagi Grimberg <sagi@grimberg.me>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Stephen Bates <sbates@raithlin.com>,
-        linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
-Message-ID: <20190725191124.GE30641@bombadil.infradead.org>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <20190725172335.6825-3-logang@deltatee.com>
- <20190725174032.GA27818@kroah.com>
- <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
- <20190725180816.GA32305@kroah.com>
- <da0eacb7-3738-ddf3-8c61-7ffc61aa41f4@deltatee.com>
- <20190725182701.GA11547@kroah.com>
- <20190725190024.GD30641@bombadil.infradead.org>
- <27943e06-a503-162e-356b-abb9e106ab2e@grimberg.me>
+        Thu, 25 Jul 2019 15:12:49 -0400
+Received: from [192.168.1.110] ([77.9.64.13]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M8hlZ-1hm2Cz1QRd-004kGV; Thu, 25 Jul 2019 21:12:44 +0200
+Subject: Re: [PATCH 0/3] Update pcengines-apuv2 platform device
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Eckert <fe@dev.tdt.de>
+Cc:     Eckert.Florian@googlemail.com,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190704090205.19400-1-fe@dev.tdt.de>
+ <CAHp75Vcocs=9AwX32ouOWFc+wAduCFv2DT_p4JYPUVV0BumjqA@mail.gmail.com>
+ <4b43316c-3e05-0ce9-3ada-db22996205b9@metux.net>
+ <cc5bbcd7148ece53a075948f240bc66b@dev.tdt.de>
+ <CAHp75Vct4O+P62vUo02e5iJy9JMFBDjijFf-JUxjRrMhf1XTEg@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <a453da4b-b5ab-2b30-5ab7-6214980baf7e@metux.net>
+Date:   Thu, 25 Jul 2019 21:12:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <27943e06-a503-162e-356b-abb9e106ab2e@grimberg.me>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAHp75Vct4O+P62vUo02e5iJy9JMFBDjijFf-JUxjRrMhf1XTEg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:xtoZTVXhxKKzbSKRgROfuYu8SsntAyy8Ke/HhDt3rB1AGAXU3C8
+ qpwVNJiRrYT6E0kL0MHdEMY1LNer2lZc6f+F9cqL/WQ9+8v0sgrr0tf972JRBDlmescdkYm
+ Z4YbEfb9+f9xDK+iyVTsGA6XXz9nsJ0PUi7MpvWJiBZM4DDYytF+1CkUT0eGj84uRFQHmRW
+ gVD3lTXc10b6cFAB6nJRA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rtNxlECWR+E=:eFpoyS7kQadOvMs2DFumPo
+ MggGu9S7CiUzA7VXNIFQzPGqXfrBtktRWpFSddURdG07+EvwmV1dz0zagjd/2X/aHJIrUj73c
+ vU5uAHv8ZQhmP12MphML9GWmcpwk++LKDYgQu2EwAYCMCpBh2n943Eqqe8c9DDJi/paP3Gf0D
+ 2naaaC9/6Pcnzs9ny3h9XbxAoNhdcMwRK94KtCV+YooekYSQAl+RJuIpalJtDAeoeEUsx5d/B
+ imzk1+cBvlyfqKtWHJ7Ox00mYccVWXvNyIRvHNYnyWNQWg1URkiij8/W2dWzbzGUFe1i4Ogdq
+ /vV+hqBRidyuwvwGGg/PTDmIVyIOGbwtv5z8QobIKSDYwYaXIYkalCgZsCiqVx3MV/h85EWWc
+ jEUwtMQFJibpSDUwhovxn7twDNKnbvSVKZ/lNtCgWohrHmC0c4Ytd3xDljDKGaBLRW6VhUHp2
+ zauBqIwFq7V8snRyuE2TzdkOc4G4PkY1iRZHLfmEhxrzJfdh/XOJvzmYZ53sj6yOIGNSULdBv
+ cYIaTeAvvXeGCOBU1pps9lTn0kvwn4avgvSmCTpsIN8mMKeWgo2Be43Rh2A8b0yxNBsXpsCoD
+ fOzwxnuy6t8SMPKyTGoNeTeZqtlqx4XqSrDOe+PXJeJ6ZH643chHaKJo1mdUTohUT87ltH0Hc
+ CQAZdpxP6ZZgzN3O1NuC7J6q8KZ7H1i2mdbukt84omHmJat+0lZ3npQENRFWsAePruRlTVw+T
+ ManOTRVIEC9LPpQdeM/CoMS5kqVD1IBRp9LAlOB+/awewUUvH7R+34gb0mM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 12:05:29PM -0700, Sagi Grimberg wrote:
-> 
-> > > > NVMe-OF is configured using configfs. The target is specified by the
-> > > > user writing a path to a configfs attribute. This is the way it works
-> > > > today but with blkdev_get_by_path()[1]. For the passthru code, we need
-> > > > to get a nvme_ctrl instead of a block_device, but the principal is the same.
-> > > 
-> > > Why isn't a fd being passed in there instead of a random string?
-> > 
-> > I suppose we could echo a string of the file descriptor number there,
-> > and look up the fd in the process' file descriptor table ...
-> 
-> Assuming that there is a open handle somewhere out there...
+On 25.07.19 19:49, Andy Shevchenko wrote:
 
-Well, that's how we'd know that the application echoing /dev/nvme3 into
-configfs actually has permission to access /dev/nvme3.  Think about
-containers, for example.  It's not exactly safe to mount configfs in a
-non-root container since it can access any NVMe device in the system,
-not just ones which it's been given permission to access.  Right?
+Hi,
+
+> On Wed, Jul 10, 2019 at 3:54 PM Florian Eckert <fe@dev.tdt.de> wrote:
+>>
+>> On 2019-07-08 21:45, Enrico Weigelt, metux IT consult wrote:
+>>> On 04.07.19 15:39, Andy Shevchenko wrote:
+>>>> On Thu, Jul 4, 2019 at 12:02 PM Florian Eckert <fe@dev.tdt.de> wrote:
+>>>>>
+>>>>> This patchset adds the following changes to this pcengines-apuv2
+>>>>> platform device.
+> 
+> Guys, I'm lost with this series.
+> So, for now I dropped them from queue, if needed, please resend a new version.
+
+@Andy: please take my patch for the keycode change, which I sent
+separately. (Florian's version also added raw gpio numnber).
+
+@Florian: could you resend your patch for the reset pin addition ?
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
