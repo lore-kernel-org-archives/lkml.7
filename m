@@ -2,111 +2,111 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0DAC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE752C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B5A20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7A022173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:06:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1cZEu7o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbfGYGCx (ORCPT
+        id S1727986AbfGYGGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 02:02:53 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38199 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726547AbfGYGCw (ORCPT
+        Thu, 25 Jul 2019 02:06:41 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40458 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbfGYGGl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 02:02:52 -0400
-Received: by mail-qk1-f196.google.com with SMTP id a27so35611323qkk.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 23:02:52 -0700 (PDT)
+        Thu, 25 Jul 2019 02:06:41 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v19so43548353wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 23:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KCKWfzF66+ujdKKdWZwTIX1edTZnqRGNlAf5n/ijexc=;
+        b=l1cZEu7oBoEUbaODHvPDj4hs5QwlbKDNhhHJ+bLSfsucvkhINm8tK2olBGb590JxN6
+         8cC0kOI38URs6KzfUm2ptxQ8aU7Qu+yVy9ewhyPBm0JQ3ZhDyplUfBWXXYzfyXpb1+xs
+         s9ZF+EvZ2TmDL9mKPay0zyi9g0VWCNnWrRdzOtKjCgJib6v4vcIkHGzQcBua4hTdy4tH
+         o0tvMqqwkS+Z21/CbxeDSwmMbtH9E9jkSVAJ5giy1VeIyr0blOIlXK9SvP+dUDlMXVYz
+         +NdvK8byqXj/kGmO/ThzaxA4SKOCjI3HM5j9aYFe4YnjXaQqcIzixxG0vf/KUbs07fu7
+         O0kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zOvrC4jRrz0ugoagicTAba2I/X1iVC+b4ZZraA+kmso=;
-        b=ZzWI7O/fN98tTQkI3qHL6OagWDYbr9Ft4HU+TDYKP5+jeZg8SZjNWZ+gmufBXeY15m
-         7sN3V+SnaFhEHHl1YxswC7bQi/qrwcKbiGsSqmCXATMFE3W5J8D1c2Pk7k6ljjib70V1
-         3crSxUwo+r4ouCnKSJnuoImhat/voniA+LkQ/lop0BP4g4Y5UuZG3obWDmrjF2fat9JO
-         vyRCLoy15wmI+j2NTNkiRe8n6S5zXZHxqBdbvPs0JqXA9XI5PjPPSJl3mv8bR0jelSJv
-         bfR66k76cFYMWiOZU4DZ4OEAksHhNRqWYb/wlE/Uiyqg5XCRB5Zpa/l1EcqqgfSsm1V5
-         WEsw==
-X-Gm-Message-State: APjAAAX0lATPQ9D/Nm8L7zS70IQRPUMdQuwHwcH0icpY+dclyQr71YBh
-        hVxjg4oDELwHk8aeopCYq1fa0g==
-X-Google-Smtp-Source: APXvYqwbxlaMB/Ups0MK5ym5+FoeShoFD8maMViZfmHscXpKdz4RszQUYRwaBR+eewotyh05tZCO4w==
-X-Received: by 2002:a37:aa04:: with SMTP id t4mr57308995qke.359.1564034571775;
-        Wed, 24 Jul 2019 23:02:51 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id i62sm22519634qke.52.2019.07.24.23.02.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 23:02:50 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 02:02:41 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jasowang@redhat.com,
-        jglisse@redhat.com, keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-Subject: Re: WARNING in __mmdrop
-Message-ID: <20190725015402-mutt-send-email-mst@kernel.org>
-References: <0000000000008dd6bb058e006938@google.com>
- <000000000000964b0d058e1a0483@google.com>
- <20190721044615-mutt-send-email-mst@kernel.org>
- <20190722141152.GA13711@ziepe.ca>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KCKWfzF66+ujdKKdWZwTIX1edTZnqRGNlAf5n/ijexc=;
+        b=lpMRzqyBW6xeaUQP/pZHEub9qI/h/T/kkLvlD8rqEN/hYmVslkRh4Z+9YYmjUxvOPv
+         tkGP8DsxAEZ+VN3XOWde8TuvsrBQg8ntVFPK+szk465p+/MgmmjXEsIg6c0uElRgVKCw
+         SrjTimdzpWE3JWh3TNH2eZT6VAO2n77PY/Ol2YJDakM7aRMQXLI331WOr/WDK/UG2krw
+         e7VM1hMS83ZKtSuPK0X5qZ1CpbHkHa2Cy2+XODvKiPipj7szjlfax2NoEfIR7OmQEj+l
+         YByzricoPQQEblNC6WEW1WXbY2xoHPUS96+mVTJfecDxm2AhTJcx+jW8c6UjfBLvT06K
+         M6KQ==
+X-Gm-Message-State: APjAAAW95PSHWD64QjlNZaTOL6NmvdDOSOcS5S/WdEn3jdj590UHkZdS
+        skWJATB6DgLI5mgWOe9wFvmcvxZOXBFeh3mYmPE=
+X-Google-Smtp-Source: APXvYqxIPslz5P15OAhT39MHqqaUtf1TLMeZSR/qP2Piw/0OfQIpnkCOtBjfyWYriXs7PAGzu/zSsxP85pq8AEZPaM0=
+X-Received: by 2002:a1c:96c7:: with SMTP id y190mr71636835wmd.87.1564034799292;
+ Wed, 24 Jul 2019 23:06:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722141152.GA13711@ziepe.ca>
+References: <20190722124833.28757-1-daniel.baluta@nxp.com> <20190722124833.28757-10-daniel.baluta@nxp.com>
+ <20190724233212.GD6859@Asurada-Nvidia.nvidia.com>
+In-Reply-To: <20190724233212.GD6859@Asurada-Nvidia.nvidia.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Thu, 25 Jul 2019 09:06:28 +0300
+Message-ID: <CAEnQRZC+5OWwBJfifjeD_8zD3z9efdNMb4Ey0P1Ka+y63v-XNA@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH 09/10] ASoC: fsl_sai: Add support for SAI new version
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Viorel Suman <viorel.suman@nxp.com>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 11:11:52AM -0300, Jason Gunthorpe wrote:
-> On Sun, Jul 21, 2019 at 06:02:52AM -0400, Michael S. Tsirkin wrote:
-> > On Sat, Jul 20, 2019 at 03:08:00AM -0700, syzbot wrote:
-> > > syzbot has bisected this bug to:
-> > > 
-> > > commit 7f466032dc9e5a61217f22ea34b2df932786bbfc
-> > > Author: Jason Wang <jasowang@redhat.com>
-> > > Date:   Fri May 24 08:12:18 2019 +0000
-> > > 
-> > >     vhost: access vq metadata through kernel virtual address
-> > > 
-> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=149a8a20600000
-> > > start commit:   6d21a41b Add linux-next specific files for 20190718
-> > > git tree:       linux-next
-> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=169a8a20600000
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=129a8a20600000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=e58112d71f77113ddb7b
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10139e68600000
-> > > 
-> > > Reported-by: syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com
-> > > Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual
-> > > address")
-> > > 
-> > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> > 
-> > 
-> > OK I poked at this for a bit, I see several things that
-> > we need to fix, though I'm not yet sure it's the reason for
-> > the failures:
-> 
-> This stuff looks quite similar to the hmm_mirror use model and other
-> places in the kernel. I'm still hoping we can share this code a bit more.
+On Thu, Jul 25, 2019 at 2:32 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+>
+> On Mon, Jul 22, 2019 at 03:48:32PM +0300, Daniel Baluta wrote:
+> > New IP version introduces Version ID and Parameter registers
+> > and optionally added Timestamp feature.
+> >
+> > VERID and PARAM registers are placed at the top of registers
+> > address space and some registers are shifted according to
+> > the following table:
+> >
+> > Tx/Rx data registers and Tx/Rx FIFO registers keep their
+> > addresses, all other registers are shifted by 8.
+>
+> Feels like Lucas's approach is neater. I saw that Register TMR
+> at 0x60 is exceptional during your previous discussion. So can
+> we apply an offset-cancellation for it exceptionally? I haven't
+> checked all the registers so this would look okay to me as well
+> if there are more than just Register TMR.
 
-Right. I think hmm is something we should look at.
+It is not just TMR exceptional. There are like half of the registers.
+Thus: half of the registers need to be shifted and half of them
+need to stay the same as in previous version of SAI.
 
--- 
-MST
+I'm not seeing yet a neater approach. Lucas idea would somehow
+work if regmap will allow some sort of translation function applied
+over registers before being accessed.
+
+Maybe Mark has some clues here?
+
+thanks,
+daniel.
