@@ -2,112 +2,103 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12286C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C06D3C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD65D2238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8010F2081B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:23:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564039432;
+	bh=yLBS79RacfNg6ARLZ0IM2pWRWzR+JhAuTHcK7Bi5sus=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ATaVPxSMBqJpZwxw/39nV3OdLZCvfTMojVtmGhUJnB5LmTIgzxZh2/3euHqn8kn/u
+	 EP2DZFyUdNkSZZgKeG5yNDFPA40kW6e+cAg7n3ktGA+5576F6iBsAexSa5exojcxcC
+	 +TEGpWvj1d+2pEoIvyXM9n638eQjZ90J55nVxMNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387986AbfGYHWe (ORCPT
+        id S2388022AbfGYHXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 03:22:34 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:45753 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387951AbfGYHWe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 03:22:34 -0400
-Received: from [192.168.1.110] ([77.9.64.13]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MsqMq-1ifCnO1BAu-00t9wS; Thu, 25 Jul 2019 09:22:30 +0200
-Subject: Re: AMD Drivers
-To:     Gilberto Nunes <gilberto.nunes32@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        dri devel <dri-devel@lists.freedesktop.org>
-References: <CAOKSTBs-cHMr7xbJVVUjZ9C3__bY6jZU-_TZ0RmMRMJ3dBk3PA@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <0c3f445d-1e37-1531-d3d5-f7ad75c58343@metux.net>
-Date:   Thu, 25 Jul 2019 09:22:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 25 Jul 2019 03:23:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387990AbfGYHXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 03:23:51 -0400
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CC742081B
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 07:23:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564039430;
+        bh=yLBS79RacfNg6ARLZ0IM2pWRWzR+JhAuTHcK7Bi5sus=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=061Mb/6SY+cgcTn9YWM++jfwZFbsnpFfOWMCuSD0z161IqIJFhXiN4XCkmEcxAb12
+         fdjo1W+gO4JRbbfwHzernMKnp684VuQ5anTe9VSMhgnlxxn4fOKmyZFYyCA/R0/BoK
+         Kf1steOJaDnmICX5dAjephI+0MjW6XjpRzcloPh8=
+Received: by mail-lj1-f176.google.com with SMTP id t28so46984654lje.9
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 00:23:50 -0700 (PDT)
+X-Gm-Message-State: APjAAAUhGuyC+XZXfIWkyURGvmN3cIeqinl+q54XOfOkSH4IIGacDo7B
+        4vUgLUEyOIYnLfB2nbXNeC+nqv+ezCpBCYfLpls=
+X-Google-Smtp-Source: APXvYqw2lqTY/8+7BqE80WKNGpSC/iiVIEbJrqTL3JiKPZIjiCMODHdAxOfHhDwrYE/YgD3YDElRG1dUz49EIqK96zQ=
+X-Received: by 2002:a2e:b4d4:: with SMTP id r20mr19996420ljm.5.1564039428406;
+ Thu, 25 Jul 2019 00:23:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAOKSTBs-cHMr7xbJVVUjZ9C3__bY6jZU-_TZ0RmMRMJ3dBk3PA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:659jE6DNqxATIz6lVOvFCp//CjtOqPsWVkvHo3c2gH0Z9BnolE/
- 7E02SQSPqT3EXNqNqKQHpo9pNLqXIrjBLgSZ35p+FLFj+9uAfcE3s3uxpjCwEddXW2lT8TA
- zYUuGjfQoU+DSlVeX8Y797vlaJys0GJbU4Ouf5kTCaaBngNL1leKjiWEVwEvnXd1gP2EVNb
- ByFNaTu55yZ7orXAW9hfg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:18pTWSl+wSI=:u79uo7fZm4iSH46IVznB4x
- BM3e8D3G+q/Vsf3DesUmX1N5BTg5+fYFUBXXggBIWMKJyFk4byDFXyGCnpLghV4nPwdP02kCZ
- if4v6A7e1A2Ju0apUUiS627vdcnEhJZpIP92MFCSRXQuVFdQvayYxLCb3CQaF8wFhbk4JSpdn
- unAG+q7mKeDwnbNdFU3m+hE+AgpzdW3cMJdcsSAhnFz/cgwa0m2zO6e1cgkFDUDQ4NNJByKrH
- RS0Bhs0rCuTA5nYTp86C3xN/KJ/F+l/dWYBYVl3G7dzvBc/MKtFjmJPL9rjGfLLAy8AC7PK/q
- H/4wxmLajPHD3eMBEXEUsgiRhc78BCpWK/DFn3zaYhnbdHKAwc6xQvqPbI0TzGkd+xL6ukU+w
- 7XL3uk3tHjJrTfYAIBa06cXjYpelXepvP63eyDMjirz9js/1OKXdT8g/PImbA94DraT6nZm70
- 1wyDs2zqSUeCzhmRtcOPJ5P3o0cncJdTf19x69yloBJAsjstsUqW9wlY9+X3ixbHQH8rNQOWM
- mdulsMgeOqJCCcDGtYKBR97JAwU/zfoid/g3IOAN+HED8ud9CxQIPrmbfFWgncYsQAxZP6XLG
- T+shpWnhmo2Mybql9qT0ftDSOZ4c7twGckuJqdyxnRvF9vV6xr/o3q9kDMizqFaxIUHEcgOzY
- qoT5wgxeANOZAlII48PLfW1oTygihlwidlbuU5XY+pxab6rrdbC6xGAX1oXiICQJ+EkjbP6rF
- 9NGAQcSNvdiaAyyrxrI9YLDq3WQ2Tjb9e1WFZD7rXcyw6qynph93jnIHUsY=
+References: <20190725063644.5982-1-gomonovych@gmail.com>
+In-Reply-To: <20190725063644.5982-1-gomonovych@gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 25 Jul 2019 09:23:37 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPd1sL_GqajZN6YAz+frapt2wCCW9WPvF8eYGsZ9iOdxsg@mail.gmail.com>
+Message-ID: <CAJKOXPd1sL_GqajZN6YAz+frapt2wCCW9WPvF8eYGsZ9iOdxsg@mail.gmail.com>
+Subject: Re: [PATCH] extcon: max77693: Add extra IRQF_ONESHOT
+To:     Vasyl Gomonovych <gomonovych@gmail.com>
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, myungjoo.ham@samsung.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.07.19 16:17, Gilberto Nunes wrote:
+On Thu, 25 Jul 2019 at 08:37, Vasyl Gomonovych <gomonovych@gmail.com> wrote:
+>
+> Do not fire irq again until thread done
+> This issue was found by code inspection
+> Coccicheck irqf_oneshot.cocci
 
-Hi,
+Rationale does not look convincing. Do you fix real problem or just
+automatic fix from coccinelle? If the latter, then it looks wrong.
+This is virtual IRQ so no need for oneshot. The hardware IRQ has
+oneshot set. Otherwise please provide slightly more specific rationale
+for this commit.
 
-crossposting to dri-devel, as it smells like a problem w/ amdgpu driver.
-
-> CPU - AMD A12-9720P RADEON R7, 12 COMPUTE CORES 4C+8G
-> GPU - Wani [Radeon R5/R6/R7 Graphics] (amdgpu)
-> Network Interface card:
-> 01:00.1 Ethernet controller: Realtek Semiconductor Co., Ltd.
-> RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 12)
-> 
-> When I install kernel 4.18.x or 5.x, the network doesn't work anymore...
-
-What about other versions (eg. v4.19) ?
-Which is the last working version ?
-
-> I can loaded the modulo r8169 andr8168.
-> I saw enp1s0f1 as well but there's no link at all!
-> Even when I fixed the IP none link!
-> I cannot ping the network gateway or any other IP inside LAN!
-> Right now, I booted my laptop with kernel
-> Linux version 5.2.2-050202-generic (kernel@kathleen) (gcc version
-> 9.1.0 (Ubuntu 9.1.0-9ubuntu2)) #201907231250 SMP Tue Jul 23 12:53:21
-> UTC 2019
-
-Could you also try 5.3 ?
-
-> The system boot slowly, and I have a SSD Samsung, which in kernel
-> 4.15, boot quickly.
-> And there's many errors in dmesg command, like you can see in this pastbin
-> 
-> https://paste.ubuntu.com/p/YhbjnzYYYh/
-
-looks like something's wrong w/ reading gpu registers (more precisely
-waiting for some changing), that's causing the soft lockup. (maybe too
-big timeout ?)
-
-> Oh! By the way, the network card r8169 are work wonderful!
-
-Didn't you say (above) that it does not work ?
-Or is it just an immediate fail and later comes back ?
+Best regards,
+Krzysztof
 
 
---mtx
-
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+>
+> Signed-off-by: Vasyl Gomonovych <gomonovych@gmail.com>
+> ---
+>  drivers/extcon/extcon-max77693.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/extcon/extcon-max77693.c b/drivers/extcon/extcon-max77693.c
+> index 32fc5a66ffa9..68e42cd87e98 100644
+> --- a/drivers/extcon/extcon-max77693.c
+> +++ b/drivers/extcon/extcon-max77693.c
+> @@ -1142,7 +1142,7 @@ static int max77693_muic_probe(struct platform_device *pdev)
+>
+>                 ret = devm_request_threaded_irq(&pdev->dev, virq, NULL,
+>                                 max77693_muic_irq_handler,
+> -                               IRQF_NO_SUSPEND,
+> +                               IRQF_NO_SUSPEND | IRQF_ONESHOT,
+>                                 muic_irq->name, info);
+>                 if (ret) {
+>                         dev_err(&pdev->dev,
+> --
+> 2.17.1
+>
