@@ -2,91 +2,91 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4330FC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1319CC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 148AC218EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCBA218EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:28:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfGYUXK (ORCPT
+        id S1726692AbfGYU2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 16:23:10 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:39448 "EHLO gloria.sntech.de"
+        Thu, 25 Jul 2019 16:28:41 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:43716 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725923AbfGYUXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 16:23:09 -0400
-Received: from d57e23da.static.ziggozakelijk.nl ([213.126.35.218] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id S1725819AbfGYU2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 16:28:41 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hqkGX-0001vF-QE; Thu, 25 Jul 2019 22:23:05 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: Limit WiFi TX power on rk3288-veyron-jerry
-Date:   Thu, 25 Jul 2019 22:23:04 +0200
-Message-ID: <2130412.AuREfPFnmH@phil>
-In-Reply-To: <20190723225258.93058-1-mka@chromium.org>
-References: <20190723225258.93058-1-mka@chromium.org>
+        (envelope-from <logang@deltatee.com>)
+        id 1hqkLl-0005E4-Ra; Thu, 25 Jul 2019 14:28:30 -0600
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190725172335.6825-1-logang@deltatee.com>
+ <20190725172335.6825-5-logang@deltatee.com>
+ <20190725175023.GA30641@bombadil.infradead.org>
+ <da58f91e-6cfa-02e0-dd89-3cfa23764a0e@deltatee.com>
+ <20190725195835.GA7317@localhost.localdomain>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <5dd6a41d-21c4-cf8d-a81d-271549de6763@deltatee.com>
+Date:   Thu, 25 Jul 2019 14:28:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20190725195835.GA7317@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, sagi@grimberg.me, hch@lst.de, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, willy@infradead.org, kbusch@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v6 04/16] nvme-core: introduce nvme_get_by_path()
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 24. Juli 2019, 00:52:58 CEST schrieb Matthias Kaehlcke:
-> The downstream Chrome OS 3.14 kernel for jerry limits WiFi TX power
-> through calibration data in the device tree [1]. Add a DT node for
-> the WiFi chip and use the downstream calibration data.
+
+
+On 2019-07-25 1:58 p.m., Keith Busch wrote:
+> On Thu, Jul 25, 2019 at 11:54:18AM -0600, Logan Gunthorpe wrote:
+>>
+>>
+>> On 2019-07-25 11:50 a.m., Matthew Wilcox wrote:
+>>> On Thu, Jul 25, 2019 at 11:23:23AM -0600, Logan Gunthorpe wrote:
+>>>> nvme_get_by_path() is analagous to blkdev_get_by_path() except it
+>>>> gets a struct nvme_ctrl from the path to its char dev (/dev/nvme0).
+>>>>
+>>>> The purpose of this function is to support NVMe-OF target passthru.
+>>>
+>>> I can't find anywhere that you use this in this patchset.
+>>>
+>>
+>> Oh sorry, the commit message is out of date the function was actually
+>> called nvme_ctrl_get_by_path() and it's used in Patch 10.
 > 
-> Not all calibration data entries have the length specified in the
-> binding (Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt),
-> however this is the data used by the downstream ('official') kernel
-> and the binding mentions that "the length can vary between hw
-> versions".
-> 
-> [1] https://crrev.com/c/271237
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  arch/arm/boot/dts/rk3288-veyron-jerry.dts | 147 ++++++++++++++++++++++
->  1 file changed, 147 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288-veyron-jerry.dts b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-> index b1613af83d5d..2d0d5a4603ba 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-> +++ b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-> @@ -82,6 +82,153 @@
->  	};
->  };
->  
-> +&sdio0 {
+> Instead of by path, could we have configfs take something else, like
+> the unique controller instance or serial number? I know that's different
+> than how we handle blocks and files, but that way nvme core can lookup
+> the cooresponding controller without adding new cdev dependencies.
 
-added #address-cells = <1> and #size-cells = <0> here
-as it was creating dtc warnings due to the reg=1 below
+Well the previous version of the patchset just used the ctrl name
+("nvme1") and looped through all the controllers to find a match. But
+this sucks because of the inconsistency and the fact that the name can
+change if hardware changes and the number changes. Allowing the user to
+make use of standard udev rules seems important to me.
 
-> +	mwifiex: wifi@1 {
-> +		compatible = "marvell,sd8897";
-> +		reg = <1>;
-> +		status = "okay";
-
-dropped status ... okay is the default and the wifi node only was
-added to this board, not before.
-
-and applied for 5.4
-
-Thanks
-Heiko
-
+Logan
 
