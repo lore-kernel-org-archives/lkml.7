@@ -2,92 +2,155 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B137FC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1186C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E5A2238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA85222CBA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:20:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="RPWbux+y"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="sYk8HlfL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389158AbfGYPTT (ORCPT
+        id S2389159AbfGYPUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 11:19:19 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:57000 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388736AbfGYPTT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 11:19:19 -0400
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x6PFJ2Cm028409;
-        Fri, 26 Jul 2019 00:19:02 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x6PFJ2Cm028409
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564067943;
-        bh=ybYKBy2jy2mNaj9dapjCxjrjOczwrfBem/VG0oV9nbc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RPWbux+yjMepS0eHBsNLg6KHVJNe8nyxRgAyeUBrPLRd3lkQ70KNqeCAl4/SFU1rA
-         KqBCIJnmWTt2dzLfUOdXeqg+NBM9I3lI8V+DKpydh+IeSPY5DNQ5WiA4bUBUSLIEkt
-         CwCTwUmJ/5Nte6KSXD0BHkytFeq93XGtPvEC8kcmddSm6NmhCaqhVNgH28OM66ukCr
-         lLHl4P5+M38HUeaBBTMOTcOcN9ExEtQDRXnM8pW4pA5bnQZzg00ryltINj4ovvWtKJ
-         oVvWb/xneF1qbgFz9QMY5BMTL9S8MZrPnS+NV0+3zfI6zHcHYFLOddfge1s6iJs6oe
-         p7abfWuOYSYfA==
-X-Nifty-SrcIP: [209.85.222.49]
-Received: by mail-ua1-f49.google.com with SMTP id j8so19975307uan.6;
-        Thu, 25 Jul 2019 08:19:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAWG2hHadUBZSQoluo44Dern+wLF9J+iIOtiPh5fXNhrhPOBRKch
-        fia/qU5R4gKWuy7KXLSaniPkmUGLIChPUQFHcr0=
-X-Google-Smtp-Source: APXvYqzREwsVdqY9MpRLTcsyv3GQ7mTlG0gkpVTsr5J+UESJVcs/+a1yYujSjrS2p7W2Tw/dNRFWb+R1W2ZTVW6lnTQ=
-X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr56716853uag.40.1564067941791;
- Thu, 25 Jul 2019 08:19:01 -0700 (PDT)
+        Thu, 25 Jul 2019 11:20:09 -0400
+Received: from cmta17.telus.net ([209.171.16.90]:45448 "EHLO cmta17.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388871AbfGYPUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 11:20:08 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id qfXGhGxCSzEP4qfXIhjKhV; Thu, 25 Jul 2019 09:20:06 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1564068006; bh=Yj6Fbdz6cjL7+b5dzv3RJ6R+eBunjGaQmRvWeERhOWY=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=sYk8HlfLRIcUdWq2AcujYgfp2zGYgb1gr3Hw/FRHIZIAb9bPc2hnHs+A88dWYtAuW
+         rUtabzSLw0Kf9abWS8i6SXX9QdgP8EfoviktUvyjP9OHCvKKxVoxPgP5f6ib9pODUh
+         d21y/L7sed8S9iHkbfJ6naK+4e8tGanpqst8fI7fnIpvapYdXiy1j7J1EJOAKtwdO5
+         Qwc1E9skOSyMNjgWt5yyJFBuOYutZtdp71JRycamNjelJHXPYSo/JEPE98dZ/IxUQ1
+         YZzIEf6+YLaU0N0mgwLOVKktEx7XuKA+jPLzB1YoBNVtvjYh0Iwc0BN/TJIDba52qz
+         +rR3OtXi2cHgg==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=cYmsUULM c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=KKAkSRfTAAAA:8 a=gu6fZOg2AAAA:8 a=_GkJrRlwnCL7A2mvMCAA:9
+ a=CjuIK1q_8ugA:10 a=-FEs8UIgK8oA:10 a=NWVoK91CQyQA:10
+ a=cvBusfyB2V15izCimMoJ:22 a=2RSlZUUhi9gRBrsHwhhZ:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Rafael J. Wysocki'" <rafael@kernel.org>
+Cc:     "'Rafael Wysocki'" <rjw@rjwysocki.net>,
+        "'Ingo Molnar'" <mingo@redhat.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>,
+        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
+        "'Joel Fernandes'" <joel@joelfernandes.org>,
+        "'v4 . 18+'" <stable@vger.kernel.org>,
+        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>
+References: <1563431200-3042-1-git-send-email-dsmythies@telus.net> <8091ef83f264feb2feaa827fbeefe08348bcd05d.1563778071.git.viresh.kumar@linaro.org> <001201d54125$a6a82350$f3f869f0$@net> <20190723091551.nchopfpqlmdmzvge@vireshk-i7> <CAJZ5v0ji+ksapJ4kc2m5UM_O+AShAvJWmYhTQHiXiHnpTq+xRg@mail.gmail.com> <20190724114327.apmx35c7a4tv3qt5@vireshk-i7>
+In-Reply-To: <20190724114327.apmx35c7a4tv3qt5@vireshk-i7>
+Subject: RE: [PATCH] cpufreq: schedutil: Don't skip freq update when limits change
+Date:   Thu, 25 Jul 2019 08:20:01 -0700
+Message-ID: <000c01d542fc$703ff850$50bfe8f0$@net>
 MIME-Version: 1.0
-References: <20190717061800.10018-1-yamada.masahiro@socionext.com>
- <20190717061800.10018-8-yamada.masahiro@socionext.com> <230d2ca1-19cd-b60e-1b1b-6d7413eea9e2@siemens.com>
-In-Reply-To: <230d2ca1-19cd-b60e-1b1b-6d7413eea9e2@siemens.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 26 Jul 2019 00:18:12 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARu--p-tiJA2RGM5_KSQPSeo6-pkp-4GRd2AwM_1dtD7Q@mail.gmail.com>
-Message-ID: <CAK7LNARu--p-tiJA2RGM5_KSQPSeo6-pkp-4GRd2AwM_1dtD7Q@mail.gmail.com>
-Subject: Re: [PATCH v3 07/12] kbuild: modpost: read modules.order instead of $(MODVERDIR)/*.mod
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdVCFQVr1phaD+P6Sq6kW1+vmsbdwQAm2IYQ
+X-CMAE-Envelope: MS4wfLaRfd1rcOoDWaHnU5xIUUcYswZjdnsvzSocGsFvBURZhWQjg5H3b8U2RJUu1tOGE5yQvC4520ORyxtygI2C7uH2qFUMWZ1Dnrjhmh14hfVSj7vVKSvv
+ pA57riQC4hXWfAFtM/q/e4dgvtdW+jmJ6vHz4AwZCteGAsf8iGpj51/1bs5ck+Aj7QwYbk5IJWJ7Kjcf/SJugOMKBoeD2hL8IYHbZkcXC+d64KJz3LZjraYR
+ /ftFdHFIayhdJlpzWgtGryp0qv6rq1ZlC83yAaldADbAiWlKvjJtpTkc1bt85O58bvO0HpsJIL18wB7NH+XTw4WHT6gRdRAx/9RHO4X1+z63yqtIKxNmpyjZ
+ bMFHfrCeAmUpiJuulm0Jz+/FGF2QSwAGgEPYE09iCGBVSqK66//MGK281SWN0GqMW5mKWqZuamKe6ZU4qXI/s/YxmqkpKStsKfFBLj6lBrxoBoQjQ7A=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jan,
+Hi,
 
-On Thu, Jul 25, 2019 at 5:39 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
-> >
+I am having trouble keeping up.
+Here is what I have so far:
+
+On 2019.07.24 04:43 Viresh Kumar wrote:
+> On 23-07-19, 12:27, Rafael J. Wysocki wrote:
+>> On Tue, Jul 23, 2019 at 11:15 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+
+>>> Though there is one difference between intel_cpufreq and acpi_cpufreq,
+>>> intel_cpufreq has fast_switch_possible=true and so it uses slightly
+>>> different path in schedutil. I tried to look from that perspective as
+>>> well but couldn't find anything wrong.
+>> 
+>> acpi-cpufreq should use fast switching on the Doug's system too.
 >
-> This affects also external modules builds: I have patterns here that do
+> Ah okay.
 >
-> [Makefile]
-> subdir-y := some-module
+>>> If you still find intel_cpufreq to be broken, even with this patch,
+
+It is.
+
+>>> please set fast_switch_possible=false instead of true in
+>>> __intel_pstate_cpu_init() and try tests again. That shall make it very
+>>> much similar to acpi-cpufreq driver.
+>> 
+>> I wonder if this helps.
+
+It does not help.
+
+>> Even so, we want fast switching to be used by intel_cpufreq.
+
 >
-> [some-module/Makefile]
-> obj-m := some-module.o
+> With both using fast switching it shouldn't make any difference.
+
+>> Anyway, it looks like the change reverted by the Doug's patch
+>> introduced a race condition that had not been present before.  Namely,
+>> need_freq_update is cleared in get_next_freq() when it is set _or_
+>> when the new freq is different from the cached one, so in the latter
+>> case if it happens to be set by sugov_limits() after evaluating
+>> sugov_should_update_freq() (which returned 'true' for timing reasons),
+>> that update will be lost now. [Previously the update would not be
+>> lost, because the clearing of need_freq_update depended only on its
+>> current value.] Where it matters is that in the "need_freq_update set"
+>> case, the "premature frequency reduction avoidance" should not be
+>> applied (as you noticed and hence the $subject patch).
+>> 
+>> However, even with the $subject patch, need_freq_update may still be
+>> set by sugov_limits() after the check added by it and then cleared by
+>> get_next_freq(), so it doesn't really eliminate the problem.
+>> 
+>> IMO eliminating would require invalidating next_freq this way or
+>> another when need_freq_update is set in sugov_should_update_freq(),
+>> which was done before commit ecd2884291261e3fddbc7651ee11a20d596bb514.
 >
-> and since this patch, the final some-module.ko is no longer built. Am I missing
-> something in the kbuild makefiles, or is this a regression?
+> Hmm, so to avoid locking in fast path we need two variable group to
+> protect against this kind of issues. I still don't want to override
+> next_freq with a special meaning as it can cause hidden bugs, we have
+> seen that earlier.
+>
+> What about something like this then ?
 
-Thanks for the report.
-Interesting. I have never imagined that Makefiles were written like that.
+I tried the patch ("patch2"). It did not fix the issue.
 
-I just wrote a fix-up, but I have not determined to apply it.
-https://patchwork.kernel.org/patch/11059033/
+To summarize, all kernel 5.2 based, all intel_cpufreq driver and schedutil governor:
 
-It is easy to fixup your Makefile, though.
+Test: Does a busy system respond to maximum CPU clock frequency reduction?
 
---
-Best Regards
-Masahiro Yamada
+stock, unaltered: No.
+revert ecd2884291261e3fddbc7651ee11a20d596bb514: Yes
+viresh patch: No.
+fast_switch edit: No.
+viresh patch2: No.
+
+References (and procedures used):
+https://marc.info/?l=linux-pm&m=156346478429147&w=2
+https://marc.info/?l=linux-kernel&m=156343125319461&w=2
+
+... Doug
+
+
