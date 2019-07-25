@@ -2,108 +2,178 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B3EC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6A7C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9AA122C7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:53:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564062839;
-	bh=mS8IBFvnYQrWKc/GsN8tgboZttuv2U5VEawHM3flGp8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZcBmVB3R1StKlB+yif87kEmO88fWtz402INV+HOLiTFu2KRuha5eNMmAdmK2u/hGs
-	 utuVHGdMskDOPyXU203sPStbw93gKbFzicMsGzKiBMaKD0omCGSbk67sAPa2QQa7vv
-	 s+8eDiLmGC4xrLB7WY4nH1RiogpqjjI9gVsiWRoU=
+	by mail.kernel.org (Postfix) with ESMTP id 57972218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:54:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sQQDJiby"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404118AbfGYNx6 (ORCPT
+        id S2404169AbfGYNye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:53:58 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50378 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403804AbfGYNx5 (ORCPT
+        Thu, 25 Jul 2019 09:54:34 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43797 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728943AbfGYNyc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:53:57 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v15so45111610wml.0;
-        Thu, 25 Jul 2019 06:53:55 -0700 (PDT)
+        Thu, 25 Jul 2019 09:54:32 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p13so50863420wru.10
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:54:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GCYwHJCLOsYoyyik86R2Z6x2q4egJ0xmOYkZtSr5Et4=;
-        b=IS0yrIsbzCZQC1jP26jRFo0g4nOCtbeBYrhyWET/czx/N3PXQHriKYe1jqGFSnEARp
-         gBcSwxE4pl/mFpnDgKRnZgJOdb+Eyyl3uQekvIU2tsrJV4jTZU6qZQbeHyIyaMMdg9N/
-         YSZSQHty4Etpi/Qv507Y9gxmTqwz/awhhozgI7wxwb8Y61KY01bYAa/hit5+jPUtV6/q
-         Ei2yMP5zgt3sIkgsi2XGczqjmf4Cle4wKQIZan6/brv6TH2vbBMoMquCb9akA+6lhZtw
-         e2tjtuXzfBiU2wgE+DjXs+6pc0P6+tbSF/2MR0vCd03WoyjL0Xcn2ZGRIli0CZKpDZFA
-         abFw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=kiGD59LaW0LszoAZzmVLJ1Hft59fIaEtybxXjg0U4OU=;
+        b=sQQDJiby1lR9rJnYwpFayBJL1RCmEUHrXJL5ktfkxstXcB1e72/IJ+7W0b7G/ZBDE7
+         l2/Oe7WGAKBlaplOUnR9eKLvijJm+yqgNtv1e2Xt94tpqVPUHg4DEcD9UGsRs0szMquI
+         gd0SnX7mYKDLhjJOaB+OD74kiTzZcmfgGeIajBjxHk8HORwabuVH5qYZ14shV48okQcq
+         oV1q3+hmkLuRmabQQ4N1s3WbE9w1LtffyarQQhGJ98ItiO4babxYtOZPj/d8HElgIXh3
+         +7ifv5dKadFG/B1N65t8KG2r29CwpiyOZg/YA0MfSDcC9TY3HZioK4MipWty6YP9bw5P
+         6xWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GCYwHJCLOsYoyyik86R2Z6x2q4egJ0xmOYkZtSr5Et4=;
-        b=SxV3JC8es1825gTKKzMkGI3jnTDONTe3V6qxzX4WP07KBWvOa4uXio3SAekp7fSNo0
-         TDMmIpgJTUpNc/hDTTN6ok9CzqzOtyUI69FNyfWVrbfxWTT7xVEiiNX5nCj/XGAeyPmv
-         /+WpuZ7pT73r20eFZS2IKlV1rzOpk/jKfgMi6bbcSJH0HAa8eaxN9ZJo1ivdf9G0qKeG
-         LKMjjw3+dnrK9bBFqo3h3lZyOtTvDPbJd/ldt7dGl67CgMoae+ZxQ9pIWKuWSWliFfqO
-         0lsnh7u0N00wfBIggBYchgatd2FNwqdKiWwYb1ftW+6xZu0H9Flg+K2An9qMM12m3TXj
-         l18w==
-X-Gm-Message-State: APjAAAVPT+G8LQNdWR2W/Y1LGI/CjeC08lafqwyqYEqMcA+QwB7FVOCp
-        Q8bqzWq03ZoikN7LCw+jOz8=
-X-Google-Smtp-Source: APXvYqxAfOcivn+U2a7IrJytSvx2dWf5Bs4Fypm6B+rPklb1sKuFAoEn63YogZXS7jvztrm7pV8Jfg==
-X-Received: by 2002:a1c:968c:: with SMTP id y134mr75559079wmd.122.1564062834820;
-        Thu, 25 Jul 2019 06:53:54 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id g12sm69938967wrv.9.2019.07.25.06.53.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 06:53:54 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 15:53:51 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
-        tj@kernel.org, linux-kernel@vger.kernel.org,
-        luca.abeni@santannapisa.it, claudio@evidence.eu.com,
-        tommaso.cucinotta@santannapisa.it, bristot@redhat.com,
-        mathieu.poirier@linaro.org, lizefan@huawei.com, longman@redhat.com,
-        dietmar.eggemann@arm.com, cgroups@vger.kernel.org
-Subject: Re: [PATCH v9 3/8] cpuset: Rebuild root domain deadline accounting
- information
-Message-ID: <20190725135351.GA108579@gmail.com>
-References: <20190719140000.31694-1-juri.lelli@redhat.com>
- <20190719140000.31694-4-juri.lelli@redhat.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=kiGD59LaW0LszoAZzmVLJ1Hft59fIaEtybxXjg0U4OU=;
+        b=ltB1p/gom1IFtMSu21b2TNE7bB6lDQaG1f2vii86L4pv0P1utEG90uK2RtmxWOmzOG
+         aLNAu17h213aGCJKBOCN0+HFYQwwZdRAnvAVNDnIZItmWUPHqYlfrcPX5TWJTEzjzVCS
+         ogyHJESB4XTfb7gyOSF2Un4KnlJf9qKkxj6Ba56Uhp6Ij9lNO/GiQD/Fs3abdpkDECXg
+         sOA4jWs+skRWJ35YgDuRxw72Y4gJIhLmq0CUjoJa/1xIxCbKTlkg5GQUHbcnz4MYFk35
+         5Eq+kj65Iy0CpROIzbRjY286WLfVqxlvJVBmhySl+G+wVNC26tkaCU+APCvldofyobte
+         28AA==
+X-Gm-Message-State: APjAAAVhnwEl3WVvNl8Z30e1TQMGT+Jz8mwOMKuA83EJlsnpTgBnbgf4
+        I9K0pXfufDR3RBt3DUZQYsfAwQ==
+X-Google-Smtp-Source: APXvYqyi+7SaHwgU0aK/nQJij+0evagD7L54rP/lc55M34rnwnlBR+KX1Ln1iOdMtsPd3Xr0XJt2kw==
+X-Received: by 2002:adf:f3d1:: with SMTP id g17mr64650717wrp.38.1564062869954;
+        Thu, 25 Jul 2019 06:54:29 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id c9sm40786310wml.41.2019.07.25.06.54.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Jul 2019 06:54:29 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 14:54:02 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        rafael@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Liam Girdwood <lgirdwood@gmail.com>, linux-i2c@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-spi@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Wolfram Sang <wsa@the-dreams.de>, Alan Tull <atull@kernel.org>,
+        Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>, Mark Brown <broonie@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Jiri Slaby <jslaby@suse.com>
+Subject: Re: [PATCH v3 2/7] drivers: Introduce device lookup variants by
+ of_node
+Message-ID: <20190725135402.GL23883@dell>
+References: <20190723221838.12024-1-suzuki.poulose@arm.com>
+ <20190723221838.12024-3-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190719140000.31694-4-juri.lelli@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190723221838.12024-3-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 23 Jul 2019, Suzuki K Poulose wrote:
 
-* Juri Lelli <juri.lelli@redhat.com> wrote:
-
-> When the topology of root domains is modified by CPUset or CPUhotplug
-> operations information about the current deadline bandwidth held in the
-> root domain is lost.
+> Introduce wrappers for {bus/driver/class}_find_device() to
+> locate devices by its of_node.
 > 
-> This patch addresses the issue by recalculating the lost deadline
-> bandwidth information by circling through the deadline tasks held in
-> CPUsets and adding their current load to the root domain they are
-> associated with.
-> 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: devicetree@vger.kernel.org
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: linux-i2c@vger.kernel.org
+> Cc: linux-rockchip@lists.infradead.org
+> Cc: linux-spi@vger.kernel.org
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: Alan Tull <atull@kernel.org>
+> Cc: Moritz Fischer <mdf@kernel.org>
+> Cc: linux-fpga@vger.kernel.org
+> Cc: Peter Rosin <peda@axentia.se>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Heiner Kallweit <hkallweit1@gmail.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Thor Thayer <thor.thayer@linux.intel.com>
+> Cc: Jiri Slaby <jslaby@suse.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Peter Rosin <peda@axentia.se>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  - Dropped the reviewed-by tags from Thor, Mark, Andrew and Peter as the
+>    patches are mereged, though there are no functional changes.
+> ---
+>  drivers/amba/tegra-ahb.c              | 11 +-------
+>  drivers/fpga/fpga-bridge.c            |  8 +-----
+>  drivers/fpga/fpga-mgr.c               |  8 +-----
+>  drivers/gpu/drm/drm_mipi_dsi.c        |  7 +----
+>  drivers/i2c/i2c-core-of.c             |  7 +----
+>  drivers/mfd/altera-sysmgr.c           | 14 ++--------
 
-Was this commit written by Mathieu? If yes then it's missing a From line. 
-If not then the Signed-off-by should probably be changed to Acked-by or 
-Reviewed-by?
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-Thanks,
+What's the merge plan for this patch?
 
-	Ingo
+Is anyone prepared to create an immutable branch for us to pull from?
+I'm happy to do it if no one else steps up.
+
+>  drivers/mux/core.c                    |  7 +----
+>  drivers/net/phy/mdio_bus.c            |  9 +------
+>  drivers/nvmem/core.c                  |  7 +----
+>  drivers/of/of_mdio.c                  |  8 +-----
+>  drivers/of/platform.c                 |  7 +----
+>  drivers/regulator/of_regulator.c      |  7 +----
+>  drivers/spi/spi.c                     | 20 +++------------
+>  include/linux/device.h                | 37 +++++++++++++++++++++++++++
+>  sound/soc/rockchip/rk3399_gru_sound.c |  9 ++-----
+>  15 files changed, 56 insertions(+), 110 deletions(-)
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
