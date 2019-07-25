@@ -2,208 +2,105 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02263C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C292C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF22122BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:25:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="sdkkufIy"
+	by mail.kernel.org (Postfix) with ESMTP id 3A77E22BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388049AbfGYOZY (ORCPT
+        id S1728361AbfGYOZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:25:24 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:44181 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfGYOZY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:25:24 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PEPCk71039726
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 25 Jul 2019 07:25:12 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PEPCk71039726
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564064713;
-        bh=pJFBqu0KlzfcdyjUhP1o+3MD7G1jYiQMgHmknMA0PW4=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=sdkkufIyt81jS9jSG7Fl4YtuP+IlWKyYKMPdIj49SKLJlBlYO9icI3rWio51y9oY9
-         bvJH5YbBR7meSZarh2sndtkfAs8p9uVEJr1bHTgnGbXM54uxo2WuH+MILwSDtOQiT+
-         s+6dmxWQJCJicxJNmuvX/kFDCwVKzP1HT5YTnNelU5Eu1PFJcHKxCOJFBwYOIBdAhK
-         xWtQ34aLldaST4DojJp9EJgSBFjwxG0hZSXE7wF6UBfD9IcVCYZHrCxE9+mB7QReoI
-         inYbXFfjAOCs5zNlZ0uGZs2rfq687tgg2cHQMjVtK0HFf9IwzNU99aTKv75IyyJNLR
-         VYOt7kkYZYgKQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PEPC891039722;
-        Thu, 25 Jul 2019 07:25:12 -0700
-Date:   Thu, 25 Jul 2019 07:25:12 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-8b542da372875373db9688477671151df3418acb@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, hpa@zytor.com, peterz@infradead.org,
-        tglx@linutronix.de, mingo@kernel.org
-Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com,
-          peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org
-In-Reply-To: <20190722105219.434738036@linutronix.de>
-References: <20190722105219.434738036@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/apic] x86/apic: Move ipi header into apic directory
-Git-Commit-ID: 8b542da372875373db9688477671151df3418acb
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 25 Jul 2019 10:25:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37208 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727937AbfGYOZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 10:25:58 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0E40A335E8;
+        Thu, 25 Jul 2019 14:25:58 +0000 (UTC)
+Received: from [10.72.12.18] (ovpn-12-18.pek2.redhat.com [10.72.12.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 910435D71A;
+        Thu, 25 Jul 2019 14:25:48 +0000 (UTC)
+Subject: Re: WARNING in __mmdrop
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+References: <20190723032024-mutt-send-email-mst@kernel.org>
+ <1d14de4d-0133-1614-9f64-3ded381de04e@redhat.com>
+ <20190723035725-mutt-send-email-mst@kernel.org>
+ <3f4178f1-0d71-e032-0f1f-802428ceca59@redhat.com>
+ <20190723051828-mutt-send-email-mst@kernel.org>
+ <caff362a-e208-3468-3688-63e1d093a9d3@redhat.com>
+ <20190725012149-mutt-send-email-mst@kernel.org>
+ <55e8930c-2695-365f-a07b-3ad169654d28@redhat.com>
+ <20190725042651-mutt-send-email-mst@kernel.org>
+ <84bb2e31-0606-adff-cf2a-e1878225a847@redhat.com>
+ <20190725092332-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <11802a8a-ce41-f427-63d5-b6a4cf96bb3f@redhat.com>
+Date:   Thu, 25 Jul 2019 22:25:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190725092332-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 25 Jul 2019 14:25:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  8b542da372875373db9688477671151df3418acb
-Gitweb:     https://git.kernel.org/tip/8b542da372875373db9688477671151df3418acb
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Mon, 22 Jul 2019 20:47:12 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 25 Jul 2019 16:11:57 +0200
 
-x86/apic: Move ipi header into apic directory
+On 2019/7/25 下午9:26, Michael S. Tsirkin wrote:
+>> Exactly, and that's the reason actually I use synchronize_rcu() there.
+>>
+>> So the concern is still the possible synchronize_expedited()?
+> I think synchronize_srcu_expedited.
+>
+> synchronize_expedited sends lots of IPI and is bad for realtime VMs.
+>
+>> Can I do this
+>> on through another series on top of the incoming V2?
+>>
+>> Thanks
+>>
+> The question is this: is this still a gain if we switch to the
+> more expensive srcu? If yes then we can keep the feature on,
 
-Only used locally.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190722105219.434738036@linutronix.de
+I think we only care about the cost on srcu_read_lock() which looks 
+pretty tiny form my point of view. Which is basically a READ_ONCE() + 
+WRITE_ONCE().
 
----
- arch/x86/kernel/apic/apic_flat_64.c         | 3 ++-
- arch/x86/kernel/apic/apic_numachip.c        | 3 ++-
- arch/x86/kernel/apic/bigsmp_32.c            | 9 ++-------
- arch/x86/kernel/apic/ipi.c                  | 3 ++-
- arch/x86/{include/asm => kernel/apic}/ipi.h | 0
- arch/x86/kernel/apic/probe_32.c             | 3 ++-
- arch/x86/kernel/apic/probe_64.c             | 3 ++-
- arch/x86/kernel/apic/x2apic_phys.c          | 3 +--
- 8 files changed, 13 insertions(+), 14 deletions(-)
+Of course I can benchmark to see the difference.
 
-diff --git a/arch/x86/kernel/apic/apic_flat_64.c b/arch/x86/kernel/apic/apic_flat_64.c
-index 8d7242df1fd6..a38b1ecc018d 100644
---- a/arch/x86/kernel/apic/apic_flat_64.c
-+++ b/arch/x86/kernel/apic/apic_flat_64.c
-@@ -15,7 +15,8 @@
- #include <asm/jailhouse_para.h>
- #include <asm/apic_flat_64.h>
- #include <asm/apic.h>
--#include <asm/ipi.h>
-+
-+#include "ipi.h"
- 
- static struct apic apic_physflat;
- static struct apic apic_flat;
-diff --git a/arch/x86/kernel/apic/apic_numachip.c b/arch/x86/kernel/apic/apic_numachip.c
-index e071e8dcb097..7d4c00f4e984 100644
---- a/arch/x86/kernel/apic/apic_numachip.c
-+++ b/arch/x86/kernel/apic/apic_numachip.c
-@@ -18,7 +18,8 @@
- 
- #include <asm/apic_flat_64.h>
- #include <asm/pgtable.h>
--#include <asm/ipi.h>
-+
-+#include "ipi.h"
- 
- u8 numachip_system __read_mostly;
- static const struct apic apic_numachip1;
-diff --git a/arch/x86/kernel/apic/bigsmp_32.c b/arch/x86/kernel/apic/bigsmp_32.c
-index afee386ff711..2c031b75dfce 100644
---- a/arch/x86/kernel/apic/bigsmp_32.c
-+++ b/arch/x86/kernel/apic/bigsmp_32.c
-@@ -4,18 +4,13 @@
-  *
-  * Drives the local APIC in "clustered mode".
-  */
--#include <linux/threads.h>
- #include <linux/cpumask.h>
--#include <linux/kernel.h>
--#include <linux/init.h>
- #include <linux/dmi.h>
- #include <linux/smp.h>
- 
--#include <asm/apicdef.h>
--#include <asm/fixmap.h>
--#include <asm/mpspec.h>
- #include <asm/apic.h>
--#include <asm/ipi.h>
-+
-+#include "ipi.h"
- 
- static unsigned bigsmp_get_apic_id(unsigned long x)
- {
-diff --git a/arch/x86/kernel/apic/ipi.c b/arch/x86/kernel/apic/ipi.c
-index dad523bbe701..0f26141d479c 100644
---- a/arch/x86/kernel/apic/ipi.c
-+++ b/arch/x86/kernel/apic/ipi.c
-@@ -3,7 +3,8 @@
- #include <linux/cpumask.h>
- 
- #include <asm/apic.h>
--#include <asm/ipi.h>
-+
-+#include "ipi.h"
- 
- void __default_send_IPI_shortcut(unsigned int shortcut, int vector, unsigned int dest)
- {
-diff --git a/arch/x86/include/asm/ipi.h b/arch/x86/kernel/apic/ipi.h
-similarity index 100%
-rename from arch/x86/include/asm/ipi.h
-rename to arch/x86/kernel/apic/ipi.h
-diff --git a/arch/x86/kernel/apic/probe_32.c b/arch/x86/kernel/apic/probe_32.c
-index 8f3c7f50b0a9..40b786e3427a 100644
---- a/arch/x86/kernel/apic/probe_32.c
-+++ b/arch/x86/kernel/apic/probe_32.c
-@@ -11,7 +11,8 @@
- 
- #include <asm/apic.h>
- #include <asm/acpi.h>
--#include <asm/ipi.h>
-+
-+#include "ipi.h"
- 
- #ifdef CONFIG_HOTPLUG_CPU
- #define DEFAULT_SEND_IPI	(1)
-diff --git a/arch/x86/kernel/apic/probe_64.c b/arch/x86/kernel/apic/probe_64.c
-index f7bd3f48deb2..6268c487f963 100644
---- a/arch/x86/kernel/apic/probe_64.c
-+++ b/arch/x86/kernel/apic/probe_64.c
-@@ -9,7 +9,8 @@
-  * James Cleverdon.
-  */
- #include <asm/apic.h>
--#include <asm/ipi.h>
-+
-+#include "ipi.h"
- 
- /*
-  * Check the APIC IDs in bios_cpu_apicid and choose the APIC mode.
-diff --git a/arch/x86/kernel/apic/x2apic_phys.c b/arch/x86/kernel/apic/x2apic_phys.c
-index e5289a0c595b..3bde4724c1c7 100644
---- a/arch/x86/kernel/apic/x2apic_phys.c
-+++ b/arch/x86/kernel/apic/x2apic_phys.c
-@@ -3,9 +3,8 @@
- #include <linux/cpumask.h>
- #include <linux/acpi.h>
- 
--#include <asm/ipi.h>
--
- #include "x2apic.h"
-+#include "ipi.h"
- 
- int x2apic_phys;
- 
+
+> if not we'll put it off until next release and think
+> of better solutions. rcu->srcu is just a find and replace,
+> don't see why we need to defer that. can be a separate patch
+> for sure, but we need to know how well it works.
+
+
+I think I get here, let me try to do that in V2 and let's see the numbers.
+
+Thanks
+
