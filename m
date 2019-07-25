@@ -2,120 +2,183 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A61FC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8E7C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F672190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0529D2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:33:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ip6hXMPL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S7zg9NIJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387926AbfGYNcU (ORCPT
+        id S2387984AbfGYNdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:32:20 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50898 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387632AbfGYNcU (ORCPT
+        Thu, 25 Jul 2019 09:33:13 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35901 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbfGYNdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:32:20 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6PDVqIt074564;
-        Thu, 25 Jul 2019 08:31:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564061512;
-        bh=B/ntLJ2e1bIKShYP2qLtMwAe3jOvq47HHoEw6r4s2ZA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Ip6hXMPL4GiG/YNz0lIukcvAkp/BqHTNVXLtqtwTWZvDh3xsO4c9kteivrfZmAiEB
-         QUzcDPwqZj9HSlvBM+ZyC7PovEIcxAsqzqfVowgMbmbsJACjBO4EdlBZa5c257g+EK
-         vbtBslAD/tq6XsA/Cjk9N9zv7D04+VmLjp19dKT0=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6PDVql1073481
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 25 Jul 2019 08:31:52 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 25
- Jul 2019 08:31:51 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 25 Jul 2019 08:31:51 -0500
-Received: from [10.250.86.29] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6PDVo6N082317;
-        Thu, 25 Jul 2019 08:31:50 -0500
-Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-References: <20190624194908.121273-1-john.stultz@linaro.org>
- <20190624194908.121273-5-john.stultz@linaro.org>
- <20190718100840.GB19666@infradead.org>
- <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
- <20190724065958.GC16225@infradead.org>
- <8e6f8e4f-20fc-1f1f-2228-f4fd7c7c5c1f@ti.com>
- <20190725125014.GD20286@infradead.org>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <0eae0024-1fdf-bd06-a8ff-1a41f0af3c69@ti.com>
-Date:   Thu, 25 Jul 2019 09:31:50 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 09:33:13 -0400
+Received: by mail-oi1-f195.google.com with SMTP id q4so8491272oij.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:33:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B1z3qSqeis7KRp59LvW3GrIz3rWu/CFv+sXSsB3MIv0=;
+        b=S7zg9NIJWKApcIDLjPg7XBK9rjPeDYoBWNVm005ZjT5gIbIyVfUK1xk1sLRQw2MM6x
+         0Mdkbzf6ixFn9ev3RGLQI0Euk3fBpj38V9Um9YNXmB8Nig9Gqm7yu3MXe9SGvtsSF/wm
+         cBMTtWscvwBj58mpSYQZHP82mWWmXezEv903XajiM4H7GkdESKIQ2TWthd1ygp1tVdlf
+         auy3V0rc8NfdYnkaaXDknQrzs7TI038ABRxdFGjrDH+niO5voLKTNLeZJ3SjiHVtixc8
+         lxDg71dtEjf+ShJe5QILrIeZjUXh+f9GR/ZH/Tfe/MfFQcGDLs78lnMBTM2MtL7glJNB
+         5yWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B1z3qSqeis7KRp59LvW3GrIz3rWu/CFv+sXSsB3MIv0=;
+        b=B9qsvphBpm6bB3G42Kyl8DM1mX/clX794WIfqNz3zzr28sQi9jWO06kF/rywLH3iSa
+         Jnpqb7yArAAoivoO9gy9qk82x0lzNAz/ruDbY/blAnjZXJscY4oG6OBJkNARdSDjipnX
+         PVgg7WoPpyQnwlV5oEWTganqOcR2Mkt3yyQULQrEaBSus0UH5UwCEW1iYVAMah2EQyUU
+         XJIzr5qIqsgsL+ggEP03GaMU19kp6aQ2igVfbI4z+k039NfRGSRdg/U95Ofxp922cqEp
+         YuHD3WfF1N1ZSa4JfS80PaoK7G7TDlw6W4h40jSTANuMgpRQdK3PQG+9d6ITbICVubRm
+         S5wA==
+X-Gm-Message-State: APjAAAW74d7RbrrL8ji/3TQvZVhg2NcumO3wOVQrA/oVeYhDKPgwWlm9
+        2Gt4FUBBDjvCLgu3Uvrbv7MN7WWbPJ7zjPfQ69lEwKgBa7s=
+X-Google-Smtp-Source: APXvYqzWSaFSn1p/xkKu/nTk8JDTShS1XkRJNDVHcXJf+E/HgRUTiWRJNBpO14sGxRyKRreBRD1/QWYHKp73a7558FA=
+X-Received: by 2002:a1f:f282:: with SMTP id q124mr34325145vkh.4.1564059690186;
+ Thu, 25 Jul 2019 06:01:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190725125014.GD20286@infradead.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1561958991-21935-1-git-send-email-manish.narani@xilinx.com>
+ <1561958991-21935-2-git-send-email-manish.narani@xilinx.com>
+ <20190722215404.GA28292@bogus> <MN2PR02MB602907616249FF19C1A737D8C1C70@MN2PR02MB6029.namprd02.prod.outlook.com>
+In-Reply-To: <MN2PR02MB602907616249FF19C1A737D8C1C70@MN2PR02MB6029.namprd02.prod.outlook.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 25 Jul 2019 15:00:53 +0200
+Message-ID: <CAPDyKFostBKYipTkCsDbggsrux7w8BPqARx7fwRsL1XqEEX2NQ@mail.gmail.com>
+Subject: Re: [PATCH v2 01/11] dt-bindings: mmc: arasan: Update documentation
+ for SD Card Clock
+To:     Manish Narani <MNARANI@xilinx.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        Michal Simek <michals@xilinx.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "christoph.muellner@theobroma-systems.com" 
+        <christoph.muellner@theobroma-systems.com>,
+        "philipp.tomsich@theobroma-systems.com" 
+        <philipp.tomsich@theobroma-systems.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
+        "ayaka@soulik.info" <ayaka@soulik.info>,
+        "kernel@esmil.dk" <kernel@esmil.dk>,
+        "tony.xie@rock-chips.com" <tony.xie@rock-chips.com>,
+        Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>,
+        Nava kishore Manne <navam@xilinx.com>,
+        "mdf@kernel.org" <mdf@kernel.org>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/25/19 8:50 AM, Christoph Hellwig wrote:
-> On Wed, Jul 24, 2019 at 11:46:01AM -0400, Andrew F. Davis wrote:
->> https://patchwork.kernel.org/patch/10863957/
->>
->> It's actually a more simple heap type IMHO, but the logic inside is
->> incompatible with the system/CMA heaps, if you move any of their code
->> into the core framework then this heap stops working. Leading to out of
->> tree hacks on the core to get it back functional. I see the same for the
->> "complex" heaps with ION.
-> 
-> Well, this mostly is just another allocator (gen_pool).  And given that
-> the whole dma-buf infrastucture assumes things are backed by pages we
-> really shouldn't need much more than an alloc and a free callback (and
-> maybe the pgprot to map it) and handle the rest in common code.
-> 
+On Tue, 23 Jul 2019 at 10:23, Manish Narani <MNARANI@xilinx.com> wrote:
+>
+> Hi Rob,
+>
+> Thanks a lot for the review!
+>
+>
+> > -----Original Message-----
+> > From: Rob Herring <robh@kernel.org>
+> > Sent: Tuesday, July 23, 2019 3:24 AM
+> > To: Manish Narani <MNARANI@xilinx.com>
+> > Cc: ulf.hansson@linaro.org; mark.rutland@arm.com; heiko@sntech.de; Michal
+> > Simek <michals@xilinx.com>; adrian.hunter@intel.com;
+> > christoph.muellner@theobroma-systems.com; philipp.tomsich@theobroma-
+> > systems.com; viresh.kumar@linaro.org; scott.branden@broadcom.com;
+> > ayaka@soulik.info; kernel@esmil.dk; tony.xie@rock-chips.com; Rajan Vaja
+> > <RAJANV@xilinx.com>; Jolly Shah <JOLLYS@xilinx.com>; Nava kishore Manne
+> > <navam@xilinx.com>; mdf@kernel.org; olof@lixom.net; linux-
+> > mmc@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> > rockchip@lists.infradead.org
+> > Subject: Re: [PATCH v2 01/11] dt-bindings: mmc: arasan: Update
+> > documentation for SD Card Clock
+> >
+> > On Mon, Jul 01, 2019 at 10:59:41AM +0530, Manish Narani wrote:
+> > > The clock handling is to be updated in the Arasan SDHCI. As the
+> > > 'devm_clk_register' is deprecated in the clock framework, this needs to
+> > > specify one more clock named 'clk_sdcard' to get the clock in the driver
+> > > via 'devm_clk_get()'. This clock represents the clock from controller to
+> > > the card.
+> >
+> > Please explain why in terms of the binding, not some driver calls.
+> Okay.
+>
+> >
+> >
+> > > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 15 ++++++++++-
+> > ----
+> > >  1 file changed, 10 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> > b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> > > index 1edbb04..15c6397 100644
+> > > --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> > > +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> > > @@ -23,6 +23,10 @@ Required Properties:
+> > >    - reg: From mmc bindings: Register location and length.
+> > >    - clocks: From clock bindings: Handles to clock inputs.
+> > >    - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
+> > > +            Apart from these two there is one more optional clock which
+> > > +            is "clk_sdcard". This clock represents output clock from
+> > > +            controller and card. This must be specified when #clock-cells
+> > > +            is specified.
+> > >    - interrupts: Interrupt specifier
+> > >
+> > >  Required Properties for "arasan,sdhci-5.1":
+> > > @@ -36,9 +40,10 @@ Optional Properties:
+> > >    - clock-output-names: If specified, this will be the name of the card clock
+> > >      which will be exposed by this device.  Required if #clock-cells is
+> > >      specified.
+> > > -  - #clock-cells: If specified this should be the value <0>.  With this property
+> > > -    in place we will export a clock representing the Card Clock.  This clock
+> > > -    is expected to be consumed by our PHY.  You must also specify
+> > > +  - #clock-cells: If specified this should be the value <0>. With this
+> > > +    property in place we will export one clock representing the Card
+> > > +    Clock. This clock is expected to be consumed by our PHY. You must also
+> > > +    specify
+> >
+> > specify what?
+> I think this line was already there, I missed to correct it, Will update in v3.
+>
+> >
+> > The 3rd clock input I assume? This statement means any existing users
+> > with 2 clock inputs and #clock-cells are in error now. Is that correct?
+> Yes, this is correct. So far there was only one vendor using '#clock-cells'  which is Rockchip. I have sent DT patch (02/11) for that also.
+> Here this is needed as earlier implementation isn't correct as suggested by Uffe. (https://lkml.org/lkml/2019/6/20/486) .
 
-But that's just it, dma-buf does not assume buffers are backed by normal
-kernel managed memory, it is up to the buffer exporter where and when to
-allocate the memory. The memory backed by this SRAM buffer does not have
-the normal struct page backing. So moving the map, sync, etc functions
-to common code would fail for this and many other heap types. This was a
-major problem with Ion that prompted this new design.
+I am not sure how big of a problem the backwards compatible thingy
+with DT is, in general we must not break it. What do you say Manish?
 
-Each heap type may need to do something different depending on its
-backing memory, moving everything to common code that is common to
-System and CMA heaps is would lead those being the only upstreamable heaps.
+As a workaround, would it be possible to use
+of_clk_get_from_provider() somehow to address the compatibility issue?
+Or maybe there is another clock API that can help.
 
-Andrew
+Kind regards
+Uffe
