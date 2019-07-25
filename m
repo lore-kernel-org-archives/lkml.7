@@ -2,204 +2,149 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D07BFC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16457C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9904F21901
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:29:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QW0w2cwR"
+	by mail.kernel.org (Postfix) with ESMTP id E766E21901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387702AbfGYO35 (ORCPT
+        id S2387706AbfGYOaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:29:57 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:58571 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfGYO34 (ORCPT
+        Thu, 25 Jul 2019 10:30:19 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:42316 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727167AbfGYOaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:29:56 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PETkRx1040460
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 25 Jul 2019 07:29:46 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PETkRx1040460
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564064986;
-        bh=m7i+lQ5M3WfjqYcaz4/SJINxKzCuUBmdzSlgmOBVRDk=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=QW0w2cwR+GNpYcMqmHUuqAKry5tBb6ei6sYCFgpzS6MitKXvjN0wbSrguSG6GBmeT
-         btJyaw2HsW6e6mNk4LrNtH+Lvnjj4ThzuCfIXNwvLw8FUOHFKsDJpVF9XVj2Cmh7kH
-         U72IlKRM7GQMXiwBMxBxbAIZu5j/PyICsrcPv7QsLeIZCYxX9agaehFX63TX0TRB1/
-         PJENN9srywxELstkRN5CJFwfinRyEVpEeoSuEgc4w0KFAG43BA3L230jnSooFiuMAB
-         4cog5gAIXu5HOjc05kBN+XdFXZnSz2CMURiGDfA9lhAxx5l5frSrAXlHdCFIGBfBEW
-         rw1InddIrQP/Q==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PETkwE1040457;
-        Thu, 25 Jul 2019 07:29:46 -0700
-Date:   Thu, 25 Jul 2019 07:29:46 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-3994ff90acc3b115734fe532720c37a499c502ce@git.kernel.org>
-Cc:     hpa@zytor.com, mingo@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org
-Reply-To: tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          mingo@kernel.org, hpa@zytor.com, peterz@infradead.org
-In-Reply-To: <20190722105220.094613426@linutronix.de>
-References: <20190722105220.094613426@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/apic] x86/apic: Remove dest argument from
- __default_send_IPI_shortcut()
-Git-Commit-ID: 3994ff90acc3b115734fe532720c37a499c502ce
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 25 Jul 2019 10:30:16 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0TXn-jI9_1564065003;
+Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TXn-jI9_1564065003)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 25 Jul 2019 22:30:11 +0800
+Date:   Thu, 25 Jul 2019 22:30:03 +0800
+From:   Aaron Lu <aaron.lu@linux.alibaba.com>
+To:     Aubrey Li <aubrey.intel@gmail.com>
+Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20190725143003.GA992@aaronlu>
+References: <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com>
+ <20190531210816.GA24027@sinkpad>
+ <20190606152637.GA5703@sinkpad>
+ <20190612163345.GB26997@sinkpad>
+ <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com>
+ <20190613032246.GA17752@sinkpad>
+ <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
+ <20190619183302.GA6775@sinkpad>
+ <20190718100714.GA469@aaronlu>
+ <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3994ff90acc3b115734fe532720c37a499c502ce
-Gitweb:     https://git.kernel.org/tip/3994ff90acc3b115734fe532720c37a499c502ce
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Mon, 22 Jul 2019 20:47:19 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 25 Jul 2019 16:11:59 +0200
+On Mon, Jul 22, 2019 at 06:26:46PM +0800, Aubrey Li wrote:
+> The granularity period of util_avg seems too large to decide task priority
+> during pick_task(), at least it is in my case, cfs_prio_less() always picked
+> core max task, so pick_task() eventually picked idle, which causes this change
+> not very helpful for my case.
+> 
+>  <idle>-0     [057] dN..    83.716973: __schedule: max: sysbench/2578
+> ffff889050f68600
+>  <idle>-0     [057] dN..    83.716974: __schedule:
+> (swapper/5/0;140,0,0) ?< (mysqld/2511;119,1042118143,0)
+>  <idle>-0     [057] dN..    83.716975: __schedule:
+> (sysbench/2578;119,96449836,0) ?< (mysqld/2511;119,1042118143,0)
+>  <idle>-0     [057] dN..    83.716975: cfs_prio_less: picked
+> sysbench/2578 util_avg: 20 527 -507 <======= here===
+>  <idle>-0     [057] dN..    83.716976: __schedule: pick_task cookie
+> pick swapper/5/0 ffff889050f68600
 
-x86/apic: Remove dest argument from __default_send_IPI_shortcut()
+I tried a different approach based on vruntime with 3 patches following.
 
-The SDM states:
+When the two tasks are on the same CPU, no change is made, I still route
+the two sched entities up till they are in the same group(cfs_rq) and
+then do the vruntime comparison.
 
-  "The destination shorthand field of the ICR allows the delivery mode to be
-   by-passed in favor of broadcasting the IPI to all the processors on the
-   system bus and/or back to itself (see Section 10.6.1, Interrupt Command
-   Register (ICR)). Three destination shorthands are supported: self, all
-   excluding self, and all including self. The destination mode is ignored
-   when a destination shorthand is used."
+When the two tasks are on differen threads of the same core, the root
+level sched_entities to which the two tasks belong will be used to do
+the comparison.
 
-So there is no point to supply the destination mode to the shorthand
-delivery function.
+An ugly illustration for the cross CPU case:
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190722105220.094613426@linutronix.de
+   cpu0         cpu1
+ /   |  \     /   |  \
+se1 se2 se3  se4 se5 se6
+    /  \            /   \
+  se21 se22       se61  se62
 
----
- arch/x86/kernel/apic/apic_flat_64.c |  6 ++----
- arch/x86/kernel/apic/ipi.c          | 15 +++++++--------
- arch/x86/kernel/apic/local.h        |  2 +-
- arch/x86/kernel/apic/probe_64.c     |  2 +-
- 4 files changed, 11 insertions(+), 14 deletions(-)
+Assume CPU0 and CPU1 are smt siblings and task A's se is se21 while
+task B's se is se61. To compare priority of task A and B, we compare
+priority of se2 and se6. The smaller vruntime wins.
 
-diff --git a/arch/x86/kernel/apic/apic_flat_64.c b/arch/x86/kernel/apic/apic_flat_64.c
-index f8594b844637..004611a44962 100644
---- a/arch/x86/kernel/apic/apic_flat_64.c
-+++ b/arch/x86/kernel/apic/apic_flat_64.c
-@@ -90,8 +90,7 @@ static void flat_send_IPI_allbutself(int vector)
- 			_flat_send_IPI_mask(mask, vector);
- 		}
- 	} else if (num_online_cpus() > 1) {
--		__default_send_IPI_shortcut(APIC_DEST_ALLBUT,
--					    vector, apic->dest_logical);
-+		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector);
- 	}
- }
- 
-@@ -100,8 +99,7 @@ static void flat_send_IPI_all(int vector)
- 	if (vector == NMI_VECTOR) {
- 		flat_send_IPI_mask(cpu_online_mask, vector);
- 	} else {
--		__default_send_IPI_shortcut(APIC_DEST_ALLINC,
--					    vector, apic->dest_logical);
-+		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector);
- 	}
- }
- 
-diff --git a/arch/x86/kernel/apic/ipi.c b/arch/x86/kernel/apic/ipi.c
-index 6fa9f6ca7eef..50c9dcc6f60e 100644
---- a/arch/x86/kernel/apic/ipi.c
-+++ b/arch/x86/kernel/apic/ipi.c
-@@ -16,7 +16,7 @@ static inline void __xapic_wait_icr_idle(void)
- 		cpu_relax();
- }
- 
--void __default_send_IPI_shortcut(unsigned int shortcut, int vector, unsigned int dest)
-+void __default_send_IPI_shortcut(unsigned int shortcut, int vector)
- {
- 	/*
- 	 * Subtle. In the case of the 'never do double writes' workaround
-@@ -33,9 +33,10 @@ void __default_send_IPI_shortcut(unsigned int shortcut, int vector, unsigned int
- 	__xapic_wait_icr_idle();
- 
- 	/*
--	 * No need to touch the target chip field
-+	 * No need to touch the target chip field. Also the destination
-+	 * mode is ignored when a shorthand is used.
- 	 */
--	cfg = __prepare_ICR(shortcut, vector, dest);
-+	cfg = __prepare_ICR(shortcut, vector, 0);
- 
- 	/*
- 	 * Send the IPI. The write to APIC_ICR fires this off.
-@@ -202,8 +203,7 @@ void default_send_IPI_allbutself(int vector)
- 	if (no_broadcast || vector == NMI_VECTOR) {
- 		apic->send_IPI_mask_allbutself(cpu_online_mask, vector);
- 	} else {
--		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector,
--					    apic->dest_logical);
-+		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector);
- 	}
- }
- 
-@@ -212,14 +212,13 @@ void default_send_IPI_all(int vector)
- 	if (no_broadcast || vector == NMI_VECTOR) {
- 		apic->send_IPI_mask(cpu_online_mask, vector);
- 	} else {
--		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector,
--					    apic->dest_logical);
-+		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector);
- 	}
- }
- 
- void default_send_IPI_self(int vector)
- {
--	__default_send_IPI_shortcut(APIC_DEST_SELF, vector, apic->dest_logical);
-+	__default_send_IPI_shortcut(APIC_DEST_SELF, vector);
- }
- 
- /* must come after the send_IPI functions above for inlining */
-diff --git a/arch/x86/kernel/apic/local.h b/arch/x86/kernel/apic/local.h
-index 95adac0e785b..47c43381b444 100644
---- a/arch/x86/kernel/apic/local.h
-+++ b/arch/x86/kernel/apic/local.h
-@@ -38,7 +38,7 @@ static inline unsigned int __prepare_ICR(unsigned int shortcut, int vector,
- 	return icr;
- }
- 
--void __default_send_IPI_shortcut(unsigned int shortcut, int vector, unsigned int dest);
-+void __default_send_IPI_shortcut(unsigned int shortcut, int vector);
- 
- /*
-  * This is used to send an IPI with no shorthand notation (the destination is
-diff --git a/arch/x86/kernel/apic/probe_64.c b/arch/x86/kernel/apic/probe_64.c
-index e0e1e3380ea2..fb457b540e78 100644
---- a/arch/x86/kernel/apic/probe_64.c
-+++ b/arch/x86/kernel/apic/probe_64.c
-@@ -40,7 +40,7 @@ void __init default_setup_apic_routing(void)
- 
- void apic_send_IPI_self(int vector)
- {
--	__default_send_IPI_shortcut(APIC_DEST_SELF, vector, APIC_DEST_PHYSICAL);
-+	__default_send_IPI_shortcut(APIC_DEST_SELF, vector);
- }
- 
- int __init default_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+To make this work, the root level ses on both CPU should have a common
+cfs_rq min vuntime, which I call it the core cfs_rq min vruntime.
+
+This is mostly done in patch2/3.
+
+Test:
+1 wrote an cpu intensive program that does nothing but while(1) in
+  main(), let's call it cpuhog;
+2 start 2 cgroups, with one cgroup's cpuset binding to CPU2 and the
+  other binding to cpu3. cpu2 and cpu3 are smt siblings on the test VM;
+3 enable cpu.tag for the two cgroups;
+4 start one cpuhog task in each cgroup;
+5 kill both cpuhog tasks after 10 seconds;
+6 check each cgroup's cpu usage.
+
+If the task is scheduled fairly, then each cgroup's cpu usage should be
+around 5s.
+
+With v3, the cpu usage of both cgroups are sometimes 3s, 7s; sometimes
+1s, 9s.
+
+With the 3 patches applied, the numbers are mostly around 5s, 5s.
+
+Another test is starting two cgroups simultaneously with cpu.tag set,
+with one cgroup running: will-it-scale/page_fault1_processes -t 16 -s 30,
+the other running: will-it-scale/page_fault2_processes -t 16 -s 30.
+With v3, like I said last time, the later started page_fault processes
+can't start running. With the 3 patches applied, both running at the
+same time with each CPU having a relatively fair score:
+
+output line of 16 page_fault1 processes in 1 second interval:
+min:105225 max:131716 total:1872322
+
+output line of 16 page_fault2 processes in 1 second interval:
+min:86797 max:110554 total:1581177
+
+Note the value in min and max, the smaller the gap is, the better the
+faireness is.
+
+Aubrey,
+
+I haven't been able to run your workload yet...
