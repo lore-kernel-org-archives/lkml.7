@@ -2,168 +2,97 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B79C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AF5C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E65A22C7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:23:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564089831;
-	bh=JYTK4cSg+nAThy171dGjWsj4cVJclrRgvFc0gU0l4oo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YuDb0z60CqM0YKvx2TA1lXyOJMKqhwjDLFwiVoVmWjV+ceR9ystOs8QRwi0tBt5eY
-	 ev7bVz4dGd1wDBJWDx/MqlqwKspdz2UUtyuAvK94+QDEj1MdaVaWedIOnQQUL9xo8q
-	 S3s8PpWfIt44PByCEF7NpgLR3GN3xkbnEC7+QI3o=
+	by mail.kernel.org (Postfix) with ESMTP id B1A0C218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:25:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="AWXlfRnE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfGYVXu (ORCPT
+        id S1726720AbfGYVZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 17:23:50 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43053 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbfGYVXt (ORCPT
+        Thu, 25 Jul 2019 17:25:37 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33405 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfGYVZh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 17:23:49 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w79so38766382oif.10;
-        Thu, 25 Jul 2019 14:23:48 -0700 (PDT)
+        Thu, 25 Jul 2019 17:25:37 -0400
+Received: by mail-io1-f66.google.com with SMTP id z3so100433594iog.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 14:25:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=0OE6CkyrftBD3Ku7P1YRVsn9jYbz8x68WmGWVUa6hzY=;
+        b=AWXlfRnEtLM74XglQGEkne+2wpRMQ3s+jTBHVl27BvwSaVklVPQBOEl+vVl2AOmA5q
+         qv9xXCge4s0vMUla2SYNdU3WfUuDpFqt6iVunAkr8kVIuSSqBhDFCulVS6VMtoNBW2nW
+         a3G2ZcfFBZNVDiJHDGaVNLBfRDN7Awy4HmWGgAy3K0bwPm+wqk1zOeXXbb/TXMI5b+i0
+         DnvM6BNfb/FAc68JxHuQRI2poAaDUJAcgX3JFh0zp6NFcq0rNvNxGTWgwNBKhLE/Hkyp
+         MdU+cjP7xzKxethms3zDzEPZwpyPFzGC5cDQqCSu2QqadqaB+iA26yhrhCOZ+AgVap5e
+         mmmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ymU59qUw9f+YTxwPbG7+MzBEYroVA+eRo9XyYVrY9Y0=;
-        b=jx2CrTTtBfcYutOC3ytJVzumXkRkXZIJsczv0xclVXJBGFqNHF66eL75m9GXvuZq6+
-         X1X6ORUfprAwKhe5Fh870lp0MVchdoeQbFN0X37XP6f+Le01XbfI8IOK+ckqYnkZfRGF
-         RRHyYJSz0lM5ETHhtFHKjixs4Riy9hlcyQD892fkSYWzL1GsT4/4Arvqdyj+qo+M+HhP
-         9OjixcdrEByXvqU8YzGtFFP+FhAj1t3AAUfqZsylZa6fq1UqtYHZVwR8BbYd/zT5R6qA
-         PPcUXzL6s1ok7N6jgcXV8xW4qpHYIj/hrdYQLcKdHHHkBRrV/1BZkKismw73f44MHeTf
-         /E5Q==
-X-Gm-Message-State: APjAAAXr3q9SVNvyx8LvqPHSHulrgAKYCKA6NXRLFeyrnPIYmLjB2Jp2
-        iAHQpIeWmJdhsZt+HKf2TprZ+uF+hBQ7TjrnWEg=
-X-Google-Smtp-Source: APXvYqyvlhdC/BZI1W/nxzJZ72rWrJHG8Ltb0e8ZMHIC8wvEkvppGARCCAW+v73DBm/IDsBdOykCZuSDfEu2WefnQ+k=
-X-Received: by 2002:aca:d907:: with SMTP id q7mr43310361oig.68.1564089828123;
- Thu, 25 Jul 2019 14:23:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=0OE6CkyrftBD3Ku7P1YRVsn9jYbz8x68WmGWVUa6hzY=;
+        b=pyf0wpPJc06w0ZDsbgK8pmLie3grkylxPr31668BDZNxr0HQTn/hjttCgTNIrnq910
+         uAcV/LNLQqULjmEc4kvYKRIYpmcOiC92uTMMPej45B++DCTFEhsstwoBk9TPeyTN3JVj
+         v4/8dIy+VoZxyHbURCOZQH+ZNJNFc5roxVqBcwo0UD96MbfdEHpeXQ6LtylSjZCKY3by
+         u9Luv5uW0NoVfyjE2AqgYhneNBmhSoIq2TnMnItM6iQVa48jP7i6fmqMIiAHbS5qj0Z0
+         nPFQgavw4SXYfOI5zIbQOhGTvakcKKog+deRiwOwEO0+tYRtOC7s1pdDiNJWIQLbN3wR
+         dX/w==
+X-Gm-Message-State: APjAAAXyhVMcQhwzxohC8Bhqlw8/oFhOEpWkHMLTT7JZathwYdaA9gLL
+        KrN37FKsoBot2cFAZruWfoyyxQ==
+X-Google-Smtp-Source: APXvYqyXby2GabhLGrmfNxGRSjjzbJ/o7K20JIc5pwz0S+rpYgbr6bHq19jJS94ZBSI/g1gq1f+w5w==
+X-Received: by 2002:a6b:b556:: with SMTP id e83mr81812981iof.94.1564089936348;
+        Thu, 25 Jul 2019 14:25:36 -0700 (PDT)
+Received: from localhost (67-0-24-96.albq.qwest.net. [67.0.24.96])
+        by smtp.gmail.com with ESMTPSA id s2sm36154569ioj.8.2019.07.25.14.25.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 14:25:35 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 14:25:34 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     bhelgaas@google.com
+cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH] pci: Kconfig: select PCI_MSI_IRQ_DOMAIN by default on
+ RISC-V
+Message-ID: <alpine.DEB.2.21.9999.1907251422040.32766@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-References: <20190724143017.12841-1-david@redhat.com> <20190725125636.GA3582@dhcp22.suse.cz>
- <6dc566c2-faf6-565d-4ef1-2ac3a366bc76@redhat.com> <20190725135747.GB3582@dhcp22.suse.cz>
- <447b74ca-f7c7-0835-fd50-a9f7191fe47c@redhat.com> <20190725191943.GA6142@dhcp22.suse.cz>
- <e31882cf-3290-ea36-77d6-637eaf66fe77@redhat.com>
-In-Reply-To: <e31882cf-3290-ea36-77d6-637eaf66fe77@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 25 Jul 2019 23:23:37 +0200
-Message-ID: <CAJZ5v0h+MjC3gFm1Kf3eBg2Rs12368j6S_i5_Gc24yWx+Z3xBA@mail.gmail.com>
-Subject: Re: [PATCH v1] ACPI / scan: Acquire device_hotplug_lock in acpi_scan_init()
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 10:49 PM David Hildenbrand <david@redhat.com> wrote:
->
-> On 25.07.19 21:19, Michal Hocko wrote:
-> > On Thu 25-07-19 16:35:07, David Hildenbrand wrote:
-> >> On 25.07.19 15:57, Michal Hocko wrote:
-> >>> On Thu 25-07-19 15:05:02, David Hildenbrand wrote:
-> >>>> On 25.07.19 14:56, Michal Hocko wrote:
-> >>>>> On Wed 24-07-19 16:30:17, David Hildenbrand wrote:
-> >>>>>> We end up calling __add_memory() without the device hotplug lock held.
-> >>>>>> (I used a local patch to assert in __add_memory() that the
-> >>>>>>  device_hotplug_lock is held - I might upstream that as well soon)
-> >>>>>>
-> >>>>>> [   26.771684]        create_memory_block_devices+0xa4/0x140
-> >>>>>> [   26.772952]        add_memory_resource+0xde/0x200
-> >>>>>> [   26.773987]        __add_memory+0x6e/0xa0
-> >>>>>> [   26.775161]        acpi_memory_device_add+0x149/0x2b0
-> >>>>>> [   26.776263]        acpi_bus_attach+0xf1/0x1f0
-> >>>>>> [   26.777247]        acpi_bus_attach+0x66/0x1f0
-> >>>>>> [   26.778268]        acpi_bus_attach+0x66/0x1f0
-> >>>>>> [   26.779073]        acpi_bus_attach+0x66/0x1f0
-> >>>>>> [   26.780143]        acpi_bus_scan+0x3e/0x90
-> >>>>>> [   26.780844]        acpi_scan_init+0x109/0x257
-> >>>>>> [   26.781638]        acpi_init+0x2ab/0x30d
-> >>>>>> [   26.782248]        do_one_initcall+0x58/0x2cf
-> >>>>>> [   26.783181]        kernel_init_freeable+0x1bd/0x247
-> >>>>>> [   26.784345]        kernel_init+0x5/0xf1
-> >>>>>> [   26.785314]        ret_from_fork+0x3a/0x50
-> >>>>>>
-> >>>>>> So perform the locking just like in acpi_device_hotplug().
-> >>>>>
-> >>>>> While playing with the device_hotplug_lock, can we actually document
-> >>>>> what it is protecting please? I have a bad feeling that we are adding
-> >>>>> this lock just because some other code path does rather than with a good
-> >>>>> idea why it is needed. This patch just confirms that. What exactly does
-> >>>>> the lock protect from here in an early boot stage.
-> >>>>
-> >>>> We have plenty of documentation already
-> >>>>
-> >>>> mm/memory_hotplug.c
-> >>>>
-> >>>> git grep -C5 device_hotplug mm/memory_hotplug.c
-> >>>>
-> >>>> Also see
-> >>>>
-> >>>> Documentation/core-api/memory-hotplug.rst
-> >>>
-> >>> OK, fair enough. I was more pointing to a documentation right there
-> >>> where the lock is declared because that is the place where people
-> >>> usually check for documentation. The core-api documentation looks quite
-> >>> nice. And based on that doc it seems that this patch is actually not
-> >>> needed because neither the online/offline or cpu hotplug should be
-> >>> possible that early unless I am missing something.
-> >>
-> >> I really prefer to stick to locking rules as outlined on the
-> >> interfaces if it doesn't hurt. Why it is not needed is not clear.
-> >>
-> >>>
-> >>>> Regarding the early stage: primarily lockdep as I mentioned.
-> >>>
-> >>> Could you add a lockdep splat that would be fixed by this patch to the
-> >>> changelog for reference?
-> >>>
-> >>
-> >> I have one where I enforce what's documented (but that's of course not
-> >> upstream and therefore not "real" yet)
-> >
-> > Then I suppose to not add locking for something that is not a problem.
-> > Really, think about it. People will look at this code and follow the
-> > lead without really knowing why the locking is needed.
-> > device_hotplug_lock has its purpose and if the code in question doesn't
-> > need synchronization for the documented scenarios then the locking
-> > simply shouldn't be there. Adding the lock just because of a
-> > non-existing, and IMHO dubious, lockdep splats is just wrong.
-> >
-> > We need to rationalize the locking here, not to add more hacks.
->
-> No, sorry. The real hack is calling a function that is *documented* to
-> be called under lock without it. That is an optimization for a special
-> case. That is the black magic in the code.
->
-> The only alternative I see to this patch is adding a comment like
->
-> /*
->  * We end up calling __add_memory() without the device_hotplug_lock
->  * held. This is fine as we cannot race with other hotplug activities
->  * and userspace trying to online memory blocks.
->  */
->
-> Personally, I don't think that's any better than just grabbing the lock
-> as we are told to. (honestly, I don't see how optimizing away the lock
-> here is of *any* help to optimize our overall memory hotplug locking)
->
-> @Rafael, what's your take? lock or comment?
 
-Well, I have ACKed your patch already. :-)
+This is part of adding support for RISC-V systems with PCIe host 
+controllers that support message-signaled interrupts.
 
-That said, adding a comment stating that the lock is acquired mostly
-for consistency wouldn't hurt.
+Signed-off-by: Wesley Terpstra <wesley@sifive.com>
+[paul.walmsley@sifive.com: wrote patch description; split this
+ patch from the arch/riscv patch]
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+---
+ drivers/pci/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 2ab92409210a..beb3408a0272 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -52,7 +52,7 @@ config PCI_MSI
+ 	   If you don't know what to do here, say Y.
+ 
+ config PCI_MSI_IRQ_DOMAIN
+-	def_bool ARC || ARM || ARM64 || X86
++	def_bool ARC || ARM || ARM64 || X86 || RISCV
+ 	depends on PCI_MSI
+ 	select GENERIC_MSI_IRQ_DOMAIN
