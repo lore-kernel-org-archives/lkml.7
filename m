@@ -2,408 +2,148 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B04C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A46C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B548A22BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E53122BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:23:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="S6FvozyO"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XvNiJPnR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390422AbfGYQXJ (ORCPT
+        id S2387722AbfGYQXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:23:09 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:46591 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388971AbfGYQXJ (ORCPT
+        Thu, 25 Jul 2019 12:23:53 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:47764 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389479AbfGYQXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:23:09 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PGMgG61076465
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 25 Jul 2019 09:22:42 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PGMgG61076465
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564071763;
-        bh=Opltyb754+G+CUU6RWtbrUw+m8e4wAw/JBIKiJ/XHQc=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=S6FvozyOcrmxasVTWZSvj4bcBSD2Hm4jiVTBJEkbdQBJJXnBalSmEzmvbG2w5w27I
-         ih30azNqqNNtte1C0xcedofEWyIRfEzQx8QXGqEokQ6yXwQv7AB+2JKbqDzlTv7Hk3
-         j7bPfqgGLvsC7++YiDfaO/fjmNAgNvMd0iVcQzXx5OEJlTE+0xqPpWM6WoW5ybSWtD
-         S8cBrUfcOop45e1sFDioGEbyCO96mYwXTgQKqmoAvby0F0ZExCnOV1jbTMHuLkC353
-         WCqrXmJyhDXVJ4cHR5/Iwd+FK00Tv9/KMXLDyZBXAgBi1d5Xyi3hw/9dk+6koKYela
-         3npWnfTe2b+fA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PGMfSR1076454;
-        Thu, 25 Jul 2019 09:22:41 -0700
-Date:   Thu, 25 Jul 2019 09:22:41 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Juri Lelli <tipbot@zytor.com>
-Message-ID: <tip-1243dc518c9da467da6635313a2dbb41b8ffc275@git.kernel.org>
-Cc:     dietmar.eggemann@arm.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org,
-        hpa@zytor.com, juri.lelli@redhat.com, torvalds@linux-foundation.org
-Reply-To: linux-kernel@vger.kernel.org, tglx@linutronix.de,
-          dietmar.eggemann@arm.com, peterz@infradead.org,
-          torvalds@linux-foundation.org, mingo@kernel.org, hpa@zytor.com,
-          juri.lelli@redhat.com
-In-Reply-To: <20190719140000.31694-6-juri.lelli@redhat.com>
-References: <20190719140000.31694-6-juri.lelli@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] cgroup/cpuset: Convert cpuset_mutex to
- percpu_rwsem
-Git-Commit-ID: 1243dc518c9da467da6635313a2dbb41b8ffc275
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 25 Jul 2019 12:23:51 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190725162349euoutp0122096b1b17d605cf047e383268cea464~0swrAnxTm3239532395euoutp01-
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 16:23:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190725162349euoutp0122096b1b17d605cf047e383268cea464~0swrAnxTm3239532395euoutp01-
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1564071829;
+        bh=VcdlZyKrQCdgkYUt20ZBw2/TUXd1x62JJBXr6EHpia8=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=XvNiJPnR4xylIsj9T2NATRQ2lcH0fM8lr9CVTXhzw4VUMrYhSsiO7IbPuueFrHpU5
+         yU0ipTKi81vTWARn2GpTEMpfVE13c1mSWD+N4WZDx10h8htD9dI+9sLMRDHqZtjNrj
+         FkifOq9e/gJ4ync6ko/sksv1UPjhChQlQ5oAAIJg=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190725162348eucas1p2d04c89a2846f8586af7949b4a13942de~0swqMOc8H1109611096eucas1p2u;
+        Thu, 25 Jul 2019 16:23:48 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id CB.B0.04298.497D93D5; Thu, 25
+        Jul 2019 17:23:48 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190725162347eucas1p15f983918e07b912c4a00fefd0c2a5d8e~0swpaXOGQ3041930419eucas1p1N;
+        Thu, 25 Jul 2019 16:23:47 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190725162347eusmtrp29900cce149672f61a0bdef0c8a88c966~0swpMPzBg1648516485eusmtrp2B;
+        Thu, 25 Jul 2019 16:23:47 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-4a-5d39d7949571
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 04.46.04146.397D93D5; Thu, 25
+        Jul 2019 17:23:47 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190725162346eusmtip1ad4b284580c6a68ae2f63e50c9027790~0swoSc50i3163931639eusmtip1Z;
+        Thu, 25 Jul 2019 16:23:46 +0000 (GMT)
+Subject: Re: [PATCH v4 3/5] drivers: devfreq: events: extend events by type
+ of counted data
+To:     Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, myungjoo.ham@samsung.com
+Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, kyungmin.park@samsung.com,
+        m.szyprowski@samsung.com, s.nawrocki@samsung.com, kgene@kernel.org,
+        willy.mh.wolff.ml@gmail.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <6ad9882f-10c8-3708-1a06-ee712bb1c66d@partner.samsung.com>
+Date:   Thu, 25 Jul 2019 18:23:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <15375017-2e82-7df8-344c-a9c41d61331c@samsung.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUxNYRz23nPPR62bt9vl/pav7W6+MoWZvcXCmF0zk41NaJx0VtG9ck9F
+        MepaoUkWI5eUj3aTS0la5aN2Sx8aUeO2SJSWUkJl+aNyTyfTf8/v+T2/93me7eUodQvtxUUY
+        owWTkY/UMa7K4uo/rxZfdPgFL+kdciMPMvJp4hjsoklW1SuapHV8o0hDQwFLXpp7WVLY8Y4m
+        TWXXGDKQWoVIRsMzBblX1cqSHMcbBXmfmMuQpKdVLKnsPUWT37XtaA3W267bkL7U0srqC/PO
+        MPqHt0/ozxXlIf1A4exAZqfrqlAhMiJWMPkG7HUNz347wkT10EfOfL7OJKA6ZQpy4QAvh/vW
+        fFrCapyLYKxek4JcnXgQwdBwJyMPAwjuVA8r/l1YKzJpeWF1XlQUK+ShD4G97SabgjjOEwdD
+        8t0VEq/BnQjuljeOX1DYgcBm7kKSiME+UJJ3SHpVhTfAyR/9jISVeC587LYgCU/DO6CpqAzJ
+        Gg+ou/JlPLcLXg0D5u/jPIW10PIlSyHjOXDy0VVK8gKcyEFTcRIrx14Pj5+PUjL2hJ6aogl+
+        JoyVZk1UEyEh9QaS8THoSMuc0KyEypo3tJSZwgshv8xXptdCdlq7UqIBu0Nzn4ccwR3Siy9T
+        Mq2C08lqWb0Ais6+njCaDlbbJfY80lkmFbNMKmOZVMby3zcbKfOQVogRDWGCuNQoHPYReYMY
+        Ywzz2XfQUIicP65+tOZXCRpqDLEjzCGdm+q11S9YTfOxYpzBjoCjdBrVoxInpQrl4+IF08E9
+        pphIQbSjGZxSp1UdnfJplxqH8dHCAUGIEkz/tgrOxSsBKWILzP7mW6eGDLVNbcs0tqRA//m6
+        dZqYn2h3+dX4oEOVLr3Lkrqzm895b2mclfBk3sUdiVvdlrQmB9pyRjxSL3uHdH5e2B6/sV67
+        6OuwNkAZdDx4/3Kv0Nqv6ezmvRdyjHxqzpQX27dtCijwTY7a3t96b2pG5gfU3jUYKJTW7Eyx
+        x+qUYji/1JsyifxfdPWf8m0DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrAIsWRmVeSWpSXmKPExsVy+t/xu7qTr1vGGnS3iFpsnLGe1eL6l+es
+        FvOPnGO16H/8mtni/PkN7BZnm96wW2x6fI3V4vKuOWwWn3uPMFrMOL+PyWLtkbvsFkuvX2Sy
+        uN24gs2ide8RdovDb9pZLb6deMToIOCxZt4aRo+ds+6ye2xa1cnmsXlJvUffllWMHp83yQWw
+        RenZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehlLLj6
+        l63gFWtF58N5bA2MJ1m6GDk5JARMJJYfmMvaxcjFISSwlFFi85XfTBAJMYlJ+7azQ9jCEn+u
+        dbFBFL1mlJj+YikzSEJYIFai6dJlsG4RgaeMEmt/NoJVMQtcZ5Q4O3EG1NzdTBJN02YDLeTg
+        YBPQk9ixqhCkm1fATaL5w3s2EJtFQFXi3stZjCC2qECERF/bbDaIGkGJkzOfgN3KKWAv8bnp
+        HVgNs4CZxLzND5khbHGJW0/mM0HY8hLNW2czT2AUmoWkfRaSlllIWmYhaVnAyLKKUSS1tDg3
+        PbfYUK84Mbe4NC9dLzk/dxMjMLa3Hfu5eQfjpY3BhxgFOBiVeHgvLLeMFWJNLCuuzD3EKMHB
+        rCTCu3UHUIg3JbGyKrUoP76oNCe1+BCjKdBzE5mlRJPzgWknryTe0NTQ3MLS0NzY3NjMQkmc
+        t0PgYIyQQHpiSWp2ampBahFMHxMHp1QDY9eTWw+lP0oWdmaYvVpSceM3+y2O6M+LLNbJptz8
+        4HXJ5oVg+7MzhSHLheIO/OCUtxAtyt/aoyf02slkKzP3Ac+LNZ/irJ5uf7pV+7Fam/6d858M
+        sjbtstzQffKQ3cmHGZOKFzPM2fOz+2/J3ivSN3xrDmbGTDb+5FYUkShluOnc4tNuld83rVJi
+        Kc5INNRiLipOBAC0EGq+AwMAAA==
+X-CMS-MailID: 20190725162347eucas1p15f983918e07b912c4a00fefd0c2a5d8e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190605091303eucas1p27177d349e0f2bd37bf582dbd7266321a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190605091303eucas1p27177d349e0f2bd37bf582dbd7266321a
+References: <20190605091236.24263-1-l.luba@partner.samsung.com>
+        <CGME20190605091303eucas1p27177d349e0f2bd37bf582dbd7266321a@eucas1p2.samsung.com>
+        <20190605091236.24263-4-l.luba@partner.samsung.com>
+        <37af143f-a585-a28a-a36f-2ed25c5b6d3b@partner.samsung.com>
+        <15375017-2e82-7df8-344c-a9c41d61331c@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1243dc518c9da467da6635313a2dbb41b8ffc275
-Gitweb:     https://git.kernel.org/tip/1243dc518c9da467da6635313a2dbb41b8ffc275
-Author:     Juri Lelli <juri.lelli@redhat.com>
-AuthorDate: Fri, 19 Jul 2019 15:59:57 +0200
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Thu, 25 Jul 2019 15:55:02 +0200
+Hi Chanwoo,
 
-cgroup/cpuset: Convert cpuset_mutex to percpu_rwsem
+On 7/24/19 12:24 PM, Chanwoo Choi wrote:
+> Hi Lukasz,
+> 
+> On 19. 7. 24. 오후 7:15, Lukasz Luba wrote:
+>> Hi Chanwoo,
+>>
+>> Could you have a look a this patch, please?
+>> This patch has been rewritten accorifing to your suggestion.
+>> Krzysztof tried to apply 5/5 DT patch on his current branch,
+>> but it is missing earlier stuff.
+>> The other patches have needed ACKs so could go through devfreq tree
+>> probably, but this one left.
+> 
+> Sorry for the late reply. It looks good to me.
+> 
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Thank you for the ACK.
 
-Holding cpuset_mutex means that cpusets are stable (only the holder can
-make changes) and this is required for fixing a synchronization issue
-between cpusets and scheduler core.  However, grabbing cpuset_mutex from
-setscheduler() hotpath (as implemented in a later patch) is a no-go, as
-it would create a bottleneck for tasks concurrently calling
-setscheduler().
+MyungJoo could you take the patches (apart from 5/5 which will be in
+Krzysztof's tree probably) through devfreq tree, please?
 
-Convert cpuset_mutex to be a percpu_rwsem (cpuset_rwsem), so that
-setscheduler() will then be able to read lock it and avoid concurrency
-issues.
-
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bristot@redhat.com
-Cc: claudio@evidence.eu.com
-Cc: lizefan@huawei.com
-Cc: longman@redhat.com
-Cc: luca.abeni@santannapisa.it
-Cc: mathieu.poirier@linaro.org
-Cc: rostedt@goodmis.org
-Cc: tj@kernel.org
-Cc: tommaso.cucinotta@santannapisa.it
-Link: https://lkml.kernel.org/r/20190719140000.31694-6-juri.lelli@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/cgroup/cpuset.c | 68 ++++++++++++++++++++++++++------------------------
- 1 file changed, 35 insertions(+), 33 deletions(-)
-
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 846cbdb68566..e1a8d168c5e9 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -333,7 +333,7 @@ static struct cpuset top_cpuset = {
-  * guidelines for accessing subsystem state in kernel/cgroup.c
-  */
- 
--static DEFINE_MUTEX(cpuset_mutex);
-+DEFINE_STATIC_PERCPU_RWSEM(cpuset_rwsem);
- static DEFINE_SPINLOCK(callback_lock);
- 
- static struct workqueue_struct *cpuset_migrate_mm_wq;
-@@ -913,7 +913,7 @@ static void rebuild_root_domains(void)
- 	struct cpuset *cs = NULL;
- 	struct cgroup_subsys_state *pos_css;
- 
--	lockdep_assert_held(&cpuset_mutex);
-+	percpu_rwsem_assert_held(&cpuset_rwsem);
- 	lockdep_assert_cpus_held();
- 	lockdep_assert_held(&sched_domains_mutex);
- 
-@@ -973,7 +973,7 @@ static void rebuild_sched_domains_locked(void)
- 	cpumask_var_t *doms;
- 	int ndoms;
- 
--	lockdep_assert_held(&cpuset_mutex);
-+	percpu_rwsem_assert_held(&cpuset_rwsem);
- 	get_online_cpus();
- 
- 	/*
-@@ -1005,9 +1005,9 @@ static void rebuild_sched_domains_locked(void)
- 
- void rebuild_sched_domains(void)
- {
--	mutex_lock(&cpuset_mutex);
-+	percpu_down_write(&cpuset_rwsem);
- 	rebuild_sched_domains_locked();
--	mutex_unlock(&cpuset_mutex);
-+	percpu_up_write(&cpuset_rwsem);
- }
- 
- /**
-@@ -1113,7 +1113,7 @@ static int update_parent_subparts_cpumask(struct cpuset *cpuset, int cmd,
- 	int deleting;	/* Moving cpus from subparts_cpus to effective_cpus */
- 	bool part_error = false;	/* Partition error? */
- 
--	lockdep_assert_held(&cpuset_mutex);
-+	percpu_rwsem_assert_held(&cpuset_rwsem);
- 
- 	/*
- 	 * The parent must be a partition root.
-@@ -2101,7 +2101,7 @@ static int cpuset_can_attach(struct cgroup_taskset *tset)
- 	cpuset_attach_old_cs = task_cs(cgroup_taskset_first(tset, &css));
- 	cs = css_cs(css);
- 
--	mutex_lock(&cpuset_mutex);
-+	percpu_down_write(&cpuset_rwsem);
- 
- 	/* allow moving tasks into an empty cpuset if on default hierarchy */
- 	ret = -ENOSPC;
-@@ -2125,7 +2125,7 @@ static int cpuset_can_attach(struct cgroup_taskset *tset)
- 	cs->attach_in_progress++;
- 	ret = 0;
- out_unlock:
--	mutex_unlock(&cpuset_mutex);
-+	percpu_up_write(&cpuset_rwsem);
- 	return ret;
- }
- 
-@@ -2135,9 +2135,9 @@ static void cpuset_cancel_attach(struct cgroup_taskset *tset)
- 
- 	cgroup_taskset_first(tset, &css);
- 
--	mutex_lock(&cpuset_mutex);
-+	percpu_down_write(&cpuset_rwsem);
- 	css_cs(css)->attach_in_progress--;
--	mutex_unlock(&cpuset_mutex);
-+	percpu_up_write(&cpuset_rwsem);
- }
- 
- /*
-@@ -2160,7 +2160,7 @@ static void cpuset_attach(struct cgroup_taskset *tset)
- 	cgroup_taskset_first(tset, &css);
- 	cs = css_cs(css);
- 
--	mutex_lock(&cpuset_mutex);
-+	percpu_down_write(&cpuset_rwsem);
- 
- 	/* prepare for attach */
- 	if (cs == &top_cpuset)
-@@ -2214,7 +2214,7 @@ static void cpuset_attach(struct cgroup_taskset *tset)
- 	if (!cs->attach_in_progress)
- 		wake_up(&cpuset_attach_wq);
- 
--	mutex_unlock(&cpuset_mutex);
-+	percpu_up_write(&cpuset_rwsem);
- }
- 
- /* The various types of files and directories in a cpuset file system */
-@@ -2245,7 +2245,7 @@ static int cpuset_write_u64(struct cgroup_subsys_state *css, struct cftype *cft,
- 	cpuset_filetype_t type = cft->private;
- 	int retval = 0;
- 
--	mutex_lock(&cpuset_mutex);
-+	percpu_down_write(&cpuset_rwsem);
- 	if (!is_cpuset_online(cs)) {
- 		retval = -ENODEV;
- 		goto out_unlock;
-@@ -2281,7 +2281,7 @@ static int cpuset_write_u64(struct cgroup_subsys_state *css, struct cftype *cft,
- 		break;
- 	}
- out_unlock:
--	mutex_unlock(&cpuset_mutex);
-+	percpu_up_write(&cpuset_rwsem);
- 	return retval;
- }
- 
-@@ -2292,7 +2292,7 @@ static int cpuset_write_s64(struct cgroup_subsys_state *css, struct cftype *cft,
- 	cpuset_filetype_t type = cft->private;
- 	int retval = -ENODEV;
- 
--	mutex_lock(&cpuset_mutex);
-+	percpu_down_write(&cpuset_rwsem);
- 	if (!is_cpuset_online(cs))
- 		goto out_unlock;
- 
-@@ -2305,7 +2305,7 @@ static int cpuset_write_s64(struct cgroup_subsys_state *css, struct cftype *cft,
- 		break;
- 	}
- out_unlock:
--	mutex_unlock(&cpuset_mutex);
-+	percpu_up_write(&cpuset_rwsem);
- 	return retval;
- }
- 
-@@ -2344,7 +2344,7 @@ static ssize_t cpuset_write_resmask(struct kernfs_open_file *of,
- 	kernfs_break_active_protection(of->kn);
- 	flush_work(&cpuset_hotplug_work);
- 
--	mutex_lock(&cpuset_mutex);
-+	percpu_down_write(&cpuset_rwsem);
- 	if (!is_cpuset_online(cs))
- 		goto out_unlock;
- 
-@@ -2368,7 +2368,7 @@ static ssize_t cpuset_write_resmask(struct kernfs_open_file *of,
- 
- 	free_cpuset(trialcs);
- out_unlock:
--	mutex_unlock(&cpuset_mutex);
-+	percpu_up_write(&cpuset_rwsem);
- 	kernfs_unbreak_active_protection(of->kn);
- 	css_put(&cs->css);
- 	flush_workqueue(cpuset_migrate_mm_wq);
-@@ -2499,13 +2499,13 @@ static ssize_t sched_partition_write(struct kernfs_open_file *of, char *buf,
- 		return -EINVAL;
- 
- 	css_get(&cs->css);
--	mutex_lock(&cpuset_mutex);
-+	percpu_down_write(&cpuset_rwsem);
- 	if (!is_cpuset_online(cs))
- 		goto out_unlock;
- 
- 	retval = update_prstate(cs, val);
- out_unlock:
--	mutex_unlock(&cpuset_mutex);
-+	percpu_up_write(&cpuset_rwsem);
- 	css_put(&cs->css);
- 	return retval ?: nbytes;
- }
-@@ -2711,7 +2711,7 @@ static int cpuset_css_online(struct cgroup_subsys_state *css)
- 	if (!parent)
- 		return 0;
- 
--	mutex_lock(&cpuset_mutex);
-+	percpu_down_write(&cpuset_rwsem);
- 
- 	set_bit(CS_ONLINE, &cs->flags);
- 	if (is_spread_page(parent))
-@@ -2762,7 +2762,7 @@ static int cpuset_css_online(struct cgroup_subsys_state *css)
- 	cpumask_copy(cs->effective_cpus, parent->cpus_allowed);
- 	spin_unlock_irq(&callback_lock);
- out_unlock:
--	mutex_unlock(&cpuset_mutex);
-+	percpu_up_write(&cpuset_rwsem);
- 	return 0;
- }
- 
-@@ -2781,7 +2781,7 @@ static void cpuset_css_offline(struct cgroup_subsys_state *css)
- {
- 	struct cpuset *cs = css_cs(css);
- 
--	mutex_lock(&cpuset_mutex);
-+	percpu_down_write(&cpuset_rwsem);
- 
- 	if (is_partition_root(cs))
- 		update_prstate(cs, 0);
-@@ -2800,7 +2800,7 @@ static void cpuset_css_offline(struct cgroup_subsys_state *css)
- 	cpuset_dec();
- 	clear_bit(CS_ONLINE, &cs->flags);
- 
--	mutex_unlock(&cpuset_mutex);
-+	percpu_up_write(&cpuset_rwsem);
- }
- 
- static void cpuset_css_free(struct cgroup_subsys_state *css)
-@@ -2812,7 +2812,7 @@ static void cpuset_css_free(struct cgroup_subsys_state *css)
- 
- static void cpuset_bind(struct cgroup_subsys_state *root_css)
- {
--	mutex_lock(&cpuset_mutex);
-+	percpu_down_write(&cpuset_rwsem);
- 	spin_lock_irq(&callback_lock);
- 
- 	if (is_in_v2_mode()) {
-@@ -2825,7 +2825,7 @@ static void cpuset_bind(struct cgroup_subsys_state *root_css)
- 	}
- 
- 	spin_unlock_irq(&callback_lock);
--	mutex_unlock(&cpuset_mutex);
-+	percpu_up_write(&cpuset_rwsem);
- }
- 
- /*
-@@ -2867,6 +2867,8 @@ struct cgroup_subsys cpuset_cgrp_subsys = {
- 
- int __init cpuset_init(void)
- {
-+	BUG_ON(percpu_init_rwsem(&cpuset_rwsem));
-+
- 	BUG_ON(!alloc_cpumask_var(&top_cpuset.cpus_allowed, GFP_KERNEL));
- 	BUG_ON(!alloc_cpumask_var(&top_cpuset.effective_cpus, GFP_KERNEL));
- 	BUG_ON(!zalloc_cpumask_var(&top_cpuset.subparts_cpus, GFP_KERNEL));
-@@ -2938,7 +2940,7 @@ hotplug_update_tasks_legacy(struct cpuset *cs,
- 	is_empty = cpumask_empty(cs->cpus_allowed) ||
- 		   nodes_empty(cs->mems_allowed);
- 
--	mutex_unlock(&cpuset_mutex);
-+	percpu_up_write(&cpuset_rwsem);
- 
- 	/*
- 	 * Move tasks to the nearest ancestor with execution resources,
-@@ -2948,7 +2950,7 @@ hotplug_update_tasks_legacy(struct cpuset *cs,
- 	if (is_empty)
- 		remove_tasks_in_empty_cpuset(cs);
- 
--	mutex_lock(&cpuset_mutex);
-+	percpu_down_write(&cpuset_rwsem);
- }
- 
- static void
-@@ -2998,14 +3000,14 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
- retry:
- 	wait_event(cpuset_attach_wq, cs->attach_in_progress == 0);
- 
--	mutex_lock(&cpuset_mutex);
-+	percpu_down_write(&cpuset_rwsem);
- 
- 	/*
- 	 * We have raced with task attaching. We wait until attaching
- 	 * is finished, so we won't attach a task to an empty cpuset.
- 	 */
- 	if (cs->attach_in_progress) {
--		mutex_unlock(&cpuset_mutex);
-+		percpu_up_write(&cpuset_rwsem);
- 		goto retry;
- 	}
- 
-@@ -3073,7 +3075,7 @@ update_tasks:
- 		hotplug_update_tasks_legacy(cs, &new_cpus, &new_mems,
- 					    cpus_updated, mems_updated);
- 
--	mutex_unlock(&cpuset_mutex);
-+	percpu_up_write(&cpuset_rwsem);
- }
- 
- /**
-@@ -3103,7 +3105,7 @@ static void cpuset_hotplug_workfn(struct work_struct *work)
- 	if (on_dfl && !alloc_cpumasks(NULL, &tmp))
- 		ptmp = &tmp;
- 
--	mutex_lock(&cpuset_mutex);
-+	percpu_down_write(&cpuset_rwsem);
- 
- 	/* fetch the available cpus/mems and find out which changed how */
- 	cpumask_copy(&new_cpus, cpu_active_mask);
-@@ -3153,7 +3155,7 @@ static void cpuset_hotplug_workfn(struct work_struct *work)
- 		update_tasks_nodemask(&top_cpuset);
- 	}
- 
--	mutex_unlock(&cpuset_mutex);
-+	percpu_up_write(&cpuset_rwsem);
- 
- 	/* if cpus or mems changed, we need to propagate to descendants */
- 	if (cpus_updated || mems_updated) {
+Regards,
+Lukasz
