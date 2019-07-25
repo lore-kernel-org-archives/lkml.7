@@ -2,200 +2,103 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6599AC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDE2C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FAF82086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E382086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 22:57:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XhsBF6Xu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfGYW4g (ORCPT
+        id S1727211AbfGYW5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 18:56:36 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:48811 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfGYW4Z (ORCPT
+        Thu, 25 Jul 2019 18:57:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38714 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfGYW5F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 18:56:25 -0400
-Received: from 79.184.253.188.ipv4.supernova.orange.pl (79.184.253.188) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 029eb76f9a03ea22; Fri, 26 Jul 2019 00:56:21 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Subject: [PATCH 4/4] ACPI: PM: s2idle: Add acpi_sleep=no_lps0 command line switch
-Date:   Fri, 26 Jul 2019 00:56:11 +0200
-Message-ID: <2019011.7K24B7Jytf@kreacher>
-In-Reply-To: <3471485.I2vrcDHEeC@kreacher>
-References: <3471485.I2vrcDHEeC@kreacher>
+        Thu, 25 Jul 2019 18:57:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rzTThFl8sllwWs3QosLRBrU3gklbSk14p9uDQON6994=; b=XhsBF6Xu9T4+TRncHszD+UAfi
+        3N6mrPwJwqY1vGBjs4egkbrISOObA/gGcb7nQAVA32WcAEv7FsQzSgUISurRtdaE4WHDtiCE+f6Cp
+        hi7x7TSz85sm2NebmON0hxbw9c85xRSVVIjsSywMO0FEKu8i6oHd/imp7xtGAi4EqwaaRFUafCrUO
+        arIgYvTVlNR90z19yX+j9gtYozrxnMTB2deF9gyjtOhieQjB2LwOOrU8cw6nBiop5o78N1+U0Tp1v
+        3NK/8EUWT8E2DKITOmMmuBSGFuR6bNhyXa386yRU1dwNPROLzUnpNfNEzcnIz7LZdkIO+mj39vQsX
+        rA76zFfow==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hqmfT-0004Nn-1f; Thu, 25 Jul 2019 22:56:59 +0000
+Date:   Thu, 25 Jul 2019 15:56:58 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        x86@kernel.org, Dave Hansen <dave.hansen@intel.com>,
+        linux-kernel@vger.kernel.org, Steven Price <Steven.Price@arm.com>,
+        linux-mm@kvack.org, Mark Brown <Mark.Brown@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC] mm/pgtable/debug: Add test validating architecture page
+ table helpers
+Message-ID: <20190725225658.GH30641@bombadil.infradead.org>
+References: <1564037723-26676-1-git-send-email-anshuman.khandual@arm.com>
+ <1564037723-26676-2-git-send-email-anshuman.khandual@arm.com>
+ <20190725143920.GW363@bombadil.infradead.org>
+ <20190725213858.GK1330@shell.armlinux.org.uk>
+ <20190725214222.GG30641@bombadil.infradead.org>
+ <20190725215812.GN1330@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725215812.GN1330@shell.armlinux.org.uk>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Thu, Jul 25, 2019 at 10:58:12PM +0100, Russell King - ARM Linux admin wrote:
+> On Thu, Jul 25, 2019 at 02:42:22PM -0700, Matthew Wilcox wrote:
+> > On Thu, Jul 25, 2019 at 10:38:58PM +0100, Russell King - ARM Linux admin wrote:
+> > > On Thu, Jul 25, 2019 at 07:39:21AM -0700, Matthew Wilcox wrote:
+> > > > But 'page' isn't necessarily PMD-aligned.  I don't think we can rely on
+> > > > architectures doing the right thing if asked to make a PMD for a randomly
+> > > > aligned page.
+> > > > 
+> > > > How about finding the physical address of something like kernel_init(),
+> > > > and using the corresponding pte/pmd/pud/p4d/pgd that encompasses that
+> > > > address?  It's also better to pass in the pfn/page rather than using global
+> > > > variables to communicate to the test functions.
+> > > 
+> > > There are architectures (32-bit ARM) where the kernel is mapped using
+> > > section mappings, and we don't expect the Linux page table walking to
+> > > work for section mappings.
+> > 
+> > This test doesn't go so far as to insert the PTE/PMD/PUD/... into the
+> > page tables.  It merely needs an appropriately aligned PFN to create a
+> > PTE/PMD/PUD/... from.
+> 
+> Well, in any case,
+> 
+> c085ac68 t kernel_init
+> 
+> so I'm not sure that would be an improvement.
 
-Add a kernel command line switch to prevent the LPS0 _DSM funtions
-from being invoked (if need be) and rework the suspend-to-idle
-blacklist entries in acpisleep_dmi_table[] to make them simply
-prevent suspend-to-idle from being used by default on the systems
-in question (which really is the original purpose of those entries).
+I said "the corresponding pte/pmd/pud/p4d/pgd that encompasses that address"
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- Documentation/admin-guide/kernel-parameters.txt |    5 ++-
- arch/x86/kernel/acpi/sleep.c                    |    2 +
- drivers/acpi/sleep.c                            |   34 +++++++++++++++---------
- include/linux/acpi.h                            |    1 
- 4 files changed, 29 insertions(+), 13 deletions(-)
-
-Index: linux-pm/drivers/acpi/sleep.c
-===================================================================
---- linux-pm.orig/drivers/acpi/sleep.c
-+++ linux-pm/drivers/acpi/sleep.c
-@@ -158,11 +158,19 @@ static int __init init_nvs_nosave(const
- 	return 0;
- }
- 
--static bool acpi_sleep_no_lps0;
-+#define ACPI_SLEEP_AVOID_LPS0_DSM	BIT(0)
-+#define ACPI_SLEEP_DEFAULT_S3		BIT(1)
- 
--static int __init init_no_lps0(const struct dmi_system_id *d)
-+static u8 acpi_sleep_lps0_flags;
-+
-+void __init acpi_sleep_init_no_lps0(void)
-+{
-+	acpi_sleep_lps0_flags |= ACPI_SLEEP_AVOID_LPS0_DSM;
-+}
-+
-+static int __init init_default_s3(const struct dmi_system_id *d)
- {
--	acpi_sleep_no_lps0 = true;
-+	acpi_sleep_lps0_flags |= ACPI_SLEEP_DEFAULT_S3;
- 	return 0;
- }
- 
-@@ -363,7 +371,7 @@ static const struct dmi_system_id acpisl
- 	 * S0 Idle firmware interface.
- 	 */
- 	{
--	.callback = init_no_lps0,
-+	.callback = init_default_s3,
- 	.ident = "Dell XPS13 9360",
- 	.matches = {
- 		DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-@@ -376,7 +384,7 @@ static const struct dmi_system_id acpisl
- 	 * https://bugzilla.kernel.org/show_bug.cgi?id=199057).
- 	 */
- 	{
--	.callback = init_no_lps0,
-+	.callback = init_default_s3,
- 	.ident = "ThinkPad X1 Tablet(2016)",
- 	.matches = {
- 		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-@@ -525,7 +533,7 @@ static void acpi_pm_end(void)
- }
- #else /* !CONFIG_ACPI_SLEEP */
- #define acpi_target_sleep_state	ACPI_STATE_S0
--#define acpi_sleep_no_lps0	(false)
-+#define acpi_sleep_lps0_flags	(0)
- static inline void acpi_sleep_dmi_check(void) {}
- #endif /* CONFIG_ACPI_SLEEP */
- 
-@@ -904,15 +912,15 @@ static int lps0_device_attach(struct acp
- 	if (lps0_device_handle)
- 		return 0;
- 
--	if (acpi_sleep_no_lps0) {
-+	if (!(acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0))
-+		return 0;
-+
-+	if (acpi_sleep_lps0_flags & ACPI_SLEEP_AVOID_LPS0_DSM) {
- 		acpi_handle_info(adev->handle,
- 				 "Low Power S0 Idle interface disabled\n");
--		return 0;
-+		goto default_sleep;
- 	}
- 
--	if (!(acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0))
--		return 0;
--
- 	guid_parse(ACPI_LPS0_DSM_UUID, &lps0_dsm_guid);
- 	/* Check if the _DSM is present and as expected. */
- 	out_obj = acpi_evaluate_dsm(adev->handle, &lps0_dsm_guid, 1, 0, NULL);
-@@ -933,11 +941,13 @@ static int lps0_device_attach(struct acp
- 
- 	lpi_device_get_constraints();
- 
-+default_sleep:
- 	/*
- 	 * Use suspend-to-idle by default if the default suspend mode was not
- 	 * set from the command line.
- 	 */
--	if (mem_sleep_default > PM_SUSPEND_MEM)
-+	if (mem_sleep_default > PM_SUSPEND_MEM &&
-+	    !(acpi_sleep_lps0_flags & ACPI_SLEEP_DEFAULT_S3))
- 		mem_sleep_current = PM_SUSPEND_TO_IDLE;
- 
- 	return 0;
-Index: linux-pm/include/linux/acpi.h
-===================================================================
---- linux-pm.orig/include/linux/acpi.h
-+++ linux-pm/include/linux/acpi.h
-@@ -471,6 +471,7 @@ void __init acpi_old_suspend_ordering(vo
- void __init acpi_nvs_nosave(void);
- void __init acpi_nvs_nosave_s3(void);
- void __init acpi_sleep_no_blacklist(void);
-+void __init acpi_sleep_init_no_lps0(void);
- #endif /* CONFIG_PM_SLEEP */
- 
- struct acpi_osc_context {
-Index: linux-pm/arch/x86/kernel/acpi/sleep.c
-===================================================================
---- linux-pm.orig/arch/x86/kernel/acpi/sleep.c
-+++ linux-pm/arch/x86/kernel/acpi/sleep.c
-@@ -137,6 +137,8 @@ static int __init acpi_sleep_setup(char
- 			acpi_nvs_nosave_s3();
- 		if (strncmp(str, "old_ordering", 12) == 0)
- 			acpi_old_suspend_ordering();
-+		if (strncmp(str, "no_lps0", 7) == 0)
-+			acpi_sleep_init_no_lps0();
- 		if (strncmp(str, "nobl", 4) == 0)
- 			acpi_sleep_no_blacklist();
- 		str = strchr(str, ',');
-Index: linux-pm/Documentation/admin-guide/kernel-parameters.txt
-===================================================================
---- linux-pm.orig/Documentation/admin-guide/kernel-parameters.txt
-+++ linux-pm/Documentation/admin-guide/kernel-parameters.txt
-@@ -222,7 +222,8 @@
- 
- 	acpi_sleep=	[HW,ACPI] Sleep options
- 			Format: { s3_bios, s3_mode, s3_beep, s4_nohwsig,
--				  old_ordering, nonvs, sci_force_enable, nobl }
-+				  old_ordering, nonvs, sci_force_enable,
-+				  no_lps0, nobl }
- 			See Documentation/power/video.rst for information on
- 			s3_bios and s3_mode.
- 			s3_beep is for debugging; it makes the PC's speaker beep
-@@ -238,6 +239,8 @@
- 			sci_force_enable causes the kernel to set SCI_EN directly
- 			on resume from S1/S3 (which is against the ACPI spec,
- 			but some broken systems don't work without it).
-+			no_lps0 prevents the kernel from using the special
-+			LPS0 device interface during suspend-to-idle.
- 			nobl causes the internal blacklist of systems known to
- 			behave incorrectly in some ways with respect to system
- 			suspend and resume to be ignored (use wisely).
-
-
-
+So for a PTE, you'd use PFN 0xc085a000, for a PMD, you'd use PFN 0xc0000000
+and for a PGD, you'd use PFN 0 (assuming 9 bits per level of table).
