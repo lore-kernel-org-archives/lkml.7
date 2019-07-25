@@ -2,97 +2,220 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281B0C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62382C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F074E217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D44921901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:07:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kvjs2WCz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rUySh5ls"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbfGYOFu (ORCPT
+        id S1727644AbfGYOHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:05:50 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58450 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727681AbfGYOFt (ORCPT
+        Thu, 25 Jul 2019 10:07:36 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46299 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbfGYOHg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:05:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7+BaHSDvnuGwzorwA9PLsy47qF1uCR3WQcWR5zaTyNI=; b=kvjs2WCzSpxEm2zESW5YD+q0F
-        CzKdE4yll5H3tpmhimv/8k1nTYfzoVJP8soDoM4DAL36nupKFBWWrEewd7t11jUT0YMhWq2/aTJoX
-        obnXnQwwH9EGlB+sWNvRe31oMTImiEwVwW8M268jpyJzBicEXfGpxW+Hr96INfzfvaYqC+rbfeMrm
-        lYVMqhMqijRYk7Kn9rwwBmIIS3lcyluwgWGiSErEMsmGrp7zqBpbYeIMzw1JPMzgmuEopyugsHcxw
-        CnQ3Nh5GjF2K34II3Mck1qgywCMzWAbcgPfVRLVNuJZmU1NQch+lWcSat79lr7FQug1USD4VYaRjg
-        +g4GE+bqQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqeNQ-0000v9-21; Thu, 25 Jul 2019 14:05:48 +0000
-Date:   Thu, 25 Jul 2019 07:05:48 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Laura Abbott <labbott@redhat.com>,
-        John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
-Message-ID: <20190725140548.GB25010@infradead.org>
-References: <20190624194908.121273-1-john.stultz@linaro.org>
- <20190624194908.121273-5-john.stultz@linaro.org>
- <20190718100840.GB19666@infradead.org>
- <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
- <20190724065958.GC16225@infradead.org>
- <25353c4f-5389-0352-b34e-78698b35e588@redhat.com>
- <20190725124820.GC20286@infradead.org>
- <18975c1a-7e4e-fab3-eec8-387fbf9dcfe5@ti.com>
+        Thu, 25 Jul 2019 10:07:36 -0400
+Received: by mail-lf1-f68.google.com with SMTP id z15so30353739lfh.13;
+        Thu, 25 Jul 2019 07:07:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rC7CJ3Us0JHdnFwo5M1FbCnSzpf/yZ4Z3VE1tDizNCA=;
+        b=rUySh5lsYoDX6So5KaiKnCykcehQFNsmsNlgnnSGBL4Nq6j0qUO7iAkhwwqjWSWmhC
+         zemDKCKpV6ugv6dVkspNpL4nf+cI2rpoOpGuCp/zAJosNgXUqF2WZHOFnWftSu5MagJv
+         JNxYhLjW7sSE03ic4ibRUdrhd6i1gdOBeIZudZlLTvcuoxflzCua91YhbITRAn5VW/Ow
+         P2Q/VAyIphqfLYs5ZlqOUZ3wVimx7WC6C6Eq3fJ3JpqNIY1ELqwI51uAOdGF1snVBn5N
+         l6MkTgRLMYzfpXo386oWBP7CIpUxEPWqdkqIlncILwrny8r+LrIPKKUn1K7sYk6kZmX6
+         JahA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rC7CJ3Us0JHdnFwo5M1FbCnSzpf/yZ4Z3VE1tDizNCA=;
+        b=eTbpduCXUWjFDQxdX0z8SKSqSYncCuCl8kwVfsKfD+rIa85PFJLxHOHTxSAeROrLPV
+         +lH3qo6WNdkt8yOsQhWaQYVXoorhvXZEv/SyjwJ7Td+FImpSB96sYWEzCkzxsQcjhXjg
+         JJPVAx8qzEXd9W+seU5VgGHWafvbSAcWKFUpoP1eju4x5KqK573kHxWDQByDvnn9Lq1v
+         uyyI4p9Y4mzRkMrIT8fO1S6unO8nZMcmR8GksSTJ1On5ZoNSnktCHFkYZsADewOjITYR
+         yY2WUq7UDTge83vhZj//QEVcvs2wkPP53nlODrvpnbIFslpmA+IjI75Do04dhGJAU5/W
+         h77w==
+X-Gm-Message-State: APjAAAWFUVUQMIFS/VVnklJrdOGRM6D/2TFlCVTaxInLia4AEDnVkHhF
+        1XgHIHxQd4iTOJdy93c4dE3yJl+3g2grVv8YnN4=
+X-Google-Smtp-Source: APXvYqybVQQ6LELvat6wI1HX6srPrUA8LGsWE6tcmgtfjJZ13dyU1yiUAYM5W7zhul+DXGPFfOjwvdPhUuNASVk2vLo=
+X-Received: by 2002:a19:6e41:: with SMTP id q1mr31289910lfk.20.1564063653383;
+ Thu, 25 Jul 2019 07:07:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <18975c1a-7e4e-fab3-eec8-387fbf9dcfe5@ti.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20190724171747.26076-1-dafna.hirschfeld@collabora.com>
+In-Reply-To: <20190724171747.26076-1-dafna.hirschfeld@collabora.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 25 Jul 2019 11:07:34 -0300
+Message-ID: <CAOMZO5AJwocYFaKtUBZbo0NareGmdAySwDjouxh5KMvnGz2o0A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: imx: Add i.mx8mq nitrogen8m basic dts support
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>, kernel@collabora.com,
+        Gary Bisson <gary.bisson@boundarydevices.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 09:47:11AM -0400, Andrew F. Davis wrote:
-> This is a central allocator, it is not tied to any one device. If we
-> knew the one device ahead of time we would just use the existing dma_alloc.
-> 
-> We might be able to solve some of that with late mapping after all the
-> devices attach to the buffer, but even then, which device's CMA area
-> would we chose to use from all the attached devices?
-> 
-> I can agree that allocating from per-device CMA using Heaps doesn't make
-> much sense, but for global pools I'm not sure I see any way to allow
-> devices to select which pool is right for a specific use. They don't
-> have the full use-case information like the application does, the
-> selection needs to be made from the application.
+Hi Dafna,
 
-Well, the examples we had before was that we clear want to use the
-per-device CMA area.  And at least in upstream a CMA area either is
-global or attached to a device, as we otherwise wouldn't find it.
+On Wed, Jul 24, 2019 at 2:51 PM Dafna Hirschfeld
+<dafna.hirschfeld@collabora.com> wrote:
+>
+> From: dafna <dafna.hirschfeld@collabora.com>
+>
+> Add basic dts support for i.MX8MQ NITROGEN8M.
+>
+> Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+
+Your From and Signed-off-by tags do not match.
+
+> ---
+>  arch/arm64/boot/dts/freescale/Makefile             |   1 +
+>  .../arm64/boot/dts/freescale/imx8mq-nitrogen8m.dts | 411 +++++++++++++++++++++
+>  2 files changed, 412 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-nitrogen8m.dts
+>
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index c043aca66572..54a5c18c5c30 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -26,3 +26,4 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
+> +dtb-$(CONFIG_ARCH_MXC) += imx8mq-nitrogen8m.dtb
+
+Please keep it in alphabetical order.
+
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-nitrogen8m.dts b/arch/arm64/boot/dts/freescale/imx8mq-nitrogen8m.dts
+> new file mode 100644
+> index 000000000000..cfd4915d2916
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-nitrogen8m.dts
+
+Isn't the 8m in the end redundant? What about just naming it
+imx8mq-nitrogen.dts instead?
+
+> +&a53_opp_table {
+> +               opp-1500000000 {
+> +                       opp-hz = /bits/ 64 <1500000000>;
+> +                       opp-microvolt = <1000000>;
+> +               };
+> +
+> +               opp-1000000000 {
+> +                       opp-hz = /bits/ 64 <1000000000>;
+> +                       opp-microvolt = <900000>;
+> +               };
+
+Couldn't this be dropped and just use the operational points defined
+at imx8mq.dtsi?
+
+> +};
+> +
+> +&iomuxc {
+
+We usually prefer to place iomux as the last node.
+
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_hog>;
+
+You could place the "pinctrl_hog: hoggrp {" here
+
+> +&i2c1 {
+> +       clock-frequency = <400000>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_i2c1>;
+> +       status = "okay";
+> +
+> +       i2cmux@70 {
+> +               compatible = "pca9546";
+
+You missed the manufacturer string: "nxp,pca9546"
+
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_i2c1_pca9546>;
+> +               reg = <0x70>;
+> +               reset-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               i2c1a: i2c1@0 {
+> +                       reg = <0>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg_arm_dram: fan53555@60 {
+
+Node names should be generic:
+
+regulator@60
+
+> +                               compatible = "fcs,fan53555";
+> +                               pinctrl-names = "default";
+> +                               pinctrl-0 = <&pinctrl_reg_arm_dram>;
+> +                               reg = <0x60>;
+> +                               regulator-min-microvolt =  <900000>;
+> +                               regulator-max-microvolt = <1000000>;
+> +                               regulator-always-on;
+> +                               vsel-gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>;
+> +                       };
+> +               };
+> +
+> +               i2c1b: i2c1@1 {
+> +                       reg = <1>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg_dram_1p1v: fan53555@60 {
+
+regulator@60
+
+> +                               compatible = "fcs,fan53555";
+> +                               pinctrl-names = "default";
+> +                               pinctrl-0 = <&pinctrl_reg_dram_1p1v>;
+> +                               reg = <0x60>;
+> +                               regulator-min-microvolt = <1100000>;
+> +                               regulator-max-microvolt = <1100000>;
+> +                               regulator-always-on;
+> +                               vsel-gpios = <&gpio2 11 GPIO_ACTIVE_HIGH>;
+> +                       };
+> +               };
+> +
+> +               i2c1c: i2c1@2 {
+> +                       reg = <2>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg_soc_gpu_vpu: fan53555@60 {
+
+regulator@60
+
+> +&usdhc1 {
+> +       bus-width = <8>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_usdhc1>;
+> +       non-removable;
+> +       vqmmc-1-8-v;
+
+This property does not exist. Please remove it.
