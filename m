@@ -2,206 +2,213 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D7EC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 469CEC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6088F2238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15BAC2238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:20:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="vWHBawv3"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="isQLuIiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389858AbfGYNUM (ORCPT
+        id S2389907AbfGYNUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:20:12 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51610 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389776AbfGYNUM (ORCPT
+        Thu, 25 Jul 2019 09:20:17 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:18063 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389776AbfGYNUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:20:12 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 207so44992377wma.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:20:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=o4s5mYhFtZl29VTDqSwCHcLENJRWZGEcESnpKK9TpyE=;
-        b=vWHBawv33ZZ6U2Kf/1WV8az60+8PapAIgbjF4cRKP1SqiON9Sc9cUXurj2fsDId5eO
-         +LBQZfXQcEmtfEeC1R5pEISJ4vJ4+PfM0J13CxHOuUjvfvV3uMDIJeMLQ+fR7x2z2TEd
-         sGl/CfMK2zfHVvRcmyhNAYeumt99lUvwQ6J0bi8iJtBTYXgFUzgiZNsDq74HeUPC8uIe
-         hDHd+6H9+6gnZhpu5Ha8Ysr09ciwPcFf6EJjrYEEQoS11HpZ2kqEPYsMCpHTiXItjqCa
-         2B0weoEZ5Utu/OPtO280+QxfpG1Q3QK/dutrzbUNE35n+P5bK4xTZ2KtqpzI0oZUuThW
-         2BgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=o4s5mYhFtZl29VTDqSwCHcLENJRWZGEcESnpKK9TpyE=;
-        b=TsbOR5OIGS+vMJTVW5YwYdAhMHt2cUawzeMUz2wuAqBcsb//OslQthiwXsg5LYYPEi
-         TMQuDECX+/4Mv5vhE8K73t1WiLKZJckLZ+CYB91mEo+cJ4Nqd7aKNnQaJ2xplNz2IaWt
-         vJ9lOUZMJ3mosH62dNGnTGJARGUW5W0JUaNGFVpWp2vHvXXdnqNSRVt3B4wI/5bMS/yi
-         f4G8Fqrr9VwfugS3ZN77vgT0R6FEJyUfeXAnC4EvbHKzCDwRztUYfX5Umg12JmjuySCP
-         lI8PFc9zJ56W7TTusJpwvERDM0JSjq9SNJNYW8bcWR/GdiyAyhQv62Yi1ldvvqgIzVfY
-         Vj7Q==
-X-Gm-Message-State: APjAAAWifEAEoi00YiIhfUeN0ptAcRvgBXOOuOLWmbdhNl0nHAoDFz9n
-        TIpTrUt/2026Sk85BdxXQyg=
-X-Google-Smtp-Source: APXvYqzAlpy7gYe9nIkhMAWD7UaqXx5H1UnY+8UcvvqFWqvBgfMOU5mP1w9Z79vNCNMuGs37+drGXg==
-X-Received: by 2002:a1c:411:: with SMTP id 17mr74091953wme.74.1564060387102;
-        Thu, 25 Jul 2019 06:13:07 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id z7sm47119735wrh.67.2019.07.25.06.13.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 06:13:06 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Lechner <david@lechnology.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 4/5] ARM: davinci: support multiplatform build for ARM v5
-Date:   Thu, 25 Jul 2019 15:12:56 +0200
-Message-Id: <20190725131257.6142-5-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190725131257.6142-1-brgl@bgdev.pl>
-References: <20190725131257.6142-1-brgl@bgdev.pl>
+        Thu, 25 Jul 2019 09:20:14 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d39ac940000>; Thu, 25 Jul 2019 06:20:20 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 25 Jul 2019 06:20:12 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 06:20:12 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 25 Jul
+ 2019 13:20:09 +0000
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "wens@csie.org" <wens@csie.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>
+References: <cover.1562149883.git.joabreu@synopsys.com>
+ <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <7a79be5d-7ba2-c457-36d3-1ccef6572181@nvidia.com>
+Date:   Thu, 25 Jul 2019 14:20:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564060820; bh=0UU4p4fjSvuq+XgEx2myYMcD6cODEFOXywbe+DQR42Y=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=isQLuIiSVeLw7cn+/BRLZrFTRMXNgmPPF16oiSOHPfNeyumjr63w6TZtNtKuV1T2e
+         P17wS19TRokQFI5cvZJ76VRFyYk7PuYIqQjQ5Bf68HgOB/N7gSId073r5SUhZ+ASVS
+         chMa2uQjJG6MDZl06C5fOdJvC3ytWA9s1ol0J3TuqoRgBPNbialMHD/+1CuqvUbnsi
+         HhVtgM7YnBPHMqCIwicc16LgQL5ZUS7eyJFoNwjIOpHsrj1W40KMJevK4K5a89qYSK
+         91RNn6AJCz70A6CHt+WcnSBkGdCPktYqRFL5wxve7j99z5Jnoy5X1Bj2WS6Ikm5F2R
+         5SFgMFTGGbZjg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Add modifications necessary to make davinci part of the ARM v5
-multiplatform build.
+On 03/07/2019 11:37, Jose Abreu wrote:
+> Mapping and unmapping DMA region is an high bottleneck in stmmac driver,
+> specially in the RX path.
+> 
+> This commit introduces support for Page Pool API and uses it in all RX
+> queues. With this change, we get more stable troughput and some increase
+> of banwidth with iperf:
+> 	- MAC1000 - 950 Mbps
+> 	- XGMAC: 9.22 Gbps
+> 
+> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+> Cc: Joao Pinto <jpinto@synopsys.com>
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/Kconfig       |   1 +
+>  drivers/net/ethernet/stmicro/stmmac/stmmac.h      |  10 +-
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 196 ++++++----------------
+>  3 files changed, 63 insertions(+), 144 deletions(-)
 
-Move the arch-specific configuration out of arch/arm/Kconfig and
-into mach-davinci/Kconfig. Remove the sub-menu for DaVinci
-implementations (they'll be visible directly under the system type.
-Select all necessary options not already selected by ARCH_MULTI_V5.
-Update davinci_all_defconfig. Explicitly include the mach-specific
-headers in mach-davinci/Makefile.
+...
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/arm/Kconfig                       | 21 ---------------------
- arch/arm/configs/davinci_all_defconfig |  5 +++++
- arch/arm/mach-davinci/Kconfig          | 17 +++++++++++++----
- arch/arm/mach-davinci/Makefile         |  2 ++
- 4 files changed, 20 insertions(+), 25 deletions(-)
+> @@ -3306,49 +3295,22 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
+>  		else
+>  			p = rx_q->dma_rx + entry;
+>  
+> -		if (likely(!rx_q->rx_skbuff[entry])) {
+> -			struct sk_buff *skb;
+> -
+> -			skb = netdev_alloc_skb_ip_align(priv->dev, bfsize);
+> -			if (unlikely(!skb)) {
+> -				/* so for a while no zero-copy! */
+> -				rx_q->rx_zeroc_thresh = STMMAC_RX_THRESH;
+> -				if (unlikely(net_ratelimit()))
+> -					dev_err(priv->device,
+> -						"fail to alloc skb entry %d\n",
+> -						entry);
+> -				break;
+> -			}
+> -
+> -			rx_q->rx_skbuff[entry] = skb;
+> -			rx_q->rx_skbuff_dma[entry] =
+> -			    dma_map_single(priv->device, skb->data, bfsize,
+> -					   DMA_FROM_DEVICE);
+> -			if (dma_mapping_error(priv->device,
+> -					      rx_q->rx_skbuff_dma[entry])) {
+> -				netdev_err(priv->dev, "Rx DMA map failed\n");
+> -				dev_kfree_skb(skb);
+> +		if (!buf->page) {
+> +			buf->page = page_pool_dev_alloc_pages(rx_q->page_pool);
+> +			if (!buf->page)
+>  				break;
+> -			}
+> -
+> -			stmmac_set_desc_addr(priv, p, rx_q->rx_skbuff_dma[entry]);
+> -			stmmac_refill_desc3(priv, rx_q, p);
+> -
+> -			if (rx_q->rx_zeroc_thresh > 0)
+> -				rx_q->rx_zeroc_thresh--;
+> -
+> -			netif_dbg(priv, rx_status, priv->dev,
+> -				  "refill entry #%d\n", entry);
+>  		}
+> -		dma_wmb();
+> +
+> +		buf->addr = buf->page->dma_addr;
+> +		stmmac_set_desc_addr(priv, p, buf->addr);
+> +		stmmac_refill_desc3(priv, rx_q, p);
+>  
+>  		rx_q->rx_count_frames++;
+>  		rx_q->rx_count_frames %= priv->rx_coal_frames;
+>  		use_rx_wd = priv->use_riwt && rx_q->rx_count_frames;
+>  
+> -		stmmac_set_rx_owner(priv, p, use_rx_wd);
+> -
+>  		dma_wmb();
+> +		stmmac_set_rx_owner(priv, p, use_rx_wd);
+>  
+>  		entry = STMMAC_GET_ENTRY(entry, DMA_RX_SIZE);
+>  	}
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 33b00579beff..013d4eefdf32 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -578,27 +578,6 @@ config ARCH_S3C24XX
- 	  (<http://www.simtec.co.uk/products/EB110ITX/>), the IPAQ 1940 or the
- 	  Samsung SMDK2410 development board (and derivatives).
+I was looking at this change in a bit closer detail and one thing that
+stuck out to me was the above where the barrier had been moved from
+after the stmmac_set_rx_owner() call to before. 
+
+So I moved this back and I no longer saw the crash. However, then I
+recalled I had the patch to enable the debug prints for the buffer
+address applied but after reverting that, the crash occurred again. 
+
+In other words, what works for me is moving the above barrier and adding
+the debug print, which appears to suggest that there is some
+timing/coherency issue here. Anyway, maybe this is clue to what is going
+on?
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index a7486c2f3221..2f016397231b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3303,8 +3303,8 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
+                rx_q->rx_count_frames %= priv->rx_coal_frames;
+                use_rx_wd = priv->use_riwt && rx_q->rx_count_frames;
  
--config ARCH_DAVINCI
--	bool "TI DaVinci"
--	select ARCH_HAS_HOLES_MEMORYMODEL
--	select COMMON_CLK
--	select CPU_ARM926T
--	select GENERIC_ALLOCATOR
--	select GENERIC_CLOCKEVENTS
--	select GENERIC_IRQ_CHIP
--	select GENERIC_IRQ_MULTI_HANDLER
--	select GPIOLIB
--	select HAVE_IDE
--	select PM_GENERIC_DOMAINS if PM
--	select PM_GENERIC_DOMAINS_OF if PM && OF
--	select REGMAP_MMIO
--	select RESET_CONTROLLER
--	select SPARSE_IRQ
--	select USE_OF
--	select ZONE_DMA
--	help
--	  Support for TI's DaVinci platform.
--
- config ARCH_OMAP1
- 	bool "TI OMAP1"
- 	depends on MMU
-diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-index 9a32a8c0f873..b34970ce6b31 100644
---- a/arch/arm/configs/davinci_all_defconfig
-+++ b/arch/arm/configs/davinci_all_defconfig
-@@ -17,6 +17,9 @@ CONFIG_MODVERSIONS=y
- CONFIG_PARTITION_ADVANCED=y
- # CONFIG_IOSCHED_DEADLINE is not set
- # CONFIG_IOSCHED_CFQ is not set
-+CONFIG_ARCH_MULTIPLATFORM=y
-+CONFIG_ARCH_MULTI_V7=n
-+CONFIG_ARCH_MULTI_V5=y
- CONFIG_ARCH_DAVINCI=y
- CONFIG_ARCH_DAVINCI_DM644x=y
- CONFIG_ARCH_DAVINCI_DM355=y
-@@ -129,9 +132,11 @@ CONFIG_SPI=y
- CONFIG_SPI_DAVINCI=m
- CONFIG_PINCTRL_DA850_PUPD=m
- CONFIG_PINCTRL_SINGLE=y
-+CONFIG_GPIOLIB=y
- CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_PCA953X=y
- CONFIG_GPIO_PCA953X_IRQ=y
-+CONFIG_RESET_CONTROLLER=y
- CONFIG_POWER_RESET=y
- CONFIG_POWER_RESET_GPIO=y
- CONFIG_SYSCON_REBOOT_MODE=m
-diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
-index 5a59cebc7d0a..dd427bd2768c 100644
---- a/arch/arm/mach-davinci/Kconfig
-+++ b/arch/arm/mach-davinci/Kconfig
-@@ -1,11 +1,22 @@
- # SPDX-License-Identifier: GPL-2.0
+-               dma_wmb();
+                stmmac_set_rx_owner(priv, p, use_rx_wd);
++               dma_wmb();
+ 
+                entry = STMMAC_GET_ENTRY(entry, DMA_RX_SIZE);
+        }
+@@ -3438,6 +3438,10 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+                        dma_sync_single_for_device(priv->device, buf->addr,
+                                                   frame_len, DMA_FROM_DEVICE);
+ 
++                       pr_info("%s: paddr=0x%llx, vaddr=0x%llx, len=%d", __func__,
++                                       buf->addr, page_address(buf->page),
++                                       frame_len);
 +
-+menuconfig ARCH_DAVINCI
-+	bool "TI DaVinci"
-+	depends on ARCH_MULTI_V5
-+	select DAVINCI_TIMER
-+	select ZONE_DMA
-+	select ARCH_HAS_HOLES_MEMORYMODEL
-+	select PM_GENERIC_DOMAINS if PM
-+	select PM_GENERIC_DOMAINS_OF if PM && OF
-+	select REGMAP_MMIO
-+	select HAVE_IDE
-+	select PINCTRL_SINGLE
-+
- if ARCH_DAVINCI
- 
- config ARCH_DAVINCI_DMx
- 	bool
- 
--menu "TI DaVinci Implementations"
--
- comment "DaVinci Core Type"
- 
- config ARCH_DAVINCI_DM644x
-@@ -225,6 +236,4 @@ config DAVINCI_MUX_WARNINGS
- 	  to change the pin multiplexing setup. When there are no warnings
- 	  printed, it's safe to deselect DAVINCI_MUX for your product.
- 
--endmenu
--
- endif
-diff --git a/arch/arm/mach-davinci/Makefile b/arch/arm/mach-davinci/Makefile
-index f76a8482784f..a03d8443ef08 100644
---- a/arch/arm/mach-davinci/Makefile
-+++ b/arch/arm/mach-davinci/Makefile
-@@ -4,6 +4,8 @@
- #
- #
- 
-+ccflags-$(CONFIG_ARCH_MULTIPLATFORM) := -I$(srctree)/$(src)/include
-+
- # Common objects
- obj-y 					:= time.o serial.o usb.o \
- 					   common.o sram.o
+                        if (netif_msg_pktdata(priv)) {
+                                netdev_dbg(priv->dev, "frame received (%dbytes)",
+                                           frame_len);
+
+Cheers
+Jon
+
 -- 
-2.21.0
-
+nvpublic
