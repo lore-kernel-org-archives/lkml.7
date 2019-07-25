@@ -7,108 +7,145 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AD9C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BC1C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA4E22BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EB0422BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:41:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PY7ogkWJ"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="qdeLOGQa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391438AbfGYMk6 (ORCPT
+        id S2391522AbfGYMlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:40:58 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39330 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388147AbfGYMk5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:40:57 -0400
-Received: by mail-pf1-f195.google.com with SMTP id f17so18714567pfn.6;
-        Thu, 25 Jul 2019 05:40:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=J/ML/61niP752oM19bE97gL7v9QOrp5SMkL6UiNcqYE=;
-        b=PY7ogkWJSakBzZPZF4n2rjhfrfmSkjdugD/7CnQ2AqUGOsDzDMnWigVTfJnXOSd/nG
-         OHvI4U1bWrzJc10q0ELDmuahZITR4TYwVJ3U2w7H6z7M1oLchLHnOOLYol3n/ELqfIHN
-         +0MsLULuJdKSSZKIOOevgIyn+nmTJawaLgthP5bamahLF47jndtaNLyi+gIXTQobQVkL
-         BIoSjO7QJEgIPzV6C2CyBOvtdA8yhr4972R5ZnEwIgmCPjEarOszKBCWPqWlaGYKnNaa
-         yI1pmOeXcdlYxTV7oKBhiOVlLC7umlDnqTBUZOm4Z/uTcEkK6sKwX540uFSaK9HVZHFu
-         OWvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J/ML/61niP752oM19bE97gL7v9QOrp5SMkL6UiNcqYE=;
-        b=YjYhDo3BE4SFpmr7ovwvKcdoCLIjldpREzmO76ZQUcZaR9HNPaTttkBl3rIKfYDAfA
-         TMIGl6TInS+Tu5nrbJHO8kAOjAM5YwXgLDNLOk+MPdlolsn9y21m6KCYDlQCYTNgtXqr
-         5E0V6KI1Nx7cFSkGphjWjOQn7t0/afJFD9GmrRBL5JjupMHmV6f7NJUH8KChPRabVF0y
-         x8F6GvlBb5AkKVxqR+HNbUW7tuqMiVTyKTfvOEyJRribVQJpTXJxTJnb59xDdZDAZ4sn
-         d3f+ilsO81DCyXY8vQYMAfAl6zibI6LpqEul26zb0h3xpomttGazBApKLiCmKMGa47qZ
-         EeuA==
-X-Gm-Message-State: APjAAAW2X71VreSNqLWvQGsb23pNn/zXDtCWk2c6DhpJ5wrtVYIGME9a
-        N7ty6BdjW34ZljQwAxGeCSE=
-X-Google-Smtp-Source: APXvYqzZVtmGtPxVfQ7kMqq6RGu0TK7XEyvGUo+ip6f/tN4SU+bt3iJP2qgOxVj7+4bnA9svqwtsOQ==
-X-Received: by 2002:aa7:9786:: with SMTP id o6mr16119807pfp.222.1564058456426;
-        Thu, 25 Jul 2019 05:40:56 -0700 (PDT)
-Received: from icarus ([2001:268:c144:ff3:774d:cc30:25fc:d4ac])
-        by smtp.gmail.com with ESMTPSA id n7sm57496320pff.59.2019.07.25.05.40.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Jul 2019 05:40:55 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 21:40:37 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     David Lechner <david@lechnology.com>
-Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 0/4] new driver for TI eQEP
-Message-ID: <20190725124037.GA4802@icarus>
-References: <20190722154538.5314-1-david@lechnology.com>
+        Thu, 25 Jul 2019 08:41:07 -0400
+Received: from mout.web.de ([212.227.17.12]:57725 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388609AbfGYMlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 08:41:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1564058457;
+        bh=Hw27FxLaYi5ffFA7g+fgj355c4ti6LrH7CfmS8MEk9g=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=qdeLOGQafB+Ou6qsfsfY7LYh8/+7RimVgyWMWxTmAjmpB0Qbq2quobID3j0ynhnOQ
+         N1QNyJ5hZMJKAsln/N4b7+v0OyJkfG+vCwW3go6eQIFoUwnPtfjoIQMdTtBWmyec20
+         FfCk8mCxQO+nlUr7qF9NuVLoTTn8M0ekoejJ3tYM=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.39.22]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MLxwG-1hl9vx1TFE-007oTB; Thu, 25
+ Jul 2019 14:40:57 +0200
+Subject: Re: [1/2] string: Add stracpy and stracpy_pad mechanisms
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Joe Perches <joe@perches.com>, cocci@systeme.lip6.fr,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Laight <David.Laight@ACULAB.COM>
+References: <alpine.DEB.2.21.1907242040490.10108@hadrien>
+ <e3a37d93-0353-ebed-948a-991add184616@web.de>
+ <alpine.DEB.2.21.1907250632500.2535@hadrien>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <42a3af53-e349-6c5b-fa0f-0113fccbe9eb@web.de>
+Date:   Thu, 25 Jul 2019 14:40:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.1907250632500.2535@hadrien>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190722154538.5314-1-david@lechnology.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:V8yVvRyx3HvDzlv9nkqUqzKC6COo35nwhRAN4A9IW4JgDZJcTPS
+ tiXXpsTxxiB0bOUW4chfrdFgDxN/h888HSO2Qku7J2bgy6cUuMDhqN0i+tMH78rVRHqVJDZ
+ dIYAU501zurwMCOt2+mX+1BiZophbENbzFApX8IxMHHQcPV/8g8gdlERcYg2nkxclMOdHVl
+ NuY8iLkkZ9nvA0tMM5a/w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fGkDaJ0qqIc=:2HcU0AiEzrotcPgaHLeu9V
+ ni0RznqRBetURaKPY2VhUxQxk+B0h+TKeTnsaPJlD90/zuiI26c5CyDeVEeFD2I2BMxQbDIaD
+ 9DSCrACfhjVQxBJMSgVHf2YTkTgDzR21Sbrd2RgNpChERmjhvTZ6+y8e7pD624dgP7D7dS6Tm
+ ZwzSLeMsDhHt73E1bXCqTXalc5y8mm3xPqAM1dbUF4Y6miqLKoXnsgUDzfNFt7upZA9hD32hH
+ EDt+lmv9acVYIrBHPhZeMJw1xaekI19aJlZdqyfc0dlwjjVCnKK4g7CLAdEhACZ32Htqt3XtD
+ tlTlRF6Kf4EzRJAZXpcMNjFNZUrjrtNcLEPbCSS0UxIOc/E2JxpUaMvVRHmJFxNOLNNDiWSlE
+ HVfwpGrOmaQfh84mMHyvN0pfK5+uwOuT0+Tm/LP8v0Hh/Cyk+6Q7jPF5HExl6MImJtgr8IlEC
+ QeRGvOcAVfPF7YZAJgbEV9uj8kQ426uhkb3kGMeVHFHOTU1UVDzCXE0JU41AgZ3teLATaowHs
+ 9/JI8xDiP1iZOfdeex9Vcr/YmR7ep6z38mP5Csf5MBkObq3IKCZ9c2RVY7hb16pwJBV2ue2pd
+ 8RMOaT1oWWLu9yOUft5CPpXVgCw3Xg6NKcuEzbHLSpoXDorHnDL4ibUARgnEcENKhECVqiab5
+ Pwe2dIQTOU0Q4h7zFUT2VK8ArzhWxZ9lw7USbDsLTHWp/IjZAZEewLCSERcvOTnUFZLl11zoJ
+ +8Ny0RiQRdQMpS3cva3Qp/Q3rqOhr+cDCyN/nbI7Frn/lv46fa+VMU24puYtlyQK+GY2aQ7XG
+ aGO/J1VA1Bvy9EJ3GHAhsssI/xN+Vvu/2O44qsGVK+vxfgbuR+LxtQYCLrP21GBIQsndtJvXk
+ FZAgSUrvRPvuyut3xSCRvLntcXZI1yEa9f2nsUXPlEgD61TjTnToKIWCadVm1TbCtVw0869rz
+ P/gc9e8OzqCs4IARNQyPsHhLNId4iNvniPRf5VjG/QNgdDQJ0+JJikv75FboS8XZqCP3vYWJN
+ rVcDqfBPn3c9cnQzEi+QlrGqddMJFaC69/XtO3luHoiGMJBzCb+Lp1I6RoWNIqrM/oxzykaoe
+ l/zRleSATcqpt1vqrLhe3AwCXLta2GQqn4U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 10:45:34AM -0500, David Lechner wrote:
-> This series adds device tree bindings and a new counter driver for the Texas
-> Instruments Enhanced Quadrature Encoder Pulse (eQEP).
-> 
-> As mentioned in one of the commit messages, to start with, the driver only
-> supports reading the current counter value and setting the min/max values.
-> Other features can be added on an as-needed basis.
-> 
-> The only other feature I am interested in is adding is getting time data in
-> order to calculate the rotational speed of a motor. However, there probably
-> needs to be a higher level discussion of how this can fit into the counter
-> subsystem in general first.
+>>> @@
+>>> (
+>>> -x =3D strlcpy
+>>> +stracpy
+>>>   (e1.f, e2
+>>> -    , i2
+>>>   )@p;
+>>>   ... when !=3D x
+>>>
+>>> |
+>>
+>> I wonder about the deletion of the assignment target.
+>> Should the setting of such a variable be usually preserved?
+>
+> If it is a local variable and never subsequently used, it doesn't seem
+> very useful.
 
-I believe exposing some sort of time data has merit. Quadrature counter
-devices in particular are commonly used for position tracking of
-automation systems, and such systems would benefit from velocity/speed
-information. So let's try to introduce that sort of functionality in this
-driver if possible.
+Such an explanation is easier to understand.
 
-First, let's discuss your specific use case and requirements, and hopefully we
-can generalize it enough to be of use for future drivers. From your description,
-it sounds like you're attaching some sort of rotary encoder to the eQEP device.
-Is that correct? What sort of time data are you hoping to use; does the eQEP
-device provide a clock value, or would you be grabbing a timestamp from the
-system?
+* How do you think about the possibility that it was (accidentally)
+  forgotten to use such a local variable?
 
-I'm not sure yet if it would make sense to expose rotational speed directly as
-an attribute. If we were to expose just the count value and timestamp since the
-last read, that should be enough for a user to compute the delta and derive
-speed. I'll think more about this since some devices may simplify that case if
-the hardware is able to compute the speed for us.
+* Your transformation can result in an intentionally unused return value.
+  Would you like point any more source code places out
+  where values are unused so far?
 
-William Breathitt Gray
+Regards,
+Markus
