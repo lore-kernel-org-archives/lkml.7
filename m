@@ -2,75 +2,108 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B01AC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24ED0C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4C822C7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2ABE22BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:13:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="zil7vD52"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390067AbfGYQNV (ORCPT
+        id S2390092AbfGYQNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:13:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51424 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389184AbfGYQNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:13:21 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2CE2383F45;
-        Thu, 25 Jul 2019 16:13:21 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id B62E310114A1;
-        Thu, 25 Jul 2019 16:13:17 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 25 Jul 2019 18:13:20 +0200 (CEST)
-Date:   Thu, 25 Jul 2019 18:13:17 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, ebiederm@xmission.com,
-        keescook@chromium.org, joel@joelfernandes.org, tglx@linutronix.de,
-        tj@kernel.org, dhowells@redhat.com, jannh@google.com,
-        luto@kernel.org, akpm@linux-foundation.org, cyphar@cyphar.com,
-        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        kernel-team@android.com, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH 4/5] pidfd: add CLONE_WAIT_PID
-Message-ID: <20190725161316.GI4707@redhat.com>
-References: <20190724144651.28272-1-christian@brauner.io>
- <20190724144651.28272-5-christian@brauner.io>
- <20190725103543.GF4707@redhat.com>
- <20190725104006.7myahvjtnbcgu3in@brauner.io>
- <20190725112503.GG4707@redhat.com>
- <20190725114359.GH4707@redhat.com>
- <20190725122650.4i3arct5rpchqmyt@brauner.io>
+        Thu, 25 Jul 2019 12:13:25 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:40389 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389184AbfGYQNX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 12:13:23 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PGD9R71074627
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 09:13:09 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PGD9R71074627
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564071189;
+        bh=Sej3E0zuNeW6aNXfOe8nX4J0oZkJD6yalWbXZthvR9A=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=zil7vD52l8XN9bVe4DnfFqw4Nh8SzSa2sh2VFNFRiO21XgJHaI7dOCYo1kMrUlMyJ
+         GToo4PmYbN2oo5t3/Az6NPDt9hewFk0UtaXhMYpaWrvNZqx1HCslELRcy873b8vW+O
+         DNpvLs03thwbsLN2r5IQ+Zl1aWpEa/idTACmfvfKhbgj2qaqkt+Ao1WvmunwKaxyzh
+         iBdCFSKHcDsdbPNMiXGR4seHFvvXfgacI2t97YSXAmhFRYmGvO5CN+kBSB1Jqb0kTr
+         3FUWb3GSEyAOoamC0J4IGsaexR/a0LBJW1w1xWVpgNbaQpNrsyySmSXM9cXpsRMWTm
+         6XY9hD2b8rj2g==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PGD8uD1074624;
+        Thu, 25 Jul 2019 09:13:08 -0700
+Date:   Thu, 25 Jul 2019 09:13:08 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Valentin Schneider <tipbot@zytor.com>
+Message-ID: <tip-9434f9f5d117302cc7ddf038e7879f6871dc7a81@git.kernel.org>
+Cc:     valentin.schneider@arm.com, mingo@kernel.org, tglx@linutronix.de,
+        torvalds@linux-foundation.org, peterz@infradead.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org
+Reply-To: valentin.schneider@arm.com, tglx@linutronix.de, mingo@kernel.org,
+          hpa@zytor.com, peterz@infradead.org,
+          torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190715102508.32434-4-valentin.schneider@arm.com>
+References: <20190715102508.32434-4-valentin.schneider@arm.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/core] sched/fair: Change task_numa_work() storage to
+ static
+Git-Commit-ID: 9434f9f5d117302cc7ddf038e7879f6871dc7a81
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190725122650.4i3arct5rpchqmyt@brauner.io>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 25 Jul 2019 16:13:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/25, Christian Brauner wrote:
->
-> The key is that you want to be able to create child processes in a
-> shared library without the main programing having to know about this so
-> that it can use P_ALL and never get stuff from the library.
+Commit-ID:  9434f9f5d117302cc7ddf038e7879f6871dc7a81
+Gitweb:     https://git.kernel.org/tip/9434f9f5d117302cc7ddf038e7879f6871dc7a81
+Author:     Valentin Schneider <valentin.schneider@arm.com>
+AuthorDate: Mon, 15 Jul 2019 11:25:08 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Thu, 25 Jul 2019 15:51:52 +0200
 
-OK, thanks...
+sched/fair: Change task_numa_work() storage to static
 
-in this case you should probablu pass 0 in CSIGNAL to ensure that the main
-program won't be notified when that child exits.
+There are no callers outside of fair.c.
 
-Oleg.
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: mgorman@suse.de
+Cc: riel@surriel.com
+Link: https://lkml.kernel.org/r/20190715102508.32434-4-valentin.schneider@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/fair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index fd391fc00ed8..b5546a15206c 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -2482,7 +2482,7 @@ static void reset_ptenuma_scan(struct task_struct *p)
+  * The expensive part of numa migration is done from task_work context.
+  * Triggered from task_tick_numa().
+  */
+-void task_numa_work(struct callback_head *work)
++static void task_numa_work(struct callback_head *work)
+ {
+ 	unsigned long migrate, next_scan, now = jiffies;
+ 	struct task_struct *p = current;
