@@ -2,143 +2,176 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04101C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 360E3C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA0A22AED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:40:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564029636;
-	bh=wcwG4pMAinnKbG7g0QnFfuSmByspa9vQBYKTGDgSLfg=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=qJ2Pki59ASpTJrr9Y98pwsSn+iZgp+zEB++NZz4Or4jaSpg+QX6jKLy+kN5ABEpx0
-	 IQHkCs4aeRhg2gvP/49qHW7se4TWr67R2IGJxDpyc6L0SJ3dt10A3M2SIdfRh1qKuu
-	 KG9VgFKGBjLu+n8/qtozgpX0eaQgTtGzV5E+4caA=
+	by mail.kernel.org (Postfix) with ESMTP id 0FA52218DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:44:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SJ4Dwf4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390131AbfGYEkf (ORCPT
+        id S2390200AbfGYEoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 00:40:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389297AbfGYEkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 00:40:35 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD337218DA;
-        Thu, 25 Jul 2019 04:40:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564029634;
-        bh=wcwG4pMAinnKbG7g0QnFfuSmByspa9vQBYKTGDgSLfg=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=n+AtQlS8DgC2uB6+dqe/2ZEDwF3+o+vdoXUv6KtJTv0AHp/MSsnvsCcDfXcSgDSJ0
-         OZ1T+sQ4jg8/TT3FFRy3w1cHk2dwBj39FE36wLS5wiziIl7JgMc9dHmUmSikmOUe9r
-         sCoBZxU4mgjtSWFIDDM8CtUgykz6sKZnNU0bMEBM=
-Date:   Wed, 24 Jul 2019 21:40:32 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        David Miller <davem@davemloft.net>, eric.dumazet@gmail.com,
-        dvyukov@google.com, netdev@vger.kernel.org, fw@strlen.de,
-        i.maximets@samsung.com, edumazet@google.com, dsahern@gmail.com,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
-Message-ID: <20190725044032.GB677@sol.localdomain>
-Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
-        David Miller <davem@davemloft.net>, eric.dumazet@gmail.com,
-        dvyukov@google.com, netdev@vger.kernel.org, fw@strlen.de,
-        i.maximets@samsung.com, edumazet@google.com, dsahern@gmail.com,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <20190724163014.GC673@sol.localdomain>
- <20190724.111225.2257475150626507655.davem@davemloft.net>
- <20190724183710.GF213255@gmail.com>
- <20190724.130928.1854327585456756387.davem@davemloft.net>
- <20190725033913.GB13651@mit.edu>
+        Thu, 25 Jul 2019 00:44:17 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44825 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfGYEoQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 00:44:16 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k18so46629632ljc.11
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 21:44:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AyGiyyjXDEEbxEDjW6wSuafMmtzbdAu0GXJfcJOiDP8=;
+        b=SJ4Dwf4Cc8/OlTK6xpQs5Q211vS83evBe73sA/AQGoPy6GL0kcJ6fSDe+9t7KpX1BY
+         NKuhvf0I+9ubX/4dHOF7XlVHaOr31Lvkknfy5f4Qn+oEYj4e+b80psju2yVlKMZiO32J
+         5gmQKEU9K90nGO3ktkYYtg+hDIGBxjMHsEQJM85R1Yf2mZDwj3K4ZGbN8Y53xdYDf0Ip
+         4wNrCHkZConZEpvdgy5z/hjXzwXaof8thFlBRlN7ToALGgVnHO+Cx3IXq9eiCaomj0UI
+         RiMfiPiDN9irmrpemqnVu/fxOfXGmGCVvkn5iGt3TzNeSH3P3a716oOgATq3TbTkHwvg
+         9Lmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AyGiyyjXDEEbxEDjW6wSuafMmtzbdAu0GXJfcJOiDP8=;
+        b=F0neVJSbT6JkTEYtFO2x/mKIrwAsSMt8ERLoByNLP7fhwJZfmvv7r6m0aDJNlrfqaE
+         a1AgLBU+Ega9jLIg6Br0LDxLUv5xjqDsAEz4t2jsHHOkxh6dMTDmedNNOiR4Fw4kADCg
+         Y4ZZUCMqMw2xrsQxtKvrfcIZw3uNgBkpKhN1YhKs/pcpEcH+xc8PpNwPSFb4VkbJSJEB
+         l5cxQaIIYVrCZkr9/mijCFTyy+4CULD5hlGFOQLRc4mQb0VJeYxpJRsiYSKoLrR4qfGz
+         OVusz9t30GZ1VAmHtQqNBgmR8fWRaFy2PnmkiI4yaiQY90oiguAfcsfHmi+wCT25EGuw
+         OMRg==
+X-Gm-Message-State: APjAAAXk800svNL8YbH+mrNTCcOZa+sHjc+u2seFHA295F2cVj2Z1zW/
+        fjuTntdbxBnRSJDzgthKRTUcSc8Y3qB7IY2V9xK4Wx1d5RE=
+X-Google-Smtp-Source: APXvYqyeA6KsFzksjJDf94nSJu6w5HUZtja1X47I54TE0Mi2LMeu4QKnJWjErHE63f/G3DB5waXNTNvR/FCbmfqHIz8=
+X-Received: by 2002:a2e:8559:: with SMTP id u25mr44529608ljj.224.1564029854423;
+ Wed, 24 Jul 2019 21:44:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725033913.GB13651@mit.edu>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190724191655.268628197@linuxfoundation.org>
+In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 25 Jul 2019 10:14:01 +0530
+Message-ID: <CA+G9fYtOry75ux=E3g1G_SQxnqw8rFMDc4tvuUH6=hMb_hijKQ@mail.gmail.com>
+Subject: Re: [PATCH 4.19 000/271] 4.19.61-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 11:39:13PM -0400, Theodore Y. Ts'o wrote:
-> On Wed, Jul 24, 2019 at 01:09:28PM -0700, David Miller wrote:
-> > From: Eric Biggers <ebiggers@kernel.org>
-> > Date: Wed, 24 Jul 2019 11:37:12 -0700
-> > 
-> > > We can argue about what words to use to describe this situation, but
-> > > it doesn't change the situation itself.
-> > 
-> > And we should argue about those words because it matters to humans and
-> > effects how they feel, and humans ultimately fix these bugs.
-> > 
-> > So please stop with the hyperbole.
-> 
-> Perhaps it would be better to call them, "syzbot reports".  Not all
-> syzbot reports are bugs.  In fact, Dmitry has steadfastly refused to
-> add features which any basic bug-tracking system would have, claiming
-> that syzbot should not be a bug-tracking system, and something like
-> bugzilla should be forcibly imposed on all kernel developers.  So I
-> don't consider syzkaller reports as bugs --- they are just reports.
-> 
-> In order for developers to want to engage with "syzbot reports", we
-> need to reduce developer toil which syzbot imposes on developers, such
-> that it is a net benefit, instead of it being just a source of
-> annoying e-mails, some of which are actionable, and some of which are
-> noise.
-> 
-> In particular, asking developers to figure out which syzbot reports
-> should be closed, because developers found the problem independently,
-> and fixed it without hearing about from syzbot first, really isn't a
-> fair thing to ask.  Especially if we can automate away the problem.
-> 
-> If there is a reproducer, it should be possible to automatically
-> categorize the reproducer as a reliable reproducer or a flakey one.
-> If it is a reliable reproducer on version X, and it fails to be
-> reliably reproduce on version X+N, then it should be able to figure
-> out that it has been fixed, instead of requesting that a human confirm
-> it.  If you really want a human to look at it, now that syzkaller has
-> a bisection feature, it should be possible to use the reliable
-> reproducer to do a negative bisection search to report a candidate
-> fix.  This would significantly reproduce the developer toil imposed as
-> a tax on developers.  And if Dmitry doesn't want to auto-close those
-> reports that appear to be fixed already, at the very least they should
-> be down-prioritized on Eric's reports, so people who don't want to
-> waste their time on "bureaucracy" can do so.
-> 
-> Cheers,
-> 
-> 						- Ted
-> 
-> P.S.  Another criteria I'd suggest down-prioritizing on is, "does it
-> require root privileges?"  After all, since root has so many different
-> ways of crashing a system already, and if we're all super-busy, we
-> need to prioritize which reports should be addressed first.
-> 
+On Thu, 25 Jul 2019 at 01:35, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.61 release.
+> There are 271 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri 26 Jul 2019 07:13:35 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.61-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-I agree with all this.  Fix bisection would be really useful.  I think what we'd
-actually need to do to get decent results, though, is consider many different
-signals (days since last occurred, repro type, fix bisected, bug bisected,
-occurred in mainline or not, does the repro work as root, is it clearly a "bad"
-bug like use-after-free, etc.) and compute an appropriate timeout based on that.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-However, I'd like to emphasize that in my reminder emails, I've *already*
-considered many of these factors when sorting the bug reports, and in particular
-the bugs/reports that have been seen recently are strongly weighted towards
-being listed first, especially if they were seen in mainline.  In this
-particular reminder email, for example, the first 18 bugs/reports have *all*
-been seen in the last 4 days.
+Summary
+------------------------------------------------------------------------
 
-These first 18 bugs/reports are ready to be worked on and fixed now.  It's
-unclear to me what is most impeding this.  Is it part of the syzbot process?
-Bad reproducers?  Too much noise?  Or is it no funding?  Not enough qualified
-people?  No maintainers?  Not enough reminders?  Lack of CVEs and demonstrable
-exploits?  What is most impeding these 18 bugs from being fixed?
+kernel: 4.19.61-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 872cde3ebfc93ca6ac127f51bbb54eafe1d8eda5
+git describe: v4.19.60-272-g872cde3ebfc9
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.60-272-g872cde3ebfc9
 
-- Eric
+No regressions (compared to build v4.19.60)
+
+No fixes (compared to build v4.19.60)
+
+Ran 23544 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* network-basic-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
