@@ -2,99 +2,142 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F12DC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05893C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0587218EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564086857;
-	bh=Sslw0b3NB3GoI3NZZlFZ4IXYX/XVRSejkty5CZ58ar0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qNSiZZk6aY3heeeNweWEAOsmxsdwHAHx+ApE5i1QzYRi9D/l/W0NTF/8ejGzYNT7w
-	 jP9k98fAWsPa9Tu+gbSZH8faeKy7dFeQGMdMcHzYjLdm6+giHCbnaVD5kNIPp2MFof
-	 9DULwacmd7d4Ae5Cd2MCgoN7qAv2d9kTWAK7EFwQ=
+	by mail.kernel.org (Postfix) with ESMTP id DBA43218EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfGYUeP (ORCPT
+        id S1726763AbfGYUhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 16:34:15 -0400
-Received: from mga05.intel.com ([192.55.52.43]:29092 "EHLO mga05.intel.com"
+        Thu, 25 Jul 2019 16:37:04 -0400
+Received: from mga03.intel.com ([134.134.136.65]:58797 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbfGYUeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 16:34:13 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726195AbfGYUhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 16:37:03 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 13:34:10 -0700
-X-ExtLoop1: 1
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 13:37:02 -0700
 X-IronPort-AV: E=Sophos;i="5.64,308,1559545200"; 
-   d="scan'208";a="345618092"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga005.jf.intel.com with ESMTP; 25 Jul 2019 13:34:11 -0700
-Date:   Thu, 25 Jul 2019 14:31:18 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH v6 04/16] nvme-core: introduce nvme_get_by_path()
-Message-ID: <20190725203118.GB7317@localhost.localdomain>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <20190725172335.6825-5-logang@deltatee.com>
- <20190725175023.GA30641@bombadil.infradead.org>
- <da58f91e-6cfa-02e0-dd89-3cfa23764a0e@deltatee.com>
- <20190725195835.GA7317@localhost.localdomain>
- <5dd6a41d-21c4-cf8d-a81d-271549de6763@deltatee.com>
+   d="scan'208";a="161090207"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 13:37:02 -0700
+Message-ID: <5f78cccab8273cb759538ef6e088886a507ce438.camel@linux.intel.com>
+Subject: Re: [PATCH v2 4/5] mm: Introduce Hinted pages
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Zhang <yang.zhang.wz@gmail.com>, pagupta@redhat.com,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        lcapitulino@redhat.com, wei.w.wang@intel.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, dan.j.williams@intel.com,
+        Matthew Wilcox <willy@infradead.org>
+Date:   Thu, 25 Jul 2019 13:37:02 -0700
+In-Reply-To: <c200d5cf-90f7-9dca-5061-b6e0233ca089@redhat.com>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+         <20190724170259.6685.18028.stgit@localhost.localdomain>
+         <a9f52894-52df-cd0c-86ac-eea9fbe96e34@redhat.com>
+         <CAKgT0Ud-UNk0Mbef92hDLpWb2ppVHsmd24R9gEm2N8dujb4iLw@mail.gmail.com>
+         <f0ac7747-0e18-5039-d341-5dfda8d5780e@redhat.com>
+         <b3568a5422d0f6b88f7c5cb46577db1a43057c04.camel@linux.intel.com>
+         <c200d5cf-90f7-9dca-5061-b6e0233ca089@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5dd6a41d-21c4-cf8d-a81d-271549de6763@deltatee.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 02:28:28PM -0600, Logan Gunthorpe wrote:
-> 
-> 
-> On 2019-07-25 1:58 p.m., Keith Busch wrote:
-> > On Thu, Jul 25, 2019 at 11:54:18AM -0600, Logan Gunthorpe wrote:
-> >>
-> >>
-> >> On 2019-07-25 11:50 a.m., Matthew Wilcox wrote:
-> >>> On Thu, Jul 25, 2019 at 11:23:23AM -0600, Logan Gunthorpe wrote:
-> >>>> nvme_get_by_path() is analagous to blkdev_get_by_path() except it
-> >>>> gets a struct nvme_ctrl from the path to its char dev (/dev/nvme0).
-> >>>>
-> >>>> The purpose of this function is to support NVMe-OF target passthru.
-> >>>
-> >>> I can't find anywhere that you use this in this patchset.
-> >>>
-> >>
-> >> Oh sorry, the commit message is out of date the function was actually
-> >> called nvme_ctrl_get_by_path() and it's used in Patch 10.
+On Thu, 2019-07-25 at 20:32 +0200, David Hildenbrand wrote:
+> On 25.07.19 19:38, Alexander Duyck wrote:
+> > On Thu, 2019-07-25 at 18:48 +0200, David Hildenbrand wrote:
+> > > On 25.07.19 17:59, Alexander Duyck wrote:
+> > > > On Thu, Jul 25, 2019 at 1:53 AM David Hildenbrand <david@redhat.com> wrote:
+> > > > > On 24.07.19 19:03, Alexander Duyck wrote:
+> > > > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 > > 
-> > Instead of by path, could we have configfs take something else, like
-> > the unique controller instance or serial number? I know that's different
-> > than how we handle blocks and files, but that way nvme core can lookup
-> > the cooresponding controller without adding new cdev dependencies.
+> > <snip>
+> > 
+> > > > > Can't we reuse one of the traditional page flags for that, not used
+> > > > > along with buddy pages? E.g., PG_dirty: Pages that were not hinted yet
+> > > > > are dirty.
+> > > > 
+> > > > Reusing something like the dirty bit would just be confusing in my
+> > > > opinion. In addition it looks like Xen has also re-purposed PG_dirty
+> > > > already for another purpose.
+> > > 
+> > > You brought up waste page management. A dirty bit for unprocessed pages
+> > > fits perfectly in this context. Regarding XEN, as long as it's not used
+> > > along with buddy pages, no issue.
+> > 
+> > I would rather not have to dirty all pages that aren't hinted. That starts
+> > to get too invasive. Ideally we only modify pages if we are hinting on
+> > them. That is why I said I didn't like the use of a dirty bit. What we
+> > want is more of a "guaranteed clean" bit.
 > 
-> Well the previous version of the patchset just used the ctrl name
-> ("nvme1") and looped through all the controllers to find a match. But
-> this sucks because of the inconsistency and the fact that the name can
-> change if hardware changes and the number changes. Allowing the user to
-> make use of standard udev rules seems important to me.
+> Not sure if that is too invasive, but fair enough.
+> 
+> > > FWIW, I don't even thing PG_offline matches to what you are using it
+> > > here for. The pages are not logically offline. They were simply buddy
+> > > pages that were hinted. (I'd even prefer a separate page type for that
+> > > instead - if we cannot simply reuse one of the other flags)
+> > > 
+> > > "Offline pages" that are not actually offline in the context of the
+> > > buddy is way more confusing.
+> > 
+> > Right now offline and hinted are essentially the same thing since the
+> > effect is identical.
+> 
+> No they are not the same thing. Regarding virtio-balloon: You are free
+> to reuse any hinted pages immediate. Offline pages (a.k.a. inflated) you
+> might not generally reuse before deflating.
 
-Should we then create a new udev rule for persistent controller
-names? /dev/nvme1 may not be the same controller each time you refer
-to it.
+Okay, so it sounds like your perspective is a bit different than mine. I
+was thinking of it from the perspective of the host OS where in either
+case the guest has set the page as MADV_DONTNEED. You are looking at it
+from the guest perspective where Offline means the guest cannot use it.
+
+> > There may be cases in the future where that is not the case, but with the
+> > current patch set they both result in the pages being evicted from the
+> > guest.
+> > 
+> > > > If anything I could probably look at seeing if the PG_private flags
+> > > > are available when a page is in the buddy allocator which I suspect
+> > > > they probably are since the only users I currently see appear to be
+> > > > SLOB and compound pages. Either that or maybe something like PG_head
+> > > > might make sense since once we start allocating them we are popping
+> > > > the head off of the boundary list.
+> > > 
+> > > Would also be fine with me.
+> > 
+> > Actually I may have found an even better bit if we are going with the
+> > "reporting" name. I could probably use "PG_uptodate" since it looks like
+> > most of its uses are related to filesystems. I will wait till I hear from
+> > Matthew on what bits would be available for use before I update things.
+> 
+> Also fine with me. In the optimal case we (in my opinion)
+> a) Don't reuse PG_offline
+> b) Don't use another page type
+
+That is fine. I just need to determine the exact flag to use then. I'll do
+some more research and wait to see if anyone else from MM comunity has
+input or suggestions on the page flag to be used. From what I can tell it
+looks like there are a bunch of flag bits that are unused as far as the
+buddy pages are concerned so I should have a few to choose from.
+
