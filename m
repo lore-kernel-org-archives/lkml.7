@@ -2,80 +2,90 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408A3C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8234FC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE6E2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D7B216B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:41:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KT2ejeym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390685AbfGYJk5 (ORCPT
+        id S2390707AbfGYJl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 05:40:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56325 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387533AbfGYJk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 05:40:57 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C3F9830C62A4;
-        Thu, 25 Jul 2019 09:40:56 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 5084160BEC;
-        Thu, 25 Jul 2019 09:40:53 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 25 Jul 2019 11:40:56 +0200 (CEST)
-Date:   Thu, 25 Jul 2019 11:40:52 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, ebiederm@xmission.com,
-        keescook@chromium.org, joel@joelfernandes.org, tglx@linutronix.de,
-        tj@kernel.org, dhowells@redhat.com, jannh@google.com,
-        luto@kernel.org, akpm@linux-foundation.org, cyphar@cyphar.com,
-        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        kernel-team@android.com
-Subject: Re: [RFC][PATCH 1/5] exit: kill struct waitid_info
-Message-ID: <20190725094051.GC4707@redhat.com>
-References: <20190724144651.28272-1-christian@brauner.io>
- <20190724144651.28272-2-christian@brauner.io>
+        Thu, 25 Jul 2019 05:41:29 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:16225 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387533AbfGYJl3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 05:41:29 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d3979450000>; Thu, 25 Jul 2019 02:41:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 25 Jul 2019 02:41:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 02:41:28 -0700
+Received: from tbergstrom-lnx.Nvidia.com (172.20.13.39) by
+ HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Thu, 25 Jul 2019 09:41:27 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id 981E64286D; Thu, 25 Jul 2019 12:41:25 +0300 (EEST)
+Date:   Thu, 25 Jul 2019 12:41:25 +0300
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Jon Hunter <jonathanh@nvidia.com>
+CC:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] soc/tegra: pmc: Query PCLK clock rate at probe time
+Message-ID: <20190725094125.GL12715@pdeschrijver-desktop.Nvidia.com>
+References: <20190707230843.11224-1-digetx@gmail.com>
+ <c9bd6dd3-7a03-6e2c-db9f-fefa059a428f@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190724144651.28272-2-christian@brauner.io>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 25 Jul 2019 09:40:57 +0000 (UTC)
+In-Reply-To: <c9bd6dd3-7a03-6e2c-db9f-fefa059a428f@nvidia.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564047685; bh=oPcjP0l90Xlbid52BTLH5HFuWayYMYluv+P4cZpz0BE=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=KT2ejeymvAUJefXKG+dCSv+tBemWustPybrYzvGkDRajoTPPzmtzjuQ6sinuPBhhw
+         DrLfZ0M6Zl153mj3bu86R/oBeJ9sGBQJrCmJkHth/kZ6vXgjVD8h7efkZzoIvGfpP3
+         Ng9tiKLuAGwZW0N4oBapHnWOtttLqwN2ZoD2q8/pgstBxfTAAPG/Qo6OR4OmyEETlD
+         78xenL+GCaKbFWHAgObka/fYDc2/lDBZQ8R/R44UFoV1wG/mXGwImqRg3sYn0MhfI/
+         FPUIOWzdvsgYLvZ7jNle/uO2t3GYg4/uda0Y2eUcYcTAyihpSOrCzUNKqLCUtMjUmf
+         mp7LC7+DPmHIQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/24, Christian Brauner wrote:
->
-> Note that this changes how struct siginfo is filled in for users of
-> waitid.
+On Thu, Jul 18, 2019 at 10:45:31AM +0100, Jon Hunter wrote:
+> 
+> On 08/07/2019 00:08, Dmitry Osipenko wrote:
+> > The PCLK clock is running off SCLK, which is a critical clock that is
+> > very unlikely to randomly change its rate. It's also a bit clumsy (and
+> > apparently incorrect) to query the clock's rate with interrupts being
+> > disabled because clk_get_rate() takes a mutex and that's the case during
+> > suspend/cpuidle entering. Lastly, it's better to always fully reprogram
+> > PMC state because it's not obvious whether it could be changed after SC7.
+> 
+> I agree with the first part, but I would drop the last sentence because
+> I see no evidence of this. Maybe Peter can confirm.
+> 
 
-Namely, copy_siginfo_to_user() will nullify the extra SI_EXPANSION_SIZE
-bytes + 2*sizeof(__ARCH_SI_CLOCK_T) from _sigchld (waitid doesn't report
-utime/stime in siginfo).
+SCLK and PCLK certainly can change rate at runtime, although the changes
+for this haven't made it upstream yet. It's indeed not very obvious, but
+certainly doable.
 
-Looks correct... even the compat case, but please double-check
-copy_siginfo_to_user32/siginfo_layout. Looks like both SIL_KILL and
-SIL_CHLD cases are fine in that this patch can't add other user-visible
-changes, but I could easily miss something.
-
-> In case
-> anyone relies on the old behavior we can just revert
-
-we won't need to rever the whole patch, we can just replace
-copy_siginfo_to_user() with copy_to_user(offsetof(si_utime)).
-
-I see you are going to update the changelog and resend, feel free to add
-my reviewed-by.
-
-Oleg.
-
+Peter.
