@@ -2,90 +2,105 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B408EC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9076C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89ACB22BE8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:46:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEwcJavH"
+	by mail.kernel.org (Postfix) with ESMTP id 8345622BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 02:48:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564022919;
+	bh=YWxaVqhUBxhNakctl9Qk/YX4ee0cDSELqHl7XG/98z0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ujqsb+6iQcyjKvvfgys39SDD27/pp9MiC5xUmzzyVCtdjcVdjHeFfEB3LbMANgeWN
+	 xMDXIoQhBPkyD5W/eDxIrIGlbIlCBk2uuYDf+2L3QAjLvihT2QZLSbvIGZwUtf4N8N
+	 hEnXdGW9m58h+LqFetHUhHoX9uuIkPKrRFJT2HcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389340AbfGYCq2 (ORCPT
+        id S2389357AbfGYCsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 22:46:28 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34131 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388165AbfGYCq1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 22:46:27 -0400
-Received: by mail-pl1-f193.google.com with SMTP id i2so22793904plt.1;
-        Wed, 24 Jul 2019 19:46:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aGeqbbaRQz52Mrxm18aXtkYJrSyeGJbcuPy0BL4Y1Vs=;
-        b=uEwcJavHy2kklEv19UdZJTg8zda6WO/bZLW9FDuWCcIXLJCQz1IYlkWkQFwiJXgaSr
-         z2Ew6K9ayMT6PYMIW8SaX0ASAjZHghbYNkPsc6zYcJylNVC2cFJYVyBxrvThd0xAp6gd
-         mOXZOpzhvGy+u0bar9h7GDanOG1NQXF6DrpbIrkKY6p9GfWTJKMzpNU30MODTgRYgVYj
-         6NnFwXJO0yrRfCuMqna6kieSCzG9sXYdgxPiZ6GPbUHeUmPnferi5Q+e9sarf2n7ayNS
-         8GHQXgSuGsTBk3nqdL42iyCJ6gsiSFaFa2E0C0L9Aqpz8JgrHjN2MEXEzATMO2fRfbe6
-         Ylrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aGeqbbaRQz52Mrxm18aXtkYJrSyeGJbcuPy0BL4Y1Vs=;
-        b=kOoXG/DcrsWf77KLDYy3iP6e+4PFO7JtDFXKUoqrDYekE5fAM4ot2z9BoTuzyz4yXR
-         fTOFt0OMsl9E18UeTg6zWg2SK8ouWetrR+h7rdPG0Aa7Dja/hovaixMJx18oxxkofM8K
-         T+0ASSMIjJ8HBIMWvTohDpYLsHdKoR4EdfGY1c7Qc+rEIlaX/4xT+t/lFis+pZBT57v2
-         g3SsOd4/6PH/mfGpFehLPQYMW3Ost1aiub1lAYpv8M7nFhIzffP9sC4y4eAZ0vNQwdxu
-         5754nv311sTQ+MEY8DKyk5s2h03hzt9CJE7VK9TJxKl1HkHi1y+dJTgWVuEi3dEdR8sa
-         UEAA==
-X-Gm-Message-State: APjAAAWPjg0qeeYhhPm1NbFqpc+7UlrlvzDlUnibotSkRIQlKVhH77NT
-        tVddQ5R0vPvy7rAJ96A3ZU7MzsOkAEA=
-X-Google-Smtp-Source: APXvYqzn0eD2QRa02YoHPNpKVxuwggwW9Gwuz5NywLmQ8LRrbVXQiqMsn20cTsA7I4jVD5JgOr/2Sw==
-X-Received: by 2002:a17:902:8490:: with SMTP id c16mr90566604plo.1.1564022786580;
-        Wed, 24 Jul 2019 19:46:26 -0700 (PDT)
-Received: from [172.27.227.155] ([216.129.126.118])
-        by smtp.googlemail.com with ESMTPSA id 14sm46295162pfy.40.2019.07.24.19.46.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 19:46:25 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 3/3] netlink: add validation of NLA_F_NESTED
- flag
-To:     Thomas Haller <thaller@redhat.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-References: <cover.1556806084.git.mkubecek@suse.cz>
- <6b6ead21c5d8436470b82ab40355f6bd7dbbf14b.1556806084.git.mkubecek@suse.cz>
- <0fc58a4883f6656208b9250876e53d723919e342.camel@redhat.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <8e4ba571-de11-8448-c44c-cbc7024ab9a4@gmail.com>
-Date:   Wed, 24 Jul 2019 19:46:22 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <0fc58a4883f6656208b9250876e53d723919e342.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Wed, 24 Jul 2019 22:48:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388165AbfGYCsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 22:48:37 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7990F22BE8;
+        Thu, 25 Jul 2019 02:48:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564022916;
+        bh=YWxaVqhUBxhNakctl9Qk/YX4ee0cDSELqHl7XG/98z0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JnzxG+M3g1veiHLMx35BlJ7hi4YjM+QUckJY7zP4n5e9rvPCtvpWqldrs7tU3huZs
+         hZOBCxuM8mEGlJRvz3bg3AO7O+QhhzX0By2Aw3ys0sPHaSLDvv1YFxOVg8B9xrErpp
+         1krPoi09vQ1iDFBWz29WXlNbysr39DZYUzdfWAFo=
+Date:   Wed, 24 Jul 2019 19:48:35 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     mhocko@suse.com, dvyukov@google.com, catalin.marinas@arm.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: page_alloc: document kmemleak's non-blockable
+ __GFP_NOFAIL case
+Message-Id: <20190724194835.59947a6b4df3c2ae7816470d@linux-foundation.org>
+In-Reply-To: <1562964544-59519-1-git-send-email-yang.shi@linux.alibaba.com>
+References: <1562964544-59519-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/19 1:57 AM, Thomas Haller wrote:
-> Does this flag and strict validation really provide any value? Commonly a netlink message
-> is a plain TLV blob, and the meaning depends entirely on the policy.
+On Sat, 13 Jul 2019 04:49:04 +0800 Yang Shi <yang.shi@linux.alibaba.com> wrote:
 
-Strict checking enables kernel side filtering and other features that
-require passing attributes as part of the dump request - like address
-dumps in a specific namespace.
+> When running ltp's oom test with kmemleak enabled, the below warning was
+> triggerred since kernel detects __GFP_NOFAIL & ~__GFP_DIRECT_RECLAIM is
+> passed in:
+> 
+> ...
+>
+> The mempool_alloc_slab() clears __GFP_DIRECT_RECLAIM, kmemleak has
+> __GFP_NOFAIL set all the time due to commit
+> d9570ee3bd1d4f20ce63485f5ef05663866fe6c0 ("kmemleak: allow to coexist
+> with fault injection").
+> 
+> The fault-injection would not try to fail slab or page allocation if
+> __GFP_NOFAIL is used and that commit tries to turn off fault injection
+> for kmemleak allocation.  Although __GFP_NOFAIL doesn't guarantee no
+> failure for all the cases (i.e. non-blockable allocation may fail), it
+> still makes sense to the most cases.  Kmemleak is also a debugging tool,
+> so it sounds not worth changing the behavior.
+> 
+> It also meaks sense to keep the warning, so just document the special
+> case in the comment.
+> 
+> ...
+>
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -4531,8 +4531,14 @@ bool gfp_pfmemalloc_allowed(gfp_t gfp_mask)
+>  	 */
+>  	if (gfp_mask & __GFP_NOFAIL) {
+>  		/*
+> -		 * All existing users of the __GFP_NOFAIL are blockable, so warn
+> -		 * of any new users that actually require GFP_NOWAIT
+> +		 * The users of the __GFP_NOFAIL are expected be blockable,
+> +		 * and this is true for the most cases except for kmemleak.
+> +		 * The kmemleak pass in __GFP_NOFAIL to skip fault injection,
+> +		 * however kmemleak may allocate object at some non-blockable
+> +		 * context to trigger this warning.
+> +		 *
+> +		 * Keep this warning since it is still useful for the most
+> +		 * normal cases.
+>  		 */
+
+Comment has rather a lot of typos.  I'd normally fix them but I think
+I'll duck this patch until the kmemleak situation is addressed, so we
+can add a kmemleakless long-term comment, if desired.
+
