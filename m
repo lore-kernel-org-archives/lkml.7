@@ -2,118 +2,143 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E568C41517
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEB4C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97B3229F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2809E20869
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="thhM7y8K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+R+4w2M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfGYXvS (ORCPT
+        id S1727021AbfGYXyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 19:51:18 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49406 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbfGYXvR (ORCPT
+        Thu, 25 Jul 2019 19:54:37 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41928 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbfGYXyg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 19:51:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dnWpmDquviv2T4rhOaKwfYrYkAK4O04dPwOKTktYaOs=; b=thhM7y8KKCymntW36Aear/ueL
-        3yz70nHaio9xlpXUE8ytrM21+KRWlKYUO2me8Mk/zwg4dNq8qcIbXPODdZ3avIukc6wI4Du1LVxJo
-        8d1pMsg8sILIf8rByVRmAQ97UlVSAGve0hNP8Dta041us0ooVAroMXcDN5q2rfpeqs8Cagem+5I4q
-        y3hKbtksNNtRMWUff6W/Ox/dcr02eeOTKMs0+Ppw+OF5ZS/b0lmJgEWJ4IJSBnI5xhrF1wuSURU26
-        3xH6xb2WP2EIEfqSnTrwl6B7YDyLh/Av21TfBdp1uc+nk3LC460dz8qRyPdxcv9fhXcA2E7WtL7xm
-        XkQJkJjEA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqnW0-0005yk-GJ; Thu, 25 Jul 2019 23:51:16 +0000
-Subject: Re: mmotm 2019-07-24-21-39 uploaded (mm/memcontrol)
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Chris Down <chris@chrisdown.name>
-References: <20190725044010.4tE0dhrji%akpm@linux-foundation.org>
- <4831a203-8853-27d7-1996-280d34ea824f@infradead.org>
- <20190725163959.3d759a7f37ba40bb7f75244e@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <704b25d9-08bd-8418-f6b3-d8ba4c4cecfa@infradead.org>
-Date:   Thu, 25 Jul 2019 16:51:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 25 Jul 2019 19:54:36 -0400
+Received: by mail-pl1-f194.google.com with SMTP id m9so23908917pls.8;
+        Thu, 25 Jul 2019 16:54:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jbjn6X1o+b+RloH7E/SSTLYw0cWzlKuB788mEgA/bpM=;
+        b=P+R+4w2MxJZR2ZtX05liUIbVVC5sHJ1cw/fh/WcaeHysDxmi3GzLzGaWIp5i3b7Wpp
+         Z5axEdJM0C9BxpHhuJgeIfMtZiJ7OqS55l0Vk59YkWRWJYtV1I/xYiTpcPhaBxl9DoGE
+         VWSFrwfLKi5hXTOVrjw1Bg4X9Xatca02BwLVrlB1NQsTop3tDT+bPDNuhMI8GNxI2Ohr
+         WdJK53rB4iq8IIAsOClZ9aGiFSX5o+twaXEa8q0fMxEm5tfROzEPOFV0VtctPb/A6xTo
+         C9MGQjy1vM0Vo3/n5ReQCnqqIc4dSzextvN953XLWfo+GRG43E2+T7NzSwkUQOaC1mXB
+         5uRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jbjn6X1o+b+RloH7E/SSTLYw0cWzlKuB788mEgA/bpM=;
+        b=PKjuRydWHLXvoYpOPK71GHMd8Hi+40bwYCPZZ6hPvdi2opVLtixTNhMRG4qMDEEAsH
+         a9/UFeikLt7g3pLUhCxZ+lceMlmn1VuqvPWdQuL4l9z/dc2XBePdhNti2DXzLFuQVU1u
+         AsFovNX8lc71+SsJcZRFKXMVCbVDhmu3GC6k5yumx6jAMmC0sJhe04CSbanaTZSt8fRl
+         AbkBUoGcn+aTeT+cecHK7U8REL0csu+NOJpwRV8zA7pupPp7dXncR+C7aZ61WzIr8r5K
+         4h4qq+btUaOYWNJqRmC6Azczm/nN6CKrXGgawKw84E9aMKBRU7Cr5RZenq9BnzFQbHoX
+         +fQw==
+X-Gm-Message-State: APjAAAWDRVsOdOzT5WX0NLh4KWPscg0qhYUXINiel3OI6UjenrPc1Zks
+        tArGygBKDY0W/cG2sQmNB0w=
+X-Google-Smtp-Source: APXvYqxZ/3rxr8khd3NQIG7YTDRhwqCZcgL8B3stAATASb/7sIT0JVYywxlJ/HpSESLgObq4pmW5Dw==
+X-Received: by 2002:a17:902:7612:: with SMTP id k18mr92208136pll.48.1564098875806;
+        Thu, 25 Jul 2019 16:54:35 -0700 (PDT)
+Received: from ast-mbp ([2620:10d:c090:200::1:85f9])
+        by smtp.gmail.com with ESMTPSA id w18sm64466745pfj.37.2019.07.25.16.54.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 16:54:34 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 16:54:33 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Brian Vazquez <brianvv.kernel@gmail.com>
+Cc:     Song Liu <liu.song.a23@gmail.com>,
+        Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH bpf-next 2/6] bpf: add BPF_MAP_DUMP command to dump more
+ than one entry per call
+Message-ID: <20190725235432.lkptx3fafegnm2et@ast-mbp>
+References: <20190724165803.87470-1-brianvv@google.com>
+ <20190724165803.87470-3-brianvv@google.com>
+ <CAPhsuW4HPjXE+zZGmPM9GVPgnVieRr0WOuXfM0W6ec3SB4imDw@mail.gmail.com>
+ <CABCgpaXz4hO=iGoswdqYBECWE5eu2AdUgms=hyfKnqz7E+ZgNg@mail.gmail.com>
+ <CAPhsuW5NzzeDmNmgqRh0kwHnoQfaD90L44NJ9AbydG_tGJkKiQ@mail.gmail.com>
+ <CABCgpaV7mj5DhFqh44rUNVj5XMAyP+n79LrMobW_=DfvEaS4BQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190725163959.3d759a7f37ba40bb7f75244e@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABCgpaV7mj5DhFqh44rUNVj5XMAyP+n79LrMobW_=DfvEaS4BQ@mail.gmail.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/25/19 4:39 PM, Andrew Morton wrote:
-> On Thu, 25 Jul 2019 15:02:59 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
+On Thu, Jul 25, 2019 at 04:25:53PM -0700, Brian Vazquez wrote:
+> > > > If prev_key is deleted before map_get_next_key(), we get the first key
+> > > > again. This is pretty weird.
+> > >
+> > > Yes, I know. But note that the current scenario happens even for the
+> > > old interface (imagine you are walking a map from userspace and you
+> > > tried get_next_key the prev_key was removed, you will start again from
+> > > the beginning without noticing it).
+> > > I tried to sent a patch in the past but I was missing some context:
+> > > before NULL was used to get the very first_key the interface relied in
+> > > a random (non existent) key to retrieve the first_key in the map, and
+> > > I was told what we still have to support that scenario.
+> >
+> > BPF_MAP_DUMP is slightly different, as you may return the first key
+> > multiple times in the same call. Also, BPF_MAP_DUMP is new, so we
+> > don't have to support legacy scenarios.
+> >
+> > Since BPF_MAP_DUMP keeps a list of elements. It is possible to try
+> > to look up previous keys. Would something down this direction work?
 > 
->> On 7/24/19 9:40 PM, akpm@linux-foundation.org wrote:
->>> The mm-of-the-moment snapshot 2019-07-24-21-39 has been uploaded to
->>>
->>>    http://www.ozlabs.org/~akpm/mmotm/
->>>
->>> mmotm-readme.txt says
->>>
->>> README for mm-of-the-moment:
->>>
->>> http://www.ozlabs.org/~akpm/mmotm/
->>>
->>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
->>> more than once a week.
->>>
->>> You will need quilt to apply these patches to the latest Linus release (5.x
->>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
->>> http://ozlabs.org/~akpm/mmotm/series
->>>
->>
->> on i386:
->>
->> ld: mm/memcontrol.o: in function `mem_cgroup_handle_over_high':
->> memcontrol.c:(.text+0x6235): undefined reference to `__udivdi3'
+> I've been thinking about it and I think first we need a way to detect
+> that since key was not present we got the first_key instead:
 > 
-> Thanks.  This?
-
-
-Yes, that works.  Thanks.
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-
-
-> --- a/mm/memcontrol.c~mm-throttle-allocators-when-failing-reclaim-over-memoryhigh-fix-fix
-> +++ a/mm/memcontrol.c
-> @@ -2414,8 +2414,9 @@ void mem_cgroup_handle_over_high(void)
->  	 */
->  	clamped_high = max(high, 1UL);
->  
-> -	overage = ((u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT)
-> -		/ clamped_high;
-> +	overage = (u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT;
-> +	do_div(overage, clamped_high);
-> +
->  	penalty_jiffies = ((u64)overage * overage * HZ)
->  		>> (MEMCG_DELAY_PRECISION_SHIFT + MEMCG_DELAY_SCALING_SHIFT);
->  
-> _
+> - One solution I had in mind was to explicitly asked for the first key
+> with map_get_next_key(map, NULL, first_key) and while walking the map
+> check that map_get_next_key(map, prev_key, key) doesn't return the
+> same key. This could be done using memcmp.
+> - Discussing with Stan, he mentioned that another option is to support
+> a flag in map_get_next_key to let it know that we want an error
+> instead of the first_key.
 > 
+> After detecting the problem we also need to define what we want to do,
+> here some options:
+> 
+> a) Return the error to the caller
+> b) Try with previous keys if any (which be limited to the keys that we
+> have traversed so far in this dump call)
+> c) continue with next entries in the map. array is easy just get the
+> next valid key (starting on i+1), but hmap might be difficult since
+> starting on the next bucket could potentially skip some keys that were
+> concurrently added to the same bucket where key used to be, and
+> starting on the same bucket could lead us to return repeated elements.
+> 
+> Or maybe we could support those 3 cases via flags and let the caller
+> decide which one to use?
 
+this type of indecision is the reason why I wasn't excited about
+batch dumping in the first place and gave 'soft yes' when Stan
+mentioned it during lsf/mm/bpf uconf.
+We probably shouldn't do it.
+It feels this map_dump makes api more complex and doesn't really
+give much benefit to the user other than large map dump becomes faster.
+I think we gotta solve this problem differently.
 
--- 
-~Randy
