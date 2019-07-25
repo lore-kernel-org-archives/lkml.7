@@ -2,163 +2,150 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BF1C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBFAC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4AA8218F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:38:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564072711;
-	bh=qZ8UghbS60mDMJe5QbgJ8kO1NzUbcQ/OeUsBgknVAy0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SNomZc0xNSk4WR0hU0EWJsp0TYWHr2llmgoUKnvQLcPPtODPQfMjH4MWe3rLib2h1
-	 LKQet210k3yCzWkJB46BabSUuYKn6kkA+u0o6YDHVxjGh6/vkmPfaRP8k5aqwxr9mT
-	 LGGk0SZkEhMn+NNpMxIXax5NQp+ztlG9IOd/xSEg=
+	by mail.kernel.org (Postfix) with ESMTP id 81FBF218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:39:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fnAdnCZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388123AbfGYQia (ORCPT
+        id S1729485AbfGYQjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:38:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52488 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387886AbfGYQia (ORCPT
+        Thu, 25 Jul 2019 12:39:49 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33773 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727957AbfGYQjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:38:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ca9GbmqtM642n/T8uQzhp0j5BRMVMOK19wEQmvfzCLA=; b=rsthi9CNEKRZL/k8DUTxgU/2r
-        5foinMWImlH9SO35tcA70x2McVlxMzsq2cEZWUxAXjkbDJSoZuzSV8sf4Wqk/F4nsVDQqu/cp+Udj
-        rgq3ghwxG9Cjl7I/7GVqopCFmcEN87Yz+65QhmiozWWH4uPxNDfTxjmFPkjwW+N4c+k5UHRPr4PVb
-        ckk8iRHJ8Bf0mZROn3UnhFwnLjIV7+IKWSUgSAHsZR0JfTGUwtTSs998Q8IvtScvHBKpi9sMD3gwt
-        ksnlIzeVbhHzLWz38PeXnNulPXQ2OpbinyKHRU6MtrFncLKWac7PTCEJCC4YD/rUeifft2KSn/jox
-        tjiWISmfw==;
-Received: from [179.95.31.157] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqgl7-0000nQ-CL; Thu, 25 Jul 2019 16:38:26 +0000
-Date:   Thu, 25 Jul 2019 13:38:19 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
-        kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/7] media: hantro: Move VP8 common code
-Message-ID: <20190725133819.16379d96@coco.lan>
-In-Reply-To: <92f197b5d45e5f250c001752b11749af2533f4c3.camel@collabora.com>
-References: <20190725141756.2518-1-ezequiel@collabora.com>
-        <20190725141756.2518-7-ezequiel@collabora.com>
-        <20190725132230.6e7f0c22@coco.lan>
-        <92f197b5d45e5f250c001752b11749af2533f4c3.camel@collabora.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 25 Jul 2019 12:39:49 -0400
+Received: by mail-io1-f67.google.com with SMTP id z3so98667423iog.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 09:39:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=obR63h1i9BTxqQDmE4djGLMnXZRaUmocRF7TA6/FFLU=;
+        b=fnAdnCZ8mXjzi0Ez/WAImfwe0mh8dxrf0Mm/NKM0Ak4rUX1VniWZ9VJa2C581rfCit
+         omI2LoEHf2D597gUyoqvqACH/9hmAQYqnoWQxJnw+t+qr3WPKZA4r/H7lmsvCQE+a7Zt
+         EkCVsZx7FrGEWzQvrM9ArMdWPmYvJqwksiwuIXxYDwCNtar+IuffKBqvh87Hcobrth6h
+         +Qg/PqYq/xNeaUKy4cOV1aZr/t0yRG18uHIbykOmPlycWmoZWXriQsiNeWVKzRCLQs48
+         sRnoNeu4Rf3F64YDT+Kvjew3fssi/LsU6UaQwIvbdW6KA/Tmhmr5mHJsyQjLmuSs8nI5
+         GYdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=obR63h1i9BTxqQDmE4djGLMnXZRaUmocRF7TA6/FFLU=;
+        b=bH6Q3kvCTbY7V66R0gUmeJ7G+ke2XmFC9AhhrEzFvs66hlSoFwDa9c+mGpTZA9VHAh
+         C8aKCNAx+bjMOVnWW1CFHBvOEDw+fkT9kxdGWXkRZAQhkTkWv1RYZysCufM5oK5hlYxl
+         uCzap6Uo3N6qafzGLxpHXT0855PgIqidBdulXy0aMLu3Gb+5vdGSj8lChlSGVC+FaLti
+         emRjF3Sqa7Odh0/IxWIP492vLJXMa6QWRpG2v4NZ6u5lw7KzuPUm3mQf27wuHgZ0Ix4N
+         pmOVe1Cgex0jjEvFDabr8aXEtLOr1XKcebxdDpuCWJIyMTzz5MlSyBNQ6rdugX9zUkhB
+         zSew==
+X-Gm-Message-State: APjAAAUn0caU8MT0Szfks4vR9vhVmOCfv2dnz56dLubJkP3UIho+RpYs
+        NLVTAL2zpe6m1q++VmBhcI9+Iw==
+X-Google-Smtp-Source: APXvYqwmaCog90kSDSaqWIR64tr1c51dMxcgT/Z5zkYX4lANAr+lfcC8+kobCHL+WrjIQz22GD+p1A==
+X-Received: by 2002:a5d:8497:: with SMTP id t23mr57365077iom.298.1564072787932;
+        Thu, 25 Jul 2019 09:39:47 -0700 (PDT)
+Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
+        by smtp.gmail.com with ESMTPSA id q22sm41603613ioj.56.2019.07.25.09.39.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 09:39:47 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 11:39:46 -0500
+From:   Dan Rue <dan.rue@linaro.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        wanpengli@tencent.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        patches@kernelci.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>, jmattson@google.com
+Subject: Re: [PATCH 5.2 000/413] 5.2.3-stable review
+Message-ID: <20190725163946.xt2p3pvxwuabzojj@xps.therub.org>
+Mail-Followup-To: Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        wanpengli@tencent.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        patches@kernelci.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
+        jmattson@google.com
+References: <20190724191735.096702571@linuxfoundation.org>
+ <CADYN=9+WLxhmqX3JNL_s-kWSN97G=8WhD=TF=uAuKecJnKcj_Q@mail.gmail.com>
+ <20190725113437.GA27429@kroah.com>
+ <230a5b34-d23e-8318-0b1f-d23ada7318e0@redhat.com>
+ <CA+G9fYsWdmboyquZ=Bs3tkTwRFTzd1yuL0_EVpHOecNi4E_stA@mail.gmail.com>
+ <20190725160939.GC18612@linux.intel.com>
+ <33f1cfaa-525d-996a-4977-fda32dc368ee@redhat.com>
+ <20190725162053.GD18612@linux.intel.com>
+ <7bc207e0-0812-e41a-bfd5-e3fbfd43f242@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7bc207e0-0812-e41a-bfd5-e3fbfd43f242@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 25 Jul 2019 13:30:07 -0300
-Ezequiel Garcia <ezequiel@collabora.com> escreveu:
-
-> On Thu, 2019-07-25 at 13:22 -0300, Mauro Carvalho Chehab wrote:
-> > Em Thu, 25 Jul 2019 11:17:55 -0300
-> > Ezequiel Garcia <ezequiel@collabora.com> escreveu:
-> >   
-> > > In order to introduce support for RK3399 VP8 decoding,
-> > > move some common VP8 code. This will be reused by
-> > > the RK3399 implementation, reducing code duplication.
-> > > 
-> > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > ---
-> > >  .../staging/media/hantro/hantro_g1_vp8_dec.c    | 17 -----------------
-> > >  drivers/staging/media/hantro/hantro_hw.h        |  4 ++++
-> > >  drivers/staging/media/hantro/hantro_vp8.c       | 15 +++++++++++++++
-> > >  3 files changed, 19 insertions(+), 17 deletions(-)
-> > > 
-> > > diff --git a/drivers/staging/media/hantro/hantro_g1_vp8_dec.c b/drivers/staging/media/hantro/hantro_g1_vp8_dec.c
-> > > index cd1fbd3a0d5f..181e2f76d8cb 100644
-> > > --- a/drivers/staging/media/hantro/hantro_g1_vp8_dec.c
-> > > +++ b/drivers/staging/media/hantro/hantro_g1_vp8_dec.c
-> > > @@ -16,8 +16,6 @@
-> > >  #include "hantro.h"
-> > >  #include "hantro_g1_regs.h"
-> > >  
-> > > -#define DEC_8190_ALIGN_MASK	0x07U
-> > > -
-> > >  /* DCT partition base address regs */
-> > >  static const struct hantro_reg vp8_dec_dct_base[8] = {
-> > >  	{ G1_REG_ADDR_STR, 0, 0xffffffff },
-> > > @@ -131,21 +129,6 @@ static const struct hantro_reg vp8_dec_pred_bc_tap[8][4] = {
-> > >  	},
-> > >  };
-> > >  
-> > > -/*
-> > > - * filter taps taken to 7-bit precision,
-> > > - * reference RFC6386#Page-16, filters[8][6]
-> > > - */
-> > > -static const u32 vp8_dec_mc_filter[8][6] = {
-> > > -	{ 0, 0, 128, 0, 0, 0 },
-> > > -	{ 0, -6, 123, 12, -1, 0 },
-> > > -	{ 2, -11, 108, 36, -8, 1 },
-> > > -	{ 0, -9, 93, 50, -6, 0 },
-> > > -	{ 3, -16, 77, 77, -16, 3 },
-> > > -	{ 0, -6, 50, 93, -9, 0 },
-> > > -	{ 1, -8, 36, 108, -11, 2 },
-> > > -	{ 0, -1, 12, 123, -6, 0 }
-> > > -};
-> > > -
-> > >  /*
-> > >   * Set loop filters
-> > >   */
-> > > diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
-> > > index 34ef24e3a9ef..185e27d47e47 100644
-> > > --- a/drivers/staging/media/hantro/hantro_hw.h
-> > > +++ b/drivers/staging/media/hantro/hantro_hw.h
-> > > @@ -15,6 +15,8 @@
-> > >  #include <media/vp8-ctrls.h>
-> > >  #include <media/videobuf2-core.h>
-> > >  
-> > > +#define DEC_8190_ALIGN_MASK	0x07U
-> > > +
-> > >  struct hantro_dev;
-> > >  struct hantro_ctx;
-> > >  struct hantro_buf;
-> > > @@ -93,6 +95,8 @@ extern const struct hantro_variant rk3399_vpu_variant;
-> > >  extern const struct hantro_variant rk3328_vpu_variant;
-> > >  extern const struct hantro_variant rk3288_vpu_variant;
-> > >  
-> > > +extern const u32 vp8_dec_mc_filter[8][6];  
+On Thu, Jul 25, 2019 at 06:30:10PM +0200, Paolo Bonzini wrote:
+> On 25/07/19 18:20, Sean Christopherson wrote:
+> > On Thu, Jul 25, 2019 at 06:10:37PM +0200, Paolo Bonzini wrote:
+> >> On 25/07/19 18:09, Sean Christopherson wrote:
+> >>>> This investigation confirms it is a new test code failure on stable-rc 5.2.3
+> >>> No, it only confirms that kvm-unit-tests/master fails on 5.2.*.  To confirm
+> >>> a new failure in 5.2.3 you would need to show a test that passes on 5.2.2
+> >>> and fails on 5.2.3.
+> >>
+> >> I think he meant "a failure in new test code". :)
 > > 
-> > Please don't do that, as a symbol like that can easily cause
-> > namespace clashes in the future. For all exported symbols,
-> > please prepend the driver name, like:
-> > 
-> > 	hantro_vp8_dec_mc_filter
-> >   
+> > Ah, that does appear to be the case.  So just to be clear, we're good, right?
 > 
-> Right. Would you be OK, with taking Hans' PR and accept a follow-up
-> patch fixing this?
+> Yes.  I'm happy to gather ideas on how to avoid this (i.e. 1) if a
+> submodule would be useful; 2) where to stick it).
 
-No need. I went ahead and applied a fixup. Just remember about that
-next time, as we don't want to mess with Kernel export symbol
-namespace.
+Hi!
 
-Thanks,
-Mauro
+First, to be clear: from LKFT perspective there are no kernel
+regressions here.
+
+To your point Paolo - reporting 'fail' because of a missing kernel
+feature is a generic problem we see across test suites, and causes tons
+of pain and misery for CI people. As a general rule, I'd avoid
+submodules, and even branches that track specific kernels. Rather, and I
+don't know if it's possible in this case, but the best way to manage it
+from both a test author and a test runner POV is to wrap the test in
+kernel feature checks, kernel version checks, kernel config checks, etc.
+Report 'skip' if the environment in which the test is running isn't
+sufficient to run the test. Then, you only have to maintain one version
+of the test suite, users can always use the latest, and critically: all
+failures are actual failures.
+
+Dan
+
+> 
+> Paolo
+
+-- 
+Linaro - Kernel Validation
