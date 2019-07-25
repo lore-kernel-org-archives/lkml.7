@@ -2,147 +2,89 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BAAC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8224C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 491B0218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A02D122BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 21:42:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="m9ZUKMR2";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="m9ZUKMR2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e/Yzp6j8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbfGYVlu (ORCPT
+        id S1726791AbfGYVme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 17:41:50 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44918 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfGYVlt (ORCPT
+        Thu, 25 Jul 2019 17:42:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56682 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbfGYVmd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 17:41:49 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 93BDD60386; Thu, 25 Jul 2019 21:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564090908;
-        bh=jqzrQBVq8lBiAxe0oBWB4NzMopTX5KV8rFKZCzdTySI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=m9ZUKMR2bmgnO0VU73/7N6pitQWuXk5awOMdwtiw8/aZ8J7Lne0OiwQstf9b+oyfo
-         2GOHhrejNCyojn4oCOm6XWmaDah5HfN8TNanUKgWZUEIDkRMQM25WiB+UQp6XaxjuZ
-         AQXLkO1WGVDYqa/xWCcXjwRYnUbPXO72x8RvlHZs=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 249BE6021A;
-        Thu, 25 Jul 2019 21:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564090908;
-        bh=jqzrQBVq8lBiAxe0oBWB4NzMopTX5KV8rFKZCzdTySI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=m9ZUKMR2bmgnO0VU73/7N6pitQWuXk5awOMdwtiw8/aZ8J7Lne0OiwQstf9b+oyfo
-         2GOHhrejNCyojn4oCOm6XWmaDah5HfN8TNanUKgWZUEIDkRMQM25WiB+UQp6XaxjuZ
-         AQXLkO1WGVDYqa/xWCcXjwRYnUbPXO72x8RvlHZs=
+        Thu, 25 Jul 2019 17:42:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JNOo0Dhi9UDinqug0uYA1LHheZfDibP+WEcEG6xvIBA=; b=e/Yzp6j8Alk5/730XXwU0FDWq
+        rr3okQdzLCE/J4OLyeEPbCRO5XaSEEqvUQNRuRdDTG/W3OlD1FAjSaxvbulJP4bbEv2K/AQ2pdD7U
+        C25B6yg420c7m5I/Iv0H7H3aTu60UCDWNz1VIrgdDL7SjaSToKp3xhjFnK0FAT+OdGd8tjn7T0BiL
+        FVnp2v5FBeoStt238IAx1keeH1uoGWywMyOzwIoA2i0vmW6dd0U6Kfa62LYSOi7Vnd4DWO1YOgjNg
+        0PLrZ06JDUhTYMwDhiWauSPYZcheWxkHZREuSCfc07MneufWREPlpo1Hg9S9UoGbIioPLs5HnL1tq
+        WlAQZfXjQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hqlVG-0004iU-Tb; Thu, 25 Jul 2019 21:42:22 +0000
+Date:   Thu, 25 Jul 2019 14:42:22 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        x86@kernel.org, Dave Hansen <dave.hansen@intel.com>,
+        linux-kernel@vger.kernel.org, Steven Price <Steven.Price@arm.com>,
+        linux-mm@kvack.org, Mark Brown <Mark.Brown@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC] mm/pgtable/debug: Add test validating architecture page
+ table helpers
+Message-ID: <20190725214222.GG30641@bombadil.infradead.org>
+References: <1564037723-26676-1-git-send-email-anshuman.khandual@arm.com>
+ <1564037723-26676-2-git-send-email-anshuman.khandual@arm.com>
+ <20190725143920.GW363@bombadil.infradead.org>
+ <20190725213858.GK1330@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 25 Jul 2019 14:41:48 -0700
-From:   pheragu@codeaurora.org
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux-arm Msm <linux-arm-msm@vger.kernel.org>,
-        psodagud@codeaurora.org, Tsoni <tsoni@codeaurora.org>,
-        rananta@codeaurora.org, mnalajal@codeaurora.org
-Subject: Re: Warning seen when removing a module using irqdomain framework
-In-Reply-To: <20190724075103.00ae5924@why>
-References: <aa6a66a7671f12f19d0364755e76de0d@codeaurora.org>
- <20190724075103.00ae5924@why>
-Message-ID: <db46690929f70536ea4d391275471131@codeaurora.org>
-X-Sender: pheragu@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725213858.GK1330@shell.armlinux.org.uk>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-23 23:51, Marc Zyngier wrote:
-> On Tue, 23 Jul 2019 14:52:34 -0700
-> pheragu@codeaurora.org wrote:
+On Thu, Jul 25, 2019 at 10:38:58PM +0100, Russell King - ARM Linux admin wrote:
+> On Thu, Jul 25, 2019 at 07:39:21AM -0700, Matthew Wilcox wrote:
+> > But 'page' isn't necessarily PMD-aligned.  I don't think we can rely on
+> > architectures doing the right thing if asked to make a PMD for a randomly
+> > aligned page.
+> > 
+> > How about finding the physical address of something like kernel_init(),
+> > and using the corresponding pte/pmd/pud/p4d/pgd that encompasses that
+> > address?  It's also better to pass in the pfn/page rather than using global
+> > variables to communicate to the test functions.
 > 
-> Hi Prakruthi,
-> 
->> Hi,
->> 
->> I have been working on a interrupt controller driver that uses tree
->> based mapping for its domain (irq_domain_add_tree(..)).
->> If I understand correctly, the clients get a mapping when they call
->> platform_get_irq(..). However, after these clients are removed
->> (rmmod), when I try to remove the interrupt controller driver where
->> it calls irq_domain_remove(..), I hit this warning from
->> kernel/kernel/irq/irqdomain.c:: irq_domain_remove(..)
->> [WARN_ON(!radix_tree_empty(&domain->revmap_tree));]-
->> WARNING: CPU: 0 PID: 238 at /kernel/kernel/irq/irqdomain.c:246 
->> irq_domain_remove+0x84/0x98
->> 
->> Also, I see that the requested IRQs by the clients are still present
->> (in /proc/interrupts) even after they had been removed. Hence, I just
->> wanted to know how to handle this warning. Should the client clean up
->> by calling irq_dispose_mapping(..) or is it the responsibility of the
->> interrupt controller driver to dispose the mappings one by one?
-> 
-> In general, building interrupt controller drivers as a module is a
-> pretty difficult thing to do in a safe manner. As you found out, this
-> relies on the irq_domain being "emptied" before it can be freed. There
-> are some other gotchas in the rest of the IRQ stack as well.
-> 
-> Doing that is hard. One of the reasons is that the OF subsystem will
-> happily allocate all the interrupts it can even if there is no driver
-> having requested them (see of_platform_populate). This means that you
-> cannot track whether a client driver is using one of the interrupt your
-> irqchip is in charge of. You can apply some heuristics, but they are in
-> general all wrong.
-> 
-> Fixing the OF subsystem is possible, but will break a lot of platforms
-> that will have to be identified and fixed one by one.  Another
-> possibility would be to refcount irqdescs, and make sure the irqdomain
-> directly holds pointers to them. Doable, but may create overhead.
-> 
-> To sum it up, don't build your irqchip driver as a module if you can
-> avoid it. If you can't, you'll have to be very careful about how the
-> mapping is established (make sure it is not created by
-> of_platform_populate), and use irq_dispose_mapping in the client
-> drivers.
-> 
-As per your suggestion I tried making this driver a statically compiled 
-one.
-I tried various approaches with this -
+> There are architectures (32-bit ARM) where the kernel is mapped using
+> section mappings, and we don't expect the Linux page table walking to
+> work for section mappings.
 
-1. Using arch_inticall(..) - When I used this call, I saw that once the
-clients were removed, I don't see the IRQs requested by them (in 
-/proc/interrupts).
-
-2. Using module_init(..) (statically compiled) - When I used this call, 
-I saw that
-even after the clients were removed, I do see their requested IRQs in 
-/proc/interrupts.
-This behavior in #2 is the same as the one I saw when I compiled my 
-driver as a module
-and used arch_initcall(..).
-
-Is there any reason why this is seen only with arch_initcall(..) used 
-statically?
-
-
-Regards,
-Prakruthi Deepak
-
-
-
-
-
-
-
-
-
-
+This test doesn't go so far as to insert the PTE/PMD/PUD/... into the
+page tables.  It merely needs an appropriately aligned PFN to create a
+PTE/PMD/PUD/... from.
 
