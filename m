@@ -2,184 +2,287 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 819E4C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B218C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4053F22BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1FB22BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:14:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ZZmLSdpq"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="45YifFRE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390156AbfGYQOb (ORCPT
+        id S2390182AbfGYQOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:14:31 -0400
-Received: from mail-eopbgr750059.outbound.protection.outlook.com ([40.107.75.59]:33799
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389047AbfGYQOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:14:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b9d8YQLc9UIALoYX8xzvM5TFDq4BP5wP7Rmv8rcntAFdZ1M5NUFs/sS3Sgk8GXZ12CVQdMLSrGeIhhl+HiONuUI/Uo0ytz3VpqgkgTzavBeFp/wtt0H4LhBPglFgyVZHA4Crqgm2CKGCx0FpDZpcs50+BTFOAhSFitYM1eKOGNLU/vAlES4iTh0s/lIITEhFmDK/HBnEiXdDcHK89DSUZCrg4RcYyLtvIxBTSXuWSVP4gwTAkOgURGT9oSGEratlOSS/WHYi8lHyIT3VQquRLqCrFyuD/ti7flxf4Pdt1cDBkrS9Kkiww6roolSpgr6GdOkS4aC3K+VUE16SsMnMTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k/hasSJXrSl4WPd8vYfEjO2Oa8pS5LzLaSVVc7ykuFk=;
- b=DZBPnNfKd3ERKkQ5bYwG3smS41bl0segDnqBozHL78e8/fOWBrg/PdstKisHJ/orgk88eZP1oPitaOgXs4HEcOiAaDJ2KIgYzY7K+JjwQru9zG8VfOLGd2huCollCvHcycFBVY2JsuQcyGP/8Wxa1XNWGWJ0usvzjQq15Sh4FDMMsO22WdrJ56QpSpopGLhIuFWcmVDI6MF2LyVdU1kM4ksvkHG/g3GVynhP32F+OC3nX6GcMZ+LygYOL8uyR0atiEGDGFf/RT5+nsuBA2mm6ErOgaS7cszlnZ2fbJ6TWYN8kchHaJvdCcvZqPq9EVM8kZsUHeCcvaLK4jtT2TVWAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
- header.d=amd.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k/hasSJXrSl4WPd8vYfEjO2Oa8pS5LzLaSVVc7ykuFk=;
- b=ZZmLSdpqR1Aeu5A4MTFDpb9Yujyx6ujFlqB0JDvualjWw5QwlTI0+Nz+eH+jXH4pCFMpFuI4ez74EskCivWBE3BE4FM6X8Ue9QXcEhX/UJfpMM9Sew1JA0tre3WOCSnjBW0t7XL3Na3ZVt5SfxtINhVIZPE0Y8QJjVlN3a0ZFsQ=
-Received: from BYAPR12MB3560.namprd12.prod.outlook.com (20.178.197.10) by
- BYAPR12MB3207.namprd12.prod.outlook.com (20.179.92.202) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.17; Thu, 25 Jul 2019 16:14:26 +0000
-Received: from BYAPR12MB3560.namprd12.prod.outlook.com
- ([fe80::8581:1f0c:2002:db97]) by BYAPR12MB3560.namprd12.prod.outlook.com
- ([fe80::8581:1f0c:2002:db97%7]) with mapi id 15.20.2115.005; Thu, 25 Jul 2019
- 16:14:26 +0000
-From:   "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com>
-To:     "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        Rex Zhu <rex.zhu@amd.com>, "Quan, Evan" <Evan.Quan@amd.com>
-CC:     David Airlie <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [PATCH 5/7] drm/amd/display: Use proper enum conversion functions
-Thread-Topic: [PATCH 5/7] drm/amd/display: Use proper enum conversion
- functions
-Thread-Index: AQHVMjm3BBZjBABNkkubYh2hnztXdKbRXFiAgApDRgCAAAP4AA==
-Date:   Thu, 25 Jul 2019 16:14:25 +0000
-Message-ID: <18b343ab-8834-ea86-1bca-974f23b60b16@amd.com>
-References: <20190704055217.45860-1-natechancellor@gmail.com>
- <20190704055217.45860-6-natechancellor@gmail.com>
- <20190719031647.GA84028@archlinux-threadripper>
- <5f0e8332-50ae-cc9c-1a12-5a097c51297d@amd.com>
-In-Reply-To: <5f0e8332-50ae-cc9c-1a12-5a097c51297d@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YTOPR0101CA0024.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:15::37) To BYAPR12MB3560.namprd12.prod.outlook.com
- (2603:10b6:a03:ae::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Nicholas.Kazlauskas@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.55.250]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: eaec22b3-ad22-4fb7-9457-08d7111b299a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR12MB3207;
-x-ms-traffictypediagnostic: BYAPR12MB3207:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <BYAPR12MB3207442691525AC17D550051ECC10@BYAPR12MB3207.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1122;
-x-forefront-prvs: 0109D382B0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(376002)(39860400002)(396003)(136003)(199004)(189003)(36756003)(486006)(99286004)(6436002)(6512007)(6306002)(71200400001)(71190400001)(256004)(305945005)(31696002)(110136005)(54906003)(2906002)(316002)(14454004)(86362001)(7736002)(3846002)(6116002)(66066001)(6486002)(53936002)(6246003)(31686004)(14444005)(4326008)(66476007)(25786009)(66946007)(66556008)(26005)(68736007)(66446008)(64756008)(186003)(966005)(229853002)(478600001)(81156014)(81166006)(8676002)(8936002)(5660300002)(2616005)(11346002)(446003)(386003)(6506007)(52116002)(102836004)(53546011)(476003)(6636002)(76176011)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB3207;H:BYAPR12MB3560.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KIMkqZy5eM/n5rgoJcDmcDfOE8R0U3EKd+gyoWmWbpQxr81vaT+6rOc8ri1YG6XVgPtLyz0bWb2eOAwVk5TuXFK2hgQ3qprKd7TD0oFScRIVaH4e5MoqjAttN5S1I/4PN6GILEOI0kQS4sKz3A3zqok/CIPt/R6/2uNktt+6l6rxvY13fKuyHBjrqblY7cQyesuG9KuAxKiHOLmnAxvcNcCdbvkLkuHRsAqO13GDi9ep1sXwK+aeP2G6YxmCIk9dOnKzXb2ZcaHS4Etqn4O3CqzZC2F6sfljzL2zW1HWxeTcuvtt0uiMEcC2+niGcOUzGTRaRNd/exhbbG4bzvJ2X1crjodzUEtCepSC9EFmexOi9TACm0Cgq63kHfBy9EpKdCk+1AYn/ljyDGoLxs56PYH/gOsVNv/DUK/dfscjczg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <ACB2C3C9055D6F4C88F9A0B2C09CF89F@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 25 Jul 2019 12:14:50 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:41029 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbfGYQOt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 12:14:49 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PGEbp31074789
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 09:14:37 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PGEbp31074789
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564071278;
+        bh=zgcyJljCzme48yRRppqFQ53HQPRurU26j98fcYAua1Y=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=45YifFREsmEo+kHl+Wcq5HJcg51vZerMimD3uXpNLgc2VDlbs1GLKZtQMJy3Zi0rT
+         EJ67qfoj7CdKir17PaBREh98SF/qaBXj/7FBVn0COXMSHp+i4ck16LrttvQHjPMw9e
+         rvGDeu7N4Xwa8whT9I8UQTI2Z3cfNHGWPPzt+X7MnbrPk6fdR/lkBM78saG8fmdja2
+         4a3YNL9S228ZYf7ooKxHMnlpPAzCEZ1Q38xP6BN4cw6VyWt4DUHssHE6FVOp38FL/4
+         uqIQCfqU9Nf+7exFRVnINXWbsVSQ31UTtvSOyCEKRL3FuIxrkIYODEW6gxolMMhXW0
+         Kp+PjB4cLcgKg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PGEapT1074785;
+        Thu, 25 Jul 2019 09:14:36 -0700
+Date:   Thu, 25 Jul 2019 09:14:36 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   "tip-bot for Paul E. McKenney" <tipbot@zytor.com>
+Message-ID: <tip-84ec3a0787086fcd25f284f59b3aa01fd6fc0a5d@git.kernel.org>
+Cc:     hpa@zytor.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, paulmck@linux.ibm.com,
+        mingo@kernel.org, peterz@infradead.org, frederic@kernel.org,
+        tglx@linutronix.de
+Reply-To: paulmck@linux.ibm.com, linux-kernel@vger.kernel.org,
+          torvalds@linux-foundation.org, hpa@zytor.com, tglx@linutronix.de,
+          peterz@infradead.org, mingo@kernel.org, frederic@kernel.org
+In-Reply-To: <20190625165238.GJ26519@linux.ibm.com>
+References: <20190625165238.GJ26519@linux.ibm.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/core] time/tick-broadcast: Fix tick_broadcast_offline()
+ lockdep complaint
+Git-Commit-ID: 84ec3a0787086fcd25f284f59b3aa01fd6fc0a5d
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eaec22b3-ad22-4fb7-9457-08d7111b299a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2019 16:14:25.9168
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nkazlaus@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3207
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNy8yNS8xOSAxMjowMCBQTSwgTGksIFN1biBwZW5nIChMZW8pIHdyb3RlOg0KPiANCj4gDQo+
-IE9uIDIwMTktMDctMTggMTE6MTYgcC5tLiwgTmF0aGFuIENoYW5jZWxsb3Igd3JvdGU6DQo+PiBP
-biBXZWQsIEp1bCAwMywgMjAxOSBhdCAxMDo1MjoxNlBNIC0wNzAwLCBOYXRoYW4gQ2hhbmNlbGxv
-ciB3cm90ZToNCj4+PiBjbGFuZyB3YXJuczoNCj4+Pg0KPj4+IGRyaXZlcnMvZ3B1L2RybS9hbWQv
-YW1kZ3B1Ly4uL2Rpc3BsYXkvYW1kZ3B1X2RtL2FtZGdwdV9kbV9wcF9zbXUuYzozMzY6ODoNCj4+
-PiB3YXJuaW5nOiBpbXBsaWNpdCBjb252ZXJzaW9uIGZyb20gZW51bWVyYXRpb24gdHlwZSAnZW51
-bSBzbXVfY2xrX3R5cGUnDQo+Pj4gdG8gZGlmZmVyZW50IGVudW1lcmF0aW9uIHR5cGUgJ2VudW0g
-YW1kX3BwX2Nsb2NrX3R5cGUnDQo+Pj4gWy1XZW51bS1jb252ZXJzaW9uXQ0KPj4+ICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGNfdG9fc211X2Nsb2NrX3R5cGUoY2xr
-X3R5cGUpLA0KPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXn5+
-fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fg0KPj4+IGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1k
-Z3B1Ly4uL2Rpc3BsYXkvYW1kZ3B1X2RtL2FtZGdwdV9kbV9wcF9zbXUuYzo0MjE6MTQ6DQo+Pj4g
-d2FybmluZzogaW1wbGljaXQgY29udmVyc2lvbiBmcm9tIGVudW1lcmF0aW9uIHR5cGUgJ2VudW0N
-Cj4+PiBhbWRfcHBfY2xvY2tfdHlwZScgdG8gZGlmZmVyZW50IGVudW1lcmF0aW9uIHR5cGUgJ2Vu
-dW0gc211X2Nsa190eXBlJw0KPj4+IFstV2VudW0tY29udmVyc2lvbl0NCj4+PiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRjX3RvX3BwX2Nsb2NrX3R5cGUoY2xrX3R5
-cGUpLA0KPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXn5+fn5+
-fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+DQo+Pj4NCj4+PiBUaGVyZSBhcmUgZnVuY3Rpb25zIHRv
-IHByb3Blcmx5IGNvbnZlcnQgYmV0d2VlbiBhbGwgb2YgdGhlc2UgdHlwZXMsIHVzZQ0KPj4+IHRo
-ZW0gc28gdGhlcmUgYXJlIG5vIGxvbmdlciBhbnkgd2FybmluZ3MuDQo+Pj4NCj4+PiBGaXhlczog
-YTQzOTEzZWE1MGE1ICgiZHJtL2FtZC9wb3dlcnBsYXk6IGFkZCBmdW5jdGlvbiBnZXRfY2xvY2tf
-YnlfdHlwZV93aXRoX2xhdGVuY3kgZm9yIG5hdmkxMCIpDQo+Pj4gRml4ZXM6IGU1ZTRlMjIzOTFj
-MiAoImRybS9hbWQvcG93ZXJwbGF5OiBhZGQgaW50ZXJmYWNlIHRvIGdldCBjbG9jayBieSB0eXBl
-IHdpdGggbGF0ZW5jeSBmb3IgZGlzcGxheSAodjIpIikNCj4+PiBMaW5rOiBodHRwczovL2dpdGh1
-Yi5jb20vQ2xhbmdCdWlsdExpbnV4L2xpbnV4L2lzc3Vlcy81ODYNCj4+PiBTaWduZWQtb2ZmLWJ5
-OiBOYXRoYW4gQ2hhbmNlbGxvciA8bmF0ZWNoYW5jZWxsb3JAZ21haWwuY29tPg0KPj4+IC0tLQ0K
-Pj4+ICAgZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2FtZGdwdV9kbS9hbWRncHVfZG1fcHBf
-c211LmMgfCA0ICsrLS0NCj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIg
-ZGVsZXRpb25zKC0pDQo+Pj4NCj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9k
-aXNwbGF5L2FtZGdwdV9kbS9hbWRncHVfZG1fcHBfc211LmMgYi9kcml2ZXJzL2dwdS9kcm0vYW1k
-L2Rpc3BsYXkvYW1kZ3B1X2RtL2FtZGdwdV9kbV9wcF9zbXUuYw0KPj4+IGluZGV4IGVhYzA5YmZl
-M2JlMi4uMGY3NmNmZmY5ZDliIDEwMDY0NA0KPj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQv
-ZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1X2RtX3BwX3NtdS5jDQo+Pj4gKysrIGIvZHJpdmVycy9n
-cHUvZHJtL2FtZC9kaXNwbGF5L2FtZGdwdV9kbS9hbWRncHVfZG1fcHBfc211LmMNCj4+PiBAQCAt
-MzMzLDcgKzMzMyw3IEBAIGJvb2wgZG1fcHBfZ2V0X2Nsb2NrX2xldmVsc19ieV90eXBlKA0KPj4+
-ICAgCQl9DQo+Pj4gICAJfSBlbHNlIGlmIChhZGV2LT5zbXUuZnVuY3MgJiYgYWRldi0+c211LmZ1
-bmNzLT5nZXRfY2xvY2tfYnlfdHlwZSkgew0KPj4+ICAgCQlpZiAoc211X2dldF9jbG9ja19ieV90
-eXBlKCZhZGV2LT5zbXUsDQo+Pj4gLQkJCQkJICBkY190b19zbXVfY2xvY2tfdHlwZShjbGtfdHlw
-ZSksDQo+Pj4gKwkJCQkJICBkY190b19wcF9jbG9ja190eXBlKGNsa190eXBlKSwNCj4gDQo+IHNt
-dV9mdW5jcy0+Z2V0X2Nsb2NrX2J5X3R5cGUgZG9lc24ndCBzZWVtIHRvIGJlIGhvb2tlZCB1cCBh
-bnl3aGVyZSwNCj4gc28gdGhpcyBsb29rcyB0byBiZSB0aGUgbW9zdCBjb3JyZWN0Lg0KPiANCj4g
-QWx0aG91Z2ggaXQgbWFrZXMgbW9yZSBzZW5zZSB0byB1c2Ugc211X2Nsa190eXBlcyBoZXJlIHJh
-dGhlciB0aGFuDQo+IGFtZF9wcF9jbG9ja190eXBlIC0gYW55IHJlYXNvbiB3aHkgdGhpcyBpc24n
-dCB0aGUgY2FzZT8NCj4gDQo+Pj4gICAJCQkJCSAgJnBwX2Nsa3MpKSB7DQo+Pj4gICAJCQlnZXRf
-ZGVmYXVsdF9jbG9ja19sZXZlbHMoY2xrX3R5cGUsIGRjX2Nsa3MpOw0KPj4+ICAgCQkJcmV0dXJu
-IHRydWU7DQo+Pj4gQEAgLTQxOCw3ICs0MTgsNyBAQCBib29sIGRtX3BwX2dldF9jbG9ja19sZXZl
-bHNfYnlfdHlwZV93aXRoX2xhdGVuY3koDQo+Pj4gICAJCQlyZXR1cm4gZmFsc2U7DQo+Pj4gICAJ
-fSBlbHNlIGlmIChhZGV2LT5zbXUucHB0X2Z1bmNzICYmIGFkZXYtPnNtdS5wcHRfZnVuY3MtPmdl
-dF9jbG9ja19ieV90eXBlX3dpdGhfbGF0ZW5jeSkgew0KPj4+ICAgCQlpZiAoc211X2dldF9jbG9j
-a19ieV90eXBlX3dpdGhfbGF0ZW5jeSgmYWRldi0+c211LA0KPj4+IC0JCQkJCQkgICAgICAgZGNf
-dG9fcHBfY2xvY2tfdHlwZShjbGtfdHlwZSksDQo+Pj4gKwkJCQkJCSAgICAgICBkY190b19zbXVf
-Y2xvY2tfdHlwZShjbGtfdHlwZSksDQo+IA0KPiBUaGlzIGlzIHNsaWdodGx5IGNvbmNlcm5pbmcu
-IFRoZSBmdW5jdGlvbnMgYXJlIGRvaW5nIHRoZSByaWdodCB0aGluZywNCj4gYnV0IGFtZF9wcF9j
-bG9ja190eXBlIGRvZXNuJ3QgbWFwIDEtMSB0byBzbXVfY2xrX3R5cGUuLi4gSW4gYW55IGNhc2Us
-DQo+IHRoaXMgbG9va3MgZ29vZCB0byBtZS4NCj4gDQo+IFJldmlld2VkLWJ5OiBMZW8gTGkgPHN1
-bnBlbmcubGlAYW1kLmNvbT4NCg0KTG9va3MgbW9zdGx5IGxpa2UgdGhlIHRhYmxlIGp1c3QgbmVl
-ZHMgdG8gYmUgc2l6ZWQgcHJvcGVybHk6DQoNCglzdGF0aWMgaW50IGRjX2Nsa190eXBlX21hcFtd
-ID0gew0KLT4NCglzdGF0aWMgaW50IGRjX2Nsa190eXBlX21hcFtETV9QUF9DTE9DS19UWVBFX05V
-TV9UWVBFU10gPSB7DQoNCndoZXJlIERNX1BQX0NMT0NLX1RZUEVfTlVNX1RZUEVTIHdvdWxkIGJl
-IGFkZGVkIHRvIGVudW0gZG1fcHBfY2xvY2tfdHlwZS4NCg0KT3IgaXQgY291bGQganVzdCB1c2Ug
-YSBzd2l0Y2ggdGFibGUgaW5zdGVhZCwgbGlrZSB0aGUgb3RoZXIgZnVuY3Rpb24gZG9lcy4NCg0K
-TmljaG9sYXMgS2F6bGF1c2thcw0KDQoNCj4gDQo+Pj4gICAJCQkJCQkgICAgICAgJnBwX2Nsa3Mp
-KQ0KPj4+ICAgCQkJcmV0dXJuIGZhbHNlOw0KPj4+ICAgCX0NCj4+PiAtLSANCj4+PiAyLjIyLjAN
-Cj4+Pg0KPj4NCj4+IEdlbnRsZSBwaW5nIGZvciByZXZpZXcsIHRoaXMgaXMgdGhlIGxhc3QgcmVt
-YWluaW5nIHdhcm5pbmcgdGhhdCBJIHNlZQ0KPj4gZnJvbSBhbWRncHUgb24gbmV4dC0yMDE5MDcx
-OC4NCj4+DQo+PiBDaGVlcnMsDQo+PiBOYXRoYW4NCj4+DQo+IF9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QNCj4g
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZw0KPiBodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA0KPiANCg0K
+Commit-ID:  84ec3a0787086fcd25f284f59b3aa01fd6fc0a5d
+Gitweb:     https://git.kernel.org/tip/84ec3a0787086fcd25f284f59b3aa01fd6fc0a5d
+Author:     Paul E. McKenney <paulmck@linux.ibm.com>
+AuthorDate: Tue, 25 Jun 2019 09:52:38 -0700
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Thu, 25 Jul 2019 15:51:53 +0200
+
+time/tick-broadcast: Fix tick_broadcast_offline() lockdep complaint
+
+time/tick-broadcast: Fix tick_broadcast_offline() lockdep complaint
+
+The TASKS03 and TREE04 rcutorture scenarios produce the following
+lockdep complaint:
+
+	WARNING: inconsistent lock state
+	5.2.0-rc1+ #513 Not tainted
+	--------------------------------
+	inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
+	migration/1/14 [HC0[0]:SC0[0]:HE1:SE1] takes:
+	(____ptrval____) (tick_broadcast_lock){?...}, at: tick_broadcast_offline+0xf/0x70
+	{IN-HARDIRQ-W} state was registered at:
+	  lock_acquire+0xb0/0x1c0
+	  _raw_spin_lock_irqsave+0x3c/0x50
+	  tick_broadcast_switch_to_oneshot+0xd/0x40
+	  tick_switch_to_oneshot+0x4f/0xd0
+	  hrtimer_run_queues+0xf3/0x130
+	  run_local_timers+0x1c/0x50
+	  update_process_times+0x1c/0x50
+	  tick_periodic+0x26/0xc0
+	  tick_handle_periodic+0x1a/0x60
+	  smp_apic_timer_interrupt+0x80/0x2a0
+	  apic_timer_interrupt+0xf/0x20
+	  _raw_spin_unlock_irqrestore+0x4e/0x60
+	  rcu_nocb_gp_kthread+0x15d/0x590
+	  kthread+0xf3/0x130
+	  ret_from_fork+0x3a/0x50
+	irq event stamp: 171
+	hardirqs last  enabled at (171): [<ffffffff8a201a37>] trace_hardirqs_on_thunk+0x1a/0x1c
+	hardirqs last disabled at (170): [<ffffffff8a201a53>] trace_hardirqs_off_thunk+0x1a/0x1c
+	softirqs last  enabled at (0): [<ffffffff8a264ee0>] copy_process.part.56+0x650/0x1cb0
+	softirqs last disabled at (0): [<0000000000000000>] 0x0
+
+        [...]
+
+To reproduce, run the following rcutorture test:
+
+ $ tools/testing/selftests/rcutorture/bin/kvm.sh --duration 5 --kconfig "CONFIG_DEBUG_LOCK_ALLOC=y CONFIG_PROVE_LOCKING=y" --configs "TASKS03 TREE04"
+
+It turns out that tick_broadcast_offline() was an innocent bystander.
+After all, interrupts are supposed to be disabled throughout
+take_cpu_down(), and therefore should have been disabled upon entry to
+tick_offline_cpu() and thus to tick_broadcast_offline().  This suggests
+that one of the CPU-hotplug notifiers was incorrectly enabling interrupts,
+and leaving them enabled on return.
+
+Some debugging code showed that the culprit was sched_cpu_dying().
+It had irqs enabled after return from sched_tick_stop().  Which in turn
+had irqs enabled after return from cancel_delayed_work_sync().  Which is a
+wrapper around __cancel_work_timer().  Which can sleep in the case where
+something else is concurrently trying to cancel the same delayed work,
+and as Thomas Gleixner pointed out on IRC, sleeping is a decidedly bad
+idea when you are invoked from take_cpu_down(), regardless of the state
+you leave interrupts in upon return.
+
+Code inspection located no reason why the delayed work absolutely
+needed to be canceled from sched_tick_stop():  The work is not
+bound to the outgoing CPU by design, given that the whole point is
+to collect statistics without disturbing the outgoing CPU.
+
+This commit therefore simply drops the cancel_delayed_work_sync() from
+sched_tick_stop().  Instead, a new ->state field is added to the tick_work
+structure so that the delayed-work handler function sched_tick_remote()
+can avoid reposting itself.  A cpu_is_offline() check is also added to
+sched_tick_remote() to avoid mucking with the state of an offlined CPU
+(though it does appear safe to do so).  The sched_tick_start() and
+sched_tick_stop() functions also update ->state, and sched_tick_start()
+also schedules the delayed work if ->state indicates that it is not
+already in flight.
+
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+[ paulmck: Apply Peter Zijlstra and Frederic Weisbecker atomics feedback. ]
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190625165238.GJ26519@linux.ibm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/core.c | 57 +++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 49 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 2b037f195473..0b22e55cebe8 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3486,8 +3486,36 @@ void scheduler_tick(void)
+ 
+ struct tick_work {
+ 	int			cpu;
++	atomic_t		state;
+ 	struct delayed_work	work;
+ };
++/* Values for ->state, see diagram below. */
++#define TICK_SCHED_REMOTE_OFFLINE	0
++#define TICK_SCHED_REMOTE_OFFLINING	1
++#define TICK_SCHED_REMOTE_RUNNING	2
++
++/*
++ * State diagram for ->state:
++ *
++ *
++ *          TICK_SCHED_REMOTE_OFFLINE
++ *                    |   ^
++ *                    |   |
++ *                    |   | sched_tick_remote()
++ *                    |   |
++ *                    |   |
++ *                    +--TICK_SCHED_REMOTE_OFFLINING
++ *                    |   ^
++ *                    |   |
++ * sched_tick_start() |   | sched_tick_stop()
++ *                    |   |
++ *                    V   |
++ *          TICK_SCHED_REMOTE_RUNNING
++ *
++ *
++ * Other transitions get WARN_ON_ONCE(), except that sched_tick_remote()
++ * and sched_tick_start() are happy to leave the state in RUNNING.
++ */
+ 
+ static struct tick_work __percpu *tick_work_cpu;
+ 
+@@ -3500,6 +3528,7 @@ static void sched_tick_remote(struct work_struct *work)
+ 	struct task_struct *curr;
+ 	struct rq_flags rf;
+ 	u64 delta;
++	int os;
+ 
+ 	/*
+ 	 * Handle the tick only if it appears the remote CPU is running in full
+@@ -3513,7 +3542,7 @@ static void sched_tick_remote(struct work_struct *work)
+ 
+ 	rq_lock_irq(rq, &rf);
+ 	curr = rq->curr;
+-	if (is_idle_task(curr))
++	if (is_idle_task(curr) || cpu_is_offline(cpu))
+ 		goto out_unlock;
+ 
+ 	update_rq_clock(rq);
+@@ -3533,13 +3562,18 @@ out_requeue:
+ 	/*
+ 	 * Run the remote tick once per second (1Hz). This arbitrary
+ 	 * frequency is large enough to avoid overload but short enough
+-	 * to keep scheduler internal stats reasonably up to date.
++	 * to keep scheduler internal stats reasonably up to date.  But
++	 * first update state to reflect hotplug activity if required.
+ 	 */
+-	queue_delayed_work(system_unbound_wq, dwork, HZ);
++	os = atomic_fetch_add_unless(&twork->state, -1, TICK_SCHED_REMOTE_RUNNING);
++	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_OFFLINE);
++	if (os == TICK_SCHED_REMOTE_RUNNING)
++		queue_delayed_work(system_unbound_wq, dwork, HZ);
+ }
+ 
+ static void sched_tick_start(int cpu)
+ {
++	int os;
+ 	struct tick_work *twork;
+ 
+ 	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
+@@ -3548,15 +3582,20 @@ static void sched_tick_start(int cpu)
+ 	WARN_ON_ONCE(!tick_work_cpu);
+ 
+ 	twork = per_cpu_ptr(tick_work_cpu, cpu);
+-	twork->cpu = cpu;
+-	INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
+-	queue_delayed_work(system_unbound_wq, &twork->work, HZ);
++	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_RUNNING);
++	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_RUNNING);
++	if (os == TICK_SCHED_REMOTE_OFFLINE) {
++		twork->cpu = cpu;
++		INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
++		queue_delayed_work(system_unbound_wq, &twork->work, HZ);
++	}
+ }
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+ static void sched_tick_stop(int cpu)
+ {
+ 	struct tick_work *twork;
++	int os;
+ 
+ 	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
+ 		return;
+@@ -3564,7 +3603,10 @@ static void sched_tick_stop(int cpu)
+ 	WARN_ON_ONCE(!tick_work_cpu);
+ 
+ 	twork = per_cpu_ptr(tick_work_cpu, cpu);
+-	cancel_delayed_work_sync(&twork->work);
++	/* There cannot be competing actions, but don't rely on stop-machine. */
++	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_OFFLINING);
++	WARN_ON_ONCE(os != TICK_SCHED_REMOTE_RUNNING);
++	/* Don't cancel, as this would mess up the state machine. */
+ }
+ #endif /* CONFIG_HOTPLUG_CPU */
+ 
+@@ -3572,7 +3614,6 @@ int __init sched_tick_offload_init(void)
+ {
+ 	tick_work_cpu = alloc_percpu(struct tick_work);
+ 	BUG_ON(!tick_work_cpu);
+-
+ 	return 0;
+ }
+ 
