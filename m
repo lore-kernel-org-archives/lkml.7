@@ -2,252 +2,129 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A11C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A7EC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F7D22BE8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1890B2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 20:03:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EvM7EY5+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gRrhkgmX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfGYUDD (ORCPT
+        id S1726723AbfGYUDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 16:03:03 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40507 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfGYUDC (ORCPT
+        Thu, 25 Jul 2019 16:03:34 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34097 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbfGYUDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 16:03:02 -0400
-Received: by mail-qt1-f193.google.com with SMTP id a15so50294594qtn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 13:03:01 -0700 (PDT)
+        Thu, 25 Jul 2019 16:03:33 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b13so23284029pfo.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 13:03:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=T6Kfxrjva1Z1h3U5G28XyW7S6d6s6YSCvgoryc554dQ=;
-        b=EvM7EY5+yKYt+issfk/6zSI+1ZPOtWCPjl9voDPzyAjWWeMcRywZFrYzY/8fqRIgVW
-         /gAvyRah6w1gv0XfO56pH7g1/ZvJYWtGlh3x6f7ipb6hWXc53yM0lPBg/ZPYJdiHX4fs
-         zM9Jfui2pTHzVm+oHtn13YrmmcBU6EKKK+kuQFUnvYVJ4My1EnzYxC9tMK4QxfMp+KO8
-         JxB77DpRAu0LdBfU4omovMBkpTWaVUTyabcEdj8LtuW61Axth28DhWOO5JBLCZWJNqdR
-         0FLsc9xgvFo8qD9GyW/cWjI3g1AdMBMOK9eQbxKeF+M+KR8ZPRxbEBDrU/XcDq9+0lbk
-         kAIw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uHw7zEXiXiWuFCeMIM1DoPEM5lUo8QWt7fmyIitbzd4=;
+        b=gRrhkgmXX57rpW/eOfU07DHgYIRJaSRHWUMLcqkuazmJ9eSgJ3ejVn/JebuAtKVADk
+         Es6uzHuBitkmgkTqzHq1W3PJ0BRywQ0CY27gZ/QC9xT0zl4goLkz+41D93WnbaD1uMqw
+         G/fn+b5k6gja9lg/U079hwILSubBD+sUO58DQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=T6Kfxrjva1Z1h3U5G28XyW7S6d6s6YSCvgoryc554dQ=;
-        b=Ob9sJgNzHH6+KU8jfHPURjSlHNpaa8w20azY9PW4YW6smS8l4npoOrEYKCWB/hUAs6
-         X/4EnZtBf/v0iROTQ/UdfOZxNjF781bmhyKdidjjrXYa7lIuk7T5XabFvgTjYs054OTd
-         Ym2T0DvNmAjtrptWv/vwmqXGUgwl1lYpfDsBg2zcKlsUuMvbTKnUJEy99WwNq9x/TVk2
-         jQNAYds95Uj6O8LLseDc8vTTPMjK6VJ4b8uGH/j1Amv5oGkvb4wqy76A7eq/dZs5jP2y
-         61ihgRi5ktdXAwxQv4utZcx5pFLqyZtNPFSvuvzTCCmEmlJtVGXA3wtZSdmy147IiJyv
-         2NRQ==
-X-Gm-Message-State: APjAAAWnIEYszGkn84sxB5iWxNm4eSMqLvH8E6yCgP9Jr9wO8nFlfdWt
-        QA3NxjrkgYSASj492lGv5MVBb1/4cIIWTRW22ac=
-X-Google-Smtp-Source: APXvYqx5AxMPKirkH8FxekIX3xCjh8i+duSDJqVMjJsjnv8OlSkqwuVQxTN5eSaygHpyAGhXFq04UY/vw3ed4vN+T/I=
-X-Received: by 2002:ac8:38c5:: with SMTP id g5mr64364701qtc.299.1564084980831;
- Thu, 25 Jul 2019 13:03:00 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uHw7zEXiXiWuFCeMIM1DoPEM5lUo8QWt7fmyIitbzd4=;
+        b=WC9jtQvMhw2pHOFzAiV2dQ0dzBVlCPLvnrmPH0doer43T2avmKM59ife63j8sFE03z
+         yW28s738ECGJ9GX/QjTRVE/4F17HX4wW/ARZhnp6d4kwa/VrwgLKfxM08n3cqqbhDcKu
+         X/nwOYPlDUVPbyLeSLmt3boxSJc2REJod+08UpA6FvSol+VWApFwrwYf0tGstz3+J1HD
+         3v4kOnrQHNlLnMglBlWig4VY4TNdYNIE8GZajk+FE5ekUIGtDTLnuc8M9xzfwjkF32Hb
+         ndmXPL0ndybM2p6Jl5BRh5J/cOiQ97h/XhDKcZcW7yMR08Z4mIdXU1zapThBUpP7s8Pi
+         B7eg==
+X-Gm-Message-State: APjAAAUQJwf3Sn/d1pde1xEtyE1Ognkb/JMa1VTp6uS1gbONLBUCbgbK
+        DoZEjZaaBswW0YZTBnafMy3+Rg8Sr5c=
+X-Google-Smtp-Source: APXvYqyiwJnHa4FCVMLcBfvKJWud2kqtfpMi3xvkqMN2IoBqOPCPGL/0CNp1/3L5rVvFG+E3R3tlcw==
+X-Received: by 2002:a63:a302:: with SMTP id s2mr18456663pge.125.1564085012343;
+        Thu, 25 Jul 2019 13:03:32 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p65sm50026998pfp.58.2019.07.25.13.03.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Jul 2019 13:03:31 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 13:03:30 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Yann Droneaud <ydroneaud@opteya.com>,
+        David Laight <David.Laight@aculab.com>,
+        Joe Perches <joe@perches.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, Stephen Kitt <steve@sk2.org>,
+        Nitin Gote <nitin.r.gote@intel.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/2] string: Add stracpy and stracpy_pad mechanisms
+Message-ID: <201907251301.E1E32DCCCE@keescook>
+References: <cover.1563841972.git.joe@perches.com>
+ <7ab8957eaf9b0931a59eff6e2bd8c5169f2f6c41.1563841972.git.joe@perches.com>
+ <eec901c6-ca51-89e4-1887-1ccab0288bee@rasmusvillemoes.dk>
+ <5ffdbf4f87054b47a2daf23a6afabecf@AcuMS.aculab.com>
+ <bc1ad99a420dd842ce3a17c2c38a2f94683dc91c.camel@opteya.com>
+ <396d1eed-8edf-aa77-110b-c50ead3a5fd5@rasmusvillemoes.dk>
+ <CAHk-=whPA-Vv-OHbUe4M5=ygTknQNOasnLAp-E3zSAaq=pue+g@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAOKSTBs-cHMr7xbJVVUjZ9C3__bY6jZU-_TZ0RmMRMJ3dBk3PA@mail.gmail.com>
- <0c3f445d-1e37-1531-d3d5-f7ad75c58343@metux.net> <CADnq5_NqDNLzZW6h3cXBUfTMsBe6isvE6YQH=9Op6Gews=ubGg@mail.gmail.com>
- <CAOKSTBvjJ+3he9AJoRGkxQfQLoG_T9jY+H8p0o6A6FdmnisSJA@mail.gmail.com> <CADnq5_Mjq9GxeO3m3F2bEjfmWr7k2KbGkNVJ7k7YKNdVsyMb5Q@mail.gmail.com>
-In-Reply-To: <CADnq5_Mjq9GxeO3m3F2bEjfmWr7k2KbGkNVJ7k7YKNdVsyMb5Q@mail.gmail.com>
-From:   Gilberto Nunes <gilberto.nunes32@gmail.com>
-Date:   Thu, 25 Jul 2019 17:02:24 -0300
-Message-ID: <CAOKSTBvoakV3TeTFCnVRScT82U-Hc52DV5C8e2TyakoDGc8Big@mail.gmail.com>
-Subject: Re: AMD Drivers
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whPA-Vv-OHbUe4M5=ygTknQNOasnLAp-E3zSAaq=pue+g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Awesome, thanks for the update! I will wait for the next upstrem...
-Besides this minor problem everything is wonderful!
-Even retroarch works now!
-With 4.18.x 5.1.x and 5.2.x freeze the entire system when access amdgpu...
+On Wed, Jul 24, 2019 at 10:08:57AM -0700, Linus Torvalds wrote:
+> On Wed, Jul 24, 2019 at 6:09 AM Rasmus Villemoes
+> <linux@rasmusvillemoes.dk> wrote:
+> >
+> > The kernel's snprintf() does not behave in a non-standard way, at least
+> > not with respect to its return value.
+> 
+> Note that the kernels snprintf() *does* very much protect against the
+> overflow case - not by changing the return value, but simply by having
+> 
+>         /* Reject out-of-range values early.  Large positive sizes are
+>            used for unknown buffer sizes. */
+>         if (WARN_ON_ONCE(size > INT_MAX))
+>                 return 0;
+> 
+> at the very top.
+> 
+> So you can't actually overflow in the kernel by using the repeated
+> 
+>         offset += vsnprintf( .. size - offset ..);
+> 
+> model.
+> 
+> Yes, it's the wrong thing to do, but it is still _safe_.
 
-Thanks a lot!
----
-Gilberto Nunes Ferreira
+Actually, perhaps we should add this test to strscpy() too?
 
-(47) 3025-5907
-(47) 99676-7530 - Whatsapp / Telegram
+diff --git a/lib/string.c b/lib/string.c
+index 461fb620f85f..0e0d7628ddc4 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -182,7 +182,7 @@ ssize_t strscpy(char *dest, const char *src, size_t count)
+ 	size_t max = count;
+ 	long res = 0;
+ 
+-	if (count == 0)
++	if (count == 0 || count > INT_MAX)
+ 		return -E2BIG;
+ 
+ #ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
 
-Skype: gilberto.nunes36
-
-
-
-
-Em qui, 25 de jul de 2019 =C3=A0s 16:50, Alex Deucher
-<alexdeucher@gmail.com> escreveu:
->
-> On Thu, Jul 25, 2019 at 3:29 PM Gilberto Nunes
-> <gilberto.nunes32@gmail.com> wrote:
-> >
-> > Hi there!
-> >
-> > I try the kernel 5.3.0-050300rc1-generic and almost everything works
-> > perfectly, except there's no sound in HDMI!!!
->
-> Sounds is fixed with this patch:
-> https://cgit.freedesktop.org/~agd5f/linux/commit/?h=3Ddrm-fixes-5.3&id=3D=
-92e6475ae0a0383b012eb21c1aaf0e5456b1a3d9
-> which is on it's way upstream for rc2.
->
-> Alex
->
-> > Pavucontrol show me device unplugged!
-> > But I have now work properly NIC and GPU!
-> >
-> >
-> > lspci
-> > 00:00.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > (Models 60h-6fh) Processor Root Complex
-> > 00:00.2 IOMMU: Advanced Micro Devices, Inc. [AMD] Family 15h (Models
-> > 60h-6fh) I/O Memory Management Unit
-> > 00:01.0 VGA compatible controller: Advanced Micro Devices, Inc.
-> > [AMD/ATI] Wani [Radeon R5/R6/R7 Graphics] (rev c8)
-> > 00:01.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Kabini
-> > HDMI/DP Audio
-> > 00:02.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > (Models 60h-6fh) Host Bridge
-> > 00:02.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > (Models 60h-6fh) Processor Root Port
-> > 00:02.3 PCI bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > (Models 60h-6fh) Processor Root Port
-> > 00:03.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > (Models 60h-6fh) Host Bridge
-> > 00:03.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > (Models 60h-6fh) Processor Root Port
-> > 00:08.0 Encryption controller: Advanced Micro Devices, Inc. [AMD] Devic=
-e 1578
-> > 00:09.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 157d
-> > 00:09.2 Audio device: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > (Models 60h-6fh) Audio Controller
-> > 00:10.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB
-> > XHCI Controller (rev 20)
-> > 00:11.0 SATA controller: Advanced Micro Devices, Inc. [AMD] FCH SATA
-> > Controller [AHCI mode] (rev 49)
-> > 00:12.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB
-> > EHCI Controller (rev 49)
-> > 00:14.0 SMBus: Advanced Micro Devices, Inc. [AMD] FCH SMBus Controller =
-(rev 4a)
-> > 00:14.3 ISA bridge: Advanced Micro Devices, Inc. [AMD] FCH LPC Bridge (=
-rev 11)
-> > 00:18.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > (Models 60h-6fh) Processor Function 0
-> > 00:18.1 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > (Models 60h-6fh) Processor Function 1
-> > 00:18.2 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > (Models 60h-6fh) Processor Function 2
-> > 00:18.3 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > (Models 60h-6fh) Processor Function 3
-> > 00:18.4 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > (Models 60h-6fh) Processor Function 4
-> > 00:18.5 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h
-> > (Models 60h-6fh) Processor Function 5
-> > 01:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd.
-> > RTL8411B PCI Express Card Reader (rev 01)
-> > 01:00.1 Ethernet controller: Realtek Semiconductor Co., Ltd.
-> > RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 12)
-> > 02:00.0 Network controller: Qualcomm Atheros QCA9377 802.11ac Wireless
-> > Network Adapter (rev 31)
-> > 03:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI]
-> > Lexa PRO [Radeon RX 550/550X] (rev c3)
-> > ---
-> > Gilberto Nunes Ferreira
-> >
-> > (47) 3025-5907
-> > (47) 99676-7530 - Whatsapp / Telegram
-> >
-> > Skype: gilberto.nunes36
-> >
-> >
-> > Em qui, 25 de jul de 2019 =C3=A0s 14:26, Alex Deucher
-> > <alexdeucher@gmail.com> escreveu:
-> > >
-> > > On Thu, Jul 25, 2019 at 3:30 AM Enrico Weigelt, metux IT consult
-> > > <lkml@metux.net> wrote:
-> > > >
-> > > > On 24.07.19 16:17, Gilberto Nunes wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > crossposting to dri-devel, as it smells like a problem w/ amdgpu dr=
-iver.
-> > > >
-> > > > > CPU - AMD A12-9720P RADEON R7, 12 COMPUTE CORES 4C+8G
-> > > > > GPU - Wani [Radeon R5/R6/R7 Graphics] (amdgpu)
-> > > > > Network Interface card:
-> > > > > 01:00.1 Ethernet controller: Realtek Semiconductor Co., Ltd.
-> > > > > RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 12=
-)
-> > > > >
-> > > > > When I install kernel 4.18.x or 5.x, the network doesn't work any=
-more...
-> > > >
-> > > > What about other versions (eg. v4.19) ?
-> > > > Which is the last working version ?
-> > > >
-> > > > > I can loaded the modulo r8169 andr8168.
-> > > > > I saw enp1s0f1 as well but there's no link at all!
-> > > > > Even when I fixed the IP none link!
-> > > > > I cannot ping the network gateway or any other IP inside LAN!
-> > > > > Right now, I booted my laptop with kernel
-> > > > > Linux version 5.2.2-050202-generic (kernel@kathleen) (gcc version
-> > > > > 9.1.0 (Ubuntu 9.1.0-9ubuntu2)) #201907231250 SMP Tue Jul 23 12:53=
-:21
-> > > > > UTC 2019
-> > > >
-> > > > Could you also try 5.3 ?
-> > > >
-> > > > > The system boot slowly, and I have a SSD Samsung, which in kernel
-> > > > > 4.15, boot quickly.
-> > > > > And there's many errors in dmesg command, like you can see in thi=
-s pastbin
-> > > > >
-> > > > > https://paste.ubuntu.com/p/YhbjnzYYYh/
-> > > >
-> > > > looks like something's wrong w/ reading gpu registers (more precise=
-ly
-> > > > waiting for some changing), that's causing the soft lockup. (maybe =
-too
-> > > > big timeout ?)
-> > >
-> > > It looks like the dGPU fails to power up properly when you attempt to
-> > > use it.  You can append amdgpu.runpm=3D0 to the kernel command line i=
-n
-> > > grub to disable dynamically powering down the dGPU.
-> > >
-> > > Alex
-> > >
-> > > >
-> > > > > Oh! By the way, the network card r8169 are work wonderful!
-> > > >
-> > > > Didn't you say (above) that it does not work ?
-> > > > Or is it just an immediate fail and later comes back ?
-> > > >
-> > > >
-> > > > --mtx
-> > > >
-> > > >
-> > > > --
-> > > > Enrico Weigelt, metux IT consult
-> > > > Free software and Linux embedded engineering
-> > > > info@metux.net -- +49-151-27565287
-> > > > _______________________________________________
-> > > > dri-devel mailing list
-> > > > dri-devel@lists.freedesktop.org
-> > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+-- 
+Kees Cook
