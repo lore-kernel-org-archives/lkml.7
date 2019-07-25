@@ -2,69 +2,145 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B54C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F29C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC0F2084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721BC20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NlXL42m+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bCgV0Y0K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730066AbfGYRuZ (ORCPT
+        id S1729994AbfGYRvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:50:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49808 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbfGYRuY (ORCPT
+        Thu, 25 Jul 2019 13:51:05 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37791 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbfGYRvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:50:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gA09uTP520+DTF2hbvI/7yy94RH4p4YdpNEly2D3hiE=; b=NlXL42m+P8l20ZGmxozAfD9AW
-        KRKxSJOkUTvQl10MfwL7pToTFDZOhRnUh9xZJx1Md+VqUy8Rkb+/OTWH7XSWYuz0qRtM22S+bQtez
-        fpJlt0Pu0QvTeaDzT0vIJxqqfy7TU5K7HdmHWriIA6hcd7wXEHROIPtyJ0RfiSsC+y5cZ55oUmNez
-        +ZBtZgdXnwSqJKwcBjldQ9Yenq+7GnuBD+uKntEAT7Mi5dR/Vxce/12OtAeUDwl8DDvwJfNW01+qf
-        YxgZ3Wxo8z2/UzaqBVWWr7ZGcSCJCT+JjhyFPAmZFcu2gQrsVFJzNcKH6LMX2EpD/KkqOswXnaEop
-        TKsPQdOfw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqhsl-00028P-Mb; Thu, 25 Jul 2019 17:50:23 +0000
-Date:   Thu, 25 Jul 2019 10:50:23 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH v6 04/16] nvme-core: introduce nvme_get_by_path()
-Message-ID: <20190725175023.GA30641@bombadil.infradead.org>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <20190725172335.6825-5-logang@deltatee.com>
+        Thu, 25 Jul 2019 13:51:05 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w13so51035148eds.4;
+        Thu, 25 Jul 2019 10:51:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rLx1WxxS2eiFupzGOfH7X3JpoyBVgunYKBsWNt5yLUw=;
+        b=bCgV0Y0KK+hZmQcR1Ije8gmw+VFkvFkFIk7n6PTSK4+JTJutIG+r8glT/WEdzuFC10
+         O3KQ4Siab33aiSEyEsyVYzHGz/nsrTIerU+zKakzfKJf4AMYChTdkwaNgn70ISdnNF3c
+         TLSUlrxjEMfU+AYpWgjfD92PU+aG7Wdh4ZlNR0UEV+INBwHfjkgCfyqB3c9aQxux/GIF
+         /JNsbzuvL4tYp+0BsS2aeaToEyI8t1OuTNiG9EtNGBpV3IviSxEx6Jkv2tedyJlpVIMf
+         bJc+oDf9i99jxX1rArWlfw4m4NL/MpETs01X74VX5XoLRBZE/jAVi7B0aYpWfHywarah
+         jvlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rLx1WxxS2eiFupzGOfH7X3JpoyBVgunYKBsWNt5yLUw=;
+        b=Ajq3ff3yw9QYdg5esNuProiKm/rPY+x9J0QPOndKs5gIt7kJHm2hI00F+oY9s/XD+t
+         99CSm2m6XU2hz6gGCu6LDlQL441Bg9/0hgtQujTN41HvgVx5oOczwI2IJTyRufpZBJ8f
+         Ht7AgcvKmSH5qR654tnI/dY0oCnkOxAuPVIhCiEruNcxE1AkNBX1I6pKzuVV9pTvwKHr
+         M7Js/KJ158V4CS7dfmuLrhXEBootoFRzbjmysjVE1gr5J5l7epc9GgSahTkJHexf82Pe
+         uiCOzeMnSNZWSG9m9hTRyeDKwacZ7kQF11HpivrkYEdMK9NUXWlHCgFhu/mK3LYR7Gkx
+         QXxA==
+X-Gm-Message-State: APjAAAVGjSKR3u8gDjkKHhZw8R/5nZDnsWaXWfuvgKetITDApQrpr73X
+        o0uzVbte2m7UiZvH6zBacB2mdPYMeGZfryphBGE=
+X-Google-Smtp-Source: APXvYqx0hq85a8gR6SvZiwDeUgHmw4HBnllzoppGUeegEPb0sAcSwB9g+0T/RlSOGs1+9qmJErJLRLdvNOJgJ7TKSlg=
+X-Received: by 2002:a17:906:f85:: with SMTP id q5mr70131087ejj.192.1564077063087;
+ Thu, 25 Jul 2019 10:51:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725172335.6825-5-logang@deltatee.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1564073588-27386-1-git-send-email-jcrouse@codeaurora.org>
+In-Reply-To: <1564073588-27386-1-git-send-email-jcrouse@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 25 Jul 2019 10:50:51 -0700
+Message-ID: <CAF6AEGus9DtNou8KHaVK=_-mgc5JYH=cVoiTABsm=jBkXo2v2w@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm: Annotate intentional switch statement fall throughs
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 11:23:23AM -0600, Logan Gunthorpe wrote:
-> nvme_get_by_path() is analagous to blkdev_get_by_path() except it
-> gets a struct nvme_ctrl from the path to its char dev (/dev/nvme0).
-> 
-> The purpose of this function is to support NVMe-OF target passthru.
+On Thu, Jul 25, 2019 at 9:53 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> Explicitly mark intentional fall throughs in switch statements to keep
+> -Wimplicit-fallthrough from complaining.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 
-I can't find anywhere that you use this in this patchset.
+Reviewed-by: Rob Clark <robdclark@gmail.com>
+
+> ---
+>
+>  drivers/gpu/drm/msm/adreno/a5xx_gpu.c   | 2 ++
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c   | 1 +
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 1 +
+>  3 files changed, 4 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+> index 1671db4..e9c55d1 100644
+> --- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+> @@ -59,6 +59,7 @@ static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit
+>                 case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
+>                         if (priv->lastctx == ctx)
+>                                 break;
+> +                       /* fall-thru */
+>                 case MSM_SUBMIT_CMD_BUF:
+>                         /* copy commands into RB: */
+>                         obj = submit->bos[submit->cmd[i].idx].obj;
+> @@ -149,6 +150,7 @@ static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+>                 case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
+>                         if (priv->lastctx == ctx)
+>                                 break;
+> +                       /* fall-thru */
+>                 case MSM_SUBMIT_CMD_BUF:
+>                         OUT_PKT7(ring, CP_INDIRECT_BUFFER_PFE, 3);
+>                         OUT_RING(ring, lower_32_bits(submit->cmd[i].iova));
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> index be39cf0..dc8ec2c 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -115,6 +115,7 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+>                 case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
+>                         if (priv->lastctx == ctx)
+>                                 break;
+> +                       /* fall-thru */
+>                 case MSM_SUBMIT_CMD_BUF:
+>                         OUT_PKT7(ring, CP_INDIRECT_BUFFER_PFE, 3);
+>                         OUT_RING(ring, lower_32_bits(submit->cmd[i].iova));
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> index 9acbbc0..048c8be 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> @@ -428,6 +428,7 @@ void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+>                         /* ignore if there has not been a ctx switch: */
+>                         if (priv->lastctx == ctx)
+>                                 break;
+> +                       /* fall-thru */
+>                 case MSM_SUBMIT_CMD_BUF:
+>                         OUT_PKT3(ring, adreno_is_a430(adreno_gpu) ?
+>                                 CP_INDIRECT_BUFFER_PFE : CP_INDIRECT_BUFFER_PFD, 2);
+> --
+> 2.7.4
+>
