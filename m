@@ -2,32 +2,32 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0DEC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FE5C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1182122CBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E5A2081B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391300AbfGYRYb (ORCPT
+        id S2390975AbfGYRXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:24:31 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:39706 "EHLO ale.deltatee.com"
+        Thu, 25 Jul 2019 13:23:51 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:39614 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391101AbfGYRXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:23:52 -0400
+        id S1729868AbfGYRXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 13:23:45 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hqhSw-0001Jh-Ff; Thu, 25 Jul 2019 11:23:51 -0600
+        id 1hqhSv-0001JQ-SF; Thu, 25 Jul 2019 11:23:44 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hqhSw-0001ni-An; Thu, 25 Jul 2019 11:23:42 -0600
+        id 1hqhSv-0001nQ-NU; Thu, 25 Jul 2019 11:23:41 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
@@ -36,18 +36,19 @@ Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
         Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
         Max Gurtovoy <maxg@mellanox.com>,
         Stephen Bates <sbates@raithlin.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 25 Jul 2019 11:23:33 -0600
-Message-Id: <20190725172335.6825-15-logang@deltatee.com>
+Date:   Thu, 25 Jul 2019 11:23:27 -0600
+Message-Id: <20190725172335.6825-9-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190725172335.6825-1-logang@deltatee.com>
 References: <20190725172335.6825-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v6 14/16] block: don't check blk_rq_is_passthrough() in blk_do_io_stat()
+Subject: [PATCH v6 08/16] nvmet-passthru: update KConfig with config passthru option
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,50 +56,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of checking blk_rq_is_passthruough() for every call to
-blk_do_io_stat(), don't set RQF_IO_STAT for passthrough requests.
-This should be equivalent, and opens the possibility of passthrough
-requests specifically requesting statistics tracking.
+From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 
+This patch updates KConfig file for the NVMeOF target where we add new
+option so that user can selectively enable/disable passthru code.
+
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+[logang@deltatee.com: fixed some of the wording in the help message]
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- block/blk-mq.c | 2 +-
- block/blk.h    | 5 ++---
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ drivers/nvme/target/Kconfig | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index b038ec680e84..b8d41d6824f6 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -318,7 +318,7 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
- 	rq->cmd_flags = op;
- 	if (data->flags & BLK_MQ_REQ_PREEMPT)
- 		rq->rq_flags |= RQF_PREEMPT;
--	if (blk_queue_io_stat(data->q))
-+	if (blk_queue_io_stat(data->q) && !blk_rq_is_passthrough(rq))
- 		rq->rq_flags |= RQF_IO_STAT;
- 	INIT_LIST_HEAD(&rq->queuelist);
- 	INIT_HLIST_NODE(&rq->hash);
-diff --git a/block/blk.h b/block/blk.h
-index de6b2e146d6e..554efa769bfe 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -234,13 +234,12 @@ int blk_dev_init(void);
-  *
-  *	a) it's attached to a gendisk, and
-  *	b) the queue had IO stats enabled when this request was started, and
-- *	c) it's a file system request
-+ *	c) it's a file system request (RQF_IO_STAT will not be set otherwise)
-  */
- static inline bool blk_do_io_stat(struct request *rq)
- {
- 	return rq->rq_disk &&
--	       (rq->rq_flags & RQF_IO_STAT) &&
--		!blk_rq_is_passthrough(rq);
-+	       (rq->rq_flags & RQF_IO_STAT);
- }
+diff --git a/drivers/nvme/target/Kconfig b/drivers/nvme/target/Kconfig
+index d7f48c0fb311..2478cb5a932d 100644
+--- a/drivers/nvme/target/Kconfig
++++ b/drivers/nvme/target/Kconfig
+@@ -15,6 +15,16 @@ config NVME_TARGET
+ 	  To configure the NVMe target you probably want to use the nvmetcli
+ 	  tool from http://git.infradead.org/users/hch/nvmetcli.git.
  
- static inline void req_set_nomerge(struct request_queue *q, struct request *req)
++config NVME_TARGET_PASSTHRU
++	bool "NVMe Target Passthrough support"
++	depends on NVME_CORE
++	depends on NVME_TARGET
++	help
++	  This enables target side NVMe passthru controller support for the
++	  NVMe Over Fabrics protocol. It allows for hosts to manage and
++	  directly access an actual NVMe controller residing on the target
++	  side, incuding executing Vendor Unique Commands.
++
+ config NVME_TARGET_LOOP
+ 	tristate "NVMe loopback device support"
+ 	depends on NVME_TARGET
 -- 
 2.20.1
 
