@@ -2,114 +2,90 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A05C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742CEC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746AA22C7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47BFD22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:11:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e+/2hx5N"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ag0sWRS2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387877AbfGYOLT (ORCPT
+        id S2387905AbfGYOLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:11:19 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45673 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728482AbfGYOLS (ORCPT
+        Thu, 25 Jul 2019 10:11:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34912 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfGYOLp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:11:18 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m23so48072888lje.12;
-        Thu, 25 Jul 2019 07:11:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jrNLPp3bYzLEDpFwB8WgHdHYREWfUZXv7BJCALM4nMs=;
-        b=e+/2hx5NHVl51pt1NoaAoxtOSPUgJyMBrXs5dukRJ1aHbWbr/J+zpahxrXK3AgWKqf
-         SWfpzTsD1VTIIL/Qay3uuk5XlDjRcihMMzNXo6umEyByVYASmGDPvndRWcis7ufx4och
-         tu/PHfw2z1mk7WqODC9xEAeEY47OnalZSUBE9HEG8BR+Bq7Vuvra7Aa4FeOW3LweYqkZ
-         /ie7cwtrsfgLO9UEYPqp9zk5WxuMh8X28QhSGeEP+L7jW5qMdvrZZuCy7XG07gdmn4lj
-         wY6olIf2XlYDqFyJrpcLxCyHWe5oyMc/YrSsmY57AKlKb7H6SxFaVl2Pkbd11PH+5BLv
-         xixw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jrNLPp3bYzLEDpFwB8WgHdHYREWfUZXv7BJCALM4nMs=;
-        b=E99etn3zEhEexjRtHvWBPthtL2iUGM8yC1jbw/ltdEulmov8+tNE5bb7P90tYr0Rgx
-         uwh8sDcHsUgyTT8/iaJf+S55HcgGUmK6FovUewqSPXn46jaNkKXcdzCKPYnFI6ouX8Cy
-         sRUKNQXmU+GwHygqIpJ9juCPW6MoS525F6bUKlbvVJjltNMGDEKhp+LvsXGs/8IjlKX/
-         JBBp8CQOZGmaHqZE8Hstb58lYU2FwGcqi5OF8CsKfqj705HScNf/o+Pn1YPAycKX9dJQ
-         uN0wJLNMhQXV9lT6R4PCFIgpzuEhzNunsaR2zbGxKtNQdP0GfG+JdowidO6LuzlWF/Xk
-         Sx7w==
-X-Gm-Message-State: APjAAAUEc8d/FA/r/M9AUuFA6KfvxBQXknAxrDAACrBLXJBj7rbBp9Fa
-        wGmLeSJ4ZUf3pMX9ImhybuM9OHxq49SEbn9BeS0=
-X-Google-Smtp-Source: APXvYqyZ2xU3Q3DBuDrKPPtRFmzwXjv7b2fsezBfSsrDgdvw3PESauQBwgujk6jS3/yZmnECnwmNvlSxES79Qhh42rw=
-X-Received: by 2002:a2e:2c07:: with SMTP id s7mr9166631ljs.44.1564063876251;
- Thu, 25 Jul 2019 07:11:16 -0700 (PDT)
+        Thu, 25 Jul 2019 10:11:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rVU3OdYVB/xxhc+Jxe+Jl0rvuIWAAmVPWnVC1lgwyac=; b=ag0sWRS2Qau6/riWg3p8KEakN
+        879W/vBUC7KhSFSuRmVrddLtdB+ukxtpMcsgoDdTk3iHr0s+Xw6ewyntMvp4Eerrw5vUjV2JrKI5+
+        BRjfvW0r7QfVyp4L8LfjZMW3yS+muIPpdCptG0YM8vfE7w7c9aPH0JHWs2QzvzBPt9loTWP1nyZ4T
+        58pi6b0FzZdPCa8JKojNGEy+/57NctfhMHMuztnzLcUMBqmfvwgUKmcGmX35Dsdb+f980RoRtTDht
+        H3JKkAp4EfelUoFFPn6BU18hLE2pz3Igtrej1ytLc6NVvgVgF5Y5yPGrJWBGTUr8c6pWpy1YdaLm2
+        LHbtTAczg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hqeTA-0004Hq-RH; Thu, 25 Jul 2019 14:11:44 +0000
+Date:   Thu, 25 Jul 2019 07:11:44 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        butao <butao@hisilicon.com>,
+        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
+        Yudongbin <yudongbin@hisilicon.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
+Message-ID: <20190725141144.GA14609@infradead.org>
+References: <20190624194908.121273-1-john.stultz@linaro.org>
+ <20190624194908.121273-5-john.stultz@linaro.org>
+ <20190718100840.GB19666@infradead.org>
+ <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
+ <20190724065958.GC16225@infradead.org>
+ <8e6f8e4f-20fc-1f1f-2228-f4fd7c7c5c1f@ti.com>
+ <20190725125014.GD20286@infradead.org>
+ <0eae0024-1fdf-bd06-a8ff-1a41f0af3c69@ti.com>
+ <20190725140448.GA25010@infradead.org>
+ <8e2ec315-5d18-68b2-8cb5-2bfb8a116d1b@ti.com>
 MIME-Version: 1.0
-References: <20190725121452.16607-1-dafna.hirschfeld@collabora.com> <20190725121452.16607-2-dafna.hirschfeld@collabora.com>
-In-Reply-To: <20190725121452.16607-2-dafna.hirschfeld@collabora.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 25 Jul 2019 11:11:17 -0300
-Message-ID: <CAOMZO5BWarNdbCc5eVW7TTO9ahkG5wMwX_3XXKkngzKcjk+mpg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: arm: imx: add imx8mq nitrogen support
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>, kernel@collabora.com,
-        Gary Bisson <gary.bisson@boundarydevices.com>,
-        Troy Kisky <troy.kisky@boundarydevices.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e2ec315-5d18-68b2-8cb5-2bfb8a116d1b@ti.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dafna,
+On Thu, Jul 25, 2019 at 10:10:08AM -0400, Andrew F. Davis wrote:
+> Pages yes, but not "normal" pages from the kernel managed area.
+> page_to_pfn() will return bad values on the pages returned by this
+> allocator and so will any of the kernel sync/map functions. Therefor
+> those operations cannot be common and need special per-heap handling.
 
-On Thu, Jul 25, 2019 at 10:56 AM Dafna Hirschfeld
-<dafna.hirschfeld@collabora.com> wrote:
->
-> From: Gary Bisson <gary.bisson@boundarydevices.com>
->
-> i.MX 8Quad is a quad (4x) Cortex-A53 processor with powerful
-> graphic and multimedia features.
-> This patch adds Nitrogen8M board support.
->
-> Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
-> Signed-off-by: Troy Kisky <troy.kisky@boundarydevices.com>
-> [Dafna: porting vendor's code to mainline]
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index 7294ac36f4c0..728c41ef83bb 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -227,6 +227,12 @@ properties:
->                - fsl,imx8qxp-mek           # i.MX8QXP MEK Board
->            - const: fsl,imx8qxp
->
-> +      - description: i.MX8MQ based Boards
-
-This line is already present in latest code as we already have some
-i.MX8MQ boards listed.
-
-Please rebase it against linux-next.
+Well, that means this thing is buggy and abuses the scatterlist API
+and we can't merge it anyway, so it is irrelevant.
