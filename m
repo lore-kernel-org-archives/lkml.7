@@ -2,111 +2,111 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CADC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 905BBC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032F3218EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66345218EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:38:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="V1ADhv36"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="qW9lqXmW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729128AbfGYOi2 (ORCPT
+        id S2387646AbfGYOi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:38:28 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53746 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbfGYOi2 (ORCPT
+        Thu, 25 Jul 2019 10:38:57 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44006 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfGYOi4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:38:28 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x15so45240793wmj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 07:38:26 -0700 (PDT)
+        Thu, 25 Jul 2019 10:38:56 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i189so22870196pfg.10
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 07:38:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=xKhjaESpwvk6sR4/SITRYpcTnlFG6jIulb5Z7EfG/G8=;
-        b=V1ADhv36o2+cFrscOoSHKnRjQaO9dDNPwd3Ahh6Kl9afPgC4H7hsakbzpEII9ZBu3/
-         LtKUTgwGP2hJW4bT58gqaxPReeLUWvqMGCpXPUyrP2WYF1zGLO+3neKuDwwo+Y3FHCkE
-         Wvtcz3x2U+4xnulIqZltKgwoIt38DxPDPPyDf0XK3AqxmKDqo2E7Y49/iUffPrC/TJsv
-         NYdXwTKkWfoIiM8q8r1eJXEbaHZSwVM7s1gB2mHAPGnEbGDnwE8T9PNUTUikrXHii2T9
-         wA0jAXz+9MA1wlhWFtP21oNGb7/Ahj3vr3lwVYFCVAXVtbenOm+Zdo596KtqjgZ91d61
-         lprg==
+        d=android.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=dM0tavbTao+XHLEjp4zxGd1Wc/gjo0u4n5AfPPLxYxY=;
+        b=qW9lqXmWOxkhdiOYGKrIWBHJs6675m6ojicr27ola+XCc/laXgrTsFw66srMTfptKM
+         E79JHYUrgD0swB3l5aRCQD23i2Yw2BoCoSowYMi0YrTZ439hPJPdYEpr+IPidFY7bJ6w
+         pYFJoxehPvvEcBRzxjNtLlvrWBiePB0+ymsj/T7HaZBy/uLx765/XOGY8lMSK+q1l0vj
+         2Tg3XPrMqO++R7wch3UgVTEumv9q1vy/A7yceOCUX3sSgckKX3VdA/enhcH4mOqaTvj5
+         3sHr+pvZlJx5Ev1BtEhINmnp3Q8GES5JIb0iUg15mcxR6OZc0CGwqWYCVo6sw3ar6rfF
+         lCug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=xKhjaESpwvk6sR4/SITRYpcTnlFG6jIulb5Z7EfG/G8=;
-        b=kXSLGwcYaZps1FYh48CNjniew8DNchhu/v/Ej0JALBDSJP1bWZz6I2LIV6zq6NYKVD
-         3TBO+j2sWsp7c4rFWWobKKrrcHyV0h0DSWtar/1jiKrIEQuDKseGeiwdITwRrCw8Y6Ak
-         kgR1gAnGfYf65oAB+c4zCAoJ9OsjgDIwO6EUAZm42jnzHCeHkJqsR9Gkr6QEqkbgei7y
-         p0EdZDponovS1AllxRJC19qFIVQJmplyzQhnnxBicvmOWtNd7eNJ/0G9AvsU1Hgs3FU7
-         xVBHqaKOHpl4aXOcVE5ieHMHhjqkNHzdxL9bFupFflRSPFFgu9ZFLtUN4J5/X8FiTkjJ
-         RvrA==
-X-Gm-Message-State: APjAAAU9/kDCkc1EJoiizvycGV6zJoncJLRCHebc7TbrNimSk+L1oXTI
-        /6UE4sUzZ+OPPM3fohad3SbJzQ==
-X-Google-Smtp-Source: APXvYqxUa4coqzdXQVeu4+Cob/EMTrXyHltG48aeyxm8e5yNgpQ4cUf2+pfTE9+Acv3S/pIJ6kzOxA==
-X-Received: by 2002:a1c:9e4d:: with SMTP id h74mr84250838wme.9.1564065506038;
-        Thu, 25 Jul 2019 07:38:26 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id z1sm51923870wrv.90.2019.07.25.07.38.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 07:38:25 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Alexandre Mergnat <amergnat@baylibre.com>
-Cc:     khilman@baylibre.com, sboyd@kernel.org, narmstrong@baylibre.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        baylibre-upstreaming@groups.io,
-        Alexandre Mergnat <amergnat@baylibre.com>
-Subject: Re: [PATCH] clk: meson: axg-audio: migrate to the new parent description method
-In-Reply-To: <20190722094954.14040-1-amergnat@baylibre.com>
-References: <20190722094954.14040-1-amergnat@baylibre.com>
-Date:   Thu, 25 Jul 2019 16:38:24 +0200
-Message-ID: <1jd0hyxjq7.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=dM0tavbTao+XHLEjp4zxGd1Wc/gjo0u4n5AfPPLxYxY=;
+        b=LMDWpnPm8O7GxEWc8z6GIvMUdzuXR/SyWTgwIrc6Fva8Ijo1+wSwBah8Ba5gVt3pbC
+         EnPcuBV31/Q47YfGqV+uU9KqsE6kbX6KBTFNy5ynbpiyV8YYSp1KPvc+0v8wWxPGQS3/
+         hERPD/aWktwmfXbxdNna8eyyb4PZgcQ0OtrVJrOEpxfZtbx8pf+nc18Fg4pTQd4obiUl
+         8pSQHIZPEpkdeGpNCpbkU6p8jG7AdvWBJM7fhqId7d0uIGa0kFmabTBEFiErZbE8v/7x
+         CqhFrEUD1aXDHQdKCMbzhgf06misf6pUW90sWbdFN3toe8GeqdqZwm4BE9tYOkKn3ijG
+         TL3A==
+X-Gm-Message-State: APjAAAXXcLP3cxR90D3meHShT8rc3IhMXd2B2ilKrCG/bhIxVg3/yFIr
+        i9oKePE1RwTUwAohyX+gVxo=
+X-Google-Smtp-Source: APXvYqxbW1kdSdI2g5El3DdDVDtndVrRVVH5xAYU7zqmtvAOT6CVSwyux9F/5Aztl1fxRRkV7d9XhQ==
+X-Received: by 2002:a63:c44c:: with SMTP id m12mr48061734pgg.396.1564065536100;
+        Thu, 25 Jul 2019 07:38:56 -0700 (PDT)
+Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
+        by smtp.googlemail.com with ESMTPSA id z4sm39432142pgp.80.2019.07.25.07.38.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 07:38:55 -0700 (PDT)
+Subject: Re: [PATCH v10 5/5] overlayfs: override_creds=off option bypass
+ creator_cred
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel-team@android.com, Miklos Szeredi <miklos@szeredi.hu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-doc@vger.kernel.org
+References: <20190724195719.218307-1-salyzyn@android.com>
+ <20190724195719.218307-6-salyzyn@android.com>
+ <CAOQ4uxim8zZN5YHZs2OJz5A=3B0U10wyf371yadpe2B7hA8pZw@mail.gmail.com>
+From:   Mark Salyzyn <salyzyn@android.com>
+Message-ID: <9acceab1-86af-758a-ec00-8f6d33f3da87@android.com>
+Date:   Thu, 25 Jul 2019 07:38:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CAOQ4uxim8zZN5YHZs2OJz5A=3B0U10wyf371yadpe2B7hA8pZw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 22 Jul 2019 at 11:49, Alexandre Mergnat <amergnat@baylibre.com> wrote:
+On 7/24/19 11:14 PM, Amir Goldstein wrote:
+>> +void ovl_revert_creds(const struct cred *old_cred)
+>> +{
+>> +       if (old_cred)
+>> +               revert_creds(old_cred);
+>> +}
+>> +
+> Mark,
+>
+> Not sure if you have seen my "shutdown" patches:
+> https://lore.kernel.org/linux-fsdevel/20190715133839.9878-4-amir73il@gmail.com/
 
-> diff --git a/drivers/clk/meson/axg-audio.c b/drivers/clk/meson/axg-audio.c
-> index 8028ff6f6610..4253a466eae8 100644
-> --- a/drivers/clk/meson/axg-audio.c
-> +++ b/drivers/clk/meson/axg-audio.c
-> @@ -15,7 +15,6 @@
->  #include <linux/slab.h>
->  
->  #include "axg-audio.h"
-> -#include "clk-input.h"
->  #include "clk-regmap.h"
->  #include "clk-phase.h"
->  #include "sclk-div.h"
-> @@ -24,7 +23,7 @@
->  #define AUD_SLV_SCLK_COUNT	10
->  #define AUD_SLV_LRCLK_COUNT	10
->  
-> -#define AUD_GATE(_name, _reg, _bit, _pname, _iflags)			\
-> +#define AUD_GATE(_name, _reg, _bit, _phws, _iflags)			\
->  struct clk_regmap aud_##_name = {					\
->  	.data = &(struct clk_regmap_gate_data){				\
->  		.offset = (_reg),					\
-> @@ -33,13 +32,13 @@ struct clk_regmap aud_##_name = {					\
->  	.hw.init = &(struct clk_init_data) {				\
->  		.name = "aud_"#_name,					\
->  		.ops = &clk_regmap_gate_ops,				\
-> -		.parent_names = (const char *[]){ _pname },		\
-> +		.parent_hws = (const struct clk_hw *[]) { &_phws.hw }, \
+Good to know!
 
-Those '\' are aligned with tabs. please check, you have aligned a few
-with spaces instead
+>
+> I am fine with this patch, but would like to request that you add @sb arg
+> to the ovl_revert_creds() helper, so it is more useful for other things in the
+> future that scope the underlying layers access (like shutdown).
 
->  		.num_parents = 1,					\
+Will respin and retest.
+
+-- Mark
+
