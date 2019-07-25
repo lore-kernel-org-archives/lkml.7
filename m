@@ -2,62 +2,94 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C9EC76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A270CC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928BE229F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5636222BE8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:08:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564078101;
+	bh=KiiFegUHU5GPihsnRiipJWlk+KirWCXeCrKP7PJ9rpc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=exybelD/rZB0VrjKU3Qu8IBJHocMa6+X2/cBDpft1zVKoGe+6+C4VHNXLAJog6brD
+	 hdv03Vyep/Be5pMK6jevgWhLrLtu5U9gKEBCChOkKYTC6sTyLThNW9U565W9A4kptr
+	 nHxxMHEYlg7t/ndAUWyEEp0kwWWOIawjq/B/NA44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfGYSEk (ORCPT
+        id S1727555AbfGYSIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 14:04:40 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:53492 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbfGYSEj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 14:04:39 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqi6O-0005Zb-G4; Thu, 25 Jul 2019 18:04:28 +0000
-Date:   Thu, 25 Jul 2019 19:04:28 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Cyril Hrubis <chrubis@suse.cz>,
-        kernel test robot <rong.a.chen@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>, ltp@lists.linux.it
-Subject: Re: [LTP] 56cbb429d9: ltp.fs_fill.fail
-Message-ID: <20190725180428.GH1131@ZenIV.linux.org.uk>
-References: <20190725110944.GA22106@shao2-debian>
- <20190725132617.GA23135@rei.lan>
- <CAHk-=wg+yRjY_AUrjbgrN59OeGAWMF_q=-Dqf2cYtVzoY01j7Q@mail.gmail.com>
+        Thu, 25 Jul 2019 14:08:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726300AbfGYSIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 14:08:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BE45218F0;
+        Thu, 25 Jul 2019 18:08:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564078098;
+        bh=KiiFegUHU5GPihsnRiipJWlk+KirWCXeCrKP7PJ9rpc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oA295ozAwbkkLgAao5fN+JRSaJrf6L0LtcY2aIsVs0zCTwQM8QLvcoR8WRWwy1so+
+         mwzUu3WkwpFOFBjZRDEAf6HHDVMsAeyHgloYzHJbK820PXzKfUm1RJHEcE0XsUrf/z
+         f9CpVOxFp+taewZCX44SLRKoCnk4t3R7S7hi27bY=
+Date:   Thu, 25 Jul 2019 20:08:16 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
+Message-ID: <20190725180816.GA32305@kroah.com>
+References: <20190725172335.6825-1-logang@deltatee.com>
+ <20190725172335.6825-3-logang@deltatee.com>
+ <20190725174032.GA27818@kroah.com>
+ <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wg+yRjY_AUrjbgrN59OeGAWMF_q=-Dqf2cYtVzoY01j7Q@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 09:32:13AM -0700, Linus Torvalds wrote:
-> On Thu, Jul 25, 2019 at 6:26 AM Cyril Hrubis <chrubis@suse.cz> wrote:
-> >
-> > This looks like mkfs.vfat got EBUSY after the loop device was
-> > succesfully umounted.
+On Thu, Jul 25, 2019 at 11:53:20AM -0600, Logan Gunthorpe wrote:
 > 
-> Hmm. Smells like the RCU-delaying got triggered again.
 > 
-> We have that "synchronize_rcu_expedited()" in namespace_unlock(),
-> which is so that everything should be done by the time we return to
-> user space.
+> On 2019-07-25 11:40 a.m., Greg Kroah-Hartman wrote:
+> > On Thu, Jul 25, 2019 at 11:23:21AM -0600, Logan Gunthorpe wrote:
+> >> cdev_get_by_path() attempts to retrieve a struct cdev from
+> >> a path name. It is analagous to blkdev_get_by_path().
+> >>
+> >> This will be necessary to create a nvme_ctrl_get_by_path()to
+> >> support NVMe-OF passthru.
+> > 
+> > Ick, why?  Why would a cdev have a "pathname"?
 > 
-> Al, maybe that RCU synchronization should be after the mntput()s?
+> So we can go from "/dev/nvme0" (which points to a char device) to its
+> struct cdev and eventually it's struct nvme_ctrl. Doing it this way also
+> allows supporting symlinks that might be created by udev rules.
 
-There are several interesting issues in there, but synchronize_rcu()
-should be between zeroing ->mnt_ns and dropping the final refs.
-I'm digging through that crap right now; at least one bug is dealt
-with by #fixes, but there's more, unfortunately.
+Why do you have a "string" within the kernel and are not using the
+normal open() call from userspace on the character device node on the
+filesystem in your namespace/mount/whatever?
+
+Where is this random string coming from?  Why is this so special that no
+one else has ever needed it?
+
+thanks,
+
+greg k-h
