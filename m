@@ -2,243 +2,160 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8674C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 297CDC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C2122BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:16:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="t0H8ByBg"
+	by mail.kernel.org (Postfix) with ESMTP id F0880206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390222AbfGYQQP (ORCPT
+        id S2403745AbfGYQQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:16:15 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54685 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390045AbfGYQQO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:16:14 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PGG3cD1075138
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 25 Jul 2019 09:16:03 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PGG3cD1075138
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564071364;
-        bh=WDeeX8BvGqaCTB/0Sgu9Omxb4koUAUlpjeF0FBdEe4U=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=t0H8ByBg3JW8l0LFYU/T2sWghQwLehNsZ3ylbDwaWUa/sy365KEdpNAsSkQev9nRI
-         Ef/5DzPP9KrznpiF60riA4SXNKn+lk8U9Sr2NX9M0+jUd25iT9eaEsVjL1mYERDCGj
-         CMuHQN/hZF50mq95e4e6ioeb218oNyHoFxP/P+9sJrqufhlsnxt0Qlly33fVmgQUyS
-         9Nx5f0G8epEYHRWsINP7xlgGpEiTQKwIRZlV+F/uKHMTIfGcutuevUi92hElsTJRl3
-         ipGFtXUFXZaR7gdkqVvUbE+cU8f0IeX68hfjsTJzPZJfMSfuUgf2qcGbjgS7HdPiOA
-         kneaRV3LddPSw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PGG3RB1075134;
-        Thu, 25 Jul 2019 09:16:03 -0700
-Date:   Thu, 25 Jul 2019 09:16:03 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Viresh Kumar <tipbot@zytor.com>
-Message-ID: <tip-3c29e651e16dd3b3179cfb2d055ee9538e37515c@git.kernel.org>
-Cc:     tglx@linutronix.de, daniel.lezcano@linaro.org,
-        linux-kernel@vger.kernel.org, viresh.kumar@linaro.org,
-        hpa@zytor.com, peterz@infradead.org, vincent.guittot@linaro.org,
-        torvalds@linux-foundation.org, mingo@kernel.org
-Reply-To: tglx@linutronix.de, daniel.lezcano@linaro.org,
-          linux-kernel@vger.kernel.org, viresh.kumar@linaro.org,
-          hpa@zytor.com, vincent.guittot@linaro.org, peterz@infradead.org,
-          mingo@kernel.org, torvalds@linux-foundation.org
-In-Reply-To: <eeafa25fdeb6f6edd5b2da716bc8f0ba7708cbcf.1561523542.git.viresh.kumar@linaro.org>
-References: <eeafa25fdeb6f6edd5b2da716bc8f0ba7708cbcf.1561523542.git.viresh.kumar@linaro.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/fair: Fall back to sched-idle CPU if idle
- CPU isn't found
-Git-Commit-ID: 3c29e651e16dd3b3179cfb2d055ee9538e37515c
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 25 Jul 2019 12:16:22 -0400
+Received: from mga17.intel.com ([192.55.52.151]:28927 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390045AbfGYQQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 12:16:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 09:16:21 -0700
+X-IronPort-AV: E=Sophos;i="5.64,307,1559545200"; 
+   d="scan'208";a="164225983"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 09:16:21 -0700
+Message-ID: <96b1ac42dccbfbb5dd17210e6767ca2544558390.camel@linux.intel.com>
+Subject: Re: [PATCH v2 QEMU] virtio-balloon: Provide a interface for "bubble
+ hinting"
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com
+Date:   Thu, 25 Jul 2019 09:16:21 -0700
+In-Reply-To: <20190725111303-mutt-send-email-mst@kernel.org>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+         <20190724171050.7888.62199.stgit@localhost.localdomain>
+         <20190724173403-mutt-send-email-mst@kernel.org>
+         <ada4e7d932ebd436d00c46e8de699212e72fd989.camel@linux.intel.com>
+         <fed474fe-93f4-a9f6-2e01-75e8903edd81@redhat.com>
+         <bc162a5eaa58ac074c8ad20cb23d579aa04d0f43.camel@linux.intel.com>
+         <20190725111303-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3c29e651e16dd3b3179cfb2d055ee9538e37515c
-Gitweb:     https://git.kernel.org/tip/3c29e651e16dd3b3179cfb2d055ee9538e37515c
-Author:     Viresh Kumar <viresh.kumar@linaro.org>
-AuthorDate: Wed, 26 Jun 2019 10:36:30 +0530
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Thu, 25 Jul 2019 15:51:54 +0200
+On Thu, 2019-07-25 at 11:16 -0400, Michael S. Tsirkin wrote:
+> On Thu, Jul 25, 2019 at 08:05:30AM -0700, Alexander Duyck wrote:
+> > On Thu, 2019-07-25 at 07:35 -0400, Nitesh Narayan Lal wrote:
+> > > On 7/24/19 6:03 PM, Alexander Duyck wrote:
+> > > > On Wed, 2019-07-24 at 17:38 -0400, Michael S. Tsirkin wrote:
+> > > > > On Wed, Jul 24, 2019 at 10:12:10AM -0700, Alexander Duyck wrote:
+> > > > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > > > 
+> > > > > > Add support for what I am referring to as "bubble hinting". Basically the
+> > > > > > idea is to function very similar to how the balloon works in that we
+> > > > > > basically end up madvising the page as not being used. However we don't
+> > > > > > really need to bother with any deflate type logic since the page will be
+> > > > > > faulted back into the guest when it is read or written to.
+> > > > > > 
+> > > > > > This is meant to be a simplification of the existing balloon interface
+> > > > > > to use for providing hints to what memory needs to be freed. I am assuming
+> > > > > > this is safe to do as the deflate logic does not actually appear to do very
+> > > > > > much other than tracking what subpages have been released and which ones
+> > > > > > haven't.
+> > > > > > 
+> > > > > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > > BTW I wonder about migration here.  When we migrate we lose all hints
+> > > > > right?  Well destination could be smarter, detect that page is full of
+> > > > > 0s and just map a zero page. Then we don't need a hint as such - but I
+> > > > > don't think it's done like that ATM.
+> > > > I was wondering about that a bit myself. If you migrate with a balloon
+> > > > active what currently happens with the pages in the balloon? Do you
+> > > > actually migrate them, or do you ignore them and just assume a zero page?
+> > > > I'm just reusing the ram_block_discard_range logic that was being used for
+> > > > the balloon inflation so I would assume the behavior would be the same.
+> > > I agree, however, I think it is worth investigating to see if enabling hinting
+> > > adds some sort of overhead specifically in this kind of scenarios. What do you
+> > > think?
+> > 
+> > I suspect that the hinting/reporting would probably improve migration
+> > times based on the fact that from the sound of things it would just be
+> > migrated as a zero page.
+> > 
+> > I don't have a good setup for testing migration though and I am not that
+> > familiar with trying to do a live migration. That is one of the reasons
+> > why I didn't want to stray too far from the existing balloon code as that
+> > has already been tested with migration so I would assume as long as I am
+> > doing almost the exact same thing to hint the pages away it should behave
+> > exactly the same.
+> > 
+> > > > > I also wonder about interaction with deflate.  ATM deflate will add
+> > > > > pages to the free list, then balloon will come right back and report
+> > > > > them as free.
+> > > > I don't know how likely it is that somebody who is getting the free page
+> > > > reporting is likely to want to also use the balloon to take up memory.
+> > > I think it is possible. There are two possibilities:
+> > > 1. User has a workload running, which is allocating and freeing the pages and at
+> > > the same time, user deflates.
+> > > If these new pages get used by this workload, we don't have to worry as you are
+> > > already handling that by not hinting the free pages immediately.
+> > > 2. Guest is idle and the user adds up some memory, for this situation what you
+> > > have explained below does seems reasonable.
+> > 
+> > Us hinting on pages that are freed up via deflate wouldn't be too big of a
+> > deal. I would think that is something we could look at addressing as more
+> > of a follow-on if we ever needed to since it would just add more
+> > complexity.
+> > 
+> > Really what I would like to see is the balloon itself get updated first to
+> > perhaps work with variable sized pages first so that we could then have
+> > pages come directly out of the balloon and go back into the freelist as
+> > hinted, or visa-versa where hinted pages could be pulled directly into the
+> > balloon without needing to notify the host.
+> 
+> Right, I agree. At this point the main thing I worry about is that
+> the interfaces only support one reporter, since a page flag is used.
+> So if we ever rewrite existing hinting to use the new mm
+> infrastructure then we can't e.g. enable both types of hinting.
 
-sched/fair: Fall back to sched-idle CPU if idle CPU isn't found
+Does it make sense to have multiple types of hinting active at the same
+time though? That kind of seems wasteful to me. Ideally we should be able
+to provide the hints and have them feed whatever is supposed to be using
+them. So for example I could probably look at also clearing the bitmaps
+when migration is in process.
 
-We try to find an idle CPU to run the next task, but in case we don't
-find an idle CPU it is better to pick a CPU which will run the task the
-soonest, for performance reason.
+Also, I am wonder if the free page hints would be redundant with the form
+of page hinting/reporting that I have since we should be migrating a much
+smaller footprint anyway if the pages have been madvised away before we
+even start the migration.
 
-A CPU which isn't idle but has only SCHED_IDLE activity queued on it
-should be a good target based on this criteria as any normal fair task
-will most likely preempt the currently running SCHED_IDLE task
-immediately. In fact, choosing a SCHED_IDLE CPU over a fully idle one
-shall give better results as it should be able to run the task sooner
-than an idle CPU (which requires to be woken up from an idle state).
+> FWIW Nitesh's RFC does not have this limitation.
 
-This patch updates both fast and slow paths with this optimization.
+Yes, but there are also limitations to his approach. For example the fact
+that the bitmap it maintains is back to being a hint rather then being
+very exact. As a result you could end up walking the bitmap for a while
+clearing bits without ever finding a free page.
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: chris.redpath@arm.com
-Cc: quentin.perret@linaro.org
-Cc: songliubraving@fb.com
-Cc: steven.sistare@oracle.com
-Cc: subhra.mazumdar@oracle.com
-Cc: tkjos@google.com
-Link: https://lkml.kernel.org/r/eeafa25fdeb6f6edd5b2da716bc8f0ba7708cbcf.1561523542.git.viresh.kumar@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/sched/fair.c | 43 +++++++++++++++++++++++++++++++++----------
- 1 file changed, 33 insertions(+), 10 deletions(-)
+> I intend to think about this over the weekend.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 9ed5ab53872f..52564e050062 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5431,6 +5431,15 @@ static struct {
- 
- #endif /* CONFIG_NO_HZ_COMMON */
- 
-+/* CPU only has SCHED_IDLE tasks enqueued */
-+static int sched_idle_cpu(int cpu)
-+{
-+	struct rq *rq = cpu_rq(cpu);
-+
-+	return unlikely(rq->nr_running == rq->cfs.idle_h_nr_running &&
-+			rq->nr_running);
-+}
-+
- static unsigned long cpu_runnable_load(struct rq *rq)
- {
- 	return cfs_rq_runnable_load_avg(&rq->cfs);
-@@ -5753,7 +5762,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 	unsigned int min_exit_latency = UINT_MAX;
- 	u64 latest_idle_timestamp = 0;
- 	int least_loaded_cpu = this_cpu;
--	int shallowest_idle_cpu = -1;
-+	int shallowest_idle_cpu = -1, si_cpu = -1;
- 	int i;
- 
- 	/* Check if we have any choice: */
-@@ -5784,7 +5793,12 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 				latest_idle_timestamp = rq->idle_stamp;
- 				shallowest_idle_cpu = i;
- 			}
--		} else if (shallowest_idle_cpu == -1) {
-+		} else if (shallowest_idle_cpu == -1 && si_cpu == -1) {
-+			if (sched_idle_cpu(i)) {
-+				si_cpu = i;
-+				continue;
-+			}
-+
- 			load = cpu_runnable_load(cpu_rq(i));
- 			if (load < min_load) {
- 				min_load = load;
-@@ -5793,7 +5807,11 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 		}
- 	}
- 
--	return shallowest_idle_cpu != -1 ? shallowest_idle_cpu : least_loaded_cpu;
-+	if (shallowest_idle_cpu != -1)
-+		return shallowest_idle_cpu;
-+	if (si_cpu != -1)
-+		return si_cpu;
-+	return least_loaded_cpu;
- }
- 
- static inline int find_idlest_cpu(struct sched_domain *sd, struct task_struct *p,
-@@ -5946,7 +5964,7 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
-  */
- static int select_idle_smt(struct task_struct *p, int target)
- {
--	int cpu;
-+	int cpu, si_cpu = -1;
- 
- 	if (!static_branch_likely(&sched_smt_present))
- 		return -1;
-@@ -5956,9 +5974,11 @@ static int select_idle_smt(struct task_struct *p, int target)
- 			continue;
- 		if (available_idle_cpu(cpu))
- 			return cpu;
-+		if (si_cpu == -1 && sched_idle_cpu(cpu))
-+			si_cpu = cpu;
- 	}
- 
--	return -1;
-+	return si_cpu;
- }
- 
- #else /* CONFIG_SCHED_SMT */
-@@ -5986,8 +6006,8 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- 	u64 avg_cost, avg_idle;
- 	u64 time, cost;
- 	s64 delta;
--	int cpu, nr = INT_MAX;
- 	int this = smp_processor_id();
-+	int cpu, nr = INT_MAX, si_cpu = -1;
- 
- 	this_sd = rcu_dereference(*this_cpu_ptr(&sd_llc));
- 	if (!this_sd)
-@@ -6015,11 +6035,13 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- 
- 	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
- 		if (!--nr)
--			return -1;
-+			return si_cpu;
- 		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
- 			continue;
- 		if (available_idle_cpu(cpu))
- 			break;
-+		if (si_cpu == -1 && sched_idle_cpu(cpu))
-+			si_cpu = cpu;
- 	}
- 
- 	time = cpu_clock(this) - time;
-@@ -6038,13 +6060,14 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
- 	struct sched_domain *sd;
- 	int i, recent_used_cpu;
- 
--	if (available_idle_cpu(target))
-+	if (available_idle_cpu(target) || sched_idle_cpu(target))
- 		return target;
- 
- 	/*
- 	 * If the previous CPU is cache affine and idle, don't be stupid:
- 	 */
--	if (prev != target && cpus_share_cache(prev, target) && available_idle_cpu(prev))
-+	if (prev != target && cpus_share_cache(prev, target) &&
-+	    (available_idle_cpu(prev) || sched_idle_cpu(prev)))
- 		return prev;
- 
- 	/* Check a recently used CPU as a potential idle candidate: */
-@@ -6052,7 +6075,7 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
- 	if (recent_used_cpu != prev &&
- 	    recent_used_cpu != target &&
- 	    cpus_share_cache(recent_used_cpu, target) &&
--	    available_idle_cpu(recent_used_cpu) &&
-+	    (available_idle_cpu(recent_used_cpu) || sched_idle_cpu(recent_used_cpu)) &&
- 	    cpumask_test_cpu(p->recent_used_cpu, p->cpus_ptr)) {
- 		/*
- 		 * Replace recent_used_cpu with prev as it is a potential
+Sounds good. I'll try to get the stuff you have pointed out so far
+addressed and hopefully have v3 ready to go next week.
+
+Thanks.
+
+- Alex
+
