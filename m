@@ -2,127 +2,189 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F2FC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03BFC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35CEE21880
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F7721880
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:24:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564035884;
+	bh=ncW/68XK5c9cQCbKoGP5zby1jJDeNvVhZPLDGjRekFM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=INR3UrvhnvkbRDta5xou7hyVWo6TvCmM554V8itQ5IfPD6ufXGaT0aDcVYSjZmqbH
+	 K4fXJTOn6hh/XuF5YCj4OXserUwuHVJY1QPXIcrM9nyQ/VCJlCS0ao5r8o+R+D/w30
+	 yGtJsp0g9bLOeRdMeWPzKSwrEnylkzaVZvjAX7m4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387470AbfGYGXt (ORCPT
+        id S1729496AbfGYGYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 02:23:49 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.166]:24799 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbfGYGXs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 02:23:48 -0400
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCzwp5iD+2s6bqei8mNpEiGupa/KJG1vh7ft13w="
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2001:16b8:26ed:3500:85cc:8b56:536:d1f1]
-        by smtp.strato.de (RZmta 44.24 AUTH)
-        with ESMTPSA id j00b6dv6P6NhX0K
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 25 Jul 2019 08:23:43 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to make display work again
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20190724194259.GA25847@bogus>
-Date:   Thu, 25 Jul 2019 08:23:49 +0200
-Cc:     Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com>
-References: <cover.1562597164.git.hns@goldelico.com> <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com> <20190724194259.GA25847@bogus>
-To:     Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: Apple Mail (2.3124)
+        Thu, 25 Jul 2019 02:24:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729159AbfGYGYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 02:24:43 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A220B206B8;
+        Thu, 25 Jul 2019 06:24:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564035882;
+        bh=ncW/68XK5c9cQCbKoGP5zby1jJDeNvVhZPLDGjRekFM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Yrg+fRs630IVn/OcuIQ5CzQG7jp5KvX8vYi7b3sPDNeRowFMphGnIETaVsXc2bK7B
+         CsTRjfn4aF3nWunCw6c4Di1pzqEe6IhgXVHwfEKh2QT2p/yPznkjdWgtFxfxU5qdJ4
+         yBbhRd4gWr2ZZRDrQUlav524sux9jH4WWvLfby3M=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: [PATCH] kprobes: Allow kprobes coexist with livepatch
+Date:   Thu, 25 Jul 2019 15:24:37 +0900
+Message-Id: <156403587671.30117.5233558741694155985.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Allow kprobes which do not modify regs->ip, coexist with livepatch
+by dropping FTRACE_OPS_FL_IPMODIFY from ftrace_ops.
 
-> Am 24.07.2019 um 21:42 schrieb Rob Herring <robh@kernel.org>:
-> 
-> On Mon, Jul 08, 2019 at 04:46:05PM +0200, H. Nikolaus Schaller wrote:
->> commit 6953c57ab172 "gpio: of: Handle SPI chipselect legacy bindings"
->> 
->> did introduce logic to centrally handle the legacy spi-cs-high property
->> in combination with cs-gpios. This assumes that the polarity
->> of the CS has to be inverted if spi-cs-high is missing, even
->> and especially if non-legacy GPIO_ACTIVE_HIGH is specified.
->> 
->> The DTS for the GTA04 was orginally introduced under the assumption
->> that there is no need for spi-cs-high if the gpio is defined with
->> proper polarity GPIO_ACTIVE_HIGH.
-> 
-> Given that spi-cs-high is called legacy, that would imply that DT's 
-> should not have to use spi-cs-high.
+User who wants to modify regs->ip (e.g. function fault injection)
+must set a dummy post_handler to its kprobes when registering.
+However, if such regs->ip modifying kprobes is set on a function,
+that function can not be livepatched.
 
-Yes.
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ kernel/kprobes.c |   56 +++++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 40 insertions(+), 16 deletions(-)
 
-> 
->> This was not a problem until gpiolib changed the interpretation of
->> GPIO_ACTIVE_HIGH and missing spi-cs-high.
-> 
-> Then we should fix gpiolib...
-
-I tried to convince Linus that this is the right way but he convinced
-me that a fix that handles all cases does not exist.
-
-There seem to be embedded devices with older DTB (potentially in ROM)
-which provide a plain 0 value for a gpios definition. And either with
-or without spi-cs-high.
-
-Since "0" is the same as "GPIO_ACTIVE_HIGH", the absence of
-spi-cs-high was and must be interpreted as active low for these
-devices. This leads to the inversion logic in code.
-
-AFAIR it boils down to the question if gpiolib and the bindings
-should still support such legacy devices with out-of tree DTB,
-but force in-tree DTS to add the legacy spi-cs-high property.
-
-Or if we should fix the 2 or 3 cases of in-tree legacy cases
-and potentially break out-of tree DTBs.
-
-IMHO it is more general to keep the out-of-tree DTBs working
-and "fix" what we can control (in-tree DTS).
-
-> 
->> The effect is that the missing spi-cs-high is now interpreted as CS being
->> low (despite GPIO_ACTIVE_HIGH) which turns off the SPI interface when the
->> panel is to be programmed by the panel driver.
->> 
->> Therefore, we have to add the redundant and legacy spi-cs-high property
->> to properly pass through the legacy handler.
->> 
->> Since this is nowhere documented in the bindings, we add some words of
->> WARNING.
->> 
->> Cc: stable@vger.kernel.org
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> Documentation/devicetree/bindings/spi/spi-bus.txt | 6 ++++++
->> arch/arm/boot/dts/omap3-gta04.dtsi                | 1 +
->> 2 files changed, 7 insertions(+)
-
-BR,
-Nikolaus
-
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 9873fc627d61..29065380dad0 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -961,9 +961,16 @@ static struct kprobe *alloc_aggr_kprobe(struct kprobe *p)
+ 
+ #ifdef CONFIG_KPROBES_ON_FTRACE
+ static struct ftrace_ops kprobe_ftrace_ops __read_mostly = {
++	.func = kprobe_ftrace_handler,
++	.flags = FTRACE_OPS_FL_SAVE_REGS,
++};
++
++static struct ftrace_ops kprobe_ipmodify_ops __read_mostly = {
+ 	.func = kprobe_ftrace_handler,
+ 	.flags = FTRACE_OPS_FL_SAVE_REGS | FTRACE_OPS_FL_IPMODIFY,
+ };
++
++static int kprobe_ipmodify_enabled;
+ static int kprobe_ftrace_enabled;
+ 
+ /* Must ensure p->addr is really on ftrace */
+@@ -976,58 +983,75 @@ static int prepare_kprobe(struct kprobe *p)
+ }
+ 
+ /* Caller must lock kprobe_mutex */
+-static int arm_kprobe_ftrace(struct kprobe *p)
++static int __arm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
++			       int *cnt)
+ {
+ 	int ret = 0;
+ 
+-	ret = ftrace_set_filter_ip(&kprobe_ftrace_ops,
+-				   (unsigned long)p->addr, 0, 0);
++	ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 0, 0);
+ 	if (ret) {
+ 		pr_debug("Failed to arm kprobe-ftrace at %pS (%d)\n",
+ 			 p->addr, ret);
+ 		return ret;
+ 	}
+ 
+-	if (kprobe_ftrace_enabled == 0) {
+-		ret = register_ftrace_function(&kprobe_ftrace_ops);
++	if (*cnt == 0) {
++		ret = register_ftrace_function(ops);
+ 		if (ret) {
+ 			pr_debug("Failed to init kprobe-ftrace (%d)\n", ret);
+ 			goto err_ftrace;
+ 		}
+ 	}
+ 
+-	kprobe_ftrace_enabled++;
++	(*cnt)++;
+ 	return ret;
+ 
+ err_ftrace:
+ 	/*
+-	 * Note: Since kprobe_ftrace_ops has IPMODIFY set, and ftrace requires a
+-	 * non-empty filter_hash for IPMODIFY ops, we're safe from an accidental
+-	 * empty filter_hash which would undesirably trace all functions.
++	 * At this point, sinec ops is not registered, we should be sefe from
++	 * registering empty filter.
+ 	 */
+-	ftrace_set_filter_ip(&kprobe_ftrace_ops, (unsigned long)p->addr, 1, 0);
++	ftrace_set_filter_ip(ops, (unsigned long)p->addr, 1, 0);
+ 	return ret;
+ }
+ 
++static int arm_kprobe_ftrace(struct kprobe *p)
++{
++	bool ipmodify = (p->post_handler != NULL);
++
++	return __arm_kprobe_ftrace(p,
++		ipmodify ? &kprobe_ipmodify_ops : &kprobe_ftrace_ops,
++		ipmodify ? &kprobe_ipmodify_enabled : &kprobe_ftrace_enabled);
++}
++
+ /* Caller must lock kprobe_mutex */
+-static int disarm_kprobe_ftrace(struct kprobe *p)
++static int __disarm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
++				  int *cnt)
+ {
+ 	int ret = 0;
+ 
+-	if (kprobe_ftrace_enabled == 1) {
+-		ret = unregister_ftrace_function(&kprobe_ftrace_ops);
++	if (*cnt == 1) {
++		ret = unregister_ftrace_function(ops);
+ 		if (WARN(ret < 0, "Failed to unregister kprobe-ftrace (%d)\n", ret))
+ 			return ret;
+ 	}
+ 
+-	kprobe_ftrace_enabled--;
++	(*cnt)--;
+ 
+-	ret = ftrace_set_filter_ip(&kprobe_ftrace_ops,
+-			   (unsigned long)p->addr, 1, 0);
++	ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 1, 0);
+ 	WARN_ONCE(ret < 0, "Failed to disarm kprobe-ftrace at %pS (%d)\n",
+ 		  p->addr, ret);
+ 	return ret;
+ }
++
++static int disarm_kprobe_ftrace(struct kprobe *p)
++{
++	bool ipmodify = (p->post_handler != NULL);
++
++	return __disarm_kprobe_ftrace(p,
++		ipmodify ? &kprobe_ipmodify_ops : &kprobe_ftrace_ops,
++		ipmodify ? &kprobe_ipmodify_enabled : &kprobe_ftrace_enabled);
++}
+ #else	/* !CONFIG_KPROBES_ON_FTRACE */
+ #define prepare_kprobe(p)	arch_prepare_kprobe(p)
+ #define arm_kprobe_ftrace(p)	(-ENODEV)
 
