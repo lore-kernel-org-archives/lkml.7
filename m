@@ -2,139 +2,155 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C21FC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7937AC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E7F21851
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:01:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WAKFeAPV"
+	by mail.kernel.org (Postfix) with ESMTP id 50E8621901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564074243;
+	bh=G7gvFcYApmp1l9C8rLZ9WKSMZGAiimXV8gLo9SGW9rs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YDnNHsxlAPYNJq7KekFy6eCYE1oliM3OCiuSAbled60wctpAAaQ7G9gKtX6xv68oR
+	 jwuEVUCborhxACJGEs+SHXKdsiva+Nnc2a30B5AF5qa/rjfsVKc6900T/nnvXs7ZGj
+	 eWLUDJ4j1dXK/kH3hYy3Eg08a2rJ4zVAo5FOSCUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729697AbfGYRBK (ORCPT
+        id S1729596AbfGYREC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:01:10 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36197 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbfGYRBJ (ORCPT
+        Thu, 25 Jul 2019 13:04:02 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34822 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfGYREB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:01:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n4so51624371wrs.3;
-        Thu, 25 Jul 2019 10:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nXagbzMpHpMrK6qPzkE9x7SDyjhg8P+uqPw06U7BiHM=;
-        b=WAKFeAPVDb3PlezhG7uMMnHJoqjzAnVxXT7f1HVG8wlYluuB4nEHp/KS0cPXKPw/hE
-         yGyxcFORLA11JTbaKZQLR+xl4E2Wuhl7vSB4xuurLrrfrkrg6sDCyLoJhx86EWnZ45IB
-         1/lv9bvH3LV9HVplQ0E6qvijD38Dgf2edYF6JBG7l8EUQ+9kwmEWKd63SBcepS+XCwjB
-         nFcrcTyxymdzHvMKZ65s9RvX0fg11iKxrE79b26pJLaFL1CPUV4yjIXFgbdhmsfzqidL
-         sJGeTTfgRXjwoyRTKddBBPjaOPqwya33pjFrnd/mbZTUeHSm9volU9nrZX1e91ZGyjmq
-         rRCw==
+        Thu, 25 Jul 2019 13:04:01 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j19so13930055otq.2;
+        Thu, 25 Jul 2019 10:04:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nXagbzMpHpMrK6qPzkE9x7SDyjhg8P+uqPw06U7BiHM=;
-        b=SbN5AqEjV7zfuA0kp+QwRQTkDA5FzK9rLGMTTSTMEvZ6c5OvhI8xSzLIcgNMWtWbXk
-         6Qji0UKFo63rD6rSXLbsgWBaYbFF0DNK3iZS6MgouTVK0FBvPEjoQWyTxDQOQg4U+9RH
-         +uWY8uGcg8WUpkNxnKY0DtDyZGghOKDxcqjMcEHC2z96yZy4BJoBcQg8fLGkclWHWQ/X
-         n+prxxIsMrFasfyYBpc16WvJT7Hh8nSYIxJvAiS3NvxXN3NFxjgXhcODW/pEV/G5vv0J
-         9R+uCG0fovpHZPoX3EcqVfJwV/vUL/EF7qzmnQp8j+anbx7i9lhGxvsH4nv3zSFjVOeD
-         Sa8A==
-X-Gm-Message-State: APjAAAWuNSFPmgRpU3wwD+fH3L2oVMCCOqyhyTCmWz/7Aqr/Jqq9thwd
-        ogmMssJG0MaW7uOwydj2TMM=
-X-Google-Smtp-Source: APXvYqyugU+wuL9tcYJ7BnYcE2ZJ12kDdOmhVdWDrIOenOwmOCKYBZCws8lajVXLEDonPreUgdBcjQ==
-X-Received: by 2002:adf:de08:: with SMTP id b8mr70727820wrm.282.1564074066832;
-        Thu, 25 Jul 2019 10:01:06 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id p6sm54433837wrq.97.2019.07.25.10.01.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 10:01:06 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 10:01:04 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Peter Smith <peter.smith@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2] kbuild: Check for unknown options with cc-option
- usage in Kconfig and clang
-Message-ID: <20190725170104.GB80773@archlinux-threadripper>
-References: <20190725154730.80169-1-swboyd@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8G44gacPmRhlcyhu/6GsJIvVHd40YjenVn8zxXxswWA=;
+        b=QhyhihXv1Z6618u6WrfSQOsJUEj4xGAumxOXRlowwIxbGkbrB0xlgI8xjcHk2tfIfZ
+         0sGaQayYy5ZNrZqO/xuNTYWUWHPwNoZ+JTeh0vZetVk3nqvD8uDtFyxfdizRany0RNli
+         S2Bw3WJy+KuYiVMVLeBOi0ETsnpZ2o4D7r9Q50MeiSNCKVyOa9Oux5M/IwQKo9uzrCGF
+         sF3GOOoRPu3Ovni32v2cJ3+vrJfgbZ5m+tKpAvekTcAxb0ZEkAlZ1wIeRah/TtnIkUm8
+         pergCe4dbNAW2+wPkBijaKqHKXgvTCRlh/Pq1GFjrfsFo6DzBJLKo5EcNVcvhqNUWXH0
+         E1CA==
+X-Gm-Message-State: APjAAAXLoVfhpMb+18SVF8Xj/e5pHu8YR6JIlwyj/2IVABD7G7MOzeup
+        GuVEo0u1UtMPUrzp+3t8Aiu60h2jGzZs6iWJqco=
+X-Google-Smtp-Source: APXvYqwDu0+fLy73J2/Flv6Watu3GrPu0mjMjW7YrikgMdZCMbyar08W0Nzg9Q45z6Y+GkpP0x1DenMgNvH1tT0T2QU=
+X-Received: by 2002:a9d:6b96:: with SMTP id b22mr67539409otq.262.1564074240786;
+ Thu, 25 Jul 2019 10:04:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725154730.80169-1-swboyd@chromium.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <2332799.izEFUvJP67@kreacher> <E62786E4-5DA9-4542-899A-658D0E021190@canonical.com>
+ <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
+In-Reply-To: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 25 Jul 2019 19:03:49 +0200
+Message-ID: <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
+Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
+ suspend" has problems
+To:     Mario Limonciello <Mario.Limonciello@dell.com>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 08:47:30AM -0700, Stephen Boyd wrote:
-> If the particular version of clang a user has doesn't enable
-> -Werror=unknown-warning-option by default, even though it is the
-> default[1], then make sure to pass the option to the Kconfig cc-option
-> command so that testing options from Kconfig files works properly.
-> Otherwise, depending on the default values setup in the clang toolchain
-> we will silently assume options such as -Wmaybe-uninitialized are
-> supported by clang, when they really aren't.
-> 
-> A compilation issue only started happening for me once commit
-> 589834b3a009 ("kbuild: Add -Werror=unknown-warning-option to
-> CLANG_FLAGS") was applied on top of commit b303c6df80c9 ("kbuild:
-> compute false-positive -Wmaybe-uninitialized cases in Kconfig"). This
-> leads kbuild to try and test for the existence of the
-> -Wmaybe-uninitialized flag with the cc-option command in
-> scripts/Kconfig.include, and it doesn't see an error returned from the
-> option test so it sets the config value to Y. Then the Makefile tries to
-> pass the unknown option on the command line and
-> -Werror=unknown-warning-option catches the invalid option and breaks the
-> build. Before commit 589834b3a009 ("kbuild: Add
-> -Werror=unknown-warning-option to CLANG_FLAGS") the build works fine,
-> but any cc-option test of a warning option in Kconfig files silently
-> evaluates to true, even if the warning option flag isn't supported on
-> clang.
-> 
-> Note: This doesn't change cc-option usages in Makefiles because those
-> use a different rule that includes KBUILD_CFLAGS by default (see the
-> __cc-option command in scripts/Kbuild.incluide). The KBUILD_CFLAGS
-> variable already has the -Werror=unknown-warning-option flag set. Thanks
-> to Doug for pointing out the different rule.
-> 
-> [1] https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
-> Cc: Peter Smith <peter.smith@linaro.org>
-> Cc: Nathan Chancellor <natechancellor@gmail.com>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+On Thu, Jul 25, 2019 at 6:24 PM <Mario.Limonciello@dell.com> wrote:
+>
+> +Rajat
+>
+> > -----Original Message-----
+> > From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > Sent: Thursday, July 25, 2019 9:03 AM
+> > To: Rafael J. Wysocki
+> > Cc: Keith Busch; Christoph Hellwig; Sagi Grimberg; linux-
+> > nvme@lists.infradead.org; Limonciello, Mario; Linux PM; LKML
+> > Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
+> > suspend" has problems
+> >
+> >
+> > [EXTERNAL EMAIL]
+> >
+> > Hi Rafael,
+> >
+> > at 17:51, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > > Hi Keith,
+> > >
+> > > Unfortunately,
+> > >
+> > > commit d916b1be94b6dc8d293abed2451f3062f6af7551
+> > > Author: Keith Busch <keith.busch@intel.com>
+> > > Date:   Thu May 23 09:27:35 2019 -0600
+> > >
+> > >     nvme-pci: use host managed power state for suspend
+> > >
+> > > doesn't universally improve things.  In fact, in some cases it makes
+> > > things worse.
+> > >
+> > > For example, on the Dell XPS13 9380 I have here it prevents the processor
+> > > package
+> > > from reaching idle states deeper than PC2 in suspend-to-idle (which, of
+> > > course, also
+> > > prevents the SoC from reaching any kind of S0ix).
+> > >
+> > > That can be readily explained too.  Namely, with the commit above the
+> > > NVMe device
+> > > stays in D0 over suspend/resume, so the root port it is connected to also
+> > > has to stay in
+> > > D0 and that "blocks" package C-states deeper than PC2.
+> > >
+> > > In order for the root port to be able to go to D3, the device connected
+> > > to it also needs
+> > > to go into D3, so it looks like (at least on this particular machine, but
+> > > maybe in
+> > > general), both D3 and the NVMe-specific PM are needed.
+>
+> Well this is really unfortunate to hear.  I recall that with some disks we were
+> seeing problems where NVME specific PM wasn't working when the disk was in D3.
+>
+> On your specific disk, it would be good to know if just removing the pci_save_state(pdev)
+> call helps.
 
-Commit message wording looks better to me, thanks for the change!
+Yes, it does help.
 
-I think we might also want to add:
+> If so, :
+> * that might be a better option to add as a parameter.
+> * maybe we should double check all the disks one more time with that tweak.
 
-Cc: stable@vger.kernel.org # 4.19+
+At this point it seems so.
 
-in addition to Doug's suggested fixes tag because my patch has been
-AUTOSEL'd by Sasha:
+> > > I'm not sure what to do here, because evidently there are systems where
+> > > that commit
+> > > helps.  I was thinking about adding a module option allowing the user to
+> > > override the
+> > > default behavior which in turn should be compatible with 5.2 and earlier
+> > > kernels.
+> >
+> > I just briefly tested s2i on XPS 9370, and the power meter shows a 0.8~0.9W
+> > power consumption so at least I don’t see the issue on XPS 9370.
+> >
+>
+> To me that confirms NVME is down, but it still seems higher than I would have
+> expected.  We should be more typically in the order of ~0.3W I think.
 
-https://lore.kernel.org/lkml/20190719040732.17285-44-sashal@kernel.org/
+It may go to PC10, but not reach S0ix.
 
-https://git.kernel.org/sashal/linux-stable/c/a28859fa4fea5a834a53d86d51e502012ce09c57
-
-Alternatively, I can just mention that this patch needs to be picked up
-in addition to that one when it is formally sent out in a stable review.
-
-Cheers,
-Nathan
+Anyway, I run the s2idle tests under turbostat which then tells me
+what has happened more precisely.
