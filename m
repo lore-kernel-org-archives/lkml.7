@@ -2,261 +2,191 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C86C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC192C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7D92238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81DC022BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388803AbfGYO7V (ORCPT
+        id S2388862AbfGYO7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:59:21 -0400
-Received: from mailgw02.mediatek.com ([216.200.240.185]:50183 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387834AbfGYO7U (ORCPT
+        Thu, 25 Jul 2019 10:59:49 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33329 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387834AbfGYO7t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:59:20 -0400
-X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Jul 2019 10:59:20 EDT
-X-UUID: 68c8c96cfe82444895fc582f3966f561-20190725
-X-UUID: 68c8c96cfe82444895fc582f3966f561-20190725
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1017426763; Thu, 25 Jul 2019 06:53:06 -0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 25 Jul 2019 22:27:04 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 25 Jul 2019 22:27:04 +0800
-From:   <miles.chen@mediatek.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-CC:     <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Miles Chen <miles.chen@mediatek.com>
-Subject: [RFC PATCH] mm: memcontrol: fix use after free in mem_cgroup_iter()
-Date:   Thu, 25 Jul 2019 22:27:03 +0800
-Message-ID: <20190725142703.27276-1-miles.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Thu, 25 Jul 2019 10:59:49 -0400
+Received: by mail-qt1-f196.google.com with SMTP id r6so45140140qtt.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 07:59:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Rmm6yLiguxnk1HEaBFpodRlU5b5ba8DS6Z2s5rRsdl0=;
+        b=os08S6KpiXJ5DAQQEC2gwU8j1Lp3q7DuSQFh1rhSH4Q4xP/uiBs6lQHirKM/ISkH+f
+         Ojf3cuYFGBNps+zEIIL/nritLeU5/0JoXwsSKem0MFCXATZOiSbxBZW2GbmkKwFDKciK
+         v7FOuVModrFXyc4VxXhfug50rfp82D8Tz+ggN0QjpqQY3b4Sja/PLB64xtdkrUDOkDKL
+         v6SMNHH8wZPszLnGqLDosFcDWvCOCWESNi8GXLqMSuj/KKeIKIVUKd/eMf5aYTKgkAdN
+         Gdwrq28Uwv0TxKEu/9RcLJQawLVIlRpqkrSfsmYqNB0mTim0Qoj2mgTbn1Tx1tpZrv5Q
+         LqyA==
+X-Gm-Message-State: APjAAAUYkQqtsKag8EwZhZ4uNBWWG+qf41XSWGKVxu3/ixts8KUXbbmc
+        kngAu3ACHZD7kfmAy9iX4oeUCQ==
+X-Google-Smtp-Source: APXvYqzoIpindOeRtA1tCkHO4cy0qQv+nosyivtBgk+2pOYdPVUj3ArumomPLobNHAIjfwa4IloqWA==
+X-Received: by 2002:ac8:3907:: with SMTP id s7mr64407808qtb.374.1564066787847;
+        Thu, 25 Jul 2019 07:59:47 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id v75sm24506057qka.38.2019.07.25.07.59.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 07:59:47 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 10:59:40 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com
+Subject: Re: [PATCH v2 5/5] virtio-balloon: Add support for providing page
+ hints to host
+Message-ID: <20190725105852-mutt-send-email-mst@kernel.org>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+ <20190724170514.6685.17161.stgit@localhost.localdomain>
+ <20190724143902-mutt-send-email-mst@kernel.org>
+ <21cc88cd-3577-e8b4-376f-26c7848f5764@redhat.com>
+ <d75ba86f0cab44562148f3ffd66684c167952079.camel@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: BA133858E120E853044F975DFC7A41746A406CCD8C5E6AAF83D767E759F686B22000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d75ba86f0cab44562148f3ffd66684c167952079.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miles Chen <miles.chen@mediatek.com>
+On Thu, Jul 25, 2019 at 07:56:15AM -0700, Alexander Duyck wrote:
+> On Thu, 2019-07-25 at 10:44 -0400, Nitesh Narayan Lal wrote:
+> > On 7/24/19 3:02 PM, Michael S. Tsirkin wrote:
+> > > On Wed, Jul 24, 2019 at 10:05:14AM -0700, Alexander Duyck wrote:
+> > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > 
+> > > > Add support for the page hinting feature provided by virtio-balloon.
+> > > > Hinting differs from the regular balloon functionality in that is is
+> > > > much less durable than a standard memory balloon. Instead of creating a
+> > > > list of pages that cannot be accessed the pages are only inaccessible
+> > > > while they are being indicated to the virtio interface. Once the
+> > > > interface has acknowledged them they are placed back into their respective
+> > > > free lists and are once again accessible by the guest system.
+> > > > 
+> > > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > Looking at the design, it seems that hinted pages can immediately be
+> > > reused. I wonder how we can efficiently support this
+> > > with kvm when poisoning is in effect. Of course we can just
+> > > ignore the poison. However it seems cleaner to
+> > > 1. verify page is poisoned with the correct value
+> > > 2. fill the page with the correct value on fault
+> > > 
+> > > Requirement 2 requires some kind of madvise that
+> > > will save the poison e.g. in the VMA.
+> > > 
+> > > Not a blocker for sure ... 
+> > > 
+> > > 
+> > > > ---
+> > > >  drivers/virtio/Kconfig              |    1 +
+> > > >  drivers/virtio/virtio_balloon.c     |   47 +++++++++++++++++++++++++++++++++++
+> > > >  include/uapi/linux/virtio_balloon.h |    1 +
+> > > >  3 files changed, 49 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+> > > > index 078615cf2afc..d45556ae1f81 100644
+> > > > --- a/drivers/virtio/Kconfig
+> > > > +++ b/drivers/virtio/Kconfig
+> > > > @@ -58,6 +58,7 @@ config VIRTIO_BALLOON
+> > > >  	tristate "Virtio balloon driver"
+> > > >  	depends on VIRTIO
+> > > >  	select MEMORY_BALLOON
+> > > > +	select PAGE_HINTING
+> > > >  	---help---
+> > > >  	 This driver supports increasing and decreasing the amount
+> > > >  	 of memory within a KVM guest.
+> > > > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> > > > index 226fbb995fb0..dee9f8f3ad09 100644
+> > > > --- a/drivers/virtio/virtio_balloon.c
+> > > > +++ b/drivers/virtio/virtio_balloon.c
+> > > > @@ -19,6 +19,7 @@
+> > > >  #include <linux/mount.h>
+> > > >  #include <linux/magic.h>
+> > > >  #include <linux/pseudo_fs.h>
+> > > > +#include <linux/page_hinting.h>
+> > > >  
+> > > >  /*
+> > > >   * Balloon device works in 4K page units.  So each page is pointed to by
+> > > > @@ -27,6 +28,7 @@
+> > > >   */
+> > > >  #define VIRTIO_BALLOON_PAGES_PER_PAGE (unsigned)(PAGE_SIZE >> VIRTIO_BALLOON_PFN_SHIFT)
+> > > >  #define VIRTIO_BALLOON_ARRAY_PFNS_MAX 256
+> > > > +#define VIRTIO_BALLOON_ARRAY_HINTS_MAX	32
+> > > >  #define VIRTBALLOON_OOM_NOTIFY_PRIORITY 80
+> > > >  
+> > > >  #define VIRTIO_BALLOON_FREE_PAGE_ALLOC_FLAG (__GFP_NORETRY | __GFP_NOWARN | \
+> > > > @@ -46,6 +48,7 @@ enum virtio_balloon_vq {
+> > > >  	VIRTIO_BALLOON_VQ_DEFLATE,
+> > > >  	VIRTIO_BALLOON_VQ_STATS,
+> > > >  	VIRTIO_BALLOON_VQ_FREE_PAGE,
+> > > > +	VIRTIO_BALLOON_VQ_HINTING,
+> > > >  	VIRTIO_BALLOON_VQ_MAX
+> > > >  };
+> > > >  
+> > > > @@ -113,6 +116,10 @@ struct virtio_balloon {
+> > > >  
+> > > >  	/* To register a shrinker to shrink memory upon memory pressure */
+> > > >  	struct shrinker shrinker;
+> > > > +
+> > > > +	/* Unused page hinting device */
+> > > > +	struct virtqueue *hinting_vq;
+> > > > +	struct page_hinting_dev_info ph_dev_info;
+> > > >  };
+> > > >  
+> > > >  static struct virtio_device_id id_table[] = {
+> > > > @@ -152,6 +159,22 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
+> > > >  
+> > > >  }
+> > > >  
+> > > > +void virtballoon_page_hinting_react(struct page_hinting_dev_info *ph_dev_info,
+> > > > +				    unsigned int num_hints)
+> > > > +{
+> > > > +	struct virtio_balloon *vb =
+> > > > +		container_of(ph_dev_info, struct virtio_balloon, ph_dev_info);
+> > > > +	struct virtqueue *vq = vb->hinting_vq;
+> > > > +	unsigned int unused;
+> > > > +
+> > > > +	/* We should always be able to add these buffers to an empty queue. */
+> > > 
+> > > can be an out of memory condition, and then ...
+> > 
+> > Do we need an error check here?
+> > 
+> > For situations where this fails we should disable hinting completely, maybe?
+> 
+> No. Instead I will just limit the capacity to no more than the vq size.
+> Doing that should allow us to avoid the out of memory issue here if I am
+> understanding things correctly.
+> 
+> I'm assuming the allocation being referred to is alloc_indirect_split(),
+> if so then it looks like it can fail and then we just fall back to using
+> the vring.desc directly which will work for my purposes as long as I limit
+> the capacity of the scatterlist to no more than the size of the vring.
+> 
 
-This RFC patch is sent to report an use after free in mem_cgroup_iter()
-after merging commit: be2657752e9e "mm: memcg: fix use after free in
-mem_cgroup_iter()".
 
-I work with android kernel tree (4.9 & 4.14), and the commit:
-be2657752e9e "mm: memcg: fix use after free in mem_cgroup_iter()" has
-been merged to the trees. However, I can still observe use after free
-issues addressed in the commit be2657752e9e.
-(on low-end devices, a few times this month)
+Right. And maybe tweak the GFP mask - no reason to try to
+allocate memory aggressively with just 1 element in flight.
 
-backtrace:
-	css_tryget <- crash here
-	mem_cgroup_iter
-	shrink_node
-	shrink_zones
-	do_try_to_free_pages
-	try_to_free_pages
-	__perform_reclaim
-	__alloc_pages_direct_reclaim
-	__alloc_pages_slowpath
-	__alloc_pages_nodemask
-
-To debug, I poisoned mem_cgroup before freeing it:
-
-static void __mem_cgroup_free(struct mem_cgroup *memcg)
-	for_each_node(node)
-	free_mem_cgroup_per_node_info(memcg, node);
-	free_percpu(memcg->stat);
-+       /* poison memcg before freeing it */
-+       memset(memcg, 0x78, sizeof(struct mem_cgroup));
-	kfree(memcg);
-}
-
-The coredump shows the position=0xdbbc2a00 is freed.
-
-(gdb) p/x ((struct mem_cgroup_per_node *)0xe5009e00)->iter[8]
-$13 = {position = 0xdbbc2a00, generation = 0x2efd}
-
-0xdbbc2a00:     0xdbbc2e00      0x00000000      0xdbbc2800      0x00000100
-0xdbbc2a10:     0x00000200      0x78787878      0x00026218      0x00000000
-0xdbbc2a20:     0xdcad6000      0x00000001      0x78787800      0x00000000
-0xdbbc2a30:     0x78780000      0x00000000      0x0068fb84      0x78787878
-0xdbbc2a40:     0x78787878      0x78787878      0x78787878      0xe3fa5cc0
-0xdbbc2a50:     0x78787878      0x78787878      0x00000000      0x00000000
-0xdbbc2a60:     0x00000000      0x00000000      0x00000000      0x00000000
-0xdbbc2a70:     0x00000000      0x00000000      0x00000000      0x00000000
-0xdbbc2a80:     0x00000000      0x00000000      0x00000000      0x00000000
-0xdbbc2a90:     0x00000001      0x00000000      0x00000000      0x00100000
-0xdbbc2aa0:     0x00000001      0xdbbc2ac8      0x00000000      0x00000000
-0xdbbc2ab0:     0x00000000      0x00000000      0x00000000      0x00000000
-0xdbbc2ac0:     0x00000000      0x00000000      0xe5b02618      0x00001000
-0xdbbc2ad0:     0x00000000      0x78787878      0x78787878      0x78787878
-0xdbbc2ae0:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2af0:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b00:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b10:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b20:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b30:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b40:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b50:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b60:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b70:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b80:     0x78787878      0x78787878      0x00000000      0x78787878
-0xdbbc2b90:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2ba0:     0x78787878      0x78787878      0x78787878      0x78787878
-
-In the reclaim path, try_to_free_pages() does not setup
-sc.target_mem_cgroup and sc is passed to do_try_to_free_pages(), ...,
-shrink_node().
-
-In mem_cgroup_iter(), root is set to root_mem_cgroup because
-sc->target_mem_cgroup is NULL.
-It is possible to assign a memcg to root_mem_cgroup.nodeinfo.iter in
-mem_cgroup_iter().
-
-	try_to_free_pages
-		struct scan_control sc = {...}, target_mem_cgroup is 0x0;
-	do_try_to_free_pages
-	shrink_zones
-	shrink_node
-		 mem_cgroup *root = sc->target_mem_cgroup;
-		 memcg = mem_cgroup_iter(root, NULL, &reclaim);
-	mem_cgroup_iter()
-		if (!root)
-			root = root_mem_cgroup;
-		...
-
-		css = css_next_descendant_pre(css, &root->css);
-		memcg = mem_cgroup_from_css(css);
-		cmpxchg(&iter->position, pos, memcg);
-
-My device uses memcg non-hierarchical mode.
-When we release a memcg: invalidate_reclaim_iterators() reaches only
-dead_memcg and its parents. If non-hierarchical mode is used,
-invalidate_reclaim_iterators() never reaches root_mem_cgroup.
-
-static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-{
-	struct mem_cgroup *memcg = dead_memcg;
-
-	for (; memcg; memcg = parent_mem_cgroup(memcg)
-	...
-}
-
-So the use after free scenario looks like:
-
-CPU1						CPU2
-
-try_to_free_pages
-do_try_to_free_pages
-shrink_zones
-shrink_node
-mem_cgroup_iter()
-    if (!root)
-    	root = root_mem_cgroup;
-    ...
-    css = css_next_descendant_pre(css, &root->css);
-    memcg = mem_cgroup_from_css(css);
-    cmpxchg(&iter->position, pos, memcg);
-
-					invalidate_reclaim_iterators(memcg);
-					...
-					__mem_cgroup_free()
-						kfree(memcg);
-
-try_to_free_pages
-do_try_to_free_pages
-shrink_zones
-shrink_node
-mem_cgroup_iter()
-    if (!root)
-    	root = root_mem_cgroup;
-    ...
-    mz = mem_cgroup_nodeinfo(root, reclaim->pgdat->node_id);
-    iter = &mz->iter[reclaim->priority];
-    pos = READ_ONCE(iter->position);
-    css_tryget(&pos->css) <- use after free
-
-To avoid this, we should also invalidate root_mem_cgroup.nodeinfo.iter in
-invalidate_reclaim_iterators().
-
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
----
- mm/memcontrol.c | 33 +++++++++++++++++++++++----------
- 1 file changed, 23 insertions(+), 10 deletions(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index cdbb7a84cb6e..578b02982c9a 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1130,26 +1130,39 @@ void mem_cgroup_iter_break(struct mem_cgroup *root,
- 		css_put(&prev->css);
- }
- 
--static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-+static void __invalidate_reclaim_iterators(struct mem_cgroup *from,
-+					struct mem_cgroup *dead_memcg)
- {
--	struct mem_cgroup *memcg = dead_memcg;
- 	struct mem_cgroup_reclaim_iter *iter;
- 	struct mem_cgroup_per_node *mz;
- 	int nid;
- 	int i;
- 
--	for (; memcg; memcg = parent_mem_cgroup(memcg)) {
--		for_each_node(nid) {
--			mz = mem_cgroup_nodeinfo(memcg, nid);
--			for (i = 0; i <= DEF_PRIORITY; i++) {
--				iter = &mz->iter[i];
--				cmpxchg(&iter->position,
--					dead_memcg, NULL);
--			}
-+	for_each_node(nid) {
-+		mz = mem_cgroup_nodeinfo(from, nid);
-+		for (i = 0; i <= DEF_PRIORITY; i++) {
-+			iter = &mz->iter[i];
-+			cmpxchg(&iter->position,
-+				dead_memcg, NULL);
- 		}
- 	}
- }
- 
-+static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-+{
-+	struct mem_cgroup *memcg = dead_memcg;
-+	int invalid_root = 0;
-+
-+	for (; memcg; memcg = parent_mem_cgroup(memcg)) {
-+		__invalidate_reclaim_iterators(memcg, dead_memcg);
-+		if (memcg == root_mem_cgroup)
-+			invalid_root = 1;
-+	}
-+
-+	if (!invalid_root)
-+		__invalidate_reclaim_iterators(root_mem_cgroup, dead_memcg);
-+}
-+
- /**
-  * mem_cgroup_scan_tasks - iterate over tasks of a memory cgroup hierarchy
-  * @memcg: hierarchy root
--- 
-2.18.0
-
+> 
