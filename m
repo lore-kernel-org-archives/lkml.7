@@ -2,194 +2,135 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F25BAC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6998DC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC25A22C7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:04:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mejtluFb"
+	by mail.kernel.org (Postfix) with ESMTP id 42F2722BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390341AbfGYFDz (ORCPT
+        id S2390360AbfGYFEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:03:55 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36753 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390312AbfGYFDx (ORCPT
+        Thu, 25 Jul 2019 01:04:07 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:40251 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390312AbfGYFEG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:03:53 -0400
-Received: by mail-qt1-f196.google.com with SMTP id z4so47912509qtc.3;
-        Wed, 24 Jul 2019 22:03:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=H39b2ploFjN9pdMuxlSa6UUk4s9UZsZu6j1GUYRP990=;
-        b=mejtluFbzw8MkFwo5+Q7yt6ewsH00E2O/E73K+KPZYIM6WxeG6s9dhcT3dgam8ju9f
-         0nLjITGV4dVI7Ji2FQj76lBR8yLRCqBg6abc/oQnoh07HQc1Y14ymVQaVxWxSyyEnP6L
-         Dd2a5iy41AQJuJLUETGtKWzK+00KDGaWbqXIOr7XoDwWUyWFcLD0UK7vr6EJbHcJ91Ot
-         fAIK0IENS1dlRqZkMrPwzd94rhGgqLNmlb1dPWYraor0izhlj8U9K8lYNqm+spwbSSCp
-         z9Ba8jNxNTISd4pvEABWBFFT+28/LDqhBDugsjtKE2R+sqQNunHnG8p+dcY3oaSzrqWe
-         qLbQ==
+        Thu, 25 Jul 2019 01:04:06 -0400
+Received: by mail-io1-f69.google.com with SMTP id v11so53576511iop.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 22:04:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=H39b2ploFjN9pdMuxlSa6UUk4s9UZsZu6j1GUYRP990=;
-        b=MWd17BmNA+2Mc9ufN2Gvw7HrfnxQmqKTA/Ds/ZHiH6ssQZE+GVa025h2ZO0KJsgiLF
-         Co1aLmFVyTFkMXpa/q5LdQLHCPFTz1ZZXj9piR10ywH6SGsTbK2NJErpCDQflmxnMww0
-         D3MH4ZLOU9WttVSHRw5Y1ifDpo1KLbXyCET4Z86dgtv8WxtIBRKYcpQPC71Gjn0HoDEp
-         ol8mbv8RaGbFqFV8mMLVFk9zBlK05zUqOeg2oKdj4yavxgQ6sVGhIrYEfaTv7wLnV0Q5
-         vyIkMjoLd8Yy46SUuMol6JHSsA+6Y7mCTZCR8zOO2EuruFHVF6x5Nwaf6YmcYrKM0tX3
-         iesw==
-X-Gm-Message-State: APjAAAUQBmns8BBqOGz/Oi0pKfVf8LMebj6p9+wVeJ9yI4KtPDUymi+g
-        ic7p1kL+4xVrKC4rqOEWK14YLAfcLSI=
-X-Google-Smtp-Source: APXvYqwPQS+miESjpP0rTLP6Xw+JLCm1fufuc0BZ1YcvC86luE5wXiZLTIIycjGRG9NSymofoSof0A==
-X-Received: by 2002:ac8:7349:: with SMTP id q9mr60305499qtp.151.1564031031591;
-        Wed, 24 Jul 2019 22:03:51 -0700 (PDT)
-Received: from AzureHyper-V.3xjlci4r0w3u5g13o212qxlisd.bx.internal.cloudapp.net ([13.68.195.119])
-        by smtp.gmail.com with ESMTPSA id y2sm21835328qkj.8.2019.07.24.22.03.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 22:03:51 -0700 (PDT)
-From:   Himadri Pandya <himadrispandya@gmail.com>
-X-Google-Original-From: Himadri Pandya <himadri18.07@gmail.com>
-To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Himadri Pandya <himadri18.07@gmail.com>
-Subject: [PATCH 1/2] Drivers: hv: Specify receive buffer size using Hyper-V page size
-Date:   Thu, 25 Jul 2019 05:03:14 +0000
-Message-Id: <20190725050315.6935-2-himadri18.07@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190725050315.6935-1-himadri18.07@gmail.com>
-References: <20190725050315.6935-1-himadri18.07@gmail.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=L3X65vZ3rUayuRUS9zN2GDw/XxLqoFgPS3n++Iwna6A=;
+        b=iSY8nr7IajD02C3DC3h+1UB31wyf7z0PAC6w1IgO3uZYEeSXHzsXyBhhZQ365QI8Cy
+         rscY7lS2fCQcsXjJRKPuqSh9cI7MUIDfSycFit/PY4JqiEqkLKP88ou9vAvPjVgA/xRF
+         snNmpXopJGKoEZxU/PAd7Q6Tc6kZQntxwuQgeiXDbHyB8YwwRUZ+2X+lMtRyAtQOxT5j
+         x+hyt7+N0s2F+VHw/VjuQamCuF1Twyz7xc3P/R4/nKww099lmz9298q4rDP7LKWzjdSs
+         tFrVYVF468Pj+GNCHmlP8aCSEIJaJS4F9CyH1WJ0b1rrlWaKE9bGyKtgNfjStX75Dj8D
+         Hi2A==
+X-Gm-Message-State: APjAAAUde2b1sdfybH9Tu7I4h64jJj4yAv/6M6y04kVk/PRsyF4RuSba
+        cxMcGUTpAwHsueSu7PeYEtpczX+IE6gONrzub+Z1ahQpuizR
+X-Google-Smtp-Source: APXvYqzY2yjxTZN7foDFPwt5tMSC/DMH88SCMokplXfOZycOYHM8wdRoZvOlXN32Jc9l/IU3X+nVJ88t3J/1E7NAJoWMPDLtLebS
+MIME-Version: 1.0
+X-Received: by 2002:a6b:b985:: with SMTP id j127mr27063494iof.186.1564031045859;
+ Wed, 24 Jul 2019 22:04:05 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 22:04:05 -0700
+In-Reply-To: <0000000000003acc06058e6d6b70@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e80c0e058e7a5a31@google.com>
+Subject: Re: general protection fault in __pm_runtime_resume
+From:   syzbot <syzbot+3cbe5cd105d2ad56a1df@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        len.brown@intel.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, pavel@ucw.cz,
+        rjw@rjwysocki.net, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The recv_buffer is used to retrieve data from the VMbus ring buffer.
-VMbus ring buffers are sized based on the guest page size which
-Hyper-V assumes to be 4KB. But it may be different on some
-architectures. So use the Hyper-V page size to allocate the
-recv_buffer and set the maximum size to receive.
+syzbot has found a reproducer for the following crash on:
 
-Signed-off-by: Himadri Pandya <himadri18.07@gmail.com>
----
- drivers/hv/hv_fcopy.c    | 3 ++-
- drivers/hv/hv_kvp.c      | 3 ++-
- drivers/hv/hv_snapshot.c | 3 ++-
- drivers/hv/hv_util.c     | 8 ++++----
- 4 files changed, 10 insertions(+), 7 deletions(-)
+HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=108edb68600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
+dashboard link: https://syzkaller.appspot.com/bug?extid=3cbe5cd105d2ad56a1df
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13f0b4c8600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=172d8758600000
 
-diff --git a/drivers/hv/hv_fcopy.c b/drivers/hv/hv_fcopy.c
-index 7e30ae0635cc..08fa4a5de644 100644
---- a/drivers/hv/hv_fcopy.c
-+++ b/drivers/hv/hv_fcopy.c
-@@ -13,6 +13,7 @@
- #include <linux/workqueue.h>
- #include <linux/hyperv.h>
- #include <linux/sched.h>
-+#include <asm/hyperv-tlfs.h>
- 
- #include "hyperv_vmbus.h"
- #include "hv_utils_transport.h"
-@@ -234,7 +235,7 @@ void hv_fcopy_onchannelcallback(void *context)
- 	if (fcopy_transaction.state > HVUTIL_READY)
- 		return;
- 
--	vmbus_recvpacket(channel, recv_buffer, PAGE_SIZE * 2, &recvlen,
-+	vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 2, &recvlen,
- 			 &requestid);
- 	if (recvlen <= 0)
- 		return;
-diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
-index 5054d1105236..ae7c028dc5a8 100644
---- a/drivers/hv/hv_kvp.c
-+++ b/drivers/hv/hv_kvp.c
-@@ -27,6 +27,7 @@
- #include <linux/connector.h>
- #include <linux/workqueue.h>
- #include <linux/hyperv.h>
-+#include <asm/hyperv-tlfs.h>
- 
- #include "hyperv_vmbus.h"
- #include "hv_utils_transport.h"
-@@ -661,7 +662,7 @@ void hv_kvp_onchannelcallback(void *context)
- 	if (kvp_transaction.state > HVUTIL_READY)
- 		return;
- 
--	vmbus_recvpacket(channel, recv_buffer, PAGE_SIZE * 4, &recvlen,
-+	vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 4, &recvlen,
- 			 &requestid);
- 
- 	if (recvlen > 0) {
-diff --git a/drivers/hv/hv_snapshot.c b/drivers/hv/hv_snapshot.c
-index 20ba95b75a94..03b6454268b3 100644
---- a/drivers/hv/hv_snapshot.c
-+++ b/drivers/hv/hv_snapshot.c
-@@ -12,6 +12,7 @@
- #include <linux/connector.h>
- #include <linux/workqueue.h>
- #include <linux/hyperv.h>
-+#include <asm/hyperv-tlfs.h>
- 
- #include "hyperv_vmbus.h"
- #include "hv_utils_transport.h"
-@@ -297,7 +298,7 @@ void hv_vss_onchannelcallback(void *context)
- 	if (vss_transaction.state > HVUTIL_READY)
- 		return;
- 
--	vmbus_recvpacket(channel, recv_buffer, PAGE_SIZE * 2, &recvlen,
-+	vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 2, &recvlen,
- 			 &requestid);
- 
- 	if (recvlen > 0) {
-diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
-index e32681ee7b9f..c2c08f26bd5f 100644
---- a/drivers/hv/hv_util.c
-+++ b/drivers/hv/hv_util.c
-@@ -136,7 +136,7 @@ static void shutdown_onchannelcallback(void *context)
- 	struct icmsg_hdr *icmsghdrp;
- 
- 	vmbus_recvpacket(channel, shut_txf_buf,
--			 PAGE_SIZE, &recvlen, &requestid);
-+			 HV_HYP_PAGE_SIZE, &recvlen, &requestid);
- 
- 	if (recvlen > 0) {
- 		icmsghdrp = (struct icmsg_hdr *)&shut_txf_buf[
-@@ -284,7 +284,7 @@ static void timesync_onchannelcallback(void *context)
- 	u8 *time_txf_buf = util_timesynch.recv_buffer;
- 
- 	vmbus_recvpacket(channel, time_txf_buf,
--			 PAGE_SIZE, &recvlen, &requestid);
-+			 HV_HYP_PAGE_SIZE, &recvlen, &requestid);
- 
- 	if (recvlen > 0) {
- 		icmsghdrp = (struct icmsg_hdr *)&time_txf_buf[
-@@ -346,7 +346,7 @@ static void heartbeat_onchannelcallback(void *context)
- 	while (1) {
- 
- 		vmbus_recvpacket(channel, hbeat_txf_buf,
--				 PAGE_SIZE, &recvlen, &requestid);
-+				 HV_HYP_PAGE_SIZE, &recvlen, &requestid);
- 
- 		if (!recvlen)
- 			break;
-@@ -390,7 +390,7 @@ static int util_probe(struct hv_device *dev,
- 		(struct hv_util_service *)dev_id->driver_data;
- 	int ret;
- 
--	srv->recv_buffer = kmalloc(PAGE_SIZE * 4, GFP_KERNEL);
-+	srv->recv_buffer = kmalloc(HV_HYP_PAGE_SIZE * 4, GFP_KERNEL);
- 	if (!srv->recv_buffer)
- 		return -ENOMEM;
- 	srv->channel = dev->channel;
--- 
-2.17.1
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+3cbe5cd105d2ad56a1df@syzkaller.appspotmail.com
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN
+CPU: 0 PID: 1740 Comm: syz-executor618 Not tainted 5.2.0-rc6+ #15
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:__pm_runtime_resume+0x49/0x180 drivers/base/power/runtime.c:1069
+Code: ed 74 d5 fe 45 85 ed 0f 85 9a 00 00 00 e8 6f 73 d5 fe 48 8d bd c1 02  
+00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48  
+89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 fe 00 00 00
+RSP: 0018:ffff8881cf5878e0 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000020 RCX: ffffffff82676833
+RDX: 000000021d463be5 RSI: ffffffff82676841 RDI: 00000010ea31df2b
+RBP: 00000010ea31dc6a R08: ffff8881d1b7e000 R09: fffffbfff0e84c25
+R10: ffff8881cf587940 R11: ffffffff87426127 R12: 0000000000000004
+R13: 0000000000000000 R14: ffff8881cfd7a500 R15: ffffffff897f9040
+FS:  0000555555808880(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000043f760 CR3: 00000001d0f29000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  pm_runtime_get_sync include/linux/pm_runtime.h:226 [inline]
+  usb_autopm_get_interface+0x1b/0x50 drivers/usb/core/driver.c:1707
+  usbhid_power+0x7c/0xe0 drivers/hid/usbhid/hid-core.c:1234
+  hid_hw_power include/linux/hid.h:1038 [inline]
+  hidraw_open+0x20d/0x740 drivers/hid/hidraw.c:282
+  chrdev_open+0x219/0x5c0 fs/char_dev.c:413
+  do_dentry_open+0x497/0x1040 fs/open.c:778
+  do_last fs/namei.c:3416 [inline]
+  path_openat+0x1430/0x3ff0 fs/namei.c:3533
+  do_filp_open+0x1a1/0x280 fs/namei.c:3563
+  do_sys_open+0x3c0/0x580 fs/open.c:1070
+  do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x401ad0
+Code: 01 f0 ff ff 0f 83 c0 0b 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
+44 00 00 83 3d fd 5b 2d 00 00 75 14 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 94 0b 00 00 c3 48 83 ec 08 e8 fa 00 00 00
+RSP: 002b:00007ffed8d15738 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000401ad0
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007ffed8d15740
+RBP: 6666666666666667 R08: 000000000000000f R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402af0
+R13: 0000000000402b80 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 60987a9feed42828 ]---
+RIP: 0010:__pm_runtime_resume+0x49/0x180 drivers/base/power/runtime.c:1069
+Code: ed 74 d5 fe 45 85 ed 0f 85 9a 00 00 00 e8 6f 73 d5 fe 48 8d bd c1 02  
+00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48  
+89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 fe 00 00 00
+RSP: 0018:ffff8881cf5878e0 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000020 RCX: ffffffff82676833
+RDX: 000000021d463be5 RSI: ffffffff82676841 RDI: 00000010ea31df2b
+RBP: 00000010ea31dc6a R08: ffff8881d1b7e000 R09: fffffbfff0e84c25
+R10: ffff8881cf587940 R11: ffffffff87426127 R12: 0000000000000004
+R13: 0000000000000000 R14: ffff8881cfd7a500 R15: ffffffff897f9040
+FS:  0000555555808880(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000043f760 CR3: 00000001d0f29000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
