@@ -2,79 +2,116 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46843C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D927C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2130E214AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2358214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:17:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfGYTPY (ORCPT
+        id S1726960AbfGYTRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 15:15:24 -0400
-Received: from smtp07.smtpout.orange.fr ([80.12.242.129]:52144 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfGYTPX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:15:23 -0400
-Received: from localhost.localdomain ([92.140.204.221])
-        by mwinf5d13 with ME
-        id h7EX2000F4n7eLC037EpXF; Thu, 25 Jul 2019 21:15:21 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 25 Jul 2019 21:15:21 +0200
-X-ME-IP: 92.140.204.221
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     johannes@sipsolutions.net, kvalo@codeaurora.org,
-        davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] mac80211_hwsim: Fix a typo in the name of function 'mac80211_hswim_he_capab()'
-Date:   Thu, 25 Jul 2019 21:13:28 +0200
-Message-Id: <20190725191328.18010-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Thu, 25 Jul 2019 15:17:19 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:42248 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbfGYTRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 15:17:17 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hqjEe-0003mV-J9; Thu, 25 Jul 2019 13:17:05 -0600
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190722230859.5436-1-logang@deltatee.com>
+ <20190722230859.5436-12-logang@deltatee.com>
+ <20190725185830.GH7450@mellanox.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <cf61d237-8a8a-e3ac-a9df-466f20b63020@deltatee.com>
+Date:   Thu, 25 Jul 2019 13:17:02 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190725185830.GH7450@mellanox.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, epilmore@gigaio.com, dan.j.williams@intel.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, Christian.Koenig@amd.com, hch@lst.de, bhelgaas@google.com, linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, jgg@mellanox.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 11/14] PCI/P2PDMA: dma_map P2PDMA map requests that
+ traverse the host bridge
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function name should be 'mac80211_hwsim_he_capab()' (s wand w
-switched) to be consistent with the rest of the file.
-Fix and use it.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/net/wireless/mac80211_hwsim.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
-index b5274d1f30fa..64b0e51f8e8d 100644
---- a/drivers/net/wireless/mac80211_hwsim.c
-+++ b/drivers/net/wireless/mac80211_hwsim.c
-@@ -2595,7 +2595,7 @@ static const struct ieee80211_sband_iftype_data he_capa_5ghz = {
- 	},
- };
- 
--static void mac80211_hswim_he_capab(struct ieee80211_supported_band *sband)
-+static void mac80211_hwsim_he_capab(struct ieee80211_supported_band *sband)
- {
- 	if (sband->band == NL80211_BAND_2GHZ)
- 		sband->iftype_data =
-@@ -2898,7 +2898,7 @@ static int mac80211_hwsim_new_radio(struct genl_info *info,
- 		sband->ht_cap.mcs.rx_mask[1] = 0xff;
- 		sband->ht_cap.mcs.tx_params = IEEE80211_HT_MCS_TX_DEFINED;
- 
--		mac80211_hswim_he_capab(sband);
-+		mac80211_hwsim_he_capab(sband);
- 
- 		hw->wiphy->bands[band] = sband;
- 	}
--- 
-2.20.1
+On 2019-07-25 12:58 p.m., Jason Gunthorpe wrote:
+> On Mon, Jul 22, 2019 at 05:08:56PM -0600, Logan Gunthorpe wrote:
+>> Any requests that traverse the host bridge will need to be mapped into
+>> the IOMMU, so call dma_map_sg() inside pci_p2pdma_map_sg() when
+>> appropriate.
+>>
+>> Similarly, call dma_unmap_sg() inside pci_p2pdma_unmap_sg().
+>>
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>>  drivers/pci/p2pdma.c | 31 ++++++++++++++++++++++++++++++-
+>>  1 file changed, 30 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+>> index 5f43f92f9336..76f51678342c 100644
+>> +++ b/drivers/pci/p2pdma.c
+>> @@ -830,8 +830,22 @@ int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
+>>  		int nents, enum dma_data_direction dir, unsigned long attrs)
+>>  {
+>>  	struct dev_pagemap *pgmap = sg_page(sg)->pgmap;
+>> +	struct pci_dev *client;
+>> +	int dist;
+>> +
+>> +	client = find_parent_pci_dev(dev);
+>> +	if (WARN_ON_ONCE(!client))
+>> +		return 0;
+>>  
+>> -	return __pci_p2pdma_map_sg(pgmap, dev, sg, nents);
+>> +	dist = upstream_bridge_distance(pgmap->pci_p2pdma_provider,
+>> +					client, NULL);
+>> +	if (WARN_ON_ONCE(dist & P2PDMA_NOT_SUPPORTED))
+>> +		return 0;
+>> +
+>> +	if (dist & P2PDMA_THRU_HOST_BRIDGE)
+>> +		return dma_map_sg_attrs(dev, sg, nents, dir, attrs);
+> 
+> IIRC at this point the SG will have struct page references to the BAR
+> memory - so (all?) the IOMMU drivers are able to handle P2P setup in
+> this case?
 
+Yes. The IOMMU drivers refer to the physical address for BAR which they
+can get from the struct page. And this works fine today.
+
+> Didn't you also have a patch to remove the struct page's for the BAR
+> memory?  
+
+Well that was an RFC that's not going anywhere in it's current form. I'd
+still like to remove struct pages but that's going to take a while and
+when that happens, this will have to be reworked. Probably to use
+dma_map_resource() instead but will depend on the form the removal takes.
+
+Logan
