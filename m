@@ -2,291 +2,165 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DC7C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1426C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C0B206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B5C22C7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:31:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oyGpE2Md"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729886AbfGYM2J (ORCPT
+        id S2387787AbfGYMbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:28:09 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2487 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727890AbfGYM2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:28:09 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id D203DAE15A54074DDC27;
-        Thu, 25 Jul 2019 20:28:05 +0800 (CST)
-Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 25 Jul 2019 20:28:05 +0800
-Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
- (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Thu, 25
- Jul 2019 20:28:04 +0800
-Subject: Re: [PATCH net-next 07/11] net: hns3: adds debug messages to identify
- eth down cause
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        "tanhuazhong@huawei.com" <tanhuazhong@huawei.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "lipeng321@huawei.com" <lipeng321@huawei.com>,
-        "yisen.zhuang@huawei.com" <yisen.zhuang@huawei.com>,
-        "salil.mehta@huawei.com" <salil.mehta@huawei.com>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
- <1563938327-9865-8-git-send-email-tanhuazhong@huawei.com>
- <ffd942e7d7442549a3a6d469709b7f7405928afe.camel@mellanox.com>
-From:   liuyonglong <liuyonglong@huawei.com>
-Message-ID: <30483e38-5e4a-0111-f431-4742ceb1aa62@huawei.com>
-Date:   Thu, 25 Jul 2019 20:28:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 25 Jul 2019 08:31:37 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40118 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727890AbfGYMbg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 08:31:36 -0400
+Received: by mail-qk1-f194.google.com with SMTP id s145so36244089qke.7
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 05:31:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3vOhJr4R9IHXs2ns1CQPNi9tups8zk+9lQf/RJAnA0w=;
+        b=oyGpE2Mdzy7CUufchd8ehSD43VuTFwk8fz2D/ftoUm+otR7MhqugXIeS0KEE3Y2HvZ
+         y8Ur6mOC9Ux+nbHqhK5HwulszZ7kC9jZe+6ctmJpl83GjOrr6ngsFAHfCtnmeBr30L9i
+         HIbouEFLFnWjGWiYVh6RcUsSKFNhhscC1Wv2Skt+AT2xCaBZvNr2Mc4Xfl3f8FMy+axk
+         Ytx39Mgh9a3bzcryxeAEPDFMahDuRnO6Q6lhJFoOVQko81LaCcchwFiwLFJ23i6LJ/7H
+         yCrbyaIRSyTEFGh7IY+eROAyPHPH2hjL8Bv2PSRyfDdwYUnlUwqmBnvxtmSclgsHCCd+
+         fPig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3vOhJr4R9IHXs2ns1CQPNi9tups8zk+9lQf/RJAnA0w=;
+        b=fBUKK4arkG6WfaWCL8fj3uEPAXE6RxchVjK+JiTgzqL8pQg+xxiJPSFnWFik59Zt2j
+         TZy5arb8qEV1sFu5U6gGkWcLJEE+NlYe+RrxTyadY/mDgAK6zIFo/WWxSp0mAZjmN/Gv
+         Qetjpwl5pjsV0jHvcPDFw/0bJT2stPo7CPNc8Hq7hyTr5m8Ae6el1M5JH28k327N63ro
+         4lKPmAqRdZPkLJ4AXClW1y15qSxcGjcHHG4ClZlpFO6q7B8LzWu9I2GuDBfrIIHJ1Tfb
+         xX4mEN9H8URR1a7JnDOchhMWKB4725/rRLLGXfj86bqosQTNZLbMzlKXAO9ylT+CQ6GA
+         rS8w==
+X-Gm-Message-State: APjAAAVVplPYlGYrc/FjOZGK5FktbZxL0XmStKATk3jeHWDhazzC11Rp
+        8PzdyMJ/tp5+WbJfVIFV9Dy+rKdqR/tIKRUf/JMvYQ==
+X-Google-Smtp-Source: APXvYqzw0OOD7qxJ+qp3p00p/2GWwD3VFv4Bn031dtzHiYXsJAGBNbun3scyLD1DLCPkYYTMixPKN3qbD+BIOKe+yV4=
+X-Received: by 2002:a05:620a:1286:: with SMTP id w6mr56787652qki.219.1564057895419;
+ Thu, 25 Jul 2019 05:31:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ffd942e7d7442549a3a6d469709b7f7405928afe.camel@mellanox.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.37.248]
-X-ClientProxiedBy: dggeme716-chm.china.huawei.com (10.1.199.112) To
- dggeme760-chm.china.huawei.com (10.3.19.106)
-X-CFilter-Loop: Reflected
+References: <1562141052-26221-1-git-send-email-olivier.moysan@st.com> <129ffc9a-0bfc-354e-c4a1-9043260832c0@ti.com>
+In-Reply-To: <129ffc9a-0bfc-354e-c4a1-9043260832c0@ti.com>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Thu, 25 Jul 2019 14:31:24 +0200
+Message-ID: <CA+M3ks6H4OC0SUUj=34OxCq-chA-W_YxO_xs_0hkJAuxQv12JQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: sii902x: add audio graph card support
+To:     Jyri Sarha <jsarha@ti.com>
+Cc:     Olivier Moysan <olivier.moysan@st.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>, jernej.skrabec@siol.net,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Le jeu. 11 juil. 2019 =C3=A0 13:09, Jyri Sarha <jsarha@ti.com> a =C3=A9crit=
+ :
+>
+> On 03/07/2019 11:04, Olivier Moysan wrote:
+> > Implement get_dai_id callback of audio HDMI codec
+> > to support ASoC audio graph card.
+> > HDMI audio output has to be connected to sii902x port 3.
+> > get_dai_id callback maps this port to ASoC DAI index 0.
+> >
+> > Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+>
+> I have not used audio graph binding, but compared to the other
+> get_dai_id() implementations, this looks identical. So:
+>
+> Reviewed-by: Jyri Sarha <jsarha@ti.com>
 
+Applied on drm-misc-next,
+Thanks,
+Benjamin
 
-On 2019/7/25 3:12, Saeed Mahameed wrote:
-> On Wed, 2019-07-24 at 11:18 +0800, Huazhong Tan wrote:
->> From: Yonglong Liu <liuyonglong@huawei.com>
->>
->> Some times just see the eth interface have been down/up via
->> dmesg, but can not know why the eth down. So adds some debug
->> messages to identify the cause for this.
->>
-> 
-> I really don't like this. your default msg lvl has NETIF_MSG_IFDOWN
-> turned on .. dumping every single operation that happens on your device
-> by default to kernel log is too much ! 
-> 
-> We should really consider using trace buffers with well defined
-> structures for vendor specific events. so we can use bpf filters and
-> state of the art tools for netdev debugging.
-> 
-
-We do this because we can just see a link down message in dmesg, and had
-take a long time to found the cause of link down, just because another
-user changed the settings.
-
-We can change the net_open/net_stop/dcbnl_ops to msg_drv (not default
-turned on),  and want to keep the others default print to kernel log,
-is it acceptable?
-
->> @@ -1593,6 +1603,11 @@ static int hns3_ndo_set_vf_vlan(struct
->> net_device *netdev, int vf, u16 vlan,
->>  	struct hnae3_handle *h = hns3_get_handle(netdev);
->>  	int ret = -EIO;
->>  
->> +	if (netif_msg_ifdown(h))
-> 
-> why msg_ifdown ? looks like netif_msg_drv is more appropriate, for many
-> of the cases in this patch.
-> 
-
-This operation may cause link down, so we use msg_ifdown.
-
->> +		netdev_info(netdev,
->> +			    "set vf vlan: vf=%d, vlan=%d, qos=%d,
->> vlan_proto=%d\n",
->> +			    vf, vlan, qos, vlan_proto);
->> +
->>  	if (h->ae_algo->ops->set_vf_vlan_filter)
->>  		ret = h->ae_algo->ops->set_vf_vlan_filter(h, vf, vlan,
->>  							  qos,
->> vlan_proto);
->> @@ -1611,6 +1626,10 @@ static int hns3_nic_change_mtu(struct
->> net_device *netdev, int new_mtu)
->>  	if (!h->ae_algo->ops->set_mtu)
->>  		return -EOPNOTSUPP;
->>  
->> +	if (netif_msg_ifdown(h))
->> +		netdev_info(netdev, "change mtu from %d to %d\n",
->> +			    netdev->mtu, new_mtu);
->> +
->>  	ret = h->ae_algo->ops->set_mtu(h, new_mtu);
->>  	if (ret)
->>  		netdev_err(netdev, "failed to change MTU in hardware
->> %d\n",
->> @@ -4395,6 +4414,11 @@ int hns3_set_channels(struct net_device
->> *netdev,
->>  	if (kinfo->rss_size == new_tqp_num)
->>  		return 0;
->>  
->> +	if (netif_msg_ifdown(h))
->> +		netdev_info(netdev,
->> +			    "set channels: tqp_num=%d, rxfh=%d\n",
->> +			    new_tqp_num, rxfh_configured);
->> +
->>  	ret = hns3_reset_notify(h, HNAE3_DOWN_CLIENT);
->>  	if (ret)
->>  		return ret;
->> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
->> b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
->> index e71c92b..edb9845 100644
->> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
->> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
->> @@ -311,6 +311,9 @@ static void hns3_self_test(struct net_device
->> *ndev,
->>  	if (eth_test->flags != ETH_TEST_FL_OFFLINE)
->>  		return;
->>  
->> +	if (netif_msg_ifdown(h))
->> +		netdev_info(ndev, "self test start\n");
->> +
->>  	st_param[HNAE3_LOOP_APP][0] = HNAE3_LOOP_APP;
->>  	st_param[HNAE3_LOOP_APP][1] =
->>  			h->flags & HNAE3_SUPPORT_APP_LOOPBACK;
->> @@ -374,6 +377,9 @@ static void hns3_self_test(struct net_device
->> *ndev,
->>  
->>  	if (if_running)
->>  		ndev->netdev_ops->ndo_open(ndev);
->> +
->> +	if (netif_msg_ifdown(h))
->> +		netdev_info(ndev, "self test end\n");
->>  }
->>  
->>  static int hns3_get_sset_count(struct net_device *netdev, int
->> stringset)
->> @@ -604,6 +610,11 @@ static int hns3_set_pauseparam(struct net_device
->> *netdev,
->>  {
->>  	struct hnae3_handle *h = hns3_get_handle(netdev);
->>  
->> +	if (netif_msg_ifdown(h))
->> +		netdev_info(netdev,
->> +			    "set pauseparam: autoneg=%d, rx:%d,
->> tx:%d\n",
->> +			    param->autoneg, param->rx_pause, param-
->>> tx_pause);
->> +
->>  	if (h->ae_algo->ops->set_pauseparam)
->>  		return h->ae_algo->ops->set_pauseparam(h, param-
->>> autoneg,
->>  						       param->rx_pause,
->> @@ -743,6 +754,13 @@ static int hns3_set_link_ksettings(struct
->> net_device *netdev,
->>  	if (cmd->base.speed == SPEED_1000 && cmd->base.duplex ==
->> DUPLEX_HALF)
->>  		return -EINVAL;
->>  
->> +	if (netif_msg_ifdown(handle))
->> +		netdev_info(netdev,
->> +			    "set link(%s): autoneg=%d, speed=%d,
->> duplex=%d\n",
->> +			    netdev->phydev ? "phy" : "mac",
->> +			    cmd->base.autoneg, cmd->base.speed,
->> +			    cmd->base.duplex);
->> +
->>  	/* Only support ksettings_set for netdev with phy attached for
->> now */
->>  	if (netdev->phydev)
->>  		return phy_ethtool_ksettings_set(netdev->phydev, cmd);
->> @@ -984,6 +1002,10 @@ static int hns3_nway_reset(struct net_device
->> *netdev)
->>  		return -EINVAL;
->>  	}
->>  
->> +	if (netif_msg_ifdown(handle))
->> +		netdev_info(netdev, "nway reset (using %s)\n",
->> +			    phy ? "phy" : "mac");
->> +
->>  	if (phy)
->>  		return genphy_restart_aneg(phy);
->>  
->> @@ -1308,6 +1330,10 @@ static int hns3_set_fecparam(struct net_device
->> *netdev,
->>  	if (!ops->set_fec)
->>  		return -EOPNOTSUPP;
->>  	fec_mode = eth_to_loc_fec(fec->fec);
->> +
->> +	if (netif_msg_ifdown(handle))
->> +		netdev_info(netdev, "set fecparam: mode=%d\n",
->> fec_mode);
->> +
->>  	return ops->set_fec(handle, fec_mode);
->>  }
->>  
->> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
->> b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
->> index bac4ce1..133e7c6 100644
->> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
->> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
->> @@ -201,6 +201,7 @@ static int hclge_client_setup_tc(struct hclge_dev
->> *hdev)
->>  static int hclge_ieee_setets(struct hnae3_handle *h, struct ieee_ets
->> *ets)
->>  {
->>  	struct hclge_vport *vport = hclge_get_vport(h);
->> +	struct net_device *netdev = h->kinfo.netdev;
->>  	struct hclge_dev *hdev = vport->back;
->>  	bool map_changed = false;
->>  	u8 num_tc = 0;
->> @@ -215,6 +216,9 @@ static int hclge_ieee_setets(struct hnae3_handle
->> *h, struct ieee_ets *ets)
->>  		return ret;
->>  
->>  	if (map_changed) {
->> +		if (netif_msg_ifdown(h))
->> +			netdev_info(netdev, "set ets\n");
->> +
->>  		ret = hclge_notify_client(hdev, HNAE3_DOWN_CLIENT);
->>  		if (ret)
->>  			return ret;
->> @@ -300,6 +304,7 @@ static int hclge_ieee_getpfc(struct hnae3_handle
->> *h, struct ieee_pfc *pfc)
->>  static int hclge_ieee_setpfc(struct hnae3_handle *h, struct ieee_pfc
->> *pfc)
->>  {
->>  	struct hclge_vport *vport = hclge_get_vport(h);
->> +	struct net_device *netdev = h->kinfo.netdev;
->>  	struct hclge_dev *hdev = vport->back;
->>  	u8 i, j, pfc_map, *prio_tc;
->>  
->> @@ -325,6 +330,11 @@ static int hclge_ieee_setpfc(struct hnae3_handle
->> *h, struct ieee_pfc *pfc)
->>  	hdev->tm_info.hw_pfc_map = pfc_map;
->>  	hdev->tm_info.pfc_en = pfc->pfc_en;
->>  
->> +	if (netif_msg_ifdown(h))
->> +		netdev_info(netdev,
->> +			    "set pfc: pfc_en=%d, pfc_map=%d,
->> num_tc=%d\n",
->> +			    pfc->pfc_en, pfc_map, hdev-
->>> tm_info.num_tc);
->> +
->>  	hclge_tm_pfc_info_update(hdev);
->>  
->>  	return hclge_pause_setup_hw(hdev, false);
->> @@ -345,8 +355,12 @@ static u8 hclge_getdcbx(struct hnae3_handle *h)
->>  static u8 hclge_setdcbx(struct hnae3_handle *h, u8 mode)
->>  {
->>  	struct hclge_vport *vport = hclge_get_vport(h);
->> +	struct net_device *netdev = h->kinfo.netdev;
->>  	struct hclge_dev *hdev = vport->back;
->>  
->> +	if (netif_msg_drv(h))
->> +		netdev_info(netdev, "set dcbx: mode=%d\n", mode);
->> +
->>  	/* No support for LLD_MANAGED modes or CEE */
->>  	if ((mode & DCB_CAP_DCBX_LLD_MANAGED) ||
->>  	    (mode & DCB_CAP_DCBX_VER_CEE) ||
-
+>
+> > ---
+> >  drivers/gpu/drm/bridge/sii902x.c | 23 +++++++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/=
+sii902x.c
+> > index dd7aa466b280..daf9ef3cd817 100644
+> > --- a/drivers/gpu/drm/bridge/sii902x.c
+> > +++ b/drivers/gpu/drm/bridge/sii902x.c
+> > @@ -158,6 +158,8 @@
+> >
+> >  #define SII902X_I2C_BUS_ACQUISITION_TIMEOUT_MS       500
+> >
+> > +#define SII902X_AUDIO_PORT_INDEX             3
+> > +
+> >  struct sii902x {
+> >       struct i2c_client *i2c;
+> >       struct regmap *regmap;
+> > @@ -690,11 +692,32 @@ static int sii902x_audio_get_eld(struct device *d=
+ev, void *data,
+> >       return 0;
+> >  }
+> >
+> > +static int sii902x_audio_get_dai_id(struct snd_soc_component *componen=
+t,
+> > +                                 struct device_node *endpoint)
+> > +{
+> > +     struct of_endpoint of_ep;
+> > +     int ret;
+> > +
+> > +     ret =3D of_graph_parse_endpoint(endpoint, &of_ep);
+> > +     if (ret < 0)
+> > +             return ret;
+> > +
+> > +     /*
+> > +      * HDMI sound should be located at reg =3D <3>
+> > +      * Return expected DAI index 0.
+> > +      */
+> > +     if (of_ep.port =3D=3D SII902X_AUDIO_PORT_INDEX)
+> > +             return 0;
+> > +
+> > +     return -EINVAL;
+> > +}
+> > +
+> >  static const struct hdmi_codec_ops sii902x_audio_codec_ops =3D {
+> >       .hw_params =3D sii902x_audio_hw_params,
+> >       .audio_shutdown =3D sii902x_audio_shutdown,
+> >       .digital_mute =3D sii902x_audio_digital_mute,
+> >       .get_eld =3D sii902x_audio_get_eld,
+> > +     .get_dai_id =3D sii902x_audio_get_dai_id,
+> >  };
+> >
+> >  static int sii902x_audio_codec_init(struct sii902x *sii902x,
+> >
+>
+>
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
