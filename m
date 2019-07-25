@@ -2,82 +2,66 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EBFC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1808C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F57F22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76BFE229F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404403AbfGYLuL (ORCPT
+        id S1729314AbfGYLum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:50:11 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43342 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404313AbfGYLuL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:50:11 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id AB0A128A773;
-        Thu, 25 Jul 2019 12:50:09 +0100 (BST)
-Date:   Thu, 25 Jul 2019 13:50:07 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        ZhiChao Yu <zhichao.yu@rock-chips.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: media: hantro: Remove call to memset after
- dma_alloc_coherent
-Message-ID: <20190725135007.33dc2cd3@collabora.com>
-In-Reply-To: <20190725030602.GA13200@hari-Inspiron-1545>
-References: <20190725030602.GA13200@hari-Inspiron-1545>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 25 Jul 2019 07:50:42 -0400
+Received: from verein.lst.de ([213.95.11.211]:60849 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727116AbfGYLul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 07:50:41 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 3990468BFE; Thu, 25 Jul 2019 13:50:40 +0200 (CEST)
+Date:   Thu, 25 Jul 2019 13:50:38 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-rdma@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [PATCH 14/14] PCI/P2PDMA: Introduce
+ pci_p2pdma_[un]map_resource()
+Message-ID: <20190725115038.GC31065@lst.de>
+References: <20190722230859.5436-1-logang@deltatee.com> <20190722230859.5436-15-logang@deltatee.com> <20190724063235.GC1804@lst.de> <57e8fc1a-de70-fb65-5ef1-ffa2b95c73a6@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <57e8fc1a-de70-fb65-5ef1-ffa2b95c73a6@deltatee.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jul 2019 08:36:02 +0530
-Hariprasad Kelam <hariprasad.kelam@gmail.com> wrote:
-
-> fix below issue reported by coccicheck
-> /drivers/staging/media/hantro/hantro_vp8.c:149:16-34: WARNING:
-> dma_alloc_coherent use in aux_buf -> cpu already zeroes out memory,  so
-> memset is not needed
+On Wed, Jul 24, 2019 at 10:06:22AM -0600, Logan Gunthorpe wrote:
+> Yes. This is the downside of dealing only with a phys_addr_t: we have to
+> look up against it. Unfortunately, I believe it's possible for different
+> BARs on a device to be in different windows, so something like this is
+> necessary unless we already know the BAR the phys_addr_t belongs to. It
+> might probably be sped up a bit by storing the offsets of each bar
+> instead of looping through all the bridge windows, but I don't think it
+> will get you *that* much.
 > 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> As this is an example with no users, the answer here will really depend
+> on what the use-case is doing. If they can lookup, ahead of time, the
+> mapping type and offset then they don't have to do this work on the hot
+> path and it means that pci_p2pdma_map_resource() is simply not a
+> suitable API.
 
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-
-> ---
->  drivers/staging/media/hantro/hantro_vp8.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/staging/media/hantro/hantro_vp8.c b/drivers/staging/media/hantro/hantro_vp8.c
-> index 66c4533..363ddda 100644
-> --- a/drivers/staging/media/hantro/hantro_vp8.c
-> +++ b/drivers/staging/media/hantro/hantro_vp8.c
-> @@ -151,8 +151,6 @@ int hantro_vp8_dec_init(struct hantro_ctx *ctx)
->  	if (!aux_buf->cpu)
->  		return -ENOMEM;
->  
-> -	memset(aux_buf->cpu, 0, aux_buf->size);
-> -
->  	/*
->  	 * Allocate probability table buffer,
->  	 * total 1208 bytes, 4K page is far enough.
-
+Ok.  So lets just keep this out as an RFC and don't merge it until an
+actual concrete user shows up.
