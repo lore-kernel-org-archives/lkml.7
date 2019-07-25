@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDACC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C512C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46BA204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63DE422C7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfGYS4Z (ORCPT
+        id S1726581AbfGYS42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 14:56:25 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:56819 "EHLO
+        Thu, 25 Jul 2019 14:56:28 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:39707 "EHLO
         relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbfGYS4V (ORCPT
+        with ESMTP id S1726496AbfGYS40 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 14:56:21 -0400
+        Thu, 25 Jul 2019 14:56:26 -0400
 X-Originating-IP: 93.29.109.196
 Received: from localhost.localdomain (196.109.29.93.rev.sfr.net [93.29.109.196])
         (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 0144940002;
-        Thu, 25 Jul 2019 18:56:18 +0000 (UTC)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 6C02540004;
+        Thu, 25 Jul 2019 18:56:22 +0000 (UTC)
 From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
@@ -45,9 +45,9 @@ Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Jonas Karlman <jonas@kwiboo.se>,
         Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v7 1/4] media: v4l2-ctrl: Add a comment on why we zero out compound controls fields
-Date:   Thu, 25 Jul 2019 20:55:59 +0200
-Message-Id: <20190725185602.22522-2-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v7 3/4] media: pixfmt: Document the HEVC slice pixel format
+Date:   Thu, 25 Jul 2019 20:56:01 +0200
+Message-Id: <20190725185602.22522-4-paul.kocialkowski@bootlin.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190725185602.22522-1-paul.kocialkowski@bootlin.com>
 References: <20190725185602.22522-1-paul.kocialkowski@bootlin.com>
@@ -58,30 +58,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since it's not necessarily very explicit why we need to zero some fields
-in std_validate_compound, add a comment before the function to explain
-why, which should help as a reminder.
+Document the current state of the HEVC slice pixel format.
+The format will need to evolve in the future, which is why it is
+not part of the public API.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 ---
- drivers/media/v4l2-core/v4l2-ctrls.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../media/uapi/v4l/pixfmt-compressed.rst      | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index 76fa2db0e8fb..cd1ae016706f 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -1645,6 +1645,10 @@ static void std_log(const struct v4l2_ctrl *ctrl)
- #define zero_padding(s) \
- 	memset(&(s).padding, 0, sizeof((s).padding))
+diff --git a/Documentation/media/uapi/v4l/pixfmt-compressed.rst b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
+index f52a7b67023d..ecbff783918d 100644
+--- a/Documentation/media/uapi/v4l/pixfmt-compressed.rst
++++ b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
+@@ -163,6 +163,27 @@ Compressed Formats
+       - ``V4L2_PIX_FMT_HEVC``
+       - 'HEVC'
+       - HEVC/H.265 video elementary stream.
++    * .. _V4L2-PIX-FMT-HEVC-SLICE:
++
++      - ``V4L2_PIX_FMT_HEVC_SLICE``
++      - 'S265'
++      - HEVC parsed slice data, as extracted from the HEVC bitstream.
++	This format is adapted for stateless video decoders that implement a
++	HEVC pipeline (using the :ref:`mem2mem` and :ref:`media-request-api`).
++	Metadata associated with the frame to decode is required to be passed
++	through the following controls :
++        * ``V4L2_CID_MPEG_VIDEO_HEVC_SPS``
++        * ``V4L2_CID_MPEG_VIDEO_HEVC_PPS``
++        * ``V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS``
++	See the :ref:`associated Codec Control IDs <v4l2-mpeg-hevc>`.
++	Buffers associated with this pixel format must contain the appropriate
++	number of macroblocks to decode a full corresponding frame.
++
++	.. note::
++
++	   This format is not yet part of the public kernel API and it
++	   is expected to change.
++
+     * .. _V4L2-PIX-FMT-FWHT:
  
-+/*
-+ * Compound controls validation requires setting unused fields/flags to zero
-+ * in order to properly detect unchanged controls with std_equal's memcmp.
-+ */
- static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
- 				 union v4l2_ctrl_ptr ptr)
- {
+       - ``V4L2_PIX_FMT_FWHT``
 -- 
 2.22.0
 
