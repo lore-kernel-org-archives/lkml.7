@@ -2,96 +2,96 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C79C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864F7C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E81C420856
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA1520856
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:04:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="e6TYk6nU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfGYTCt (ORCPT
+        id S1726473AbfGYTEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 15:02:49 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42920 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfGYTCt (ORCPT
+        Thu, 25 Jul 2019 15:04:37 -0400
+Received: from mail-qt1-f177.google.com ([209.85.160.177]:41269 "EHLO
+        mail-qt1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfGYTEg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:02:49 -0400
-Received: by mail-oi1-f194.google.com with SMTP id s184so38449963oie.9;
-        Thu, 25 Jul 2019 12:02:48 -0700 (PDT)
+        Thu, 25 Jul 2019 15:04:36 -0400
+Received: by mail-qt1-f177.google.com with SMTP id d17so50076259qtj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 12:04:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=LKu/Qknu3DhcpvZAjH/Cg2C3TRqk9B3bltB+fAqL9wk=;
+        b=e6TYk6nUklMcBLDNOXeCNg7kg6Zy+WiNNfq1X+GbMgJgt9ZpbkE0mLxrahOgvG9ikR
+         Roar7pYOfSEJlGeu5C1RbUvc4byj6OfsdmaHAnOYqCfRplqNSXECeo/sbd+kJtIosD7y
+         ZWZGm+7U1oOHN6ijjTX+z31n97JPV1uzg2KGc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=y/lTIw6bVEla4w+tYy+il+kwWC5SN/IC6++JTH0QKCo=;
-        b=PJoCok8QV2e46x2XG1QqtuQQstlZ11HOZ2gucwQK1IezRv2Zqhl4IrFNaaRgbT6cqf
-         JK1vncfKI8QT3n6cT0pkDaYOMXc2ytkS0hl45YEGt4X7ZvjnnZTCkw8enTp1doB87mru
-         X7Skqm/Nuqq7nhIHrm7ZZsyxxw/++ZZR4Zdkvj7nQ8bm8NiYviCRsisqa7A05Fr6IRV/
-         M12KVjkEQy2O7sjpWRmByUvKbNspmcyB8hwEtY3/O2vxuO3l0diYAEAM+OKEyOdRR1Hd
-         ev7s5FoHmFAtDQYbdFxxV1bN/MvIfSsJzW9bqgPJ83eZX1CGe1M/uKye0nArJSi7KnsQ
-         hApA==
-X-Gm-Message-State: APjAAAX9XL2rraFXO0LV/MVZfA5hvQy93H6Tjt9ArUyAwHLpDvPNQqW+
-        CIy+3sTbn19IpfADjjdZfYQ=
-X-Google-Smtp-Source: APXvYqzIpG+WlfbxIbSb9LlcTd3JD9DVuRkzugImR9DbDnonCa38Ce1KoYRVxInrHY006f71VNok+g==
-X-Received: by 2002:aca:90d:: with SMTP id 13mr46807463oij.126.1564081368153;
-        Thu, 25 Jul 2019 12:02:48 -0700 (PDT)
-Received: from [192.168.1.114] (162-195-240-247.lightspeed.sntcca.sbcglobal.net. [162.195.240.247])
-        by smtp.gmail.com with ESMTPSA id p2sm16744895otl.59.2019.07.25.12.02.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 12:02:47 -0700 (PDT)
-Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <20190725172335.6825-3-logang@deltatee.com>
- <20190725174032.GA27818@kroah.com>
- <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
- <20190725180816.GA32305@kroah.com>
- <da0eacb7-3738-ddf3-8c61-7ffc61aa41f4@deltatee.com>
- <20190725182701.GA11547@kroah.com>
- <a3262a7f-b78e-05ba-cda3-a7587946bd91@deltatee.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <5951e0f5-cc90-f3de-0083-088fecfd43bb@grimberg.me>
-Date:   Thu, 25 Jul 2019 12:02:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=LKu/Qknu3DhcpvZAjH/Cg2C3TRqk9B3bltB+fAqL9wk=;
+        b=cYM1reeFY71qcxhOd+rqkQ6SqMGQiS6g7Z99bkAASH2y3RMaxFTTyG9nQZsS14/UHV
+         35miyUskkVolCyxDeH4HZ+zu6dG9JFU4vg3BPXFQ6pLBmcp0gCPYDckxYzSbGNQj5ma3
+         KYo3ixSVDc8yB/flej+mP6FJtGYyxmwpjgFWna9r392jqk2V0CYHvSf9PyURuIp44RNT
+         EltTSKnPXqXeKIR2rbUghraOcNeAIUnDDwAe5BpcRhFa6eX7v5PBwHMkeD7BU216cera
+         76ikd3sppD79Yrqsu+M31MpqLrzhb1sl35ENH3u1tFzvIdf4XEjrlYJhbU/0D3NTVaAn
+         ZTEQ==
+X-Gm-Message-State: APjAAAUXZ0bk+IGBCKd6+eI4xyKEe4cOubY9JcyHun+hz/UY8UvJ841W
+        M/cvDc3DWbbpS7WqfRweb+CbhT2xAyU=
+X-Google-Smtp-Source: APXvYqwsOsw6JjT7srltx0Ylo5GNatkMNTx2CBFErbN69fvUDtoL+U5aRkJ9Gi6+P8FGydZ/C6FAJw==
+X-Received: by 2002:ac8:1106:: with SMTP id c6mr10335368qtj.332.1564081475362;
+        Thu, 25 Jul 2019 12:04:35 -0700 (PDT)
+Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id a6sm22909833qth.76.2019.07.25.12.04.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 12:04:34 -0700 (PDT)
+From:   Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date:   Thu, 25 Jul 2019 15:04:32 -0400 (EDT)
+X-X-Sender: vince@macbook-air
+To:     linux-kernel@vger.kernel.org
+cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [patch] perf report segfault with 0-sized strings
+In-Reply-To: <alpine.DEB.2.21.1907251423410.22624@macbook-air>
+Message-ID: <alpine.DEB.2.21.1907251501290.22624@macbook-air>
+References: <alpine.DEB.2.21.1907251423410.22624@macbook-air>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <a3262a7f-b78e-05ba-cda3-a7587946bd91@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
->>>> Why do you have a "string" within the kernel and are not using the
->>>> normal open() call from userspace on the character device node on the
->>>> filesystem in your namespace/mount/whatever?
->>>
->>> NVMe-OF is configured using configfs. The target is specified by the
->>> user writing a path to a configfs attribute. This is the way it works
->>> today but with blkdev_get_by_path()[1]. For the passthru code, we need
->>> to get a nvme_ctrl instead of a block_device, but the principal is the same.
->>
->> Why isn't a fd being passed in there instead of a random string?
-> 
-> I wouldn't know the answer to this but I assume because once we decided
-> to use configfs, there was no way for the user to pass the kernel an fd.
+probably all perf_header_strings are affected by this.  The fuzzer just 
+tripped up cmdline now, which needs this fix.
 
-That's definitely not changing. But this is not different than how we
-use the block device or file configuration, this just happen to need the
-nvme controller chardev now to issue I/O.
+Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
+
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index c24db7f4909c..631aa1911f3a 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1427,6 +1430,8 @@ static void print_cmdline(struct feat_fd *ff, FILE *fp)
+ 
+ 	fprintf(fp, "# cmdline : ");
+ 
++	if (ff->ph->env.cmdline_argv==NULL) return;
++
+ 	for (i = 0; i < nr; i++) {
+ 		char *argv_i = strdup(ff->ph->env.cmdline_argv[i]);
+ 		if (!argv_i) {
