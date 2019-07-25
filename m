@@ -2,125 +2,112 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C37C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D294C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CCF122C7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2FB22BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 14:22:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fA9HlS2N"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="W7Ig1Eb4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387774AbfGYOVr (ORCPT
+        id S2387841AbfGYOWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 10:21:47 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44207 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387419AbfGYOVr (ORCPT
+        Thu, 25 Jul 2019 10:22:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:52897 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387419AbfGYOWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 10:21:47 -0400
-Received: by mail-ot1-f68.google.com with SMTP id b7so1675922otl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 07:21:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p0zCRge4IyR2wlfjUSbezvebKIU/ZeQqbglizi25Hnc=;
-        b=fA9HlS2NA+mqlLSk8D6kP778L1e3wK4+NbKw7veEzErPD2TgOeK3SY+5AXDqI8qkok
-         6xoRISMUNVjk3vANwDKjwCLy8Grl5UaqrIpDyDMwYSb9aKRg0Cv5yeVQCORdHWHQLuZj
-         O1TBBjM5fbgumkoW9ecLGcude/8nHJa54JktiPhZTagj37GJHLwvwXNLfxiTwhMmnped
-         mYHWRpmvr6PwPAtfwIoCGsv9bn06rejj2xLY280jWBQaXI7A3CbGaR2lnH9IXX/m+iSv
-         926o5fJKEbVpp1C4wpXSiyvRKtwfAZxVY6joaUzc4DrY+LYkXMR4KXs1E5V6Fmk8n2f3
-         GNNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p0zCRge4IyR2wlfjUSbezvebKIU/ZeQqbglizi25Hnc=;
-        b=RJ0q2GmFWKtn5KjYuYD1FQdc1SgVDlJTHPpQk6yYupjGceXP98wKkQ/Rrim8Y+J9b2
-         0iDS6CqQZh5iBUYcAEzNvk7LVSZVL1cQs6CyRBXd0OkLCcYY2Y8ylPoAH4z7jhWct4yk
-         dmzyNfFwNbcnAjtTKdbjzK+Id3hdxZCmO9hoNPeC85e1jvSEXtwlO+tZASlCeZMGptLe
-         Uy0Ca2I/MA6wsEshbzyUHc9p88V/jGF62o+4cgZEWUpNh+uNjhXeBP08hjHU2x5UWUts
-         KoXrANTZ3ARWe5bvnvZlR2bdqLFpyC7Gv8pGztiop4TV/mQnnP4PSkbQ0l9uD7ZQeNty
-         gwbg==
-X-Gm-Message-State: APjAAAWol9bqa5a42EXAaINYe2DrZdqmt0dVqapeg5FdCT6y/8skgGAv
-        Uy2j5pDdR8O8aoEbc76jxJOKpX4InQ+/mhf1iGM=
-X-Google-Smtp-Source: APXvYqwmXc5yVMJE6L7+bhpGYYiXCwSadkoyKo4JYb9tEs1Es0bf1DgrK5Xaxq2GT032GnRfxzVy/ElYYbZfmB8Qy/w=
-X-Received: by 2002:a9d:73c4:: with SMTP id m4mr38862075otk.369.1564064506211;
- Thu, 25 Jul 2019 07:21:46 -0700 (PDT)
+        Thu, 25 Jul 2019 10:22:22 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PEMAPL1037537
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 07:22:10 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PEMAPL1037537
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564064531;
+        bh=AVmTYOxVuhPUGjUnnjqwYIiHywSp+08pFlxVJuqMW94=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=W7Ig1Eb47r+bYrFqjGi2qNLvw+gfDutqwoEBSU3ryKE4J8H1VLn02y6Xp2vIeHHVI
+         AkvbriJTv9QgrwXy2RblNwgxWiIvpTgyax1fb0WUFDSd2/VLCbAsZ+OWNSLvnh4MJF
+         EVnF3zlzH299fUwR7snqgIT26krM7/jr4wTLDfU8W2TeqyQinVuxNaL4W6SubJcW15
+         JQqoGNGbqeCwzWNi8CCL4fA+phsUt11yfZf/2ejI7W1z3TXUPfYEBedfDsmRE+5Aed
+         d36laexPrIDzBjo0LFAIaMBAMGNrv9x14LqX42zkZsbUNVS84SVe3ym1N8JTjhYLsp
+         bvUPAVQiB6Ggg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PEM9Ru1037515;
+        Thu, 25 Jul 2019 07:22:09 -0700
+Date:   Thu, 25 Jul 2019 07:22:09 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-2640da4cccf5cc613bf26f0998b9e340f4b5f69c@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, tglx@linutronix.de,
+        hpa@zytor.com, peterz@infradead.org
+Reply-To: linux-kernel@vger.kernel.org, mingo@kernel.org,
+          tglx@linutronix.de, hpa@zytor.com, peterz@infradead.org
+In-Reply-To: <20190722105219.068290579@linutronix.de>
+References: <20190722105219.068290579@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/apic] x86/apic: Soft disable APIC before initializing it
+Git-Commit-ID: 2640da4cccf5cc613bf26f0998b9e340f4b5f69c
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190716152656.12255-1-lpf.vector@gmail.com> <20190716152656.12255-2-lpf.vector@gmail.com>
- <20190724193637.44ced3b82dd76649df28ecf5@linux-foundation.org>
-In-Reply-To: <20190724193637.44ced3b82dd76649df28ecf5@linux-foundation.org>
-From:   Pengfei Li <lpf.vector@gmail.com>
-Date:   Thu, 25 Jul 2019 22:21:34 +0800
-Message-ID: <CAD7_sbEGno-o=zh=VJQOXPZ=ppcTF3h_UWAXo6dXFnBJcTNTrA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] mm/vmalloc: do not keep unpurged areas in the busy tree
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Uladzislau Rezki <urezki@gmail.com>, rpenyaev@suse.de,
-        peterz@infradead.org, guro@fb.com, rick.p.edgecombe@intel.com,
-        rppt@linux.ibm.com, aryabinin@virtuozzo.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks.
+Commit-ID:  2640da4cccf5cc613bf26f0998b9e340f4b5f69c
+Gitweb:     https://git.kernel.org/tip/2640da4cccf5cc613bf26f0998b9e340f4b5f69c
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Mon, 22 Jul 2019 20:47:08 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 25 Jul 2019 16:11:56 +0200
 
-Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
+x86/apic: Soft disable APIC before initializing it
 
-On Thu, Jul 25, 2019 at 10:36 AM Andrew Morton
-<akpm@linux-foundation.org> wrote:
->
-> On Tue, 16 Jul 2019 23:26:55 +0800 Pengfei Li <lpf.vector@gmail.com> wrote:
->
-> > From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-> >
-> > The busy tree can be quite big, even though the area is freed
-> > or unmapped it still stays there until "purge" logic removes
-> > it.
-> >
-> > 1) Optimize and reduce the size of "busy" tree by removing a
-> > node from it right away as soon as user triggers free paths.
-> > It is possible to do so, because the allocation is done using
-> > another augmented tree.
-> >
-> > The vmalloc test driver shows the difference, for example the
-> > "fix_size_alloc_test" is ~11% better comparing with default
-> > configuration:
-> >
-> > sudo ./test_vmalloc.sh performance
-> >
-> > <default>
-> > Summary: fix_size_alloc_test loops: 1000000 avg: 993985 usec
-> > Summary: full_fit_alloc_test loops: 1000000 avg: 973554 usec
-> > Summary: long_busy_list_alloc_test loops: 1000000 avg: 12617652 usec
-> > <default>
-> >
-> > <this patch>
-> > Summary: fix_size_alloc_test loops: 1000000 avg: 882263 usec
-> > Summary: full_fit_alloc_test loops: 1000000 avg: 973407 usec
-> > Summary: long_busy_list_alloc_test loops: 1000000 avg: 12593929 usec
-> > <this patch>
-> >
-> > 2) Since the busy tree now contains allocated areas only and does
-> > not interfere with lazily free nodes, introduce the new function
-> > show_purge_info() that dumps "unpurged" areas that is propagated
-> > through "/proc/vmallocinfo".
-> >
-> > 3) Eliminate VM_LAZY_FREE flag.
-> >
-> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
->
-> This should have included your signed-off-by, since you were on the
-> patch delivery path.  (Documentation/process/submitting-patches.rst,
-> section 11).
->
-> Please send along your signed-off-by?
+If the APIC was already enabled on entry of setup_local_APIC() then
+disabling it soft via the SPIV register makes a lot of sense.
+
+That masks all LVT entries and brings it into a well defined state.
+
+Otherwise previously enabled LVTs which are not touched in the setup
+function stay unmasked and might surprise the just booting kernel.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105219.068290579@linutronix.de
+
+---
+ arch/x86/kernel/apic/apic.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index fa0846d4e000..621992de49ee 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1522,6 +1522,14 @@ static void setup_local_APIC(void)
+ 		return;
+ 	}
+ 
++	/*
++	 * If this comes from kexec/kcrash the APIC might be enabled in
++	 * SPIV. Soft disable it before doing further initialization.
++	 */
++	value = apic_read(APIC_SPIV);
++	value &= ~APIC_SPIV_APIC_ENABLED;
++	apic_write(APIC_SPIV, value);
++
+ #ifdef CONFIG_X86_32
+ 	/* Pound the ESR really hard over the head with a big hammer - mbligh */
+ 	if (lapic_is_integrated() && apic->disable_esr) {
