@@ -2,102 +2,188 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51012C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815C0C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC6A22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B45822ADA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:39:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nmCIp8hq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389332AbfGYPhA (ORCPT
+        id S2389246AbfGYPjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 11:37:00 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37795 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389301AbfGYPg7 (ORCPT
+        Thu, 25 Jul 2019 11:39:53 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:34034 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728392AbfGYPjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 11:36:59 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1hqfnQ-0001bw-8U; Thu, 25 Jul 2019 17:36:44 +0200
-Message-ID: <1564069001.3006.1.camel@pengutronix.de>
-Subject: Re: [PATCH v2 1/7] media: hantro: Set DMA max segment size
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Date:   Thu, 25 Jul 2019 17:36:41 +0200
-In-Reply-To: <20190725141756.2518-2-ezequiel@collabora.com>
-References: <20190725141756.2518-1-ezequiel@collabora.com>
-         <20190725141756.2518-2-ezequiel@collabora.com>
+        Thu, 25 Jul 2019 11:39:53 -0400
+Received: by mail-ua1-f67.google.com with SMTP id c4so20013087uad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 08:39:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zUSY0yNX7mjAe5hgCsuzMt6JoI+T3veQET0Qe3Sg7bs=;
+        b=nmCIp8hqFv2u364QTeF1hoE1hDHQBhUlMI7TLjTtUqlM+25nPEpVMXgqAJLBrL8W0E
+         KIj2AH3i+7XfPuNPCPGSvPkgR0tOh0YPzOZGrx8Hwrh+I0lAOo36NobtMFOnjg6kl3YJ
+         Qk+Lxh1O2J1WrPHMivAvH/rBYsTe2Iw+lYFPQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zUSY0yNX7mjAe5hgCsuzMt6JoI+T3veQET0Qe3Sg7bs=;
+        b=GUZ3NP2gZEjMixlbNWZoVIPtCloNQxD7B3W+Ddid7e3uTSmC9MnrVHH0tfSHm3dV8e
+         mmjj6GDSRUpjSTg1LiUIWORYKhFsaiHvsfWV8Bj5wbB+HEeXPzbYwMzXO2XjqGgWGHAR
+         OF80swMphTRMEOn7nGKUmQcYfhud+rpQGE3yF0eSGAZvGJ/QWOMXXb4EsllB48mYuOiE
+         retxoitFP1t92Qp8LYppq1pMXKE1oXqMCcb0UEoyWLPZPO2rdtJIkWwkUD/euGIAWAaM
+         owaoAXAhF6Jye7P8IOST1gwS10d4W3Wn+WjB6tbbJNwNE84vlduwNChei/HOkW5w6Xru
+         FbBw==
+X-Gm-Message-State: APjAAAUx/OWpqT6Z4VeKW4+kVXH12gaPvJYWpH2SLwH/4+EqhrV/SXzc
+        6oLxeQb3ypZFkldox3TYfxDmsuyTXS8=
+X-Google-Smtp-Source: APXvYqxYwwzu48Ia/cgyvtxcYrENlGnzA6OjzmlXridNRtONWPpmibDtg76cS7O9qpWPNtAe/3zlyA==
+X-Received: by 2002:ab0:23ce:: with SMTP id c14mr29425099uan.77.1564069191944;
+        Thu, 25 Jul 2019 08:39:51 -0700 (PDT)
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
+        by smtp.gmail.com with ESMTPSA id n187sm47997496vkd.9.2019.07.25.08.39.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 08:39:51 -0700 (PDT)
+Received: by mail-ua1-f41.google.com with SMTP id j2so20013742uaq.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 08:39:51 -0700 (PDT)
+X-Received: by 2002:ab0:1391:: with SMTP id m17mr52819855uae.90.1564069190798;
+ Thu, 25 Jul 2019 08:39:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190722215340.3071-1-ilina@codeaurora.org> <20190722215340.3071-2-ilina@codeaurora.org>
+ <5d3769df.1c69fb81.55d03.aa33@mx.google.com> <20190724145251.GB18620@codeaurora.org>
+ <5d38b38e.1c69fb81.e8e5d.035b@mx.google.com> <20190724203610.GE18620@codeaurora.org>
+ <CAD=FV=UYj55m99EcQXmkYhs257A46x8DaarE0DC-GRF_3dY3-Q@mail.gmail.com> <20190725151851.GG18620@codeaurora.org>
+In-Reply-To: <20190725151851.GG18620@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 25 Jul 2019 08:39:30 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=X2ENqt5+vdUoRnLTRbedj_sFdQD3Me-yYEW0fDOdBCvg@mail.gmail.com>
+Message-ID: <CAD=FV=X2ENqt5+vdUoRnLTRbedj_sFdQD3Me-yYEW0fDOdBCvg@mail.gmail.com>
+Subject: Re: [PATCH V2 2/4] drivers: qcom: rpmh-rsc: avoid locking in the
+ interrupt handler
+To:     Lina Iyer <ilina@codeaurora.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>, mkshah@codeaurora.org
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-07-25 at 11:17 -0300, Ezequiel Garcia wrote:
-> From: Francois Buergisser <fbuergisser@chromium.org>
-> 
-> The Hantro codec is typically used in platforms with an IOMMU,
-> so we need to set a proper DMA segment size.
+Hi,
 
-... to make sure the DMA-mapping subsystem produces contiguous mappings?
+On Thu, Jul 25, 2019 at 8:18 AM Lina Iyer <ilina@codeaurora.org> wrote:
+>
+> On Wed, Jul 24 2019 at 17:28 -0600, Doug Anderson wrote:
+> >Hi,
+> >
+> >On Wed, Jul 24, 2019 at 1:36 PM Lina Iyer <ilina@codeaurora.org> wrote:
+> >>
+> >> On Wed, Jul 24 2019 at 13:38 -0600, Stephen Boyd wrote:
+> >> >Quoting Lina Iyer (2019-07-24 07:52:51)
+> >> >> On Tue, Jul 23 2019 at 14:11 -0600, Stephen Boyd wrote:
+> >> >> >Quoting Lina Iyer (2019-07-22 14:53:38)
+> >> >> >> Avoid locking in the interrupt context to improve latency. Since we
+> >> >> >> don't lock in the interrupt context, it is possible that we now could
+> >> >> >> race with the DRV_CONTROL register that writes the enable register and
+> >> >> >> cleared by the interrupt handler. For fire-n-forget requests, the
+> >> >> >> interrupt may be raised as soon as the TCS is triggered and the IRQ
+> >> >> >> handler may clear the enable bit before the DRV_CONTROL is read back.
+> >> >> >>
+> >> >> >> Use the non-sync variant when enabling the TCS register to avoid reading
+> >> >> >> back a value that may been cleared because the interrupt handler ran
+> >> >> >> immediately after triggering the TCS.
+> >> >> >>
+> >> >> >> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> >> >> >> ---
+> >> >> >
+> >> >> >I have to read this patch carefully. The commit text isn't convincing me
+> >> >> >that it is actually safe to make this change. It mostly talks about the
+> >> >> >performance improvements and how we need to fix __tcs_trigger(), which
+> >> >> >is good, but I was hoping to be convinced that not grabbing the lock
+> >> >> >here is safe.
+> >> >> >
+> >> >> >How do we ensure that drv->tcs_in_use is cleared before we call
+> >> >> >tcs_write() and try to look for a free bit? Isn't it possible that we'll
+> >> >> >get into a situation where the bitmap is all used up but the hardware
+> >> >> >has just received an interrupt and is going to clear out a bit and then
+> >> >> >an rpmh write fails with -EBUSY?
+> >> >> >
+> >> >> If we have a situation where there are no available free bits, we retry
+> >> >> and that is part of the function. Since we have only 2 TCSes avaialble
+> >> >> to write to the hardware and there could be multiple requests coming in,
+> >> >> it is a very common situation. We try and acquire the drv->lock and if
+> >> >> there are free TCS available and if available mark them busy and send
+> >> >> our requests. If there are none available, we keep retrying.
+> >> >>
+> >> >
+> >> >Ok. I wonder if we need some sort of barriers here too, like an
+> >> >smp_mb__after_atomic()? That way we can make sure that the write to
+> >> >clear the bit is seen by another CPU that could be spinning forever
+> >> >waiting for that bit to be cleared? Before this change the spinlock
+> >> >would be guaranteed to make these barriers for us, but now that doesn't
+> >> >seem to be the case. I really hope that this whole thing can be changed
+> >> >to be a mutex though, in which case we can use the bit_wait() API, etc.
+> >> >to put tasks to sleep while RPMh is processing things.
+> >> >
+> >> We have drivers that want to send requests in atomic contexts and
+> >> therefore mutex locks would not work.
+> >
+> >Jumping in without reading all the context, but I saw this fly by and
+> >it seemed odd.  If I'm way off base then please ignore...
+> >
+> >Can you give more details?  Why are these drivers in atomic contexts?
+> >If they are in atomic contexts because they are running in the context
+> >of an interrupt then your next patch in the series isn't so correct.
+> >
+> >Also: when people submit requests in atomic context are they always
+> >submitting an asynchronous request?  In that case we could
+> >(presumably) just use a spinlock to protect the queue of async
+> >requests and a mutex for everything else?
+> Yes, drivers only make async requests in interrupt contexts.
 
-> Devices without an
-> IOMMU will still fallback to default 64KiB segments.
+So correct me if I'm off base, but you're saying that drivers make
+requests in interrupt contexts even after your whole series and that's
+why you're using spinlocks instead of mutexes.  ...but then in patch
+#3 in your series you say:
 
-I don't understand this comment. The default max_seg_size may be 64 KiB,
-but if we are always setting it to DMA_BUT_MASK(32), there is no falling
-back.
+> Switch over from using _irqsave/_irqrestore variants since we no longer
+> race with a lock from the interrupt handler.
 
-> Cc: stable@vger.kernel.org
-> Fixes: 775fec69008d3 ("media: add Rockchip VPU JPEG encoder driver")
-> Signed-off-by: Francois Buergisser <fbuergisser@chromium.org>
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
->  drivers/staging/media/hantro/hantro_drv.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-> index b71a06e9159e..4eae1dbb1ac8 100644
-> --- a/drivers/staging/media/hantro/hantro_drv.c
-> +++ b/drivers/staging/media/hantro/hantro_drv.c
-> @@ -731,6 +731,7 @@ static int hantro_probe(struct platform_device *pdev)
->  		dev_err(vpu->dev, "Could not set DMA coherent mask.\n");
->  		return ret;
->  	}
-> +	vb2_dma_contig_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32));
+Those seem like contradictions.  What happens if someone is holding
+the lock, then an interrupt fires, then the interrupt routine wants to
+do an async request.  Boom, right?
 
-This should be complemented by a call to
-vb2_dma_contig_clear_max_seg_size() in _remove,
-to avoid leaking dev->dma_parms.
 
->  
->  	for (i = 0; i < vpu->variant->num_irqs; i++) {
->  		const char *irq_name = vpu->variant->irqs[i].name;
+> They cannot
+> use the sync variants. The async and sync variants are streamlined into
+> the same code path. Hence the use of spinlocks instead of mutexes
+> through the critical path.
 
-regards
-Philipp
+I will perhaps defer to Stephen who was the one thinking that a mutex
+would be a big win here.  ...but if a mutex truly is a big win then it
+doesn't seem like it'd be that hard to have a linked list (protected
+by a spinlock) and then some type of async worker that:
+
+1. Grab the spinlock, pops one element off the linked list, release the spinlock
+2. Grab the mutex, send the one element, release the mutex
+3. Go back to step #1.
+
+This will keep the spinlock held for as little time as possible.
+
+
+-Doug
