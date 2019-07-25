@@ -2,138 +2,99 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234D9C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78295C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E88B522BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:04:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q9dPlklL"
+	by mail.kernel.org (Postfix) with ESMTP id 4C6CB22BEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:06:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390405AbfGYFEw (ORCPT
+        id S2390422AbfGYFGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:04:52 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38565 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390362AbfGYFEw (ORCPT
+        Thu, 25 Jul 2019 01:06:09 -0400
+Received: from icp-osb-irony-out1.external.iinet.net.au ([203.59.1.210]:42198
+        "EHLO icp-osb-irony-out1.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390362AbfGYFGI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:04:52 -0400
-Received: by mail-wr1-f67.google.com with SMTP id g17so49208015wrr.5;
-        Wed, 24 Jul 2019 22:04:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=L3y8eC1YuclFK7hkbXSnSrEEcZUpnhzJHsbuLqVifNc=;
-        b=q9dPlklL5rXCpD7A83RKtz9wCstwLbnUviTpE/vD1Aga8gLxuWcfLGMAlemNHX3mpY
-         SWyrx6/IAOIO8s1PqgPfNZfMuaNGNsQ/9yo7CefpiHSh22W2q33Lt9pfO8cItKDdXv2A
-         14T8Mt8KAukz4RGykTJyND2vCEPqS/wUQyE+7+5Cy7aWk1J+nXiy3KYyR6gff0fxjd2Q
-         3zNjFK2NArzweu0DyrivLKEP8aOsrCPxyLUphiq5juNtI2o5JaX32IJq5Mb+sGqGRios
-         nbH+vUbmDqH2Q5ZkqVUBdV695MFZu8euLS89xOdrmrvyXjmUQQL/LvFlmPGagvO/Dc0g
-         InOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=L3y8eC1YuclFK7hkbXSnSrEEcZUpnhzJHsbuLqVifNc=;
-        b=J1oZ87/tOVT0FuhmSTxxk8sfc5uljZ+pNm2I/Pjw4uJymRIVuoieNG3kzpgSlURg7y
-         BleXjdf+6fqbv24AqqOv0eEZW4dqt+W94YDDBaTqqJ0nkwvwCJZ9mXcSmohffEVsxaRm
-         F6eRfeSJcFipiP0CQRhXJuQbFrgkx394v+qz0Io+o0us/U7mueb6a/bL7nIK4i9lEKsE
-         81OEPP9K2hA9LhjKlTOpamXneZGVMSIKhjwnbotLotGVmTrzrCF2jt4m5zR2FlqYUPUy
-         lH1kwCW8s03sAT4w/qCo1f5NZaLVObkXCmU20H3s0tVKzUO+TlpnmhdXzFayxK4zdTiW
-         H0Kw==
-X-Gm-Message-State: APjAAAWlO+kUxE3iI+2cxvdHhQvBV+YFkODTSxl+gPwYgHls/M+ThQ80
-        MAlRZaQz78th1QFwWKDROfg=
-X-Google-Smtp-Source: APXvYqwbeu82ejFTSWXKLFdZY97MjPo8vdf0wiUiDfJNuujA1pYZkzS4KF9tqtwY2qYts4mA/wBZbA==
-X-Received: by 2002:adf:db46:: with SMTP id f6mr40735548wrj.212.1564031090109;
-        Wed, 24 Jul 2019 22:04:50 -0700 (PDT)
-Received: from [192.168.8.147] (240.169.185.81.rev.sfr.net. [81.185.169.240])
-        by smtp.gmail.com with ESMTPSA id j33sm95211179wre.42.2019.07.24.22.04.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 22:04:48 -0700 (PDT)
-Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
-To:     David Miller <davem@davemloft.net>, eric.dumazet@gmail.com,
-        dvyukov@google.com, netdev@vger.kernel.org, fw@strlen.de,
-        i.maximets@samsung.com, edumazet@google.com, dsahern@gmail.com,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <20190724163014.GC673@sol.localdomain>
- <20190724.111225.2257475150626507655.davem@davemloft.net>
- <20190724183710.GF213255@gmail.com>
- <20190724.130928.1854327585456756387.davem@davemloft.net>
- <20190724210950.GH213255@gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <1e07462d-61e2-9885-edd0-97a82dd7883e@gmail.com>
-Date:   Thu, 25 Jul 2019 07:04:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190724210950.GH213255@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 25 Jul 2019 01:06:08 -0400
+X-Greylist: delayed 559 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Jul 2019 01:06:07 EDT
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2CxDAAmNTld/1/rO8tlhW4hEhcTjRi?=
+ =?us-ascii?q?IFwGCQwGDWYVTkRcJAQEBAQEBAQEBGxwBAYQ6BIMAOBMBAwEBAQQBAQEBBQF?=
+ =?us-ascii?q?thGVFhXgvcnASgyKBdxOtZDOIeYFIgTSHCYRugUA/g3VshAMKG4V/BJU3lTQ?=
+ =?us-ascii?q?JgSV2lBIZmAqLX4FYmWMhgVhNHxmDJ4J5jho1MIskglIBAQ?=
+X-IPAS-Result: =?us-ascii?q?A2CxDAAmNTld/1/rO8tlhW4hEhcTjRiIFwGCQwGDWYVTk?=
+ =?us-ascii?q?RcJAQEBAQEBAQEBGxwBAYQ6BIMAOBMBAwEBAQQBAQEBBQFthGVFhXgvcnASg?=
+ =?us-ascii?q?yKBdxOtZDOIeYFIgTSHCYRugUA/g3VshAMKG4V/BJU3lTQJgSV2lBIZmAqLX?=
+ =?us-ascii?q?4FYmWMhgVhNHxmDJ4J5jho1MIskglIBAQ?=
+X-IronPort-AV: E=Sophos;i="5.64,305,1559491200"; 
+   d="scan'208";a="228497770"
+Received: from 203-59-235-95.perm.iinet.net.au (HELO rtcentos7.electromag.com.au) ([203.59.235.95])
+  by icp-osb-irony-out1.iinet.net.au with ESMTP; 25 Jul 2019 12:56:43 +0800
+From:   Richard Tresidder <rtresidd@electromag.com.au>
+To:     sre@kernel.org, kstewart@linuxfoundation.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        rfontana@redhat.com, allison@lohutok.net,
+        rtresidd@electromag.com.au, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] power: supply: sbs-battery: Add ability to force load a battery via the devicetree
+Date:   Thu, 25 Jul 2019 12:56:41 +0800
+Message-Id: <1564030601-14639-1-git-send-email-rtresidd@electromag.com.au>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add the ability to force load a hot pluggable battery during boot where
+there is no gpio detect method available and the module is statically
+built. Normal polling will then occur on that battery when it is inserted.
 
+Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
+---
 
-On 7/24/19 11:09 PM, Eric Biggers wrote:
-> On Wed, Jul 24, 2019 at 01:09:28PM -0700, David Miller wrote:
->> From: Eric Biggers <ebiggers@kernel.org>
->> Date: Wed, 24 Jul 2019 11:37:12 -0700
->>
->>> We can argue about what words to use to describe this situation, but
->>> it doesn't change the situation itself.
->>
->> And we should argue about those words because it matters to humans and
->> effects how they feel, and humans ultimately fix these bugs.
->>
->> So please stop with the hyperbole.
->>
->> Thank you.
-> 
-> Okay, there are 151 bugs that syzbot saw on the mainline Linux kernel in the
-> last 7 days (90.1% with reproducers).  Of those, 59 were reported over 3 months
-> ago (89.8% with reproducers).  Of those, 12 were reported over a year ago (83.3%
-> with reproducers).
-> 
-> No opinion on whether those are small/medium/large numbers, in case it would
-> hurt someone's feelings.
-> 
-> These numbers do *not* include bugs that are still valid but weren't seen on
-> mainline in last 7 days, e.g.:
-> 
-> - Bugs that are seen only rarely, so by chance weren't seen in last 7 days.
-> - Bugs only in linux-next and/or subsystem branches.
-> - Bugs that were seen in mainline more than 7 days ago, and then only on
->   linux-next or subsystem branch in last 7 days.
-> - Bugs that stopped being seen due to a change in syzkaller.
-> - Bugs that stopped being seen due to a change in kernel config.
-> - Bugs that stopped being seen due to other environment changes such as kernel
->   command line parameters.
-> - Bugs that stopped being seen due to a kernel change that hid the bug but
->   didn't actually fix it, i.e. still reachable in other ways.
-> 
+Notes:
+    Add the ability to force load a hot pluggable battery during boot where
+    there is no gpio detect method available and the module is statically
+    built. Normal polling will then occur on that battery when it is inserted.
 
-We do not doubt syzkaller is an incredible tool.
+ drivers/power/supply/sbs-battery.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-But netdev@ and lkml@ are mailing lists for humans to interact,
-exchange ideas, send patches and review them.
-
-To me, an issue that was reported to netdev by a real user is _way_ more important
-than potential issues that a bot might have found doing crazy things.
-
-We need to keep optimal S/N on mailing lists, so any bots trying to interact
-with these lists must be very cautious and damn smart.
-
-When I have time to spare and can work on syzbot reports, I am going to a web
-page where I can see them and select the ones it makes sense to fix.
-I hate having to set up email filters.
+diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
+index 048d205..ea8ba3e 100644
+--- a/drivers/power/supply/sbs-battery.c
++++ b/drivers/power/supply/sbs-battery.c
+@@ -161,6 +161,7 @@ struct sbs_info {
+ 	int				poll_time;
+ 	u32				i2c_retry_count;
+ 	u32				poll_retry_count;
++	bool				force_load;
+ 	struct delayed_work		work;
+ 	struct mutex			mode_lock;
+ 	u32				flags;
+@@ -852,6 +853,9 @@ static int sbs_probe(struct i2c_client *client,
+ 	if (rc)
+ 		chip->poll_retry_count = 0;
+ 
++	chip->force_load = of_property_read_bool(client->dev.of_node,
++						"sbs,force-load");
++
+ 	if (pdata) {
+ 		chip->poll_retry_count = pdata->poll_retry_count;
+ 		chip->i2c_retry_count  = pdata->i2c_retry_count;
+@@ -890,7 +894,7 @@ static int sbs_probe(struct i2c_client *client,
+ 	 * Before we register, we might need to make sure we can actually talk
+ 	 * to the battery.
+ 	 */
+-	if (!(force_load || chip->gpio_detect)) {
++	if (!(force_load || chip->gpio_detect || chip->force_load)) {
+ 		rc = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
+ 
+ 		if (rc < 0) {
+-- 
+1.8.3.1
 
