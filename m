@@ -2,90 +2,78 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CC6C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AE9C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 993662081B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F9282081B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564037955;
+	bh=uQuQ96hVzj6wwcH5JvjI2+Q5onAAbFJiJ6TWsAXNvWg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nju0aXdA81+mD+eSwfIaKI8xDj79ZIJX9B2ZSDHxXaDNYS087i6Jg0h/BSvmxnny4
+	 H40F3PxiiW2GoPqFYvd4lB/i+v6+dIUSMmw9zGE/IjF1bRg2tCw+/0Whte+0+5VciE
+	 Zuse2S/ZAqYki0z+T7G6WFp1aOsAMq8pNGlcawug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbfGYG5o (ORCPT
+        id S1729213AbfGYG7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 02:57:44 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2052 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725808AbfGYG5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 02:57:44 -0400
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 84A2A2D77354B4292889;
-        Thu, 25 Jul 2019 14:57:42 +0800 (CST)
-Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 25 Jul 2019 14:57:01 +0800
-Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
- (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Thu, 25
- Jul 2019 14:57:01 +0800
-Subject: Re: [PATCH net] net: hns: fix LED configuration for marvell phy
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     David Miller <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <shiju.jose@huawei.com>
-References: <1563775152-21369-1-git-send-email-liuyonglong@huawei.com>
- <20190722.181906.2225538844348045066.davem@davemloft.net>
- <72061222-411f-a58c-5873-ad873394cdb5@huawei.com>
- <20190725042829.GB14276@lunn.ch>
-From:   liuyonglong <liuyonglong@huawei.com>
-Message-ID: <8017d9ff-2991-f94f-e611-4d1bac12e93b@huawei.com>
-Date:   Thu, 25 Jul 2019 14:56:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 25 Jul 2019 02:59:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33136 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726479AbfGYG7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 02:59:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E01E12070B;
+        Thu, 25 Jul 2019 06:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564037953;
+        bh=uQuQ96hVzj6wwcH5JvjI2+Q5onAAbFJiJ6TWsAXNvWg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nG572jkH/2I9ooGy82VphpyM/IcVtwRZqH3fCLtpnFXuMT7L3OnVFMFMLuC9hG7HE
+         ux6yXy/e6aUqdbcVwMeJI1i2pjCe1DdxZaFg+vdJAp2UsRyqWWSsC1+vWyU7BFvWGC
+         B/Cz+xHq1wJYe/1Nljny0kpMm2zvvGKvlKmWYX6U=
+Date:   Thu, 25 Jul 2019 08:20:21 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Steve French <smfrench@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Jeff Layton <jlayton@poochiereds.net>
+Subject: Re: [PATCH 5.2 038/413] signal/cifs: Fix cifs_put_tcp_session to
+ call send_sig instead of force_sig
+Message-ID: <20190725062021.GC31256@kroah.com>
+References: <20190724191735.096702571@linuxfoundation.org>
+ <20190724191738.345725184@linuxfoundation.org>
+ <CAH2r5msp4h4+gR6MC0ciO7X9w8cTWh5DD_W1teWpxHfooc5tsA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190725042829.GB14276@lunn.ch>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.37.248]
-X-ClientProxiedBy: dggeme704-chm.china.huawei.com (10.1.199.100) To
- dggeme760-chm.china.huawei.com (10.3.19.106)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH2r5msp4h4+gR6MC0ciO7X9w8cTWh5DD_W1teWpxHfooc5tsA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/7/25 12:28, Andrew Lunn wrote:
-> On Thu, Jul 25, 2019 at 11:00:08AM +0800, liuyonglong wrote:
->>> Revert "net: hns: fix LED configuration for marvell phy"
->>> This reverts commit f4e5f775db5a4631300dccd0de5eafb50a77c131.
->>>
->>> Andrew Lunn says this should be handled another way.
->>>
->>> Signed-off-by: David S. Miller <davem@davemloft.net>
->>
->>
->> Hi Andrew:
->>
->> I see this patch have been reverted, can you tell me the better way to do this?
->> Thanks very much!
+On Wed, Jul 24, 2019 at 03:49:32PM -0500, Steve French wrote:
+> Note that this patch causes a regression (removing cifs module fails,
+> due to unmount leaking a thread with this change).
 > 
-> Please take a look at the work Matthias Kaehlcke is doing. It has not
-> got too far yet, but when it is complete, it should define a generic
-> way to configure PHY LEDs.
-> 
->     Andrew
-> 
+> We are testing a workaround to cifs.ko which would be needed if this
+> patch were to be backported.
 
-Hi Andrew
+I've now dropped this from all of the stable queues.  If you all figure
+this out, please let us know and we will be glad to queue this up, along
+with the fix.
 
-https://lore.kernel.org/patchwork/patch/1097185/
+thanks,
 
-You are discussing about the DT configuration, is Matthias Kaehlcke's work
-also provide a generic way to configure PHY LEDS using ACPI?
-
+greg k-h
