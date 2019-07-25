@@ -2,143 +2,88 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEB4C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B22C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2809E20869
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:54:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+R+4w2M"
+	by mail.kernel.org (Postfix) with ESMTP id 769A120869
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfGYXyh (ORCPT
+        id S1727089AbfGYXzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 19:54:37 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41928 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbfGYXyg (ORCPT
+        Thu, 25 Jul 2019 19:55:24 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:57542 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbfGYXzX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 19:54:36 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m9so23908917pls.8;
-        Thu, 25 Jul 2019 16:54:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jbjn6X1o+b+RloH7E/SSTLYw0cWzlKuB788mEgA/bpM=;
-        b=P+R+4w2MxJZR2ZtX05liUIbVVC5sHJ1cw/fh/WcaeHysDxmi3GzLzGaWIp5i3b7Wpp
-         Z5axEdJM0C9BxpHhuJgeIfMtZiJ7OqS55l0Vk59YkWRWJYtV1I/xYiTpcPhaBxl9DoGE
-         VWSFrwfLKi5hXTOVrjw1Bg4X9Xatca02BwLVrlB1NQsTop3tDT+bPDNuhMI8GNxI2Ohr
-         WdJK53rB4iq8IIAsOClZ9aGiFSX5o+twaXEa8q0fMxEm5tfROzEPOFV0VtctPb/A6xTo
-         C9MGQjy1vM0Vo3/n5ReQCnqqIc4dSzextvN953XLWfo+GRG43E2+T7NzSwkUQOaC1mXB
-         5uRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jbjn6X1o+b+RloH7E/SSTLYw0cWzlKuB788mEgA/bpM=;
-        b=PKjuRydWHLXvoYpOPK71GHMd8Hi+40bwYCPZZ6hPvdi2opVLtixTNhMRG4qMDEEAsH
-         a9/UFeikLt7g3pLUhCxZ+lceMlmn1VuqvPWdQuL4l9z/dc2XBePdhNti2DXzLFuQVU1u
-         AsFovNX8lc71+SsJcZRFKXMVCbVDhmu3GC6k5yumx6jAMmC0sJhe04CSbanaTZSt8fRl
-         AbkBUoGcn+aTeT+cecHK7U8REL0csu+NOJpwRV8zA7pupPp7dXncR+C7aZ61WzIr8r5K
-         4h4qq+btUaOYWNJqRmC6Azczm/nN6CKrXGgawKw84E9aMKBRU7Cr5RZenq9BnzFQbHoX
-         +fQw==
-X-Gm-Message-State: APjAAAWDRVsOdOzT5WX0NLh4KWPscg0qhYUXINiel3OI6UjenrPc1Zks
-        tArGygBKDY0W/cG2sQmNB0w=
-X-Google-Smtp-Source: APXvYqxZ/3rxr8khd3NQIG7YTDRhwqCZcgL8B3stAATASb/7sIT0JVYywxlJ/HpSESLgObq4pmW5Dw==
-X-Received: by 2002:a17:902:7612:: with SMTP id k18mr92208136pll.48.1564098875806;
-        Thu, 25 Jul 2019 16:54:35 -0700 (PDT)
-Received: from ast-mbp ([2620:10d:c090:200::1:85f9])
-        by smtp.gmail.com with ESMTPSA id w18sm64466745pfj.37.2019.07.25.16.54.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 16:54:34 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 16:54:33 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Brian Vazquez <brianvv.kernel@gmail.com>
-Cc:     Song Liu <liu.song.a23@gmail.com>,
-        Brian Vazquez <brianvv@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH bpf-next 2/6] bpf: add BPF_MAP_DUMP command to dump more
- than one entry per call
-Message-ID: <20190725235432.lkptx3fafegnm2et@ast-mbp>
-References: <20190724165803.87470-1-brianvv@google.com>
- <20190724165803.87470-3-brianvv@google.com>
- <CAPhsuW4HPjXE+zZGmPM9GVPgnVieRr0WOuXfM0W6ec3SB4imDw@mail.gmail.com>
- <CABCgpaXz4hO=iGoswdqYBECWE5eu2AdUgms=hyfKnqz7E+ZgNg@mail.gmail.com>
- <CAPhsuW5NzzeDmNmgqRh0kwHnoQfaD90L44NJ9AbydG_tGJkKiQ@mail.gmail.com>
- <CABCgpaV7mj5DhFqh44rUNVj5XMAyP+n79LrMobW_=DfvEaS4BQ@mail.gmail.com>
+        Thu, 25 Jul 2019 19:55:23 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hqnZe-0004a0-QJ; Thu, 25 Jul 2019 23:55:02 +0000
+Date:   Fri, 26 Jul 2019 00:55:02 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Stephen Bates <sbates@raithlin.com>,
+        linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+        linux-fsdevel@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
+Message-ID: <20190725235502.GJ1131@ZenIV.linux.org.uk>
+References: <20190725172335.6825-3-logang@deltatee.com>
+ <20190725174032.GA27818@kroah.com>
+ <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
+ <20190725180816.GA32305@kroah.com>
+ <da0eacb7-3738-ddf3-8c61-7ffc61aa41f4@deltatee.com>
+ <20190725182701.GA11547@kroah.com>
+ <20190725190024.GD30641@bombadil.infradead.org>
+ <27943e06-a503-162e-356b-abb9e106ab2e@grimberg.me>
+ <20190725191124.GE30641@bombadil.infradead.org>
+ <425dd2ac-333d-a8c4-ce49-870c8dadf436@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABCgpaV7mj5DhFqh44rUNVj5XMAyP+n79LrMobW_=DfvEaS4BQ@mail.gmail.com>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <425dd2ac-333d-a8c4-ce49-870c8dadf436@deltatee.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 04:25:53PM -0700, Brian Vazquez wrote:
-> > > > If prev_key is deleted before map_get_next_key(), we get the first key
-> > > > again. This is pretty weird.
-> > >
-> > > Yes, I know. But note that the current scenario happens even for the
-> > > old interface (imagine you are walking a map from userspace and you
-> > > tried get_next_key the prev_key was removed, you will start again from
-> > > the beginning without noticing it).
-> > > I tried to sent a patch in the past but I was missing some context:
-> > > before NULL was used to get the very first_key the interface relied in
-> > > a random (non existent) key to retrieve the first_key in the map, and
-> > > I was told what we still have to support that scenario.
-> >
-> > BPF_MAP_DUMP is slightly different, as you may return the first key
-> > multiple times in the same call. Also, BPF_MAP_DUMP is new, so we
-> > don't have to support legacy scenarios.
-> >
-> > Since BPF_MAP_DUMP keeps a list of elements. It is possible to try
-> > to look up previous keys. Would something down this direction work?
+On Thu, Jul 25, 2019 at 01:24:22PM -0600, Logan Gunthorpe wrote:
 > 
-> I've been thinking about it and I think first we need a way to detect
-> that since key was not present we got the first_key instead:
 > 
-> - One solution I had in mind was to explicitly asked for the first key
-> with map_get_next_key(map, NULL, first_key) and while walking the map
-> check that map_get_next_key(map, prev_key, key) doesn't return the
-> same key. This could be done using memcmp.
-> - Discussing with Stan, he mentioned that another option is to support
-> a flag in map_get_next_key to let it know that we want an error
-> instead of the first_key.
+> On 2019-07-25 1:11 p.m., Matthew Wilcox wrote:
+> > On Thu, Jul 25, 2019 at 12:05:29PM -0700, Sagi Grimberg wrote:
+> >>
+> >>>>> NVMe-OF is configured using configfs. The target is specified by the
+> >>>>> user writing a path to a configfs attribute. This is the way it works
+> >>>>> today but with blkdev_get_by_path()[1]. For the passthru code, we need
+> >>>>> to get a nvme_ctrl instead of a block_device, but the principal is the same.
+> >>>>
+> >>>> Why isn't a fd being passed in there instead of a random string?
+> >>>
+> >>> I suppose we could echo a string of the file descriptor number there,
+> >>> and look up the fd in the process' file descriptor table ...
+> >>
+> >> Assuming that there is a open handle somewhere out there...
 > 
-> After detecting the problem we also need to define what we want to do,
-> here some options:
-> 
-> a) Return the error to the caller
-> b) Try with previous keys if any (which be limited to the keys that we
-> have traversed so far in this dump call)
-> c) continue with next entries in the map. array is easy just get the
-> next valid key (starting on i+1), but hmap might be difficult since
-> starting on the next bucket could potentially skip some keys that were
-> concurrently added to the same bucket where key used to be, and
-> starting on the same bucket could lead us to return repeated elements.
-> 
-> Or maybe we could support those 3 cases via flags and let the caller
-> decide which one to use?
+> Yes, that would be a step backwards from an interface. The user would
+> then need a special process to open the fd and pass it through configfs.
+> They couldn't just do it with basic bash commands.
 
-this type of indecision is the reason why I wasn't excited about
-batch dumping in the first place and gave 'soft yes' when Stan
-mentioned it during lsf/mm/bpf uconf.
-We probably shouldn't do it.
-It feels this map_dump makes api more complex and doesn't really
-give much benefit to the user other than large map dump becomes faster.
-I think we gotta solve this problem differently.
+First of all, they can, but... WTF not have filp_open() done right there?
+Yes, by name.  With permission checks done.  And pick your object from the
+sodding struct file you'll get.
 
+What's the problem?  Why do you need cdev lookups, etc., when you are
+dealing with files under your full control?  Just open them and use
+->private_data or whatever you set in ->open() to access the damn thing.
+All there is to it...
