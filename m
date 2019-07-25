@@ -6,102 +6,71 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5264EC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCA8C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 184F7218DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD23120828
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 06:10:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729209AbfGYGKL (ORCPT
+        id S1729421AbfGYGKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 25 Jul 2019 02:10:15 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:52233 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbfGYGKL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jul 2019 02:10:11 -0400
-Received: from verein.lst.de ([213.95.11.211]:58481 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbfGYGKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 02:10:10 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0ECA268B20; Thu, 25 Jul 2019 08:10:06 +0200 (CEST)
-Date:   Thu, 25 Jul 2019 08:10:05 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-rdma@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH 11/14] PCI/P2PDMA: dma_map P2PDMA map requests that
- traverse the host bridge
-Message-ID: <20190725061005.GB24875@lst.de>
-References: <20190722230859.5436-1-logang@deltatee.com> <20190722230859.5436-12-logang@deltatee.com> <20190724063232.GB1804@lst.de> <7173a4dd-0c9c-48de-98cd-93513313fd8d@deltatee.com>
+X-Originating-IP: 81.250.144.103
+Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id D99C260004;
+        Thu, 25 Jul 2019 06:10:06 +0000 (UTC)
+Subject: Re: [PATCH REBASE v4 00/14] Provide generic top-down mmap layout
+ functions
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+References: <20190724055850.6232-1-alex@ghiti.fr>
+ <20190724171745.GX19023@42.do-not-panic.com>
+From:   Alexandre Ghiti <alex@ghiti.fr>
+Message-ID: <c7a35023-8571-6000-d870-12803314adbf@ghiti.fr>
+Date:   Thu, 25 Jul 2019 08:10:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7173a4dd-0c9c-48de-98cd-93513313fd8d@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190724171745.GX19023@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 09:58:59AM -0600, Logan Gunthorpe wrote:
-> 
-> 
-> On 2019-07-24 12:32 a.m., Christoph Hellwig wrote:
-> >>  	struct dev_pagemap *pgmap = sg_page(sg)->pgmap;
-> >> +	struct pci_dev *client;
-> >> +	int dist;
-> >> +
-> >> +	client = find_parent_pci_dev(dev);
-> >> +	if (WARN_ON_ONCE(!client))
-> >> +		return 0;
-> >>  
-> >> +	dist = upstream_bridge_distance(pgmap->pci_p2pdma_provider,
-> >> +					client, NULL);
-> > 
-> > Doing this on every mapping call sounds expensive..
-> 
-> The result of this function is cached in an xarray (per patch 4) so, on
-> the hot path, it should just be a single xa_load() which should be a
-> relatively fast lookup which is similarly used for other hot path
-> operations.
+On 7/24/19 7:17 PM, Luis Chamberlain wrote:
+> Other than the two comments:
+>
+> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 
-We don't cache find_parent_pci_dev, though.  So we should probably
-export find_parent_pci_dev with a proper namespaces name and cache
-that in the caler.
 
-> > 
-> >> +	if (WARN_ON_ONCE(dist & P2PDMA_NOT_SUPPORTED))
-> >> +		return 0;
-> >> +
-> >> +	if (dist & P2PDMA_THRU_HOST_BRIDGE)
-> >> +		return dma_map_sg_attrs(dev, sg, nents, dir, attrs);
-> >> +	else
-> >> +		return __pci_p2pdma_map_sg(pgmap, dev, sg, nents);
-> > 
-> > Can't we organize the values so that we can switch on the return
-> > value instead of doing flag checks?
-> 
-> Sorry, I don't follow what you are saying here. If you mean for
-> upstream_bridge_distance() to just return how to map and not the
-> distance that would interfere with other uses of that function.
+Thanks for your time Luis,
 
-The point is that in the map path we don't even care about the
-distance.  I think we should just have a function that returns the
-P2PDMA_ values from the xarray (maybe also store it there as two
-values, but that isn't quite as important), and get rid of even
-the concept of distance in the map path. e.g.:
+Alex
 
-	switch (pci_p2pdma_supported(pgmap->pci_p2pdma_provider, client))) {
-	case P2PDMA_HOST_BRIDGE:
-		return dma_map_sg_attrs(dev, sg, nents, dir, attrs);
-	case P2PDMA_SWITCH:
-		return __pci_p2pdma_map_sg(pgmap, dev, sg, nents);
-	default:
-		WARN_ON_ONCE(1);
-		return 0;
-	}
+
+>
+>    Luis
+>
