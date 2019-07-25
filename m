@@ -2,124 +2,113 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2E3C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E307FC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8CDD21951
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5B721951
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388453AbfGYM7e (ORCPT
+        id S1729901AbfGYM7q convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:59:34 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:49199 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728897AbfGYM7e (ORCPT
+        Thu, 25 Jul 2019 08:59:46 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:50657 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfGYM7q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:59:34 -0400
-Received: from [IPv6:2001:420:44c1:2579:64cb:e917:d1ce:4f27] ([IPv6:2001:420:44c1:2579:64cb:e917:d1ce:4f27])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id qdLBhEcaaLqASqdLEhTpVV; Thu, 25 Jul 2019 14:59:31 +0200
-Subject: Re: [PATCH 0/7] hantro: Add RK3399 VP8 decoding support
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
-References: <20190724171702.9449-1-ezequiel@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <b0cd9a4f-4bf9-a48c-6d7c-7147b13fa0b2@xs4all.nl>
-Date:   Thu, 25 Jul 2019 14:59:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190724171702.9449-1-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfH91+GSCR9/BQ6o5MVMi8O1vy+fYBT8pfW7voO0zSMsUL/0FoUIfCsRdCer6unCd3zmVDWduneqT8untxNKbfwUDD6zeR30I/mWIt+H5JH5JV6aFt3Ns
- mebj0wkIAzROiH99iss3dQxTRTr6M8q8jDR5mK5PhjPdMfgmsLT/weZJ/M64eB0YEPJozJdlg0rPFiA0UiYy0/KvPaJaTvZBnzhunjpHuCim0YhoHm7EKQWb
- 4lEyOEjzOZzRC6ADMMp1ncXoQALIFxtlIOg1ueb9RjvcuFZSF9SvFxMwdjO4jiL2qP7dva5mKzRNYtq8tcuORYZ5dGcoGRDol6NRK5BYFB1hCSy0QOuZ6E/u
- et6/0+bQuPcpTZeWzvPZ63UBC8um/HLQEIIM2RxvpVFO/RqORAMUjmuVKX6VOmlV0Brb3gEQV0+tr7/5NCp149iYNlLXi0P7I5zyj4UuCMTZGx5rVpCSkD3i
- 4Y/AoeWBbZ7T/5W4slLL0sLVLRxl+XfQFDNrQ3B6ay/2xODlw/+VPb6EsPPPgHz9IePfdSQyMTpsgRcvkTy0A3HiuMuvQ8o4oCPuDx+S7pk3mRRLvZmEhe16
- ZQFiIrzs2PhW5IC17EiAG1yhpLXU0eIHcg5dFhpvPSQr0aWwuUtQjj4zL7eSlXKvRmLHU7twDPiGPUQsF5l6mR3bGu2SZkR8bfsnt50RxiCCFUXwktXHvTdG
- T3IGCaNCHD0ynrqgpuETywVduNEEDsXUB4BIIb72u/zM65uPDZ3NKFzvPTcFPoRrdxsQ+Ur4gvNQY7nBRZA3cxtKKjSigmRk
+        Thu, 25 Jul 2019 08:59:46 -0400
+Received: from marcel-macbook.fritz.box (p5B3D2BA7.dip0.t-ipconnect.de [91.61.43.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id A8EA1CEC82;
+        Thu, 25 Jul 2019 15:08:20 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] Bluetooth: hci_uart: check for missing tty operations in
+ protocol handlers
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20190725120909.31235-1-vdronov@redhat.com>
+Date:   Thu, 25 Jul 2019 14:59:42 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Suraj Sumangala <suraj@atheros.com>,
+        Frederic Danis <frederic.danis@linux.intel.com>,
+        Loic Poulain <loic.poulain@intel.com>,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        syzkaller@googlegroups.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <2E234F47-724D-4CFB-93B5-48E5BDA6F230@holtmann.org>
+References: <20190725120909.31235-1-vdronov@redhat.com>
+To:     Vladis Dronov <vdronov@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/24/19 7:16 PM, Ezequiel Garcia wrote:
-> This series adds VP8 decoding support on RK3399 SoC.
-> 
-> I'm including a set of commits from Boris' recent H264 series [1].
-> These commits add some helpers that are also useful for RK3399 VP8,
-> and at the same time cleanup the driver nicely.
-> 
-> Finally, there's a fix by Francois Buergisser from Chromium team.
-> 
-> VP8 and MPEG-2 tested on RK3399 RockPi and RK3288 Rock2 boards.
+Hi Vladis,
 
-I get this when compiling:
+> Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
+> functions which are called by the certain HCI UART protocols (hci_ath,
+> hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
+> or directly. This leads to an execution at NULL and can be triggered by
+> an unprivileged user. Fix this by adding a check for the missing tty
+> operations to the protocols which use them.
+> 
+> This fixes CVE-2019-10207.
+> 
+> Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
+> Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
+> Cc: stable@vger.kernel.org # v2.6.36+
+> Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
+> Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
+> Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate configuration support")
+> Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
+> Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
+> Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+> ---
+> drivers/bluetooth/hci_ath.c   | 3 +++
+> drivers/bluetooth/hci_bcm.c   | 5 +++++
+> drivers/bluetooth/hci_intel.c | 3 +++
+> drivers/bluetooth/hci_mrvl.c  | 3 +++
+> drivers/bluetooth/hci_qca.c   | 4 ++++
+> 5 files changed, 18 insertions(+)
+> 
+> diff --git a/drivers/bluetooth/hci_ath.c b/drivers/bluetooth/hci_ath.c
+> index a55be205b91a..99df8a13e47e 100644
+> --- a/drivers/bluetooth/hci_ath.c
+> +++ b/drivers/bluetooth/hci_ath.c
+> @@ -98,6 +98,9 @@ static int ath_open(struct hci_uart *hu)
+> 
+> 	BT_DBG("hu %p", hu);
+> 
+> +	if (!hu->tty->driver->ops->tiocmget || !hu->tty->driver->ops->tiocmset)
+> +		return -ENOTSUPP;
+> +
+> 	ath = kzalloc(sizeof(*ath), GFP_KERNEL);
+> 	if (!ath)
+> 		return -ENOMEM;
+> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+> index 8905ad2edde7..8c3e09cc341c 100644
+> --- a/drivers/bluetooth/hci_bcm.c
+> +++ b/drivers/bluetooth/hci_bcm.c
+> @@ -406,6 +406,11 @@ static int bcm_open(struct hci_uart *hu)
+> 
+> 	bt_dev_dbg(hu->hdev, "hu %p", hu);
+> 
+> +#ifdef CONFIG_PM
+> +	if (!hu->tty->driver->ops->tiocmget || !hu->tty->driver->ops->tiocmset)
+> +		return -ENOTSUPP;
+> +#endif
+> +
 
-/home/hans/work/build/media-git/drivers/staging/media/hantro/hantro_g1_vp8_dec.c: In function 'hantro_g1_vp8_dec_run':
-/home/hans/work/build/media-git/drivers/staging/media/hantro/hantro_g1_vp8_dec.c:435:26: warning: variable 'vb2_src' set but not used [-Wunused-but-set-variable]
-  struct vb2_v4l2_buffer *vb2_src;
-                          ^~~~~~~
-  CC      drivers/staging/media/omap4iss/iss_csiphy.o
-/home/hans/work/build/media-git/drivers/staging/media/hantro/rk3399_vpu_hw_vp8_dec.c: In function 'rk3399_vpu_vp8_dec_run':
-/home/hans/work/build/media-git/drivers/staging/media/hantro/rk3399_vpu_hw_vp8_dec.c:515:26: warning: variable 'vb2_src' set but not used [-Wunused-but-set-variable]
-  struct vb2_v4l2_buffer *vb2_src;
-                          ^~~~~~~
+why is this one hidden behind CONFIG_PM? The general baud rate changes are independent of runtime power management support.
 
-Can you take a look?
+And I would introduce a bool hci_uart_has_tiocm_support(struct hci_uart *) helper.
 
-Thanks,
+Regards
 
-	Hans
-
-> 
-> [1] https://patchwork.kernel.org/cover/11003971/
-> 
-> Boris Brezillon (4):
->   media: hantro: Simplify the controls creation logic
->   media: hantro: Constify the control array
->   media: hantro: Add hantro_get_{src,dst}_buf() helpers
->   media: hantro: Add helpers to prepare/finish a run
-> 
-> Ezequiel Garcia (1):
->   media: hantro: Move VP8 common code
-> 
-> Francois Buergisser (1):
->   media: hantro: Set DMA max segment size
-> 
-> Jeffy Chen (1):
->   media: hantro: Support RK3399 VP8 decoding
-> 
->  drivers/staging/media/hantro/Makefile         |   1 +
->  drivers/staging/media/hantro/hantro.h         |  15 +-
->  drivers/staging/media/hantro/hantro_drv.c     |  53 +-
->  .../media/hantro/hantro_g1_mpeg2_dec.c        |  14 +-
->  .../staging/media/hantro/hantro_g1_vp8_dec.c  |  34 +-
->  .../staging/media/hantro/hantro_h1_jpeg_enc.c |  11 +-
->  drivers/staging/media/hantro/hantro_hw.h      |   7 +
->  drivers/staging/media/hantro/hantro_vp8.c     |  15 +
->  drivers/staging/media/hantro/rk3399_vpu_hw.c  |  22 +-
->  .../media/hantro/rk3399_vpu_hw_jpeg_enc.c     |  12 +-
->  .../media/hantro/rk3399_vpu_hw_mpeg2_dec.c    |  14 +-
->  .../media/hantro/rk3399_vpu_hw_vp8_dec.c      | 597 ++++++++++++++++++
->  12 files changed, 711 insertions(+), 84 deletions(-)
->  create mode 100644 drivers/staging/media/hantro/rk3399_vpu_hw_vp8_dec.c
-> 
+Marcel
 
