@@ -2,29 +2,29 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08684C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED640C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A109620840
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A938C2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391084AbfGYJ5g (ORCPT
+        id S2387690AbfGYJ6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 05:57:36 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55836 "EHLO huawei.com"
+        Thu, 25 Jul 2019 05:58:02 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56654 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390986AbfGYJ53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 05:57:29 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9CBBB1DFD2306BD2CB73;
-        Thu, 25 Jul 2019 17:57:26 +0800 (CST)
+        id S2388197AbfGYJ6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 05:58:00 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 022926D1D410475F9081;
+        Thu, 25 Jul 2019 17:57:52 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 25 Jul
- 2019 17:57:16 +0800
+ 2019 17:57:43 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -41,9 +41,9 @@ CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v4 04/24] erofs: add raw address_space operations
-Date:   Thu, 25 Jul 2019 17:56:38 +0800
-Message-ID: <20190725095658.155779-5-gaoxiang25@huawei.com>
+Subject: [PATCH v4 16/24] erofs: introduce workstation for decompression
+Date:   Thu, 25 Jul 2019 17:56:50 +0800
+Message-ID: <20190725095658.155779-17-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190725095658.155779-1-gaoxiang25@huawei.com>
 References: <20190725095658.155779-1-gaoxiang25@huawei.com>
@@ -56,444 +56,348 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds functions for meta and raw data, and also
-provides address_space_operations for raw data access.
+This patch introduces another concept used by decompress
+subsystem called 'workstation'. It can be seen as
+a sparse array that stores pointers pointed to data
+structures related to the corresponding physical clusters.
+
+All lookups are protected by RCU read lock. Besides,
+reference count and spin_lock are also introduced
+to manage its lifetime and serialize all update
+operations.
+
+`workstation' is currently implemented on the in-kernel
+radix tree approach for backward compatibility. With the
+evolution of linux kernel, it will be migrated into
+new XArray implementation in the future.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/data.c | 423 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 423 insertions(+)
- create mode 100644 fs/erofs/data.c
+ fs/erofs/internal.h |  83 ++++++++++++++++++++++
+ fs/erofs/super.c    |   4 ++
+ fs/erofs/utils.c    | 167 +++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 252 insertions(+), 2 deletions(-)
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-new file mode 100644
-index 000000000000..471074b216ff
---- /dev/null
-+++ b/fs/erofs/data.c
-@@ -0,0 +1,423 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * linux/fs/erofs/data.c
-+ *
-+ * Copyright (C) 2017-2018 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Gao Xiang <gaoxiang25@huawei.com>
-+ */
-+#include "internal.h"
-+#include <linux/prefetch.h>
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 3b43f960b7bd..3d908dcaadad 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -66,6 +66,9 @@ struct erofs_sb_info {
+ 	struct list_head list;
+ 	struct mutex umount_mutex;
+ 
++	/* the dedicated workstation for compression */
++	struct radix_tree_root workstn_tree;
 +
-+#include <trace/events/erofs.h>
+ 	unsigned int shrinker_run_no;
+ #endif	/* CONFIG_EROFS_FS_ZIP */
+ 	u32 blocks;
+@@ -152,6 +155,77 @@ static inline void *erofs_kmalloc(struct erofs_sb_info *sbi,
+ 
+ #define DEFAULT_MAX_IO_RETRIES_NOFAIL	5
+ 
++#ifdef CONFIG_EROFS_FS_ZIP
++#define EROFS_LOCKED_MAGIC     (INT_MIN | 0xE0F510CCL)
 +
-+static inline void read_endio(struct bio *bio)
++/* basic unit of the workstation of a super_block */
++struct erofs_workgroup {
++	/* the workgroup index in the workstation */
++	pgoff_t index;
++
++	/* overall workgroup reference count */
++	atomic_t refcount;
++};
++
++#if defined(CONFIG_SMP)
++static inline bool erofs_workgroup_try_to_freeze(struct erofs_workgroup *grp,
++						 int val)
 +{
-+	struct super_block *const sb = bio->bi_private;
-+	struct bio_vec *bvec;
-+	blk_status_t err = bio->bi_status;
-+	struct bvec_iter_all iter_all;
-+
-+	if (time_to_inject(EROFS_SB(sb), FAULT_READ_IO)) {
-+		erofs_show_injection_info(FAULT_READ_IO);
-+		err = BLK_STS_IOERR;
++	preempt_disable();
++	if (val != atomic_cmpxchg(&grp->refcount, val, EROFS_LOCKED_MAGIC)) {
++		preempt_enable();
++		return false;
 +	}
-+
-+	bio_for_each_segment_all(bvec, bio, iter_all) {
-+		struct page *page = bvec->bv_page;
-+
-+		/* page is already locked */
-+		DBG_BUGON(PageUptodate(page));
-+
-+		if (unlikely(err))
-+			SetPageError(page);
-+		else
-+			SetPageUptodate(page);
-+
-+		unlock_page(page);
-+		/* page could be reclaimed now */
-+	}
-+	bio_put(bio);
++	return true;
 +}
 +
-+/* prio -- true is used for dir */
-+struct page *__erofs_get_meta_page(struct super_block *sb,
-+				   erofs_blk_t blkaddr, bool prio, bool nofail)
++static inline void erofs_workgroup_unfreeze(struct erofs_workgroup *grp,
++					    int orig_val)
 +{
-+	struct inode *const bd_inode = sb->s_bdev->bd_inode;
-+	struct address_space *const mapping = bd_inode->i_mapping;
-+	/* prefer retrying in the allocator to blindly looping below */
-+	const gfp_t gfp = mapping_gfp_constraint(mapping, ~__GFP_FS) |
-+		(nofail ? __GFP_NOFAIL : 0);
-+	unsigned int io_retries = nofail ? DEFAULT_MAX_IO_RETRIES_NOFAIL : 0;
-+	struct page *page;
-+	int err;
++	/*
++	 * other observers should notice all modifications
++	 * in the freezing period.
++	 */
++	smp_mb();
++	atomic_set(&grp->refcount, orig_val);
++	preempt_enable();
++}
++
++static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
++{
++	return atomic_cond_read_relaxed(&grp->refcount,
++					VAL != EROFS_LOCKED_MAGIC);
++}
++#else
++static inline bool erofs_workgroup_try_to_freeze(struct erofs_workgroup *grp,
++						 int val)
++{
++	preempt_disable();
++	/* no need to spin on UP platforms, let's just disable preemption. */
++	if (val != atomic_read(&grp->refcount)) {
++		preempt_enable();
++		return false;
++	}
++	return true;
++}
++
++static inline void erofs_workgroup_unfreeze(struct erofs_workgroup *grp,
++					    int orig_val)
++{
++	preempt_enable();
++}
++
++static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
++{
++	int v = atomic_read(&grp->refcount);
++
++	/* workgroup is never freezed on uniprocessor systems */
++	DBG_BUGON(v == EROFS_LOCKED_MAGIC);
++	return v;
++}
++#endif	/* !CONFIG_SMP */
++#endif	/* !CONFIG_EROFS_FS_ZIP */
++
+ /* we strictly follow PAGE_SIZE and no buffer head yet */
+ #define LOG_BLOCK_SIZE		PAGE_SHIFT
+ 
+@@ -409,6 +483,15 @@ extern const struct file_operations erofs_dir_fops;
+ 
+ /* utils.c */
+ #ifdef CONFIG_EROFS_FS_ZIP
++int erofs_workgroup_put(struct erofs_workgroup *grp);
++struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
++					     pgoff_t index, bool *tag);
++int erofs_register_workgroup(struct super_block *sb,
++			     struct erofs_workgroup *grp, bool tag);
++unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
++				       unsigned long nr_shrink, bool cleanup);
++static inline void erofs_workgroup_free_rcu(struct erofs_workgroup *grp) {}
++
+ void erofs_shrinker_register(struct super_block *sb);
+ void erofs_shrinker_unregister(struct super_block *sb);
+ int __init erofs_init_shrinker(void);
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index b8c48508a0dd..45552d984108 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -338,6 +338,10 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+ 	else
+ 		sb->s_flags &= ~SB_POSIXACL;
+ 
++#ifdef CONFIG_EROFS_FS_ZIP
++	INIT_RADIX_TREE(&sbi->workstn_tree, GFP_ATOMIC);
++#endif
++
+ 	/* get the root inode */
+ 	inode = erofs_iget(sb, ROOT_NID(sbi), true);
+ 	if (IS_ERR(inode))
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
+index cab7d77c4e59..56f27fe901b7 100644
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -7,11 +7,174 @@
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #include "internal.h"
++#include <linux/pagevec.h>
+ 
+ #ifdef CONFIG_EROFS_FS_ZIP
+ /* global shrink count (for all mounted EROFS instances) */
+ static atomic_long_t erofs_global_shrink_cnt;
+ 
++#define __erofs_workgroup_get(grp)	atomic_inc(&(grp)->refcount)
++#define __erofs_workgroup_put(grp)	atomic_dec(&(grp)->refcount)
++
++static int erofs_workgroup_get(struct erofs_workgroup *grp)
++{
++	int o;
 +
 +repeat:
-+	page = find_or_create_page(mapping, blkaddr, gfp);
-+	if (unlikely(!page)) {
-+		DBG_BUGON(nofail);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+	DBG_BUGON(!PageLocked(page));
++	o = erofs_wait_on_workgroup_freezed(grp);
++	if (unlikely(o <= 0))
++		return -1;
 +
-+	if (!PageUptodate(page)) {
-+		struct bio *bio;
++	if (unlikely(atomic_cmpxchg(&grp->refcount, o, o + 1) != o))
++		goto repeat;
 +
-+		bio = erofs_grab_bio(sb, blkaddr, 1, sb, read_endio, nofail);
-+		if (IS_ERR(bio)) {
-+			DBG_BUGON(nofail);
-+			err = PTR_ERR(bio);
-+			goto err_out;
-+		}
++	/* decrease refcount paired by erofs_workgroup_put */
++	if (unlikely(o == 1))
++		atomic_long_dec(&erofs_global_shrink_cnt);
++	return 0;
++}
 +
-+		err = bio_add_page(bio, page, PAGE_SIZE, 0);
-+		if (unlikely(err != PAGE_SIZE)) {
-+			err = -EFAULT;
-+			goto err_out;
-+		}
++struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
++					     pgoff_t index, bool *tag)
++{
++	struct erofs_sb_info *const sbi = EROFS_SB(sb);
++	struct erofs_workgroup *grp;
 +
-+		__submit_bio(bio, REQ_OP_READ,
-+			     REQ_META | (prio ? REQ_PRIO : 0));
++repeat:
++	rcu_read_lock();
++	grp = radix_tree_lookup(&sbi->workstn_tree, index);
++	if (grp) {
++		*tag = xa_pointer_tag(grp);
++		grp = xa_untag_pointer(grp);
 +
-+		lock_page(page);
-+
-+		/* this page has been truncated by others */
-+		if (unlikely(page->mapping != mapping)) {
-+unlock_repeat:
-+			unlock_page(page);
-+			put_page(page);
++		if (erofs_workgroup_get(grp)) {
++			/* prefer to relax rcu read side */
++			rcu_read_unlock();
 +			goto repeat;
 +		}
 +
-+		/* more likely a read error */
-+		if (unlikely(!PageUptodate(page))) {
-+			if (io_retries) {
-+				--io_retries;
-+				goto unlock_repeat;
-+			}
-+			err = -EIO;
-+			goto err_out;
-+		}
++		DBG_BUGON(index != grp->index);
 +	}
-+	return page;
-+
-+err_out:
-+	unlock_page(page);
-+	put_page(page);
-+	return ERR_PTR(err);
++	rcu_read_unlock();
++	return grp;
 +}
 +
-+static int erofs_map_blocks_flatmode(struct inode *inode,
-+				     struct erofs_map_blocks *map,
-+				     int flags)
++int erofs_register_workgroup(struct super_block *sb,
++			     struct erofs_workgroup *grp,
++			     bool tag)
 +{
-+	int err = 0;
-+	erofs_blk_t nblocks, lastblk;
-+	u64 offset = map->m_la;
-+	struct erofs_vnode *vi = EROFS_V(inode);
++	struct erofs_sb_info *sbi;
++	int err;
 +
-+	trace_erofs_map_blocks_flatmode_enter(inode, map, flags);
-+
-+	nblocks = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
-+	lastblk = nblocks - is_inode_flat_inline(inode);
-+
-+	if (unlikely(offset >= inode->i_size)) {
-+		/* leave out-of-bound access unmapped */
-+		map->m_flags = 0;
-+		map->m_plen = 0;
-+		goto out;
-+	}
-+
-+	/* there is no hole in flatmode */
-+	map->m_flags = EROFS_MAP_MAPPED;
-+
-+	if (offset < blknr_to_addr(lastblk)) {
-+		map->m_pa = blknr_to_addr(vi->raw_blkaddr) + map->m_la;
-+		map->m_plen = blknr_to_addr(lastblk) - offset;
-+	} else if (is_inode_flat_inline(inode)) {
-+		/* 2 - inode inline B: inode, [xattrs], inline last blk... */
-+		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
-+
-+		map->m_pa = iloc(sbi, vi->nid) + vi->inode_isize +
-+			vi->xattr_isize + erofs_blkoff(map->m_la);
-+		map->m_plen = inode->i_size - offset;
-+
-+		/* inline data should locate in one meta block */
-+		if (erofs_blkoff(map->m_pa) + map->m_plen > PAGE_SIZE) {
-+			DBG_BUGON(1);
-+			err = -EIO;
-+			goto err_out;
-+		}
-+
-+		map->m_flags |= EROFS_MAP_META;
-+	} else {
-+		errln("internal error @ nid: %llu (size %llu), m_la 0x%llx",
-+		      vi->nid, inode->i_size, map->m_la);
++	/* grp shouldn't be broken or used before */
++	if (unlikely(atomic_read(&grp->refcount) != 1)) {
 +		DBG_BUGON(1);
-+		err = -EIO;
-+		goto err_out;
++		return -EINVAL;
 +	}
 +
-+out:
-+	map->m_llen = map->m_plen;
-+
-+err_out:
-+	trace_erofs_map_blocks_flatmode_exit(inode, map, flags, 0);
-+	return err;
-+}
-+
-+int erofs_map_blocks(struct inode *inode,
-+		     struct erofs_map_blocks *map, int flags)
-+{
-+	if (is_inode_layout_compression(inode))
-+		return -ENOTSUPP;
-+
-+	return erofs_map_blocks_flatmode(inode, map, flags);
-+}
-+
-+static inline struct bio *erofs_read_raw_page(struct bio *bio,
-+					      struct address_space *mapping,
-+					      struct page *page,
-+					      erofs_off_t *last_block,
-+					      unsigned int nblocks,
-+					      bool ra)
-+{
-+	struct inode *const inode = mapping->host;
-+	struct super_block *const sb = inode->i_sb;
-+	erofs_off_t current_block = (erofs_off_t)page->index;
-+	int err;
-+
-+	DBG_BUGON(!nblocks);
-+
-+	if (PageUptodate(page)) {
-+		err = 0;
-+		goto has_updated;
-+	}
-+
-+	if (cleancache_get_page(page) == 0) {
-+		err = 0;
-+		SetPageUptodate(page);
-+		goto has_updated;
-+	}
-+
-+	/* note that for readpage case, bio also equals to NULL */
-+	if (bio &&
-+	    /* not continuous */
-+	    *last_block + 1 != current_block) {
-+submit_bio_retry:
-+		__submit_bio(bio, REQ_OP_READ, 0);
-+		bio = NULL;
-+	}
-+
-+	if (!bio) {
-+		struct erofs_map_blocks map = {
-+			.m_la = blknr_to_addr(current_block),
-+		};
-+		erofs_blk_t blknr;
-+		unsigned int blkoff;
-+
-+		err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
-+		if (unlikely(err))
-+			goto err_out;
-+
-+		/* zero out the holed page */
-+		if (unlikely(!(map.m_flags & EROFS_MAP_MAPPED))) {
-+			zero_user_segment(page, 0, PAGE_SIZE);
-+			SetPageUptodate(page);
-+
-+			/* imply err = 0, see erofs_map_blocks */
-+			goto has_updated;
-+		}
-+
-+		/* for RAW access mode, m_plen must be equal to m_llen */
-+		DBG_BUGON(map.m_plen != map.m_llen);
-+
-+		blknr = erofs_blknr(map.m_pa);
-+		blkoff = erofs_blkoff(map.m_pa);
-+
-+		/* deal with inline page */
-+		if (map.m_flags & EROFS_MAP_META) {
-+			void *vsrc, *vto;
-+			struct page *ipage;
-+
-+			DBG_BUGON(map.m_plen > PAGE_SIZE);
-+
-+			ipage = erofs_get_meta_page(inode->i_sb, blknr, 0);
-+
-+			if (IS_ERR(ipage)) {
-+				err = PTR_ERR(ipage);
-+				goto err_out;
-+			}
-+
-+			vsrc = kmap_atomic(ipage);
-+			vto = kmap_atomic(page);
-+			memcpy(vto, vsrc + blkoff, map.m_plen);
-+			memset(vto + map.m_plen, 0, PAGE_SIZE - map.m_plen);
-+			kunmap_atomic(vto);
-+			kunmap_atomic(vsrc);
-+			flush_dcache_page(page);
-+
-+			SetPageUptodate(page);
-+			/* TODO: could we unlock the page earlier? */
-+			unlock_page(ipage);
-+			put_page(ipage);
-+
-+			/* imply err = 0, see erofs_map_blocks */
-+			goto has_updated;
-+		}
-+
-+		/* pa must be block-aligned for raw reading */
-+		DBG_BUGON(erofs_blkoff(map.m_pa));
-+
-+		/* max # of continuous pages */
-+		if (nblocks > DIV_ROUND_UP(map.m_plen, PAGE_SIZE))
-+			nblocks = DIV_ROUND_UP(map.m_plen, PAGE_SIZE);
-+		if (nblocks > BIO_MAX_PAGES)
-+			nblocks = BIO_MAX_PAGES;
-+
-+		bio = erofs_grab_bio(sb, blknr, nblocks, sb,
-+				     read_endio, false);
-+		if (IS_ERR(bio)) {
-+			err = PTR_ERR(bio);
-+			bio = NULL;
-+			goto err_out;
-+		}
-+	}
-+
-+	err = bio_add_page(bio, page, PAGE_SIZE, 0);
-+	/* out of the extent or bio is full */
-+	if (err < PAGE_SIZE)
-+		goto submit_bio_retry;
-+
-+	*last_block = current_block;
-+
-+	/* shift in advance in case of it followed by too many gaps */
-+	if (bio->bi_iter.bi_size >= bio->bi_max_vecs * PAGE_SIZE) {
-+		/* err should reassign to 0 after submitting */
-+		err = 0;
-+		goto submit_bio_out;
-+	}
-+
-+	return bio;
-+
-+err_out:
-+	/* for sync reading, set page error immediately */
-+	if (!ra) {
-+		SetPageError(page);
-+		ClearPageUptodate(page);
-+	}
-+has_updated:
-+	unlock_page(page);
-+
-+	/* if updated manually, continuous pages has a gap */
-+	if (bio)
-+submit_bio_out:
-+		__submit_bio(bio, REQ_OP_READ, 0);
-+
-+	return unlikely(err) ? ERR_PTR(err) : NULL;
-+}
-+
-+/*
-+ * since we dont have write or truncate flows, so no inode
-+ * locking needs to be held at the moment.
-+ */
-+static int erofs_raw_access_readpage(struct file *file, struct page *page)
-+{
-+	erofs_off_t last_block;
-+	struct bio *bio;
-+
-+	trace_erofs_readpage(page, true);
-+
-+	bio = erofs_read_raw_page(NULL, page->mapping,
-+				  page, &last_block, 1, false);
-+
-+	if (IS_ERR(bio))
-+		return PTR_ERR(bio);
-+
-+	DBG_BUGON(bio);	/* since we have only one bio -- must be NULL */
-+	return 0;
-+}
-+
-+static int erofs_raw_access_readpages(struct file *filp,
-+				      struct address_space *mapping,
-+				      struct list_head *pages,
-+				      unsigned int nr_pages)
-+{
-+	erofs_off_t last_block;
-+	struct bio *bio = NULL;
-+	gfp_t gfp = readahead_gfp_mask(mapping);
-+	struct page *page = list_last_entry(pages, struct page, lru);
-+
-+	trace_erofs_readpages(mapping->host, page, nr_pages, true);
-+
-+	for (; nr_pages; --nr_pages) {
-+		page = list_entry(pages->prev, struct page, lru);
-+
-+		prefetchw(&page->flags);
-+		list_del(&page->lru);
-+
-+		if (!add_to_page_cache_lru(page, mapping, page->index, gfp)) {
-+			bio = erofs_read_raw_page(bio, mapping, page,
-+						  &last_block, nr_pages, true);
-+
-+			/* all the page errors are ignored when readahead */
-+			if (IS_ERR(bio)) {
-+				pr_err("%s, readahead error at page %lu of nid %llu\n",
-+				       __func__, page->index,
-+				       EROFS_V(mapping->host)->nid);
-+
-+				bio = NULL;
-+			}
-+		}
-+
-+		/* pages could still be locked */
-+		put_page(page);
-+	}
-+	DBG_BUGON(!list_empty(pages));
-+
-+	/* the rare case (end in gaps) */
-+	if (unlikely(bio))
-+		__submit_bio(bio, REQ_OP_READ, 0);
-+	return 0;
-+}
-+
-+static int erofs_get_block(struct inode *inode, sector_t iblock,
-+			   struct buffer_head *bh, int create)
-+{
-+	struct erofs_map_blocks map = {
-+		.m_la = iblock << 9,
-+	};
-+	int err;
-+
-+	err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
++	err = radix_tree_preload(GFP_NOFS);
 +	if (err)
 +		return err;
 +
-+	if (map.m_flags & EROFS_MAP_MAPPED)
-+		bh->b_blocknr = erofs_blknr(map.m_pa);
++	sbi = EROFS_SB(sb);
 +
++	xa_lock(&sbi->workstn_tree);
++	grp = xa_tag_pointer(grp, tag);
++
++	/*
++	 * Bump up reference count before making this workgroup
++	 * visible to other users in order to avoid potential UAF
++	 * without serialized by erofs_workstn_lock.
++	 */
++	__erofs_workgroup_get(grp);
++
++	err = radix_tree_insert(&sbi->workstn_tree, grp->index, grp);
++	if (unlikely(err))
++		/*
++		 * it's safe to decrease since the workgroup isn't visible
++		 * and refcount >= 2 (cannot be freezed).
++		 */
++		__erofs_workgroup_put(grp);
++
++	xa_unlock(&sbi->workstn_tree);
++	radix_tree_preload_end();
 +	return err;
 +}
 +
-+static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
++static void  __erofs_workgroup_free(struct erofs_workgroup *grp)
 +{
-+	struct inode *inode = mapping->host;
-+
-+	if (is_inode_flat_inline(inode)) {
-+		erofs_blk_t blks = i_size_read(inode) >> LOG_BLOCK_SIZE;
-+
-+		if (block >> LOG_SECTORS_PER_BLOCK >= blks)
-+			return 0;
-+	}
-+
-+	return generic_block_bmap(mapping, block, erofs_get_block);
++	atomic_long_dec(&erofs_global_shrink_cnt);
++	erofs_workgroup_free_rcu(grp);
 +}
 +
-+/* for uncompressed (aligned) files and raw access for other files */
-+const struct address_space_operations erofs_raw_access_aops = {
-+	.readpage = erofs_raw_access_readpage,
-+	.readpages = erofs_raw_access_readpages,
-+	.bmap = erofs_bmap,
-+};
++int erofs_workgroup_put(struct erofs_workgroup *grp)
++{
++	int count = atomic_dec_return(&grp->refcount);
 +
++	if (count == 1)
++		atomic_long_inc(&erofs_global_shrink_cnt);
++	else if (!count)
++		__erofs_workgroup_free(grp);
++	return count;
++}
++
++/* for nocache case, no customized reclaim path at all */
++static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
++					   struct erofs_workgroup *grp,
++					   bool cleanup)
++{
++	int cnt = atomic_read(&grp->refcount);
++
++	DBG_BUGON(cnt <= 0);
++	DBG_BUGON(cleanup && cnt != 1);
++
++	if (cnt > 1)
++		return false;
++
++	DBG_BUGON(xa_untag_pointer(radix_tree_delete(&sbi->workstn_tree,
++						     grp->index)) != grp);
++
++	/* (rarely) could be grabbed again when freeing */
++	erofs_workgroup_put(grp);
++	return true;
++}
++
++
++unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
++				       unsigned long nr_shrink,
++				       bool cleanup)
++{
++	pgoff_t first_index = 0;
++	void *batch[PAGEVEC_SIZE];
++	unsigned int freed = 0;
++
++	int i, found;
++repeat:
++	xa_lock(&sbi->workstn_tree);
++
++	found = radix_tree_gang_lookup(&sbi->workstn_tree,
++				       batch, first_index, PAGEVEC_SIZE);
++
++	for (i = 0; i < found; ++i) {
++		struct erofs_workgroup *grp = xa_untag_pointer(batch[i]);
++
++		first_index = grp->index + 1;
++
++		/* try to shrink each valid workgroup */
++		if (!erofs_try_to_release_workgroup(sbi, grp, cleanup))
++			continue;
++
++		++freed;
++		if (unlikely(!--nr_shrink))
++			break;
++	}
++	xa_unlock(&sbi->workstn_tree);
++
++	if (i && nr_shrink)
++		goto repeat;
++	return freed;
++}
++
+ /* protected by 'erofs_sb_list_lock' */
+ static unsigned int shrinker_run_no;
+ 
+@@ -35,7 +198,7 @@ void erofs_shrinker_unregister(struct super_block *sb)
+ 	struct erofs_sb_info *const sbi = EROFS_SB(sb);
+ 
+ 	mutex_lock(&sbi->umount_mutex);
+-	/* will add shrink final handler here */
++	erofs_shrink_workstation(sbi, ~0UL, true);
+ 
+ 	spin_lock(&erofs_sb_list_lock);
+ 	list_del(&sbi->list);
+@@ -84,7 +247,7 @@ static unsigned long erofs_shrink_scan(struct shrinker *shrink,
+ 		spin_unlock(&erofs_sb_list_lock);
+ 		sbi->shrinker_run_no = run_no;
+ 
+-		/* will add shrink handler here */
++		freed += erofs_shrink_workstation(sbi, nr, false);
+ 
+ 		spin_lock(&erofs_sb_list_lock);
+ 		/* Get the next list element before we move this one */
 -- 
 2.17.1
 
