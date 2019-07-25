@@ -2,110 +2,116 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3F7C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0F5C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6A52190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8DC2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:45:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UOPEEsvk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390743AbfGYJoO convert rfc822-to-8bit (ORCPT
+        id S2390758AbfGYJpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 05:44:14 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:41049 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfGYJoO (ORCPT
+        Thu, 25 Jul 2019 05:45:52 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:15831 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbfGYJpw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 05:44:14 -0400
-Received: from marcel-macbook.fritz.box (p5B3D2BA7.dip0.t-ipconnect.de [91.61.43.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 596F3CED29;
-        Thu, 25 Jul 2019 11:52:49 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: KASAN: use-after-free Read in h5_rx_3wire_hdr
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <CACT4Y+YLqSt34ka5kQQNBeo+GvGZ0dzNFL3Rb8_1Cid_C75_2w@mail.gmail.com>
-Date:   Thu, 25 Jul 2019 11:44:12 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        syzbot <syzbot+0abbda0523882250a97a@syzkaller.appspotmail.com>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <500EB100-0253-4934-80FD-689C32ED310C@holtmann.org>
-References: <0000000000003fd4ab058e46951f@google.com>
- <CACT4Y+YLqSt34ka5kQQNBeo+GvGZ0dzNFL3Rb8_1Cid_C75_2w@mail.gmail.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Thu, 25 Jul 2019 05:45:52 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d397a500000>; Thu, 25 Jul 2019 02:45:52 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 25 Jul 2019 02:45:51 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 02:45:51 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 25 Jul
+ 2019 09:45:48 +0000
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+CC:     David Miller <davem@davemloft.net>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "lists@bofh.nu" <lists@bofh.nu>,
+        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "wens@csie.org" <wens@csie.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <BYAPR12MB32692AF2BA127C5DA5B74804D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
+ <6c769226-bdd9-6fe0-b96b-5a0d800fed24@arm.com>
+ <8756d681-e167-fe4a-c6f0-47ae2dcbb100@nvidia.com>
+ <20190723.115112.1824255524103179323.davem@davemloft.net>
+ <20190724085427.GA10736@apalos>
+ <BYAPR12MB3269AA9955844E317B62A239D3C60@BYAPR12MB3269.namprd12.prod.outlook.com>
+ <20190724095310.GA12991@apalos>
+ <BYAPR12MB3269C5766F553438ECFF2C9BD3C60@BYAPR12MB3269.namprd12.prod.outlook.com>
+ <33de62bf-2f8a-bf00-9260-418b12bed24c@nvidia.com>
+ <BYAPR12MB32696F0A2BFDF69F31C4311CD3C60@BYAPR12MB3269.namprd12.prod.outlook.com>
+ <a07c3480-af03-a61b-4e9c-d9ceb29ce622@nvidia.com>
+ <BYAPR12MB3269F4E62B64484B08F90998D3C10@BYAPR12MB3269.namprd12.prod.outlook.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <d2658b7d-1f24-70f7-fafe-b60a0fd7d240@nvidia.com>
+Date:   Thu, 25 Jul 2019 10:45:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <BYAPR12MB3269F4E62B64484B08F90998D3C10@BYAPR12MB3269.namprd12.prod.outlook.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564047952; bh=5isgglopm7SeJ86vy3+jPoE2tjL+r8qlKxtTv2QKBHM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=UOPEEsvkrrYBFIWOd177XUvGoLoWRcDIklaeRlE6HdJ86bODEuxFdAKOnXSsl7TQj
+         C1BlC2kjEQ0OhI0uEKzvHK9P8cFLhTi9bOecyjyqn+yeZ5oJTX4F0fA21jvxkmoMGW
+         TNukEvfcPf42Mg3iQLiGz6vTTPRGJWuSlRF4vZIshHT3rYR/wZStZWNFVVkYAUtTdd
+         e5axWio9Qs/BMnGYpAWXNM8SBrmW/SE92TcRbIn7zHU7j0fR3D8FXMdI5wfJW2vgh6
+         LWbcupZd1chBOxvamcdQX84cb/usJkiRoWPgbFY/h+z97ZHmL8OzwA12q1uekPsgVZ
+         PMCZNteWQgGFg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
 
->> syzbot found the following crash on:
->> 
->> HEAD commit:    6d21a41b Add linux-next specific files for 20190718
->> git tree:       linux-next
->> console output: https://syzkaller.appspot.com/x/log.txt?x=1377958fa00000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
->> dashboard link: https://syzkaller.appspot.com/bug?extid=0abbda0523882250a97a
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=113e2bb7a00000
+On 25/07/2019 08:44, Jose Abreu wrote:
+
+...
+
+> OK. Can you please test what Ilias mentioned ?
 > 
-> +drivers/bluetooth/hci_h5.c maintainers
+> Basically you can hard-code the order to 0 in 
+> alloc_dma_rx_desc_resources():
+> - pp_params.order = DIV_ROUND_UP(priv->dma_buf_sz, PAGE_SIZE);
+> + pp_params.order = 0;
 > 
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+0abbda0523882250a97a@syzkaller.appspotmail.com
->> 
->> ==================================================================
->> BUG: KASAN: use-after-free in h5_rx_3wire_hdr+0x35d/0x3c0
->> /drivers/bluetooth/hci_h5.c:438
->> Read of size 1 at addr ffff8880a161d1c8 by task syz-executor.4/12040
->> 
->> CPU: 1 PID: 12040 Comm: syz-executor.4 Not tainted 5.2.0-next-20190718 #41
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
->> Google 01/01/2011
->> Call Trace:
->>  __dump_stack /lib/dump_stack.c:77 [inline]
->>  dump_stack+0x172/0x1f0 /lib/dump_stack.c:113
->>  print_address_description.cold+0xd4/0x306 /mm/kasan/report.c:351
->>  __kasan_report.cold+0x1b/0x36 /mm/kasan/report.c:482
->>  kasan_report+0x12/0x17 /mm/kasan/common.c:612
->>  __asan_report_load1_noabort+0x14/0x20 /mm/kasan/generic_report.c:129
->>  h5_rx_3wire_hdr+0x35d/0x3c0 /drivers/bluetooth/hci_h5.c:438
->>  h5_recv+0x32f/0x500 /drivers/bluetooth/hci_h5.c:563
->>  hci_uart_tty_receive+0x279/0x790 /drivers/bluetooth/hci_ldisc.c:600
->>  tiocsti /drivers/tty/tty_io.c:2197 [inline]
->>  tty_ioctl+0x949/0x14f0 /drivers/tty/tty_io.c:2573
->>  vfs_ioctl /fs/ioctl.c:46 [inline]
->>  file_ioctl /fs/ioctl.c:509 [inline]
->>  do_vfs_ioctl+0xdb6/0x13e0 /fs/ioctl.c:696
->>  ksys_ioctl+0xab/0xd0 /fs/ioctl.c:713
->>  __do_sys_ioctl /fs/ioctl.c:720 [inline]
->>  __se_sys_ioctl /fs/ioctl.c:718 [inline]
->>  __x64_sys_ioctl+0x73/0xb0 /fs/ioctl.c:718
->>  do_syscall_64+0xfd/0x6a0 /arch/x86/entry/common.c:296
->>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->> RIP: 0033:0x459819
->> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
->> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
->> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
->> RSP: 002b:00007f7a3b459c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
->> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459819
->> RDX: 0000000020000080 RSI: 0000000000005412 RDI: 0000000000000003
->> RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
->> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7a3b45a6d4
->> R13: 00000000004c408a R14: 00000000004d7ff0 R15: 00000000ffffffff
+> Unless you use a MTU > PAGE_SIZE.
 
-Is this happening on specific hardware?
+I made the change but unfortunately the issue persists.
 
-Regards
+Jon
 
-Marcel
-
+-- 
+nvpublic
