@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFED1C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8E6C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 910F2218D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80C5218DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 10:06:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bZG05YAA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jfhn1IH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388082AbfGYKFo (ORCPT
+        id S2388353AbfGYKGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 06:05:44 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36278 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387953AbfGYKFo (ORCPT
+        Thu, 25 Jul 2019 06:06:01 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45608 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387953AbfGYKGA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 06:05:44 -0400
-Received: by mail-qk1-f194.google.com with SMTP id g18so35951183qkl.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:05:43 -0700 (PDT)
+        Thu, 25 Jul 2019 06:06:00 -0400
+Received: by mail-qt1-f195.google.com with SMTP id x22so43543001qtp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 03:06:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=7MqY5TdYDukrmEcvyvH1Gy2JxiZVpxAfuPKcTJpAIOc=;
-        b=bZG05YAAVga3Lrh/0yIRiZu0OwBZ1sptqRJR8ItXyufWxbjZiVGIoqJ0QpP+TPerhF
-         VS0hlrNFycUS3jM5WWtRoTESWbMzjpbMJgoMIj2JvhSvGV8FVTTpKMFtDJdX9DvdLpM6
-         9DRwIIX/Qy19YhgVSoNRaga21XU0ELRRBHGN2XVRcrCVDHwsYoEyrRoa/m2wMLE0DfON
-         diKx1f2P1O9zbznpnDIteD9wOHwQ/zzPS3GCxbbLKKO1EAKn3XcjR9ESC3eEnrRNBXfq
-         D5x8VcJmwr7IFSNLpFwemFmEYv6f9thE4MW8BI/eQmHOwtYrPEkfgzCM7MUc4qpuJRo3
-         GiUw==
+        bh=dY1dpg/OHfGT/mutmAs25ca6whmcjcdibSv9ZWjkmsM=;
+        b=Jfhn1IH6hkL03mon/JSCxCgfxtUbbHpAWLvoKakLq9+OvKHCgOwv54x4UYs6F+oQMn
+         pYkQIJEg75i+hHconcv4V1/srr2zzQ2gLAF18fBF3ME7Lvqc9OSkQogjIIcoEHtIYzD7
+         NNOk23BB7KD8mkF2N8cBwWxrirrIwIZ3Q64/Qs4CiRdRhGrXqGztvhuRIsUjCcx7OsNh
+         1K2hL6DNo+hoWiB/V+VadwE/INHTA+S7S2oEyb+FW0F1AAaeEosEGU3YUvgpHt443Dvu
+         NWKMDxuEbXYfUF6UQWng1gU1awRncLz4AvRJgscAlnEgrW9grqqxYPfBxrxKl2dxOCEc
+         99bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7MqY5TdYDukrmEcvyvH1Gy2JxiZVpxAfuPKcTJpAIOc=;
-        b=J5nCR9lu7vKqraGvYhRvYba6Pe8A1JRvcj+fHPd7p8vWzy5qTob1MZXU+4Cgm+n9Wl
-         sjz+NypZ6TOXeyoElTNvZ9b66nffbV9OoK2M0e0mDmm5qqMEdCVIuItHHS2ixq3DO/ou
-         ligYsk6xx7Jg5VcbgV9k/lSG9y8AUdesNLXLIFwmfu3jxzah3qVSTvJSToXqFPFKXx+r
-         4lzktp6ku28v+K/2WjpYtUSCgVbNVDb1zsVRr/qvoRQkFBV+81MGumVDCKd7Gb+KmXzn
-         cPTXeHRwbQKWlvPiYWobgiKaz8NCRXiEo13qwHLEtAsEoyhXCZzaMY/pi+oYlH/L2z3o
-         mieA==
-X-Gm-Message-State: APjAAAUWv5LbW+0IUVTuJLC44UXW5FisaU7BrG9lFDs2ZhHKiZORlGnx
-        5C69m9AMFycv17WSbR3zsuhS2Hp3dMBas5X/QOo15g==
-X-Google-Smtp-Source: APXvYqyhCeRsfUMKnaFdLn3aJWF2r7C0su+s5w1UqLu1cTlcNydCdWit5JkkqefwAGH3hmKajOG/V6rCyDq9aRuGQfA=
-X-Received: by 2002:a37:bcc7:: with SMTP id m190mr56245928qkf.433.1564049143158;
- Thu, 25 Jul 2019 03:05:43 -0700 (PDT)
+        bh=dY1dpg/OHfGT/mutmAs25ca6whmcjcdibSv9ZWjkmsM=;
+        b=cFp8B5lRkVJRmkTHG+WLlJncd/N95OSTmw+IgEQPXp1RKC2i0hoVj7g8DVkv2l9LG6
+         6RzFVthTJHS4mNvApjZKyQQIiev24J4b80vin+K4s1alb4rTXxnIiL/OSdHY3nE96fBS
+         j7xoP442suGAgkkgWGbjuacDqRzxYnSQOByFmeW1XctVUd9ujvQ2Itg/Rbxod/XGAg2k
+         2qNcwE33+x7DRgjhPLZuOI67O7iihwIcWzZW9Q2YDAcgPn3IQR5zCHibOa/wRvOOqfaO
+         rMCpsoOg9XfePYkVA6iulG3YPoJ8fwCXW2Gyfe29xIWbKFof0Jc6efZiLJv1DFhyoWwn
+         8r+Q==
+X-Gm-Message-State: APjAAAXilsjSGjiz0RG4w7Gjl4mnsB3/f0WoIuqU+kN+idLYgRnbjT30
+        p0kHKsTUakMmInvnD+msZa1kDjypVfs1C+gnWTrOkQ==
+X-Google-Smtp-Source: APXvYqyNGztGQcRtMMJsWvdYYDKXUmMJH8KY8KYoJe4UVpVBo8GDSkeBtSiY93R7Znfd5M96vEy07a17By30LwrGnqE=
+X-Received: by 2002:aed:36c5:: with SMTP id f63mr62620869qtb.239.1564049160250;
+ Thu, 25 Jul 2019 03:06:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <1563811560-29589-1-git-send-email-olivier.moysan@st.com> <1563811560-29589-2-git-send-email-olivier.moysan@st.com>
-In-Reply-To: <1563811560-29589-2-git-send-email-olivier.moysan@st.com>
+References: <1563811560-29589-1-git-send-email-olivier.moysan@st.com> <1563811560-29589-3-git-send-email-olivier.moysan@st.com>
+In-Reply-To: <1563811560-29589-3-git-send-email-olivier.moysan@st.com>
 From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Thu, 25 Jul 2019 12:05:32 +0200
-Message-ID: <CA+M3ks5v7vF_mPBr4mkwsHidc-N4jfJDgqWWE7qRv0LDsYJ-pQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] drm/bridge: sii902x: fix missing reference to mclk clock
+Date:   Thu, 25 Jul 2019 12:05:49 +0200
+Message-ID: <CA+M3ks6aA2YpHG3Kb+JxxECvdWYkgOVabYqL4-QTUDYkM6N67Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: display: sii902x: Change audio mclk binding
 To:     Olivier Moysan <olivier.moysan@st.com>
 Cc:     Andrzej Hajda <a.hajda@samsung.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
@@ -84,38 +84,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Le lun. 22 juil. 2019 =C3=A0 18:06, Olivier Moysan <olivier.moysan@st.com> =
 a =C3=A9crit :
 >
-> Add devm_clk_get call to retrieve reference to master clock.
+> As stated in SiL9022/24 datasheet, master clock is not required for I2S.
+> Make mclk property optional in DT bindings.
 >
-> Fixes: ff5781634c41 ("drm/bridge: sii902x: Implement HDMI audio support")
+> Fixes: 3f18021f43a3 ("dt-bindings: display: sii902x: Add HDMI audio bindi=
+ngs")
 >
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-> Reviewed-by: Jyri Sarha <jsarha@ti.com>
-> Acked-by: Andrzej Hajda <a.hajda@samsung.com
-
 Applied on drm-misc-next.
 Thanks,
 Benjamin
 
+> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+> Reviewed-by: Jyri Sarha <jsarha@ti.com>
+> Acked-by: Andrzej Hajda <a.hajda@samsung.com>
 > ---
->  drivers/gpu/drm/bridge/sii902x.c | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/display/bridge/sii902x.txt | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/si=
-i902x.c
-> index c2f97e5997a1..962931c20efe 100644
-> --- a/drivers/gpu/drm/bridge/sii902x.c
-> +++ b/drivers/gpu/drm/bridge/sii902x.c
-> @@ -751,6 +751,7 @@ static int sii902x_audio_codec_init(struct sii902x *s=
-ii902x,
->                 sii902x->audio.i2s_fifo_sequence[i] |=3D audio_fifo_id[i]=
- |
->                         i2s_lane_id[lanes[i]] | SII902X_TPI_I2S_FIFO_ENAB=
-LE;
+> diff --git a/Documentation/devicetree/bindings/display/bridge/sii902x.txt=
+ b/Documentation/devicetree/bindings/display/bridge/sii902x.txt
+> index 2df44b7d3821..6e14e087c0d0 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/sii902x.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/sii902x.txt
+> @@ -26,9 +26,8 @@ Optional properties:
+>         - clocks: phandle and clock specifier for each clock listed in
+>             the clock-names property
+>         - clock-names: "mclk"
+> -          Describes SII902x MCLK input. MCLK is used to produce
+> -          HDMI audio CTS values. This property is required if
+> -          "#sound-dai-cells"-property is present. This property follows
+> +          Describes SII902x MCLK input. MCLK can be used to produce
+> +          HDMI audio CTS values. This property follows
+>            Documentation/devicetree/bindings/clock/clock-bindings.txt
+>            consumer binding.
 >
-> +       sii902x->audio.mclk =3D devm_clk_get(dev, "mclk");
->         if (IS_ERR(sii902x->audio.mclk)) {
->                 dev_err(dev, "%s: No clock (audio mclk) found: %ld\n",
->                         __func__, PTR_ERR(sii902x->audio.mclk));
 > --
 > 2.7.4
 >
