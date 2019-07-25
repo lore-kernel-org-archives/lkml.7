@@ -2,54 +2,54 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCBCC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1FAC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3CFD22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 630B522BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:49:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404344AbfGYLtp (ORCPT
+        id S2404380AbfGYLt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:49:45 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36992 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404295AbfGYLtn (ORCPT
+        Thu, 25 Jul 2019 07:49:56 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35390 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404327AbfGYLtp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:49:43 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f17so44442744wme.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 04:49:42 -0700 (PDT)
+        Thu, 25 Jul 2019 07:49:45 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y4so50469040wrm.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 04:49:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ahpb6xPK075Z6njHxQUERLqrZnJthEhBDnChxsDJ0yI=;
-        b=bIQLT9d2araUhbkRwtqTQEgHiwTjutvLUc5ecKptwwO5zAv51M54RbzVtEoXlvffH0
-         isad4vhs2MYvl00mNkC4y1gWIC44qdi/p6E2YjihIM+C5Qwaw259mvGZyte3ICrRHvqN
-         H8rY+bhR7fB2MWd/nahkaWDh7NBu3l2Gg/GPml0H4uaANKzNZJtnzATZQnVjBaaQ2l+V
-         V5lvRqgiKr4SkLT7vBdUxKAY8m9guPYbriOpfkI6Ttop1FbEzxQaJtl3MIFaU/sTNUen
-         hEzdJ/34HAK7DHrtNG/DrOQ7UnmczFumgz+KyQZFHAB5/sjU6lXFJTTH5vUzvOJ1Uhmt
-         km7w==
-X-Gm-Message-State: APjAAAXi5E5BSsb9Z0UBUX+S6IweTrCqtGBHED+/B2Oa4Eac0j9iV1Lb
-        rf6osALUvuP5iMhDetKFbCqou69q4c4=
-X-Google-Smtp-Source: APXvYqysh53Nn7YpCuVhrX6td5G/bTjwKnhelBX4YvIb8Js+9A/cGM/O1IBBsQ19J2X8WwmSCryqSg==
-X-Received: by 2002:a7b:cf0b:: with SMTP id l11mr83901119wmg.143.1564055381570;
-        Thu, 25 Jul 2019 04:49:41 -0700 (PDT)
+        bh=5eFHQcAJJ1arMcU18ItSiGCK+xpQYpQYRWNTnt4Sl8M=;
+        b=Dsb9dlgD6Hpo7hUnv8Z/1mKdp3kcD6InKXsWwZ70OhY2zfo+ds67w7ztcgV//65Hjh
+         +rj6WDPpnAzXnerKk7bzSs4hEnj0cU6fqAoD3MkgJmNviMKIBvX3IiYfYq2P5GR4IkMn
+         5NdD5NaXaq76+1JJkNnwcznUtBkQ2jIF1nK46xKP9XADKnmwBtnPkSx6doIT8PH4BDV2
+         ly1SOu4sFRZitCPOmJwjaRHaSIww9nZyXonWEpdR/SVxtZKtZRqDWuSH8APlilm2XtiA
+         LzZH/hsMiAWRCNnxKJlnUR24VGHkbRySKX4qCjymHul5zdGw8KpThkX7ASCYfgWWNXeE
+         3bHA==
+X-Gm-Message-State: APjAAAUOV3rod7EY3nYuGJ56K3TRtUC5RtEBAxbf41iowm/4pbrIMJ4n
+        esX/gPf6TQVjG+HBHJtV+vnGfw==
+X-Google-Smtp-Source: APXvYqwHF+F+rdSQWjhG31Xnxl9xMrRVHiLRHocchVFoV1vta3opzCIwlmlEKq6AN3HyyfnnQNNydw==
+X-Received: by 2002:a05:6000:1189:: with SMTP id g9mr57465609wrx.51.1564055383632;
+        Thu, 25 Jul 2019 04:49:43 -0700 (PDT)
 Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id t140sm44784683wmt.0.2019.07.25.04.49.40
+        by smtp.gmail.com with ESMTPSA id t140sm44784683wmt.0.2019.07.25.04.49.42
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 04:49:41 -0700 (PDT)
+        Thu, 25 Jul 2019 04:49:42 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     stable@vger.kernel.org
 Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH stable-5.1 1/3] KVM: nVMX: do not use dangling shadow VMCS after guest reset
-Date:   Thu, 25 Jul 2019 13:49:36 +0200
-Message-Id: <20190725114938.3976-2-vkuznets@redhat.com>
+Subject: [PATCH stable-5.1 3/3] Revert "kvm: x86: Use task structs fpu field for user"
+Date:   Thu, 25 Jul 2019 13:49:38 +0200
+Message-Id: <20190725114938.3976-4-vkuznets@redhat.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190725114938.3976-1-vkuznets@redhat.com>
 References: <20190725114938.3976-1-vkuznets@redhat.com>
@@ -62,64 +62,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit 88dddc11a8d6b09201b4db9d255b3394d9bc9e57 ]
+[ Upstream commit ec269475cba7bcdd1eb8fdf8e87f4c6c81a376fe ]
 
-If a KVM guest is reset while running a nested guest, free_nested will
-disable the shadow VMCS execution control in the vmcs01.  However,
-on the next KVM_RUN vmx_vcpu_run would nevertheless try to sync
-the VMCS12 to the shadow VMCS which has since been freed.
+This reverts commit 240c35a3783ab9b3a0afaba0dde7291295680a6b
+("kvm: x86: Use task structs fpu field for user", 2018-11-06).
+The commit is broken and causes QEMU's FPU state to be destroyed
+when KVM_RUN is preempted.
 
-This causes a vmptrld of a NULL pointer on my machime, but Jan reports
-the host to hang altogether.  Let's see how much this trivial patch fixes.
-
-Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Liran Alon <liran.alon@oracle.com>
+Fixes: 240c35a3783a ("kvm: x86: Use task structs fpu field for user")
 Cc: stable@vger.kernel.org
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/nested.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/kvm_host.h | 7 ++++---
+ arch/x86/kvm/x86.c              | 4 ++--
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 4ca834d22169..3f48006a43ec 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -184,6 +184,7 @@ static void vmx_disable_shadow_vmcs(struct vcpu_vmx *vmx)
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index c79abe7ca093..564729a4a25c 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -609,15 +609,16 @@ struct kvm_vcpu_arch {
+ 
+ 	/*
+ 	 * QEMU userspace and the guest each have their own FPU state.
+-	 * In vcpu_run, we switch between the user, maintained in the
+-	 * task_struct struct, and guest FPU contexts. While running a VCPU,
+-	 * the VCPU thread will have the guest FPU context.
++	 * In vcpu_run, we switch between the user and guest FPU contexts.
++	 * While running a VCPU, the VCPU thread will have the guest FPU
++	 * context.
+ 	 *
+ 	 * Note that while the PKRU state lives inside the fpu registers,
+ 	 * it is switched out separately at VMENTER and VMEXIT time. The
+ 	 * "guest_fpu" state here contains the guest FPU context, with the
+ 	 * host PRKU bits.
+ 	 */
++	struct fpu user_fpu;
+ 	struct fpu *guest_fpu;
+ 
+ 	u64 xcr0;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 37028ea85d4c..aede8fa2ea9a 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8172,7 +8172,7 @@ static int complete_emulated_mmio(struct kvm_vcpu *vcpu)
+ static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu)
  {
- 	vmcs_clear_bits(SECONDARY_VM_EXEC_CONTROL, SECONDARY_EXEC_SHADOW_VMCS);
- 	vmcs_write64(VMCS_LINK_POINTER, -1ull);
-+	vmx->nested.need_vmcs12_sync = false;
- }
- 
- static inline void nested_release_evmcs(struct kvm_vcpu *vcpu)
-@@ -1328,6 +1329,9 @@ static void copy_shadow_to_vmcs12(struct vcpu_vmx *vmx)
- 	u64 field_value;
- 	struct vmcs *shadow_vmcs = vmx->vmcs01.shadow_vmcs;
- 
-+	if (WARN_ON(!shadow_vmcs))
-+		return;
-+
  	preempt_disable();
- 
- 	vmcs_load(shadow_vmcs);
-@@ -1366,6 +1370,9 @@ static void copy_vmcs12_to_shadow(struct vcpu_vmx *vmx)
- 	u64 field_value = 0;
- 	struct vmcs *shadow_vmcs = vmx->vmcs01.shadow_vmcs;
- 
-+	if (WARN_ON(!shadow_vmcs))
-+		return;
-+
- 	vmcs_load(shadow_vmcs);
- 
- 	for (q = 0; q < ARRAY_SIZE(fields); q++) {
-@@ -4340,7 +4347,6 @@ static inline void nested_release_vmcs12(struct kvm_vcpu *vcpu)
- 		/* copy to memory all shadowed fields in case
- 		   they were modified */
- 		copy_shadow_to_vmcs12(vmx);
--		vmx->nested.need_vmcs12_sync = false;
- 		vmx_disable_shadow_vmcs(vmx);
- 	}
- 	vmx->nested.posted_intr_nv = -1;
+-	copy_fpregs_to_fpstate(&current->thread.fpu);
++	copy_fpregs_to_fpstate(&vcpu->arch.user_fpu);
+ 	/* PKRU is separately restored in kvm_x86_ops->run.  */
+ 	__copy_kernel_to_fpregs(&vcpu->arch.guest_fpu->state,
+ 				~XFEATURE_MASK_PKRU);
+@@ -8185,7 +8185,7 @@ static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu)
+ {
+ 	preempt_disable();
+ 	copy_fpregs_to_fpstate(vcpu->arch.guest_fpu);
+-	copy_kernel_to_fpregs(&current->thread.fpu.state);
++	copy_kernel_to_fpregs(&vcpu->arch.user_fpu.state);
+ 	preempt_enable();
+ 	++vcpu->stat.fpu_reload;
+ 	trace_kvm_fpu(0);
 -- 
 2.20.1
 
