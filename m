@@ -2,164 +2,111 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37001C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58832C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C66C22BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC6B22BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:42:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AUXehrO5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jI+NycjU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389305AbfGYPl3 (ORCPT
+        id S2389375AbfGYPmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 11:41:29 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44315 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388598AbfGYPl2 (ORCPT
+        Thu, 25 Jul 2019 11:42:06 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38685 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389265AbfGYPmF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 11:41:28 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t16so22927051pfe.11
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 08:41:28 -0700 (PDT)
+        Thu, 25 Jul 2019 11:42:05 -0400
+Received: by mail-ed1-f67.google.com with SMTP id r12so15846227edo.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 08:42:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:cc:from:user-agent:date;
-        bh=X8/QgqyB39MtESyGgZ7nkN1r+o6x8E3Px4aWeY6fSy8=;
-        b=AUXehrO5W9wuyzZuZBVkUi7NvR/TV1K1W/XYV0IFn7j+NKUpBAGDYxyQfn9mDsSoYw
-         jWoo0+wJ1AN0irALxjqsJcaJ8t72qzlHfLktjawnytbtM2ak974bFiqFXukLHA2641gm
-         GPc9f4Wg7sgW6yTrUgOPbYyiksCcg0/pnYuXg=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MNkXECJCwZrlY0TNH7A1b2lGWt3otavBoyZrTznJtcA=;
+        b=jI+NycjUP6dxobiyu7dooewJyiMPSKnZuEAR9QAAdHorsKKv9zQty8Zi/e3mTuuwTw
+         f+5REnTryYYRy7SGL9GubSQdxHJJASl9Ylgtuj/XQKjHnxc3LR3PA0ZTh3KESVVHAP0l
+         b+ZmbxdwQ8OgMxYul7lgpNzEHZXSO/mmnFCbw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
-         :user-agent:date;
-        bh=X8/QgqyB39MtESyGgZ7nkN1r+o6x8E3Px4aWeY6fSy8=;
-        b=mBhCYqjEpTqDGIvrylmDp11/Y3wEZzo+TWuMKJLHO68Blr1qa8ycrmOLbPSJpZ0/Uv
-         WQ3GgP6Qp2/qlPdQiHK0pDCLALN3LC/PSy4J+X0zxGJ5RmnrYpl0/l7QdR6Oz3w9l0Bh
-         F2OK1xBuDL/Z1+tVaWNM7Smq98tfZn+AaND9SbGDa67KR+2dgdZHkjJv/PQljsmHFpZk
-         SKasLJo/yhue+qbyXZ5OkevPNZqMi2jvWyBN9zCJoKIIOuGMtZdmhvoIwt7zBavjoQI1
-         SWDw5uFN0o51XOCuT6ckOgVucSKzqjRb9KhxtNnS7gwpWWRpzSFkNMa5F7K5pito5PXZ
-         ybMw==
-X-Gm-Message-State: APjAAAWS2cciUS3YORrWN1LLghS5ZoDbaTiLL2baPt9NMlRDxmzlFfRj
-        oN20+CjmuW9fEfncLMDe+cIuzw==
-X-Google-Smtp-Source: APXvYqx4GdSrwnuq7D4ujwzibdor9GbMmh+yIgrQF4BGBdz+YTVhinpjS5wfhgCNOXCWw0WsKCvaQw==
-X-Received: by 2002:a62:cf07:: with SMTP id b7mr17371441pfg.217.1564069287761;
-        Thu, 25 Jul 2019 08:41:27 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id r75sm68338054pfc.18.2019.07.25.08.41.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 08:41:27 -0700 (PDT)
-Message-ID: <5d39cda7.1c69fb81.6e01c.0e70@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MNkXECJCwZrlY0TNH7A1b2lGWt3otavBoyZrTznJtcA=;
+        b=sBq/WxA9IQ86NGuFc/wwKY1Le9tysCZ2ZNBWrlOnYKlFEkrdAkC0fxiPZt9OpC7q3g
+         Xhb196ZvEChmMjxLxuvoBnlh5Fdr3renYqH1zHdjGaCpNsKf4uBYG7V0yhU4BiFhXqfn
+         fLkzAs6a2/4pDCRf6dZuBICV5r7HtF9NOT6p+nXv+gEtaXGcKW1/xDk9PyIjGBdjiVG4
+         siUDhxmyTGGUjSKnvZ0c0rkngdQfD3HrspIaL6F7KzcIRy9ctbeYNe5FgBuHDIrnA8k7
+         zvrJzoqIp0io2wGMVggm9OqRnJANkMjVgE+/6YsIg5V9lcAzaUq60jVdTlLRGhmqcYh+
+         p6Iw==
+X-Gm-Message-State: APjAAAXf2t+ujfaNx5bK5L4cxlpSGx+k7DCdTwEO8688py9lW5Gexobh
+        zzfOzCyTVTkDDp8PsYNoGKen6rOvxrRL5A==
+X-Google-Smtp-Source: APXvYqwkQpqC/Uc8NuGdcCroZPVdgqHvEITX9s8vt8veyNhChwTo90hnZuTsko3X/1mEebdfkMsxHA==
+X-Received: by 2002:a50:c081:: with SMTP id k1mr77138843edf.19.1564069323506;
+        Thu, 25 Jul 2019 08:42:03 -0700 (PDT)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com. [209.85.128.50])
+        by smtp.gmail.com with ESMTPSA id uz27sm9849717ejb.24.2019.07.25.08.42.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 08:42:02 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id f17so45152875wme.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 08:42:02 -0700 (PDT)
+X-Received: by 2002:a1c:343:: with SMTP id 64mr77603832wmd.116.1564069321964;
+ Thu, 25 Jul 2019 08:42:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190725051857.GA53904@archlinux-threadripper>
-References: <20190724235030.131144-1-swboyd@chromium.org> <20190725051857.GA53904@archlinux-threadripper>
-Subject: Re: [PATCH] kbuild: Check for unknown options with cc-option and clang in Kbuild
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Peter Smith <peter.smith@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Douglas Anderson <dianders@chromium.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 25 Jul 2019 08:41:25 -0700
+References: <20190725141756.2518-1-ezequiel@collabora.com> <20190725141756.2518-2-ezequiel@collabora.com>
+ <1564069001.3006.1.camel@pengutronix.de>
+In-Reply-To: <1564069001.3006.1.camel@pengutronix.de>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Fri, 26 Jul 2019 00:41:48 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5BxQJBNqMnS1bCVXz-9+dCkw0g4xmiPLYgtVCJx_pbRPg@mail.gmail.com>
+Message-ID: <CAAFQd5BxQJBNqMnS1bCVXz-9+dCkw0g4xmiPLYgtVCJx_pbRPg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] media: hantro: Set DMA max segment size
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>, kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Nathan Chancellor (2019-07-24 22:18:57)
-> Hi Stephen,
->=20
-> Was the second Kbuild in the subject line supposed to be Kconfig?
+On Fri, Jul 26, 2019 at 12:36 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+>
+> On Thu, 2019-07-25 at 11:17 -0300, Ezequiel Garcia wrote:
+> > From: Francois Buergisser <fbuergisser@chromium.org>
+> >
+> > The Hantro codec is typically used in platforms with an IOMMU,
+> > so we need to set a proper DMA segment size.
+>
+> ... to make sure the DMA-mapping subsystem produces contiguous mappings?
+>
+> > Devices without an
+> > IOMMU will still fallback to default 64KiB segments.
+>
+> I don't understand this comment. The default max_seg_size may be 64 KiB,
+> but if we are always setting it to DMA_BUT_MASK(32), there is no falling
+> back.
+>
 
-Sure. I'll change it to Kconfig.
+DMA mask and segment size are two completely orthogonal parameters.
+Please check https://elixir.bootlin.com/linux/v5.3-rc1/source/drivers/iommu/dma-iommu.c#L740
+for an example of how the latter is used.
 
->=20
-> On Wed, Jul 24, 2019 at 04:50:30PM -0700, Stephen Boyd wrote:
-> > If the particular version of clang a user has doesn't enable
-> > -Werror=3Dunknown-warning-option by default, even though it is the
-> > default[1], then make sure to pass the option to the Kconfig cc-option
->=20
-> Hmmm interesting, I did not even know that was possible... Is that a
-> clang configuration option or an out of tree patch? Looks like it has
-> been on by default since clang 3.2: https://godbolt.org/z/mOmusu
-
-I asked and it turns out that we force this flag off in the ChromeOS
-toolchain so that we can compile the multitude of packages in our system
-that assume various GCC specific warning flags. I guess this is easier
-than patching all the Makefiles out there.
-
->=20
-> > command so that testing options from Kconfig files works properly.
-> > Otherwise, depending on the default values setup in the clang toolchain
-> > we will silently assume options such as -Wmaybe-uninitialized are
-> > supported by clang, when they really aren't.
-> >=20
-> > This issue only started happening for me once commit 589834b3a009
-> > ("kbuild: Add -Werror=3Dunknown-warning-option to CLANG_FLAGS") was
-> > applied on top of commit b303c6df80c9 ("kbuild: compute false-positive
-> > -Wmaybe-uninitialized cases in Kconfig"). This leads kbuild to try and
->=20
-> Prior to 589834b3a009, how did cc-option work at all if
-> -Wunknown-warning-option wasn't enabled by default? I assume that clang
-> would just eat any unknown flags while returning zero so it looked like
-> the flag was supported?
-
-Yes. But just warning options?
-
->=20
-> > test for the existence of the -Wmaybe-uninitialized flag with the
-> > cc-option command in scripts/Kconfig.include, and it doesn't see an
-> > error returned from the option test so it sets the config value to Y.
->=20
-> It might be worth explicitly saying somewhere in here that clang will
-> not error on unknown flags without -Werror + -Wunknown-warning-option.
-
-I think it warns on unknown flags, just not unknown warning options
-(-Wfoo), so I didn't mention this.
-
->=20
-> > Then the makefile tries to pass the unknown option on the command line
-> > and -Werror=3Dunknown-warning-option catches the invalid option and bre=
-aks
-> > the build.
-> >=20
-> > Note: this doesn't change the cc-option tests in Makefiles, because
-> > those use a different rule that includes KBUILD_CFLAGS by default, and
-> > the KBUILD_CFLAGS already has -Werror=3Dunknown-warning-option. Thanks =
-to
-> > Doug for pointing out the different rule.
-> >=20
-> > [1] https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warn=
-ing-option
-> > Cc: Peter Smith <peter.smith@linaro.org>
-> > Cc: Nathan Chancellor <natechancellor@gmail.com>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Cc: Douglas Anderson <dianders@chromium.org>
-> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> >=20
-> > Change-Id: I3bb69d45bb062d1306acbf19bc0adfb60f706442
->=20
-> I assume that shouldn't be there?
->=20
-> Overall, seems okay to me (took me a sec to understand the bug,
-> certainly a very specific one). It might make sense to explicitly add
-> somewhere in the commit message that this syncs cc-option behavior
-> between Kconfig and Kbuild as a whole, as I didn't understand that at
-> first. Thanks for the triage and sorry for the breakage!
->=20
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-
-I reworded the commit text a bit now and I'll resend it soon. Thanks for
-the review.
-
+Best regards,
+Tomasz
