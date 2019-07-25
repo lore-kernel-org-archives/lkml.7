@@ -2,211 +2,95 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0D0C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D07C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9FC217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:46:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iC1vZvfJ"
+	by mail.kernel.org (Postfix) with ESMTP id 9AD3D217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 12:47:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389135AbfGYMqA (ORCPT
+        id S2389161AbfGYMrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 08:46:00 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36738 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388497AbfGYMp7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 08:45:59 -0400
-Received: by mail-lj1-f193.google.com with SMTP id i21so47885223ljj.3;
-        Thu, 25 Jul 2019 05:45:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=YxoMXX9Nct0eRRcS7Q/PLXYnZRgyZpcSP8/DWhoCE08=;
-        b=iC1vZvfJutufEB8O0LVkEL3eLGLkJvcm3eMtB88c8eNso6GNJRzNp+ZIqa/3Q52BIu
-         JRoQYKgU9myUBTAbT0TCOHH5UbyaMYcVFjy0TEU3YM81qHCSIkGNjrtDJtW+uxLeVFwA
-         kRHHCiwp15FcRYWijkcBil/QsrUnPTJH2FLrZb5nWB8g8uEQIW22396vX3zHb35bpdR3
-         UD1bfkthTgUKyJ+NW7JORGckCMOEp4JMlXM5VEoEoEj01RVHQ5NYxto3PDXdunGJjHiC
-         9vtq66s8v7Wl8bnyGmgwgfT7Zruss//MqXAsQOXN1Ft+UULQ/F+gDuzbsN6AJOXkE/cj
-         Wf9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=YxoMXX9Nct0eRRcS7Q/PLXYnZRgyZpcSP8/DWhoCE08=;
-        b=AquvUnnGLUf0F+hqnm2VvkyP9xUSulJ+GXsk+VNCighqJVwi0jVubsG4AO7URAN+qW
-         /ly2JwZ4b+TNo5X05q8ZLcNeB6Ei21yUMQ3wlCiyfBZgict4dEYyEv32AH5FxJa6YdPf
-         RFPlDDmtHx/KcVc94nlD8xs4InDlpP1x3TcLH3sARbe55jTBvdMDBJWW2Q2DN4k1D3h/
-         wgZcMjgX2RUigDSM5og4guCGjcKE46Oyak756cY4kMR01eWuAgJqkXNcRB0ncWmBh/Tz
-         y6ojH36F8MEC4adHfnN99Gst36HHZsKVd3Y64L3z+hNFjTP2mHj7/fpc4GUkZ3650Oy4
-         /JDA==
-X-Gm-Message-State: APjAAAUQ2JUbAo2qCfCGTMu7o4SXIskLnte+aanCxHn/eHYCpmorRDo0
-        GBTGY6qrELpb8rtG4Zr8MpEQ6w6GQfvC7P3oZ40=
-X-Google-Smtp-Source: APXvYqwievWEj3UbBaN2VIfe8QRJUis+gUfdQlAX6IUbqOgqfMnKj83r/6dVQ+2l6WZ0uRdOwLDmDD1IMt9qut4IPNs=
-X-Received: by 2002:a2e:8945:: with SMTP id b5mr44878199ljk.93.1564058756462;
- Thu, 25 Jul 2019 05:45:56 -0700 (PDT)
+        Thu, 25 Jul 2019 08:47:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:56622 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388497AbfGYMrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 08:47:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 17377152D;
+        Thu, 25 Jul 2019 05:47:00 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A80E3F71F;
+        Thu, 25 Jul 2019 05:46:59 -0700 (PDT)
+Subject: Re: [PATCHv2] EDAC, altera: Move Stratix10 SDRAM ECC to peripheral
+To:     thor.thayer@linux.intel.com
+Cc:     bp@alien8.de, mchehab@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1562956123-23640-1-git-send-email-thor.thayer@linux.intel.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <eb7a1e75-2de9-cb60-bf8f-77cd1e71255f@arm.com>
+Date:   Thu, 25 Jul 2019 13:46:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <CGME20190723122023eucas1p2ff56c00b60a676ed85d9fe159a1839f2@eucas1p2.samsung.com>
- <20190723122016.30279-1-a.swigon@partner.samsung.com> <20190723122016.30279-3-a.swigon@partner.samsung.com>
-In-Reply-To: <20190723122016.30279-3-a.swigon@partner.samsung.com>
-Reply-To: cwchoi00@gmail.com
-From:   Chanwoo Choi <cwchoi00@gmail.com>
-Date:   Thu, 25 Jul 2019 21:45:19 +0900
-Message-ID: <CAGTfZH3GXCuYY-xmKtGd-M47WKp2c8PseytKw-oUOwp+TtGsvQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 02/11] devfreq: exynos-bus: Extract exynos_bus_profile_init_passive()
-To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        georgi.djakov@linaro.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1562956123-23640-1-git-send-email-thor.thayer@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EC=88=98) =EC=98=A4=EC=A0=84 8:07, A=
-rtur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>=EB=8B=98=EC=9D=B4 =EC=
-=9E=91=EC=84=B1:
->
-> This patch adds a new static function, exynos_bus_profile_init_passive(),
-> extracted from exynos_bus_probe().
->
-> Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>
-> ---
->  drivers/devfreq/exynos-bus.c | 70 +++++++++++++++++++++---------------
->  1 file changed, 42 insertions(+), 28 deletions(-)
->
-> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-> index d8f1efaf2d49..cf6f6cbd0f55 100644
-> --- a/drivers/devfreq/exynos-bus.c
-> +++ b/drivers/devfreq/exynos-bus.c
-> @@ -430,13 +430,51 @@ static int exynos_bus_profile_init(struct exynos_bu=
-s *bus,
->         return ret;
->  }
->
-> +static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
-> +                                          struct devfreq_dev_profile *pr=
-ofile)
-> +{
-> +       struct device *dev =3D bus->dev;
-> +       struct devfreq *parent_devfreq;
-> +       struct devfreq_passive_data *passive_data;
-> +       int ret =3D 0;
-> +
-> +       /* Initialize the struct profile and governor data for passive de=
-vice */
-> +       profile->target =3D exynos_bus_passive_target;
-> +       profile->exit =3D exynos_bus_passive_exit;
-> +
-> +       /* Get the instance of parent devfreq device */
-> +       parent_devfreq =3D devfreq_get_devfreq_by_phandle(dev, 0);
-> +       if (IS_ERR(parent_devfreq)) {
-> +               ret =3D -EPROBE_DEFER;
-> +               goto err;
-> +       }
-> +
-> +       passive_data =3D devm_kzalloc(dev, sizeof(*passive_data), GFP_KER=
-NEL);
-> +       if (!passive_data) {
-> +               ret =3D -ENOMEM;
-> +               goto err;
-> +       }
-> +       passive_data->parent =3D parent_devfreq;
-> +
-> +       /* Add devfreq device for exynos bus with passive governor */
-> +       bus->devfreq =3D devm_devfreq_add_device(dev, profile, DEVFREQ_GO=
-V_PASSIVE,
-> +                                               passive_data);
-> +       if (IS_ERR(bus->devfreq)) {
-> +               dev_err(dev,
-> +                       "failed to add devfreq dev with passive governor\=
-n");
-> +               ret =3D PTR_ERR(bus->devfreq);
-> +               goto err;
-> +       }
-> +
-> +err:
-> +       return ret;
-> +}
-> +
->  static int exynos_bus_probe(struct platform_device *pdev)
->  {
->         struct device *dev =3D &pdev->dev;
->         struct device_node *np =3D dev->of_node, *node;
->         struct devfreq_dev_profile *profile;
-> -       struct devfreq_passive_data *passive_data;
-> -       struct devfreq *parent_devfreq;
->         struct exynos_bus *bus;
->         int ret, max_state;
->         unsigned long min_freq, max_freq;
-> @@ -481,33 +519,9 @@ static int exynos_bus_probe(struct platform_device *=
-pdev)
->
->         goto out;
->  passive:
-> -       /* Initialize the struct profile and governor data for passive de=
-vice */
-> -       profile->target =3D exynos_bus_passive_target;
-> -       profile->exit =3D exynos_bus_passive_exit;
-> -
-> -       /* Get the instance of parent devfreq device */
-> -       parent_devfreq =3D devfreq_get_devfreq_by_phandle(dev, 0);
-> -       if (IS_ERR(parent_devfreq)) {
-> -               ret =3D -EPROBE_DEFER;
-> +       ret =3D exynos_bus_profile_init_passive(bus, profile);
-> +       if (ret < 0)
->                 goto err;
-> -       }
-> -
-> -       passive_data =3D devm_kzalloc(dev, sizeof(*passive_data), GFP_KER=
-NEL);
-> -       if (!passive_data) {
-> -               ret =3D -ENOMEM;
-> -               goto err;
-> -       }
-> -       passive_data->parent =3D parent_devfreq;
-> -
-> -       /* Add devfreq device for exynos bus with passive governor */
-> -       bus->devfreq =3D devm_devfreq_add_device(dev, profile, DEVFREQ_GO=
-V_PASSIVE,
-> -                                               passive_data);
-> -       if (IS_ERR(bus->devfreq)) {
-> -               dev_err(dev,
-> -                       "failed to add devfreq dev with passive governor\=
-n");
-> -               ret =3D PTR_ERR(bus->devfreq);
-> -               goto err;
-> -       }
->
->  out:
->         max_state =3D bus->devfreq->profile->max_state;
-> --
-> 2.17.1
->
+Hi Thor,
 
-Actually, it is not necessary. It has no any benefit.
-Please drop it as I commented on patch1.
+On 12/07/2019 19:28, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> ARM32 SoCFPGAs had separate IRQs for SDRAM. ARM64 SoCFPGAs
+> send all DBEs to SError so filtering by source is necessary.
+> 
+> The Stratix10 SDRAM ECC is a better match with the generic
+> Altera peripheral ECC framework because the linked list can
+> be searched to find the ECC block offset and printout
+> the DBE Address.
 
 
---
-Best Regards,
-Chanwoo Choi
+> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+> index c2e693e34d43..09a80b53acea 100644
+> --- a/drivers/edac/altera_edac.c
+> +++ b/drivers/edac/altera_edac.c
+
+> @@ -2231,13 +2275,15 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
+>  		    of_device_is_compatible(child, "altr,socfpga-dma-ecc") ||
+>  		    of_device_is_compatible(child, "altr,socfpga-usb-ecc") ||
+>  		    of_device_is_compatible(child, "altr,socfpga-qspi-ecc") ||
+> +#ifdef CONFIG_EDAC_ALTERA_SDRAM
+> +		    of_device_is_compatible(child, "altr,sdram-edac-s10") ||
+> +#endif
+>  		    of_device_is_compatible(child, "altr,socfpga-sdmmc-ecc"))
+
+I'm just curious: This list looks suspiciously like the altr_edac_a10_device_of_match[]
+list. Is there a reason it can't use of_match_device() here?
+
+>  
+>  			altr_edac_a10_device_add(edac, child);
+>  
+>  #ifdef CONFIG_EDAC_ALTERA_SDRAM
+> -		else if ((of_device_is_compatible(child, "altr,sdram-edac-a10")) ||
+> -			 (of_device_is_compatible(child, "altr,sdram-edac-s10")))
+> +		else if (of_device_is_compatible(child, "altr,sdram-edac-a10"))
+>  			of_platform_populate(pdev->dev.of_node,
+>  					     altr_sdram_ctrl_of_match,
+>  					     NULL, &pdev->dev);
+
+
+Acked-by: James Morse <james.morse@arm.com>
+
+
+Thanks,
+
+James
