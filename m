@@ -2,95 +2,127 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E79CCC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6824C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6F312238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9992421901
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:16:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sezAG8uN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JPcCwXhG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391690AbfGYLP5 (ORCPT
+        id S2391706AbfGYLQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:15:57 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41680 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388791AbfGYLP4 (ORCPT
+        Thu, 25 Jul 2019 07:16:01 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39792 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391692AbfGYLQA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:15:56 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 62so29371169lfa.8;
-        Thu, 25 Jul 2019 04:15:55 -0700 (PDT)
+        Thu, 25 Jul 2019 07:16:00 -0400
+Received: by mail-wm1-f66.google.com with SMTP id u25so34007285wmc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 04:15:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QstKujjss/0DVnYAF/0TqP63JHZfB86wUYC2n+CaVaw=;
-        b=sezAG8uN4ojmh3KX81i1yVQrYSLC3CO86FTiakafuU/O4OR/mAhXKmyIRLIwOPSWBN
-         gwfnZ9xQNuo3CdKoQEareQCWp+6CRxX5F2Dol1OY42Il+hKQMEFTY6FvDgUDqml3ODEV
-         lN4rcwJklFe1PhU1o7KRt8RRc+FXrUHbNLbElhkWnTh4bcbK1SHAZuEwn4/v/ll1xjFU
-         72insAs7hQt3uSKXkZJIAMcobzxMSEqc5E7I3ND6FQR9Wm398NxHKnexAzk9tWo9J0FZ
-         pyDUkFVxsRWJ0l2PFXAYdIpI7dOCcC17m1Sr5XM+9UZ3+YkcMiSqtWk8mRT2ZEmfm+Fg
-         tM6g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=QF+7Jm8pJkonsuJf5bcYYdklp7SuR7E7WLX/qpmLIMY=;
+        b=JPcCwXhG2xYcAxickSomrOJkvgTBB5DjGLN3ImW41oQin65O47uBJez5y6QHqPi4CR
+         R7p/PX3cBDvjHCCXcAM73DTDSepGGTQQ2CN2Mn3M7v7z93rwWzHrKJCmJY9wOEvBDKq2
+         NpiyRbMo36jxYlVEKnTElXwIE0Y6sqOOKYRQcc+CbQLpWYGGyF1vhlYKPIneuigp7lER
+         g/uEtUrvKDd1sm7FXHFVMcoPSdQ6TQYr3xRhUnqsEI0ABKQ9ZgKAV5U2smgQQPt2O5M5
+         Inroyadx6ibMupV0tHIR/8R1NUETYkUXGcS33jsQ20wFt42RB7EmtkbcaAmdRw7W/QHJ
+         31MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QstKujjss/0DVnYAF/0TqP63JHZfB86wUYC2n+CaVaw=;
-        b=g2H0dZ0yGWOEgilI29rmciABP3h+O60bECRO7maE+sox2WPOibOmZSrT2NijAwIaGh
-         rC/k2tmn8vmO5BWkzP7zK9yQGlU7FYs6QHN+E/bAaPfn75sVy/paU5BEfBMeY9lIoOLZ
-         JUDNWt9o8dV4Cjg5yt8CXB1uzZGkFEDCm4EjRrEaD2UXJw7AsLypGUYJHc3OLgQs8VW6
-         YFcvNOQp/o6N8CbQwDuPHGCgWs0pGsqEmAHKQ8F68o9Dpk60RoRAIW6+Ut1PtPwfwEUb
-         nqa41TByOAbrOBbTO8blExuYw05FVV7zyahfHARnYE8djruaMVYszs8VuA3MugKw2pNs
-         iYDw==
-X-Gm-Message-State: APjAAAWnfk0oDTdQo6Ds2XlMQ9+vZYmz26f7aeXEu1HMSSoK01TkJDGw
-        Ya5dj37AhU2IWcs7J74nXqdwwZMt
-X-Google-Smtp-Source: APXvYqxBsw9k0EPJMZuZ6kkrUZKHfpWXsS5Z9fW12Fq/E9YP//RrhuxJ/z7QKwu0EOoxlkL9yqA+WA==
-X-Received: by 2002:a19:2297:: with SMTP id i145mr40440899lfi.97.1564053354293;
-        Thu, 25 Jul 2019 04:15:54 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id c19sm7380178lfi.39.2019.07.25.04.15.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 04:15:53 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] soc/tegra: pmc: Query PCLK clock rate at probe
- time
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190723023511.24542-1-digetx@gmail.com>
- <20190725093644.GJ12715@pdeschrijver-desktop.Nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f7879942-0875-1f27-5870-3f8414c2148d@gmail.com>
-Date:   Thu, 25 Jul 2019 14:15:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=QF+7Jm8pJkonsuJf5bcYYdklp7SuR7E7WLX/qpmLIMY=;
+        b=uV08aZbslFCL+Yh1hlZlacWY/RMrAU8YxBlXedBphaSEgXINqjMDaCvqz2Vh3yyFzd
+         ReKr6EGmF+M8PB4CxgjX23+BQShZhl4ZByZn10PY6tL37IDrW2oesdqduYVOrc2pZ/kQ
+         YcFpoROLIdjlR7kF5gR8dgPnlLzhZh4THnZBqLCpJ1/uyVz1iwWaI3kNXBopujL2ZhIF
+         Bm0yvy33NqlmPKAb0vtC66k7+1MSXurXki8Oqd+sPdlK8TxzhEOUrs78fQCiuXos74EL
+         utSu+I6k1nDTAJ51Hco/9r3JWWT9uspnvkvNuU8moEJ0WxlD1fPW/Cm7fUW5nlA8FMjf
+         pDpQ==
+X-Gm-Message-State: APjAAAXR915A/H3r+xLyLGVbohlAw6ZqbeDO3rUktgOKTkjYWuFCworT
+        fLBekfRuwYaVT7NINQ0CJ1ezaA==
+X-Google-Smtp-Source: APXvYqwHJQvJFZHzw1frET7Zmr1qdyEsn845eWjpbVigiDXyd3xqohC1yA+q2+bnBWLbG0Uze50N5Q==
+X-Received: by 2002:a1c:3c04:: with SMTP id j4mr74612867wma.37.1564053358224;
+        Thu, 25 Jul 2019 04:15:58 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id y16sm100988574wrg.85.2019.07.25.04.15.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Jul 2019 04:15:57 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 12:15:41 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 0/4] backlight: Expose brightness curve type through
+ sysfs
+Message-ID: <20190725111541.GA23883@dell>
+References: <20190709190007.91260-1-mka@chromium.org>
+ <20190722235926.GA250418@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190725093644.GJ12715@pdeschrijver-desktop.Nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190722235926.GA250418@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-25.07.2019 12:36, Peter De Schrijver пишет:
-> On Tue, Jul 23, 2019 at 05:35:10AM +0300, Dmitry Osipenko wrote:
->> The PCLK clock is running off SCLK, which is a critical clock that is
->> very unlikely to randomly change its rate. It's also a bit clumsy (and
->> apparently incorrect) to query the clock's rate with interrupts being
->> disabled because clk_get_rate() takes a mutex and that's the case during
->> suspend/cpuidle entering.
->>
-> 
-> SCLK and PCLK certainly can change rate at runtime, although the code to
-> handle this hasn't reached upstream yet.
+On Mon, 22 Jul 2019, Matthias Kaehlcke wrote:
 
-Okay, maybe this patch is indeed not very worthwhile then. I'm leaving
-it up to you, guys, to decide.
+> On Tue, Jul 09, 2019 at 12:00:03PM -0700, Matthias Kaehlcke wrote:
+> > Backlight brightness curves can have different shapes. The two main
+> > types are linear and non-linear curves. The human eye doesn't
+> > perceive linearly increasing/decreasing brightness as linear (see
+> > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+> > linearly to human eye"), hence many backlights use non-linear (often
+> > logarithmic) brightness curves. The type of curve is currently opaque
+> > to userspace, so userspace often relies on more or less reliable
+> > heuristics (like the number of brightness levels) to decide whether
+> > to treat a backlight device as linear or non-linear.
+> > 
+> > Export the type of the brightness curve via a new sysfs attribute.
+> > 
+> > Matthias Kaehlcke (4):
+> >   MAINTAINERS: Add entry for stable backlight sysfs ABI documentation
+> >   backlight: Expose brightness curve type through sysfs
+> >   backlight: pwm_bl: Set scale type for CIE 1931 curves
+> >   backlight: pwm_bl: Set scale type for brightness curves specified in
+> >     the DT
+> > 
+> >  .../ABI/testing/sysfs-class-backlight         | 26 ++++++++++++++
+> >  MAINTAINERS                                   |  2 ++
+> >  drivers/video/backlight/backlight.c           | 19 ++++++++++
+> >  drivers/video/backlight/pwm_bl.c              | 35 ++++++++++++++++++-
+> >  include/linux/backlight.h                     |  8 +++++
+> >  5 files changed, 89 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-class-backlight
+> 
+> ping, any comments on v3?
+
+Looks like PATCH 2/4 still needs seeing to.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
