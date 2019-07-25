@@ -4,186 +4,162 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815C0C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37001C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B45822ADA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C66C22BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 15:41:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nmCIp8hq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AUXehrO5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389246AbfGYPjx (ORCPT
+        id S2389305AbfGYPl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 11:39:53 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:34034 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728392AbfGYPjx (ORCPT
+        Thu, 25 Jul 2019 11:41:29 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44315 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388598AbfGYPl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 11:39:53 -0400
-Received: by mail-ua1-f67.google.com with SMTP id c4so20013087uad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 08:39:52 -0700 (PDT)
+        Thu, 25 Jul 2019 11:41:28 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t16so22927051pfe.11
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 08:41:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zUSY0yNX7mjAe5hgCsuzMt6JoI+T3veQET0Qe3Sg7bs=;
-        b=nmCIp8hqFv2u364QTeF1hoE1hDHQBhUlMI7TLjTtUqlM+25nPEpVMXgqAJLBrL8W0E
-         KIj2AH3i+7XfPuNPCPGSvPkgR0tOh0YPzOZGrx8Hwrh+I0lAOo36NobtMFOnjg6kl3YJ
-         Qk+Lxh1O2J1WrPHMivAvH/rBYsTe2Iw+lYFPQ=
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=X8/QgqyB39MtESyGgZ7nkN1r+o6x8E3Px4aWeY6fSy8=;
+        b=AUXehrO5W9wuyzZuZBVkUi7NvR/TV1K1W/XYV0IFn7j+NKUpBAGDYxyQfn9mDsSoYw
+         jWoo0+wJ1AN0irALxjqsJcaJ8t72qzlHfLktjawnytbtM2ak974bFiqFXukLHA2641gm
+         GPc9f4Wg7sgW6yTrUgOPbYyiksCcg0/pnYuXg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zUSY0yNX7mjAe5hgCsuzMt6JoI+T3veQET0Qe3Sg7bs=;
-        b=GUZ3NP2gZEjMixlbNWZoVIPtCloNQxD7B3W+Ddid7e3uTSmC9MnrVHH0tfSHm3dV8e
-         mmjj6GDSRUpjSTg1LiUIWORYKhFsaiHvsfWV8Bj5wbB+HEeXPzbYwMzXO2XjqGgWGHAR
-         OF80swMphTRMEOn7nGKUmQcYfhud+rpQGE3yF0eSGAZvGJ/QWOMXXb4EsllB48mYuOiE
-         retxoitFP1t92Qp8LYppq1pMXKE1oXqMCcb0UEoyWLPZPO2rdtJIkWwkUD/euGIAWAaM
-         owaoAXAhF6Jye7P8IOST1gwS10d4W3Wn+WjB6tbbJNwNE84vlduwNChei/HOkW5w6Xru
-         FbBw==
-X-Gm-Message-State: APjAAAUx/OWpqT6Z4VeKW4+kVXH12gaPvJYWpH2SLwH/4+EqhrV/SXzc
-        6oLxeQb3ypZFkldox3TYfxDmsuyTXS8=
-X-Google-Smtp-Source: APXvYqxYwwzu48Ia/cgyvtxcYrENlGnzA6OjzmlXridNRtONWPpmibDtg76cS7O9qpWPNtAe/3zlyA==
-X-Received: by 2002:ab0:23ce:: with SMTP id c14mr29425099uan.77.1564069191944;
-        Thu, 25 Jul 2019 08:39:51 -0700 (PDT)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id n187sm47997496vkd.9.2019.07.25.08.39.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 08:39:51 -0700 (PDT)
-Received: by mail-ua1-f41.google.com with SMTP id j2so20013742uaq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 08:39:51 -0700 (PDT)
-X-Received: by 2002:ab0:1391:: with SMTP id m17mr52819855uae.90.1564069190798;
- Thu, 25 Jul 2019 08:39:50 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=X8/QgqyB39MtESyGgZ7nkN1r+o6x8E3Px4aWeY6fSy8=;
+        b=mBhCYqjEpTqDGIvrylmDp11/Y3wEZzo+TWuMKJLHO68Blr1qa8ycrmOLbPSJpZ0/Uv
+         WQ3GgP6Qp2/qlPdQiHK0pDCLALN3LC/PSy4J+X0zxGJ5RmnrYpl0/l7QdR6Oz3w9l0Bh
+         F2OK1xBuDL/Z1+tVaWNM7Smq98tfZn+AaND9SbGDa67KR+2dgdZHkjJv/PQljsmHFpZk
+         SKasLJo/yhue+qbyXZ5OkevPNZqMi2jvWyBN9zCJoKIIOuGMtZdmhvoIwt7zBavjoQI1
+         SWDw5uFN0o51XOCuT6ckOgVucSKzqjRb9KhxtNnS7gwpWWRpzSFkNMa5F7K5pito5PXZ
+         ybMw==
+X-Gm-Message-State: APjAAAWS2cciUS3YORrWN1LLghS5ZoDbaTiLL2baPt9NMlRDxmzlFfRj
+        oN20+CjmuW9fEfncLMDe+cIuzw==
+X-Google-Smtp-Source: APXvYqx4GdSrwnuq7D4ujwzibdor9GbMmh+yIgrQF4BGBdz+YTVhinpjS5wfhgCNOXCWw0WsKCvaQw==
+X-Received: by 2002:a62:cf07:: with SMTP id b7mr17371441pfg.217.1564069287761;
+        Thu, 25 Jul 2019 08:41:27 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id r75sm68338054pfc.18.2019.07.25.08.41.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 08:41:27 -0700 (PDT)
+Message-ID: <5d39cda7.1c69fb81.6e01c.0e70@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190722215340.3071-1-ilina@codeaurora.org> <20190722215340.3071-2-ilina@codeaurora.org>
- <5d3769df.1c69fb81.55d03.aa33@mx.google.com> <20190724145251.GB18620@codeaurora.org>
- <5d38b38e.1c69fb81.e8e5d.035b@mx.google.com> <20190724203610.GE18620@codeaurora.org>
- <CAD=FV=UYj55m99EcQXmkYhs257A46x8DaarE0DC-GRF_3dY3-Q@mail.gmail.com> <20190725151851.GG18620@codeaurora.org>
-In-Reply-To: <20190725151851.GG18620@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 25 Jul 2019 08:39:30 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X2ENqt5+vdUoRnLTRbedj_sFdQD3Me-yYEW0fDOdBCvg@mail.gmail.com>
-Message-ID: <CAD=FV=X2ENqt5+vdUoRnLTRbedj_sFdQD3Me-yYEW0fDOdBCvg@mail.gmail.com>
-Subject: Re: [PATCH V2 2/4] drivers: qcom: rpmh-rsc: avoid locking in the
- interrupt handler
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>, mkshah@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190725051857.GA53904@archlinux-threadripper>
+References: <20190724235030.131144-1-swboyd@chromium.org> <20190725051857.GA53904@archlinux-threadripper>
+Subject: Re: [PATCH] kbuild: Check for unknown options with cc-option and clang in Kbuild
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Peter Smith <peter.smith@linaro.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Douglas Anderson <dianders@chromium.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 25 Jul 2019 08:41:25 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Quoting Nathan Chancellor (2019-07-24 22:18:57)
+> Hi Stephen,
+>=20
+> Was the second Kbuild in the subject line supposed to be Kconfig?
 
-On Thu, Jul 25, 2019 at 8:18 AM Lina Iyer <ilina@codeaurora.org> wrote:
->
-> On Wed, Jul 24 2019 at 17:28 -0600, Doug Anderson wrote:
-> >Hi,
-> >
-> >On Wed, Jul 24, 2019 at 1:36 PM Lina Iyer <ilina@codeaurora.org> wrote:
-> >>
-> >> On Wed, Jul 24 2019 at 13:38 -0600, Stephen Boyd wrote:
-> >> >Quoting Lina Iyer (2019-07-24 07:52:51)
-> >> >> On Tue, Jul 23 2019 at 14:11 -0600, Stephen Boyd wrote:
-> >> >> >Quoting Lina Iyer (2019-07-22 14:53:38)
-> >> >> >> Avoid locking in the interrupt context to improve latency. Since we
-> >> >> >> don't lock in the interrupt context, it is possible that we now could
-> >> >> >> race with the DRV_CONTROL register that writes the enable register and
-> >> >> >> cleared by the interrupt handler. For fire-n-forget requests, the
-> >> >> >> interrupt may be raised as soon as the TCS is triggered and the IRQ
-> >> >> >> handler may clear the enable bit before the DRV_CONTROL is read back.
-> >> >> >>
-> >> >> >> Use the non-sync variant when enabling the TCS register to avoid reading
-> >> >> >> back a value that may been cleared because the interrupt handler ran
-> >> >> >> immediately after triggering the TCS.
-> >> >> >>
-> >> >> >> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> >> >> >> ---
-> >> >> >
-> >> >> >I have to read this patch carefully. The commit text isn't convincing me
-> >> >> >that it is actually safe to make this change. It mostly talks about the
-> >> >> >performance improvements and how we need to fix __tcs_trigger(), which
-> >> >> >is good, but I was hoping to be convinced that not grabbing the lock
-> >> >> >here is safe.
-> >> >> >
-> >> >> >How do we ensure that drv->tcs_in_use is cleared before we call
-> >> >> >tcs_write() and try to look for a free bit? Isn't it possible that we'll
-> >> >> >get into a situation where the bitmap is all used up but the hardware
-> >> >> >has just received an interrupt and is going to clear out a bit and then
-> >> >> >an rpmh write fails with -EBUSY?
-> >> >> >
-> >> >> If we have a situation where there are no available free bits, we retry
-> >> >> and that is part of the function. Since we have only 2 TCSes avaialble
-> >> >> to write to the hardware and there could be multiple requests coming in,
-> >> >> it is a very common situation. We try and acquire the drv->lock and if
-> >> >> there are free TCS available and if available mark them busy and send
-> >> >> our requests. If there are none available, we keep retrying.
-> >> >>
-> >> >
-> >> >Ok. I wonder if we need some sort of barriers here too, like an
-> >> >smp_mb__after_atomic()? That way we can make sure that the write to
-> >> >clear the bit is seen by another CPU that could be spinning forever
-> >> >waiting for that bit to be cleared? Before this change the spinlock
-> >> >would be guaranteed to make these barriers for us, but now that doesn't
-> >> >seem to be the case. I really hope that this whole thing can be changed
-> >> >to be a mutex though, in which case we can use the bit_wait() API, etc.
-> >> >to put tasks to sleep while RPMh is processing things.
-> >> >
-> >> We have drivers that want to send requests in atomic contexts and
-> >> therefore mutex locks would not work.
-> >
-> >Jumping in without reading all the context, but I saw this fly by and
-> >it seemed odd.  If I'm way off base then please ignore...
-> >
-> >Can you give more details?  Why are these drivers in atomic contexts?
-> >If they are in atomic contexts because they are running in the context
-> >of an interrupt then your next patch in the series isn't so correct.
-> >
-> >Also: when people submit requests in atomic context are they always
-> >submitting an asynchronous request?  In that case we could
-> >(presumably) just use a spinlock to protect the queue of async
-> >requests and a mutex for everything else?
-> Yes, drivers only make async requests in interrupt contexts.
+Sure. I'll change it to Kconfig.
 
-So correct me if I'm off base, but you're saying that drivers make
-requests in interrupt contexts even after your whole series and that's
-why you're using spinlocks instead of mutexes.  ...but then in patch
-#3 in your series you say:
+>=20
+> On Wed, Jul 24, 2019 at 04:50:30PM -0700, Stephen Boyd wrote:
+> > If the particular version of clang a user has doesn't enable
+> > -Werror=3Dunknown-warning-option by default, even though it is the
+> > default[1], then make sure to pass the option to the Kconfig cc-option
+>=20
+> Hmmm interesting, I did not even know that was possible... Is that a
+> clang configuration option or an out of tree patch? Looks like it has
+> been on by default since clang 3.2: https://godbolt.org/z/mOmusu
 
-> Switch over from using _irqsave/_irqrestore variants since we no longer
-> race with a lock from the interrupt handler.
+I asked and it turns out that we force this flag off in the ChromeOS
+toolchain so that we can compile the multitude of packages in our system
+that assume various GCC specific warning flags. I guess this is easier
+than patching all the Makefiles out there.
 
-Those seem like contradictions.  What happens if someone is holding
-the lock, then an interrupt fires, then the interrupt routine wants to
-do an async request.  Boom, right?
+>=20
+> > command so that testing options from Kconfig files works properly.
+> > Otherwise, depending on the default values setup in the clang toolchain
+> > we will silently assume options such as -Wmaybe-uninitialized are
+> > supported by clang, when they really aren't.
+> >=20
+> > This issue only started happening for me once commit 589834b3a009
+> > ("kbuild: Add -Werror=3Dunknown-warning-option to CLANG_FLAGS") was
+> > applied on top of commit b303c6df80c9 ("kbuild: compute false-positive
+> > -Wmaybe-uninitialized cases in Kconfig"). This leads kbuild to try and
+>=20
+> Prior to 589834b3a009, how did cc-option work at all if
+> -Wunknown-warning-option wasn't enabled by default? I assume that clang
+> would just eat any unknown flags while returning zero so it looked like
+> the flag was supported?
 
+Yes. But just warning options?
 
-> They cannot
-> use the sync variants. The async and sync variants are streamlined into
-> the same code path. Hence the use of spinlocks instead of mutexes
-> through the critical path.
+>=20
+> > test for the existence of the -Wmaybe-uninitialized flag with the
+> > cc-option command in scripts/Kconfig.include, and it doesn't see an
+> > error returned from the option test so it sets the config value to Y.
+>=20
+> It might be worth explicitly saying somewhere in here that clang will
+> not error on unknown flags without -Werror + -Wunknown-warning-option.
 
-I will perhaps defer to Stephen who was the one thinking that a mutex
-would be a big win here.  ...but if a mutex truly is a big win then it
-doesn't seem like it'd be that hard to have a linked list (protected
-by a spinlock) and then some type of async worker that:
+I think it warns on unknown flags, just not unknown warning options
+(-Wfoo), so I didn't mention this.
 
-1. Grab the spinlock, pops one element off the linked list, release the spinlock
-2. Grab the mutex, send the one element, release the mutex
-3. Go back to step #1.
+>=20
+> > Then the makefile tries to pass the unknown option on the command line
+> > and -Werror=3Dunknown-warning-option catches the invalid option and bre=
+aks
+> > the build.
+> >=20
+> > Note: this doesn't change the cc-option tests in Makefiles, because
+> > those use a different rule that includes KBUILD_CFLAGS by default, and
+> > the KBUILD_CFLAGS already has -Werror=3Dunknown-warning-option. Thanks =
+to
+> > Doug for pointing out the different rule.
+> >=20
+> > [1] https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warn=
+ing-option
+> > Cc: Peter Smith <peter.smith@linaro.org>
+> > Cc: Nathan Chancellor <natechancellor@gmail.com>
+> > Cc: Nick Desaulniers <ndesaulniers@google.com>
+> > Cc: Douglas Anderson <dianders@chromium.org>
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> >=20
+> > Change-Id: I3bb69d45bb062d1306acbf19bc0adfb60f706442
+>=20
+> I assume that shouldn't be there?
+>=20
+> Overall, seems okay to me (took me a sec to understand the bug,
+> certainly a very specific one). It might make sense to explicitly add
+> somewhere in the commit message that this syncs cc-option behavior
+> between Kconfig and Kbuild as a whole, as I didn't understand that at
+> first. Thanks for the triage and sorry for the breakage!
+>=20
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-This will keep the spinlock held for as little time as possible.
+I reworded the commit text a bit now and I'll resend it soon. Thanks for
+the review.
 
-
--Doug
