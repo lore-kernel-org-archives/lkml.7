@@ -2,57 +2,59 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513E8C41517
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB745C76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA4F218EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EEAB229F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:43:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UQg/tDmQ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="py8c1rPU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfGYTnJ (ORCPT
+        id S1726581AbfGYTnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 15:43:09 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52562 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbfGYTnI (ORCPT
+        Thu, 25 Jul 2019 15:43:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45659 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfGYTnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:43:08 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s3so45984442wms.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 12:43:07 -0700 (PDT)
+        Thu, 25 Jul 2019 15:43:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f9so51944879wre.12
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 12:43:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=HpwqwqbOJStimlLPjV2WsSVvFoS5zR7dipevAmhXn+I=;
-        b=UQg/tDmQSfp9ChPaHt8EGlDQzZ6S/EdbxNg82he/Mzh8kwJ1qDpcDDkFMwLldt0cJc
-         lCF8BYMyw+DpR0ybV0yCoNWYL08yFyuTbTqO6aSQREaMO43xW88KfpTm8GecjxL8rJGw
-         GyauPYbXAUfd+wepxHqkp3tFKGMm0w8zorbYNjo6KTprUZWLwZ/Fo8VRDIu+/lxrhFXM
-         eDgKBYvOFPyY6b3EkW8UL0kebH0JQ+M7KxuybGZKYAD/kf7iDXT6S2sTLL26ra0MIe4W
-         Qa6E4+gr7U08eq2pNnQbGEPANNHi3nhHnEMX5iaonM8eETL+dQ37+c+wg0iR530FfwHU
-         Nk5Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=71zYLXTlisczUvOPC0g8GNny5+TtCvKfT2pyo6fGJ9c=;
+        b=py8c1rPUaxb6LfpTZULVE5wEow4Ig/y0vI4laAKs1jK5qDuf2LJkdKobWT+rg7RI7m
+         wFUYFn/E+DZ2sQq6mKRDo1naRmF9pJp1AYYe56I8ZIgodq/kNB9sYjOhuoXLu6L99noU
+         hhAWFcc/bYt1E0IT9Pthq2bsOgk6Uo1SiCeVPtH3PhTYqKvkEVPIAF+4UJ+XjXNFb4oz
+         stpVoUdeEuLMF/TLEjzWK9aYjKt4Hw6H4SAJbWPBpNybsXEc3NyEwjq2sZGwdVG+5RLk
+         ia4Mkj9ZTsUju+cKbPNSiBaWdlmz/E+GZkjEGsPdT+XnLEII7hsOIJSxgi0stAOm3hvD
+         XI5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=HpwqwqbOJStimlLPjV2WsSVvFoS5zR7dipevAmhXn+I=;
-        b=rLpwwbDWO+6YFwFfzoA6GKd+DvWdoG96ftl5JGz+Ha1BtWUGY0Ade+zLG95gdGZlXx
-         z/198wc3Ebkql/1xUv7iqUzDTE+Zh+PF0Zl89sfy6HdUnqWVSIAfqxEeexJ2nsuaHkK/
-         ByCp8dtY9Gyg6VUEp/ASnOq3EUVizteBRSw9wCnPVbNoLiTDOMQaUaM1XNQ2Mp1tUxxd
-         TDw33iRLx/ryHlipOi0fexceXIIKoTbu83OLpN6yiqUQ1Uup+hgOzUn5hYCxPIudXMFH
-         REGAltWLY+ILtaZLHRqzthpUIozHOqOUMVnQVOEp2hYr+T7+gednybDXmyNaLsopCYOO
-         Aw9A==
-X-Gm-Message-State: APjAAAXo2qroGp10eeoBOE6YjMRykMJNhDQGFxeD42COFxxGnRa85K3w
-        C6CwHvz3yvtvF2xkvN+s7hzijg==
-X-Google-Smtp-Source: APXvYqxpAh0jfU//NVh88rL1qSwss1rtJWAjuYNhw8soBe0yFJ+ERG4l4cq/Ofn+pyhmxoEsDSGiRA==
-X-Received: by 2002:a1c:cb43:: with SMTP id b64mr82451700wmg.86.1564083786567;
-        Thu, 25 Jul 2019 12:43:06 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=71zYLXTlisczUvOPC0g8GNny5+TtCvKfT2pyo6fGJ9c=;
+        b=ffZX18hGmiozqfeRln8+BylHKDcR2LHyCPvECKgZ8+GB0HopKHl3qbOtrZXlv54yWF
+         YwRTbEfoFen3/7FtGqYoObV3DFNh8lLLt0xLz3gJSWqgSG19xIElasyHboFsZODaDBgM
+         Lo9cppodV5gm5oy9oypMjhTn2bdxzYxTRKzuVUPPawIbgapWscPw9iDDhQTBAmCDqc0y
+         4vXSsdq6b/Y9DlpEpDmwTiXga8C64mlWNUZQ8rproUqY0aXMkeqBiuhooFwLkblOYBIO
+         1QZXjEPCR2/W7RgXcN/MIsWDvPBa4PfcMY/iAsJo9NylHkGdmXoEEwcaEqvu4yIHJjHo
+         u7Yw==
+X-Gm-Message-State: APjAAAXVj1D4Zf/vhUuuf7nl6SyKIKZ28jPq0Ai3J001UcPtJyBDaoDP
+        Es0Ef0sG3hSdkaUOFhcyERL5Zw==
+X-Google-Smtp-Source: APXvYqw72jesc7xJzzreRGaFI1bWXggNaMx7Vpt35ZvVydkI9rJHOxhJjt0/7QZNpnnjlbQp3BNJdw==
+X-Received: by 2002:adf:f08f:: with SMTP id n15mr13801539wro.213.1564083787509;
+        Thu, 25 Jul 2019 12:43:07 -0700 (PDT)
 Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id y16sm103410662wrg.85.2019.07.25.12.43.05
+        by smtp.googlemail.com with ESMTPSA id y16sm103410662wrg.85.2019.07.25.12.43.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 25 Jul 2019 12:43:05 -0700 (PDT)
+        Thu, 25 Jul 2019 12:43:06 -0700 (PDT)
 From:   Corentin Labbe <clabbe@baylibre.com>
 To:     davem@davemloft.net, herbert@gondor.apana.org.au,
         khilman@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org
@@ -60,48 +62,77 @@ Cc:     devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
         linux-kernel@vger.kernel.org, baylibre-upstreaming@groups.io,
         Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH 0/4] crypto: add amlogic crypto offloader driver
-Date:   Thu, 25 Jul 2019 19:42:52 +0000
-Message-Id: <1564083776-20540-1-git-send-email-clabbe@baylibre.com>
+Subject: [PATCH 1/4] dt-bindings: crypto: Add DT bindings documentation for amlogic-crypto
+Date:   Thu, 25 Jul 2019 19:42:53 +0000
+Message-Id: <1564083776-20540-2-git-send-email-clabbe@baylibre.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1564083776-20540-1-git-send-email-clabbe@baylibre.com>
+References: <1564083776-20540-1-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+This patch adds documentation for Device-Tree bindings for the
+Amlogic GXL cryptographic offloader driver.
 
-This serie adds support for the crypto offloader present on amlogic GXL
-SoCs.
-
-Tested on meson-gxl-s905x-khadas-vim and meson-gxl-s905x-libretech-cc
-
-Regards
-
-Corentin Labbe (4):
-  dt-bindings: crypto: Add DT bindings documentation for amlogic-crypto
-  crypto: amlogic: Add crypto accelerator for amlogic GXL
-  MAINTAINERS: Add myself as maintainer of amlogic crypto
-  ARM64: dts: amlogic: adds crypto hardware node
-
- .../bindings/crypto/amlogic-gxl-crypto.yaml   |  45 +++
- MAINTAINERS                                   |   7 +
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |  11 +
- drivers/crypto/Kconfig                        |   2 +
- drivers/crypto/Makefile                       |   1 +
- drivers/crypto/amlogic/Kconfig                |  24 ++
- drivers/crypto/amlogic/Makefile               |   2 +
- drivers/crypto/amlogic/amlogic-cipher.c       | 358 ++++++++++++++++++
- drivers/crypto/amlogic/amlogic-core.c         | 326 ++++++++++++++++
- drivers/crypto/amlogic/amlogic.h              | 172 +++++++++
- 10 files changed, 948 insertions(+)
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+---
+ .../bindings/crypto/amlogic-gxl-crypto.yaml   | 45 +++++++++++++++++++
+ 1 file changed, 45 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
- create mode 100644 drivers/crypto/amlogic/Kconfig
- create mode 100644 drivers/crypto/amlogic/Makefile
- create mode 100644 drivers/crypto/amlogic/amlogic-cipher.c
- create mode 100644 drivers/crypto/amlogic/amlogic-core.c
- create mode 100644 drivers/crypto/amlogic/amlogic.h
 
+diff --git a/Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml b/Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+new file mode 100644
+index 000000000000..41265e57c00b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/crypto/amlogic-gxl-crypto.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Amlogic GXL Cryptographic Offloader
++
++maintainers:
++  - Corentin Labbe <clabbe@baylibre.com>
++
++properties:
++  compatible:
++    oneOf:
++      - const: amlogic,gxl-crypto
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: blkmv
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    crypto: crypto@c883e000 {
++        compatible = "amlogic,gxl-crypto";
++        reg = <0x0 0xc883e000 0x0 0x36>;
++        interrupts = <GIC_SPI 188 IRQ_TYPE_EDGE_RISING>,
++            <GIC_SPI 189 IRQ_TYPE_EDGE_RISING>;
++        clocks = <&clkc CLKID_BLKMV>;
++        clock-names = "blkmv";
++    };
 -- 
 2.21.0
 
