@@ -4,59 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF1FC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C85DC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10F8E218F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B84218F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 16:17:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="dSGGAH/A"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="coojm5Oe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389736AbfGYQRA (ORCPT
+        id S1729230AbfGYQRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 12:17:00 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51555 "EHLO
+        Thu, 25 Jul 2019 12:17:43 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:60279 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfGYQRA (ORCPT
+        with ESMTP id S1727852AbfGYQRn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 12:17:00 -0400
+        Thu, 25 Jul 2019 12:17:43 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PGGlV01075230
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6PGHVIQ1075304
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 25 Jul 2019 09:16:48 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PGGlV01075230
+        Thu, 25 Jul 2019 09:17:32 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6PGHVIQ1075304
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564071408;
-        bh=K8/4EXYTAOYg1KI3nUvy13jLc8kfpfL9vnkfzswdXtg=;
+        s=2019071901; t=1564071452;
+        bh=st3obXGHa7UGavDjAsr6yooXSLYLwEddQ6y7fGDZon4=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=dSGGAH/AXGqjsOgeFbopiLDiufe4vr3ZDHIi3Qglnsu3i2ujfGXZA7MM/0DMZOfSa
-         aN8bEhHWeTWrDohPUHQxhQt841czY7xr6O5QY+DwGemqo2X/L81xtXZP2YO6RVjS4b
-         bsI6ct3BG1FtJONXh+bOImPTmGav36pOiqL6NZEPWcEwgXJIdAMFrD1g6EfaJ4KPk4
-         8bPvqj/o5eORkNiEIg9GhwEqqirRzZc3ng0NXOl0/fL1i/uhMWeas1S8vNLYygjtld
-         3nTj3mdj/jcG42xYkWHI5sIIS11YqOvCvLk6/0lbWrWN+UHPELRr4aSxUcLwAYqkpb
-         lEy/UsVyJpbDQ==
+        b=coojm5OeGjMLn/RmrJV96w4qgZiVJRN+PwKfhQHbe9/17IhkT2G3jg6qFlyPop1y1
+         VV715OjYocbZBRWbKIvq9oA5T3OzQv2iCdSuRP9/jhBkXv36gGfLyUmDTxh1/fYxPw
+         Ogf2I/RiQ9z9foXjALkKG8JPyVOsVbQ/jiKVl/JXKZ37Ze6SBC6Fshrp4V0NFmSMuC
+         i+dXasS0LQmD+p0/Rf4woaMkle/twMCpXFhjDd1nk7bXHpt6OLb6HuqrKqm1RtqvkP
+         RLGlwtf1b0SqJCPxYeouGE3iel2Vh8SL7DNVgaX68BbLlolmAxHPC7nLe6lUJRE4bD
+         3fCVebpeGmY/w==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PGGlna1075227;
-        Thu, 25 Jul 2019 09:16:47 -0700
-Date:   Thu, 25 Jul 2019 09:16:47 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6PGHUI61075300;
+        Thu, 25 Jul 2019 09:17:30 -0700
+Date:   Thu, 25 Jul 2019 09:17:30 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   "tip-bot for Matthew Wilcox (Oracle)" <tipbot@zytor.com>
-Message-ID: <tip-7b3c92b85a65c2db1f542265bc98e1f9e3056eba@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        torvalds@linux-foundation.org, willy@infradead.org, hpa@zytor.com,
-        mingo@kernel.org, tglx@linutronix.de
-Reply-To: mingo@kernel.org, tglx@linutronix.de,
-          torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-          peterz@infradead.org, hpa@zytor.com, willy@infradead.org
-In-Reply-To: <20190704221323.24290-1-willy@infradead.org>
-References: <20190704221323.24290-1-willy@infradead.org>
+From:   tip-bot for Yi Wang <tipbot@zytor.com>
+Message-ID: <tip-65d74e91694e1afac40c96fb64a9ef120757729e@git.kernel.org>
+Cc:     torvalds@linux-foundation.org, peterz@infradead.org,
+        tglx@linutronix.de, hpa@zytor.com, wang.yi59@zte.com.cn,
+        mingo@kernel.org, linux-kernel@vger.kernel.org
+Reply-To: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+          hpa@zytor.com, peterz@infradead.org, wang.yi59@zte.com.cn,
+          mingo@kernel.org, tglx@linutronix.de
+In-Reply-To: <1562301307-43002-1-git-send-email-wang.yi59@zte.com.cn>
+References: <1562301307-43002-1-git-send-email-wang.yi59@zte.com.cn>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/core: Convert get_task_struct() to return
- the task
-Git-Commit-ID: 7b3c92b85a65c2db1f542265bc98e1f9e3056eba
+Subject: [tip:sched/core] sched/stats: Fix unlikely() use of sched_info_on()
+Git-Commit-ID: 65d74e91694e1afac40c96fb64a9ef120757729e
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,126 +69,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  7b3c92b85a65c2db1f542265bc98e1f9e3056eba
-Gitweb:     https://git.kernel.org/tip/7b3c92b85a65c2db1f542265bc98e1f9e3056eba
-Author:     Matthew Wilcox (Oracle) <willy@infradead.org>
-AuthorDate: Thu, 4 Jul 2019 15:13:23 -0700
+Commit-ID:  65d74e91694e1afac40c96fb64a9ef120757729e
+Gitweb:     https://git.kernel.org/tip/65d74e91694e1afac40c96fb64a9ef120757729e
+Author:     Yi Wang <wang.yi59@zte.com.cn>
+AuthorDate: Fri, 5 Jul 2019 12:35:07 +0800
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Thu, 25 Jul 2019 15:51:54 +0200
+CommitDate: Thu, 25 Jul 2019 15:51:55 +0200
 
-sched/core: Convert get_task_struct() to return the task
+sched/stats: Fix unlikely() use of sched_info_on()
 
-Returning the pointer that was passed in allows us to write
-slightly more idiomatic code.  Convert a few users.
+sched_info_on() is called with unlikely hint, however, the test
+is to be a constant(1) on which compiler will do nothing when
+make defconfig, so remove the hint.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Also, fix a lack of {}.
+
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190704221323.24290-1-willy@infradead.org
+Cc: up2wing@gmail.com
+Cc: wang.liang82@zte.com.cn
+Cc: xue.zhihong@zte.com.cn
+Link: https://lkml.kernel.org/r/1562301307-43002-1-git-send-email-wang.yi59@zte.com.cn
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/sched/task.h        | 6 +++++-
- kernel/events/core.c              | 9 +++------
- kernel/irq/manage.c               | 3 +--
- kernel/locking/rtmutex.c          | 6 ++----
- kernel/trace/trace_sched_wakeup.c | 3 +--
- 5 files changed, 12 insertions(+), 15 deletions(-)
+ kernel/sched/stats.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-index 0497091e40c1..3d90ed8f75f0 100644
---- a/include/linux/sched/task.h
-+++ b/include/linux/sched/task.h
-@@ -105,7 +105,11 @@ extern void sched_exec(void);
- #define sched_exec()   {}
- #endif
+diff --git a/kernel/sched/stats.h b/kernel/sched/stats.h
+index aa0de240fb41..ba683fe81a6e 100644
+--- a/kernel/sched/stats.h
++++ b/kernel/sched/stats.h
+@@ -157,9 +157,10 @@ static inline void sched_info_dequeued(struct rq *rq, struct task_struct *t)
+ {
+ 	unsigned long long now = rq_clock(rq), delta = 0;
  
--#define get_task_struct(tsk) do { refcount_inc(&(tsk)->usage); } while(0)
-+static inline struct task_struct *get_task_struct(struct task_struct *t)
-+{
-+	refcount_inc(&t->usage);
-+	return t;
-+}
+-	if (unlikely(sched_info_on()))
++	if (sched_info_on()) {
+ 		if (t->sched_info.last_queued)
+ 			delta = now - t->sched_info.last_queued;
++	}
+ 	sched_info_reset_dequeued(t);
+ 	t->sched_info.run_delay += delta;
  
- extern void __put_task_struct(struct task_struct *t);
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 026a14541a38..ea5e8139fe62 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4089,10 +4089,8 @@ alloc_perf_context(struct pmu *pmu, struct task_struct *task)
- 		return NULL;
- 
- 	__perf_event_init_context(ctx);
--	if (task) {
--		ctx->task = task;
--		get_task_struct(task);
--	}
-+	if (task)
-+		ctx->task = get_task_struct(task);
- 	ctx->pmu = pmu;
- 
- 	return ctx;
-@@ -10355,8 +10353,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 		 * and we cannot use the ctx information because we need the
- 		 * pmu before we get a ctx.
- 		 */
--		get_task_struct(task);
--		event->hw.target = task;
-+		event->hw.target = get_task_struct(task);
+@@ -192,7 +193,7 @@ static void sched_info_arrive(struct rq *rq, struct task_struct *t)
+  */
+ static inline void sched_info_queued(struct rq *rq, struct task_struct *t)
+ {
+-	if (unlikely(sched_info_on())) {
++	if (sched_info_on()) {
+ 		if (!t->sched_info.last_queued)
+ 			t->sched_info.last_queued = rq_clock(rq);
  	}
- 
- 	event->clock = &local_clock;
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index e8f7f179bf77..9d50fbe5531a 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -1255,8 +1255,7 @@ setup_irq_thread(struct irqaction *new, unsigned int irq, bool secondary)
- 	 * the thread dies to avoid that the interrupt code
- 	 * references an already freed task_struct.
- 	 */
--	get_task_struct(t);
--	new->thread = t;
-+	new->thread = get_task_struct(t);
- 	/*
- 	 * Tell the thread to set its affinity. This is
- 	 * important for shared interrupt handlers as we do
-diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
-index fa83d36e30c6..2874bf556162 100644
---- a/kernel/locking/rtmutex.c
-+++ b/kernel/locking/rtmutex.c
-@@ -628,8 +628,7 @@ static int rt_mutex_adjust_prio_chain(struct task_struct *task,
- 		}
- 
- 		/* [10] Grab the next task, i.e. owner of @lock */
--		task = rt_mutex_owner(lock);
--		get_task_struct(task);
-+		task = get_task_struct(rt_mutex_owner(lock));
- 		raw_spin_lock(&task->pi_lock);
- 
- 		/*
-@@ -709,8 +708,7 @@ static int rt_mutex_adjust_prio_chain(struct task_struct *task,
- 	}
- 
- 	/* [10] Grab the next task, i.e. the owner of @lock */
--	task = rt_mutex_owner(lock);
--	get_task_struct(task);
-+	task = get_task_struct(rt_mutex_owner(lock));
- 	raw_spin_lock(&task->pi_lock);
- 
- 	/* [11] requeue the pi waiters if necessary */
-diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
-index 743b2b520d34..5e43b9664eca 100644
---- a/kernel/trace/trace_sched_wakeup.c
-+++ b/kernel/trace/trace_sched_wakeup.c
-@@ -579,8 +579,7 @@ probe_wakeup(void *ignore, struct task_struct *p)
- 	else
- 		tracing_dl = 0;
- 
--	wakeup_task = p;
--	get_task_struct(wakeup_task);
-+	wakeup_task = get_task_struct(p);
- 
- 	local_save_flags(flags);
+@@ -239,7 +240,7 @@ __sched_info_switch(struct rq *rq, struct task_struct *prev, struct task_struct
+ static inline void
+ sched_info_switch(struct rq *rq, struct task_struct *prev, struct task_struct *next)
+ {
+-	if (unlikely(sched_info_on()))
++	if (sched_info_on())
+ 		__sched_info_switch(rq, prev, next);
+ }
  
