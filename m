@@ -2,101 +2,65 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED70C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA53C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4529218EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5482218EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:47:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfGYTpU (ORCPT
+        id S1726524AbfGYTrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 15:45:20 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37216 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfGYTpT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 15:45:19 -0400
-Received: by mail-ot1-f67.google.com with SMTP id s20so52875316otp.4;
-        Thu, 25 Jul 2019 12:45:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YM6khcozeX5HCI3TLwGme6MoZN6oKGjknBQrsf5/NIs=;
-        b=lotIOCdhfy/2wpoG1+TBBKKGlDLndm1kFyAbkrTJJqoYCtuik2CxMKhFCzJgDkNrSA
-         oeapOw+UU8NnsZx2UDH/7wL1FK6zxEFL5ZWxlCKuxdGpOh7xVeb913uNBshdwXBIIMxs
-         emfVrlYEgjMuXLz5M+KUYF2Jy9qFO8MST3i2Bu32hqI74BeHYOJO9VxuEGUDbhKZN4gO
-         +SAoNuU1+iGxNvF4Vj7iEufAsXmdUrfLD3Au0eF97PgT3VgtQdEq3fs3ZQymDqMnKn6L
-         tVk/qhArul+/0215ypVIN0PJSOwrS7G4YLRnR3fZVEzOc/tyV1xDndPTh1uXI2UzC25h
-         1tsA==
-X-Gm-Message-State: APjAAAWg3PHbQSc5ElFM1ba0Ufva0yJUR/ShI/lhLiACtXxSYoeKfNR5
-        m0mF0CXMk+H451BKMEGabYA=
-X-Google-Smtp-Source: APXvYqztMRLMzXcB5HNvGbVqaTvfVch+4p86/tSF9VTNiZRY+RU1oA8E47opbCMO3jKmoCOODsTS7g==
-X-Received: by 2002:a05:6830:2148:: with SMTP id r8mr60886138otd.179.1564083918204;
-        Thu, 25 Jul 2019 12:45:18 -0700 (PDT)
-Received: from [192.168.1.114] (162-195-240-247.lightspeed.sntcca.sbcglobal.net. [162.195.240.247])
-        by smtp.gmail.com with ESMTPSA id x5sm17395205otb.6.2019.07.25.12.45.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 12:45:17 -0700 (PDT)
-Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20190725172335.6825-3-logang@deltatee.com>
- <20190725174032.GA27818@kroah.com>
- <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
- <20190725180816.GA32305@kroah.com>
- <da0eacb7-3738-ddf3-8c61-7ffc61aa41f4@deltatee.com>
- <20190725182701.GA11547@kroah.com>
- <a3262a7f-b78e-05ba-cda3-a7587946bd91@deltatee.com>
- <5951e0f5-cc90-f3de-0083-088fecfd43bb@grimberg.me>
- <20190725193415.GA12117@kroah.com>
- <966fa988-de56-effe-dd52-3515ee83629c@grimberg.me>
- <20190725194312.GA13090@kroah.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <89fb0e7e-eccd-5db5-00c1-d0b90c85270f@grimberg.me>
-Date:   Thu, 25 Jul 2019 12:45:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 15:47:55 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:39198 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726320AbfGYTrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 15:47:55 -0400
+Received: from d57e23da.static.ziggozakelijk.nl ([213.126.35.218] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hqjiK-0001nu-FG; Thu, 25 Jul 2019 21:47:44 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Nathan Huckleberry <nhuck@google.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, andy.yan@rock-chips.com,
+        zhangqing@rock-chips.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] clk: rockchip: Fix -Wunused-const-variable
+Date:   Thu, 25 Jul 2019 21:47:42 +0200
+Message-ID: <1785547.ocfUNUBeK4@phil>
+In-Reply-To: <20190627222220.89175-1-nhuck@google.com>
+References: <20190627222220.89175-1-nhuck@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190725194312.GA13090@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->>> So, as was kind of alluded to in another part of the thread, what are
->>> you doing about permissions?  It seems that any user/group permissions
->>> are out the window when you have the kernel itself do the opening of the
->>> char device, right?  Why is that ok?  You can pass it _any_ character
->>> device node and away it goes?  What if you give it a "wrong" one?  Char
->>> devices are very different from block devices this way.
->>
->> We could condition any configfs operation on capable(CAP_NET_ADMIN) to
->> close that hole for now..
+Am Freitag, 28. Juni 2019, 00:22:20 CEST schrieb Nathan Huckleberry:
+> Clang produces the following warning
 > 
-> Why that specific permission?
+> drivers/clk/rockchip/clk-rv1108.c:125:7: warning: unused variable
+> 'mux_pll_src_3plls_p' [-Wunused-const-variable]
+> PNAME(mux_pll_src_3plls_p)      = { "apll", "gpll", "dpll" };
+> 
+> Looks like this variable was never used. Deleting it to remove the
+> warning.
+> 
+> Cc: clang-built-linux@googlegroups.com
+> Link: https://github.com/ClangBuiltLinux/linux/issues/524
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
 
-Meant CAP_SYS_ADMIN
+applied for 5.4
 
-> And what about the "pass any random char device name" issue?  What
-> happens if you pass /dev/random/ as the string?
+Thanks
+Heiko
 
-What is the difference if the application is opening the device if
-it has the wrong path?
+
