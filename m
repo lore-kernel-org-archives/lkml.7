@@ -6,73 +6,78 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88659C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD3AC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65948206DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 18:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5380F206DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 19:00:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lopY/BRo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l8FB5LIM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfGYS6n (ORCPT
+        id S1726526AbfGYTA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 14:58:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53904 "EHLO
+        Thu, 25 Jul 2019 15:00:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56428 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfGYS6l (ORCPT
+        with ESMTP id S1726303AbfGYTAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 14:58:41 -0400
+        Thu, 25 Jul 2019 15:00:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uM1m72nodYHDEUlSsjslsPY2INrx+IqGO9Kqpg6MkME=; b=lopY/BRo9oAHx6/JdfjuDyu9Z
-        RMbXMxg4xB9JD+NYF+mRAUKmgCXsDuWmLIj3Hogbw28fXWoV4lzj2niNe8BIFE7DXuibFeiN0cdBE
-        UCfcTVOUloizBGEhRd1Ng4REhVzIeqKYOlKicz1HOKsdZL/wPDBxAtvww+zKrNc1vKtihZZxKhmJu
-        1jWKI7WPrnq43+9RYoGp9ZLcwucz40YhAeSEbJZjaWlbWXQhqXWIbUfFKCUTxy4HDN2J5a4HKBcTW
-        VZMHVSESwIGnKO9XWRap/PffQi54zOUHP+U4G0juZqRkC6p98l/DBV8JDhUC+Vi4/Q2jIvmvsMRf+
-        Up7EnRc7Q==;
+         bh=T12SANXJfFYGAgoypYepvPduiF69NIPuQswfYpT9irw=; b=l8FB5LIMV6v7FUzlsTxEQEgEt
+        sYro009Akgm0ixWwNSlGthAnEQgNl1iQFyHCu1a3RgQlxVxqBANR1p9gZ2y7GEywWQ9aDahvzUiVP
+        Zs7V6DPQm1qPQIzYhov0+BhUQ52M02dK3QuPm3HzGlFZU3Y7xR7qV8f3xR7QqSiwVikvwTV6pI6Am
+        mWOOyyRp0q8dTEpuomnAvNgjREwacnPoB/C/PNOBkQ3nbEEVz2inA+QEhT/cZrAE9D0dqwpksdM+n
+        SFhQ2eKPAajA9RgBLos3BC0H7I/y2iOFuCevwBD3y5NogKUmK1M8VGzAQMg2nGEWO0vdbiA92btPP
+        9FihCjsVg==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqiwC-0007WD-Ug; Thu, 25 Jul 2019 18:58:01 +0000
-Date:   Thu, 25 Jul 2019 11:58:00 -0700
+        id 1hqiyW-0001Cp-7l; Thu, 25 Jul 2019 19:00:24 +0000
+Date:   Thu, 25 Jul 2019 12:00:24 -0700
 From:   Matthew Wilcox <willy@infradead.org>
-To:     Pengfei Li <lpf.vector@gmail.com>
-Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        mhocko@suse.com, vbabka@suse.cz, cai@lca.pw,
-        aryabinin@virtuozzo.com, osalvador@suse.de, rostedt@goodmis.org,
-        mingo@redhat.com, pavel.tatashin@microsoft.com, rppt@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 01/10] mm/page_alloc: use unsigned int for "order" in
- should_compact_retry()
-Message-ID: <20190725185800.GC30641@bombadil.infradead.org>
-References: <20190725184253.21160-1-lpf.vector@gmail.com>
- <20190725184253.21160-2-lpf.vector@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
+Message-ID: <20190725190024.GD30641@bombadil.infradead.org>
+References: <20190725172335.6825-1-logang@deltatee.com>
+ <20190725172335.6825-3-logang@deltatee.com>
+ <20190725174032.GA27818@kroah.com>
+ <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
+ <20190725180816.GA32305@kroah.com>
+ <da0eacb7-3738-ddf3-8c61-7ffc61aa41f4@deltatee.com>
+ <20190725182701.GA11547@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190725184253.21160-2-lpf.vector@gmail.com>
+In-Reply-To: <20190725182701.GA11547@kroah.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 02:42:44AM +0800, Pengfei Li wrote:
->  static inline bool
-> -should_compact_retry(struct alloc_context *ac, int order, int alloc_flags,
-> -		     enum compact_result compact_result,
-> -		     enum compact_priority *compact_priority,
-> -		     int *compaction_retries)
-> +should_compact_retry(struct alloc_context *ac, unsigned int order,
-> +	int alloc_flags, enum compact_result compact_result,
-> +	enum compact_priority *compact_priority, int *compaction_retries)
->  {
->  	int max_retries = MAX_COMPACT_RETRIES;
+On Thu, Jul 25, 2019 at 08:27:01PM +0200, Greg Kroah-Hartman wrote:
+> > NVMe-OF is configured using configfs. The target is specified by the
+> > user writing a path to a configfs attribute. This is the way it works
+> > today but with blkdev_get_by_path()[1]. For the passthru code, we need
+> > to get a nvme_ctrl instead of a block_device, but the principal is the same.
+> 
+> Why isn't a fd being passed in there instead of a random string?
 
-One tab here is insufficient indentation.  It should be at least two.
-Some parts of the kernel insist on lining up arguments with the opening
-parenthesis of the function; I don't know if mm really obeys this rule,
-but you're indenting function arguments to the same level as the opening
-variables of the function, which is confusing.
+I suppose we could echo a string of the file descriptor number there,
+and look up the fd in the process' file descriptor table ...
+
+I'll get my coat.
+
