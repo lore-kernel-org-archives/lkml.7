@@ -2,100 +2,129 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 498CFC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E5FC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCD721852
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C7121852
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 03:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389720AbfGYDLC (ORCPT
+        id S2389744AbfGYDLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 23:11:02 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:57997 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388594AbfGYDLB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 23:11:01 -0400
-X-IronPort-AV: E=Sophos;i="5.64,305,1559491200"; 
-   d="scan'208";a="72161282"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 25 Jul 2019 11:11:00 +0800
-Received: from G08CNEXCHPEKD02.g08.fujitsu.local (unknown [10.167.33.83])
-        by cn.fujitsu.com (Postfix) with ESMTP id 10AD04CDE64D;
-        Thu, 25 Jul 2019 11:10:59 +0800 (CST)
-Received: from [10.167.215.46] (10.167.215.46) by
- G08CNEXCHPEKD02.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- id 14.3.439.0; Thu, 25 Jul 2019 11:11:00 +0800
-Message-ID: <5D391DC0.3050100@cn.fujitsu.com>
-Date:   Thu, 25 Jul 2019 11:10:56 +0800
-From:   Yang Xu <xuyang2018.jy@cn.fujitsu.com>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
+        Wed, 24 Jul 2019 23:11:19 -0400
+Received: from mga11.intel.com ([192.55.52.93]:24587 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388594AbfGYDLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 23:11:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 20:11:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,305,1559545200"; 
+   d="scan'208";a="321537716"
+Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
+  by orsmga004.jf.intel.com with ESMTP; 24 Jul 2019 20:11:16 -0700
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sean.j.christopherson@intel.com, pbonzini@redhat.com
+Cc:     mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        Yang Weijiang <weijiang.yang@intel.com>
+Subject: [PATCH v6 0/8] Introduce support for Guest CET feature
+Date:   Thu, 25 Jul 2019 11:12:38 +0800
+Message-Id: <20190725031246.8296-1-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     <gorcunov@gmail.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] sys_prctl(): remove unsigned comparision with less
- than zero
-References: <20190723094809.GE4832@uranus.lan>  <1563934308-20833-1-git-send-email-xuyang2018.jy@cn.fujitsu.com> <20190724191448.4db70a34f8b89bd8bdc085f5@linux-foundation.org>
-In-Reply-To: <20190724191448.4db70a34f8b89bd8bdc085f5@linux-foundation.org>
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.215.46]
-X-yoursite-MailScanner-ID: 10AD04CDE64D.A18B6
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: xuyang2018.jy@cn.fujitsu.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-on 2019/07/25 10:14, Andrew Morton wrote:
+Control-flow Enforcement Technology (CET) provides protection against
+Return/Jump-Oriented Programming (ROP/JOP) attack. It includes two
+sub-features: Shadow Stack (SHSTK) and Indirect Branch Tracking (IBT).
 
-> On Wed, 24 Jul 2019 10:11:48 +0800 Yang Xu<xuyang2018.jy@cn.fujitsu.com>  wrote:
->
->> Currently, when calling prctl(PR_SET_TIMERSLACK, arg2), arg2 is an
->> unsigned long value, arg2 will never<  0. Negative judgment is
->> meaningless, so remove it.
->>
->> ...
->>
->> --- a/kernel/sys.c
->> +++ b/kernel/sys.c
->> @@ -2372,7 +2372,7 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
->>   			error = current->timer_slack_ns;
->>   		break;
->>   	case PR_SET_TIMERSLACK:
->> -		if (arg2<= 0)
->> +		if (arg2 == 0)
->>   			current->timer_slack_ns =
->>   					current->default_timer_slack_ns;
-> A number of years ago Linus expressed approval of such comparisons with
-> unsigned quantities.  He felt that it improves readability a little -
-> the reader doesn't have to scroll back and check the type.
-Hi Andrew
+KVM modification is required to support Guest CET feature.
+This patch serial implemented CET related CPUID/XSAVES enumeration, MSRs
+and VMEntry configuration etc.so that Guest kernel can setup CET
+runtime infrastructure based on them. Some MSRs and related feature
+flags used in the patches reference the definitions in kernel patch.
 
-    It sounds good. ButWe still have to look at the actual situation. In here, this comparisons with unsigned
-quantities doesn't improvereadability. In turn, the code give user a wrongdescription  as man page said "
-If arg2 is less than or equal to zero, the "current" timer slack is reset to the thread's default" timer slack value."
+CET kernel patches is here:
+https://lkml.org/lkml/2019/6/6/1003
+https://lkml.org/lkml/2019/6/6/1030
+ 
+v5 -> v6:
+- Rebase patch to kernel v5.2.
+- Move CPUID(0xD, n>=1) helper to a seperate patch.
+- Merge xsave size fix with other patch.
+- Other minor fixes per community feedback.
 
-If we set -1 in user space, we pass it into kernel as ULONG_MAX, it will not use default timer_slack value.
+v4 -> v5:
+- Rebase patch to kernel v5.1.
+- Wrap CPUID(0xD, n>=1) code to a helper function.
+- Pass through MSR_IA32_PL1_SSP and MSR_IA32_PL2_SSP to Guest.
+- Add Co-developed-by expression in patch description.
+- Refine patch description.
 
-Also, I guess that if value has no actual sense we can use this comparisons. In here, arg2 represents slack time.
-time will never less than 0.
+v3 -> v4:
+- Add Sean's patch for loading Guest fpu state before access XSAVES
+  managed CET MSRs.
+- Melt down CET bits setting into CPUID configuration patch.
+- Add VMX interface to query Host XSS.
+- Check Host and Guest XSS support bits before set Guest XSS.
+- Make Guest SHSTK and IBT feature enabling independent.
+- Do not report CET support to Guest when Host CET feature is Disabled.
 
-ps: whether we change or not change this comparisons, it doesn't affect logic. So if you think this patch is meaningless,
-I will accept it.
+v2 -> v3:
+- Modified patches to make Guest CET independent to Host enabling.
+- Added patch 8 to add user space access for Guest CET MSR access.
+- Modified code comments and patch description to reflect changes.
 
-Thanks
-Yang Xu
+v1 -> v2:
+- Re-ordered patch sequence, combined one patch.
+- Added more description for CET related VMCS fields.
+- Added Host CET capability check while enabling Guest CET loading bit.
+- Added Host CET capability check while reporting Guest CPUID(EAX=7, EXC=0).
+- Modified code in reporting Guest CPUID(EAX=D,ECX>=1), make it clearer.
+- Added Host and Guest XSS mask check while setting bits for Guest XSS.
 
->
->
->
->
+
+PATCH 1    : Define CET VMCS fields and bits.
+PATCH 2    : Add a helper function for CPUID(0xD, n>=1) enumeration.
+PATCH 3    : Enumerate CET features/XSAVES in CPUID.
+PATCH 4    : Pass through CET MSRs to Guest.
+PATCH 5    : Load Guest CET states via VMCS.
+PATCH 6    : Add CET bits setting in CR4 and IA32_XSS.
+PATCH 7    : Load Guest FPU states for XSAVES managed MSRs.
+PATCH 8    : Add user-space access interface for CET states.
 
 
+Sean Christopherson (1):
+  KVM: x86: Load Guest fpu state when accessing MSRs managed by XSAVES
+
+Yang Weijiang (7):
+  KVM: VMX: Define CET VMCS fields and control bits
+  KVM: x86: Add a helper function for CPUID(0xD,n>=1) enumeration
+  KVM: x86: Implement CET CPUID enumeration for Guest
+  KVM: VMX: Pass through CET related MSRs to Guest
+  KVM: VMX: Load Guest CET via VMCS when CET is enabled in Guest
+  KVM: x86: Add CET bits setting in CR4 and XSS
+  KVM: x86: Add user-space access interface for CET MSRs
+
+ arch/x86/include/asm/kvm_host.h |   5 +-
+ arch/x86/include/asm/vmx.h      |   8 +++
+ arch/x86/kvm/cpuid.c            | 107 +++++++++++++++++++++-----------
+ arch/x86/kvm/vmx/vmx.c          |  83 +++++++++++++++++++++++--
+ arch/x86/kvm/x86.c              |  29 ++++++++-
+ arch/x86/kvm/x86.h              |   4 ++
+ 6 files changed, 193 insertions(+), 43 deletions(-)
+
+-- 
+2.17.2
 
