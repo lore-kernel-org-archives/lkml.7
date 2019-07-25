@@ -2,118 +2,98 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AE7C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F1AC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A35220840
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B30A20840
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 09:55:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="G0VLQQDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfGYJxa convert rfc822-to-8bit (ORCPT
+        id S1728963AbfGYJzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 05:53:30 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:35464 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbfGYJxa (ORCPT
+        Thu, 25 Jul 2019 05:55:07 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:16966 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbfGYJzG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 05:53:30 -0400
-Received: from marcel-macbook.fritz.box (p5B3D2BA7.dip0.t-ipconnect.de [91.61.43.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 6E589CEC81;
-        Thu, 25 Jul 2019 12:02:05 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: KASAN: use-after-free Read in h5_rx_3wire_hdr
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <CACT4Y+aRxn2Wgr7OuZRMb-PbvpJqbeLVUAkygUd_2y6+4u_5Jg@mail.gmail.com>
-Date:   Thu, 25 Jul 2019 11:53:26 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        syzbot <syzbot+0abbda0523882250a97a@syzkaller.appspotmail.com>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <9F8A3279-E5BE-4852-B099-7CD94A08C1CE@holtmann.org>
-References: <0000000000003fd4ab058e46951f@google.com>
- <CACT4Y+YLqSt34ka5kQQNBeo+GvGZ0dzNFL3Rb8_1Cid_C75_2w@mail.gmail.com>
- <500EB100-0253-4934-80FD-689C32ED310C@holtmann.org>
- <CACT4Y+aRxn2Wgr7OuZRMb-PbvpJqbeLVUAkygUd_2y6+4u_5Jg@mail.gmail.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Thu, 25 Jul 2019 05:55:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d397c760004>; Thu, 25 Jul 2019 02:55:02 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 25 Jul 2019 02:55:05 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 02:55:05 -0700
+Received: from tbergstrom-lnx.Nvidia.com (172.20.13.39) by
+ HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Thu, 25 Jul 2019 09:55:04 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id 8EF8E4286A; Thu, 25 Jul 2019 12:55:02 +0300 (EEST)
+Date:   Thu, 25 Jul 2019 12:55:02 +0300
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
+        <stefan@agner.ch>, <mark.rutland@arm.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
+ suspend
+Message-ID: <20190725095502.GM12715@pdeschrijver-desktop.Nvidia.com>
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+ <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564048503; bh=ssTZBE+UvhxmRscb1bfFWkAue53y1Iqmywo1qz9iIgE=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=G0VLQQDUsh89ujpB7kNRnhX8LTxDvmLjwLern2fdpLIa7ywejvMlg4se10jcnfOLD
+         C+ylHNnfkSRtwQ/bOfYoZZpbdnnRbVFP2keOiR81Al2jdH4DwybrOnxreVYmz8xbgP
+         YMFrbSI6NNAsWW+d7jMeI8D6nTzJq2LNafeQ4xS8GcCmUeqRt7NNeqQjYVoJl8l4Sc
+         iI8F4gmdsKdfHp1+QhEhzptQosW8c71p0JK9HgUP/nSyc1PeK3Mly/3hdzv5aEDO5Q
+         Fxuq6XFE+P4jOPeQ6vwLfUHRLlNbIt609ThbLD1lQMqvxga4R6ZQisIcNyVj7w5D/U
+         32KNTGavqPdkQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
-
->>>> syzbot found the following crash on:
->>>> 
->>>> HEAD commit:    6d21a41b Add linux-next specific files for 20190718
->>>> git tree:       linux-next
->>>> console output: https://syzkaller.appspot.com/x/log.txt?x=1377958fa00000
->>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
->>>> dashboard link: https://syzkaller.appspot.com/bug?extid=0abbda0523882250a97a
->>>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=113e2bb7a00000
->>> 
->>> +drivers/bluetooth/hci_h5.c maintainers
->>> 
->>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->>>> Reported-by: syzbot+0abbda0523882250a97a@syzkaller.appspotmail.com
->>>> 
->>>> ==================================================================
->>>> BUG: KASAN: use-after-free in h5_rx_3wire_hdr+0x35d/0x3c0
->>>> /drivers/bluetooth/hci_h5.c:438
->>>> Read of size 1 at addr ffff8880a161d1c8 by task syz-executor.4/12040
->>>> 
->>>> CPU: 1 PID: 12040 Comm: syz-executor.4 Not tainted 5.2.0-next-20190718 #41
->>>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
->>>> Google 01/01/2011
->>>> Call Trace:
->>>> __dump_stack /lib/dump_stack.c:77 [inline]
->>>> dump_stack+0x172/0x1f0 /lib/dump_stack.c:113
->>>> print_address_description.cold+0xd4/0x306 /mm/kasan/report.c:351
->>>> __kasan_report.cold+0x1b/0x36 /mm/kasan/report.c:482
->>>> kasan_report+0x12/0x17 /mm/kasan/common.c:612
->>>> __asan_report_load1_noabort+0x14/0x20 /mm/kasan/generic_report.c:129
->>>> h5_rx_3wire_hdr+0x35d/0x3c0 /drivers/bluetooth/hci_h5.c:438
->>>> h5_recv+0x32f/0x500 /drivers/bluetooth/hci_h5.c:563
->>>> hci_uart_tty_receive+0x279/0x790 /drivers/bluetooth/hci_ldisc.c:600
->>>> tiocsti /drivers/tty/tty_io.c:2197 [inline]
->>>> tty_ioctl+0x949/0x14f0 /drivers/tty/tty_io.c:2573
->>>> vfs_ioctl /fs/ioctl.c:46 [inline]
->>>> file_ioctl /fs/ioctl.c:509 [inline]
->>>> do_vfs_ioctl+0xdb6/0x13e0 /fs/ioctl.c:696
->>>> ksys_ioctl+0xab/0xd0 /fs/ioctl.c:713
->>>> __do_sys_ioctl /fs/ioctl.c:720 [inline]
->>>> __se_sys_ioctl /fs/ioctl.c:718 [inline]
->>>> __x64_sys_ioctl+0x73/0xb0 /fs/ioctl.c:718
->>>> do_syscall_64+0xfd/0x6a0 /arch/x86/entry/common.c:296
->>>> entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>> RIP: 0033:0x459819
->>>> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
->>>> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
->>>> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
->>>> RSP: 002b:00007f7a3b459c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
->>>> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459819
->>>> RDX: 0000000020000080 RSI: 0000000000005412 RDI: 0000000000000003
->>>> RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
->>>> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7a3b45a6d4
->>>> R13: 00000000004c408a R14: 00000000004d7ff0 R15: 00000000ffffffff
->> 
->> Is this happening on specific hardware?
+On Mon, Jul 22, 2019 at 12:54:51PM +0300, Dmitry Osipenko wrote:
 > 
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
+> doesn't sound correct to me. Something like 'firmware_sc7' should suit
+> better here.
+> 
+> > +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+> 
+> Secondly, I'm also not sure why COP interrupts need to be disabled for
+> pre-T210 at all, since COP is unused. This looks to me like it was
+> cut-n-pasted from downstream kernel without a good reason and could be
+> simply removed.
 
-funny ;)
+I don't think we can rely on the fact that COP is unused. People can
+write their own code to run on COP.
 
-I meant the Bluetooth chip on this machine.
-
-Regards
-
-Marcel
-
+Peter.
