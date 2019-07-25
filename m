@@ -2,86 +2,179 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44F0C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39524C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87A2C2238C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F1022238C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 17:19:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbfGYRTV (ORCPT
+        id S1726738AbfGYRTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 13:19:21 -0400
-Received: from mga09.intel.com ([134.134.136.24]:11488 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728807AbfGYRTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 13:19:20 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 10:19:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,307,1559545200"; 
-   d="scan'208";a="160972719"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga007.jf.intel.com with ESMTP; 25 Jul 2019 10:19:20 -0700
-Date:   Thu, 25 Jul 2019 10:19:19 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Edac Mailing List <linux-edac@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: update EDAC entry to reflect current tree
- and maintainers
-Message-ID: <20190725171919.GA27542@agluck-desk2.amr.corp.intel.com>
-References: <1eb2d09e58500bef18428e2b3f52b54d3cd707d5.1564071419.git.mchehab+samsung@kernel.org>
- <20190725170050.GA27348@nazgul.tnic>
+        Thu, 25 Jul 2019 13:19:54 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41549 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfGYRTy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 13:19:54 -0400
+Received: by mail-qt1-f195.google.com with SMTP id d17so49757554qtj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 10:19:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5u3LjMGnob/eh7dErEU98DnSWYn59krPNcbtYSmpfxg=;
+        b=LUpabVBUi/Wg7Z5J0S5q6tBT833DflKbloPovr7AdWEMeI5akK+0TBVKG4PsohNToy
+         hfzNm4+vZAhadQ1yJzhmEfire7DZbbPEK/6eoQ9E2dJLvmgZ5QXK6gLE4FjjP30eUovY
+         b6XZh2OLRbRBDwSfmuTNraUN++Tx2tT9OrcI1J6HY3U7gXEF58zhrFm8C8w7M5hfZ07C
+         F1MDAyUR3SDxZORXc5xooaoBLPWO3FO0M1IuL0Rs5D7LZHROTWpJCxCz6mI7kIXx2yEu
+         Zw6YhwKw8KlccUOVLLXNouQYiezaPAJ2yrTp25Y4WeAcOlDa4s2uNIxfKcujrAFP48Ee
+         lRlQ==
+X-Gm-Message-State: APjAAAUgJEyBHRGLf+edN7mVsSCoNgv88ZEwfT+6fOZf1F2E1/2B1pHw
+        GOaHQuOxSLHtzikHQ9NTeF4Zfw==
+X-Google-Smtp-Source: APXvYqzh6iVjr6MjlWT59KW8JoNnu8DTc4nuzePg5RGcXEbwv4teTePt1g4kYdzGbH7yQSr7ND0zdg==
+X-Received: by 2002:ac8:2379:: with SMTP id b54mr64138089qtb.168.1564075193014;
+        Thu, 25 Jul 2019 10:19:53 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id w25sm20020746qto.87.2019.07.25.10.19.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 10:19:52 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 13:19:45 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com
+Subject: Re: [PATCH v2 QEMU] virtio-balloon: Provide a interface for "bubble
+ hinting"
+Message-ID: <20190725131821-mutt-send-email-mst@kernel.org>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+ <20190724171050.7888.62199.stgit@localhost.localdomain>
+ <20190724173403-mutt-send-email-mst@kernel.org>
+ <ada4e7d932ebd436d00c46e8de699212e72fd989.camel@linux.intel.com>
+ <fed474fe-93f4-a9f6-2e01-75e8903edd81@redhat.com>
+ <bc162a5eaa58ac074c8ad20cb23d579aa04d0f43.camel@linux.intel.com>
+ <20190725111303-mutt-send-email-mst@kernel.org>
+ <96b1ac42dccbfbb5dd17210e6767ca2544558390.camel@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190725170050.GA27348@nazgul.tnic>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <96b1ac42dccbfbb5dd17210e6767ca2544558390.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 07:00:50PM +0200, Borislav Petkov wrote:
-> On Thu, Jul 25, 2019 at 12:17:35PM -0400, Mauro Carvalho Chehab wrote:
-> > Tony will start to officially maintain EDAC trees. Also, we'll
-> > be using a single tree for the EDAC development.
+On Thu, Jul 25, 2019 at 09:16:21AM -0700, Alexander Duyck wrote:
+> On Thu, 2019-07-25 at 11:16 -0400, Michael S. Tsirkin wrote:
+> > On Thu, Jul 25, 2019 at 08:05:30AM -0700, Alexander Duyck wrote:
+> > > On Thu, 2019-07-25 at 07:35 -0400, Nitesh Narayan Lal wrote:
+> > > > On 7/24/19 6:03 PM, Alexander Duyck wrote:
+> > > > > On Wed, 2019-07-24 at 17:38 -0400, Michael S. Tsirkin wrote:
+> > > > > > On Wed, Jul 24, 2019 at 10:12:10AM -0700, Alexander Duyck wrote:
+> > > > > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > > > > 
+> > > > > > > Add support for what I am referring to as "bubble hinting". Basically the
+> > > > > > > idea is to function very similar to how the balloon works in that we
+> > > > > > > basically end up madvising the page as not being used. However we don't
+> > > > > > > really need to bother with any deflate type logic since the page will be
+> > > > > > > faulted back into the guest when it is read or written to.
+> > > > > > > 
+> > > > > > > This is meant to be a simplification of the existing balloon interface
+> > > > > > > to use for providing hints to what memory needs to be freed. I am assuming
+> > > > > > > this is safe to do as the deflate logic does not actually appear to do very
+> > > > > > > much other than tracking what subpages have been released and which ones
+> > > > > > > haven't.
+> > > > > > > 
+> > > > > > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > > > BTW I wonder about migration here.  When we migrate we lose all hints
+> > > > > > right?  Well destination could be smarter, detect that page is full of
+> > > > > > 0s and just map a zero page. Then we don't need a hint as such - but I
+> > > > > > don't think it's done like that ATM.
+> > > > > I was wondering about that a bit myself. If you migrate with a balloon
+> > > > > active what currently happens with the pages in the balloon? Do you
+> > > > > actually migrate them, or do you ignore them and just assume a zero page?
+> > > > > I'm just reusing the ram_block_discard_range logic that was being used for
+> > > > > the balloon inflation so I would assume the behavior would be the same.
+> > > > I agree, however, I think it is worth investigating to see if enabling hinting
+> > > > adds some sort of overhead specifically in this kind of scenarios. What do you
+> > > > think?
+> > > 
+> > > I suspect that the hinting/reporting would probably improve migration
+> > > times based on the fact that from the sound of things it would just be
+> > > migrated as a zero page.
+> > > 
+> > > I don't have a good setup for testing migration though and I am not that
+> > > familiar with trying to do a live migration. That is one of the reasons
+> > > why I didn't want to stray too far from the existing balloon code as that
+> > > has already been tested with migration so I would assume as long as I am
+> > > doing almost the exact same thing to hint the pages away it should behave
+> > > exactly the same.
+> > > 
+> > > > > > I also wonder about interaction with deflate.  ATM deflate will add
+> > > > > > pages to the free list, then balloon will come right back and report
+> > > > > > them as free.
+> > > > > I don't know how likely it is that somebody who is getting the free page
+> > > > > reporting is likely to want to also use the balloon to take up memory.
+> > > > I think it is possible. There are two possibilities:
+> > > > 1. User has a workload running, which is allocating and freeing the pages and at
+> > > > the same time, user deflates.
+> > > > If these new pages get used by this workload, we don't have to worry as you are
+> > > > already handling that by not hinting the free pages immediately.
+> > > > 2. Guest is idle and the user adds up some memory, for this situation what you
+> > > > have explained below does seems reasonable.
+> > > 
+> > > Us hinting on pages that are freed up via deflate wouldn't be too big of a
+> > > deal. I would think that is something we could look at addressing as more
+> > > of a follow-on if we ever needed to since it would just add more
+> > > complexity.
+> > > 
+> > > Really what I would like to see is the balloon itself get updated first to
+> > > perhaps work with variable sized pages first so that we could then have
+> > > pages come directly out of the balloon and go back into the freelist as
+> > > hinted, or visa-versa where hinted pages could be pulled directly into the
+> > > balloon without needing to notify the host.
 > > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> > ---
-> >  MAINTAINERS | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 783569e3c4b4..7c22905b5aba 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -5781,10 +5781,10 @@ F:	drivers/edac/thunderx_edac*
-> >  EDAC-CORE
-> >  M:	Borislav Petkov <bp@alien8.de>
-> >  M:	Mauro Carvalho Chehab <mchehab@kernel.org>
-> > +M:	Tony Luck <tony.luck@intel.com>
-> >  R:	James Morse <james.morse@arm.com>
-> >  L:	linux-edac@vger.kernel.org
-> > -T:	git git://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git for-next
-> > -T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-edac.git linux_next
-> > +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac-for-next
-> >  S:	Supported
-> >  F:	Documentation/admin-guide/ras.rst
-> >  F:	Documentation/driver-api/edac.rst
-> > -- 
+> > Right, I agree. At this point the main thing I worry about is that
+> > the interfaces only support one reporter, since a page flag is used.
+> > So if we ever rewrite existing hinting to use the new mm
+> > infrastructure then we can't e.g. enable both types of hinting.
 > 
-> Acked-by: Borislav Petkov <bp@suse.de>
+> Does it make sense to have multiple types of hinting active at the same
+> time though? That kind of seems wasteful to me. Ideally we should be able
+> to provide the hints and have them feed whatever is supposed to be using
+> them. So for example I could probably look at also clearing the bitmaps
+> when migration is in process.
 > 
+> Also, I am wonder if the free page hints would be redundant with the form
+> of page hinting/reporting that I have since we should be migrating a much
+> smaller footprint anyway if the pages have been madvised away before we
+> even start the migration.
 
-Acked-by: Tony Luck <tony.luck@intel.com>
+Good points.
 
--Tony
+> > FWIW Nitesh's RFC does not have this limitation.
+> 
+> Yes, but there are also limitations to his approach. For example the fact
+> that the bitmap it maintains is back to being a hint rather then being
+> very exact. As a result you could end up walking the bitmap for a while
+> clearing bits without ever finding a free page.
+
+For sure.
+
+> > I intend to think about this over the weekend.
+> 
+> Sounds good. I'll try to get the stuff you have pointed out so far
+> addressed and hopefully have v3 ready to go next week.
+> 
+> Thanks.
+> 
+> - Alex
