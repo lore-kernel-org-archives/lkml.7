@@ -2,208 +2,182 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070A4C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD781C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F4F2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858D62190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 13:27:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l61Pt9f2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbfGYN05 (ORCPT
+        id S1728599AbfGYN10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 09:26:57 -0400
-Received: from mail-qk1-f177.google.com ([209.85.222.177]:33811 "EHLO
-        mail-qk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbfGYN04 (ORCPT
+        Thu, 25 Jul 2019 09:27:26 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36224 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbfGYN10 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:26:56 -0400
-Received: by mail-qk1-f177.google.com with SMTP id t8so36387321qkt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 06:26:56 -0700 (PDT)
+        Thu, 25 Jul 2019 09:27:26 -0400
+Received: by mail-lf1-f68.google.com with SMTP id q26so34570026lfc.3;
+        Thu, 25 Jul 2019 06:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=WXiBayTqTdkKTq09rjY6tipJqJtsUSTf9qvOhgtptXE=;
+        b=l61Pt9f2xC+aDtypRt0x2wON8TQwif0kEQaB9wG4yMNYHVMH1B56FKjgcRsrZ0faFe
+         3GPlEaprv7OncIBA5s1Q6ImyRuZk3GXPShB9sE1juXK0z8yUwR8pPeC5l1WP9dWUPafi
+         Ed/34bGH+qMk1dUj3ViF+UCHnhe6jLJ/mA5UOdxt4r+fMOWRXX6s8EhNBRJBisWWy3j0
+         +pbOkjPCzOqgohgd3/NWnJ7UluS8cZQ0/Vkrz6RUUz4YOgdztrfBgkGGz91I6PW/0o1d
+         DIuFSkZ2HBg61DLk/SG1shV9emIytsU40xnOcaY8vMyvbw+tB6Cy97HfuGXZRpvtsz5T
+         BZLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=KjjBu7BMfk8xmpq06aF6LWsxATJ7zX54K3XmB9nU8ns=;
-        b=lZzuUWqmsiIbpirdIT3keFKX8b83L+ju5wWcQZ8xcBBzi/9hVIkoQX3Z9T2TDtJoVd
-         fqFjEUUR4QfWKE6B/YDc9zAW6pqHDKibO9MfSVQg0JZE3HoUnwTKYiGlhgyNzklSov82
-         bTGXEyNWMXgFvYoz3zBHMQEx5W/NLupEDTMI0dViNPE7By62oStoF8Z/OeqB4g+fVvR2
-         6PWq1AosjMQ6EK2FFgy0E9mSrvGVM6QwVcGteyMpeQSQo+lRDEvyaZbN1lj6vmHkWcqF
-         k97mO3N8n0RZiqzICX+MA4Qq2ae/yY5MuJ+PrRJdhF64Mqcfu8PzuSpTjE1LZTkz2edX
-         XYlQ==
-X-Gm-Message-State: APjAAAXx/0triidT0a3XZs9VkUwzLLSJQkq6dHalRYn6NLx+wc6gM7dF
-        GrDXbQagJj/yY2akjl+37FaJzA==
-X-Google-Smtp-Source: APXvYqxOAsHTrNRpwq6vcJ7tGMHpKurQRE42kOps0/crxS2PgQFMsqddCIqZtIPX1c6ngHTE5rQAdg==
-X-Received: by 2002:a05:620a:1447:: with SMTP id i7mr59552516qkl.254.1564061215681;
-        Thu, 25 Jul 2019 06:26:55 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id 47sm29804600qtw.90.2019.07.25.06.26.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 06:26:54 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 09:26:46 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
-        keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-Subject: Re: WARNING in __mmdrop
-Message-ID: <20190725092332-mutt-send-email-mst@kernel.org>
-References: <20190723032024-mutt-send-email-mst@kernel.org>
- <1d14de4d-0133-1614-9f64-3ded381de04e@redhat.com>
- <20190723035725-mutt-send-email-mst@kernel.org>
- <3f4178f1-0d71-e032-0f1f-802428ceca59@redhat.com>
- <20190723051828-mutt-send-email-mst@kernel.org>
- <caff362a-e208-3468-3688-63e1d093a9d3@redhat.com>
- <20190725012149-mutt-send-email-mst@kernel.org>
- <55e8930c-2695-365f-a07b-3ad169654d28@redhat.com>
- <20190725042651-mutt-send-email-mst@kernel.org>
- <84bb2e31-0606-adff-cf2a-e1878225a847@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=WXiBayTqTdkKTq09rjY6tipJqJtsUSTf9qvOhgtptXE=;
+        b=sXMbfjpwSr+TrNmHbAdSa6NqU5I1QHwYP9cA7FojopfxGpogvlPlD06yRgGWwb7x0x
+         i0+vE87qgXvUKlsXvlkE58AhH/TKjnD+fbau/3YVSdxrM0nUnrBDp0likQXP7HcxkMhM
+         qLsf2J3MK5BbG1NW0c2HmMgBrQN2SSoaWgZxcYiNEtoLKm7mEqeNUACZHDHmNKiS43an
+         O4tLUa+uak1hKFTzlqBePYjjXZXJt6LjRrw6AS2DogxNteVwDzcwWaX5FEhYt/QY6/6d
+         lxJXkIOhP4gTogtYu8/zk9eWUqAuMTEqhb/s3uH2ry/xzL0QcQo/WnpXYF5h8hp9i3E7
+         JyVw==
+X-Gm-Message-State: APjAAAWKmaRl6FgK7Vp/9xEcZw1LQoa6+2NXsIFKk0lxhyXeJIYXp2ib
+        PX0dDW3qnJeG93NAcLmxCA8htcVmO4yRA4CK6r0u+5tFWW4=
+X-Google-Smtp-Source: APXvYqw4Ed1+h8H7qf66p3bgbVK3gmUySWTmYzoU/O47r6Wa7RjMhhccNUNPE6lXOnU4XDyXX1GQMhICP//rsdR1lZc=
+X-Received: by 2002:ac2:47e8:: with SMTP id b8mr25974255lfp.84.1564059772302;
+ Thu, 25 Jul 2019 06:02:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <84bb2e31-0606-adff-cf2a-e1878225a847@redhat.com>
+References: <CGME20190723122024eucas1p1ff060d072132bfbc8a8a1d10fa1f90f8@eucas1p1.samsung.com>
+ <20190723122016.30279-1-a.swigon@partner.samsung.com> <20190723122016.30279-4-a.swigon@partner.samsung.com>
+ <CAGTfZH09n9UOLMwNrCvcdeRCHYFO4TiB-YG2rMVuxA4bxuLCVw@mail.gmail.com>
+In-Reply-To: <CAGTfZH09n9UOLMwNrCvcdeRCHYFO4TiB-YG2rMVuxA4bxuLCVw@mail.gmail.com>
+Reply-To: cwchoi00@gmail.com
+From:   Chanwoo Choi <cwchoi00@gmail.com>
+Date:   Thu, 25 Jul 2019 22:02:14 +0900
+Message-ID: <CAGTfZH2pPh5VVQuHV1d_8Wj1N3TPAh6w4KUkQtssBhEdPgQiuA@mail.gmail.com>
+Subject: Re: [RFC PATCH 03/11] devfreq: exynos-bus: Change goto-based logic to
+ if-else logic
+To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        georgi.djakov@linaro.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 09:21:22PM +0800, Jason Wang wrote:
-> 
-> On 2019/7/25 下午4:28, Michael S. Tsirkin wrote:
-> > On Thu, Jul 25, 2019 at 03:43:41PM +0800, Jason Wang wrote:
-> > > On 2019/7/25 下午1:52, Michael S. Tsirkin wrote:
-> > > > On Tue, Jul 23, 2019 at 09:31:35PM +0800, Jason Wang wrote:
-> > > > > On 2019/7/23 下午5:26, Michael S. Tsirkin wrote:
-> > > > > > On Tue, Jul 23, 2019 at 04:49:01PM +0800, Jason Wang wrote:
-> > > > > > > On 2019/7/23 下午4:10, Michael S. Tsirkin wrote:
-> > > > > > > > On Tue, Jul 23, 2019 at 03:53:06PM +0800, Jason Wang wrote:
-> > > > > > > > > On 2019/7/23 下午3:23, Michael S. Tsirkin wrote:
-> > > > > > > > > > > > Really let's just use kfree_rcu. It's way cleaner: fire and forget.
-> > > > > > > > > > > Looks not, you need rate limit the fire as you've figured out?
-> > > > > > > > > > See the discussion that followed. Basically no, it's good enough
-> > > > > > > > > > already and is only going to be better.
-> > > > > > > > > > 
-> > > > > > > > > > > And in fact,
-> > > > > > > > > > > the synchronization is not even needed, does it help if I leave a comment to
-> > > > > > > > > > > explain?
-> > > > > > > > > > Let's try to figure it out in the mail first. I'm pretty sure the
-> > > > > > > > > > current logic is wrong.
-> > > > > > > > > Here is what the code what to achieve:
-> > > > > > > > > 
-> > > > > > > > > - The map was protected by RCU
-> > > > > > > > > 
-> > > > > > > > > - Writers are: MMU notifier invalidation callbacks, file operations (ioctls
-> > > > > > > > > etc), meta_prefetch (datapath)
-> > > > > > > > > 
-> > > > > > > > > - Readers are: memory accessor
-> > > > > > > > > 
-> > > > > > > > > Writer are synchronized through mmu_lock. RCU is used to synchronized
-> > > > > > > > > between writers and readers.
-> > > > > > > > > 
-> > > > > > > > > The synchronize_rcu() in vhost_reset_vq_maps() was used to synchronized it
-> > > > > > > > > with readers (memory accessors) in the path of file operations. But in this
-> > > > > > > > > case, vq->mutex was already held, this means it has been serialized with
-> > > > > > > > > memory accessor. That's why I think it could be removed safely.
-> > > > > > > > > 
-> > > > > > > > > Anything I miss here?
-> > > > > > > > > 
-> > > > > > > > So invalidate callbacks need to reset the map, and they do
-> > > > > > > > not have vq mutex. How can they do this and free
-> > > > > > > > the map safely? They need synchronize_rcu or kfree_rcu right?
-> > > > > > > Invalidation callbacks need but file operations (e.g ioctl) not.
-> > > > > > > 
-> > > > > > > 
-> > > > > > > > And I worry somewhat that synchronize_rcu in an MMU notifier
-> > > > > > > > is a problem, MMU notifiers are supposed to be quick:
-> > > > > > > Looks not, since it can allow to be blocked and lots of driver depends on
-> > > > > > > this. (E.g mmu_notifier_range_blockable()).
-> > > > > > Right, they can block. So why don't we take a VQ mutex and be
-> > > > > > done with it then? No RCU tricks.
-> > > > > This is how I want to go with RFC and V1. But I end up with deadlock between
-> > > > > vq locks and some MM internal locks. So I decide to use RCU which is 100%
-> > > > > under the control of vhost.
-> > > > > 
-> > > > > Thanks
-> > > > And I guess the deadlock is because GUP is taking mmu locks which are
-> > > > taken on mmu notifier path, right?
-> > > 
-> > > Yes, but it's not the only lock. I don't remember the details, but I can
-> > > confirm I meet issues with one or two other locks.
-> > > 
-> > > 
-> > > >     How about we add a seqlock and take
-> > > > that in invalidate callbacks?  We can then drop the VQ lock before GUP,
-> > > > and take it again immediately after.
-> > > > 
-> > > > something like
-> > > > 	if (!vq_meta_mapped(vq)) {
-> > > > 		vq_meta_setup(&uaddrs);
-> > > > 		mutex_unlock(vq->mutex)
-> > > > 		vq_meta_map(&uaddrs);
-> > > 
-> > > The problem is the vq address could be changed at this time.
-> > > 
-> > > 
-> > > > 		mutex_lock(vq->mutex)
-> > > > 
-> > > > 		/* recheck both sock->private_data and seqlock count. */
-> > > > 		if changed - bail out
-> > > > 	}
-> > > > 
-> > > > And also requires that VQ uaddrs is defined like this:
-> > > > - writers must have both vq mutex and dev mutex
-> > > > - readers must have either vq mutex or dev mutex
-> > > > 
-> > > > 
-> > > > That's a big change though. For now, how about switching to a per-vq SRCU?
-> > > > That is only a little bit more expensive than RCU, and we
-> > > > can use synchronize_srcu_expedited.
-> > > > 
-> > > Consider we switch to use kfree_rcu(), what's the advantage of per-vq SRCU?
-> > > 
-> > > Thanks
-> > 
-> > I thought we established that notifiers must wait for
-> > all readers to finish before they mark page dirty, to
-> > prevent page from becoming dirty after address
-> > has been invalidated.
-> > Right?
-> 
-> 
-> Exactly, and that's the reason actually I use synchronize_rcu() there.
-> 
-> So the concern is still the possible synchronize_expedited()?
+2019=EB=85=84 7=EC=9B=94 25=EC=9D=BC (=EB=AA=A9) =EC=98=A4=ED=9B=84 9:56, C=
+hanwoo Choi <cwchoi00@gmail.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> 2019=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EC=88=98) =EC=98=A4=EC=A0=84 8:08,=
+ Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>=EB=8B=98=EC=9D=B4 =
+=EC=9E=91=EC=84=B1:
+> >
+> > This patch improves code readability by changing the following construc=
+t:
+> >
+> > >    if (cond)
+> > >        goto passive;
+> > >    foo();
+> > >    goto out;
+> > >passive:
+> > >    bar();
+> > >out:
+> >
+> > into this:
+> >
+> > >    if (cond)
+> > >        bar();
+> > >    else
+> > >        foo();
+> >
+> > Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>
+> > ---
+> >  drivers/devfreq/exynos-bus.c | 24 +++++++++---------------
+> >  1 file changed, 9 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.=
+c
+> > index cf6f6cbd0f55..4bb83b945bf7 100644
+> > --- a/drivers/devfreq/exynos-bus.c
+> > +++ b/drivers/devfreq/exynos-bus.c
+> > @@ -505,25 +505,19 @@ static int exynos_bus_probe(struct platform_devic=
+e *pdev)
+> >         node =3D of_parse_phandle(dev->of_node, "devfreq", 0);
+> >         if (node) {
+> >                 of_node_put(node);
+> > -               goto passive;
+> > +               ret =3D exynos_bus_profile_init_passive(bus, profile);
+> > +               if (ret < 0)
+> > +                       goto err;
+> >         } else {
+> >                 ret =3D exynos_bus_parent_parse_of(np, bus);
+> > +               if (ret < 0)
+> > +                       goto err;
+> > +
+> > +               ret =3D exynos_bus_profile_init(bus, profile);
+> > +               if (ret < 0)
+> > +                       goto err;
+> >         }
+> >
+> > -       if (ret < 0)
+> > -               goto err;
+> > -
+> > -       ret =3D exynos_bus_profile_init(bus, profile);
+> > -       if (ret < 0)
+> > -               goto err;
+> > -
+> > -       goto out;
+> > -passive:
+> > -       ret =3D exynos_bus_profile_init_passive(bus, profile);
+> > -       if (ret < 0)
+> > -               goto err;
+> > -
+> > -out:
+> >         max_state =3D bus->devfreq->profile->max_state;
+> >         min_freq =3D (bus->devfreq->profile->freq_table[0] / 1000);
+> >         max_freq =3D (bus->devfreq->profile->freq_table[max_state - 1] =
+/ 1000);
+> > --
+> > 2.17.1
+> >
+>
+> It seems more simple than before.
+> Instead, please merge patch1/2/3 to one patch. and drop the patch4.
+
+But, I think that you better to drop the cleanup patch from this series
+because the series[1] touch the exynos-bus.c driver for coupled regulator.
+[1] https://www.spinics.net/lists/arm-kernel/msg741971.html
+
+I recommend that you send the cleanup patch with my comment
+either after reviewing the Kamil's patch[1] or rebase this series base
+on patch[1].
+
+>
+> --
+> Best Regards,
+> Chanwoo Choi
 
 
-I think synchronize_srcu_expedited.
 
-synchronize_expedited sends lots of IPI and is bad for realtime VMs.
-
-> Can I do this
-> on through another series on top of the incoming V2?
-> 
-> Thanks
-> 
-
-The question is this: is this still a gain if we switch to the
-more expensive srcu? If yes then we can keep the feature on,
-if not we'll put it off until next release and think
-of better solutions. rcu->srcu is just a find and replace,
-don't see why we need to defer that. can be a separate patch
-for sure, but we need to know how well it works.
-
--- 
-MST
+--=20
+Best Regards,
+Chanwoo Choi
