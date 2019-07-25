@@ -2,69 +2,80 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 218B1C76190
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D653BC76190
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF2B222ADA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17B821850
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 04:24:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfGYENi (ORCPT
+        id S1728383AbfGYEYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 00:13:38 -0400
-Received: from hurricane.the-brannons.com ([71.19.155.94]:33446 "EHLO
-        hurricane.the-brannons.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725774AbfGYENi (ORCPT
+        Thu, 25 Jul 2019 00:24:01 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:55128 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfGYEYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 00:13:38 -0400
-X-Greylist: delayed 569 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Jul 2019 00:13:38 EDT
-Received: from localhost (unknown [IPv6:2602:61:7344:8d00::a00b:8ad9])
-        by hurricane.the-brannons.com (Postfix) with ESMTPSA id F151A77888;
-        Wed, 24 Jul 2019 21:04:08 -0700 (PDT)
-From:   Chris Brannon <chris@the-brannons.com>
-To:     Gregory Nowak <greg@gregn.net>
-Cc:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        speakup@linux-speakup.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Okash Khawaja <okash.khawaja@gmail.com>,
-        devel@driverdev.osuosl.org, Kirk Reiser <kirk@reisers.ca>,
-        Simon Dickson <simonhdickson@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Christopher Brannon <chris@the-brannons.com>
-Subject: Re: [HELP REQUESTED from the community] Was: Staging status of speakup
-References: <20190315130035.6a8f16e9@narunkot>
-        <20190316031831.GA2499@kroah.com> <20190706200857.22918345@narunkot>
-        <20190707065710.GA5560@kroah.com> <20190712083819.GA8862@kroah.com>
-        <20190712092319.wmke4i7zqzr26tly@function>
-        <20190713004623.GA9159@gregn.net> <20190725035352.GA7717@gregn.net>
-Date:   Wed, 24 Jul 2019 21:04:07 -0700
-In-Reply-To: <20190725035352.GA7717@gregn.net> (Gregory Nowak's message of
-        "Wed, 24 Jul 2019 20:53:52 -0700")
-Message-ID: <875znqhia0.fsf@cmbmachine.messageid.invalid>
+        Thu, 25 Jul 2019 00:24:01 -0400
+Received: by mail-io1-f71.google.com with SMTP id n8so53452226ioo.21
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 21:24:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=4ykhyuiBMEbxqBLsBHdyDvPAOtbB9E2k09FumAP9piY=;
+        b=SBlvJhUxv0QbAEkvNq9y1ylIdy2/eveBjk/2qyKIkMmJlI1HMUPy4v5DmoNmeuxM1g
+         U0/0bDM9wT6jb7xTcNwKPu5hmOLr/wzf1p4HqEu2UnBMJiDr4+KtaBBabQIp9dx8x6qy
+         OjtY3YaZ+3IkFa8HFkOwt1ogXRyCqBWMFiswXoq96eXkhWKCD2TMNpqve3/LZe433meT
+         71GmZYJkgZuYEe4IdhHnY5KtCZVE5oSifHnUb2x6bWca94ZbxUDsGe7uFKdV/CpSGWna
+         v6b+PY0VUXv/NyAzkYuO7ZcBmInRfni89UA9iDlj+qxJ56mKXceMvWA+oTnJ7JjKCySO
+         txiA==
+X-Gm-Message-State: APjAAAXW0IiaJTTjo6eFch6ab6ge3ps949dRiHJmVUpyfIbDJfCPOZnB
+        j/8nJXBQRYkLhUcIL3vw7eyatq3l8+gME4ZbH5SjDtkOwLVw
+X-Google-Smtp-Source: APXvYqzisP9svwAdUk2M7vpsY1nwZNJ9MmjI4tHYq0ELgBH3s/kK/fffQN/IDt9aWlEkMTECMVVjYMhh99FscjT9fYsgt99Ef1Bm
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Received: by 2002:a5d:94d0:: with SMTP id y16mr43188529ior.123.1564028640346;
+ Wed, 24 Jul 2019 21:24:00 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 21:24:00 -0700
+In-Reply-To: <0000000000004a3a63058e722b94@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000086c732058e79cb59@google.com>
+Subject: Re: WARNING in ovl_real_fdget_meta
+From:   syzbot <syzbot+032bc63605089a199d30@syzkaller.appspotmail.com>
+To:     amir73il@gmail.com, bfields@fieldses.org, jlayton@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-unionfs@vger.kernel.org, miklos@szeredi.hu,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gregory Nowak <greg@gregn.net> writes:
+syzbot has bisected this bug to:
 
-> keymap
-> I believe this is the currently active kernel keymap. I'm not sure of
-> the format, probably what dumpkeys(1) and showkey(1) use. Echoing
-> different values here should allow for remapping speakup's review
-> commands besides remapping the keyboard as a whole.
+commit 387e3746d01c34457d6a73688acd90428725070b
+Author: Amir Goldstein <amir73il@gmail.com>
+Date:   Fri Jun 7 14:24:38 2019 +0000
 
-AFAIK the Speakup keymap is just for remapping keys to Speakup
-functions.  It's a binary format, not related to dumpkeys etc.  You need
-a special program to compile a textual keymap into something that can be
-loaded into /sys/accessibility/speakup/keymap.  I may have source for
-that lying around here somewhere.  This is "here there be dragons"
-territory.  I think the only specification of the format is in the
-source code.
+     locks: eliminate false positive conflicts for write lease
 
--- Chris
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15a79594600000
+start commit:   c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=17a79594600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13a79594600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3c8985c08e1f9727
+dashboard link: https://syzkaller.appspot.com/bug?extid=032bc63605089a199d30
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15855334600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17fcc4c8600000
+
+Reported-by: syzbot+032bc63605089a199d30@syzkaller.appspotmail.com
+Fixes: 387e3746d01c ("locks: eliminate false positive conflicts for write  
+lease")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
