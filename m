@@ -2,136 +2,168 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAE1C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AD2C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD71521734
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F1621734
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:57:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D7jepyaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726178AbfGZGyA (ORCPT
+        id S1726103AbfGZG5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 02:54:00 -0400
-Received: from mga09.intel.com ([134.134.136.24]:13215 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725878AbfGZGyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 02:54:00 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 23:53:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,309,1559545200"; 
-   d="scan'208";a="170535298"
-Received: from gliakhov-mobl2.ger.corp.intel.com (HELO ubuntu) ([10.249.35.244])
-  by fmsmga008.fm.intel.com with ESMTP; 25 Jul 2019 23:53:56 -0700
-Date:   Fri, 26 Jul 2019 00:23:02 +0200
-From:   Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [RFC PATCH 09/40] soundwire: cadence_master: fix
- usage of CONFIG_UPDATE
-Message-ID: <20190725222302.GB16003@ubuntu>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-10-pierre-louis.bossart@linux.intel.com>
+        Fri, 26 Jul 2019 02:57:44 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42932 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfGZG5o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 02:57:44 -0400
+Received: by mail-pl1-f194.google.com with SMTP id ay6so24424147plb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 23:57:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bzQNKaZKw8eToFqDsQXbuB2yvZDO2AGHnxOmbSadekg=;
+        b=D7jepyajIBROtTtVBRHO30NiYXAeVmjGCJbHSHXTuzjnSS8FsQ3UuvfORc1nANBoCV
+         4CKKsTIM5dtsEO607omtllGtCE8qOnJmQCgTbR1fYXDggum829aLmyTii5PkS6fd34od
+         T2cNSa8CjGv9SEDMGaCU33ritC8YGOBNMhBoWe3ZRvwB41GWr9XjgqkBMvZ0QDrcWs4L
+         irdsOPL2P9Fg1+oEAAw1PUVDBjx6voLdFWjdrEsONJ55F1XS6VlJs1SEpAek+1so9BNd
+         NTazoekjIgNqSPfCw/ZOVTRebwGFq8baCu0Xq8yDDvZLf6hFmjfiL7BxVK25Jti7ffq1
+         bx+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bzQNKaZKw8eToFqDsQXbuB2yvZDO2AGHnxOmbSadekg=;
+        b=Mt6VSxy+aCqEfjCwqygBzgY2jv54Z0soLjPYFlHrtmT4wydD3SFCMb1kQAQHChvzCA
+         tzQmEOJ6dH97sJR8U4DGW2ix/i1QpszmJ9ilfXd71bgaOAqhuV5F4kB24TG6nB//+3KP
+         nOji1GTCSvrZ4kegtkqNh6npsr8jFABF2TcQobiqiV75/1yIDssfxPvYkugKKRMztJv8
+         XDNHofMIkdn6MhyyiWq3E+0GXeu+KtRvQK6hQyVnzOzP/w7Yrikw6BRya03veMv2oPbg
+         6t7cpvRsywg83Go+V195gHK0db6ziS4Rha7QeReOYiWuAOddXtPvFMkdSBXuiy6Y+dYN
+         eLTg==
+X-Gm-Message-State: APjAAAVdb2IeupSpACqOG0oDgUX2JC0mQj0trFUrSeMAgZ7TJCONcUQ/
+        gm51JGhpsT5na0BV/CaG3qSVFA==
+X-Google-Smtp-Source: APXvYqzzo+ODsFIczIG4j/cy5XNrUcZj88VBcx5YjQ+nwxEcwhFoGe3xWYa2zhp/yiPSVfhcKjKEfw==
+X-Received: by 2002:a17:902:ff11:: with SMTP id f17mr96645555plj.121.1564124263268;
+        Thu, 25 Jul 2019 23:57:43 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id o24sm7949706pgn.93.2019.07.25.23.57.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 23:57:41 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 12:27:39 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "'Rafael J. Wysocki'" <rafael@kernel.org>,
+        'Rafael Wysocki' <rjw@rjwysocki.net>,
+        'Ingo Molnar' <mingo@redhat.com>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        'Linux PM' <linux-pm@vger.kernel.org>,
+        'Vincent Guittot' <vincent.guittot@linaro.org>,
+        'Joel Fernandes' <joel@joelfernandes.org>,
+        "'v4 . 18+'" <stable@vger.kernel.org>,
+        'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: schedutil: Don't skip freq update when limits
+ change
+Message-ID: <20190726065739.xjvyvqpkb3o6m4ty@vireshk-i7>
+References: <1563431200-3042-1-git-send-email-dsmythies@telus.net>
+ <8091ef83f264feb2feaa827fbeefe08348bcd05d.1563778071.git.viresh.kumar@linaro.org>
+ <001201d54125$a6a82350$f3f869f0$@net>
+ <20190723091551.nchopfpqlmdmzvge@vireshk-i7>
+ <CAJZ5v0ji+ksapJ4kc2m5UM_O+AShAvJWmYhTQHiXiHnpTq+xRg@mail.gmail.com>
+ <20190724114327.apmx35c7a4tv3qt5@vireshk-i7>
+ <000c01d542fc$703ff850$50bfe8f0$@net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190725234032.21152-10-pierre-louis.bossart@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <000c01d542fc$703ff850$50bfe8f0$@net>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 06:40:01PM -0500, Pierre-Louis Bossart wrote:
-> Per the hardware documentation, all changes to MCP_CONFIG,
-> MCP_CONTROL, MCP_CMDCTRL and MCP_PHYCTRL need to be validated with a
-> self-clearing write to MCP_CONFIG_UPDATE.
+On 25-07-19, 08:20, Doug Smythies wrote:
+> I tried the patch ("patch2"). It did not fix the issue.
 > 
-> For some reason, the existing code only does this write to
-> CONFIG_UPDATE when enabling interrupts. Add a helper and do the update
-> when the CONFIG is changed.
+> To summarize, all kernel 5.2 based, all intel_cpufreq driver and schedutil governor:
 > 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->  drivers/soundwire/cadence_master.c | 29 +++++++++++++++++++++--------
->  1 file changed, 21 insertions(+), 8 deletions(-)
+> Test: Does a busy system respond to maximum CPU clock frequency reduction?
 > 
-> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
-> index 9f611a1fff0a..eb46cf651d62 100644
-> --- a/drivers/soundwire/cadence_master.c
-> +++ b/drivers/soundwire/cadence_master.c
-> @@ -224,6 +224,22 @@ static int cdns_clear_bit(struct sdw_cdns *cdns, int offset, u32 value)
->  	return -EAGAIN;
->  }
->  
-> +/*
-> + * all changes to the MCP_CONFIG, MCP_CONTROL, MCP_CMDCTRL and MCP_PHYCTRL
-> + * need to be confirmed with a write to MCP_CONFIG_UPDATE
-> + */
-> +static int cdns_update_config(struct sdw_cdns *cdns)
-> +{
-> +	int ret;
-> +
-> +	ret = cdns_clear_bit(cdns, CDNS_MCP_CONFIG_UPDATE,
-> +			     CDNS_MCP_CONFIG_UPDATE_BIT);
-> +	if (ret < 0)
-> +		dev_err(cdns->dev, "Config update timedout\n");
-> +
-> +	return ret;
-> +}
-> +
->  /*
->   * debugfs
->   */
-> @@ -758,15 +774,9 @@ static int _cdns_enable_interrupt(struct sdw_cdns *cdns)
->   */
->  int sdw_cdns_enable_interrupt(struct sdw_cdns *cdns)
->  {
-> -	int ret;
-> -
->  	_cdns_enable_interrupt(cdns);
-> -	ret = cdns_clear_bit(cdns, CDNS_MCP_CONFIG_UPDATE,
-> -			     CDNS_MCP_CONFIG_UPDATE_BIT);
-> -	if (ret < 0)
-> -		dev_err(cdns->dev, "Config update timedout\n");
->  
-> -	return ret;
-> +	return 0;
->  }
->  EXPORT_SYMBOL(sdw_cdns_enable_interrupt);
->  
-> @@ -943,7 +953,10 @@ int sdw_cdns_init(struct sdw_cdns *cdns)
->  
->  	cdns_writel(cdns, CDNS_MCP_CONFIG, val);
->  
-> -	return 0;
-> +	/* commit changes */
-> +	ret = cdns_update_config(cdns);
-> +
-> +	return ret;
+> stock, unaltered: No.
+> revert ecd2884291261e3fddbc7651ee11a20d596bb514: Yes
+> viresh patch: No.
+> fast_switch edit: No.
+> viresh patch2: No.
 
-+	return cdns_update_config(cdns);
+Hmm, so I tried to reproduce your setup on my ARM board.
+- booted only with CPU0 so I hit the sugov_update_single() routine
+- And applied below diff to make CPU look permanently busy:
 
-Thanks
-Guennadi
+-------------------------8<-------------------------
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 2f382b0959e5..afb47490e5dc 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -121,6 +121,7 @@ static void sugov_fast_switch(struct sugov_policy *sg_policy, u64 time,
+        if (!sugov_update_next_freq(sg_policy, time, next_freq))
+                return;
+ 
++       pr_info("%s: %d: %u\n", __func__, __LINE__, freq);
+        next_freq = cpufreq_driver_fast_switch(policy, next_freq);
+        if (!next_freq)
+                return;
+@@ -424,14 +425,10 @@ static unsigned long sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
+ #ifdef CONFIG_NO_HZ_COMMON
+ static bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu)
+ {
+-       unsigned long idle_calls = tick_nohz_get_idle_calls_cpu(sg_cpu->cpu);
+-       bool ret = idle_calls == sg_cpu->saved_idle_calls;
+-
+-       sg_cpu->saved_idle_calls = idle_calls;
+-       return ret;
++       return true;
+ }
+ #else
+-static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return false; }
++static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return true; }
+ #endif /* CONFIG_NO_HZ_COMMON */
+ 
+ /*
+@@ -565,6 +562,7 @@ static void sugov_work(struct kthread_work *work)
+        sg_policy->work_in_progress = false;
+        raw_spin_unlock_irqrestore(&sg_policy->update_lock, flags);
+ 
++       pr_info("%s: %d: %u\n", __func__, __LINE__, freq);
+        mutex_lock(&sg_policy->work_lock);
+        __cpufreq_driver_target(sg_policy->policy, freq, CPUFREQ_RELATION_L);
+        mutex_unlock(&sg_policy->work_lock);
 
->  }
->  EXPORT_SYMBOL(sdw_cdns_init);
->  
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+-------------------------8<-------------------------
+
+Now, the frequency never gets down and so gets set to the maximum
+possible after a bit.
+
+- Then I did:
+
+echo <any-low-freq-value> > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+
+Without my patch applied:
+        The print never gets printed and so frequency doesn't go down.
+
+With my patch applied:
+        The print gets printed immediately from sugov_work() and so
+        the frequency reduces.
+
+Can you try with this diff along with my Patch2 ? I suspect there may
+be something wrong with the intel_cpufreq driver as the patch fixes
+the only path we have in the schedutil governor which takes busyness
+of a CPU into account.
+
+-- 
+viresh
