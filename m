@@ -2,219 +2,92 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7762DC76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFB7C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5056722CB9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A9D2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:21:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dcn0TQ5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfGZHVD (ORCPT
+        id S1726388AbfGZHVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 03:21:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47766 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbfGZHVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 03:21:02 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8121DA70E;
-        Fri, 26 Jul 2019 07:21:01 +0000 (UTC)
-Received: from [10.36.116.244] (ovpn-116-244.ams2.redhat.com [10.36.116.244])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B6A3D5DE80;
-        Fri, 26 Jul 2019 07:20:59 +0000 (UTC)
-Subject: Re: [PATCH v1] ACPI / scan: Acquire device_hotplug_lock in
- acpi_scan_init()
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>
-References: <20190724143017.12841-1-david@redhat.com>
- <20190725125636.GA3582@dhcp22.suse.cz>
- <6dc566c2-faf6-565d-4ef1-2ac3a366bc76@redhat.com>
- <20190725135747.GB3582@dhcp22.suse.cz>
- <447b74ca-f7c7-0835-fd50-a9f7191fe47c@redhat.com>
- <20190725191943.GA6142@dhcp22.suse.cz>
- <e31882cf-3290-ea36-77d6-637eaf66fe77@redhat.com>
- <CAJZ5v0h+MjC3gFm1Kf3eBg2Rs12368j6S_i5_Gc24yWx+Z3xBA@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwX4EEwECACgFAljj9eoCGwMFCQlmAYAGCwkI
- BwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEE3eEPcA/4Na5IIP/3T/FIQMxIfNzZshIq687qgG
- 8UbspuE/YSUDdv7r5szYTK6KPTlqN8NAcSfheywbuYD9A4ZeSBWD3/NAVUdrCaRP2IvFyELj
- xoMvfJccbq45BxzgEspg/bVahNbyuBpLBVjVWwRtFCUEXkyazksSv8pdTMAs9IucChvFmmq3
- jJ2vlaz9lYt/lxN246fIVceckPMiUveimngvXZw21VOAhfQ+/sofXF8JCFv2mFcBDoa7eYob
- s0FLpmqFaeNRHAlzMWgSsP80qx5nWWEvRLdKWi533N2vC/EyunN3HcBwVrXH4hxRBMco3jvM
- m8VKLKao9wKj82qSivUnkPIwsAGNPdFoPbgghCQiBjBe6A75Z2xHFrzo7t1jg7nQfIyNC7ez
- MZBJ59sqA9EDMEJPlLNIeJmqslXPjmMFnE7Mby/+335WJYDulsRybN+W5rLT5aMvhC6x6POK
- z55fMNKrMASCzBJum2Fwjf/VnuGRYkhKCqqZ8gJ3OvmR50tInDV2jZ1DQgc3i550T5JDpToh
- dPBxZocIhzg+MBSRDXcJmHOx/7nQm3iQ6iLuwmXsRC6f5FbFefk9EjuTKcLMvBsEx+2DEx0E
- UnmJ4hVg7u1PQ+2Oy+Lh/opK/BDiqlQ8Pz2jiXv5xkECvr/3Sv59hlOCZMOaiLTTjtOIU7Tq
- 7ut6OL64oAq+zsFNBFXLn5EBEADn1959INH2cwYJv0tsxf5MUCghCj/CA/lc/LMthqQ773ga
- uB9mN+F1rE9cyyXb6jyOGn+GUjMbnq1o121Vm0+neKHUCBtHyseBfDXHA6m4B3mUTWo13nid
- 0e4AM71r0DS8+KYh6zvweLX/LL5kQS9GQeT+QNroXcC1NzWbitts6TZ+IrPOwT1hfB4WNC+X
- 2n4AzDqp3+ILiVST2DT4VBc11Gz6jijpC/KI5Al8ZDhRwG47LUiuQmt3yqrmN63V9wzaPhC+
- xbwIsNZlLUvuRnmBPkTJwwrFRZvwu5GPHNndBjVpAfaSTOfppyKBTccu2AXJXWAE1Xjh6GOC
- 8mlFjZwLxWFqdPHR1n2aPVgoiTLk34LR/bXO+e0GpzFXT7enwyvFFFyAS0Nk1q/7EChPcbRb
- hJqEBpRNZemxmg55zC3GLvgLKd5A09MOM2BrMea+l0FUR+PuTenh2YmnmLRTro6eZ/qYwWkC
- u8FFIw4pT0OUDMyLgi+GI1aMpVogTZJ70FgV0pUAlpmrzk/bLbRkF3TwgucpyPtcpmQtTkWS
- gDS50QG9DR/1As3LLLcNkwJBZzBG6PWbvcOyrwMQUF1nl4SSPV0LLH63+BrrHasfJzxKXzqg
- rW28CTAE2x8qi7e/6M/+XXhrsMYG+uaViM7n2je3qKe7ofum3s4vq7oFCPsOgwARAQABwsFl
- BBgBAgAPBQJVy5+RAhsMBQkJZgGAAAoJEE3eEPcA/4NagOsP/jPoIBb/iXVbM+fmSHOjEshl
- KMwEl/m5iLj3iHnHPVLBUWrXPdS7iQijJA/VLxjnFknhaS60hkUNWexDMxVVP/6lbOrs4bDZ
- NEWDMktAeqJaFtxackPszlcpRVkAs6Msn9tu8hlvB517pyUgvuD7ZS9gGOMmYwFQDyytpepo
- YApVV00P0u3AaE0Cj/o71STqGJKZxcVhPaZ+LR+UCBZOyKfEyq+ZN311VpOJZ1IvTExf+S/5
- lqnciDtbO3I4Wq0ArLX1gs1q1XlXLaVaA3yVqeC8E7kOchDNinD3hJS4OX0e1gdsx/e6COvy
- qNg5aL5n0Kl4fcVqM0LdIhsubVs4eiNCa5XMSYpXmVi3HAuFyg9dN+x8thSwI836FoMASwOl
- C7tHsTjnSGufB+D7F7ZBT61BffNBBIm1KdMxcxqLUVXpBQHHlGkbwI+3Ye+nE6HmZH7IwLwV
- W+Ajl7oYF+jeKaH4DZFtgLYGLtZ1LDwKPjX7VAsa4Yx7S5+EBAaZGxK510MjIx6SGrZWBrrV
- TEvdV00F2MnQoeXKzD7O4WFbL55hhyGgfWTHwZ457iN9SgYi1JLPqWkZB0JRXIEtjd4JEQcx
- +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <8e891e0c-9024-b5ad-0f44-bccd4e87c60e@redhat.com>
-Date:   Fri, 26 Jul 2019 09:20:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0h+MjC3gFm1Kf3eBg2Rs12368j6S_i5_Gc24yWx+Z3xBA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 26 Jul 2019 07:21:01 +0000 (UTC)
+        Fri, 26 Jul 2019 03:21:22 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38282 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfGZHVV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 03:21:21 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f5so15510991pgu.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 00:21:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=DPFbvaM0ffzn/S9lvtDvQ6X/wXEPD6IvdQw6DnygcpE=;
+        b=Dcn0TQ5iRKLiq9la/u8PnkLoh/bQ2HK/pp5dNWDnoSTPgId5B1ES2XCZi8js0tnVhC
+         KXOtq22CVWqlrrr+aJObx2rwiuJsfIl7mY9R3xWmrAFgRkh9A0GLxELmkTaWSiy/d51P
+         s0bap92JtiqtNfdeVMzIxqhcUx6GIyuEaMsWzjldAXjQdkBdQjzVZXq03JkOdlEqsCr7
+         +/7+BNEovq0MpwM8KHegM16BSHvp9FATaTzBq6pse5fXCApisAoCGuNKaecOlGBVxX9n
+         LmfGDxRULfqXvBm7lRINK7qgeM4mx9z+WK8g8Cm7S5UQc9jKSK0AonVKhg+tPDB2PiFo
+         qIIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=DPFbvaM0ffzn/S9lvtDvQ6X/wXEPD6IvdQw6DnygcpE=;
+        b=ttXncbOu9rNp1cqg+ssS8iNA/E0TJb/hAXCHhp8h80V7zVamr+1Kt26mh3P79HbR0J
+         3pUnISALN7/anWxffw6T1zxstgFcuGozaC3TK5fpABLQYh9bVKnvB0oTDpy1w9mNO0bP
+         w5wd0Q+biQfBLDjYkDige+M3zETPhE8bmQS3rVLcZZUfGNh76TR27V4FSOwJo0r0G1Ot
+         OMkWdPKWryBup2tR9daaCGU1744KUfAto3y7blZ9MYosca0JdlXbBWuGFCbEcCJh89eo
+         QbwWu84Pq/50AhRC4W890n/Uua/0FSC84qJRF0FlMu1Uht4tis+ZTne2kz6VUSir14AF
+         kLHA==
+X-Gm-Message-State: APjAAAVlBJkAb/dxgQrwwE/ES3Yf4i7xilTOKdNholhOKeZ7OXU6l3j7
+        qqLoNaCL9mGp3B/6qRHq9vx1mQ==
+X-Google-Smtp-Source: APXvYqyF4Tr6KpqzUUg1uyFSW7cNnma7IjvzfFuYcV2VA1wP1hJQrdEzG7PNSHLazixsMdq0cLRW9Q==
+X-Received: by 2002:a63:c006:: with SMTP id h6mr56329731pgg.290.1564125680781;
+        Fri, 26 Jul 2019 00:21:20 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id o12sm39216152pjr.22.2019.07.26.00.21.17
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 26 Jul 2019 00:21:20 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        orsonzhai@gmail.com, zhang.lyra@gmail.com
+Cc:     weicx@spreadst.com, sherry.zong@unisoc.com, baolin.wang@linaro.org,
+        vincent.guittot@linaro.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] Optimize Spreadtrum ADI driver
+Date:   Fri, 26 Jul 2019 15:20:47 +0800
+Message-Id: <cover.1564125131.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.07.19 23:23, Rafael J. Wysocki wrote:
-> On Thu, Jul 25, 2019 at 10:49 PM David Hildenbrand <david@redhat.com> wrote:
->>
->> On 25.07.19 21:19, Michal Hocko wrote:
->>> On Thu 25-07-19 16:35:07, David Hildenbrand wrote:
->>>> On 25.07.19 15:57, Michal Hocko wrote:
->>>>> On Thu 25-07-19 15:05:02, David Hildenbrand wrote:
->>>>>> On 25.07.19 14:56, Michal Hocko wrote:
->>>>>>> On Wed 24-07-19 16:30:17, David Hildenbrand wrote:
->>>>>>>> We end up calling __add_memory() without the device hotplug lock held.
->>>>>>>> (I used a local patch to assert in __add_memory() that the
->>>>>>>>  device_hotplug_lock is held - I might upstream that as well soon)
->>>>>>>>
->>>>>>>> [   26.771684]        create_memory_block_devices+0xa4/0x140
->>>>>>>> [   26.772952]        add_memory_resource+0xde/0x200
->>>>>>>> [   26.773987]        __add_memory+0x6e/0xa0
->>>>>>>> [   26.775161]        acpi_memory_device_add+0x149/0x2b0
->>>>>>>> [   26.776263]        acpi_bus_attach+0xf1/0x1f0
->>>>>>>> [   26.777247]        acpi_bus_attach+0x66/0x1f0
->>>>>>>> [   26.778268]        acpi_bus_attach+0x66/0x1f0
->>>>>>>> [   26.779073]        acpi_bus_attach+0x66/0x1f0
->>>>>>>> [   26.780143]        acpi_bus_scan+0x3e/0x90
->>>>>>>> [   26.780844]        acpi_scan_init+0x109/0x257
->>>>>>>> [   26.781638]        acpi_init+0x2ab/0x30d
->>>>>>>> [   26.782248]        do_one_initcall+0x58/0x2cf
->>>>>>>> [   26.783181]        kernel_init_freeable+0x1bd/0x247
->>>>>>>> [   26.784345]        kernel_init+0x5/0xf1
->>>>>>>> [   26.785314]        ret_from_fork+0x3a/0x50
->>>>>>>>
->>>>>>>> So perform the locking just like in acpi_device_hotplug().
->>>>>>>
->>>>>>> While playing with the device_hotplug_lock, can we actually document
->>>>>>> what it is protecting please? I have a bad feeling that we are adding
->>>>>>> this lock just because some other code path does rather than with a good
->>>>>>> idea why it is needed. This patch just confirms that. What exactly does
->>>>>>> the lock protect from here in an early boot stage.
->>>>>>
->>>>>> We have plenty of documentation already
->>>>>>
->>>>>> mm/memory_hotplug.c
->>>>>>
->>>>>> git grep -C5 device_hotplug mm/memory_hotplug.c
->>>>>>
->>>>>> Also see
->>>>>>
->>>>>> Documentation/core-api/memory-hotplug.rst
->>>>>
->>>>> OK, fair enough. I was more pointing to a documentation right there
->>>>> where the lock is declared because that is the place where people
->>>>> usually check for documentation. The core-api documentation looks quite
->>>>> nice. And based on that doc it seems that this patch is actually not
->>>>> needed because neither the online/offline or cpu hotplug should be
->>>>> possible that early unless I am missing something.
->>>>
->>>> I really prefer to stick to locking rules as outlined on the
->>>> interfaces if it doesn't hurt. Why it is not needed is not clear.
->>>>
->>>>>
->>>>>> Regarding the early stage: primarily lockdep as I mentioned.
->>>>>
->>>>> Could you add a lockdep splat that would be fixed by this patch to the
->>>>> changelog for reference?
->>>>>
->>>>
->>>> I have one where I enforce what's documented (but that's of course not
->>>> upstream and therefore not "real" yet)
->>>
->>> Then I suppose to not add locking for something that is not a problem.
->>> Really, think about it. People will look at this code and follow the
->>> lead without really knowing why the locking is needed.
->>> device_hotplug_lock has its purpose and if the code in question doesn't
->>> need synchronization for the documented scenarios then the locking
->>> simply shouldn't be there. Adding the lock just because of a
->>> non-existing, and IMHO dubious, lockdep splats is just wrong.
->>>
->>> We need to rationalize the locking here, not to add more hacks.
->>
->> No, sorry. The real hack is calling a function that is *documented* to
->> be called under lock without it. That is an optimization for a special
->> case. That is the black magic in the code.
->>
->> The only alternative I see to this patch is adding a comment like
->>
->> /*
->>  * We end up calling __add_memory() without the device_hotplug_lock
->>  * held. This is fine as we cannot race with other hotplug activities
->>  * and userspace trying to online memory blocks.
->>  */
->>
->> Personally, I don't think that's any better than just grabbing the lock
->> as we are told to. (honestly, I don't see how optimizing away the lock
->> here is of *any* help to optimize our overall memory hotplug locking)
->>
->> @Rafael, what's your take? lock or comment?
-> 
-> Well, I have ACKed your patch already. :-)
+This patchset did some optimization to remove some redundant code,
+add more reboot mode support and change hardware spinlock support
+to be optional.
 
-It's never to late to un-ACK if you changed your mind :)
+Baolin Wang (3):
+  spi: sprd: adi: Remove redundant address bits setting
+  spi: sprd: adi: Change hwlock to be optional
+  dt-bindings: spi: sprd: Change the hwlock support to be optional
 
-> 
-> That said, adding a comment stating that the lock is acquired mostly
-> for consistency wouldn't hurt.
-> 
+Chenxu Wei (1):
+  spi: sprd: adi: Add a reset reason for TOS panic
 
-I can certainly do that. Thanks!
+Sherry Zong (2):
+  spi: sprd: adi: Add a reset reason for factory test mode
+  spi: sprd: adi: Add a reset reason for watchdog mode
+
+ .../devicetree/bindings/spi/spi-sprd-adi.txt       |   11 ++-
+ drivers/spi/spi-sprd-adi.c                         |   92 ++++++++++++++------
+ 2 files changed, 71 insertions(+), 32 deletions(-)
 
 -- 
+1.7.9.5
 
-Thanks,
-
-David / dhildenb
