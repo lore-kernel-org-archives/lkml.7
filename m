@@ -2,89 +2,146 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B394AC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D670AC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 957E822CF4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B6E22CED
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:50:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cp4F4YKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfGZJtV (ORCPT
+        id S1726431AbfGZJuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:49:21 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:60040 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbfGZJtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:49:18 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id E25F2FB02;
-        Fri, 26 Jul 2019 11:49:15 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TtfFpcmoz3Q8; Fri, 26 Jul 2019 11:49:13 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 0D36F46AA0; Fri, 26 Jul 2019 11:49:12 +0200 (CEST)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Robert Chiras <robert.chiras@nxp.com>, Marek Vasut <marex@denx.de>,
-        Stefan Agner <stefan@agner.ch>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] drm/mxsfb: Read bus flags from bridge if present
-Date:   Fri, 26 Jul 2019 11:49:12 +0200
-Message-Id: <9390060f65f94722cb13101d4835d9048037f7a0.1564134488.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1564134488.git.agx@sigxcpu.org>
-References: <cover.1564134488.git.agx@sigxcpu.org>
+        Fri, 26 Jul 2019 05:50:04 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36336 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfGZJuD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:50:03 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r7so24265342pfl.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 02:50:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YLdfLrMSiT4KXAf/cjnjVZ2fM60YfkutQSVFLbjZHOQ=;
+        b=cp4F4YKDtn8FmO7tNNvB1Zl3+soGtcVxxS1B3gZMO5dm5UHaIEj4ZvwJ49y/fcp7aF
+         mYyqoW5O0g8Os9efZeigNDVGy3qdJDkXsKnCAGlnuMtVgVGJ6Jp5cDHrjpz8Id6GpWCS
+         3ZdVi9q/2s4zkI6SjQEULEWmkQOnWdR5ZyDSU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YLdfLrMSiT4KXAf/cjnjVZ2fM60YfkutQSVFLbjZHOQ=;
+        b=gttx7RImmCYi8+KOg58zIbHnTubVaDcIRDCTfsfKblu0+sp6FFOEPeFZ6gkk2UElD5
+         gxZatlpMwpuHuFanUTlOsgXDVs0nU6gj6Dpco75mZwy5g+um2VO7PkK5oQFbnbhHGn8r
+         mGJRwXe+7J4Z43tjhAHsVRNQdcQq2+gUB7ajRU79GYC/DwFMJKZmu2gmigxqVP2vDnqd
+         badu4vVy0uechPy2+RkK6zc+IljbZHfUq0lRbYVHMN0tuxlxC/aN83PtC/s78KcHGgXx
+         TJYl3tPpjzG29KLRxr2L7JbByt92Sd3q2gLs/zT1OnPMltSKWdCFar1HgyVG6Y/0XA8P
+         VoKA==
+X-Gm-Message-State: APjAAAWYSSBKoF6AeCTyL/yHipnwcDv3+TcPhYSDKBawdgOyoRxmhHUr
+        viCNH0w/meme5ClYNaf2r/MYZncM4y87xaSEz+TAvw==
+X-Google-Smtp-Source: APXvYqw1c2xASRmY1awQwTYYEA2qAtfGkQi+5W6p4QqQ6+VOVIAsQpW0Ti3ZVLpjihaeVcD5W4AeV12h6Zw0qkafmD0=
+X-Received: by 2002:a63:eb06:: with SMTP id t6mr85181196pgh.107.1564134601904;
+ Fri, 26 Jul 2019 02:50:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CGME20190714034415epcms2p25f9787cb71993a30f58524d2f355b543@epcms2p2>
+ <20190714034415epcms2p25f9787cb71993a30f58524d2f355b543@epcms2p2>
+In-Reply-To: <20190714034415epcms2p25f9787cb71993a30f58524d2f355b543@epcms2p2>
+From:   Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Date:   Fri, 26 Jul 2019 15:19:50 +0530
+Message-ID: <CAK=zhgoqoTDZb=q9Cq7hC+RDNOC9GTKCnDdHeiPsYcKOaT8N6g@mail.gmail.com>
+Subject: Re: [PATCH V2] mpt3sas: support target smid for [abort|query] task
+To:     minwoo.im@samsung.com
+Cc:     "sathya.prakash@broadcom.com" <sathya.prakash@broadcom.com>,
+        "suganath-prabu.subramani@broadcom.com" 
+        <suganath-prabu.subramani@broadcom.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "MPT-FusionLinux.pdl@broadcom.com" <MPT-FusionLinux.pdl@broadcom.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Euihyeok Kwon <eh81.kwon@samsung.com>,
+        Sarah Cho <sohyeon.jo@samsung.com>,
+        Sanggwan Lee <sanggwan.lee@samsung.com>,
+        Gyeongmin Nam <gm.nam@samsung.com>,
+        Sungjun Park <sj1228.park@samsung.com>,
+        "minwoo.im.dev@gmail.com" <minwoo.im.dev@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bridge might have special requirmentes on the input bus. This
-is e.g. used by the imx-nwl bridge.
+On Sun, Jul 14, 2019 at 9:14 AM Minwoo Im <minwoo.im@samsung.com> wrote:
+>
+> We can request task management IOCTL command(MPI2_FUNCTION_SCSI_TASK_MGMT)
+> to /dev/mpt3ctl.  If the given task_type is either abort task or query
+> task, it may need a field named "Initiator Port Transfer Tag to Manage"
+> in the IU.
+>
+> Current code does not support to check target IPTT tag from the
+> tm_request.  This patch introduces to check TaskMID given from the
+> userspace as a target tag.  We have a rule of relationship between
+> (struct request *req->tag) and smid in mpt3sas_base.c:
+>
+> 3318 u16
+> 3319 mpt3sas_base_get_smid_scsiio(struct MPT3SAS_ADAPTER *ioc, u8 cb_idx,
+> 3320         struct scsi_cmnd *scmd)
+> 3321 {
+> 3322         struct scsiio_tracker *request = scsi_cmd_priv(scmd);
+> 3323         unsigned int tag = scmd->request->tag;
+> 3324         u16 smid;
+> 3325
+> 3326         smid = tag + 1;
+>
+> So if we want to abort a request tagged #X, then we can pass (X + 1) to
+> this IOCTL handler.  Otherwise, user space just can pass 0 TaskMID to
+> abort the first outstanding smid which is legacy behaviour.
+>
+> Cc: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+> Cc: Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
+> Cc: Sathya Prakash <sathya.prakash@broadcom.com>
+> Cc: James E.J. Bottomley <jejb@linux.ibm.com>
+> Cc: Martin K. Petersen <martin.petersen@oracle.com>
+> Cc: MPT-FusionLinux.pdl@broadcom.com
+> Signed-off-by: Minwoo Im <minwoo.im@samsung.com>
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Acked-by:  Sreekanth Reddy <sreekanth.reddy@broadcom.com>
 
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-index e84bac3a541d..3b8eb3ac13b6 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-@@ -215,7 +215,7 @@ static void mxsfb_crtc_mode_set_nofb(struct mxsfb_drm_private *mxsfb)
- {
- 	struct drm_device *drm = mxsfb->pipe.crtc.dev;
- 	struct drm_display_mode *m = &mxsfb->pipe.crtc.state->adjusted_mode;
--	const u32 bus_flags = mxsfb->connector->display_info.bus_flags;
-+	u32 bus_flags = mxsfb->connector->display_info.bus_flags;
- 	u32 vdctrl0, vsync_pulse_len, hsync_pulse_len;
- 	int err;
- 
-@@ -239,6 +239,9 @@ static void mxsfb_crtc_mode_set_nofb(struct mxsfb_drm_private *mxsfb)
- 
- 	clk_set_rate(mxsfb->clk, m->crtc_clock * 1000);
- 
-+	if (mxsfb->bridge && mxsfb->bridge->timings)
-+		bus_flags = mxsfb->bridge->timings->input_bus_flags;
-+
- 	DRM_DEV_DEBUG_DRIVER(drm->dev, "Pixel clock: %dkHz (actual: %dkHz)\n",
- 			     m->crtc_clock,
- 			     (int)(clk_get_rate(mxsfb->clk) / 1000));
--- 
-2.20.1
-
+> ---
+>  drivers/scsi/mpt3sas/mpt3sas_ctl.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+> index b2bb47c14d35..f6b8fd90610a 100644
+> --- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+> +++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+> @@ -596,8 +596,16 @@ _ctl_set_task_mid(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command *karg,
+>                 if (priv_data->sas_target->handle != handle)
+>                         continue;
+>                 st = scsi_cmd_priv(scmd);
+> -               tm_request->TaskMID = cpu_to_le16(st->smid);
+> -               found = 1;
+> +
+> +               /*
+> +                * If the given TaskMID from the user space is zero, then the
+> +                * first outstanding smid will be picked up.  Otherwise,
+> +                * targeted smid will be the one.
+> +                */
+> +               if (!tm_request->TaskMID || tm_request->TaskMID == st->smid) {
+> +                       tm_request->TaskMID = cpu_to_le16(st->smid);
+> +                       found = 1;
+> +               }
+>         }
+>
+>         if (!found) {
+> --
+> 2.16.1
+>
