@@ -2,199 +2,147 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 498B2C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC7BC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBEA22BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F008F22BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:18:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LK/US9Wb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="STZQWw4r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfGZURQ (ORCPT
+        id S1727559AbfGZUSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 16:17:16 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40486 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbfGZURP (ORCPT
+        Fri, 26 Jul 2019 16:18:34 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:32707 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfGZUSd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 16:17:15 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w10so25277855pgj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 13:17:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=j/IRcBqVskGgCakuPtG7Hutcm/XW9ghuXgQa4VWoPlM=;
-        b=LK/US9WbkyS77sGoAMWZy8gc2tGLtDUIhGi4KMKrm9oXRfVinKUyR1ssB6V7E0lSPF
-         t/FBIGuDdkXVBs+1IGdLW0u4vU7EhC8ye6/SumBvlCByTHKDzSPQANwc2+Cz5KG93322
-         DxJth4doKg55yaBKLnxxhquhCyOPSzH0DfcrLstq3TIPdIfoqLAhdPV2sW/jW5uOEgZh
-         9dNoVlQg4Fd0RgDO2d3e7R3Sc/NQM7WAwGpOyVBMibzfmrm1SxYT0p4MtOVewLloU9/U
-         dg8autDLELzhHkbhQ0F+N69b27WnOJG4toZ032w1oSfL/RGxxCMWWcFDcxTzJ3oZGhWY
-         RzmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j/IRcBqVskGgCakuPtG7Hutcm/XW9ghuXgQa4VWoPlM=;
-        b=UANdowcFus9hCrfjMYa+Qd0GxtxQZyr4paVxPXwj/Gp0Izk/epYivwrU1FtlIMbEUA
-         rad08lQlMSuDpux4rgJN5OfOch7lkt7JwYOB96sRVgB6wHWlO27uJi+6nlQ4iwqqh+ff
-         JkgrgR/ZGKvv8FLBmwLM+K1+vsvadBmCiyixbQTe4KiurFZM7plspGvgH44RSa8naTTg
-         Avl8wAQaULZFL/9AlIzbu0nGcSvc3DJK9TRv4KqUvWqa9Yfx6C/h+nTYa/uLP9pfhX67
-         1NLPChibfEGNwh7AgMoNdLGQiSQ0Q5cNkGiHFtJmUNyJ2A6zcCT2Jur69iAba6M1uYwS
-         +x4w==
-X-Gm-Message-State: APjAAAV5pecurpvb1etmm7ko5nTqiQ5kmccirjc3951Fy6OvQZ6AuIV4
-        FIrb3K1Yng3KCsRcV6mGexcr1Q==
-X-Google-Smtp-Source: APXvYqwxUiBPlc83U36uwiE/oXy5nDvLjq7p224Nm5j2u8JgOtNcB6axsTT2TqGR7rpxgANLPkrqZg==
-X-Received: by 2002:a17:90a:220a:: with SMTP id c10mr101547847pje.33.1564172234495;
-        Fri, 26 Jul 2019 13:17:14 -0700 (PDT)
-Received: from sspatil-workstation.mtv.corp.google.com ([2620:15c:211:0:fb21:5c58:d6bc:4bef])
-        by smtp.gmail.com with ESMTPSA id s185sm80459064pgs.67.2019.07.26.13.17.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 13:17:12 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 13:17:10 -0700
-From:   sspatil@google.com
-To:     joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-        adobriyan@gmail.com, akpm@linux-foundation.org, bgregg@netflix.com,
-        chansen3@cisco.com, dancol@google.com, fmayer@google.com,
-        joaodias@google.com, joelaf@google.com, corbet@lwn.net,
-        keescook@chromium.org, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
-        rppt@linux.ibm.com, minchan@kernel.org, namhyung@google.com,
-        guro@fb.com, sfr@canb.auug.org.au, surenb@google.com,
-        tkjos@google.com, vdavydov.dev@gmail.com, vbabka@suse.cz,
-        wvw@google.com, sspatil+mutt@google.com
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
-        fmayer@google.com, joaodias@google.com, joelaf@google.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
-        namhyung@google.com, Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
-        tkjos@google.com, Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, wvw@google.com
-Subject: Re: [PATCH v3 2/2] doc: Update documentation for page_idle virtual
- address indexing
-Message-ID: <20190726201710.GA144547@google.com>
-References: <20190726152319.134152-1-joel@joelfernandes.org>
- <20190726152319.134152-2-joel@joelfernandes.org>
+        Fri, 26 Jul 2019 16:18:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1564172314; x=1595708314;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=AngrC8jvuImhLFWkJW1/1VV7s6vc+iNx2vnmGpjsvD0=;
+  b=STZQWw4rtMcdld27+dpjE5glYfajwm1VeT2COWjIIgGL0sEDfR1BerEV
+   U4BiyH6oyLCWElYQko51ThnC8xguU5MGYHbnRaxWcoWyy7LOUfHFHNVGP
+   V8ItG0BYI3BR/2l0mssFrGV3WnwbZvqZMvWMauUe8nIX9hI87Zu6TXT0q
+   3U+812zZq+ioaN96WCGG0Lf7+5Zi4R3BUV4z1298oWSJiD5nTzwaSBsBG
+   ytWqB058UnK67OWCPzUdsutSeS6iEpIyU8pr+VVQs5Zos6SeYJppSbd5O
+   g7F7ZV/8Nx8VCsS56j2qq7WwJOfpdjaPT0mufn71OVTJTY8UmQbsUuzj0
+   Q==;
+IronPort-SDR: WXFEIb9o1QYJwm1BJhSJA+NoH4waEnwVgNCkTqXvAqwHFjVs1IAo7ymikYrp7dxZB+7s03QlBF
+ I6TDCpAym1AuZyEEcJ7+NUIXtg/SYKfiJDCXUEJgFO21TCDsn2R02xCdYeT/M32G3Sb7xz7pq0
+ AvNPBGBPZdR1x8pIoYK1vEgTjRfo23h7JbIBxdBP6o0QKRWibkuZ+6KavUOtq4FeH1/oIYYghL
+ 2PK9fL5TwJkCgRVMwa0EZVyUyJGQ09iH5uKz5jurXbNiBCWsfV8YJHDlaegR3mQLtu1TTjW2po
+ Quo=
+X-IronPort-AV: E=Sophos;i="5.64,312,1559491200"; 
+   d="scan'208";a="115276021"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 27 Jul 2019 04:18:33 +0800
+IronPort-SDR: fvJ7mH/YqLg1iQqRi7xbrxXl5ItmhYgiiaUfW6basIp+7R6CN6DqzCDAosFd908u35xpbMmzMf
+ 5sY+x8QAk+nOTNlBwn6NJGdg4DhEmuE5XRfaf5U3L9m5JMicrXh2Jj+qgHT0EmgauiWGvd0G9n
+ 9e9imtQOKq/l5h7WK0C9EjDNrGfBwq4qcy4n/GT6IPzEOANLut1qlqs8YikhISQuxW+c/fzV3i
+ lnbxQKdoSAYWwoAFFH6o07ph1c4mNRxd0OkVvFzqyiJtse57ns976SPQhoxIieFJc8/WkrrzdE
+ 5ZXGUswmRNFFgwObf01Tg6vr
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP; 26 Jul 2019 13:16:42 -0700
+IronPort-SDR: 8NkVZ9+WldyDrtOMJztKxi/Kh1+rvBTTfOmH5xE6uB24ORokOVOnLAEcG/xJ/N6p5gdx2r+KaO
+ zVkk3ycg1Usy7gq7fbwxOE3frcBs6HF91c3liv/u0hb+apT2ph4o6d+rmlwZ+IFn7/WZPeVfkP
+ EW6+xrcLWOVKpgQpcARVLNRxGJCcD8FvLfapzYqJsYplk8iykMzcsiI3qmAnEujqL0Zj0azldW
+ dY0Q5CN5OCbu9TAfnpb+qaFWz+CHDQ8m9CKsIwHiwbqkmnGGeniw97ychWjZjlASUq2nInYUcP
+ T6I=
+Received: from unknown (HELO [10.225.104.231]) ([10.225.104.231])
+  by uls-op-cesaip01.wdc.com with ESMTP; 26 Jul 2019 13:18:33 -0700
+Subject: Re: [PATCH 0/7] Fix broken references to files under Documentation/*
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?=c5=81ukasz_Stelmach?= <l.stelmach@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>
+References: <cover.1564140865.git.mchehab+samsung@kernel.org>
+ <04794d40-0b39-0223-c91e-03b46cb6e2db@wdc.com>
+ <20190726171352.5eaa4d83@coco.lan>
+From:   Atish Patra <atish.patra@wdc.com>
+Message-ID: <57eaa99a-d644-7b79-7177-a45d3ef1e71a@wdc.com>
+Date:   Fri, 26 Jul 2019 13:18:30 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190726152319.134152-2-joel@joelfernandes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190726171352.5eaa4d83@coco.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Joel, just a couple of nits for the doc inline below. Other than that,
-
-Reviewed-by: Sandeep Patil <sspatil@google.com>
-
-I'll plan on making changes to Android to use this instead of the pagemap +
-page_idle. I think it will also be considerably faster.
-
-On Fri, Jul 26, 2019 at 11:23:19AM -0400, Joel Fernandes (Google) wrote:
-> This patch updates the documentation with the new page_idle tracking
-> feature which uses virtual address indexing.
+On 7/26/19 1:14 PM, Mauro Carvalho Chehab wrote:
+> Em Fri, 26 Jul 2019 12:55:36 -0700
+> Atish Patra <atish.patra@wdc.com> escreveu:
 > 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  .../admin-guide/mm/idle_page_tracking.rst     | 43 ++++++++++++++++---
->  1 file changed, 36 insertions(+), 7 deletions(-)
+>> On 7/26/19 4:47 AM, Mauro Carvalho Chehab wrote:
+>>> Solves most of the pending broken references upstream, except for two of
+>>> them:
+>>>
+>>> 	$ ./scripts/documentation-file-ref-check
+>>> 	Documentation/riscv/boot-image-header.txt: Documentation/riscv/booting.txt
+>>> 	MAINTAINERS: Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+>>>
+>>> As written at boot-image-header.txt, it is waiting for the addition of
+>>> a future file:
+>>>
+>>> 	"The complete booting guide will be available at
+>>> 	  Documentation/riscv/booting.txt."
+>>>    
+>>
+>> Yeah. We don't have complete booting guide defined in RISC-V land.
+>> Documentation/riscv/booting.txt will be available once we have that.
+>>
+>> In the mean time, do we need to convert boot-image-header.txt to
+>> boot-image-header.rst and fix the reference to
+>> Documentation/riscv/booting.rst as well ?
 > 
-> diff --git a/Documentation/admin-guide/mm/idle_page_tracking.rst b/Documentation/admin-guide/mm/idle_page_tracking.rst
-> index df9394fb39c2..1eeac78c94a7 100644
-> --- a/Documentation/admin-guide/mm/idle_page_tracking.rst
-> +++ b/Documentation/admin-guide/mm/idle_page_tracking.rst
-> @@ -19,10 +19,14 @@ It is enabled by CONFIG_IDLE_PAGE_TRACKING=y.
->  
->  User API
->  ========
-> +There are 2 ways to access the idle page tracking API. One uses physical
-> +address indexing, another uses a simpler virtual address indexing scheme.
->  
-> -The idle page tracking API is located at ``/sys/kernel/mm/page_idle``.
-> -Currently, it consists of the only read-write file,
-> -``/sys/kernel/mm/page_idle/bitmap``.
-> +Physical address indexing
-> +-------------------------
-> +The idle page tracking API for physical address indexing using page frame
-> +numbers (PFN) is located at ``/sys/kernel/mm/page_idle``.  Currently, it
-> +consists of the only read-write file, ``/sys/kernel/mm/page_idle/bitmap``.
->  
->  The file implements a bitmap where each bit corresponds to a memory page. The
->  bitmap is represented by an array of 8-byte integers, and the page at PFN #i is
-> @@ -74,6 +78,31 @@ See :ref:`Documentation/admin-guide/mm/pagemap.rst <pagemap>` for more
->  information about ``/proc/pid/pagemap``, ``/proc/kpageflags``, and
->  ``/proc/kpagecgroup``.
->  
-> +Virtual address indexing
-> +------------------------
-> +The idle page tracking API for virtual address indexing using virtual page
-> +frame numbers (VFN) is located at ``/proc/<pid>/page_idle``. It is a bitmap
-> +that follows the same semantics as ``/sys/kernel/mm/page_idle/bitmap``
-> +except that it uses virtual instead of physical frame numbers.
-> +
-> +This idle page tracking API does not need deal with PFN so it does not require
-
-s/need//
-
-> +prior lookups of ``pagemap`` in order to find if page is idle or not. This is
-
-s/in order to find if page is idle or not//
-
-> +an advantage on some systems where looking up PFN is considered a security
-> +issue.  Also in some cases, this interface could be slightly more reliable to
-> +use than physical address indexing, since in physical address indexing, address
-> +space changes can occur between reading the ``pagemap`` and reading the
-> +``bitmap``, while in virtual address indexing, the process's ``mmap_sem`` is
-> +held for the duration of the access.
-> +
-> +To estimate the amount of pages that are not used by a workload one should:
-> +
-> + 1. Mark all the workload's pages as idle by setting corresponding bits in
-> +    ``/proc/<pid>/page_idle``.
-> +
-> + 2. Wait until the workload accesses its working set.
-> +
-> + 3. Read ``/proc/<pid>/page_idle`` and count the number of bits set.
-> +
->  .. _impl_details:
->  
->  Implementation Details
-> @@ -99,10 +128,10 @@ When a dirty page is written to swap or disk as a result of memory reclaim or
->  exceeding the dirty memory limit, it is not marked referenced.
->  
->  The idle memory tracking feature adds a new page flag, the Idle flag. This flag
-> -is set manually, by writing to ``/sys/kernel/mm/page_idle/bitmap`` (see the
-> -:ref:`User API <user_api>`
-> -section), and cleared automatically whenever a page is referenced as defined
-> -above.
-> +is set manually, by writing to ``/sys/kernel/mm/page_idle/bitmap`` for physical
-> +addressing or by writing to ``/proc/<pid>/page_idle`` for virtual
-> +addressing (see the :ref:`User API <user_api>` section), and cleared
-> +automatically whenever a page is referenced as defined above.
->  
->  When a page is marked idle, the Accessed bit must be cleared in all PTEs it is
->  mapped to, otherwise we will not be able to detect accesses to the page coming
-> -- 
-> 2.22.0.709.g102302147b-goog
+> Well, in the mean time, every time someone builds the Kernel with
+> COMPILE_TEST enabled, a warning will be produced.
 > 
-> -- 
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+> So, my suggestion would be to write it on a different way, like:
 > 
+> 	"A complete booting guide is being written and should be
+> 	 available on future versions."
+> 
+> Or:
+> 	TODO:
+> 	   Write a complete booting guide.
+> 
+> And update this once the guide is finished. This should be enough
+> to prevent the warning.
+> 
+
+Sounds good to me.
+
+> With regards to converting it to ReST, that's recommended. I suspect
+> we could be able to finish the entire doc conversion in a couple
+> Kernel versions.
+> 
+Sure.
+
+> Also, it should be really trivial to convert this one to ReST.
+> 
+
+Yes. Let me know if you prefer to update it along with your series or I 
+will send the patch.
+
+> Thanks,
+> Mauro
+> 
+
+
+-- 
+Regards,
+Atish
