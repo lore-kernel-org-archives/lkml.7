@@ -2,185 +2,73 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35DEC76194
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB89C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD0022CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:20:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="jToOEjgr"
+	by mail.kernel.org (Postfix) with ESMTP id C01EA22C7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:21:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfGZAUy (ORCPT
+        id S1727149AbfGZAU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 20:20:54 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34128 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbfGZAUx (ORCPT
+        Thu, 25 Jul 2019 20:20:59 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:41324 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbfGZAU7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 20:20:53 -0400
-Received: by mail-io1-f67.google.com with SMTP id k8so101188974iot.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 17:20:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=wVoyay7NO1Taf0v9T8BEjNVHV5CQV4op2+u8nOtjKhg=;
-        b=jToOEjgrbrybRXQICjzzQLCzC6a+oGnvytylhhSA9uxtg6WnH51O9ifLdSV6bfGMfa
-         q8niV4muBTTLsVTSbcEIiUpVX+Amr5OSrKkakw3SIsgJ8wNsZyQBOkBDr2dbL5g7FM01
-         G/XkE2FByaeoL8V88ESwf2TAB2YZjUSsL0fYgL45Wj4T/V0LKEidele78SCI55EuL/J/
-         sYl0p5itnLMSTOYg3+6E06sl9nRstqfUkqQp7Rox6hXNDgUyeGkR886lLScN+95mjm/T
-         aOi3Bf5eztl/MGmlss1eZVgOtDl8Lkje5E83dmFr4AAMVpQxweZF/aXyNxTquIa66KkV
-         3ymw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=wVoyay7NO1Taf0v9T8BEjNVHV5CQV4op2+u8nOtjKhg=;
-        b=lMdMywmAd1D54WbAkWpFcT4ZzRL2heM2HTL3wy94M2gj7+KtqOBNhUvH7xamlsS4ez
-         OaJxf3tsuvNQFCCP+48tx67xmOsKUUG7NhoVs1BulUp8Kcmu5H57UwEMWDCLG4MKdL1D
-         GeVvVfiWNBrTjDTQcLvVT8O/aB5UPjpB7w/4Kd1B3C6tB75xFhxegXispuCLGbydNEU9
-         2V5uaTFPYs4Lh375/tjuWypc3+GCGSUuiyoN0ZuFpzp29ojZ5QYc461ayHRm2PGB2p+N
-         BzZjyc9axlWyWTWG+EVp+aAxMvwNNB+Kj9wBEU8eBpgh48+32Rlgte18tlLFi1v7jK+I
-         SVVQ==
-X-Gm-Message-State: APjAAAWXvNmPJvsblPTcQL2AgdQteKhQA1E1Ah/lyZFJO497boDcfu9s
-        JQqjq4NHlANYLmdkTA1s1/N5Mg==
-X-Google-Smtp-Source: APXvYqwip5nwThbcgJqNtgafvdfTP5pQ2Oo0kmQagV/oOYV3+6lQkCabaIgCA6ODx3NeYEb64i78TA==
-X-Received: by 2002:a6b:f80e:: with SMTP id o14mr15217081ioh.1.1564100452408;
-        Thu, 25 Jul 2019 17:20:52 -0700 (PDT)
-Received: from localhost (67-0-24-96.albq.qwest.net. [67.0.24.96])
-        by smtp.gmail.com with ESMTPSA id 20sm54026778iog.62.2019.07.25.17.20.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 17:20:51 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 17:20:50 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Alexandre Ghiti <alex@ghiti.fr>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Cashman <dcashman@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Paul Burton <paul.burton@mips.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        James Hogan <jhogan@kernel.org>, linux-fsdevel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [PATCH REBASE v4 14/14] riscv: Make mmap allocation top-down by
- default
-In-Reply-To: <20190724055850.6232-15-alex@ghiti.fr>
-Message-ID: <alpine.DEB.2.21.9999.1907251655310.32766@viisi.sifive.com>
-References: <20190724055850.6232-1-alex@ghiti.fr> <20190724055850.6232-15-alex@ghiti.fr>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Thu, 25 Jul 2019 20:20:59 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4A92612650632;
+        Thu, 25 Jul 2019 17:20:58 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 17:20:57 -0700 (PDT)
+Message-Id: <20190725.172057.361131538899179966.davem@davemloft.net>
+To:     navid.emamdoost@gmail.com
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        secalert@redhat.com, alexandre.belloni@bootlin.com,
+        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: mscc: ocelot: null check devm_kcalloc
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190725015609.24389-1-navid.emamdoost@gmail.com>
+References: <20190725015609.24389-1-navid.emamdoost@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 25 Jul 2019 17:20:58 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre,
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
+Date: Wed, 24 Jul 2019 20:56:09 -0500
 
-I have a few questions about this patch.  Sorry to be dense here ...
-
-On Wed, 24 Jul 2019, Alexandre Ghiti wrote:
-
-> In order to avoid wasting user address space by using bottom-up mmap
-> allocation scheme, prefer top-down scheme when possible.
+> devm_kcalloc may fail and return NULL. Added the null check.
 > 
-> Before:
-> root@qemuriscv64:~# cat /proc/self/maps
-> 00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
-> 00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
-> 00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
-> 00018000-00039000 rw-p 00000000 00:00 0          [heap]
-> 1555556000-155556d000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
-> 155556d000-155556e000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
-> 155556e000-155556f000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
-> 155556f000-1555570000 rw-p 00000000 00:00 0
-> 1555570000-1555572000 r-xp 00000000 00:00 0      [vdso]
-> 1555574000-1555576000 rw-p 00000000 00:00 0
-> 1555576000-1555674000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
-> 1555674000-1555678000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
-> 1555678000-155567a000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
-> 155567a000-15556a0000 rw-p 00000000 00:00 0
-> 3fffb90000-3fffbb1000 rw-p 00000000 00:00 0      [stack]
-> 
-> After:
-> root@qemuriscv64:~# cat /proc/self/maps
-> 00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
-> 00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
-> 00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
-> 2de81000-2dea2000 rw-p 00000000 00:00 0          [heap]
-> 3ff7eb6000-3ff7ed8000 rw-p 00000000 00:00 0
-> 3ff7ed8000-3ff7fd6000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
-> 3ff7fd6000-3ff7fda000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
-> 3ff7fda000-3ff7fdc000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
-> 3ff7fdc000-3ff7fe2000 rw-p 00000000 00:00 0
-> 3ff7fe4000-3ff7fe6000 r-xp 00000000 00:00 0      [vdso]
-> 3ff7fe6000-3ff7ffd000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
-> 3ff7ffd000-3ff7ffe000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
-> 3ff7ffe000-3ff7fff000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
-> 3ff7fff000-3ff8000000 rw-p 00000000 00:00 0
-> 3fff888000-3fff8a9000 rw-p 00000000 00:00 0      [stack]
-> 
-> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 > ---
->  arch/riscv/Kconfig | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  drivers/net/ethernet/mscc/ocelot_board.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 59a4727ecd6c..6a63973873fd 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -54,6 +54,17 @@ config RISCV
->  	select EDAC_SUPPORT
->  	select ARCH_HAS_GIGANTIC_PAGE
->  	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
-> +	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
-> +	select HAVE_ARCH_MMAP_RND_BITS
-> +
-> +config ARCH_MMAP_RND_BITS_MIN
-> +	default 18
+> diff --git a/drivers/net/ethernet/mscc/ocelot_board.c b/drivers/net/ethernet/mscc/ocelot_board.c
+> index 58bde1a9eacb..52377cfdc31a 100644
+> --- a/drivers/net/ethernet/mscc/ocelot_board.c
+> +++ b/drivers/net/ethernet/mscc/ocelot_board.c
+> @@ -257,6 +257,8 @@ static int mscc_ocelot_probe(struct platform_device *pdev)
+>  
+>  	ocelot->ports = devm_kcalloc(&pdev->dev, ocelot->num_phys_ports,
+>  				     sizeof(struct ocelot_port *), GFP_KERNEL);
+> +	if (!ocelot->ports)
+> +		return -ENOMEM;
+>  
 
-Could you help me understand the rationale behind this constant?
-
-> +
-> +# max bits determined by the following formula:
-> +#  VA_BITS - PAGE_SHIFT - 3
-
-I realize that these lines are probably copied from arch/arm64/Kconfig.  
-But the rationale behind the "- 3" is not immediately obvious.  This 
-apparently originates from commit 8f0d3aa9de57 ("arm64: mm: support 
-ARCH_MMAP_RND_BITS"). Can you provide any additional context here?
-
-> +config ARCH_MMAP_RND_BITS_MAX
-> +	default 33 if 64BIT # SV48 based
-
-The rationale here is clear for Sv48, per the above formula:
-
-   (48 - 12 - 3) = 33
-
-> +	default 18
-
-However, here it is less clear to me.  For Sv39, shouldn't this be
-
-   (39 - 12 - 3) = 24
-
-?  And what about Sv32?
- 
-
-- Paul
+At the very least this leaks a reference to 'ports'.  I didn't check what other
+resources obtained by this function are leaked as well by this change, please
+audit before resubmitting.
