@@ -2,83 +2,165 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE411C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF9BC41517
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF7E229F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E6A229F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:14:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Hbcvsw+j";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OjBrgcz+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726178AbfGZKOX (ORCPT
+        id S1726256AbfGZKOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 06:14:23 -0400
-Received: from mga14.intel.com ([192.55.52.115]:50406 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfGZKOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 06:14:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 03:14:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,310,1559545200"; 
-   d="scan'208";a="175553798"
-Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.251.89.116]) ([10.251.89.116])
-  by orsmga006.jf.intel.com with ESMTP; 26 Jul 2019 03:14:17 -0700
-Subject: Re: [RFC PATCH 23/40] soundwire: stream: fix disable sequence
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
-        gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-24-pierre-louis.bossart@linux.intel.com>
-From:   Cezary Rojewski <cezary.rojewski@intel.com>
-Message-ID: <492d7897-973d-f207-46d5-f2f554645df7@intel.com>
-Date:   Fri, 26 Jul 2019 12:14:15 +0200
+        Fri, 26 Jul 2019 06:14:46 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:54488 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfGZKOq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 06:14:46 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id CFFB5602BC; Fri, 26 Jul 2019 10:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564136085;
+        bh=jvQxmzWvpok8BXHCVML4PDBkl58pFVq1DH9k7A72xrI=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=Hbcvsw+jUAUwQUyIS0UEH1vlmY7SG3UGJxFTRFN2VeZ9+HwWFM2suO3MOqNljgdbo
+         nHBGnexfVZVPzvgLbOR7G2OC9q/hGeibKn21XkjU+3O/K3rlVhWHVld69zhmUZG25D
+         7V/d3CxEF63KkXnge/psrRtHmoSaUm612Kg3rXkk=
+Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D408260247;
+        Fri, 26 Jul 2019 10:14:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564136084;
+        bh=jvQxmzWvpok8BXHCVML4PDBkl58pFVq1DH9k7A72xrI=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=OjBrgcz+rtbPEy8asULLePhQI4rc2BAZgXIVXF4aCn4H0/mg66gBhsLZGH3EYpLpO
+         ao5RZP7zE6KeY8usw2suKqShAETpklB5PxtpnhxmleaQ+tuzeAa21s5GpEBVZqJUcK
+         YlOCTw7ajTj3LJNyEWoL5lEugzEY6Hkavzdd8k20=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D408260247
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+Subject: Re: [Regression] Missing device nodes for ETR, ETF and STM after
+ CONFIG_UEVENT_HELPER=n
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <cfe09a46-462f-633a-37c2-52f8bfc0ffb2@codeaurora.org>
+ <20190726070429.GA15714@kroah.com>
+ <165028a7-ff12-dd28-cc4c-57a3961dbb40@codeaurora.org>
+ <20190726084127.GA28470@kroah.com>
+ <097942a1-6914-2542-450f-65a6147dc7aa@codeaurora.org>
+Message-ID: <6d48f996-6297-dc69-250b-790be6d2670c@codeaurora.org>
+Date:   Fri, 26 Jul 2019 15:44:40 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190725234032.21152-24-pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <097942a1-6914-2542-450f-65a6147dc7aa@codeaurora.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-26 01:40, Pierre-Louis Bossart wrote:
->   
-> -	return do_bank_switch(stream);
-> +	ret = do_bank_switch(stream);
-> +	if (ret < 0) {
-> +		dev_err(bus->dev, "Bank switch failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* make sure alternate bank (previous current) is also disabled */
-> +	list_for_each_entry(m_rt, &stream->master_list, stream_node) {
-> +		bus = m_rt->bus;
-> +		/* Disable port(s) */
-> +		ret = sdw_enable_disable_ports(m_rt, false);
-> +		if (ret < 0) {
-> +			dev_err(bus->dev, "Disable port(s) failed: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
->   }
->   
->   /**
+On 7/26/2019 3:14 PM, Sai Prakash Ranjan wrote:
+> On 7/26/2019 2:11 PM, Greg Kroah-Hartman wrote:
+>> On Fri, Jul 26, 2019 at 01:50:27PM +0530, Sai Prakash Ranjan wrote:
+>>> On 7/26/2019 12:34 PM, Greg Kroah-Hartman wrote:
+>>>> On Fri, Jul 26, 2019 at 11:49:19AM +0530, Sai Prakash Ranjan wrote:
+>>>>> Hi,
+>>>>>
+>>>>> When trying to test my coresight patches, I found that etr,etf and stm
+>>>>> device nodes are missing from /dev.
+>>>>
+>>>> I have no idea what those device nodes are.
+>>>>
+>>>>> Bisection gives this as the bad commit.
+>>>>>
+>>>>> 1be01d4a57142ded23bdb9e0c8d9369e693b26cc is the first bad commit
+>>>>> commit 1be01d4a57142ded23bdb9e0c8d9369e693b26cc
+>>>>> Author: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>>> Date:   Thu Mar 14 12:13:50 2019 +0100
+>>>>>
+>>>>>       driver: base: Disable CONFIG_UEVENT_HELPER by default
+>>>>>
+>>>>>       Since commit 7934779a69f1184f ("Driver-Core: disable 
+>>>>> /sbin/hotplug by
+>>>>>       default"), the help text for the /sbin/hotplug fork-bomb says
+>>>>>       "This should not be used today [...] creates a high system 
+>>>>> load, or
+>>>>>       [...] out-of-memory situations during bootup".  The rationale 
+>>>>> for this
+>>>>>       was that no recent mainstream system used this anymore (in 
+>>>>> 2010!).
+>>>>>
+>>>>>       A few years later, the complete uevent helper support was 
+>>>>> made optional
+>>>>>       in commit 86d56134f1b67d0c ("kobject: Make support for 
+>>>>> uevent_helper
+>>>>>       optional.").  However, if was still left enabled by default, 
+>>>>> to support
+>>>>>       ancient userland.
+>>>>>
+>>>>>       Time passed by, and nothing should use this anymore, so it 
+>>>>> can be
+>>>>>       disabled by default.
+>>>>>
+>>>>>       Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>>>       Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>>>
+>>>>>    drivers/base/Kconfig | 1 -
+>>>>>    1 file changed, 1 deletion(-)
+>>>>>
+>>>>>
+>>>>> Any idea on this?
+>>>>
+>>>> That means that who ever created those device nodes is relying on udev
+>>>> to do this, and is not doing the correct thing within the kernel and
+>>>> using devtmpfs.
+>>>>
+>>>> Any pointers to where in the kernel those devices are trying to be
+>>>> created?
+>>>>
+>>>
+>>> Somewhere in drivers/hwtracing/coresight/* probably. I am not sure,
+>>> Mathieu/Suzuki would be able to point you to the exact code.
+>>>
+>>> Also just to add on some more details, I am using *initramfs*
+>>
+>> Are you using devtmpfs for your /dev/ mount?
+>>
+> 
+> I am not mounting devtmpfs. However
+> 
+>   CONFIG_DEVTMPFS=y
+>   CONFIG_DEVTMPFS_MOUNT=y
 > 
 
-While not directly connected to this commit, I see that you do:
-link_for_each_entry(m_rt, &stream->master_list, stream_node)
+Ok my initramfs is using mdev:
 
-quite often in /stream.c code. Helpful macro would prove useful.
+*/sbin/mdev -s*
+
+This somehow is not mounting etr, etf, stm devices when uevent-helper is
+disabled. Anyways as Suzuki mentioned, using devtmpfs does fix the issue.
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
