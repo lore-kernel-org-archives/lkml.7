@@ -2,447 +2,130 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBBDC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F56C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B7E22CB9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7889B216C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:41:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="gDX4zze0"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="gF9HjbvM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbfGZJlL (ORCPT
+        id S1726413AbfGZJlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:41:11 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43615 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbfGZJlJ (ORCPT
+        Fri, 26 Jul 2019 05:41:36 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:35790 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbfGZJlg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:41:09 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p13so53683892wru.10
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 02:41:07 -0700 (PDT)
+        Fri, 26 Jul 2019 05:41:36 -0400
+Received: by mail-vs1-f66.google.com with SMTP id u124so35691810vsu.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 02:41:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jGJO60BGRfv0UwsNco+vPhFtEwujYOvVXKIXwQ+ynCQ=;
-        b=gDX4zze0R2o2iXPvZ+fJveRTo2g33vYDGTpCuRCQY9DurpB1TaCaMP/5KHfsjvJ2yS
-         pXtOttKQdk1I7m4I9LDKwH5WQZvhWoVVVxFoM59I21wrTIQC3ulwbcD4X8E0XpcI/Ex9
-         ZVth4yvA6GhXtjikt3xwvR5wPvtnNhbuVtwWuh2sHDecpWdqFVRegjzrMst3c6xv5H6n
-         rYcon3yTs/GFUTh/++MXsxRTyCS47KhpQkUenUJCDj3PhkAggGbR8g4UxiSAvk4vqILA
-         hZqQgwAGBQ0yNnbEeaKWAvC/lW5+A2cYhopc9WZQO//0Mq4crKOtTvEDoSK61FgpJDKf
-         ZSGw==
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=zQAETFiPc0aFNIxeDXyiIDZA2xGxTwhcJMiDlxf4BIg=;
+        b=gF9HjbvMjl5SVhv7yb2XcM5f/0R83Nt0MPGcMkb3JbW0PVLg8hJ1aDN8/yxAzHRJe8
+         h9bXjl+UIP7KZVZAq1hlOgwASM6/xlIuz5VAvWQ9gqSBIcvHOSWWHldRinLfZcpxh5Rr
+         VrSzo56C0bQjWOrBiGcfS6/jjvR+Xnuj4oVSbD6ay+tKRmwQUR9Zq63KTw704nCRuR3M
+         UpFbHnUlHD8pWZl/Wa2KTRmcV6gw6k48UOvAfQhYPVD3wnFnjv7obhES0C5gXSDvYFjU
+         DQh0biEXrF3tyOZ+TJv1zPmIv/gUnZ5njhjYC/kyqTZEJp9caVQKRvrG7Vxf9uhQEWPk
+         fzbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jGJO60BGRfv0UwsNco+vPhFtEwujYOvVXKIXwQ+ynCQ=;
-        b=VUvK/MlD8EHmpP8+iqnga3o1FWe1Xq1c3e9ZMFIrorIxaXH8JUVX+soWZCzwSrhtZ0
-         3ngx1NP330aMsq4UdOuwdbIbxCv7Mz859C4SE5lUBeBdyhX0hGi2scMF5qdfNDcieOaD
-         DSMXW2UWaKsluISontd2hvW0kqEaqlim6uWf9/sB9YG6VIL2J+Bvpsaj1qKRIM0S1AFH
-         ubB1mlUmMzsQBgYlfG6Utr0kU666H0IdTS/f9tcsnUalJb76St/WpLA4b2yQGcRg6rcN
-         PQkIkVPtqxQDI4w7u91X/UokbH6icUjk7ZwU6dEM5aFTgyqAK1opIuiqDCLDVpBXir17
-         cneA==
-X-Gm-Message-State: APjAAAWnaE8Q6DGbzNv5sdk5C4oRUje7pACbOOPJ8SlPBn1AcEiLmd6j
-        RBbVdxscYGn2odbRw3VlhSZNCYMkP34=
-X-Google-Smtp-Source: APXvYqwOERcca6Jycz2UpfNdg60A9BigLTUkM1foiwh6hBqDy2xfdBe8JHBQmqh3qrOe54+Rn6BRKQ==
-X-Received: by 2002:adf:f851:: with SMTP id d17mr101113985wrq.77.1564134066312;
-        Fri, 26 Jul 2019 02:41:06 -0700 (PDT)
-Received: from localhost.localdomain ([213.220.153.21])
-        by smtp.gmail.com with ESMTPSA id r12sm61664892wrt.95.2019.07.26.02.41.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 02:41:05 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     linux-kernel@vger.kernel.org, oleg@redhat.com
-Cc:     arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
-        joel@joelfernandes.org, tglx@linutronix.de, tj@kernel.org,
-        dhowells@redhat.com, jannh@google.com, luto@kernel.org,
-        akpm@linux-foundation.org, cyphar@cyphar.com,
-        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        kernel-team@android.com, Christian Brauner <christian@brauner.io>
-Subject: [PATCH v1 2/2] pidfd: add pidfd_wait tests
-Date:   Fri, 26 Jul 2019 11:39:34 +0200
-Message-Id: <20190726093934.13557-3-christian@brauner.io>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190726093934.13557-1-christian@brauner.io>
-References: <20190726093934.13557-1-christian@brauner.io>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zQAETFiPc0aFNIxeDXyiIDZA2xGxTwhcJMiDlxf4BIg=;
+        b=aplUfGEmiha52RfASU2J67aqyhj0RzmjzgP2a4J5bShEzlKj0CEJkbp1Jrc00IYzEl
+         bsQyKt0kzJSQOSBvaFIfDzgoU4Nh4wyxflH8cxJweL+PJmEFbI48QBOY0JKafDzOeEA2
+         WI3dCcK1iK5qGBdi23Q4IEnVpX4fkEKxm4HiMLH1HTVCenxKxzfQdHWRr18G35uro+En
+         ua/URuf2KCF6QC6W1W3K/BxjmigvPPypYtInojfW2WfTA0RTyj9XlU0WJMDoeBO+D4Mp
+         VmTVzmsVdn74IrJ0y0DhpsXxXk7Mf9wMTTMy7IRzur8wOQwsaj89YOK43mt7szm0ECg7
+         0wKQ==
+X-Gm-Message-State: APjAAAUHja/lwnN4GdOeEhO6k3/UhM/oQngk9XMba8AU7acb8IUGHSGt
+        Xx1VjlBb7wO9QF1Sae8O5W9eKnTV3KGmT3SJjvNRYQ==
+X-Google-Smtp-Source: APXvYqxvp/2LfFvQ/EjoQDSHcBttZZk1A87AFf9gl9KRUa+fnZYFT1MDihIpFExEm6iD5Y9Rq6s1yOnrhkOaXjfB/uI=
+X-Received: by 2002:a67:d990:: with SMTP id u16mr59869159vsj.95.1564134094915;
+ Fri, 26 Jul 2019 02:41:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190725080925.6575-1-jian-hong@endlessm.com> <06d713fff7434dfb9ccab32c2e2112e2@AcuMS.aculab.com>
+ <CAPpJ_ecAAw=1X=7+MOw-VVH0ZKBr6rcRub6JnEqgNbZ6Hxt=ag@mail.gmail.com> <c2cdffd30923459e8773379fc2927e1d@AcuMS.aculab.com>
+In-Reply-To: <c2cdffd30923459e8773379fc2927e1d@AcuMS.aculab.com>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Fri, 26 Jul 2019 17:40:58 +0800
+Message-ID: <CAPpJ_eey7+KCMFj2YVQD8ziWR_xf-==k9MYb49-32Z5E6vTdHA@mail.gmail.com>
+Subject: Re: [PATCH] rtw88: pci: Use general byte arrays as the elements of RX ring
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux@endlessm.com" <linux@endlessm.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add tests for pidfd_wait() and CLONE_WAIT_PID:
-- test that waitid(P_PIDFD) can wait on a pidfd
-- test that waitid(P_PIDFD) can wait on a pidfd and return siginfo_t
-- test that waitid(P_PIDFD) works with WEXITED
-- test that waitid(P_PIDFD) works with WSTOPPED
-- test that waitid(P_PIDFD) works with WUNTRACED
-- test that waitid(P_PIDFD) works with WCONTINUED
-- test that waitid(P_PIDFD) works with WNOWAIT
-- test that waitid(P_PIDFD)works with WNOHANG
+David Laight <David.Laight@aculab.com> =E6=96=BC 2019=E5=B9=B47=E6=9C=8826=
+=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=885:23=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> From: Jian-Hong Pan
+> > Sent: 26 July 2019 07:18
+> ...
+> > > While allocating all 512 buffers in one block (just over 4MB)
+> > > is probably not a good idea, you may need to allocated (and dma map)
+> > > then in groups.
+> >
+> > Thanks for reviewing.  But got questions here to double confirm the ide=
+a.
+> > According to original code, it allocates 512 skbs for RX ring and dma
+> > mapping one by one.  So, the new code allocates memory buffer 512
+> > times to get 512 buffer arrays.  Will the 512 buffers arrays be in one
+> > block?  Do you mean aggregate the buffers as a scatterlist and use
+> > dma_map_sg?
+>
+> If you malloc a buffer of size (8192+32) the allocator will either
+> round it up to a whole number of (often 4k) pages or to a power of
+> 2 of pages - so either 12k of 16k.
+> I think the Linux allocator does the latter.
+> Some of the allocators also 'steal' a bit from the front of the buffer
+> for 'red tape'.
+>
+> OTOH malloc the space 15 buffers and the allocator will round the
+> 15*(8192 + 32) up to 32*4k - and you waste under 8k across all the
+> buffers.
+>
+> You then dma_map the large buffer and split into the actual rx buffers.
+> Repeat until you've filled the entire ring.
+> The only complication is remembering the base address (and size) for
+> the dma_unmap and free.
+> Although there is plenty of padding to extend the buffer structure
+> significantly without using more memory.
+> Allocate in 15's and you (probably) have 512 bytes per buffer.
+> Allocate in 31's and you have 256 bytes.
+>
+> The problem is that larger allocates are more likely to fail
+> (especially if the system has been running for some time).
+> So you almost certainly want to be able to fall back to smaller
+> allocates even though they use more memory.
+>
+> I also wonder if you actually need 512 8k rx buffers to cover
+> interrupt latency?
+> I've not done any measurements for 20 years!
 
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Andy Lutomirsky <luto@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
----
-v1:
-- Christian Brauner <christian@brauner.io>:
-  - adapt tests to new P_PIDFD concept
----
- tools/testing/selftests/pidfd/pidfd.h      |  25 +++
- tools/testing/selftests/pidfd/pidfd_test.c |  14 --
- tools/testing/selftests/pidfd/pidfd_wait.c | 245 +++++++++++++++++++++
- 3 files changed, 270 insertions(+), 14 deletions(-)
- create mode 100644 tools/testing/selftests/pidfd/pidfd_wait.c
+Thanks for the explanation.
+I am not sure the combination of 512 8k RX buffers.  Maybe Realtek
+folks can give us some idea.
+Tony Chuang any comment?
 
-diff --git a/tools/testing/selftests/pidfd/pidfd.h b/tools/testing/selftests/pidfd/pidfd.h
-index 8452e910463f..7d7d0ca05e0b 100644
---- a/tools/testing/selftests/pidfd/pidfd.h
-+++ b/tools/testing/selftests/pidfd/pidfd.h
-@@ -16,6 +16,26 @@
- 
- #include "../kselftest.h"
- 
-+#ifndef P_PIDFD
-+#define P_PIDFD 3
-+#endif
-+
-+#ifndef CLONE_PIDFD
-+#define CLONE_PIDFD 0x00001000
-+#endif
-+
-+#ifndef __NR_pidfd_open
-+#define __NR_pidfd_open -1
-+#endif
-+
-+#ifndef __NR_pidfd_send_signal
-+#define __NR_pidfd_send_signal -1
-+#endif
-+
-+#ifndef __NR_clone3
-+#define __NR_clone3 -1
-+#endif
-+
- /*
-  * The kernel reserves 300 pids via RESERVED_PIDS in kernel/pid.c
-  * That means, when it wraps around any pid < 300 will be skipped.
-@@ -53,5 +73,10 @@ int wait_for_pid(pid_t pid)
- 	return WEXITSTATUS(status);
- }
- 
-+static inline int sys_pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
-+					unsigned int flags)
-+{
-+	return syscall(__NR_pidfd_send_signal, pidfd, sig, info, flags);
-+}
- 
- #endif /* __PIDFD_H */
-diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
-index 7eaa8a3de262..42e3eb494d72 100644
---- a/tools/testing/selftests/pidfd/pidfd_test.c
-+++ b/tools/testing/selftests/pidfd/pidfd_test.c
-@@ -21,20 +21,12 @@
- #include "pidfd.h"
- #include "../kselftest.h"
- 
--#ifndef __NR_pidfd_send_signal
--#define __NR_pidfd_send_signal -1
--#endif
--
- #define str(s) _str(s)
- #define _str(s) #s
- #define CHILD_THREAD_MIN_WAIT 3 /* seconds */
- 
- #define MAX_EVENTS 5
- 
--#ifndef CLONE_PIDFD
--#define CLONE_PIDFD 0x00001000
--#endif
--
- static pid_t pidfd_clone(int flags, int *pidfd, int (*fn)(void *))
- {
- 	size_t stack_size = 1024;
-@@ -47,12 +39,6 @@ static pid_t pidfd_clone(int flags, int *pidfd, int (*fn)(void *))
- #endif
- }
- 
--static inline int sys_pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
--					unsigned int flags)
--{
--	return syscall(__NR_pidfd_send_signal, pidfd, sig, info, flags);
--}
--
- static int signal_received;
- 
- static void set_signal_received_on_sigusr1(int sig)
-diff --git a/tools/testing/selftests/pidfd/pidfd_wait.c b/tools/testing/selftests/pidfd/pidfd_wait.c
-new file mode 100644
-index 000000000000..018d806032c0
---- /dev/null
-+++ b/tools/testing/selftests/pidfd/pidfd_wait.c
-@@ -0,0 +1,245 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <linux/sched.h>
-+#include <linux/types.h>
-+#include <signal.h>
-+#include <stdint.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <sched.h>
-+#include <string.h>
-+#include <sys/resource.h>
-+#include <sys/time.h>
-+#include <sys/types.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
-+
-+#include "pidfd.h"
-+#include "../kselftest.h"
-+
-+#define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
-+
-+static pid_t sys_clone3(struct clone_args *args)
-+{
-+	return syscall(__NR_clone3, args, sizeof(struct clone_args));
-+}
-+
-+static int sys_waitid(int which, pid_t pid, siginfo_t *info, int options,
-+		      struct rusage *ru)
-+{
-+	return syscall(__NR_waitid, which, pid, info, options, ru);
-+}
-+
-+static int test_pidfd_wait_simple(void)
-+{
-+	const char *test_name = "pidfd wait siginfo";
-+	int pidfd = -1, status = 0;
-+	pid_t parent_tid = -1;
-+	struct clone_args args = {
-+		.parent_tid = ptr_to_u64(&parent_tid),
-+		.pidfd = ptr_to_u64(&pidfd),
-+		.flags = CLONE_PIDFD | CLONE_PARENT_SETTID,
-+		.exit_signal = SIGCHLD,
-+	};
-+	int ret;
-+	pid_t pid;
-+	siginfo_t info = {
-+		.si_signo = 0,
-+	};
-+
-+	pid = sys_clone3(&args);
-+	if (pid < 0)
-+		ksft_exit_fail_msg("%s test: failed to create new process %s\n",
-+				   test_name, strerror(errno));
-+
-+	if (pid == 0)
-+		exit(EXIT_SUCCESS);
-+
-+	pid = sys_waitid(P_PIDFD, pidfd, &info, WEXITED, NULL);
-+	if (pid < 0)
-+		ksft_exit_fail_msg(
-+			"%s test: failed to wait on process with pid %d and pidfd %d: %s\n",
-+			test_name, parent_tid, pidfd, strerror(errno));
-+
-+	if (!WIFEXITED(info.si_status) || WEXITSTATUS(info.si_status))
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected status received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, parent_tid, pidfd, strerror(errno));
-+	close(pidfd);
-+
-+	if (info.si_signo != SIGCHLD)
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected si_signo value %d received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, info.si_signo, parent_tid, pidfd,
-+			strerror(errno));
-+
-+	if (info.si_code != CLD_EXITED)
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected si_code value %d received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, info.si_code, parent_tid, pidfd,
-+			strerror(errno));
-+
-+	if (info.si_pid != parent_tid)
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected si_pid value %d received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, info.si_pid, parent_tid, pidfd,
-+			strerror(errno));
-+
-+	ksft_test_result_pass("%s test: Passed\n", test_name);
-+	return 0;
-+}
-+
-+static int test_pidfd_wait_states(void)
-+{
-+	const char *test_name = "pidfd wait states";
-+	int pidfd = -1, status = 0;
-+	pid_t parent_tid = -1;
-+	struct clone_args args = {
-+		.parent_tid = ptr_to_u64(&parent_tid),
-+		.pidfd = ptr_to_u64(&pidfd),
-+		.flags = CLONE_PIDFD | CLONE_PARENT_SETTID,
-+		.exit_signal = SIGCHLD,
-+	};
-+	int ret;
-+	pid_t pid;
-+	siginfo_t info = {
-+		.si_signo = 0,
-+	};
-+
-+	pid = sys_clone3(&args);
-+	if (pid < 0)
-+		ksft_exit_fail_msg("%s test: failed to create new process %s\n",
-+				   test_name, strerror(errno));
-+
-+	if (pid == 0) {
-+		kill(getpid(), SIGSTOP);
-+		kill(getpid(), SIGSTOP);
-+		exit(EXIT_SUCCESS);
-+	}
-+
-+	ret = sys_waitid(P_PIDFD, pidfd, &info, WSTOPPED, NULL);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s test: failed to wait on process with pid %d and pidfd %d: %s\n",
-+			test_name, parent_tid, pidfd, strerror(errno));
-+
-+	if (info.si_signo != SIGCHLD)
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected si_signo value %d received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, info.si_signo, parent_tid, pidfd,
-+			strerror(errno));
-+
-+	if (info.si_code != CLD_STOPPED)
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected si_code value %d received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, info.si_code, parent_tid, pidfd,
-+			strerror(errno));
-+
-+	if (info.si_pid != parent_tid)
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected si_pid value %d received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, info.si_pid, parent_tid, pidfd,
-+			strerror(errno));
-+
-+	ret = sys_pidfd_send_signal(pidfd, SIGCONT, NULL, 0);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s test: failed to wait on process with pid %d and pidfd %d: %s\n",
-+			test_name, parent_tid, pidfd, strerror(errno));
-+
-+	ret = sys_waitid(P_PIDFD, pidfd, &info, WCONTINUED, NULL);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s test: failed to wait on process with pid %d and pidfd %d: %s\n",
-+			test_name, parent_tid, pidfd, strerror(errno));
-+
-+	if (info.si_signo != SIGCHLD)
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected si_signo value %d received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, info.si_signo, parent_tid, pidfd,
-+			strerror(errno));
-+
-+	if (info.si_code != CLD_CONTINUED)
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected si_code value %d received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, info.si_code, parent_tid, pidfd,
-+			strerror(errno));
-+
-+	if (info.si_pid != parent_tid)
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected si_pid value %d received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, info.si_pid, parent_tid, pidfd,
-+			strerror(errno));
-+
-+	ret = sys_waitid(P_PIDFD, pidfd, &info, WUNTRACED, NULL);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s test: failed to wait on process with pid %d and pidfd %d: %s\n",
-+			test_name, parent_tid, pidfd, strerror(errno));
-+
-+	if (info.si_signo != SIGCHLD)
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected si_signo value %d received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, info.si_signo, parent_tid, pidfd,
-+			strerror(errno));
-+
-+	if (info.si_code != CLD_STOPPED)
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected si_code value %d received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, info.si_code, parent_tid, pidfd,
-+			strerror(errno));
-+
-+	if (info.si_pid != parent_tid)
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected si_pid value %d received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, info.si_pid, parent_tid, pidfd,
-+			strerror(errno));
-+
-+	ret = sys_pidfd_send_signal(pidfd, SIGKILL, NULL, 0);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s test: failed to wait on process with pid %d and pidfd %d: %s\n",
-+			test_name, parent_tid, pidfd, strerror(errno));
-+
-+	ret = sys_waitid(P_PIDFD, pidfd, &info, WEXITED, NULL);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s test: failed to wait on process with pid %d and pidfd %d: %s\n",
-+			test_name, parent_tid, pidfd, strerror(errno));
-+
-+	if (info.si_signo != SIGCHLD)
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected si_signo value %d received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, info.si_signo, parent_tid, pidfd,
-+			strerror(errno));
-+
-+	if (info.si_code != CLD_KILLED)
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected si_code value %d received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, info.si_code, parent_tid, pidfd,
-+			strerror(errno));
-+
-+	if (info.si_pid != parent_tid)
-+		ksft_exit_fail_msg(
-+			"%s test: unexpected si_pid value %d received after waiting on process with pid %d and pidfd %d: %s\n",
-+			test_name, info.si_pid, parent_tid, pidfd,
-+			strerror(errno));
-+
-+	close(pidfd);
-+
-+	ksft_test_result_pass("%s test: Passed\n", test_name);
-+	return 0;
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	ksft_print_header();
-+	ksft_set_plan(2);
-+
-+	test_pidfd_wait_simple();
-+	test_pidfd_wait_states();
-+
-+	return ksft_exit_pass();
-+}
--- 
-2.22.0
-
+Jian-Hong Pan
