@@ -2,127 +2,243 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB2BC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C35C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9802238C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D2A322BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:08:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akcpUf2+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfGZJH1 (ORCPT
+        id S1726065AbfGZJIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:07:27 -0400
-Received: from mga07.intel.com ([134.134.136.100]:9276 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfGZJHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:07:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 02:07:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,310,1559545200"; 
-   d="scan'208";a="345772348"
-Received: from xxx.igk.intel.com ([10.237.93.170])
-  by orsmga005.jf.intel.com with ESMTP; 26 Jul 2019 02:07:22 -0700
-From:   =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>
-Subject: [PATCH v4 1/1] ASoC: Intel: Skylake: Remove static table index when parsing topology
-Date:   Fri, 26 Jul 2019 11:09:29 +0200
-Message-Id: <20190726090929.27946-2-amadeuszx.slawinski@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190726090929.27946-1-amadeuszx.slawinski@linux.intel.com>
-References: <20190726090929.27946-1-amadeuszx.slawinski@linux.intel.com>
+        Fri, 26 Jul 2019 05:08:36 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33781 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfGZJIg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:08:36 -0400
+Received: by mail-pf1-f196.google.com with SMTP id g2so24213511pfq.0;
+        Fri, 26 Jul 2019 02:08:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sl9ak2o2uQzwNPD5/4s22uTgucUrMMNJrOBG4XX3NNQ=;
+        b=akcpUf2+qYcrl7GEwXjRMLmRnhSMBI0S28EtF1EBs4ISYZGuZYFYUL6MhDgnf80NBS
+         JkXh2FWYcJOQD1B9VPLEeOnSNczCl8hw106N4ancPc0st6mmcW/0x4AVJYdTKR5EBejD
+         Cp3dlHwaEV18ZtEtxa4lrlTq/l3Wz76dlZmUvnksq/r6WLlxsOv38/NM63KdZ/Lr5SdO
+         yCh1igmU9qhoP/NGOkvJROUHo/NgPFm+3z6M/ckT8Dqw8Ya2aGvV2r0ZB7PTmJjuh7F+
+         6M1h6pDK6h3YonjTikTwv0g8y/4S40R+bKAgxsTFLIUivMNH4x98DB3MXu1i6TPemQuY
+         kRIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sl9ak2o2uQzwNPD5/4s22uTgucUrMMNJrOBG4XX3NNQ=;
+        b=DAXhhV2bF41pWQsgv1DFzoUGbFnWPC9yClvPKiB4+d1sXD0k8dPet5lFALbPfZ3TEy
+         9ELTMONuLpomuA935F7oj9Bu+3WGDWqz54U/TNrAM1zau1qfeI/k1y6s6QOP96T599fR
+         YmwCJSyivdhIJd2mW2X9ZcKlRTExBNls4gphaUX9xCf2yf7YYfti1aSZGB2GGooeQNk0
+         qJAhmrPg37ro6tPjhHNHRQXy4e4wLpvohzSqPLxG56SmE24DRMoaMOM3uwsvz6ju8g20
+         h77kQln4FZsqg4hu2n8Vhpvxvs2684cxEiXwIFpsWxvxyF6omg1CSpr5CSg8TK2L4EgF
+         dJEg==
+X-Gm-Message-State: APjAAAVi00Dz3BFJom+W9tp7tLO5+LJ6Sw9c8wz+11+7VWLvvx0/qsLt
+        h9cUmHirYjrnDemTrS/jmQM=
+X-Google-Smtp-Source: APXvYqzmH4ONSATgubzOLMnn8csvaEAeMHceOnU9JLK0FdSn4cekseMXU34W0DbTlt/Ieue3yuqqhA==
+X-Received: by 2002:a65:65c5:: with SMTP id y5mr89541205pgv.342.1564132114939;
+        Fri, 26 Jul 2019 02:08:34 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id z24sm93209667pfr.51.2019.07.26.02.08.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 26 Jul 2019 02:08:34 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Kevin Tsai <ktsai@capellamicro.com>,
+        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] iio: light: Use device-managed APIs
+Date:   Fri, 26 Jul 2019 17:08:29 +0800
+Message-Id: <20190726090829.16979-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently when we remove and reload driver we use previous ref_count
-value to start iterating over skl->modules which leads to out of table
-access. To fix this just inline the function and calculate indexes
-everytime we parse UUID token.
+Use device-managed APIs to simplify the code.
+The remove functions are redundant now and can
+be deleted.
 
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- sound/soc/intel/skylake/skl-topology.c | 34 +++++++++-----------------
- 1 file changed, 12 insertions(+), 22 deletions(-)
+ drivers/iio/light/cm3323.c | 31 ++++++++++-----------------
+ drivers/iio/light/si1145.c | 44 ++++++++++++++------------------------
+ 2 files changed, 27 insertions(+), 48 deletions(-)
 
-diff --git a/sound/soc/intel/skylake/skl-topology.c b/sound/soc/intel/skylake/skl-topology.c
-index 118866cd5075..c1c37ce759bd 100644
---- a/sound/soc/intel/skylake/skl-topology.c
-+++ b/sound/soc/intel/skylake/skl-topology.c
-@@ -3333,25 +3333,6 @@ static int skl_tplg_get_int_tkn(struct device *dev,
- 	return tkn_count;
+diff --git a/drivers/iio/light/cm3323.c b/drivers/iio/light/cm3323.c
+index 50f3438c2b49..fd352c0a4507 100644
+--- a/drivers/iio/light/cm3323.c
++++ b/drivers/iio/light/cm3323.c
+@@ -101,15 +101,16 @@ static int cm3323_init(struct iio_dev *indio_dev)
+ 	return 0;
  }
  
--static int skl_tplg_get_manifest_uuid(struct device *dev,
--				struct skl_dev *skl,
--				struct snd_soc_tplg_vendor_uuid_elem *uuid_tkn)
--{
--	static int ref_count;
--	struct skl_module *mod;
+-static void cm3323_disable(struct iio_dev *indio_dev)
++static void cm3323_disable(void *data)
+ {
+ 	int ret;
+-	struct cm3323_data *data = iio_priv(indio_dev);
++	struct iio_dev *indio_dev = data;
++	struct cm3323_data *cm_data = iio_priv(indio_dev);
+ 
+-	ret = i2c_smbus_write_word_data(data->client, CM3323_CMD_CONF,
++	ret = i2c_smbus_write_word_data(cm_data->client, CM3323_CMD_CONF,
+ 					CM3323_CONF_SD_BIT);
+ 	if (ret < 0)
+-		dev_err(&data->client->dev, "Error writing reg_conf\n");
++		dev_err(&cm_data->client->dev, "Error writing reg_conf\n");
+ }
+ 
+ static int cm3323_set_it_bits(struct cm3323_data *data, int val, int val2)
+@@ -243,25 +244,16 @@ static int cm3323_probe(struct i2c_client *client,
+ 		return ret;
+ 	}
+ 
+-	ret = iio_device_register(indio_dev);
++	ret = devm_add_action_or_reset(&client->dev, cm3323_disable, indio_dev);
++	if (ret < 0)
++		return ret;
++
++	ret = devm_iio_device_register(&client->dev, indio_dev);
+ 	if (ret < 0) {
+ 		dev_err(&client->dev, "failed to register iio dev\n");
+-		goto err_init;
++		return ret;
+ 	}
+ 
+-	return 0;
+-err_init:
+-	cm3323_disable(indio_dev);
+-	return ret;
+-}
 -
--	if (uuid_tkn->token == SKL_TKN_UUID) {
--		mod = skl->modules[ref_count];
--		guid_copy(&mod->uuid, (guid_t *)&uuid_tkn->uuid);
--		ref_count++;
--	} else {
--		dev_err(dev, "Not an UUID token tkn %d\n", uuid_tkn->token);
--		return -EINVAL;
--	}
+-static int cm3323_remove(struct i2c_client *client)
+-{
+-	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+-
+-	iio_device_unregister(indio_dev);
+-	cm3323_disable(indio_dev);
+-
+ 	return 0;
+ }
+ 
+@@ -276,7 +268,6 @@ static struct i2c_driver cm3323_driver = {
+ 		.name = CM3323_DRV_NAME,
+ 	},
+ 	.probe		= cm3323_probe,
+-	.remove		= cm3323_remove,
+ 	.id_table	= cm3323_id,
+ };
+ 
+diff --git a/drivers/iio/light/si1145.c b/drivers/iio/light/si1145.c
+index 6579d2418814..61867552b27c 100644
+--- a/drivers/iio/light/si1145.c
++++ b/drivers/iio/light/si1145.c
+@@ -1271,13 +1271,14 @@ static int si1145_probe_trigger(struct iio_dev *indio_dev)
+ 	return 0;
+ }
+ 
+-static void si1145_remove_trigger(struct iio_dev *indio_dev)
++static void si1145_remove_trigger(void *data)
+ {
+-	struct si1145_data *data = iio_priv(indio_dev);
++	struct iio_dev *indio_dev = data;
++	struct si1145_data *si_data = iio_priv(indio_dev);
+ 
+-	if (data->trig) {
+-		iio_trigger_unregister(data->trig);
+-		data->trig = NULL;
++	if (si_data->trig) {
++		iio_trigger_unregister(si_data->trig);
++		si_data->trig = NULL;
+ 	}
+ }
+ 
+@@ -1332,7 +1333,8 @@ static int si1145_probe(struct i2c_client *client,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = iio_triggered_buffer_setup(indio_dev, NULL,
++	ret = devm_iio_triggered_buffer_setup(&client->dev,
++		indio_dev, NULL,
+ 		si1145_trigger_handler, &si1145_buffer_setup_ops);
+ 	if (ret < 0)
+ 		return ret;
+@@ -1340,23 +1342,21 @@ static int si1145_probe(struct i2c_client *client,
+ 	if (client->irq) {
+ 		ret = si1145_probe_trigger(indio_dev);
+ 		if (ret < 0)
+-			goto error_free_buffer;
++			return ret;
++
++		ret = devm_add_action_or_reset(&client->dev,
++					si1145_remove_trigger, indio_dev);
++		if (ret < 0)
++			return ret;
++
+ 	} else {
+ 		dev_info(&client->dev, "no irq, using polling\n");
+ 	}
+ 
+-	ret = iio_device_register(indio_dev);
++	ret = devm_iio_device_register(&client->dev, indio_dev);
+ 	if (ret < 0)
+-		goto error_free_trigger;
++		return ret;
+ 
+ 	return 0;
+-
+-error_free_trigger:
+-	si1145_remove_trigger(indio_dev);
+-error_free_buffer:
+-	iio_triggered_buffer_cleanup(indio_dev);
+-
+-	return ret;
+ }
+ 
+ static const struct i2c_device_id si1145_ids[] = {
+@@ -1371,23 +1371,11 @@ static const struct i2c_device_id si1145_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, si1145_ids);
+ 
+-static int si1145_remove(struct i2c_client *client)
+-{
+-	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+-
+-	iio_device_unregister(indio_dev);
+-	si1145_remove_trigger(indio_dev);
+-	iio_triggered_buffer_cleanup(indio_dev);
 -
 -	return 0;
 -}
 -
- /*
-  * Fill the manifest structure by parsing the tokens based on the
-  * type.
-@@ -3362,6 +3343,7 @@ static int skl_tplg_get_manifest_tkn(struct device *dev,
- {
- 	int tkn_count = 0, ret;
- 	int off = 0, tuple_size = 0;
-+	u8 uuid_index = 0;
- 	struct snd_soc_tplg_vendor_array *array;
- 	struct snd_soc_tplg_vendor_value_elem *tkn_elem;
+ static struct i2c_driver si1145_driver = {
+ 	.driver = {
+ 		.name   = "si1145",
+ 	},
+ 	.probe  = si1145_probe,
+-	.remove = si1145_remove,
+ 	.id_table = si1145_ids,
+ };
  
-@@ -3384,9 +3366,17 @@ static int skl_tplg_get_manifest_tkn(struct device *dev,
- 			continue;
- 
- 		case SND_SOC_TPLG_TUPLE_TYPE_UUID:
--			ret = skl_tplg_get_manifest_uuid(dev, skl, array->uuid);
--			if (ret < 0)
--				return ret;
-+			if (array->uuid->token != SKL_TKN_UUID) {
-+				dev_err(dev, "Not an UUID token: %d\n",
-+					array->uuid->token);
-+				return -EINVAL;
-+			}
-+			if (uuid_index >= skl->nr_modules) {
-+				dev_err(dev, "Too many UUID tokens\n");
-+				return -EINVAL;
-+			}
-+			guid_copy(&skl->modules[uuid_index++]->uuid,
-+				  (guid_t *)&array->uuid->uuid);
- 
- 			tuple_size += sizeof(*array->uuid);
- 			continue;
 -- 
-2.17.1
+2.20.1
 
