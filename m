@@ -2,165 +2,109 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538E1C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705C6C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2076422CBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38986218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:25:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="NSm723gH"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Y3QrsQ1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbfGZPXe (ORCPT
+        id S1727981AbfGZPZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:23:34 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46053 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728416AbfGZPXd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:23:33 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y8so24901406plr.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 08:23:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dWQZR/3W1JJGAqPUD7hTWyfWfaLoNTQhqklPLc/rCo0=;
-        b=NSm723gHApWanD6yeW4J2Hod3LusoD9q5rDYeMMOfmnvzy1V6IW8Ik70kYPIywWp+5
-         ePTv11kUJPhco3rtrxGscl1Xvn/9LGCfMjCA63hEQGhn0+RLeCWphNUjv25+mG/EUvI5
-         IipB8N+66gykX0zBQeBiqZbzJqprH2vYSF24M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dWQZR/3W1JJGAqPUD7hTWyfWfaLoNTQhqklPLc/rCo0=;
-        b=sCPPa+XTX7Q3jFTYKc4bdl8W4VJrC3ZeDI7i15Y9ntR/8QJ5ra0ZcHeX7HueTDE9bJ
-         cmhRbe4huaIEOtjWWohBw9zqK6TA3LxK0p2irHF103Bk+6S4bzkZ60yE1XhhgZwOm84j
-         7LeAyTLITpuKMeZ/dpZukTWTQCR4vAeRk6vGL6jwP3NhAbi5qg5N3qEgQm5U5Rj7wohf
-         JjaNuzHtXLT+hwHfF1XwH199yOCSeHRmIXJ7df8Zbt20vm0MaUyE10QPXDt4lYbFeP4q
-         qbguxO1uAhiurDR3tbj4kBH8wXOG3X8Gg0A3sWuB81ciNxW00FUdbUPekiPOLCnqE99j
-         ziZw==
-X-Gm-Message-State: APjAAAVHCu//GpI/RJGkWsdQNgewHkfP4AjOkccoSWuL3vEl+u8biSAg
-        70QlUw/a/dW8L4rNG+l1M8XsLw3R
-X-Google-Smtp-Source: APXvYqxDFJfffeebJNKJPBtRQh+QrCwtMX6C8cQ3ucTqzwQ23dCczXPmGvaj1O0CVDvfDxhY8WADAQ==
-X-Received: by 2002:a17:902:be03:: with SMTP id r3mr97943466pls.156.1564154612178;
-        Fri, 26 Jul 2019 08:23:32 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id w132sm55268640pfd.78.2019.07.26.08.23.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 08:23:31 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
-        fmayer@google.com, joaodias@google.com, joelaf@google.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
-        namhyung@google.com, Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
-        tkjos@google.com, Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, wvw@google.com
-Subject: [PATCH v3 2/2] doc: Update documentation for page_idle virtual address indexing
-Date:   Fri, 26 Jul 2019 11:23:19 -0400
-Message-Id: <20190726152319.134152-2-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-In-Reply-To: <20190726152319.134152-1-joel@joelfernandes.org>
-References: <20190726152319.134152-1-joel@joelfernandes.org>
+        Fri, 26 Jul 2019 11:25:25 -0400
+Received: from mail-eopbgr60065.outbound.protection.outlook.com ([40.107.6.65]:4674
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727476AbfGZPZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:25:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AHVb/c7F6VvWGT8OtnCyc5BUDA0o1O3vea6+1jCce6GR+cIeg08sLVVd2hGME/D5ThECTjU0rr0hpsaY8UBnOq8yEhuwnTHez+PfyvHdIK+9VeXvwf12iPhclqujXgVyWLulEQoky+HlEtMla81EqWSxLY7x+2ezShk79+1NqZ7xuLwvzlYSUVSOoqE5oJiPuP6or7q55E0WT7GIKb2zjPO7qvM9y/ClS8ySckqZsl44aafs2ZsTamVukFjbgXOv4kompz8Hb5nvAbEvQIUMQrqjajC9rFajHSZS/fH80gEaZybt9VJEhjieFAkh6/avSbukEIwigeP0ldhkBIvlow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n+bKdT2+COwjFBZ28cC301VbdXIIY0AMRzlju+ouLE4=;
+ b=JuvEdKlEYIWqHp2x8dkqOGdnrChqmJYKsxoR5UvueRNJ9zDwMIVzaYDFdeMykChqG9blkC5ZUbqVFQ0rbObtSAfyy/K4Ue1b30NwojcH76XZtIdY8uz7k4YoKUpinjcSwHFQkyjZ3wzwS4kOGEsazQ4YSeqBde4wNj87Q6ik7bI/Dw1F4o2j+jni/lCihwRkHTkCXBtoD2N1By+hb1UL5D+XYhFRqntzk2+2D/E360PPhc8o/JNjFOtxXyC4QmCY6X/WPg6zGAhh6lQXlLpIb529PDAw4yKuX+Mz/ylslRWprblaAXVApshBbzjgeg1rrpZL2pZaogFHFPjNTqzXxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n+bKdT2+COwjFBZ28cC301VbdXIIY0AMRzlju+ouLE4=;
+ b=Y3QrsQ1QkT+ONgKIZR1pU/V4FNXOX0d7wb5EHxS+A/OX6slYGhpN9f3iMuFT4D+QGcHO2bb5doHy1DOJrMqAOhhyzYR2l+1wgL3KMugjL8BlwsIw7u6mkAFUBtrCM39Ya2rm7iliuwY4VY8vk32JHEJGr7YOU1QRVf3OYbEAh3U=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3631.eurprd04.prod.outlook.com (52.134.7.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.17; Fri, 26 Jul 2019 15:25:21 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::7c64:5296:4607:e10]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::7c64:5296:4607:e10%5]) with mapi id 15.20.2094.017; Fri, 26 Jul 2019
+ 15:25:21 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v3 05/14] crypto: caam - check authsize
+Thread-Topic: [PATCH v3 05/14] crypto: caam - check authsize
+Thread-Index: AQHVQvEPg1sByUmkbE2MhOZimAmAuA==
+Date:   Fri, 26 Jul 2019 15:25:21 +0000
+Message-ID: <VI1PR0402MB3485FC672AC806098AF0C1A998C00@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <1564063106-9552-1-git-send-email-iuliana.prodan@nxp.com>
+ <1564063106-9552-6-git-send-email-iuliana.prodan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [79.118.216.219]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 41e31e43-09b3-4f95-07c3-08d711dd7967
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3631;
+x-ms-traffictypediagnostic: VI1PR0402MB3631:
+x-microsoft-antispam-prvs: <VI1PR0402MB363106944D935D7D1B97A2E598C00@VI1PR0402MB3631.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 01106E96F6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(136003)(376002)(346002)(199004)(189003)(3846002)(6116002)(53936002)(81166006)(6436002)(9686003)(81156014)(99286004)(6506007)(86362001)(55016002)(316002)(478600001)(25786009)(26005)(71190400001)(71200400001)(6636002)(6246003)(14454004)(8676002)(558084003)(54906003)(8936002)(44832011)(66556008)(66446008)(76116006)(74316002)(66476007)(52536014)(229853002)(66946007)(5660300002)(66066001)(102836004)(7696005)(110136005)(476003)(446003)(186003)(14444005)(256004)(76176011)(68736007)(486006)(7736002)(33656002)(305945005)(4326008)(53546011)(64756008)(91956017)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3631;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: YEZ7N23cv6XIR1z0EyWV03gWkYChTH/p0gVtiSrSu0ui/zq7WEvJBf4cQg5ny36lDLoZWXyfClVAz4JwUPIk532ndIZnW4nSwyufPWHfS9cqAQwFRmaRKXxgHfs+Z3u3cCVOxgEyEddu4IW/OhS9vwXRUmK1EGlxh7WhLBhoyogv66lTERI9pM+V+Dv/cDw3p0keiDwDNPeOSzsBnLRTA6nvYIHflgxVtoARFCULpRAoUD1xJNOn7/XQ+ZBEI5cbgzp+Vk3fj7GIUH4uYGNoVZevduDxN7ay/qZFwec5lh5HOEnXKtGwxTZ+fS6IBLlonOosvHxMcjSr1Hd/4r2DZa2gDrExNgFmpjwt+GcLAuh5Mk2i8NOqjsWDXzwAXXypQSXfXZlH7kG9rRP6nRz1qec5mlIUCouXLEEDUCv41Q0=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41e31e43-09b3-4f95-07c3-08d711dd7967
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2019 15:25:21.7355
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3631
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch updates the documentation with the new page_idle tracking
-feature which uses virtual address indexing.
-
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- .../admin-guide/mm/idle_page_tracking.rst     | 43 ++++++++++++++++---
- 1 file changed, 36 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/admin-guide/mm/idle_page_tracking.rst b/Documentation/admin-guide/mm/idle_page_tracking.rst
-index df9394fb39c2..1eeac78c94a7 100644
---- a/Documentation/admin-guide/mm/idle_page_tracking.rst
-+++ b/Documentation/admin-guide/mm/idle_page_tracking.rst
-@@ -19,10 +19,14 @@ It is enabled by CONFIG_IDLE_PAGE_TRACKING=y.
- 
- User API
- ========
-+There are 2 ways to access the idle page tracking API. One uses physical
-+address indexing, another uses a simpler virtual address indexing scheme.
- 
--The idle page tracking API is located at ``/sys/kernel/mm/page_idle``.
--Currently, it consists of the only read-write file,
--``/sys/kernel/mm/page_idle/bitmap``.
-+Physical address indexing
-+-------------------------
-+The idle page tracking API for physical address indexing using page frame
-+numbers (PFN) is located at ``/sys/kernel/mm/page_idle``.  Currently, it
-+consists of the only read-write file, ``/sys/kernel/mm/page_idle/bitmap``.
- 
- The file implements a bitmap where each bit corresponds to a memory page. The
- bitmap is represented by an array of 8-byte integers, and the page at PFN #i is
-@@ -74,6 +78,31 @@ See :ref:`Documentation/admin-guide/mm/pagemap.rst <pagemap>` for more
- information about ``/proc/pid/pagemap``, ``/proc/kpageflags``, and
- ``/proc/kpagecgroup``.
- 
-+Virtual address indexing
-+------------------------
-+The idle page tracking API for virtual address indexing using virtual page
-+frame numbers (VFN) is located at ``/proc/<pid>/page_idle``. It is a bitmap
-+that follows the same semantics as ``/sys/kernel/mm/page_idle/bitmap``
-+except that it uses virtual instead of physical frame numbers.
-+
-+This idle page tracking API does not need deal with PFN so it does not require
-+prior lookups of ``pagemap`` in order to find if page is idle or not. This is
-+an advantage on some systems where looking up PFN is considered a security
-+issue.  Also in some cases, this interface could be slightly more reliable to
-+use than physical address indexing, since in physical address indexing, address
-+space changes can occur between reading the ``pagemap`` and reading the
-+``bitmap``, while in virtual address indexing, the process's ``mmap_sem`` is
-+held for the duration of the access.
-+
-+To estimate the amount of pages that are not used by a workload one should:
-+
-+ 1. Mark all the workload's pages as idle by setting corresponding bits in
-+    ``/proc/<pid>/page_idle``.
-+
-+ 2. Wait until the workload accesses its working set.
-+
-+ 3. Read ``/proc/<pid>/page_idle`` and count the number of bits set.
-+
- .. _impl_details:
- 
- Implementation Details
-@@ -99,10 +128,10 @@ When a dirty page is written to swap or disk as a result of memory reclaim or
- exceeding the dirty memory limit, it is not marked referenced.
- 
- The idle memory tracking feature adds a new page flag, the Idle flag. This flag
--is set manually, by writing to ``/sys/kernel/mm/page_idle/bitmap`` (see the
--:ref:`User API <user_api>`
--section), and cleared automatically whenever a page is referenced as defined
--above.
-+is set manually, by writing to ``/sys/kernel/mm/page_idle/bitmap`` for physical
-+addressing or by writing to ``/proc/<pid>/page_idle`` for virtual
-+addressing (see the :ref:`User API <user_api>` section), and cleared
-+automatically whenever a page is referenced as defined above.
- 
- When a page is marked idle, the Accessed bit must be cleared in all PTEs it is
- mapped to, otherwise we will not be able to detect accesses to the page coming
--- 
-2.22.0.709.g102302147b-goog
-
+On 7/25/2019 4:58 PM, Iuliana Prodan wrote:=0A=
+> Check authsize to solve the extra tests that expect -EINVAL to be=0A=
+> returned when the authentication tag size is not valid.=0A=
+> =0A=
+> Validated authsize for GCM, RFC4106 and RFC4543.=0A=
+> =0A=
+> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
