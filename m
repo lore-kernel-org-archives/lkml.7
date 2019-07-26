@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E41AC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554CFC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B9622CBE
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B736218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155006;
-	bh=aXuFXmvuOCl4TOVeyEZep3uEELKMMorlx56lvwHF+Wc=;
+	s=default; t=1564155012;
+	bh=qV1uPx44c/lDnu2VPvoFyoVq2I1KcqlgPo8CaBaqsCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A7TlW88D5/b8H5NhRQBO30HH5mQ4EiylPRMbkA9ScENWhrPxp4Q2ihExgwHU4VTrr
-	 0oGN/nDDo+VPVuNOeAdo92L9Aj2rirX+x+qh6YSEHNohRpimKrOb45wgkwj0JXd2L+
-	 QCb+P63zAzGPdqw+VObimYIenxx0lDxwY84VVrMI=
+	b=DPf4+TQ7/Q6Wsa6RuIuv3Oz7Rk3aI3sLpEGJaxJQ819T1R1Nc/kEEidB6DsEoM+47
+	 3Jq8zXJ7bmBracd/P8whfLOY8V5e/Oq7oo0ijw/z1k3FO48a6MkfYI+y5MeAimhl3d
+	 fRG8XgJSQNRG08sR714KydLOj2dx8/XARM0HFtDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388983AbfGZPaE (ORCPT
+        id S2389009AbfGZPaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:30:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44828 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:30:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728305AbfGZPaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:30:01 -0400
+        id S2388997AbfGZPaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:30:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C9C322CB9;
-        Fri, 26 Jul 2019 15:30:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4A7222CB9;
+        Fri, 26 Jul 2019 15:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155001;
-        bh=aXuFXmvuOCl4TOVeyEZep3uEELKMMorlx56lvwHF+Wc=;
+        s=default; t=1564155006;
+        bh=qV1uPx44c/lDnu2VPvoFyoVq2I1KcqlgPo8CaBaqsCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M4cc0CK3EYog5ARZWK36iRdZvBcGRGxeNqd746JZgY8cGwhbKjA8QTRWsY+WA6HkM
-         fvRJHMBMZPa7xYTfsbHUX1JSTkL1AJTefNU4dK28uNOztnhH8OUU1WuHEK8OwvN7jJ
-         7grZZ349XmJA8fqg8NKlrVEcp8z8ZnSs7FpkTOp4=
+        b=zasXpcDCukye0AHExWq3WMInTFB+i8I84OfjsgH9StxqSObXMaw9XtDJbuCToG79B
+         fWeEUadGrsnn4LNVJEI3OvVtk9QrXZMWK4NuhWNHCCkT+XA5Pa80zsoU/duf9EjWjh
+         g3X5w2WOyhnVtxxGEIUTrkC736VfW28qhSOSmJnM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        stable@vger.kernel.org, Andreas Steinmetz <ast@domdv.de>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 14/62] net_sched: unset TCQ_F_CAN_BYPASS when adding filters
-Date:   Fri, 26 Jul 2019 17:24:26 +0200
-Message-Id: <20190726152303.180484684@linuxfoundation.org>
+Subject: [PATCH 5.1 33/62] macsec: fix checksumming after decryption
+Date:   Fri, 26 Jul 2019 17:24:45 +0200
+Message-Id: <20190726152305.271918226@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -60,77 +59,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Andreas Steinmetz <ast@domdv.de>
 
-[ Upstream commit 3f05e6886a595c9a29a309c52f45326be917823c ]
+[ Upstream commit 7d8b16b9facb0dd81d1469808dd9a575fa1d525a ]
 
-For qdisc's that support TC filters and set TCQ_F_CAN_BYPASS,
-notably fq_codel, it makes no sense to let packets bypass the TC
-filters we setup in any scenario, otherwise our packets steering
-policy could not be enforced.
+Fix checksumming after decryption.
 
-This can be reproduced easily with the following script:
-
- ip li add dev dummy0 type dummy
- ifconfig dummy0 up
- tc qd add dev dummy0 root fq_codel
- tc filter add dev dummy0 parent 8001: protocol arp basic action mirred egress redirect dev lo
- tc filter add dev dummy0 parent 8001: protocol ip basic action mirred egress redirect dev lo
- ping -I dummy0 192.168.112.1
-
-Without this patch, packets are sent directly to dummy0 without
-hitting any of the filters. With this patch, packets are redirected
-to loopback as expected.
-
-This fix is not perfect, it only unsets the flag but does not set it back
-because we have to save the information somewhere in the qdisc if we
-really want that. Note, both fq_codel and sfq clear this flag in their
-->bind_tcf() but this is clearly not sufficient when we don't use any
-class ID.
-
-Fixes: 23624935e0c4 ("net_sched: TCQ_F_CAN_BYPASS generalization")
-Cc: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Andreas Steinmetz <ast@domdv.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/cls_api.c      |    1 +
- net/sched/sch_fq_codel.c |    2 --
- net/sched/sch_sfq.c      |    2 --
- 3 files changed, 1 insertion(+), 4 deletions(-)
+ drivers/net/macsec.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/sched/cls_api.c
-+++ b/net/sched/cls_api.c
-@@ -2162,6 +2162,7 @@ replay:
- 		tfilter_notify(net, skb, n, tp, block, q, parent, fh,
- 			       RTM_NEWTFILTER, false, rtnl_held);
- 		tfilter_put(tp, fh);
-+		q->flags &= ~TCQ_F_CAN_BYPASS;
- 	}
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -869,6 +869,7 @@ static void macsec_reset_skb(struct sk_b
  
- errout:
---- a/net/sched/sch_fq_codel.c
-+++ b/net/sched/sch_fq_codel.c
-@@ -600,8 +600,6 @@ static unsigned long fq_codel_find(struc
- static unsigned long fq_codel_bind(struct Qdisc *sch, unsigned long parent,
- 			      u32 classid)
+ static void macsec_finalize_skb(struct sk_buff *skb, u8 icv_len, u8 hdr_len)
  {
--	/* we cannot bypass queue discipline anymore */
--	sch->flags &= ~TCQ_F_CAN_BYPASS;
- 	return 0;
- }
- 
---- a/net/sched/sch_sfq.c
-+++ b/net/sched/sch_sfq.c
-@@ -828,8 +828,6 @@ static unsigned long sfq_find(struct Qdi
- static unsigned long sfq_bind(struct Qdisc *sch, unsigned long parent,
- 			      u32 classid)
- {
--	/* we cannot bypass queue discipline anymore */
--	sch->flags &= ~TCQ_F_CAN_BYPASS;
- 	return 0;
- }
- 
++	skb->ip_summed = CHECKSUM_NONE;
+ 	memmove(skb->data + hdr_len, skb->data, 2 * ETH_ALEN);
+ 	skb_pull(skb, hdr_len);
+ 	pskb_trim_unique(skb, skb->len - icv_len);
 
 
