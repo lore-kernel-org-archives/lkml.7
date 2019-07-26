@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26782C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A59C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F026222CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F0A922CBF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148530;
-	bh=jwyKKrIH0Sb3LUWowXcuRJ297ShxLiOtHjsxfr0bXBQ=;
+	s=default; t=1564148534;
+	bh=63hZ9egKx37hVIVrHIR+iW3hIjhT86QqwlTUfbow8ss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cGH+cR11XgVTeU9SnndzJfUfd4RuMeSECsOJd9Squ69CvwYG6Efmicug8OULyrN3X
-	 nMlaUC/94gzOzWqxPT/8CAJRPVSsYwglsjbWfixGBvmJPrkbybvkgA+jEJjAjE4Sx/
-	 qYX3oIWQJTgfRdtq1EMl6j/iPHCDw+2IgV6UZOZc=
+	b=agLwd4YBPubtsY2TORUctYgogrKpECATX9GLlhNgPT6pY2BvkC85ChxETeB8PtCXC
+	 rwUPtt8JvpxefMvr5V/yuuBq5ic94FCw4a3mbSk5oeRbOBnT7RBj48A+HDDXmF5SmH
+	 86Ostxs44mqjoOfjqxUNBz1kz0i6p4dHPgLIbXr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387856AbfGZNmI (ORCPT
+        id S2387881AbfGZNmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:42:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49258 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:42:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387418AbfGZNmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:42:06 -0400
+        id S2387845AbfGZNmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:42:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EF6F22BF5;
-        Fri, 26 Jul 2019 13:42:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F109822CBF;
+        Fri, 26 Jul 2019 13:42:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148525;
-        bh=jwyKKrIH0Sb3LUWowXcuRJ297ShxLiOtHjsxfr0bXBQ=;
+        s=default; t=1564148527;
+        bh=63hZ9egKx37hVIVrHIR+iW3hIjhT86QqwlTUfbow8ss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pO5aPHJxePB3A5na1SQEVi0ksbB8X4/W0lmianAPdtLFJ4Sapxqu0Upn/899C8v56
-         Bav46PtE7M6gNmUjihALnfKi7vW0dOLYuRYb4W3XW6koCN/BsNes+mGnzobjYKd/fr
-         qj69X3excgIFeu6Hx8XSpCCWm274qB/xugGW6LVs=
+        b=13drCaaYs1fy5Q4V6I3OCj9rdrrttgeYO9n6Owl7/KqxJ/icOXa6WZ8Enwn3rrHKV
+         RJEhosfZ1DSVPVKh7alUMar8RTqijvfhq175z/bpQB97fvvvgDjKOTKnnIhqA3+9y0
+         0JGWouMllXHX5Svv7NCkxdVACi3DCEMZCBb4PA8U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 82/85] bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()
-Date:   Fri, 26 Jul 2019 09:39:32 -0400
-Message-Id: <20190726133936.11177-82-sashal@kernel.org>
+Cc:     Fugang Duan <fugang.duan@nxp.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.2 84/85] dma-direct: correct the physical addr in dma_direct_sync_sg_for_cpu/device
+Date:   Fri, 26 Jul 2019 09:39:34 -0400
+Message-Id: <20190726133936.11177-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -63,110 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Fugang Duan <fugang.duan@nxp.com>
 
-[ Upstream commit 3193c0836f203a91bef96d88c64cccf0be090d9c ]
+[ Upstream commit 449fa54d6815be8c2c1f68fa9dbbae9384a7c03e ]
 
-On x86-64, with CONFIG_RETPOLINE=n, GCC's "global common subexpression
-elimination" optimization results in ___bpf_prog_run()'s jumptable code
-changing from this:
+dma_map_sg() may use swiotlb buffer when the kernel command line includes
+"swiotlb=force" or the dma_addr is out of dev->dma_mask range.  After
+DMA complete the memory moving from device to memory, then user call
+dma_sync_sg_for_cpu() to sync with DMA buffer, and copy the original
+virtual buffer to other space.
 
-	select_insn:
-		jmp *jumptable(, %rax, 8)
-		...
-	ALU64_ADD_X:
-		...
-		jmp *jumptable(, %rax, 8)
-	ALU_ADD_X:
-		...
-		jmp *jumptable(, %rax, 8)
+So dma_direct_sync_sg_for_cpu() should use swiotlb physical addr, not
+the original physical addr from sg_phys(sg).
 
-to this:
+dma_direct_sync_sg_for_device() also has the same issue, correct it as
+well.
 
-	select_insn:
-		mov jumptable, %r12
-		jmp *(%r12, %rax, 8)
-		...
-	ALU64_ADD_X:
-		...
-		jmp *(%r12, %rax, 8)
-	ALU_ADD_X:
-		...
-		jmp *(%r12, %rax, 8)
-
-The jumptable address is placed in a register once, at the beginning of
-the function.  The function execution can then go through multiple
-indirect jumps which rely on that same register value.  This has a few
-issues:
-
-1) Objtool isn't smart enough to be able to track such a register value
-   across multiple recursive indirect jumps through the jump table.
-
-2) With CONFIG_RETPOLINE enabled, this optimization actually results in
-   a small slowdown.  I measured a ~4.7% slowdown in the test_bpf
-   "tcpdump port 22" selftest.
-
-   This slowdown is actually predicted by the GCC manual:
-
-     Note: When compiling a program using computed gotos, a GCC
-     extension, you may get better run-time performance if you
-     disable the global common subexpression elimination pass by
-     adding -fno-gcse to the command line.
-
-So just disable the optimization for this function.
-
-Fixes: e55a73251da3 ("bpf: Fix ORC unwinding in non-JIT BPF code")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/30c3ca29ba037afcbd860a8672eef0021addf9fe.1563413318.git.jpoimboe@redhat.com
+Fixes: 55897af63091("dma-direct: merge swiotlb_dma_ops into the dma_direct code")
+Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/compiler-gcc.h   | 2 ++
- include/linux/compiler_types.h | 4 ++++
- kernel/bpf/core.c              | 2 +-
- 3 files changed, 7 insertions(+), 1 deletion(-)
+ kernel/dma/direct.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-index e8579412ad21..d7ee4c6bad48 100644
---- a/include/linux/compiler-gcc.h
-+++ b/include/linux/compiler-gcc.h
-@@ -170,3 +170,5 @@
- #else
- #define __diag_GCC_8(s)
- #endif
-+
-+#define __no_fgcse __attribute__((optimize("-fno-gcse")))
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index 19e58b9138a0..0454d82f8bd8 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -187,6 +187,10 @@ struct ftrace_likely_data {
- #define asm_volatile_goto(x...) asm goto(x)
- #endif
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index 2c2772e9702a..2c6d51a62251 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -231,12 +231,14 @@ void dma_direct_sync_sg_for_device(struct device *dev,
+ 	int i;
  
-+#ifndef __no_fgcse
-+# define __no_fgcse
-+#endif
+ 	for_each_sg(sgl, sg, nents, i) {
+-		if (unlikely(is_swiotlb_buffer(sg_phys(sg))))
+-			swiotlb_tbl_sync_single(dev, sg_phys(sg), sg->length,
++		phys_addr_t paddr = dma_to_phys(dev, sg_dma_address(sg));
 +
- /* Are two types/vars the same type (ignoring qualifiers)? */
- #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
++		if (unlikely(is_swiotlb_buffer(paddr)))
++			swiotlb_tbl_sync_single(dev, paddr, sg->length,
+ 					dir, SYNC_FOR_DEVICE);
  
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 080e2bb644cc..ebfd189916dc 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -1295,7 +1295,7 @@ bool bpf_opcode_in_insntable(u8 code)
-  *
-  * Decode and execute eBPF instructions.
-  */
--static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
-+static u64 __no_fgcse ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
- {
- #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
- #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
+ 		if (!dev_is_dma_coherent(dev))
+-			arch_sync_dma_for_device(dev, sg_phys(sg), sg->length,
++			arch_sync_dma_for_device(dev, paddr, sg->length,
+ 					dir);
+ 	}
+ }
+@@ -268,11 +270,13 @@ void dma_direct_sync_sg_for_cpu(struct device *dev,
+ 	int i;
+ 
+ 	for_each_sg(sgl, sg, nents, i) {
++		phys_addr_t paddr = dma_to_phys(dev, sg_dma_address(sg));
++
+ 		if (!dev_is_dma_coherent(dev))
+-			arch_sync_dma_for_cpu(dev, sg_phys(sg), sg->length, dir);
+-	
+-		if (unlikely(is_swiotlb_buffer(sg_phys(sg))))
+-			swiotlb_tbl_sync_single(dev, sg_phys(sg), sg->length, dir,
++			arch_sync_dma_for_cpu(dev, paddr, sg->length, dir);
++
++		if (unlikely(is_swiotlb_buffer(paddr)))
++			swiotlb_tbl_sync_single(dev, paddr, sg->length, dir,
+ 					SYNC_FOR_CPU);
+ 	}
+ 
 -- 
 2.20.1
 
