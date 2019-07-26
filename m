@@ -2,99 +2,106 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20CBC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22922C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05F522CD8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="TuZpe1Nk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pSlIkRnR"
+	by mail.kernel.org (Postfix) with ESMTP id F128822CE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564148891;
+	bh=yW7TGlrP4rOvaiUM/u3oVyJsef4Xl1+aBQt0r6KEkMg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bvtH3Hnn1UvGMUIUBaJwjCAUXae7hml8zG619KAIcJbAQK4pTxRkiORfVoTZ2bSVO
+	 rvPTlZeRFAwfbngNuJ+Zm5WrkuiETLg+q62D2CLqaOCF1pu/aYERS/B9N6XgwTgcIM
+	 w3rbGjzpooXeXkbrjzZETIvUwKQHTQp9gTMocqag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388764AbfGZNsH (ORCPT
+        id S2388771AbfGZNsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:48:07 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:46059 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388036AbfGZNsE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:48:04 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 9DA8E5B5;
-        Fri, 26 Jul 2019 09:48:03 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Fri, 26 Jul 2019 09:48:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=EwBpIkjhCHtc6Po0QEhUGVxUPV9
-        vvyQZliRF9TyzIsw=; b=TuZpe1Nk0q/BOxdUgTXVqKmed6/8769jGxywKgLJ7Ok
-        aKoIHR7vG+pP09vplXewjZXdn44bfCuodsSZm7w+BB6xkHJsxijVQDxWbIFZguNd
-        WUAMuIadKIae+ziCON8pz4Kw34mcIUQCjgReYu5OGcGmz2oO9G5X/w8s3oTkWXbL
-        brufs+Qtr7/v0JU6u7EQKZcgWujewbF/y/vcSlsWtsTg4E7EPKvfr3QcbYU5YYVC
-        RFBKDn2tPzO/6LQzHt1mdGH0Yl0ViNyTy9wASG9CcvOF0v9tfOo/vd4rxGUaO2iF
-        n9WMU77YbyDPDdBKan1UcJ3+klT4gDG+xaixVaYDzkw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=EwBpIk
-        jhCHtc6Po0QEhUGVxUPV9vvyQZliRF9TyzIsw=; b=pSlIkRnRajFAAKrhMWR0nF
-        ciGnPNIcILZ/TwwalAjPGFPxCget17THr/UOL2MvXxPkf09ovVO/rtjaU75ZB3/D
-        W/w++jTgRZdCmk4iMLmY1s4LOHfMfGm1Q677Pt+Zj8HLw2bHgjlHKGTUg6KVgnxl
-        //vhKI8qE3dCEZMpI+cqB3iIsBjCUWlMnQRX+C63tzZFPqAvC0B17ALmEoVDKqK5
-        lE3kwD1Zs2WA4jaVVFX2wErQTNFYstng3breWrR293AkIsLwD9YxPdSBiOCiJLdd
-        wNnfLb0FbLa7GPREuTh60Om4QBEQGMImlyaGNR6kkp4gLr8MzQcPoV+MWn9q6tXA
-        ==
-X-ME-Sender: <xms:kgQ7XUzzqfCSn_myxjMq4PC-VB9hFVqwZEkMYNjjWQQ3dfWEtz6pkQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrkeeggdeilecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:kgQ7XbozBuhl0-RHB9XXsPFLlKVCqQkfG9THTamB2ZQ15-8tOORpyA>
-    <xmx:kgQ7XRk1nIlbiZe0Sq-KrILzoq9b-dFwSrPD_HJUR5BRRZGLMMjnQg>
-    <xmx:kgQ7XUCB_8YJ6eOFctKG6ApUxSt8QH57q3JiJIqsDFY8fBDb3jgHbg>
-    <xmx:kwQ7XW3d_regz52ZsMOFHmxRgATolIEq4VYi6RqKmBux6kfh_gBBbQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7A03C380086;
-        Fri, 26 Jul 2019 09:48:02 -0400 (EDT)
-Date:   Fri, 26 Jul 2019 15:48:00 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     stable@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH stable-4.19 0/2] KVM: nVMX: guest reset fixes
-Message-ID: <20190726134800.GA23085@kroah.com>
-References: <20190725104645.30642-1-vkuznets@redhat.com>
+        Fri, 26 Jul 2019 09:48:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388559AbfGZNpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:45:25 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E90B22CF6;
+        Fri, 26 Jul 2019 13:45:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564148725;
+        bh=yW7TGlrP4rOvaiUM/u3oVyJsef4Xl1+aBQt0r6KEkMg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yIfrOwwxSynw2Cd0OhYCaw4+E9PeNW30DPhvs/VpxE8uwFpjtVC1r9vM+8moBZzSl
+         TwbKRcghxz+r05JE3Gmh+rvwEsxN/LC6U4Dd3OJlrEIZOMg1MMiDPnaAuphjmIdxdm
+         4eiVHc/LK4c4qyOfWXFcaqz90CPcikb0hKJVP7dI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 02/23] ARM: dts: rockchip: Mark that the rk3288 timer might stop in suspend
+Date:   Fri, 26 Jul 2019 09:45:01 -0400
+Message-Id: <20190726134522.13308-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190726134522.13308-1-sashal@kernel.org>
+References: <20190726134522.13308-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725104645.30642-1-vkuznets@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 12:46:43PM +0200, Vitaly Kuznetsov wrote:
-> Few patches were recently marked for stable@ but commits are not
-> backportable as-is and require a few tweaks. Here is 4.19 stable backport.
-> 
-> Jan Kiszka (1):
->   KVM: nVMX: Clear pending KVM_REQ_GET_VMCS12_PAGES when leaving nested
-> 
-> Paolo Bonzini (1):
->   KVM: nVMX: do not use dangling shadow VMCS after guest reset
-> 
->  arch/x86/kvm/vmx.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+From: Douglas Anderson <dianders@chromium.org>
 
-All now applied, thanks!
+[ Upstream commit 8ef1ba39a9fa53d2205e633bc9b21840a275908e ]
 
-greg k-h
+This is similar to commit e6186820a745 ("arm64: dts: rockchip: Arch
+counter doesn't tick in system suspend").  Specifically on the rk3288
+it can be seen that the timer stops ticking in suspend if we end up
+running through the "osc_disable" path in rk3288_slp_mode_set().  In
+that path the 24 MHz clock will turn off and the timer stops.
+
+To test this, I ran this on a Chrome OS filesystem:
+  before=$(date); \
+  suspend_stress_test -c1 --suspend_min=30 --suspend_max=31; \
+  echo ${before}; date
+
+...and I found that unless I plug in a device that requests USB wakeup
+to be active that the two calls to "date" would show that fewer than
+30 seconds passed.
+
+NOTE: deep suspend (where the 24 MHz clock gets disabled) isn't
+supported yet on upstream Linux so this was tested on a downstream
+kernel.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 04ea209f1737..98abb053b7da 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -205,6 +205,7 @@
+ 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		clock-frequency = <24000000>;
++		arm,no-tick-in-suspend;
+ 	};
+ 
+ 	timer: timer@ff810000 {
+-- 
+2.20.1
+
