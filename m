@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFB3C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A9CC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0605C22CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A652205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564154933;
-	bh=DUMf8D6Ci0+Z+D6DYbbzK+MEp4miY4VT4miHyi+A9+k=;
+	s=default; t=1564154937;
+	bh=9cCUXLDKRsxfDMoR6KEmOnfyTw5M6dYipV/GNd1btkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vAD1W9tqQXTeaIzgUfvkUX28wFaeWlDX6f53ip2hUeQP01HErRX2QHZHXq8qVtvAL
-	 9gXPuOibun+Zuibp2cB9hKKLkaE+N4xe4WrbWbq1LplqPe9R0oI6nsbK7ExHg2Lt6s
-	 6RwljK3oGhgQ+oS2ZTagv6wcP2NKMwlDLN6pHEKI=
+	b=LDdRCBam6efPlSiSAI3ycfrN4QoxmhJPBkVCHXsfUv8bB12/DAYQkfL8n1w5ZcIlF
+	 69u9H7QWWnQcpPfTn8AayUbEBraR04bSt3BDJtLp+ujXQSwcKcXJKbNgvmkDsV5h7B
+	 feJFlAeOQP6xulGXTZgYXDiJr0sycDsCr4Io3jyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388624AbfGZP2v (ORCPT
+        id S2388639AbfGZP24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:28:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43390 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:28:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388591AbfGZP2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:28:49 -0400
+        id S2387941AbfGZP2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:28:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60A1922C7E;
-        Fri, 26 Jul 2019 15:28:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20A2722CBF;
+        Fri, 26 Jul 2019 15:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154928;
-        bh=DUMf8D6Ci0+Z+D6DYbbzK+MEp4miY4VT4miHyi+A9+k=;
+        s=default; t=1564154932;
+        bh=9cCUXLDKRsxfDMoR6KEmOnfyTw5M6dYipV/GNd1btkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2GIjz3QqOT6E2JGqIogQmyEvWkBVj+BoXMaV8+8x7lEIzvDhUuqLD4bPEtY5EUFlv
-         F98UQnXNI/AuPssrR7N4B7hRUi6/AyskugoeZrg1M1XQOJ8htv4uvOkGuYt/KLXWsA
-         lPGq+KqvWNviDdFk1rnVptX7RRYWpQn9zlkWAdf0=
+        b=Sf3bN0vu5xuzt5bVVqMIAtZ0WMtY6r9Xo0HU9LsE5pQRiGQey+0WBGOFHtQOkeLvL
+         uo0PRtuqsYTGcih5SJrB26ONNCGg5yFji/NALUACoVgjsrOpH9f+0jo44ykpXXSCPR
+         aPoGYySzCITH6G3P3ySRxU5SFW9XEfUJjXzoa5RA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH 5.2 48/66] dma-buf: Discard old fence_excl on retrying get_fences_rcu for realloc
-Date:   Fri, 26 Jul 2019 17:24:47 +0200
-Message-Id: <20190726152307.144996465@linuxfoundation.org>
+        stable@vger.kernel.org, Eli Britstein <elibr@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.2 39/66] net/mlx5e: Fix port tunnel GRE entropy control
+Date:   Fri, 26 Jul 2019 17:24:38 +0200
+Message-Id: <20190726152306.249386182@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
 References: <20190726152301.936055394@linuxfoundation.org>
@@ -63,42 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Eli Britstein <elibr@mellanox.com>
 
-commit f5b07b04e5f090a85d1e96938520f2b2b58e4a8e upstream.
+[ Upstream commit 914adbb1bcf89478ac138318d28b302704564d59 ]
 
-If we have to drop the seqcount & rcu lock to perform a krealloc, we
-have to restart the loop. In doing so, be careful not to lose track of
-the already acquired exclusive fence.
+GRE entropy calculation is a single bit per card, and not per port.
+Force disable GRE entropy calculation upon the first GRE encap rule,
+and release the force at the last GRE encap rule removal. This is done
+per port.
 
-Fixes: fedf54132d24 ("dma-buf: Restart reservation_object_get_fences_rcu() after writes")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Christian König <christian.koenig@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: stable@vger.kernel.org #v4.10
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190604125323.21396-1-chris@chris-wilson.co.uk
+Fixes: 97417f6182f8 ("net/mlx5e: Fix GRE key by controlling port tunnel entropy calculation")
+Signed-off-by: Eli Britstein <elibr@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/dma-buf/reservation.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/lib/port_tun.c |   23 ++---------------
+ 1 file changed, 4 insertions(+), 19 deletions(-)
 
---- a/drivers/dma-buf/reservation.c
-+++ b/drivers/dma-buf/reservation.c
-@@ -365,6 +365,10 @@ int reservation_object_get_fences_rcu(st
- 					   GFP_NOWAIT | __GFP_NOWARN);
- 			if (!nshared) {
- 				rcu_read_unlock();
-+
-+				dma_fence_put(fence_excl);
-+				fence_excl = NULL;
-+
- 				nshared = krealloc(shared, sz, GFP_KERNEL);
- 				if (nshared) {
- 					shared = nshared;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/lib/port_tun.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/port_tun.c
+@@ -98,27 +98,12 @@ static int mlx5_set_entropy(struct mlx5_
+ 	 */
+ 	if (entropy_flags.gre_calc_supported &&
+ 	    reformat_type == MLX5_REFORMAT_TYPE_L2_TO_NVGRE) {
+-		/* Other applications may change the global FW entropy
+-		 * calculations settings. Check that the current entropy value
+-		 * is the negative of the updated value.
+-		 */
+-		if (entropy_flags.force_enabled &&
+-		    enable == entropy_flags.gre_calc_enabled) {
+-			mlx5_core_warn(tun_entropy->mdev,
+-				       "Unexpected GRE entropy calc setting - expected %d",
+-				       !entropy_flags.gre_calc_enabled);
+-			return -EOPNOTSUPP;
+-		}
+-		err = mlx5_set_port_gre_tun_entropy_calc(tun_entropy->mdev, enable,
+-							 entropy_flags.force_supported);
++		if (!entropy_flags.force_supported)
++			return 0;
++		err = mlx5_set_port_gre_tun_entropy_calc(tun_entropy->mdev,
++							 enable, !enable);
+ 		if (err)
+ 			return err;
+-		/* if we turn on the entropy we don't need to force it anymore */
+-		if (entropy_flags.force_supported && enable) {
+-			err = mlx5_set_port_gre_tun_entropy_calc(tun_entropy->mdev, 1, 0);
+-			if (err)
+-				return err;
+-		}
+ 	} else if (entropy_flags.calc_supported) {
+ 		/* Other applications may change the global FW entropy
+ 		 * calculations settings. Check that the current entropy value
 
 
