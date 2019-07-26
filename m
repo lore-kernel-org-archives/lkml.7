@@ -2,88 +2,142 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E76C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67015C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA28B218B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DDB821994
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:19:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="t7xuzeqr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbfGZTTp (ORCPT
+        id S2388547AbfGZTS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 15:19:45 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50190 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388528AbfGZTS6 (ORCPT
+        Fri, 26 Jul 2019 15:18:57 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38129 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388523AbfGZTS5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 15:18:58 -0400
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hr5k0-0001AY-Fy; Fri, 26 Jul 2019 21:18:56 +0200
-Message-Id: <20190726185753.169509224@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Fri, 26 Jul 2019 20:30:53 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: [patch 05/12] perf/core: Mark hrtimers to expire in hard interrupt
- context
-References: <20190726183048.982726647@linutronix.de>
+        Fri, 26 Jul 2019 15:18:57 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y15so24962247pfn.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 12:18:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aaLCO9rquW8zOfKrWz3ON/6AgObn6JUEqFdlb0biVXs=;
+        b=t7xuzeqrfaBvKuIzgMGqiBiJ+bNKXpm0hav9D4RB0YlIt0j3Ja5TcPtOdARR8OOKXv
+         R8skIXSww2dlvw1KwWGssW8pAcTrO0mxapnzlplUyC+8320bpsICCvBR4p/oYgIW/hxO
+         TWmLmhivSt+2Q5v6AU6uj2TpMtH6HN72fyR+E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aaLCO9rquW8zOfKrWz3ON/6AgObn6JUEqFdlb0biVXs=;
+        b=FrmBbd2Lpu95SuriKgIvMD8ofWbsUPGVaF61fPyOdKREVR/3zDvpPlfTdIhxSaAKEJ
+         QWNlh5Ufq1NcpsNjxHoBVX5mYDphov7isyVGbWPNH7rUpjCevJ7juaXONmbaeC63Ns9j
+         c5hmeMlZmn9CUy8g2byBCPcWpNt3etV7MySWKfHVywlCETAcO0+6J8blkvn7azMElZT7
+         RRxco0Y9Ujg8XY5/FYhc5JF1pYQELFRqbj2dnKMBD2oxyG6j75Vwcbr55MA8cgZfa75v
+         s1mCqnzTn6FxBCW9sAaMjSVTXrowyap2EuRfqjwJ/qFaAqEi+AkbJcFb8U7HN5NICog6
+         ImuQ==
+X-Gm-Message-State: APjAAAWzi6Lyp1CzRbXFCkjbqbqAmUzYt5ljYmbrOV56/xIlS850F2xL
+        Ew6Cs2ZFeHeE6Sfzf5uUHp0=
+X-Google-Smtp-Source: APXvYqzchn27cAzocnBFE1KDl/j92iJMV04GePHVAx4gM5q3wTu5qdEQzK08hGWd1BxpCIg6dSLdxQ==
+X-Received: by 2002:a65:5b8e:: with SMTP id i14mr91573307pgr.188.1564168736216;
+        Fri, 26 Jul 2019 12:18:56 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id j12sm45814793pff.4.2019.07.26.12.18.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 26 Jul 2019 12:18:55 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 15:18:53 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Network Development <netdev@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>, kernel-team@android.com
+Subject: Re: [PATCH RFC 0/4] Add support to directly attach BPF program to
+ ftrace
+Message-ID: <20190726191853.GA196514@google.com>
+References: <20190716222650.tk2coihjtsxszarf@ast-mbp.dhcp.thefacebook.com>
+ <20190716224150.GC172157@google.com>
+ <20190716235500.GA199237@google.com>
+ <20190717012406.lugqemvubixfdd6v@ast-mbp.dhcp.thefacebook.com>
+ <20190717130119.GA138030@google.com>
+ <CAADnVQJY_=yeY0C3k1ZKpRFu5oNbB4zhQf5tQnLr=Mi8i6cgeQ@mail.gmail.com>
+ <20190718025143.GB153617@google.com>
+ <20190723221108.gamojemj5lorol7k@ast-mbp>
+ <20190724135714.GA9945@google.com>
+ <20190726183954.oxzhkrwt4uhgl4gl@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190726183954.oxzhkrwt4uhgl4gl@ast-mbp.dhcp.thefacebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On Fri, Jul 26, 2019 at 11:39:56AM -0700, Alexei Starovoitov wrote:
+[snip]
+> > > > 1. timeinstate: By hooking 2 programs onto sched_switch and cpu_frequency
+> > > > tracepoints, we are able to collect CPU power per-UID (specific app). Connor
+> > > > O'Brien is working on that.
+> > > > 
+> > > > 2. inode to file path mapping: By hooking onto VFS tracepoints we are adding to
+> > > > the android kernels, we can collect data when the kernel resolves a file path
+> > > > to a inode/device number. A BPF map stores the inode/dev number (key) and the
+> > > > path (value). We have usecases where we need a high speed lookup of this
+> > > > without having to scan all the files in the filesystem.
+> > > 
+> > > Can you share the link to vfs tracepoints you're adding?
+> > > Sounds like you're not going to attempt to upstream them knowing
+> > > Al's stance towards them?
+> > > May be there is a way we can do the feature you need, but w/o tracepoints?
+> > 
+> > Yes, given Al's stance I understand the patch is not upstreamable. The patch
+> > is here:
+> > For tracepoint:
+> > https://android.googlesource.com/kernel/common/+/27d3bfe20558d279041af403a887e7bdbdcc6f24%5E%21/
+> 
+> this is way more than tracepoint.
 
-To guarantee that the multiplexing mechanism and the hrtimer driven events
-work on PREEMPT_RT enabled kernels it's required that the related hrtimers
-expire in hard interrupt context. Mark them so PREEMPT_RT kernels wont
-defer them to soft interrupt context.
+True there is some code that calls the tracepoint. I want to optimize it more
+but lets see I am ready to think more about it before doing it this way,
+based on your suggestions.
 
-No functional change.
+> > For bpf program:
+> > https://android.googlesource.com/platform/system/bpfprogs/+/908f6cd718fab0de7a944f84628c56f292efeb17%5E%21/
+> 
+> what is unsafe_bpf_map_update_elem() in there?
+> The verifier comment sounds odd.
+> Could you describe the issue you see with the verifier?
 
-[ tglx: Split out of larger combo patch. Added changelog ]
+Will dig out the verifier issue I was seeing. I was just trying to get a
+prototype working so I did not go into verifier details much.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
----
- kernel/events/core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > I intended to submit the tracepoint only for the Android kernels, however if
+> > there is an upstream solution to this then that's even better since upstream can
+> > benefit. Were you thinking of a BPF helper function to get this data?
+> 
+> I think the best way to evaluate the patches is whether they are upstreamable or not.
+> If they're not (like this case), it means that there is something wrong with their design
+> and if android decides to go with such approach it will only create serious issues long term.
+> Starting with the whole idea of dev+inode -> filepath cache.
+> dev+inode is not a unique identifier of the file.
+> In some filesystems two different files may have the same ino integer value.
+> Have you looked at 'struct file_handle' ? and name_to_handle_at ?
+> I think fhandle is the only way to get unique identifier of the file.
+> Could you please share more details why android needs this cache of dev+ino->path?
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1103,7 +1103,7 @@ static void __perf_mux_hrtimer_init(stru
- 	cpuctx->hrtimer_interval = ns_to_ktime(NSEC_PER_MSEC * interval);
- 
- 	raw_spin_lock_init(&cpuctx->hrtimer_lock);
--	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
-+	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
- 	timer->function = perf_mux_hrtimer_handler;
- }
- 
-@@ -1121,7 +1121,7 @@ static int perf_mux_hrtimer_restart(stru
- 	if (!cpuctx->hrtimer_active) {
- 		cpuctx->hrtimer_active = 1;
- 		hrtimer_forward_now(timer, cpuctx->hrtimer_interval);
--		hrtimer_start_expires(timer, HRTIMER_MODE_ABS_PINNED);
-+		hrtimer_start_expires(timer, HRTIMER_MODE_ABS_PINNED_HARD);
- 	}
- 	raw_spin_unlock_irqrestore(&cpuctx->hrtimer_lock, flags);
- 
+I will follow-up with you on this by email off the list, thanks.
 
+thanks,
+
+ - Joel
 
