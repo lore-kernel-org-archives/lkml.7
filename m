@@ -2,115 +2,115 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69469C41517
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1DEC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5F522CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149187;
-	bh=3xVYBERJTrE1AyNi27bN6GYOlyuafegPFm+RMVy+xCI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2LfO5TjBFGG9kRDVWwguldavTDc5O69vUoh/Z/83LfUAKhed14TfqceG2Oq/BdYUU
-	 zGm2VId0LGrFQbHQqVEuKDOL/z9GI2/xGdb3om/0+35STFC4IokLgbYqCF58xmfDss
-	 1Ib2Q1Mgv/9COlCpvdl8WXYNs3LJuUdyeHDVdqh4=
+	by mail.kernel.org (Postfix) with ESMTP id CE1B622CE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388607AbfGZNxG (ORCPT
+        id S2388888AbfGZNxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:53:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388249AbfGZNnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:43:35 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 926C922CEA;
-        Fri, 26 Jul 2019 13:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148615;
-        bh=3xVYBERJTrE1AyNi27bN6GYOlyuafegPFm+RMVy+xCI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YXwUMPiqs60IgpbQUI56amQuatbE9KMSkRXH3g8v5RsgAg2e90DqFezBtk1L+EmPc
-         QYjhPQSMrXANXWEajXGtYdKCGQXaPmF0ouGfhJcCXGdT3oQOvuEO2SA3U8wzrab2PU
-         rCh2eZDRzThyewUFnrTpLX9jF8i8pwjQnegbdmDg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/37] ARM: dts: rockchip: Make rk3288-veyron-minnie run at hs200
-Date:   Fri, 26 Jul 2019 09:42:57 -0400
-Message-Id: <20190726134332.12626-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726134332.12626-1-sashal@kernel.org>
-References: <20190726134332.12626-1-sashal@kernel.org>
+        Fri, 26 Jul 2019 09:53:09 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36895 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388253AbfGZNxF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:53:05 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y26so52639522qto.4
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 06:53:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=AG8g0/5+Esm5c3gfwUTGC7xBT2DUyGJWbBLEtSQE6Lo=;
+        b=f5sS255ejBIPNtSc+bjfotL6SPL3L21wib4criaycDSqAWvop2fF44S98mi/h3dEpz
+         aKrCtYMA8BCqVejFTCPGtNjwz+CR5Xvpt7E52ZwgKmsrFz5CbSrTLzRVXoSTjaL4LsWS
+         0iM7xHIpZd5LM2qGQnMBwGgJS/siospe2T8l2Fa9L4Qjpi5UI9fYFh5FmsEBmhOXfks1
+         miXThjAHkaK6tm2IseZyDeVy4NB8KDV5VbWQhk9mBK8p18+dSP6OlBzR64RjgF9jGzM2
+         NnWYMTX0HZczlJHU1EcTez940R4/7X5xi9WrAYcmAy2kRlQ61ZhBkd1qnFp91EYvOYIz
+         qflA==
+X-Gm-Message-State: APjAAAXWW5pc+OqWbGmdz7WSLEWt9qbBvysH9MLC4H3A7O54YAJPZvFQ
+        aDHk/8ZLw9uptgHE+i/7mLo0cQ==
+X-Google-Smtp-Source: APXvYqydwEkRiDUhjkzyGjQfoaMf8JbYOCxKxauTFB3YoeZG49kK7ARiVn02SSH3ZF9H39y3z1BKaA==
+X-Received: by 2002:a0c:b521:: with SMTP id d33mr68309462qve.239.1564149185035;
+        Fri, 26 Jul 2019 06:53:05 -0700 (PDT)
+Received: from redhat.com ([212.92.104.165])
+        by smtp.gmail.com with ESMTPSA id v17sm30156688qtc.23.2019.07.26.06.53.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 26 Jul 2019 06:53:04 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 09:52:59 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] vhost: disable metadata prefetch optimization
+Message-ID: <20190726095044-mutt-send-email-mst@kernel.org>
+References: <20190726115021.7319-1-mst@redhat.com>
+ <ccba99c1-7708-3e55-6fc9-7775415c77a8@redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ccba99c1-7708-3e55-6fc9-7775415c77a8@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+On Fri, Jul 26, 2019 at 07:57:25PM +0800, Jason Wang wrote:
+> 
+> On 2019/7/26 下午7:51, Michael S. Tsirkin wrote:
+> > This seems to cause guest and host memory corruption.
+> > Disable for now until we get a better handle on that.
+> > 
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > ---
+> > 
+> > I put this in linux-next, we'll re-enable if we can fix
+> > the outstanding issues in a short order.
+> 
+> 
+> Btw, is this more suitable to e.g revert the
+> 842aa64eddacd23adc6ecdbc69cb2030bec47122
 
-[ Upstream commit 1c0479023412ab7834f2e98b796eb0d8c627cd62 ]
+Yes I did that too.
 
-As some point hs200 was failing on rk3288-veyron-minnie.  See commit
-984926781122 ("ARM: dts: rockchip: temporarily remove emmc hs200 speed
-from rk3288 minnie").  Although I didn't track down exactly when it
-started working, it seems to work OK now, so let's turn it back on.
+> and let syzbot fuzz more on the
+> current code?
 
-To test this, I booted from SD card and then used this script to
-stress the enumeration process after fixing a memory leak [1]:
-  cd /sys/bus/platform/drivers/dwmmc_rockchip
-  for i in $(seq 1 3000); do
-    echo "========================" $i
-    echo ff0f0000.dwmmc > unbind
-    sleep .5
-    echo ff0f0000.dwmmc > bind
-    while true; do
-      if [ -e /dev/mmcblk2 ]; then
-        break;
-      fi
-      sleep .1
-    done
-  done
+Current metadata direct access code is known to corrupt guest and host
+memory - I don't feel we need more fuzzing.
 
-It worked fine.
+> 
+> I think we won't accept that patch eventually, so I suspect what syzbot
+> reports today is a false positives.
 
-[1] https://lkml.kernel.org/r/20190503233526.226272-1-dianders@chromium.org
+Today's reports are real, it's a bug in my patch. But I reverted it -
+the below is an easier way to make sure at least linux-next is stable
+for everyone.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/rk3288-veyron-minnie.dts | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-index 544de6027aaa..6000dca1cf05 100644
---- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-@@ -125,10 +125,6 @@
- 	power-supply = <&backlight_regulator>;
- };
- 
--&emmc {
--	/delete-property/mmc-hs200-1_8v;
--};
--
- &gpio_keys {
- 	pinctrl-0 = <&pwr_key_l &ap_lid_int_l &volum_down_l &volum_up_l>;
- 
--- 
-2.20.1
-
+> 
+> Thanks
+> 
+> 
+> > 
+> >   drivers/vhost/vhost.h | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> > index 819296332913..42a8c2a13ab1 100644
+> > --- a/drivers/vhost/vhost.h
+> > +++ b/drivers/vhost/vhost.h
+> > @@ -96,7 +96,7 @@ struct vhost_uaddr {
+> >   };
+> >   #if defined(CONFIG_MMU_NOTIFIER) && ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE == 0
+> > -#define VHOST_ARCH_CAN_ACCEL_UACCESS 1
+> > +#define VHOST_ARCH_CAN_ACCEL_UACCESS 0
+> >   #else
+> >   #define VHOST_ARCH_CAN_ACCEL_UACCESS 0
+> >   #endif
