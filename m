@@ -4,144 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D01C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AB2C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A840229F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A664B218DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:57:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbfGZLwF (ORCPT
+        id S1726821AbfGZL5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 07:52:05 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:47272 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfGZLwE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 07:52:04 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x6QBpqSd015619, This message is accepted by code: ctloc85258
-Received: from RS-CAS02.realsil.com.cn (msx.realsil.com.cn[172.29.17.3](maybeforged))
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x6QBpqSd015619
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 26 Jul 2019 19:51:52 +0800
-Received: from toshiba (172.29.36.108) by RS-CAS02.realsil.com.cn
- (172.29.17.3) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 26 Jul
- 2019 19:51:51 +0800
-Date:   Fri, 26 Jul 2019 19:52:08 +0800
-From:   Alex Lu <alex_lu@realsil.com.cn>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-CC:     <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Max Chou <max.chou@realtek.com>
-Subject: [PATCH] Bluetooth: btusb: Fix suspend issue for Realtek
-Message-ID: <20190726115208.GA8152@toshiba>
+        Fri, 26 Jul 2019 07:57:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56310 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbfGZL5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 07:57:33 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3785183F4C;
+        Fri, 26 Jul 2019 11:57:33 +0000 (UTC)
+Received: from [10.72.12.238] (ovpn-12-238.pek2.redhat.com [10.72.12.238])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DC5EA60C18;
+        Fri, 26 Jul 2019 11:57:28 +0000 (UTC)
+Subject: Re: [PATCH] vhost: disable metadata prefetch optimization
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org
+References: <20190726115021.7319-1-mst@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <ccba99c1-7708-3e55-6fc9-7775415c77a8@redhat.com>
+Date:   Fri, 26 Jul 2019 19:57:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Originating-IP: [172.29.36.108]
+In-Reply-To: <20190726115021.7319-1-mst@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 26 Jul 2019 11:57:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Lu <alex_lu@realsil.com.cn>
 
-From the perspective of controller, global suspend means there is no
-SET_FEATURE (DEVICE_REMOTE_WAKEUP) and controller would drop the
-firmware. It would consume less power. So we should not send this kind
-of SET_FEATURE when host goes to suspend state.
-Otherwise, when making device enter selective suspend, host should send
-SET_FEATURE to make sure the firmware remains.
+On 2019/7/26 下午7:51, Michael S. Tsirkin wrote:
+> This seems to cause guest and host memory corruption.
+> Disable for now until we get a better handle on that.
+>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>
+> I put this in linux-next, we'll re-enable if we can fix
+> the outstanding issues in a short order.
 
-Signed-off-by: Alex Lu <alex_lu@realsil.com.cn>
----
- drivers/bluetooth/btusb.c | 40 +++++++++++++++++++++++++++++++++++----
- 1 file changed, 36 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 50aed5259c2b..69f6b4208901 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -426,6 +426,7 @@ static const struct dmi_system_id btusb_needs_reset_resume_table[] = {
- #define BTUSB_DIAG_RUNNING	10
- #define BTUSB_OOB_WAKE_ENABLED	11
- #define BTUSB_HW_RESET_ACTIVE	12
-+#define BTUSB_QUIRK_SUSPEND	13
- 
- struct btusb_data {
- 	struct hci_dev       *hdev;
-@@ -1165,6 +1166,15 @@ static int btusb_open(struct hci_dev *hdev)
- 	 */
- 	device_wakeup_enable(&data->udev->dev);
- 
-+	/* Disable device remote wakeup when host is suspended
-+	 * For Realtek chips, global suspend without
-+	 * SET_FEATURE (DEVICE_REMOTE_WAKEUP) can save more power in device.
-+	 */
-+#ifdef CONFIG_BT_HCIBTUSB_RTL
-+	if (test_bit(BTUSB_QUIRK_SUSPEND, &data->flags))
-+		device_wakeup_disable(&data->udev->dev);
-+#endif
-+
- 	if (test_and_set_bit(BTUSB_INTR_RUNNING, &data->flags))
- 		goto done;
- 
-@@ -1227,6 +1237,13 @@ static int btusb_close(struct hci_dev *hdev)
- 		goto failed;
- 
- 	data->intf->needs_remote_wakeup = 0;
-+
-+	/* Enable remote wake up for auto-suspend */
-+#ifdef CONFIG_BT_HCIBTUSB_RTL
-+	if (test_bit(BTUSB_QUIRK_SUSPEND, &data->flags))
-+		data->intf->needs_remote_wakeup = 1;
-+#endif
-+
- 	device_wakeup_disable(&data->udev->dev);
- 	usb_autopm_put_interface(data->intf);
- 
-@@ -3185,11 +3202,11 @@ static int btusb_probe(struct usb_interface *intf,
- 	if (id->driver_info & BTUSB_REALTEK) {
- 		hdev->setup = btrtl_setup_realtek;
- 
--		/* Realtek devices lose their updated firmware over suspend,
--		 * but the USB hub doesn't notice any status change.
--		 * Explicitly request a device reset on resume.
-+		/* Realtek devices lose their updated firmware over global
-+		 * suspend that means host doesn't send SET_FEATURE
-+		 * (DEVICE_REMOTE_WAKEUP)
- 		 */
--		interface_to_usbdev(intf)->quirks |= USB_QUIRK_RESET_RESUME;
-+		set_bit(BTUSB_QUIRK_SUSPEND, &data->flags);
- 	}
- #endif
- 
-@@ -3363,6 +3380,21 @@ static int btusb_suspend(struct usb_interface *intf, pm_message_t message)
- 		enable_irq(data->oob_wake_irq);
- 	}
- 
-+#ifdef CONFIG_BT_HCIBTUSB_RTL
-+	/* For global suspend, Realtek devices lose the loaded fw
-+	 * in them. But for autosuspend, firmware should remain.
-+	 * Actually, it depends on whether the usb host sends
-+	 * set feature (enable wakeup) or not.
-+	 */
-+	if (test_bit(BTUSB_QUIRK_SUSPEND, &data->flags)) {
-+		if (PMSG_IS_AUTO(message) &&
-+		    device_can_wakeup(&data->udev->dev))
-+			data->udev->do_remote_wakeup = 1;
-+		else if (!PMSG_IS_AUTO(message))
-+			data->udev->reset_resume = 1;
-+	}
-+#endif
-+
- 	return 0;
- }
- 
--- 
-2.19.2
+Btw, is this more suitable to e.g revert the 
+842aa64eddacd23adc6ecdbc69cb2030bec47122 and let syzbot fuzz more on the 
+current code?
 
+I think we won't accept that patch eventually, so I suspect what syzbot 
+reports today is a false positives.
+
+Thanks
+
+
+>
+>   drivers/vhost/vhost.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> index 819296332913..42a8c2a13ab1 100644
+> --- a/drivers/vhost/vhost.h
+> +++ b/drivers/vhost/vhost.h
+> @@ -96,7 +96,7 @@ struct vhost_uaddr {
+>   };
+>   
+>   #if defined(CONFIG_MMU_NOTIFIER) && ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE == 0
+> -#define VHOST_ARCH_CAN_ACCEL_UACCESS 1
+> +#define VHOST_ARCH_CAN_ACCEL_UACCESS 0
+>   #else
+>   #define VHOST_ARCH_CAN_ACCEL_UACCESS 0
+>   #endif
