@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 008E7C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B23C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCFDC22CEB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86ED22CE9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148719;
-	bh=cljafivhS5SgwGmwbvwM7kjh7jlUt6mW6AydIjbkjVo=;
+	s=default; t=1564148722;
+	bh=5FX+wq9W2/yXLvQvozoVGSUl6g+1aCWYapttN7WDd7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZS5EZQOYAc0ZrroYrpbCSGzMH22dG6O0/2bkyWxdPm5YELF8GS0tlRblW7AFngJqT
-	 XIR7h+N7lZh5Fzs65k877afQGnq4Lo/vVKdvumpoy/BtX/wn+Sx6VdcvhPrhBob0mm
-	 5LuV/NnmUFeUdoBBqwab6Cph8kNUcMBG8M5If86U=
+	b=KEahaU8UNgkPRQtw3jPYqShCOoniObKpCLaGcQ8kljPdwr4dgoCH/J++Zn9wVvJpS
+	 NmR3i+AHtD+ela3UvR/dm7SsW/tUCDCu3rd0tRCMbXoklLOp7qeBJ8VPW3eVbMjZVZ
+	 ssRIvfIaQEB8EztHIenfqX+EOq2QZgawq3ob12h4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388529AbfGZNpS (ORCPT
+        id S2388546AbfGZNpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:45:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53990 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:45:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728143AbfGZNpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:45:12 -0400
+        id S2388531AbfGZNpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:45:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEA7922CE9;
-        Fri, 26 Jul 2019 13:45:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B482122CD8;
+        Fri, 26 Jul 2019 13:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148711;
-        bh=cljafivhS5SgwGmwbvwM7kjh7jlUt6mW6AydIjbkjVo=;
+        s=default; t=1564148718;
+        bh=5FX+wq9W2/yXLvQvozoVGSUl6g+1aCWYapttN7WDd7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vf8GA85BVfYGM/4r/wlVn1CJUcPwOUoyEpnaEL5paQKmvdcn/Ug+bKiocMV5YAl6b
-         C3V555TORvqXmu/zo2Yw1gUaeUu7+Cy4WM8jSFJBM7DD8JQ+8FBbEsk4rNPpjs27BA
-         jWPHjnO+dtzfqsyQsk+MCHgDEHUPBqU4+ydOSby8=
+        b=X1KVydY7RcTONPGInkY7qNqUu1seiMv4g0ULmY6CWPj/BEzH198C4JVvuKUhnvIhv
+         XoW6NSLBWjcovSkmYKTE6RJ3aHPu4SU+7iCCPvfVqJubglTArYstvYuU8ci0pBHLsE
+         r4zvaGAxnZRTNPUcq734NNOzpOnzmlmVzDA3Pwi0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Rodolfo Giometti <giometti@enneenne.com>,
-        Greg KH <greg@kroah.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 24/30] drivers/pps/pps.c: clear offset flags in PPS_SETPARAMS ioctl
-Date:   Fri, 26 Jul 2019 09:44:26 -0400
-Message-Id: <20190726134432.12993-24-sashal@kernel.org>
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 29/30] x86/kvm: Don't call kvm_spurious_fault() from .fixup
+Date:   Fri, 26 Jul 2019 09:44:31 -0400
+Message-Id: <20190726134432.12993-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134432.12993-1-sashal@kernel.org>
 References: <20190726134432.12993-1-sashal@kernel.org>
@@ -64,52 +61,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Lichvar <mlichvar@redhat.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit 5515e9a6273b8c02034466bcbd717ac9f53dab99 ]
+[ Upstream commit 3901336ed9887b075531bffaeef7742ba614058b ]
 
-The PPS assert/clear offset corrections are set by the PPS_SETPARAMS
-ioctl in the pps_ktime structs, which also contain flags.  The flags are
-not initialized by applications (using the timepps.h header) and they
-are not used by the kernel for anything except returning them back in
-the PPS_GETPARAMS ioctl.
+After making a change to improve objtool's sibling call detection, it
+started showing the following warning:
 
-Set the flags to zero to make it clear they are unused and avoid leaking
-uninitialized data of the PPS_SETPARAMS caller to other applications
-that have a read access to the PPS device.
+  arch/x86/kvm/vmx/nested.o: warning: objtool: .fixup+0x15: sibling call from callable instruction with modified stack frame
 
-Link: http://lkml.kernel.org/r/20190702092251.24303-1-mlichvar@redhat.com
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Rodolfo Giometti <giometti@enneenne.com>
-Cc: Greg KH <greg@kroah.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+The problem is the ____kvm_handle_fault_on_reboot() macro.  It does a
+fake call by pushing a fake RIP and doing a jump.  That tricks the
+unwinder into printing the function which triggered the exception,
+rather than the .fixup code.
+
+Instead of the hack to make it look like the original function made the
+call, just change the macro so that the original function actually does
+make the call.  This allows removal of the hack, and also makes objtool
+happy.
+
+I triggered a vmx instruction exception and verified that the stack
+trace is still sane:
+
+  kernel BUG at arch/x86/kvm/x86.c:358!
+  invalid opcode: 0000 [#1] SMP PTI
+  CPU: 28 PID: 4096 Comm: qemu-kvm Not tainted 5.2.0+ #16
+  Hardware name: Lenovo THINKSYSTEM SD530 -[7X2106Z000]-/-[7X2106Z000]-, BIOS -[TEE113Z-1.00]- 07/17/2017
+  RIP: 0010:kvm_spurious_fault+0x5/0x10
+  Code: 00 00 00 00 00 8b 44 24 10 89 d2 45 89 c9 48 89 44 24 10 8b 44 24 08 48 89 44 24 08 e9 d4 40 22 00 0f 1f 40 00 0f 1f 44 00 00 <0f> 0b 66 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41 55 49 89 fd 41
+  RSP: 0018:ffffbf91c683bd00 EFLAGS: 00010246
+  RAX: 000061f040000000 RBX: ffff9e159c77bba0 RCX: ffff9e15a5c87000
+  RDX: 0000000665c87000 RSI: ffff9e15a5c87000 RDI: ffff9e159c77bba0
+  RBP: 0000000000000000 R08: 0000000000000000 R09: ffff9e15a5c87000
+  R10: 0000000000000000 R11: fffff8f2d99721c0 R12: ffff9e159c77bba0
+  R13: ffffbf91c671d960 R14: ffff9e159c778000 R15: 0000000000000000
+  FS:  00007fa341cbe700(0000) GS:ffff9e15b7400000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007fdd38356804 CR3: 00000006759de003 CR4: 00000000007606e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  PKRU: 55555554
+  Call Trace:
+   loaded_vmcs_init+0x4f/0xe0
+   alloc_loaded_vmcs+0x38/0xd0
+   vmx_create_vcpu+0xf7/0x600
+   kvm_vm_ioctl+0x5e9/0x980
+   ? __switch_to_asm+0x40/0x70
+   ? __switch_to_asm+0x34/0x70
+   ? __switch_to_asm+0x40/0x70
+   ? __switch_to_asm+0x34/0x70
+   ? free_one_page+0x13f/0x4e0
+   do_vfs_ioctl+0xa4/0x630
+   ksys_ioctl+0x60/0x90
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x55/0x1c0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7fa349b1ee5b
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/64a9b64d127e87b6920a97afde8e96ea76f6524e.1563413318.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pps/pps.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/include/asm/kvm_host.h | 34 ++++++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/pps/pps.c b/drivers/pps/pps.c
-index 2f07cd615665..76ae38450aea 100644
---- a/drivers/pps/pps.c
-+++ b/drivers/pps/pps.c
-@@ -129,6 +129,14 @@ static long pps_cdev_ioctl(struct file *file,
- 			pps->params.mode |= PPS_CANWAIT;
- 		pps->params.api_version = PPS_API_VERS;
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 83b5b2990b49..222cb69e1219 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1309,25 +1309,29 @@ enum {
+ #define kvm_arch_vcpu_memslots_id(vcpu) ((vcpu)->arch.hflags & HF_SMM_MASK ? 1 : 0)
+ #define kvm_memslots_for_spte_role(kvm, role) __kvm_memslots(kvm, (role).smm)
  
-+		/*
-+		 * Clear unused fields of pps_kparams to avoid leaking
-+		 * uninitialized data of the PPS_SETPARAMS caller via
-+		 * PPS_GETPARAMS
-+		 */
-+		pps->params.assert_off_tu.flags = 0;
-+		pps->params.clear_off_tu.flags = 0;
++asmlinkage void __noreturn kvm_spurious_fault(void);
 +
- 		spin_unlock_irq(&pps->lock);
+ /*
+  * Hardware virtualization extension instructions may fault if a
+  * reboot turns off virtualization while processes are running.
+- * Trap the fault and ignore the instruction if that happens.
++ * Usually after catching the fault we just panic; during reboot
++ * instead the instruction is ignored.
+  */
+-asmlinkage void kvm_spurious_fault(void);
+-
+-#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)	\
+-	"666: " insn "\n\t" \
+-	"668: \n\t"                           \
+-	".pushsection .fixup, \"ax\" \n" \
+-	"667: \n\t" \
+-	cleanup_insn "\n\t"		      \
+-	"cmpb $0, kvm_rebooting \n\t"	      \
+-	"jne 668b \n\t"      		      \
+-	__ASM_SIZE(push) " $666b \n\t"	      \
+-	"jmp kvm_spurious_fault \n\t"	      \
+-	".popsection \n\t" \
+-	_ASM_EXTABLE(666b, 667b)
++#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)		\
++	"666: \n\t"							\
++	insn "\n\t"							\
++	"jmp	668f \n\t"						\
++	"667: \n\t"							\
++	"call	kvm_spurious_fault \n\t"				\
++	"668: \n\t"							\
++	".pushsection .fixup, \"ax\" \n\t"				\
++	"700: \n\t"							\
++	cleanup_insn "\n\t"						\
++	"cmpb	$0, kvm_rebooting\n\t"					\
++	"je	667b \n\t"						\
++	"jmp	668b \n\t"						\
++	".popsection \n\t"						\
++	_ASM_EXTABLE(666b, 700b)
  
- 		break;
+ #define __kvm_handle_fault_on_reboot(insn)		\
+ 	____kvm_handle_fault_on_reboot(insn, "")
 -- 
 2.20.1
 
