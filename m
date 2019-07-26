@@ -4,49 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3FFC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F111C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 172A822CEB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2553122CE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:53:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149207;
-	bh=+ji7mFsUFkSIoN123yX2W9OUGZf68/Hsg61RzvHrGZA=;
+	s=default; t=1564149213;
+	bh=ffW1qHV0lE3IgJXZwbzIvXiJftUw4lGsPWf3gE45yHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iCYGYFd1/VHgL8wt96kKEO5xq59ocKoxLgonhdnuCWO4m2Np5itmsYBsmYf8QzMkb
-	 XZkguzVcVlEiuE1hzpkhxo1qC4j6QVjpG4fcMF9TID6MxNv42XC0sIaiN0FbcCM0HO
-	 WQIvc4M+Mgg78eCIRhcf+uXqXmYwq8B0ZBeJkf2Y=
+	b=Oe5EAa5Uv5sEk3WsxxqTsn/DyJiABl3GfXTSqxnd14RJto3Th0Y7Ec7Ydrhs3BRPL
+	 qpYvkEpefG9EQ1J5Jpu+PEmtdLBilywEdyi0YvE1Tz8pG2DK9DzVT2yqwEX0h2zIp1
+	 pGkWKH3YoNnPY9MRJln8Hhkl3UoE+m1BxBGOk0a4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388190AbfGZNn0 (ORCPT
+        id S2388897AbfGZNxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:43:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51008 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:53:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388171AbfGZNnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:43:21 -0400
+        id S2388177AbfGZNnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:43:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67DDE22BF5;
-        Fri, 26 Jul 2019 13:43:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABAA822CE5;
+        Fri, 26 Jul 2019 13:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148600;
-        bh=+ji7mFsUFkSIoN123yX2W9OUGZf68/Hsg61RzvHrGZA=;
+        s=default; t=1564148602;
+        bh=ffW1qHV0lE3IgJXZwbzIvXiJftUw4lGsPWf3gE45yHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hxO83RbQvgLYww6IV3AivStxozIKbdTBkMekw2UDAL1bmzoGLE3noOQ29WyUt1boL
-         NRmfUF9BnWkzgwd18w0PlPUbC3NmqodMfxfnaNS89amRR+iu78m9PRCgkLZctT4QHN
-         xlKUOCCYeu4KToPb4BLS77lnVpeFRMZARimLEjxU=
+        b=Ai+Psephq1KaSTmuhi46q5GGDLfExA8Sannh+VCczLgu4DymAB2B3IheMwSB17xAu
+         SxEjvxdjhV8N8YGPjOOMA0GMEgBgC18ows+rss3zSIM+AHrrKnUeBDtnTF78sUd27n
+         eHnTJzq8qozG92Gw2AnxC6S9aFNKPGpdO0a66Dyo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Denis Efremov <efremov@ispras.ru>, Willy Tarreau <w@1wt.eu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 40/47] floppy: fix out-of-bounds read in copy_buffer
-Date:   Fri, 26 Jul 2019 09:42:03 -0400
-Message-Id: <20190726134210.12156-40-sashal@kernel.org>
+Cc:     Juergen Gross <jgross@suse.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 42/47] xen: let alloc_xenballooned_pages() fail if not enough memory free
+Date:   Fri, 26 Jul 2019 09:42:05 -0400
+Message-Id: <20190726134210.12156-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
 References: <20190726134210.12156-1-sashal@kernel.org>
@@ -59,52 +57,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@ispras.ru>
+From: Juergen Gross <jgross@suse.com>
 
-[ Upstream commit da99466ac243f15fbba65bd261bfc75ffa1532b6 ]
+[ Upstream commit a1078e821b605813b63bf6bca414a85f804d5c66 ]
 
-This fixes a global out-of-bounds read access in the copy_buffer
-function of the floppy driver.
+Instead of trying to allocate pages with GFP_USER in
+add_ballooned_pages() check the available free memory via
+si_mem_available(). GFP_USER is far less limiting memory exhaustion
+than the test via si_mem_available().
 
-The FDDEFPRM ioctl allows one to set the geometry of a disk.  The sect
-and head fields (unsigned int) of the floppy_drive structure are used to
-compute the max_sector (int) in the make_raw_rw_request function.  It is
-possible to overflow the max_sector.  Next, max_sector is passed to the
-copy_buffer function and used in one of the memcpy calls.
+This will avoid dom0 running out of memory due to excessive foreign
+page mappings especially on ARM and on x86 in PVH mode, as those don't
+have a pre-ballooned area which can be used for foreign mappings.
 
-An unprivileged user could trigger the bug if the device is accessible,
-but requires a floppy disk to be inserted.
+As the normal ballooning suffers from the same problem don't balloon
+down more than si_mem_available() pages in one iteration. At the same
+time limit the default maximum number of retries.
 
-The patch adds the check for the .sect * .head multiplication for not
-overflowing in the set_geometry function.
+This is part of XSA-300.
 
-The bug was found by syzkaller.
-
-Signed-off-by: Denis Efremov <efremov@ispras.ru>
-Tested-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/floppy.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/xen/balloon.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index b1425b218606..0d43e90eb252 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -3244,8 +3244,10 @@ static int set_geometry(unsigned int cmd, struct floppy_struct *g,
- 	int cnt;
+diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+index 7ab6caef599c..d4e8b717ce2b 100644
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -527,8 +527,15 @@ static void balloon_process(struct work_struct *work)
+ 				state = reserve_additional_memory();
+ 		}
  
- 	/* sanity checking for parameters. */
--	if (g->sect <= 0 ||
--	    g->head <= 0 ||
-+	if ((int)g->sect <= 0 ||
-+	    (int)g->head <= 0 ||
-+	    /* check for overflow in max_sector */
-+	    (int)(g->sect * g->head) <= 0 ||
- 	    /* check for zero in F_SECT_PER_TRACK */
- 	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
- 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
+-		if (credit < 0)
+-			state = decrease_reservation(-credit, GFP_BALLOON);
++		if (credit < 0) {
++			long n_pages;
++
++			n_pages = min(-credit, si_mem_available());
++			state = decrease_reservation(n_pages, GFP_BALLOON);
++			if (state == BP_DONE && n_pages != -credit &&
++			    n_pages < totalreserve_pages)
++				state = BP_EAGAIN;
++		}
+ 
+ 		state = update_schedule(state);
+ 
+@@ -567,6 +574,9 @@ static int add_ballooned_pages(int nr_pages)
+ 		}
+ 	}
+ 
++	if (si_mem_available() < nr_pages)
++		return -ENOMEM;
++
+ 	st = decrease_reservation(nr_pages, GFP_USER);
+ 	if (st != BP_DONE)
+ 		return -ENOMEM;
+@@ -696,7 +706,7 @@ static int __init balloon_init(void)
+ 	balloon_stats.schedule_delay = 1;
+ 	balloon_stats.max_schedule_delay = 32;
+ 	balloon_stats.retry_count = 1;
+-	balloon_stats.max_retry_count = RETRY_UNLIMITED;
++	balloon_stats.max_retry_count = 4;
+ 
+ #ifdef CONFIG_XEN_BALLOON_MEMORY_HOTPLUG
+ 	set_online_page_callback(&xen_online_page);
 -- 
 2.20.1
 
