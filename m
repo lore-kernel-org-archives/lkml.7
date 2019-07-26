@@ -2,208 +2,170 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C2BC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4E1C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 733D621951
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:37:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="SdQArZa5"
+	by mail.kernel.org (Postfix) with ESMTP id 9C50122BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:38:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfGZMhv (ORCPT
+        id S1727448AbfGZMiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:37:51 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44330 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbfGZMhu (ORCPT
+        Fri, 26 Jul 2019 08:38:25 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41124 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfGZMiZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:37:50 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i18so24739515pgl.11
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 05:37:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xWLxR5mxn/WIqVIPsCOMymm5CovvcceNPc0vJVvgU3o=;
-        b=SdQArZa52WyEjXjSDZG46CrKHmnd4cER3oWhOcTwsDK9CrBF1z3GLxerEb53Pc3th+
-         wpQuMYoPC5zou+UIKoOBmPTUKOC2XfJHOAO9cBDVtwQzbzMXVKh26Gy1ZrZBJvLFQYAR
-         57SLCwaD4j+chWRqSsNsiEidmove1ukOzz/TWCApHABTvgxHyp5C/9zaJOYbvs3vEHOd
-         a1z2ZjJDaR1vTW7w697hPBd7TvOqEjhOuMv6+h2mfjOFuTHdrAlp5Ag0EL9jWaIIc9NI
-         2aHkAPubigZSAgLcpS8h0Fgc1ziRMvk6oXKb70stiTX9/UbhpM9tYaMAsbYq1hHXxKfA
-         qk6w==
+        Fri, 26 Jul 2019 08:38:25 -0400
+Received: by mail-qt1-f195.google.com with SMTP id d17so52304013qtj.8
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 05:38:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xWLxR5mxn/WIqVIPsCOMymm5CovvcceNPc0vJVvgU3o=;
-        b=Rg6ZtSsWX5fEGINaYbgkeJlMF0A1i7+FKU9J77tIRGc+TXR4WQlC43qW3heLO+NQte
-         svP+eI37oJonNLj7rFag8pHNjgUnHtBEparQHvrXt9IwSZpf5kTpoS9uKpeHwnfDdusB
-         m3JCUWhjDHbkjT1KKiYnf8GHFuNVSZb5/VYXAD80vDvahVJmUS98FwnA4tdcz+WB1dut
-         pKZ9hdb9SA+V/K0t65Rf0Ke4v6Dk7/SnNxsNeJ08Iav6U8e+7uaX4Hd9xJYZLNuH5XxA
-         pFnHY63hprkYlhtMo2vHIiyeOgeYabXGx4JMT/WdgH4fqp90zVX6TWTFSXrGvXBrwBis
-         jKRg==
-X-Gm-Message-State: APjAAAW/BH0ZtLuoDO57PqXNbDVc4I8pSepnhTGmmA8iQLS7gaf3j+bK
-        m21TUOVLZFfLIikDayX1pyE=
-X-Google-Smtp-Source: APXvYqw3rSHg9MubdAi+98gPT17cGWZXqONjc569gyjeU1TkfxXlM/bk+ddhqB0l2XJcZ17uEZpl5g==
-X-Received: by 2002:a63:6a81:: with SMTP id f123mr12428028pgc.348.1564144669760;
-        Fri, 26 Jul 2019 05:37:49 -0700 (PDT)
-Received: from brauner.io ([172.58.30.217])
-        by smtp.gmail.com with ESMTPSA id h70sm48307305pgc.36.2019.07.26.05.37.42
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=7AAahzA3S5OmAp3WHwhPen11x5qmdYBmT/Y66i6DKGs=;
+        b=YYkQH+I2kXeXP8QCpr6wYUOhl9Px++oLGsWWWHll8Z1D21N8du1wnVss4IB1hzSEGu
+         dnc//vP8AJVLBliI5LkOq82awWx1S4Hp8wEmOwIudjrIPjkepphE4tfcFDhiocAJjbXy
+         lDR9lOyb6urinbe1Gjk6QAzghyAylYjRok2/YhVGyVipHOS/XN8y7jy9+pkWFdktUFJU
+         GAIAktK34o2et/pN33eqaz41yn6fNkIrol4VesfDWF7UWA0cb4B2ZlzlNf5Y+EBqZM0g
+         IvCTPQ0Pe1o0sakBfH0bBnczhDxstoxkM5y/eqDWNRWhl9SCh3tp9TJEbvydURSR/c7J
+         PsQA==
+X-Gm-Message-State: APjAAAWqctKFU8pPIZD14/amALXFYXXEd3x5DMaWcPtuOk7ZeFBd7gdW
+        JeuLRDw7sUdpE6iBIZWXL9YfZf+5CoFf7A==
+X-Google-Smtp-Source: APXvYqzmq5+4vWxaDwMY+05UXlQp7huBRpq3YhuBZEQ2PajFPNo/CMYsaRV1rBY4ljt21ew7Zf/M7w==
+X-Received: by 2002:ac8:37b8:: with SMTP id d53mr65290476qtc.227.1564144703827;
+        Fri, 26 Jul 2019 05:38:23 -0700 (PDT)
+Received: from redhat.com ([212.92.104.165])
+        by smtp.gmail.com with ESMTPSA id v7sm25082729qte.86.2019.07.26.05.38.16
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 05:37:48 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 14:37:39 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tejun Heo <tj@kernel.org>, David Howells <dhowells@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Android Kernel Team <kernel-team@android.com>
-Subject: Re: [RFC][PATCH 1/5] exit: kill struct waitid_info
-Message-ID: <20190726123737.axwqx6zeeza5dmpb@brauner.io>
-References: <20190724144651.28272-1-christian@brauner.io>
- <20190724144651.28272-2-christian@brauner.io>
- <CAHk-=wjOLjnZdZBSDwNbaWp3uGLGQkgxe-2HmNG5gE4TLbED_w@mail.gmail.com>
- <87zhl2wabp.fsf@xmission.com>
- <20190726080133.yrxsaaxasxudyjj4@brauner.io>
- <87wog5qa50.fsf@xmission.com>
+        Fri, 26 Jul 2019 05:38:23 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 08:38:13 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+Subject: Re: WARNING in __mmdrop
+Message-ID: <20190726082837-mutt-send-email-mst@kernel.org>
+References: <20190723051828-mutt-send-email-mst@kernel.org>
+ <caff362a-e208-3468-3688-63e1d093a9d3@redhat.com>
+ <20190725012149-mutt-send-email-mst@kernel.org>
+ <55e8930c-2695-365f-a07b-3ad169654d28@redhat.com>
+ <20190725042651-mutt-send-email-mst@kernel.org>
+ <84bb2e31-0606-adff-cf2a-e1878225a847@redhat.com>
+ <20190725092332-mutt-send-email-mst@kernel.org>
+ <11802a8a-ce41-f427-63d5-b6a4cf96bb3f@redhat.com>
+ <20190726074644-mutt-send-email-mst@kernel.org>
+ <5cc94f15-b229-a290-55f3-8295266edb2b@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87wog5qa50.fsf@xmission.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5cc94f15-b229-a290-55f3-8295266edb2b@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 06:59:39AM -0500, Eric W. Biederman wrote:
-> Christian Brauner <christian@brauner.io> writes:
+On Fri, Jul 26, 2019 at 08:00:58PM +0800, Jason Wang wrote:
 > 
-> > On Thu, Jul 25, 2019 at 07:46:50AM -0500, Eric W. Biederman wrote:
-> >> Linus Torvalds <torvalds@linux-foundation.org> writes:
-> >> 
-> >> > On Wed, Jul 24, 2019 at 7:47 AM Christian Brauner <christian@brauner.io> wrote:
-> >> >>
-> >> >> The code here uses a struct waitid_info to catch basic information about
-> >> >> process exit including the pid, uid, status, and signal that caused the
-> >> >> process to exit. This information is then stuffed into a struct siginfo
-> >> >> for the waitid() syscall. That seems like an odd thing to do. We can
-> >> >> just pass down a siginfo_t struct directly which let's us cleanup and
-> >> >> simplify the whole code quite a bit.
-> >> >
-> >> > Ack. Except I'd like the commit message to explain where this comes
-> >> > from instead of that "That seems like an odd thing to do".
-> >> >
-> >> > The _original_ reason for "struct waitid_info" was that "siginfo_t" is
-> >> > huge because of all the insane padding that various architectures do.
-> >> >
-> >> > So it was introduced by commit 67d7ddded322 ("waitid(2): leave copyout
-> >> > of siginfo to syscall itself") very much to avoid stack usage issues.
-> >> > And I quote:
-> >> >
-> >> >     collect the information needed for siginfo into
-> >> >     a small structure (waitid_info)
-> >> >
-> >> > simply because "sigset_t" was big.
-> >> >
-> >> > But that size came from the explicit "pad it out to 128 bytes for
-> >> > future expansion that will never happen", and the kernel using the
-> >> > same exact sigset_t that was exposed to user space.
-> >> >
-> >> > Then in commit 4ce5f9c9e754 ("signal: Use a smaller struct siginfo in
-> >> > the kernel") we got rid of the insane padding for in-kernel use,
-> >> > exactly because it causes issues like this.
-> >> >
-> >> > End result: that "struct waitid_info" no longer makes sense. It's not
-> >> > appreciably smaller than kernel_siginfo_t is today, but it made sense
-> >> > at the time.
-> >> 
-> >> Apologies.  I meant to reply yesterday but I was preempted by baby
-> >> issues.
-> >> 
-> >> I strongly disagree that this direction makes sense.  The largest
-> >> value that I see from struct waitid_info is that it makes it possible to
-> >> reason about which values are returned where struct kernel_siginfo does
-> >> not.
-> >> 
-> >> One of the details the existence of struct waitid_info makes clear is
-> >> that unlike the related child death path the wait code does not
-> >> fillin si_utime and si_stime.  Which is very important to know when you
-> >> are dealing with y2038 issues and Arnd Bergmann is.
-> >> 
-> >> The most egregious example I know of using siginfo wrong is:
-> >> 70f1b0d34bdf ("signal/usb: Replace kill_pid_info_as_cred with
-> >> kill_pid_usb_asyncio").  But just by moving struct siginfo out of the
-> >> program logic and into dedicated little functions that just deal with
-> >> the craziness of struct siginfo I have found lots of little bugs.
-> >> 
-> >> We don't need that kind of invitation to bugs in the wait logic.
-> >
-> > I don't think it's a strong enough argument for rejecting this change.
-> > Suspecting that something might go wrong if we simplify something is a
-> > valid call to proceed with caution and be on the lookout for potential
-> > regressions so we can react fast. I respect that. But it's not
-> > necessarily a good argument to reject a change.
+> On 2019/7/26 下午7:49, Michael S. Tsirkin wrote:
+> > On Thu, Jul 25, 2019 at 10:25:25PM +0800, Jason Wang wrote:
+> > > On 2019/7/25 下午9:26, Michael S. Tsirkin wrote:
+> > > > > Exactly, and that's the reason actually I use synchronize_rcu() there.
+> > > > > 
+> > > > > So the concern is still the possible synchronize_expedited()?
+> > > > I think synchronize_srcu_expedited.
+> > > > 
+> > > > synchronize_expedited sends lots of IPI and is bad for realtime VMs.
+> > > > 
+> > > > > Can I do this
+> > > > > on through another series on top of the incoming V2?
+> > > > > 
+> > > > > Thanks
+> > > > > 
+> > > > The question is this: is this still a gain if we switch to the
+> > > > more expensive srcu? If yes then we can keep the feature on,
+> > > 
+> > > I think we only care about the cost on srcu_read_lock() which looks pretty
+> > > tiny form my point of view. Which is basically a READ_ONCE() + WRITE_ONCE().
+> > > 
+> > > Of course I can benchmark to see the difference.
+> > > 
+> > > 
+> > > > if not we'll put it off until next release and think
+> > > > of better solutions. rcu->srcu is just a find and replace,
+> > > > don't see why we need to defer that. can be a separate patch
+> > > > for sure, but we need to know how well it works.
+> > > 
+> > > I think I get here, let me try to do that in V2 and let's see the numbers.
+> > > 
+> > > Thanks
 > 
-> Except your change was not a simplification.   Your change was
-> a substitution to do the work of filling in struct kernel_siginfo in 4
-> locations instead of just 2.
 > 
-> The only simplification came from not using unsafe_put_user.  Which is
-> valid but has nothing to do with struct waitid_info.
-> 
-> > I'm happy to switch from an initializer (which is not even clear is a
-> > bug) to using clear_siginfo().
-> 
-> I just double checked the definitions in signal_types.h and
-> uapi/asm-generic/siginfo.h and there is definitely padding on 64bit.
-> So yes barring magic compiler plug ins it is a bug.
-> 
-> > And I'm also going to split this patch out of the P_PIDFD patch but I'm
-> > going to send this out again. I haven't heard a sound argument why
-> > this
-> > patch is worse than what we have right now in there.
-> 
-> Then I am afraid I have not expressed myself well.
-> 
-> When I read through this patch I saw.
-> - A bug when dealing with struct kernel_siginfo.
-> - A substitution from of struct waitid_info to struct kernel_siginfo.
-> - An actual simplification in replacing several unsafe_put_user calls
->   with copy_siginfo_to_user.
-> - A gratuitous change in change the order of several of the statements.
-> - No simplification in the logic of do_wait.
+> It looks to me for tree rcu, its srcu_read_lock() have a mb() which is too
+> expensive for us.
 
-I'm not going to feel bad for trying to improve a piece of code and not
-getting it right the first time.
-Removal of a custom struct that is only used to copy bits of information
-into another struct for which we have a dedicated in-kernel struct to
-avoid exactly that seems like a valid use of
-s/<custom-struct>/<dedicated-kernel-struct>/ to me; especially since I
-needed to touch that file anyway.
+I will try to ponder using vq lock in some way.
+Maybe with trylock somehow ...
+
+
+> If we just worry about the IPI,
+
+With synchronize_rcu what I would worry about is that guest is stalled
+because system is busy because of other guests.
+With expedited it's the IPIs...
+
+
+> can we do something like in
+> vhost_invalidate_vq_start()?
+> 
+>         if (map) {
+>                 /* In order to avoid possible IPIs with
+>                  * synchronize_rcu_expedited() we use call_rcu() +
+>                  * completion.
+> */
+> init_completion(&c.completion);
+>                 call_rcu(&c.rcu_head, vhost_finish_vq_invalidation);
+> wait_for_completion(&c.completion);
+>                 vhost_set_map_dirty(vq, map, index);
+> vhost_map_unprefetch(map);
+>         }
+> 
+> ?
+
+Why would that be faster than synchronize_rcu?
+
+
 
 > 
-> Or in short I saw you did "s/struct waitid_info/struct kernel_siginfo/"
-> and introduced bugs.  Further you increased the number of locations that
-> we need to be very careful with struct kernel_siginfo from 2 to 4.
+> > There's one other thing that bothers me, and that is that
+> > for large rings which are not physically contiguous
+> > we don't implement the optimization.
+> > 
+> > For sure, that can wait, but I think eventually we should
+> > vmap large rings.
+> 
+> 
+> Yes, worth to try. But using direct map has its own advantage: it can use
+> hugepage that vmap can't
+> 
+> Thanks
 
-If you're concerned about siginfo_t being used in more places than it is
-right now, then please put a comment above it that it should be avoided
-and that because of architectural nuances clear_signfo() needs to be
-used to initialize it correctly.
+Sure, so we can do that for small rings.
 
-Christian
+-- 
+MST
