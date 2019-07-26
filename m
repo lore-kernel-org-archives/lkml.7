@@ -2,114 +2,301 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8832BC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6E0C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 556D9218EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3BD822C7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564137952;
-	bh=0YY7mkRGRSxULY/Rw3dGZM6yw9mz2AHZvaMTsWTx5ss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hQUD2jrebAshNj5KhRhSexStKdypc5BWGMeBzNZixb4uVdBdYk6yWwb4NCroSHZSi
-	 59chijCu3o9Jze0R2kQ5vKrZHqhlGijpYKyTWemebx55RHBmmvi+UvrdCC3878kNLn
-	 L3Ryv2Mrqimxqkndtb7vYuiOeIfN99mgVHvWN4cE=
+	s=default; t=1564137961;
+	bh=x9mpS5NvmpKmAahIcVZmBhUi4LVxeCyzdFwA6MTZsMU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1KawQAC0GamXf9GwW2pp6HmCKVmFqCqqPcT8+MjykCWM84p4XodaLWMWvWcMAdl+O
+	 xRLvddL6QtBQ7rGtk9cjBd3OGK5G9nv26loEa8clBs7/W52ZAWZMzY2aKS2F3R3gN5
+	 AiPG14NeTJpmIrV5DD0Mryr2E3joMAunVHy9T4oE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfGZKpv (ORCPT
+        id S1726667AbfGZKqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 06:45:51 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59924 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfGZKpu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 06:45:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DiLw617umykXb2Ab64YhiIyIqGLqcMOLE/qOfe0nhxg=; b=Zj5fo/Ze6u/+6R7jl/2UE8DZP
-        XvkRoAiAuQiWDsCeWbifjJhRwmf8ruIxKTO+fB5ASu6V4Yr3I5EbKAwvpHU+sTgSrHAIJzb1V7Np6
-        +fHp1FzJkjGwILI8fpHSJpw+sRRYNwKB/iN44KJpTzuVWA6CIjabdweLWjVIyUC78ESZw=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hqxjR-00018l-4g; Fri, 26 Jul 2019 10:45:49 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id DD4052742B63; Fri, 26 Jul 2019 11:45:47 +0100 (BST)
-Date:   Fri, 26 Jul 2019 11:45:47 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc:     lgirdwood@gmail.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] regulator: of: Add of_node_put() before return in
- function
-Message-ID: <20190726104547.GA4902@sirena.org.uk>
-References: <20190724083231.10276-1-nishkadg.linux@gmail.com>
- <20190724154701.GA4524@sirena.org.uk>
- <af559a36-c926-e2a5-a401-aae0f6867a6e@gmail.com>
+        Fri, 26 Jul 2019 06:46:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbfGZKqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 06:46:00 -0400
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C574F22CBB;
+        Fri, 26 Jul 2019 10:45:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564137958;
+        bh=x9mpS5NvmpKmAahIcVZmBhUi4LVxeCyzdFwA6MTZsMU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=q5TngikPRTXMNg0jozDNBJPwFVF/esEnumTmy+r7ILHTK8YXiAtYXiv4n0Ftz/gYH
+         VoWYJrImvalMWzFplysthaI8Pd2QGW14KO/MIM/bQ9BOcY6m+ViYxbnLc9ibtDq8W2
+         YWBb3du4rBxkznulmmTs9BFTIKNfvEuXon0wj6fQ=
+Received: by mail-lj1-f177.google.com with SMTP id h10so51050503ljg.0;
+        Fri, 26 Jul 2019 03:45:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAXIO3bswoo3QQIAVLl8SdZkcRbdIjtUDfg5fezTqIKVGDB0dcgF
+        MqyRjtCZ14lsc6rfoHKe3xgRQ9ljLjjTDWVmgNc=
+X-Google-Smtp-Source: APXvYqzZkUIlkzQtInKbgDs9Nar+L2o6NkagjMqtMfPToLfoMzoo3NIJHIWVhDdfUt4SL85oQ13GjXQLdyM04b3g+uU=
+X-Received: by 2002:a2e:8155:: with SMTP id t21mr48690964ljg.80.1564137955920;
+ Fri, 26 Jul 2019 03:45:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
-Content-Disposition: inline
-In-Reply-To: <af559a36-c926-e2a5-a401-aae0f6867a6e@gmail.com>
-X-Cookie: List at least two alternate dates.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CGME20190723122024eucas1p25a480ccddaa69ee1d0f1a07960ca3f22@eucas1p2.samsung.com>
+ <20190723122016.30279-1-a.swigon@partner.samsung.com> <20190723122016.30279-5-a.swigon@partner.samsung.com>
+ <CAGTfZH3Z334D3OKpBOGSfS9RoHkOX-s_2M858z1Ye2NoMtVh4g@mail.gmail.com>
+In-Reply-To: <CAGTfZH3Z334D3OKpBOGSfS9RoHkOX-s_2M858z1Ye2NoMtVh4g@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 26 Jul 2019 12:45:44 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfsD0XFs2hM64Kf0eG2G+xhWef3QZKjk9NU2ECzgQeqsA@mail.gmail.com>
+Message-ID: <CAJKOXPfsD0XFs2hM64Kf0eG2G+xhWef3QZKjk9NU2ECzgQeqsA@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/11] devfreq: exynos-bus: Clean up code
+To:     cwchoi00@gmail.com
+Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        georgi.djakov@linaro.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 25 Jul 2019 at 14:51, Chanwoo Choi <cwchoi00@gmail.com> wrote:
+>
+> 2019=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EC=88=98) =EC=98=A4=EC=A0=84 8:07,=
+ Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>=EB=8B=98=EC=9D=B4 =
+=EC=9E=91=EC=84=B1:
+> >
+> > This patch adds minor improvements to the exynos-bus driver.
+> >
+> > Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>
+> > ---
+> >  drivers/devfreq/exynos-bus.c | 49 ++++++++++++++++--------------------
+> >  1 file changed, 22 insertions(+), 27 deletions(-)
+> >
+> > diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.=
+c
+> > index 4bb83b945bf7..412511ca7703 100644
+> > --- a/drivers/devfreq/exynos-bus.c
+> > +++ b/drivers/devfreq/exynos-bus.c
+> > @@ -15,11 +15,10 @@
+> >  #include <linux/device.h>
+> >  #include <linux/export.h>
+> >  #include <linux/module.h>
+> > -#include <linux/of_device.h>
+> > +#include <linux/of.h>
+> >  #include <linux/pm_opp.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/regulator/consumer.h>
+> > -#include <linux/slab.h>
+> >
+> >  #define DEFAULT_SATURATION_RATIO       40
+> >  #define DEFAULT_VOLTAGE_TOLERANCE      2
+> > @@ -256,7 +255,7 @@ static int exynos_bus_parent_parse_of(struct device=
+_node *np,
+> >                                         struct exynos_bus *bus)
+> >  {
+> >         struct device *dev =3D bus->dev;
+> > -       int i, ret, count, size;
+> > +       int i, ret, count;
+> >
+> >         /* Get the regulator to provide each bus with the power */
+> >         bus->regulator =3D devm_regulator_get(dev, "vdd");
+> > @@ -283,8 +282,7 @@ static int exynos_bus_parent_parse_of(struct device=
+_node *np,
+> >         }
+> >         bus->edev_count =3D count;
+> >
+> > -       size =3D sizeof(*bus->edev) * count;
+> > -       bus->edev =3D devm_kzalloc(dev, size, GFP_KERNEL);
+> > +       bus->edev =3D devm_kcalloc(dev, count, sizeof(*bus->edev), GFP_=
+KERNEL);
+> >         if (!bus->edev) {
+> >                 ret =3D -ENOMEM;
+> >                 goto err_regulator;
+> > @@ -388,7 +386,7 @@ static int exynos_bus_profile_init(struct exynos_bu=
+s *bus,
+> >         ondemand_data =3D devm_kzalloc(dev, sizeof(*ondemand_data), GFP=
+_KERNEL);
+> >         if (!ondemand_data) {
+> >                 ret =3D -ENOMEM;
+> > -               goto err;
+> > +               goto out;
+> >         }
+> >         ondemand_data->upthreshold =3D 40;
+> >         ondemand_data->downdifferential =3D 5;
+> > @@ -400,14 +398,14 @@ static int exynos_bus_profile_init(struct exynos_=
+bus *bus,
+> >         if (IS_ERR(bus->devfreq)) {
+> >                 dev_err(dev, "failed to add devfreq device\n");
+> >                 ret =3D PTR_ERR(bus->devfreq);
+> > -               goto err;
+> > +               goto out;
+> >         }
+> >
+> >         /* Register opp_notifier to catch the change of OPP  */
+> >         ret =3D devm_devfreq_register_opp_notifier(dev, bus->devfreq);
+> >         if (ret < 0) {
+> >                 dev_err(dev, "failed to register opp notifier\n");
+> > -               goto err;
+> > +               goto out;
+> >         }
+> >
+> >         /*
+> > @@ -417,16 +415,16 @@ static int exynos_bus_profile_init(struct exynos_=
+bus *bus,
+> >         ret =3D exynos_bus_enable_edev(bus);
+> >         if (ret < 0) {
+> >                 dev_err(dev, "failed to enable devfreq-event devices\n"=
+);
+> > -               goto err;
+> > +               goto out;
+> >         }
+> >
+> >         ret =3D exynos_bus_set_event(bus);
+> >         if (ret < 0) {
+> >                 dev_err(dev, "failed to set event to devfreq-event devi=
+ces\n");
+> > -               goto err;
+> > +               goto out;
+> >         }
+> >
+> > -err:
+> > +out:
+> >         return ret;
+> >  }
+> >
+> > @@ -446,27 +444,28 @@ static int exynos_bus_profile_init_passive(struct=
+ exynos_bus *bus,
+> >         parent_devfreq =3D devfreq_get_devfreq_by_phandle(dev, 0);
+> >         if (IS_ERR(parent_devfreq)) {
+> >                 ret =3D -EPROBE_DEFER;
+> > -               goto err;
+> > +               goto out;
+> >         }
+> >
+> >         passive_data =3D devm_kzalloc(dev, sizeof(*passive_data), GFP_K=
+ERNEL);
+> >         if (!passive_data) {
+> >                 ret =3D -ENOMEM;
+> > -               goto err;
+> > +               goto out;
+> >         }
+> >         passive_data->parent =3D parent_devfreq;
+> >
+> >         /* Add devfreq device for exynos bus with passive governor */
+> > -       bus->devfreq =3D devm_devfreq_add_device(dev, profile, DEVFREQ_=
+GOV_PASSIVE,
+> > +       bus->devfreq =3D devm_devfreq_add_device(dev, profile,
+> > +                                               DEVFREQ_GOV_PASSIVE,
+> >                                                 passive_data);
+> >         if (IS_ERR(bus->devfreq)) {
+> >                 dev_err(dev,
+> >                         "failed to add devfreq dev with passive governo=
+r\n");
+> >                 ret =3D PTR_ERR(bus->devfreq);
+> > -               goto err;
+> > +               goto out;
+> >         }
+> >
+> > -err:
+> > +out:
+> >         return ret;
+> >  }
+> >
+> > @@ -484,11 +483,11 @@ static int exynos_bus_probe(struct platform_devic=
+e *pdev)
+> >                 return -EINVAL;
+> >         }
+> >
+> > -       bus =3D devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
+> > +       bus =3D devm_kzalloc(dev, sizeof(*bus), GFP_KERNEL);
+> >         if (!bus)
+> >                 return -ENOMEM;
+> >         mutex_init(&bus->lock);
+> > -       bus->dev =3D &pdev->dev;
+> > +       bus->dev =3D dev;
+> >         platform_set_drvdata(pdev, bus);
+> >
+> >         /* Parse the device-tree to get the resource information */
+> > @@ -502,7 +501,7 @@ static int exynos_bus_probe(struct platform_device =
+*pdev)
+> >                 goto err;
+> >         }
+> >
+> > -       node =3D of_parse_phandle(dev->of_node, "devfreq", 0);
+> > +       node =3D of_parse_phandle(np, "devfreq", 0);
+> >         if (node) {
+> >                 of_node_put(node);
+> >                 ret =3D exynos_bus_profile_init_passive(bus, profile);
+> > @@ -547,12 +546,10 @@ static int exynos_bus_resume(struct device *dev)
+> >         int ret;
+> >
+> >         ret =3D exynos_bus_enable_edev(bus);
+> > -       if (ret < 0) {
+> > +       if (ret < 0)
+> >                 dev_err(dev, "failed to enable the devfreq-event device=
+s\n");
+> > -               return ret;
+> > -       }
+> >
+> > -       return 0;
+> > +       return ret;
+> >  }
+> >
+> >  static int exynos_bus_suspend(struct device *dev)
+> > @@ -561,12 +558,10 @@ static int exynos_bus_suspend(struct device *dev)
+> >         int ret;
+> >
+>
+> NACK.
 
---C7zPtVaVf+AK4Oqc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Instead of simple nack you should explain what is wrong with proposed
+approach. The existing code could be improved and this patch clearly
+improves the readability. "err" label is confusing if it is used for
+correct exit path. The last "if() return" block is subjective - but
+then explain exactly why you prefer one over another. No just "nack"
+for peoples contributions.
 
-On Fri, Jul 26, 2019 at 01:02:52PM +0530, Nishka Dasgupta wrote:
-> On 24/07/19 9:17 PM, Mark Brown wrote:
-> > On Wed, Jul 24, 2019 at 02:02:31PM +0530, Nishka Dasgupta wrote:
+> >         ret =3D exynos_bus_disable_edev(bus);
+> > -       if (ret < 0) {
+> > +       if (ret < 0)
+> >                 dev_err(dev, "failed to disable the devfreq-event devic=
+es\n");
+> > -               return ret;
+> > -       }
+> >
+> > -       return 0;
+> > +       return ret;
+> >  }
+> >  #endif
+> >
+> > --
+> > 2.17.1
+> >
+>
+> NACK.
+>
+> As I already commented, It has never any benefit.
+> I think that it is not usful. Please drop it.
 
-> > > The local variable search in regulator_of_get_init_node takes the value
-> > > returned by either of_get_child_by_name or of_node_get, both of which
-> > > get a node. If this node is not put before returning, it could cause a
-> > > memory leak. Hence put search before a mid-loop return statement.
-> > > Issue found with Coccinelle.
+The benefit for me is clear - makes the code easier to understand.
 
-> > > -		if (!strcmp(desc->of_match, name))
-> > > +		if (!strcmp(desc->of_match, name)) {
-> > > +			of_node_put(search);
-> > >   			return of_node_get(child);
-> > > +		}
-
-> > Why not just remove the extra of_node_get() and a comment explaining why
-> > it's not needed?
-
-> I'm sorry, I don't think I understand. I'm putting search in this patch; the
-> program was already getting child. Should I also return child directly
-> instead of getting it again, and continue to put search?
-
-Your new code is dropping a reference then immediately reacquiring one
-to return it (introducing a race condition along the way).  Why not just
-return the already held reference and not call any functions at all?
-
---C7zPtVaVf+AK4Oqc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl062dgACgkQJNaLcl1U
-h9BqfAf/XkPCA/poexRgHnpFE+r37fkrF/5xoqRAFbobrvS42H1YdMPKPDuShBG2
-akn59PB6QIRjUgSVJVgdCRvAVDR6/HvvR55SUD66w6iQY3qHIFGxn426t9huP++T
-Rox4MQtM4W/6QKb9jXN8fxstr+bvw7LXgXoc5ZHBQ2boMfWormTWe7TtNIp+uZkc
-o2Id8iUdXPRk6fwQcRtTAiL3cJpLKWEGh0zK3EB8gFSFolgacoOooY4XeR02lP2T
-zmNYrdrGlNPG9ddjKW+RBerO1v8PObzmWmY3hcsTnbhQMnolKklzsJB3egv9FpLW
-pbq3pldG5+VJsEHoOmcAnq9DgAUAGQ==
-=k/xs
------END PGP SIGNATURE-----
-
---C7zPtVaVf+AK4Oqc--
+Best regards,
+Krzysztof
