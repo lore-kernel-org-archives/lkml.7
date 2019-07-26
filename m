@@ -2,119 +2,291 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AF5C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD3EC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B91D216C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62853229F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:31:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="bhVBOdqg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbfGZLao (ORCPT
+        id S1726562AbfGZLbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 07:30:44 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:58716 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbfGZLao (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 07:30:44 -0400
-Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x6QBU0JI005258;
-        Fri, 26 Jul 2019 20:30:00 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav303.sakura.ne.jp);
- Fri, 26 Jul 2019 20:30:00 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav303.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x6QBTrHb005193
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Fri, 26 Jul 2019 20:30:00 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] hung_task: Allow printing warnings every check interval
-To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Vasiliy Khoruzhick <vasilykh@arista.com>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20190724170249.9644-1-dima@arista.com>
- <2964b430-63d6-e172-84e2-cb269cf43443@i-love.sakura.ne.jp>
- <aa151251-d271-1e65-1cae-0d9da9764d56@arista.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <9a919c32-4e0e-ca1b-887f-c329543913d3@i-love.sakura.ne.jp>
-Date:   Fri, 26 Jul 2019 20:29:52 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 26 Jul 2019 07:31:35 -0400
+Received: from uho.ysoft.cz ([81.19.3.130]:42400 "EHLO uho.ysoft.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726023AbfGZLbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 07:31:34 -0400
+Received: from [10.1.8.111] (unknown [10.1.8.111])
+        by uho.ysoft.cz (Postfix) with ESMTP id 2C8E8A2536;
+        Fri, 26 Jul 2019 13:31:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
+        s=20160406-ysoft-com; t=1564140691;
+        bh=zRs4ConriXfESmaC5+3ZmOaU35JUrHZdPz+39redIfM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=bhVBOdqgxEaL6viGU35gcAiweLhHecJRxJdARbSlWZfC/qHUU1ni1VEX9M6pfVGrL
+         T6pK7sXqkCrgOaUH7g88BFtsoYPzBC+v7uo2Jwiq/4uTkrRAWwAVNPnjQ1P4E/GDj7
+         jrlk5nFdA/91lt3YGqykR9NCgjVWjo0SW8BkTjq4=
+Subject: Re: [RFC PATCH v2 0/4] Input: mpr121-polled: Add polled driver for
+ MPR121
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+References: <1558098773-47416-1-git-send-email-michal.vokac@ysoft.com>
+ <20190521053705.GI183429@dtor-ws>
+ <ef172b24-cd27-5bb0-d8b1-718f835d0647@ysoft.com>
+ <20190725085753.GA26665@penguin>
+ <ac436c3c-fa89-f777-85b2-f38adf842e10@ysoft.com>
+ <20190725144009.GA27432@penguin>
+From:   =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+Message-ID: <dcee1139-c53f-5ea0-f387-a3aa5a9bf39f@ysoft.com>
+Date:   Fri, 26 Jul 2019 13:31:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <aa151251-d271-1e65-1cae-0d9da9764d56@arista.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190725144009.GA27432@penguin>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/07/25 23:25, Dmitry Safonov wrote:
-> Yes, also current distributions already using the counter to print
-> warnings number of times and then silently ignore. I.e., on my Arch
-> Linux setup:
-> hung_task_warnings:10
+On 25. 07. 19 16:40, Dmitry Torokhov wrote:
+> On Thu, Jul 25, 2019 at 02:58:02PM +0200, Michal Vokáč wrote:
+>> On 25. 07. 19 10:57, Dmitry Torokhov wrote:
+>>> Hi Michal,
+>>>
+>>> On Tue, May 21, 2019 at 08:51:17AM +0200, Michal Vokáč wrote:
+>>>> On 21. 05. 19 7:37, Dmitry Torokhov wrote:
+>>>>> Hi Michal,
+>>>>>
+>>>>> On Fri, May 17, 2019 at 03:12:49PM +0200, Michal Vokáč wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> I have to deal with a situation where we have a custom i.MX6 based
+>>>>>> platform in production that uses the MPR121 touchkey controller.
+>>>>>> Unfortunately the chip is connected using only the I2C interface.
+>>>>>> The interrupt line is not used. Back in 2015 (Linux v3.14), my
+>>>>>> colleague modded the existing mpr121_touchkey.c driver to use polling
+>>>>>> instead of interrupt.
+>>>>>>
+>>>>>> For quite some time yet I am in a process of updating the product from
+>>>>>> the ancient Freescale v3.14 kernel to the latest mainline and pushing
+>>>>>> any needed changes upstream. The DT files for our imx6dl-yapp4 platform
+>>>>>> already made it into v5.1-rc.
+>>>>>>
+>>>>>> I rebased and updated our mpr121 patch to the latest mainline.
+>>>>>> It is created as a separate driver, similarly to gpio_keys_polled.
+>>>>>>
+>>>>>> The I2C device is quite susceptible to ESD. An ESD test quite often
+>>>>>> causes reset of the chip or some register randomly changes its value.
+>>>>>> The [PATCH 3/4] adds a write-through register cache. With the cache
+>>>>>> this state can be detected and the device can be re-initialied.
+>>>>>>
+>>>>>> The main question is: Is there any chance that such a polled driver
+>>>>>> could be accepted? Is it correct to implement it as a separate driver
+>>>>>> or should it be done as an option in the existing driver? I can not
+>>>>>> really imagine how I would do that though..
+>>>>>>
+>>>>>> There are also certain worries that the MPR121 chip may no longer be
+>>>>>> available in nonspecifically distant future. In case of EOL I will need
+>>>>>> to add a polled driver for an other touchkey chip. May it be already
+>>>>>> in mainline or a completely new one.
+>>>>>
+>>>>> I think that my addition of input_polled_dev was ultimately a wrong
+>>>>> thing to do. I am looking into enabling polling mode for regular input
+>>>>> devices as we then can enable polling mode in existing drivers.
+>>>>
+>>>> OK, that sounds good. Especially when one needs to switch from one chip
+>>>> to another that is already in tree, the need for a whole new polling
+>>>> driver is eliminated.
+>>>
+>>> Could you please try the patch below and see if it works for your use
+>>> case? Note that I have not tried running it, but it compiles so it must
+>>> be good ;)
+>>
+>> Hi Dmitry,
+>> Thank you very much for the patch!
+>> I gave it a shot and it seems you forgot to add the input-poller.h file
+>> to the patch.. it does not compile on my side :(
+> 
+> Oops ;) Please see the updated patch below.
 
-You can propose changing the default value of hung_task_warnings to -1.
+Thank you, now it is (almost) good as you said :D
 
-Current patch might be inconvenient because printk() from hung_task_warning(t, false)
-fails to go to consoles when that "t" was blocked for more than "timeout" seconds, for
+>>
+>>> Input: add support for polling to input devices
+>>>
+>>> From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>>>
+>>> Separating "normal" and "polled" input devices was a mistake, as often we want
+>>> to allow the very same device work on both interrupt-driven and polled mode,
+>>> depending on the board on which the device is used.
+>>>
+>>> This introduces new APIs:
+>>>
+>>> - input_setup_polling
+>>> - input_set_poll_interval
+>>> - input_set_min_poll_interval
+>>> - input_set_max_poll_interval
+>>>
+>>> These new APIs allow switching an input device into polled mode with sysfs
+>>> attributes matching drivers using input_polled_dev APIs that will be eventually
+>>> removed.
+>>
+>> After reading this I am not really sure what else needs to be done
+>> to test/use the poller. I suspect I need to modify the input device
+>> driver (mpr121_touchkey.c in my case) like this:
+>>
+>> If the interrupt gpio is not provided in DT, the device driver probe
+>> function should:
+>>   - not request the threaded interrupt
+>>   - call input_setup_polling and provide it with poll_fn
+>>     Can the mpr_touchkey_interrupt function be used as is for this
+>>     purpose? The only problem I see is it returns IRQ_HANDLED.
+> 
+> I'd factor out code suitable for polling from mpr_touchkey_interrupt()
+> and then do
+> 
+> static irqreturn_t mpr_touchkey_interrupt(...)
+> {
+> 	mpr_touchkey_report(...);
+> 	return IRQ_HANDLED;
+> }
+> 
 
-	if (sysctl_hung_task_panic) {
-		console_verbose();
-		hung_task_show_lock = true;
-		hung_task_call_panic = true;
-	}
+Probably a trivial problem for experienced kernel hacker but I can not
+wrap my head around this - the interrupt handler takes the mpr121
+device id as an argument while the poller poll_fn takes struct input_dev.
 
-path which is intended to force printk() to go to consoles is ignored by
+I fail to figure out how to get the device id from the input device.
 
-	/* Don't print warings twice */
-	if (!sysctl_hung_task_interval_warnings)
-		hung_task_warning(t, true);
+Here is what I have:
 
-when panic() should be called. (The vmcore would contain the printk() output which
-was not sent to consoles if kdump is configured. But vmcore is not always available.)
-
-> Yes, that's why it's disabled by default (=0).
-> I tend to agree that printing with KERN_DEBUG may be better, but in my
-> point of view the patch isn't enough justification for patching
-> sched_show_task() and show_stack().
-
-You can propose sched_show_task_log_lvl() and show_stack_log_lvl() like show_trace_log_lvl().
-
-I think that sysctl_hung_task_interval_warnings should not be decremented automatically.
-I guess that that variable should become a boolean which controls whether to report threads
-(with KERN_DEBUG level) which was blocked for more than sysctl_hung_task_check_interval_secs
-seconds (or a tristate which also controls whether the report should be sent to consoles
-(because KERN_DEBUG level likely prevents sending to consoles)), and
-hung_task_warning(t, false) should be called like
-
-	if (time_is_after_jiffies(t->last_switch_time + timeout * HZ)) {
-		if (sysctl_hung_task_interval_warnings)
-			hung_task_warning(t, false);
-		return;
-	}
-
-rather than
-
-	if (sysctl_hung_task_interval_warnings)
-		hung_task_warning(t, false);
-	if (time_is_after_jiffies(t->last_switch_time + timeout * HZ))
-		return;
-
-.
-
+diff --git a/drivers/input/keyboard/mpr121_touchkey.c b/drivers/input/keyboard/mpr121_touchkey.c
+index e9ceaa16b46a..1124f77ee10a 100644
+--- a/drivers/input/keyboard/mpr121_touchkey.c
++++ b/drivers/input/keyboard/mpr121_touchkey.c
+@@ -54,6 +54,10 @@
+  /* MPR121 has 12 keys */
+  #define MPR121_MAX_KEY_COUNT		12
+  
++#define MPR121_POLL_INTERVAL		50
++#define MPR121_MIN_POLL_INTERVAL	10
++#define MPR121_MAX_POLL_INTERVAL	200
++
+  struct mpr121_touchkey {
+  	struct i2c_client	*client;
+  	struct input_dev	*input_dev;
+@@ -115,9 +119,12 @@ static struct regulator *mpr121_vdd_supply_init(struct device *dev)
+  	return vdd_supply;
+  }
+  
+-static irqreturn_t mpr_touchkey_interrupt(int irq, void *dev_id)
++static void mpr_touchkey_report(struct input_dev *dev)
+  {
+-	struct mpr121_touchkey *mpr121 = dev_id;
++	/*
++	 * TODO the input_dev dev needs to be converted to mpr121 device id.
++	 */
++	struct mpr121_touchkey *mpr121 = /* TODO */;
+  	struct i2c_client *client = mpr121->client;
+  	struct input_dev *input = mpr121->input_dev;
+  	unsigned long bit_changed;
+@@ -127,14 +134,14 @@ static irqreturn_t mpr_touchkey_interrupt(int irq, void *dev_id)
+  	reg = i2c_smbus_read_byte_data(client, ELE_TOUCH_STATUS_1_ADDR);
+  	if (reg < 0) {
+  		dev_err(&client->dev, "i2c read error [%d]\n", reg);
+-		goto out;
++		return;
+  	}
+  
+  	reg <<= 8;
+  	reg |= i2c_smbus_read_byte_data(client, ELE_TOUCH_STATUS_0_ADDR);
+  	if (reg < 0) {
+  		dev_err(&client->dev, "i2c read error [%d]\n", reg);
+-		goto out;
++		return;
+  	}
+  
+  	reg &= TOUCH_STATUS_MASK;
+@@ -155,8 +162,17 @@ static irqreturn_t mpr_touchkey_interrupt(int irq, void *dev_id)
+  
+  	}
+  	input_sync(input);
++}
++
++static irqreturn_t mpr_touchkey_interrupt(int irq, void *dev_id)
++{
++	/*
++	 * TODO
++	 * mpr_touchkey_report takes struct input_dev as an argument,
++	 * not the device id.
++	 */
++	mpr_touchkey_report(/* TODO */);
+  
+-out:
+  	return IRQ_HANDLED;
+  }
+  
+@@ -232,11 +248,6 @@ static int mpr_touchkey_probe(struct i2c_client *client,
+  	int error;
+  	int i;
+  
+-	if (!client->irq) {
+-		dev_err(dev, "irq number should not be zero\n");
+-		return -EINVAL;
+-	}
+-
+  	vdd_supply = mpr121_vdd_supply_init(dev);
+  	if (IS_ERR(vdd_supply))
+  		return PTR_ERR(vdd_supply);
+@@ -289,13 +300,27 @@ static int mpr_touchkey_probe(struct i2c_client *client,
+  		return error;
+  	}
+  
+-	error = devm_request_threaded_irq(dev, client->irq, NULL,
+-					  mpr_touchkey_interrupt,
+-					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+-					  dev->driver->name, mpr121);
+-	if (error) {
+-		dev_err(dev, "Failed to register interrupt\n");
+-		return error;
++	if (client->irq) {
++		error = devm_request_threaded_irq(dev, client->irq, NULL,
++						  mpr_touchkey_interrupt,
++						  IRQF_TRIGGER_FALLING |
++						  IRQF_ONESHOT,
++						  dev->driver->name, mpr121);
++		if (error) {
++			dev_err(dev, "Failed to register interrupt\n");
++			return error;
++		}
++	} else {
++		dev_dbg(dev, "invalid IRQ number, using polling mode\n");
++		error = input_setup_polling(input_dev, mpr_touchkey_report);
++		if (error)
++			return error;
++
++		input_set_poll_interval(input_dev, MPR121_POLL_INTERVAL);
++		input_set_min_poll_interval(input_dev,
++					    MPR121_MIN_POLL_INTERVAL);
++		input_set_max_poll_interval(input_dev,
++					    MPR121_MAX_POLL_INTERVAL);
+  	}
+  
+  	error = input_register_device(input_dev);
+--
