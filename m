@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C929C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EEBC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 324F2218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C8B20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155168;
-	bh=BrtvQnA6t0Sx/oqyb9Dc+rL7Xgk788u0Ct8W+1Gmi80=;
+	s=default; t=1564155172;
+	bh=shJTikug5vCmgXdjWixPN2Mt7ygPLs3Sk1CgBOOm6Ns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rFvPZAcFpqEfvynG3iFARKFxkNtK37f0aqfSrfTg2J12zilbFoqdE3Nq+fsrolsmx
-	 1nnl1H7xftzuzQG+VFd/itrLWz9/cafdC49HM92lOp535jnfMZwMTwMaKZr/DYjMXm
-	 Tuui4zp+scnQDFkEefC3SphZtEn71qfwaSFv0+3o=
+	b=Cejm5XqNd1J/t6y8KXBgfkGhTmrIeclPgaE76NR8aGcOAmrDSRZk9arUitl2AI40Q
+	 hkFrEVq7Z+CqkuBaZJlvXPm+rU4gUQxXaYUANvfrZ8LP8rKXmoP6TgzJ0R2Wy54EsF
+	 6QVtjwN7YK7ISpsTe8wijzjgskOyASrzdmGifIgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389552AbfGZPcr (ORCPT
+        id S2389562AbfGZPcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:32:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47972 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:32:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389538AbfGZPco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:32:44 -0400
+        id S2388558AbfGZPct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:32:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAFB022CC0;
-        Fri, 26 Jul 2019 15:32:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A4DD22CC0;
+        Fri, 26 Jul 2019 15:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155163;
-        bh=BrtvQnA6t0Sx/oqyb9Dc+rL7Xgk788u0Ct8W+1Gmi80=;
+        s=default; t=1564155168;
+        bh=shJTikug5vCmgXdjWixPN2Mt7ygPLs3Sk1CgBOOm6Ns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CG8/1Mz5251F4kteiPjsqRtk3weWe1lMKmiaUCndllD4JF5y/4bTHIqiVQlienq1u
-         yl3f7N80geTIPubbUqBMEL1fCBjTTVaxAa6WoURUoI1uKrpykmEvx1FiILhGWpuD3g
-         LA06bgeV5uqlDxDtt3JOGO5Jz8Axlh4quTkIY9Es=
+        b=RCz7GNDo95AuSpQJZ6a+YI8zxgxkV4pLij8p5sx4OqCL6i5Y0iJD/WFRA0w/vryjX
+         jzuAWInBZauhMeMrWgZzHZM2I8cKEKKH1kXON6ldnpbxAXmzzbUmQmNGnlQbE4AZ8E
+         sVNs8Kg1hlTuvQy0BfWdZ6y4R6bE/k1hF2k7VHq0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Kosyh <p.kosyh@gmail.com>,
-        David Ahern <dsa@cumulusnetworks.com>,
+        stable@vger.kernel.org, Andreas Steinmetz <ast@domdv.de>,
+        Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 23/50] vrf: make sure skb->data contains ip header to make routing
-Date:   Fri, 26 Jul 2019 17:24:58 +0200
-Message-Id: <20190726152302.951045622@linuxfoundation.org>
+Subject: [PATCH 4.19 25/50] macsec: fix use-after-free of skb during RX
+Date:   Fri, 26 Jul 2019 17:25:00 +0200
+Message-Id: <20190726152303.159709857@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -60,113 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Kosyh <p.kosyh@gmail.com>
+From: Andreas Steinmetz <ast@domdv.de>
 
-[ Upstream commit 107e47cc80ec37cb332bd41b22b1c7779e22e018 ]
+[ Upstream commit 095c02da80a41cf6d311c504d8955d6d1c2add10 ]
 
-vrf_process_v4_outbound() and vrf_process_v6_outbound() do routing
-using ip/ipv6 addresses, but don't make sure the header is available
-in skb->data[] (skb_headlen() is less then header size).
+Fix use-after-free of skb when rx_handler returns RX_HANDLER_PASS.
 
-Case:
-
-1) igb driver from intel.
-2) Packet size is greater then 255.
-3) MPLS forwards to VRF device.
-
-So, patch adds pskb_may_pull() calls in vrf_process_v4/v6_outbound()
-functions.
-
-Signed-off-by: Peter Kosyh <p.kosyh@gmail.com>
-Reviewed-by: David Ahern <dsa@cumulusnetworks.com>
+Signed-off-by: Andreas Steinmetz <ast@domdv.de>
+Acked-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/vrf.c |   58 ++++++++++++++++++++++++++++++++----------------------
- 1 file changed, 35 insertions(+), 23 deletions(-)
+ drivers/net/macsec.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -169,23 +169,29 @@ static int vrf_ip6_local_out(struct net
- static netdev_tx_t vrf_process_v6_outbound(struct sk_buff *skb,
- 					   struct net_device *dev)
- {
--	const struct ipv6hdr *iph = ipv6_hdr(skb);
-+	const struct ipv6hdr *iph;
- 	struct net *net = dev_net(skb->dev);
--	struct flowi6 fl6 = {
--		/* needed to match OIF rule */
--		.flowi6_oif = dev->ifindex,
--		.flowi6_iif = LOOPBACK_IFINDEX,
--		.daddr = iph->daddr,
--		.saddr = iph->saddr,
--		.flowlabel = ip6_flowinfo(iph),
--		.flowi6_mark = skb->mark,
--		.flowi6_proto = iph->nexthdr,
--		.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF,
--	};
-+	struct flowi6 fl6;
- 	int ret = NET_XMIT_DROP;
- 	struct dst_entry *dst;
- 	struct dst_entry *dst_null = &net->ipv6.ip6_null_entry->dst;
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -1103,10 +1103,9 @@ static rx_handler_result_t macsec_handle
+ 	}
  
-+	if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct ipv6hdr)))
-+		goto err;
-+
-+	iph = ipv6_hdr(skb);
-+
-+	memset(&fl6, 0, sizeof(fl6));
-+	/* needed to match OIF rule */
-+	fl6.flowi6_oif = dev->ifindex;
-+	fl6.flowi6_iif = LOOPBACK_IFINDEX;
-+	fl6.daddr = iph->daddr;
-+	fl6.saddr = iph->saddr;
-+	fl6.flowlabel = ip6_flowinfo(iph);
-+	fl6.flowi6_mark = skb->mark;
-+	fl6.flowi6_proto = iph->nexthdr;
-+	fl6.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF;
-+
- 	dst = ip6_route_output(net, NULL, &fl6);
- 	if (dst == dst_null)
- 		goto err;
-@@ -241,21 +247,27 @@ static int vrf_ip_local_out(struct net *
- static netdev_tx_t vrf_process_v4_outbound(struct sk_buff *skb,
- 					   struct net_device *vrf_dev)
- {
--	struct iphdr *ip4h = ip_hdr(skb);
-+	struct iphdr *ip4h;
- 	int ret = NET_XMIT_DROP;
--	struct flowi4 fl4 = {
--		/* needed to match OIF rule */
--		.flowi4_oif = vrf_dev->ifindex,
--		.flowi4_iif = LOOPBACK_IFINDEX,
--		.flowi4_tos = RT_TOS(ip4h->tos),
--		.flowi4_flags = FLOWI_FLAG_ANYSRC | FLOWI_FLAG_SKIP_NH_OIF,
--		.flowi4_proto = ip4h->protocol,
--		.daddr = ip4h->daddr,
--		.saddr = ip4h->saddr,
--	};
-+	struct flowi4 fl4;
- 	struct net *net = dev_net(vrf_dev);
- 	struct rtable *rt;
+ 	skb = skb_unshare(skb, GFP_ATOMIC);
+-	if (!skb) {
+-		*pskb = NULL;
++	*pskb = skb;
++	if (!skb)
+ 		return RX_HANDLER_CONSUMED;
+-	}
  
-+	if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct iphdr)))
-+		goto err;
-+
-+	ip4h = ip_hdr(skb);
-+
-+	memset(&fl4, 0, sizeof(fl4));
-+	/* needed to match OIF rule */
-+	fl4.flowi4_oif = vrf_dev->ifindex;
-+	fl4.flowi4_iif = LOOPBACK_IFINDEX;
-+	fl4.flowi4_tos = RT_TOS(ip4h->tos);
-+	fl4.flowi4_flags = FLOWI_FLAG_ANYSRC | FLOWI_FLAG_SKIP_NH_OIF;
-+	fl4.flowi4_proto = ip4h->protocol;
-+	fl4.daddr = ip4h->daddr;
-+	fl4.saddr = ip4h->saddr;
-+
- 	rt = ip_route_output_flow(net, &fl4, NULL);
- 	if (IS_ERR(rt))
- 		goto err;
+ 	pulled_sci = pskb_may_pull(skb, macsec_extra_len(true));
+ 	if (!pulled_sci) {
 
 
