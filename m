@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2D8C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29150C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0815D22CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8F4722CD8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149029;
-	bh=kg9ORp9aZK6vwWWjv/ZJX2FXW9kBst9/U2Ly7bWVi7A=;
+	s=default; t=1564149042;
+	bh=8bKqOjSUUQC1mnRNDLkjrxM4PpNvEvT4NFD5HvX0/1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XfGyI2N9dqz389tOrbAlb7QcCPw8gDbrYoZV+egblbsGzBlWJLI/a4IrjCRkG3c9S
-	 fQ0Nf8fu3DteeQ1Q9P6Udy+/HO8au7iGFAliXEP8jkRocXT9KCRPTYffSEzUuAkNIy
-	 kLrUd65BNZYK1eudiXct3nMvhCrGVTlf2IbDEjMU=
+	b=JLVmDqpOkmcS8yvl5d+aRW5q+LhY/vtzJq9vYBx+pv8jyPusSO73cg8nalCdpWdj+
+	 DzsgTIjPbRl1SgBkSev4yWnaiOimB8q3CF2Z9F7D+mFsRgsF+Kb65NTpYqEPrO4iv8
+	 CDhPJor9eVlNFNVvpZchkzJgnR2e0QS7c1dvrtWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388840AbfGZNuY (ORCPT
+        id S2387558AbfGZNuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:50:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52714 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388340AbfGZNo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:44:28 -0400
+        id S1728096AbfGZNoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:44:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B19D022CD0;
-        Fri, 26 Jul 2019 13:44:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DE5222CD8;
+        Fri, 26 Jul 2019 13:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148667;
-        bh=kg9ORp9aZK6vwWWjv/ZJX2FXW9kBst9/U2Ly7bWVi7A=;
+        s=default; t=1564148661;
+        bh=8bKqOjSUUQC1mnRNDLkjrxM4PpNvEvT4NFD5HvX0/1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=psxWUZS2oJJ+QMuhyQTZNCXHfabyUNrjqQ2TvHaChKOq9EFwHA/qqozgxVeua8C7s
-         99AntLdyJhfvQaVoAYNfw+keZ5p+wQ05knuZtgPuQqYvF9puqqMqzm2eRIsnnmxZk6
-         cKoQ4tULGityAFWb9EXURyIyfHGS96AbW8B4vBek=
+        b=nPtuQRW0/diSn3YIaUDnob/F7aGKpOXza4ldm6pYi+3h7hMCNJB6uIPzU8x8etQ33
+         pKMnamOPa8Z7IeRRFTCo5nJ9lhl65UkcQ9AS+lOpZr/zU03VeEtODxDkkNcl2reyGD
+         0IH+yX5dLEfr02zQke4U9mCSxheiucCWGC7E9Axs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 35/37] x86/paravirt: Fix callee-saved function ELF sizes
-Date:   Fri, 26 Jul 2019 09:43:30 -0400
-Message-Id: <20190726134332.12626-35-sashal@kernel.org>
+Cc:     Denis Efremov <efremov@ispras.ru>, Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 31/37] floppy: fix out-of-bounds read in copy_buffer
+Date:   Fri, 26 Jul 2019 09:43:26 -0400
+Message-Id: <20190726134332.12626-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134332.12626-1-sashal@kernel.org>
 References: <20190726134332.12626-1-sashal@kernel.org>
@@ -62,55 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Denis Efremov <efremov@ispras.ru>
 
-[ Upstream commit 083db6764821996526970e42d09c1ab2f4155dd4 ]
+[ Upstream commit da99466ac243f15fbba65bd261bfc75ffa1532b6 ]
 
-The __raw_callee_save_*() functions have an ELF symbol size of zero,
-which confuses objtool and other tools.
+This fixes a global out-of-bounds read access in the copy_buffer
+function of the floppy driver.
 
-Fixes a bunch of warnings like the following:
+The FDDEFPRM ioctl allows one to set the geometry of a disk.  The sect
+and head fields (unsigned int) of the floppy_drive structure are used to
+compute the max_sector (int) in the make_raw_rw_request function.  It is
+possible to overflow the max_sector.  Next, max_sector is passed to the
+copy_buffer function and used in one of the memcpy calls.
 
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_pte_val() is missing an ELF size annotation
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_pgd_val() is missing an ELF size annotation
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_make_pte() is missing an ELF size annotation
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_make_pgd() is missing an ELF size annotation
+An unprivileged user could trigger the bug if the device is accessible,
+but requires a floppy disk to be inserted.
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/afa6d49bb07497ca62e4fc3b27a2d0cece545b4e.1563413318.git.jpoimboe@redhat.com
+The patch adds the check for the .sect * .head multiplication for not
+overflowing in the set_geometry function.
+
+The bug was found by syzkaller.
+
+Signed-off-by: Denis Efremov <efremov@ispras.ru>
+Tested-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/paravirt.h | 1 +
- arch/x86/kernel/kvm.c           | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/block/floppy.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index c83a2f418cea..4471f0da6ed7 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -758,6 +758,7 @@ static __always_inline bool pv_vcpu_is_preempted(long cpu)
- 	    PV_RESTORE_ALL_CALLER_REGS					\
- 	    FRAME_END							\
- 	    "ret;"							\
-+	    ".size " PV_THUNK_NAME(func) ", .-" PV_THUNK_NAME(func) ";"	\
- 	    ".popsection")
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index 4c6c20376a83..1205472a9f63 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3239,8 +3239,10 @@ static int set_geometry(unsigned int cmd, struct floppy_struct *g,
+ 	int cnt;
  
- /* Get a reference to a callee-save function */
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 652bdd867782..5853eb50138e 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -631,6 +631,7 @@ asm(
- "cmpb	$0, " __stringify(KVM_STEAL_TIME_preempted) "+steal_time(%rax);"
- "setne	%al;"
- "ret;"
-+".size __raw_callee_save___kvm_vcpu_is_preempted, .-__raw_callee_save___kvm_vcpu_is_preempted;"
- ".popsection");
- 
- #endif
+ 	/* sanity checking for parameters. */
+-	if (g->sect <= 0 ||
+-	    g->head <= 0 ||
++	if ((int)g->sect <= 0 ||
++	    (int)g->head <= 0 ||
++	    /* check for overflow in max_sector */
++	    (int)(g->sect * g->head) <= 0 ||
+ 	    /* check for zero in F_SECT_PER_TRACK */
+ 	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
+ 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
 -- 
 2.20.1
 
