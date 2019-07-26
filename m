@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6057AC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00C5C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36F4C22BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D30722CBF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148555;
-	bh=yWv4w82eJ4DUrjGMKIX9faGTTSZolnoRlKDkvEU6Osg=;
+	s=default; t=1564148561;
+	bh=Qpjzsm+fRNhDRErGNwLJjXGpuo84iqjZYGVsf3hADoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iIjfxGLCH1xBo94hRWXOVRVVMnX8Zraw9o2vhc+6J0fBGSpjPlPLfi1jQIohweH2/
-	 N+QvheFHCquzkSjbX6OX/7YRs5T1rbKHX2ikSdRW6BLKq49m3U8hjFNdEiEc/KGWus
-	 lCxp3YAyPg8g6KCX7XhEOvkFfS5ArHtU8BTFRvMM=
+	b=bF43wShGWw1PeEaV3tzoAAENRzrydoqLMVWDHyivkw+DSbiYXBu825xehf8kJ4zGy
+	 1tyAmqAUzWqQQkgPqG28x6uPDkoemo4ZkuGh+VaTv6IhzVjOePxIJg7TK38tPwWa6v
+	 UuJrGgiAfrxXW4qghlZQoDQkpfIUze/A502Q1DkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387975AbfGZNme (ORCPT
+        id S2388001AbfGZNmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:42:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49598 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:42:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387916AbfGZNmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:42:20 -0400
+        id S2387948AbfGZNm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:42:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3353722BF5;
-        Fri, 26 Jul 2019 13:42:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D3F322CC0;
+        Fri, 26 Jul 2019 13:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148540;
-        bh=yWv4w82eJ4DUrjGMKIX9faGTTSZolnoRlKDkvEU6Osg=;
+        s=default; t=1564148548;
+        bh=Qpjzsm+fRNhDRErGNwLJjXGpuo84iqjZYGVsf3hADoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W6FNxRoJLtF4OurkX65gp7xlr6j1bGMGzW1ivCmEWZxHXqZAjAlreYjCslAkcmvq0
-         HU4FYLMwXyaDphRIIGTrL1fMv36y4b/USlB+NFb25Ni0lD+go8LHj3xsDzDG/yj6CV
-         UwTaHLqK3tXkuall4Zu8Boo5+oF09EktDYOHTERs=
+        b=ujlfoQ79QNmwGC46Brvfun77LHxsOQWgImRJ/gfdZbYmsWEhbSfHI4enssynwzO/m
+         SyE+RIQeLCy85yu5N5njYRDFLA3XirOv3AKCBozvZXygPLl9TuTMFbtv/Aad9BIyg8
+         /aIdJd04x3ssFDtuxAzU7oXJPyXnIeXX4wKw2K/0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 07/47] arm64: dts: rockchip: fix isp iommu clocks and power domain
-Date:   Fri, 26 Jul 2019 09:41:30 -0400
-Message-Id: <20190726134210.12156-7-sashal@kernel.org>
+Cc:     Petr Cvek <petrcvekcz@gmail.com>,
+        Paul Burton <paul.burton@mips.com>, hauke@hauke-m.de,
+        john@phrozen.org, linux-mips@vger.kernel.org,
+        openwrt-devel@lists.openwrt.org, pakahmar@hotmail.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 10/47] MIPS: lantiq: Fix bitfield masking
+Date:   Fri, 26 Jul 2019 09:41:33 -0400
+Message-Id: <20190726134210.12156-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
 References: <20190726134210.12156-1-sashal@kernel.org>
@@ -61,63 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helen Koike <helen.koike@collabora.com>
+From: Petr Cvek <petrcvekcz@gmail.com>
 
-[ Upstream commit c432a29d3fc9ee928caeca2f5cf68b3aebfa6817 ]
+[ Upstream commit ba1bc0fcdeaf3bf583c1517bd2e3e29cf223c969 ]
 
-isp iommu requires wrapper variants of the clocks.
-noc variants are always on and using the wrapper variants will activate
-{A,H}CLK_ISP{0,1} due to the hierarchy.
+The modification of EXIN register doesn't clean the bitfield before
+the writing of a new value. After a few modifications the bitfield would
+accumulate only '1's.
 
-Tested using the pending isp patch set (which is not upstream
-yet). Without this patch, streaming from the isp stalls.
-
-Also add the respective power domain and remove the "disabled" status.
-
-Refer:
- RK3399 TRM v1.4 Fig. 2-4 RK3399 Clock Architecture Diagram
- RK3399 TRM v1.4 Fig. 8-1 RK3399 Power Domain Partition
-
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Petr Cvek <petrcvekcz@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: hauke@hauke-m.de
+Cc: john@phrozen.org
+Cc: linux-mips@vger.kernel.org
+Cc: openwrt-devel@lists.openwrt.org
+Cc: pakahmar@hotmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/mips/lantiq/irq.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index df7e62d9a670..cea44a7c7cf9 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1643,11 +1643,11 @@
- 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
- 		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
- 		interrupt-names = "isp0_mmu";
--		clocks = <&cru ACLK_ISP0_NOC>, <&cru HCLK_ISP0_NOC>;
-+		clocks = <&cru ACLK_ISP0_WRAPPER>, <&cru HCLK_ISP0_WRAPPER>;
- 		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
-+		power-domains = <&power RK3399_PD_ISP0>;
- 		rockchip,disable-mmu-reset;
--		status = "disabled";
- 	};
+diff --git a/arch/mips/lantiq/irq.c b/arch/mips/lantiq/irq.c
+index c4ef1c31e0c4..37caeadb2964 100644
+--- a/arch/mips/lantiq/irq.c
++++ b/arch/mips/lantiq/irq.c
+@@ -156,8 +156,9 @@ static int ltq_eiu_settype(struct irq_data *d, unsigned int type)
+ 			if (edge)
+ 				irq_set_handler(d->hwirq, handle_edge_irq);
  
- 	isp1_mmu: iommu@ff924000 {
-@@ -1655,11 +1655,11 @@
- 		reg = <0x0 0xff924000 0x0 0x100>, <0x0 0xff925000 0x0 0x100>;
- 		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH 0>;
- 		interrupt-names = "isp1_mmu";
--		clocks = <&cru ACLK_ISP1_NOC>, <&cru HCLK_ISP1_NOC>;
-+		clocks = <&cru ACLK_ISP1_WRAPPER>, <&cru HCLK_ISP1_WRAPPER>;
- 		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
-+		power-domains = <&power RK3399_PD_ISP1>;
- 		rockchip,disable-mmu-reset;
--		status = "disabled";
- 	};
+-			ltq_eiu_w32(ltq_eiu_r32(LTQ_EIU_EXIN_C) |
+-				(val << (i * 4)), LTQ_EIU_EXIN_C);
++			ltq_eiu_w32((ltq_eiu_r32(LTQ_EIU_EXIN_C) &
++				    (~(7 << (i * 4)))) | (val << (i * 4)),
++				    LTQ_EIU_EXIN_C);
+ 		}
+ 	}
  
- 	hdmi_sound: hdmi-sound {
 -- 
 2.20.1
 
