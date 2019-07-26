@@ -2,115 +2,116 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35E5C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61194C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8173B2238C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC392238C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:16:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I61Gsocz"
+	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="FH1O0W8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbfGZJOp (ORCPT
+        id S1726166AbfGZJP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:14:45 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35537 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfGZJOo (ORCPT
+        Fri, 26 Jul 2019 05:15:59 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33015 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfGZJP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:14:44 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u14so24235774pfn.2;
-        Fri, 26 Jul 2019 02:14:44 -0700 (PDT)
+        Fri, 26 Jul 2019 05:15:59 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n9so53731112wru.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 02:15:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=TYiDJjF4yOS8bkmjhmB2OznvRayOVVC1oxEpAkjtmTY=;
-        b=I61GsoczxdHQtaJ6fHWGIB4x4LyJFbsdK7l2wJZBTM8JstVMhrNZuzZUEfXnocjdD7
-         yVW4nrN9xNDsJYYymIPOQ+1TgmY9cqEMM5hAM7Z0ZnxahB/dFGJJF/FgHKMY2EnmDuF6
-         81mqT7wx5lhXqI1xVYHgFcAWk7LWkuwy5fRbvWCIqGo1OvH6nyouRgROWhEciCu9dn3u
-         74Gku8Q9fbvNP2dSm5q2L/lflTNBXi8cUXfM5pNrtViUxxcX5B80TvJd7jIbdTi0HDCS
-         Fl605ATEigDLBGWTTlGI9lyO1mjTgwt4mma/cMy75D3CMPKpyz6owXurOGVJFwi07FHk
-         PJ3g==
+        d=6wind.com; s=google;
+        h=reply-to:subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9r9uyuQRxfZKsoTfi+2znRv6sD15zYzQ2hWxzsI8gkU=;
+        b=FH1O0W8U9KDswyjDE9zBBKyiW+8HqfR5iTgIt4qJ9Y3AGO+xa5LRQKGEPJ0seda+4v
+         HI+s51qtGlL3qrvNl8cMfjrZNb57Bj0BioHtSus10VSR5cQsEcQA5S3iwfpwBIlvoYm3
+         P3U8b4ZpT3T8QnLmGboYhMHszdu3Y9s3gwcSmPgolImcipQBpTkidyJNeMXy9o+8msfI
+         mgAGuPxuMU5sRLjLUes9hrVEkUssc0vwOw4IIhoV1t5MNgV4H8CF4e8Pf/LXRUmjRt0w
+         ozpM2Q1hmcRGR2fwAJ7Qqub+f1zyeq7jr8/GmNhA9Pa3kOSKbxN5m0YE9iw04Iv7La7J
+         sYZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TYiDJjF4yOS8bkmjhmB2OznvRayOVVC1oxEpAkjtmTY=;
-        b=PjsdDRXs6Do+fL3fBaXJdeDmI5jjmNjtdfpPtg3zMJ/vJ4Wv90gtDcT6wtW0DrD+rQ
-         56V5MuTFjzWwaS2NBfJgT4Vh5TpqIiZ7E6ZEr0+tKwugoHUewy/pymnlpLrz+GMGT8wQ
-         cDGViPJwd0QMYwxYOdjb2lI+WmBBmFLU5xGlCDS7npSgus60JV5ZHRfH4OJ/eB/ypQPO
-         SwMwSb2yPloE/+Nh2eSjPMEeZZU9sq1byGo2TnGFK45xCr5iGVTG9JWvM+Vyx+25cYdp
-         gyJebwfiUSGd8ngMQt34Wq8JwdPoDjCeq2WiCJwLg0Cs8gafDCYHev3pO2Yk+JA017be
-         o1sg==
-X-Gm-Message-State: APjAAAVXjNvn/0pmVbrRtaM5WS9b+tqE1qaILmIKdrpkSv+n1GBbvQlz
-        gPwNuAFJ0uE1ms6/RW/qcyc=
-X-Google-Smtp-Source: APXvYqyzGncQMVpBKteXwxGu8JqgLDcbIaKfg9VkHM8Tr2D5sXtgT/oUseLrE64Vg0RtdqCDvWN0RA==
-X-Received: by 2002:a17:90a:1b4a:: with SMTP id q68mr96898848pjq.61.1564132484301;
-        Fri, 26 Jul 2019 02:14:44 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id g11sm54686920pgu.11.2019.07.26.02.14.41
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=9r9uyuQRxfZKsoTfi+2znRv6sD15zYzQ2hWxzsI8gkU=;
+        b=c4roqAgWYPjWtGc9V7YJK+UMnY0a6Kh2FVK6f8LkjF48Ds/DgFaSvAcSjmJmjx/7BZ
+         e6Bd9cL6wvHPT2diVE2xGeE9EY8hD/3zPq3UMqnOjEwCH8g/8dLJQEIC5YzNAAZMLIne
+         VdhngJfZnMbaLP1VKlUcVq3cGyqlDCrRj6hHIec3HCHh7kohrqJdbuqwcj4W8ULLYy28
+         SPzr/jkkBGaRrE1KGzgjtstUKhuj8E9j05ICoMSVh+G6AylaM1VptQMK6zuBULHUd6i/
+         2ArVBbNfyBnbX9zTLPYFPzohals/opEYd3k8g7pSJbxp7ljGAZv6K8UVGC5pBxs/ST6E
+         zStA==
+X-Gm-Message-State: APjAAAV/i9yrE0BlhHzFnna59HL6V6LUtE8Oi2J3uj+IffxlNHxZFTL5
+        gmhhF1jRdR3YtlnI52hmnP8RSG0F1fY=
+X-Google-Smtp-Source: APXvYqxz+P+obXJh82sven9XrOIR1qZjORt5FUejMPL60HgvSTlqEnklEnW7LYq1aLEaXt1KO3iw5g==
+X-Received: by 2002:a5d:4206:: with SMTP id n6mr33329547wrq.110.1564132556971;
+        Fri, 26 Jul 2019 02:15:56 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:8b63:dc30:9d:caad:2868:a68c? ([2a01:e35:8b63:dc30:9d:caad:2868:a68c])
+        by smtp.gmail.com with ESMTPSA id f12sm57268364wrg.5.2019.07.26.02.15.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 02:14:43 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     dmitry.torokhov@gmail.com, tglx@linutronix.de,
-        gregkh@linuxfoundation.org, allison@lohutok.net,
-        rdunlap@infradead.org
-Cc:     patches@opensource.cirrus.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH v2] input: touchscreen: wm97xx-core: Fix possible null-pointer dereferences in wm97xx_ts_input_open()
-Date:   Fri, 26 Jul 2019 17:14:36 +0800
-Message-Id: <20190726091436.8866-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Fri, 26 Jul 2019 02:15:56 -0700 (PDT)
+Reply-To: nicolas.dichtel@6wind.com
+Subject: Re: [PATCH 1/2] net: ipv4: Fix a possible null-pointer dereference in
+ inet_csk_rebuild_route()
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>, davem@davemloft.net,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190726022534.24994-1-baijiaju1990@gmail.com>
+From:   Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Organization: 6WIND
+Message-ID: <64986d3e-3ee8-896f-0261-3d9cc595ba11@6wind.com>
+Date:   Fri, 26 Jul 2019 11:15:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190726022534.24994-1-baijiaju1990@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In wm97xx_ts_input_open(), there is an if statement on line 507 to check
-whether wm->mach_ops is NULL:
-    if (wm->mach_ops && wm->mach_ops->acc_enabled)
+Le 26/07/2019 à 04:25, Jia-Ju Bai a écrit :
+> In inet_csk_rebuild_route(), rt is assigned to NULL on line 1071.
+> On line 1076, rt is used:
+>     return &rt->dst;
+> Thus, a possible null-pointer dereference may occur.>
+> To fix this bug, rt is checked before being used.
+> 
+> This bug is found by a static analysis tool STCheck written by us.
+> 
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> ---
+>  net/ipv4/inet_connection_sock.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+> index f5c163d4771b..27d9d80f3401 100644
+> --- a/net/ipv4/inet_connection_sock.c
+> +++ b/net/ipv4/inet_connection_sock.c
+> @@ -1073,7 +1073,10 @@ static struct dst_entry *inet_csk_rebuild_route(struct sock *sk, struct flowi *f
+>  		sk_setup_caps(sk, &rt->dst);
+>  	rcu_read_unlock();
+>  
+> -	return &rt->dst;
+> +	if (rt)
+> +		return &rt->dst;
+> +	else
+> +		return NULL;
+Hmm, ->dst is the first field (and that will never change), thus &rt->dst is
+NULL if rt is NULL.
+I don't think there is a problem with the current code.
 
-When wm->mach_ops is NULL, it is used on line 521:
-    wm97xx_init_pen_irq(wm);
-        BUG_ON(!wm->mach_ops->irq_enable);
-        BUG_ON(!wm->mach_ops->irq_gpio);
-        wm97xx_reg_write(..., reg & ~(wm->mach_ops->irq_gpio))
 
-Thus, possible null-pointer dereferences may occur.
-
-To fix these bugs, wm->mach_ops is checked at the beginning of 
-wm97xx_init_pen_irq().
-
-These bugs found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
-v2:
-* Add a new check of wm->mach_ops in wm97xx_init_pen_irq().
-  Thank Charles for helpful advice.
-
----
- drivers/input/touchscreen/wm97xx-core.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/input/touchscreen/wm97xx-core.c b/drivers/input/touchscreen/wm97xx-core.c
-index 0a174bd82915..50b016abf492 100644
---- a/drivers/input/touchscreen/wm97xx-core.c
-+++ b/drivers/input/touchscreen/wm97xx-core.c
-@@ -374,6 +374,9 @@ static int wm97xx_init_pen_irq(struct wm97xx *wm)
- {
- 	u16 reg;
- 
-+	if (!wm->mach_ops)
-+		return -EINVAL;
-+
- 	/* If an interrupt is supplied an IRQ enable operation must also be
- 	 * provided. */
- 	BUG_ON(!wm->mach_ops->irq_enable);
--- 
-2.17.0
-
+Regards,
+Nicolas
