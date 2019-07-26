@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B061C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8884C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5839D22CBB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A29CC22CBF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148427;
-	bh=iSt6GWVmi+fpAvXm1Wkw4oTple+1SFW8tj+x+5LwXHM=;
+	s=default; t=1564148428;
+	bh=kdDk1CBB9bt8maWhjSpCjH2YxMp3YDDBWtpFwBsVQVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tG5cftxtfXKMtF7g2uu+/T9YOvmEKIUcbsIWGrlDNnCnqLI2Q/R3BQWh5dPHOOdbE
-	 bcowS8jnLGkDLYTSnqNa7jddWngwdCMVldHqSJVGFN3iasxwgzyXlEIXSer1ki1dhz
-	 JMSSyuJJNl7w1Ca5hr/OHQu38s7sMoiyof1iUEdQ=
+	b=qHdY88Gf7dsM4GJ2xEZoQknD1ALA84Y9Hre6IJjqn3kUbIR+oOk+mUpakmcKt5g3B
+	 g4lqU1/jvb5o6FYX4nUK47Ayf3fF4E5FlIw00XnDD3NiVRv0dY196j8wPB512veb7e
+	 jeY51U3gybFr6KtbO5tN1eCc9qPGY9//fxuAsjek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387456AbfGZNk0 (ORCPT
+        id S1727658AbfGZNk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:40:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46360 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:40:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387423AbfGZNkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:40:20 -0400
+        id S2387437AbfGZNkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:40:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C0A022C7E;
-        Fri, 26 Jul 2019 13:40:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83C2522BE8;
+        Fri, 26 Jul 2019 13:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148420;
-        bh=iSt6GWVmi+fpAvXm1Wkw4oTple+1SFW8tj+x+5LwXHM=;
+        s=default; t=1564148423;
+        bh=kdDk1CBB9bt8maWhjSpCjH2YxMp3YDDBWtpFwBsVQVA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h9fYt+hnjwFh5YEYLvPOnjeQrRNGd82EHi/DOzX6dW3iOw60wZMChNNn9aCx3QiTX
-         QlicawywOGj7tSEzWS+6i8GOpO7qoWOhCur9CrYc1TqDn7EFYrc3t7ayKPAVt7iA31
-         0Xg/W6RU4rxchBDd4PikoNJDEuTdIICtU7GAlx74=
+        b=UB+b2+3t8DdVTTgPGX8tyaD/mTK4Sa6bdsASoW9awJyTAzRcduFE9GZno4ZMVoqSV
+         6cLTuaEpZw+ubHKvbhKmG6nfWMHV/e2dwIImZ5kiUx8aPUL9TxwNKekwhsjZl5/0Gc
+         +ja8LT0wcFlnDGLBemqN0bGBsTmNenErqvgOOEZY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chunyan Zhang <zhang.chunyan@linaro.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 24/85] clk: sprd: Add check for return value of sprd_clk_regmap_init()
-Date:   Fri, 26 Jul 2019 09:38:34 -0400
-Message-Id: <20190726133936.11177-24-sashal@kernel.org>
+Cc:     Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 26/85] btrfs: tree-checker: Check if the file extent end overflows
+Date:   Fri, 26 Jul 2019 09:38:36 -0400
+Message-Id: <20190726133936.11177-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -60,45 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <zhang.chunyan@linaro.org>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit c974c48deeb969c5e4250e4f06af91edd84b1f10 ]
+[ Upstream commit 4c094c33c9ed4b8d0d814bd1d7ff78e123d15d00 ]
 
-sprd_clk_regmap_init() doesn't always return success, adding check
-for its return value should make the code more strong.
+Under certain conditions, we could have strange file extent item in log
+tree like:
 
-Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
-Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
-[sboyd@kernel.org: Add a missing int ret]
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+  item 18 key (69599 108 397312) itemoff 15208 itemsize 53
+	extent data disk bytenr 0 nr 0
+	extent data offset 0 nr 18446744073709547520 ram 18446744073709547520
+
+The num_bytes + ram_bytes overflow 64 bit type.
+
+For num_bytes part, we can detect such overflow along with file offset
+(key->offset), as file_offset + num_bytes should never go beyond u64.
+
+For ram_bytes part, it's about the decompressed size of the extent, not
+directly related to the size.
+In theory it is OK to have a large value, and put extra limitation
+on RAM bytes may cause unexpected false alerts.
+
+So in tree-checker, we only check if the file offset and num bytes
+overflow.
+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sprd/sc9860-clk.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/btrfs/tree-checker.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/clk/sprd/sc9860-clk.c b/drivers/clk/sprd/sc9860-clk.c
-index 9980ab55271b..f76305b4bc8d 100644
---- a/drivers/clk/sprd/sc9860-clk.c
-+++ b/drivers/clk/sprd/sc9860-clk.c
-@@ -2023,6 +2023,7 @@ static int sc9860_clk_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *match;
- 	const struct sprd_clk_desc *desc;
-+	int ret;
+diff --git a/fs/btrfs/tree-checker.c b/fs/btrfs/tree-checker.c
+index 96fce4bef4e7..ccd5706199d7 100644
+--- a/fs/btrfs/tree-checker.c
++++ b/fs/btrfs/tree-checker.c
+@@ -132,6 +132,7 @@ static int check_extent_data_item(struct extent_buffer *leaf,
+ 	struct btrfs_file_extent_item *fi;
+ 	u32 sectorsize = fs_info->sectorsize;
+ 	u32 item_size = btrfs_item_size_nr(leaf, slot);
++	u64 extent_end;
  
- 	match = of_match_node(sprd_sc9860_clk_ids, pdev->dev.of_node);
- 	if (!match) {
-@@ -2031,7 +2032,9 @@ static int sc9860_clk_probe(struct platform_device *pdev)
- 	}
+ 	if (!IS_ALIGNED(key->offset, sectorsize)) {
+ 		file_extent_err(leaf, slot,
+@@ -207,6 +208,16 @@ static int check_extent_data_item(struct extent_buffer *leaf,
+ 	    CHECK_FE_ALIGNED(leaf, slot, fi, num_bytes, sectorsize))
+ 		return -EUCLEAN;
  
- 	desc = match->data;
--	sprd_clk_regmap_init(pdev, desc);
-+	ret = sprd_clk_regmap_init(pdev, desc);
-+	if (ret)
-+		return ret;
- 
- 	return sprd_clk_probe(&pdev->dev, desc->hw_clks);
- }
++	/* Catch extent end overflow */
++	if (check_add_overflow(btrfs_file_extent_num_bytes(leaf, fi),
++			       key->offset, &extent_end)) {
++		file_extent_err(leaf, slot,
++	"extent end overflow, have file offset %llu extent num bytes %llu",
++				key->offset,
++				btrfs_file_extent_num_bytes(leaf, fi));
++		return -EUCLEAN;
++	}
++
+ 	/*
+ 	 * Check that no two consecutive file extent items, in the same leaf,
+ 	 * present ranges that overlap each other.
 -- 
 2.20.1
 
