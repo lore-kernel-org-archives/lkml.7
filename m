@@ -5,66 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E386C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7E5C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0340D22C97
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0DF1229F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:28:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vhHmCUXb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="paKnIlYr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfGZL23 (ORCPT
+        id S1727109AbfGZL2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 07:28:29 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34045 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfGZL22 (ORCPT
+        Fri, 26 Jul 2019 07:28:34 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34059 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfGZL2c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 07:28:28 -0400
-Received: by mail-lj1-f194.google.com with SMTP id p17so51156944ljg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 04:28:26 -0700 (PDT)
+        Fri, 26 Jul 2019 07:28:32 -0400
+Received: by mail-lj1-f196.google.com with SMTP id p17so51157166ljg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 04:28:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=qXAXo0fvFfroRZgYWsv3eTIS6UJVzpeVoAbknFGsjMk=;
-        b=vhHmCUXbOqW0ShlZ/0VDIpjuqPN+yllwC23Y3r37PVgVfm8QzAufXGqQE2M+e3bBXW
-         Sa6agtYW/J24tzUmmzQjuBIoBrEixhf2OJJIwLPQWd9lzYXcR2RWUkVbv4kyj5McBBh8
-         VCM3fRX1y9DZW93ANmXw5P15g2/wydbxmnos6SrNyEQldDQEgLri8kEg4Rc43TnBR8aU
-         AF47mTvHieO1vcSgJNotQg7LAhRptdA3m/4kyvTmUukb0G6X/fGd+q4RKWD6SqLlU4Ic
-         PjQCc0/aPxCrzqEw94q1kEOcur207rRqjYV3LPtB5ntt2FqDgvmoASo8zndwPTG1O1JC
-         GTgQ==
+        bh=jDadNNbYe3LS8LmqydZtAt2j9BxdXP1ro/L0sTrXrfs=;
+        b=paKnIlYrTB9mZ1q+76dYucQ2YrQhp3wT5CXmH8bfAUtG8Ql4NHvpKe5oC4CNcCfuUy
+         LhtWrUFJNdVYGpkF8FAkY7jEfQ9udtzptzqJZNIydmpLUUW1xLSxXxJZjBb+bl/N4RBk
+         9C8U5oYF6kMIpnUc5cnUKl9jvX+UXu6xtAK/jTWro0TccoYZ+5iroP6YQYJ3Ro4nt6IG
+         U4x1w1BKn42uZv5A+hdpXdfvXGsgDG8CLAA+MvcqzIVauDAJDNLbBNZJqVX75sd/lmg8
+         PUc7T/K9Kc4eN/Ip27nvK3h00kbo4dXNtDsHb7T6qPm9H0CHGmnv9TWnZ4Mzq/Z1L/nB
+         CoDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=qXAXo0fvFfroRZgYWsv3eTIS6UJVzpeVoAbknFGsjMk=;
-        b=pHctYEz6xwlPc84xp4kcnSvMO48R2wGTjowvUBeouQdwFKZcioCGlI25K19GNj4l0t
-         J1zQCHWWUnHL4G3tiwucY6cHLU90SSqafuBpb9yb9s0In45GMr3H901gmPEqLphjynsX
-         fyJopcJQDony7+SVmB+FZH/ec2QLJCGdOE1iesWhq9ZDCMFgytMaGnmIQTSeX6v3K5Tg
-         hwTWBUKfoxSlVqeO0EIIeYBQ6/bCL31mSjVRA6nIeIZdCxP6L0PKnmMkEaiKiv65OkC4
-         cIUgqBrnwqEIm8wql+UCtV+085EydmJ4VPUEg5E2jQcYOZycWMZVWDlRkG00R8APIqD5
-         7i/w==
-X-Gm-Message-State: APjAAAX+eNNBvgVtlhKOSMpfAlM9YaOIi1o02KrYNpv2/Aor2zSQK/Wm
-        yW9vwyNoHTSRnuqMV3vJZXpxvg==
-X-Google-Smtp-Source: APXvYqxRcpeZfOkhl+kP2goAmuAtJQrE6rFVOEMWhCTxNELXPLbMSsa8XPVrXecSGADSpL4vrWzCFA==
-X-Received: by 2002:a2e:301a:: with SMTP id w26mr48094531ljw.76.1564140506079;
-        Fri, 26 Jul 2019 04:28:26 -0700 (PDT)
+        bh=jDadNNbYe3LS8LmqydZtAt2j9BxdXP1ro/L0sTrXrfs=;
+        b=S8egWMxblzNtvAdHKywYkRIns5A5nMjOdenNFJBUSvD3Pxk9U7RPH7YLt18aSxjlsL
+         ArrSXalAdAXeWwe+nsaQ/ZU1HG4KEJ1SXQ/P67A0R4hxNvx9E71CVIAWoQA2p/OlafjX
+         4AskicmhIdZdwIe/eW10uTV5Z2q2FT66VGLJn+ORKiTOf37xU2E4Ksj0+dmETPQC0m8j
+         dwtIDth2RxfnpqbJ1WvnpSLe5L3+cPaFIuFi0Ruzy1vChaPODtjWpUFQPMJhB0i8Rx5g
+         DZonqIuGrdT/zDMBFJYwi47vTveMp96j8AN4Ero038gynUwyZEqGReFadeISU88dCB3/
+         2Mzg==
+X-Gm-Message-State: APjAAAUXG6P2ipBxP+6zWd64sbVN8/agTJEM63LZbvCyNzrAMyIUSaWb
+        PsFfcKtquACk4f7QAcyRI4vdKw==
+X-Google-Smtp-Source: APXvYqzxbrKUQRAM2nkEPFxwSxAymhpssFk1Sh8DZVjufCLoQmmDfw2qCBnAwWR3q8oP1z+HvndRlw==
+X-Received: by 2002:a2e:9753:: with SMTP id f19mr48914253ljj.113.1564140511155;
+        Fri, 26 Jul 2019 04:28:31 -0700 (PDT)
 Received: from localhost (c-243c70d5.07-21-73746f28.bbcust.telenor.se. [213.112.60.36])
-        by smtp.gmail.com with ESMTPSA id s26sm10008774ljs.77.2019.07.26.04.28.25
+        by smtp.gmail.com with ESMTPSA id 72sm9964704ljj.104.2019.07.26.04.28.30
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 04:28:25 -0700 (PDT)
+        Fri, 26 Jul 2019 04:28:30 -0700 (PDT)
 From:   Anders Roxell <anders.roxell@linaro.org>
-To:     will@kernel.org, joro@8bytes.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>,
-        stable@vger.kernel.org
-Subject: [PATCH] iommu: arm-smmu-v3: Mark expected switch fall-through
-Date:   Fri, 26 Jul 2019 13:28:21 +0200
-Message-Id: <20190726112821.19775-1-anders.roxell@linaro.org>
+To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH] irqchip: gic-v3: Mark expected switch fall-through
+Date:   Fri, 26 Jul 2019 13:28:26 +0200
+Message-Id: <20190726112826.19825-1-anders.roxell@linaro.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -74,46 +72,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When fall-through warnings was enabled by default, commit d93512ef0f0e
-("Makefile: Globally enable fall-through warning"), the following
-warning was starting to show up:
+When fall-through warnings was enabled by default the following warning
+was starting to show up:
 
-../drivers/iommu/arm-smmu-v3.c: In function ‘arm_smmu_write_strtab_ent’:
-../drivers/iommu/arm-smmu-v3.c:1189:7: warning: this statement may fall
+In file included from ../arch/arm64/include/asm/cputype.h:132,
+                 from ../arch/arm64/include/asm/cache.h:8,
+                 from ../include/linux/cache.h:6,
+                 from ../include/linux/printk.h:9,
+                 from ../include/linux/kernel.h:15,
+                 from ../include/linux/list.h:9,
+                 from ../include/linux/kobject.h:19,
+                 from ../include/linux/of.h:17,
+                 from ../include/linux/irqdomain.h:35,
+                 from ../include/linux/acpi.h:13,
+                 from ../drivers/irqchip/irq-gic-v3.c:9:
+../drivers/irqchip/irq-gic-v3.c: In function ‘gic_cpu_sys_reg_init’:
+../arch/arm64/include/asm/sysreg.h:853:2: warning: this statement may fall
  through [-Wimplicit-fallthrough=]
-    if (disable_bypass)
-       ^
-../drivers/iommu/arm-smmu-v3.c:1191:3: note: here
-   default:
-   ^~~~~~~
+  asm volatile(__msr_s(r, "%x0") : : "rZ" (__val));  \
+  ^~~
+../arch/arm64/include/asm/arch_gicv3.h:20:29: note: in expansion of macro ‘write_sysreg_s’
+ #define write_gicreg(v, r)  write_sysreg_s(v, SYS_ ## r)
+                             ^~~~~~~~~~~~~~
+../drivers/irqchip/irq-gic-v3.c:773:4: note: in expansion of macro ‘write_gicreg’
+    write_gicreg(0, ICC_AP0R2_EL1);
+    ^~~~~~~~~~~~
+../drivers/irqchip/irq-gic-v3.c:774:3: note: here
+   case 6:
+   ^~~~
 
-Rework so that the compiler doesn't warn about fall-through. Make it
-clearer by calling 'BUG()' when disable_bypass is set, and always
-'break;'
+Rework so that the compiler doesn't warn about fall-through.
 
-Cc: stable@vger.kernel.org # v4.2+
-Fixes: 5bc0a11664e1 ("iommu/arm-smmu: Don't BUG() if we find aborting STEs with disable_bypass")
+Fixes: d93512ef0f0e ("Makefile: Globally enable fall-through warning")
 Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-gic-v3.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index a9a9fabd3968..8e5f0565996d 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -1186,8 +1186,9 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
- 			ste_live = true;
- 			break;
- 		case STRTAB_STE_0_CFG_ABORT:
--			if (disable_bypass)
--				break;
-+			if (!disable_bypass)
-+				BUG();
-+			break;
- 		default:
- 			BUG(); /* STE corruption */
- 		}
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index 9bca4896fa6f..96d927f0f91a 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -771,8 +771,10 @@ static void gic_cpu_sys_reg_init(void)
+ 		case 7:
+ 			write_gicreg(0, ICC_AP0R3_EL1);
+ 			write_gicreg(0, ICC_AP0R2_EL1);
++		/* Fall through */
+ 		case 6:
+ 			write_gicreg(0, ICC_AP0R1_EL1);
++		/* Fall through */
+ 		case 5:
+ 		case 4:
+ 			write_gicreg(0, ICC_AP0R0_EL1);
+@@ -786,8 +788,10 @@ static void gic_cpu_sys_reg_init(void)
+ 	case 7:
+ 		write_gicreg(0, ICC_AP1R3_EL1);
+ 		write_gicreg(0, ICC_AP1R2_EL1);
++		/* Fall through */
+ 	case 6:
+ 		write_gicreg(0, ICC_AP1R1_EL1);
++		/* Fall through */
+ 	case 5:
+ 	case 4:
+ 		write_gicreg(0, ICC_AP1R0_EL1);
 -- 
 2.20.1
 
