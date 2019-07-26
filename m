@@ -2,185 +2,79 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17517C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7AAC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2EC922CB9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:39:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155568;
-	bh=EvBLQ6kSMwCQh4fSs12lF93NW+Tl1p2iPCcUQyfqziQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TpOOZjYp9GrT5VegxE+bLs+2nhk/bLAQ0cZwLjH9LLisWycJJKFPhS3Tw586arKZ4
-	 h78aLyrsD+uVkUQ4ESagHChAr/Jy+At1QFjsHOrHV9VrPzvRGDM+0XY2wnqSi0844x
-	 InKiC0WvansyX6L+FP8IfiASR0cC50obvZ1R55tM=
+	by mail.kernel.org (Postfix) with ESMTP id 8ACB822CB9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388673AbfGZPj0 (ORCPT
+        id S2388888AbfGZPja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:39:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387792AbfGZP0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:26:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0497422CD0;
-        Fri, 26 Jul 2019 15:26:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154764;
-        bh=EvBLQ6kSMwCQh4fSs12lF93NW+Tl1p2iPCcUQyfqziQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zNat9NtyK2Iljr4jIk4+Ylzjazz4qjMGxBwAvZfmmd72MRRNfe4JbFd827eSXZsvs
-         vmuLZpriI3gcsHxQn72nbS0KKzp02OK+XunwNK1kdewxhsRZoDkceBy2LfRSxLcKCG
-         lHsfskaziXFippkF/T+hjNhvBTats+MYbyltGoOw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+7966f2a0b2c7da8939b4@syzkaller.appspotmail.com,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 19/66] rxrpc: Fix send on a connected, but unbound socket
-Date:   Fri, 26 Jul 2019 17:24:18 +0200
-Message-Id: <20190726152303.859878708@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
-References: <20190726152301.936055394@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 26 Jul 2019 11:39:30 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:46557 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387756AbfGZP0B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:26:01 -0400
+Received: by mail-io1-f69.google.com with SMTP id s83so59041520iod.13
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 08:26:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=iHIZY3n79tjWiqF4FrsxNYHlKLoyYYCqi0zeJqFjTkY=;
+        b=ZdzuMOPigJG+/FpmeTQ+SXesmtBik+YcnBByR7qJxFHd2Xaihuy4qK09S7NEA2YSS6
+         RVgCpQ38uXgP3GoIVw5Thi5GbzSioqGt4xjGP0EJiWrKn+KctsKPDsEZ3jRz5SUmRYbc
+         4hLBgXlvEAy3nZVSz57PvidiTveDme7n4Lyvy0tngYj8O35tOiEkDlSfeAGbtlyveioJ
+         C3jjW4J22hzdq0nVjshrqgRSEm6Xw+BYCEstx1EO6Xgph8xtcnCRWb2WML0B1SZB6iTY
+         6WsBJPiiYvIYwrT5yB6DlxNMsvqfWx0YMzUbm3gnfAi9HgXaut7de88mbDLXeGgki5A6
+         mk3w==
+X-Gm-Message-State: APjAAAVLemrKBJv3/pXE0x60uJErVuHsNzPoWWK8Cq8r9M7YDOt6aHXz
+        ML7l5+jPnzeOsuVzaNO7P403n/L37HPK9/rA3zQdyZYZlwE6
+X-Google-Smtp-Source: APXvYqzHpk/vEMkIMKMtiMdg8PB4RYhne1o6pJ8WL+G6Degv9dbMalQiRsRdhyVuMJOgTkwheM+dhLdMfqp+YLyIul4ruGrn56Gi
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a02:4484:: with SMTP id o126mr98783066jaa.34.1564154761082;
+ Fri, 26 Jul 2019 08:26:01 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 08:26:01 -0700
+In-Reply-To: <000000000000b4358f058e924c6d@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e87d14058e9728d7@google.com>
+Subject: Re: INFO: rcu detected stall in vhost_worker
+From:   syzbot <syzbot+36e93b425cd6eb54fcc1@syzkaller.appspotmail.com>
+To:     jasowang@redhat.com, kvm@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michal.lkml@markovi.net, mst@redhat.com, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        yamada.masahiro@socionext.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+syzbot has bisected this bug to:
 
-[ Upstream commit e835ada07091f40dcfb1bc735082bd0a7c005e59 ]
+commit 0ecfebd2b52404ae0c54a878c872bb93363ada36
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun Jul 7 22:41:56 2019 +0000
 
-If sendmsg() or sendmmsg() is called on a connected socket that hasn't had
-bind() called on it, then an oops will occur when the kernel tries to
-connect the call because no local endpoint has been allocated.
+     Linux 5.2
 
-Fix this by implicitly binding the socket if it is in the
-RXRPC_CLIENT_UNBOUND state, just like it does for the RXRPC_UNBOUND state.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=118810bfa00000
+start commit:   13bf6d6a Add linux-next specific files for 20190725
+git tree:       linux-next
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8ae987d803395886
+dashboard link: https://syzkaller.appspot.com/bug?extid=36e93b425cd6eb54fcc1
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15112f3fa00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=131ab578600000
 
-Further, the state should be transitioned to RXRPC_CLIENT_BOUND after this
-to prevent further attempts to bind it.
+Reported-by: syzbot+36e93b425cd6eb54fcc1@syzkaller.appspotmail.com
+Fixes: 0ecfebd2b524 ("Linux 5.2")
 
-This can be tested with:
-
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <string.h>
-	#include <sys/socket.h>
-	#include <arpa/inet.h>
-	#include <linux/rxrpc.h>
-	static const unsigned char inet6_addr[16] = {
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0xac, 0x14, 0x14, 0xaa
-	};
-	int main(void)
-	{
-		struct sockaddr_rxrpc srx;
-		struct cmsghdr *cm;
-		struct msghdr msg;
-		unsigned char control[16];
-		int fd;
-		memset(&srx, 0, sizeof(srx));
-		srx.srx_family = 0x21;
-		srx.srx_service = 0;
-		srx.transport_type = AF_INET;
-		srx.transport_len = 0x1c;
-		srx.transport.sin6.sin6_family = AF_INET6;
-		srx.transport.sin6.sin6_port = htons(0x4e22);
-		srx.transport.sin6.sin6_flowinfo = htons(0x4e22);
-		srx.transport.sin6.sin6_scope_id = htons(0xaa3b);
-		memcpy(&srx.transport.sin6.sin6_addr, inet6_addr, 16);
-		cm = (struct cmsghdr *)control;
-		cm->cmsg_len	= CMSG_LEN(sizeof(unsigned long));
-		cm->cmsg_level	= SOL_RXRPC;
-		cm->cmsg_type	= RXRPC_USER_CALL_ID;
-		*(unsigned long *)CMSG_DATA(cm) = 0;
-		msg.msg_name = NULL;
-		msg.msg_namelen = 0;
-		msg.msg_iov = NULL;
-		msg.msg_iovlen = 0;
-		msg.msg_control = control;
-		msg.msg_controllen = cm->cmsg_len;
-		msg.msg_flags = 0;
-		fd = socket(AF_RXRPC, SOCK_DGRAM, AF_INET);
-		connect(fd, (struct sockaddr *)&srx, sizeof(srx));
-		sendmsg(fd, &msg, 0);
-		return 0;
-	}
-
-Leading to the following oops:
-
-	BUG: kernel NULL pointer dereference, address: 0000000000000018
-	#PF: supervisor read access in kernel mode
-	#PF: error_code(0x0000) - not-present page
-	...
-	RIP: 0010:rxrpc_connect_call+0x42/0xa01
-	...
-	Call Trace:
-	 ? mark_held_locks+0x47/0x59
-	 ? __local_bh_enable_ip+0xb6/0xba
-	 rxrpc_new_client_call+0x3b1/0x762
-	 ? rxrpc_do_sendmsg+0x3c0/0x92e
-	 rxrpc_do_sendmsg+0x3c0/0x92e
-	 rxrpc_sendmsg+0x16b/0x1b5
-	 sock_sendmsg+0x2d/0x39
-	 ___sys_sendmsg+0x1a4/0x22a
-	 ? release_sock+0x19/0x9e
-	 ? reacquire_held_locks+0x136/0x160
-	 ? release_sock+0x19/0x9e
-	 ? find_held_lock+0x2b/0x6e
-	 ? __lock_acquire+0x268/0xf73
-	 ? rxrpc_connect+0xdd/0xe4
-	 ? __local_bh_enable_ip+0xb6/0xba
-	 __sys_sendmsg+0x5e/0x94
-	 do_syscall_64+0x7d/0x1bf
-	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: 2341e0775747 ("rxrpc: Simplify connect() implementation and simplify sendmsg() op")
-Reported-by: syzbot+7966f2a0b2c7da8939b4@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/rxrpc/af_rxrpc.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/net/rxrpc/af_rxrpc.c
-+++ b/net/rxrpc/af_rxrpc.c
-@@ -545,6 +545,7 @@ static int rxrpc_sendmsg(struct socket *
- 
- 	switch (rx->sk.sk_state) {
- 	case RXRPC_UNBOUND:
-+	case RXRPC_CLIENT_UNBOUND:
- 		rx->srx.srx_family = AF_RXRPC;
- 		rx->srx.srx_service = 0;
- 		rx->srx.transport_type = SOCK_DGRAM;
-@@ -569,10 +570,9 @@ static int rxrpc_sendmsg(struct socket *
- 		}
- 
- 		rx->local = local;
--		rx->sk.sk_state = RXRPC_CLIENT_UNBOUND;
-+		rx->sk.sk_state = RXRPC_CLIENT_BOUND;
- 		/* Fall through */
- 
--	case RXRPC_CLIENT_UNBOUND:
- 	case RXRPC_CLIENT_BOUND:
- 		if (!m->msg_name &&
- 		    test_bit(RXRPC_SOCK_CONNECTED, &rx->flags)) {
-
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
