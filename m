@@ -2,67 +2,82 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=FAKE_REPLY_C,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79523C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9051BC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59F7422ADA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A20A22BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfGZMgC (ORCPT
+        id S1727427AbfGZMga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:36:02 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:46542 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbfGZMgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:36:01 -0400
-Received: from gondolin.me.apana.org.au ([192.168.0.6] helo=gondolin.hengli.com.au)
-        by fornost.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hqzRy-00042T-46; Fri, 26 Jul 2019 22:35:54 +1000
-Received: from herbert by gondolin.hengli.com.au with local (Exim 4.80)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hqzRx-0002EN-Fm; Fri, 26 Jul 2019 22:35:53 +1000
-Date:   Fri, 26 Jul 2019 22:35:53 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc:     davem@davemloft.net, gilad@benyossef.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com
-Subject: Re: [PATCH 1/2] crypto: ccree - check assoclen for rfc4543
-Message-ID: <20190726123553.GA8568@gondor.apana.org.au>
+        Fri, 26 Jul 2019 08:36:30 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:33924 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfGZMg3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 08:36:29 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id A8FC880482;
+        Fri, 26 Jul 2019 14:36:26 +0200 (CEST)
+Date:   Fri, 26 Jul 2019 14:36:25 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com,
+        airlied@linux.ie, daniel@ffwll.ch, bjorn.andersson@linaro.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] Add Sharp panel option for Lenovo Miix 630
+Message-ID: <20190726123625.GA17037@ravnborg.org>
+References: <20190708165647.46224-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1563520164-1153-1-git-send-email-iuliana.prodan@nxp.com>
-Organization: Core
-X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190708165647.46224-1-jeffrey.l.hugo@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=HQdGnUN6SEKGFpM_q2QA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Iuliana Prodan <iuliana.prodan@nxp.com> wrote:
-> Check assoclen to solve the extra tests that expect -EINVAL to be
-> returned when the associated data size is not valid.
-> 
-> Validated assoclen for RFC4543 which expects an assoclen
-> of 16 or 20, the same as RFC4106.
-> Based on seqiv, IPsec ESP and RFC4543/RFC4106 the assoclen is sizeof
-> IP Header (spi, seq_no, extended seq_no) and IV len. This can be 16 or
-> 20 bytes.
-> 
-> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-> ---
-> drivers/crypto/ccree/cc_aead.c | 26 ++++++++++++++++++++------
-> 1 file changed, 20 insertions(+), 6 deletions(-)
+Hi Jeffrey.
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+On Mon, Jul 08, 2019 at 09:56:47AM -0700, Jeffrey Hugo wrote:
+> The Lenovo Miix 630 laptop can be found with one of two panels - a BOE
+> or Sharp option.  This likely provides options during manufacturing.
+> 
+> These panels connect via eDP, however they sit behind a DSI to eDP
+> bridge on the laptop, so they can easily be handled by the existing
+> simple panel code.
+> 
+> This series adds support for the Sharp option.
+> 
+> v2:
+> -removed no-hpd from dt example
+> -added .bus_format and .bus_flags fields based on reviews
+> -added .flags after Bjorn pointed me to something I missed
+> -added Sam's reviewed-by tags
+> 
+> Jeffrey Hugo (2):
+>   dt-bindings: panel: Add Sharp LD-D5116Z01B
+>   drm/panel: simple: Add support for Sharp LD-D5116Z01B panel
+
+Thanks.
+Both patches applied and pushed to drm-misc-next.
+
+Are you up to a little janitorial work?
+Today the preferred format for bindings files are the new yaml format.
+Could you update 'your' file, and maybe the other sharp files too?
+It would be good to have some progress in this.
+
+	Sam
