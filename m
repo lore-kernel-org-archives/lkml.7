@@ -2,61 +2,112 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C75AC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87CDC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08BFD218D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926F7218D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:31:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qkr83lkT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfGZOav (ORCPT
+        id S2387419AbfGZOb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:30:51 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:40122 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfGZOav (ORCPT
+        Fri, 26 Jul 2019 10:31:26 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34182 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfGZOb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 10:30:51 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hr1FA-0006Yw-Nm; Fri, 26 Jul 2019 14:30:48 +0000
-Date:   Fri, 26 Jul 2019 15:30:48 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [git pull] struct mount leak fix
-Message-ID: <20190726143048.GL1131@ZenIV.linux.org.uk>
+        Fri, 26 Jul 2019 10:31:26 -0400
+Received: by mail-io1-f66.google.com with SMTP id k8so105244875iot.1;
+        Fri, 26 Jul 2019 07:31:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rZ/UBeNiBanOLKs9K5WAA6k/h0iDCXstzGMvYChhbN8=;
+        b=Qkr83lkT49ARvGJVqpIAVKE+c3OskLUv7tZduSwYle/0YBDI1fhM3M35Dcm10CPOD6
+         oGBJhLWanlvfEu/PCaAedYdFu3iFX9GnV0PyK5Gcoz6j0Y5iEEBn3sYWFz5Hd+F2arb0
+         T2sokMAFO0/Sygfx4x/RYdUfRKTMg+sJlzbw2E0TxCmNd95v35OovB5jQws5FGWwQVKp
+         tGbHGXnypMThoSExSEfOyJyB0uds+q5lX9GPtaJeVTzfIjhGoFtp10AqYWIz/UUmowJr
+         MnV9vSAvagmcnnWHdHv8NZVXwoR9uoiCBznhNgb6GaRVLk+lD2nfRmPOfcHfvK9a+HV/
+         4NqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rZ/UBeNiBanOLKs9K5WAA6k/h0iDCXstzGMvYChhbN8=;
+        b=PoONsJBRJGh19vgP30/rfsPxo1wnj6wMzIxTW5s7UKHt3Tsd8/EP6tFZfsb5islFvO
+         VfboKd16KPUKdyPCJ7t6C9q9MbB7Mufx2kW/KzQHkaP6u5JcWjvk0R+QP9ydXnfk4VRs
+         IAhJ0buEYTTEB4rAxDowiM6MD3Z3i3y6r+r0jrMmmIvY/FH8BTnI5f0GqJoTei7CImkB
+         MWT+l+gdjlqr/G2pK0fnJBGezz1JyeOP84qo/zQ4jMxGXKlN6urdXgmG6/FZLMsPyhGY
+         fd76lPvCmUwY2CqVDTSPuLeij/J/MjQwufIOXhnFJNzcVWPkT34CfJejb6/9eZJUnwRo
+         VLVw==
+X-Gm-Message-State: APjAAAWWCW2C8d1/q7UCRetIifjAZ5tqdrQqGDTaJ6PmSwtnfLHjPCYO
+        WhMUgybSN/82qq6/ryJ/ktnHRZ1Q+S8fr6KX99Q=
+X-Google-Smtp-Source: APXvYqyoFusi9rRAzb8Sz4ryxauK7V4EPDxozJDRC9Dy92L8oHNobVWt0IqcIZkUd2t5E2rbe4hpr1GOx/+E7EEzITA=
+X-Received: by 2002:a6b:901:: with SMTP id t1mr13636701ioi.42.1564151485320;
+ Fri, 26 Jul 2019 07:31:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190708165647.46224-1-jeffrey.l.hugo@gmail.com> <20190726123625.GA17037@ravnborg.org>
+In-Reply-To: <20190726123625.GA17037@ravnborg.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Fri, 26 Jul 2019 08:31:15 -0600
+Message-ID: <CAOCk7NqU7G-afjHwTnQxqrRFcH9=kqDJAUABPHuwRWsdm6xENQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Add Sharp panel option for Lenovo Miix 630
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, thierry.reding@gmail.com,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Braino introduced in "switch the remnants of releasing the mountpoint
-away from fs_pin"; the most visible result is leaking struct mount when
-mounting btrfs, making it impossible to shut down.
+On Fri, Jul 26, 2019 at 6:36 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Jeffrey.
+>
+> On Mon, Jul 08, 2019 at 09:56:47AM -0700, Jeffrey Hugo wrote:
+> > The Lenovo Miix 630 laptop can be found with one of two panels - a BOE
+> > or Sharp option.  This likely provides options during manufacturing.
+> >
+> > These panels connect via eDP, however they sit behind a DSI to eDP
+> > bridge on the laptop, so they can easily be handled by the existing
+> > simple panel code.
+> >
+> > This series adds support for the Sharp option.
+> >
+> > v2:
+> > -removed no-hpd from dt example
+> > -added .bus_format and .bus_flags fields based on reviews
+> > -added .flags after Bjorn pointed me to something I missed
+> > -added Sam's reviewed-by tags
+> >
+> > Jeffrey Hugo (2):
+> >   dt-bindings: panel: Add Sharp LD-D5116Z01B
+> >   drm/panel: simple: Add support for Sharp LD-D5116Z01B panel
+>
+> Thanks.
+> Both patches applied and pushed to drm-misc-next.
 
-The following changes since commit 18253e034d2aeee140f82fc9fe89c4bce5c81799:
+Excellent.  Thanks
 
-  Merge branch 'work.dcache2' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs (2019-07-20 09:15:51 -0700)
+> Are you up to a little janitorial work?
+> Today the preferred format for bindings files are the new yaml format.
+> Could you update 'your' file, and maybe the other sharp files too?
 
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
-
-for you to fetch changes up to 19a1c4092e7ca1ad1a72ac5535f902c483372cd5:
-
-  fix the struct mount leak in umount_tree() (2019-07-26 07:59:06 -0400)
-
-----------------------------------------------------------------
-Al Viro (1):
-      fix the struct mount leak in umount_tree()
-
- fs/namespace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I confess I haven't yet familiarized myself with the yaml format yet,
+but I'll take a look and do an update once I understand the
+requirements.
