@@ -2,86 +2,100 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2A5C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8376C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092B42054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBEAF205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564155287;
+	bh=eQod0ywmdB6ZvWigLTZR/Z2eROwQcj35Rw5LyXpuEIs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LduqDazRqRZOpFUtpMBjqYTLQ79wISuhXwqaLg4Vrxv7sRg4vlhM6RBgJM2y8BZ4A
+	 3FSx2l1p1m29ddIzFN+z8zpp35HnEkAJStDhLlOFA8FLXeYYinB4gfOVVNZD3DwAAW
+	 IjTwMxo4fzJ/HLHcP7T9Jo/qqNPE7EWAn/PYvBD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389871AbfGZPem (ORCPT
+        id S2389861AbfGZPel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:34:42 -0400
-Received: from mga07.intel.com ([134.134.136.100]:30545 "EHLO mga07.intel.com"
+        Fri, 26 Jul 2019 11:34:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389487AbfGZPek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:34:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 08:34:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
-   d="scan'208";a="322067214"
-Received: from msmall-mobl.amr.corp.intel.com (HELO [10.251.154.62]) ([10.251.154.62])
-  by orsmga004.jf.intel.com with ESMTP; 26 Jul 2019 08:34:39 -0700
-Subject: Re: [RFC PATCH 04/40] soundwire: intel: add debugfs register dump
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-5-pierre-louis.bossart@linux.intel.com>
- <20190726140635.GB8767@kroah.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <0dc45659-33cd-0dfb-946b-9303fe54ec1c@linux.intel.com>
-Date:   Fri, 26 Jul 2019 10:34:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2387438AbfGZPeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:34:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FAD72054F;
+        Fri, 26 Jul 2019 15:34:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564155251;
+        bh=eQod0ywmdB6ZvWigLTZR/Z2eROwQcj35Rw5LyXpuEIs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NYY7jkhHP8uk+O7D2UGz/mL1WYMTtjtPeKpi8wOkQTeCccCkD4ZgiELPN6dv5ILc7
+         AWTi5JqVeGJn2IhtfaK83jIBuaYjp+6KrPw/DogpX1qPdPlkxKq1i5Chi5xslY2TXJ
+         SrA6oOe3aQkKG7EZrNAUqUvVD+7SypJL6Zu5U+6E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Martin Weinelt <martin@linuxlounge.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 33/50] net: bridge: mcast: fix stale ipv6 hdr pointer when handling v6 query
+Date:   Fri, 26 Jul 2019 17:25:08 +0200
+Message-Id: <20190726152304.047028867@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
+References: <20190726152300.760439618@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190726140635.GB8767@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
->> +static const struct file_operations intel_reg_fops = {
->> +	.open = simple_open,
->> +	.read = intel_reg_read,
->> +	.llseek = default_llseek,
->> +};
-> 
-> DEFINE_SIMPLE_ATTRIBUTE()?
+[ Upstream commit 3b26a5d03d35d8f732d75951218983c0f7f68dff ]
 
-yes
+We get a pointer to the ipv6 hdr in br_ip6_multicast_query but we may
+call pskb_may_pull afterwards and end up using a stale pointer.
+So use the header directly, it's just 1 place where it's needed.
 
-> 
->> +
->> +static void intel_debugfs_init(struct sdw_intel *sdw)
->> +{
->> +	struct dentry *root = sdw->cdns.bus.debugfs;
->> +
->> +	if (!root)
->> +		return;
->> +
->> +	sdw->fs = debugfs_create_dir("intel-sdw", root);
->> +	if (IS_ERR_OR_NULL(sdw->fs)) {
->> +		dev_err(sdw->cdns.dev, "debugfs root creation failed\n");
-> 
-> No, come on, don't do that.  I've been sweeping the kernel tree to
-> remove this anti-pattern.
-> 
-> The debugfs core will print an error if you got something wrong, just
-> call the function and move on, you NEVER need to check the return value
-> of a debugfs call.
+Fixes: 08b202b67264 ("bridge br_multicast: IPv6 MLD support.")
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Tested-by: Martin Weinelt <martin@linuxlounge.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/bridge/br_multicast.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Yes, sorry to make your blood pressure go up... I missed this one in the 
-cleanups yesterday. will fix.
+--- a/net/bridge/br_multicast.c
++++ b/net/bridge/br_multicast.c
+@@ -1510,7 +1510,6 @@ static int br_ip6_multicast_query(struct
+ 				  struct sk_buff *skb,
+ 				  u16 vid)
+ {
+-	const struct ipv6hdr *ip6h = ipv6_hdr(skb);
+ 	struct mld_msg *mld;
+ 	struct net_bridge_mdb_entry *mp;
+ 	struct mld2_query *mld2q;
+@@ -1554,7 +1553,7 @@ static int br_ip6_multicast_query(struct
+ 
+ 	if (is_general_query) {
+ 		saddr.proto = htons(ETH_P_IPV6);
+-		saddr.u.ip6 = ip6h->saddr;
++		saddr.u.ip6 = ipv6_hdr(skb)->saddr;
+ 
+ 		br_multicast_query_received(br, port, &br->ip6_other_query,
+ 					    &saddr, max_delay);
+
+
