@@ -4,39 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D777AC41517
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF14C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8C302166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014AC2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:53:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbfGZHxu (ORCPT
+        id S1726701AbfGZHxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 03:53:50 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2777 "EHLO huawei.com"
+        Fri, 26 Jul 2019 03:53:52 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2773 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726457AbfGZHxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726473AbfGZHxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jul 2019 03:53:38 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EAD07D33E4FE4B64B68D;
+        by Forcepoint Email with ESMTP id D37CE5C456BCE2471C5C;
         Fri, 26 Jul 2019 15:53:34 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 26 Jul 2019 15:53:27 +0800
+ 14.3.439.0; Fri, 26 Jul 2019 15:53:25 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <saeedm@mellanox.com>,
-        Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 08/10] net: hns3: add interrupt affinity support for misc interrupt
-Date:   Fri, 26 Jul 2019 15:51:28 +0800
-Message-ID: <1564127490-22173-9-git-send-email-tanhuazhong@huawei.com>
+        Guangbin Huang <huangguangbin@huawei.com>,
+        "Huazhong Tan" <tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 02/10] net: hns3: add a check for get_reset_level
+Date:   Fri, 26 Jul 2019 15:51:22 +0800
+Message-ID: <1564127490-22173-3-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564127490-22173-1-git-send-email-tanhuazhong@huawei.com>
 References: <1564127490-22173-1-git-send-email-tanhuazhong@huawei.com>
@@ -49,146 +47,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Guangbin Huang <huangguangbin@huawei.com>
 
-The misc interrupt is used to schedule the reset and mailbox
-subtask, and service_task delayed_work is used to do periodic
-management work each second.
+For some cases, ops->get_reset_level may not be implemented, so we
+should check whether it is NULL before calling get_reset_level.
 
-This patch sets the above three subtask's affinity using the
-misc interrupt' affinity.
-
-Also this patch setups a affinity notify for misc interrupt to
-allow user to change the above three subtask's affinity.
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Guangbin Huang <huangguangbin@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 53 ++++++++++++++++++++--
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  4 ++
- 2 files changed, 53 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 13c9697..30a7074 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -1270,6 +1270,12 @@ static int hclge_configure(struct hclge_dev *hdev)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 08af782..4d58c53 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1963,7 +1963,7 @@ static pci_ers_result_t hns3_slot_reset(struct pci_dev *pdev)
  
- 	hclge_init_kdump_kernel_config(hdev);
- 
-+	/* Set the init affinity based on pci func number */
-+	i = cpumask_weight(cpumask_of_node(dev_to_node(&hdev->pdev->dev)));
-+	i = i ? PCI_FUNC(hdev->pdev->devfn) % i : 0;
-+	cpumask_set_cpu(cpumask_local_spread(i, dev_to_node(&hdev->pdev->dev)),
-+			&hdev->affinity_mask);
-+
- 	return ret;
- }
- 
-@@ -2499,14 +2505,16 @@ static void hclge_mbx_task_schedule(struct hclge_dev *hdev)
- {
- 	if (!test_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state) &&
- 	    !test_and_set_bit(HCLGE_STATE_MBX_SERVICE_SCHED, &hdev->state))
--		schedule_work(&hdev->mbx_service_task);
-+		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
-+			      &hdev->mbx_service_task);
- }
- 
- static void hclge_reset_task_schedule(struct hclge_dev *hdev)
- {
- 	if (!test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
- 	    !test_and_set_bit(HCLGE_STATE_RST_SERVICE_SCHED, &hdev->state))
--		schedule_work(&hdev->rst_service_task);
-+		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
-+			      &hdev->rst_service_task);
- }
- 
- static void hclge_task_schedule(struct hclge_dev *hdev)
-@@ -2516,8 +2524,9 @@ static void hclge_task_schedule(struct hclge_dev *hdev)
- 	    !test_and_set_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state)) {
- 		hdev->hw_stats.stats_timer++;
- 		hdev->fd_arfs_expire_timer++;
--		mod_delayed_work(system_wq, &hdev->service_task,
--				 round_jiffies_relative(HZ));
-+		mod_delayed_work_on(cpumask_first(&hdev->affinity_mask),
-+				    system_wq, &hdev->service_task,
-+				    round_jiffies_relative(HZ));
- 	}
- }
- 
-@@ -2903,6 +2912,36 @@ static void hclge_get_misc_vector(struct hclge_dev *hdev)
- 	hdev->num_msi_used += 1;
- }
- 
-+static void hclge_irq_affinity_notify(struct irq_affinity_notify *notify,
-+				      const cpumask_t *mask)
-+{
-+	struct hclge_dev *hdev = container_of(notify, struct hclge_dev,
-+					      affinity_notify);
-+
-+	cpumask_copy(&hdev->affinity_mask, mask);
-+}
-+
-+static void hclge_irq_affinity_release(struct kref *ref)
-+{
-+}
-+
-+static void hclge_misc_affinity_setup(struct hclge_dev *hdev)
-+{
-+	irq_set_affinity_hint(hdev->misc_vector.vector_irq,
-+			      &hdev->affinity_mask);
-+
-+	hdev->affinity_notify.notify = hclge_irq_affinity_notify;
-+	hdev->affinity_notify.release = hclge_irq_affinity_release;
-+	irq_set_affinity_notifier(hdev->misc_vector.vector_irq,
-+				  &hdev->affinity_notify);
-+}
-+
-+static void hclge_misc_affinity_teardown(struct hclge_dev *hdev)
-+{
-+	irq_set_affinity_notifier(hdev->misc_vector.vector_irq, NULL);
-+	irq_set_affinity_hint(hdev->misc_vector.vector_irq, NULL);
-+}
-+
- static int hclge_misc_irq_init(struct hclge_dev *hdev)
- {
- 	int ret;
-@@ -8794,6 +8833,11 @@ static int hclge_init_ae_dev(struct hnae3_ae_dev *ae_dev)
- 	INIT_WORK(&hdev->rst_service_task, hclge_reset_service_task);
- 	INIT_WORK(&hdev->mbx_service_task, hclge_mailbox_service_task);
- 
-+	/* Setup affinity after service timer setup because add_timer_on
-+	 * is called in affinity notify.
-+	 */
-+	hclge_misc_affinity_setup(hdev);
-+
- 	hclge_clear_all_event_cause(hdev);
- 	hclge_clear_resetting_state(hdev);
- 
-@@ -8955,6 +8999,7 @@ static void hclge_uninit_ae_dev(struct hnae3_ae_dev *ae_dev)
- 	struct hclge_dev *hdev = ae_dev->priv;
- 	struct hclge_mac *mac = &hdev->hw.mac;
- 
-+	hclge_misc_affinity_teardown(hdev);
- 	hclge_state_uninit(hdev);
- 
- 	if (mac->phydev)
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index dde8f22..688e425 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -863,6 +863,10 @@ struct hclge_dev {
- 
- 	DECLARE_KFIFO(mac_tnl_log, struct hclge_mac_tnl_stats,
- 		      HCLGE_MAC_TNL_LOG_SIZE);
-+
-+	/* affinity mask and notify for misc interrupt */
-+	cpumask_t affinity_mask;
-+	struct irq_affinity_notify affinity_notify;
- };
- 
- /* VPort level vlan tag configuration for TX direction */
+ 	ops = ae_dev->ops;
+ 	/* request the reset */
+-	if (ops->reset_event) {
++	if (ops->reset_event && ops->get_reset_level) {
+ 		if (ae_dev->hw_err_reset_req) {
+ 			reset_type = ops->get_reset_level(ae_dev,
+ 						&ae_dev->hw_err_reset_req);
 -- 
 2.7.4
 
