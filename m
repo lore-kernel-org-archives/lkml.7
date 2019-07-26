@@ -2,162 +2,178 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A70C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B17F4C41517
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D3C921901
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8474821951
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:03:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Is5BWPCu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGn5V/hh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbfGZIBj (ORCPT
+        id S1726148AbfGZIDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 04:01:39 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36057 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfGZIBj (ORCPT
+        Fri, 26 Jul 2019 04:03:04 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44294 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfGZIDD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 04:01:39 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n4so53460239wrs.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 01:01:36 -0700 (PDT)
+        Fri, 26 Jul 2019 04:03:03 -0400
+Received: by mail-pf1-f193.google.com with SMTP id t16so24092253pfe.11;
+        Fri, 26 Jul 2019 01:03:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZB8dfk0+fR1uXGnwfzqMYaZMnZMymTDsEAfbI/dGGgM=;
-        b=Is5BWPCunQpjy7PvPMsrepFEaIGGTLAgm+Qb7dy7rLrzpOI/1YYXPHC9DF2tVSZlAu
-         5MEh2PX9qkakBs66dvrzdjb5uiN83FVXp4OI12kzBTGOrsXmtRFJQIpzZ1qVRdUXz65m
-         P9nqoM8Zyekr4Zn2+AhWU9HR67IJt6MevwL0ATW7qFumMQUHzmJG9jDhFVtOOyKjbc1L
-         1b3q/ok8kDo7rSQlCzbPmb/OhgQOvXhDZTLSMJ0ViyjUMtGTY4JAanmwVsYojCGSK+bR
-         2+QKmflufD08AKH8HOvIM3Jbe7pMKykUqxyioUpf/UgJNx5vZtG5Sk0ljUj8u2DWyU8c
-         zoyQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hMe5uKhvczAsGIczBY6wv4d6jpwWM+g7rT71u8zhUT8=;
+        b=ZGn5V/hhVXThkYc5+9ypEko++Dco1vB3j9OjCjRLUdJ1d/XqtgKtbV4ASenScK8CJN
+         2qX1brclvxlxaqEkcjLQn6PJaP/jgCUeDF5PnW5G28u9WD/zY7HGwWATDAH4tGrTav61
+         99GSSVYz4SghGSD+PobiyTmggY0L14+5lO8s9saHK0XuD2Svo7c5QzLNQvCtkmv5UDxU
+         EAj8EcDQJamYBqavlWA2Ik7ILSVYmubZSA5dKAYjYhd8rZmYT93+BfIO/4zqgnZaPEdH
+         H3zEyKk2tN9X4eiI+HDR0iJbt5QSjAMQpE6rjxT/dwavOerXo2LZt8txPCmErvrak1CR
+         S3gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZB8dfk0+fR1uXGnwfzqMYaZMnZMymTDsEAfbI/dGGgM=;
-        b=aphwGhaHS4gF+VT8w6wDrsEz08tGd/twNHUtB9uGEKPLfnwE8d9WADrJNvtuGzrHGy
-         oiJYOFOkcMqmDuxOwciYXICUOs5Sr0iGoMzNFOqVTFyp0nFider7V2ZDduD6eM5ogS7E
-         Zzgn/SvUQICSMCk3M2B/g+eC4VF2fAPsPZJNbFQNXDV9iQiaqlq5sbOuA4Clow81vxcW
-         1iXaoQgx9XLM5TOVExuLr/cDJpjgxpgZa9igw8IJZU/2d40KS/b0JyvLMc85v5wR0DrP
-         /2nB4DxK6MWzwYf9cUt4fZcaef1pPamt5TfVQDOIN6pJztEPubD7uedgU/DA6L0PkiPi
-         Pntw==
-X-Gm-Message-State: APjAAAWk9Zl3MjxSub0UWIF75qolUk3yLehvOsZTXr5qhr44xX9Abkvm
-        Q0eUi4Wej2p9pqDRgIYobtY=
-X-Google-Smtp-Source: APXvYqwKBoAx+AnXpV27UMAa9BwVVgbPG1g4+ekndfqDxqQ0yHizqVxKrn6C35gyhmIDeMJfd8tE1g==
-X-Received: by 2002:adf:dcc6:: with SMTP id x6mr71091327wrm.322.1564128096151;
-        Fri, 26 Jul 2019 01:01:36 -0700 (PDT)
-Received: from brauner.io ([213.220.153.21])
-        by smtp.gmail.com with ESMTPSA id s15sm32108777wrw.21.2019.07.26.01.01.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hMe5uKhvczAsGIczBY6wv4d6jpwWM+g7rT71u8zhUT8=;
+        b=UCz9upHf/55CDiHLqp9a+LWnYtcsaIEkv4clw4/XbCJC3pbH5vVITP1REd8bXQezpq
+         mphutmAcuVsTTzWEgnE9oEsSFQO1RsTRUCT0Z21ZCj0Cgoq0z2tyn7DBrJGozcnRSkdP
+         rH5/yQB7kqF4bfqKfDMBP1aHK+bZK3FCR8oc5vTwEez9X+dhg5R+aXH3KXEf43lhs9qS
+         mmAD2gKVSgrpNJm0CyGzJ1EjQKMy5zBYgS8zuUwd0VTHWrKsGBblDJLLHfIc8w90ChOL
+         zyvNFCDkvw9ANJbOz8Msg7dcKsBqB1GUJkE8zehd3dcrdrNWPm3wF8bVWdftfGt/qAd8
+         /8CA==
+X-Gm-Message-State: APjAAAUo3ecGYKX6O8WuazDuIZOMyLqAshO5QiyaJs6Ty46IaUmESj5N
+        VCmzQnhw5tBUcFaJMVSOZug=
+X-Google-Smtp-Source: APXvYqyBULFpTkd0szfg14Xa/0UeiQd1hq5s+NS3x16Cm1gNDiIsCqzIj/gaA/sQbk0UTXpxo5xnaQ==
+X-Received: by 2002:a17:90a:cb81:: with SMTP id a1mr94386101pju.81.1564128183115;
+        Fri, 26 Jul 2019 01:03:03 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id y10sm53028132pfm.66.2019.07.26.01.03.00
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 01:01:35 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 10:01:34 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tejun Heo <tj@kernel.org>, David Howells <dhowells@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Android Kernel Team <kernel-team@android.com>
-Subject: Re: [RFC][PATCH 1/5] exit: kill struct waitid_info
-Message-ID: <20190726080133.yrxsaaxasxudyjj4@brauner.io>
-References: <20190724144651.28272-1-christian@brauner.io>
- <20190724144651.28272-2-christian@brauner.io>
- <CAHk-=wjOLjnZdZBSDwNbaWp3uGLGQkgxe-2HmNG5gE4TLbED_w@mail.gmail.com>
- <87zhl2wabp.fsf@xmission.com>
+        Fri, 26 Jul 2019 01:03:02 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] iio: humidity: Use device-managed APIs
+Date:   Fri, 26 Jul 2019 16:02:55 +0800
+Message-Id: <20190726080255.13226-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87zhl2wabp.fsf@xmission.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 07:46:50AM -0500, Eric W. Biederman wrote:
-> Linus Torvalds <torvalds@linux-foundation.org> writes:
-> 
-> > On Wed, Jul 24, 2019 at 7:47 AM Christian Brauner <christian@brauner.io> wrote:
-> >>
-> >> The code here uses a struct waitid_info to catch basic information about
-> >> process exit including the pid, uid, status, and signal that caused the
-> >> process to exit. This information is then stuffed into a struct siginfo
-> >> for the waitid() syscall. That seems like an odd thing to do. We can
-> >> just pass down a siginfo_t struct directly which let's us cleanup and
-> >> simplify the whole code quite a bit.
-> >
-> > Ack. Except I'd like the commit message to explain where this comes
-> > from instead of that "That seems like an odd thing to do".
-> >
-> > The _original_ reason for "struct waitid_info" was that "siginfo_t" is
-> > huge because of all the insane padding that various architectures do.
-> >
-> > So it was introduced by commit 67d7ddded322 ("waitid(2): leave copyout
-> > of siginfo to syscall itself") very much to avoid stack usage issues.
-> > And I quote:
-> >
-> >     collect the information needed for siginfo into
-> >     a small structure (waitid_info)
-> >
-> > simply because "sigset_t" was big.
-> >
-> > But that size came from the explicit "pad it out to 128 bytes for
-> > future expansion that will never happen", and the kernel using the
-> > same exact sigset_t that was exposed to user space.
-> >
-> > Then in commit 4ce5f9c9e754 ("signal: Use a smaller struct siginfo in
-> > the kernel") we got rid of the insane padding for in-kernel use,
-> > exactly because it causes issues like this.
-> >
-> > End result: that "struct waitid_info" no longer makes sense. It's not
-> > appreciably smaller than kernel_siginfo_t is today, but it made sense
-> > at the time.
-> 
-> Apologies.  I meant to reply yesterday but I was preempted by baby
-> issues.
-> 
-> I strongly disagree that this direction makes sense.  The largest
-> value that I see from struct waitid_info is that it makes it possible to
-> reason about which values are returned where struct kernel_siginfo does
-> not.
-> 
-> One of the details the existence of struct waitid_info makes clear is
-> that unlike the related child death path the wait code does not
-> fillin si_utime and si_stime.  Which is very important to know when you
-> are dealing with y2038 issues and Arnd Bergmann is.
-> 
-> The most egregious example I know of using siginfo wrong is:
-> 70f1b0d34bdf ("signal/usb: Replace kill_pid_info_as_cred with
-> kill_pid_usb_asyncio").  But just by moving struct siginfo out of the
-> program logic and into dedicated little functions that just deal with
-> the craziness of struct siginfo I have found lots of little bugs.
-> 
-> We don't need that kind of invitation to bugs in the wait logic.
+Use device-managed APIs to simplify the code.
+The remove functions are redundant now and can
+be deleted.
 
-I don't think it's a strong enough argument for rejecting this change.
-Suspecting that something might go wrong if we simplify something is a
-valid call to proceed with caution and be on the lookout for potential
-regressions so we can react fast. I respect that. But it's not
-necessarily a good argument to reject a change.
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/iio/humidity/am2315.c  | 21 ++++-----------------
+ drivers/iio/humidity/hdc100x.c | 18 ++++--------------
+ 2 files changed, 8 insertions(+), 31 deletions(-)
 
-I'm happy to switch from an initializer (which is not even clear is a
-bug) to using clear_siginfo().
-And I'm also going to split this patch out of the P_PIDFD patch but I'm
-going to send this out again. I haven't heard a sound argument why this
-patch is worse than what we have right now in there.
+diff --git a/drivers/iio/humidity/am2315.c b/drivers/iio/humidity/am2315.c
+index f18da7859229..038638e92f4a 100644
+--- a/drivers/iio/humidity/am2315.c
++++ b/drivers/iio/humidity/am2315.c
+@@ -240,32 +240,20 @@ static int am2315_probe(struct i2c_client *client,
+ 	indio_dev->channels = am2315_channels;
+ 	indio_dev->num_channels = ARRAY_SIZE(am2315_channels);
+ 
+-	ret = iio_triggered_buffer_setup(indio_dev, iio_pollfunc_store_time,
++	ret = devm_iio_triggered_buffer_setup(&client->dev,
++					indio_dev, iio_pollfunc_store_time,
+ 					 am2315_trigger_handler, NULL);
+ 	if (ret < 0) {
+ 		dev_err(&client->dev, "iio triggered buffer setup failed\n");
+ 		return ret;
+ 	}
+ 
+-	ret = iio_device_register(indio_dev);
++	ret = devm_iio_device_register(&client->dev, indio_dev);
+ 	if (ret < 0)
+-		goto err_buffer_cleanup;
++		return ret;
+ 
+ 	return 0;
+ 
+-err_buffer_cleanup:
+-	iio_triggered_buffer_cleanup(indio_dev);
+-	return ret;
+-}
+-
+-static int am2315_remove(struct i2c_client *client)
+-{
+-	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+-
+-	iio_device_unregister(indio_dev);
+-	iio_triggered_buffer_cleanup(indio_dev);
+-
+-	return 0;
+ }
+ 
+ static const struct i2c_device_id am2315_i2c_id[] = {
+@@ -287,7 +275,6 @@ static struct i2c_driver am2315_driver = {
+ 		.acpi_match_table = ACPI_PTR(am2315_acpi_id),
+ 	},
+ 	.probe =            am2315_probe,
+-	.remove =	    am2315_remove,
+ 	.id_table =         am2315_i2c_id,
+ };
+ 
+diff --git a/drivers/iio/humidity/hdc100x.c b/drivers/iio/humidity/hdc100x.c
+index 066e05f92081..5186fd9bfdc5 100644
+--- a/drivers/iio/humidity/hdc100x.c
++++ b/drivers/iio/humidity/hdc100x.c
+@@ -385,26 +385,17 @@ static int hdc100x_probe(struct i2c_client *client,
+ 	hdc100x_set_it_time(data, 1, hdc100x_int_time[1][0]);
+ 	hdc100x_update_config(data, HDC100X_REG_CONFIG_ACQ_MODE, 0);
+ 
+-	ret = iio_triggered_buffer_setup(indio_dev, NULL,
++	ret = devm_iio_triggered_buffer_setup(&client->dev,
++					 indio_dev, NULL,
+ 					 hdc100x_trigger_handler,
+ 					 &hdc_buffer_setup_ops);
+ 	if (ret < 0) {
+ 		dev_err(&client->dev, "iio triggered buffer setup failed\n");
+ 		return ret;
+ 	}
+-	ret = iio_device_register(indio_dev);
++	ret = devm_iio_device_register(&client->dev, indio_dev);
+ 	if (ret < 0)
+-		iio_triggered_buffer_cleanup(indio_dev);
+-
+-	return ret;
+-}
+-
+-static int hdc100x_remove(struct i2c_client *client)
+-{
+-	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+-
+-	iio_device_unregister(indio_dev);
+-	iio_triggered_buffer_cleanup(indio_dev);
++		return ret;
+ 
+ 	return 0;
+ }
+@@ -436,7 +427,6 @@ static struct i2c_driver hdc100x_driver = {
+ 		.of_match_table = of_match_ptr(hdc100x_dt_ids),
+ 	},
+ 	.probe = hdc100x_probe,
+-	.remove = hdc100x_remove,
+ 	.id_table = hdc100x_id,
+ };
+ module_i2c_driver(hdc100x_driver);
+-- 
+2.20.1
 
-Christian
