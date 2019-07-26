@@ -2,137 +2,114 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A842C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B435DC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D82822CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7EE22CE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564148815;
+	bh=cljafivhS5SgwGmwbvwM7kjh7jlUt6mW6AydIjbkjVo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kyxUku0YAyiM/9TcVEbeS5euXLoQA2VbFhaT5G1Xe6QAcXQZsC7petKDhKkk55U7f
+	 HV0/vVCzllEY42jP0EiN8dvr4DeaRgEOmp5F/xUeVRqea4v7KN8ukAJFOKlACHfH4j
+	 EkQQYU7bu+P+TKaLl+CZ6Ks7nwq01sohJ9ViH12o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388414AbfGZNqw (ORCPT
+        id S2388651AbfGZNqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:46:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39074 "EHLO mx1.redhat.com"
+        Fri, 26 Jul 2019 09:46:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387711AbfGZNqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:46:49 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2388625AbfGZNqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:46:02 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CFBE630860D1;
-        Fri, 26 Jul 2019 13:46:48 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C2E2579423;
-        Fri, 26 Jul 2019 13:46:47 +0000 (UTC)
-Subject: Re: [PATCH AUTOSEL 5.2 13/85] kernel/module.c: Only return -EEXIST
- for modules that have finished loading
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Barret Rhoden <brho@google.com>, David Arcari <darcari@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-References: <20190726133936.11177-1-sashal@kernel.org>
- <20190726133936.11177-13-sashal@kernel.org>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <cb703dc8-03a3-a877-2e5f-72a349e0f2d7@redhat.com>
-Date:   Fri, 26 Jul 2019 09:46:46 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by mail.kernel.org (Postfix) with ESMTPSA id 7388522CE5;
+        Fri, 26 Jul 2019 13:46:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564148762;
+        bh=cljafivhS5SgwGmwbvwM7kjh7jlUt6mW6AydIjbkjVo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Xa1x1b1zfVsSEvg234GUKgMmFNWQBmxJK+sK9K0denPBRP7U1p6riC9Ik0J+TRgjA
+         t5tgSGn1lnsbJPAYDeyDchwQUDLcS4MRMX7rLVfVGeuqkPnnPkSAq9D0EHvVT70l0i
+         UcEmH1Y486DVfm/ONzLnREKLUzjQmH+tmSfzjU34=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rodolfo Giometti <giometti@enneenne.com>,
+        Greg KH <greg@kroah.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 19/23] drivers/pps/pps.c: clear offset flags in PPS_SETPARAMS ioctl
+Date:   Fri, 26 Jul 2019 09:45:18 -0400
+Message-Id: <20190726134522.13308-19-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190726134522.13308-1-sashal@kernel.org>
+References: <20190726134522.13308-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190726133936.11177-13-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 26 Jul 2019 13:46:49 +0000 (UTC)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Miroslav Lichvar <mlichvar@redhat.com>
 
+[ Upstream commit 5515e9a6273b8c02034466bcbd717ac9f53dab99 ]
 
-On 7/26/19 9:38 AM, Sasha Levin wrote:
-> From: Prarit Bhargava <prarit@redhat.com>
-> 
-> [ Upstream commit 6e6de3dee51a439f76eb73c22ae2ffd2c9384712 ]
-> 
-> Microsoft HyperV disables the X86_FEATURE_SMCA bit on AMD systems, and
-> linux guests boot with repeated errors:
-> 
+The PPS assert/clear offset corrections are set by the PPS_SETPARAMS
+ioctl in the pps_ktime structs, which also contain flags.  The flags are
+not initialized by applications (using the timepps.h header) and they
+are not used by the kernel for anything except returning them back in
+the PPS_GETPARAMS ioctl.
 
-Hey Sasha, I'd prefer to leave this out of stable branches for now.  Linus is a
-bit nervous about it and I like to get see more soak time before the patch is
-backported to stable.
+Set the flags to zero to make it clear they are unused and avoid leaking
+uninitialized data of the PPS_SETPARAMS caller to other applications
+that have a read access to the PPS device.
 
-https://lkml.org/lkml/2019/7/18/680
+Link: http://lkml.kernel.org/r/20190702092251.24303-1-mlichvar@redhat.com
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Rodolfo Giometti <giometti@enneenne.com>
+Cc: Greg KH <greg@kroah.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pps/pps.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-FWIW we've been running this in RHEL for some time now without any issues.
+diff --git a/drivers/pps/pps.c b/drivers/pps/pps.c
+index 2f07cd615665..76ae38450aea 100644
+--- a/drivers/pps/pps.c
++++ b/drivers/pps/pps.c
+@@ -129,6 +129,14 @@ static long pps_cdev_ioctl(struct file *file,
+ 			pps->params.mode |= PPS_CANWAIT;
+ 		pps->params.api_version = PPS_API_VERS;
+ 
++		/*
++		 * Clear unused fields of pps_kparams to avoid leaking
++		 * uninitialized data of the PPS_SETPARAMS caller via
++		 * PPS_GETPARAMS
++		 */
++		pps->params.assert_off_tu.flags = 0;
++		pps->params.clear_off_tu.flags = 0;
++
+ 		spin_unlock_irq(&pps->lock);
+ 
+ 		break;
+-- 
+2.20.1
 
-P.
-
-> amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
-> amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
-> amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
-> amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
-> amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
-> amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
-> 
-> The warnings occur because the module code erroneously returns -EEXIST
-> for modules that have failed to load and are in the process of being
-> removed from the module list.
-> 
-> module amd64_edac_mod has a dependency on module edac_mce_amd.  Using
-> modules.dep, systemd will load edac_mce_amd for every request of
-> amd64_edac_mod.  When the edac_mce_amd module loads, the module has
-> state MODULE_STATE_UNFORMED and once the module load fails and the state
-> becomes MODULE_STATE_GOING.  Another request for edac_mce_amd module
-> executes and add_unformed_module() will erroneously return -EEXIST even
-> though the previous instance of edac_mce_amd has MODULE_STATE_GOING.
-> Upon receiving -EEXIST, systemd attempts to load amd64_edac_mod, which
-> fails because of unknown symbols from edac_mce_amd.
-> 
-> add_unformed_module() must wait to return for any case other than
-> MODULE_STATE_LIVE to prevent a race between multiple loads of
-> dependent modules.
-> 
-> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-> Signed-off-by: Barret Rhoden <brho@google.com>
-> Cc: David Arcari <darcari@redhat.com>
-> Cc: Jessica Yu <jeyu@kernel.org>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Signed-off-by: Jessica Yu <jeyu@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  kernel/module.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 80c7c09584cf..8431c3d47c97 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -3385,8 +3385,7 @@ static bool finished_loading(const char *name)
->  	sched_annotate_sleep();
->  	mutex_lock(&module_mutex);
->  	mod = find_module_all(name, strlen(name), true);
-> -	ret = !mod || mod->state == MODULE_STATE_LIVE
-> -		|| mod->state == MODULE_STATE_GOING;
-> +	ret = !mod || mod->state == MODULE_STATE_LIVE;
->  	mutex_unlock(&module_mutex);
->  
->  	return ret;
-> @@ -3576,8 +3575,7 @@ static int add_unformed_module(struct module *mod)
->  	mutex_lock(&module_mutex);
->  	old = find_module_all(mod->name, strlen(mod->name), true);
->  	if (old != NULL) {
-> -		if (old->state == MODULE_STATE_COMING
-> -		    || old->state == MODULE_STATE_UNFORMED) {
-> +		if (old->state != MODULE_STATE_LIVE) {
->  			/* Wait in case it fails to load. */
->  			mutex_unlock(&module_mutex);
->  			err = wait_event_interruptible(module_wq,
-> 
