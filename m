@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C3EC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7687EC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99020205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F7B4205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155541;
-	bh=GH0024jItE3M+mrjJFsl1zzLd5bi+P+GwkHqwepwIG8=;
+	s=default; t=1564155546;
+	bh=V7+Br9o9LhsUH2f7E9v51PJEkEZe8FFACI/PZu6wLkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g/PZBMFSBBpeL2lQbxryeLGXgdv46DlVfqAHD0e/VT+ixh+6YaBhwXsGych5/+m/W
-	 FEHis37SWfEMAA5ihCapGTLWx+njtq8/Nwh5fcPegr78haOYfhPN4c1tYWdokbBOEe
-	 AyEWEUzFKKt5KUt/SmDkQJbwyH/QwydIfRkI1OlY=
+	b=frUNLKSgQF9tacWoTAP5gySsS8NSTDnTLdHaUrdGarj2SpgmZHNDO3h3kMbBL+BUC
+	 HjuAtWdprADN4cM8NrekDG0+7uXmCRJGo37/9OOnaQjof7C7yF1QDxQ0i0zXnjlceV
+	 X1fSlERlRMdoOrC5Bcm0JFpJ859ZvANVjC5ND1ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388781AbfGZPjA (ORCPT
+        id S2388832AbfGZPjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:39:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41190 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:39:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388182AbfGZP1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:27:02 -0400
+        id S2388135AbfGZP0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:26:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBF6A22CBD;
-        Fri, 26 Jul 2019 15:27:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F271322BF5;
+        Fri, 26 Jul 2019 15:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154822;
-        bh=GH0024jItE3M+mrjJFsl1zzLd5bi+P+GwkHqwepwIG8=;
+        s=default; t=1564154814;
+        bh=V7+Br9o9LhsUH2f7E9v51PJEkEZe8FFACI/PZu6wLkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FrT0P757tt40iw3Z/r78Yd3FbiOfimvQSiWdR1Vh062JVJms7i9Vg4tWf7aaEgU6s
-         XYvG6ozc3Aj59GwkthMWDw9I8JPcP/HRVC8hUFJGUATV0hlmoaKw4wbCFDwAC8XEM/
-         3iH8BrKxjnN+TWJ3obgAfRukfyHLhld0ru5PFazo=
+        b=CGuDKjbayr8TVcJZOF4Lzvr+GfB4hufSdPc/KkcYUonHVkKZ3UnEVaI6wpXomKWNf
+         nqu0sQdJ7iam5FY9nTM6Sdc3ps1VcoGcBDmXhkJCT0YLhznkIiNqKg3V38lt3HFAZY
+         HxzktTrQxHloWGevLEzN4U3UXlmhW7wlefOEASJw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frank de Brabander <debrabander@gmail.com>,
-        Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Alexander Petrovskiy <alexpe@mellanox.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 36/66] selftests: txring_overwrite: fix incorrect test of mmap() return value
-Date:   Fri, 26 Jul 2019 17:24:35 +0200
-Message-Id: <20190726152305.920273600@linuxfoundation.org>
+Subject: [PATCH 5.2 07/66] ipv6: Unlink sibling route in case of failure
+Date:   Fri, 26 Jul 2019 17:24:06 +0200
+Message-Id: <20190726152302.707755084@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
 References: <20190726152301.936055394@linuxfoundation.org>
@@ -60,32 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank de Brabander <debrabander@gmail.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit cecaa76b2919aac2aa584ce476e9fcd5b084add5 ]
+[ Upstream commit 54851aa90cf27041d64b12f65ac72e9f97bd90fd ]
 
-If mmap() fails it returns MAP_FAILED, which is defined as ((void *) -1).
-The current if-statement incorrectly tests if *ring is NULL.
+When a route needs to be appended to an existing multipath route,
+fib6_add_rt2node() first appends it to the siblings list and increments
+the number of sibling routes on each sibling.
 
-Fixes: 358be656406d ("selftests/net: add txring_overwrite")
-Signed-off-by: Frank de Brabander <debrabander@gmail.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
+Later, the function notifies the route via call_fib6_entry_notifiers().
+In case the notification is vetoed, the route is not unlinked from the
+siblings list, which can result in a use-after-free.
+
+Fix this by unlinking the route from the siblings list before returning
+an error.
+
+Audited the rest of the call sites from which the FIB notification chain
+is called and could not find more problems.
+
+Fixes: 2233000cba40 ("net/ipv6: Move call_fib6_entry_notifiers up for route adds")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Alexander Petrovskiy <alexpe@mellanox.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/txring_overwrite.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv6/ip6_fib.c |   18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
---- a/tools/testing/selftests/net/txring_overwrite.c
-+++ b/tools/testing/selftests/net/txring_overwrite.c
-@@ -113,7 +113,7 @@ static int setup_tx(char **ring)
+--- a/net/ipv6/ip6_fib.c
++++ b/net/ipv6/ip6_fib.c
+@@ -1104,8 +1104,24 @@ add:
+ 		err = call_fib6_entry_notifiers(info->nl_net,
+ 						FIB_EVENT_ENTRY_ADD,
+ 						rt, extack);
+-		if (err)
++		if (err) {
++			struct fib6_info *sibling, *next_sibling;
++
++			/* If the route has siblings, then it first
++			 * needs to be unlinked from them.
++			 */
++			if (!rt->fib6_nsiblings)
++				return err;
++
++			list_for_each_entry_safe(sibling, next_sibling,
++						 &rt->fib6_siblings,
++						 fib6_siblings)
++				sibling->fib6_nsiblings--;
++			rt->fib6_nsiblings = 0;
++			list_del_init(&rt->fib6_siblings);
++			rt6_multipath_rebalance(next_sibling);
+ 			return err;
++		}
  
- 	*ring = mmap(0, req.tp_block_size * req.tp_block_nr,
- 		     PROT_READ | PROT_WRITE, MAP_SHARED, fdt, 0);
--	if (!*ring)
-+	if (*ring == MAP_FAILED)
- 		error(1, errno, "mmap");
- 
- 	return fdt;
+ 		rcu_assign_pointer(rt->fib6_next, iter);
+ 		fib6_info_hold(rt);
 
 
