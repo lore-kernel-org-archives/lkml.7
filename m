@@ -2,94 +2,111 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58511C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2141BC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241762166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC2A6229F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbfGZVrG (ORCPT
+        id S1727465AbfGZVsE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 17:47:06 -0400
-Received: from hera.aquilenet.fr ([185.233.100.1]:41062 "EHLO
-        hera.aquilenet.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfGZVrF (ORCPT
+        Fri, 26 Jul 2019 17:48:04 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:43280 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbfGZVsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 17:47:05 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by hera.aquilenet.fr (Postfix) with ESMTP id 3556D19315;
-        Fri, 26 Jul 2019 23:47:04 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at aquilenet.fr
-Received: from hera.aquilenet.fr ([127.0.0.1])
-        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id HgFx9HJp6DC3; Fri, 26 Jul 2019 23:47:03 +0200 (CEST)
-Received: from function (105.251.129.77.rev.sfr.net [77.129.251.105])
-        by hera.aquilenet.fr (Postfix) with ESMTPSA id 861ED19312;
-        Fri, 26 Jul 2019 23:47:03 +0200 (CEST)
-Received: from samy by function with local (Exim 4.92)
-        (envelope-from <samuel.thibault@ens-lyon.org>)
-        id 1hr83K-00012p-Gb; Fri, 26 Jul 2019 23:47:02 +0200
-Date:   Fri, 26 Jul 2019 23:47:02 +0200
-From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        931507@bugs.debian.org
-Subject: [PATCHv2] hda: Fix 1-minute detection delay when i915 module is not
- available
-Message-ID: <20190726214702.kxi2gavlieiwyf7q@function>
-Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        931507@bugs.debian.org
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Fri, 26 Jul 2019 17:48:04 -0400
+Received: from marcel-macpro.fritz.box (p5B3D2BA7.dip0.t-ipconnect.de [91.61.43.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 0B8A5CECD2;
+        Fri, 26 Jul 2019 23:56:40 +0200 (CEST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v2] Bluetooth: hci_ldisc: check for missing tty operations
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20190726142628.20534-1-vdronov@redhat.com>
+Date:   Fri, 26 Jul 2019 23:48:02 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Suraj Sumangala <suraj@atheros.com>,
+        Frederic Danis <frederic.danis@linux.intel.com>,
+        Loic Poulain <loic.poulain@intel.com>,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        syzkaller@googlegroups.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <62A82405-46E2-4921-BA52-D1660FC2DDDB@holtmann.org>
+References: <20190726142628.20534-1-vdronov@redhat.com>
+To:     Vladis Dronov <vdronov@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Distribution installation images such as Debian include different sets
-of modules which can be downloaded dynamically.  Such images may notably
-include the hda sound modules but not the i915 DRM module, even if the
-latter was enabled at build time, as reported on
-https://bugs.debian.org/931507
+Hi Vladis,
 
-In such a case hdac_i915 would be linked in and try to load the i915
-module, fail since it is not there, but still wait for a whole minute
-before giving up binding with it.
+> Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
+> functions which are called by the certain HCI UART protocols (hci_ath,
+> hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
+> or directly. This leads to an execution at NULL and can be triggered by
+> an unprivileged user. Fix this by adding a check for the missing tty
+> operations the same way it is done for write().
+> 
+> This fixes CVE-2019-10207. The Fixes: lines list commits where calls to
+> tiocm[gs]et() or hci_uart_set_flow_control() were added to the HCI UART
+> protocols.
+> 
+> Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
+> Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
+> Cc: stable@vger.kernel.org # v2.6.36+
+> Fixes: c19483cc5e56 ("bluetooth: Fix missing NULL check")
+> Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
+> Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
+> Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate configuration support")
+> Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
+> Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
+> Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+> ---
+> 
+> out-of-commit-message-note:
+> 
+> I believe, this is a good location for the check. This way we protect protocols
+> which does not call tiocm[gs]et() or hci_uart_set_flow_control() but may
+> change to call them in the future.
+> 
+> Also we do not need hci_uart_has_tiocm_support() helper now.
+> 
+> drivers/bluetooth/hci_ldisc.c | 7 ++++---
+> 1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_ldisc.c
+> index c84f985f348d..4a85c51d0307 100644
+> --- a/drivers/bluetooth/hci_ldisc.c
+> +++ b/drivers/bluetooth/hci_ldisc.c
+> @@ -459,10 +459,11 @@ static int hci_uart_tty_open(struct tty_struct *tty)
+> 
+> 	BT_DBG("tty %p", tty);
+> 
+> -	/* Error if the tty has no write op instead of leaving an exploitable
+> -	 * hole
+> +	/* Error if the tty has no write or tiocm[gs]et ops instead of leaving
+> +	 * an exploitable hole
+> 	 */
+> -	if (tty->ops->write == NULL)
+> +	if (tty->ops->write == NULL || tty->ops->tiocmget == NULL ||
+> +	    tty->ops->tiocmset == NULL)
+> 		return -EOPNOTSUPP;
 
-This fixes such as case by only waiting for the binding if the module
-was properly loaded (or module support is disabled, in which case i915
-is already compiled-in anyway).
+this means that you can not run hci_h4.c on any TTY anymore. For all the vendor specific ones, I agree, but H:4 is a Bluetooth SIG defined standard one that we might want to allow on any kind of TTY since it doesn’t really mandate anything.
 
-Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
----
- sound/hda/hdac_i915.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+So I would prefer if we go with a hci_uart_has_tiocm_support helper for now. 
 
---- a/sound/hda/hdac_i915.c
-+++ b/sound/hda/hdac_i915.c
-@@ -136,10 +136,13 @@ int snd_hdac_i915_init(struct hdac_bus *
- 	if (!acomp)
- 		return -ENODEV;
- 	if (!acomp->ops) {
--		request_module("i915");
--		/* 60s timeout */
--		wait_for_completion_timeout(&bind_complete,
--					    msecs_to_jiffies(60 * 1000));
-+		if (!IS_ENABLED(CONFIG_MODULES) ||
-+		    !request_module("i915"))
-+		{
-+			/* 60s timeout */
-+			wait_for_completion_timeout(&bind_complete,
-+						   msecs_to_jiffies(60 * 1000));
-+		}
- 	}
- 	if (!acomp->ops) {
- 		dev_info(bus->dev, "couldn't bind with audio component\n");
+Regards
+
+Marcel
+
