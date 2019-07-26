@@ -2,39 +2,49 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787F2C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD72FC41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4345621951
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4B52238C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:36:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbfGZIev (ORCPT
+        id S1726400AbfGZIgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 04:34:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56938 "EHLO mx1.redhat.com"
+        Fri, 26 Jul 2019 04:36:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33582 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfGZIev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 04:34:51 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1725842AbfGZIgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 04:36:45 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A51C030C34D4;
-        Fri, 26 Jul 2019 08:34:50 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 947363082B44;
+        Fri, 26 Jul 2019 08:36:44 +0000 (UTC)
 Received: from [10.36.116.244] (ovpn-116-244.ams2.redhat.com [10.36.116.244])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4076A6092D;
-        Fri, 26 Jul 2019 08:34:48 +0000 (UTC)
-Subject: Re: [PATCH v3 1/5] mm,memory_hotplug: Introduce MHP_MEMMAP_ON_MEMORY
-To:     Oscar Salvador <osalvador@suse.de>, akpm@linux-foundation.org
-Cc:     dan.j.williams@intel.com, pasha.tatashin@soleen.com,
-        mhocko@suse.com, anshuman.khandual@arm.com,
-        Jonathan.Cameron@huawei.com, vbabka@suse.cz, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190725160207.19579-1-osalvador@suse.de>
- <20190725160207.19579-2-osalvador@suse.de>
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0A5CB6012D;
+        Fri, 26 Jul 2019 08:36:42 +0000 (UTC)
+Subject: Re: [PATCH v1] ACPI / scan: Acquire device_hotplug_lock in
+ acpi_scan_init()
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>
+References: <20190724143017.12841-1-david@redhat.com>
+ <20190725125636.GA3582@dhcp22.suse.cz>
+ <6dc566c2-faf6-565d-4ef1-2ac3a366bc76@redhat.com>
+ <20190725135747.GB3582@dhcp22.suse.cz>
+ <447b74ca-f7c7-0835-fd50-a9f7191fe47c@redhat.com>
+ <20190725191943.GA6142@dhcp22.suse.cz>
+ <e31882cf-3290-ea36-77d6-637eaf66fe77@redhat.com>
+ <20190726075729.GG6142@dhcp22.suse.cz>
+ <fd9e8495-1a93-ac47-442f-081d392ed09b@redhat.com>
+ <20190726083117.GJ6142@dhcp22.suse.cz>
 From:   David Hildenbrand <david@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
@@ -81,277 +91,60 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
  SE+xAvmumFBY
 Organization: Red Hat GmbH
-Message-ID: <8b60e40a-1e8a-1f7c-a31d-ad2e511decd5@redhat.com>
-Date:   Fri, 26 Jul 2019 10:34:47 +0200
+Message-ID: <38d76051-504e-c81a-293a-0b0839e829d3@redhat.com>
+Date:   Fri, 26 Jul 2019 10:36:42 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190725160207.19579-2-osalvador@suse.de>
+In-Reply-To: <20190726083117.GJ6142@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 26 Jul 2019 08:34:50 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 26 Jul 2019 08:36:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.07.19 18:02, Oscar Salvador wrote:
-> This patch introduces MHP_MEMMAP_ON_MEMORY flag,
-> and prepares the callers that add memory to take a "flags" parameter.
-> This "flags" parameter will be evaluated later on in Patch#3
-> to init mhp_restrictions struct.
+On 26.07.19 10:31, Michal Hocko wrote:
+> On Fri 26-07-19 10:05:58, David Hildenbrand wrote:
+>> On 26.07.19 09:57, Michal Hocko wrote:
+>>> On Thu 25-07-19 22:49:36, David Hildenbrand wrote:
+>>>> On 25.07.19 21:19, Michal Hocko wrote:
+>>> [...]
+>>>>> We need to rationalize the locking here, not to add more hacks.
+>>>>
+>>>> No, sorry. The real hack is calling a function that is *documented* to
+>>>> be called under lock without it. That is an optimization for a special
+>>>> case. That is the black magic in the code.
+>>>
+>>> OK, let me ask differently. What does the device_hotplug_lock actually
+>>> protects from in the add_memory path? (Which data structures)
+>>>
+>>> This function is meant to be used when struct pages and node/zone data
+>>> structures should be updated. Why should we even care about some device
+>>> concept here? This should all be handled a layer up. Not all memory will
+>>> have user space API to control online/offline state.
+>>
+>> Via add_memory()/__add_memory() we create memory block devices for all
+>> memory. So all memory we create via this function (IOW, hotplug) will
+>> have user space APIs.
 > 
-> The callers are:
-> 
-> add_memory
-> __add_memory
-> add_memory_resource
-> 
-> Unfortunately, we do not have a single entry point to add memory, as depending
-> on the requisites of the caller, they want to hook up in different places,
-> (e.g: Xen reserve_additional_memory()), so we have to spread the parameter
-> in the three callers.
-> 
-> MHP_MEMMAP_ON_MEMORY flag parameter will specify to allocate memmaps
-> from the hot-added range.
-> If callers wants memmaps to be allocated per memory block, it will
-> have to call add_memory() variants in memory-block granularity
-> spanning the whole range, while if it wants to allocate memmaps
-> per whole memory range, just one call will do.
-> 
-> Want to add 384MB (3 sections, 3 memory-blocks)
-> e.g:
-> 
-> 	add_memory(0x1000, size_memory_block);
-> 	add_memory(0x2000, size_memory_block);
-> 	add_memory(0x3000, size_memory_block);
-> 
-> 	[memblock#0  ]
-> 	[0 - 511 pfns      ] - vmemmaps for section#0
-> 	[512 - 32767 pfns  ] - normal memory
-> 
-> 	[memblock#1 ]
-> 	[32768 - 33279 pfns] - vmemmaps for section#1
-> 	[33280 - 65535 pfns] - normal memory
-> 
-> 	[memblock#2 ]
-> 	[65536 - 66047 pfns] - vmemmap for section#2
-> 	[66048 - 98304 pfns] - normal memory
+> Ups, I have mixed add_memory with add_pages which I've had in mind while
+> writing that. Sorry about the confusion.
 
-I wouldn't even care about documenting this right now. We have no user
-so far, so spending 50% of the description on this topic isn't really
-needed IMHO :)
+No worries :)
 
 > 
-> or
-> 	add_memory(0x1000, size_memory_block * 3);
-> 
-> 	[memblock #0 ]
->         [0 - 1533 pfns    ] - vmemmap for section#{0-2}
->         [1534 - 98304 pfns] - normal memory
-> 
-> When using larger memory blocks (1GB or 2GB), the principle is the same.
-> 
-> Of course, per whole-range granularity is nicer when it comes to have a large
-> contigous area, while per memory-block granularity allows us to have flexibility
-> when removing the memory.
+> Anyway, my dislike of the device_hotplug_lock persists. I would really
+> love to see it go rather than grow even more to the hotplug code. We
+> should be really striving for mem hotplug internal and ideally range
+> defined locking longterm. 
 
-E.g., in my virtio-mem I am currently adding all memory blocks
-separately either way (to guranatee that remove_memory() works cleanly -
-see __release_memory_resource()), and to control the amount of
-not-offlined memory blocks (e.g., to make user space is actually
-onlining them). As it's just a prototype, this might change of course in
-the future.
-
-> 
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> ---
->  drivers/acpi/acpi_memhotplug.c |  2 +-
->  drivers/base/memory.c          |  2 +-
->  drivers/dax/kmem.c             |  2 +-
->  drivers/hv/hv_balloon.c        |  2 +-
->  drivers/s390/char/sclp_cmd.c   |  2 +-
->  drivers/xen/balloon.c          |  2 +-
->  include/linux/memory_hotplug.h | 25 ++++++++++++++++++++++---
->  mm/memory_hotplug.c            | 10 +++++-----
->  8 files changed, 33 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/acpi/acpi_memhotplug.c b/drivers/acpi/acpi_memhotplug.c
-> index e294f44a7850..d91b3584d4b2 100644
-> --- a/drivers/acpi/acpi_memhotplug.c
-> +++ b/drivers/acpi/acpi_memhotplug.c
-> @@ -207,7 +207,7 @@ static int acpi_memory_enable_device(struct acpi_memory_device *mem_device)
->  		if (node < 0)
->  			node = memory_add_physaddr_to_nid(info->start_addr);
->  
-> -		result = __add_memory(node, info->start_addr, info->length);
-> +		result = __add_memory(node, info->start_addr, info->length, 0);
->  
->  		/*
->  		 * If the memory block has been used by the kernel, add_memory()
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 154d5d4a0779..d30d0f6c8ad0 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -521,7 +521,7 @@ static ssize_t probe_store(struct device *dev, struct device_attribute *attr,
->  
->  	nid = memory_add_physaddr_to_nid(phys_addr);
->  	ret = __add_memory(nid, phys_addr,
-> -			   MIN_MEMORY_BLOCK_SIZE * sections_per_block);
-> +			   MIN_MEMORY_BLOCK_SIZE * sections_per_block, 0);
->  
->  	if (ret)
->  		goto out;
-> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-> index 3d0a7e702c94..e159184e0ba0 100644
-> --- a/drivers/dax/kmem.c
-> +++ b/drivers/dax/kmem.c
-> @@ -65,7 +65,7 @@ int dev_dax_kmem_probe(struct device *dev)
->  	new_res->flags = IORESOURCE_SYSTEM_RAM;
->  	new_res->name = dev_name(dev);
->  
-> -	rc = add_memory(numa_node, new_res->start, resource_size(new_res));
-> +	rc = add_memory(numa_node, new_res->start, resource_size(new_res), 0);
->  	if (rc) {
->  		release_resource(new_res);
->  		kfree(new_res);
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index 6fb4ea5f0304..beb92bc56186 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -731,7 +731,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
->  
->  		nid = memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
->  		ret = add_memory(nid, PFN_PHYS((start_pfn)),
-> -				(HA_CHUNK << PAGE_SHIFT));
-> +				(HA_CHUNK << PAGE_SHIFT), 0);
->  
->  		if (ret) {
->  			pr_err("hot_add memory failed error is %d\n", ret);
-> diff --git a/drivers/s390/char/sclp_cmd.c b/drivers/s390/char/sclp_cmd.c
-> index 37d42de06079..f61026c7db7e 100644
-> --- a/drivers/s390/char/sclp_cmd.c
-> +++ b/drivers/s390/char/sclp_cmd.c
-> @@ -406,7 +406,7 @@ static void __init add_memory_merged(u16 rn)
->  	if (!size)
->  		goto skip_add;
->  	for (addr = start; addr < start + size; addr += block_size)
-> -		add_memory(numa_pfn_to_nid(PFN_DOWN(addr)), addr, block_size);
-> +		add_memory(numa_pfn_to_nid(PFN_DOWN(addr)), addr, block_size, 0);
->  skip_add:
->  	first_rn = rn;
->  	num = 1;
-> diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
-> index 4e11de6cde81..e4934ce40478 100644
-> --- a/drivers/xen/balloon.c
-> +++ b/drivers/xen/balloon.c
-> @@ -349,7 +349,7 @@ static enum bp_state reserve_additional_memory(void)
->  	mutex_unlock(&balloon_mutex);
->  	/* add_memory_resource() requires the device_hotplug lock */
->  	lock_device_hotplug();
-> -	rc = add_memory_resource(nid, resource);
-> +	rc = add_memory_resource(nid, resource, 0);
->  	unlock_device_hotplug();
->  	mutex_lock(&balloon_mutex);
->  
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index f46ea71b4ffd..45dece922d7c 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -54,6 +54,25 @@ enum {
->  };
->  
->  /*
-> + * We want memmap (struct page array) to be allocated from the hotadded range.
-> + * To do so, there are two possible ways depending on what the caller wants.
-> + * 1) Allocate memmap pages whole hot-added range.
-> + *    Here the caller will only call any add_memory() variant with the whole
-> + *    memory address.
-> + * 2) Allocate memmap pages per memblock
-> + *    Here, the caller will call any add_memory() variant per memblock
-> + *    granularity.
-> + * The former implies that we will use the beginning of the hot-added range
-> + * to store the memmap pages of the whole range, while the latter implies
-> + * that we will use the beginning of each memblock to store its own memmap
-> + * pages.
-
-Can you make this documentation only state how MHP_MEMMAP_ON_MEMORY
-works? (IOW, shrink it heavily to what we actually implement)
-
-> + *
-> + * Please note that this is only a hint, not a guarantee. Only selected
-> + * architectures support it with SPARSE_VMEMMAP.
-> + */
-> +#define MHP_MEMMAP_ON_MEMORY	(1UL<<1)
-> +
-> +/*
->   * Restrictions for the memory hotplug:
->   * flags:  MHP_ flags
->   * altmap: alternative allocator for memmap array
-> @@ -340,9 +359,9 @@ static inline void __remove_memory(int nid, u64 start, u64 size) {}
->  #endif /* CONFIG_MEMORY_HOTREMOVE */
->  
->  extern void __ref free_area_init_core_hotplug(int nid);
-> -extern int __add_memory(int nid, u64 start, u64 size);
-> -extern int add_memory(int nid, u64 start, u64 size);
-> -extern int add_memory_resource(int nid, struct resource *resource);
-> +extern int __add_memory(int nid, u64 start, u64 size, unsigned long flags);
-> +extern int add_memory(int nid, u64 start, u64 size, unsigned long flags);
-> +extern int add_memory_resource(int nid, struct resource *resource, unsigned long flags);
->  extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
->  		unsigned long nr_pages, struct vmem_altmap *altmap);
->  extern bool is_memblock_offlined(struct memory_block *mem);
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 9a82e12bd0e7..3d97c3711333 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1046,7 +1046,7 @@ static int online_memory_block(struct memory_block *mem, void *arg)
->   *
->   * we are OK calling __meminit stuff here - we have CONFIG_MEMORY_HOTPLUG
->   */
-> -int __ref add_memory_resource(int nid, struct resource *res)
-> +int __ref add_memory_resource(int nid, struct resource *res, unsigned long flags)
->  {
->  	struct mhp_restrictions restrictions = {};
->  	u64 start, size;
-> @@ -1123,7 +1123,7 @@ int __ref add_memory_resource(int nid, struct resource *res)
->  }
->  
->  /* requires device_hotplug_lock, see add_memory_resource() */
-> -int __ref __add_memory(int nid, u64 start, u64 size)
-> +int __ref __add_memory(int nid, u64 start, u64 size, unsigned long flags)
->  {
->  	struct resource *res;
->  	int ret;
-> @@ -1132,18 +1132,18 @@ int __ref __add_memory(int nid, u64 start, u64 size)
->  	if (IS_ERR(res))
->  		return PTR_ERR(res);
->  
-> -	ret = add_memory_resource(nid, res);
-> +	ret = add_memory_resource(nid, res, flags);
->  	if (ret < 0)
->  		release_memory_resource(res);
->  	return ret;
->  }
->  
-> -int add_memory(int nid, u64 start, u64 size)
-> +int add_memory(int nid, u64 start, u64 size, unsigned long flags)
->  {
->  	int rc;
->  
->  	lock_device_hotplug();
-> -	rc = __add_memory(nid, start, size);
-> +	rc = __add_memory(nid, start, size, flags);
->  	unlock_device_hotplug();
->  
->  	return rc;
-> 
-
-Apart from the requested description/documentation changes
-
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Yes, and that is a different story, because it will require major
+changes to all add_memory() users. (esp, due to the documented race
+conditions). Having that said, memory hotplug locking is not ideal yet.
 
 -- 
 
