@@ -2,416 +2,166 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428F5C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA5EC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E29F522BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9438421994
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:10:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="eBdQAdIE";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="hsulPR62"
+	dkim=pass (1024-bit key) header.d=victronenergy.com header.i=@victronenergy.com header.b="g01DnGPm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfGZUIL (ORCPT
+        id S1726739AbfGZUK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 16:08:11 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:54474 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726000AbfGZUIK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 16:08:10 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 697178EE147;
-        Fri, 26 Jul 2019 13:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1564171689;
-        bh=HZ0rHOZIhOcKEbYoaFFlkj6tGBdjEf+6TGyECg/4r6A=;
-        h=Subject:From:To:Cc:Date:From;
-        b=eBdQAdIE34+KVANlng75LqdvVfqulMAvnYFb2mCStgWYeT0zatuJ7EIqeCCacqBBf
-         AHsIGwZaeda0+HW/CjvRB3sySNnwSUuHO3Da8vHSUrEdt+uE4fw+Lk+EQSHPjbz7Zf
-         K1peY4ggltO/a+huWgw5eEx91tS4glQvLb8g+Dcg=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 3rMneackXjPM; Fri, 26 Jul 2019 13:08:09 -0700 (PDT)
-Received: from jarvis.lan (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 946DE8EE0FD;
-        Fri, 26 Jul 2019 13:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1564171688;
-        bh=HZ0rHOZIhOcKEbYoaFFlkj6tGBdjEf+6TGyECg/4r6A=;
-        h=Subject:From:To:Cc:Date:From;
-        b=hsulPR62nEI1FoSFlgorScj1+HTBp8lASI63ZaW7h48ve6SXNxhx9Vlh3rzSYsnts
-         fHtez/WF4Z9gW2ossGqZ3syRIcgP3Dv1oqLDXOPeCn+QgyYX+jYbi65MvJbX2A2fQ0
-         5RwB7Nm2IEYPXj9A2BD25Qp8WA5xxdYiQ3Bo5qd0=
-Message-ID: <1564171685.9950.14.camel@HansenPartnership.com>
-Subject: [GIT PULL] SCSI fixes for 5.3-rc1
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Fri, 26 Jul 2019 13:08:05 -0700
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 26 Jul 2019 16:10:56 -0400
+Received: from mail-eopbgr50128.outbound.protection.outlook.com ([40.107.5.128]:32310
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726000AbfGZUKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 16:10:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n/mawkMv2AlRvlSbFfcD40UCW5bZQmYuxcq5XsZvTurxw5aU+ragcwPkNu5bk01vr+WB9PcuZ3xQRu4pSrA+p5R/5LtM8LEnodRv+cVgxIi2o7tZoiFTuaSiDyUWZsubXgRl8Ps6aN/edXnHRCZqLAkcU+jqTqMb60UJBXtKLHXN5o1Vmem7TB4cccFWGqFGr3r/rFBVuBVYQQNIYyw7jCaLg+EhHSLIvPVNmtR13L5cu77KATuSwkxuYHbWfi9u84ktjj7tpBp7z0e4d63HMpAYZkDvf2Se5RIA4hP5/zmIq8QBHk3O4xc3BgvDQ6OdYm0KvEUpzp4dcRC8+SIXgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fpF+G7/TPynfXVONp8ygT4kHP5Q+fjjw5yyE6c9Cgs0=;
+ b=ZTGm8MYZ5eiYgdX+qUXS/aNSRKmNQ5rFwZjDDGuvFaWgUBgyhe3FutKCiKoVAb/XfWtjN3MZrAWPLAeBcLW/BkjlecNam6V0bOoKpEfM9furPmZlj5cbL+80SUAfaQSeLUot4L00LInfQ1U0h3Vw6tMiRMHGKzFvh+/iqKnZ9ZQWFLtr4PIwXPBopqLTNnf17qWVLnpKfmYIvZdby5+S/HIvYu5xCZsQeOxdODZa/7MkQJXO5mdkLWugLqEo2D4WvQ+bmIgcDWd9BNu3y1+kNE2d+ak3kvZNCkQPPE9rd+lHCD9Oqp7ERspZyaYc/CfH0st8XRmT9eCLI78ZwxJNxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=victronenergy.com;dmarc=pass action=none
+ header.from=victronenergy.com;dkim=pass header.d=victronenergy.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=victronenergy.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fpF+G7/TPynfXVONp8ygT4kHP5Q+fjjw5yyE6c9Cgs0=;
+ b=g01DnGPmbBbHw6vFZyUvXv02DDRPs3QItg8dUMsEsNwdk/4c0VwlVDgoGfPH05qOqlcjV6zwZ27jAHZ2PDTXWju0Z7PaDr18Sdrd9TcNBhAlmv2lzpjknsm+7D6ajaWEKRSXSb4+WBd+ThySYp62gplJhwITJn+Ovy7nJGEqtZM=
+Received: from VI1PR0702MB3661.eurprd07.prod.outlook.com (52.134.1.159) by
+ VI1PR0702MB3662.eurprd07.prod.outlook.com (52.134.1.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.4; Fri, 26 Jul 2019 20:10:47 +0000
+Received: from VI1PR0702MB3661.eurprd07.prod.outlook.com
+ ([fe80::d98:1296:674c:4fa4]) by VI1PR0702MB3661.eurprd07.prod.outlook.com
+ ([fe80::d98:1296:674c:4fa4%3]) with mapi id 15.20.2136.009; Fri, 26 Jul 2019
+ 20:10:47 +0000
+From:   Jeroen Hofstee <jhofstee@victronenergy.com>
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+CC:     Anant Gole <anantgole@ti.com>, AnilKumar Ch <anilkumar@ti.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] can: ti_hecc: use timestamp based rx-offloading
+Thread-Topic: [PATCH] can: ti_hecc: use timestamp based rx-offloading
+Thread-Index: AQHU/oOQxrziEdIHYkKLtad3jyL4gabdUycAgACMPIA=
+Date:   Fri, 26 Jul 2019 20:10:47 +0000
+Message-ID: <c52cda86-8889-63a7-ce10-e1d10444f6d2@victronenergy.com>
+References: <1556539376-20932-1-git-send-email-jhofstee@victronenergy.com>
+ <04bdda38-79fa-c266-2a3c-1229a1fd8229@pengutronix.de>
+In-Reply-To: <04bdda38-79fa-c266-2a3c-1229a1fd8229@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-originating-ip: [2001:1c01:3b04:4900::5]
+x-clientproxiedby: AM0PR0202CA0031.eurprd02.prod.outlook.com
+ (2603:10a6:208:1::44) To VI1PR0702MB3661.eurprd07.prod.outlook.com
+ (2603:10a6:803:3::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jhofstee@victronenergy.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 739f9bf5-b2b8-44bc-78b7-08d7120558f2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0702MB3662;
+x-ms-traffictypediagnostic: VI1PR0702MB3662:
+x-microsoft-antispam-prvs: <VI1PR0702MB36628A087DE30E494CBDEAF7C0C00@VI1PR0702MB3662.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01106E96F6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39850400004)(136003)(376002)(366004)(346002)(199004)(189003)(68736007)(102836004)(66476007)(66446008)(36756003)(66556008)(25786009)(14444005)(64756008)(256004)(81156014)(229853002)(8936002)(14454004)(81166006)(58126008)(66946007)(316002)(2501003)(486006)(53936002)(6436002)(110136005)(508600001)(4326008)(6116002)(6486002)(6512007)(305945005)(6246003)(46003)(31696002)(8676002)(476003)(99286004)(31686004)(65806001)(11346002)(86362001)(2616005)(186003)(5660300002)(446003)(386003)(76176011)(53546011)(71190400001)(64126003)(71200400001)(65956001)(2906002)(52116002)(6506007)(65826007)(54906003)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0702MB3662;H:VI1PR0702MB3661.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: victronenergy.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: J4f2YaMlfUaBY7LpreotO2KAH4qGCHzBVWXEgN4HLwBvbxIRv22XWlh38AUTHjaXmBMPR/ABOntsEI6/rLDTKLA1Nw254vDQJZnCh04VyF21RxJo72lQgROFtV4g5jyvXhpuVzpNn5x9Eml0w5UgrC4Amvsk9KTsw4uNaBN8KPdZYHAETOBbzRU5OIFwjLOLRyolX429a+HStEqDBt6pSwTjPb0VZlWr328xRnP5lhx/8FlfjH3/SrcJYRu5UWZw1HqkeNXslzsJnrqYNOGaE74MhI9WrY445tLgAodWjMTglR/NTP/xha9AAzVbsjkYovrtsgZrILCSGyC/5CMkETWCuCTJ2kgKXqW5brn4s8/jpHwIOdUn4N/BDkI5rMVGKqrcGdPyVHM+5ORHsul8U8DO299IyhHFjhNgTVWqZB0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <446F18C45B2B9D4EBEE768D3D7EE34C8@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: victronenergy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 739f9bf5-b2b8-44bc-78b7-08d7120558f2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2019 20:10:47.4025
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 60b95f08-3558-4e94-b0f8-d690c498e225
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JHofstee@victronenergy.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0702MB3662
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nine fixes: The most important core one is the dma_max_mapping_size fix
-that corrects the boot problem Gunter Roeck was having.  A couple of
-other driver only fixes are significant, like the cxgbi selector
-support addition, the alua 2 second delay and the fdomain build fix.
-
-As you know I use expiring keys, so I've renewed and updated my current
-keys on the keyservers, but if you're not using them, you can get it
-from my DNSSEC using DANE with:
-
-gpg --auto-key-locate dane --recv-keys D5606E73C8B46271BEAD9ADF814AE47C214854D6 
-
-The patch is available here:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
-
-The short changelog is:
-
-Arnd Bergmann (1):
-      scsi: fdomain: fix building pcmcia front-end
-
-Christoph Hellwig (1):
-      scsi: core: fix the dma_max_mapping_size call
-
-Christophe JAILLET (1):
-      scsi: fcoe: fix a typo
-
-Colin Ian King (1):
-      scsi: megaraid_sas: fix spelling mistake "megarid_sas" -> "megaraid_sas"
-
-Hannes Reinecke (1):
-      scsi: scsi_dh_alua: always use a 2 second delay before retrying RTPG
-
-Junxiao Bi (1):
-      scsi: megaraid_sas: fix panic on loading firmware crashdump
-
-Tyrel Datwyler (1):
-      scsi: ibmvfc: fix WARN_ON during event pool release
-
-Varun Prakash (1):
-      scsi: target: cxgbit: add support for IEEE_8021QAZ_APP_SEL_STREAM selector
-
-YueHaibing (1):
-      scsi: megaraid_sas: Make some functions static
-
-And the diffstat:
-
- drivers/scsi/Kconfig                        |  4 ++--
- drivers/scsi/device_handler/scsi_dh_alua.c  |  7 ++++++-
- drivers/scsi/fcoe/fcoe_ctlr.c               |  2 +-
- drivers/scsi/ibmvscsi/ibmvfc.c              |  2 +-
- drivers/scsi/megaraid/megaraid_sas_base.c   |  5 ++++-
- drivers/scsi/megaraid/megaraid_sas_fusion.c | 27 ++++++++++++++-------------
- drivers/scsi/scsi_lib.c                     |  6 ++++--
- drivers/target/iscsi/cxgbit/cxgbit_cm.c     |  8 +++++---
- drivers/target/iscsi/cxgbit/cxgbit_main.c   |  3 ++-
- include/scsi/libfcoe.h                      |  2 +-
- 10 files changed, 40 insertions(+), 26 deletions(-)
-
-With full diff below.
-
-James
-
----
-
-diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
-index 75f66f8ad3ea..1b92f3c19ff3 100644
---- a/drivers/scsi/Kconfig
-+++ b/drivers/scsi/Kconfig
-@@ -1523,10 +1523,10 @@ config SCSI_VIRTIO
- 
- source "drivers/scsi/csiostor/Kconfig"
- 
--endif # SCSI_LOWLEVEL
--
- source "drivers/scsi/pcmcia/Kconfig"
- 
-+endif # SCSI_LOWLEVEL
-+
- source "drivers/scsi/device_handler/Kconfig"
- 
- endmenu
-diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c b/drivers/scsi/device_handler/scsi_dh_alua.c
-index f0066f8a1786..4971104b1817 100644
---- a/drivers/scsi/device_handler/scsi_dh_alua.c
-+++ b/drivers/scsi/device_handler/scsi_dh_alua.c
-@@ -40,6 +40,7 @@
- #define ALUA_FAILOVER_TIMEOUT		60
- #define ALUA_FAILOVER_RETRIES		5
- #define ALUA_RTPG_DELAY_MSECS		5
-+#define ALUA_RTPG_RETRY_DELAY		2
- 
- /* device handler flags */
- #define ALUA_OPTIMIZE_STPG		0x01
-@@ -682,7 +683,7 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
- 	case SCSI_ACCESS_STATE_TRANSITIONING:
- 		if (time_before(jiffies, pg->expiry)) {
- 			/* State transition, retry */
--			pg->interval = 2;
-+			pg->interval = ALUA_RTPG_RETRY_DELAY;
- 			err = SCSI_DH_RETRY;
- 		} else {
- 			struct alua_dh_data *h;
-@@ -807,6 +808,8 @@ static void alua_rtpg_work(struct work_struct *work)
- 				spin_lock_irqsave(&pg->lock, flags);
- 				pg->flags &= ~ALUA_PG_RUNNING;
- 				pg->flags |= ALUA_PG_RUN_RTPG;
-+				if (!pg->interval)
-+					pg->interval = ALUA_RTPG_RETRY_DELAY;
- 				spin_unlock_irqrestore(&pg->lock, flags);
- 				queue_delayed_work(kaluad_wq, &pg->rtpg_work,
- 						   pg->interval * HZ);
-@@ -818,6 +821,8 @@ static void alua_rtpg_work(struct work_struct *work)
- 		spin_lock_irqsave(&pg->lock, flags);
- 		if (err == SCSI_DH_RETRY || pg->flags & ALUA_PG_RUN_RTPG) {
- 			pg->flags &= ~ALUA_PG_RUNNING;
-+			if (!pg->interval && !(pg->flags & ALUA_PG_RUN_RTPG))
-+				pg->interval = ALUA_RTPG_RETRY_DELAY;
- 			pg->flags |= ALUA_PG_RUN_RTPG;
- 			spin_unlock_irqrestore(&pg->lock, flags);
- 			queue_delayed_work(kaluad_wq, &pg->rtpg_work,
-diff --git a/drivers/scsi/fcoe/fcoe_ctlr.c b/drivers/scsi/fcoe/fcoe_ctlr.c
-index 590ec8009f52..1a85fe9e4b7b 100644
---- a/drivers/scsi/fcoe/fcoe_ctlr.c
-+++ b/drivers/scsi/fcoe/fcoe_ctlr.c
-@@ -1019,7 +1019,7 @@ static void fcoe_ctlr_recv_adv(struct fcoe_ctlr *fip, struct sk_buff *skb)
- {
- 	struct fcoe_fcf *fcf;
- 	struct fcoe_fcf new;
--	unsigned long sol_tov = msecs_to_jiffies(FCOE_CTRL_SOL_TOV);
-+	unsigned long sol_tov = msecs_to_jiffies(FCOE_CTLR_SOL_TOV);
- 	int first = 0;
- 	int mtu_valid;
- 	int found = 0;
-diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
-index acd16e0d52cf..8cdbac076a1b 100644
---- a/drivers/scsi/ibmvscsi/ibmvfc.c
-+++ b/drivers/scsi/ibmvscsi/ibmvfc.c
-@@ -4864,8 +4864,8 @@ static int ibmvfc_remove(struct vio_dev *vdev)
- 
- 	spin_lock_irqsave(vhost->host->host_lock, flags);
- 	ibmvfc_purge_requests(vhost, DID_ERROR);
--	ibmvfc_free_event_pool(vhost);
- 	spin_unlock_irqrestore(vhost->host->host_lock, flags);
-+	ibmvfc_free_event_pool(vhost);
- 
- 	ibmvfc_free_mem(vhost);
- 	spin_lock(&ibmvfc_driver_lock);
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index b2339d04a700..f9f07935556e 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -3163,6 +3163,7 @@ fw_crash_buffer_show(struct device *cdev,
- 		(struct megasas_instance *) shost->hostdata;
- 	u32 size;
- 	unsigned long dmachunk = CRASH_DMA_BUF_SIZE;
-+	unsigned long chunk_left_bytes;
- 	unsigned long src_addr;
- 	unsigned long flags;
- 	u32 buff_offset;
-@@ -3186,6 +3187,8 @@ fw_crash_buffer_show(struct device *cdev,
- 	}
- 
- 	size = (instance->fw_crash_buffer_size * dmachunk) - buff_offset;
-+	chunk_left_bytes = dmachunk - (buff_offset % dmachunk);
-+	size = (size > chunk_left_bytes) ? chunk_left_bytes : size;
- 	size = (size >= PAGE_SIZE) ? (PAGE_SIZE - 1) : size;
- 
- 	src_addr = (unsigned long)instance->crash_buf[buff_offset / dmachunk] +
-@@ -8763,7 +8766,7 @@ static int __init megasas_init(void)
- 
- 	if ((event_log_level < MFI_EVT_CLASS_DEBUG) ||
- 	    (event_log_level > MFI_EVT_CLASS_DEAD)) {
--		printk(KERN_WARNING "megarid_sas: provided event log level is out of range, setting it to default 2(CLASS_CRITICAL), permissible range is: -2 to 4\n");
-+		pr_warn("megaraid_sas: provided event log level is out of range, setting it to default 2(CLASS_CRITICAL), permissible range is: -2 to 4\n");
- 		event_log_level = MFI_EVT_CLASS_CRITICAL;
- 	}
- 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-index a32b3f0fcd15..120e3c4de8c2 100644
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-@@ -537,7 +537,7 @@ static int megasas_create_sg_sense_fusion(struct megasas_instance *instance)
- 	return 0;
- }
- 
--int
-+static int
- megasas_alloc_cmdlist_fusion(struct megasas_instance *instance)
- {
- 	u32 max_mpt_cmd, i, j;
-@@ -576,7 +576,8 @@ megasas_alloc_cmdlist_fusion(struct megasas_instance *instance)
- 
- 	return 0;
- }
--int
-+
-+static int
- megasas_alloc_request_fusion(struct megasas_instance *instance)
- {
- 	struct fusion_context *fusion;
-@@ -657,7 +658,7 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
- 	return 0;
- }
- 
--int
-+static int
- megasas_alloc_reply_fusion(struct megasas_instance *instance)
- {
- 	int i, count;
-@@ -734,7 +735,7 @@ megasas_alloc_reply_fusion(struct megasas_instance *instance)
- 	return 0;
- }
- 
--int
-+static int
- megasas_alloc_rdpq_fusion(struct megasas_instance *instance)
- {
- 	int i, j, k, msix_count;
-@@ -916,7 +917,7 @@ megasas_free_reply_fusion(struct megasas_instance *instance) {
-  * and is used as SMID of the cmd.
-  * SMID value range is from 1 to max_fw_cmds.
-  */
--int
-+static int
- megasas_alloc_cmds_fusion(struct megasas_instance *instance)
- {
- 	int i;
-@@ -1736,7 +1737,7 @@ static inline void megasas_free_ioc_init_cmd(struct megasas_instance *instance)
-  *
-  * This is the main function for initializing firmware.
-  */
--u32
-+static u32
- megasas_init_adapter_fusion(struct megasas_instance *instance)
- {
- 	struct fusion_context *fusion;
-@@ -1962,7 +1963,7 @@ megasas_fusion_stop_watchdog(struct megasas_instance *instance)
-  * @ext_status :	ext status of cmd returned by FW
-  */
- 
--void
-+static void
- map_cmd_status(struct fusion_context *fusion,
- 		struct scsi_cmnd *scmd, u8 status, u8 ext_status,
- 		u32 data_length, u8 *sense)
-@@ -2375,7 +2376,7 @@ int megasas_make_sgl(struct megasas_instance *instance, struct scsi_cmnd *scp,
-  *
-  * Used to set the PD LBA in CDB for FP IOs
-  */
--void
-+static void
- megasas_set_pd_lba(struct MPI2_RAID_SCSI_IO_REQUEST *io_request, u8 cdb_len,
- 		   struct IO_REQUEST_INFO *io_info, struct scsi_cmnd *scp,
- 		   struct MR_DRV_RAID_MAP_ALL *local_map_ptr, u32 ref_tag)
-@@ -2714,7 +2715,7 @@ megasas_set_raidflag_cpu_affinity(struct fusion_context *fusion,
-  * Prepares the io_request and chain elements (sg_frame) for IO
-  * The IO can be for PD (Fast Path) or LD
-  */
--void
-+static void
- megasas_build_ldio_fusion(struct megasas_instance *instance,
- 			  struct scsi_cmnd *scp,
- 			  struct megasas_cmd_fusion *cmd)
-@@ -3211,7 +3212,7 @@ megasas_build_syspd_fusion(struct megasas_instance *instance,
-  * Invokes helper functions to prepare request frames
-  * and sets flags appropriate for IO/Non-IO cmd
-  */
--int
-+static int
- megasas_build_io_fusion(struct megasas_instance *instance,
- 			struct scsi_cmnd *scp,
- 			struct megasas_cmd_fusion *cmd)
-@@ -3325,9 +3326,9 @@ megasas_get_request_descriptor(struct megasas_instance *instance, u16 index)
- /* megasas_prepate_secondRaid1_IO
-  *  It prepares the raid 1 second IO
-  */
--void megasas_prepare_secondRaid1_IO(struct megasas_instance *instance,
--			    struct megasas_cmd_fusion *cmd,
--			    struct megasas_cmd_fusion *r1_cmd)
-+static void megasas_prepare_secondRaid1_IO(struct megasas_instance *instance,
-+					   struct megasas_cmd_fusion *cmd,
-+					   struct megasas_cmd_fusion *r1_cmd)
- {
- 	union MEGASAS_REQUEST_DESCRIPTOR_UNION *req_desc, *req_desc2 = NULL;
- 	struct fusion_context *fusion;
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 9381171c2fc0..11e64b50497f 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -1784,8 +1784,10 @@ void __scsi_init_queue(struct Scsi_Host *shost, struct request_queue *q)
- 		blk_queue_max_integrity_segments(q, shost->sg_prot_tablesize);
- 	}
- 
--	shost->max_sectors = min_t(unsigned int, shost->max_sectors,
--			dma_max_mapping_size(dev) << SECTOR_SHIFT);
-+	if (dev->dma_mask) {
-+		shost->max_sectors = min_t(unsigned int, shost->max_sectors,
-+				dma_max_mapping_size(dev) >> SECTOR_SHIFT);
-+	}
- 	blk_queue_max_hw_sectors(q, shost->max_sectors);
- 	if (shost->unchecked_isa_dma)
- 		blk_queue_bounce_limit(q, BLK_BOUNCE_ISA);
-diff --git a/drivers/target/iscsi/cxgbit/cxgbit_cm.c b/drivers/target/iscsi/cxgbit/cxgbit_cm.c
-index 22dd4c457d6a..c70caf4ea490 100644
---- a/drivers/target/iscsi/cxgbit/cxgbit_cm.c
-+++ b/drivers/target/iscsi/cxgbit/cxgbit_cm.c
-@@ -875,10 +875,12 @@ static u8 cxgbit_get_iscsi_dcb_priority(struct net_device *ndev, u16 local_port)
- 		return 0;
- 
- 	if (caps & DCB_CAP_DCBX_VER_IEEE) {
--		iscsi_dcb_app.selector = IEEE_8021QAZ_APP_SEL_ANY;
--
-+		iscsi_dcb_app.selector = IEEE_8021QAZ_APP_SEL_STREAM;
- 		ret = dcb_ieee_getapp_mask(ndev, &iscsi_dcb_app);
--
-+		if (!ret) {
-+			iscsi_dcb_app.selector = IEEE_8021QAZ_APP_SEL_ANY;
-+			ret = dcb_ieee_getapp_mask(ndev, &iscsi_dcb_app);
-+		}
- 	} else if (caps & DCB_CAP_DCBX_VER_CEE) {
- 		iscsi_dcb_app.selector = DCB_APP_IDTYPE_PORTNUM;
- 
-diff --git a/drivers/target/iscsi/cxgbit/cxgbit_main.c b/drivers/target/iscsi/cxgbit/cxgbit_main.c
-index 343b129c2cfa..e877b917c15f 100644
---- a/drivers/target/iscsi/cxgbit/cxgbit_main.c
-+++ b/drivers/target/iscsi/cxgbit/cxgbit_main.c
-@@ -589,7 +589,8 @@ static void cxgbit_dcb_workfn(struct work_struct *work)
- 	iscsi_app = &dcb_work->dcb_app;
- 
- 	if (iscsi_app->dcbx & DCB_CAP_DCBX_VER_IEEE) {
--		if (iscsi_app->app.selector != IEEE_8021QAZ_APP_SEL_ANY)
-+		if ((iscsi_app->app.selector != IEEE_8021QAZ_APP_SEL_STREAM) &&
-+		    (iscsi_app->app.selector != IEEE_8021QAZ_APP_SEL_ANY))
- 			goto out;
- 
- 		priority = iscsi_app->app.priority;
-diff --git a/include/scsi/libfcoe.h b/include/scsi/libfcoe.h
-index c50fb297e265..dc14b52577f7 100644
---- a/include/scsi/libfcoe.h
-+++ b/include/scsi/libfcoe.h
-@@ -31,7 +31,7 @@
-  * FIP tunable parameters.
-  */
- #define FCOE_CTLR_START_DELAY	2000	/* mS after first adv. to choose FCF */
--#define FCOE_CTRL_SOL_TOV	2000	/* min. solicitation interval (mS) */
-+#define FCOE_CTLR_SOL_TOV	2000	/* min. solicitation interval (mS) */
- #define FCOE_CTLR_FCF_LIMIT	20	/* max. number of FCF entries */
- #define FCOE_CTLR_VN2VN_LOGIN_LIMIT 3	/* max. VN2VN rport login retries */
- 
+SGVsbG8gTWFyYywNCg0KT24gNy8yNi8xOSAxOjQ4IFBNLCBNYXJjIEtsZWluZS1CdWRkZSB3cm90
+ZToNCj4gT24gNC8yOS8xOSAyOjAzIFBNLCBKZXJvZW4gSG9mc3RlZSB3cm90ZToNCj4NCj4+IEBA
+IC03NDQsOCArNjUyLDggQEAgc3RhdGljIGlycXJldHVybl90IHRpX2hlY2NfaW50ZXJydXB0KGlu
+dCBpcnEsIHZvaWQgKmRldl9pZCkNCj4+ICAgCXN0cnVjdCBuZXRfZGV2aWNlICpuZGV2ID0gKHN0
+cnVjdCBuZXRfZGV2aWNlICopZGV2X2lkOw0KPj4gICAJc3RydWN0IHRpX2hlY2NfcHJpdiAqcHJp
+diA9IG5ldGRldl9wcml2KG5kZXYpOw0KPj4gICAJc3RydWN0IG5ldF9kZXZpY2Vfc3RhdHMgKnN0
+YXRzID0gJm5kZXYtPnN0YXRzOw0KPj4gLQl1MzIgbWJ4bm8sIG1ieF9tYXNrLCBpbnRfc3RhdHVz
+LCBlcnJfc3RhdHVzOw0KPj4gLQl1bnNpZ25lZCBsb25nIGFjaywgZmxhZ3M7DQo+PiArCXUzMiBt
+YnhubywgbWJ4X21hc2ssIGludF9zdGF0dXMsIGVycl9zdGF0dXMsIHN0YW1wOw0KPj4gKwl1bnNp
+Z25lZCBsb25nIGZsYWdzLCByeF9wZW5kaW5nOw0KPj4gICANCj4+ICAgCWludF9zdGF0dXMgPSBo
+ZWNjX3JlYWQocHJpdiwNCj4+ICAgCQkocHJpdi0+dXNlX2hlY2MxaW50KSA/IEhFQ0NfQ0FOR0lG
+MSA6IEhFQ0NfQ0FOR0lGMCk7DQo+PiBAQCAtNzY5LDExICs2NzcsMTEgQEAgc3RhdGljIGlycXJl
+dHVybl90IHRpX2hlY2NfaW50ZXJydXB0KGludCBpcnEsIHZvaWQgKmRldl9pZCkNCj4+ICAgCQkJ
+c3Bpbl9sb2NrX2lycXNhdmUoJnByaXYtPm1ieF9sb2NrLCBmbGFncyk7DQo+PiAgIAkJCWhlY2Nf
+Y2xlYXJfYml0KHByaXYsIEhFQ0NfQ0FOTUUsIG1ieF9tYXNrKTsNCj4+ICAgCQkJc3Bpbl91bmxv
+Y2tfaXJxcmVzdG9yZSgmcHJpdi0+bWJ4X2xvY2ssIGZsYWdzKTsNCj4+IC0JCQlzdGF0cy0+dHhf
+Ynl0ZXMgKz0gaGVjY19yZWFkX21ieChwcml2LCBtYnhubywNCj4+IC0JCQkJCQlIRUNDX0NBTk1D
+RikgJiAweEY7DQo+PiArCQkJc3RhbXAgPSBoZWNjX3JlYWRfc3RhbXAocHJpdiwgbWJ4bm8pOw0K
+Pj4gKwkJCXN0YXRzLT50eF9ieXRlcyArPSBjYW5fcnhfb2ZmbG9hZF9nZXRfZWNob19za2IoJnBy
+aXYtPm9mZmxvYWQsDQo+PiArCQkJCQkJCQkJbWJ4bm8sIHN0YW1wKTsNCj4+ICAgCQkJc3RhdHMt
+PnR4X3BhY2tldHMrKzsNCj4+ICAgCQkJY2FuX2xlZF9ldmVudChuZGV2LCBDQU5fTEVEX0VWRU5U
+X1RYKTsNCj4+IC0JCQljYW5fZ2V0X2VjaG9fc2tiKG5kZXYsIG1ieG5vKTsNCj4+ICAgCQkJLS1w
+cml2LT50eF90YWlsOw0KPj4gICAJCX0NCj4+ICAgDQo+PiBAQCAtNzg0LDEyICs2OTIsMTEgQEAg
+c3RhdGljIGlycXJldHVybl90IHRpX2hlY2NfaW50ZXJydXB0KGludCBpcnEsIHZvaWQgKmRldl9p
+ZCkNCj4+ICAgCQkoKHByaXYtPnR4X2hlYWQgJiBIRUNDX1RYX01BU0spID09IEhFQ0NfVFhfTUFT
+SykpKQ0KPj4gICAJCQluZXRpZl93YWtlX3F1ZXVlKG5kZXYpOw0KPj4gICANCj4+IC0JCS8qIERp
+c2FibGUgUlggbWFpbGJveCBpbnRlcnJ1cHRzIGFuZCBsZXQgTkFQSSByZWVuYWJsZSB0aGVtICov
+DQo+PiAtCQlpZiAoaGVjY19yZWFkKHByaXYsIEhFQ0NfQ0FOUk1QKSkgew0KPj4gLQkJCWFjayA9
+IGhlY2NfcmVhZChwcml2LCBIRUNDX0NBTk1JTSk7DQo+PiAtCQkJYWNrICY9IEJJVChIRUNDX01B
+WF9UWF9NQk9YKSAtIDE7DQo+PiAtCQkJaGVjY193cml0ZShwcml2LCBIRUNDX0NBTk1JTSwgYWNr
+KTsNCj4+IC0JCQluYXBpX3NjaGVkdWxlKCZwcml2LT5uYXBpKTsNCj4+ICsJCS8qIG9mZmxvYWQg
+UlggbWFpbGJveGVzIGFuZCBsZXQgTkFQSSBkZWxpdmVyIHRoZW0gKi8NCj4+ICsJCXdoaWxlICgo
+cnhfcGVuZGluZyA9IGhlY2NfcmVhZChwcml2LCBIRUNDX0NBTlJNUCkpKSB7DQo+PiArCQkJY2Fu
+X3J4X29mZmxvYWRfaXJxX29mZmxvYWRfdGltZXN0YW1wKCZwcml2LT5vZmZsb2FkLA0KPj4gKwkJ
+CQkJCQkgICAgIHJ4X3BlbmRpbmcpOw0KPj4gKwkJCWhlY2Nfd3JpdGUocHJpdiwgSEVDQ19DQU5S
+TVAsIHJ4X3BlbmRpbmcpOw0KPiBDYW4gcHJlcGFyZSBhIHBhdGNoIHRvIG1vdmUgdGhlIFJNUCB3
+cml0aW5nIGludG8gdGhlIG1haWxib3hfcmVhZCgpDQo+IGZ1bmN0aW9uLiBUaGlzIG1ha2VzIHRo
+ZSBtYWlsYm94IGF2YWlsYWJsZSBhIGJpdCBlYXJsaWVyIGFuZCB3b3Jrcw0KPiBiZXR0ZXIgZm9y
+IG1lbW9yeSBwcmVzc3VyZSBzaXR1YXRpb25zLCB3aGVyZSBubyBza2IgY2FuIGJlIGFsbG9jYXRl
+ZC4NCg0KDQpGb3IgbXkgdW5kZXJzdGFuZGluZywgaXMgdGhlcmUgYW55IG90aGVyIHJlYXNvbiBm
+b3IgYWxsb2NfY2FuX3NrYiwNCnRvIGZhaWwsIGJlc2lkZXMgYmVpbmcgb3V0IG9mIG1lbW9yeS4g
+SSBjb3VsZG4ndCBlYXNpbHkgZmluZCBhbiBvdGhlcg0KbGltaXQgZW5mb3JjZWQgb24gaXQuDQoN
+CklmIGl0IGlzIGFjdHVhbGx5IF9tb3ZlZF8sIGFzIHlvdSBzdWdnZXN0ZWQsIGl0IGRvZXMgbG9v
+c2UgdGhlIGFiaWxpdHkgdG8NCmhhbmRsZSB0aGUgbmV3bHkgcmVjZWl2ZWQgbWVzc2FnZXMgd2hp
+bGUgdGhlIG1lc3NhZ2VzIGFyZSByZWFkDQppbiB0aGUgc2FtZSBpbnRlcnJ1cHQsIHNvIGl0IG5l
+ZWRzIHRvIGludGVycnVwdCBhZ2Fpbi4gVGhhdCB3aWxsIHdvcmssDQpidXQgc2VlbXMgYSBiaXQg
+YSBzaWxseSB0aGluZyB0byBkby4NCg0KUGVyaGFwcyB3ZSBjYW4gZG8gYm90aD8gTWFyayB0aGUg
+bWFpbGJveCBhcyBhdmFpbGFibGUgaW4NCm1haWxib3hfcmVhZCwgc28gaXQgaXMgYXZhaWxhYmxl
+IGFzIHNvb24gYXMgcG9zc2libGUgYW5kIGNsZWFyDQp0aGVtIGFsbCBpbiB0aGUgaXJxICh1bmRl
+ciB0aGUgYXNzdW1wdGlvbiB0aGF0IGFsbG9jX2Nhbl9za2INCmZhaWx1cmUgbWVhbnMgcmVhbCBi
+aWcgdHJvdWJsZSwgd2h5IHdvdWxkIHdlIHdhbnQgdG8ga2VlcCB0aGUNCm9sZCBtZXNzYWdlcyBh
+cm91bmQgYW5kIGV2ZW50dWFsbHkgaWdub3JlIHRoZSBuZXcgbWVzc2FnZXM/KS4NCg0KQW5vdGhl
+ciBxdWVzdGlvbiwgbm90IHJlbGF0ZWQgdG8gdGhpcyBwYXRjaCwgYnV0IHRoaXMgZHJpdmVyLi4N
+Ck1vc3Qgb2YgdGhlIHRpbWVzIHRoZSBpcnEgaGFuZGxlcyAxIG9yIHNvbWV0aW1lcyAyIG1lc3Nh
+Z2VzLg0KRG8geW91IGhhcHBlbiB0byBrbm93IGlmIGl0IGlzIHBvc3NpYmxlIHRvIG9wdGlvbmFs
+bHkgZGVsYXkgdGhlIGlycQ0KYSBiaXQgaW4gdGhlIG1pbGxpc2Vjb25kIHJhbmdlLCBzbyBtb3Jl
+IHdvcmsgY2FuIGJlIGRvbmUgaW4gYSBzaW5nbGUNCmludGVycnVwdD8gU2luY2UgdGhlcmUgYXJl
+IG5vdyAyOCByeCBoYXJkd2FyZSBtYWlsYm94ZXMgYXZhaWxhYmxlLA0KaXQgc2hvdWxkbid0IHJ1
+biBvdXQgZWFzaWx5Lg0KDQpBbmQgYXMgbGFzdCwgSSBndWVzcyB5b3Ugd2FudCBhIHBhdGNoIHdo
+aWNoIGFwcGxpZXMgdG8NCmxpbnV4LWNhbi1uZXh0L3Rlc3RpbmcsIHJpZ2h0Pw0KDQpXaXRoIGtp
+bmQgcmVnYXJkcywNCg0KSmVyb2VuDQoNCg0K
