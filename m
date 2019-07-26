@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DCDC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5133EC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 479022054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DDAD2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155311;
-	bh=xT2UpDtA6vGQpDJDBTkELIs45FdR8Jx73gBVtKdwkKc=;
+	s=default; t=1564155328;
+	bh=FAbVGOf/4NqrHRC4j4DAffgINtihHAgReaZlF9DfIQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ynAZdAbzZOCjz3BfOhptSCEEZazERRqNpkV2KHstuJPnSZnBGr7Ml0VGR3lo1BxYV
-	 vhAdq+ClExR3PPkBi4YknwNLC0E/7axqdYYTuU2mIdhqkGY9sJFaZtRNhAiuW5jEAs
-	 fxkJ6gfmGjzstFG8wporbU/Jgb/UTPyrX7KFDhaA=
+	b=D6/6cCUzDfDNuH8v4LtuMAg8goAouyr2x7BRp5HhtMgIEqEyHdIKT6YGJ4f2jmXgR
+	 TXHl+5gLvLyxLQEDpKr2zEkJCIU02B+TGm74TKiWIdWTtGpQ1u+9Xci5s7rVlYDBqf
+	 7A1bT5ljKPo/qMzkp+ASLl4jeGQVnbyDnOsdDkKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389355AbfGZPfK (ORCPT
+        id S2389480AbfGZPf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:35:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48820 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:35:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389644AbfGZPd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:33:26 -0400
+        id S1727622AbfGZPcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:32:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3AAE218D4;
-        Fri, 26 Jul 2019 15:33:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BF692054F;
+        Fri, 26 Jul 2019 15:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155205;
-        bh=xT2UpDtA6vGQpDJDBTkELIs45FdR8Jx73gBVtKdwkKc=;
+        s=default; t=1564155175;
+        bh=FAbVGOf/4NqrHRC4j4DAffgINtihHAgReaZlF9DfIQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P7g2DmNcCcbx8IGKpAeXt+0/liXkA+cjUq7lC/eKtvc4d17BRzz/KfwYqjmKZDDtX
-         I44lqIdsKnuB7nTiN/dSNeA6L17OPpdqN3I/IC0SgLPocFWXOQg+inOL2oAhzMgZPC
-         CMPXQMufMIp3P9UfiiNg4Iaf6bSpTHM5JzVeH+qk=
+        b=nsl/8zv8SU5DaNab4P4ikSuLTzvYeTQSJJ1BGc5Td8uP3nfbFgOLqmERmCCJSo7ke
+         JyRMnG0XY0CAL8H5iIxSE0KNk5l35spGskp/Tl6Vj2ZcVQMEow42E2Ned/NhTN+hGC
+         ceAESyJpcuckVUBWVWfMm+V6cTbxl8VPpzep2Cxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 4.19 38/50] gpio: davinci: silence error prints in case of EPROBE_DEFER
-Date:   Fri, 26 Jul 2019 17:25:13 +0200
-Message-Id: <20190726152304.603717864@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+d6636a36d3c34bd88938@syzkaller.appspotmail.com,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 27/50] netrom: fix a memory leak in nr_rx_frame()
+Date:   Fri, 26 Jul 2019 17:25:02 +0200
+Message-Id: <20190726152303.423302107@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -59,35 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keerthy <j-keerthy@ti.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit 541e4095f388c196685685633c950cb9b97f8039 upstream.
+[ Upstream commit c8c8218ec5af5d2598381883acbefbf604e56b5e ]
 
-Silence error prints in case of EPROBE_DEFER. This avoids
-multiple/duplicate defer prints during boot.
+When the skb is associated with a new sock, just assigning
+it to skb->sk is not sufficient, we have to set its destructor
+to free the sock properly too.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reported-by: syzbot+d6636a36d3c34bd88938@syzkaller.appspotmail.com
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/gpio/gpio-davinci.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/netrom/af_netrom.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -222,8 +222,9 @@ static int davinci_gpio_probe(struct pla
- 	for (i = 0; i < nirq; i++) {
- 		chips->irqs[i] = platform_get_irq(pdev, i);
- 		if (chips->irqs[i] < 0) {
--			dev_info(dev, "IRQ not populated, err = %d\n",
--				 chips->irqs[i]);
-+			if (chips->irqs[i] != -EPROBE_DEFER)
-+				dev_info(dev, "IRQ not populated, err = %d\n",
-+					 chips->irqs[i]);
- 			return chips->irqs[i];
- 		}
- 	}
+--- a/net/netrom/af_netrom.c
++++ b/net/netrom/af_netrom.c
+@@ -872,7 +872,7 @@ int nr_rx_frame(struct sk_buff *skb, str
+ 	unsigned short frametype, flags, window, timeout;
+ 	int ret;
+ 
+-	skb->sk = NULL;		/* Initially we don't know who it's for */
++	skb_orphan(skb);
+ 
+ 	/*
+ 	 *	skb->data points to the netrom frame start
+@@ -971,6 +971,7 @@ int nr_rx_frame(struct sk_buff *skb, str
+ 	window = skb->data[20];
+ 
+ 	skb->sk             = make;
++	skb->destructor     = sock_efree;
+ 	make->sk_state	    = TCP_ESTABLISHED;
+ 
+ 	/* Fill in his circuit details */
 
 
