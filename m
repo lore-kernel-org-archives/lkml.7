@@ -2,72 +2,90 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0349EC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD9EC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5EB82171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC152171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbfGZJzg (ORCPT
+        id S1726166AbfGZJ5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:55:36 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:60256 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfGZJzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:55:36 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 30FD3FB03;
-        Fri, 26 Jul 2019 11:55:35 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id KjqHBg3sjT4T; Fri, 26 Jul 2019 11:55:34 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 2240D46AA1; Fri, 26 Jul 2019 11:55:34 +0200 (CEST)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: phy: Drop duplicate 'be made'
-Date:   Fri, 26 Jul 2019 11:55:34 +0200
-Message-Id: <37eecffe6ecd9d64bfdb57a32f34b2c0805dd754.1564134855.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 26 Jul 2019 05:57:10 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45098 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725815AbfGZJ5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:57:10 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A574AA3A8054CBAEA764;
+        Fri, 26 Jul 2019 17:57:07 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 26 Jul 2019 17:56:59 +0800
+From:   Yonglong Liu <liuyonglong@huawei.com>
+To:     <andrew@lunn.ch>, <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <shiju.jose@huawei.com>
+Subject: [RFC] net: phy: read link status twice when phy_check_link_status()
+Date:   Fri, 26 Jul 2019 17:53:51 +0800
+Message-ID: <1564134831-24962-1-git-send-email-liuyonglong@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.165.24]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix duplicate words.
+According to the datasheet of Marvell phy and Realtek phy, the
+copper link status should read twice, or it may get a fake link
+up status, and cause up->down->up at the first time when link up.
+This happens more oftem at Realtek phy.
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
+I add a fake status read, and can solve this problem.
+
+I also see that in genphy_update_link(), had delete the fake
+read in polling mode, so I don't know whether my solution is
+correct.
+
+Or provide a phydev->drv->read_status functions for the phy I
+used is more acceptable?
+
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 ---
-Noticed on next-20190725.
+ drivers/net/phy/phy.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
- Documentation/driver-api/phy/phy.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/driver-api/phy/phy.rst b/Documentation/driver-api/phy/phy.rst
-index 457c3e0f86d6..8fc1ce0bb905 100644
---- a/Documentation/driver-api/phy/phy.rst
-+++ b/Documentation/driver-api/phy/phy.rst
-@@ -179,8 +179,8 @@ PHY Mappings
+diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+index ef7aa73..0c03edc 100644
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -1,4 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0+
++	err = phy_read_status(phydev);
++	if (err)
++		return err;
+ /* Framework for configuring and reading PHY devices
+  * Based on code in sungem_phy.c and gianfar_phy.c
+  *
+@@ -525,6 +528,11 @@ static int phy_check_link_status(struct phy_device *phydev)
  
- In order to get reference to a PHY without help from DeviceTree, the framework
- offers lookups which can be compared to clkdev that allow clk structures to be
--bound to devices. A lookup can be made be made during runtime when a handle to
--the struct phy already exists.
-+bound to devices. A lookup can be made during runtime when a handle to the
-+struct phy already exists.
+ 	WARN_ON(!mutex_is_locked(&phydev->lock));
  
- The framework offers the following API for registering and unregistering the
- lookups::
++	/* Do a fake read */
++	err = phy_read(phydev, MII_BMSR);
++	if (err < 0)
++		return err;
++
+ 	err = phy_read_status(phydev);
+ 	if (err)
+ 		return err;
 -- 
-2.20.1
+2.8.1
 
