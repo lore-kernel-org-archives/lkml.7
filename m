@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07981C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A693C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C90A222BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041AE22CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148569;
-	bh=yGGLQpsk4pfJOCVhiY5lkmd6e5gX8chRYfFcRPbzkgU=;
+	s=default; t=1564148573;
+	bh=l9OGrWheufQP0+CwPOwPLWMhUfh+EraEKkAJGpVQxCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BL8h3BOi2Zt4msP1MQA6W1Jd/CxdLfN9pdLErQW12R0D8Lnt/9Jte9WAeFJ5qtK+K
-	 VRQOGlbqFf0ddmFo82OSmOhpUvnea6DHzzbysoJY3UtmwoR4WIu3mFUpbPCzHBWtQ7
-	 Mmmpjq0aWYku1NgAgIKJNXWU0TFV0V3/8t8tIlu8=
+	b=ZPZSYGywek1SEBvusH9d7RCODpBKfhV0f4/FU1GwPBhT2gDNwOMChZP6VX9b01u1Q
+	 oSO5Q+izL6rl2FCuoNTjkKNhc7uQqYKHJK6lAsPjuaCpihz2W7jfCzBVUvSDYb2BEx
+	 Pd7M++aAhrd1QKZmHwAY/CGZifyuaAbijQlBOI5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388040AbfGZNmr (ORCPT
+        id S1727374AbfGZNmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:42:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50060 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:42:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388021AbfGZNmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:42:44 -0400
+        id S2388039AbfGZNmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:42:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4431322CBF;
-        Fri, 26 Jul 2019 13:42:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D43C022CBD;
+        Fri, 26 Jul 2019 13:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148563;
-        bh=yGGLQpsk4pfJOCVhiY5lkmd6e5gX8chRYfFcRPbzkgU=;
+        s=default; t=1564148566;
+        bh=l9OGrWheufQP0+CwPOwPLWMhUfh+EraEKkAJGpVQxCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=18yNJDuVsiABeDh5PDvJMLeLe2JfW2j6m9wG5RJTjgck+4s6mJ/S4I72n6y9cemiB
-         cBIDOgEDAxet/OtIdURcqyQczAskquQ8y6t9dMbiiZe0skqG7oH7wgPDjVKr3aVbLj
-         +N6M2krVe9OCTuSZPPfaS+CtqTbUCuFuy75Odbns=
+        b=bb8bzPxNEz2ABi49Zk8Jmd64Nq6XfifSrTMC6fR0kY8ZQH0bEP1NyBejYCZaksQNK
+         wYeO8/p8/j+V+xd7rDoGSR9tDIYxS4PD3vkSFurmCywqi/LUyNUJqo6CjM0AkA6XC4
+         t/a/W8eGppdPKeXO4hbHes3nlmQtXyMV/OoHji80=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 19/47] ceph: fix improper use of smp_mb__before_atomic()
-Date:   Fri, 26 Jul 2019 09:41:42 -0400
-Message-Id: <20190726134210.12156-19-sashal@kernel.org>
+Cc:     Benjamin Block <bblock@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 22/47] scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
+Date:   Fri, 26 Jul 2019 09:41:45 -0400
+Message-Id: <20190726134210.12156-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
 References: <20190726134210.12156-1-sashal@kernel.org>
@@ -61,44 +61,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <andrea.parri@amarulasolutions.com>
+From: Benjamin Block <bblock@linux.ibm.com>
 
-[ Upstream commit 749607731e26dfb2558118038c40e9c0c80d23b5 ]
+[ Upstream commit 484647088826f2f651acbda6bcf9536b8a466703 ]
 
-This barrier only applies to the read-modify-write operations; in
-particular, it does not apply to the atomic64_set() primitive.
+GCC v9 emits this warning:
+      CC      drivers/s390/scsi/zfcp_erp.o
+    drivers/s390/scsi/zfcp_erp.c: In function 'zfcp_erp_action_enqueue':
+    drivers/s390/scsi/zfcp_erp.c:217:26: warning: 'erp_action' may be used uninitialized in this function [-Wmaybe-uninitialized]
+      217 |  struct zfcp_erp_action *erp_action;
+          |                          ^~~~~~~~~~
 
-Replace the barrier with an smp_mb().
+This is a possible false positive case, as also documented in the GCC
+documentations:
+    https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wmaybe-uninitialized
 
-Fixes: fdd4e15838e59 ("ceph: rework dcache readdir")
-Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Reported-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+The actual code-sequence is like this:
+    Various callers can invoke the function below with the argument "want"
+    being one of:
+    ZFCP_ERP_ACTION_REOPEN_ADAPTER,
+    ZFCP_ERP_ACTION_REOPEN_PORT_FORCED,
+    ZFCP_ERP_ACTION_REOPEN_PORT, or
+    ZFCP_ERP_ACTION_REOPEN_LUN.
+
+    zfcp_erp_action_enqueue(want, ...)
+        ...
+        need = zfcp_erp_required_act(want, ...)
+            need = want
+            ...
+            maybe: need = ZFCP_ERP_ACTION_REOPEN_PORT
+            maybe: need = ZFCP_ERP_ACTION_REOPEN_ADAPTER
+            ...
+            return need
+        ...
+        zfcp_erp_setup_act(need, ...)
+            struct zfcp_erp_action *erp_action; // <== line 217
+            ...
+            switch(need) {
+            case ZFCP_ERP_ACTION_REOPEN_LUN:
+                    ...
+                    erp_action = &zfcp_sdev->erp_action;
+                    WARN_ON_ONCE(erp_action->port != port); // <== access
+                    ...
+                    break;
+            case ZFCP_ERP_ACTION_REOPEN_PORT:
+            case ZFCP_ERP_ACTION_REOPEN_PORT_FORCED:
+                    ...
+                    erp_action = &port->erp_action;
+                    WARN_ON_ONCE(erp_action->port != port); // <== access
+                    ...
+                    break;
+            case ZFCP_ERP_ACTION_REOPEN_ADAPTER:
+                    ...
+                    erp_action = &adapter->erp_action;
+                    WARN_ON_ONCE(erp_action->port != NULL); // <== access
+                    ...
+                    break;
+            }
+            ...
+            WARN_ON_ONCE(erp_action->adapter != adapter); // <== access
+
+When zfcp_erp_setup_act() is called, 'need' will never be anything else
+than one of the 4 possible enumeration-names that are used in the
+switch-case, and 'erp_action' is initialized for every one of them, before
+it is used. Thus the warning is a false positive, as documented.
+
+We introduce the extra if{} in the beginning to create an extra code-flow,
+so the compiler can be convinced that the switch-case will never see any
+other value.
+
+BUG_ON()/BUG() is intentionally not used to not crash anything, should
+this ever happen anyway - right now it's impossible, as argued above; and
+it doesn't introduce a 'default:' switch-case to retain warnings should
+'enum zfcp_erp_act_type' ever be extended and no explicit case be
+introduced. See also v5.0 commit 399b6c8bc9f7 ("scsi: zfcp: drop old
+default switch case which might paper over missing case").
+
+Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Reviewed-by: Steffen Maier <maier@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/super.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/s390/scsi/zfcp_erp.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-index 582e28fd1b7b..d8579a56e5dc 100644
---- a/fs/ceph/super.h
-+++ b/fs/ceph/super.h
-@@ -526,7 +526,12 @@ static inline void __ceph_dir_set_complete(struct ceph_inode_info *ci,
- 					   long long release_count,
- 					   long long ordered_count)
- {
--	smp_mb__before_atomic();
-+	/*
-+	 * Makes sure operations that setup readdir cache (update page
-+	 * cache and i_size) are strongly ordered w.r.t. the following
-+	 * atomic64_set() operations.
-+	 */
-+	smp_mb();
- 	atomic64_set(&ci->i_complete_seq[0], release_count);
- 	atomic64_set(&ci->i_complete_seq[1], ordered_count);
- }
+diff --git a/drivers/s390/scsi/zfcp_erp.c b/drivers/s390/scsi/zfcp_erp.c
+index ebdbc457003f..332701db7379 100644
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -11,6 +11,7 @@
+ #define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
+ 
+ #include <linux/kthread.h>
++#include <linux/bug.h>
+ #include "zfcp_ext.h"
+ #include "zfcp_reqlist.h"
+ 
+@@ -238,6 +239,12 @@ static struct zfcp_erp_action *zfcp_erp_setup_act(int need, u32 act_status,
+ 	struct zfcp_erp_action *erp_action;
+ 	struct zfcp_scsi_dev *zfcp_sdev;
+ 
++	if (WARN_ON_ONCE(need != ZFCP_ERP_ACTION_REOPEN_LUN &&
++			 need != ZFCP_ERP_ACTION_REOPEN_PORT &&
++			 need != ZFCP_ERP_ACTION_REOPEN_PORT_FORCED &&
++			 need != ZFCP_ERP_ACTION_REOPEN_ADAPTER))
++		return NULL;
++
+ 	switch (need) {
+ 	case ZFCP_ERP_ACTION_REOPEN_LUN:
+ 		zfcp_sdev = sdev_to_zfcp(sdev);
 -- 
 2.20.1
 
