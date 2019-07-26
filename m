@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906C7C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0DEC41517
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F6672189F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42DAF2189F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:46:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="kbhMHiqz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Myyb8LAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfGZTqz (ORCPT
+        id S1727860AbfGZTqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 15:46:55 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:17134 "EHLO
+        Fri, 26 Jul 2019 15:46:53 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:17125 "EHLO
         esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727771AbfGZTqt (ORCPT
+        with ESMTP id S1726103AbfGZTqu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 15:46:49 -0400
+        Fri, 26 Jul 2019 15:46:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
   t=1564170409; x=1595706409;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4G/AiivRvt04iQqbVTDPT9b5v5TEP81JdiptpePFLX8=;
-  b=kbhMHiqz2to9iR+Vg1UjXHeF8S4OkHEVCybu87MmRw36LyagmS9aBljZ
-   2jctNq7rRulWH3l6Kecq+IUXazjRPsZiE1ydjbwlCFcdFivzuGWwOzaOl
-   e5SuvctxWai5mtjsqwQRAoBpPqCQ2LafOWhVlJkG28OW4fRDdRgfaTwg3
-   jkFJ1G5v0L/b61W+0MiLiiyge61zZ+a7UBpHgNcX6f21i3MY8GIHpOpVX
-   v6jebSA0xNL6ahTLCLmqetOPFk2A06g7NLPWNrMdBCKJnQR7I7SqOUrLb
-   rkBmAjV4iN+SIFc3FhGtnDqTU8XYY1uhOO3Ogg8LZUrfExEToIHLBt+g0
-   w==;
-IronPort-SDR: VjMPj83Lrgwf5MV/myr/BJOW7KJGWKp8CJ1PQqHPZpRfUzKbVrxt9eDrZzzHqtqTSLZsXR9C1T
- VABfD93gM+1xxMPat4uIZqbmcXYHqjTb/8OOhUFARwPi/3CuIpS1UXpRqdUqW6HC5PcPDbB806
- icTJ1QWdZilYu3sQxYM29r2LxKzRfHcDEMQHKEoih6jFZjEt2T2e5SKwaVCjOimAhZMvkoy+Lm
- Q5CysZAlOknNyMlUTKFRSY8Q+PRZuDatLHrL7q5YOokS7E55/Sa5msQGWgG+iYEsAUSpk2+sux
- H5I=
+  bh=zuljV/XFkkELlNYpQrLLimGaj7xDNrUz/oDJpIkonzM=;
+  b=Myyb8LADvrkShiHFTkJu9BTi0McjGUKkl1a9HCB50f3ePIhLZm772RNE
+   XYNyHoZrk5KhbfaCwOMH52Vetl6emY3poS/+psauQQFt6wIQJXD/JXs+f
+   77Xp0yK/zATNG4PkbEo/Yh9Y+MoYbP86+njc2eEWqz15JssvsB76JrZmU
+   FDTnv4DUJ5Bfi0Z3+uN1ogp2jl2mNrS+Q7GzGjvwZJozEpjYjbP5//JI2
+   V/i2/hib3eB593otYiRrnh1iVvRmAchozgXGtCuALwE5Nhxvzf84xMP5j
+   G1LxUaouahSOD2U9sgYQpKHmx6d2Edt+Jh5P8EmTiL/ACKyiWLqsQD/4D
+   g==;
+IronPort-SDR: ep3fD+qdH5febwaPD6KRwukJ6RZRWOZ9k0n229xzTUY6pcYhgFmhtJmq+97MU4RDXivVKVQkVe
+ Qc7SCVwFAeoIUGeY38UbEmm1V3KpDbPS2+9ddsb3g+Aw70Jg/tRr6NmVty+/Iw+VPqY9oaA76t
+ DoYO+kmpwqpny1OwQABwvMi/uPSUZYSakJk75dZeDveA2fb5512JKWxsTIuv45QQV0zfK6pI/M
+ 3FVEcehczaRw/TbWJ3TBh/6N+VY4C5NUXQiFYFjKZXHzhcGh7eimtGNG3hFmsOWObAAft0cElf
+ AmI=
 X-IronPort-AV: E=Sophos;i="5.64,312,1559491200"; 
-   d="scan'208";a="114239813"
+   d="scan'208";a="114239812"
 Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
   by ob1.hgst.iphmx.com with ESMTP; 27 Jul 2019 03:46:48 +0800
-IronPort-SDR: 4esurgtfWkTuDEqyJRca9cVoDRGSe9HfzjmuSjsX52UGp8rNLHCjA/Pd9SnlIjNest+8fZ++nL
- 1h/XKqBgJx+DQ35JKC9Q6rgAjplmyYXjU+7hqF/tZKSUBm5zXavjDVj6i83CN7aHSOCGUYx8bX
- eRJvNTdLH0ShVt/S1bBU3w4BI/D+yGgr5e/oeTvFRplJfX7MNwGjmgg/l9kQnt5hs28vosrm1G
- SSllSoVN1yIj5mnZ1K8f5UG92fKCWKhz5br/llpNWaTGxov+IiOgUOHbFWhpoLld8XRHnVLQQi
- M8xAL8tJaPQ1M16mAXUiygMa
+IronPort-SDR: ixCC1/VtgmBvREQOX5zigMCb+mBTGF14wbKC32jtURGfaFHsY7QF8Sme56YbdWFgGGbOYtYj/9
+ e+1ZS6gnspysCv/0muExZvAkaKdmWGsh7EzTTnZpyIGcnl7dcCWFDKy9hJqkC7MJImITUXjxNc
+ BH5XREhbyJ7sf7VyQbmvX/DAWZyZ4pajoO/phlptSO3zZ0lqvYYvE7UFkUow1meaoHEdQsLZBQ
+ /jEfgahiutzTn+xGqO2mt9oTYDb7P5GmhUUlDEs+QPv8+H77pBmIs1/UMnqJIrPF0NtZLkkliH
+ rRn1wRr8nED4gSZEW69uX+Hu
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
   by uls-op-cesaep01.wdc.com with ESMTP; 26 Jul 2019 12:44:57 -0700
-IronPort-SDR: J+Ohxn5O071I/GlSvFKCslQ9U8iEOicbnZ4EcP2qBdVSymXxULqZFXIfnOnMBQFvrfRo8ZHBlm
- fFpNFzKwqBNbM0XfVEW+YRpM+1MQbVg4/t+Xwxpji2jecPcLABfxtsEcO8eILswds3CPKKERls
- R1MTIVpFz5P7/9+zl0AvLs+6yKfvCYsW4I7XaCjhX01og23X+/jlzsOfLnB6mLSnGdWs5F69Cv
- t0gCfuOsBiMP1ZYMyIfhHFZKG2FE5t3hOTvud6Dlgv4xYVIKMTx5bEfe9N4nm0/YTE60F4sS2n
- gco=
+IronPort-SDR: wTxhkBHItRBK6MQN42Flf6IDsh0NhG04f+bcBRld7ws7XJL62cnVGK7DynbnmXlEJ2GUnFXWG0
+ peU7/eOrwiFPw9pbSRMd1QwreStg8598I0Tm1oqu1ia9hVcU0eFKVL/GxeBBOS++awvjNnrZ4K
+ us0zET2Sf80U+I6/KdcnhsS+YOGXYChPOQIGCNhyMeJotR22b/t2IonRa0IKyI8xhU5mKEmJj5
+ 4rTMHJT0NehUAirTRMneA1RTzOh30uD1OSLu0Q3X8WhW/57CSiAE9dZlVX0cuFIfe29ogq+IrQ
+ WoE=
 Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
   by uls-op-cesaip01.wdc.com with ESMTP; 26 Jul 2019 12:46:48 -0700
 From:   Atish Patra <atish.patra@wdc.com>
@@ -73,9 +73,9 @@ Cc:     Atish Patra <atish.patra@wdc.com>,
         Palmer Dabbelt <palmer@sifive.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4/4] RISC-V: Fix unsupported isa string info.
-Date:   Fri, 26 Jul 2019 12:46:38 -0700
-Message-Id: <20190726194638.8068-4-atish.patra@wdc.com>
+Subject: [PATCH 3/4] RISC-V: Support case insensitive ISA string parsing.
+Date:   Fri, 26 Jul 2019 12:46:37 -0700
+Message-Id: <20190726194638.8068-3-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190726194638.8068-1-atish.patra@wdc.com>
 References: <20190726194638.8068-1-atish.patra@wdc.com>
@@ -86,121 +86,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, kernel prints a info warning if any of the extensions
-from "mafdcsu" is missing in device tree. This is not entirely
-correct as Linux can boot with "f or d" extensions if kernel is
-configured accordingly. Moreover, it will continue to print the
-info string for future extensions such as hypervisor as well which
-is misleading. /proc/cpuinfo also doesn't print any other extensions
-except "mafdcsu".
+As per riscv specification, ISA naming strings are
+case insensitive. However, currently only lower case
+strings are parsed during cpu procfs.
 
-Make sure that info log is only printed only if kernel is configured
-to have any mandatory extensions but device tree doesn't describe it.
-All the extensions present in device tree and follow the order
-described in the RISC-V specification (except 'S') are printed via
-/proc/cpuinfo always.
+Support parsing of upper case letters as well.
 
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
 ---
- arch/riscv/kernel/cpu.c | 47 ++++++++++++++++++++++++++++++++---------
- 1 file changed, 37 insertions(+), 10 deletions(-)
+ arch/riscv/kernel/cpu.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
-index 185143478830..3d050440364c 100644
+index 7da3c6a93abd..185143478830 100644
 --- a/arch/riscv/kernel/cpu.c
 +++ b/arch/riscv/kernel/cpu.c
-@@ -8,6 +8,7 @@
- #include <linux/ctype.h>
+@@ -5,6 +5,7 @@
+ 
+ #include <linux/init.h>
+ #include <linux/seq_file.h>
++#include <linux/ctype.h>
  #include <linux/of.h>
  #include <asm/smp.h>
-+#include <asm/hwcap.h>
  
- /*
-  * Returns the hart ID of the given device tree node, or -ENODEV if the node
-@@ -47,11 +48,14 @@ int riscv_of_processor_hartid(struct device_node *node)
+@@ -57,10 +58,10 @@ static void print_isa(struct seq_file *f, const char *orig_isa)
+ 	 * kernels on harts with the same ISA that the kernel is compiled for.
+ 	 */
+ #if defined(CONFIG_32BIT)
+-	if (strncmp(isa, "rv32i", 5) != 0)
++	if (strncasecmp(isa, "rv32i", 5) != 0)
+ 		return;
+ #elif defined(CONFIG_64BIT)
+-	if (strncmp(isa, "rv64i", 5) != 0)
++	if (strncasecmp(isa, "rv64i", 5) != 0)
+ 		return;
+ #endif
  
- #ifdef CONFIG_PROC_FS
- 
--static void print_isa(struct seq_file *f, const char *orig_isa)
-+static void print_isa(struct seq_file *f, const char *orig_isa,
-+		      unsigned long cpuid)
- {
--	static const char *ext = "mafdcsu";
-+	static const char *mandatory_ext = "mafdcsu";
- 	const char *isa = orig_isa;
- 	const char *e;
-+	char unsupported_isa[26] = {0};
-+	int index = 0;
- 
- 	/*
- 	 * Linux doesn't support rv32e or rv128i, and we only support booting
-@@ -71,27 +75,50 @@ static void print_isa(struct seq_file *f, const char *orig_isa)
- 	isa += 5;
- 
- 	/*
--	 * Check the rest of the ISA string for valid extensions, printing those
--	 * we find.  RISC-V ISA strings define an order, so we only print the
-+	 * RISC-V ISA strings define an order, so we only print all the
- 	 * extension bits when they're in order. Hide the supervisor (S)
+@@ -76,8 +77,8 @@ static void print_isa(struct seq_file *f, const char *orig_isa)
  	 * extension from userspace as it's not accessible from there.
-+	 * Throw a warning only if any mandatory extensions are not available
-+	 * and kernel is configured to have that mandatory extensions.
  	 */
--	for (e = ext; *e != '\0'; ++e) {
--		if (tolower(isa[0]) == e[0]) {
-+	for (e = mandatory_ext; *e != '\0'; ++e) {
-+		if (tolower(isa[0]) != e[0]) {
-+#if defined(CONFIG_ISA_RISCV_C)
-+			if (tolower(isa[0] == 'c'))
-+				continue;
-+#endif
-+#if defined(CONFIG_FP)
-+			if ((tolower(isa[0]) == 'f') || tolower(isa[0] == 'd'))
-+				continue;
-+#endif
-+			unsupported_isa[index] = e[0];
-+			index++;
-+		}
-+		if (isa[0] != '\0') {
-+			/* Only write if part of isa string */
- 			if (tolower(isa[0] != 's'))
+ 	for (e = ext; *e != '\0'; ++e) {
+-		if (isa[0] == e[0]) {
+-			if (isa[0] != 's')
++		if (tolower(isa[0]) == e[0]) {
++			if (tolower(isa[0] != 's'))
  				seq_write(f, isa, 1);
--
+ 
  			isa++;
- 		}
- 	}
-+	if (isa[0] != '\0') {
-+		/* Add remainging isa strings */
-+		for (e = isa; *e != '\0'; ++e) {
-+#if !defined(CONFIG_VIRTUALIZATION)
-+			if ((tolower(e[0]) != 'h'))
-+#endif
-+				seq_write(f, e, 1);
-+		}
-+	}
- 	seq_puts(f, "\n");
- 
- 	/*
- 	 * If we were given an unsupported ISA in the device tree then print
- 	 * a bit of info describing what went wrong.
- 	 */
--	if (isa[0] != '\0')
--		pr_info("unsupported ISA \"%s\" in device tree\n", orig_isa);
-+	if (unsupported_isa[0])
-+		pr_info("unsupported ISA extensions \"%s\" in device tree for cpu [%ld]\n",
-+			unsupported_isa, cpuid);
- }
- 
- static void print_mmu(struct seq_file *f, const char *mmu_type)
-@@ -135,7 +162,7 @@ static int c_show(struct seq_file *m, void *v)
- 	seq_printf(m, "processor\t: %lu\n", cpu_id);
- 	seq_printf(m, "hart\t\t: %lu\n", cpuid_to_hartid_map(cpu_id));
- 	if (!of_property_read_string(node, "riscv,isa", &isa))
--		print_isa(m, isa);
-+		print_isa(m, isa, cpu_id);
- 	if (!of_property_read_string(node, "mmu-type", &mmu))
- 		print_mmu(m, mmu);
- 	if (!of_property_read_string(node, "compatible", &compat)
 -- 
 2.21.0
 
