@@ -2,131 +2,109 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F26C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6780C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC6B421734
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBF521734
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:27:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oSxV5e5b"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JsisJ/fp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbfGZQ0V (ORCPT
+        id S1728842AbfGZQ1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:26:21 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44167 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727554AbfGZQ0U (ORCPT
+        Fri, 26 Jul 2019 12:27:13 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:27616 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727554AbfGZQ1M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:26:20 -0400
-Received: by mail-io1-f67.google.com with SMTP id s7so105853512iob.11
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 09:26:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=49yfm4zari4iNgyc4c8iUnGnNiF8H5iDhklR2GX7QUY=;
-        b=oSxV5e5bNKAEOl0HwhKJhFqS6oocpVP8oUntBD5al/WdfjqqJtsIfjWUwUDx29tEVj
-         Ocox6SNSxTgTxci3S8uus+9f4v048jOPUOqwuyvdGpFBolmfQvjuixpWQTQ5t5g8nuwr
-         Sy9w9ffMso7C/QX4f1ZEvHSPRs5SJNYv6cimfjMXpAyHuG6KjU7Rsm1uupYDv1xHZZxm
-         U9VXVqwxnRXp45lR+vyNSgiPcH8dTiR7z+dw7MCbH2Yt6OKPOLKCfrRN86ogxLxP1o2E
-         CbNgCMUgLLBu374M3UiEjVmgk6BDWDqRqVAPodQaRsA6oqmCQhhul6kJGPCrPdH4BVfB
-         3cNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=49yfm4zari4iNgyc4c8iUnGnNiF8H5iDhklR2GX7QUY=;
-        b=QGQS5wLoGvbM4QV+tpCeSQutCHhlRIIMX2zDcMwA+RWQ6k4eNm8EtsoD8kIwHi7Huq
-         ylrmXGNp1jGrlJW6PuEo+mA0pGJCHQxu7k9dtg+Gc5LuH9dgshb1fGB0RkylOf63+OJA
-         wQgfx2hGBWQ1fyLF6H+YsUFYC080Q/Rowk7aC4SvJf0vuYtxwwV5iBQ0vom8vIV/Dfsn
-         AUEpiSdRCpRmqYqt1KqOjhvyVHXfpufRX4wnjhwpLoK5xj110YvZsWo/cfo90Aykpdx0
-         MM5A02IKY2gTVNYnTYceLJT3dlMKPz+nxtwry/arM0CdooL450w9gOysM/X6bQTSPbNp
-         DiYg==
-X-Gm-Message-State: APjAAAXgjzhVEpwZnidEMOFiwelAqgPrOK9eN+WR6WY189e37d7v84ho
-        1I3VOmJXOdIqVqx0AN/tj1+6VpJ/JRGFmgctkPfmiw==
-X-Google-Smtp-Source: APXvYqyjf4GbmLPhL55X+s5p3TCQUBLJfRXVKJ2wZzfFHaTvxUziKKWb5psRA8Z3KyOrSCo3gRDt5OcQAS+5PqQqTdQ=
-X-Received: by 2002:a5d:80d6:: with SMTP id h22mr65658210ior.231.1564158379700;
- Fri, 26 Jul 2019 09:26:19 -0700 (PDT)
+        Fri, 26 Jul 2019 12:27:12 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6QG7fWq014148;
+        Fri, 26 Jul 2019 18:27:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=n6HKe0PgjUg51eRmGPMx0Q+MwoGoF4rstkH/lFHzWaM=;
+ b=JsisJ/fpUkrGVDfSbnAzLrhU0vpu091fbUaYeaRC1Do+Xg5R8AE1Wdflko+wosp4+R7F
+ ya+MTVXY6X0yGUrx2znky65+IAwBMKRttphn0UXtGe3GuDxucpAACX+UQmTk3q3poqeC
+ /DcYKUe81hr1OIfNwuVYApiAUVhWiMLl2SDq6d1fn6P/iPB0ORPk8iXb+1Hy1XIeQQA8
+ gM2gLphuWIzte4rglgFqd7h56FKz+gcjVNe5DiVtVuYPCroIYfnHwgXM83CWu3yPYQGz
+ X3sch1vB/47ieQ44MWFKSwACSBmJYcw/smxwLA/hkavoRMvNjBkqXJ9CtUS6zsD0HViW dw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2tx60absu1-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 26 Jul 2019 18:27:03 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 10B1231;
+        Fri, 26 Jul 2019 16:27:03 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DF60D4FD0;
+        Fri, 26 Jul 2019 16:27:02 +0000 (GMT)
+Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 26 Jul
+ 2019 18:27:02 +0200
+Subject: Re: [PATCH] ARM: dts: stm32: fix -Wall W=1 compilation warnings for
+ can1_sleep pinctrl
+To:     Erwan Le Ray <erwan.leray@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bich.hemon@st.com>
+References: <1561972686-23281-1-git-send-email-erwan.leray@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <8cb628b9-dbbf-98d6-e09a-2ecc082315d4@st.com>
+Date:   Fri, 26 Jul 2019 18:27:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <00000000000052ad6b058e722ba4@google.com> <20190726130013.GC2368@arrakis.emea.arm.com>
- <CACT4Y+b5H4jvY34iT2K0m6a2HCpzgKd3dtv+YFsApp=-18B+pw@mail.gmail.com>
- <20190726155732.GA30211@e109758.arm.com> <CACT4Y+Zf-p7CTRZd8x+2ymAXho2tM_5hLCn3ODJXPVuocMxwbw@mail.gmail.com>
- <20190726161530.GE2368@arrakis.emea.arm.com>
-In-Reply-To: <20190726161530.GE2368@arrakis.emea.arm.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 26 Jul 2019 18:26:08 +0200
-Message-ID: <CACT4Y+bDSnocDe_VB4VhXaJv+q83YMnvpn+KCuW3hENiBfCNTw@mail.gmail.com>
-Subject: Re: memory leak in vq_meta_prefetch
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     syzbot <syzbot+a871c1e6ea00685e73d7@syzkaller.appspotmail.com>,
-        alexandre.belloni@free-electrons.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, nicolas.ferre@atmel.com,
-        Rob Herring <robh@kernel.org>, sre@kernel.org,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1561972686-23281-1-git-send-email-erwan.leray@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-26_12:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 6:15 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > > > On Wed, Jul 24, 2019 at 12:18:07PM -0700, syzbot wrote:
-> > > > > > syzbot found the following crash on:
-> > > > > >
-> > > > > > HEAD commit:    c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
-> > > > > > git tree:       upstream
-> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=15fffef4600000
-> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=8de7d700ea5ac607
-> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=a871c1e6ea00685e73d7
-> > > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=127b0334600000
-> > > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12609e94600000
-> > > > > >
-> > > > > > The bug was bisected to:
-> > > > > >
-> > > > > > commit 0e5f7d0b39e1f184dc25e3adb580c79e85332167
-> > > > > > Author: Nicolas Ferre <nicolas.ferre@atmel.com>
-> > > > > > Date:   Wed Mar 16 13:19:49 2016 +0000
-> > > > > >
-> > > > > >     ARM: dts: at91: shdwc binding: add new shutdown controller documentation
-> > > > >
-> > > > > That's another wrong commit identification (a documentation patch should
-> > > > > not cause a memory leak).
-> > > > >
-> > > > > I don't really think kmemleak, with its relatively high rate of false
-> > > > > positives, is suitable for automated testing like syzbot. You could
-> > > >
-> > > > Do you mean automated testing in general, or bisection only?
-> > > > The wrong commit identification is related to bisection only, but you
-> > > > generalized it to automated testing in general. So which exactly you
-> > > > mean?
-> > >
-> > > I probably meant both. In terms of automated testing and reporting, if
-> > > the false positives rate is high, people start ignoring the reports. So
-> > > it requires some human checking first (or make the tool more robust).
-> [...]
-> > Do you have any data points wrt automated testing in general? This
-> > disagrees with what I see.
->
-> I'm fine with automated testing in general. Just that automated
-> reporting for kmemleak could be improved a bit to reduce the false
-> positives (e.g. run it a few times to confirm that it is a real leak).
+Hi Erwan		
 
+On 7/1/19 11:18 AM, Erwan Le Ray wrote:
+> Fix compilations warnings detected by -Wall W=1 compilation option:
+> - node has a unit name, but no reg property
+> 
+> Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> index 140a983..ce98fd8 100644
+> --- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> @@ -427,7 +427,7 @@
+>   				};
+>   			};
+>   
+> -			m_can1_sleep_pins_a: m_can1-sleep@0 {
+> +			m_can1_sleep_pins_a: m_can1-sleep-0 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('H', 13, ANALOG)>, /* CAN1_TX */
+>   						 <STM32_PINMUX('I', 9, ANALOG)>; /* CAN1_RX */
+> 
 
-I did a bunch of various external measures in syzkaller to improve
-kmemleak quality. As far as I see the current rate is close to 100%
-true positives. We already have 40 leaks (>50%) fixed.
+Thanks for cleaning the STM32 DT. Applied on stm32-next. Note that I 
+changed commit title to indicate which STM32 platform is targeted by 
+this patch.
 
-Though, kmemleak can be improved too (stop-the-world, etc what we
-discussed). That would make kmemleak directly usable e.g. during
-unit-testing, something that's badly needed for kernel.
-
-
-> Just to be clear, I'm not talking about syzbot in general, it's a great
-> tool, only about improving kmemleak reporting and bisecting.
+Regards
+Alex
