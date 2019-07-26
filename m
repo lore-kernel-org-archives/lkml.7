@@ -2,207 +2,103 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CB2C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A40C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25CBE229F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81AD9229F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:23:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbfGZJXZ (ORCPT
+        id S1726349AbfGZJXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:23:25 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:55767 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfGZJXZ (ORCPT
+        Fri, 26 Jul 2019 05:23:39 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:42031 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726065AbfGZJXj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:23:25 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 3483420026;
-        Fri, 26 Jul 2019 11:23:17 +0200 (CEST)
-Date:   Fri, 26 Jul 2019 11:23:15 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>
-Subject: Re: [PATCH 2/3] dt-bindings: display/bridge: Add binding for IMX NWL
- mipi dsi host controller
-Message-ID: <20190726092315.GA9754@ravnborg.org>
-References: <cover.1563983037.git.agx@sigxcpu.org>
- <70a5c6617936a4a095e7608b96e3f9fae5ddfbb1.1563983037.git.agx@sigxcpu.org>
+        Fri, 26 Jul 2019 05:23:39 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-213-_IbTtnJhNCekhz4rwLltKA-1; Fri, 26 Jul 2019 10:23:36 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 26 Jul 2019 10:23:35 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 26 Jul 2019 10:23:35 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Jian-Hong Pan' <jian-hong@endlessm.com>
+CC:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux@endlessm.com" <linux@endlessm.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] rtw88: pci: Use general byte arrays as the elements of RX
+ ring
+Thread-Topic: [PATCH] rtw88: pci: Use general byte arrays as the elements of
+ RX ring
+Thread-Index: AQHVQsDFH4BG56wpwU66J+Fzxhx3XabbDGOQgAFRNgCAADuAcA==
+Date:   Fri, 26 Jul 2019 09:23:35 +0000
+Message-ID: <c2cdffd30923459e8773379fc2927e1d@AcuMS.aculab.com>
+References: <20190725080925.6575-1-jian-hong@endlessm.com>
+ <06d713fff7434dfb9ccab32c2e2112e2@AcuMS.aculab.com>
+ <CAPpJ_ecAAw=1X=7+MOw-VVH0ZKBr6rcRub6JnEqgNbZ6Hxt=ag@mail.gmail.com>
+In-Reply-To: <CAPpJ_ecAAw=1X=7+MOw-VVH0ZKBr6rcRub6JnEqgNbZ6Hxt=ag@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <70a5c6617936a4a095e7608b96e3f9fae5ddfbb1.1563983037.git.agx@sigxcpu.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=8nJEP1OIZ-IA:10 a=ze386MxoAAAA:8
-        a=e5mUnYsNAAAA:8 a=uEMGSPKFWDNqce5SinMA:9 a=NMl6CGBPn1O5J89H:21
-        a=Vgy-7kDX4t5A4FfJ:21 a=wPNLvfGTeEIA:10 a=iBZjaW-pnkserzjvUTHh:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+X-MC-Unique: _IbTtnJhNCekhz4rwLltKA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guido.
+RnJvbTogSmlhbi1Ib25nIFBhbiANCj4gU2VudDogMjYgSnVseSAyMDE5IDA3OjE4DQouLi4NCj4g
+PiBXaGlsZSBhbGxvY2F0aW5nIGFsbCA1MTIgYnVmZmVycyBpbiBvbmUgYmxvY2sgKGp1c3Qgb3Zl
+ciA0TUIpDQo+ID4gaXMgcHJvYmFibHkgbm90IGEgZ29vZCBpZGVhLCB5b3UgbWF5IG5lZWQgdG8g
+YWxsb2NhdGVkIChhbmQgZG1hIG1hcCkNCj4gPiB0aGVuIGluIGdyb3Vwcy4NCj4gDQo+IFRoYW5r
+cyBmb3IgcmV2aWV3aW5nLiAgQnV0IGdvdCBxdWVzdGlvbnMgaGVyZSB0byBkb3VibGUgY29uZmly
+bSB0aGUgaWRlYS4NCj4gQWNjb3JkaW5nIHRvIG9yaWdpbmFsIGNvZGUsIGl0IGFsbG9jYXRlcyA1
+MTIgc2ticyBmb3IgUlggcmluZyBhbmQgZG1hDQo+IG1hcHBpbmcgb25lIGJ5IG9uZS4gIFNvLCB0
+aGUgbmV3IGNvZGUgYWxsb2NhdGVzIG1lbW9yeSBidWZmZXIgNTEyDQo+IHRpbWVzIHRvIGdldCA1
+MTIgYnVmZmVyIGFycmF5cy4gIFdpbGwgdGhlIDUxMiBidWZmZXJzIGFycmF5cyBiZSBpbiBvbmUN
+Cj4gYmxvY2s/ICBEbyB5b3UgbWVhbiBhZ2dyZWdhdGUgdGhlIGJ1ZmZlcnMgYXMgYSBzY2F0dGVy
+bGlzdCBhbmQgdXNlDQo+IGRtYV9tYXBfc2c/DQoNCklmIHlvdSBtYWxsb2MgYSBidWZmZXIgb2Yg
+c2l6ZSAoODE5MiszMikgdGhlIGFsbG9jYXRvciB3aWxsIGVpdGhlcg0Kcm91bmQgaXQgdXAgdG8g
+YSB3aG9sZSBudW1iZXIgb2YgKG9mdGVuIDRrKSBwYWdlcyBvciB0byBhIHBvd2VyIG9mDQoyIG9m
+IHBhZ2VzIC0gc28gZWl0aGVyIDEyayBvZiAxNmsuDQpJIHRoaW5rIHRoZSBMaW51eCBhbGxvY2F0
+b3IgZG9lcyB0aGUgbGF0dGVyLg0KU29tZSBvZiB0aGUgYWxsb2NhdG9ycyBhbHNvICdzdGVhbCcg
+YSBiaXQgZnJvbSB0aGUgZnJvbnQgb2YgdGhlIGJ1ZmZlcg0KZm9yICdyZWQgdGFwZScuDQoNCk9U
+T0ggbWFsbG9jIHRoZSBzcGFjZSAxNSBidWZmZXJzIGFuZCB0aGUgYWxsb2NhdG9yIHdpbGwgcm91
+bmQgdGhlDQoxNSooODE5MiArIDMyKSB1cCB0byAzMio0ayAtIGFuZCB5b3Ugd2FzdGUgdW5kZXIg
+OGsgYWNyb3NzIGFsbCB0aGUNCmJ1ZmZlcnMuDQoNCllvdSB0aGVuIGRtYV9tYXAgdGhlIGxhcmdl
+IGJ1ZmZlciBhbmQgc3BsaXQgaW50byB0aGUgYWN0dWFsIHJ4IGJ1ZmZlcnMuDQpSZXBlYXQgdW50
+aWwgeW91J3ZlIGZpbGxlZCB0aGUgZW50aXJlIHJpbmcuDQpUaGUgb25seSBjb21wbGljYXRpb24g
+aXMgcmVtZW1iZXJpbmcgdGhlIGJhc2UgYWRkcmVzcyAoYW5kIHNpemUpIGZvcg0KdGhlIGRtYV91
+bm1hcCBhbmQgZnJlZS4NCkFsdGhvdWdoIHRoZXJlIGlzIHBsZW50eSBvZiBwYWRkaW5nIHRvIGV4
+dGVuZCB0aGUgYnVmZmVyIHN0cnVjdHVyZQ0Kc2lnbmlmaWNhbnRseSB3aXRob3V0IHVzaW5nIG1v
+cmUgbWVtb3J5Lg0KQWxsb2NhdGUgaW4gMTUncyBhbmQgeW91IChwcm9iYWJseSkgaGF2ZSA1MTIg
+Ynl0ZXMgcGVyIGJ1ZmZlci4NCkFsbG9jYXRlIGluIDMxJ3MgYW5kIHlvdSBoYXZlIDI1NiBieXRl
+cy4NCg0KVGhlIHByb2JsZW0gaXMgdGhhdCBsYXJnZXIgYWxsb2NhdGVzIGFyZSBtb3JlIGxpa2Vs
+eSB0byBmYWlsDQooZXNwZWNpYWxseSBpZiB0aGUgc3lzdGVtIGhhcyBiZWVuIHJ1bm5pbmcgZm9y
+IHNvbWUgdGltZSkuDQpTbyB5b3UgYWxtb3N0IGNlcnRhaW5seSB3YW50IHRvIGJlIGFibGUgdG8g
+ZmFsbCBiYWNrIHRvIHNtYWxsZXINCmFsbG9jYXRlcyBldmVuIHRob3VnaCB0aGV5IHVzZSBtb3Jl
+IG1lbW9yeS4NCg0KSSBhbHNvIHdvbmRlciBpZiB5b3UgYWN0dWFsbHkgbmVlZCA1MTIgOGsgcngg
+YnVmZmVycyB0byBjb3Zlcg0KaW50ZXJydXB0IGxhdGVuY3k/DQpJJ3ZlIG5vdCBkb25lIGFueSBt
+ZWFzdXJlbWVudHMgZm9yIDIwIHllYXJzIQ0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRy
+ZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1L
+MSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
-A few comments follows.
-
-	Sam
-
-On Wed, Jul 24, 2019 at 05:52:25PM +0200, Guido Günther wrote:
-> The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
-> 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> ---
->  .../bindings/display/bridge/imx-nwl-dsi.txt   | 89 +++++++++++++++++++
-
-New binding. Any chance we can get this in yaml format?
-This is the way forward and we have to convert the file anyway.
-
-None of the other bridges use yaml format, but someone has to be the
-first.
-
->  1 file changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt b/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
-> new file mode 100644
-> index 000000000000..288fdb726d5a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
-> @@ -0,0 +1,89 @@
-> +Northwest Logic MIPI-DSI on imx SoCs
-> +=====================================
-> +
-> +NWL MIPI-DSI host controller found on i.MX8 platforms. This is a
-> +dsi bridge for the for the NWL MIPI-DSI host.
-
-To my best understanding a bridge is something that converts from one
-format to another format.
-Something that in the drm world are connected to an encoder.
-
-I do not know the HW here - but from this very brif description this
-sounds more like a display controller and not a bridge?
-
-
-> +
-> +Required properties:
-> +- compatible: 		"fsl,<chip>-nwl-dsi"
-> +	The following strings are expected:
-> +			"fsl,imx8mq-nwl-dsi"
-> +- reg: 			the register range of the MIPI-DSI controller
-> +- interrupts: 		the interrupt number for this module
-> +- clock, clock-names: 	phandles to the MIPI-DSI clocks
-> +	The following clocks are expected on all platforms:
-> +		"core"    - DSI core clock
-> +		"tx_esc"  - TX_ESC clock (used in escape mode)
-> +		"rx_esc"  - RX_ESC clock (used in escape mode)
-> +		"phy_ref" - PHY_REF clock. Clock is managed by the phy. Only
-> +                            used to read the clock rate.
-> +- assigned-clocks:	phandles to clocks that require initial configuration
-> +- assigned-clock-rates:	rates of the clocks that require initial configuration
-> +	The following clocks need to have an initial configuration:
-> +	"tx_esc" (20 MHz) and "rx_esc" (80 Mhz).
-> +- phys: 		phandle to the phy module representing the DPHY
-> +			inside the MIPI-DSI IP block
-> +- phy-names: 		should be "dphy"
-> +
-> +Optional properties:
-> +- power-domains 	phandle to the power domain
-> +- src			phandle to the system reset controller (required on
-> +			i.MX8MQ)
-Name is not very descriptive.
-Other bindings seems to use "resets" here?
-
-> +- mux-sel		phandle to the MUX register set (required on i.MX8MQ)
-> +- assigned-clock-parents phandles to parent clocks that needs to be assigned as
-> +			parents to clocks defined in assigned-clocks
-> +
-> +Example:
-> +	mipi_dsi: mipi_dsi@30a00000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "fsl,imx8mq-nwl-dsi";
-> +		reg = <0x30A00000 0x300>;
-> +		clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
-> +			 <&clk IMX8MQ_CLK_DSI_AHB>,
-> +			 <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
-> +			 <&clk IMX8MQ_CLK_DSI_PHY_REF>;
-> +		clock-names = "core", "rx_esc", "tx_esc", "phy_ref";
-> +		assigned-clocks = <&clk IMX8MQ_CLK_DSI_AHB>,
-> +				  <&clk IMX8MQ_CLK_DSI_CORE>,
-> +				  <&clk IMX8MQ_CLK_DSI_IPG_DIV>;
-> +		assigned-clock-parents = <&clk IMX8MQ_SYS1_PLL_80M>,
-> +					 <&clk IMX8MQ_SYS1_PLL_266M>;
-> +		assigned-clock-rates = <80000000>,
-> +				       <266000000>,
-> +				       <20000000>;
-> +		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> +		power-domains = <&pgc_mipi>;
-> +		src = <&src>;
-> +		mux-sel = <&iomuxc_gpr>;
-> +		phys = <&dphy>;
-> +		phy-names = "dphy";
-> +		status = "okay";
-I recall status should not be included in examples.
-
-> +
-> +		panel@0 {
-> +			compatible = "...";
-> +			port {
-> +			     panel_in: endpoint {
-> +				       remote-endpoint = <&mipi_dsi_out>;
-> +			     };
-> +			};
-> +		};
-> +
-> +		ports {
-> +		      #address-cells = <1>;
-> +		      #size-cells = <0>;
-> +
-> +		      port@0 {
-> +			     reg = <0>;
-> +			     mipi_dsi_in: endpoint {
-> +					  remote-endpoint = <&dcss_disp0_mipi_dsi>;
-> +			     };
-> +		      };
-> +		      port@1 {
-> +			     reg = <1>;
-> +			     mipi_dsi_out: endpoint {
-> +					   remote-endpoint = <&panel_in>;
-> +			     };
-> +		      };
-> +		};
-> +	};
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
