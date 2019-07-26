@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC11C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA058C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74FB222BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C6C22BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155143;
-	bh=PltuJcm2Wk6JXPqDyH0+KMFXC1Oi07pB4sraRzR3yBU=;
+	s=default; t=1564155146;
+	bh=sgiH1nr+fxCZQp0g+9HvvoCks0KuNYIZ5VeqiQlyx5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WAJL5xRCMme6EUzhRcyZkJKstQl0g4yaA8KLGrtmezZTbyFX6lCEEhw47r2fJ5FW9
-	 i9y/lJalxcZXw3zZYvy2QW6kFYnI1X4RJH+nABNROMdSOgLbS3Bby4S0VFKgkUNjxX
-	 iMvX3Guj9ZpXwPaBqhGcwZY5lk6DcqVaeM2oAKQU=
+	b=gV5I/IgIkSHvxgZZajUv72dVZFOsTep6TKga+9IgmjxPjtYkt+JifWssh1WRJD2Io
+	 jb2B1ZJln0ME+pS70TFPhlXn9czmcYXBhWZnF9cXiS0x28jyAGEm/h2gJzMJgfLRM6
+	 ZHLn8uzuUnn/9bndHE846Y/pBNQbQyZuN457sLOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389459AbfGZPcW (ORCPT
+        id S2389471AbfGZPc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:32:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47480 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:32:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389067AbfGZPcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:32:20 -0400
+        id S2389460AbfGZPcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:32:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FB3022BF5;
-        Fri, 26 Jul 2019 15:32:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0509120644;
+        Fri, 26 Jul 2019 15:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155139;
-        bh=PltuJcm2Wk6JXPqDyH0+KMFXC1Oi07pB4sraRzR3yBU=;
+        s=default; t=1564155142;
+        bh=sgiH1nr+fxCZQp0g+9HvvoCks0KuNYIZ5VeqiQlyx5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OVa1ANvK14k4YpF89NSirIQ8blqbCDHz2YqhYAYQKGeKNRrcVefSbjmk1EaF/gogL
-         su7VAIJcES7jmSuzWpl2l9YRdV7sSWCYwIrqUP0twfqsChqiZo5Y0iKoXXmk+d99O5
-         Bkqrn10sjN737Hbjuq4PuW5C4YNwBmZBP9nhmLzE=
+        b=IOxTWWCBEumbWDBDtThQiKs4GRMrpi7m/I/OiCOcZ20Agc2jfwee/e8R+8A7XFN1e
+         lIaN8FIKcjMQUUlTV84O4l2wJISqP7L4qvC568vk7Hf/eCZjYtNLjcE4AemxxwnPDy
+         OG/csF82MP2/AZ0a4HlgwsatWQK1f+P1414gSAI8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ionut Radu <ionut.radu@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
+        stable@vger.kernel.org,
+        syzbot+7966f2a0b2c7da8939b4@syzkaller.appspotmail.com,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 16/50] r8169: fix issue with confused RX unit after PHY power-down on RTL8411b
-Date:   Fri, 26 Jul 2019 17:24:51 +0200
-Message-Id: <20190726152302.226615840@linuxfoundation.org>
+Subject: [PATCH 4.19 17/50] rxrpc: Fix send on a connected, but unbound socket
+Date:   Fri, 26 Jul 2019 17:24:52 +0200
+Message-Id: <20190726152302.332604716@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -60,173 +62,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit fe4e8db0392a6c2e795eb89ef5fcd86522e66248 ]
+[ Upstream commit e835ada07091f40dcfb1bc735082bd0a7c005e59 ]
 
-On RTL8411b the RX unit gets confused if the PHY is powered-down.
-This was reported in [0] and confirmed by Realtek. Realtek provided
-a sequence to fix the RX unit after PHY wakeup.
+If sendmsg() or sendmmsg() is called on a connected socket that hasn't had
+bind() called on it, then an oops will occur when the kernel tries to
+connect the call because no local endpoint has been allocated.
 
-The issue itself seems to have been there longer, the Fixes tag
-refers to where the fix applies properly.
+Fix this by implicitly binding the socket if it is in the
+RXRPC_CLIENT_UNBOUND state, just like it does for the RXRPC_UNBOUND state.
 
-[0] https://bugzilla.redhat.com/show_bug.cgi?id=1692075
+Further, the state should be transitioned to RXRPC_CLIENT_BOUND after this
+to prevent further attempts to bind it.
 
-Fixes: a99790bf5c7f ("r8169: Reinstate ASPM Support")
-Tested-by: Ionut Radu <ionut.radu@gmail.com>
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+This can be tested with:
+
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <sys/socket.h>
+	#include <arpa/inet.h>
+	#include <linux/rxrpc.h>
+	static const unsigned char inet6_addr[16] = {
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0xac, 0x14, 0x14, 0xaa
+	};
+	int main(void)
+	{
+		struct sockaddr_rxrpc srx;
+		struct cmsghdr *cm;
+		struct msghdr msg;
+		unsigned char control[16];
+		int fd;
+		memset(&srx, 0, sizeof(srx));
+		srx.srx_family = 0x21;
+		srx.srx_service = 0;
+		srx.transport_type = AF_INET;
+		srx.transport_len = 0x1c;
+		srx.transport.sin6.sin6_family = AF_INET6;
+		srx.transport.sin6.sin6_port = htons(0x4e22);
+		srx.transport.sin6.sin6_flowinfo = htons(0x4e22);
+		srx.transport.sin6.sin6_scope_id = htons(0xaa3b);
+		memcpy(&srx.transport.sin6.sin6_addr, inet6_addr, 16);
+		cm = (struct cmsghdr *)control;
+		cm->cmsg_len	= CMSG_LEN(sizeof(unsigned long));
+		cm->cmsg_level	= SOL_RXRPC;
+		cm->cmsg_type	= RXRPC_USER_CALL_ID;
+		*(unsigned long *)CMSG_DATA(cm) = 0;
+		msg.msg_name = NULL;
+		msg.msg_namelen = 0;
+		msg.msg_iov = NULL;
+		msg.msg_iovlen = 0;
+		msg.msg_control = control;
+		msg.msg_controllen = cm->cmsg_len;
+		msg.msg_flags = 0;
+		fd = socket(AF_RXRPC, SOCK_DGRAM, AF_INET);
+		connect(fd, (struct sockaddr *)&srx, sizeof(srx));
+		sendmsg(fd, &msg, 0);
+		return 0;
+	}
+
+Leading to the following oops:
+
+	BUG: kernel NULL pointer dereference, address: 0000000000000018
+	#PF: supervisor read access in kernel mode
+	#PF: error_code(0x0000) - not-present page
+	...
+	RIP: 0010:rxrpc_connect_call+0x42/0xa01
+	...
+	Call Trace:
+	 ? mark_held_locks+0x47/0x59
+	 ? __local_bh_enable_ip+0xb6/0xba
+	 rxrpc_new_client_call+0x3b1/0x762
+	 ? rxrpc_do_sendmsg+0x3c0/0x92e
+	 rxrpc_do_sendmsg+0x3c0/0x92e
+	 rxrpc_sendmsg+0x16b/0x1b5
+	 sock_sendmsg+0x2d/0x39
+	 ___sys_sendmsg+0x1a4/0x22a
+	 ? release_sock+0x19/0x9e
+	 ? reacquire_held_locks+0x136/0x160
+	 ? release_sock+0x19/0x9e
+	 ? find_held_lock+0x2b/0x6e
+	 ? __lock_acquire+0x268/0xf73
+	 ? rxrpc_connect+0xdd/0xe4
+	 ? __local_bh_enable_ip+0xb6/0xba
+	 __sys_sendmsg+0x5e/0x94
+	 do_syscall_64+0x7d/0x1bf
+	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: 2341e0775747 ("rxrpc: Simplify connect() implementation and simplify sendmsg() op")
+Reported-by: syzbot+7966f2a0b2c7da8939b4@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/realtek/r8169.c |  137 +++++++++++++++++++++++++++++++++++
- 1 file changed, 137 insertions(+)
+ net/rxrpc/af_rxrpc.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/realtek/r8169.c
-+++ b/drivers/net/ethernet/realtek/r8169.c
-@@ -5202,6 +5202,143 @@ static void rtl_hw_start_8411_2(struct r
- 	/* disable aspm and clock request before access ephy */
- 	rtl_hw_aspm_clkreq_enable(tp, false);
- 	rtl_ephy_init(tp, e_info_8411_2, ARRAY_SIZE(e_info_8411_2));
-+
-+	/* The following Realtek-provided magic fixes an issue with the RX unit
-+	 * getting confused after the PHY having been powered-down.
-+	 */
-+	r8168_mac_ocp_write(tp, 0xFC28, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xFC2A, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xFC2C, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xFC2E, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xFC30, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xFC32, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xFC34, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xFC36, 0x0000);
-+	mdelay(3);
-+	r8168_mac_ocp_write(tp, 0xFC26, 0x0000);
-+
-+	r8168_mac_ocp_write(tp, 0xF800, 0xE008);
-+	r8168_mac_ocp_write(tp, 0xF802, 0xE00A);
-+	r8168_mac_ocp_write(tp, 0xF804, 0xE00C);
-+	r8168_mac_ocp_write(tp, 0xF806, 0xE00E);
-+	r8168_mac_ocp_write(tp, 0xF808, 0xE027);
-+	r8168_mac_ocp_write(tp, 0xF80A, 0xE04F);
-+	r8168_mac_ocp_write(tp, 0xF80C, 0xE05E);
-+	r8168_mac_ocp_write(tp, 0xF80E, 0xE065);
-+	r8168_mac_ocp_write(tp, 0xF810, 0xC602);
-+	r8168_mac_ocp_write(tp, 0xF812, 0xBE00);
-+	r8168_mac_ocp_write(tp, 0xF814, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xF816, 0xC502);
-+	r8168_mac_ocp_write(tp, 0xF818, 0xBD00);
-+	r8168_mac_ocp_write(tp, 0xF81A, 0x074C);
-+	r8168_mac_ocp_write(tp, 0xF81C, 0xC302);
-+	r8168_mac_ocp_write(tp, 0xF81E, 0xBB00);
-+	r8168_mac_ocp_write(tp, 0xF820, 0x080A);
-+	r8168_mac_ocp_write(tp, 0xF822, 0x6420);
-+	r8168_mac_ocp_write(tp, 0xF824, 0x48C2);
-+	r8168_mac_ocp_write(tp, 0xF826, 0x8C20);
-+	r8168_mac_ocp_write(tp, 0xF828, 0xC516);
-+	r8168_mac_ocp_write(tp, 0xF82A, 0x64A4);
-+	r8168_mac_ocp_write(tp, 0xF82C, 0x49C0);
-+	r8168_mac_ocp_write(tp, 0xF82E, 0xF009);
-+	r8168_mac_ocp_write(tp, 0xF830, 0x74A2);
-+	r8168_mac_ocp_write(tp, 0xF832, 0x8CA5);
-+	r8168_mac_ocp_write(tp, 0xF834, 0x74A0);
-+	r8168_mac_ocp_write(tp, 0xF836, 0xC50E);
-+	r8168_mac_ocp_write(tp, 0xF838, 0x9CA2);
-+	r8168_mac_ocp_write(tp, 0xF83A, 0x1C11);
-+	r8168_mac_ocp_write(tp, 0xF83C, 0x9CA0);
-+	r8168_mac_ocp_write(tp, 0xF83E, 0xE006);
-+	r8168_mac_ocp_write(tp, 0xF840, 0x74F8);
-+	r8168_mac_ocp_write(tp, 0xF842, 0x48C4);
-+	r8168_mac_ocp_write(tp, 0xF844, 0x8CF8);
-+	r8168_mac_ocp_write(tp, 0xF846, 0xC404);
-+	r8168_mac_ocp_write(tp, 0xF848, 0xBC00);
-+	r8168_mac_ocp_write(tp, 0xF84A, 0xC403);
-+	r8168_mac_ocp_write(tp, 0xF84C, 0xBC00);
-+	r8168_mac_ocp_write(tp, 0xF84E, 0x0BF2);
-+	r8168_mac_ocp_write(tp, 0xF850, 0x0C0A);
-+	r8168_mac_ocp_write(tp, 0xF852, 0xE434);
-+	r8168_mac_ocp_write(tp, 0xF854, 0xD3C0);
-+	r8168_mac_ocp_write(tp, 0xF856, 0x49D9);
-+	r8168_mac_ocp_write(tp, 0xF858, 0xF01F);
-+	r8168_mac_ocp_write(tp, 0xF85A, 0xC526);
-+	r8168_mac_ocp_write(tp, 0xF85C, 0x64A5);
-+	r8168_mac_ocp_write(tp, 0xF85E, 0x1400);
-+	r8168_mac_ocp_write(tp, 0xF860, 0xF007);
-+	r8168_mac_ocp_write(tp, 0xF862, 0x0C01);
-+	r8168_mac_ocp_write(tp, 0xF864, 0x8CA5);
-+	r8168_mac_ocp_write(tp, 0xF866, 0x1C15);
-+	r8168_mac_ocp_write(tp, 0xF868, 0xC51B);
-+	r8168_mac_ocp_write(tp, 0xF86A, 0x9CA0);
-+	r8168_mac_ocp_write(tp, 0xF86C, 0xE013);
-+	r8168_mac_ocp_write(tp, 0xF86E, 0xC519);
-+	r8168_mac_ocp_write(tp, 0xF870, 0x74A0);
-+	r8168_mac_ocp_write(tp, 0xF872, 0x48C4);
-+	r8168_mac_ocp_write(tp, 0xF874, 0x8CA0);
-+	r8168_mac_ocp_write(tp, 0xF876, 0xC516);
-+	r8168_mac_ocp_write(tp, 0xF878, 0x74A4);
-+	r8168_mac_ocp_write(tp, 0xF87A, 0x48C8);
-+	r8168_mac_ocp_write(tp, 0xF87C, 0x48CA);
-+	r8168_mac_ocp_write(tp, 0xF87E, 0x9CA4);
-+	r8168_mac_ocp_write(tp, 0xF880, 0xC512);
-+	r8168_mac_ocp_write(tp, 0xF882, 0x1B00);
-+	r8168_mac_ocp_write(tp, 0xF884, 0x9BA0);
-+	r8168_mac_ocp_write(tp, 0xF886, 0x1B1C);
-+	r8168_mac_ocp_write(tp, 0xF888, 0x483F);
-+	r8168_mac_ocp_write(tp, 0xF88A, 0x9BA2);
-+	r8168_mac_ocp_write(tp, 0xF88C, 0x1B04);
-+	r8168_mac_ocp_write(tp, 0xF88E, 0xC508);
-+	r8168_mac_ocp_write(tp, 0xF890, 0x9BA0);
-+	r8168_mac_ocp_write(tp, 0xF892, 0xC505);
-+	r8168_mac_ocp_write(tp, 0xF894, 0xBD00);
-+	r8168_mac_ocp_write(tp, 0xF896, 0xC502);
-+	r8168_mac_ocp_write(tp, 0xF898, 0xBD00);
-+	r8168_mac_ocp_write(tp, 0xF89A, 0x0300);
-+	r8168_mac_ocp_write(tp, 0xF89C, 0x051E);
-+	r8168_mac_ocp_write(tp, 0xF89E, 0xE434);
-+	r8168_mac_ocp_write(tp, 0xF8A0, 0xE018);
-+	r8168_mac_ocp_write(tp, 0xF8A2, 0xE092);
-+	r8168_mac_ocp_write(tp, 0xF8A4, 0xDE20);
-+	r8168_mac_ocp_write(tp, 0xF8A6, 0xD3C0);
-+	r8168_mac_ocp_write(tp, 0xF8A8, 0xC50F);
-+	r8168_mac_ocp_write(tp, 0xF8AA, 0x76A4);
-+	r8168_mac_ocp_write(tp, 0xF8AC, 0x49E3);
-+	r8168_mac_ocp_write(tp, 0xF8AE, 0xF007);
-+	r8168_mac_ocp_write(tp, 0xF8B0, 0x49C0);
-+	r8168_mac_ocp_write(tp, 0xF8B2, 0xF103);
-+	r8168_mac_ocp_write(tp, 0xF8B4, 0xC607);
-+	r8168_mac_ocp_write(tp, 0xF8B6, 0xBE00);
-+	r8168_mac_ocp_write(tp, 0xF8B8, 0xC606);
-+	r8168_mac_ocp_write(tp, 0xF8BA, 0xBE00);
-+	r8168_mac_ocp_write(tp, 0xF8BC, 0xC602);
-+	r8168_mac_ocp_write(tp, 0xF8BE, 0xBE00);
-+	r8168_mac_ocp_write(tp, 0xF8C0, 0x0C4C);
-+	r8168_mac_ocp_write(tp, 0xF8C2, 0x0C28);
-+	r8168_mac_ocp_write(tp, 0xF8C4, 0x0C2C);
-+	r8168_mac_ocp_write(tp, 0xF8C6, 0xDC00);
-+	r8168_mac_ocp_write(tp, 0xF8C8, 0xC707);
-+	r8168_mac_ocp_write(tp, 0xF8CA, 0x1D00);
-+	r8168_mac_ocp_write(tp, 0xF8CC, 0x8DE2);
-+	r8168_mac_ocp_write(tp, 0xF8CE, 0x48C1);
-+	r8168_mac_ocp_write(tp, 0xF8D0, 0xC502);
-+	r8168_mac_ocp_write(tp, 0xF8D2, 0xBD00);
-+	r8168_mac_ocp_write(tp, 0xF8D4, 0x00AA);
-+	r8168_mac_ocp_write(tp, 0xF8D6, 0xE0C0);
-+	r8168_mac_ocp_write(tp, 0xF8D8, 0xC502);
-+	r8168_mac_ocp_write(tp, 0xF8DA, 0xBD00);
-+	r8168_mac_ocp_write(tp, 0xF8DC, 0x0132);
-+
-+	r8168_mac_ocp_write(tp, 0xFC26, 0x8000);
-+
-+	r8168_mac_ocp_write(tp, 0xFC2A, 0x0743);
-+	r8168_mac_ocp_write(tp, 0xFC2C, 0x0801);
-+	r8168_mac_ocp_write(tp, 0xFC2E, 0x0BE9);
-+	r8168_mac_ocp_write(tp, 0xFC30, 0x02FD);
-+	r8168_mac_ocp_write(tp, 0xFC32, 0x0C25);
-+	r8168_mac_ocp_write(tp, 0xFC34, 0x00A9);
-+	r8168_mac_ocp_write(tp, 0xFC36, 0x012D);
-+
- 	rtl_hw_aspm_clkreq_enable(tp, true);
- }
+--- a/net/rxrpc/af_rxrpc.c
++++ b/net/rxrpc/af_rxrpc.c
+@@ -552,6 +552,7 @@ static int rxrpc_sendmsg(struct socket *
  
+ 	switch (rx->sk.sk_state) {
+ 	case RXRPC_UNBOUND:
++	case RXRPC_CLIENT_UNBOUND:
+ 		rx->srx.srx_family = AF_RXRPC;
+ 		rx->srx.srx_service = 0;
+ 		rx->srx.transport_type = SOCK_DGRAM;
+@@ -576,10 +577,9 @@ static int rxrpc_sendmsg(struct socket *
+ 		}
+ 
+ 		rx->local = local;
+-		rx->sk.sk_state = RXRPC_CLIENT_UNBOUND;
++		rx->sk.sk_state = RXRPC_CLIENT_BOUND;
+ 		/* Fall through */
+ 
+-	case RXRPC_CLIENT_UNBOUND:
+ 	case RXRPC_CLIENT_BOUND:
+ 		if (!m->msg_name &&
+ 		    test_bit(RXRPC_SOCK_CONNECTED, &rx->flags)) {
 
 
