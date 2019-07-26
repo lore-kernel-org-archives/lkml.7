@@ -2,177 +2,103 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B692CC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9D2C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A01322CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC605229F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564149380;
+	bh=dA9rjTfI3ezqpl0b3sykI4tA/BBNeqQ0Y08JP8hVIyw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=g8AOmFVda1JvR5Uw+8Gc+MGIj8CqtXOheA4K0xpiMP7vx5xrfjwL+lSwgp39FSdeU
+	 VUvi1F52Zaffns/RxZEochZZJ/SoJOuanmzAHRSZdLjOeMXEgNwLduUXv5BEfBdfTt
+	 McqGpEBSmBImoDbffqXG6UV/gM1nq714qRu/AiXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbfGZN4I (ORCPT
+        id S1728481AbfGZN4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:56:08 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39926 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728452AbfGZN4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:56:05 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 358F2D34AB62BD8B557C;
-        Fri, 26 Jul 2019 21:56:01 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Fri, 26 Jul 2019
- 21:55:52 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
-        <shivasharan.srikanteshwara@broadcom.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <megaraidlinux.pdl@broadcom.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] scsi: megaraid_sas: Make a bunch of functions static
-Date:   Fri, 26 Jul 2019 21:55:40 +0800
-Message-ID: <20190726135540.48780-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 26 Jul 2019 09:56:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727558AbfGZNlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:41:55 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE59722CBD;
+        Fri, 26 Jul 2019 13:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564148514;
+        bh=dA9rjTfI3ezqpl0b3sykI4tA/BBNeqQ0Y08JP8hVIyw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uGmlVZl8XSMB0BSzWLuhfh9gXsSGgLETdAY8sOvTePaI1nTKSskBvFk5B/Ctp5nmK
+         VdoT6+MmFT9gtlC8m3uXuC4q2zglgp0hJgbb2EYRuFD/fM95rZJrVhsNxTFbMpMteQ
+         6g60XOzBKcKM0jDc0PUwn06wALiuQYUFzO7Rua/w=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 77/85] objtool: Add mcsafe_handle_tail() to the uaccess safe list
+Date:   Fri, 26 Jul 2019 09:39:27 -0400
+Message-Id: <20190726133936.11177-77-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
+References: <20190726133936.11177-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warnings:
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-drivers/scsi/megaraid/megaraid_sas_fusion.c:3369:1: warning: symbol 'complete_cmd_fusion' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:3535:6: warning: symbol 'megasas_sync_irqs' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:3554:1: warning: symbol 'megasas_complete_cmd_dpc_fusion' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:3573:13: warning: symbol 'megasas_isr_fusion' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:3604:1: warning: symbol 'build_mpt_mfi_pass_thru' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:3661:40: warning: symbol 'build_mpt_cmd' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:3688:1: warning: symbol 'megasas_issue_dcmd_fusion' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:3881:5: warning: symbol 'megasas_wait_for_outstanding_fusion' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:4005:6: warning: symbol 'megasas_refire_mgmt_cmd' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:4525:25: warning: symbol 'megasas_get_peer_instance' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:4825:7: warning: symbol 'megasas_fusion_crash_dump' was not declared. Should it be static?
+[ Upstream commit a7e47f26039c26312a4144c3001b4e9fa886bd45 ]
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+After an objtool improvement, it's reporting that __memcpy_mcsafe() is
+calling mcsafe_handle_tail() with AC=1:
+
+  arch/x86/lib/memcpy_64.o: warning: objtool: .fixup+0x13: call to mcsafe_handle_tail() with UACCESS enabled
+  arch/x86/lib/memcpy_64.o: warning: objtool:   __memcpy_mcsafe()+0x34: (alt)
+  arch/x86/lib/memcpy_64.o: warning: objtool:   __memcpy_mcsafe()+0xb: (branch)
+  arch/x86/lib/memcpy_64.o: warning: objtool:   __memcpy_mcsafe()+0x0: <=== (func)
+
+mcsafe_handle_tail() is basically an extension of __memcpy_mcsafe(), so
+AC=1 is supposed to be set.  Add mcsafe_handle_tail() to the uaccess
+safe list.
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/035c38f7eac845281d3c3d36749144982e06e58c.1563413318.git.jpoimboe@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_fusion.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ tools/objtool/check.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-index 120e3c4..10ef99e 100644
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-@@ -3511,7 +3511,7 @@ megasas_complete_r1_command(struct megasas_instance *instance,
-  * @instance:			Adapter soft state
-  * Completes all commands that is in reply descriptor queue
-  */
--int
-+static int
- complete_cmd_fusion(struct megasas_instance *instance, u32 MSIxIndex,
- 		    struct megasas_irq_context *irq_context)
- {
-@@ -3702,7 +3702,7 @@ static void megasas_enable_irq_poll(struct megasas_instance *instance)
-  * megasas_sync_irqs -	Synchronizes all IRQs owned by adapter
-  * @instance:			Adapter soft state
-  */
--void megasas_sync_irqs(unsigned long instance_addr)
-+static void megasas_sync_irqs(unsigned long instance_addr)
- {
- 	u32 count, i;
- 	struct megasas_instance *instance =
-@@ -3760,7 +3760,7 @@ int megasas_irqpoll(struct irq_poll *irqpoll, int budget)
-  *
-  * Tasklet to complete cmds
-  */
--void
-+static void
- megasas_complete_cmd_dpc_fusion(unsigned long instance_addr)
- {
- 	struct megasas_instance *instance =
-@@ -3780,7 +3780,7 @@ megasas_complete_cmd_dpc_fusion(unsigned long instance_addr)
- /**
-  * megasas_isr_fusion - isr entry point
-  */
--irqreturn_t megasas_isr_fusion(int irq, void *devp)
-+static irqreturn_t megasas_isr_fusion(int irq, void *devp)
- {
- 	struct megasas_irq_context *irq_context = devp;
- 	struct megasas_instance *instance = irq_context->instance;
-@@ -3816,7 +3816,7 @@ irqreturn_t megasas_isr_fusion(int irq, void *devp)
-  * mfi_cmd:			megasas_cmd pointer
-  *
-  */
--void
-+static void
- build_mpt_mfi_pass_thru(struct megasas_instance *instance,
- 			struct megasas_cmd *mfi_cmd)
- {
-@@ -3874,7 +3874,7 @@ build_mpt_mfi_pass_thru(struct megasas_instance *instance,
-  * @cmd:			mfi cmd to build
-  *
-  */
--union MEGASAS_REQUEST_DESCRIPTOR_UNION *
-+static union MEGASAS_REQUEST_DESCRIPTOR_UNION *
- build_mpt_cmd(struct megasas_instance *instance, struct megasas_cmd *cmd)
- {
- 	union MEGASAS_REQUEST_DESCRIPTOR_UNION *req_desc = NULL;
-@@ -3900,7 +3900,7 @@ build_mpt_cmd(struct megasas_instance *instance, struct megasas_cmd *cmd)
-  * @cmd:			mfi cmd pointer
-  *
-  */
--void
-+static void
- megasas_issue_dcmd_fusion(struct megasas_instance *instance,
- 			  struct megasas_cmd *cmd)
- {
-@@ -4096,8 +4096,9 @@ static inline void megasas_trigger_snap_dump(struct megasas_instance *instance)
- }
- 
- /* This function waits for outstanding commands on fusion to complete */
--int megasas_wait_for_outstanding_fusion(struct megasas_instance *instance,
--					int reason, int *convert)
-+static int
-+megasas_wait_for_outstanding_fusion(struct megasas_instance *instance,
-+				    int reason, int *convert)
- {
- 	int i, outstanding, retval = 0, hb_seconds_missed = 0;
- 	u32 fw_state, abs_state;
-@@ -4221,7 +4222,7 @@ void  megasas_reset_reply_desc(struct megasas_instance *instance)
-  * megasas_refire_mgmt_cmd :	Re-fire management commands
-  * @instance:				Controller's soft instance
- */
--void megasas_refire_mgmt_cmd(struct megasas_instance *instance)
-+static void megasas_refire_mgmt_cmd(struct megasas_instance *instance)
- {
- 	int j;
- 	struct megasas_cmd_fusion *cmd_fusion;
-@@ -4747,7 +4748,8 @@ int megasas_reset_target_fusion(struct scsi_cmnd *scmd)
- }
- 
- /*SRIOV get other instance in cluster if any*/
--struct megasas_instance *megasas_get_peer_instance(struct megasas_instance *instance)
-+static struct
-+megasas_instance *megasas_get_peer_instance(struct megasas_instance *instance)
- {
- 	int i;
- 
-@@ -5053,7 +5055,7 @@ int megasas_reset_fusion(struct Scsi_Host *shost, int reason)
- }
- 
- /* Fusion Crash dump collection */
--void  megasas_fusion_crash_dump(struct megasas_instance *instance)
-+static void  megasas_fusion_crash_dump(struct megasas_instance *instance)
- {
- 	u32 status_reg;
- 	u8 partial_copy = 0;
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 172f99195726..f5c3b97051a7 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -488,6 +488,7 @@ static const char *uaccess_safe_builtin[] = {
+ 	/* misc */
+ 	"csum_partial_copy_generic",
+ 	"__memcpy_mcsafe",
++	"mcsafe_handle_tail",
+ 	"ftrace_likely_update", /* CONFIG_TRACE_BRANCH_PROFILING */
+ 	NULL
+ };
 -- 
-2.7.4
-
+2.20.1
 
