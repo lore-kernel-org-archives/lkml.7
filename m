@@ -4,52 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D393C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8687CC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D48322CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6028322CD3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148601;
-	bh=hzhPci1f8YjaZz8Meul7xO8RN99zDxrb7Alf8Jo/aN4=;
+	s=default; t=1564148604;
+	bh=jDYthrTEGclmOg2T6WE69S5AIUGsUkMk/TbxqsyMRIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sR9rZgwt3226+J/ds8/bqzCgl/ytov6VIgxvOw0iMd7euKDfN+yXQjV/u7rMshyou
-	 p6tkiXq2Lx8HwIPcFJKLMpo7QudMcT6Tx+ufVuF9mukZyiaRxmJy/+DugPi0dMnLKd
-	 Dx+DWE79b+Tv94qBkanzRf0MxITJ6wcRvxNvP5Ko=
+	b=oCS1QI7TYgsmp94o50nlmzin7Jrpc3es9qh2IN3Xh5xMs/iVZB+k+fwX2MqHJ26X1
+	 2E9k8QsInIesu2u7+BJpGWtzuubEQkPkB9M62hfHpRfRM1DL/PQvRDJa9tYFycnmL4
+	 VgKgat9dKw7aRKYsMovyAbsqhr2LUocKU3rPTrI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388172AbfGZNnU (ORCPT
+        id S2388184AbfGZNnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:43:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50836 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:43:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387803AbfGZNnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:43:15 -0400
+        id S2388161AbfGZNnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:43:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32B1622BF5;
-        Fri, 26 Jul 2019 13:43:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFC1922CD8;
+        Fri, 26 Jul 2019 13:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148594;
-        bh=hzhPci1f8YjaZz8Meul7xO8RN99zDxrb7Alf8Jo/aN4=;
+        s=default; t=1564148597;
+        bh=jDYthrTEGclmOg2T6WE69S5AIUGsUkMk/TbxqsyMRIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KUBOiDxJPrTcqDnGzj+G8wfIYnRQnQhy5b+LsT0vnGUCry7OWYMV5cJ64pBGWXJkr
-         1MZ6uqmRvbsl6cR6i3ulPhPljZ3hvvS1S4Y6/l4CEIgM4UILdDANNV/oY8kHzvvRdJ
-         0C7kYY/phq1aZb0sN8dBDNAh0Feu+NYqglBT9aYQ=
+        b=vkbPj11hyqnz/ZK2RIkVTfKfh+vA4HB+LYmSg1Acz9uOrbDvEOpe0DnpWjp7w4EzT
+         mtQirRfdBPatm+Bs6s/dmtS7W696hQ+1FNSd8rF0CpXF6h90OsjMpY8Abm78ujEK1x
+         3Cr1bU3BYELtDMatT6179rYi1SnIg17AiAxEMrWk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andreas Christoforou <andreaschristofo@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 36/47] drivers/rapidio/devices/rio_mport_cdev.c: NUL terminate some strings
-Date:   Fri, 26 Jul 2019 09:41:59 -0400
-Message-Id: <20190726134210.12156-36-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 38/47] ipc/mqueue.c: only perform resource calculation if user valid
+Date:   Fri, 26 Jul 2019 09:42:01 -0400
+Message-Id: <20190726134210.12156-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
 References: <20190726134210.12156-1-sashal@kernel.org>
@@ -62,47 +66,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 156e0b1a8112b76e351684ac948c59757037ac36 ]
+[ Upstream commit a318f12ed8843cfac53198390c74a565c632f417 ]
 
-The dev_info.name[] array has space for RIO_MAX_DEVNAME_SZ + 1
-characters.  But the problem here is that we don't ensure that the user
-put a NUL terminator on the end of the string.  It could lead to an out
-of bounds read.
+Andreas Christoforou reported:
 
-Link: http://lkml.kernel.org/r/20190529110601.GB19119@mwanda
-Fixes: e8de370188d0 ("rapidio: add mport char device driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Alexandre Bounine <alex.bou9@gmail.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
+  UBSAN: Undefined behaviour in ipc/mqueue.c:414:49 signed integer overflow:
+  9 * 2305843009213693951 cannot be represented in type 'long int'
+  ...
+  Call Trace:
+    mqueue_evict_inode+0x8e7/0xa10 ipc/mqueue.c:414
+    evict+0x472/0x8c0 fs/inode.c:558
+    iput_final fs/inode.c:1547 [inline]
+    iput+0x51d/0x8c0 fs/inode.c:1573
+    mqueue_get_inode+0x8eb/0x1070 ipc/mqueue.c:320
+    mqueue_create_attr+0x198/0x440 ipc/mqueue.c:459
+    vfs_mkobj+0x39e/0x580 fs/namei.c:2892
+    prepare_open ipc/mqueue.c:731 [inline]
+    do_mq_open+0x6da/0x8e0 ipc/mqueue.c:771
+
+Which could be triggered by:
+
+        struct mq_attr attr = {
+                .mq_flags = 0,
+                .mq_maxmsg = 9,
+                .mq_msgsize = 0x1fffffffffffffff,
+                .mq_curmsgs = 0,
+        };
+
+        if (mq_open("/testing", 0x40, 3, &attr) == (mqd_t) -1)
+                perror("mq_open");
+
+mqueue_get_inode() was correctly rejecting the giant mq_msgsize, and
+preparing to return -EINVAL.  During the cleanup, it calls
+mqueue_evict_inode() which performed resource usage tracking math for
+updating "user", before checking if there was a valid "user" at all
+(which would indicate that the calculations would be sane).  Instead,
+delay this check to after seeing a valid "user".
+
+The overflow was real, but the results went unused, so while the flaw is
+harmless, it's noisy for kernel fuzzers, so just fix it by moving the
+calculation under the non-NULL "user" where it actually gets used.
+
+Link: http://lkml.kernel.org/r/201906072207.ECB65450@keescook
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reported-by: Andreas Christoforou <andreaschristofo@gmail.com>
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Manfred Spraul <manfred@colorfullife.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rapidio/devices/rio_mport_cdev.c | 2 ++
- 1 file changed, 2 insertions(+)
+ ipc/mqueue.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
-index cbe467ff1aba..fa0bbda4b3f2 100644
---- a/drivers/rapidio/devices/rio_mport_cdev.c
-+++ b/drivers/rapidio/devices/rio_mport_cdev.c
-@@ -1688,6 +1688,7 @@ static int rio_mport_add_riodev(struct mport_cdev_priv *priv,
+diff --git a/ipc/mqueue.c b/ipc/mqueue.c
+index bce7af1546d9..de4070d5472f 100644
+--- a/ipc/mqueue.c
++++ b/ipc/mqueue.c
+@@ -389,7 +389,6 @@ static void mqueue_evict_inode(struct inode *inode)
+ {
+ 	struct mqueue_inode_info *info;
+ 	struct user_struct *user;
+-	unsigned long mq_bytes, mq_treesize;
+ 	struct ipc_namespace *ipc_ns;
+ 	struct msg_msg *msg, *nmsg;
+ 	LIST_HEAD(tmp_msg);
+@@ -412,16 +411,18 @@ static void mqueue_evict_inode(struct inode *inode)
+ 		free_msg(msg);
+ 	}
  
- 	if (copy_from_user(&dev_info, arg, sizeof(dev_info)))
- 		return -EFAULT;
-+	dev_info.name[sizeof(dev_info.name) - 1] = '\0';
- 
- 	rmcd_debug(RDEV, "name:%s ct:0x%x did:0x%x hc:0x%x", dev_info.name,
- 		   dev_info.comptag, dev_info.destid, dev_info.hopcount);
-@@ -1819,6 +1820,7 @@ static int rio_mport_del_riodev(struct mport_cdev_priv *priv, void __user *arg)
- 
- 	if (copy_from_user(&dev_info, arg, sizeof(dev_info)))
- 		return -EFAULT;
-+	dev_info.name[sizeof(dev_info.name) - 1] = '\0';
- 
- 	mport = priv->md->mport;
- 
+-	/* Total amount of bytes accounted for the mqueue */
+-	mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
+-		min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
+-		sizeof(struct posix_msg_tree_node);
+-
+-	mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
+-				  info->attr.mq_msgsize);
+-
+ 	user = info->user;
+ 	if (user) {
++		unsigned long mq_bytes, mq_treesize;
++
++		/* Total amount of bytes accounted for the mqueue */
++		mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
++			min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
++			sizeof(struct posix_msg_tree_node);
++
++		mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
++					  info->attr.mq_msgsize);
++
+ 		spin_lock(&mq_lock);
+ 		user->mq_bytes -= mq_bytes;
+ 		/*
 -- 
 2.20.1
 
