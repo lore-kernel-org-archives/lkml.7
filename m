@@ -2,123 +2,137 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56251C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB0AC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C75520823
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:12:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564143179;
-	bh=8sEX6r78czCZz+0NijkLzlpwinluW6Jn+4X9u6dnXTM=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=kwu1PaX44DZhcFyEaY1TnNJHNWwZBcQaA18uyedAWkNzIAvgG+FveFJ1lO5lJpUxB
-	 liuF7dhPGmW5hAzcXWN8XLGUiwWD9xEeUuEQcIq9whrrcP98jpCjLtSnjiXoDDPSCJ
-	 tK5uzfb4RsNNSjRYpCPWwK+ckcov8b1EhjYpqzNk=
+	by mail.kernel.org (Postfix) with ESMTP id 6224520823
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfGZMMg (ORCPT
+        id S1727203AbfGZMN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:12:36 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36544 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbfGZMMg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:12:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=BMtU9YJUxgrsyYdv4yLoBRiCh3Jg5LDz29y8MvcJIpo=; b=fVDrdNX2Mzfc
-        RFWfg+HAikW6jEmkqYX4BPF/R4nKboZXDGEvdnd0JdgXqaRX8ChT+5Q3DfgskS10hZV5K/BmKFz/r
-        4memv61usG+3A1h0UqcuNq9heoBswCLJcTcpwDPhV6pogbPqQvPpOV1s5HnIes286ixoNwpo4+4pa
-        +MOEA=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hqz5F-0001ad-CG; Fri, 26 Jul 2019 12:12:25 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id BD6AA2742B66; Fri, 26 Jul 2019 13:12:24 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     baolin.wang@linaro.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        mark.rutland@arm.com, orsonzhai@gmail.com, robh+dt@kernel.org,
-        sherry.zong@unisoc.com, vincent.guittot@linaro.org,
-        weicx@spreadst.com, zhang.lyra@gmail.com
-Subject: Applied "spi: sprd: adi: Remove redundant address bits setting" to the spi tree
-In-Reply-To: <3cb57b8aadb7747a9f833e9b4fe8596ba738d9f6.1564125131.git.baolin.wang@linaro.org>
-X-Patchwork-Hint: ignore
-Message-Id: <20190726121224.BD6AA2742B66@ypsilon.sirena.org.uk>
-Date:   Fri, 26 Jul 2019 13:12:24 +0100 (BST)
+        Fri, 26 Jul 2019 08:13:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:42330 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbfGZMN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 08:13:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1E78337;
+        Fri, 26 Jul 2019 05:13:57 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A0F5C3F694;
+        Fri, 26 Jul 2019 05:13:56 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 13:13:54 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     will@kernel.org, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH 1/3] arm64: perf: Mark expected switch fall-through
+Message-ID: <20190726121354.GB26088@lakrids.cambridge.arm.com>
+References: <20190726112716.19104-1-anders.roxell@linaro.org>
+ <20190726121056.GA26088@lakrids.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190726121056.GA26088@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Fri, Jul 26, 2019 at 01:10:57PM +0100, Mark Rutland wrote:
+> On Fri, Jul 26, 2019 at 01:27:16PM +0200, Anders Roxell wrote:
+> > When fall-through warnings was enabled by default, commit d93512ef0f0e
+> > ("Makefile: Globally enable fall-through warning"), the following
+> > warnings was starting to show up:
+> > 
+> > ../arch/arm64/kernel/hw_breakpoint.c: In function ‘hw_breakpoint_arch_parse’:
+> > ../arch/arm64/kernel/hw_breakpoint.c:540:7: warning: this statement may fall
+> >  through [-Wimplicit-fallthrough=]
+> >     if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
+> >        ^
+> > ../arch/arm64/kernel/hw_breakpoint.c:542:3: note: here
+> >    case 2:
+> >    ^~~~
+> > ../arch/arm64/kernel/hw_breakpoint.c:544:7: warning: this statement may fall
+> >  through [-Wimplicit-fallthrough=]
+> >     if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
+> >        ^
+> > ../arch/arm64/kernel/hw_breakpoint.c:546:3: note: here
+> >    default:
+> >    ^~~~~~~
+> > 
+> > Rework so that the compiler doesn't warn about fall-through. Rework so
+> > the code looks like the arm code. Since the comment in the function
+> > indicates taht this is supposed to behave the same way as arm32 because
+> 
+> Typo: s/taht/that/
+> 
+> > it handles 32-bit tasks also.
+> > 
+> > Cc: stable@vger.kernel.org # v3.16+
+> > Fixes: 6ee33c2712fc ("ARM: hw_breakpoint: correct and simplify alignment fixup code")
+> > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> 
+> The patch itself looks fine, but I don't think this needs a CC to
+> stable, nor does it require that fixes tag, as there's no functional
+> problem.
 
-   spi: sprd: adi: Remove redundant address bits setting
+Hmm... I now see I spoke too soon, and this is making the 1-byte
+breakpoint work at a 3-byte offset.
 
-has been applied to the spi tree at
+Given that:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+... and the fixes and stable tags are appropriate for that portion of
+the patch.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Sorry for the noise.
 
 Thanks,
-Mark
+Mark.
 
-From c627c58acdc48055a9e4d40d6f9f1b434222a68d Mon Sep 17 00:00:00 2001
-From: Baolin Wang <baolin.wang@linaro.org>
-Date: Fri, 26 Jul 2019 15:20:48 +0800
-Subject: [PATCH] spi: sprd: adi: Remove redundant address bits setting
 
-The ADI default transfer address bits is 12bit on Spreadtrum SC9860
-platform, thus there is no need to set again, remove it.
-
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Link: https://lore.kernel.org/r/3cb57b8aadb7747a9f833e9b4fe8596ba738d9f6.1564125131.git.baolin.wang@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-sprd-adi.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/drivers/spi/spi-sprd-adi.c b/drivers/spi/spi-sprd-adi.c
-index df5960bddfe6..11880db08ce9 100644
---- a/drivers/spi/spi-sprd-adi.c
-+++ b/drivers/spi/spi-sprd-adi.c
-@@ -380,9 +380,6 @@ static void sprd_adi_hw_init(struct sprd_adi *sadi)
- 	const __be32 *list;
- 	u32 tmp;
- 
--	/* Address bits select default 12 bits */
--	writel_relaxed(0, sadi->base + REG_ADI_CTRL0);
--
- 	/* Set all channels as default priority */
- 	writel_relaxed(0, sadi->base + REG_ADI_CHN_PRIL);
- 	writel_relaxed(0, sadi->base + REG_ADI_CHN_PRIH);
--- 
-2.20.1
-
+> > ---
+> >  arch/arm64/kernel/hw_breakpoint.c | 11 +++++++----
+> >  1 file changed, 7 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
+> > index dceb84520948..ea616adf1cf1 100644
+> > --- a/arch/arm64/kernel/hw_breakpoint.c
+> > +++ b/arch/arm64/kernel/hw_breakpoint.c
+> > @@ -535,14 +535,17 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+> >  		case 0:
+> >  			/* Aligned */
+> >  			break;
+> > -		case 1:
+> > -			/* Allow single byte watchpoint. */
+> > -			if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
+> > -				break;
+> >  		case 2:
+> >  			/* Allow halfword watchpoints and breakpoints. */
+> >  			if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
+> >  				break;
+> > +			/* Fall through */
+> > +		case 1:
+> > +		case 3:
+> > +			/* Allow single byte watchpoint. */
+> > +			if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
+> > +				break;
+> > +			/* Fall through */
+> >  		default:
+> >  			return -EINVAL;
+> >  		}
+> > -- 
+> > 2.20.1
+> > 
