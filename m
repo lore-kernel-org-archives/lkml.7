@@ -2,55 +2,52 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A637C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B37BC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8E1822BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084AB22CD8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148592;
-	bh=dbhU8J/ANE/G/844c8cbLui83Q3d6YR6YMZ/39ABKWA=;
+	s=default; t=1564148595;
+	bh=YfDo/63lxPW0sH2O9DcR7uvSG7t0vwBN3OKd1Ls/sr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TAU5LZYJfdylilMdXdFs4r3mS8b4H4eJJUttTLg+KSWy2dApIBC/5BbJDNg6HlE27
-	 WUPCt3m0dirX0avZOcsuxFxS0gH5Wwfm40/AU2kmptiB96647b3THI/uOCFB/p+own
-	 CdpRaQJwswuVzihWaytTQZ6EnGYk7/MqARAIgQSU=
+	b=xN51K5AiyCEghrOWfE2C090keNGhFSXwbVzpF7FdbvJEwnyRsxYkaOBSbyPps5xqw
+	 UzphkoZSJp8XEdPi9ORC8gMRpIsD+Cc0HsDE5FSgTOuXciKCJC5dSETk+TwZ2MljwT
+	 CHZBy2jr8gEMK6/0ZCLYWsc+y0/At+h2lzLB1c9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387720AbfGZNnK (ORCPT
+        id S2388151AbfGZNnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:43:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50554 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:43:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387638AbfGZNnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:43:04 -0400
+        id S2388130AbfGZNnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:43:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B597622CD5;
-        Fri, 26 Jul 2019 13:43:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A4A822BF5;
+        Fri, 26 Jul 2019 13:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148583;
-        bh=dbhU8J/ANE/G/844c8cbLui83Q3d6YR6YMZ/39ABKWA=;
+        s=default; t=1564148585;
+        bh=YfDo/63lxPW0sH2O9DcR7uvSG7t0vwBN3OKd1Ls/sr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hgj52EqTXKohNxcCJAPrifcAAfCs4r7fDj0euyOntAhDpY1e/fcZgKzHuM8jJEfPY
-         JYDNiV2h0+NopcWCqGyA94li1lBT68Ot8BZ2fv03/jVftJwETAsMQXaFqSsY0/Kr5u
-         C35no1OXT+lw2rP+FFGZ3nSCKCkk38pgAKDvW+HE=
+        b=kOjKPC2cNvhvr1IU9Gp8xDqln9D4XZzzRS9W61dYioa0PTpYu4zJgg04TS24pTD/p
+         nvKKZ6141Yh5BG7D5wSheIKDlaujnKbmbj5FMwfdmvrmfg6e4hriU/SQ+59PxPne39
+         FyB73b9zt+yLyuREzsIL+8zDa81irleL1fl76K9Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Joe Perches <joe@perches.com>,
+Cc:     Peter Rosin <peda@axentia.se>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 31/47] lib/test_overflow.c: avoid tainting the kernel and fix wrap size
-Date:   Fri, 26 Jul 2019 09:41:54 -0400
-Message-Id: <20190726134210.12156-31-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 32/47] lib/test_string.c: avoid masking memset16/32/64 failures
+Date:   Fri, 26 Jul 2019 09:41:55 -0400
+Message-Id: <20190726134210.12156-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
 References: <20190726134210.12156-1-sashal@kernel.org>
@@ -63,54 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Peter Rosin <peda@axentia.se>
 
-[ Upstream commit 8e060c21ae2c265a2b596e9e7f9f97ec274151a4 ]
+[ Upstream commit 33d6e0ff68af74be0c846c8e042e84a9a1a0561e ]
 
-This adds __GFP_NOWARN to the kmalloc()-portions of the overflow test to
-avoid tainting the kernel.  Additionally fixes up the math on wrap size
-to be architecture and page size agnostic.
+If a memsetXX implementation is completely broken and fails in the first
+iteration, when i, j, and k are all zero, the failure is masked as zero
+is returned.  Failing in the first iteration is perhaps the most likely
+failure, so this makes the tests pretty much useless.  Avoid the
+situation by always setting a random unused bit in the result on
+failure.
 
-Link: http://lkml.kernel.org/r/201905282012.0A8767E24@keescook
-Fixes: ca90800a91ba ("test_overflow: Add memory allocation overflow tests")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Joe Perches <joe@perches.com>
+Link: http://lkml.kernel.org/r/20190506124634.6807-3-peda@axentia.se
+Fixes: 03270c13c5ff ("lib/string.c: add testcases for memset16/32/64")
+Signed-off-by: Peter Rosin <peda@axentia.se>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_overflow.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ lib/test_string.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/lib/test_overflow.c b/lib/test_overflow.c
-index fc680562d8b6..7a4b6f6c5473 100644
---- a/lib/test_overflow.c
-+++ b/lib/test_overflow.c
-@@ -486,16 +486,17 @@ static int __init test_overflow_shift(void)
-  * Deal with the various forms of allocator arguments. See comments above
-  * the DEFINE_TEST_ALLOC() instances for mapping of the "bits".
-  */
--#define alloc010(alloc, arg, sz) alloc(sz, GFP_KERNEL)
--#define alloc011(alloc, arg, sz) alloc(sz, GFP_KERNEL, NUMA_NO_NODE)
-+#define alloc_GFP		 (GFP_KERNEL | __GFP_NOWARN)
-+#define alloc010(alloc, arg, sz) alloc(sz, alloc_GFP)
-+#define alloc011(alloc, arg, sz) alloc(sz, alloc_GFP, NUMA_NO_NODE)
- #define alloc000(alloc, arg, sz) alloc(sz)
- #define alloc001(alloc, arg, sz) alloc(sz, NUMA_NO_NODE)
--#define alloc110(alloc, arg, sz) alloc(arg, sz, GFP_KERNEL)
-+#define alloc110(alloc, arg, sz) alloc(arg, sz, alloc_GFP)
- #define free0(free, arg, ptr)	 free(ptr)
- #define free1(free, arg, ptr)	 free(arg, ptr)
+diff --git a/lib/test_string.c b/lib/test_string.c
+index 0fcdb82dca86..98a787e7a1fd 100644
+--- a/lib/test_string.c
++++ b/lib/test_string.c
+@@ -35,7 +35,7 @@ static __init int memset16_selftest(void)
+ fail:
+ 	kfree(p);
+ 	if (i < 256)
+-		return (i << 24) | (j << 16) | k;
++		return (i << 24) | (j << 16) | k | 0x8000;
+ 	return 0;
+ }
  
--/* Wrap around to 8K */
--#define TEST_SIZE		(9 << PAGE_SHIFT)
-+/* Wrap around to 16K */
-+#define TEST_SIZE		(5 * 4096)
+@@ -71,7 +71,7 @@ static __init int memset32_selftest(void)
+ fail:
+ 	kfree(p);
+ 	if (i < 256)
+-		return (i << 24) | (j << 16) | k;
++		return (i << 24) | (j << 16) | k | 0x8000;
+ 	return 0;
+ }
  
- #define DEFINE_TEST_ALLOC(func, free_func, want_arg, want_gfp, want_node)\
- static int __init test_ ## func (void *arg)				\
+@@ -107,7 +107,7 @@ static __init int memset64_selftest(void)
+ fail:
+ 	kfree(p);
+ 	if (i < 256)
+-		return (i << 24) | (j << 16) | k;
++		return (i << 24) | (j << 16) | k | 0x8000;
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
