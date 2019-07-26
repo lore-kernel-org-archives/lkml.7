@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F06C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4A0C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A675822BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCCE822CBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148522;
-	bh=DM7dIiX4yXoSE31CLN5Uu6r4oDMxr77YDotnzPxyWQc=;
+	s=default; t=1564148524;
+	bh=GEdDCyha1tfVux9t3kYEBrYBenkyndz46G+JFxGWXAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qwauDn75ywDCRAKDN8HOJBsccr1KwM5ZMUTxnmbvSJejAaDw60luu6ISExgCZITI6
-	 barV7JSjFDzBST9T6Aq1bgYLpFw99fmD0YGOI/i4MaSPPuk4/o4dmZGf/SbIo+9x26
-	 GCttEJUGZvkeT0OHmsBgqPVq09JeiJjeamSgkD/c=
+	b=Vh3XAxsjmkhh6H6tJnXobsVlibUtErQjw7WoXGsjdjrwQRpkIn4YLJ02keCGSxGb1
+	 K7yDAPMHYYOl4214oxsUZg3B9AQeNllR0kJ0sKL9BAmqnElL7L7WSf6PEAMFCTS8BA
+	 7sDXDuSS70TXTJNUi3yrMBmWZ2hlIiInEv+pMfH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387824AbfGZNmB (ORCPT
+        id S2387837AbfGZNmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:42:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49120 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:42:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727620AbfGZNl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:41:58 -0400
+        id S2387825AbfGZNmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:42:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CB7622CC2;
-        Fri, 26 Jul 2019 13:41:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9CD222CC2;
+        Fri, 26 Jul 2019 13:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148518;
-        bh=DM7dIiX4yXoSE31CLN5Uu6r4oDMxr77YDotnzPxyWQc=;
+        s=default; t=1564148521;
+        bh=GEdDCyha1tfVux9t3kYEBrYBenkyndz46G+JFxGWXAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DTMgiuoKz6sh6z+D9SeXycpHulUeUXqXdQ7rMCpu+NGFM+tR0pAUimuMujCUD4Hfx
-         URufPQcMHEYqom0W21vnIxIRBfIBfcU1rzEB631p4luJ2TSS9gLIrHzaLD8MBZV9Ih
-         GujEm8obuRzhQw4aJHJGzi2bNKLuvIMQtq6EeYl8=
+        b=xNotDWuijkUV1zsrKoEnAQm+qxVkiaAzdES6g48TKWcMuh0W6Zkbp8mlwTBN3VJ6S
+         +8uqc6ZWDLtkaLmsBbKABHYF9C5AOR4EebdE03x4wOmneQJj8KrAKiCNKoWNrZrrg1
+         TApJwIxAnx/4eWrnaUJfjtMHkB8tWNpum6s2ICDo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 80/85] bnxt_en: Fix VNIC accounting when enabling aRFS on 57500 chips.
-Date:   Fri, 26 Jul 2019 09:39:30 -0400
-Message-Id: <20190726133936.11177-80-sashal@kernel.org>
+Cc:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 81/85] x86, boot: Remove multiple copy of static function sanitize_boot_params()
+Date:   Fri, 26 Jul 2019 09:39:31 -0400
+Message-Id: <20190726133936.11177-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -59,56 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 
-[ Upstream commit 9b3d15e6b05e0b916be5fbd915f90300a403098b ]
+[ Upstream commit 8c5477e8046ca139bac250386c08453da37ec1ae ]
 
-Unlike legacy chips, 57500 chips don't need additional VNIC resources
-for aRFS/ntuple.  Fix the code accordingly so that we don't reserve
-and allocate additional VNICs on 57500 chips.  Without this patch,
-the driver is failing to initialize when it tries to allocate extra
-VNICs.
+Kernel build warns:
+ 'sanitize_boot_params' defined but not used [-Wunused-function]
 
-Fixes: ac33906c67e2 ("bnxt_en: Add support for aRFS on 57500 chips.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+at below files:
+  arch/x86/boot/compressed/cmdline.c
+  arch/x86/boot/compressed/error.c
+  arch/x86/boot/compressed/early_serial_console.c
+  arch/x86/boot/compressed/acpi.c
+
+That's becausethey each include misc.h which includes a definition of
+sanitize_boot_params() via bootparam_utils.h.
+
+Remove the inclusion from misc.h and have the c file including
+bootparam_utils.h directly.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1563283092-1189-1-git-send-email-zhenzhong.duan@oracle.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/x86/boot/compressed/misc.c | 1 +
+ arch/x86/boot/compressed/misc.h | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index f758b2e0591f..9a2a0d24d20d 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -3022,7 +3022,7 @@ static int bnxt_alloc_vnics(struct bnxt *bp)
- 	int num_vnics = 1;
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index 5a237e8dbf8d..0de54a1d25c0 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -17,6 +17,7 @@
+ #include "pgtable.h"
+ #include "../string.h"
+ #include "../voffset.h"
++#include <asm/bootparam_utils.h>
  
- #ifdef CONFIG_RFS_ACCEL
--	if (bp->flags & BNXT_FLAG_RFS)
-+	if ((bp->flags & (BNXT_FLAG_RFS | BNXT_FLAG_CHIP_P5)) == BNXT_FLAG_RFS)
- 		num_vnics += bp->rx_nr_rings;
- #endif
+ /*
+  * WARNING!!
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index d2f184165934..c8181392f70d 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -23,7 +23,6 @@
+ #include <asm/page.h>
+ #include <asm/boot.h>
+ #include <asm/bootparam.h>
+-#include <asm/bootparam_utils.h>
  
-@@ -7124,6 +7124,9 @@ static int bnxt_alloc_rfs_vnics(struct bnxt *bp)
- #ifdef CONFIG_RFS_ACCEL
- 	int i, rc = 0;
- 
-+	if (bp->flags & BNXT_FLAG_CHIP_P5)
-+		return 0;
-+
- 	for (i = 0; i < bp->rx_nr_rings; i++) {
- 		struct bnxt_vnic_info *vnic;
- 		u16 vnic_id = i + 1;
-@@ -9587,7 +9590,7 @@ int bnxt_check_rings(struct bnxt *bp, int tx, int rx, bool sh, int tcs,
- 		return -ENOMEM;
- 
- 	vnics = 1;
--	if (bp->flags & BNXT_FLAG_RFS)
-+	if ((bp->flags & (BNXT_FLAG_RFS | BNXT_FLAG_CHIP_P5)) == BNXT_FLAG_RFS)
- 		vnics += rx_rings;
- 
- 	if (bp->flags & BNXT_FLAG_AGG_RINGS)
+ #define BOOT_CTYPE_H
+ #include <linux/acpi.h>
 -- 
 2.20.1
 
