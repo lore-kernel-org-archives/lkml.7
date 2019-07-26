@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0A4C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98964C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCACE22CC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696FA22CBF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148540;
-	bh=SRWkb1rYWHX8LGcFo1lj7BcnybwsJzYcZ56huQNPnn4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=lsREJlmzM7Wx+/1Vws189xtrU/yIh8DXhmaMl2gcdRpsWji/aKYdMegPyciDwXaVD
-	 m36G5fUaCgzfU70+j4bkmRTQyGnsYBDBdQyhwmkOGf91PhsesMaWcLH3Xco9lXoCiJ
-	 4Y6FzE4l67mseYocu78SXeoNOAg+TnD6lNt4fGVw=
+	s=default; t=1564148549;
+	bh=cK+4ZI7ONRMmofh2PiyzJkm+n+FSC2dB0tgVtk5lsF4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2VdsWRGlbm72MnU1bESTjeT1uIvJh2NS7prkAtRgyCH1mbHYIqdP7Upgskv1p+n1T
+	 QUaWyxdP/SEw0s7WufT6P/Eyay0sfbU5Joh9k+rLfDH0PFTMahjTTF1RF1O7oaGnqB
+	 tF++9jb5/e6HpizZQoV5Pn/mpplEyjUCmBjjoLvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387911AbfGZNmT (ORCPT
+        id S2387950AbfGZNm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:42:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49450 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:42:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387874AbfGZNmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:42:13 -0400
+        id S2387897AbfGZNmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:42:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49CAF22CC0;
-        Fri, 26 Jul 2019 13:42:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 871A122CC2;
+        Fri, 26 Jul 2019 13:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148531;
-        bh=SRWkb1rYWHX8LGcFo1lj7BcnybwsJzYcZ56huQNPnn4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=lvmdxL0ZxCLs++Msjs4gfE6/SQs2QKRbomfDMI8WtrnRWw6YHoZVAS7IcRr7a6QUH
-         Akg9qUGe5J7gRZdci0TsurcsQr9ttswumPVmhRkL9OjfoEs1ccn375BuDslbDJMg84
-         XpCjSH5Yt/VW9c1z6OgqJiEon0oDIs6mC7+FOtUM=
+        s=default; t=1564148536;
+        bh=cK+4ZI7ONRMmofh2PiyzJkm+n+FSC2dB0tgVtk5lsF4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=U3nDXRo/8q7DmvG9RzkqlRCiCmbJj0mXfPPcMGpWjMTULbRJMQ0ys1qDCsDbWw4bU
+         GUrahRbbtu8xgwcAeMr2cvaHqk86Hb74Yq/arw0+uFXd5j4i3CPyISGLzIk/If9jAO
+         /DyuFtljfr+kizw/3p6nUmASpRN6fQJT6VHTD5ms=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+Cc:     Cheng Jian <cj.chengjian@huawei.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 01/47] ARM: riscpc: fix DMA
-Date:   Fri, 26 Jul 2019 09:41:24 -0400
-Message-Id: <20190726134210.12156-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 05/47] ftrace: Enable trampoline when rec count returns back to one
+Date:   Fri, 26 Jul 2019 09:41:28 -0400
+Message-Id: <20190726134210.12156-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
+References: <20190726134210.12156-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,48 +59,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Cheng Jian <cj.chengjian@huawei.com>
 
-[ Upstream commit ffd9a1ba9fdb7f2bd1d1ad9b9243d34e96756ba2 ]
+[ Upstream commit a124692b698b00026a58d89831ceda2331b2e1d0 ]
 
-DMA got broken a while back in two different ways:
-1) a change in the behaviour of disable_irq() to wait for the interrupt
-   to finish executing causes us to deadlock at the end of DMA.
-2) a change to avoid modifying the scatterlist left the first transfer
-   uninitialised.
+Custom trampolines can only be enabled if there is only a single ops
+attached to it. If there's only a single callback registered to a function,
+and the ops has a trampoline registered for it, then we can call the
+trampoline directly. This is very useful for improving the performance of
+ftrace and livepatch.
 
-DMA is only used with expansion cards, so has gone unnoticed.
+If more than one callback is registered to a function, the general
+trampoline is used, and the custom trampoline is not restored back to the
+direct call even if all the other callbacks were unregistered and we are
+back to one callback for the function.
 
-Fixes: fa4e99899932 ("[ARM] dma: RiscPC: don't modify DMA SG entries")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+To fix this, set FTRACE_FL_TRAMP flag if rec count is decremented
+to one, and the ops that left has a trampoline.
+
+Testing After this patch :
+
+insmod livepatch_unshare_files.ko
+cat /sys/kernel/debug/tracing/enabled_functions
+
+	unshare_files (1) R I	tramp: 0xffffffffc0000000(klp_ftrace_handler+0x0/0xa0) ->ftrace_ops_assist_func+0x0/0xf0
+
+echo unshare_files > /sys/kernel/debug/tracing/set_ftrace_filter
+echo function > /sys/kernel/debug/tracing/current_tracer
+cat /sys/kernel/debug/tracing/enabled_functions
+
+	unshare_files (2) R I ->ftrace_ops_list_func+0x0/0x150
+
+echo nop > /sys/kernel/debug/tracing/current_tracer
+cat /sys/kernel/debug/tracing/enabled_functions
+
+	unshare_files (1) R I	tramp: 0xffffffffc0000000(klp_ftrace_handler+0x0/0xa0) ->ftrace_ops_assist_func+0x0/0xf0
+
+Link: http://lkml.kernel.org/r/1556969979-111047-1-git-send-email-cj.chengjian@huawei.com
+
+Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-rpc/dma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kernel/trace/ftrace.c | 28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm/mach-rpc/dma.c b/arch/arm/mach-rpc/dma.c
-index fb48f3141fb4..c4c96661eb89 100644
---- a/arch/arm/mach-rpc/dma.c
-+++ b/arch/arm/mach-rpc/dma.c
-@@ -131,7 +131,7 @@ static irqreturn_t iomd_dma_handle(int irq, void *dev_id)
- 	} while (1);
- 
- 	idma->state = ~DMA_ST_AB;
--	disable_irq(irq);
-+	disable_irq_nosync(irq);
- 
- 	return IRQ_HANDLED;
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 118ecce14386..d9dd709b3c12 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1647,6 +1647,11 @@ static bool test_rec_ops_needs_regs(struct dyn_ftrace *rec)
+ 	return  keep_regs;
  }
-@@ -174,6 +174,9 @@ static void iomd_enable_dma(unsigned int chan, dma_t *dma)
- 				DMA_FROM_DEVICE : DMA_TO_DEVICE);
- 		}
  
-+		idma->dma_addr = idma->dma.sg->dma_address;
-+		idma->dma_len = idma->dma.sg->length;
++static struct ftrace_ops *
++ftrace_find_tramp_ops_any(struct dyn_ftrace *rec);
++static struct ftrace_ops *
++ftrace_find_tramp_ops_next(struct dyn_ftrace *rec, struct ftrace_ops *ops);
 +
- 		iomd_writeb(DMA_CR_C, dma_base + CR);
- 		idma->state = DMA_ST_AB;
- 	}
+ static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
+ 				     int filter_hash,
+ 				     bool inc)
+@@ -1775,15 +1780,17 @@ static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
+ 			}
+ 
+ 			/*
+-			 * If the rec had TRAMP enabled, then it needs to
+-			 * be cleared. As TRAMP can only be enabled iff
+-			 * there is only a single ops attached to it.
+-			 * In otherwords, always disable it on decrementing.
+-			 * In the future, we may set it if rec count is
+-			 * decremented to one, and the ops that is left
+-			 * has a trampoline.
++			 * The TRAMP needs to be set only if rec count
++			 * is decremented to one, and the ops that is
++			 * left has a trampoline. As TRAMP can only be
++			 * enabled if there is only a single ops attached
++			 * to it.
+ 			 */
+-			rec->flags &= ~FTRACE_FL_TRAMP;
++			if (ftrace_rec_count(rec) == 1 &&
++			    ftrace_find_tramp_ops_any(rec))
++				rec->flags |= FTRACE_FL_TRAMP;
++			else
++				rec->flags &= ~FTRACE_FL_TRAMP;
+ 
+ 			/*
+ 			 * flags will be cleared in ftrace_check_record()
+@@ -1976,11 +1983,6 @@ static void print_ip_ins(const char *fmt, const unsigned char *p)
+ 		printk(KERN_CONT "%s%02x", i ? ":" : "", p[i]);
+ }
+ 
+-static struct ftrace_ops *
+-ftrace_find_tramp_ops_any(struct dyn_ftrace *rec);
+-static struct ftrace_ops *
+-ftrace_find_tramp_ops_next(struct dyn_ftrace *rec, struct ftrace_ops *ops);
+-
+ enum ftrace_bug_type ftrace_bug_type;
+ const void *ftrace_expected;
+ 
 -- 
 2.20.1
 
