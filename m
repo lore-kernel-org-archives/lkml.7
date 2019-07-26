@@ -2,94 +2,108 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD357C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 751A3C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8197C22BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:10:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n/Tfy/qY"
+	by mail.kernel.org (Postfix) with ESMTP id 5592722BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfGZMKP (ORCPT
+        id S1726826AbfGZMKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:10:15 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46783 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfGZMKO (ORCPT
+        Fri, 26 Jul 2019 08:10:19 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49038 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfGZMKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:10:14 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z23so26757477ote.13
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 05:10:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JrQTsqOEOykeYsYpjUAu93byMK1KwkPcKibV3U5vnJs=;
-        b=n/Tfy/qYbxxPMGO0GtR4PSwWNzJiHr/teYhJWdmOLIQXeIGRhXlrNAOjHxIg44X/c8
-         rTMphlu7MEMszPQPE7i0KXL/fg/5WjYEzxco2QaaRD1yrK2bg+KCzZWa39ZRgNTM2LtM
-         lCI+/my1YocZGIgiqhq3JHhPYzlOqgYvp6ZdftyiDQSF1s5Nqn4vzv+ZzYEuh31enYTk
-         jjQ04X5nn2NicQK3HyVuUjV+toViPvNj+wcJA44R4DusLvIx9mXjaDaZ27VLOEOxPKkn
-         k32sNyCUvsUw8nN+h7F+9P8EGFwgzyFqenM4BP1xKx9k2fNKMAwbFIXSWbIArOH/RDFF
-         Qdtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JrQTsqOEOykeYsYpjUAu93byMK1KwkPcKibV3U5vnJs=;
-        b=p0iIbu5PacGrPPJyCmCBudiuOeod5u21A7Ginit4PN+blowLOH4Xex8I6IMAa02sZe
-         oxJ6ClFzOR80s/sTFfFOcc/UEGAE7enSKZWQxeJ+TG8PT7nwjFU3gasZwyQ8PjIe2hhy
-         qK4o30pL2tMfh2bI5admGJq+9GJ6PWU09Xr2x5CeEFg6nn3D+HKJp0F1GD6yhFgYgBiF
-         GaR/FLYZvDwSUWPOY0mIje0Gn24W3BL9fymeuWjKw3r3N0rjFz3Wqcbxj7LAr0JZPc1/
-         QQuTyDSwa5br0lBicaBkyj8djzwKnq4eWT86lasnK+vRCq9Rps1fVe+EpLWgtZAooZbG
-         NIUg==
-X-Gm-Message-State: APjAAAVJfpdFGDs6v3g2JIn0Sh9pBeKy4p1XWhc34zNML6tH7kLLOhUp
-        u6y6zSZ9tj6El59AQX/tnqC23DU1hwCqEAGWRt5VMQ==
-X-Google-Smtp-Source: APXvYqywRN7n6lzmjA5a4KHs4TPzxtEcwP96gaeiFcPkyYj2chffCIcDU5MoSxlTXx3/N/hta8tMsIUOdAnpviY8SDk=
-X-Received: by 2002:a9d:529:: with SMTP id 38mr69587609otw.145.1564143014185;
- Fri, 26 Jul 2019 05:10:14 -0700 (PDT)
+        Fri, 26 Jul 2019 08:10:16 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hqz2z-0001PB-Ua; Fri, 26 Jul 2019 14:10:06 +0200
+Date:   Fri, 26 Jul 2019 14:10:05 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org
+Subject: Re: [PATCH 1/7] crypto: ux500: Use spinlock_t instead of struct
+ spinlock
+In-Reply-To: <20190704153803.12739-2-bigeasy@linutronix.de>
+Message-ID: <alpine.DEB.2.21.1907261409540.1791@nanos.tec.linutronix.de>
+References: <20190704153803.12739-1-bigeasy@linutronix.de> <20190704153803.12739-2-bigeasy@linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <cover.1564125131.git.baolin.wang@linaro.org> <23d51f5d9c9cc647ad0c5a1fb950d3d9fb9c1303.1564125131.git.baolin.wang@linaro.org>
- <20190726112901.GC4902@sirena.org.uk>
-In-Reply-To: <20190726112901.GC4902@sirena.org.uk>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Fri, 26 Jul 2019 20:10:02 +0800
-Message-ID: <CAMz4ku+3FVOYr7Gvh-Yrdhvw2cfntbnEkhONYGbC71UmCgZA-A@mail.gmail.com>
-Subject: Re: [PATCH 6/6] dt-bindings: spi: sprd: Change the hwlock support to
- be optional
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>, weicx@spreadst.com,
-        sherry.zong@unisoc.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Thu, 4 Jul 2019, Sebastian Andrzej Siewior wrote:
 
-On Fri, 26 Jul 2019 at 19:29, Mark Brown <broonie@kernel.org> wrote:
->
-> On Fri, Jul 26, 2019 at 03:20:53PM +0800, Baolin Wang wrote:
-> > No need to add hardware spinlock proctection due to add multiple
-> > msater channel, so change it to be optional in documentation.
->
-> Please use subject lines matching the style for the subsystem.  This
-> makes it easier for people to identify relevant patches.
+Polite reminder...
 
-The subject lines format 'dt-bindings: xxx' was recommended by Rob, so
-I am not sure if I need to change the format as 'spi: sprd:'? Thanks.
-
--- 
-Baolin Wang
-Best Regards
+> For spinlocks the type spinlock_t should be used instead of "struct
+> spinlock".
+> 
+> Use spinlock_t for spinlock's definition.
+> 
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: linux-crypto@vger.kernel.org
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>  drivers/crypto/ux500/cryp/cryp.h     | 4 ++--
+>  drivers/crypto/ux500/hash/hash_alg.h | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/crypto/ux500/cryp/cryp.h b/drivers/crypto/ux500/cryp/cryp.h
+> index bd89504e81678..8da7f87b339b4 100644
+> --- a/drivers/crypto/ux500/cryp/cryp.h
+> +++ b/drivers/crypto/ux500/cryp/cryp.h
+> @@ -241,12 +241,12 @@ struct cryp_device_data {
+>  	struct clk *clk;
+>  	struct regulator *pwr_regulator;
+>  	int power_status;
+> -	struct spinlock ctx_lock;
+> +	spinlock_t ctx_lock;
+>  	struct cryp_ctx *current_ctx;
+>  	struct klist_node list_node;
+>  	struct cryp_dma dma;
+>  	bool power_state;
+> -	struct spinlock power_state_spinlock;
+> +	spinlock_t power_state_spinlock;
+>  	bool restore_dev_ctx;
+>  };
+>  
+> diff --git a/drivers/crypto/ux500/hash/hash_alg.h b/drivers/crypto/ux500/hash/hash_alg.h
+> index ab2bd00c1c365..7c9bcc15125ff 100644
+> --- a/drivers/crypto/ux500/hash/hash_alg.h
+> +++ b/drivers/crypto/ux500/hash/hash_alg.h
+> @@ -366,10 +366,10 @@ struct hash_device_data {
+>  	phys_addr_t             phybase;
+>  	struct klist_node	list_node;
+>  	struct device		*dev;
+> -	struct spinlock		ctx_lock;
+> +	spinlock_t		ctx_lock;
+>  	struct hash_ctx		*current_ctx;
+>  	bool			power_state;
+> -	struct spinlock		power_state_lock;
+> +	spinlock_t		power_state_lock;
+>  	struct regulator	*regulator;
+>  	struct clk		*clk;
+>  	bool			restore_dev_state;
+> -- 
+> 2.20.1
+> 
+> 
