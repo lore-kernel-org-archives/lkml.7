@@ -2,122 +2,130 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB6CC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 04:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47B5C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 04:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6429422C7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 04:37:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564115844;
-	bh=1nt7q8KxuqRj39ao5XXnNzUnhd9l2e/3yTz4YLjJoXQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FjXuKs/+F+gFJ6UFxnEv5busXbexbxMBpPwiKjgQdxBSHFw399XZF5wrR8aWhX/nH
-	 8sNI1KZ/0G7AukYSeZQJFxYkS6kpwN/DnEclYNhtv6Vfl+IYCCTzUq4ad6Dl3MRH0I
-	 5osFqNhAxpEACYCpZhrbn1xn+Fru51HQhDd/cPgk=
+	by mail.kernel.org (Postfix) with ESMTP id 808E922BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 04:42:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Hm635lZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbfGZEhX (ORCPT
+        id S1725925AbfGZEmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 00:37:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726384AbfGZEhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 00:37:22 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36D2422BE8;
-        Fri, 26 Jul 2019 04:37:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564115841;
-        bh=1nt7q8KxuqRj39ao5XXnNzUnhd9l2e/3yTz4YLjJoXQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WVBxM/YV8tvQiY8Qz7TwN9/0ZnDu7VgpBpwwwkwyW7i9HzUhRuKogVAVDOy14013F
-         LGG4C+p4aZZQzL6s0BJAkmDVCj9w5GHvB+9lKBM3O8kJdvvv4gahecherBfmWvKHKK
-         pdn4Heg8oyDdq98B3/8yKc2xXShzOIFt3zFK5cHc=
-Date:   Thu, 25 Jul 2019 21:37:19 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH 4/5] IMA: use obj-y for non-modular objects
-Message-ID: <20190726043719.GB643@sol.localdomain>
-Mail-Followup-To: Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-References: <20190726021058.4212-1-yamada.masahiro@socionext.com>
- <20190726021058.4212-5-yamada.masahiro@socionext.com>
+        Fri, 26 Jul 2019 00:42:17 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43356 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbfGZEmQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 00:42:16 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i189so23860402pfg.10
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 21:42:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eq62dV3aG3jd/W9zqRWfepVRB8FhgcYvUn8Cc6l9GkA=;
+        b=Hm635lZZN0RARpzAb9ayexcKn9YXj1XlLee2lITYorBDY2KOsISLHVejwgEYcg6Nc0
+         ZqhT1sHlG9s/X0ETZP/JU0sFKEZfCI/zwx6FZHpw1WBMbMM+jyC+fd8EFxcdysy7wZMH
+         YYPvEnctY6Zda/l2Cl2oxKrjCh5ExnnUiBHjE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eq62dV3aG3jd/W9zqRWfepVRB8FhgcYvUn8Cc6l9GkA=;
+        b=mUFqQvoPnuio6E3b7qaDhCxJdHwC1FdZ8wJPe3XtP7IMDLWFEoPyk6ou74bmdIM0Hx
+         MQD53rY0wX9kAfAEYRQgvBmIMI6GFuFUVx/qxUORnka4MjgUClYX9VfcpCVnp6suahum
+         o6uL8pidg+gG6+yS4B72tlZyjusYob0IU2NTTu2gi/wszeMjsEevBTiJEm+ofZe9vHHL
+         tSYiJ2CDGMGM1iKfVqeZafA1NZka84jQ+xWQmG5Q7NkJ8E3mjNbP0uVXvgppPvY++8Gr
+         zsD+KNMqWnPSHZ6t+rOVpgjhTWm7UttwYHTZo5bYKFqbZi2zhfwHiPgXSZCaMUosn2ST
+         T/cg==
+X-Gm-Message-State: APjAAAWp4UvnH1FAbnTOne5boQ0XRp6kTzhG+4zbEkm6MaTX0sBfap+r
+        BwqiJO6IzlgQJkmz8WydN5HetWmkbco=
+X-Google-Smtp-Source: APXvYqzyDNFdueHohA8SGN1O6dmRutvK/f1c35LtOqHGnJFqaLCJWNkNKPAQTGdjzMb/377e4SAgXA==
+X-Received: by 2002:a17:90a:9905:: with SMTP id b5mr98357683pjp.70.1564116135769;
+        Thu, 25 Jul 2019 21:42:15 -0700 (PDT)
+Received: from localhost ([2401:fa00:1:b:e688:dfd2:a1a7:2956])
+        by smtp.gmail.com with ESMTPSA id t7sm41702252pjq.15.2019.07.25.21.42.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 21:42:14 -0700 (PDT)
+From:   Cheng-Yi Chiang <cychiang@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org,
+        dgreid@chromium.org, tzungbi@chromium.org, mka@chromium.org,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Cheng-Yi Chiang <cychiang@chromium.org>
+Subject: [PATCH] Revert "ASoC: rockchip: i2s: Support mono capture"
+Date:   Fri, 26 Jul 2019 12:42:02 +0800
+Message-Id: <20190726044202.26866-1-cychiang@chromium.org>
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190726021058.4212-5-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 11:10:57AM +0900, Masahiro Yamada wrote:
-> CONFIG_IMA is a boolean option, so none of these objects is linked
-> into a module.
-> 
-> All the objects in this directory are compiled only when CONFIG_IMA=y
-> since this directory is guarded by the parent Makefile:
-> 
->   obj-$(CONFIG_IMA)                       += ima/
-> 
-> So, there is no point in creating the composite object, ima.o
-> 
-> Flatten the code into the obj-$(CONFIG_...) form.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  security/integrity/ima/Makefile | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/security/integrity/ima/Makefile b/security/integrity/ima/Makefile
-> index d921dc4f9eb0..5517486c9154 100644
-> --- a/security/integrity/ima/Makefile
-> +++ b/security/integrity/ima/Makefile
-> @@ -4,10 +4,8 @@
->  # Measurement Architecture(IMA).
->  #
->  
-> -obj-$(CONFIG_IMA) += ima.o
-> -
-> -ima-y := ima_fs.o ima_queue.o ima_init.o ima_main.o ima_crypto.o ima_api.o \
-> +obj-y := ima_fs.o ima_queue.o ima_init.o ima_main.o ima_crypto.o ima_api.o \
->  	 ima_policy.o ima_template.o ima_template_lib.o
-> -ima-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
-> -ima-$(CONFIG_HAVE_IMA_KEXEC) += ima_kexec.o
-> +obj-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
-> +obj-$(CONFIG_HAVE_IMA_KEXEC) += ima_kexec.o
->  obj-$(CONFIG_IMA_BLACKLIST_KEYRING) += ima_mok.o
-> -- 
+This reverts commit db51707b9c9aeedd310ebce60f15d5bb006567e0.
 
-This patch changes the kernel command line options
+Previous discussion in
 
-	ima.ahash_minsize
-	ima.ahash_bufsize
+https://patchwork.kernel.org/patch/10147153/
 
-to
-	ima_crypto.ahash_minsize
-	ima_crypto.ahash_bufsize
+explains the issue of the patch.
+While device is configured as 1-ch, hardware is still
+generating a 2-ch stream.
+When user space reads the data and assumes it is a 1-ch stream,
+the rate will be slower by 2x.
 
-Intentional?
+Revert the change so 1-ch is not supported.
+User space can selectively take one channel data out of two channel
+if 1-ch is preferred.
+Currently, both channels record identical data.
 
-Note that these are documented in
-Documentation/admin-guide/kernel-parameters.txt.
+Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+---
+ sound/soc/rockchip/rockchip_i2s.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-- Eric
+diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
+index 0a34d0eb8dba..88ebaf6e1880 100644
+--- a/sound/soc/rockchip/rockchip_i2s.c
++++ b/sound/soc/rockchip/rockchip_i2s.c
+@@ -326,7 +326,6 @@ static int rockchip_i2s_hw_params(struct snd_pcm_substream *substream,
+ 		val |= I2S_CHN_4;
+ 		break;
+ 	case 2:
+-	case 1:
+ 		val |= I2S_CHN_2;
+ 		break;
+ 	default:
+@@ -459,7 +458,7 @@ static struct snd_soc_dai_driver rockchip_i2s_dai = {
+ 	},
+ 	.capture = {
+ 		.stream_name = "Capture",
+-		.channels_min = 1,
++		.channels_min = 2,
+ 		.channels_max = 2,
+ 		.rates = SNDRV_PCM_RATE_8000_192000,
+ 		.formats = (SNDRV_PCM_FMTBIT_S8 |
+@@ -659,7 +658,7 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	if (!of_property_read_u32(node, "rockchip,capture-channels", &val)) {
+-		if (val >= 1 && val <= 8)
++		if (val >= 2 && val <= 8)
+ 			soc_dai->capture.channels_max = val;
+ 	}
+ 
+-- 
+2.22.0.709.g102302147b-goog
+
