@@ -2,230 +2,287 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B71C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05582C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D577D218EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5091218EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:20:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h/5Uz9dX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i2nl6omO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbfGZQTh (ORCPT
+        id S1728569AbfGZQU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:19:37 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39253 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728407AbfGZQTh (ORCPT
+        Fri, 26 Jul 2019 12:20:28 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52112 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728496AbfGZQU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:19:37 -0400
-Received: by mail-io1-f66.google.com with SMTP id f4so105970091ioh.6
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 09:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IqERv8DKz+oP8owpdP7PzdiwI3xbOV3Kj5XS3CmvVfM=;
-        b=h/5Uz9dXIC/L69HRyfY+zKXCM1SWZ3EC3foYWgxL4aKfrrUtCL4G+KLWOfPBQGV2OA
-         0Q0qyWEMnlTrNKBGf6pTQYwUAJSfJx9xa9xNuHTQey4jy6pM786XbsE4qy52oyVrYcHW
-         dSpSPcxVgvlhC0b1gSTjcOE0fRv7wEImoj25Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IqERv8DKz+oP8owpdP7PzdiwI3xbOV3Kj5XS3CmvVfM=;
-        b=F/DbZhdnW7sS1pepwd6RR0yBHdAacO/ykl+wHff3bbfld1ttGb0atbn87alhcW5UCb
-         /5WSOKWqwrpksqIfFk406TVCj2FesVt8pnovsa2ok0P6ibjuH6ysSSKhRGvNcopNXTXE
-         pYv7VKZm98opbjNBS/o1gBM7TIH18pfGbPA3kQrfIONmnNj3d3tr1IRB+WNGV7spw7is
-         P+kW+9CyKhrKGop1m7BnGjzSOG2zsx7l0CDSKDK+v4fjhGVcMwdYt4c6aR2Ta4eNX+Nq
-         N6GZ7pg5sasyzK2mOgl59DFINziluczzCy0TD/Y9KMXraxfSb9Yl5Xr8WhSCC08wPirf
-         a1Yw==
-X-Gm-Message-State: APjAAAVswYL8LErz+rU0+52Lrt2wYl8LpDc3XOnCYktt1DBUZ0LbvsgL
-        09E8NtJ2XizrL56vL106EWg+ABIbxGM=
-X-Google-Smtp-Source: APXvYqwsmMQV8/Jgl4aRFFg2F41paf3xvjH3QiDt5DRQ0BMvvZciVF0qV3LyYBWE8Jr2hvvebenMfw==
-X-Received: by 2002:a5e:c70c:: with SMTP id f12mr13013403iop.293.1564157975992;
-        Fri, 26 Jul 2019 09:19:35 -0700 (PDT)
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com. [209.85.166.54])
-        by smtp.gmail.com with ESMTPSA id j25sm69808164ioj.67.2019.07.26.09.19.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 09:19:34 -0700 (PDT)
-Received: by mail-io1-f54.google.com with SMTP id e20so75538880iob.9
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 09:19:34 -0700 (PDT)
-X-Received: by 2002:a5e:c241:: with SMTP id w1mr83037431iop.58.1564157973635;
- Fri, 26 Jul 2019 09:19:33 -0700 (PDT)
+        Fri, 26 Jul 2019 12:20:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Yz9Xtm2sZUJQiP7HnbPwNasUB4b81OC8P1nglrmAuoQ=; b=i2nl6omOecnIfjXkC3qrF9hfS3
+        4M78gC12E+KgUXleRqQdna/LhFi4f1nVaNFNJXfGAZPjwi7I3lDSjzbZoMhDSbQSRt39Wz7GyI8Uh
+        +sN0qMCJ2KH/fq1CZhJ33Qs3fMPgPUduY75qg2HeHcYV0i7BmxpXsEKg8kAY6OcaBgngIjsO8KhuH
+        r2HDy3nYpKzIE9KX0ndJ04eCZpt8FtMKbNBzhIbAdErR/4yR+oUvXF4macJU0ZUubIO3H4jZtoqKy
+        zFouVwIGj/6bNnzJ3YkQ2kfwSIK7U+iPMtT7+n5jsQyuPxZra2/Okp4BW7IuKdX7WI6rBRGaa+tgD
+        bmLbdwVg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hr2wz-0006vx-AC; Fri, 26 Jul 2019 16:20:09 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 5C2A320229754; Fri, 26 Jul 2019 18:20:05 +0200 (CEST)
+Message-Id: <20190726161357.812535015@infradead.org>
+User-Agent: quilt/0.65
+Date:   Fri, 26 Jul 2019 16:54:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     mingo@kernel.org, juri.lelli@redhat.com
+Cc:     linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
+        luca.abeni@santannapisa.it, bristot@redhat.com,
+        balsini@android.com, dvyukov@google.com, tglx@linutronix.de,
+        vpillai@digitalocean.com, rostedt@goodmis.org, peterz@infradead.org
+Subject: [RFC][PATCH 08/13] sched: Rework pick_next_task() slow-path
+References: <20190726145409.947503076@infradead.org>
 MIME-Version: 1.0
-References: <20190725183551.169208-1-dianders@chromium.org> <20190726091630.GA20016@kroah.com>
-In-Reply-To: <20190726091630.GA20016@kroah.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 26 Jul 2019 09:19:21 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WVaksqBE4HBTMZwV1hv6_FJMmAqF+kWBpdfvsHQyRkSA@mail.gmail.com>
-Message-ID: <CAD=FV=WVaksqBE4HBTMZwV1hv6_FJMmAqF+kWBpdfvsHQyRkSA@mail.gmail.com>
-Subject: Re: [PATCH] kgdboc: disable the console lock when in kgdb
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Jiri Slaby <jslaby@suse.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Avoid the RETRY_TASK case in the pick_next_task() slow path.
 
-On Fri, Jul 26, 2019 at 2:16 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jul 25, 2019 at 11:35:51AM -0700, Douglas Anderson wrote:
-> > After commit ddde3c18b700 ("vt: More locking checks") kdb / kgdb has
-> > become useless because my console is filled with spews of:
-> >
-> > WARNING: CPU: 0 PID: 0 at .../drivers/tty/vt/vt.c:3846 con_is_visible+0x50/0x74
-> > CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc1+ #48
-> > Hardware name: Rockchip (Device Tree)
-> > Backtrace:
-> > [<c020ce9c>] (dump_backtrace) from [<c020d188>] (show_stack+0x20/0x24)
-> > [<c020d168>] (show_stack) from [<c0a8fc14>] (dump_stack+0xb0/0xd0)
-> > [<c0a8fb64>] (dump_stack) from [<c0232c58>] (__warn+0xec/0x11c)
-> > [<c0232b6c>] (__warn) from [<c0232dc4>] (warn_slowpath_null+0x4c/0x58)
-> > [<c0232d78>] (warn_slowpath_null) from [<c06338a0>] (con_is_visible+0x50/0x74)
-> > [<c0633850>] (con_is_visible) from [<c0634078>] (con_scroll+0x108/0x1ac)
-> > [<c0633f70>] (con_scroll) from [<c0634160>] (lf+0x44/0x88)
-> > [<c063411c>] (lf) from [<c06363ec>] (vt_console_print+0x1a4/0x2bc)
-> > [<c0636248>] (vt_console_print) from [<c02f628c>] (vkdb_printf+0x420/0x8a4)
-> > [<c02f5e6c>] (vkdb_printf) from [<c02f6754>] (kdb_printf+0x44/0x60)
-> > [<c02f6714>] (kdb_printf) from [<c02fa6f4>] (kdb_main_loop+0xf4/0x6e0)
-> > [<c02fa600>] (kdb_main_loop) from [<c02fd5f0>] (kdb_stub+0x268/0x398)
-> > [<c02fd388>] (kdb_stub) from [<c02f3ba0>] (kgdb_cpu_enter+0x1f8/0x674)
-> > [<c02f39a8>] (kgdb_cpu_enter) from [<c02f4330>] (kgdb_handle_exception+0x1c4/0x1fc)
-> > [<c02f416c>] (kgdb_handle_exception) from [<c0210fe0>] (kgdb_compiled_brk_fn+0x30/0x3c)
-> > [<c0210fb0>] (kgdb_compiled_brk_fn) from [<c020d7ac>] (do_undefinstr+0x180/0x1a0)
-> > [<c020d62c>] (do_undefinstr) from [<c0201b44>] (__und_svc_finish+0x0/0x3c)
-> > ...
-> > [<c02f3224>] (kgdb_breakpoint) from [<c02f3310>] (sysrq_handle_dbg+0x58/0x6c)
-> > [<c02f32b8>] (sysrq_handle_dbg) from [<c062abf0>] (__handle_sysrq+0xac/0x154)
-> >
-> > Let's disable this warning when we're in kgdb to avoid the spew.  The
-> > whole system is stopped when we're in kgdb so we can't exactly wait
-> > for someone else to drop the lock.  Presumably the best we can do is
-> > to disable the warning and hope for the best.
-> >
-> > Fixes: ddde3c18b700 ("vt: More locking checks")
-> > Cc: Daniel Vetter <daniel.vetter@intel.com>
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >
-> >  drivers/tty/serial/kgdboc.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-> > index bfe5e9e034ec..c7d51b51898f 100644
-> > --- a/drivers/tty/serial/kgdboc.c
-> > +++ b/drivers/tty/serial/kgdboc.c
-> > @@ -277,10 +277,14 @@ static void kgdboc_pre_exp_handler(void)
-> >       /* Increment the module count when the debugger is active */
-> >       if (!kgdb_connected)
-> >               try_module_get(THIS_MODULE);
-> > +
-> > +     atomic_inc(&ignore_console_lock_warning);
-> >  }
-> >
-> >  static void kgdboc_post_exp_handler(void)
-> >  {
-> > +     atomic_dec(&ignore_console_lock_warning);
-> > +
-> >       /* decrement the module count when the debugger detaches */
-> >       if (!kgdb_connected)
-> >               module_put(THIS_MODULE);
-> > --
-> > 2.22.0.709.g102302147b-goog
->
-> I have the following patch in my tree to go to Linus that I think might
-> fix this issue for you.  Can you test it instead?
->
-> thanks,
->
-> greg k-h
->
-> -----------------
->
->
-> From 61d51456f35760a09e8aa1e6ddd247f1547015d3 Mon Sep 17 00:00:00 2001
-> From: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Date: Thu, 18 Jul 2019 10:09:03 +0200
-> Subject: [PATCH] vt: Grab console_lock around con_is_bound in show_bind
->
-> Not really harmful not to, but also not harm in grabbing the lock. And
-> this shuts up a new WARNING I introduced in commit ddde3c18b700 ("vt:
-> More locking checks").
->
-> Reported-by: Jens Remus <jremus@linux.ibm.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
-> Cc: Martin Hostettler <textshell@uchuujin.de>
-> Cc: Adam Borowski <kilobyte@angband.pl>
-> Cc: Mikulas Patocka <mpatocka@redhat.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Fixes: ddde3c18b700 ("vt: More locking checks")
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> Tested-by: Jens Remus <jremus@linux.ibm.com>
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> Link: https://lore.kernel.org/r/20190718080903.22622-1-daniel.vetter@ffwll.ch
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/tty/vt/vt.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> index ec92f36ab5c4..34aa39d1aed9 100644
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
-> @@ -3771,7 +3771,11 @@ static ssize_t show_bind(struct device *dev, struct device_attribute *attr,
->                          char *buf)
->  {
->         struct con_driver *con = dev_get_drvdata(dev);
-> -       int bind = con_is_bound(con->con);
-> +       int bind;
-> +
-> +       console_lock();
-> +       bind = con_is_bound(con->con);
-> +       console_unlock();
->
->         return snprintf(buf, PAGE_SIZE, "%i\n", bind);
->  }
+By doing the put_prev_task() early, we get the rt/deadline pull done,
+and by testing rq->nr_running we know if we need newidle_balance().
 
-Thanks for checking.  I had actually noticed that patch (I searched
-the mailing lists for the short git hash of the commit that broke me
-and found it) and had decided it wouldn't fix my problems.
-Specifically I think it could only possibly fix things if the function
-show_bind() was somewhere in my stack trace.  ...and it isn't.
+This then gives a stable state to pick a task from.
 
-...but after your message I decided to be extra super sure.  I tried:
+Since the fast-path is fair only; it means the other classes will
+always have pick_next_task(.prev=NULL, .rf=NULL) and we can simplify.
 
-1. Going back to mainline commit 6789f873ed37 ("Merge tag 'pm-5.3-rc2'
-of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm") and
-picking commit 61d51456f357 ("vt: Grab console_lock around
-con_is_bound in show_bind") from linuxnext.  It didn't fix my problem.
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/sched/core.c      |   19 ++++++++++++-------
+ kernel/sched/deadline.c  |   30 ++----------------------------
+ kernel/sched/fair.c      |    9 ++++++---
+ kernel/sched/idle.c      |    4 +++-
+ kernel/sched/rt.c        |   29 +----------------------------
+ kernel/sched/sched.h     |   13 ++++++++-----
+ kernel/sched/stop_task.c |    3 ++-
+ 7 files changed, 34 insertions(+), 73 deletions(-)
 
-2. Going to next-20190726.  It didn't fix my problem.
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3739,7 +3739,7 @@ pick_next_task(struct rq *rq, struct tas
+ 
+ 		p = fair_sched_class.pick_next_task(rq, prev, rf);
+ 		if (unlikely(p == RETRY_TASK))
+-			goto again;
++			goto restart;
+ 
+ 		/* Assumes fair_sched_class->next == idle_sched_class */
+ 		if (unlikely(!p))
+@@ -3748,14 +3748,19 @@ pick_next_task(struct rq *rq, struct tas
+ 		return p;
+ 	}
+ 
+-again:
++restart:
++	/*
++	 * Ensure that we put DL/RT tasks before the pick loop, such that they
++	 * can PULL higher prio tasks when we lower the RQ 'priority'.
++	 */
++	prev->sched_class->put_prev_task(rq, prev, rf);
++	if (!rq->nr_running)
++		newidle_balance(rq, rf);
++
+ 	for_each_class(class) {
+-		p = class->pick_next_task(rq, prev, rf);
+-		if (p) {
+-			if (unlikely(p == RETRY_TASK))
+-				goto again;
++		p = class->pick_next_task(rq, NULL, NULL);
++		if (p)
+ 			return p;
+-		}
+ 	}
+ 
+ 	/* The idle class should always have a runnable task: */
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -1729,39 +1729,13 @@ pick_next_task_dl(struct rq *rq, struct
+ 	struct task_struct *p;
+ 	struct dl_rq *dl_rq;
+ 
+-	dl_rq = &rq->dl;
+-
+-	if (need_pull_dl_task(rq, prev)) {
+-		/*
+-		 * This is OK, because current is on_cpu, which avoids it being
+-		 * picked for load-balance and preemption/IRQs are still
+-		 * disabled avoiding further scheduler activity on it and we're
+-		 * being very careful to re-start the picking loop.
+-		 */
+-		rq_unpin_lock(rq, rf);
+-		pull_dl_task(rq);
+-		rq_repin_lock(rq, rf);
+-		/*
+-		 * pull_dl_task() can drop (and re-acquire) rq->lock; this
+-		 * means a stop task can slip in, in which case we need to
+-		 * re-start task selection.
+-		 */
+-		if (rq->stop && task_on_rq_queued(rq->stop))
+-			return RETRY_TASK;
+-	}
++	WARN_ON_ONCE(prev || rf);
+ 
+-	/*
+-	 * When prev is DL, we may throttle it in put_prev_task().
+-	 * So, we update time before we check for dl_nr_running.
+-	 */
+-	if (prev->sched_class == &dl_sched_class)
+-		update_curr_dl(rq);
++	dl_rq = &rq->dl;
+ 
+ 	if (unlikely(!dl_rq->dl_nr_running))
+ 		return NULL;
+ 
+-	put_prev_task(rq, prev);
+-
+ 	dl_se = pick_next_dl_entity(rq, dl_rq);
+ 	BUG_ON(!dl_se);
+ 
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6740,7 +6740,7 @@ pick_next_task_fair(struct rq *rq, struc
+ 		goto idle;
+ 
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+-	if (prev->sched_class != &fair_sched_class)
++	if (!prev || prev->sched_class != &fair_sched_class)
+ 		goto simple;
+ 
+ 	/*
+@@ -6817,8 +6817,8 @@ pick_next_task_fair(struct rq *rq, struc
+ 	goto done;
+ simple:
+ #endif
+-
+-	put_prev_task(rq, prev);
++	if (prev)
++		put_prev_task(rq, prev);
+ 
+ 	do {
+ 		se = pick_next_entity(cfs_rq, NULL);
+@@ -6846,6 +6846,9 @@ done: __maybe_unused;
+ 	return p;
+ 
+ idle:
++	if (!rf)
++		return NULL;
++
+ 	new_tasks = newidle_balance(rq, rf);
+ 
+ 	/*
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -389,7 +389,9 @@ pick_next_task_idle(struct rq *rq, struc
+ {
+ 	struct task_struct *next = rq->idle;
+ 
+-	put_prev_task(rq, prev);
++	if (prev)
++		put_prev_task(rq, prev);
++
+ 	set_next_task_idle(rq, next);
+ 
+ 	return next;
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -1554,38 +1554,11 @@ pick_next_task_rt(struct rq *rq, struct
+ 	struct task_struct *p;
+ 	struct rt_rq *rt_rq = &rq->rt;
+ 
+-	if (need_pull_rt_task(rq, prev)) {
+-		/*
+-		 * This is OK, because current is on_cpu, which avoids it being
+-		 * picked for load-balance and preemption/IRQs are still
+-		 * disabled avoiding further scheduler activity on it and we're
+-		 * being very careful to re-start the picking loop.
+-		 */
+-		rq_unpin_lock(rq, rf);
+-		pull_rt_task(rq);
+-		rq_repin_lock(rq, rf);
+-		/*
+-		 * pull_rt_task() can drop (and re-acquire) rq->lock; this
+-		 * means a dl or stop task can slip in, in which case we need
+-		 * to re-start task selection.
+-		 */
+-		if (unlikely((rq->stop && task_on_rq_queued(rq->stop)) ||
+-			     rq->dl.dl_nr_running))
+-			return RETRY_TASK;
+-	}
+-
+-	/*
+-	 * We may dequeue prev's rt_rq in put_prev_task().
+-	 * So, we update time before rt_queued check.
+-	 */
+-	if (prev->sched_class == &rt_sched_class)
+-		update_curr_rt(rq);
++	WARN_ON_ONCE(prev || rf);
+ 
+ 	if (!rt_rq->rt_queued)
+ 		return NULL;
+ 
+-	put_prev_task(rq, prev);
+-
+ 	p = _pick_next_task_rt(rq);
+ 
+ 	set_next_task_rt(rq, p);
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1704,12 +1704,15 @@ struct sched_class {
+ 	void (*check_preempt_curr)(struct rq *rq, struct task_struct *p, int flags);
+ 
+ 	/*
+-	 * It is the responsibility of the pick_next_task() method that will
+-	 * return the next task to call put_prev_task() on the @prev task or
+-	 * something equivalent.
++	 * Both @prev and @rf are optional and may be NULL, in which case the
++	 * caller must already have invoked put_prev_task(rq, prev, rf).
+ 	 *
+-	 * May return RETRY_TASK when it finds a higher prio class has runnable
+-	 * tasks.
++	 * Otherwise it is the responsibility of the pick_next_task() to call
++	 * put_prev_task() on the @prev task or something equivalent, IFF it
++	 * returns a next task.
++	 *
++	 * In that case (@rf != NULL) it may return RETRY_TASK when it finds a
++	 * higher prio class has runnable tasks.
+ 	 */
+ 	struct task_struct * (*pick_next_task)(struct rq *rq,
+ 					       struct task_struct *prev,
+--- a/kernel/sched/stop_task.c
++++ b/kernel/sched/stop_task.c
+@@ -33,10 +33,11 @@ pick_next_task_stop(struct rq *rq, struc
+ {
+ 	struct task_struct *stop = rq->stop;
+ 
++	WARN_ON_ONCE(prev || rf);
++
+ 	if (!stop || !task_on_rq_queued(stop))
+ 		return NULL;
+ 
+-	put_prev_task(rq, prev);
+ 	set_next_task_stop(rq, stop);
+ 
+ 	return stop;
 
-...so indeed my patch addresses a different issue than the one you
-pointed to, even if both fix problems introduced by the same commit.
 
-
-Thanks!
-
--Doug
