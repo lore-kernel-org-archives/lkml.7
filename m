@@ -2,105 +2,96 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C70A3C41517
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F224EC76191
 	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECD022C7C
+	by mail.kernel.org (Postfix) with ESMTP id CABFC21951
 	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:43:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/8noa7C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ti/+4SPY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbfGZDhY (ORCPT
+        id S1726138AbfGZDjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 23:37:24 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38829 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfGZDhY (ORCPT
+        Thu, 25 Jul 2019 23:39:05 -0400
+Received: from mail-pf1-f181.google.com ([209.85.210.181]:38271 "EHLO
+        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfGZDjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 23:37:24 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y15so23785512pfn.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 20:37:23 -0700 (PDT)
+        Thu, 25 Jul 2019 23:39:04 -0400
+Received: by mail-pf1-f181.google.com with SMTP id y15so23787248pfn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 20:39:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=MVFsNfeXzerLqMZOF/NXhnILFTns7YePBX6j9xJptms=;
-        b=f/8noa7Cj2VQKBganab1JYvwrmyua4Cf/vzhDrYyIXd5XHyCwhZlCwqhtqih+QvxUU
-         zgn+x9WKhWck1N72TP0W/qSYFawiiOcMkckjARINwR8GfMYg9ZxXOpy99LtcYWs9o+/U
-         pkdUyvGvhxh+VpuEofdrLfS2YC8kQfF/ubUROkOV7Kypc+xSvCiFKbqCFqt2hMs7LiGi
-         qhkxYMIol/sZg3s8tC8Bbpc4lbowo1tNE8fsCVB0GXcWtj7BRot5d4lHLzj1Y+UMFJOd
-         L97vxAfIKce9S5vj+IbECZMhSPiln0J2zfffrnYfSec/ERRI8Z9XmfDBr0yyoRYITif9
-         9Idw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=x9jpkKsawqv16UAcPnvGSGklT2l7v1L3clQy/LaazSE=;
+        b=ti/+4SPYRcJdC2ON+0rZow0dnLBewWtmxUej4Wq/2hSnhBHk+w8ww0NY40o1Nq6Umw
+         R5R2HRP/xPjYmsSQsz/9Jve182Fb+hs1UwWtKgzlEbZzKOsq4xDSG8kjtoi37ePmMCB2
+         u1fT4GquAsRIFlT7cwVVBWnUgFnQiZfRshv3o/isLQIrVV9m5prAQWi9kKM59DL0CSrD
+         Ldonv6rqPwcmaWTRK6WQnDg3Xlc5GS1uDVjmB5+t5rPOHZixbd12SKCy6GltDcf6PUGz
+         1olB+ArkOlSzGYoQFiOsD4JqvTRiq9cdwAA3nFireAhbVgL60n8nY1hpwTT7u98/l5XK
+         8hkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MVFsNfeXzerLqMZOF/NXhnILFTns7YePBX6j9xJptms=;
-        b=E4DXotCCltDMBygAJoskZ8sA0aSEHpgqwfPOQ7ULcDK60hETiNWBvRhow4cN/0OIQR
-         0/WmM2v2ingK0glo+VoOuaWY9JyNeLwCyd4x+YLzfslVNVTGnmjVLn48/xBSIVACx+04
-         Q06GKSPR4/0Zp0EWKkQNBXUdSehP0+ah+2z2aVGqSi2aJxnK00n/GVS/ub1frnfBVDcK
-         5v+cOXmFqkUNfziCK7zMlzXXa31BkYHppHgmhRotiMYbTYJdy7+c3oavElM1NeirlZJd
-         RYdZXUO6jwqDjDpET5WjwmA5Y3F7sb6JGF2nUQAJmlylrkLLjO9n4FeqB7Bi+nfiLjbY
-         wpdA==
-X-Gm-Message-State: APjAAAXxGC9D6u3SpK4jO/cy3fcoVd2bw59gQ/yL7xjFcPSCnPJUDMge
-        0vFRSc5qMNhMmK2kWRHvA8M=
-X-Google-Smtp-Source: APXvYqxQQRQYRv+F2M9U1lf7a/Ms/TkeOF4ZBQvd4vU0Jwb0/pQy2ipfwzw6SHhlDnP3RqsEJxm39g==
-X-Received: by 2002:aa7:8651:: with SMTP id a17mr19749665pfo.138.1564112243397;
-        Thu, 25 Jul 2019 20:37:23 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id v63sm53036295pfv.174.2019.07.25.20.37.21
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=x9jpkKsawqv16UAcPnvGSGklT2l7v1L3clQy/LaazSE=;
+        b=D9OGAaAiW7/manbEoUAZsgvammUjI+I9PauL05uwZwf719SyBXbKVuOKB7cQtOGXLM
+         xx2M4xkeFOF3qjeXh/zPP9G6CW9IScLGg+1ajxNT73MYgNVNy3H3Dht+pQ+E1pgWrK73
+         K9YlB73sPqzyct3v2iNoNHbVxu6M9CUj3KSUzBLFbZSWRd3ayucomT5E+YqnJF5nFH4V
+         GCSTxCH/+sSn5RHgxO1zVqIj6Y1H+/wVoPThh3P7rpmJr0UTCaUAzKwkAlVbROGpzVCT
+         AHnwNFOED56XWadwTe1e9P10BCZeQsurcHXF/ZnNqBMT1Pnu8HtbctzfVwTRJxI8WqkW
+         zjEw==
+X-Gm-Message-State: APjAAAVHdUByACwBybjBdCbni83Ud1bfylQ42aND0XLoHVbcP4UDtQ6p
+        1BJMTnIbs7rYPPX1y7PR+uOzkyysSn8=
+X-Google-Smtp-Source: APXvYqxpsRY5Whl2UjMjKGugceyF3SN4a4ogN5X4rWtnKPZe3r9lhDFkJplLVyd20xUrazvJFRxtng==
+X-Received: by 2002:a17:90a:372a:: with SMTP id u39mr95911266pjb.2.1564112344038;
+        Thu, 25 Jul 2019 20:39:04 -0700 (PDT)
+Received: from ?IPv6:2402:f000:4:72:808::177e? ([2402:f000:4:72:808::177e])
+        by smtp.gmail.com with ESMTPSA id d14sm63212225pfo.154.2019.07.25.20.39.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 20:37:22 -0700 (PDT)
+        Thu, 25 Jul 2019 20:39:03 -0700 (PDT)
+Subject: Re: [BUG] fs: f2fs: Possible null-pointer dereferences in
+ update_general_status()
+To:     Chao Yu <yuchao0@huawei.com>, jaegeuk@kernel.org
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+References: <f577be2f-fc2f-9ef8-2c6c-9c247123b1ad@gmail.com>
+ <2d66cd56-eccf-9086-c5db-118acce717a6@huawei.com>
 From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     mark@fasheh.com, jlbec@evilplan.org, joseph.qi@linux.alibaba.com
-Cc:     ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH 3/3] fs: ocfs2: Fix a possible null-pointer dereference in ocfs2_info_scan_inode_alloc()
-Date:   Fri, 26 Jul 2019 11:37:17 +0800
-Message-Id: <20190726033717.32359-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+Message-ID: <889d8107-a122-cc15-ed08-959b34dcf248@gmail.com>
+Date:   Fri, 26 Jul 2019 11:39:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <2d66cd56-eccf-9086-c5db-118acce717a6@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In ocfs2_info_scan_inode_alloc(), there is an if statement on line 283
-to check whether inode_alloc is NULL:
-    if (inode_alloc)
 
-When inode_alloc is NULL, it is used on line 287:
-    ocfs2_inode_lock(inode_alloc, &bh, 0);
-        ocfs2_inode_lock_full_nested(inode, ...)
-            struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
 
-Thus, a possible null-pointer dereference may occur.
+On 2019/7/26 11:19, Chao Yu wrote:
+> Hi Jiaju,
+>
+> Thanks for the report, I checked the code, and found it doesn't need to check
+> SM_I(sbi) pointer, this is because in fill_super() and put_super(), we will call
+> f2fs_destroy_stats() in prior to f2fs_destroy_segment_manager(), so if current
+> sbi can still be visited in global stat list, SM_I(sbi) should be released yet.
+> So anyway, let's remove unneeded check in line 70/78. :)
 
-To fix this bug, inode_alloc is checked on line 286.
+Okay, I will send a patch to remove unneeded checks.
 
-This bug is found by a static analysis tool STCheck written by us.       
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- fs/ocfs2/ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
-index d6f7b299eb23..efeea208fdeb 100644
---- a/fs/ocfs2/ioctl.c
-+++ b/fs/ocfs2/ioctl.c
-@@ -283,7 +283,7 @@ static int ocfs2_info_scan_inode_alloc(struct ocfs2_super *osb,
- 	if (inode_alloc)
- 		inode_lock(inode_alloc);
- 
--	if (o2info_coherent(&fi->ifi_req)) {
-+	if (inode_alloc && o2info_coherent(&fi->ifi_req)) {
- 		status = ocfs2_inode_lock(inode_alloc, &bh, 0);
- 		if (status < 0) {
- 			mlog_errno(status);
--- 
-2.17.0
-
+Best wishes,
+Jia-Ju Bai
