@@ -2,151 +2,161 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,PI_IMPORTANCE_HIGH,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC416C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C293BC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B9620838
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BA5320838
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:40:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="gBkAyB98"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r2LYzePY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387700AbfGZShQ (ORCPT
+        id S2387783AbfGZSkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 14:37:16 -0400
-Received: from mail-eopbgr740087.outbound.protection.outlook.com ([40.107.74.87]:60576
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726814AbfGZShQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 14:37:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YPv+xMdB1YyL8YhMajPphGi+bS9lMz6ASqai5g14MwfxNK0e5vgty+sf/HjaHykGjTEBbbUbxG+BVvONEoMClF5NkGN4eR59QoHE2587PNwV1jgHEzuCmYrjLvBamMT3FqqUTu2GVDeKipeOww4fUlj/2IqurHiyHNh6OVBgwU6SMWa9D2zkbsprk0TRsDGqLvNdKazcNUQolU+YWecbNrWsC74yCez6PsWByUF4LST2/7vdxFNh7ni8RhLCMsm7G7W+bqS1TiA//jBD8l+PWYik21PomRcdys9DGi4Lccz5V3kyek/M1AXLWM2c1HtqzRM7MtY7wNV6JmLf+dg22Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A9J5UrUZa4tOMEkBAR17JOXdDuSzN76JeNaAJVHnBHc=;
- b=RWtpvv1qNmCJgoY3umu9IZcvdrB2XcGeJKdbaZBExGsiUxpHapgwkLA+USQgBKRFzkSKQYdcD8MGTSoEqE3mLzrsZqpH8AT9+T8BNbqDNMD6PKPKeLGPcKFp2hbOEKm3j+SNUcvTqNE/toph7IWkgEfLjMwUeh3feIFhpdWnDflpPPSo6AICcB1vK5X5oMHc8gPprdjNM2frUpNEXSR5ellHwoz6NdYj+iZmmNMCHVbAMLl8bjRIIclhkCPtMQNnHRojaN18VN2lffGddph6HFQu5iQdKvV1KXeql2fZS04+OHGUgmiyP9fzINSfzuOWQqTvRlrURxVF6GWaJxJSag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=vmware.com;dmarc=pass action=none
- header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A9J5UrUZa4tOMEkBAR17JOXdDuSzN76JeNaAJVHnBHc=;
- b=gBkAyB98scssyC74Ns+vzVxPbm2YeWmn6V8tUnt1XJF+i3//thjWBgCoWa1do5brPnJaVxvh/5p7+ggz2kMpCgijxIFQAzEeMaVmEXBjC9cEwczxMrcc7TefBB+RYKGPk9+mJpMMWKgIRqLYb2lHnOGqtvJpOZOk7zYCFmTV7b4=
-Received: from CY4PR05MB3494.namprd05.prod.outlook.com (10.171.246.163) by
- CY4PR05MB3288.namprd05.prod.outlook.com (10.171.247.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.10; Fri, 26 Jul 2019 18:37:11 +0000
-Received: from CY4PR05MB3494.namprd05.prod.outlook.com
- ([fe80::84f3:3266:347a:26bf]) by CY4PR05MB3494.namprd05.prod.outlook.com
- ([fe80::84f3:3266:347a:26bf%4]) with mapi id 15.20.2115.005; Fri, 26 Jul 2019
- 18:37:11 +0000
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3 04/13] recordmcount: Rewrite error/success handling
-Thread-Topic: [PATCH v3 04/13] recordmcount: Rewrite error/success handling
-Thread-Index: AQHVQmOIZ4Qum/C9LEe1t5ZS+gGHcKbdLwWAgAAOeAA=
-Importance: high
-X-Priority: 1
-Date:   Fri, 26 Jul 2019 18:37:11 +0000
-Message-ID: <4F0912A7-345E-46EE-B58F-CF7E8EE2AB65@vmware.com>
-References: <cover.1563992889.git.mhelsley@vmware.com>
- <316706a0e2727af0a2639b8e90366746d7a3a84a.1563992889.git.mhelsley@vmware.com>
- <20190726134523.4e7afd55@gandalf.local.home>
-In-Reply-To: <20190726134523.4e7afd55@gandalf.local.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mhelsley@vmware.com; 
-x-originating-ip: [73.25.163.201]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c0d48aa1-eab9-4fd2-868f-08d711f84575
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR05MB3288;
-x-ms-traffictypediagnostic: CY4PR05MB3288:
-x-microsoft-antispam-prvs: <CY4PR05MB328842863957E7AC537F4BA4A0C00@CY4PR05MB3288.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01106E96F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(396003)(39860400002)(366004)(189003)(199004)(33656002)(76176011)(2906002)(6506007)(53936002)(8936002)(6246003)(102836004)(53546011)(66066001)(316002)(54906003)(11346002)(446003)(6436002)(4326008)(6916009)(6486002)(186003)(26005)(99286004)(476003)(486006)(68736007)(2616005)(229853002)(66446008)(66556008)(86362001)(66476007)(25786009)(3846002)(6116002)(76116006)(91956017)(66946007)(5660300002)(478600001)(81686011)(14454004)(7736002)(81156014)(6512007)(305945005)(8676002)(81166006)(36756003)(14444005)(71200400001)(71190400001)(256004)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR05MB3288;H:CY4PR05MB3494.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: pDAiQEW5siQp2RIvZquJpt7TkAftKk0dnRXD6NiHNmoycQvE4yeLemEv7xqlKRaYEShedKiM5SubKna/mLRheS6mzIWr8y0RPFFw3MeufcRKm5YNwfss5xftNvuwXnkUzykwit/zYuK8n4QnWUpGk0p579xAYAYwh2RntATUQLpOjQyo/Z24Zxtld3/gNgQvPEhh2YcBLzJP/1Fa0eYh8gd30aRbDHmu42sMpqMBLxvkr9kBGRxAiMX2pT16nqOp6FcqgeWkV2JZoQTJpwO0q6m6j1tjuJN3rhQti/co/8zAIX0Teii3/TR7vthVnx/Me++xCXxp1n9gfJvAm2ljEiAbW5DcPK+YD5TA+IAjAB/DlS9yodhqlBrAw3m/v402YUHheGH0xbbJXXHM7DrxbTMPrQ8oDYbNo+NSWHAENx0=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E54000B342538B4FA40C6E7185952517@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 26 Jul 2019 14:40:01 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40876 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387434AbfGZSkB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 14:40:01 -0400
+Received: by mail-pf1-f195.google.com with SMTP id p184so24905194pfp.7;
+        Fri, 26 Jul 2019 11:40:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bY4xnD9VEBuMVQmfTHfPZt8vwC6Vj5uTPYAbzW3F/j4=;
+        b=r2LYzePY0p1lz7qwyh9m7J8u6+UVqedhCQ7BKobVOg1zauDSAKbok5ceFZRuNp2VFf
+         lX/4BDr8lMTXFrfSeA0Op5MpsCZYnTg97r/E85vHuBuuKbkvll4YhTyjAU5YtmA0YfYi
+         3KN/k8jdDTyKs4BWRUh+VTETT++7zIU/khvMxnp8IjNmpTSFZDwCi7cQAqeyCTdCiegT
+         f4oor9KFs6N9V0FWfGlOcVzy0OlGKexfdAmTY8oCDgKlKh+cvcZFhvCJj6/CUG9BLPLb
+         nW6VTyq9P/MBwWVndBBdFnXhACkGNtbgaoLicUBHDJrL9AjJjHbTdq0du8q5IIgzqVUa
+         MJXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bY4xnD9VEBuMVQmfTHfPZt8vwC6Vj5uTPYAbzW3F/j4=;
+        b=sVIkUmNTzPdwwd6L/YGQm/fmdc3DV9vaWQx44tOISw352lMJVwHkd0igkwXBoeKbHq
+         DgtUCz20X6il+u1yChY5Bexfvhydtc+CPN8ee9TeO/aZlhBd0wmPPcVkSz1f71g/AQno
+         WYco9rpsUxBIhSjVXIL2ZHhLjSwUbjRKYYxzKoLXdSamBgcG+107XtIJbRyWKWhYantv
+         teBddUPH/j9czeo+d6hC4wuv3oBpDZPkmC88zabQ4gvYkf4q6aRWoqk2f8IiRPPAB/Jf
+         3MGrU3n6jhbYahr1Ka0sZKCES1gWMRIzD36Fks0rSqImu/oz4H88WSQPv9LstQ/Gn+Yv
+         0cQw==
+X-Gm-Message-State: APjAAAVEcb98W1HGpjlRTH6KtsRysmnN6D0xL7kWwjonzs0BYGm6j0Hl
+        ZqVJr4h+Mb6lxSvPvww7Z0c=
+X-Google-Smtp-Source: APXvYqwAa7f6KrCivJT9i9iP+Ljnbnzh9F83yxbeML6KsVRnVjPFn3zX0egbZMn28CCYbk40FWxZ9w==
+X-Received: by 2002:a62:1b0c:: with SMTP id b12mr23337721pfb.17.1564166400088;
+        Fri, 26 Jul 2019 11:40:00 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::2:2eeb])
+        by smtp.gmail.com with ESMTPSA id u7sm47886990pgr.94.2019.07.26.11.39.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jul 2019 11:39:59 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 11:39:56 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Network Development <netdev@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>, kernel-team@android.com
+Subject: Re: [PATCH RFC 0/4] Add support to directly attach BPF program to
+ ftrace
+Message-ID: <20190726183954.oxzhkrwt4uhgl4gl@ast-mbp.dhcp.thefacebook.com>
+References: <20190716213050.GA161922@google.com>
+ <20190716222650.tk2coihjtsxszarf@ast-mbp.dhcp.thefacebook.com>
+ <20190716224150.GC172157@google.com>
+ <20190716235500.GA199237@google.com>
+ <20190717012406.lugqemvubixfdd6v@ast-mbp.dhcp.thefacebook.com>
+ <20190717130119.GA138030@google.com>
+ <CAADnVQJY_=yeY0C3k1ZKpRFu5oNbB4zhQf5tQnLr=Mi8i6cgeQ@mail.gmail.com>
+ <20190718025143.GB153617@google.com>
+ <20190723221108.gamojemj5lorol7k@ast-mbp>
+ <20190724135714.GA9945@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0d48aa1-eab9-4fd2-868f-08d711f84575
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2019 18:37:11.0396
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mhelsley@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR05MB3288
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724135714.GA9945@google.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gT24gSnVsIDI2LCAyMDE5LCBhdCAxMDo0NSBBTSwgU3RldmVuIFJvc3RlZHQgPHJvc3Rl
-ZHRAZ29vZG1pcy5vcmc+IHdyb3RlOg0KPiANCj4gT24gV2VkLCAyNCBKdWwgMjAxOSAxNDowNDo1
-OCAtMDcwMA0KPiBNYXR0IEhlbHNsZXkgPG1oZWxzbGV5QHZtd2FyZS5jb20+IHdyb3RlOg0KPiAN
-Cj4gDQo+IEhpIE1hdHQsDQo+IA0KPiBBcyBJJ20gYXBwbHlpbmcgdGhlc2UgZm9yIHJlYWwsIEkn
-bSB0YWtpbmcgYSBkZWVwZXIgbG9vayBhdCB0aGUNCj4gcGF0Y2hlcy4gVGhpcyBvbmUgSSBoYXZl
-IHNvbWUgcXVlc3Rpb25zIGFib3V0Lg0KPiANCj4+IFJlY29yZG1jb3VudCB1c2VzIHNldGptcC9s
-b25nam1wIHRvIG1hbmFnZSBjb250cm9sIGZsb3cgYXMNCj4+IGl0IHJlYWRzIGFuZCB0aGVuIHdy
-aXRlcyB0aGUgRUxGIGZpbGUuIFRoaXMgdW51c3VhbCBjb250cm9sDQo+PiBmbG93IGlzIGhhcmQg
-dG8gZm9sbG93IGFuZCBjaGVjayBpbiBhZGRpdGlvbiB0byBiZWluZyB1bmxpa2UNCj4+IGtlcm5l
-bCBjb2Rpbmcgc3R5bGUuDQo+PiANCj4+IFNvIHdlIHJld3JpdGUgdGhlc2UgcGF0aHMgdG8gdXNl
-IHJlZ3VsYXIgcmV0dXJuIHZhbHVlcyB0bw0KPj4gaW5kaWNhdGUgZXJyb3Ivc3VjY2Vzcy4gV2hl
-biBhbiBlcnJvciBvciBwcmV2aW91c2x5LWNvbXBsZXRlZCBvYmplY3QNCj4+IGZpbGUgaXMgZm91
-bmQgd2UgcmV0dXJuIGFuIGVycm9yIGNvZGUgZm9sbG93aW5nIGtlcm5lbA0KPj4gY29kaW5nIGNv
-bnZlbnRpb25zIC0tIG5lZ2F0aXZlIGVycm9yIHZhbHVlcyBhbmQgMCBmb3Igc3VjY2VzcyB3aGVu
-DQo+PiB3ZSdyZSBub3QgcmV0dXJuaW5nIGEgcG9pbnRlci4gV2UgcmV0dXJuIE5VTEwgZm9yIHRo
-b3NlIHRoYXQgZmFpbA0KPj4gYW5kIHJldHVybiBub24tTlVMTCBwb2ludGVycyBvdGhlcndpc2Uu
-DQo+PiANCj4+IE9uZSBvZGRpdHkgaXMgYWxyZWFkeV9oYXNfcmVsX21jb3VudCAtLSB0aGVyZSB3
-ZSB1c2UgcG9pbnRlciBjb21wYXJpc29uDQo+PiByYXRoZXIgdGhhbiBzdHJpbmcgY29tcGFyaXNv
-biB0byBkaWZmZXJlbnRpYXRlIGJldHdlZW4NCj4+IHByZXZpb3VzbHktcHJvY2Vzc2VkIG9iamVj
-dCBmaWxlcyBhbmQgcmV0dXJuaW5nIHRoZSBuYW1lIG9mIGEgdGV4dA0KPj4gc2VjdGlvbi4NCj4g
-DQo+IFRoaXMgaXMgZmluZSwgYnV0IGl0J3MgZ290IGEgc3RyYW5nZSBpbXBsZW1lbnRhdGlvbi4N
-Cj4gDQo+IA0KPiANCj4+IGRpZmYgLS1naXQgYS9zY3JpcHRzL3JlY29yZG1jb3VudC5oIGIvc2Ny
-aXB0cy9yZWNvcmRtY291bnQuaA0KPj4gaW5kZXggYzFlMWIwNGI0ODcxLi45MDlhM2U0Nzc1YzIg
-MTAwNjQ0DQo+PiAtLS0gYS9zY3JpcHRzL3JlY29yZG1jb3VudC5oDQo+PiArKysgYi9zY3JpcHRz
-L3JlY29yZG1jb3VudC5oDQo+PiBAQCAtMjQsNyArMjQsOSBAQA0KPj4gI3VuZGVmIG1jb3VudF9h
-ZGp1c3QNCj4+ICN1bmRlZiBzaWZ0X3JlbF9tY291bnQNCj4+ICN1bmRlZiBub3BfbWNvdW50DQo+
-PiArI3VuZGVmIG1pc3Npbmdfc3ltDQo+PiAjdW5kZWYgZmluZF9zZWNzeW1fbmR4DQo+PiArI3Vu
-ZGVmIGFscmVhZHlfaGFzX3JlbF9tY291bnQNCj4gDQo+IFdoeSBkbyB3ZSBuZWVkIHRoZXNlIGFz
-IGRlZmluZXM/IENhbid0IHlvdSBqdXN0IGhhdmUgYSBzaW5nbGU6DQo+IA0KPiBjb25zdCBjaGFy
-ICphbHJlYWR5X2hhc19tY291bnQgPSAic3VjY2VzcyI7DQo+IA0KPiBpbiByZWNvcmRtY291bnQu
-YyBiZWZvcmUgcmVjb3JkbWNvdW50LmggaXMgaW5jbHVkZWQ/DQo+IA0KPiBBbmQgc2FtZSBmb3Ig
-bWlzc2luZ19zeW0uDQoNClllcywgdGhhdOKAmXMgYSBnb29kIHBvaW50LiBJ4oCZdmUgYmVlbiB0
-cnlpbmcgdG8gc2VwYXJhdGUgdGhlIGNoYW5nZXMgdG8gdGhlIGZ1bmN0aW9ucw0KZnJvbSBtb3Zp
-bmcgcGFydHMgb3V0IGJ1dCBpbiB0aGlzIGNhc2UgaXQgd291bGQgbWFrZSBqdXN0IGFzIG11Y2gg
-c2Vuc2UgdG8gYWRkIHRoZW0gdG8gcmVjb3JkbWNvdW50LmMgaW4gdGhlIGZpcnN0IHBsYWNlLg0K
-DQpVbHRpbWF0ZWx5LCB0aGlzIHVnbGluZXNzIGdldHMgcmVtb3ZlZCBhcyB0aGUgbmV4dCBzZXJp
-ZXMgcmVtb3ZlcyByZWNvcmRtY291bnQuaCBlbnRpcmVseSBhbmQgb25lIG9mIHRoZSBzdGVwcyBp
-cyBtb3ZpbmcgZmluZF9zZWNzeW1fbmR4KCkgb3V0IHdoaWxlIGVsaW1pbmF0aW5nIHRoZXNlIHJl
-ZHVuZGFudCBwaWVjZXMuDQoNCj4gDQo+IEFub3RoZXIsIHByb2JhYmx5IG1vcmUgcm9idXN0IHdh
-eSBvZiBkb2luZyB0aGlzLCBpcyBjaGFuZ2UNCj4gZmluZF9zZWNzeW1fbmR4KCkgdG8gcmV0dXJu
-IDAgb24gc3VjY2VzcyBhbmQgLTEgb24gbWlzc2luZyBzeW1ib2wsIGFuZA0KPiBqdXN0IHBhc3Mg
-YSBwb2ludGVyIGJ5IHJlZmVyZW5jZSB0byBmaWxsIHRoZSByZWNzeW0gKHdoaWNoIGRvZXNuJ3Qg
-aGF2ZQ0KPiB0byBiZSBhIGNvbnN0YW50KS4NCg0KVGhhdOKAmXMgZWFzeSBlbm91Z2ggdG8gZG8g
-IGFuZCAgSSBkbyBsaWtlIHNlcGFyYXRpbmcgdGhlIGVycm9yL3N1Y2Nlc3MgcmV0dXJuIGZyb20g
-cmV0dXJuaW5nICB0aGUgaW5kZXguIEkgY2FuIHNlbmQgdGhhdCBvdXQgbm93IG9yIHRhY2sgaXQg
-b250byB0aGUgbmV4dCBSRkMgc2VyaWVzIEnigJltIGFib3V0IHRvIHNlbmQgd2hpY2ggY29tcGxl
-dGVzIHRoZSBjb252ZXJzaW9uIGlmIHRoYXTigJlzIHByZWZlcmFibGUuDQoNClllYWgsIHRoZSBv
-cmlnaW5hbCBjb2RlIGFwcGxpZXMg4oCcY29uc3TigJ0gaW4gbG90cyBvZiBwbGFjZXMgLS0gSSBw
-cmVzdW1lIGl04oCZcyBhbiBhdHRlbXB0IHRvIGVlayBvdXQgZXZlcnkgbGFzdCBiaXQgb2YgcGVy
-Zm9ybWFuY2UgZnJvbSB0aGUgY29tcGlsZXIuDQoNCkNoZWVycywNCiAgICAgLU1hdHQ=
+On Wed, Jul 24, 2019 at 09:57:14AM -0400, Joel Fernandes wrote:
+> On Tue, Jul 23, 2019 at 03:11:10PM -0700, Alexei Starovoitov wrote:
+> > > > > > I think allowing one tracepoint and disallowing another is pointless
+> > > > > > from security point of view. Tracing bpf program can do bpf_probe_read
+> > > > > > of anything.
+> > > > >
+> > > > > I think the assumption here is the user controls the program instructions at
+> > > > > runtime, but that's not the case. The BPF program we are loading is not
+> > > > > dynamically generated, it is built at build time and it is loaded from a
+> > > > > secure verified partition, so even though it can do bpf_probe_read, it is
+> > > > > still not something that the user can change.
+> > > > 
+> > > > so you're saying that by having a set of signed bpf programs which
+> > > > instructions are known to be non-malicious and allowed set of tracepoints
+> > > > to attach via selinux whitelist, such setup will be safe?
+> > > > Have you considered how mix and match will behave?
+> > > 
+> > > Do you mean the effect of mixing tracepoints and programs? I have not
+> > > considered this. I am Ok with further enforcing of this (only certain
+> > > tracepoints can be attached to certain programs) if needed. What do
+> > > you think? We could have a new bpf(2) syscall attribute specify which
+> > > tracepoint is expected, or similar.
+> > > 
+> > > I wanted to walk you through our 2 usecases we are working on:
+> > 
+> > thanks for sharing the use case details. Appreciate it.
+> 
+> No problem and thanks for your thoughts.
+> 
+> > > 1. timeinstate: By hooking 2 programs onto sched_switch and cpu_frequency
+> > > tracepoints, we are able to collect CPU power per-UID (specific app). Connor
+> > > O'Brien is working on that.
+> > > 
+> > > 2. inode to file path mapping: By hooking onto VFS tracepoints we are adding to
+> > > the android kernels, we can collect data when the kernel resolves a file path
+> > > to a inode/device number. A BPF map stores the inode/dev number (key) and the
+> > > path (value). We have usecases where we need a high speed lookup of this
+> > > without having to scan all the files in the filesystem.
+> > 
+> > Can you share the link to vfs tracepoints you're adding?
+> > Sounds like you're not going to attempt to upstream them knowing
+> > Al's stance towards them?
+> > May be there is a way we can do the feature you need, but w/o tracepoints?
+> 
+> Yes, given Al's stance I understand the patch is not upstreamable. The patch
+> is here:
+> For tracepoint:
+> https://android.googlesource.com/kernel/common/+/27d3bfe20558d279041af403a887e7bdbdcc6f24%5E%21/
+
+this is way more than tracepoint.
+
+> For bpf program:
+> https://android.googlesource.com/platform/system/bpfprogs/+/908f6cd718fab0de7a944f84628c56f292efeb17%5E%21/
+
+what is unsafe_bpf_map_update_elem() in there?
+The verifier comment sounds odd.
+Could you describe the issue you see with the verifier?
+
+> I intended to submit the tracepoint only for the Android kernels, however if
+> there is an upstream solution to this then that's even better since upstream can
+> benefit. Were you thinking of a BPF helper function to get this data?
+
+I think the best way to evaluate the patches is whether they are upstreamable or not.
+If they're not (like this case), it means that there is something wrong with their design
+and if android decides to go with such approach it will only create serious issues long term.
+Starting with the whole idea of dev+inode -> filepath cache.
+dev+inode is not a unique identifier of the file.
+In some filesystems two different files may have the same ino integer value.
+Have you looked at 'struct file_handle' ? and name_to_handle_at ?
+I think fhandle is the only way to get unique identifier of the file.
+Could you please share more details why android needs this cache of dev+ino->path?
+I guess something uses ino to find paths?
+Sort of faster version of 'find -inum' ?
+
