@@ -7,53 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9653C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13ACAC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B02218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E01DF22CD7
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155159;
-	bh=psKLgr5doZxAykiCMrNVLh/WfEgRaqJgeuPExRYmPpw=;
+	s=default; t=1564155160;
+	bh=WEWgZBMWZpb7cstM89+rbjqinGpcnfjpuZJMXkjP0e8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DeKs2+XTBNmeakATIO/RvVuprn1KjU6LlKUlxrCgYSotszN2H9DMchiOfLx3Mk9nv
-	 3u6AkUyeQuQ0yjUo9bLov8lulq2m2ZvkoUZU3vYeGqiEo5+DV9R8uuNxQHQJpajXJ5
-	 j4zd/3hkNJHcFK0fRynIsYWWQDxaAmprfo0ZIjwI=
+	b=F40KX0YHg+atE9ClNoRVlosUDvJZ3ptBrG23Z1jFVffrunFUKiHsR4jeT5K54y8VF
+	 sU1ZbXY3x/9zqU5uVGJRxiJc24inLZrd0e1L/oi1u02eqESiN8D27c3wdtPHoIHTGn
+	 JaNfXaOr9MHCOINuxs7bVKAlH14A4wgOQI4W0KoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389516AbfGZPci (ORCPT
+        id S2389528AbfGZPcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:32:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47798 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:32:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389489AbfGZPcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:32:36 -0400
+        id S2387859AbfGZPci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:32:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3463322CBD;
-        Fri, 26 Jul 2019 15:32:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDBBB22CBF;
+        Fri, 26 Jul 2019 15:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155154;
-        bh=psKLgr5doZxAykiCMrNVLh/WfEgRaqJgeuPExRYmPpw=;
+        s=default; t=1564155157;
+        bh=WEWgZBMWZpb7cstM89+rbjqinGpcnfjpuZJMXkjP0e8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s22IF84VTEKHOzWpM9fJs7STa7eWZe42qKk2DpRFxGsJjofmo/5XwHf83A3hTOzvH
-         +vyRLlBDyL/P9vIhBb9OaTiqFWrrcxq6zk79q8y9y54MnKO6DL3Q4KourAH8PSG92U
-         BOM+fJdRZ45uoZ3QSoLGLcpsBxGzuY1Xk+ZOp3Uo=
+        b=MBXJxdg/IvMToauZGcYgF6c0fcGiN+QhECZZJ36+8xEP5+aTeJUAcQljgDB8Wry9s
+         37YW+gdEfhJx8z30UwsDetSfleF8/KFu+IGSZfm3AbJHdEVJIOpIGnTdvGWZ0rH5qm
+         h23i3opyRtiwC9j46qjkm8bikO0xvMDzS9GWJtsY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Andrew Prout <aprout@ll.mit.edu>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
+        Lawrence Brakmo <brakmo@fb.com>,
         Neal Cardwell <ncardwell@google.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        Christoph Paasch <cpaasch@apple.com>,
-        Jonathan Looney <jtl@netflix.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 20/50] tcp: be more careful in tcp_fragment()
-Date:   Fri, 26 Jul 2019 17:24:55 +0200
-Message-Id: <20190726152302.653452094@linuxfoundation.org>
+Subject: [PATCH 4.19 21/50] tcp: fix tcp_set_congestion_control() use from bpf hook
+Date:   Fri, 26 Jul 2019 17:24:56 +0200
+Message-Id: <20190726152302.754694627@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -68,92 +63,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit b617158dc096709d8600c53b6052144d12b89fab ]
+[ Upstream commit 8d650cdedaabb33e85e9b7c517c0c71fcecc1de9 ]
 
-Some applications set tiny SO_SNDBUF values and expect
-TCP to just work. Recent patches to address CVE-2019-11478
-broke them in case of losses, since retransmits might
-be prevented.
+Neal reported incorrect use of ns_capable() from bpf hook.
 
-We should allow these flows to make progress.
+bpf_setsockopt(...TCP_CONGESTION...)
+  -> tcp_set_congestion_control()
+   -> ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN)
+    -> ns_capable_common()
+     -> current_cred()
+      -> rcu_dereference_protected(current->cred, 1)
 
-This patch allows the first and last skb in retransmit queue
-to be split even if memory limits are hit.
+Accessing 'current' in bpf context makes no sense, since packets
+are processed from softirq context.
 
-It also adds the some room due to the fact that tcp_sendmsg()
-and tcp_sendpage() might overshoot sk_wmem_queued by about one full
-TSO skb (64KB size). Note this allowance was already present
-in stable backports for kernels < 4.15
+As Neal stated : The capability check in tcp_set_congestion_control()
+was written assuming a system call context, and then was reused from
+a BPF call site.
 
-Note for < 4.15 backports :
- tcp_rtx_queue_tail() will probably look like :
+The fix is to add a new parameter to tcp_set_congestion_control(),
+so that the ns_capable() call is only performed under the right
+context.
 
-static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
-{
-	struct sk_buff *skb = tcp_send_head(sk);
-
-	return skb ? tcp_write_queue_prev(sk, skb) : tcp_write_queue_tail(sk);
-}
-
-Fixes: f070ef2ac667 ("tcp: tcp_fragment() should apply sane memory limits")
+Fixes: 91b5b21c7c16 ("bpf: Add support for changing congestion control")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Andrew Prout <aprout@ll.mit.edu>
-Tested-by: Andrew Prout <aprout@ll.mit.edu>
-Tested-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Tested-by: Michal Kubecek <mkubecek@suse.cz>
+Cc: Lawrence Brakmo <brakmo@fb.com>
+Reported-by: Neal Cardwell <ncardwell@google.com>
 Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Yuchung Cheng <ycheng@google.com>
-Acked-by: Christoph Paasch <cpaasch@apple.com>
-Cc: Jonathan Looney <jtl@netflix.com>
+Acked-by: Lawrence Brakmo <brakmo@fb.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/tcp.h     |    5 +++++
- net/ipv4/tcp_output.c |   13 +++++++++++--
- 2 files changed, 16 insertions(+), 2 deletions(-)
+ include/net/tcp.h   |    3 ++-
+ net/core/filter.c   |    2 +-
+ net/ipv4/tcp.c      |    4 +++-
+ net/ipv4/tcp_cong.c |    6 +++---
+ 4 files changed, 9 insertions(+), 6 deletions(-)
 
 --- a/include/net/tcp.h
 +++ b/include/net/tcp.h
-@@ -1646,6 +1646,11 @@ static inline struct sk_buff *tcp_rtx_qu
- 	return skb_rb_first(&sk->tcp_rtx_queue);
- }
+@@ -1054,7 +1054,8 @@ void tcp_get_default_congestion_control(
+ void tcp_get_available_congestion_control(char *buf, size_t len);
+ void tcp_get_allowed_congestion_control(char *buf, size_t len);
+ int tcp_set_allowed_congestion_control(char *allowed);
+-int tcp_set_congestion_control(struct sock *sk, const char *name, bool load, bool reinit);
++int tcp_set_congestion_control(struct sock *sk, const char *name, bool load,
++			       bool reinit, bool cap_net_admin);
+ u32 tcp_slow_start(struct tcp_sock *tp, u32 acked);
+ void tcp_cong_avoid_ai(struct tcp_sock *tp, u32 w, u32 acked);
  
-+static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
-+{
-+	return skb_rb_last(&sk->tcp_rtx_queue);
-+}
-+
- static inline struct sk_buff *tcp_write_queue_head(const struct sock *sk)
- {
- 	return skb_peek(&sk->sk_write_queue);
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -1289,6 +1289,7 @@ int tcp_fragment(struct sock *sk, enum t
- 	struct tcp_sock *tp = tcp_sk(sk);
- 	struct sk_buff *buff;
- 	int nsize, old_factor;
-+	long limit;
- 	int nlen;
- 	u8 flags;
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -3991,7 +3991,7 @@ BPF_CALL_5(bpf_setsockopt, struct bpf_so
+ 						    TCP_CA_NAME_MAX-1));
+ 			name[TCP_CA_NAME_MAX-1] = 0;
+ 			ret = tcp_set_congestion_control(sk, name, false,
+-							 reinit);
++							 reinit, true);
+ 		} else {
+ 			struct tcp_sock *tp = tcp_sk(sk);
  
-@@ -1299,8 +1300,16 @@ int tcp_fragment(struct sock *sk, enum t
- 	if (nsize < 0)
- 		nsize = 0;
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2729,7 +2729,9 @@ static int do_tcp_setsockopt(struct sock
+ 		name[val] = 0;
  
--	if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf &&
--		     tcp_queue != TCP_FRAG_IN_WRITE_QUEUE)) {
-+	/* tcp_sendmsg() can overshoot sk_wmem_queued by one full size skb.
-+	 * We need some allowance to not penalize applications setting small
-+	 * SO_SNDBUF values.
-+	 * Also allow first and last skb in retransmit queue to be split.
-+	 */
-+	limit = sk->sk_sndbuf + 2 * SKB_TRUESIZE(GSO_MAX_SIZE);
-+	if (unlikely((sk->sk_wmem_queued >> 1) > limit &&
-+		     tcp_queue != TCP_FRAG_IN_WRITE_QUEUE &&
-+		     skb != tcp_rtx_queue_head(sk) &&
-+		     skb != tcp_rtx_queue_tail(sk))) {
- 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
- 		return -ENOMEM;
+ 		lock_sock(sk);
+-		err = tcp_set_congestion_control(sk, name, true, true);
++		err = tcp_set_congestion_control(sk, name, true, true,
++						 ns_capable(sock_net(sk)->user_ns,
++							    CAP_NET_ADMIN));
+ 		release_sock(sk);
+ 		return err;
  	}
+--- a/net/ipv4/tcp_cong.c
++++ b/net/ipv4/tcp_cong.c
+@@ -332,7 +332,8 @@ out:
+  * tcp_reinit_congestion_control (if the current congestion control was
+  * already initialized.
+  */
+-int tcp_set_congestion_control(struct sock *sk, const char *name, bool load, bool reinit)
++int tcp_set_congestion_control(struct sock *sk, const char *name, bool load,
++			       bool reinit, bool cap_net_admin)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+ 	const struct tcp_congestion_ops *ca;
+@@ -368,8 +369,7 @@ int tcp_set_congestion_control(struct so
+ 		} else {
+ 			err = -EBUSY;
+ 		}
+-	} else if (!((ca->flags & TCP_CONG_NON_RESTRICTED) ||
+-		     ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN))) {
++	} else if (!((ca->flags & TCP_CONG_NON_RESTRICTED) || cap_net_admin)) {
+ 		err = -EPERM;
+ 	} else if (!try_module_get(ca->owner)) {
+ 		err = -EBUSY;
 
 
