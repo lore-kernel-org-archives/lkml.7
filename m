@@ -2,80 +2,115 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AFFC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A637C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D07222CBB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8E1822BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564148592;
+	bh=dbhU8J/ANE/G/844c8cbLui83Q3d6YR6YMZ/39ABKWA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TAU5LZYJfdylilMdXdFs4r3mS8b4H4eJJUttTLg+KSWy2dApIBC/5BbJDNg6HlE27
+	 WUPCt3m0dirX0avZOcsuxFxS0gH5Wwfm40/AU2kmptiB96647b3THI/uOCFB/p+own
+	 CdpRaQJwswuVzihWaytTQZ6EnGYk7/MqARAIgQSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388136AbfGZNnH (ORCPT
+        id S2387720AbfGZNnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:43:07 -0400
-Received: from olimex.com ([184.105.72.32]:41816 "EHLO olimex.com"
+        Fri, 26 Jul 2019 09:43:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387632AbfGZNnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387638AbfGZNnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jul 2019 09:43:04 -0400
-Received: from localhost.localdomain ([94.155.250.134])
-        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 06:32:59 -0700
-From:   Stefan Mavrodiev <stefan@olimex.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org (open list:THERMAL),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     Stefan Mavrodiev <stefan@olimex.com>
-Subject: [PATCH 1/1] thermal_hwmon: Sanitize thermal_zone type
-Date:   Fri, 26 Jul 2019 16:32:36 +0300
-Message-Id: <20190726133236.22872-1-stefan@olimex.com>
-X-Mailer: git-send-email 2.17.1
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B597622CD5;
+        Fri, 26 Jul 2019 13:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564148583;
+        bh=dbhU8J/ANE/G/844c8cbLui83Q3d6YR6YMZ/39ABKWA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Hgj52EqTXKohNxcCJAPrifcAAfCs4r7fDj0euyOntAhDpY1e/fcZgKzHuM8jJEfPY
+         JYDNiV2h0+NopcWCqGyA94li1lBT68Ot8BZ2fv03/jVftJwETAsMQXaFqSsY0/Kr5u
+         C35no1OXT+lw2rP+FFGZ3nSCKCkk38pgAKDvW+HE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 31/47] lib/test_overflow.c: avoid tainting the kernel and fix wrap size
+Date:   Fri, 26 Jul 2019 09:41:54 -0400
+Message-Id: <20190726134210.12156-31-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
+References: <20190726134210.12156-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling thermal_add_hwmon_sysfs(), the device type is sanitized by
-replacing '-' with '_'. However tz->type remains unsanitized. Thus
-calling thermal_hwmon_lookup_by_type() returns no device. And if there is
-no device, thermal_remove_hwmon_sysfs() fails with "hwmon device lookup failed!".
+From: Kees Cook <keescook@chromium.org>
 
-The result is unregisted hwmon devices in the sysfs.
+[ Upstream commit 8e060c21ae2c265a2b596e9e7f9f97ec274151a4 ]
 
-Fixes: 409ef0bacacf ("thermal_hwmon: Sanitize attribute name passed to hwmon")
+This adds __GFP_NOWARN to the kmalloc()-portions of the overflow test to
+avoid tainting the kernel.  Additionally fixes up the math on wrap size
+to be architecture and page size agnostic.
 
-Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+Link: http://lkml.kernel.org/r/201905282012.0A8767E24@keescook
+Fixes: ca90800a91ba ("test_overflow: Add memory allocation overflow tests")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Joe Perches <joe@perches.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/thermal_hwmon.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ lib/test_overflow.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/thermal/thermal_hwmon.c b/drivers/thermal/thermal_hwmon.c
-index 40c69a533b24..dd5d8ee37928 100644
---- a/drivers/thermal/thermal_hwmon.c
-+++ b/drivers/thermal/thermal_hwmon.c
-@@ -87,13 +87,17 @@ static struct thermal_hwmon_device *
- thermal_hwmon_lookup_by_type(const struct thermal_zone_device *tz)
- {
- 	struct thermal_hwmon_device *hwmon;
-+	char type[THERMAL_NAME_LENGTH];
+diff --git a/lib/test_overflow.c b/lib/test_overflow.c
+index fc680562d8b6..7a4b6f6c5473 100644
+--- a/lib/test_overflow.c
++++ b/lib/test_overflow.c
+@@ -486,16 +486,17 @@ static int __init test_overflow_shift(void)
+  * Deal with the various forms of allocator arguments. See comments above
+  * the DEFINE_TEST_ALLOC() instances for mapping of the "bits".
+  */
+-#define alloc010(alloc, arg, sz) alloc(sz, GFP_KERNEL)
+-#define alloc011(alloc, arg, sz) alloc(sz, GFP_KERNEL, NUMA_NO_NODE)
++#define alloc_GFP		 (GFP_KERNEL | __GFP_NOWARN)
++#define alloc010(alloc, arg, sz) alloc(sz, alloc_GFP)
++#define alloc011(alloc, arg, sz) alloc(sz, alloc_GFP, NUMA_NO_NODE)
+ #define alloc000(alloc, arg, sz) alloc(sz)
+ #define alloc001(alloc, arg, sz) alloc(sz, NUMA_NO_NODE)
+-#define alloc110(alloc, arg, sz) alloc(arg, sz, GFP_KERNEL)
++#define alloc110(alloc, arg, sz) alloc(arg, sz, alloc_GFP)
+ #define free0(free, arg, ptr)	 free(ptr)
+ #define free1(free, arg, ptr)	 free(arg, ptr)
  
- 	mutex_lock(&thermal_hwmon_list_lock);
--	list_for_each_entry(hwmon, &thermal_hwmon_list, node)
--		if (!strcmp(hwmon->type, tz->type)) {
-+	list_for_each_entry(hwmon, &thermal_hwmon_list, node) {
-+		strcpy(type, tz->type);
-+		strreplace(type, '-', '_');
-+		if (!strcmp(hwmon->type, type)) {
- 			mutex_unlock(&thermal_hwmon_list_lock);
- 			return hwmon;
- 		}
-+	}
- 	mutex_unlock(&thermal_hwmon_list_lock);
+-/* Wrap around to 8K */
+-#define TEST_SIZE		(9 << PAGE_SHIFT)
++/* Wrap around to 16K */
++#define TEST_SIZE		(5 * 4096)
  
- 	return NULL;
+ #define DEFINE_TEST_ALLOC(func, free_func, want_arg, want_gfp, want_node)\
+ static int __init test_ ## func (void *arg)				\
 -- 
-2.17.1
+2.20.1
 
