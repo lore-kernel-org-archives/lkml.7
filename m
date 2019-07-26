@@ -7,59 +7,60 @@ X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99214C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641C6C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FFA1218B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BBBB218B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:09:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qa7vSe1R"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qWMt+4nu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388426AbfGZTIv (ORCPT
+        id S2388452AbfGZTJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 15:08:51 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39873 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387570AbfGZTIv (ORCPT
+        Fri, 26 Jul 2019 15:09:19 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44278 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387570AbfGZTJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 15:08:51 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r21so50349441otq.6
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 12:08:50 -0700 (PDT)
+        Fri, 26 Jul 2019 15:09:19 -0400
+Received: by mail-oi1-f196.google.com with SMTP id e189so40883189oib.11
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 12:09:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Qv/TYWK6NOYekEaLft+v7J5eS4Mf0pr3nYuBj6c8hlQ=;
-        b=Qa7vSe1RB8VnZOGBb0s+Kj+fpIDyeE6S/eOwpwfNE4z9MOYNwqpVwrdVgJH3WTo6R2
-         DUvJoADoLeswvTnOfIkZz29zTpMtaOUHAJbEC6boa+hc8cCAFuK7jnCqjmRsKuVsayJv
-         XGc/OTQyUT8FIl/T4thWlWIb0cB6Vpsy+3ZNoggtUSk7qWfPNebILKpjDLxrq9RvGxTt
-         qvCTlRo6Ods1D0ImSaDz5TGTQlNtzPORLqOTfxes56X7+qgfUM43q2cZkEAvoGWM5ykh
-         UajSesiCEwB4DHkJy2IPmVd48UJbLbwKJiDD8AItzwacWT5OYOLRvykef0EgO4Sb7jkV
-         Ny+Q==
+        bh=uMjbCjRJe2QgOB++4gB2dFB5TOTHSYGv6ueksF05DF0=;
+        b=qWMt+4nuD+G9wfkiBLqhatMdGiIGjryWvl4VemHGe+lra/XPFxrFP5BtycXgdkp8ln
+         F4I0fhvcwv14Fr6GtboQALGSmOYnTFO+mIqfR0J8CTVrRip2x4MhWOBIR/1pmRacGii1
+         MQ6Cvcu5EpljkPhvpcXz64TQVz9utpvHamAaPCqZTR/p5e5yQgWzA99hH5p9nQYRphdd
+         bqWc9lBJlNTjfydL2L1WyLx0O2ma8c9Rkyi8FsG3avLsayUt+RkZQta5K8mbjvt+AqBa
+         3MMh4G3EPbZtldkEXTOLj+5W1q0AhnZ+/shafrDXI1id10d9gHDUvWoknJ1/JLSytEQh
+         nCUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Qv/TYWK6NOYekEaLft+v7J5eS4Mf0pr3nYuBj6c8hlQ=;
-        b=pjK47ZFxfLO5+/ipHUIL2wzrKYFEpMLfBJEjjsgAZiHU7+tO1qgg9bZOP/SsMQjsWN
-         /sdU+uz/fusdl+q7NRBEt3BPs/NGg7bsPLRWJLjKLNiOqI5glJZdp/aZ7/+hdDaKI6J1
-         cu2l8Dtl3YYFGJdKGQisxnbiDBAHer5+JdLbP6cQMS15EDt6qD0RCG/WyAmDMz32vVW9
-         XgudQgkActzVKII2M6dmYAeDw65g68Az3tVXxn3PuXa9gyJcrS0dUo0UaR82sQOokYXJ
-         EsS6YOmqwsFwCHY5WTSl7NjGvxJQfGj/jq6r/YIPeN43kYOx0i/A0hUAwEtvu5X+taNr
-         CLVg==
-X-Gm-Message-State: APjAAAUJG1D7SOG+0nu8CjU17Ef45iKdF/3FOqn+IgrOixARvxXJRkXk
-        aehbswNT/C80T2lq5mjyLJCueXJyGlihecmOqlf1JQ==
-X-Google-Smtp-Source: APXvYqwswxBkVVGVTDXag1cBSCnrtLh/NFlUrBDxo9q0yG5wk2PUY/8LeoOx+VOVO9FtYtjmDs9baSxZ1cuMp/QUZNo=
-X-Received: by 2002:a9d:6201:: with SMTP id g1mr72758418otj.195.1564168129789;
- Fri, 26 Jul 2019 12:08:49 -0700 (PDT)
+        bh=uMjbCjRJe2QgOB++4gB2dFB5TOTHSYGv6ueksF05DF0=;
+        b=Njk6zPatZpLh8WvOEIiYOk5DVy9ZN2e65mYswQUdIGXkN3ncQMoeA9b5KcAx1GpP7L
+         gDUQyrnpGVNl4yVdc2I5xHRDBUjKDJS1UJsDHEer74hlxH0ax4zfQVeB9sTQynZ3ByDh
+         aCkbRd6bsdDbxB/z79HJLqegkalH0r5xhxyFSFZ6JATqD+7OOw7BXGsqGPgCvS4h6VY2
+         p/BHmWxWVaM0B0Zg62HmNpKkpRv+y2vD3o7qJjXZmi57Kto2oCPRzyNeTzz91ll51Stw
+         eY0wHA4sE1Xprc3YBFGp0zEZWyfLckZwWmGOj/QIQFBgEkIqyWC6okO8eEu9hBYNHbjz
+         akLw==
+X-Gm-Message-State: APjAAAVQLiObu3hYAQfhQoQH8ezwntiphue2wf0TJyqw4pdptmz15X09
+        TfNceKRH1kA1b5XIy0qNUafdv5Le+e9cZUWQ61ATAg==
+X-Google-Smtp-Source: APXvYqzMJYSItiK2iXqdRerPLeNrhU2MqqSk/R0D+pqt82QICG41qW0Z72u3gFc+QshDm3bifpp8U2mEOYts446GMB8=
+X-Received: by 2002:aca:d8c2:: with SMTP id p185mr49094053oig.30.1564168157686;
+ Fri, 26 Jul 2019 12:09:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-7-saravanak@google.com>
- <fde02417-dc72-acad-727d-452a3ae3cbd0@linaro.org>
-In-Reply-To: <fde02417-dc72-acad-727d-452a3ae3cbd0@linaro.org>
+References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-2-saravanak@google.com>
+ <2befbd75-e0f4-dbcc-e9b1-9a9f99c084d3@linaro.org>
+In-Reply-To: <2befbd75-e0f4-dbcc-e9b1-9a9f99c084d3@linaro.org>
 From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 26 Jul 2019 12:08:13 -0700
-Message-ID: <CAGETcx_y=6XJi-1YroB3wzMZ9UF1zunqPc4NLhEy0DdHJXYnNQ@mail.gmail.com>
-Subject: Re: [PATCH v3 6/6] interconnect: Add OPP table support for interconnects
+Date:   Fri, 26 Jul 2019 12:08:41 -0700
+Message-ID: <CAGETcx8X2XuC5E2pxRU_7fTXYYJ+8hD-_TRvUPh5sE+oGPWgfA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: opp: Introduce opp-peak-KBps and
+ opp-avg-KBps bindings
 To:     Georgi Djakov <georgi.djakov@linaro.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -83,69 +84,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 9:25 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+On Fri, Jul 26, 2019 at 9:24 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
 >
 > Hi Saravana,
 >
 > On 7/3/19 04:10, Saravana Kannan wrote:
-> > Interconnect paths can have different performance points. Now that OPP
-> > framework supports bandwidth OPP tables, add OPP table support for
-> > interconnects.
+> > Interconnects often quantify their performance points in terms of
+> > bandwidth. So, add opp-peak-KBps (required) and opp-avg-KBps (optional) to
+> > allow specifying Bandwidth OPP tables in DT.
 > >
-> > Devices can use the interconnect-opp-table DT property to specify OPP
-> > tables for interconnect paths. And the driver can obtain the OPP table for
-> > an interconnect path by calling icc_get_opp_table().
+> > opp-peak-KBps is a required property that replace opp-hz for Bandwidth OPP
+> > tables.
+> >
+> > opp-avg-KBps is an optional property that can be used in Bandwidth OPP
+> > tables.
 > >
 > > Signed-off-by: Saravana Kannan <saravanak@google.com>
 > > ---
-> >  drivers/interconnect/core.c  | 27 ++++++++++++++++++++++++++-
-> >  include/linux/interconnect.h |  7 +++++++
-> >  2 files changed, 33 insertions(+), 1 deletion(-)
+> >  Documentation/devicetree/bindings/opp/opp.txt | 15 ++++++++++++---
+> >  1 file changed, 12 insertions(+), 3 deletions(-)
 > >
-> > diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> > index 871eb4bc4efc..881bac80bc1e 100644
-> > --- a/drivers/interconnect/core.c
-> > +++ b/drivers/interconnect/core.c
-> > @@ -47,6 +47,7 @@ struct icc_req {
-> >   */
-> >  struct icc_path {
-> >       size_t num_nodes;
-> > +     struct opp_table *opp_table;
+> > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> > index 76b6c79604a5..c869e87caa2a 100644
+> > --- a/Documentation/devicetree/bindings/opp/opp.txt
+> > +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> > @@ -83,9 +83,14 @@ properties.
+> >
+> >  Required properties:
+> >  - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
+> > -  required property for all device nodes but devices like power domains. The
+> > -  power domain nodes must have another (implementation dependent) property which
+> > -  uniquely identifies the OPP nodes.
+> > +  required property for all device nodes but for devices like power domains or
+> > +  bandwidth opp tables. The power domain nodes must have another (implementation
+> > +  dependent) property which uniquely identifies the OPP nodes. The interconnect
+> > +  opps are required to have the opp-peak-bw property.
+> > +
+> > +- opp-peak-KBps: Peak bandwidth in kilobytes per second, expressed as a 32-bit
 >
-> I am a bit worried that these tables might be abused and size of the DT will
-> grow with many OPP tables of all existing paths.
-
-A ton of stuff can be abused in downstream code. We can't do anything
-about that.
-
-We just need to keep an eye on OPP table abuse in upstream (whether it
-frequency or bw OPP).
-
-> >       struct icc_req reqs[];
-> >  };
-> >
-> > @@ -313,7 +314,7 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
-> >  {
-> >       struct icc_path *path = ERR_PTR(-EPROBE_DEFER);
-> >       struct icc_node *src_node, *dst_node;
-> > -     struct device_node *np = NULL;
-> > +     struct device_node *np = NULL, *opp_node;
-> >       struct of_phandle_args src_args, dst_args;
-> >       int idx = 0;
-> >       int ret;
-> > @@ -381,10 +382,34 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
-> >               dev_err(dev, "%s: invalid path=%ld\n", __func__, PTR_ERR(path));
-> >       mutex_unlock(&icc_lock);
-> >
-> > +     opp_node = of_parse_phandle(np, "interconnect-opp-table", idx);
->
-> Can't we figure out if the device OPP table contains bandwidth even without this
-> property?
+> As Rob already mentioned, KBps should be documented. See [1].
 >
 
-Rob pointed out that the property isn't necessary because the device
-binding should document which OPP table is used for what. That takes
-care of my main concern of how do we know which OPP table is for what
-path. So I'm dropping this patch.
+Will do. Thanks for the pointer.
 
 -Saravana
