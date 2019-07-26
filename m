@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7759DC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD529C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4441A22CEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B214F22CE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148757;
-	bh=T+1JGxTwv5cgA4sBxreOfkkpahMOxT2F7QFlv3KlCAQ=;
+	s=default; t=1564148763;
+	bh=VK6/yK3gnFWBTKB/sD4C6n4IXru/I7ju81C/5FgLr54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w+gJC44OneJ6SAGf72gvjgS9wdClMvA9j0P9kaqKMq9ioljsbx9ZpXzsniA14irhT
-	 2O6rsThCz6VXSyayWo54aM0k522Ep2Qhels4Spoykv/Rv/AbZ1btAgtswTfgUTQFO+
-	 3foWl7nZ40JK4HOHR0Iz0+Jtj0JndmgzwADhD0C4=
+	b=X406U9emL0Zv31omypPVSEyHlGcJ4BVaV9G6ZTbFSiBonH6s3MZteBMTx5k52Kr/f
+	 4bnoKWGchnsYiLIU5aZeYSP+6yDTe5ezIEMkrEuEZL4ahhbYJB/H54BlwLLmw9lytC
+	 V4bFzZwFDLSrbdU4kzMHefUYS22t123K839TLhPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388600AbfGZNp4 (ORCPT
+        id S2388626AbfGZNqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:45:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55026 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:46:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387482AbfGZNps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:45:48 -0400
+        id S2388599AbfGZNp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:45:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE4F222CF4;
-        Fri, 26 Jul 2019 13:45:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0287922CE8;
+        Fri, 26 Jul 2019 13:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148747;
-        bh=T+1JGxTwv5cgA4sBxreOfkkpahMOxT2F7QFlv3KlCAQ=;
+        s=default; t=1564148755;
+        bh=VK6/yK3gnFWBTKB/sD4C6n4IXru/I7ju81C/5FgLr54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fF1N/XANpGkEgTFs3MGpnqUEBDwrfSlqJfneitr567Hc1keL4SuQuzr8uMq08O56W
-         eed76A4+psadofCEhZe8gM5IZFO4lo/hnqYfgx5TcCOTNhz6z0VYzhqzxiGalPy9k5
-         TJirIyCtW2PgqAE3uI7G5ZLzTUNQFqhwk8AfZSPE=
+        b=a4XUxIEJwOujZp/97pXSB6X1ohXxLzbTECr+wNZuEMs7IX9EmIXuWOAK2n3ow65DT
+         A5lj9gAhE3cvQn5DPQNvNIKDyq2hhDiH8PvsTzNPtABpufpTKuW1jRMRpmjSfjukna
+         f6pm01PgDcLKQeZRuQSAc7ii/87eJJ9zHZX1Sg44=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Poirier <bpoirier@suse.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 12/23] be2net: Signal that the device cannot transmit during reconfiguration
-Date:   Fri, 26 Jul 2019 09:45:11 -0400
-Message-Id: <20190726134522.13308-12-sashal@kernel.org>
+Cc:     Doug Berger <opendmb@gmail.com>,
+        Michal Nazarewicz <mina86@mina86.com>,
+        Yue Hu <huyue2@yulong.com>, Mike Rapoport <rppt@linux.ibm.com>,
+        Laura Abbott <labbott@redhat.com>, Peng Fan <peng.fan@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.4 15/23] mm/cma.c: fail if fixed declaration can't be honored
+Date:   Fri, 26 Jul 2019 09:45:14 -0400
+Message-Id: <20190726134522.13308-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134522.13308-1-sashal@kernel.org>
 References: <20190726134522.13308-1-sashal@kernel.org>
@@ -59,44 +66,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Poirier <bpoirier@suse.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 7429c6c0d9cb086d8e79f0d2a48ae14851d2115e ]
+[ Upstream commit c633324e311243586675e732249339685e5d6faa ]
 
-While changing the number of interrupt channels, be2net stops adapter
-operation (including netif_tx_disable()) but it doesn't signal that it
-cannot transmit. This may lead dev_watchdog() to falsely trigger during
-that time.
+The description of cma_declare_contiguous() indicates that if the
+'fixed' argument is true the reserved contiguous area must be exactly at
+the address of the 'base' argument.
 
-Add the missing call to netif_carrier_off(), following the pattern used in
-many other drivers. netif_carrier_on() is already taken care of in
-be_open().
+However, the function currently allows the 'base', 'size', and 'limit'
+arguments to be silently adjusted to meet alignment constraints.  This
+commit enforces the documented behavior through explicit checks that
+return an error if the region does not fit within a specified region.
 
-Signed-off-by: Benjamin Poirier <bpoirier@suse.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/1561422051-16142-1-git-send-email-opendmb@gmail.com
+Fixes: 5ea3b1b2f8ad ("cma: add placement specifier for "cma=" kernel parameter")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Michal Nazarewicz <mina86@mina86.com>
+Cc: Yue Hu <huyue2@yulong.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Peng Fan <peng.fan@nxp.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/emulex/benet/be_main.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ mm/cma.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/net/ethernet/emulex/benet/be_main.c b/drivers/net/ethernet/emulex/benet/be_main.c
-index 26255862d1cf..7524a33b7032 100644
---- a/drivers/net/ethernet/emulex/benet/be_main.c
-+++ b/drivers/net/ethernet/emulex/benet/be_main.c
-@@ -4307,8 +4307,12 @@ int be_update_queues(struct be_adapter *adapter)
- 	struct net_device *netdev = adapter->netdev;
- 	int status;
- 
--	if (netif_running(netdev))
-+	if (netif_running(netdev)) {
-+		/* device cannot transmit now, avoid dev_watchdog timeouts */
-+		netif_carrier_off(netdev);
-+
- 		be_close(netdev);
+diff --git a/mm/cma.c b/mm/cma.c
+index 5ae4452656cd..65c7aa419048 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -268,6 +268,12 @@ int __init cma_declare_contiguous(phys_addr_t base,
+ 	 */
+ 	alignment = max(alignment,  (phys_addr_t)PAGE_SIZE <<
+ 			  max_t(unsigned long, MAX_ORDER - 1, pageblock_order));
++	if (fixed && base & (alignment - 1)) {
++		ret = -EINVAL;
++		pr_err("Region at %pa must be aligned to %pa bytes\n",
++			&base, &alignment);
++		goto err;
 +	}
+ 	base = ALIGN(base, alignment);
+ 	size = ALIGN(size, alignment);
+ 	limit &= ~(alignment - 1);
+@@ -298,6 +304,13 @@ int __init cma_declare_contiguous(phys_addr_t base,
+ 	if (limit == 0 || limit > memblock_end)
+ 		limit = memblock_end;
  
- 	be_cancel_worker(adapter);
- 
++	if (base + size > limit) {
++		ret = -EINVAL;
++		pr_err("Size (%pa) of region at %pa exceeds limit (%pa)\n",
++			&size, &base, &limit);
++		goto err;
++	}
++
+ 	/* Reserve memory */
+ 	if (fixed) {
+ 		if (memblock_is_region_reserved(base, size) ||
 -- 
 2.20.1
 
