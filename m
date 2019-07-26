@@ -2,137 +2,77 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E961C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94266C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B3F218B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71892206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:51:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfGZUtE (ORCPT
+        id S1727564AbfGZUvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 16:49:04 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50368 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfGZUtD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 16:49:03 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hr797-0002Lz-BO; Fri, 26 Jul 2019 22:48:57 +0200
-Date:   Fri, 26 Jul 2019 22:48:56 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Sewior <bigeasy@linutronix.de>
-Subject: [PATCH] Kbuild: Handle PREEMPT_RT for version string and magic
-Message-ID: <alpine.DEB.2.21.1907262245320.1791@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 26 Jul 2019 16:51:21 -0400
+Received: from ms.lwn.net ([45.79.88.28]:52210 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726184AbfGZUvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 16:51:21 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 664C3867;
+        Fri, 26 Jul 2019 20:51:20 +0000 (UTC)
+Date:   Fri, 26 Jul 2019 14:51:19 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Sheriff Esseson <sheriffesseson@gmail.com>
+Cc:     skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Documentation: filesystem: fix "Removed Sysctls" table
+Message-ID: <20190726145119.5ef751e8@lwn.net>
+In-Reply-To: <20190723114813.GA14870@localhost>
+References: <20190723114813.GA14870@localhost>
+Organization: LWN.net
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the build scripts and the version magic to reflect when
-CONFIG_PREEMPT_RT is enabled in the same way as CONFIG_PREEMPT is treated.
+On Tue, 23 Jul 2019 12:48:13 +0100
+Sheriff Esseson <sheriffesseson@gmail.com> wrote:
 
-The resulting version strings:
+> the "Removed Sysctls" section is a table - bring it alive with ReST.
+> 
+> Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
+> ---
+>  Documentation/admin-guide/xfs.rst | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/xfs.rst b/Documentation/admin-guide/xfs.rst
+> index e76665a8f2f2..fb5b39f73059 100644
+> --- a/Documentation/admin-guide/xfs.rst
+> +++ b/Documentation/admin-guide/xfs.rst
+> @@ -337,11 +337,12 @@ None at present.
+>  Removed Sysctls
+>  ===============
+>  
+> +=============================	=======
+>    Name				Removed
+> -  ----				-------
+> +=============================	=======
+>    fs.xfs.xfsbufd_centisec	v4.0
+>    fs.xfs.age_buffer_centisecs	v4.0
+> -
+> +=============================	=======
 
-  Linux m 5.3.0-rc1+ #100 SMP Fri Jul 26 ...
-  Linux m 5.3.0-rc1+ #101 SMP PREEMPT Fri Jul 26 ...
-  Linux m 5.3.0-rc1+ #102 SMP PREEMPT_RT Fri Jul 26 ...
+I've applied this, thanks.
 
-The module vermagic:
-
-  5.3.0-rc1+ SMP mod_unload modversions 
-  5.3.0-rc1+ SMP preempt mod_unload modversions 
-  5.3.0-rc1+ SMP preempt_rt mod_unload modversions 
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: linux-kbuild@vger.kernel.org
----
- include/linux/vermagic.h |   10 +++++++---
- init/Makefile            |    5 +++--
- scripts/Makefile.modpost |    2 +-
- scripts/mkcompile_h      |    4 +++-
- 4 files changed, 14 insertions(+), 7 deletions(-)
-
---- a/include/linux/vermagic.h
-+++ b/include/linux/vermagic.h
-@@ -7,10 +7,14 @@
- #else
- #define MODULE_VERMAGIC_SMP ""
- #endif
--#ifdef CONFIG_PREEMPT
--#define MODULE_VERMAGIC_PREEMPT "preempt "
-+#ifdef CONFIG_PREEMPTION
-+# ifdef CONFIG_PREEMPT
-+#  define MODULE_VERMAGIC_PREEMPT "preempt "
-+# else
-+#  define MODULE_VERMAGIC_PREEMPT "preempt_rt "
-+# endif
- #else
--#define MODULE_VERMAGIC_PREEMPT ""
-+# define MODULE_VERMAGIC_PREEMPT ""
- #endif
- #ifdef CONFIG_MODULE_UNLOAD
- #define MODULE_VERMAGIC_MODULE_UNLOAD "mod_unload "
---- a/init/Makefile
-+++ b/init/Makefile
-@@ -33,5 +33,6 @@ mounts-$(CONFIG_BLK_DEV_MD)	+= do_mounts
- silent_chk_compile.h = :
- include/generated/compile.h: FORCE
- 	@$($(quiet)chk_compile.h)
--	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@ \
--	"$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)" "$(CC) $(KBUILD_CFLAGS)"
-+	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@	\
-+	"$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)"	\
-+	"$(CONFIG_PREEMPT_RT)" "$(CC) $(KBUILD_CFLAGS)"
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-@@ -23,7 +23,7 @@
- #   Version magic (see include/linux/vermagic.h for full details)
- #     - Kernel release
- #     - SMP is CONFIG_SMP
--#     - PREEMPT is CONFIG_PREEMPT
-+#     - PREEMPT is CONFIG_PREEMPT[_RT]
- #     - GCC Version
- #   Module info
- #     - Module version (MODULE_VERSION)
---- a/scripts/mkcompile_h
-+++ b/scripts/mkcompile_h
-@@ -5,7 +5,8 @@ TARGET=$1
- ARCH=$2
- SMP=$3
- PREEMPT=$4
--CC=$5
-+PREEMPT_RT=$5
-+CC=$6
- 
- vecho() { [ "${quiet}" = "silent_" ] || echo "$@" ; }
- 
-@@ -53,6 +54,7 @@ UTS_VERSION="#$VERSION"
- CONFIG_FLAGS=""
- if [ -n "$SMP" ] ; then CONFIG_FLAGS="SMP"; fi
- if [ -n "$PREEMPT" ] ; then CONFIG_FLAGS="$CONFIG_FLAGS PREEMPT"; fi
-+if [ -n "$PREEMPT_RT" ] ; then CONFIG_FLAGS="$CONFIG_FLAGS PREEMPT_RT"; fi
- UTS_VERSION="$UTS_VERSION $CONFIG_FLAGS $TIMESTAMP"
- 
- # Truncate to maximum length
+jon
