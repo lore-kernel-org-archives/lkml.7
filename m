@@ -2,110 +2,75 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3F2C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8EFC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36F8C2147A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9BEA217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:41:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfGZQlM (ORCPT
+        id S1728501AbfGZQlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:41:12 -0400
-Received: from mga17.intel.com ([192.55.52.151]:37330 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725298AbfGZQlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:41:12 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 09:38:08 -0700
-X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
-   d="scan'208";a="175655606"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 09:38:08 -0700
-Message-ID: <c59c6c9a5bb77d517336e3fc3b17eebd0f294276.camel@linux.intel.com>
-Subject: Re: [PATCH v2 4/5] mm: Introduce Hinted pages
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com
-Date:   Fri, 26 Jul 2019 09:38:08 -0700
-In-Reply-To: <49a49a38-b1f4-d5c0-f5f1-a6bed57a03d2@redhat.com>
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
-         <20190724170259.6685.18028.stgit@localhost.localdomain>
-         <49a49a38-b1f4-d5c0-f5f1-a6bed57a03d2@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 26 Jul 2019 12:41:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57038 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727343AbfGZQlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 12:41:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 31E5FAF27;
+        Fri, 26 Jul 2019 16:41:51 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 99A62DA811; Fri, 26 Jul 2019 18:42:27 +0200 (CEST)
+From:   David Sterba <dsterba@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     David Sterba <dsterba@suse.com>, clm@fb.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixes for 5.3-rc2
+Date:   Fri, 26 Jul 2019 18:42:24 +0200
+Message-Id: <cover.1564158940.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-26 at 08:24 -0400, Nitesh Narayan Lal wrote:
-> On 7/24/19 1:03 PM, Alexander Duyck wrote:
-> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > 
-> > 
+Hi,
 
-<snip>
+please pull two regression fixes:
 
-> > +/*
-> > + * The page hinting cycle consists of 4 stages, fill, react, drain, and idle.
-> > + * We will cycle through the first 3 stages until we fail to obtain any
-> > + * pages, in that case we will switch to idle.
-> > + */
-> > +static void page_hinting_cycle(struct zone *zone,
-> > +			       struct page_hinting_dev_info *phdev)
-> > +{
-> > +	/*
-> > +	 * Guarantee boundaries and stats are populated before we
-> > +	 * start placing hinted pages in the zone.
-> > +	 */
-> > +	if (page_hinting_populate_metadata(zone))
-> > +		return;
-> > +
-> > +	spin_lock(&zone->lock);
-> > +
-> > +	/* set bit indicating boundaries are present */
-> > +	set_bit(ZONE_PAGE_HINTING_ACTIVE, &zone->flags);
-> > +
-> > +	do {
-> > +		/* Pull pages out of allocator into a scaterlist */
-> > +		unsigned int num_hints = page_hinting_fill(zone, phdev);
-> > +
-> > +		/* no pages were acquired, give up */
-> > +		if (!num_hints)
-> > +			break;
-> > +
-> > +		spin_unlock(&zone->lock);
-> 
-> Is there any recommendation in general about how/where we should lock and unlock
-> zones in the code? For instance, over here you have a zone lock outside the loop
-> and you are unlocking it inside the loop and then re-acquiring it.
-> My guess is we should be fine as long as:
-> 1. We are not holding the lock for a very long time.
-> 2. We are making sure that if we have a zone lock we are releasing it before
-> returning from the function.
+* hangs caused by a missing barrier in the locking code
 
-So as a general rule the first two you mention work. Basically what you
-want to do is work with some sort of bounded limit when you are holding
-the lock so you know it will be released in a timely fashion.
+* memory leaks of extent_state due to bad handling of a cached pointer
 
-The reason for dropping the lock inside of the loop s because we will end
-up sleeping while we wait for the virtio-balloon device to process the
-pages. So it makes sense to release the lock, process the pages, and then
-reacquire the lock so that we can return the pages and grab another 16
-pages.
+Thanks.
 
+----------------------------------------------------------------
+The following changes since commit 373c3b80e459cb57c34381b928588a3794eb5bbd:
+
+  btrfs: don't leak extent_map in btrfs_get_io_geometry() (2019-07-17 17:03:36 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.3-rc1-tag
+
+for you to fetch changes up to a3b46b86ca76d7f9d487e6a0b594fd1984e0796e:
+
+  btrfs: fix extent_state leak in btrfs_lock_and_flush_ordered_range (2019-07-26 12:21:22 +0200)
+
+----------------------------------------------------------------
+Naohiro Aota (1):
+      btrfs: fix extent_state leak in btrfs_lock_and_flush_ordered_range
+
+Nikolay Borisov (1):
+      btrfs: Fix deadlock caused by missing memory barrier
+
+ fs/btrfs/locking.c      |  9 ++++++---
+ fs/btrfs/ordered-data.c | 11 ++++++-----
+ 2 files changed, 12 insertions(+), 8 deletions(-)
