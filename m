@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C01C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78317C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC9122CB9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482EB2238C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148436;
-	bh=u8mihk7BMaBudNZAbfb+ZXvceZCfjoz1RKteTCz+rjs=;
+	s=default; t=1564148439;
+	bh=fMIlE96iPeuJpA5NvQKZPass3MD+QVHBbBgG4YrBypA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=03f/WqtKX4d2TOMdekBvZWZpA0U/KgoP0s7OQiZUYRXyq4Qw3Nykyds/cnUXQgWxf
-	 B5hQ4PFE73HuO9un2Gn9rFVwTlXdbZFC+muHq2C/jCS/s9kk6i7u54InHlMUyDl4r1
-	 i5Hmi4bkGc6l4Fhet5FVobMKfwO4iY5E0ccIGAJk=
+	b=Lz+aGIto6rrr4E94rJHAdU/11S8dZCIi25YHBdhwAJ8izwiz5g1FqoFOQv/yRkKCj
+	 yzxfHye7koSNZ6diyefvNk6Lkc2d61sZ3BIJBWtFdJO+2PBjoRI1lmyFOT1teSTGgt
+	 tNMH30DPDJ3CjYkkExXPdMDyFf4kdlxRZKYIl824=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387501AbfGZNkf (ORCPT
+        id S2387529AbfGZNki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:40:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46592 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:40:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727692AbfGZNkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:40:31 -0400
+        id S2387507AbfGZNkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:40:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2E6222CBD;
-        Fri, 26 Jul 2019 13:40:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90E2C22BF5;
+        Fri, 26 Jul 2019 13:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148429;
-        bh=u8mihk7BMaBudNZAbfb+ZXvceZCfjoz1RKteTCz+rjs=;
+        s=default; t=1564148435;
+        bh=fMIlE96iPeuJpA5NvQKZPass3MD+QVHBbBgG4YrBypA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PWZNAD4eWFMJTGz1owVDvO3s4yEOk/PcZMBu+qxa/MN0AjYAEIVbyVIZvQ4G6rwPC
-         S8u9eghoUCDbodKwdIK/9SGfGol77x+XTVlNJymHrblb4DWS9z5veQmA4trKnAaQ7i
-         aAZ8NPtt6NDxa5Ownnt7SMA11+wkvUUDjoyi1q10=
+        b=uUH8bzv1cXOQ/Nf9kr1FxlpkZChwmhJYclCAVPT+KRQOB2azvZ5sgH9suRfnqa7Rz
+         Js9xgHjT76gkrlWFtY3eWy+KlJgzofDTjn8yPhu7hSdwl0EDjLJRvyjWw3Zc8ZeXhc
+         c0n+YN3M0pH/an4nS1fCgalOQMa+WS5L0RWLa3mM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Disseldorp <ddiss@suse.de>, "Yan, Zheng" <zyan@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 32/85] ceph: fix listxattr vxattr buffer length calculation
-Date:   Fri, 26 Jul 2019 09:38:42 -0400
-Message-Id: <20190726133936.11177-32-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.2 37/85] ACPI: blacklist: fix clang warning for unused DMI table
+Date:   Fri, 26 Jul 2019 09:38:47 -0400
+Message-Id: <20190726133936.11177-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -59,116 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Disseldorp <ddiss@suse.de>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 2b2abcac8c251d1c77a4cc9d9f248daefae0fb4e ]
+[ Upstream commit b80d6a42bdc97bdb6139107d6034222e9843c6e2 ]
 
-ceph_listxattr() incorrectly returns a length based on the static
-ceph_vxattrs_name_size() value, which only takes into account whether
-vxattrs are hidden, ignoring vxattr.exists_cb().
+When CONFIG_DMI is disabled, we only have a tentative declaration,
+which causes a warning from clang:
 
-When filling the xattr buffer ceph_listxattr() checks VXATTR_FLAG_HIDDEN
-and vxattr.exists_cb(). If both are false, we return an incorrect
-(oversize) length.
+drivers/acpi/blacklist.c:20:35: error: tentative array definition assumed to have one element [-Werror]
+static const struct dmi_system_id acpi_rev_dmi_table[] __initconst;
 
-Fix this behaviour by always calculating the vxattrs length at runtime,
-taking both vxattr.hidden and vxattr.exists_cb() into account.
+As the variable is not actually used here, hide it entirely
+in an #ifdef to shut up the warning.
 
-This bug is only exposed with the new "ceph.snap.btime" vxattr, as all
-other vxattrs with a non-null exists_cb also carry VXATTR_FLAG_HIDDEN.
-
-Signed-off-by: David Disseldorp <ddiss@suse.de>
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/xattr.c | 54 +++++++++++++++++++++++++++----------------------
- 1 file changed, 30 insertions(+), 24 deletions(-)
+ drivers/acpi/blacklist.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-index 0cc42c8879e9..b9df49e13d9c 100644
---- a/fs/ceph/xattr.c
-+++ b/fs/ceph/xattr.c
-@@ -897,10 +897,9 @@ ssize_t ceph_listxattr(struct dentry *dentry, char *names, size_t size)
- 	struct inode *inode = d_inode(dentry);
- 	struct ceph_inode_info *ci = ceph_inode(inode);
- 	struct ceph_vxattr *vxattrs = ceph_inode_vxattrs(inode);
--	u32 vir_namelen = 0;
-+	bool len_only = (size == 0);
- 	u32 namelen;
- 	int err;
--	u32 len;
- 	int i;
+diff --git a/drivers/acpi/blacklist.c b/drivers/acpi/blacklist.c
+index ad2c565f5cbe..a86a770c9b79 100644
+--- a/drivers/acpi/blacklist.c
++++ b/drivers/acpi/blacklist.c
+@@ -17,7 +17,9 @@
  
- 	spin_lock(&ci->i_ceph_lock);
-@@ -919,38 +918,45 @@ ssize_t ceph_listxattr(struct dentry *dentry, char *names, size_t size)
- 	err = __build_xattrs(inode);
- 	if (err < 0)
- 		goto out;
--	/*
--	 * Start with virtual dir xattr names (if any) (including
--	 * terminating '\0' characters for each).
--	 */
--	vir_namelen = ceph_vxattrs_name_size(vxattrs);
+ #include "internal.h"
  
--	/* adding 1 byte per each variable due to the null termination */
-+	/* add 1 byte for each xattr due to the null termination */
- 	namelen = ci->i_xattrs.names_size + ci->i_xattrs.count;
--	err = -ERANGE;
--	if (size && vir_namelen + namelen > size)
--		goto out;
--
--	err = namelen + vir_namelen;
--	if (size == 0)
--		goto out;
-+	if (!len_only) {
-+		if (namelen > size) {
-+			err = -ERANGE;
-+			goto out;
-+		}
-+		names = __copy_xattr_names(ci, names);
-+		size -= namelen;
-+	}
++#ifdef CONFIG_DMI
+ static const struct dmi_system_id acpi_rev_dmi_table[] __initconst;
++#endif
  
--	names = __copy_xattr_names(ci, names);
- 
- 	/* virtual xattr names, too */
--	err = namelen;
- 	if (vxattrs) {
- 		for (i = 0; vxattrs[i].name; i++) {
--			if (!(vxattrs[i].flags & VXATTR_FLAG_HIDDEN) &&
--			    !(vxattrs[i].exists_cb &&
--			      !vxattrs[i].exists_cb(ci))) {
--				len = sprintf(names, "%s", vxattrs[i].name);
--				names += len + 1;
--				err += len + 1;
-+			size_t this_len;
-+
-+			if (vxattrs[i].flags & VXATTR_FLAG_HIDDEN)
-+				continue;
-+			if (vxattrs[i].exists_cb && !vxattrs[i].exists_cb(ci))
-+				continue;
-+
-+			this_len = strlen(vxattrs[i].name) + 1;
-+			namelen += this_len;
-+			if (len_only)
-+				continue;
-+
-+			if (this_len > size) {
-+				err = -ERANGE;
-+				goto out;
- 			}
-+
-+			memcpy(names, vxattrs[i].name, this_len);
-+			names += this_len;
-+			size -= this_len;
- 		}
+ /*
+  * POLICY: If *anything* doesn't work, put it on the blacklist.
+@@ -61,7 +63,9 @@ int __init acpi_blacklisted(void)
  	}
--
-+	err = namelen;
- out:
- 	spin_unlock(&ci->i_ceph_lock);
- 	return err;
+ 
+ 	(void)early_acpi_osi_init();
++#ifdef CONFIG_DMI
+ 	dmi_check_system(acpi_rev_dmi_table);
++#endif
+ 
+ 	return blacklisted;
+ }
 -- 
 2.20.1
 
