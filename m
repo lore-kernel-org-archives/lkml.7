@@ -6,109 +6,139 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43285C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD65C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1698922BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C524822C7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:57:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qLaE1wkK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="H6VEWoLT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbfGZTzF (ORCPT
+        id S1728238AbfGZT5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 15:55:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38788 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727421AbfGZTzF (ORCPT
+        Fri, 26 Jul 2019 15:57:43 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:30863 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfGZT5n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 15:55:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Jbv0LbZynJFOQcTJN5oGebnbSqk/idAThN/ynHRXZp8=; b=qLaE1wkKgoy7MM+GpS8n4h0G5
-        ore0CpfVTIbcdEbcRmCa3upn43Xm+UHEcbYtITzvkm+EW5hIfq1Vkb4nLIvE1cbnvqtSp3poIxCwo
-        Z2e7Qsak865u/eh3Yug9ba7yjlnjT7jbooxL03UhvtaENYgbBDfeBxNn7xs++60Pbll5RIqAzZAtH
-        9PHtgtW9psv9Sqlz05XEV7HAfHOqSzG2R0ZGzfs4G1mjtBgBB29R+rwCVdhfIkLeKQNMAjYpdTWry
-        11Nicdi23ixiLKeLhOIAXCwfF6d2yqDdDSUDgD1LRimA9qyYq9uzv9aukemW6TAcgADgf6BU/zBrR
-        miBBXLelQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hr6Ir-00045T-GC; Fri, 26 Jul 2019 19:54:57 +0000
-Date:   Fri, 26 Jul 2019 12:54:57 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <Mark.Brown@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] mm/pgtable/debug: Add test validating architecture page
- table helpers
-Message-ID: <20190726195457.GI30641@bombadil.infradead.org>
-References: <1564037723-26676-1-git-send-email-anshuman.khandual@arm.com>
- <1564037723-26676-2-git-send-email-anshuman.khandual@arm.com>
- <20190725143920.GW363@bombadil.infradead.org>
- <c3bb0420-584c-de3b-2439-8702bc09595e@arm.com>
+        Fri, 26 Jul 2019 15:57:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1564171063; x=1595707063;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=QBDHM2QuOIDcoSjew6sW8UylfxuzHuoReuIX707TDg4=;
+  b=H6VEWoLTz7IJdlu/D91fqRCTvtH4g3CBgnaeKDEf399UVAMgLSC+B06Y
+   kwKIZ+tvz7k468d8MteMH7CL6PuCS3WOg+v7Kyj00EpKbyd/lgO9o5CTb
+   ShLDSsGyoIGgISmxHgD6IgLxqtswTDAsKDXahoQe9EV/blDhuxnfYvYc4
+   vLceZHobexIMp5VMqYsVs3HX5Dbjs1Dm8fpSAJrj+YJiB63YYri4EFt1M
+   n1eRdzeDVpJJVvr+nzFdhler7NIB8XnoyaqMX7agxhYAQhGPOKFZR0O5Q
+   ZR3EE4/Nr4ebQ7d8lP2G5YaBQFcqojLfrgnMQZi1+ZGo5eDDo2GYSlIQw
+   Q==;
+IronPort-SDR: nNcO6OLZZiTMbascjVoRZnsMtZZsTBbzCiMJW4cDyKfAR0f9FMcinyNMCIUS2B+zMrs06m25Y+
+ vCyX7htZUrSH3CaHH+oe7HN8ezrlHXYXwgpUEAVzWaYhgnuJ4mUbTxxRvrtOpnSXXvbVCubdaK
+ JaF16lSJjsKJIYdP+TKAmQpsxwKhi3idy1oQgBO8seK8Gd26Y03BocDT0sGfyHGughGSE3a18h
+ E3fmBUwghGk2bICdydXZnRntsBeYCWk6GKH0RCUTvPCrmpjg7GOiV4hlJE4dWjBPHew4YTsmJW
+ n6k=
+X-IronPort-AV: E=Sophos;i="5.64,312,1559491200"; 
+   d="scan'208";a="115275100"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 27 Jul 2019 03:55:39 +0800
+IronPort-SDR: 8LPrpYh19xnDsQE0izFTFdBQs5tc9wI7e1QXBWiJNSpQETnZ+YjP6eICQ/tmboqHFYmaRgla99
+ 5r4+04++4geaCKkV/XeD6RT/BUJINKbOs6jLxkFatPCnqrT9c39PgbIwVdO9V/YswxfmpuO6CC
+ lgmXe0x7O2ZRJ1v/x+GXUydYabQZiKIX1RlEX2E//uZlNtG8nG+qAwpuAuaPkzngblDLsIG/W6
+ VJzEziSiOBXbV5y4lTzm28gED1zZrJndxwLlo97iizVoDg3Nv2KXJKLTAFhJyf0cSbA2BvTOwg
+ gv6ADyObGkyr05ml7CzTZ2kD
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP; 26 Jul 2019 12:53:48 -0700
+IronPort-SDR: jt1iwJjO+UmUWfIifTmRgCjwAeMfW0RoIJnBpBx69FB4ukWCIxoG/e+596RpstmduUnDR0BgLW
+ +m/UD6Kt+1Jo3HsPmuqIi3FJC3neC9MFO+PLwzwJxW4doLmTjF/MRAQheWndDqfPi9QPZfGEWC
+ ZWAwI8MFyNTebGrMhf3AslZ5udniXOtAabGgqQTXEKW4Q3JPnBiNVKUCM1svnDAmi9sn1fj8j+
+ ay4OJIRcmX/AV8QCUbuS1v5U1DQp5CkaUujBw5BiH6wAq3I9MrW3pYVApCmaOdt9BkCqX2VUWR
+ Tbc=
+Received: from unknown (HELO [10.225.104.231]) ([10.225.104.231])
+  by uls-op-cesaip01.wdc.com with ESMTP; 26 Jul 2019 12:55:39 -0700
+Subject: Re: [PATCH 0/7] Fix broken references to files under Documentation/*
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?=c5=81ukasz_Stelmach?= <l.stelmach@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>
+References: <cover.1564140865.git.mchehab+samsung@kernel.org>
+From:   Atish Patra <atish.patra@wdc.com>
+Message-ID: <04794d40-0b39-0223-c91e-03b46cb6e2db@wdc.com>
+Date:   Fri, 26 Jul 2019 12:55:36 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c3bb0420-584c-de3b-2439-8702bc09595e@arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <cover.1564140865.git.mchehab+samsung@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 10:17:11AM +0530, Anshuman Khandual wrote:
-> > But 'page' isn't necessarily PMD-aligned.  I don't think we can rely on
-> > architectures doing the right thing if asked to make a PMD for a randomly
-> > aligned page.
-> > 
-> > How about finding the physical address of something like kernel_init(),
+On 7/26/19 4:47 AM, Mauro Carvalho Chehab wrote:
+> Solves most of the pending broken references upstream, except for two of
+> them:
 > 
-> Physical address corresponding to the symbol in the kernel text segment ?
-
-Yes.  We need the address of something that's definitely memory.
-The stack might be in vmalloc space.  We can't allocate memory from the
-allocator that's PUD-aligned.  This seems like a reasonable approximation
-to something that might work.
-
-> > and using the corresponding pte/pmd/pud/p4d/pgd that encompasses that
+> 	$ ./scripts/documentation-file-ref-check
+> 	Documentation/riscv/boot-image-header.txt: Documentation/riscv/booting.txt
+> 	MAINTAINERS: Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
 > 
-> So I guess this will help us use pte/pmd/pud/p4d/pgd entries from a real and
-> present mapping rather then making them up for test purpose. Although we are
-> not creating real page tables here just wondering if this could some how
-> affect these real mapping in anyway from some accessors. The current proposal
-> stays clear from anything real - allocates, evaluates and releases.
-
-I think that's a mistake.  As Russell said, the ARM p*d manipulation
-functions expect to operate on tables, not on individual entries
-constructed on the stack.
-
-So I think the right thing to do here is allocate an mm, then do the
-pgd_alloc / p4d_alloc / pud_alloc / pmd_alloc / pte_alloc() steps giving
-you real page tables that you can manipulate.
-
-Then destroy them, of course.  And don't access through them.
-
-> >> +#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-> >> +static void pud_basic_tests(void)
-> > 
-> > Is this the right ifdef?
+> As written at boot-image-header.txt, it is waiting for the addition of
+> a future file:
 > 
-> IIUC THP at PUD is where the pud_t entries are directly operated upon and the
-> corresponding accessors are present only when HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-> is enabled. Am I missing something here ?
+> 	"The complete booting guide will be available at
+> 	  Documentation/riscv/booting.txt."
+> 
 
-Maybe I am.  I thought we could end up operating on PUDs for kernel mappings,
-even without transparent hugepages turned on.
+Yeah. We don't have complete booting guide defined in RISC-V land.
+Documentation/riscv/booting.txt will be available once we have that.
+
+In the mean time, do we need to convert boot-image-header.txt to 
+boot-image-header.rst and fix the reference to 
+Documentation/riscv/booting.rst as well ?
+
+> The second is due to this patch, pending to be merged:
+> 	https://lore.kernel.org/patchwork/patch/994210/
+> 
+> I'm not a DT expert, but I can't see any issue with this patch, except
+> for a missing acked-by a DT maintainer, and a possible conversion to
+> yaml. IMO, the best fix for this would be to merge the DT patch.
+> 
+> Patch 1 was already submitted before, together with the v1 of
+> my PDF fix series.
+> 
+> Mauro Carvalho Chehab (7):
+>    docs: fix broken doc references due to renames
+>    docs: generic-counter.rst: fix broken references for ABI file
+>    MAINTAINERS: fix reference to net phy ABI file
+>    MAINTAINERS: fix a renamed DT reference
+>    docs: cgroup-v1/blkio-controller.rst: remove a CFQ left over
+>    docs: zh_CN: howto.rst: fix a broken reference
+>    docs: dt: fix a sound binding broken reference
+> 
+>   Documentation/RCU/rculist_nulls.txt                |  2 +-
+>   .../admin-guide/cgroup-v1/blkio-controller.rst     |  6 ------
+>   .../devicetree/bindings/arm/idle-states.txt        |  2 +-
+>   .../devicetree/bindings/sound/sun8i-a33-codec.txt  |  2 +-
+>   Documentation/driver-api/generic-counter.rst       |  4 ++--
+>   Documentation/locking/spinlocks.rst                |  4 ++--
+>   Documentation/memory-barriers.txt                  |  2 +-
+>   .../translations/ko_KR/memory-barriers.txt         |  2 +-
+>   Documentation/translations/zh_CN/process/howto.rst |  2 +-
+>   Documentation/watchdog/hpwdt.rst                   |  2 +-
+>   MAINTAINERS                                        | 14 +++++++-------
+>   drivers/gpu/drm/drm_modes.c                        |  2 +-
+>   drivers/i2c/busses/i2c-nvidia-gpu.c                |  2 +-
+>   drivers/scsi/hpsa.c                                |  4 ++--
+>   14 files changed, 22 insertions(+), 28 deletions(-)
+> 
+
+
+-- 
+Regards,
+Atish
