@@ -2,132 +2,80 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48743C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AFFC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED2222CD7
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148586;
-	bh=Dtsfv0EZOJEzc6QLNhd9lF+93AxZR+meA54znWd8bGE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dmNrPPgrYgB31rjLpJB3nzs3W4JN+kN9u25thV0l9fwNHCt4j9NjyHR+C6aREj1lO
-	 hHMR0wN5gG2JoyKXFkt/bt2pAWNL1Qh9BSTEDJU+hQR6oIeBFEstbT/gyqC6i3tEn9
-	 VbHmC2aA6XoiY1ShcoY+TPjmRCkTY8bEnPslDKMA=
+	by mail.kernel.org (Postfix) with ESMTP id 9D07222CBB
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388123AbfGZNnF (ORCPT
+        id S2388136AbfGZNnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:43:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50468 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:43:07 -0400
+Received: from olimex.com ([184.105.72.32]:41816 "EHLO olimex.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387569AbfGZNnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:43:01 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99C2F22CC2;
-        Fri, 26 Jul 2019 13:42:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148581;
-        bh=Dtsfv0EZOJEzc6QLNhd9lF+93AxZR+meA54znWd8bGE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qcNcvHBaSFSrMmukHuPwA17A/osRfNrPWM6dQ5b6GGi3skcym7ln2LLz6IgbE/UvA
-         VGDOnJnbxPUAX/NmpwWz2zqhkm2wDbO+s+I21KOwHZC/8fCRhDQxRTAUVDxh4Msm3O
-         m9BUMpaXuf//y21XMJzf9zyL2P4kB9Ei1SBNvLgo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Doug Berger <opendmb@gmail.com>,
-        Michal Nazarewicz <mina86@mina86.com>,
-        Yue Hu <huyue2@yulong.com>, Mike Rapoport <rppt@linux.ibm.com>,
-        Laura Abbott <labbott@redhat.com>, Peng Fan <peng.fan@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 30/47] mm/cma.c: fail if fixed declaration can't be honored
-Date:   Fri, 26 Jul 2019 09:41:53 -0400
-Message-Id: <20190726134210.12156-30-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
-References: <20190726134210.12156-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S2387632AbfGZNnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:43:04 -0400
+Received: from localhost.localdomain ([94.155.250.134])
+        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 06:32:59 -0700
+From:   Stefan Mavrodiev <stefan@olimex.com>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org (open list:THERMAL),
+        linux-kernel@vger.kernel.org (open list)
+Cc:     Stefan Mavrodiev <stefan@olimex.com>
+Subject: [PATCH 1/1] thermal_hwmon: Sanitize thermal_zone type
+Date:   Fri, 26 Jul 2019 16:32:36 +0300
+Message-Id: <20190726133236.22872-1-stefan@olimex.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+When calling thermal_add_hwmon_sysfs(), the device type is sanitized by
+replacing '-' with '_'. However tz->type remains unsanitized. Thus
+calling thermal_hwmon_lookup_by_type() returns no device. And if there is
+no device, thermal_remove_hwmon_sysfs() fails with "hwmon device lookup failed!".
 
-[ Upstream commit c633324e311243586675e732249339685e5d6faa ]
+The result is unregisted hwmon devices in the sysfs.
 
-The description of cma_declare_contiguous() indicates that if the
-'fixed' argument is true the reserved contiguous area must be exactly at
-the address of the 'base' argument.
+Fixes: 409ef0bacacf ("thermal_hwmon: Sanitize attribute name passed to hwmon")
 
-However, the function currently allows the 'base', 'size', and 'limit'
-arguments to be silently adjusted to meet alignment constraints.  This
-commit enforces the documented behavior through explicit checks that
-return an error if the region does not fit within a specified region.
-
-Link: http://lkml.kernel.org/r/1561422051-16142-1-git-send-email-opendmb@gmail.com
-Fixes: 5ea3b1b2f8ad ("cma: add placement specifier for "cma=" kernel parameter")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Michal Nazarewicz <mina86@mina86.com>
-Cc: Yue Hu <huyue2@yulong.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
 ---
- mm/cma.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/thermal/thermal_hwmon.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/mm/cma.c b/mm/cma.c
-index 476dfe13a701..4c2864270a39 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -282,6 +282,12 @@ int __init cma_declare_contiguous(phys_addr_t base,
- 	 */
- 	alignment = max(alignment,  (phys_addr_t)PAGE_SIZE <<
- 			  max_t(unsigned long, MAX_ORDER - 1, pageblock_order));
-+	if (fixed && base & (alignment - 1)) {
-+		ret = -EINVAL;
-+		pr_err("Region at %pa must be aligned to %pa bytes\n",
-+			&base, &alignment);
-+		goto err;
-+	}
- 	base = ALIGN(base, alignment);
- 	size = ALIGN(size, alignment);
- 	limit &= ~(alignment - 1);
-@@ -312,6 +318,13 @@ int __init cma_declare_contiguous(phys_addr_t base,
- 	if (limit == 0 || limit > memblock_end)
- 		limit = memblock_end;
+diff --git a/drivers/thermal/thermal_hwmon.c b/drivers/thermal/thermal_hwmon.c
+index 40c69a533b24..dd5d8ee37928 100644
+--- a/drivers/thermal/thermal_hwmon.c
++++ b/drivers/thermal/thermal_hwmon.c
+@@ -87,13 +87,17 @@ static struct thermal_hwmon_device *
+ thermal_hwmon_lookup_by_type(const struct thermal_zone_device *tz)
+ {
+ 	struct thermal_hwmon_device *hwmon;
++	char type[THERMAL_NAME_LENGTH];
  
-+	if (base + size > limit) {
-+		ret = -EINVAL;
-+		pr_err("Size (%pa) of region at %pa exceeds limit (%pa)\n",
-+			&size, &base, &limit);
-+		goto err;
+ 	mutex_lock(&thermal_hwmon_list_lock);
+-	list_for_each_entry(hwmon, &thermal_hwmon_list, node)
+-		if (!strcmp(hwmon->type, tz->type)) {
++	list_for_each_entry(hwmon, &thermal_hwmon_list, node) {
++		strcpy(type, tz->type);
++		strreplace(type, '-', '_');
++		if (!strcmp(hwmon->type, type)) {
+ 			mutex_unlock(&thermal_hwmon_list_lock);
+ 			return hwmon;
+ 		}
 +	}
-+
- 	/* Reserve memory */
- 	if (fixed) {
- 		if (memblock_is_region_reserved(base, size) ||
+ 	mutex_unlock(&thermal_hwmon_list_lock);
+ 
+ 	return NULL;
 -- 
-2.20.1
+2.17.1
 
