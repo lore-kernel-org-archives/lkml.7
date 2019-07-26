@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0DBC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3F3C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9258B2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84EE022BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155482;
-	bh=SLkY0kzv+7zTX5Msvvotv5x3ROGVMcKp6MdENo7d3Ts=;
+	s=default; t=1564155490;
+	bh=v7Xqxq0QTqHQrs+EEZYLm0GJ7qSjUp75lZ9u4crDjOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WRnpp3RhUBE7nhPiQeaawT3FTlDLIQhOvvKz5sEnA14CLxS9hQijOhXtyDwVBHtvM
-	 n7pPCfeAizc0LIvlBtU/hnWMOmor+lV1eWgT1cQr4y71v52H26CGZCVFMFhQoAfVI0
-	 Wbg3pQ8hmpZBSLNHWN+6WaKI+BTrLSgFetGrsuhQ=
+	b=PAa40kQV/fAgxyQ1m88/4BIhGpFBqwpmkt+wiRzdJWvaiZ3GXZskJ1ME1I8sYUNZe
+	 UbkrmJ424gD8RmS45pKQv7xo3itimXuNDqgeGiEqgYKGoKj2NiBUu3MmZM0/dxVQOu
+	 ZLyJOvux7CgD3kbbxsy+YaxvonCZpxiSWsLr6w5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388315AbfGZPiB (ORCPT
+        id S2388581AbfGZP2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:38:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43718 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:28:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388672AbfGZP3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:29:06 -0400
+        id S2388137AbfGZP2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:28:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13AB322C7E;
-        Fri, 26 Jul 2019 15:29:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 219F622CBF;
+        Fri, 26 Jul 2019 15:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154946;
-        bh=SLkY0kzv+7zTX5Msvvotv5x3ROGVMcKp6MdENo7d3Ts=;
+        s=default; t=1564154922;
+        bh=v7Xqxq0QTqHQrs+EEZYLm0GJ7qSjUp75lZ9u4crDjOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RxJc0G88rKvkIpm+O4u1ggkdHDQmXpvR/UvtevqPfSpyDDX3Emv38vytGU2RsEBML
-         WA9AbHZQ5gAg/BlA22hsjDfpzS/E+XpyR4tMUh17t5QHJKKjVc6r+dL/Fr7r7a+i2G
-         mSNjmYPNn0TUYWJ7wWJiuZ560e4ECVNXAGYn2s5E=
+        b=J8ormoSBkh07mv/CLje04iVl2omwkDp1gsMTUVi3Yx8A2Z4kWynmn+FJDphBQJgdg
+         pvfnLHmQ1PhwUn0h1tUfdodtkIplykTnzAswmovnKV8SAP08F5DvDGYn+Hl+tsvfYk
+         prSCCsnoD85+oq+Z9xiHH5lRlBJLVREs8RmQD/mg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Alex Kushnarov <alexanderk@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 03/62] hv_netvsc: Fix extra rcu_read_unlock in netvsc_recv_callback()
-Date:   Fri, 26 Jul 2019 17:24:15 +0200
-Message-Id: <20190726152302.069212417@linuxfoundation.org>
+Subject: [PATCH 5.2 46/66] mlxsw: spectrum: Do not process learned records with a dummy FID
+Date:   Fri, 26 Jul 2019 17:24:45 +0200
+Message-Id: <20190726152306.957806093@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
-References: <20190726152301.720139286@linuxfoundation.org>
+In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
+References: <20190726152301.936055394@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,31 +61,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit be4363bdf0ce9530f15aa0a03d1060304d116b15 ]
+[ Upstream commit 577fa14d210073ba1ce6237c659a8820312104ad ]
 
-There is an extra rcu_read_unlock left in netvsc_recv_callback(),
-after a previous patch that removes RCU from this function.
-This patch removes the extra RCU unlock.
+The switch periodically sends notifications about learned FDB entries.
+Among other things, the notification includes the FID (Filtering
+Identifier) and the port on which the MAC was learned.
 
-Fixes: 345ac08990b8 ("hv_netvsc: pass netvsc_device to receive callback")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+In case the driver does not have the FID defined on the relevant port,
+the following error will be periodically generated:
+
+mlxsw_spectrum2 0000:06:00.0 swp32: Failed to find a matching {Port, VID} following FDB notification
+
+This is not supposed to happen under normal conditions, but can happen
+if an ingress tc filter with a redirect action is installed on a bridged
+port. The redirect action will cause the packet's FID to be changed to
+the dummy FID and a learning notification will be emitted with this FID
+- which is not defined on the bridged port.
+
+Fix this by having the driver ignore learning notifications generated
+with the dummy FID and delete them from the device.
+
+Another option is to chain an ignore action after the redirect action
+which will cause the device to disable learning, but this means that we
+need to consume another action whenever a redirect action is used. In
+addition, the scenario described above is merely a corner case.
+
+Fixes: cedbb8b25948 ("mlxsw: spectrum_flower: Set dummy FID before forward action")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Alex Kushnarov <alexanderk@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Tested-by: Alex Kushnarov <alexanderk@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/hyperv/netvsc_drv.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.h           |    1 +
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_fid.c       |   10 ++++++++++
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c |    6 ++++++
+ 3 files changed, 17 insertions(+)
 
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -849,7 +849,6 @@ int netvsc_recv_callback(struct net_devi
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.h
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.h
+@@ -805,6 +805,7 @@ int mlxsw_sp_setup_tc_prio(struct mlxsw_
+ 			   struct tc_prio_qopt_offload *p);
  
- 	if (unlikely(!skb)) {
- 		++net_device_ctx->eth_stats.rx_no_memory;
--		rcu_read_unlock();
- 		return NVSP_STAT_FAIL;
+ /* spectrum_fid.c */
++bool mlxsw_sp_fid_is_dummy(struct mlxsw_sp *mlxsw_sp, u16 fid_index);
+ bool mlxsw_sp_fid_lag_vid_valid(const struct mlxsw_sp_fid *fid);
+ struct mlxsw_sp_fid *mlxsw_sp_fid_lookup_by_index(struct mlxsw_sp *mlxsw_sp,
+ 						  u16 fid_index);
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_fid.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_fid.c
+@@ -126,6 +126,16 @@ static const int *mlxsw_sp_packet_type_s
+ 	[MLXSW_SP_FLOOD_TYPE_MC]	= mlxsw_sp_sfgc_mc_packet_types,
+ };
+ 
++bool mlxsw_sp_fid_is_dummy(struct mlxsw_sp *mlxsw_sp, u16 fid_index)
++{
++	enum mlxsw_sp_fid_type fid_type = MLXSW_SP_FID_TYPE_DUMMY;
++	struct mlxsw_sp_fid_family *fid_family;
++
++	fid_family = mlxsw_sp->fid_core->fid_family_arr[fid_type];
++
++	return fid_family->start_index == fid_index;
++}
++
+ bool mlxsw_sp_fid_lag_vid_valid(const struct mlxsw_sp_fid *fid)
+ {
+ 	return fid->fid_family->lag_vid_valid;
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
+@@ -2468,6 +2468,9 @@ static void mlxsw_sp_fdb_notify_mac_proc
+ 		goto just_remove;
  	}
  
++	if (mlxsw_sp_fid_is_dummy(mlxsw_sp, fid))
++		goto just_remove;
++
+ 	mlxsw_sp_port_vlan = mlxsw_sp_port_vlan_find_by_fid(mlxsw_sp_port, fid);
+ 	if (!mlxsw_sp_port_vlan) {
+ 		netdev_err(mlxsw_sp_port->dev, "Failed to find a matching {Port, VID} following FDB notification\n");
+@@ -2527,6 +2530,9 @@ static void mlxsw_sp_fdb_notify_mac_lag_
+ 		goto just_remove;
+ 	}
+ 
++	if (mlxsw_sp_fid_is_dummy(mlxsw_sp, fid))
++		goto just_remove;
++
+ 	mlxsw_sp_port_vlan = mlxsw_sp_port_vlan_find_by_fid(mlxsw_sp_port, fid);
+ 	if (!mlxsw_sp_port_vlan) {
+ 		netdev_err(mlxsw_sp_port->dev, "Failed to find a matching {Port, VID} following FDB notification\n");
 
 
