@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA8EC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F705C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1EA22CBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686BF20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155257;
-	bh=pbeQDORN6gjVG0+4sDhKbTkgttOdLuzGdZH+0akPEqA=;
+	s=default; t=1564155260;
+	bh=mU/cphH8ryHrVmuO9omVALk2fgtD/LhRfsJrntv7E2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XruU81LNoU6xDO8DbGSN4CLZ9prsoHQQItbS9Sx2vaDiGtFo2FkRJmnFOuAVa4NsX
-	 I2lTR6u+kizIDt9HOYCV+ocFgShuye3cSBKm9Hf7BbVEVjWVYmV1bbquXgSIA+7Sk7
-	 fThNd3825nSGQTuLBiZTqz5XL4aDEdPJh2OkslcU=
+	b=MDKi1lzxyx9bxv9jmviqHPRqah2xLY8RDXbY+Sjv6X3u1X3kSA+BmRJNd+bEeRCYZ
+	 uC+f8K8tJ3cA6TsBRqPP+xkJk5GKPcQ4rfIWbuN8NhCRgcJvu5iL/2h5BQj6uYN/GO
+	 TnlE/JVhFTtDSXGIwSnR8WznzdoaqbZ7OG0gWYVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389809AbfGZPeP (ORCPT
+        id S2389819AbfGZPeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:34:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49722 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:34:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389782AbfGZPeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:34:10 -0400
+        id S2389422AbfGZPeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:34:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B471D218D4;
-        Fri, 26 Jul 2019 15:34:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97F522054F;
+        Fri, 26 Jul 2019 15:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155249;
-        bh=pbeQDORN6gjVG0+4sDhKbTkgttOdLuzGdZH+0akPEqA=;
+        s=default; t=1564155257;
+        bh=mU/cphH8ryHrVmuO9omVALk2fgtD/LhRfsJrntv7E2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zAzmc+JRpPPq9BolQVKbkMiCi1C89iaL5tUEyCpV167yLrP1u+AEeRD2+dmWp6rpu
-         8f2Fj4zgSy3t5RFFc/0ZLA7XXOoI2qFwfNBU8E76Acp53r1o2cnHZJw9Vw/U8AM5BU
-         j64OLFzi4mKCRf3gKJLbcBIj6jS6Rge9xREscoiw=
+        b=JsSFV1pnKrU8BkWi2UbE4ot/BOgSBMicUEkYJaq+5rfqrdpCKFX1TW7+XSBjlOoMz
+         QKRQxhrN8hRh8qOiB/tRr7yspI6ke+ucEcnjbhZbtwDmhN+lrohD6iRmL06OlanMQ0
+         Ccmpy0eCwKxEYvYIZngnlhu/aRWQFaQW6byE6/VQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Weinelt <martin@linuxlounge.net>,
+        stable@vger.kernel.org,
         Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 32/50] net: bridge: mcast: fix stale nsrcs pointer in igmp3/mld2 report handling
-Date:   Fri, 26 Jul 2019 17:25:07 +0200
-Message-Id: <20190726152303.934713855@linuxfoundation.org>
+Subject: [PATCH 4.19 35/50] net: bridge: stp: dont cache eth dest pointer before skb pull
+Date:   Fri, 26 Jul 2019 17:25:10 +0200
+Message-Id: <20190726152304.248021797@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -62,171 +62,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-[ Upstream commit e57f61858b7cf478ed6fa23ed4b3876b1c9625c4 ]
+[ Upstream commit 2446a68ae6a8cee6d480e2f5b52f5007c7c41312 ]
 
-We take a pointer to grec prior to calling pskb_may_pull and use it
-afterwards to get nsrcs so record nsrcs before the pull when handling
-igmp3 and we get a pointer to nsrcs and call pskb_may_pull when handling
-mld2 which again could lead to reading 2 bytes out-of-bounds.
+Don't cache eth dest pointer before calling pskb_may_pull.
 
- ==================================================================
- BUG: KASAN: use-after-free in br_multicast_rcv+0x480c/0x4ad0 [bridge]
- Read of size 2 at addr ffff8880421302b4 by task ksoftirqd/1/16
-
- CPU: 1 PID: 16 Comm: ksoftirqd/1 Tainted: G           OE     5.2.0-rc6+ #1
- Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
- Call Trace:
-  dump_stack+0x71/0xab
-  print_address_description+0x6a/0x280
-  ? br_multicast_rcv+0x480c/0x4ad0 [bridge]
-  __kasan_report+0x152/0x1aa
-  ? br_multicast_rcv+0x480c/0x4ad0 [bridge]
-  ? br_multicast_rcv+0x480c/0x4ad0 [bridge]
-  kasan_report+0xe/0x20
-  br_multicast_rcv+0x480c/0x4ad0 [bridge]
-  ? br_multicast_disable_port+0x150/0x150 [bridge]
-  ? ktime_get_with_offset+0xb4/0x150
-  ? __kasan_kmalloc.constprop.6+0xa6/0xf0
-  ? __netif_receive_skb+0x1b0/0x1b0
-  ? br_fdb_update+0x10e/0x6e0 [bridge]
-  ? br_handle_frame_finish+0x3c6/0x11d0 [bridge]
-  br_handle_frame_finish+0x3c6/0x11d0 [bridge]
-  ? br_pass_frame_up+0x3a0/0x3a0 [bridge]
-  ? virtnet_probe+0x1c80/0x1c80 [virtio_net]
-  br_handle_frame+0x731/0xd90 [bridge]
-  ? select_idle_sibling+0x25/0x7d0
-  ? br_handle_frame_finish+0x11d0/0x11d0 [bridge]
-  __netif_receive_skb_core+0xced/0x2d70
-  ? virtqueue_get_buf_ctx+0x230/0x1130 [virtio_ring]
-  ? do_xdp_generic+0x20/0x20
-  ? virtqueue_napi_complete+0x39/0x70 [virtio_net]
-  ? virtnet_poll+0x94d/0xc78 [virtio_net]
-  ? receive_buf+0x5120/0x5120 [virtio_net]
-  ? __netif_receive_skb_one_core+0x97/0x1d0
-  __netif_receive_skb_one_core+0x97/0x1d0
-  ? __netif_receive_skb_core+0x2d70/0x2d70
-  ? _raw_write_trylock+0x100/0x100
-  ? __queue_work+0x41e/0xbe0
-  process_backlog+0x19c/0x650
-  ? _raw_read_lock_irq+0x40/0x40
-  net_rx_action+0x71e/0xbc0
-  ? __switch_to_asm+0x40/0x70
-  ? napi_complete_done+0x360/0x360
-  ? __switch_to_asm+0x34/0x70
-  ? __switch_to_asm+0x40/0x70
-  ? __schedule+0x85e/0x14d0
-  __do_softirq+0x1db/0x5f9
-  ? takeover_tasklets+0x5f0/0x5f0
-  run_ksoftirqd+0x26/0x40
-  smpboot_thread_fn+0x443/0x680
-  ? sort_range+0x20/0x20
-  ? schedule+0x94/0x210
-  ? __kthread_parkme+0x78/0xf0
-  ? sort_range+0x20/0x20
-  kthread+0x2ae/0x3a0
-  ? kthread_create_worker_on_cpu+0xc0/0xc0
-  ret_from_fork+0x35/0x40
-
- The buggy address belongs to the page:
- page:ffffea0001084c00 refcount:0 mapcount:-128 mapping:0000000000000000 index:0x0
- flags: 0xffffc000000000()
- raw: 00ffffc000000000 ffffea0000cfca08 ffffea0001098608 0000000000000000
- raw: 0000000000000000 0000000000000003 00000000ffffff7f 0000000000000000
- page dumped because: kasan: bad access detected
-
- Memory state around the buggy address:
- ffff888042130180: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff888042130200: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- > ffff888042130280: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-                                     ^
- ffff888042130300: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff888042130380: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ==================================================================
- Disabling lock debugging due to kernel taint
-
-Fixes: bc8c20acaea1 ("bridge: multicast: treat igmpv3 report with INCLUDE and no sources as a leave")
-Reported-by: Martin Weinelt <martin@linuxlounge.net>
+Fixes: cf0f02d04a83 ("[BRIDGE]: use llc for receiving STP packets")
 Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Tested-by: Martin Weinelt <martin@linuxlounge.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_multicast.c |   27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+ net/bridge/br_stp_bpdu.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/net/bridge/br_multicast.c
-+++ b/net/bridge/br_multicast.c
-@@ -1147,6 +1147,7 @@ static int br_ip4_multicast_igmp3_report
- 	int type;
- 	int err = 0;
- 	__be32 group;
-+	u16 nsrcs;
+--- a/net/bridge/br_stp_bpdu.c
++++ b/net/bridge/br_stp_bpdu.c
+@@ -147,7 +147,6 @@ void br_send_tcn_bpdu(struct net_bridge_
+ void br_stp_rcv(const struct stp_proto *proto, struct sk_buff *skb,
+ 		struct net_device *dev)
+ {
+-	const unsigned char *dest = eth_hdr(skb)->h_dest;
+ 	struct net_bridge_port *p;
+ 	struct net_bridge *br;
+ 	const unsigned char *buf;
+@@ -176,7 +175,7 @@ void br_stp_rcv(const struct stp_proto *
+ 	if (p->state == BR_STATE_DISABLED)
+ 		goto out;
  
- 	ih = igmpv3_report_hdr(skb);
- 	num = ntohs(ih->ngrec);
-@@ -1160,8 +1161,9 @@ static int br_ip4_multicast_igmp3_report
- 		grec = (void *)(skb->data + len - sizeof(*grec));
- 		group = grec->grec_mca;
- 		type = grec->grec_type;
-+		nsrcs = ntohs(grec->grec_nsrcs);
+-	if (!ether_addr_equal(dest, br->group_addr))
++	if (!ether_addr_equal(eth_hdr(skb)->h_dest, br->group_addr))
+ 		goto out;
  
--		len += ntohs(grec->grec_nsrcs) * 4;
-+		len += nsrcs * 4;
- 		if (!pskb_may_pull(skb, len))
- 			return -EINVAL;
- 
-@@ -1182,7 +1184,7 @@ static int br_ip4_multicast_igmp3_report
- 		src = eth_hdr(skb)->h_source;
- 		if ((type == IGMPV3_CHANGE_TO_INCLUDE ||
- 		     type == IGMPV3_MODE_IS_INCLUDE) &&
--		    ntohs(grec->grec_nsrcs) == 0) {
-+		    nsrcs == 0) {
- 			br_ip4_multicast_leave_group(br, port, group, vid, src);
- 		} else {
- 			err = br_ip4_multicast_add_group(br, port, group, vid,
-@@ -1217,23 +1219,26 @@ static int br_ip6_multicast_mld2_report(
- 	len = skb_transport_offset(skb) + sizeof(*icmp6h);
- 
- 	for (i = 0; i < num; i++) {
--		__be16 *nsrcs, _nsrcs;
-+		__be16 *_nsrcs, __nsrcs;
-+		u16 nsrcs;
- 
--		nsrcs = skb_header_pointer(skb,
--					   len + offsetof(struct mld2_grec,
--							  grec_nsrcs),
--					   sizeof(_nsrcs), &_nsrcs);
--		if (!nsrcs)
-+		_nsrcs = skb_header_pointer(skb,
-+					    len + offsetof(struct mld2_grec,
-+							   grec_nsrcs),
-+					    sizeof(__nsrcs), &__nsrcs);
-+		if (!_nsrcs)
- 			return -EINVAL;
- 
-+		nsrcs = ntohs(*_nsrcs);
-+
- 		if (!pskb_may_pull(skb,
- 				   len + sizeof(*grec) +
--				   sizeof(struct in6_addr) * ntohs(*nsrcs)))
-+				   sizeof(struct in6_addr) * nsrcs))
- 			return -EINVAL;
- 
- 		grec = (struct mld2_grec *)(skb->data + len);
- 		len += sizeof(*grec) +
--		       sizeof(struct in6_addr) * ntohs(*nsrcs);
-+		       sizeof(struct in6_addr) * nsrcs;
- 
- 		/* We treat these as MLDv1 reports for now. */
- 		switch (grec->grec_type) {
-@@ -1252,7 +1257,7 @@ static int br_ip6_multicast_mld2_report(
- 		src = eth_hdr(skb)->h_source;
- 		if ((grec->grec_type == MLD2_CHANGE_TO_INCLUDE ||
- 		     grec->grec_type == MLD2_MODE_IS_INCLUDE) &&
--		    ntohs(*nsrcs) == 0) {
-+		    nsrcs == 0) {
- 			br_ip6_multicast_leave_group(br, port, &grec->grec_mca,
- 						     vid, src);
- 		} else {
+ 	if (p->flags & BR_BPDU_GUARD) {
 
 
