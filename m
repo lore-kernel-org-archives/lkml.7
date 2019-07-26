@@ -4,49 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B051C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8BBC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2581A22CD8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01AC122CE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148913;
-	bh=6H3V95Rkj95ytRF6BwwNX/yuyl+ZuXbdxk8+F232DmU=;
+	s=default; t=1564148919;
+	bh=6/uPIlYL4tXXpClEj4Iy438L3wZe0nAPdUyNVWwWoeY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G/Tpp1bQ9E0F1P7bmBGvHx34AvS1n8AQIuhSOhbBUyCF61FWGXeNEwcqJHCyYmg26
-	 PN0lEV5+A1RJ6fRhJuNRzFjnw7X0hON0gH9Md5nstxfFqkilcRlHXJgx1OGpqZPmeh
-	 dAwAv3CJ5ruW+jH40LiikN8JXBWchxEh5WeQutn8=
+	b=gvUaK4BP7+EGWfOJbiWhhj+4NJT7wpWpFbl0/b7lew7MEsYkMljULoOCWJw0MX1KY
+	 pG71E1LyhpYtePZkvdN5BKgaqteQEOP9pCNHOBL5rpRsFEMblbwvxQy1a/Ia8ZFZdB
+	 ZCctoWPAjHak1sqoEEsaup1aYkhZbsvMROKl/uhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388675AbfGZNsb (ORCPT
+        id S2388709AbfGZNsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:48:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54098 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:48:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387530AbfGZNpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:45:16 -0400
+        id S1728117AbfGZNpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:45:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAC9122CC2;
-        Fri, 26 Jul 2019 13:45:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB7A122BF5;
+        Fri, 26 Jul 2019 13:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148715;
-        bh=6H3V95Rkj95ytRF6BwwNX/yuyl+ZuXbdxk8+F232DmU=;
+        s=default; t=1564148707;
+        bh=6/uPIlYL4tXXpClEj4Iy438L3wZe0nAPdUyNVWwWoeY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UpGM8bGoLlPWD1b+1oPXRhPB3aUJlc3Vba/3Fa/U0cpV+o5y8EGG7Gneazy6mxScl
-         uDuBsnwVtxBoaKS57aCw1M0Fg4IeAWMtbBXaIG09p7d+06D5L/UYwD7sGL3ZYUWoyt
-         bk9/LInYYZWvMHgXRmrtL6DjS/oAjODeuV/q7Mfg=
+        b=XCutMo4cHyJlUZ7b1j5pA1vO4fh9TpCSIdpYqJ4iQ7mBPwul2TU0vJmm3fdS0iyQN
+         ARSwG6l+dXVie/uLA5ocDXxC238/iII44QrdAGIrepppqPtzAgFF7vmne+abenK3qQ
+         NWuv/6FVYSzClSrnfFdajP61IAQm3b43n1yNQVjA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Denis Efremov <efremov@ispras.ru>, Willy Tarreau <w@1wt.eu>,
+Cc:     Mikko Rapeli <mikko.rapeli@iki.fi>,
+        Jan Harkes <jaharkes@cs.cmu.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Fabian Frederick <fabf@skynet.be>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Yann Droneaud <ydroneaud@opteya.com>,
+        Zhouyang Jia <jiazhouyang09@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 26/30] floppy: fix div-by-zero in setup_format_params
-Date:   Fri, 26 Jul 2019 09:44:28 -0400
-Message-Id: <20190726134432.12993-26-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, codalist@coda.cs.cmu.edu
+Subject: [PATCH AUTOSEL 4.9 22/30] uapi linux/coda_psdev.h: move upc_req definition from uapi to kernel side headers
+Date:   Fri, 26 Jul 2019 09:44:24 -0400
+Message-Id: <20190726134432.12993-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134432.12993-1-sashal@kernel.org>
 References: <20190726134432.12993-1-sashal@kernel.org>
@@ -59,61 +69,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@ispras.ru>
+From: Mikko Rapeli <mikko.rapeli@iki.fi>
 
-[ Upstream commit f3554aeb991214cbfafd17d55e2bfddb50282e32 ]
+[ Upstream commit f90fb3c7e2c13ae829db2274b88b845a75038b8a ]
 
-This fixes a divide by zero error in the setup_format_params function of
-the floppy driver.
+Only users of upc_req in kernel side fs/coda/psdev.c and
+fs/coda/upcall.c already include linux/coda_psdev.h.
 
-Two consecutive ioctls can trigger the bug: The first one should set the
-drive geometry with such .sect and .rate values for the F_SECT_PER_TRACK
-to become zero.  Next, the floppy format operation should be called.
+Suggested by Jan Harkes <jaharkes@cs.cmu.edu> in
+  https://lore.kernel.org/lkml/20150531111913.GA23377@cs.cmu.edu/
 
-A floppy disk is not required to be inserted.  An unprivileged user
-could trigger the bug if the device is accessible.
+Fixes these include/uapi/linux/coda_psdev.h compilation errors in userspace:
 
-The patch checks F_SECT_PER_TRACK for a non-zero value in the
-set_geometry function.  The proper check should involve a reasonable
-upper limit for the .sect and .rate fields, but it could change the
-UAPI.
+  linux/coda_psdev.h:12:19: error: field `uc_chain' has incomplete type
+  struct list_head    uc_chain;
+                   ^
+  linux/coda_psdev.h:13:2: error: unknown type name `caddr_t'
+  caddr_t             uc_data;
+  ^
+  linux/coda_psdev.h:14:2: error: unknown type name `u_short'
+  u_short             uc_flags;
+  ^
+  linux/coda_psdev.h:15:2: error: unknown type name `u_short'
+  u_short             uc_inSize;  /* Size is at most 5000 bytes */
+  ^
+  linux/coda_psdev.h:16:2: error: unknown type name `u_short'
+  u_short             uc_outSize;
+  ^
+  linux/coda_psdev.h:17:2: error: unknown type name `u_short'
+  u_short             uc_opcode;  /* copied from data to save lookup */
+  ^
+  linux/coda_psdev.h:19:2: error: unknown type name `wait_queue_head_t'
+  wait_queue_head_t   uc_sleep;   /* process' wait queue */
+  ^
 
-The patch also checks F_SECT_PER_TRACK in the setup_format_params, and
-cancels the formatting operation in case of zero.
-
-The bug was found by syzkaller.
-
-Signed-off-by: Denis Efremov <efremov@ispras.ru>
-Tested-by: Willy Tarreau <w@1wt.eu>
+Link: http://lkml.kernel.org/r/9f99f5ce6a0563d5266e6cf7aa9585aac2cae971.1558117389.git.jaharkes@cs.cmu.edu
+Signed-off-by: Mikko Rapeli <mikko.rapeli@iki.fi>
+Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Colin Ian King <colin.king@canonical.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Fabian Frederick <fabf@skynet.be>
+Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Yann Droneaud <ydroneaud@opteya.com>
+Cc: Zhouyang Jia <jiazhouyang09@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/floppy.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ include/linux/coda_psdev.h      | 11 +++++++++++
+ include/uapi/linux/coda_psdev.h | 13 -------------
+ 2 files changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 6914c6e1e1a8..bb9b50d1d828 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -2113,6 +2113,9 @@ static void setup_format_params(int track)
- 	raw_cmd->kernel_data = floppy_track_buffer;
- 	raw_cmd->length = 4 * F_SECT_PER_TRACK;
+diff --git a/include/linux/coda_psdev.h b/include/linux/coda_psdev.h
+index 5b8721efa948..fe1466daf291 100644
+--- a/include/linux/coda_psdev.h
++++ b/include/linux/coda_psdev.h
+@@ -19,6 +19,17 @@ struct venus_comm {
+ 	struct mutex	    vc_mutex;
+ };
  
-+	if (!F_SECT_PER_TRACK)
-+		return;
-+
- 	/* allow for about 30ms for data transport per track */
- 	head_shift = (F_SECT_PER_TRACK + 5) / 6;
++/* messages between coda filesystem in kernel and Venus */
++struct upc_req {
++	struct list_head	uc_chain;
++	caddr_t			uc_data;
++	u_short			uc_flags;
++	u_short			uc_inSize;  /* Size is at most 5000 bytes */
++	u_short			uc_outSize;
++	u_short			uc_opcode;  /* copied from data to save lookup */
++	int			uc_unique;
++	wait_queue_head_t	uc_sleep;   /* process' wait queue */
++};
  
-@@ -3235,6 +3238,8 @@ static int set_geometry(unsigned int cmd, struct floppy_struct *g,
- 	/* sanity checking for parameters. */
- 	if (g->sect <= 0 ||
- 	    g->head <= 0 ||
-+	    /* check for zero in F_SECT_PER_TRACK */
-+	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
- 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
- 	    /* check if reserved bits are set */
- 	    (g->stretch & ~(FD_STRETCH | FD_SWAPSIDES | FD_SECTBASEMASK)) != 0)
+ static inline struct venus_comm *coda_vcp(struct super_block *sb)
+ {
+diff --git a/include/uapi/linux/coda_psdev.h b/include/uapi/linux/coda_psdev.h
+index 79d05981fc4b..e2c44d2f7d5b 100644
+--- a/include/uapi/linux/coda_psdev.h
++++ b/include/uapi/linux/coda_psdev.h
+@@ -6,19 +6,6 @@
+ #define CODA_PSDEV_MAJOR 67
+ #define MAX_CODADEVS  5	   /* how many do we allow */
+ 
+-
+-/* messages between coda filesystem in kernel and Venus */
+-struct upc_req {
+-	struct list_head    uc_chain;
+-	caddr_t	            uc_data;
+-	u_short	            uc_flags;
+-	u_short             uc_inSize;  /* Size is at most 5000 bytes */
+-	u_short	            uc_outSize;
+-	u_short	            uc_opcode;  /* copied from data to save lookup */
+-	int		    uc_unique;
+-	wait_queue_head_t   uc_sleep;   /* process' wait queue */
+-};
+-
+ #define CODA_REQ_ASYNC  0x1
+ #define CODA_REQ_READ   0x2
+ #define CODA_REQ_WRITE  0x4
 -- 
 2.20.1
 
