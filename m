@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9D2C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E939C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC605229F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0591720449
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149380;
-	bh=dA9rjTfI3ezqpl0b3sykI4tA/BBNeqQ0Y08JP8hVIyw=;
+	s=default; t=1564149382;
+	bh=kw1tzX8WE1U2hMV6bQjq4IdrRzIQAtYREyRufUjKTWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g8AOmFVda1JvR5Uw+8Gc+MGIj8CqtXOheA4K0xpiMP7vx5xrfjwL+lSwgp39FSdeU
-	 VUvi1F52Zaffns/RxZEochZZJ/SoJOuanmzAHRSZdLjOeMXEgNwLduUXv5BEfBdfTt
-	 McqGpEBSmBImoDbffqXG6UV/gM1nq714qRu/AiXM=
+	b=s0N1S5BcDM5RTGePCaEoJUNl+K3zEFSICniS6zHYFi+mR+qUDj4tp/v8QJSln4BfF
+	 mjYtyMFfziy3wUSyEqny6cgT8Fa6HBFQ3HG1rK0a30DKOqDlXaMt5+JUgl7wF5cNf5
+	 DKhMSmF2GzbPi4DPw9i5ZhB95HhSY+cm7Upq1W7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbfGZN4S (ORCPT
+        id S1727528AbfGZNlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:56:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49036 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:41:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727558AbfGZNlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:41:55 -0400
+        id S2387747AbfGZNlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:41:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE59722CBD;
-        Fri, 26 Jul 2019 13:41:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4333C22CD3;
+        Fri, 26 Jul 2019 13:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148514;
-        bh=dA9rjTfI3ezqpl0b3sykI4tA/BBNeqQ0Y08JP8hVIyw=;
+        s=default; t=1564148504;
+        bh=kw1tzX8WE1U2hMV6bQjq4IdrRzIQAtYREyRufUjKTWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uGmlVZl8XSMB0BSzWLuhfh9gXsSGgLETdAY8sOvTePaI1nTKSskBvFk5B/Ctp5nmK
-         VdoT6+MmFT9gtlC8m3uXuC4q2zglgp0hJgbb2EYRuFD/fM95rZJrVhsNxTFbMpMteQ
-         6g60XOzBKcKM0jDc0PUwn06wALiuQYUFzO7Rua/w=
+        b=gQ0faUZOwhrtv7YcgbZgENqWnQw7+9Cnl6nTCdqzj/bu8DnFfPoZvDRF/v7A/U13t
+         NJ645CpoHHip7qaN/2rDeIZBgIHkDCHsRBM3lSHASqaUjWN1UOmTwtRG7ZHUevSZHq
+         jX/EhdiugBNfQ+9Fcr0FranNfUuQQl85UeRrV3SM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 77/85] objtool: Add mcsafe_handle_tail() to the uaccess safe list
-Date:   Fri, 26 Jul 2019 09:39:27 -0400
-Message-Id: <20190726133936.11177-77-sashal@kernel.org>
+Cc:     Petr Machata <petrm@mellanox.com>,
+        Alex Veber <alexve@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 71/85] mlxsw: spectrum_dcb: Configure DSCP map as the last rule is removed
+Date:   Fri, 26 Jul 2019 09:39:21 -0400
+Message-Id: <20190726133936.11177-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -61,44 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit a7e47f26039c26312a4144c3001b4e9fa886bd45 ]
+[ Upstream commit dedfde2fe1c4ccf27179fcb234e2112d065c39bb ]
 
-After an objtool improvement, it's reporting that __memcpy_mcsafe() is
-calling mcsafe_handle_tail() with AC=1:
+Spectrum systems use DSCP rewrite map to update DSCP field in egressing
+packets to correspond to priority that the packet has. Whether rewriting
+will take place is determined at the point when the packet ingresses the
+switch: if the port is in Trust L3 mode, packet priority is determined from
+the DSCP map at the port, and DSCP rewrite will happen. If the port is in
+Trust L2 mode, 802.1p is used for packet prioritization, and no DSCP
+rewrite will happen.
 
-  arch/x86/lib/memcpy_64.o: warning: objtool: .fixup+0x13: call to mcsafe_handle_tail() with UACCESS enabled
-  arch/x86/lib/memcpy_64.o: warning: objtool:   __memcpy_mcsafe()+0x34: (alt)
-  arch/x86/lib/memcpy_64.o: warning: objtool:   __memcpy_mcsafe()+0xb: (branch)
-  arch/x86/lib/memcpy_64.o: warning: objtool:   __memcpy_mcsafe()+0x0: <=== (func)
+The driver determines the port trust mode based on whether any DSCP
+prioritization rules are in effect at given port. If there are any, trust
+level is L3, otherwise it's L2. When the last DSCP rule is removed, the
+port is switched to trust L2. Under that scenario, if DSCP of a packet
+should be rewritten, it should be rewritten to 0.
 
-mcsafe_handle_tail() is basically an extension of __memcpy_mcsafe(), so
-AC=1 is supposed to be set.  Add mcsafe_handle_tail() to the uaccess
-safe list.
+However, when switching to Trust L2, the driver neglects to also update the
+DSCP rewrite map. The last DSCP rule thus remains in effect, and packets
+egressing through this port, if they have the right priority, will have
+their DSCP set according to this rule.
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/035c38f7eac845281d3c3d36749144982e06e58c.1563413318.git.jpoimboe@redhat.com
+Fix by first configuring the rewrite map, and only then switching to trust
+L2 and bailing out.
+
+Fixes: b2b1dab6884e ("mlxsw: spectrum: Support ieee_setapp, ieee_delapp")
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Reported-by: Alex Veber <alexve@mellanox.com>
+Tested-by: Alex Veber <alexve@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../net/ethernet/mellanox/mlxsw/spectrum_dcb.c   | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 172f99195726..f5c3b97051a7 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -488,6 +488,7 @@ static const char *uaccess_safe_builtin[] = {
- 	/* misc */
- 	"csum_partial_copy_generic",
- 	"__memcpy_mcsafe",
-+	"mcsafe_handle_tail",
- 	"ftrace_likely_update", /* CONFIG_TRACE_BRANCH_PROFILING */
- 	NULL
- };
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c
+index b25048c6c761..21296fa7f7fb 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c
+@@ -408,14 +408,6 @@ static int mlxsw_sp_port_dcb_app_update(struct mlxsw_sp_port *mlxsw_sp_port)
+ 	have_dscp = mlxsw_sp_port_dcb_app_prio_dscp_map(mlxsw_sp_port,
+ 							&prio_map);
+ 
+-	if (!have_dscp) {
+-		err = mlxsw_sp_port_dcb_toggle_trust(mlxsw_sp_port,
+-					MLXSW_REG_QPTS_TRUST_STATE_PCP);
+-		if (err)
+-			netdev_err(mlxsw_sp_port->dev, "Couldn't switch to trust L2\n");
+-		return err;
+-	}
+-
+ 	mlxsw_sp_port_dcb_app_dscp_prio_map(mlxsw_sp_port, default_prio,
+ 					    &dscp_map);
+ 	err = mlxsw_sp_port_dcb_app_update_qpdpm(mlxsw_sp_port,
+@@ -432,6 +424,14 @@ static int mlxsw_sp_port_dcb_app_update(struct mlxsw_sp_port *mlxsw_sp_port)
+ 		return err;
+ 	}
+ 
++	if (!have_dscp) {
++		err = mlxsw_sp_port_dcb_toggle_trust(mlxsw_sp_port,
++					MLXSW_REG_QPTS_TRUST_STATE_PCP);
++		if (err)
++			netdev_err(mlxsw_sp_port->dev, "Couldn't switch to trust L2\n");
++		return err;
++	}
++
+ 	err = mlxsw_sp_port_dcb_toggle_trust(mlxsw_sp_port,
+ 					     MLXSW_REG_QPTS_TRUST_STATE_DSCP);
+ 	if (err) {
 -- 
 2.20.1
 
