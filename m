@@ -2,144 +2,110 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D64CAC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3F2C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B703421734
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F8C2147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387512AbfGZQcx (ORCPT
+        id S1727268AbfGZQlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:32:53 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41599 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387452AbfGZQcx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:32:53 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1hr396-0004LY-Tq; Fri, 26 Jul 2019 18:32:40 +0200
-Message-ID: <1564158758.2311.49.camel@pengutronix.de>
-Subject: Re: [PATCH RESEND v8] PCI: imx6: limit DBI register length
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Stefan Agner <stefan@agner.ch>, hongxing.zhu@nxp.com
-Cc:     lorenzo.pieralisi@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, tpiepho@impinj.com,
-        leonard.crestez@nxp.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 26 Jul 2019 18:32:38 +0200
-In-Reply-To: <20190726144007.26605-1-stefan@agner.ch>
-References: <20190726144007.26605-1-stefan@agner.ch>
+        Fri, 26 Jul 2019 12:41:12 -0400
+Received: from mga17.intel.com ([192.55.52.151]:37330 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725298AbfGZQlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 12:41:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 09:38:08 -0700
+X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
+   d="scan'208";a="175655606"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 09:38:08 -0700
+Message-ID: <c59c6c9a5bb77d517336e3fc3b17eebd0f294276.camel@linux.intel.com>
+Subject: Re: [PATCH v2 4/5] mm: Introduce Hinted pages
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
+        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com
+Date:   Fri, 26 Jul 2019 09:38:08 -0700
+In-Reply-To: <49a49a38-b1f4-d5c0-f5f1-a6bed57a03d2@redhat.com>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+         <20190724170259.6685.18028.stgit@localhost.localdomain>
+         <49a49a38-b1f4-d5c0-f5f1-a6bed57a03d2@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, den 26.07.2019, 16:40 +0200 schrieb Stefan Agner:
-> Define the length of the DBI registers and limit config space to its
-> length. This makes sure that the kernel does not access registers
-> beyond that point, avoiding the following abort on a i.MX 6Quad:
->   # cat /sys/devices/soc0/soc/1ffc000.pcie/pci0000\:00/0000\:00\:00.0/config
->   [  100.021433] Unhandled fault: imprecise external abort (0x1406) at 0xb6ea7000
->   ...
->   [  100.056423] PC is at dw_pcie_read+0x50/0x84
->   [  100.060790] LR is at dw_pcie_rd_own_conf+0x44/0x48
->   ...
-> 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+On Fri, 2019-07-26 at 08:24 -0400, Nitesh Narayan Lal wrote:
+> On 7/24/19 1:03 PM, Alexander Duyck wrote:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > 
+> > 
 
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+<snip>
 
-> ---
-> Changes in v3:
-> - Rebase on pci/dwc
-> Changes in v4:
-> - Rebase on pci/dwc
-> Changes in v5:
-> - Rebased ontop of pci/dwc
-> - Use DBI length of 0x200
-> Changes in v6:
-> - Use pci_dev.cfg_size mechanism to limit config space (this made patch 1
->   of previous versions of this patchset obsolete).
-> Changes in v7:
-> - Restrict fixup to Synopsys/0xabcd
-> - Apply cfg_size limitation only if dbi_length is specified
-> Changes in v8:
-> - Restrict fixup for Synopsys/0xabcd and class PCI bridge
-> - Check device driver to be pci-imx6
-> 
->  drivers/pci/controller/dwc/pci-imx6.c | 33 +++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 9b5cb5b70389..8b8efa3063f5 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -57,6 +57,7 @@ enum imx6_pcie_variants {
->  struct imx6_pcie_drvdata {
-> >  	enum imx6_pcie_variants variant;
-> >  	u32 flags;
-> > +	int dbi_length;
->  };
->  
->  struct imx6_pcie {
-> @@ -1212,6 +1213,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
-> >  		.variant = IMX6Q,
-> >  		.flags = IMX6_PCIE_FLAG_IMX6_PHY |
-> >  			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE,
-> > +		.dbi_length = 0x200,
-> >  	},
-> >  	[IMX6SX] = {
-> >  		.variant = IMX6SX,
-> @@ -1254,6 +1256,37 @@ static struct platform_driver imx6_pcie_driver = {
-> >  	.shutdown = imx6_pcie_shutdown,
->  };
->  
-> +static void imx6_pcie_quirk(struct pci_dev *dev)
-> +{
-> > +	struct pci_bus *bus = dev->bus;
-> > +	struct pcie_port *pp = bus->sysdata;
-> +
-> > +	/* Bus parent is the PCI bridge, its parent is this platform driver */
-> > +	if (!bus->dev.parent || !bus->dev.parent->parent)
+> > +/*
+> > + * The page hinting cycle consists of 4 stages, fill, react, drain, and idle.
+> > + * We will cycle through the first 3 stages until we fail to obtain any
+> > + * pages, in that case we will switch to idle.
+> > + */
+> > +static void page_hinting_cycle(struct zone *zone,
+> > +			       struct page_hinting_dev_info *phdev)
+> > +{
+> > +	/*
+> > +	 * Guarantee boundaries and stats are populated before we
+> > +	 * start placing hinted pages in the zone.
+> > +	 */
+> > +	if (page_hinting_populate_metadata(zone))
 > > +		return;
-> +
-> > +	/* Make sure we only quirk devices associated with this driver */
-> > +	if (bus->dev.parent->parent->driver != &imx6_pcie_driver.driver)
-> > +		return;
-> +
-> > +	if (bus->number == pp->root_bus_nr) {
-> > +		struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > +		struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
-> +
-> > +		/*
-> > +		 * Limit config length to avoid the kernel reading beyond
-> > +		 * the register set and causing an abort on i.MX 6Quad
-> > +		 */
-> > +		if (imx6_pcie->drvdata->dbi_length) {
-> > +			dev->cfg_size = imx6_pcie->drvdata->dbi_length;
-> > +			dev_info(&dev->dev, "Limiting cfg_size to %d\n",
-> > +					dev->cfg_size);
-> > +		}
-> > +	}
-> +}
-> +DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_SYNOPSYS, 0xabcd,
-> > +			PCI_CLASS_BRIDGE_PCI, 8, imx6_pcie_quirk);
-> +
->  static int __init imx6_pcie_init(void)
->  {
->  #ifdef CONFIG_ARM
+> > +
+> > +	spin_lock(&zone->lock);
+> > +
+> > +	/* set bit indicating boundaries are present */
+> > +	set_bit(ZONE_PAGE_HINTING_ACTIVE, &zone->flags);
+> > +
+> > +	do {
+> > +		/* Pull pages out of allocator into a scaterlist */
+> > +		unsigned int num_hints = page_hinting_fill(zone, phdev);
+> > +
+> > +		/* no pages were acquired, give up */
+> > +		if (!num_hints)
+> > +			break;
+> > +
+> > +		spin_unlock(&zone->lock);
+> 
+> Is there any recommendation in general about how/where we should lock and unlock
+> zones in the code? For instance, over here you have a zone lock outside the loop
+> and you are unlocking it inside the loop and then re-acquiring it.
+> My guess is we should be fine as long as:
+> 1. We are not holding the lock for a very long time.
+> 2. We are making sure that if we have a zone lock we are releasing it before
+> returning from the function.
+
+So as a general rule the first two you mention work. Basically what you
+want to do is work with some sort of bounded limit when you are holding
+the lock so you know it will be released in a timely fashion.
+
+The reason for dropping the lock inside of the loop s because we will end
+up sleeping while we wait for the virtio-balloon device to process the
+pages. So it makes sense to release the lock, process the pages, and then
+reacquire the lock so that we can return the pages and grab another 16
+pages.
+
