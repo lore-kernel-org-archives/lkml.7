@@ -2,148 +2,207 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70065C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97805C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53DB022BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E8122ADA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:28:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfGZM2G (ORCPT
+        id S1727111AbfGZM2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:28:06 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:43867 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbfGZM2G (ORCPT
+        Fri, 26 Jul 2019 08:28:25 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:10747 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726277AbfGZM2Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:28:06 -0400
-Received: by mail-io1-f70.google.com with SMTP id q26so58487453ioi.10
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 05:28:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5gizkJ6HbIiA6v2ueYpg9UUGEVC2GVC6lofPVDjQb6E=;
-        b=cN+FrgHW0glETzMT6ZX9SXu4t2r1FCLU5kOke7NvExTwJpzLYYY/k1Z3p7A8QbyXAf
-         N5+kv3GZsY9XTsLAPXUlO4q1ykjqoPaIMFWScALSUyPcf7wDfHhhQBMHngPGLSsx9DLL
-         OGdN+VUCJBu7dEFTNhobY12000qNbx/PXcmTr6sPNC0oZIHIQioYITCBL8ipwrH1yM0Z
-         Snjo5bleEJybiaH6Xj49QYJZTAqxq7cwlEo7RLfnSMkwUhU/kc2exDC9vjnLm05AVU1K
-         m4embUNNgY49qXNOUmrK18xf8LVcFoE9flB9QZAlbAH7+BsNdf2cOgfvCiCGEOVaJ/qt
-         siTA==
-X-Gm-Message-State: APjAAAVzMFSaebqi2AdZ4N/rV/biwTt8SyXISv2R3TNjf1NJ1esk34+z
-        BAn2xt/Ks5/ZhDETi1Df6PjuBWuEp4F5419Dny0DHlXktXjj
-X-Google-Smtp-Source: APXvYqziZKvrIAXBGUDQcco5v08qeiQJbu1wEPXkGYX8anG5iYoKI725g/Xcei76uXeiOlXArVv7ipZ9grkhsHPvuAuRxrRObgFh
+        Fri, 26 Jul 2019 08:28:24 -0400
+X-UUID: c0115c5e4bb04f198b33f101ac812dbd-20190726
+X-UUID: c0115c5e4bb04f198b33f101ac812dbd-20190726
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 1220834546; Fri, 26 Jul 2019 20:28:14 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 26 Jul 2019 20:28:17 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 26 Jul 2019 20:28:17 +0800
+Message-ID: <1564144097.515.3.camel@mtksdccf07>
+Subject: Re: [PATCH v3] kasan: add memory corruption identification for
+ software tag-based mode
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+CC:     Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Vasily Gorbik" <gor@linux.ibm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Date:   Fri, 26 Jul 2019 20:28:17 +0800
+In-Reply-To: <e62da62a-2a63-3a1c-faeb-9c5561a5170c@virtuozzo.com>
+References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
+         <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
+         <1560447999.15814.15.camel@mtksdccf07>
+         <1560479520.15814.34.camel@mtksdccf07>
+         <1560744017.15814.49.camel@mtksdccf07>
+         <CACT4Y+Y3uS59rXf92ByQuFK_G4v0H8NNnCY1tCbr4V+PaZF3ag@mail.gmail.com>
+         <1560774735.15814.54.camel@mtksdccf07>
+         <1561974995.18866.1.camel@mtksdccf07>
+         <CACT4Y+aMXTBE0uVkeZz+MuPx3X1nESSBncgkScWvAkciAxP1RA@mail.gmail.com>
+         <ebc99ee1-716b-0b18-66ab-4e93de02ce50@virtuozzo.com>
+         <1562640832.9077.32.camel@mtksdccf07>
+         <d9fd1d5b-9516-b9b9-0670-a1885e79f278@virtuozzo.com>
+         <1562839579.5846.12.camel@mtksdccf07>
+         <37897fb7-88c1-859a-dfcc-0a5e89a642e0@virtuozzo.com>
+         <1563160001.4793.4.camel@mtksdccf07>
+         <9ab1871a-2605-ab34-3fd3-4b44a0e17ab7@virtuozzo.com>
+         <1563789162.31223.3.camel@mtksdccf07>
+         <e62da62a-2a63-3a1c-faeb-9c5561a5170c@virtuozzo.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-X-Received: by 2002:a02:ad15:: with SMTP id s21mr99930141jan.47.1564144085690;
- Fri, 26 Jul 2019 05:28:05 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 05:28:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009af3e9058e94ac05@google.com>
-Subject: WARNING in iguanair_probe/usb_submit_urb
-From:   syzbot <syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, 2019-07-26 at 15:00 +0300, Andrey Ryabinin wrote:
+> 
+> On 7/22/19 12:52 PM, Walter Wu wrote:
+> > On Thu, 2019-07-18 at 19:11 +0300, Andrey Ryabinin wrote:
+> >>
+> >> On 7/15/19 6:06 AM, Walter Wu wrote:
+> >>> On Fri, 2019-07-12 at 13:52 +0300, Andrey Ryabinin wrote:
+> >>>>
+> >>>> On 7/11/19 1:06 PM, Walter Wu wrote:
+> >>>>> On Wed, 2019-07-10 at 21:24 +0300, Andrey Ryabinin wrote:
+> >>>>>>
+> >>>>>> On 7/9/19 5:53 AM, Walter Wu wrote:
+> >>>>>>> On Mon, 2019-07-08 at 19:33 +0300, Andrey Ryabinin wrote:
+> >>>>>>>>
+> >>>>>>>> On 7/5/19 4:34 PM, Dmitry Vyukov wrote:
+> >>>>>>>>> On Mon, Jul 1, 2019 at 11:56 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> >>>>>>
+> >>>>>>>>>
+> >>>>>>>>> Sorry for delays. I am overwhelm by some urgent work. I afraid to
+> >>>>>>>>> promise any dates because the next week I am on a conference, then
+> >>>>>>>>> again a backlog and an intern starting...
+> >>>>>>>>>
+> >>>>>>>>> Andrey, do you still have concerns re this patch? This change allows
+> >>>>>>>>> to print the free stack.
+> >>>>>>>>
+> >>>>>>>> I 'm not sure that quarantine is a best way to do that. Quarantine is made to delay freeing, but we don't that here.
+> >>>>>>>> If we want to remember more free stacks wouldn't be easier simply to remember more stacks in object itself?
+> >>>>>>>> Same for previously used tags for better use-after-free identification.
+> >>>>>>>>
+> >>>>>>>
+> >>>>>>> Hi Andrey,
+> >>>>>>>
+> >>>>>>> We ever tried to use object itself to determine use-after-free
+> >>>>>>> identification, but tag-based KASAN immediately released the pointer
+> >>>>>>> after call kfree(), the original object will be used by another
+> >>>>>>> pointer, if we use object itself to determine use-after-free issue, then
+> >>>>>>> it has many false negative cases. so we create a lite quarantine(ring
+> >>>>>>> buffers) to record recent free stacks in order to avoid those false
+> >>>>>>> negative situations.
+> >>>>>>
+> >>>>>> I'm telling that *more* than one free stack and also tags per object can be stored.
+> >>>>>> If object reused we would still have information about n-last usages of the object.
+> >>>>>> It seems like much easier and more efficient solution than patch you proposing.
+> >>>>>>
+> >>>>> To make the object reused, we must ensure that no other pointers uses it
+> >>>>> after kfree() release the pointer.
+> >>>>> Scenario:
+> >>>>> 1). The object reused information is valid when no another pointer uses
+> >>>>> it.
+> >>>>> 2). The object reused information is invalid when another pointer uses
+> >>>>> it.
+> >>>>> Do you mean that the object reused is scenario 1) ?
+> >>>>> If yes, maybe we can change the calling quarantine_put() location. It
+> >>>>> will be fully use that quarantine, but at scenario 2) it looks like to
+> >>>>> need this patch.
+> >>>>> If no, maybe i miss your meaning, would you tell me how to use invalid
+> >>>>> object information? or?
+> >>>>>
+> >>>>
+> >>>>
+> >>>> KASAN keeps information about object with the object, right after payload in the kasan_alloc_meta struct.
+> >>>> This information is always valid as long as slab page allocated. Currently it keeps only one last free stacktrace.
+> >>>> It could be extended to record more free stacktraces and also record previously used tags which will allow you
+> >>>> to identify use-after-free and extract right free stacktrace.
+> >>>
+> >>> Thanks for your explanation.
+> >>>
+> >>> For extend slub object, if one record is 9B (sizeof(u8)+ sizeof(struct
+> >>> kasan_track)) and add five records into slub object, every slub object
+> >>> may add 45B usage after the system runs longer. 
+> >>> Slub object number is easy more than 1,000,000(maybe it may be more
+> >>> bigger), then the extending object memory usage should be 45MB, and
+> >>> unfortunately it is no limit. The memory usage is more bigger than our
+> >>> patch.
+> >>
+> >> No, it's not necessarily more.
+> >> And there are other aspects to consider such as performance, how simple reliable the code is.
+> >>
+> >>>
+> >>> We hope tag-based KASAN advantage is smaller memory usage. If it’s
+> >>> possible, we should spend less memory in order to identify
+> >>> use-after-free. Would you accept our patch after fine tune it?
+> >>
+> >> Sure, if you manage to fix issues and demonstrate that performance penalty of your
+> >> patch is close to zero.
+> > 
+> > 
+> > I remember that there are already the lists which you concern. Maybe we
+> > can try to solve those problems one by one.
+> > 
+> > 1. deadlock issue? cause by kmalloc() after kfree()?
+> 
+> smp_call_on_cpu()
 
-syzbot found the following crash on:
+> > 2. decrease allocation fail, to modify GFP_NOWAIT flag to GFP_KERNEL?
+> 
+> No, this is not gonna work. Ideally we shouldn't have any allocations there.
+> It's not reliable and it hurts performance.
+> 
+I dont know this meaning, we need create a qobject and put into
+quarantine, so may need to call kmem_cache_alloc(), would you agree this
+action?
 
-HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=164ab1f0600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
-dashboard link: https://syzkaller.appspot.com/bug?extid=01a77b82edaa374068e1
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=143d7978600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134623f4600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com
-
-usb 1-1: config 0 interface 153 altsetting 0 bulk endpoint 0xA has invalid  
-maxpacket 0
-usb 1-1: New USB device found, idVendor=1781, idProduct=0938,  
-bcdDevice=13.1e
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: config 0 descriptor??
-------------[ cut here ]------------
-usb 1-1: BOGUS urb xfer, pipe 1 != type 3
-WARNING: CPU: 1 PID: 21 at drivers/usb/core/urb.c:477  
-usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 21 Comm: kworker/1:1 Not tainted 5.2.0-rc6+ #15
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  panic+0x292/0x6c9 kernel/panic.c:219
-  __warn.cold+0x20/0x4b kernel/panic.c:576
-  report_bug+0x262/0x2a0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-Code: 4d 85 ed 74 2c e8 f8 d3 f4 fd 4c 89 f7 e8 a0 51 1c ff 41 89 d8 44 89  
-e1 4c 89 ea 48 89 c6 48 c7 c7 00 0e f7 85 e8 83 98 ca fd <0f> 0b e9 20 f4  
-ff ff e8 cc d3 f4 fd 4c 89 f2 48 b8 00 00 00 00 00
-RSP: 0018:ffff8881d9eff258 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8127ef3d RDI: ffffed103b3dfe3d
-RBP: ffff8881d3c9cf00 R08: ffff8881d9e36000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-R13: ffff8881d3e52510 R14: ffff8881d08066a0 R15: ffff8881d41fba00
-  iguanair_probe+0x8fe/0x18d0 drivers/media/rc/iguanair.c:461
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_new_device.cold+0x6a4/0xe61 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1abd/0x3550 drivers/usb/core/hub.c:5441
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+> 
+> > 3. check whether slim 48 bytes (sizeof (qlist_object) +
+> > sizeof(kasan_alloc_meta)) and additional unique stacktrace in
+> > stackdepot?
+> > 4. duplicate struct 'kasan_track' information in two different places
+> > 
+> 
+> Yup.
+> 
+> > Would you have any other concern? or?
+> > 
+> 
+> It would be nice to see some performance numbers. Something that uses slab allocations a lot, e.g. netperf STREAM_STREAM test.
+> 
+ok, we will do it.
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
