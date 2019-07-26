@@ -2,116 +2,110 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A4EC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EABC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A070218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3AF0218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:16:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfGZNPf (ORCPT
+        id S1727287AbfGZNQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:15:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:43366 "EHLO foss.arm.com"
+        Fri, 26 Jul 2019 09:16:14 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:36466 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbfGZNPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:15:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55B04337;
-        Fri, 26 Jul 2019 06:15:34 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 359573F694;
-        Fri, 26 Jul 2019 06:15:34 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id E0CB4680121; Fri, 26 Jul 2019 14:15:32 +0100 (BST)
-Date:   Fri, 26 Jul 2019 14:15:32 +0100
-From:   Liviu Dudau <Liviu.Dudau@arm.com>
-To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH] drm/komeda: Initialize and enable output polling on
- Komeda
-Message-ID: <20190726131532.GP15612@e110455-lin.cambridge.arm.com>
-References: <1564128018-22921-1-git-send-email-lowry.li@arm.com>
+        id S1726364AbfGZNQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:16:14 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 77030FB03;
+        Fri, 26 Jul 2019 15:16:12 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id u3_bPs4b8AVr; Fri, 26 Jul 2019 15:16:11 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 58A3546AA1; Fri, 26 Jul 2019 15:16:11 +0200 (CEST)
+Date:   Fri, 26 Jul 2019 15:16:11 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <guido.gunther@puri.sm>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Purism Kernel Team <kernel@puri.sm>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] drm/panel: jh057n00900: Move dsi init sequence to
+ prepare
+Message-ID: <20190726131611.GA13619@bogon.m.sigxcpu.org>
+References: <cover.1564132646.git.agx@sigxcpu.org>
+ <20190726102529.GB15658@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1564128018-22921-1-git-send-email-lowry.li@arm.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190726102529.GB15658@ravnborg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 08:00:29AM +0000, Lowry Li (Arm Technology China) wrote:
-> Initialize and enable output polling on Komeda.
+Hi Sam,
+On Fri, Jul 26, 2019 at 12:25:29PM +0200, Sam Ravnborg wrote:
+> Hi Guido.
 > 
-> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-> ---
->  drivers/gpu/drm/arm/display/komeda/komeda_kms.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> On Fri, Jul 26, 2019 at 11:21:40AM +0200, Guido Günther wrote:
+> > If the panel is wrapped in a panel_bridge it gets prepar()ed before the
+> > upstream DSI bridge which can cause hangs (e.g. with imx-nwl since clocks
+> > are not enabled yet). To avoid this move the panel's first DSI access to
+> > enable() so the upstream bridge can prepare the DSI host controller in
+> > it's pre_enable().
+> > 
+> > The second patch makes the disable() call symmetric to the above and the third
+> > one just eases debugging.
+> > 
+> > Guido Günther (3):
+> >   drm/panel: jh057n00900: Move panel DSI init to enable()
+> >   drm/panel: jh057n00900: Move mipi_dsi_dcs_set_display_off to disable()
+> >   drm/panel: jh057n00900: Print error code on all DRM_DEV_ERROR()s
 > 
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> index 1462bac..26f2919 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> @@ -15,6 +15,7 @@
->  #include <drm/drm_gem_framebuffer_helper.h>
->  #include <drm/drm_irq.h>
->  #include <drm/drm_vblank.h>
-> +#include <drm/drm_probe_helper.h>
->  
->  #include "komeda_dev.h"
->  #include "komeda_framebuffer.h"
-> @@ -331,6 +332,8 @@ struct komeda_kms_dev *komeda_kms_attach(struct komeda_dev *mdev)
->  	if (err)
->  		goto uninstall_irq;
->  
-> +	drm_kms_helper_poll_init(drm);
-
-Most of the drivers call this before registering the driver. But this is all
-moot because I can't apply the patch on top of drm-misc-next, so not having
-full context of what komeda_kms_attach looks like in your tree.
-
-Best regards,
-Liviu
-
-> +
->  	return kms;
->  
->  uninstall_irq:
-> @@ -348,6 +351,7 @@ void komeda_kms_detach(struct komeda_kms_dev *kms)
->  	struct drm_device *drm = &kms->base;
->  	struct komeda_dev *mdev = drm->dev_private;
->  
-> +	drm_kms_helper_poll_fini(drm);
->  	mdev->funcs->disable_irq(mdev);
->  	drm_dev_unregister(drm);
->  	drm_irq_uninstall(drm);
-> -- 
-> 1.9.1
+> Patch 1 + 3 are both:
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 > 
+> See comment on patch 2.
 
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    Â¯\_(ãƒ„)_/Â¯
+Fixed in v2.
+
+> 
+> While you are touching this driver can you make an extra patch?
+> 
+> Today the driver calls the internal prepare,enable,disable,unprepare
+> functions.
+> The right way to do it is to use the
+> drm_panel_(prepare,enable,disable,unprepare) variants.
+
+I hope I got this right in v2 but...
+
+> 
+> The benefit is that we can move a little logic to these functions
+> and the drivers will then benefit from this.
+> 
+> Two things I have in my local queue:
+> - Move bool for prepared/enabled
+>   (to protect that we do not prepare/enable twice)
+> - backlight support
+
+...i hope so since what you have planned here would eliminate lots of
+code duplication in the panel drivers.
+Cheers and thanks for having a look!
+ -- Guido
+
+> 
+> This driver will benefit form both and this little modification will
+> make it simpler to introduce.
+> I can also prepare the patch if you prefer.
+> 
+> 	Sam
+> 
