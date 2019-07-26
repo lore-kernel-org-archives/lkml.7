@@ -2,76 +2,112 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 090F8C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C22C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB89221852
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B01B722BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564125146;
-	bh=QkrAgtdxwcypcCPFUSg9O9Gj9w+cXt1CSKS6LRjmkDw=;
+	s=default; t=1564125234;
+	bh=VrTKOPYQ4HevC0cVrTz5SGKbFtEejWwaJ8pBbPkg/j0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b2T4QCDK5qMNmGfq9y/qbH5ETZN9ap9QYTgrMUDMX7U1DMH3udIgr8YARshSw1XZG
-	 mGKiiRgMJXAVL+SMZ3dr69pgiXfA0UuGu9Yalt4Myl4zRAslx1ozvlHgo3Aj4ikxEV
-	 BPkU8une4sec2gRjR5VD7JcMKd89YBTrxNjkvEwA=
+	b=pZhDZVe6CGB1ZwEtFB+5B5Wn1CFl0NlULlmQ0B5aMWJu67VdbajJuzs1chn+WvA9l
+	 SlcTyTYI788cyMMdPyNlrI6bPoqFxqV+Q7Eh3FPrvv4HWLJzzRL6a9Ag8LNedwyk19
+	 wAuIRua02BCpEaqCsnj8zW/6jOjjYxk6tFU8VHZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfGZHMW (ORCPT
+        id S1726251AbfGZHNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 03:12:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43508 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725864AbfGZHMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 03:12:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 40D9DB11C;
-        Fri, 26 Jul 2019 07:12:20 +0000 (UTC)
-Date:   Fri, 26 Jul 2019 09:12:19 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Pengfei Li <lpf.vector@gmail.com>
-Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
-        mgorman@techsingularity.net, vbabka@suse.cz,
-        aryabinin@virtuozzo.com, osalvador@suse.de, rostedt@goodmis.org,
-        mingo@redhat.com, pavel.tatashin@microsoft.com, rppt@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 00/10] make "order" unsigned int
-Message-ID: <20190726071219.GC6142@dhcp22.suse.cz>
-References: <20190725184253.21160-1-lpf.vector@gmail.com>
- <1564080768.11067.22.camel@lca.pw>
- <CAD7_sbEXQt0oHuD01BXdW2_=G4h8U8ogHVt0N1Yez2ajFJkShw@mail.gmail.com>
+        Fri, 26 Jul 2019 03:13:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbfGZHNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 03:13:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAE3D21852;
+        Fri, 26 Jul 2019 07:13:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564125232;
+        bh=VrTKOPYQ4HevC0cVrTz5SGKbFtEejWwaJ8pBbPkg/j0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=huB1ORI4N12VUC0fNW6uNLHOn5vLfWYsWaRC+/e3+uBS4MBhu+NXCvAz2Tj+aExM0
+         cNbramMdyLsieqUEcwnT0gsWasve8Q33uTxStleFq9aiEtuV/RQT3XsYj9eePkyFpp
+         ZqxmsodmlPazTR0Ka52GZ7RJRe8oFIg/+sBS0eWk=
+Date:   Fri, 26 Jul 2019 09:13:49 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sagi Grimberg <sagi@grimberg.me>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Stephen Bates <sbates@raithlin.com>,
+        linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+        linux-fsdevel@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
+Message-ID: <20190726071349.GA16265@kroah.com>
+References: <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
+ <20190725180816.GA32305@kroah.com>
+ <da0eacb7-3738-ddf3-8c61-7ffc61aa41f4@deltatee.com>
+ <20190725182701.GA11547@kroah.com>
+ <20190725190024.GD30641@bombadil.infradead.org>
+ <27943e06-a503-162e-356b-abb9e106ab2e@grimberg.me>
+ <20190725191124.GE30641@bombadil.infradead.org>
+ <425dd2ac-333d-a8c4-ce49-870c8dadf436@deltatee.com>
+ <20190725235502.GJ1131@ZenIV.linux.org.uk>
+ <7f48a40c-6e0f-2545-a939-45fc10862dfd@grimberg.me>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD7_sbEXQt0oHuD01BXdW2_=G4h8U8ogHVt0N1Yez2ajFJkShw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <7f48a40c-6e0f-2545-a939-45fc10862dfd@grimberg.me>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 26-07-19 07:48:36, Pengfei Li wrote:
-[...]
-> For the benefit, "order" may be negative, which is confusing and weird.
+On Thu, Jul 25, 2019 at 09:29:40PM -0700, Sagi Grimberg wrote:
+> 
+> > > > > > > > NVMe-OF is configured using configfs. The target is specified by the
+> > > > > > > > user writing a path to a configfs attribute. This is the way it works
+> > > > > > > > today but with blkdev_get_by_path()[1]. For the passthru code, we need
+> > > > > > > > to get a nvme_ctrl instead of a block_device, but the principal is the same.
+> > > > > > > 
+> > > > > > > Why isn't a fd being passed in there instead of a random string?
+> > > > > > 
+> > > > > > I suppose we could echo a string of the file descriptor number there,
+> > > > > > and look up the fd in the process' file descriptor table ...
+> > > > > 
+> > > > > Assuming that there is a open handle somewhere out there...
+> > > 
+> > > Yes, that would be a step backwards from an interface. The user would
+> > > then need a special process to open the fd and pass it through configfs.
+> > > They couldn't just do it with basic bash commands.
+> > 
+> > First of all, they can, but... WTF not have filp_open() done right there?
+> > Yes, by name.  With permission checks done.  And pick your object from the
+> > sodding struct file you'll get.
+> > 
+> > What's the problem?  Why do you need cdev lookups, etc., when you are
+> > dealing with files under your full control?  Just open them and use
+> > ->private_data or whatever you set in ->open() to access the damn thing.
+> > All there is to it...
+> Oh this is so much simpler. There is really no point in using anything
+> else. Just need to remember to compare f->f_op to what we expect to make
+> sure that it is indeed the same device class.
 
-order = -1 has a special meaning.
+That is good, that solves the "/dev/random/" issue I was talking about
+earlier as well.
 
-> There is no good reason not to do this since it can be avoided.
+Odds are you all can do the same for the blockdev interface as well.
 
-"This is good because we can do it" doesn't really sound like a
-convincing argument to me. I would understand if this reduced a
-generated code, made an overall code readability much better or
-something along those lines. Also we only use MAX_ORDER range of values
-so I could argue that a smaller data type (e.g. short) should be
-sufficient for this data type.
+thanks,
 
-Please note that _any_ change, alebit seemingly small, can introduce a
-subtle bug. Also each patch requires a man power to review so you have
-to understand that "just because we can" is not a strong motivation for
-people to spend their time on such a patch.
--- 
-Michal Hocko
-SUSE Labs
+greg k-h
