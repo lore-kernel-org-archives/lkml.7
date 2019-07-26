@@ -2,78 +2,129 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACD4C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3A2C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8258121871
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A659D22BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:05:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564146331;
+	bh=PlJaIXLsd7+ROMZXdVipGcdLV0hhbDgStYB8O8oFc0c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a7TJMYZ4cdQ/abgb9Xhxwx2LUGT6abdEAEZyD/rQIMA1nCIjOd18frxT0dvKWhgKv
+	 BTwPC/RRd+84dCiOpWNdejKcpnZqzz3A7EetuILesaKBmVFXxNmCydFEdaDuKa202W
+	 LB2ieXNVgBClHcwjBsTLJoqYzugfwUr8L/6yE+Ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfGZNAS (ORCPT
+        id S1726546AbfGZNFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:00:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:43102 "EHLO foss.arm.com"
+        Fri, 26 Jul 2019 09:05:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbfGZNAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:00:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70923337;
-        Fri, 26 Jul 2019 06:00:17 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 357033F694;
-        Fri, 26 Jul 2019 06:00:16 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 14:00:14 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     syzbot <syzbot+a871c1e6ea00685e73d7@syzkaller.appspotmail.com>
-Cc:     alexandre.belloni@free-electrons.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, nicolas.ferre@atmel.com, robh@kernel.org,
-        sre@kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: memory leak in vq_meta_prefetch
-Message-ID: <20190726130013.GC2368@arrakis.emea.arm.com>
-References: <00000000000052ad6b058e722ba4@google.com>
+        id S1726086AbfGZNFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:05:30 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DD94218D4;
+        Fri, 26 Jul 2019 13:05:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564146328;
+        bh=PlJaIXLsd7+ROMZXdVipGcdLV0hhbDgStYB8O8oFc0c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RdcUIdd1H+5eq9/3l9EYVMzYIHTMXpCifNslC1KeXnrHabpBGQVVegiqp1oaFoNRa
+         dZ9wthH9uc5ZaCamXK2hqB0iYpN0Q6dAXK+IoCEFy4V5umgyxufnEdIhK/4CTLecCl
+         7Ghvg4ElsJ5NFty0qQoUitUxckBHjJfa8psJi1lo=
+Date:   Fri, 26 Jul 2019 14:05:24 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] arm64: perf: Mark expected switch fall-through
+Message-ID: <20190726130523.ftmc2un7fwwcegrr@willie-the-truck>
+References: <20190726112716.19104-1-anders.roxell@linaro.org>
+ <20190726121056.GA26088@lakrids.cambridge.arm.com>
+ <20190726121354.GB26088@lakrids.cambridge.arm.com>
+ <20190726122728.jhn4e6wq7rcowyi4@willie-the-truck>
+ <1549fe77-367f-fee1-c09c-e429fca91051@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <00000000000052ad6b058e722ba4@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1549fe77-367f-fee1-c09c-e429fca91051@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 12:18:07PM -0700, syzbot wrote:
-> syzbot found the following crash on:
+On Fri, Jul 26, 2019 at 01:38:24PM +0100, Robin Murphy wrote:
+> On 26/07/2019 13:27, Will Deacon wrote:
+> > On Fri, Jul 26, 2019 at 01:13:54PM +0100, Mark Rutland wrote:
+> > > On Fri, Jul 26, 2019 at 01:10:57PM +0100, Mark Rutland wrote:
+> > > > On Fri, Jul 26, 2019 at 01:27:16PM +0200, Anders Roxell wrote:
+> > > > > When fall-through warnings was enabled by default, commit d93512ef0f0e
+> > > > > ("Makefile: Globally enable fall-through warning"), the following
+> > > > > warnings was starting to show up:
+> > > > > 
+> > > > > ../arch/arm64/kernel/hw_breakpoint.c: In function ‘hw_breakpoint_arch_parse’:
+> > > > > ../arch/arm64/kernel/hw_breakpoint.c:540:7: warning: this statement may fall
+> > > > >   through [-Wimplicit-fallthrough=]
+> > > > >      if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
+> > > > >         ^
+> > > > > ../arch/arm64/kernel/hw_breakpoint.c:542:3: note: here
+> > > > >     case 2:
+> > > > >     ^~~~
+> > > > > ../arch/arm64/kernel/hw_breakpoint.c:544:7: warning: this statement may fall
+> > > > >   through [-Wimplicit-fallthrough=]
+> > > > >      if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
+> > > > >         ^
+> > > > > ../arch/arm64/kernel/hw_breakpoint.c:546:3: note: here
+> > > > >     default:
+> > > > >     ^~~~~~~
+> > > > > 
+> > > > > Rework so that the compiler doesn't warn about fall-through. Rework so
+> > > > > the code looks like the arm code. Since the comment in the function
+> > > > > indicates taht this is supposed to behave the same way as arm32 because
+> > > > 
+> > > > Typo: s/taht/that/
+> > > > 
+> > > > > it handles 32-bit tasks also.
+> > > > > 
+> > > > > Cc: stable@vger.kernel.org # v3.16+
+> > > > > Fixes: 6ee33c2712fc ("ARM: hw_breakpoint: correct and simplify alignment fixup code")
+> > > > > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> > > > 
+> > > > The patch itself looks fine, but I don't think this needs a CC to
+> > > > stable, nor does it require that fixes tag, as there's no functional
+> > > > problem.
+> > > 
+> > > Hmm... I now see I spoke too soon, and this is making the 1-byte
+> > > breakpoint work at a 3-byte offset.
+> > 
+> > I still don't think it's quite right though, since it forbids a 2-byte
+> > watchpoint on a byte-aligned address.
 > 
-> HEAD commit:    c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15fffef4600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8de7d700ea5ac607
-> dashboard link: https://syzkaller.appspot.com/bug?extid=a871c1e6ea00685e73d7
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=127b0334600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12609e94600000
+> Plus, AFAICS, a 1-byte watchpoint on a 2-byte-aligned address.
 > 
-> The bug was bisected to:
+> Not that I know anything about this code, but it does start to look like it
+> might want rewriting without the offending switch statement anyway. At a
+> glance, it looks like the intended semantic might boil down to:
 > 
-> commit 0e5f7d0b39e1f184dc25e3adb580c79e85332167
-> Author: Nicolas Ferre <nicolas.ferre@atmel.com>
-> Date:   Wed Mar 16 13:19:49 2016 +0000
-> 
->     ARM: dts: at91: shdwc binding: add new shutdown controller documentation
+> 	if (hw->ctrl.len > offset)
+> 		return -EINVAL;
 
-That's another wrong commit identification (a documentation patch should
-not cause a memory leak).
+Given that it's compat code, I think it's worth staying as close to the
+arch/arm/ implementation as we can. Also, beware that the
+ARM_BREAKPOINT_LEN_* definitions are masks because of the BAS fields in
+the debug architecture.
 
-I don't really think kmemleak, with its relatively high rate of false
-positives, is suitable for automated testing like syzbot. You could
-reduce the false positives if you add support for scanning in
-stop_machine(). Otherwise, in order to avoid locking the kernel for long
-periods, kmemleak runs concurrently with other threads (even on the
-current CPU) and under high load, pointers are missed (e.g. they are in
-CPU registers rather than stack).
-
--- 
-Catalin
+Will
