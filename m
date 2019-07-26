@@ -2,158 +2,110 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11132C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B2DC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9A6B22BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 396AE22BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564176308;
-	bh=ZMdUsOA413NREipWgNGiUNHEV337/SQnp+du76ZZxss=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=2Ok/qmXzc8DGk/faBvWx74Hghqeme8LUQ50tg88y/chGeP/BK/wpbCQVgKL+eimrj
-	 NXVDM7KKpIW4dRYQlx9tLe3nEsnxZrSfgAK61r0C1pgJN1KS4TBeEBp3Q6ncgi/HP6
-	 S3Oj3SRKDiirXn4mqj50ITwz3nyL+jM9OmYVxYSY=
+	s=default; t=1564176428;
+	bh=dZOExye+pM1E7BM9U+2z7J2HkixivdUeGqrmu6iwUbM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hBWhSzoFBqDEXDOW2TMsfQQuB79T8pcVZA0M5GE3bUMbXrVWKQTPsGI0tYnpuESRS
+	 KLAL5B42o6R2/RHwmnTnP0Ym7Y8dBqr+r54qzssRD2ayYrEVZjzjXS5bd9fQUuVLJL
+	 1pEErQHasOUoYjPbjGb3lhD2KIKAPZsb1wL+xfG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbfGZVZH (ORCPT
+        id S1728396AbfGZV1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 17:25:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728162AbfGZVZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 17:25:07 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D8DA2083B;
-        Fri, 26 Jul 2019 21:25:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564176306;
-        bh=ZMdUsOA413NREipWgNGiUNHEV337/SQnp+du76ZZxss=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=SgoM4QTyfOezHqndzroxeVQLXZc50SrbGADq3WK34Po2ZYwAgUgtDk2BWLI8WUPDS
-         QT+w4eRLC0ER0mBGJpRzxSzzYrouBUJ0OCJZJNck2mCYD7WvsZJek9KOkB8Nph03Rr
-         tS+sH0DqV/9miLNPM2lwhKLFafryPhYtnKl8aJcM=
-Message-ID: <e4b0d323ed0bc159d863945251cf3f4c4064526c.camel@kernel.org>
-Subject: Re: [PATCH] mm: Make kvfree safe to call
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Henriques <lhenriques@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Carlos Maiolino <cmaiolino@redhat.com>
-Date:   Fri, 26 Jul 2019 17:25:03 -0400
-In-Reply-To: <CAKgT0UcMND12oZ1869howDjcbvRj+KwabaMuRk8bmLZPWbJWcg@mail.gmail.com>
-References: <20190726210137.23395-1-willy@infradead.org>
-         <CAKgT0UcMND12oZ1869howDjcbvRj+KwabaMuRk8bmLZPWbJWcg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Fri, 26 Jul 2019 17:27:07 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37979 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbfGZV1G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 17:27:06 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r9so52785514ljg.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 14:27:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oROXchk0tmmHnZtV89FllJVdTECuKw3BPgQ6Hf6Vl4s=;
+        b=MSe+CuDQ+yUvx2OlxKcOIA/4YcSwxquGlKWAqjpBzvL1fy4OqUlDjjZFYp7icsODS2
+         3sY0GZ7+dxI7JKNycv2ZU9exAXYyPCPFqLn0O+9Bo2iriXFT42vwZfct15Ds7bGRc2k5
+         SXbYZmFVEC1KOPKJWAM4ltcZCJpZAK2Jaz6fk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oROXchk0tmmHnZtV89FllJVdTECuKw3BPgQ6Hf6Vl4s=;
+        b=N7D4N99cUp8Y8CCI6AuSPIH5tfA2XZ2CYidWMZNpZbVjJGvTqtiF+gFmipSGUcNRWE
+         sdjn5oLqpBgZ/V86gFHnKaXwgJ9eETP3gXhsH9xrhljGSBnzprQg4KteBRjDBa56s6CT
+         3TGQtbqV/HkBIdIw/AnfBZb5/mOtUEArC8l6rwu3eeLwF50psbCQ0fzTGjm4sgmG+KbW
+         wQZrjjKtePFN/OqYPtn6lyXyyew/dlCU2Zeavpr5J2frL1r0k7axAueJjfhgEs9S47WN
+         r6ceaGcr4iSDB+xg4m/CoQ9rPiKBzsQsjvA9CR4B4XIrrVi2xHFLjkPKdW0hQhlnoZje
+         zyxA==
+X-Gm-Message-State: APjAAAWEsKDQNYEmGVh6G9bMRjvFnryDFns33lBZON0uX4cmeETz+JGB
+        qJIoJdmnWshrV9OOCPnEKyuKfkst768=
+X-Google-Smtp-Source: APXvYqxoZnXsN8G27cj0ddAvIA7klqRLvTu6SkjpY6E5MKHoT1453GR1W9c67jcTYbz3zZyrLb7e/Q==
+X-Received: by 2002:a2e:88d3:: with SMTP id a19mr3670746ljk.32.1564176423657;
+        Fri, 26 Jul 2019 14:27:03 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id x18sm8742434lfe.42.2019.07.26.14.27.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jul 2019 14:27:02 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id x25so52856822ljh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 14:27:02 -0700 (PDT)
+X-Received: by 2002:a2e:9b83:: with SMTP id z3mr22933090lji.84.1564176421990;
+ Fri, 26 Jul 2019 14:27:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190726093934.13557-1-christian@brauner.io> <20190726093934.13557-2-christian@brauner.io>
+In-Reply-To: <20190726093934.13557-2-christian@brauner.io>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 26 Jul 2019 14:26:45 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wibXtQ9pjB9ctpy5jWJK93DL19Lj09Et6cYEQE+h7tPpg@mail.gmail.com>
+Message-ID: <CAHk-=wibXtQ9pjB9ctpy5jWJK93DL19Lj09Et6cYEQE+h7tPpg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] pidfd: add P_PIDFD to waitid()
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tejun Heo <tj@kernel.org>, David Howells <dhowells@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-26 at 14:10 -0700, Alexander Duyck wrote:
-> On Fri, Jul 26, 2019 at 2:01 PM Matthew Wilcox <willy@infradead.org> wrote:
-> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > 
-> > Since vfree() can sleep, calling kvfree() from contexts where sleeping
-> > is not permitted (eg holding a spinlock) is a bit of a lottery whether
-> > it'll work.  Introduce kvfree_safe() for situations where we know we can
-> > sleep, but make kvfree() safe by default.
-> > 
-> > Reported-by: Jeff Layton <jlayton@kernel.org>
-> > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> > Cc: Luis Henriques <lhenriques@suse.com>
-> > Cc: Christoph Hellwig <hch@lst.de>
-> > Cc: Carlos Maiolino <cmaiolino@redhat.com>
-> > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> 
-> So you say you are adding kvfree_safe() in the patch description, but
-> it looks like you are introducing kvfree_fast() below. Did something
-> change and the patch description wasn't updated, or is this just the
-> wrong description for this patch?
-> 
-> > ---
-> >  mm/util.c | 26 ++++++++++++++++++++++++--
-> >  1 file changed, 24 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/mm/util.c b/mm/util.c
-> > index bab284d69c8c..992f0332dced 100644
-> > --- a/mm/util.c
-> > +++ b/mm/util.c
-> > @@ -470,6 +470,28 @@ void *kvmalloc_node(size_t size, gfp_t flags, int node)
-> >  }
-> >  EXPORT_SYMBOL(kvmalloc_node);
-> > 
-> > +/**
-> > + * kvfree_fast() - Free memory.
-> > + * @addr: Pointer to allocated memory.
-> > + *
-> > + * kvfree_fast frees memory allocated by any of vmalloc(), kmalloc() or
-> > + * kvmalloc().  It is slightly more efficient to use kfree() or vfree() if
-> > + * you are certain that you know which one to use.
-> > + *
-> > + * Context: Either preemptible task context or not-NMI interrupt.  Must not
-> > + * hold a spinlock as it can sleep.
-> > + */
-> > +void kvfree_fast(const void *addr)
-> > +{
-> > +       might_sleep();
-> > +
+On Fri, Jul 26, 2019 at 2:41 AM Christian Brauner <christian@brauner.io> wrote:
+>
+> -       if (type < PIDTYPE_MAX)
+> +       if (type < PIDTYPE_MAX && !pid)
+>                 pid = find_get_pid(upid);
 
-    might_sleep_if(!in_interrupt());
+So now we have four cases in the switch statement, and two of them do
+*not* want that "find_get_pid()" call.
 
-That's what vfree does anyway, so we might as well exempt the case where
-you are.
+Honestly, let's just move that whole thing into the switch statement
+for the two cases that do want it. Particulartly since I think the
+"upid == 0" case for P_PGID will prefer it that way anyway.
 
-> > +       if (is_vmalloc_addr(addr))
-> > +               vfree(addr);
-> > +       else
-> > +               kfree(addr);
-> > +}
-> > +EXPORT_SYMBOL(kvfree_fast);
-> > +
+Let's not check 'type' in two different places in two completely
+different ways.
 
-That said -- is this really useful?
+Ok?
 
-The only way to know that this is safe is to know what sort of
-allocation it is, and in that case you can just call kfree or vfree as
-appropriate.
-
-> >  /**
-> >   * kvfree() - Free memory.
-> >   * @addr: Pointer to allocated memory.
-> > @@ -478,12 +500,12 @@ EXPORT_SYMBOL(kvmalloc_node);
-> >   * It is slightly more efficient to use kfree() or vfree() if you are certain
-> >   * that you know which one to use.
-> >   *
-> > - * Context: Either preemptible task context or not-NMI interrupt.
-> > + * Context: Any context except NMI.
-> >   */
-> >  void kvfree(const void *addr)
-> >  {
-> >         if (is_vmalloc_addr(addr))
-> > -               vfree(addr);
-> > +               vfree_atomic(addr);
-> >         else
-> >                 kfree(addr);
-> >  }
-> > --
-> > 2.20.1
-> > 
-
--- 
-Jeff Layton <jlayton@kernel.org>
-
+             Linus
