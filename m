@@ -2,125 +2,93 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DA1C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABC0C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70F622CBE
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:26:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564154760;
-	bh=B8hvJYZQVC03+qX3gtI0idWXSttmN3iZlKFBqPdTpYA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NI0FRvopsm+HAY5VkcHH9GOgZ4TcGRra+jMgApA9Mg70pauVPtHnnvvD392kqFIhs
-	 7vJGbYgRC9K+23vXErbvjbqLkrDZ1n/as7t/VfybTCLHfs80JQhStABD+nxv39dtGC
-	 oJVA9VM8sMxq0pQScZEwJtkxsXzx+BUXy0rH1DrU=
+	by mail.kernel.org (Postfix) with ESMTP id CD6A522BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387715AbfGZPZ7 (ORCPT
+        id S2387836AbfGZP0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:25:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39802 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:26:08 -0400
+Received: from mga11.intel.com ([192.55.52.93]:33806 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387427AbfGZPZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:25:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 416AB22CB8;
-        Fri, 26 Jul 2019 15:25:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154755;
-        bh=B8hvJYZQVC03+qX3gtI0idWXSttmN3iZlKFBqPdTpYA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rq3uoG6qnT+DkhTX8OZp+rDE1Pr5MqATcfveWotHSlRSdBPueBA+VL4CCuL97UlfD
-         35py7ttUoAuzaw9QRPm30UcuQxBQJwLnTJZhWEcExd+7TmpYNh/w10ruLmdWeK1VnE
-         FuZw2B/f0Tx5cCl6I5h1wMIxsmST/PnPt5IqmAe0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 16/66] net/tls: make sure offload also gets the keys wiped
-Date:   Fri, 26 Jul 2019 17:24:15 +0200
-Message-Id: <20190726152303.567642912@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
-References: <20190726152301.936055394@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2387681AbfGZP0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:26:03 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 08:26:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
+   d="scan'208";a="322065176"
+Received: from msmall-mobl.amr.corp.intel.com (HELO [10.251.154.62]) ([10.251.154.62])
+  by orsmga004.jf.intel.com with ESMTP; 26 Jul 2019 08:26:01 -0700
+Subject: Re: [alsa-devel] [RFC PATCH 21/40] soundwire: export helpers to find
+ row and column values
+To:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-22-pierre-louis.bossart@linux.intel.com>
+ <20190726144325.GH16003@ubuntu>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <d6268a75-b38c-aee5-0463-af8b602286bb@linux.intel.com>
+Date:   Fri, 26 Jul 2019 10:26:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190726144325.GH16003@ubuntu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
-
-[ Upstream commit acd3e96d53a24d219f720ed4012b62723ae05da1 ]
-
-Commit 86029d10af18 ("tls: zero the crypto information from tls_context
-before freeing") added memzero_explicit() calls to clear the key material
-before freeing struct tls_context, but it missed tls_device.c has its
-own way of freeing this structure. Replace the missing free.
-
-Fixes: 86029d10af18 ("tls: zero the crypto information from tls_context before freeing")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/tls.h    |    1 +
- net/tls/tls_device.c |    2 +-
- net/tls/tls_main.c   |    4 ++--
- 3 files changed, 4 insertions(+), 3 deletions(-)
-
---- a/include/net/tls.h
-+++ b/include/net/tls.h
-@@ -313,6 +313,7 @@ struct tls_offload_context_rx {
- 	(ALIGN(sizeof(struct tls_offload_context_rx), sizeof(void *)) + \
- 	 TLS_DRIVER_STATE_SIZE)
- 
-+void tls_ctx_free(struct tls_context *ctx);
- int wait_on_pending_writer(struct sock *sk, long *timeo);
- int tls_sk_query(struct sock *sk, int optname, char __user *optval,
- 		int __user *optlen);
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -61,7 +61,7 @@ static void tls_device_free_ctx(struct t
- 	if (ctx->rx_conf == TLS_HW)
- 		kfree(tls_offload_ctx_rx(ctx));
- 
--	kfree(ctx);
-+	tls_ctx_free(ctx);
- }
- 
- static void tls_device_gc_task(struct work_struct *work)
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -251,7 +251,7 @@ static void tls_write_space(struct sock
- 	ctx->sk_write_space(sk);
- }
- 
--static void tls_ctx_free(struct tls_context *ctx)
-+void tls_ctx_free(struct tls_context *ctx)
- {
- 	if (!ctx)
- 		return;
-@@ -643,7 +643,7 @@ static void tls_hw_sk_destruct(struct so
- 
- 	ctx->sk_destruct(sk);
- 	/* Free ctx */
--	kfree(ctx);
-+	tls_ctx_free(ctx);
- 	icsk->icsk_ulp_data = NULL;
- }
- 
 
 
+On 7/26/19 9:43 AM, Guennadi Liakhovetski wrote:
+> On Thu, Jul 25, 2019 at 06:40:13PM -0500, Pierre-Louis Bossart wrote:
+>> Add a prefix for common tables and export 2 helpers to set the frame
+>> shapes based on row/col values.
+>>
+>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>> ---
+>>   drivers/soundwire/bus.h    |  7 +++++--
+>>   drivers/soundwire/stream.c | 14 ++++++++------
+>>   2 files changed, 13 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
+>> index 06ac4adb0074..c57c9c23f6ca 100644
+>> --- a/drivers/soundwire/bus.h
+>> +++ b/drivers/soundwire/bus.h
+>> @@ -73,8 +73,11 @@ struct sdw_msg {
+>>   
+>>   #define SDW_DOUBLE_RATE_FACTOR		2
+>>   
+>> -extern int rows[SDW_FRAME_ROWS];
+>> -extern int cols[SDW_FRAME_COLS];
+>> +extern int sdw_rows[SDW_FRAME_ROWS];
+>> +extern int sdw_cols[SDW_FRAME_COLS];
+> 
+> So these arrays actually have to be exported? In the current (5.2) sources they
+> seem to only be used in stream.c, maybe make them static there?
+> 
+>> +
+>> +int sdw_find_row_index(int row);
+>> +int sdw_find_col_index(int col);
+
+yes, they need to be exported, they are used by the allocation algorithm 
+(in Patch 27).
+Others will need this for non-Intel solutions, it's really a part of the 
+standard definition and should be shared.
+I can improve the commit message to make this explicit.
