@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00C5C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7928FC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D30722CBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A55C22CBB
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148561;
-	bh=Qpjzsm+fRNhDRErGNwLJjXGpuo84iqjZYGVsf3hADoE=;
+	s=default; t=1564148565;
+	bh=7xIcJ6Fzifi4By4D8Vj/IisMVr9pp74nLitXIpQmDTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bF43wShGWw1PeEaV3tzoAAENRzrydoqLMVWDHyivkw+DSbiYXBu825xehf8kJ4zGy
-	 1tyAmqAUzWqQQkgPqG28x6uPDkoemo4ZkuGh+VaTv6IhzVjOePxIJg7TK38tPwWa6v
-	 UuJrGgiAfrxXW4qghlZQoDQkpfIUze/A502Q1DkY=
+	b=ue8gQI3YePsU6S/9YoUfLL29SXP2OmHnIeVzREkPL1fR8nqh67UpCt5Pt7DPLUr5o
+	 e4hEuLBUSo/sHvobGD/bFDPhYsZGvzxn0pJ0vKdYuBQ1l09gYbEUFIQHDuGMu0IJ89
+	 9yjNa56cuydTQTEEkrNDigN5dDdU/cSjop2IlFK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388001AbfGZNmk (ORCPT
+        id S2388024AbfGZNmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:42:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49734 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:42:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387948AbfGZNm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:42:29 -0400
+        id S2387991AbfGZNmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:42:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D3F322CC0;
-        Fri, 26 Jul 2019 13:42:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E22EE22CBD;
+        Fri, 26 Jul 2019 13:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148548;
-        bh=Qpjzsm+fRNhDRErGNwLJjXGpuo84iqjZYGVsf3hADoE=;
+        s=default; t=1564148558;
+        bh=7xIcJ6Fzifi4By4D8Vj/IisMVr9pp74nLitXIpQmDTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ujlfoQ79QNmwGC46Brvfun77LHxsOQWgImRJ/gfdZbYmsWEhbSfHI4enssynwzO/m
-         SyE+RIQeLCy85yu5N5njYRDFLA3XirOv3AKCBozvZXygPLl9TuTMFbtv/Aad9BIyg8
-         /aIdJd04x3ssFDtuxAzU7oXJPyXnIeXX4wKw2K/0=
+        b=2q6C315hTGmFgIH8/uczmTLnJ5r1mJEYsgwov0MUBY3vUzpFpMqxEF4Dn3Wx6J7S/
+         Qm+F1wgC0G8zrWBoKokwk7b0JjHYDDwYZ7jxPZ07w11C511XWw09/x3qSt6wUOvFCi
+         xDgArn3RNez8rjM6g9D2rSrsEGFWvJ8d+h1odL2s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petr Cvek <petrcvekcz@gmail.com>,
-        Paul Burton <paul.burton@mips.com>, hauke@hauke-m.de,
-        john@phrozen.org, linux-mips@vger.kernel.org,
-        openwrt-devel@lists.openwrt.org, pakahmar@hotmail.com,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 10/47] MIPS: lantiq: Fix bitfield masking
-Date:   Fri, 26 Jul 2019 09:41:33 -0400
-Message-Id: <20190726134210.12156-10-sashal@kernel.org>
+Cc:     David Sterba <dsterba@suse.com>, Qu Wenruo <wqu@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 15/47] btrfs: fix minimum number of chunk errors for DUP
+Date:   Fri, 26 Jul 2019 09:41:38 -0400
+Message-Id: <20190726134210.12156-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
 References: <20190726134210.12156-1-sashal@kernel.org>
@@ -61,42 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Cvek <petrcvekcz@gmail.com>
+From: David Sterba <dsterba@suse.com>
 
-[ Upstream commit ba1bc0fcdeaf3bf583c1517bd2e3e29cf223c969 ]
+[ Upstream commit 0ee5f8ae082e1f675a2fb6db601c31ac9958a134 ]
 
-The modification of EXIN register doesn't clean the bitfield before
-the writing of a new value. After a few modifications the bitfield would
-accumulate only '1's.
+The list of profiles in btrfs_chunk_max_errors lists DUP as a profile
+DUP able to tolerate 1 device missing. Though this profile is special
+with 2 copies, it still needs the device, unlike the others.
 
-Signed-off-by: Petr Cvek <petrcvekcz@gmail.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: hauke@hauke-m.de
-Cc: john@phrozen.org
-Cc: linux-mips@vger.kernel.org
-Cc: openwrt-devel@lists.openwrt.org
-Cc: pakahmar@hotmail.com
+Looking at the history of changes, thre's no clear reason why DUP is
+there, functions were refactored and blocks of code merged to one
+helper.
+
+d20983b40e828 Btrfs: fix writing data into the seed filesystem
+  - factor code to a helper
+
+de11cc12df173 Btrfs: don't pre-allocate btrfs bio
+  - unrelated change, DUP still in the list with max errors 1
+
+a236aed14ccb0 Btrfs: Deal with failed writes in mirrored configurations
+  - introduced the max errors, leaves DUP and RAID1 in the same group
+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/lantiq/irq.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/btrfs/volumes.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/mips/lantiq/irq.c b/arch/mips/lantiq/irq.c
-index c4ef1c31e0c4..37caeadb2964 100644
---- a/arch/mips/lantiq/irq.c
-+++ b/arch/mips/lantiq/irq.c
-@@ -156,8 +156,9 @@ static int ltq_eiu_settype(struct irq_data *d, unsigned int type)
- 			if (edge)
- 				irq_set_handler(d->hwirq, handle_edge_irq);
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index 2fd000308be7..6e008bd5c8cd 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -5040,8 +5040,7 @@ static inline int btrfs_chunk_max_errors(struct map_lookup *map)
  
--			ltq_eiu_w32(ltq_eiu_r32(LTQ_EIU_EXIN_C) |
--				(val << (i * 4)), LTQ_EIU_EXIN_C);
-+			ltq_eiu_w32((ltq_eiu_r32(LTQ_EIU_EXIN_C) &
-+				    (~(7 << (i * 4)))) | (val << (i * 4)),
-+				    LTQ_EIU_EXIN_C);
- 		}
- 	}
- 
+ 	if (map->type & (BTRFS_BLOCK_GROUP_RAID1 |
+ 			 BTRFS_BLOCK_GROUP_RAID10 |
+-			 BTRFS_BLOCK_GROUP_RAID5 |
+-			 BTRFS_BLOCK_GROUP_DUP)) {
++			 BTRFS_BLOCK_GROUP_RAID5)) {
+ 		max_errors = 1;
+ 	} else if (map->type & BTRFS_BLOCK_GROUP_RAID6) {
+ 		max_errors = 2;
 -- 
 2.20.1
 
