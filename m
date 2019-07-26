@@ -2,84 +2,101 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0402CC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 17:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D81C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 17:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D49282166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 17:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91A221734
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 17:08:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbfGZREy (ORCPT
+        id S2387713AbfGZRIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 13:04:54 -0400
-Received: from mga05.intel.com ([192.55.52.43]:60576 "EHLO mga05.intel.com"
+        Fri, 26 Jul 2019 13:08:04 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:35658 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728985AbfGZREy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 13:04:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 10:04:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
-   d="scan'208";a="172279192"
-Received: from haiyuewa-mobl.ccr.corp.intel.com (HELO [10.255.31.18]) ([10.255.31.18])
-  by fmsmga007.fm.intel.com with ESMTP; 26 Jul 2019 10:04:51 -0700
-Subject: Re: [RFC PATCH 14/17] ipmi: kcs: Finish configuring ASPEED KCS device
- before enable
-To:     Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Corey Minyard <minyard@acm.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        openipmi-developer@lists.sourceforge.net
-References: <20190726053959.2003-1-andrew@aj.id.au>
- <20190726053959.2003-15-andrew@aj.id.au>
-From:   "Wang, Haiyue" <haiyue.wang@linux.intel.com>
-Message-ID: <29a2d999-23bd-8e95-a1b8-f00e25a11df5@linux.intel.com>
-Date:   Sat, 27 Jul 2019 01:04:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        id S2387437AbfGZRIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 13:08:04 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hr3h5-0004NW-W6; Fri, 26 Jul 2019 11:07:48 -0600
+To:     Hannes Reinecke <hare@suse.de>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190725172335.6825-1-logang@deltatee.com>
+ <1f202de3-1122-f4a3-debd-0d169f545047@suse.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <8fd8813f-f8e1-2139-13bf-b0635a03bc30@deltatee.com>
+Date:   Fri, 26 Jul 2019 11:07:44 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190726053959.2003-15-andrew@aj.id.au>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1f202de3-1122-f4a3-debd-0d169f545047@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, hch@lst.de, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, hare@suse.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v6 00/16] nvmet: add target passthru commands support
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ÔÚ 2019-07-26 13:39, Andrew Jeffery Ð´µÀ:
-> The currently interrupts are configured after the channel was enabled.
->
-> Cc: Haiyue Wang<haiyue.wang@linux.intel.com>
-> Cc: Corey Minyard<minyard@acm.org>
-> Cc: Arnd Bergmann<arnd@arndb.de>
-> Cc: Greg Kroah-Hartman<gregkh@linuxfoundation.org>
-> Cc:openipmi-developer@lists.sourceforge.net
-> Signed-off-by: Andrew Jeffery<andrew@aj.id.au>
-> ---
->   drivers/char/ipmi/kcs_bmc_aspeed.c | 7 ++++---
->   1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/char/ipmi/kcs_bmc_aspeed.c b/drivers/char/ipmi/kcs_bmc_aspeed.c
-> index 3c955946e647..e3dd09022589 100644
-> --- a/drivers/char/ipmi/kcs_bmc_aspeed.c
-> +++ b/drivers/char/ipmi/kcs_bmc_aspeed.c
-> @@ -268,13 +268,14 @@ static int aspeed_kcs_probe(struct platform_device *pdev)
->   	kcs_bmc->io_inputb = aspeed_kcs_inb;
->   	kcs_bmc->io_outputb = aspeed_kcs_outb;
->   
-> +	rc = aspeed_kcs_config_irq(kcs_bmc, pdev);
-> +	if (rc)
-> +		return rc;
-> +
->   	dev_set_drvdata(dev, kcs_bmc);
 
 
-Thanks for catching this, for not miss the data.
+On 2019-07-26 12:23 a.m., Hannes Reinecke wrote:
+> How do you handle subsystem naming?
+> If you enable the 'passthru' device, the (nvmet) subsystem (and its
+> name) is already created. Yet the passthru device will have its own
+> internal subsystem naming, so if you're not extra careful you'll end up
+> with a nvmet subsystem which doesn't have any relationship with the
+> passthru subsystem, making addressing etc ... tricky.
+> Any thoughts about that?
 
+Well I can't say I have a great understanding of how multipath works, but...
+
+I don't think it necessarily makes sense for the target subsynqn and the
+target's device nqn to be the same. It would be weird for a user to want
+to use the same device and a passed through device (through a loop) as
+part of the same subsystem. That being said, it's possible for the user
+to use the subsysnqn from the passed through device for the name of the
+subsys of the target. I tried this and it works except for the fact that
+the device I'm passing through doesn't set id->cmic.
+
+> Similarly: how do you propose to handle multipath devices?
+> Any NVMe with several paths will be enabling NVMe multipathing
+> automatically, presenting you with a single multipathed namespace.
+> How will these devices be treated?
+
+Well passthru works on the controller level not on the namespace level.
+So it can't make use of the multipath handling on the target system.
+
+The one case that I think makes sense to me, but I don't know how if we
+can handle, is if the user had a couple multipath enabled controllers
+with the same subsynqn and wanted to passthru all of them to another
+system and use multipath on the host with both controllers. This would
+require having multiple target subsystems with the same name which I
+don't think will work too well.
+
+> Will the multipathed namespace be used for passthru?
+
+Nope.
+
+Honestly, I think the answer is if someone wants to use multipathed
+controllers they should use regular NVMe-of as it doesn't really mesh
+well with the passthru approach.
+
+Logan
