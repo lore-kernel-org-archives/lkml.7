@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1D8C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80ABC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A165522CBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D6A022BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564154901;
-	bh=dUOxtmro/eFLnqJUk1ooiyma0P4O1RBhUyEFBxSp198=;
+	s=default; t=1564154905;
+	bh=tq/XML1mgou6EUt/qIYkKsyK636drn68NKavb/LeLTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qHHCylg5t3M8lz1E8PD71S9fbC1U4s5dsilAlaPmoWKOby+EjJ+gf09G7auI1Sydv
-	 YyKDhqdgK7BqrSFV7Mrcb6lFrk9vcLXDXUsosCx4vWNWXIsLtBVesvpNfyrS9DMIGK
-	 +r3SFMTiTvapurZfdFj0RT1jnYi8MuL19Cp/Z5Ms=
+	b=rlxIeEqYz6jm9pzWEcEPcbxarLB+HtIaI2xtyrwWgb0o4+8+vBbqjYqHIOVDm59+I
+	 Lg2XU0VJGlm5ivK5whsjoTt3nGJ90IMSyxTPNkXq+UtvQnSffRwHAHkVyxRxWzZaEU
+	 5otiuCR5IlKLLak5k0e20k/R8eD4wcbmyErlUOZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388439AbfGZP2U (ORCPT
+        id S2388466AbfGZP2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:28:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42798 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:28:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387978AbfGZP2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:28:18 -0400
+        id S2387978AbfGZP2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:28:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AED2022BF5;
-        Fri, 26 Jul 2019 15:28:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7847F22BF5;
+        Fri, 26 Jul 2019 15:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154897;
-        bh=dUOxtmro/eFLnqJUk1ooiyma0P4O1RBhUyEFBxSp198=;
+        s=default; t=1564154901;
+        bh=tq/XML1mgou6EUt/qIYkKsyK636drn68NKavb/LeLTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=du5yXEeUi04HH67wsHDfd5pxJZ2e+R4g+DKkgQT/TrKI1TD+dNEPCpriB4KUDO7VF
-         +3hUoAOm9WWq9jgFVYCYgqrLelaVWmNc5PdeqTFKj6m2aZ/FCfuLsmSPXKzKdfcUMr
-         5197TjTAHEeSmxRKaOFeAfYvnqJmg1Imo7labFkc=
+        b=l3TZbvu++eqdVOX0n1jomchlOHdeW/Eo57WVSScNNGg/wPiCABsIZKmza1fY6pODJ
+         qGlcwW02OzNwrVf0nRzi0IPO0mOEjh4n+0y6aW5PmHI/q5XRA/ziwin8qJZIsGvpV5
+         teZMxASo60s8VD6Ago7bD1kCRNSxcH8fl0TywsNA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.2 63/66] KVM: nVMX: Clear pending KVM_REQ_GET_VMCS12_PAGES when leaving nested
-Date:   Fri, 26 Jul 2019 17:25:02 +0200
-Message-Id: <20190726152308.519083241@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.2 64/66] Revert "kvm: x86: Use task structs fpu field for user"
+Date:   Fri, 26 Jul 2019 17:25:03 +0200
+Message-Id: <20190726152308.597585968@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
 References: <20190726152301.936055394@linuxfoundation.org>
@@ -60,37 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit cf64527bb33f6cec2ed50f89182fc4688d0056b6 upstream.
+commit ec269475cba7bcdd1eb8fdf8e87f4c6c81a376fe upstream.
 
-Letting this pend may cause nested_get_vmcs12_pages to run against an
-invalid state, corrupting the effective vmcs of L1.
+This reverts commit 240c35a3783ab9b3a0afaba0dde7291295680a6b
+("kvm: x86: Use task structs fpu field for user", 2018-11-06).
+The commit is broken and causes QEMU's FPU state to be destroyed
+when KVM_RUN is preempted.
 
-This was triggerable in QEMU after a guest corruption in L2, followed by
-a L1 reset.
-
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
+Fixes: 240c35a3783a ("kvm: x86: Use task structs fpu field for user")
 Cc: stable@vger.kernel.org
-Fixes: 7f7f1ba33cf2 ("KVM: x86: do not load vmcs12 pages while still in SMM")
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/include/asm/kvm_host.h |    7 ++++---
+ arch/x86/kvm/x86.c              |    4 ++--
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -210,6 +210,8 @@ static void free_nested(struct kvm_vcpu
- 	if (!vmx->nested.vmxon && !vmx->nested.smm.vmxon)
- 		return;
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -607,15 +607,16 @@ struct kvm_vcpu_arch {
  
-+	kvm_clear_request(KVM_REQ_GET_VMCS12_PAGES, vcpu);
-+
- 	vmx->nested.vmxon = false;
- 	vmx->nested.smm.vmxon = false;
- 	free_vpid(vmx->nested.vpid02);
+ 	/*
+ 	 * QEMU userspace and the guest each have their own FPU state.
+-	 * In vcpu_run, we switch between the user, maintained in the
+-	 * task_struct struct, and guest FPU contexts. While running a VCPU,
+-	 * the VCPU thread will have the guest FPU context.
++	 * In vcpu_run, we switch between the user and guest FPU contexts.
++	 * While running a VCPU, the VCPU thread will have the guest FPU
++	 * context.
+ 	 *
+ 	 * Note that while the PKRU state lives inside the fpu registers,
+ 	 * it is switched out separately at VMENTER and VMEXIT time. The
+ 	 * "guest_fpu" state here contains the guest FPU context, with the
+ 	 * host PRKU bits.
+ 	 */
++	struct fpu user_fpu;
+ 	struct fpu *guest_fpu;
+ 
+ 	u64 xcr0;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8219,7 +8219,7 @@ static void kvm_load_guest_fpu(struct kv
+ {
+ 	fpregs_lock();
+ 
+-	copy_fpregs_to_fpstate(&current->thread.fpu);
++	copy_fpregs_to_fpstate(&vcpu->arch.user_fpu);
+ 	/* PKRU is separately restored in kvm_x86_ops->run.  */
+ 	__copy_kernel_to_fpregs(&vcpu->arch.guest_fpu->state,
+ 				~XFEATURE_MASK_PKRU);
+@@ -8236,7 +8236,7 @@ static void kvm_put_guest_fpu(struct kvm
+ 	fpregs_lock();
+ 
+ 	copy_fpregs_to_fpstate(vcpu->arch.guest_fpu);
+-	copy_kernel_to_fpregs(&current->thread.fpu.state);
++	copy_kernel_to_fpregs(&vcpu->arch.user_fpu.state);
+ 
+ 	fpregs_mark_activate();
+ 	fpregs_unlock();
 
 
