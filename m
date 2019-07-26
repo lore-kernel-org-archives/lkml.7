@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC8BC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 05:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E68C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 05:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 011B322BEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 05:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4A122BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 05:41:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="QR5/9S5O";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HnH9utGY"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="nJtUPr2d";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="koCsYE2C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfGZFkc (ORCPT
+        id S1726686AbfGZFlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 01:40:32 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:50827 "EHLO
+        Fri, 26 Jul 2019 01:41:16 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:51205 "EHLO
         out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726291AbfGZFkZ (ORCPT
+        by vger.kernel.org with ESMTP id S1726308AbfGZFk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 01:40:25 -0400
+        Fri, 26 Jul 2019 01:40:28 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 5D404222D2;
-        Fri, 26 Jul 2019 01:40:24 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 9076F2230E;
+        Fri, 26 Jul 2019 01:40:27 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 26 Jul 2019 01:40:24 -0400
+  by compute4.internal (MEProxy); Fri, 26 Jul 2019 01:40:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
         :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=/iT1MTk1oKRrE
-        njkLxpsHJsTgTurlfgvdf/YXz3Xh0c=; b=QR5/9S5OAR1o9JfaaovYhbPDOOu/m
-        nRcQ9F4FGb5xlQjwaVFWi5PGSdziwoDGgQBni42TgFdnoqsK+khHdH1JOwSRLhWY
-        aNawF5J+P6o99xKu3rpbwRyA+2aY261t8H1a9mcixArC7E8JfISsaXRQ469HCTFA
-        4JLnPB7g3lC3tWuLntagu3CTaRsRMYxxhykuIy4xvQRO2wBxrk66f8d2e9ZS8Aqx
-        HFTraM1yS2lWxYmwuWRQU+vnyatKKyjlVhUljnvW0LZk0pvgnycbwZzmAVHAEJJ6
-        OhSpvcdUVEeCcZVqxDRJURVjEQ3aEipKM8VIu0H1yuTbwnuRljAdwyXfg==
+        :mime-version:content-transfer-encoding; s=fm3; bh=oSDr1xjwZ4K40
+        /MK5vRNInuje81HUcQkw7+j8FhaZBE=; b=nJtUPr2doNBzYfahf8HEQokqeiFLZ
+        sxeJD+ChRqORwbEUNp2ySw0VWf/IW4BFBtsj8LF7E3xy4azYDmrqEwWTZH/XylqU
+        6ExCjwaOdxoR3x5V4+xW3lmboHwDfLRv+x+GyBXHroFn0Udupku4/8PfZRK0iaHz
+        OIcbJP9v7oK1XMLmyVNtjxQeNc7Ylq1LLSkvpSxQ5qNsP479LkzvmllqT15OEDkD
+        +Hg8b66dHkUxawRoVBDxRxIY1BWsUkQkRDjvHyabgigeKgOVonW7Q+zXkdi9mbJA
+        x95QvYoh5Py91eRV/KGM27DzbGB+BM5eywVuw2cPqt1HWL9YXApa5Q1Rw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=/iT1MTk1oKRrEnjkLxpsHJsTgTurlfgvdf/YXz3Xh0c=; b=HnH9utGY
-        q+bypQ5TAg7SQpLFGakmyV7ul4a0xJWHWrKjZI4SIAQO0QBB3xh2/aPMUJXxfJQI
-        1nEZSABOB3j3Yl/c/C7NRdOYr6mjPlpLFT3e7gfIGSe2ZsoaiE7zxxjJ+vgzUvgS
-        a0hTGmpXg8TLzdHK2xPif1fQOG9g0bIaBefbaOAVoJEiLAjLOVH+D+QUpdoZPSMU
-        DbcewYhJ01KvplSttcZGaupdKvSYPHI1G6XVLFDw+lQmWZgpawDDy0jygj0hOrV+
-        CmDTa71sTUk9XlAR4teYwRSahejhmQMM1HFlpyGELpxIw2/TQx32dzm1wApl9EwF
-        dNqmLXgfm2NzkA==
-X-ME-Sender: <xms:SJI6XVJnmfqlIod26b9fhxMMiuJ1jBxYAqaMSJpUkaX3jOOAq6VHQg>
+        fm3; bh=oSDr1xjwZ4K40/MK5vRNInuje81HUcQkw7+j8FhaZBE=; b=koCsYE2C
+        IS3NbTVKd205d2oxynUGvnCbRE+BzZ2S7gSFgGE6pLPpu6TzObSirDmZEgFHTlDR
+        Uh+7CeQ5dj3l0NEey+0jbDWFa5Us0IB5tqWsAaouibGTulb13XenSoZdSY0ENxdG
+        SJgY6aAGAxGPg2Wg2VbtQ/UuiqxehM9wMMvTZKuGSxrzbyMU89kwu4afLR4vrbMC
+        asYL1onjFlM1edk1I5Bhq3Ee8ets+iiy+BH0d5P1qzn/2uF3nM+PeWa7GoAdJY54
+        482QIu1fFfKbbUFwsJJLkCzFNAfKkWOjLmzu4VFclD9928yPTJC53xqlIV8qvRQd
+        41p5QBA2htFYlA==
+X-ME-Sender: <xms:S5I6XfUrr0Gmg07ph10mXzZUDMAXM-CP0EE6xar9s5fY7_Ih7B_OPA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrkeefgdeljecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
@@ -57,22 +57,21 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrkeefgdeljecutefuodetggdote
     rdhiugdrrghuqeenucfkphepvddtvddrkedurddukedrfedtnecurfgrrhgrmhepmhgrih
     hlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgep
     he
-X-ME-Proxy: <xmx:SJI6XfYvNUQ96KBk3i3O0X_pZ6b07rwvobAeTK6MeTljclwN3lcnXw>
-    <xmx:SJI6XXCz0lUE2YFnNDFaGZk5aenft_DjI5-u8LDe8Jt2kQs4y8WfRA>
-    <xmx:SJI6XZbZEVrqPJcfYoUbIqy4u1n0i0d7XVbLsNy912fWOc-FJJv4aQ>
-    <xmx:SJI6XdeXLTGkF59UyS_ne131-Bi4Zgp1Le4ybwiw5SHu9ukZAN8g9g>
+X-ME-Proxy: <xmx:S5I6XZH_kNpc_dcrOsnGt_JkI8VMWZuPEGTGxWgr8QMOA0ju1li6wA>
+    <xmx:S5I6XbfTGuLD2lfstgbNJUp4younmbw9PgMHVsYDcU7ExFBZDAdWnA>
+    <xmx:S5I6XaLoUkJX4Ziz1S267mH719wEXmgMNya4XB8HMZLcfhL1m3wdUw>
+    <xmx:S5I6XV7hUmOJCV17GTVRUg4FwAceJNDlkG5Farmrh2b3GjXrkTOHvA>
 Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F0183380076;
-        Fri, 26 Jul 2019 01:40:20 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9D6F8380076;
+        Fri, 26 Jul 2019 01:40:24 -0400 (EDT)
 From:   Andrew Jeffery <andrew@aj.id.au>
 To:     linux-aspeed@lists.ozlabs.org
 Cc:     Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org,
         mark.rutland@arm.com, joel@jms.id.au, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Adriana Kobylak <anoo@us.ibm.com>
-Subject: [PATCH 06/17] ARM: dts: swift: Cleanup gpio-keys-polled properties
-Date:   Fri, 26 Jul 2019 15:09:48 +0930
-Message-Id: <20190726053959.2003-7-andrew@aj.id.au>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 07/17] ARM: dts: witherspoon: Cleanup gpio-keys-polled properties
+Date:   Fri, 26 Jul 2019 15:09:49 +0930
+Message-Id: <20190726053959.2003-8-andrew@aj.id.au>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726053959.2003-1-andrew@aj.id.au>
 References: <20190726053959.2003-1-andrew@aj.id.au>
@@ -87,17 +86,17 @@ dtbs_check gave the following warning:
 
     Warning (avoid_unnecessary_addr_size): /gpio-keys-polled: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
 
-Cc: Adriana Kobylak <anoo@us.ibm.com>
+Cc: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- arch/arm/boot/dts/aspeed-bmc-opp-swift.dts | 2 --
+ arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-index 2077e8d0e096..9f934509ca1b 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-@@ -82,8 +82,6 @@
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+index 08facb2120b2..06319c6771ca 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+@@ -77,8 +77,6 @@
  
  	gpio-keys-polled {
  		compatible = "gpio-keys-polled";
@@ -105,7 +104,7 @@ index 2077e8d0e096..9f934509ca1b 100644
 -		#size-cells = <0>;
  		poll-interval = <1000>;
  
- 		scm0-presence {
+ 		fan0-presence {
 -- 
 2.20.1
 
