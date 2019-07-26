@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2B1C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171ECC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42969205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0427205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155414;
-	bh=ynITI96xOYS/YnM3K3IXtr5J/DO4b/4b2SJSjMHq1M0=;
+	s=default; t=1564155420;
+	bh=YFQL1Pzr8VccqE6s74auw0DJ9yQhIgPRYDfdxRobNmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nT5Hd6GSLRqT65sdb02/iRi6JtDT5aP2bwiS9Fy+kX+04w35byZYOl9gBVWcmdfzN
-	 8fPJ/IGnvicN+2jFa0UZJeAm4HaCu5gyBONqejO6+yKBWd9tdowIeLaJD10iJOMG8c
-	 J9YpqEogX6TDtUfG9jVv2WmOlOD+zhB6bhqoX5xM=
+	b=mpWD8ag4Hv8uFqGbJHxnQH9uq4OSt0Kr5aiOG3NsiWhYPywHbB9Oa9JisAmKEpXli
+	 nfdTSiyj0czAmTN6VaJIzdf8xCb1G/gQ2qbQo3UgLGJK60XIPCgp/2i7pY+dDnM3Fe
+	 WBGK3s15Kmhbsa5AApOTdc6/CC1DNMHia1hsrlQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388555AbfGZPaj (ORCPT
+        id S2388688AbfGZPg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:30:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45494 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:36:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387516AbfGZPaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:30:35 -0400
+        id S2388315AbfGZPa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:30:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DA8E205F4;
-        Fri, 26 Jul 2019 15:30:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17D5E205F4;
+        Fri, 26 Jul 2019 15:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155033;
-        bh=ynITI96xOYS/YnM3K3IXtr5J/DO4b/4b2SJSjMHq1M0=;
+        s=default; t=1564155027;
+        bh=YFQL1Pzr8VccqE6s74auw0DJ9yQhIgPRYDfdxRobNmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dn9milyQEAU88Tj0aEaQRofcz4Z0E4LBunP96EQgkWfQJoGqlaH2SY8UVM5CV5Tbj
-         3EtOvXS5ve9mATYTq0Kpqc+4R2abHIzM6aiwhhdDvOwHb03/TBA9BH2xoFmBCODejn
-         /SZeFOLJgeplsjI+Sq9ozVj5OLmLAZw7o4+daOoM=
+        b=j5uF4zVyA6lrj4Y2boD1Eu7Y4DMKhj+49sXDHJuuJ1LppRPYIKlTiCTIGSPGb7vDg
+         5HnEPA8JaiBujLkdnu2mAfEt8apgtZTBAhPRkDPLkP66rb4K4fcdTcaygG3HBLErSR
+         NCOyeIzaR8B5irRt6WPJdWNtlZ1I283PYB9fAZIk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 15/62] net: stmmac: Re-work the queue selection for TSO packets
-Date:   Fri, 26 Jul 2019 17:24:27 +0200
-Message-Id: <20190726152303.301501074@linuxfoundation.org>
+        stable@vger.kernel.org, Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.1 40/62] net/mlx5e: Rx, Fix checksum calculation for new hardware
+Date:   Fri, 26 Jul 2019 17:24:52 +0200
+Message-Id: <20190726152306.179800031@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -60,81 +58,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Saeed Mahameed <saeedm@mellanox.com>
 
-[ Upstream commit 4993e5b37e8bcb55ac90f76eb6d2432647273747 ]
+[ Upstream commit db849faa9bef993a1379dc510623f750a72fa7ce ]
 
-Ben Hutchings says:
-	"This is the wrong place to change the queue mapping.
-	stmmac_xmit() is called with a specific TX queue locked,
-	and accessing a different TX queue results in a data race
-	for all of that queue's state.
+CQE checksum full mode in new HW, provides a full checksum of rx frame.
+Covering bytes starting from eth protocol up to last byte in the received
+frame (frame_size - ETH_HLEN), as expected by the stack.
 
-	I think this commit should be reverted upstream and in all
-	stable branches.  Instead, the driver should implement the
-	ndo_select_queue operation and override the queue mapping there."
+Fixing up skb->csum by the driver is not required in such case. This fix
+is to avoid wrong checksum calculation in drivers which already support
+the new hardware with the new checksum mode.
 
-Fixes: c5acdbee22a1 ("net: stmmac: Send TSO packets always from Queue 0")
-Suggested-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 85327a9c4150 ("net/mlx5: Update the list of the PCI supported devices")
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |   29 ++++++++++++++--------
- 1 file changed, 19 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en.h      |    1 +
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c |    3 +++
+ drivers/net/ethernet/mellanox/mlx5/core/en_rx.c   |    7 ++++++-
+ include/linux/mlx5/mlx5_ifc.h                     |    3 ++-
+ 4 files changed, 12 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3058,17 +3058,8 @@ static netdev_tx_t stmmac_xmit(struct sk
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -294,6 +294,7 @@ enum {
+ 	MLX5E_RQ_STATE_ENABLED,
+ 	MLX5E_RQ_STATE_AM,
+ 	MLX5E_RQ_STATE_NO_CSUM_COMPLETE,
++	MLX5E_RQ_STATE_CSUM_FULL, /* cqe_csum_full hw bit is set */
+ };
  
- 	/* Manage oversized TCP frames for GMAC4 device */
- 	if (skb_is_gso(skb) && priv->tso) {
--		if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6)) {
--			/*
--			 * There is no way to determine the number of TSO
--			 * capable Queues. Let's use always the Queue 0
--			 * because if TSO is supported then at least this
--			 * one will be capable.
--			 */
--			skb_set_queue_mapping(skb, 0);
--
-+		if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6))
- 			return stmmac_tso_xmit(skb, dev);
--		}
+ struct mlx5e_cq {
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -948,6 +948,9 @@ static int mlx5e_open_rq(struct mlx5e_ch
+ 	if (err)
+ 		goto err_destroy_rq;
+ 
++	if (MLX5_CAP_ETH(c->mdev, cqe_checksum_full))
++		__set_bit(MLX5E_RQ_STATE_CSUM_FULL, &c->rq.state);
++
+ 	if (params->rx_dim_enabled)
+ 		__set_bit(MLX5E_RQ_STATE_AM, &c->rq.state);
+ 
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+@@ -829,8 +829,14 @@ static inline void mlx5e_handle_csum(str
+ 		if (unlikely(get_ip_proto(skb, network_depth, proto) == IPPROTO_SCTP))
+ 			goto csum_unnecessary;
+ 
++		stats->csum_complete++;
+ 		skb->ip_summed = CHECKSUM_COMPLETE;
+ 		skb->csum = csum_unfold((__force __sum16)cqe->check_sum);
++
++		if (test_bit(MLX5E_RQ_STATE_CSUM_FULL, &rq->state))
++			return; /* CQE csum covers all received bytes */
++
++		/* csum might need some fixups ...*/
+ 		if (network_depth > ETH_HLEN)
+ 			/* CQE csum is calculated from the IP header and does
+ 			 * not cover VLAN headers (if present). This will add
+@@ -841,7 +847,6 @@ static inline void mlx5e_handle_csum(str
+ 						 skb->csum);
+ 
+ 		mlx5e_skb_padding_csum(skb, network_depth, proto, stats);
+-		stats->csum_complete++;
+ 		return;
  	}
  
- 	if (unlikely(stmmac_tx_avail(priv, queue) < nfrags + 1)) {
-@@ -3885,6 +3876,23 @@ static int stmmac_setup_tc(struct net_de
- 	}
- }
- 
-+static u16 stmmac_select_queue(struct net_device *dev, struct sk_buff *skb,
-+			       struct net_device *sb_dev,
-+			       select_queue_fallback_t fallback)
-+{
-+	if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6)) {
-+		/*
-+		 * There is no way to determine the number of TSO
-+		 * capable Queues. Let's use always the Queue 0
-+		 * because if TSO is supported then at least this
-+		 * one will be capable.
-+		 */
-+		return 0;
-+	}
-+
-+	return fallback(dev, skb, NULL) % dev->real_num_tx_queues;
-+}
-+
- static int stmmac_set_mac_address(struct net_device *ndev, void *addr)
- {
- 	struct stmmac_priv *priv = netdev_priv(ndev);
-@@ -4101,6 +4109,7 @@ static const struct net_device_ops stmma
- 	.ndo_tx_timeout = stmmac_tx_timeout,
- 	.ndo_do_ioctl = stmmac_ioctl,
- 	.ndo_setup_tc = stmmac_setup_tc,
-+	.ndo_select_queue = stmmac_select_queue,
- #ifdef CONFIG_NET_POLL_CONTROLLER
- 	.ndo_poll_controller = stmmac_poll_controller,
- #endif
+--- a/include/linux/mlx5/mlx5_ifc.h
++++ b/include/linux/mlx5/mlx5_ifc.h
+@@ -716,7 +716,8 @@ struct mlx5_ifc_per_protocol_networking_
+ 	u8         swp[0x1];
+ 	u8         swp_csum[0x1];
+ 	u8         swp_lso[0x1];
+-	u8         reserved_at_23[0xd];
++	u8         cqe_checksum_full[0x1];
++	u8         reserved_at_24[0xc];
+ 	u8         max_vxlan_udp_ports[0x8];
+ 	u8         reserved_at_38[0x6];
+ 	u8         max_geneve_opt_len[0x1];
 
 
