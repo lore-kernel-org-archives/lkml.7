@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3F3C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A29C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84EE022BEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9503F205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155490;
-	bh=v7Xqxq0QTqHQrs+EEZYLm0GJ7qSjUp75lZ9u4crDjOk=;
+	s=default; t=1564155499;
+	bh=/oWQjJQQmCDYr67U7ui12mbfA/qqmrpQJfD2CzkxM84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PAa40kQV/fAgxyQ1m88/4BIhGpFBqwpmkt+wiRzdJWvaiZ3GXZskJ1ME1I8sYUNZe
-	 UbkrmJ424gD8RmS45pKQv7xo3itimXuNDqgeGiEqgYKGoKj2NiBUu3MmZM0/dxVQOu
-	 ZLyJOvux7CgD3kbbxsy+YaxvonCZpxiSWsLr6w5w=
+	b=K5GoKtJBzdt3S855TOats8K9O+NvAUzcFoA/eLnno/0Wvn1iSsfByWOVxFFEZTyRA
+	 ykmilX6y8lCtLbMh+A0OIEXddg6WsdHHl81yQ7q94WLsE1ZxtbugmlDTI8lDHql8bY
+	 D7kbggCY3y3R44YFjJtO2d7lofVveMGSZn73jze8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388581AbfGZP2s (ORCPT
+        id S2388509AbfGZPiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:28:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43282 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:38:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388137AbfGZP2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:28:43 -0400
+        id S2388489AbfGZP22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:28:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 219F622CBF;
-        Fri, 26 Jul 2019 15:28:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7C3622CBF;
+        Fri, 26 Jul 2019 15:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154922;
-        bh=v7Xqxq0QTqHQrs+EEZYLm0GJ7qSjUp75lZ9u4crDjOk=;
+        s=default; t=1564154907;
+        bh=/oWQjJQQmCDYr67U7ui12mbfA/qqmrpQJfD2CzkxM84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J8ormoSBkh07mv/CLje04iVl2omwkDp1gsMTUVi3Yx8A2Z4kWynmn+FJDphBQJgdg
-         pvfnLHmQ1PhwUn0h1tUfdodtkIplykTnzAswmovnKV8SAP08F5DvDGYn+Hl+tsvfYk
-         prSCCsnoD85+oq+Z9xiHH5lRlBJLVREs8RmQD/mg=
+        b=JsO/h7+Felah0nK8H+J+0Rw3YCzLGD5th1fod8u+NSwnErJ2+pl2Vd/VwSa2ezhE7
+         bh4B17ZF9h5J8BDxxFI8Yp6gg5k7oPoUUcuWzBCoGnE3UZ+Xci204LrMqOxNyuZDXe
+         5FlrT6kaKC0TBHeo4q8wKmBzWBG8n/vvm/ZUCCDE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Alex Kushnarov <alexanderk@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 46/66] mlxsw: spectrum: Do not process learned records with a dummy FID
-Date:   Fri, 26 Jul 2019 17:24:45 +0200
-Message-Id: <20190726152306.957806093@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.2 66/66] block: Limit zone array allocation size
+Date:   Fri, 26 Jul 2019 17:25:05 +0200
+Message-Id: <20190726152308.789643747@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
 References: <20190726152301.936055394@linuxfoundation.org>
@@ -61,96 +61,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Damien Le Moal <damien.lemoal@wdc.com>
 
-[ Upstream commit 577fa14d210073ba1ce6237c659a8820312104ad ]
+commit 26202928fafad8bda8b478edb7e62c885be623d7 upstream.
 
-The switch periodically sends notifications about learned FDB entries.
-Among other things, the notification includes the FID (Filtering
-Identifier) and the port on which the MAC was learned.
+Limit the size of the struct blk_zone array used in
+blk_revalidate_disk_zones() to avoid memory allocation failures leading
+to disk revalidation failure. Also further reduce the likelyhood of
+such failures by using kvcalloc() (that is vmalloc()) instead of
+allocating contiguous pages with alloc_pages().
 
-In case the driver does not have the FID defined on the relevant port,
-the following error will be periodically generated:
-
-mlxsw_spectrum2 0000:06:00.0 swp32: Failed to find a matching {Port, VID} following FDB notification
-
-This is not supposed to happen under normal conditions, but can happen
-if an ingress tc filter with a redirect action is installed on a bridged
-port. The redirect action will cause the packet's FID to be changed to
-the dummy FID and a learning notification will be emitted with this FID
-- which is not defined on the bridged port.
-
-Fix this by having the driver ignore learning notifications generated
-with the dummy FID and delete them from the device.
-
-Another option is to chain an ignore action after the redirect action
-which will cause the device to disable learning, but this means that we
-need to consume another action whenever a redirect action is used. In
-addition, the scenario described above is merely a corner case.
-
-Fixes: cedbb8b25948 ("mlxsw: spectrum_flower: Set dummy FID before forward action")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Alex Kushnarov <alexanderk@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Tested-by: Alex Kushnarov <alexanderk@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 515ce6061312 ("scsi: sd_zbc: Fix sd_zbc_report_zones() buffer allocation")
+Fixes: e76239a3748c ("block: add a report_zones method")
+Cc: stable@vger.kernel.org
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlxsw/spectrum.h           |    1 +
- drivers/net/ethernet/mellanox/mlxsw/spectrum_fid.c       |   10 ++++++++++
- drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c |    6 ++++++
- 3 files changed, 17 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.h
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.h
-@@ -805,6 +805,7 @@ int mlxsw_sp_setup_tc_prio(struct mlxsw_
- 			   struct tc_prio_qopt_offload *p);
+---
+ block/blk-zoned.c      |   46 ++++++++++++++++++++++++++++++----------------
+ include/linux/blkdev.h |    5 +++++
+ 2 files changed, 35 insertions(+), 16 deletions(-)
+
+--- a/block/blk-zoned.c
++++ b/block/blk-zoned.c
+@@ -14,6 +14,9 @@
+ #include <linux/rbtree.h>
+ #include <linux/blkdev.h>
+ #include <linux/blk-mq.h>
++#include <linux/mm.h>
++#include <linux/vmalloc.h>
++#include <linux/sched/mm.h>
  
- /* spectrum_fid.c */
-+bool mlxsw_sp_fid_is_dummy(struct mlxsw_sp *mlxsw_sp, u16 fid_index);
- bool mlxsw_sp_fid_lag_vid_valid(const struct mlxsw_sp_fid *fid);
- struct mlxsw_sp_fid *mlxsw_sp_fid_lookup_by_index(struct mlxsw_sp *mlxsw_sp,
- 						  u16 fid_index);
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_fid.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_fid.c
-@@ -126,6 +126,16 @@ static const int *mlxsw_sp_packet_type_s
- 	[MLXSW_SP_FLOOD_TYPE_MC]	= mlxsw_sp_sfgc_mc_packet_types,
- };
+ #include "blk.h"
  
-+bool mlxsw_sp_fid_is_dummy(struct mlxsw_sp *mlxsw_sp, u16 fid_index)
-+{
-+	enum mlxsw_sp_fid_type fid_type = MLXSW_SP_FID_TYPE_DUMMY;
-+	struct mlxsw_sp_fid_family *fid_family;
-+
-+	fid_family = mlxsw_sp->fid_core->fid_family_arr[fid_type];
-+
-+	return fid_family->start_index == fid_index;
-+}
-+
- bool mlxsw_sp_fid_lag_vid_valid(const struct mlxsw_sp_fid *fid)
+@@ -373,22 +376,25 @@ static inline unsigned long *blk_alloc_z
+  * Allocate an array of struct blk_zone to get nr_zones zone information.
+  * The allocated array may be smaller than nr_zones.
+  */
+-static struct blk_zone *blk_alloc_zones(int node, unsigned int *nr_zones)
++static struct blk_zone *blk_alloc_zones(unsigned int *nr_zones)
  {
- 	return fid->fid_family->lag_vid_valid;
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
-@@ -2468,6 +2468,9 @@ static void mlxsw_sp_fdb_notify_mac_proc
- 		goto just_remove;
+-	size_t size = *nr_zones * sizeof(struct blk_zone);
+-	struct page *page;
+-	int order;
+-
+-	for (order = get_order(size); order >= 0; order--) {
+-		page = alloc_pages_node(node, GFP_NOIO | __GFP_ZERO, order);
+-		if (page) {
+-			*nr_zones = min_t(unsigned int, *nr_zones,
+-				(PAGE_SIZE << order) / sizeof(struct blk_zone));
+-			return page_address(page);
+-		}
++	struct blk_zone *zones;
++	size_t nrz = min(*nr_zones, BLK_ZONED_REPORT_MAX_ZONES);
++
++	/*
++	 * GFP_KERNEL here is meaningless as the caller task context has
++	 * the PF_MEMALLOC_NOIO flag set in blk_revalidate_disk_zones()
++	 * with memalloc_noio_save().
++	 */
++	zones = kvcalloc(nrz, sizeof(struct blk_zone), GFP_KERNEL);
++	if (!zones) {
++		*nr_zones = 0;
++		return NULL;
  	}
  
-+	if (mlxsw_sp_fid_is_dummy(mlxsw_sp, fid))
-+		goto just_remove;
+-	return NULL;
++	*nr_zones = nrz;
 +
- 	mlxsw_sp_port_vlan = mlxsw_sp_port_vlan_find_by_fid(mlxsw_sp_port, fid);
- 	if (!mlxsw_sp_port_vlan) {
- 		netdev_err(mlxsw_sp_port->dev, "Failed to find a matching {Port, VID} following FDB notification\n");
-@@ -2527,6 +2530,9 @@ static void mlxsw_sp_fdb_notify_mac_lag_
- 		goto just_remove;
++	return zones;
+ }
+ 
+ void blk_queue_free_zone_bitmaps(struct request_queue *q)
+@@ -415,6 +421,7 @@ int blk_revalidate_disk_zones(struct gen
+ 	unsigned long *seq_zones_wlock = NULL, *seq_zones_bitmap = NULL;
+ 	unsigned int i, rep_nr_zones = 0, z = 0, nrz;
+ 	struct blk_zone *zones = NULL;
++	unsigned int noio_flag;
+ 	sector_t sector = 0;
+ 	int ret = 0;
+ 
+@@ -427,6 +434,12 @@ int blk_revalidate_disk_zones(struct gen
+ 		return 0;
  	}
  
-+	if (mlxsw_sp_fid_is_dummy(mlxsw_sp, fid))
-+		goto just_remove;
++	/*
++	 * Ensure that all memory allocations in this context are done as
++	 * if GFP_NOIO was specified.
++	 */
++	noio_flag = memalloc_noio_save();
 +
- 	mlxsw_sp_port_vlan = mlxsw_sp_port_vlan_find_by_fid(mlxsw_sp_port, fid);
- 	if (!mlxsw_sp_port_vlan) {
- 		netdev_err(mlxsw_sp_port->dev, "Failed to find a matching {Port, VID} following FDB notification\n");
+ 	if (!blk_queue_is_zoned(q) || !nr_zones) {
+ 		nr_zones = 0;
+ 		goto update;
+@@ -443,7 +456,7 @@ int blk_revalidate_disk_zones(struct gen
+ 
+ 	/* Get zone information and initialize seq_zones_bitmap */
+ 	rep_nr_zones = nr_zones;
+-	zones = blk_alloc_zones(q->node, &rep_nr_zones);
++	zones = blk_alloc_zones(&rep_nr_zones);
+ 	if (!zones)
+ 		goto out;
+ 
+@@ -480,8 +493,9 @@ update:
+ 	blk_mq_unfreeze_queue(q);
+ 
+ out:
+-	free_pages((unsigned long)zones,
+-		   get_order(rep_nr_zones * sizeof(struct blk_zone)));
++	memalloc_noio_restore(noio_flag);
++
++	kvfree(zones);
+ 	kfree(seq_zones_wlock);
+ 	kfree(seq_zones_bitmap);
+ 
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -344,6 +344,11 @@ struct queue_limits {
+ 
+ #ifdef CONFIG_BLK_DEV_ZONED
+ 
++/*
++ * Maximum number of zones to report with a single report zones command.
++ */
++#define BLK_ZONED_REPORT_MAX_ZONES	8192U
++
+ extern unsigned int blkdev_nr_zones(struct block_device *bdev);
+ extern int blkdev_report_zones(struct block_device *bdev,
+ 			       sector_t sector, struct blk_zone *zones,
 
 
