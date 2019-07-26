@@ -2,86 +2,67 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F46DC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD24C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1D722C7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:20:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="o0ksJZo1"
+	by mail.kernel.org (Postfix) with ESMTP id 72E5B21851
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:21:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbfGZWUw (ORCPT
+        id S1728697AbfGZWVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 18:20:52 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:3258 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbfGZWUw (ORCPT
+        Fri, 26 Jul 2019 18:21:21 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39416 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbfGZWVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 18:20:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1564179652; x=1595715652;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=2Pp7soz5T65+2MFGSxtLJF8/y1h3Zy8XLJbl/hXcT98=;
-  b=o0ksJZo1sM6luBzgCLZAfElThu65wZwN8YDmCfu8f3STdFI2WhMnvZm5
-   MHihwJHAzktZhg/zw2TQQWmib0k15XHcTn/h8PLcRrzjbdgTTRakchZO/
-   fiuuBVsbHfAGoUem1YJFV/46pq2Ota64XPE0JrPx1cs5raE8i7uAOFbqh
-   H6Rxt2YBROEKL5twAI9/hVdwsYOX60Z1OaP8bcDu5xKGskL0kV6EQ+/JZ
-   z8OFklzqZKxN78bEo6/kdEG30jPQPZKh4ttf79hu7faPu92Zp7rid7CC3
-   ziU8GFzLTRFoawvKlPEY71idUvnPXR6C480kiJYTMcokuKOSXY1r5cEnH
-   g==;
-IronPort-SDR: HLP3a60RI6UP05q2IlxNOgWElva8c0VkfRegoCaNRJMekx0X+YngvFsGmfjeOi8Vx0zkdxXQqW
- FM0JjFZ9LWqyophf/8LiH+WDkQzHMkDPZhECmkhdxBBec51Sl51n9jEy5eEZAaZoDUfqdzI9+u
- 48srHOXizI7Q/5sXnA5rZ+zM7QuswJeDOJXrAyOF1uLNHNurdvUfKKjre6nks3+QmCiYJ4dfHX
- rz6NLiZsUxkgEfsizM+t8w3RgQSVqL5ffe8kneH6B0Lz2FM8BpzhjnMvLwM75TJfjp2E0EpBg5
- PUw=
-X-IronPort-AV: E=Sophos;i="5.64,312,1559491200"; 
-   d="scan'208";a="115280748"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 27 Jul 2019 06:20:52 +0800
-IronPort-SDR: 0vsAFPFKckuK6EENiuX1YZ9bRL1GwUYij56pPsYA/Q8LsRkVQUMqeW6taj0Oqi+3zeNUwunsDQ
- YeoIV/pO/aOnUes1i+ybWMkPLnVccmVRVt7clzB988iuKiwaIkZhzx7P7vFCP1h7Jr/VzT0Lsd
- XPpr4ROqa42g5DHO3aOVtE40ZAymRZls9Q6qIwywMuq+VYVbEcvdJZ+uRf7MVGXnY3s26KNGiL
- rc0rLoCWe2P5tkTlwpWMdZnCdH2vhHisdpMc8PtWGYaWkoE4R1MqN396BBx9Y/5RAcXv632t23
- zyZS1aGL1wapxJKjTb9k3kre
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP; 26 Jul 2019 15:19:00 -0700
-IronPort-SDR: DTvqt9Mfx3sEEJcaEIx2FzJIgmQZ2mIv8hWErAdPzRFMdP8MEQzAeRV/QyvsCeRPRd2OXjP7h1
- R5ZcVL7wgYNM/8gkkzOacIbRzpp/FRBnOST3Ily25tSBf7loEKaXkgRK7T23DqAwMooO0TxvoO
- xrb6+4c0kBv5ZzD9Uv4ZSosSoW8ld/+z3IlmYo2nc57WLNikT60H/TKXaM/9x701mObj1g1bgA
- nNwGP5ZN4ut/H4GcPqBuphfvr2IjI2GJsS9+xBio/aHuG804X+YShuM6HmLZALhiSQgEklZGG2
- yw0=
-Received: from unknown (HELO [10.225.104.231]) ([10.225.104.231])
-  by uls-op-cesaip01.wdc.com with ESMTP; 26 Jul 2019 15:20:51 -0700
-Subject: Re: [PATCH 3/4] RISC-V: Support case insensitive ISA string parsing.
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alan Kao <alankao@andestech.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Allison Randal <allison@lohutok.net>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20190726194638.8068-1-atish.patra@wdc.com>
- <20190726194638.8068-3-atish.patra@wdc.com>
- <alpine.DEB.2.21.9999.1907261346560.26670@viisi.sifive.com>
-From:   Atish Patra <atish.patra@wdc.com>
-Message-ID: <a8a6be2c-2dcb-fe58-2c32-e3baa357819c@wdc.com>
-Date:   Fri, 26 Jul 2019 15:20:47 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Fri, 26 Jul 2019 18:21:20 -0400
+Received: by mail-pf1-f194.google.com with SMTP id f17so21143424pfn.6;
+        Fri, 26 Jul 2019 15:21:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tX/zH/PNuI497S7quCepGSwc6KOajrviepHED1Ldz1U=;
+        b=NmN+E+8smrsE59I6aBMdtsBF+rVxDO37e7Mgi+AH5cz2Q2sGZyenWCZxlThVmIuyJv
+         E9ZWFERwOodC64vdU+P5muOIDR7XrqIf+pztcUmffXTtvqbcrT7iHFIbTHSY1GoPayJT
+         nu2t0tRS9E1M9+uV9QmsBQJz946nWWQ4c7PrLkwWQycifktlkMoyLHCxIst6CUeP865q
+         eV3ZYCYgULaMnAW9biOfQbMo+wd+FE2t1ZfRAT/aywhCdb4ZE+qzrUJdJHrrDz1rTm62
+         3xgCpUhwbKxUF8Dr5WUbftyduOo/xGbZowB0TPexiFmdQEajxQ/BiE7MnXOO/P66KwLj
+         txsw==
+X-Gm-Message-State: APjAAAUKtOKdzIHmVSwnWPRi2Sadeu0C3nsXpjCDgPkd61mfWOOAC4Yn
+        tk4o3yo+orPyyzLhNFR8DuA=
+X-Google-Smtp-Source: APXvYqxRjRSPO/J+H5WK/f/tD4obqHr9uk/zzNMYETV1oB/hr82CB+shC60k4aOdcZjrzFAIe9rhfA==
+X-Received: by 2002:a17:90a:f498:: with SMTP id bx24mr101682492pjb.91.1564179679768;
+        Fri, 26 Jul 2019 15:21:19 -0700 (PDT)
+Received: from ?IPv6:2601:647:4800:973f:3044:7ea3:7e19:4d2c? ([2601:647:4800:973f:3044:7ea3:7e19:4d2c])
+        by smtp.gmail.com with ESMTPSA id k25sm43828641pgt.53.2019.07.26.15.21.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jul 2019 15:21:18 -0700 (PDT)
+Subject: Re: [PATCH v6 00/16] nvmet: add target passthru commands support
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        Hannes Reinecke <hare@suse.de>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190725172335.6825-1-logang@deltatee.com>
+ <1f202de3-1122-f4a3-debd-0d169f545047@suse.de>
+ <8fd8813f-f8e1-2139-13bf-b0635a03bc30@deltatee.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <175fa142-4815-ee48-82a4-18eb411db1ae@grimberg.me>
+Date:   Fri, 26 Jul 2019 15:21:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.9999.1907261346560.26670@viisi.sifive.com>
+In-Reply-To: <8fd8813f-f8e1-2139-13bf-b0635a03bc30@deltatee.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -90,34 +71,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/26/19 1:47 PM, Paul Walmsley wrote:
-> On Fri, 26 Jul 2019, Atish Patra wrote:
+
+>> How do you handle subsystem naming?
+>> If you enable the 'passthru' device, the (nvmet) subsystem (and its
+>> name) is already created. Yet the passthru device will have its own
+>> internal subsystem naming, so if you're not extra careful you'll end up
+>> with a nvmet subsystem which doesn't have any relationship with the
+>> passthru subsystem, making addressing etc ... tricky.
+>> Any thoughts about that?
 > 
->> As per riscv specification, ISA naming strings are
->> case insensitive. However, currently only lower case
->> strings are parsed during cpu procfs.
->>
->> Support parsing of upper case letters as well.
->>
->> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Well I can't say I have a great understanding of how multipath works, but...
+
+Why is this related to multipath?
+
+> I don't think it necessarily makes sense for the target subsynqn and the
+> target's device nqn to be the same. It would be weird for a user to want
+> to use the same device and a passed through device (through a loop) as
+> part of the same subsystem. That being said, it's possible for the user
+> to use the subsysnqn from the passed through device for the name of the
+> subsys of the target. I tried this and it works except for the fact that
+> the device I'm passing through doesn't set id->cmic.
+
+I don't see why should the subsystem nqn should be the same name. Its
+just like any other nvmet subsystem, just happens to have a nvme
+controller in the backend (which it knows about). No reason to have
+the same name IMO.
+
+>> Similarly: how do you propose to handle multipath devices?
+>> Any NVMe with several paths will be enabling NVMe multipathing
+>> automatically, presenting you with a single multipathed namespace.
+>> How will these devices be treated?
 > 
-> Is there a use case that's driving this, or 
+> Well passthru works on the controller level not on the namespace level.
+> So it can't make use of the multipath handling on the target system.
 
-Currently, we use all lower case isa string in kvmtool. But somebody can 
-have uppercase letters in future as spec allows it.
+Why? if nvmet is capable, why shouldn't we support it?
 
+> The one case that I think makes sense to me, but I don't know how if we
+> can handle, is if the user had a couple multipath enabled controllers
+> with the same subsynqn
 
-can we just say, "use
-> lowercase letters" and leave it at that?
+That is usually the case, there is no multipathing defined across NVM
+subsystems (at least for now).
+
+> and wanted to passthru all of them to another
+> system and use multipath on the host with both controllers. This would
+> require having multiple target subsystems with the same name which I
+> don't think will work too well.
+
+Don't understand why this is the case?
+
+AFAICT, all nvmet needs to do is:
+1. override cimc
+2. allow allocating multiple controllers to the pt ctrl as long as the
+hostnqn match.
+3. answer all the ana stuff.
+
+What else is missing?
+
+>> Will the multipathed namespace be used for passthru?
 > 
-
-In that case, it will not comply with RISC-V spec. Is that okay ?
-
+> Nope.
 > 
-> - Paul
-> 
+> Honestly, I think the answer is if someone wants to use multipathed
+> controllers they should use regular NVMe-of as it doesn't really mesh
+> well with the passthru approach.
 
-
--- 
-Regards,
-Atish
+Maybe I'm missing something, but they should be orthogonal.. I know that
+its sort of not real passthru, but we are exposing an nvme device across
+a fabric, I think its reasonable to have some adjustments on top.
