@@ -2,111 +2,147 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCDDC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9577FC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 080152173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C9F72173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:40:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k6+ikWOi"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="k9OCOvip"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbfGZOjI (ORCPT
+        id S1728015AbfGZOkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:39:08 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43692 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfGZOjI (ORCPT
+        Fri, 26 Jul 2019 10:40:17 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:55634 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfGZOkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 10:39:08 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6QEcwkr041238;
-        Fri, 26 Jul 2019 09:38:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564151938;
-        bh=J+EQZgCBsyteq1hOP8cMdxqBBlEMRMVub8QpeqjnQTs=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=k6+ikWOiAUs7sjOQ4nM9sgDSRQJGe/LKfFZd2t/rQdf0ErsVgh6AV4KOgoPT6Kro+
-         PIJpAIqYbMGhNCG0sl3zxxY/Ljph+TghJez5Id4ptsqdQbkMm4Ms5mzYMy1OnYg8Wk
-         chkswtDI2C575TPVIw+sXgwj97dfG39go4t7LX8Q=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6QEcw8S082901
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Jul 2019 09:38:58 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 26
- Jul 2019 09:38:58 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 26 Jul 2019 09:38:58 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6QEcvhp025112;
-        Fri, 26 Jul 2019 09:38:57 -0500
-Subject: Re: Backlight in motorola Droid 4
-From:   Dan Murphy <dmurphy@ti.com>
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <linux-omap@vger.kernel.org>, <tony@atomide.com>, <sre@kernel.org>,
-        <nekit1000@gmail.com>, <mpartap@gmx.net>, <merlijn@wizzup.org>,
-        <jacek.anaszewski@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>
-References: <20181219162626.12297-1-dmurphy@ti.com>
- <20190722205921.GA24787@amd> <b8fbc94f-c087-2c9d-4532-ea423f1626e6@ti.com>
- <20190724124530.GA30211@amd> <ca69f627-96e2-f982-3a29-18b0127ac6e5@ti.com>
-Message-ID: <edde330e-516b-ecaa-4139-0bfa766a9c08@ti.com>
-Date:   Fri, 26 Jul 2019 09:38:57 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 26 Jul 2019 10:40:16 -0400
+Received: from trochilidae.toradex.int (unknown [46.140.72.82])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id C5DBF5C0AF6;
+        Fri, 26 Jul 2019 16:40:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1564152014;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=xXvBZt2loW2wVxqkmYT2gOg2/wgOnSpx+FICc1eWU54=;
+        b=k9OCOvip8cfpxfzJ+aCk4Ob+jtjM6XQpjG//Qj50KO9qpJf6DvIcJ3OsXLnmZ8c0KtYJJL
+        F8XNABsdDGAMDTg3ig/0Ei/+O4IEi9QElFxC0znKyK9HWZaPv6exN4sNtGkHnLOL1UCpCs
+        aCLiQcPUKou8JhOQEFt43V8mvACOQbM=
+From:   Stefan Agner <stefan@agner.ch>
+To:     hongxing.zhu@nxp.com, l.stach@pengutronix.de
+Cc:     lorenzo.pieralisi@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, tpiepho@impinj.com,
+        leonard.crestez@nxp.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stefan Agner <stefan@agner.ch>
+Subject: [PATCH RESEND v8] PCI: imx6: limit DBI register length
+Date:   Fri, 26 Jul 2019 16:40:07 +0200
+Message-Id: <20190726144007.26605-1-stefan@agner.ch>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <ca69f627-96e2-f982-3a29-18b0127ac6e5@ti.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
+Define the length of the DBI registers and limit config space to its
+length. This makes sure that the kernel does not access registers
+beyond that point, avoiding the following abort on a i.MX 6Quad:
+  # cat /sys/devices/soc0/soc/1ffc000.pcie/pci0000\:00/0000\:00\:00.0/config
+  [  100.021433] Unhandled fault: imprecise external abort (0x1406) at 0xb6ea7000
+  ...
+  [  100.056423] PC is at dw_pcie_read+0x50/0x84
+  [  100.060790] LR is at dw_pcie_rd_own_conf+0x44/0x48
+  ...
 
-On 7/24/19 10:22 AM, Dan Murphy wrote:
-> Pavel
->
-> On 7/24/19 7:45 AM, Pavel Machek wrote:
-> <snip>
->>
->> +
->>   static int lm3532_parse_node(struct lm3532_data *priv)
->>   {
->>       struct fwnode_handle *child = NULL;
->> @@ -536,11 +579,13 @@ static int lm3532_parse_node(struct lm3532_data 
->> *priv)
->>           ret = fwnode_property_read_u32(child, "ti,led-mode",
->>                              &led->mode);
->>           if (ret) {
->> +          /* FIXME: should just default to non-als mod */
->
-> Looking at the rest of the code.
->
-> The DT doc indicated that this was a required child property so this 
-> is why it
->
-> errors out.
->
-> Dan
->
-> <snip>
->
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+Changes in v3:
+- Rebase on pci/dwc
+Changes in v4:
+- Rebase on pci/dwc
+Changes in v5:
+- Rebased ontop of pci/dwc
+- Use DBI length of 0x200
+Changes in v6:
+- Use pci_dev.cfg_size mechanism to limit config space (this made patch 1
+  of previous versions of this patchset obsolete).
+Changes in v7:
+- Restrict fixup to Synopsys/0xabcd
+- Apply cfg_size limitation only if dbi_length is specified
+Changes in v8:
+- Restrict fixup for Synopsys/0xabcd and class PCI bridge
+- Check device driver to be pci-imx6
 
-Did you want me to fix up the LM3532 and send the patch?
+ drivers/pci/controller/dwc/pci-imx6.c | 33 +++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-Or do you have a patch ready to go?
-
-Dan
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 9b5cb5b70389..8b8efa3063f5 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -57,6 +57,7 @@ enum imx6_pcie_variants {
+ struct imx6_pcie_drvdata {
+ 	enum imx6_pcie_variants variant;
+ 	u32 flags;
++	int dbi_length;
+ };
+ 
+ struct imx6_pcie {
+@@ -1212,6 +1213,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+ 		.variant = IMX6Q,
+ 		.flags = IMX6_PCIE_FLAG_IMX6_PHY |
+ 			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE,
++		.dbi_length = 0x200,
+ 	},
+ 	[IMX6SX] = {
+ 		.variant = IMX6SX,
+@@ -1254,6 +1256,37 @@ static struct platform_driver imx6_pcie_driver = {
+ 	.shutdown = imx6_pcie_shutdown,
+ };
+ 
++static void imx6_pcie_quirk(struct pci_dev *dev)
++{
++	struct pci_bus *bus = dev->bus;
++	struct pcie_port *pp = bus->sysdata;
++
++	/* Bus parent is the PCI bridge, its parent is this platform driver */
++	if (!bus->dev.parent || !bus->dev.parent->parent)
++		return;
++
++	/* Make sure we only quirk devices associated with this driver */
++	if (bus->dev.parent->parent->driver != &imx6_pcie_driver.driver)
++		return;
++
++	if (bus->number == pp->root_bus_nr) {
++		struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++		struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
++
++		/*
++		 * Limit config length to avoid the kernel reading beyond
++		 * the register set and causing an abort on i.MX 6Quad
++		 */
++		if (imx6_pcie->drvdata->dbi_length) {
++			dev->cfg_size = imx6_pcie->drvdata->dbi_length;
++			dev_info(&dev->dev, "Limiting cfg_size to %d\n",
++					dev->cfg_size);
++		}
++	}
++}
++DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_SYNOPSYS, 0xabcd,
++			PCI_CLASS_BRIDGE_PCI, 8, imx6_pcie_quirk);
++
+ static int __init imx6_pcie_init(void)
+ {
+ #ifdef CONFIG_ARM
+-- 
+2.22.0
 
