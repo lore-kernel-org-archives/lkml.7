@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD875C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F16C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C82218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A26D22BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155243;
-	bh=HeXPMqH5tAKQGHu9NocNCCP0qUlEnYkyuaHmGmv0X7k=;
+	s=default; t=1564155250;
+	bh=FppCgspIlyeTEQF7WqwK6Y7pgeDrCo7BI5JBXeA4STw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sNLNfb/nXKQ8LIe5y+0Dlmt2dcH6BEcLjB+FOSjV+kxfd+EAtmAq+wt/GiWKIXNAE
-	 7gkjju4GJDWjutBHiEQS1Mild6pq1naicfo1WooPt5V/u7UtFKe/S8qcTobYYs3wcm
-	 niZH78wb6eWHUxfx7OlLqMWlLC5V++xJBq3xgO5w=
+	b=Y8xjU8K+oOqlrjDbPSFcdioVagskU7KMPBSl81YJ34eGUbbvf0kINQR8kolfU1UnI
+	 gSDWlWl+MVug+6oqgdPSM4JtbCQBEKRWk+yveSvhw/a/lBj/HCGs/Mazn511/74PXX
+	 b5Cn4M6vCc9Kt+xBoWCj7FlIGBG+TfXHkNQcaqLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389779AbfGZPeC (ORCPT
+        id S2389798AbfGZPeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:34:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49514 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:34:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389755AbfGZPeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:34:00 -0400
+        id S2389782AbfGZPeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:34:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A2732054F;
-        Fri, 26 Jul 2019 15:33:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D367218D4;
+        Fri, 26 Jul 2019 15:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155239;
-        bh=HeXPMqH5tAKQGHu9NocNCCP0qUlEnYkyuaHmGmv0X7k=;
+        s=default; t=1564155245;
+        bh=FppCgspIlyeTEQF7WqwK6Y7pgeDrCo7BI5JBXeA4STw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NS2l73f0uPNs+U/SDJJOTxleWVlishza9EuHTw1KXUdi0wUQF8iqTpdUgGmi6JSIY
-         CE2kfC7Dt3/t8tSKNd+VLxhi2L+1aK4PEewQk6e9JcvLE6Kua7nC2TGIoLeEcgMVJG
-         XQKWk+nrbdq8iBlFU3I5T5uYgJd1C4Xfy3njGOW4=
+        b=D+Bitiz8/VIjI8Lb965S938nSoqHXvnkCnAnmC9p8t8sXDW5EMv4zUEGVFY/sDNOY
+         2ifZWy1HpSZJPRUfXPImR46qAeX+vNWyUj5lUh/5u4lW67VYVYBkxg7dhuJ989A1Z4
+         zDtfWL99L2BrgaPIbJB1PV/vifV9t8jLBEhpajUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 49/50] KVM: nVMX: Clear pending KVM_REQ_GET_VMCS12_PAGES when leaving nested
-Date:   Fri, 26 Jul 2019 17:25:24 +0200
-Message-Id: <20190726152305.944211946@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+079bf326b38072f849d9@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 31/50] sctp: not bind the socket in sctp_connect
+Date:   Fri, 26 Jul 2019 17:25:06 +0200
+Message-Id: <20190726152303.824062269@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -60,37 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit cf64527bb33f6cec2ed50f89182fc4688d0056b6 upstream.
+[ Upstream commit 9b6c08878e23adb7cc84bdca94d8a944b03f099e ]
 
-Letting this pend may cause nested_get_vmcs12_pages to run against an
-invalid state, corrupting the effective vmcs of L1.
+Now when sctp_connect() is called with a wrong sa_family, it binds
+to a port but doesn't set bp->port, then sctp_get_af_specific will
+return NULL and sctp_connect() returns -EINVAL.
 
-This was triggerable in QEMU after a guest corruption in L2, followed by
-a L1 reset.
+Then if sctp_bind() is called to bind to another port, the last
+port it has bound will leak due to bp->port is NULL by then.
 
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
-Cc: stable@vger.kernel.org
-Fixes: 7f7f1ba33cf2 ("KVM: x86: do not load vmcs12 pages while still in SMM")
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+sctp_connect() doesn't need to bind ports, as later __sctp_connect
+will do it if bp->port is NULL. So remove it from sctp_connect().
+While at it, remove the unnecessary sockaddr.sa_family len check
+as it's already done in sctp_inet_connect.
+
+Fixes: 644fbdeacf1d ("sctp: fix the issue that flags are ignored when using kernel_connect")
+Reported-by: syzbot+079bf326b38072f849d9@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/kvm/vmx.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/sctp/socket.c |   20 ++------------------
+ 1 file changed, 2 insertions(+), 18 deletions(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -8490,6 +8490,8 @@ static void free_nested(struct vcpu_vmx
- 	if (!vmx->nested.vmxon && !vmx->nested.smm.vmxon)
- 		return;
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -4507,34 +4507,18 @@ out_nounlock:
+ static int sctp_connect(struct sock *sk, struct sockaddr *addr,
+ 			int addr_len, int flags)
+ {
+-	struct inet_sock *inet = inet_sk(sk);
+ 	struct sctp_af *af;
+-	int err = 0;
++	int err = -EINVAL;
  
-+	kvm_clear_request(KVM_REQ_GET_VMCS12_PAGES, &vmx->vcpu);
-+
- 	hrtimer_cancel(&vmx->nested.preemption_timer);
- 	vmx->nested.vmxon = false;
- 	vmx->nested.smm.vmxon = false;
+ 	lock_sock(sk);
+ 
+ 	pr_debug("%s: sk:%p, sockaddr:%p, addr_len:%d\n", __func__, sk,
+ 		 addr, addr_len);
+ 
+-	/* We may need to bind the socket. */
+-	if (!inet->inet_num) {
+-		if (sk->sk_prot->get_port(sk, 0)) {
+-			release_sock(sk);
+-			return -EAGAIN;
+-		}
+-		inet->inet_sport = htons(inet->inet_num);
+-	}
+-
+ 	/* Validate addr_len before calling common connect/connectx routine. */
+ 	af = sctp_get_af_specific(addr->sa_family);
+-	if (!af || addr_len < af->sockaddr_len) {
+-		err = -EINVAL;
+-	} else {
+-		/* Pass correct addr len to common routine (so it knows there
+-		 * is only one address being passed.
+-		 */
++	if (af && addr_len >= af->sockaddr_len)
+ 		err = __sctp_connect(sk, addr, af->sockaddr_len, flags, NULL);
+-	}
+ 
+ 	release_sock(sk);
+ 	return err;
 
 
