@@ -2,114 +2,254 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1B5C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AD2C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA44218EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDBF2218EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564137740;
+	bh=X7zomnphSoatQ2ExsZCymGrIKUnr+7mD1sl02mTPfh4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ewmxic21mYR/aUOBPKze9tZBB4X/H1yd6VgYlB9NffPuUIld7NqzdrwAwxdh7fKVJ
+	 bWcE9fXZx01679oNEjLBwcpEkaEobckysfJX5Unr8SZt0vD6IIwunTxUQlScfNOsDq
+	 nome7ev1ePo/4UF1y76rWprTQpxoVx9THvxNp9Ig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbfGZKl6 (ORCPT
+        id S1726655AbfGZKmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 06:41:58 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41570 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfGZKl6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 06:41:58 -0400
-Received: by mail-ot1-f65.google.com with SMTP id o101so54866743ota.8
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 03:41:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mxtQTyz1jr4asSEEq6Sox9bcILV4txWbsV0XEV0OPp8=;
-        b=PekS4KR0X9vn0yTHgOLNKd0Pehxn9bLXQ0I1jUk+92Rd7mFWzB8NTki85n2UyH67gx
-         C5lBeNAPS0cAZv7ms8oG9OibPi5F5dcww9tMvqmD7FDHCyVK/LmCkDHKFJsKwvnuTPXt
-         H/sYlVMdA4GaIgKE4YmsY4l0tDUtxeWkW5JCXQrL278fVwssRycr3MU87isArd3oLaqj
-         x2z0w4o/I4lDXntH9fV7fGZQu/bZT64HzyZWiwVX7NQJMt6QDiE1V2VQhSCpzTFxxbDB
-         PcNsT2YJ2aJy+qXvOUTtbAkdGun5U6EuTEfpvr7WmGsItrf7VojQNLdfuiyEGSpNRSFi
-         MU5Q==
-X-Gm-Message-State: APjAAAXKaKbVVidK74/06qkfAEl11O6kvzlljCS2JieKrGVVnaUl2gHd
-        ljvrzGYxRZiA5NoBQTyLyek4DeR9Q94sG7kL4H4XlA==
-X-Google-Smtp-Source: APXvYqyxrU4o2HGUGHrd34/TFhwl/qvazu9c6jLmZEf8byRR7dTkCcMl260sDIPvnIzfxhJy9Je7Fbd6Um030HCtn04=
-X-Received: by 2002:a9d:758b:: with SMTP id s11mr30138097otk.130.1564137717287;
- Fri, 26 Jul 2019 03:41:57 -0700 (PDT)
+        Fri, 26 Jul 2019 06:42:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbfGZKmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 06:42:19 -0400
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2142122CB9;
+        Fri, 26 Jul 2019 10:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564137737;
+        bh=X7zomnphSoatQ2ExsZCymGrIKUnr+7mD1sl02mTPfh4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xOIT7hQdaE/9saCJ016SORI9yKJR4VdvxCbG1H173OLs1s6mHJXKyd7rc897GqvTd
+         gKGbYk2M0FXGKg+ThrcP47kYqY52jrdZIUTa1y2tkWazRdgbUglzRXmdiVxFD9JWf4
+         /rjQ/hqg3pM0VOSD8zR3w9k9kqGBqh95ky+LeizI=
+Received: by mail-lj1-f181.google.com with SMTP id r9so51018570ljg.5;
+        Fri, 26 Jul 2019 03:42:17 -0700 (PDT)
+X-Gm-Message-State: APjAAAVDXb0Q5x4XbONwUkcsxIi2/ifvFlxLaIxo3aYUjeskf/uI71Ho
+        8v35IMSOwEap4g5K8BGskqPXEgimI6tnZ65E+RI=
+X-Google-Smtp-Source: APXvYqwjjPIUcxkurCk45AI+olnU8bXwOyRqJMGB5KvMZHbMvG1vzBey1kV3fpe6+DzCzU8EHqwv22xT+qk5FHRVVEY=
+X-Received: by 2002:a2e:b4d4:: with SMTP id r20mr23905543ljm.5.1564137735265;
+ Fri, 26 Jul 2019 03:42:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <xunytvceoyob.fsf@redhat.com> <f703360d-57c5-4858-e308-1e378a9cc0dc@iogearbox.net>
-In-Reply-To: <f703360d-57c5-4858-e308-1e378a9cc0dc@iogearbox.net>
-From:   Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Date:   Fri, 26 Jul 2019 13:41:41 +0300
-Message-ID: <CANoWswn=gQq83fUE0p3DogAR1_hROJFHq=dmTU3qR_FLPkt+rQ@mail.gmail.com>
-Subject: Re: bpf: test_verifier: sanitation: alu with different scalars
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
-        Jiri Benc <jbenc@redhat.com>
+References: <CGME20190723122022eucas1p1266d90873d564894bd852c20140f8474@eucas1p1.samsung.com>
+ <20190723122016.30279-1-a.swigon@partner.samsung.com> <20190723122016.30279-2-a.swigon@partner.samsung.com>
+ <CAGTfZH0JE0PmiCHaT3vMrDaP0-8eZ3afyHy_zT9aFmMOGNTR8g@mail.gmail.com>
+In-Reply-To: <CAGTfZH0JE0PmiCHaT3vMrDaP0-8eZ3afyHy_zT9aFmMOGNTR8g@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 26 Jul 2019 12:42:03 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPe4nOjjuA2MXLP1n=dPa7o6egjLZScSBNhyi9agHqqM7A@mail.gmail.com>
+Message-ID: <CAJKOXPe4nOjjuA2MXLP1n=dPa7o6egjLZScSBNhyi9agHqqM7A@mail.gmail.com>
+Subject: Re: [RFC PATCH 01/11] devfreq: exynos-bus: Extract exynos_bus_profile_init()
+To:     cwchoi00@gmail.com
+Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        georgi.djakov@linaro.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Daniel,
-
-On Tue, Jun 25, 2019 at 12:39 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+On Thu, 25 Jul 2019 at 14:44, Chanwoo Choi <cwchoi00@gmail.com> wrote:
 >
-> On 06/25/2019 10:29 AM, Yauheni Kaliuta wrote:
-> > Hi!
+> 2019=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EC=88=98) =EC=98=A4=EC=A0=84 8:09,=
+ Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>=EB=8B=98=EC=9D=B4 =
+=EC=9E=91=EC=84=B1:
 > >
-> > I'm wondering, how the sanitaion tests (#903 5.2-rc6 for example)
-> > are supposed to work on BE arches:
+> > This patch adds a new static function, exynos_bus_profile_init(), extra=
+cted
+> > from exynos_bus_probe().
 > >
-> > {
-> >       "sanitation: alu with different scalars 1",
-> >       .insns = {
-> >       BPF_MOV64_IMM(BPF_REG_0, 1),
-> >       BPF_LD_MAP_FD(BPF_REG_ARG1, 0),
-> >       BPF_MOV64_REG(BPF_REG_ARG2, BPF_REG_FP),
-> >       BPF_ALU64_IMM(BPF_ADD, BPF_REG_ARG2, -16),
-> >       BPF_ST_MEM(BPF_DW, BPF_REG_FP, -16, 0),
-> >       BPF_EMIT_CALL(BPF_FUNC_map_lookup_elem),
-> >       BPF_JMP_IMM(BPF_JNE, BPF_REG_0, 0, 1),
-> >       BPF_EXIT_INSN(),
-> >       BPF_LDX_MEM(BPF_B, BPF_REG_1, BPF_REG_0, 0),
+> > Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>
+> > ---
+> >  drivers/devfreq/exynos-bus.c | 106 ++++++++++++++++++++---------------
+> >  1 file changed, 60 insertions(+), 46 deletions(-)
 > >
-> > reads one byte 0 on BE and 28 on LE (from ->index) since
+> > diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.=
+c
+> > index d9f377912c10..d8f1efaf2d49 100644
+> > --- a/drivers/devfreq/exynos-bus.c
+> > +++ b/drivers/devfreq/exynos-bus.c
+> > @@ -372,12 +372,69 @@ static int exynos_bus_parse_of(struct device_node=
+ *np,
+> >         return ret;
+> >  }
 > >
-> >       struct test_val {
-> >               unsigned int index;
-> >               int foo[MAX_ENTRIES];
-> >       };
+> > +static int exynos_bus_profile_init(struct exynos_bus *bus,
+> > +                                  struct devfreq_dev_profile *profile)
+> > +{
+> > +       struct device *dev =3D bus->dev;
+> > +       struct devfreq_simple_ondemand_data *ondemand_data;
+> > +       int ret;
+> > +
+> > +       /* Initialize the struct profile and governor data for parent d=
+evice */
+> > +       profile->polling_ms =3D 50;
+> > +       profile->target =3D exynos_bus_target;
+> > +       profile->get_dev_status =3D exynos_bus_get_dev_status;
+> > +       profile->exit =3D exynos_bus_exit;
+> > +
+> > +       ondemand_data =3D devm_kzalloc(dev, sizeof(*ondemand_data), GFP=
+_KERNEL);
+> > +       if (!ondemand_data) {
+> > +               ret =3D -ENOMEM;
+> > +               goto err;
+> > +       }
+> > +       ondemand_data->upthreshold =3D 40;
+> > +       ondemand_data->downdifferential =3D 5;
+> > +
+> > +       /* Add devfreq device to monitor and handle the exynos bus */
+> > +       bus->devfreq =3D devm_devfreq_add_device(dev, profile,
+> > +                                               DEVFREQ_GOV_SIMPLE_ONDE=
+MAND,
+> > +                                               ondemand_data);
+> > +       if (IS_ERR(bus->devfreq)) {
+> > +               dev_err(dev, "failed to add devfreq device\n");
+> > +               ret =3D PTR_ERR(bus->devfreq);
+> > +               goto err;
+> > +       }
+> > +
+> > +       /* Register opp_notifier to catch the change of OPP  */
+> > +       ret =3D devm_devfreq_register_opp_notifier(dev, bus->devfreq);
+> > +       if (ret < 0) {
+> > +               dev_err(dev, "failed to register opp notifier\n");
+> > +               goto err;
+> > +       }
+> > +
+> > +       /*
+> > +        * Enable devfreq-event to get raw data which is used to determ=
+ine
+> > +        * current bus load.
+> > +        */
+> > +       ret =3D exynos_bus_enable_edev(bus);
+> > +       if (ret < 0) {
+> > +               dev_err(dev, "failed to enable devfreq-event devices\n"=
+);
+> > +               goto err;
+> > +       }
+> > +
+> > +       ret =3D exynos_bus_set_event(bus);
+> > +       if (ret < 0) {
+> > +               dev_err(dev, "failed to set event to devfreq-event devi=
+ces\n");
+> > +               goto err;
+> > +       }
+> > +
+> > +err:
+> > +       return ret;
+> > +}
+> > +
+> >  static int exynos_bus_probe(struct platform_device *pdev)
+> >  {
+> >         struct device *dev =3D &pdev->dev;
+> >         struct device_node *np =3D dev->of_node, *node;
+> >         struct devfreq_dev_profile *profile;
+> > -       struct devfreq_simple_ondemand_data *ondemand_data;
+> >         struct devfreq_passive_data *passive_data;
+> >         struct devfreq *parent_devfreq;
+> >         struct exynos_bus *bus;
+> > @@ -418,52 +475,9 @@ static int exynos_bus_probe(struct platform_device=
+ *pdev)
+> >         if (ret < 0)
+> >                 goto err;
 > >
-> >         struct test_val value = {
-> >               .index = (6 + 1) * sizeof(int),
-> >               .foo[6] = 0xabcdef12,
-> >       };
+> > -       /* Initialize the struct profile and governor data for parent d=
+evice */
+> > -       profile->polling_ms =3D 50;
+> > -       profile->target =3D exynos_bus_target;
+> > -       profile->get_dev_status =3D exynos_bus_get_dev_status;
+> > -       profile->exit =3D exynos_bus_exit;
+> > -
+> > -       ondemand_data =3D devm_kzalloc(dev, sizeof(*ondemand_data), GFP=
+_KERNEL);
+> > -       if (!ondemand_data) {
+> > -               ret =3D -ENOMEM;
+> > +       ret =3D exynos_bus_profile_init(bus, profile);
+> > +       if (ret < 0)
+> >                 goto err;
+> > -       }
+> > -       ondemand_data->upthreshold =3D 40;
+> > -       ondemand_data->downdifferential =3D 5;
+> > -
+> > -       /* Add devfreq device to monitor and handle the exynos bus */
+> > -       bus->devfreq =3D devm_devfreq_add_device(dev, profile,
+> > -                                               DEVFREQ_GOV_SIMPLE_ONDE=
+MAND,
+> > -                                               ondemand_data);
+> > -       if (IS_ERR(bus->devfreq)) {
+> > -               dev_err(dev, "failed to add devfreq device\n");
+> > -               ret =3D PTR_ERR(bus->devfreq);
+> > -               goto err;
+> > -       }
+> > -
+> > -       /* Register opp_notifier to catch the change of OPP  */
+> > -       ret =3D devm_devfreq_register_opp_notifier(dev, bus->devfreq);
+> > -       if (ret < 0) {
+> > -               dev_err(dev, "failed to register opp notifier\n");
+> > -               goto err;
+> > -       }
+> > -
+> > -       /*
+> > -        * Enable devfreq-event to get raw data which is used to determ=
+ine
+> > -        * current bus load.
+> > -        */
+> > -       ret =3D exynos_bus_enable_edev(bus);
+> > -       if (ret < 0) {
+> > -               dev_err(dev, "failed to enable devfreq-event devices\n"=
+);
+> > -               goto err;
+> > -       }
+> > -
+> > -       ret =3D exynos_bus_set_event(bus);
+> > -       if (ret < 0) {
+> > -               dev_err(dev, "failed to set event to devfreq-event devi=
+ces\n");
+> > -               goto err;
+> > -       }
 > >
-> >       BPF_JMP_IMM(BPF_JEQ, BPF_REG_1, 0, 3),
+> >         goto out;
+> >  passive:
+> > --
+> > 2.17.1
 > >
-> > So different branches are taken depending of the endianness.
-> >
-> >       BPF_MOV64_IMM(BPF_REG_2, 0),
-> >       BPF_MOV64_IMM(BPF_REG_3, 0x100000),
-> >       BPF_JMP_A(2),
-> >       BPF_MOV64_IMM(BPF_REG_2, 42),
-> >       BPF_MOV64_IMM(BPF_REG_3, 0x100001),
-> >       BPF_ALU64_REG(BPF_ADD, BPF_REG_2, BPF_REG_3),
-> >       BPF_MOV64_REG(BPF_REG_0, BPF_REG_2),
-> >       BPF_EXIT_INSN(),
-> >       },
-> >       .fixup_map_array_48b = { 1 },
-> >       .result = ACCEPT,
-> >       .retval = 0x100000,
-> > },
 >
-> Let me get my hands on a s390x box later today and get back to you.
+> NACK.
+>
+> It has not any benefit and I don't understand reason why it is necessary.
+> I don't agree. Please drop it.
 
-Any progress with that?
+The probe has 12 local variables and around 140 lines of code (so much
+more than coding style recommendations). Therefore splitting some
+logical part out of probe to make code better organized and more
+readable is pretty obvious benefit.
 
--- 
-WBR, Yauheni
+Best regards,
+Krzysztof
