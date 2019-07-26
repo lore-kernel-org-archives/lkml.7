@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80902C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997F4C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7B922CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 740B222CE9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149275;
-	bh=vzNNaYikDY21v23/2zO3IPUtpcgrGZDW0AIPcGzNqA8=;
+	s=default; t=1564149278;
+	bh=LAW3JxP93QKvqRDDip8RvQ3vFrd66mz6RP78ue2oRis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O0eE2gS/j+EuMfi9dOO4b4kTwGC9jYYCQCKHI7Mjst3NCQ+qIpP004VhJIo91e3BD
-	 7QDFuUou3nR04Iek0LQRGYzIp5LwavChjNXKmRDgVc7Jr5QGY38WAKkKDlvcnwtfqP
-	 LYbf9+04N2yMX57fu98YUm0d93mzIFm0nKPSZRM0=
+	b=DWJUfZ0/aqHsGna+sdjH+axgGoNm88AVV744REOkLFxHcdS2BDOSUBvkjXybEzyoj
+	 Bd6PgSuezBykbm2914Cy0OXzNJuASjmECqQUh1MrKOazhG00UhYhWw69xq96lyX/P9
+	 KiwCadw701PWZCFgjdNQQqP/7uKQB5rkhhX6eZfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388129AbfGZNye (ORCPT
+        id S2387594AbfGZNyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:54:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50060 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:54:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388031AbfGZNmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:42:46 -0400
+        id S2388021AbfGZNms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:42:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FF6222BF5;
-        Fri, 26 Jul 2019 13:42:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FF5322CBB;
+        Fri, 26 Jul 2019 13:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148565;
-        bh=vzNNaYikDY21v23/2zO3IPUtpcgrGZDW0AIPcGzNqA8=;
+        s=default; t=1564148567;
+        bh=LAW3JxP93QKvqRDDip8RvQ3vFrd66mz6RP78ue2oRis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oSy3V2RchU4N9tjVGytiJCO05hmlZroCQiNsg+5uPeyIvpuSkvPxhOdv8oHDh74+1
-         h03ept58D2CxDasKTgSPwkMBevrslzOGcLamRDYfAZQm/Adt4ALWQxAgbjQKEFsDuw
-         RjPQRdSGOeZBjH4oAo4LlGliX+35y6DxczrhPPSw=
+        b=L8M/RiWpli4Ba2nofjup5c1QV2UVQzxBkqahNeMS8W1p6KqUZ3rTDG2G4LKGpr3MB
+         iGp94Jl1pre2TX3kJk/k2YlciVvPi5v7VcidhbedMCMQwjHcKFB9jBJTwki3MyWBKh
+         +yQTI4X14uxttClkUwIHnI+KoChn5XLiiMVCvi/I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 21/47] ACPI: blacklist: fix clang warning for unused DMI table
-Date:   Fri, 26 Jul 2019 09:41:44 -0400
-Message-Id: <20190726134210.12156-21-sashal@kernel.org>
+Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 23/47] perf version: Fix segfault due to missing OPT_END()
+Date:   Fri, 26 Jul 2019 09:41:46 -0400
+Message-Id: <20190726134210.12156-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
 References: <20190726134210.12156-1-sashal@kernel.org>
@@ -61,51 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-[ Upstream commit b80d6a42bdc97bdb6139107d6034222e9843c6e2 ]
+[ Upstream commit 916c31fff946fae0e05862f9b2435fdb29fd5090 ]
 
-When CONFIG_DMI is disabled, we only have a tentative declaration,
-which causes a warning from clang:
+'perf version' on powerpc segfaults when used with non-supported
+option:
+  # perf version -a
+  Segmentation fault (core dumped)
 
-drivers/acpi/blacklist.c:20:35: error: tentative array definition assumed to have one element [-Werror]
-static const struct dmi_system_id acpi_rev_dmi_table[] __initconst;
+Fix this.
 
-As the variable is not actually used here, hide it entirely
-in an #ifdef to shut up the warning.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Tested-by: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/20190611030109.20228-1-ravi.bangoria@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/blacklist.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/builtin-version.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/acpi/blacklist.c b/drivers/acpi/blacklist.c
-index 995c4d8922b1..761f0c19a451 100644
---- a/drivers/acpi/blacklist.c
-+++ b/drivers/acpi/blacklist.c
-@@ -30,7 +30,9 @@
+diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
+index 50df168be326..b02c96104640 100644
+--- a/tools/perf/builtin-version.c
++++ b/tools/perf/builtin-version.c
+@@ -19,6 +19,7 @@ static struct version version;
+ static struct option version_options[] = {
+ 	OPT_BOOLEAN(0, "build-options", &version.build_options,
+ 		    "display the build options"),
++	OPT_END(),
+ };
  
- #include "internal.h"
- 
-+#ifdef CONFIG_DMI
- static const struct dmi_system_id acpi_rev_dmi_table[] __initconst;
-+#endif
- 
- /*
-  * POLICY: If *anything* doesn't work, put it on the blacklist.
-@@ -74,7 +76,9 @@ int __init acpi_blacklisted(void)
- 	}
- 
- 	(void)early_acpi_osi_init();
-+#ifdef CONFIG_DMI
- 	dmi_check_system(acpi_rev_dmi_table);
-+#endif
- 
- 	return blacklisted;
- }
+ static const char * const version_usage[] = {
 -- 
 2.20.1
 
