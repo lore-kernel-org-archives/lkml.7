@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2882EC76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0F8C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 023F9218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E715322BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155397;
-	bh=CWK5sbdCgpbPy18J/Gv5W5R3I2vx4GgWxSu7isiGFnc=;
+	s=default; t=1564155400;
+	bh=SDwjP90aPitR34LDnbaqCl3IW4kZgC2Ilb45z9YwOQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qeWoi0RlRtBmhvmEA9aLuWcIegi2ZHXvWDIEEFthUndHHvQhiw7wyl06ZNpiniifw
-	 tHHxKkUjsmbEOJd7Hps7RfX642z9CHSbhxy2yQiRk+8DTHJZvgKNAYj7FPhdWMgq7w
-	 nhm6rOn1zlpx6OLfuRKVHlKCrwqUxRANgP+dPcr4=
+	b=w33IEvEiCh9Qbn+GqDizjUcsthsxaJcbPIS2LiECI/IjYE+wR66gc5iCHj1RsHvK+
+	 d1PoN9n/heTJYhOobLyRhtpOJhDDFjigZCRQeKnzYciAHTaFfClp5Du8b884pdnVfp
+	 fKXwqmj3N0UQjz9jE5p4bfHBBJRmTh8c4gWRLA78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389205AbfGZPbH (ORCPT
+        id S2389186AbfGZPbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:31:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45900 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:31:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389163AbfGZPa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:30:57 -0400
+        id S2388599AbfGZPaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:30:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1D3C22BF5;
-        Fri, 26 Jul 2019 15:30:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF3DB205F4;
+        Fri, 26 Jul 2019 15:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155056;
-        bh=CWK5sbdCgpbPy18J/Gv5W5R3I2vx4GgWxSu7isiGFnc=;
+        s=default; t=1564155051;
+        bh=SDwjP90aPitR34LDnbaqCl3IW4kZgC2Ilb45z9YwOQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WzyGkVUmlhkSjFGdkt9YmufjQGwAnu+hPVUUaIrEPHt42b/jmb6qXwTOu77uKvWcg
-         UmbzmYk9YECNfodzNmUadGUBc8VlwyWrklxB8+YE7ZHeb0byj9WXgBXKbQEESLosXB
-         TLmyx5Gxz9JFrnIzweNLTvB/xusprQDZk72KiRDM=
+        b=Iwe9D7XHfXEn8bazMaQidUU9PJwXZsHZJLJ8rnh1ZOXeqcNtyQ6aFbuZGoiAyVr2f
+         MfE1wOI5xPVk3lnI2N7NI36dy5dtowqtgqy9Sx7tJixxrXASLQ2xJmg0kXpAwEmB/N
+         q3lnIO3v1TX6phbWkIYoLeonnc9sQ6uVD1JWGjkU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 16/62] net/tls: make sure offload also gets the keys wiped
-Date:   Fri, 26 Jul 2019 17:24:28 +0200
-Message-Id: <20190726152303.413935339@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, od@zcrc.me,
+        linux-mips@vger.kernel.org
+Subject: [PATCH 5.1 47/62] MIPS: lb60: Fix pin mappings
+Date:   Fri, 26 Jul 2019 17:24:59 +0200
+Message-Id: <20190726152306.985230751@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -61,66 +63,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit acd3e96d53a24d219f720ed4012b62723ae05da1 ]
+commit 1323c3b72a987de57141cabc44bf9cd83656bc70 upstream.
 
-Commit 86029d10af18 ("tls: zero the crypto information from tls_context
-before freeing") added memzero_explicit() calls to clear the key material
-before freeing struct tls_context, but it missed tls_device.c has its
-own way of freeing this structure. Replace the missing free.
+The pin mappings introduced in commit 636f8ba67fb6
+("MIPS: JZ4740: Qi LB60: Add pinctrl configuration for several drivers")
+are completely wrong. The pinctrl driver name is incorrect, and the
+function and group fields are swapped.
 
-Fixes: 86029d10af18 ("tls: zero the crypto information from tls_context before freeing")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 636f8ba67fb6 ("MIPS: JZ4740: Qi LB60: Add pinctrl configuration for several drivers")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: od@zcrc.me
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/tls.h    |    1 +
- net/tls/tls_device.c |    2 +-
- net/tls/tls_main.c   |    4 ++--
- 3 files changed, 4 insertions(+), 3 deletions(-)
 
---- a/include/net/tls.h
-+++ b/include/net/tls.h
-@@ -285,6 +285,7 @@ struct tls_offload_context_rx {
- 	(ALIGN(sizeof(struct tls_offload_context_rx), sizeof(void *)) + \
- 	 TLS_DRIVER_STATE_SIZE)
+---
+ arch/mips/jz4740/board-qi_lb60.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+--- a/arch/mips/jz4740/board-qi_lb60.c
++++ b/arch/mips/jz4740/board-qi_lb60.c
+@@ -469,27 +469,27 @@ static unsigned long pin_cfg_bias_disabl
+ static struct pinctrl_map pin_map[] __initdata = {
+ 	/* NAND pin configuration */
+ 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-nand",
+-			"10010000.jz4740-pinctrl", "nand", "nand-cs1"),
++			"10010000.pin-controller", "nand-cs1", "nand"),
  
-+void tls_ctx_free(struct tls_context *ctx);
- int wait_on_pending_writer(struct sock *sk, long *timeo);
- int tls_sk_query(struct sock *sk, int optname, char __user *optval,
- 		int __user *optlen);
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -61,7 +61,7 @@ static void tls_device_free_ctx(struct t
- 	if (ctx->rx_conf == TLS_HW)
- 		kfree(tls_offload_ctx_rx(ctx));
+ 	/* fbdev pin configuration */
+ 	PIN_MAP_MUX_GROUP("jz4740-fb", PINCTRL_STATE_DEFAULT,
+-			"10010000.jz4740-pinctrl", "lcd", "lcd-8bit"),
++			"10010000.pin-controller", "lcd-8bit", "lcd"),
+ 	PIN_MAP_MUX_GROUP("jz4740-fb", PINCTRL_STATE_SLEEP,
+-			"10010000.jz4740-pinctrl", "lcd", "lcd-no-pins"),
++			"10010000.pin-controller", "lcd-no-pins", "lcd"),
  
--	kfree(ctx);
-+	tls_ctx_free(ctx);
- }
+ 	/* MMC pin configuration */
+ 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-mmc.0",
+-			"10010000.jz4740-pinctrl", "mmc", "mmc-1bit"),
++			"10010000.pin-controller", "mmc-1bit", "mmc"),
+ 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-mmc.0",
+-			"10010000.jz4740-pinctrl", "mmc", "mmc-4bit"),
++			"10010000.pin-controller", "mmc-4bit", "mmc"),
+ 	PIN_MAP_CONFIGS_PIN_DEFAULT("jz4740-mmc.0",
+-			"10010000.jz4740-pinctrl", "PD0", pin_cfg_bias_disable),
++			"10010000.pin-controller", "PD0", pin_cfg_bias_disable),
+ 	PIN_MAP_CONFIGS_PIN_DEFAULT("jz4740-mmc.0",
+-			"10010000.jz4740-pinctrl", "PD2", pin_cfg_bias_disable),
++			"10010000.pin-controller", "PD2", pin_cfg_bias_disable),
  
- static void tls_device_gc_task(struct work_struct *work)
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -251,7 +251,7 @@ static void tls_write_space(struct sock
- 	ctx->sk_write_space(sk);
- }
+ 	/* PWM pin configuration */
+ 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-pwm",
+-			"10010000.jz4740-pinctrl", "pwm4", "pwm4"),
++			"10010000.pin-controller", "pwm4", "pwm4"),
+ };
  
--static void tls_ctx_free(struct tls_context *ctx)
-+void tls_ctx_free(struct tls_context *ctx)
- {
- 	if (!ctx)
- 		return;
-@@ -638,7 +638,7 @@ static void tls_hw_sk_destruct(struct so
- 
- 	ctx->sk_destruct(sk);
- 	/* Free ctx */
--	kfree(ctx);
-+	tls_ctx_free(ctx);
- 	icsk->icsk_ulp_data = NULL;
- }
  
 
 
