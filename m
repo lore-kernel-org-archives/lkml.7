@@ -2,136 +2,194 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 695E3C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7C2C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C442189F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6FCB2189F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbfGZHB7 (ORCPT
+        id S1726238AbfGZHEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 03:01:59 -0400
-Received: from mga11.intel.com ([192.55.52.93]:4051 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbfGZHB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 03:01:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 00:01:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,309,1559545200"; 
-   d="scan'208";a="170537755"
-Received: from gliakhov-mobl2.ger.corp.intel.com (HELO ubuntu) ([10.249.35.244])
-  by fmsmga008.fm.intel.com with ESMTP; 26 Jul 2019 00:01:55 -0700
-Date:   Fri, 26 Jul 2019 00:31:01 +0200
-From:   Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [RFC PATCH 15/40] soundwire: cadence_master: handle
- multiple status reports per Slave
-Message-ID: <20190725223100.GC16003@ubuntu>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-16-pierre-louis.bossart@linux.intel.com>
+        Fri, 26 Jul 2019 03:04:06 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:54673 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfGZHEG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 03:04:06 -0400
+Received: by mail-io1-f71.google.com with SMTP id n8so57660133ioo.21
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 00:04:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=iiEOnn150oGXJw06DVHiQhyleupZW2777rwDJN7+kIw=;
+        b=M9VV1ckniL/5bgjpu2IzBnGbctciQH5URaWgY1PDY77XSbVX4Qi9xtm49GuqjEu+dT
+         M4sDiyYWkbAoUGqz+aE3PJevl25IeqPIDAf0exp3jNUeto+BNispQBwN9FGrMJDR+mI5
+         x3z9Mhb+nzDD4fHj8WmAg6TpYiDeF/N8FM7Mo46sURgWdjhOIhIRsCMhLo9qIvdO+kWI
+         44D9+zbsDIXvX4SYfD2ErVT0GynTad/HTsw2r3exLFSJkW73DAuPjjB2SxzBmG+FwqM1
+         z+gj5hBNcfPFueB1XTHGQv9Y3JnEe2/4EQ+a+dIhvlZPlyZxpKX+KERmkSj7MoXUh/bN
+         7cXA==
+X-Gm-Message-State: APjAAAV5kpRXNLYdRLV7bnOXKAfPOGjSwL/XpFofZyFqyxSqdOLqyT7T
+        QTThcOaky/0G3wQe0oBAjc9Jn7P34Pk9VmMajj3do/gagicV
+X-Google-Smtp-Source: APXvYqwunFbZK1zg6km7akU93VhukcwvSUaVhVPNKnxq6iH/0hj/TI18yDx2Qfd/ldQdpljb4ZZJXLtziUb1rlcGF8paXAtAHduv
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725234032.21152-16-pierre-louis.bossart@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a6b:2b08:: with SMTP id r8mr42041503ior.34.1564124645291;
+ Fri, 26 Jul 2019 00:04:05 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 00:04:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000de000a058e9025db@google.com>
+Subject: KASAN: use-after-free Read in release_sock
+From:   syzbot <syzbot+107429d62fb1d293602f@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-hams@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 06:40:07PM -0500, Pierre-Louis Bossart wrote:
-> When a Slave reports multiple status in the sticky bits, find the
-> latest configuration from the mirror of the PING frame status and
-> update the status directly.
-> 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->  drivers/soundwire/cadence_master.c | 34 ++++++++++++++++++++++++------
->  1 file changed, 28 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
-> index 889fa2cd49ae..25d5c7267c15 100644
-> --- a/drivers/soundwire/cadence_master.c
-> +++ b/drivers/soundwire/cadence_master.c
-> @@ -643,13 +643,35 @@ static int cdns_update_slave_status(struct sdw_cdns *cdns,
->  
->  		/* first check if Slave reported multiple status */
->  		if (set_status > 1) {
-> +			u32 val;
-> +
->  			dev_warn_ratelimited(cdns->dev,
-> -					     "Slave reported multiple Status: %d\n",
-> -					     mask);
-> -			/*
-> -			 * TODO: we need to reread the status here by
-> -			 * issuing a PING cmd
-> -			 */
-> +					     "Slave %d reported multiple Status: %d\n",
-> +					     i, mask);
-> +
-> +			/* re-check latest status extracted from PING commands */
-> +			val = cdns_readl(cdns, CDNS_MCP_SLAVE_STAT);
-> +			val >>= (i * 2);
+Hello,
 
-Superfluous parentheses.
+syzbot found the following crash on:
 
-> +
-> +			switch (val & 0x3) {
-> +			case 0:
-> +				status[i] = SDW_SLAVE_UNATTACHED;
-> +				break;
-> +			case 1:
-> +				status[i] = SDW_SLAVE_ATTACHED;
-> +				break;
-> +			case 2:
-> +				status[i] = SDW_SLAVE_ALERT;
-> +				break;
-> +			default:
+HEAD commit:    6789f873 Merge tag 'pm-5.3-rc2' of git://git.kernel.org/pu..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1593573fa00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6efd5962fd8c1d39
+dashboard link: https://syzkaller.appspot.com/bug?extid=107429d62fb1d293602f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-There aren't many values left for the "default" case :-) But I'm not sure whether
-any of
+Unfortunately, I don't have any reproducer for this crash yet.
 
-+			case 3:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+107429d62fb1d293602f@syzkaller.appspotmail.com
 
-or
+==================================================================
+BUG: KASAN: use-after-free in debug_spin_lock_before  
+kernel/locking/spinlock_debug.c:83 [inline]
+BUG: KASAN: use-after-free in do_raw_spin_lock+0x28a/0x2e0  
+kernel/locking/spinlock_debug.c:112
+Read of size 4 at addr ffff88808b66578c by task syz-executor.5/30407
 
-+			case 3:
-+			default:
+CPU: 0 PID: 30407 Comm: syz-executor.5 Not tainted 5.3.0-rc1+ #84
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+  kasan_report+0x12/0x17 mm/kasan/common.c:612
+  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
+  debug_spin_lock_before kernel/locking/spinlock_debug.c:83 [inline]
+  do_raw_spin_lock+0x28a/0x2e0 kernel/locking/spinlock_debug.c:112
+  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:136 [inline]
+  _raw_spin_lock_bh+0x3b/0x50 kernel/locking/spinlock.c:175
+  spin_lock_bh include/linux/spinlock.h:343 [inline]
+  release_sock+0x20/0x1c0 net/core/sock.c:2932
+  nr_release+0x303/0x3e0 net/netrom/af_netrom.c:553
+  __sock_release+0xce/0x280 net/socket.c:590
+  sock_close+0x1e/0x30 net/socket.c:1268
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x5a9/0x6a0 arch/x86/entry/common.c:299
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x413511
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48  
+83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
+89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffd3d6d51d0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 000000000000000a RCX: 0000000000413511
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000009
+RBP: 0000000000000001 R08: 000000007639d277 R09: 000000007639d27b
+R10: 00007ffd3d6d52b0 R11: 0000000000000293 R12: 000000000075c9a0
+R13: 000000000075c9a0 R14: 00000000007617a0 R15: ffffffffffffffff
 
-would improve readability.
+Allocated by task 30409:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:487 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:460
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:501
+  __do_kmalloc mm/slab.c:3655 [inline]
+  __kmalloc+0x163/0x770 mm/slab.c:3664
+  kmalloc include/linux/slab.h:557 [inline]
+  sk_prot_alloc+0x23a/0x310 net/core/sock.c:1603
+  sk_alloc+0x39/0xf70 net/core/sock.c:1657
+  nr_make_new net/netrom/af_netrom.c:476 [inline]
+  nr_rx_frame+0x733/0x1e73 net/netrom/af_netrom.c:959
+  nr_loopback_timer+0x7b/0x170 net/netrom/nr_loopback.c:59
+  call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1322
+  expire_timers kernel/time/timer.c:1366 [inline]
+  __run_timers kernel/time/timer.c:1685 [inline]
+  __run_timers kernel/time/timer.c:1653 [inline]
+  run_timer_softirq+0x697/0x17a0 kernel/time/timer.c:1698
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
 
-Thanks
-Guennadi
+Freed by task 30407:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:449
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:457
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3756
+  sk_prot_free net/core/sock.c:1640 [inline]
+  __sk_destruct+0x4f7/0x6e0 net/core/sock.c:1726
+  sk_destruct+0x86/0xa0 net/core/sock.c:1734
+  __sk_free+0xfb/0x360 net/core/sock.c:1745
+  sk_free+0x42/0x50 net/core/sock.c:1756
+  sock_put include/net/sock.h:1725 [inline]
+  nr_destroy_socket+0x3ea/0x4a0 net/netrom/af_netrom.c:288
+  nr_release+0x347/0x3e0 net/netrom/af_netrom.c:530
+  __sock_release+0xce/0x280 net/socket.c:590
+  sock_close+0x1e/0x30 net/socket.c:1268
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x5a9/0x6a0 arch/x86/entry/common.c:299
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-> +				status[i] = SDW_SLAVE_RESERVED;
-> +				break;
-> +			}
-> +
-> +			dev_warn_ratelimited(cdns->dev,
-> +					     "Slave %d status updated to %d\n",
-> +					     i, status[i]);
-> +
->  		}
->  	}
->  
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+The buggy address belongs to the object at ffff88808b665700
+  which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 140 bytes inside of
+  2048-byte region [ffff88808b665700, ffff88808b665f00)
+The buggy address belongs to the page:
+page:ffffea00022d9900 refcount:1 mapcount:0 mapping:ffff8880aa400e00  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea000187ee08 ffffea00022d3f08 ffff8880aa400e00
+raw: 0000000000000000 ffff88808b664600 0000000100000003 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88808b665680: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff88808b665700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff88808b665780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                       ^
+  ffff88808b665800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88808b665880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
