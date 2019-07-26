@@ -2,110 +2,106 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29669C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4129C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D7C208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D82C621842
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:22:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387409AbfGZOWX (ORCPT
+        id S2387453AbfGZOWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:22:23 -0400
-Received: from mga12.intel.com ([192.55.52.136]:19210 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbfGZOWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 10:22:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 07:22:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
-   d="scan'208";a="322051732"
-Received: from msmall-mobl.amr.corp.intel.com (HELO [10.251.154.62]) ([10.251.154.62])
-  by orsmga004.jf.intel.com with ESMTP; 26 Jul 2019 07:22:21 -0700
-Subject: Re: [alsa-devel] [RFC PATCH 24/40] soundwire: cadence_master: use
- BIOS defaults for frame shape
-To:     Cezary Rojewski <cezary.rojewski@intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
-        gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-25-pierre-louis.bossart@linux.intel.com>
- <7dbe6483-673f-f415-9ebc-700c090d9520@intel.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <3d1f1667-f165-024f-8a93-bb15500cd7ad@linux.intel.com>
-Date:   Fri, 26 Jul 2019 09:22:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 26 Jul 2019 10:22:25 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:55109 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727502AbfGZOWY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 10:22:24 -0400
+Received: from xps13 ([83.160.161.190])
+        by smtp-cloud9.xs4all.net with ESMTPSA
+        id r16whKvVQAffAr16zhYGlX; Fri, 26 Jul 2019 16:22:21 +0200
+Message-ID: <1876196a0e7fc665f0f50d5e9c0e2641f713e089.camel@tiscali.nl>
+Subject: Re: [PATCH] isdn/gigaset: check endpoint null in gigaset_probe
+From:   Paul Bolle <pebolle@tiscali.nl>
+To:     Phong Tran <tranmanphong@gmail.com>, isdn@linux-pingi.de,
+        gregkh@linuxfoundation.org
+Cc:     gigaset307x-common@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzbot+35b1c403a14f5c89eba7@syzkaller.appspotmail.com
+Date:   Fri, 26 Jul 2019 16:22:18 +0200
+In-Reply-To: <20190726133528.11063-1-tranmanphong@gmail.com>
+References: <20190726133528.11063-1-tranmanphong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <7dbe6483-673f-f415-9ebc-700c090d9520@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfFJtsA4bTDd5shYb0nHuFZYTI15MEGFgAWw8jsSPvPGvE0A8aew2qYUZToVNF69Zx9q7S/ETRWYGMQcZvIYd2UvKlgrXNZWzR+8/xc90O4NF+w9CE52s
+ DV7omZgcXu3jwABtrM17VrnK3vWE46IU5zqsvpgu/P1NX5qeREMX3B1s/9tgwHcPqk7znM+mxwHSGSiD4ZoGrwSQ8VmsRsT/eRIwLPDbRGwL25vKX825bQt6
+ qC8+74pGcQvytoBRVcM1oIYzPp3DFBZcUXFoNCja0+WxntwXoH7cZJUrTS54EfIqT9ksPG55rLvzG5EZDJ9wW14gsfnmcVhbhzYUOlFR98DwIWrsiOjLkFeS
+ Od0JUnNt1VnCZti3RlidmEsflh0ZPzl613qThvFYFnA9TXFgYPWPHjd9ZRcSTvIIkM4rsbLLk0Df8MSMPE2gXIl4QMqtiZLGEAvOWj+sQtDflRTOEjI+NN/D
+ IcBpkByBmDoZ6XDBDLQ1qjsUuthKsQ17nJruug==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Phong Tran schreef op vr 26-07-2019 om 20:35 [+0700]:
+> This fixed the potential reference NULL pointer while using variable
+> endpoint.
+> 
+> Reported-by: syzbot+35b1c403a14f5c89eba7@syzkaller.appspotmail.com
+> Tested by syzbot:
+> https://groups.google.com/d/msg/syzkaller-bugs/wnHG8eRNWEA/Qn2HhjNdBgAJ
+> 
+> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> ---
+>  drivers/isdn/gigaset/usb-gigaset.c | 9 +++++++++
+
+This is now drivers/staging/isdn/gigaset/usb-gigaset.c.
+
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/isdn/gigaset/usb-gigaset.c b/drivers/isdn/gigaset/usb-gigaset.c
+> index 1b9b43659bdf..2e011f3db59e 100644
+> --- a/drivers/isdn/gigaset/usb-gigaset.c
+> +++ b/drivers/isdn/gigaset/usb-gigaset.c
+> @@ -703,6 +703,10 @@ static int gigaset_probe(struct usb_interface *interface,
+>  	usb_set_intfdata(interface, cs);
+>  
+>  	endpoint = &hostif->endpoint[0].desc;
+> +        if (!endpoint) {
+> +		dev_err(cs->dev, "Couldn't get control endpoint\n");
+> +		return -ENODEV;
+> +	}
+
+When can this happen? Is this one of those bugs that one can only trigger with
+a specially crafted (evil) usb device?
+
+>  	buffer_size = le16_to_cpu(endpoint->wMaxPacketSize);
+>  	ucs->bulk_out_size = buffer_size;
+> @@ -722,6 +726,11 @@ static int gigaset_probe(struct usb_interface *interface,
+>  	}
+>  
+>  	endpoint = &hostif->endpoint[1].desc;
+> +        if (!endpoint) {
+> +		dev_err(cs->dev, "Endpoint not available\n");
+> +		retval = -ENODEV;
+> +		goto error;
+> +	}
+>  
+>  	ucs->busy = 0;
+>  
+
+Please note that I'm very close to getting cut off from the ISDN network, so
+the chances of being able to testi this on a live system are getting small. 
+
+Thanks,
 
 
-On 7/26/19 5:20 AM, Cezary Rojewski wrote:
-> On 2019-07-26 01:40, Pierre-Louis Bossart wrote:
->> +static u32 cdns_set_default_frame_shape(int n_rows, int n_cols)
->> +{
->> +    u32 val;
->> +    int c;
->> +    int r;
->> +
->> +    r = sdw_find_row_index(n_rows);
->> +    c = sdw_find_col_index(n_cols);
->> +
->> +    val = (r << 3) | c;
->> +
->> +    return val;
->> +}
->> +
->>   /**
->>    * sdw_cdns_init() - Cadence initialization
->>    * @cdns: Cadence instance
->> @@ -977,7 +990,9 @@ int sdw_cdns_init(struct sdw_cdns *cdns)
->>       cdns_writel(cdns, CDNS_MCP_CLK_CTRL0, val);
->>       /* Set the default frame shape */
->> -    cdns_writel(cdns, CDNS_MCP_FRAME_SHAPE_INIT, 
->> CDNS_DEFAULT_FRAME_SHAPE);
->> +    val = cdns_set_default_frame_shape(prop->default_row,
->> +                       prop->default_col);
->> +    cdns_writel(cdns, CDNS_MCP_FRAME_SHAPE_INIT, val);
->>       /* Set SSP interval to default value */
->>       cdns_writel(cdns, CDNS_MCP_SSP_CTRL0, CDNS_DEFAULT_SSP_INTERVAL);
->>
-> 
-> Suggestion:
-> declare "generic" _get_frame_frame(rows, cols) instead and let it do the 
-> bitwise operations for you. Pretty sure this won't be the only place in 
-> code where reg value for frame_shape needs to be prepared.
-> 
-> Said function could be as simple as:
-> return (row << 3) | cols;
-> +inline flag
-> 
-> i.e. could be even a macro..
-> 
-> Otherwise modify _set_default_frame_shape to simply:
-> return (r << 3) | c
-> 
-> without involving additional local val variable (I don't really see the 
-> point for any locals there though).
+Paul Bolle
 
-what this function does is take the standard-defined offsets for row and 
-column and stores them in a Cadence-defined register. I think we can 
-probably use a macro to remove the magic '3' value, but there are limits 
-to what we can simplify. I should probably add comments so that people 
-figure it out.
