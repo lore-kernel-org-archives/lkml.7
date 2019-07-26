@@ -2,108 +2,179 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1050FC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58F1C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8CCA2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:49:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+u+xDer"
+	by mail.kernel.org (Postfix) with ESMTP id 837E322BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:51:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfGZItR (ORCPT
+        id S1726297AbfGZIvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 04:49:17 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41665 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfGZItQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 04:49:16 -0400
-Received: by mail-pf1-f196.google.com with SMTP id m30so24191545pff.8;
-        Fri, 26 Jul 2019 01:49:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=n+PSUAMKZPff5zesM1XSMM7/Tungo32ENdBEjQ0MAgI=;
-        b=R+u+xDerujiwy7aIwIbcVjK9CQ1elm4f3hHj5YUsgz5N3B/svM8It4NRk7qF59knjA
-         Djl0h57yc3oCQLkelcEamnbnJEeiclJ3Xlps59V8c3QC7pDVAR72uqPKvZVRhr9spg6n
-         7+/iPOZDqpr1WN4s27NQh6bb2bn/FiX/mjlW5iNmv8j3j3xYVnmDCtKRzNby+E7+PsU9
-         fMoZJo2qlicsQWGJCdoFwEH8M/XOoOs/zE/vsKajnli7hgUSiohsOeGk9FgedQeJisYy
-         PEf12Gk7ux+Q1KLjgmOFoqVb3VMCDL7ezITkLW9NnA/T3hr5ilXvk0Hf+IzpSYMhaJaN
-         45lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=n+PSUAMKZPff5zesM1XSMM7/Tungo32ENdBEjQ0MAgI=;
-        b=ER/csp6Od7TabvN+6zdobCVwBArDh/lwTtSWuqa77Lyqa1T7F7PiRsw3I2dy4+JkMN
-         +opu6dwQ1ZCDuqsEqmXCyFauMIhfTvRRlnF9UXeHQYmvrpU25OEDANhWp9vWzJcExyX3
-         gpIuk90BiRzCADlvFG2ac+nQd9hRCtLb7R01lqKgdgXIlCMscA4NVqJcXU+G2ZsiqnR/
-         2GZJ55db/Xo55ixSpgY5/PmSicIX15jPEtSGgQHOpE6esQ/FpRlXi0sEDFueMXRpk1y5
-         dOVUfV6ug7ImPWLPGaySFpKRRoep1sTS72KfwClzjDSht3Me0kRzbhz8TL892ZUUuLT2
-         XcNQ==
-X-Gm-Message-State: APjAAAX2qXeIjsJTNPhfdG+TnO2ER7ndCqHrEwTrLz5Q01lFO/wSduWZ
-        /EX5UEi567bRZ+B39xYFnQY=
-X-Google-Smtp-Source: APXvYqyDwSQqnyzkZMdYYTiWiZlcCCepKLjpsdlbKywnNPSdWkMsJND3QnJI1qd8YGwKigx9PRIO9g==
-X-Received: by 2002:a63:b10f:: with SMTP id r15mr20757387pgf.230.1564130955937;
-        Fri, 26 Jul 2019 01:49:15 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id 201sm62335492pfz.24.2019.07.26.01.49.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 01:49:15 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, allison@lohutok.net, rdunlap@infradead.org
-Cc:     patches@opensource.cirrus.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] input: touchscreen: wm97xx-core: Fix possible null-pointer dereferences in wm97xx_ts_input_open()
-Date:   Fri, 26 Jul 2019 16:48:16 +0800
-Message-Id: <20190726084816.8487-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Fri, 26 Jul 2019 04:51:49 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:45332 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbfGZIvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 04:51:48 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D69E81A0966;
+        Fri, 26 Jul 2019 10:51:45 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 222B41A0976;
+        Fri, 26 Jul 2019 10:51:42 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8BDA7402A9;
+        Fri, 26 Jul 2019 16:51:37 +0800 (SGT)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     jassisinghbrar@gmail.com, o.rempel@pengutronix.de,
+        aisheng.dong@nxp.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Richard Zhu <hongxing.zhu@nxp.com>
+Subject: [RFC] mailbox: imx: Add support for i.MX v1 messaging unit
+Date:   Fri, 26 Jul 2019 16:29:36 +0800
+Message-Id: <1564129776-19574-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In wm97xx_ts_input_open(), there is an if statement on line 507 to check
-whether wm->mach_ops is NULL:
-    if (wm->mach_ops && wm->mach_ops->acc_enabled)
+There is a version1.0 MU on i.MX7ULP platform.
+One new version ID register is added, and the offset is 0.
+TRn registers are defined at the offset 0x20 ~ 0x2C.
+RRn registers are defined at the offset 0x40 ~ 0x4C.
+SR/CR registers are defined at 0x60/0x64.
+Extend this driver to support it.
 
-When wm->mach_ops is NULL, it is used on line 521:
-    wm97xx_init_pen_irq(wm);
-        BUG_ON(!wm->mach_ops->irq_enable);
-        BUG_ON(!wm->mach_ops->irq_gpio);
-        wm97xx_reg_write(..., reg & ~(wm->mach_ops->irq_gpio))
-
-Thus, possible null-pointer dereferences may occur.
-
-To fix these bugs, wm->mach_ops is checked before calling
-wm97xx_init_pen_irq().
-
-These bugs found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 ---
- drivers/input/touchscreen/wm97xx-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mailbox/imx-mailbox.c | 45 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 35 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/input/touchscreen/wm97xx-core.c b/drivers/input/touchscreen/wm97xx-core.c
-index 0a174bd82915..f7bd0726a577 100644
---- a/drivers/input/touchscreen/wm97xx-core.c
-+++ b/drivers/input/touchscreen/wm97xx-core.c
-@@ -517,7 +517,7 @@ static int wm97xx_ts_input_open(struct input_dev *idev)
- 	wm->ts_reader_interval = wm->ts_reader_min_interval;
+diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+index 25be8bb..eb55bbe 100644
+--- a/drivers/mailbox/imx-mailbox.c
++++ b/drivers/mailbox/imx-mailbox.c
+@@ -12,10 +12,14 @@
+ #include <linux/of_device.h>
+ #include <linux/slab.h>
  
- 	wm->pen_is_down = 0;
--	if (wm->pen_irq)
-+	if (wm->pen_irq && wm->mach_ops)
- 		wm97xx_init_pen_irq(wm);
- 	else
- 		dev_err(wm->dev, "No IRQ specified\n");
++#define MU_VER_ID_V1		0x0100
++
+ /* Transmit Register */
+ #define IMX_MU_xTRn(x)		(0x00 + 4 * (x))
++#define IMX_MU_xTRn_V1(x)	(0x20 + 4 * (x))
+ /* Receive Register */
+ #define IMX_MU_xRRn(x)		(0x10 + 4 * (x))
++#define IMX_MU_xRRn_V1(x)	(0x40 + 4 * (x))
+ /* Status Register */
+ #define IMX_MU_xSR		0x20
+ #define IMX_MU_xSR_GIPn(x)	BIT(28 + (3 - (x)))
+@@ -25,6 +29,7 @@
+ 
+ /* Control Register */
+ #define IMX_MU_xCR		0x24
++#define IMX_MU_xSCR_V1_OFFSET	0x40
+ /* General Purpose Interrupt Enable */
+ #define IMX_MU_xCR_GIEn(x)	BIT(28 + (3 - (x)))
+ /* Receive Interrupt Enable */
+@@ -63,6 +68,7 @@ struct imx_mu_priv {
+ 	struct imx_mu_con_priv  con_priv[IMX_MU_CHANS];
+ 	struct clk		*clk;
+ 	int			irq;
++	int			version;
+ 
+ 	bool			side_b;
+ };
+@@ -85,13 +91,16 @@ static u32 imx_mu_read(struct imx_mu_priv *priv, u32 offs)
+ static u32 imx_mu_xcr_rmw(struct imx_mu_priv *priv, u32 set, u32 clr)
+ {
+ 	unsigned long flags;
+-	u32 val;
++	u32 val, offset;
++
++	offset = unlikely(priv->version == MU_VER_ID_V1) ?
++			IMX_MU_xSCR_V1_OFFSET : 0;
+ 
+ 	spin_lock_irqsave(&priv->xcr_lock, flags);
+-	val = imx_mu_read(priv, IMX_MU_xCR);
++	val = imx_mu_read(priv, IMX_MU_xCR + offset);
+ 	val &= ~clr;
+ 	val |= set;
+-	imx_mu_write(priv, val, IMX_MU_xCR);
++	imx_mu_write(priv, val, IMX_MU_xCR + offset);
+ 	spin_unlock_irqrestore(&priv->xcr_lock, flags);
+ 
+ 	return val;
+@@ -109,10 +118,13 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
+ 	struct mbox_chan *chan = p;
+ 	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
+ 	struct imx_mu_con_priv *cp = chan->con_priv;
+-	u32 val, ctrl, dat;
++	u32 val, ctrl, dat, offset;
++
++	offset = unlikely(priv->version == MU_VER_ID_V1) ?
++			IMX_MU_xSCR_V1_OFFSET : 0;
+ 
+-	ctrl = imx_mu_read(priv, IMX_MU_xCR);
+-	val = imx_mu_read(priv, IMX_MU_xSR);
++	ctrl = imx_mu_read(priv, IMX_MU_xCR + offset);
++	val = imx_mu_read(priv, IMX_MU_xSR + offset);
+ 
+ 	switch (cp->type) {
+ 	case IMX_MU_TYPE_TX:
+@@ -138,10 +150,14 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
+ 		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx));
+ 		mbox_chan_txdone(chan, 0);
+ 	} else if (val == IMX_MU_xSR_RFn(cp->idx)) {
+-		dat = imx_mu_read(priv, IMX_MU_xRRn(cp->idx));
++		if (unlikely(priv->version == MU_VER_ID_V1))
++			dat = imx_mu_read(priv, IMX_MU_xRRn_V1(cp->idx));
++		else
++			dat = imx_mu_read(priv, IMX_MU_xRRn(cp->idx));
+ 		mbox_chan_received_data(chan, (void *)&dat);
+ 	} else if (val == IMX_MU_xSR_GIPn(cp->idx)) {
+-		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), IMX_MU_xSR);
++		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx),
++				IMX_MU_xSR + offset);
+ 		mbox_chan_received_data(chan, NULL);
+ 	} else {
+ 		dev_warn_ratelimited(priv->dev, "Not handled interrupt\n");
+@@ -159,7 +175,10 @@ static int imx_mu_send_data(struct mbox_chan *chan, void *data)
+ 
+ 	switch (cp->type) {
+ 	case IMX_MU_TYPE_TX:
+-		imx_mu_write(priv, *arg, IMX_MU_xTRn(cp->idx));
++		if (unlikely(priv->version == MU_VER_ID_V1))
++			imx_mu_write(priv, *arg, IMX_MU_xTRn_V1(cp->idx));
++		else
++			imx_mu_write(priv, *arg, IMX_MU_xTRn(cp->idx));
+ 		imx_mu_xcr_rmw(priv, IMX_MU_xCR_TIEn(cp->idx), 0);
+ 		break;
+ 	case IMX_MU_TYPE_TXDB:
+@@ -253,11 +272,17 @@ static struct mbox_chan * imx_mu_xlate(struct mbox_controller *mbox,
+ 
+ static void imx_mu_init_generic(struct imx_mu_priv *priv)
+ {
++	u32 offset;
++
+ 	if (priv->side_b)
+ 		return;
+ 
++	priv->version = imx_mu_read(priv, 0) >> 16;
++	offset = unlikely(priv->version == MU_VER_ID_V1) ?
++			IMX_MU_xSCR_V1_OFFSET : 0;
++
+ 	/* Set default MU configuration */
+-	imx_mu_write(priv, 0, IMX_MU_xCR);
++	imx_mu_write(priv, 0, IMX_MU_xCR + offset);
+ }
+ 
+ static int imx_mu_probe(struct platform_device *pdev)
 -- 
-2.17.0
+2.7.4
 
