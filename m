@@ -2,111 +2,137 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9920C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B401C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A4E22C7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 237B72238C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:05:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hWnrUtBc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbfGZB5c (ORCPT
+        id S1726001AbfGZCFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 21:57:32 -0400
-Received: from mga12.intel.com ([192.55.52.136]:24504 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbfGZB5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 21:57:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 18:57:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,308,1559545200"; 
-   d="scan'208";a="181722703"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 25 Jul 2019 18:57:26 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH v5 02/10] iommu/vt-d: Use per-device dma_ops
-To:     Christoph Hellwig <hch@lst.de>
-References: <20190725031717.32317-1-baolu.lu@linux.intel.com>
- <20190725031717.32317-3-baolu.lu@linux.intel.com>
- <20190725054413.GC24527@lst.de>
- <bc831f88-5b19-7531-00aa-a7577dd5c1ac@linux.intel.com>
- <20190725114348.GA30957@lst.de>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <a098359a-0f89-6028-68df-9f83718df256@linux.intel.com>
-Date:   Fri, 26 Jul 2019 09:56:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 25 Jul 2019 22:05:44 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43679 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfGZCFn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 22:05:43 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f25so23941897pgv.10
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 19:05:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=cCr2oTsYVgIcEXvmtc7DlfGkkVp1TEqKVaiHx8VkY0g=;
+        b=hWnrUtBcKGH6duUC6atM3dFoGEBxjthHp13HPcOGJP3NvGrheBc5ubV7GtbnVrlUG5
+         w5xBX1gRoM47ksIqKWOFmWXir+gUPA0Gh2eTDKgpymSSztq9tcT/zBuN/n0rKnfOUuca
+         qEBOAK2NsqTXHIFBuLpt5vzs2eCB9GmKpjPB+kgUHv7LrzqssPl1EAlagaMpS3cl11B5
+         Ddh3fFfxS5tzaLVHZMBeZDV1ZxTtRHvN9GoQhg8GT5xbsqmQxdkN3vS5pSlF/m8Bxnq0
+         02OcN90av2yFVbUIr4WKCyoepL+F+iRgaISztNFR+JUkamvg6b92qQRwAurdm9kPr6/f
+         qF7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=cCr2oTsYVgIcEXvmtc7DlfGkkVp1TEqKVaiHx8VkY0g=;
+        b=l8Vftz7JEsQCgsl/ycDEQPCT8ux2KArNh6ESX564solBEEBrWhN4r6RajInpWAuVZ/
+         bEnGfK53Vbsu0/ZsZxYh/vQG0UJ9dZNYDuJPHyQJh96nPhgI/rDDQFLFn73dZwC01lpP
+         0D5dRp4LCp+bEApMua7T5vZBJSXkMbNJiMsA1FLr00XExDJMnotcKRs2qCBMV7DPfx7b
+         seCcaqxTjAEKuwayz0g6pHo2BlwokLPWZYUYl5XgRtBj6yJi5kPcAkLUXEYwvba3v8IZ
+         4vD07x/HyMTiJesuiv8e2LANoKTTi4a837SjxaMI58EWnfr/XhpFj3RtaOqBqTNx2gL2
+         2F9g==
+X-Gm-Message-State: APjAAAUOTQr36yECygdR9aYf9NDFpsDFnuM+qzZXQrZc1xONgE7QVVmB
+        Hx/q58WaSyZ0eNBsnZBy2lIsL1IKOU8=
+X-Google-Smtp-Source: APXvYqyW0cJeyN4gZGlH3R5yMUABavXqQ5fq8IodhkOzNunm92SeAYGrTnWkOwPKwtBRZvJudMSzfg==
+X-Received: by 2002:a17:90a:4806:: with SMTP id a6mr96016852pjh.38.1564106742844;
+        Thu, 25 Jul 2019 19:05:42 -0700 (PDT)
+Received: from ?IPv6:2402:f000:4:72:808::177e? ([2402:f000:4:72:808::177e])
+        by smtp.gmail.com with ESMTPSA id b126sm75007442pfa.126.2019.07.25.19.05.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 19:05:42 -0700 (PDT)
+Subject: Re: [PATCH] ALSA: i2c: ak4xxx-adda: Fix a possible null pointer
+ dereference in build_adc_controls()
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     tglx@linutronix.de, gregkh@linuxfoundation.org, perex@perex.cz,
+        rfontana@redhat.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+References: <20190725082733.15234-1-baijiaju1990@gmail.com>
+ <s5hy30myuvw.wl-tiwai@suse.de>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <5ef03517-a52f-fe24-30e9-62466d4a1319@gmail.com>
+Date:   Fri, 26 Jul 2019 10:05:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190725114348.GA30957@lst.de>
+In-Reply-To: <s5hy30myuvw.wl-tiwai@suse.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 7/25/19 7:43 PM, Christoph Hellwig wrote:
-> On Thu, Jul 25, 2019 at 03:18:03PM +0800, Lu Baolu wrote:
->>> Don't we need to keep this bit so that we still allow the IOMMU
->>> to act if the device has a too small DMA mask to address all memory in
->>> the system, even if if it should otherwise be identity mapped?
->>>
+
+On 2019/7/25 23:52, Takashi Iwai wrote:
+> On Thu, 25 Jul 2019 10:27:33 +0200,
+> Jia-Ju Bai wrote:
+>> In build_adc_controls(), there is an if statement on line 773 to check
+>> whether ak->adc_info is NULL:
+>> 	if (! ak->adc_info ||
+>> 		! ak->adc_info[mixer_ch].switch_name)
 >>
->> This checking happens only when device is using an identity mapped
->> domain. If the device has a small DMA mask, swiotlb will be used for
->> high memory access.
+>> When ak->adc_info is NULL, it is used on line 792:
+>>      knew.name = ak->adc_info[mixer_ch].selector_name;
 >>
->> This is supposed to be handled in dma_direct_map_page():
+>> Thus, a possible null-pointer dereference may occur.
 >>
->>          if (unlikely(!dma_direct_possible(dev, dma_addr, size)) &&
->>              !swiotlb_map(dev, &phys, &dma_addr, size, dir, attrs)) {
->>                  report_addr(dev, dma_addr, size);
->>                  return DMA_MAPPING_ERROR;
->>          }
-> 
-> Well, yes.  But the point is that the current code uses dynamic iommu
-> mappings even if the devices is in the identity mapped domain when the
-> dma mask іs too small to map all memory directly.  Your change means it
-> will now use swiotlb which is most likely going to be a lot more
+>> To fix this bug, referring to lines 773 and 774, ak->adc_info
+>> and ak->adc_info[mixer_ch].selector_name are checked before being used.
+>>
+>> This bug is found by a static analysis tool STCheck written by us.
+>>
+>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+>> ---
+>>   sound/i2c/other/ak4xxx-adda.c | 6 ++++--
+>>   1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/sound/i2c/other/ak4xxx-adda.c b/sound/i2c/other/ak4xxx-adda.c
+>> index 5f59316f982a..9a891470e84a 100644
+>> --- a/sound/i2c/other/ak4xxx-adda.c
+>> +++ b/sound/i2c/other/ak4xxx-adda.c
+>> @@ -775,11 +775,13 @@ static int build_adc_controls(struct snd_akm4xxx *ak)
+>>   				return err;
+>>   
+>>   			memset(&knew, 0, sizeof(knew));
+>> -			knew.name = ak->adc_info[mixer_ch].selector_name;
+>> -			if (!knew.name) {
+>> +			if (! ak->adc_info ||
+>> +				! ak->adc_info[mixer_ch].selector_name) {
+>>   				knew.name = "Capture Channel";
+>>   				knew.index = mixer_ch + ak->idx_offset * 2;
+>>   			}
+>> +			else
+>> +				knew.name = ak->adc_info[mixer_ch].selector_name;
+>>   
+>>   			knew.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
+>>   			knew.info = ak4xxx_capture_source_info;
+> The code change itself looks good, but please follow the standard
+> coding style.  In short: please run checkpatch.pl, fix errors (some
+> warnings may be ignored) and resubmit.
 
-By default, we use DMA domain. The privileged users are able to change
-this with global kernel parameter or per-group default domain type under
-discussion. In another word, use of identity domain is a choice of the
-privileged user who should consider the possible bounce buffer overhead.
+Okay, thanks for the advice.
+I will send a v2 patch.
 
-I think current code doesn't do the right thing. The user asks the iommu
-driver to use identity domain for a device, but the driver force it back
-to DMA domain because of the device address capability.
 
-> expensive.  I don't think that this change is a good idea, and even if
-> we decide that this is a good idea after all that should be done in a
-> separate prep patch that explains the rationale.
-
-Yes. Make sense.
-
-Best regards,
-Baolu
+Best wishes,
+Jia-Ju Bai
