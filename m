@@ -4,50 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56B9C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5E0C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7172054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765D0205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155115;
-	bh=/NAWNINs/ZiDm75cisGFvgmJKsZU/xvo8YA4eJU5IcA=;
+	s=default; t=1564155124;
+	bh=m0pjgZqAwwp79HXzIMN+N5yibjjUnFB3FUV5X1zWHTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jWt9Yqp4Cu7TD2iSGUQiosFnBqf08mog+5t1BWw68BAS0H72zysvBD3H+XCpHvZXb
-	 9ZxRZlu9EkUYwfrmTNXWieBFnSUlX4OWB2NLxPmPmvrfMhItJRghYJdhnEvBIjAqiN
-	 EY2+pMt6tKPuuG9imJ6NJp25/GBB2TiNEN5xptIc=
+	b=wAeVmNe3MwHfqYRg8539BGr6xu1OlFBf5zQ6/Rv1bV9Kx6vAcK91rAk1HWkD5ThEj
+	 ZibQOAjq8SZDcAl4qyrBoKmkU356M6sDYW6G1YYWBNOwfWJudjJ1bPBZXCrTrpMI9i
+	 /uEsdvl8wrRnM8IUfkM45yMnh42WRSgzObFAM61Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389362AbfGZPby (ORCPT
+        id S2389376AbfGZPcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:31:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46944 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:32:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388547AbfGZPbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:31:51 -0400
+        id S2388547AbfGZPb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:31:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 260D72054F;
-        Fri, 26 Jul 2019 15:31:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2500A2054F;
+        Fri, 26 Jul 2019 15:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155110;
-        bh=/NAWNINs/ZiDm75cisGFvgmJKsZU/xvo8YA4eJU5IcA=;
+        s=default; t=1564155116;
+        bh=m0pjgZqAwwp79HXzIMN+N5yibjjUnFB3FUV5X1zWHTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xLqEWaugJkR1JfKsW8Gmmae0hoSuDVBW7lKXCGuJYYfOReEbOJaQK9/sIMc9ZY5Oc
-         0DLupe1gzvsN7A/B6773Qez1N+oQIbiNZA7zAI+n6CykFfieBR7H+Nl6YfBWHxluCA
-         eQWtqyi2Cu724u/IUOxIjqrIifJVLFCClvkfA/H0=
+        b=d7Pc3NM4DnBZQm3OBEnBfrMlnXCvEHTsHyTWkG+ii0sIYUrloBjs5WoK/vTWK0gpF
+         emNKoYVJLhq8JhiewEcle2pVMyLjqhLMoEIzZ1e09h+wEDUnR/Ao/VRvFdy7U/06hi
+         hjO9WkcnFFdXOkBCV3O5Gpus9dTmxZ8mZ/7/4+nI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.1 57/62] KVM: nVMX: do not use dangling shadow VMCS after guest reset
-Date:   Fri, 26 Jul 2019 17:25:09 +0200
-Message-Id: <20190726152307.970639518@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        mathieu.poirier@linaro.org, will.deacon@arm.com,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.1 49/62] perf/core: Fix exclusive events grouping
+Date:   Fri, 26 Jul 2019 17:25:01 +0200
+Message-Id: <20190726152307.196264676@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -60,65 +68,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit 88dddc11a8d6b09201b4db9d255b3394d9bc9e57 upstream.
+commit 8a58ddae23796c733c5dfbd717538d89d036c5bd upstream.
 
-If a KVM guest is reset while running a nested guest, free_nested will
-disable the shadow VMCS execution control in the vmcs01.  However,
-on the next KVM_RUN vmx_vcpu_run would nevertheless try to sync
-the VMCS12 to the shadow VMCS which has since been freed.
+So far, we tried to disallow grouping exclusive events for the fear of
+complications they would cause with moving between contexts. Specifically,
+moving a software group to a hardware context would violate the exclusivity
+rules if both groups contain matching exclusive events.
 
-This causes a vmptrld of a NULL pointer on my machime, but Jan reports
-the host to hang altogether.  Let's see how much this trivial patch fixes.
+This attempt was, however, unsuccessful: the check that we have in the
+perf_event_open() syscall is both wrong (looks at wrong PMU) and
+insufficient (group leader may still be exclusive), as can be illustrated
+by running:
 
-Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Liran Alon <liran.alon@oracle.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+  $ perf record -e '{intel_pt//,cycles}' uname
+  $ perf record -e '{cycles,intel_pt//}' uname
+
+ultimately successfully.
+
+Furthermore, we are completely free to trigger the exclusivity violation
+by:
+
+   perf -e '{cycles,intel_pt//}' -e '{intel_pt//,instructions}'
+
+even though the helpful perf record will not allow that, the ABI will.
+
+The warning later in the perf_event_open() path will also not trigger, because
+it's also wrong.
+
+Fix all this by validating the original group before moving, getting rid
+of broken safeguards and placing a useful one to perf_install_in_context().
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: <stable@vger.kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: mathieu.poirier@linaro.org
+Cc: will.deacon@arm.com
+Fixes: bed5b25ad9c8a ("perf: Add a pmu capability for "exclusive" events")
+Link: https://lkml.kernel.org/r/20190701110755.24646-1-alexander.shishkin@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ include/linux/perf_event.h |    5 +++++
+ kernel/events/core.c       |   34 ++++++++++++++++++++++------------
+ 2 files changed, 27 insertions(+), 12 deletions(-)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -184,6 +184,7 @@ static void vmx_disable_shadow_vmcs(stru
- {
- 	vmcs_clear_bits(SECONDARY_VM_EXEC_CONTROL, SECONDARY_EXEC_SHADOW_VMCS);
- 	vmcs_write64(VMCS_LINK_POINTER, -1ull);
-+	vmx->nested.need_vmcs12_sync = false;
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1044,6 +1044,11 @@ static inline int in_software_context(st
+ 	return event->ctx->pmu->task_ctx_nr == perf_sw_context;
  }
  
- static inline void nested_release_evmcs(struct kvm_vcpu *vcpu)
-@@ -1328,6 +1329,9 @@ static void copy_shadow_to_vmcs12(struct
- 	u64 field_value;
- 	struct vmcs *shadow_vmcs = vmx->vmcs01.shadow_vmcs;
- 
-+	if (WARN_ON(!shadow_vmcs))
-+		return;
++static inline int is_exclusive_pmu(struct pmu *pmu)
++{
++	return pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE;
++}
 +
- 	preempt_disable();
+ extern struct static_key perf_swevent_enabled[PERF_COUNT_SW_MAX];
  
- 	vmcs_load(shadow_vmcs);
-@@ -1366,6 +1370,9 @@ static void copy_vmcs12_to_shadow(struct
- 	u64 field_value = 0;
- 	struct vmcs *shadow_vmcs = vmx->vmcs01.shadow_vmcs;
+ extern void ___perf_sw_event(u32, u64, struct pt_regs *, u64);
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2543,6 +2543,9 @@ unlock:
+ 	return ret;
+ }
  
-+	if (WARN_ON(!shadow_vmcs))
-+		return;
++static bool exclusive_event_installable(struct perf_event *event,
++					struct perf_event_context *ctx);
 +
- 	vmcs_load(shadow_vmcs);
+ /*
+  * Attach a performance event to a context.
+  *
+@@ -2557,6 +2560,8 @@ perf_install_in_context(struct perf_even
  
- 	for (q = 0; q < ARRAY_SIZE(fields); q++) {
-@@ -4336,7 +4343,6 @@ static inline void nested_release_vmcs12
- 		/* copy to memory all shadowed fields in case
- 		   they were modified */
- 		copy_shadow_to_vmcs12(vmx);
--		vmx->nested.need_vmcs12_sync = false;
- 		vmx_disable_shadow_vmcs(vmx);
+ 	lockdep_assert_held(&ctx->mutex);
+ 
++	WARN_ON_ONCE(!exclusive_event_installable(event, ctx));
++
+ 	if (event->cpu != -1)
+ 		event->cpu = cpu;
+ 
+@@ -4348,7 +4353,7 @@ static int exclusive_event_init(struct p
+ {
+ 	struct pmu *pmu = event->pmu;
+ 
+-	if (!(pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE))
++	if (!is_exclusive_pmu(pmu))
+ 		return 0;
+ 
+ 	/*
+@@ -4379,7 +4384,7 @@ static void exclusive_event_destroy(stru
+ {
+ 	struct pmu *pmu = event->pmu;
+ 
+-	if (!(pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE))
++	if (!is_exclusive_pmu(pmu))
+ 		return;
+ 
+ 	/* see comment in exclusive_event_init() */
+@@ -4399,14 +4404,15 @@ static bool exclusive_event_match(struct
+ 	return false;
+ }
+ 
+-/* Called under the same ctx::mutex as perf_install_in_context() */
+ static bool exclusive_event_installable(struct perf_event *event,
+ 					struct perf_event_context *ctx)
+ {
+ 	struct perf_event *iter_event;
+ 	struct pmu *pmu = event->pmu;
+ 
+-	if (!(pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE))
++	lockdep_assert_held(&ctx->mutex);
++
++	if (!is_exclusive_pmu(pmu))
+ 		return true;
+ 
+ 	list_for_each_entry(iter_event, &ctx->event_list, event_entry) {
+@@ -10899,11 +10905,6 @@ SYSCALL_DEFINE5(perf_event_open,
+ 		goto err_alloc;
  	}
- 	vmx->nested.posted_intr_nv = -1;
+ 
+-	if ((pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE) && group_leader) {
+-		err = -EBUSY;
+-		goto err_context;
+-	}
+-
+ 	/*
+ 	 * Look up the group leader (we will attach this event to it):
+ 	 */
+@@ -10991,6 +10992,18 @@ SYSCALL_DEFINE5(perf_event_open,
+ 				move_group = 0;
+ 			}
+ 		}
++
++		/*
++		 * Failure to create exclusive events returns -EBUSY.
++		 */
++		err = -EBUSY;
++		if (!exclusive_event_installable(group_leader, ctx))
++			goto err_locked;
++
++		for_each_sibling_event(sibling, group_leader) {
++			if (!exclusive_event_installable(sibling, ctx))
++				goto err_locked;
++		}
+ 	} else {
+ 		mutex_lock(&ctx->mutex);
+ 	}
+@@ -11027,9 +11040,6 @@ SYSCALL_DEFINE5(perf_event_open,
+ 	 * because we need to serialize with concurrent event creation.
+ 	 */
+ 	if (!exclusive_event_installable(event, ctx)) {
+-		/* exclusive and group stuff are assumed mutually exclusive */
+-		WARN_ON_ONCE(move_group);
+-
+ 		err = -EBUSY;
+ 		goto err_locked;
+ 	}
 
 
