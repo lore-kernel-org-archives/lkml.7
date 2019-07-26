@@ -7,56 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A555C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D561FC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD02620840
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD39B22CBE
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155084;
-	bh=EtuxGL0g9cKMmNy6KapyBnlRAz2SyGUAO60uxNSnL+M=;
+	s=default; t=1564155088;
+	bh=m4+klA4BcnqGIYRN200INQKbvwGjkVokvb4OcKpZgLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GJZzZU1VVuDcB7WomWLtJUPOBFMorlI9jshZnMLBObwXlgys2z1R87hYF5qMDuSMf
-	 HNGDYA99/0LCiIl2LM2OOWvJWcVzm/NrVJsuCc5xQ3CMQfm8dN3dzR7PO13oUw8idG
-	 eDED9oa2Fow6ELAOYzSCc3tAnD5tt2R/A5nPOpq4=
+	b=t2QMFIrqo1LaHJzsrQhUx+emPtpOkgLZTHcRhYCg4TJRFyERjyavrJh9AebLpKnob
+	 DQYVUlF5uUAyeZzsMUTfXdR62e6zgu0jE2a2bLLJFnTK1IZHXrpGqdUNyCEuLyU54T
+	 8pi/FtujWJhE7aTzOLd7EQAErmmxdECEbzQjGJHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389269AbfGZPbX (ORCPT
+        id S2389279AbfGZPb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:31:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46306 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:31:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389256AbfGZPbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:31:20 -0400
+        id S2389262AbfGZPbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:31:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A663622CB9;
-        Fri, 26 Jul 2019 15:31:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F19B2054F;
+        Fri, 26 Jul 2019 15:31:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155079;
-        bh=EtuxGL0g9cKMmNy6KapyBnlRAz2SyGUAO60uxNSnL+M=;
+        s=default; t=1564155081;
+        bh=m4+klA4BcnqGIYRN200INQKbvwGjkVokvb4OcKpZgLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K3HhjBoDQOts8DeuCswMo/V1Ot4aD3j+OFt1a9k6pPeCRYIloMip/VAzOQXDbbeyh
-         CDwesEcklCM5pyB+CCsrt+q/+lNE19V8kbbyflcbw7Bg58DFfLGWdG2eJO1pVED3z7
-         /hecfifP8+rKrXfhOAKbWpGmPdi+KJrair5RNAnQ=
+        b=LfXNtHyfNq3VhuDG94wIs4vZLtgfQeTfaRT4mZGacgw9kRFlYK/nErPIKOFdmnIpH
+         4I3yisvm2OXk7qMUOdGaIF4pmYvY6pq3UTY1OXhoRdMLBedeHnqgRrBFq4S4auPtKG
+         eB8atSu8V2JACtwrf8dPOWK7S2pYPmIiATnV3I94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a24c397a29ad22d86c98@syzkaller.appspotmail.com,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.1 50/62] perf/core: Fix race between close() and fork()
-Date:   Fri, 26 Jul 2019 17:25:02 +0200
-Message-Id: <20190726152307.283985735@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.1 59/62] Revert "kvm: x86: Use task structs fpu field for user"
+Date:   Fri, 26 Jul 2019 17:25:11 +0200
+Message-Id: <20190726152308.138640622@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -69,183 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 1cf8dfe8a661f0462925df943140e9f6d1ea5233 upstream.
+commit ec269475cba7bcdd1eb8fdf8e87f4c6c81a376fe upstream.
 
-Syzcaller reported the following Use-after-Free bug:
+This reverts commit 240c35a3783ab9b3a0afaba0dde7291295680a6b
+("kvm: x86: Use task structs fpu field for user", 2018-11-06).
+The commit is broken and causes QEMU's FPU state to be destroyed
+when KVM_RUN is preempted.
 
-	close()						clone()
-
-							  copy_process()
-							    perf_event_init_task()
-							      perf_event_init_context()
-							        mutex_lock(parent_ctx->mutex)
-								inherit_task_group()
-								  inherit_group()
-								    inherit_event()
-								      mutex_lock(event->child_mutex)
-								      // expose event on child list
-								      list_add_tail()
-								      mutex_unlock(event->child_mutex)
-							        mutex_unlock(parent_ctx->mutex)
-
-							    ...
-							    goto bad_fork_*
-
-							  bad_fork_cleanup_perf:
-							    perf_event_free_task()
-
-	  perf_release()
-	    perf_event_release_kernel()
-	      list_for_each_entry()
-		mutex_lock(ctx->mutex)
-		mutex_lock(event->child_mutex)
-		// event is from the failing inherit
-		// on the other CPU
-		perf_remove_from_context()
-		list_move()
-		mutex_unlock(event->child_mutex)
-		mutex_unlock(ctx->mutex)
-
-							      mutex_lock(ctx->mutex)
-							      list_for_each_entry_safe()
-							        // event already stolen
-							      mutex_unlock(ctx->mutex)
-
-							    delayed_free_task()
-							      free_task()
-
-	     list_for_each_entry_safe()
-	       list_del()
-	       free_event()
-	         _free_event()
-		   // and so event->hw.target
-		   // is the already freed failed clone()
-		   if (event->hw.target)
-		     put_task_struct(event->hw.target)
-		       // WHOOPSIE, already quite dead
-
-Which puts the lie to the the comment on perf_event_free_task():
-'unexposed, unused context' not so much.
-
-Which is a 'fun' confluence of fail; copy_process() doing an
-unconditional free_task() and not respecting refcounts, and perf having
-creative locking. In particular:
-
-  82d94856fa22 ("perf/core: Fix lock inversion between perf,trace,cpuhp")
-
-seems to have overlooked this 'fun' parade.
-
-Solve it by using the fact that detached events still have a reference
-count on their (previous) context. With this perf_event_free_task()
-can detect when events have escaped and wait for their destruction.
-
-Debugged-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reported-by: syzbot+a24c397a29ad22d86c98@syzkaller.appspotmail.com
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Cc: <stable@vger.kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Fixes: 82d94856fa22 ("perf/core: Fix lock inversion between perf,trace,cpuhp")
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 240c35a3783a ("kvm: x86: Use task structs fpu field for user")
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/events/core.c |   49 +++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 41 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/kvm_host.h |    7 ++++---
+ arch/x86/kvm/x86.c              |    4 ++--
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4459,12 +4459,20 @@ static void _free_event(struct perf_even
- 	if (event->destroy)
- 		event->destroy(event);
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -609,15 +609,16 @@ struct kvm_vcpu_arch {
  
--	if (event->ctx)
--		put_ctx(event->ctx);
--
-+	/*
-+	 * Must be after ->destroy(), due to uprobe_perf_close() using
-+	 * hw.target.
-+	 */
- 	if (event->hw.target)
- 		put_task_struct(event->hw.target);
+ 	/*
+ 	 * QEMU userspace and the guest each have their own FPU state.
+-	 * In vcpu_run, we switch between the user, maintained in the
+-	 * task_struct struct, and guest FPU contexts. While running a VCPU,
+-	 * the VCPU thread will have the guest FPU context.
++	 * In vcpu_run, we switch between the user and guest FPU contexts.
++	 * While running a VCPU, the VCPU thread will have the guest FPU
++	 * context.
+ 	 *
+ 	 * Note that while the PKRU state lives inside the fpu registers,
+ 	 * it is switched out separately at VMENTER and VMEXIT time. The
+ 	 * "guest_fpu" state here contains the guest FPU context, with the
+ 	 * host PRKU bits.
+ 	 */
++	struct fpu user_fpu;
+ 	struct fpu *guest_fpu;
  
-+	/*
-+	 * perf_event_free_task() relies on put_ctx() being 'last', in particular
-+	 * all task references must be cleaned up.
-+	 */
-+	if (event->ctx)
-+		put_ctx(event->ctx);
-+
- 	exclusive_event_destroy(event);
- 	module_put(event->pmu->module);
- 
-@@ -4644,8 +4652,17 @@ again:
- 	mutex_unlock(&event->child_mutex);
- 
- 	list_for_each_entry_safe(child, tmp, &free_list, child_list) {
-+		void *var = &child->ctx->refcount;
-+
- 		list_del(&child->child_list);
- 		free_event(child);
-+
-+		/*
-+		 * Wake any perf_event_free_task() waiting for this event to be
-+		 * freed.
-+		 */
-+		smp_mb(); /* pairs with wait_var_event() */
-+		wake_up_var(var);
- 	}
- 
- no_ctx:
-@@ -11506,11 +11523,11 @@ static void perf_free_event(struct perf_
- }
- 
- /*
-- * Free an unexposed, unused context as created by inheritance by
-- * perf_event_init_task below, used by fork() in case of fail.
-+ * Free a context as created by inheritance by perf_event_init_task() below,
-+ * used by fork() in case of fail.
-  *
-- * Not all locks are strictly required, but take them anyway to be nice and
-- * help out with the lockdep assertions.
-+ * Even though the task has never lived, the context and events have been
-+ * exposed through the child_list, so we must take care tearing it all down.
-  */
- void perf_event_free_task(struct task_struct *task)
+ 	u64 xcr0;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8172,7 +8172,7 @@ static int complete_emulated_mmio(struct
+ static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu)
  {
-@@ -11540,7 +11557,23 @@ void perf_event_free_task(struct task_st
- 			perf_free_event(event, ctx);
- 
- 		mutex_unlock(&ctx->mutex);
--		put_ctx(ctx);
-+
-+		/*
-+		 * perf_event_release_kernel() could've stolen some of our
-+		 * child events and still have them on its free_list. In that
-+		 * case we must wait for these events to have been freed (in
-+		 * particular all their references to this task must've been
-+		 * dropped).
-+		 *
-+		 * Without this copy_process() will unconditionally free this
-+		 * task (irrespective of its reference count) and
-+		 * _free_event()'s put_task_struct(event->hw.target) will be a
-+		 * use-after-free.
-+		 *
-+		 * Wait for all events to drop their context reference.
-+		 */
-+		wait_var_event(&ctx->refcount, refcount_read(&ctx->refcount) == 1);
-+		put_ctx(ctx); /* must be last */
- 	}
- }
- 
+ 	preempt_disable();
+-	copy_fpregs_to_fpstate(&current->thread.fpu);
++	copy_fpregs_to_fpstate(&vcpu->arch.user_fpu);
+ 	/* PKRU is separately restored in kvm_x86_ops->run.  */
+ 	__copy_kernel_to_fpregs(&vcpu->arch.guest_fpu->state,
+ 				~XFEATURE_MASK_PKRU);
+@@ -8185,7 +8185,7 @@ static void kvm_put_guest_fpu(struct kvm
+ {
+ 	preempt_disable();
+ 	copy_fpregs_to_fpstate(vcpu->arch.guest_fpu);
+-	copy_kernel_to_fpregs(&current->thread.fpu.state);
++	copy_kernel_to_fpregs(&vcpu->arch.user_fpu.state);
+ 	preempt_enable();
+ 	++vcpu->stat.fpu_reload;
+ 	trace_kvm_fpu(0);
 
 
