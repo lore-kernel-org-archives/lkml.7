@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DE6C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F06C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7881B22CD3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A675822BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148518;
-	bh=p68XiTC1LTWllQk29SVgoAQsHI6JE9Recy3GGh2LFFA=;
+	s=default; t=1564148522;
+	bh=DM7dIiX4yXoSE31CLN5Uu6r4oDMxr77YDotnzPxyWQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bpwbQUE4NRzwJR/GgxYCK+HmaKKajzdSTrWuV90e4eywEy7+bbn+SiPW+Rs8pX6mW
-	 QkVur23sFvYeTGbdEh12n1udfKloy21bNaQSME0RTI3agQuy5zxsCpU/RJr3dUsx1v
-	 20iqRRp98GFlaxzIfA2XH3OlTmwBhr9S1+9cDloQ=
+	b=qwauDn75ywDCRAKDN8HOJBsccr1KwM5ZMUTxnmbvSJejAaDw60luu6ISExgCZITI6
+	 barV7JSjFDzBST9T6Aq1bgYLpFw99fmD0YGOI/i4MaSPPuk4/o4dmZGf/SbIo+9x26
+	 GCttEJUGZvkeT0OHmsBgqPVq09JeiJjeamSgkD/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfGZNl5 (ORCPT
+        id S2387824AbfGZNmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:41:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48914 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:42:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727542AbfGZNly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:41:54 -0400
+        id S1727620AbfGZNl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:41:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE6DC22BF5;
-        Fri, 26 Jul 2019 13:41:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CB7622CC2;
+        Fri, 26 Jul 2019 13:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148513;
-        bh=p68XiTC1LTWllQk29SVgoAQsHI6JE9Recy3GGh2LFFA=;
+        s=default; t=1564148518;
+        bh=DM7dIiX4yXoSE31CLN5Uu6r4oDMxr77YDotnzPxyWQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oEFDqa+AfqiuXz9z/Ug67UyN9k7Oxz3YK+CAn3dPnJEA5Pf1Rx5sGEFqYcqUBE03r
-         N8xUiu0gDehocxVgsg5h7uMTtFbjCKpx9Fvs+7SjCQeiD4P5SPF4kUO5slRQUDmuzV
-         xKRk6YmVo2gUsjWEOpegzb+u+SHqKwoGV1Q9txfc=
+        b=DTMgiuoKz6sh6z+D9SeXycpHulUeUXqXdQ7rMCpu+NGFM+tR0pAUimuMujCUD4Hfx
+         URufPQcMHEYqom0W21vnIxIRBfIBfcU1rzEB631p4luJ2TSS9gLIrHzaLD8MBZV9Ih
+         GujEm8obuRzhQw4aJHJGzi2bNKLuvIMQtq6EeYl8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 76/85] x86/uaccess: Remove ELF function annotation from copy_user_handle_tail()
-Date:   Fri, 26 Jul 2019 09:39:26 -0400
-Message-Id: <20190726133936.11177-76-sashal@kernel.org>
+Cc:     Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 80/85] bnxt_en: Fix VNIC accounting when enabling aRFS on 57500 chips.
+Date:   Fri, 26 Jul 2019 09:39:30 -0400
+Message-Id: <20190726133936.11177-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -60,48 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 3a6ab4bcc52263dd5b1d2fd2e4ce95a38c798b4d ]
+[ Upstream commit 9b3d15e6b05e0b916be5fbd915f90300a403098b ]
 
-After an objtool improvement, it's complaining about the CLAC in
-copy_user_handle_tail():
+Unlike legacy chips, 57500 chips don't need additional VNIC resources
+for aRFS/ntuple.  Fix the code accordingly so that we don't reserve
+and allocate additional VNICs on 57500 chips.  Without this patch,
+the driver is failing to initialize when it tries to allocate extra
+VNICs.
 
-  arch/x86/lib/copy_user_64.o: warning: objtool: .altinstr_replacement+0x12: redundant UACCESS disable
-  arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x6: (alt)
-  arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x2: (alt)
-  arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x0: <=== (func)
-
-copy_user_handle_tail() is incorrectly marked as a callable function, so
-objtool is rightfully concerned about the CLAC with no corresponding
-STAC.
-
-Remove the ELF function annotation.  The copy_user_handle_tail() code
-path is already verified by objtool because it's jumped to by other
-callable asm code (which does the corresponding STAC).
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/6b6e436774678b4b9873811ff023bd29935bee5b.1563413318.git.jpoimboe@redhat.com
+Fixes: ac33906c67e2 ("bnxt_en: Add support for aRFS on 57500 chips.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/lib/copy_user_64.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/lib/copy_user_64.S b/arch/x86/lib/copy_user_64.S
-index 378a1f70ae7d..4fe1601dbc5d 100644
---- a/arch/x86/lib/copy_user_64.S
-+++ b/arch/x86/lib/copy_user_64.S
-@@ -239,7 +239,7 @@ copy_user_handle_tail:
- 	ret
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index f758b2e0591f..9a2a0d24d20d 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -3022,7 +3022,7 @@ static int bnxt_alloc_vnics(struct bnxt *bp)
+ 	int num_vnics = 1;
  
- 	_ASM_EXTABLE_UA(1b, 2b)
--ENDPROC(copy_user_handle_tail)
-+END(copy_user_handle_tail)
+ #ifdef CONFIG_RFS_ACCEL
+-	if (bp->flags & BNXT_FLAG_RFS)
++	if ((bp->flags & (BNXT_FLAG_RFS | BNXT_FLAG_CHIP_P5)) == BNXT_FLAG_RFS)
+ 		num_vnics += bp->rx_nr_rings;
+ #endif
  
- /*
-  * copy_user_nocache - Uncached memory copy with exception handling
+@@ -7124,6 +7124,9 @@ static int bnxt_alloc_rfs_vnics(struct bnxt *bp)
+ #ifdef CONFIG_RFS_ACCEL
+ 	int i, rc = 0;
+ 
++	if (bp->flags & BNXT_FLAG_CHIP_P5)
++		return 0;
++
+ 	for (i = 0; i < bp->rx_nr_rings; i++) {
+ 		struct bnxt_vnic_info *vnic;
+ 		u16 vnic_id = i + 1;
+@@ -9587,7 +9590,7 @@ int bnxt_check_rings(struct bnxt *bp, int tx, int rx, bool sh, int tcs,
+ 		return -ENOMEM;
+ 
+ 	vnics = 1;
+-	if (bp->flags & BNXT_FLAG_RFS)
++	if ((bp->flags & (BNXT_FLAG_RFS | BNXT_FLAG_CHIP_P5)) == BNXT_FLAG_RFS)
+ 		vnics += rx_rings;
+ 
+ 	if (bp->flags & BNXT_FLAG_AGG_RINGS)
 -- 
 2.20.1
 
