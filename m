@@ -2,79 +2,100 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA19C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96A5C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69B9720823
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:14:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=saltedge.com header.i=@saltedge.com header.b="WFgDVPyn"
+	by mail.kernel.org (Postfix) with ESMTP id 8920A20823
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:18:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfGZMOL (ORCPT
+        id S1726724AbfGZMSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:14:11 -0400
-Received: from mail.saltedge.com ([148.251.41.210]:48540 "EHLO
-        mail.saltedge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfGZMOK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:14:10 -0400
-X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Fri, 26 Jul 2019 08:14:10 EDT
-Received: from [192.168.100.145] (unknown [195.22.227.78])
-        by mail.saltedge.com (Postfix) with ESMTPSA id 8238060538;
-        Fri, 26 Jul 2019 12:07:00 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.9.2 mail.saltedge.com 8238060538
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=saltedge.com;
-        s=mail; t=1564142821;
-        bh=x+Z5a9e8cJYLnAWaP567zFw2cFIDZlyHj4wl4q4yb28=;
-        h=Subject:From:To:Cc:Date:From;
-        b=WFgDVPynf+7Gr9tbYyHNLsmEWubiJz39Z8O6fkbxNhUm2xX1rFXCRKmGyv1+jhYqQ
-         HUvEGIaY8DjCZkLZJUPHwNJ0uw9vdfujBUJUKo2iBXPZLy+Mkoy8yYJpN6pfOfs4Ho
-         7PdoFXe78twwr9PXRySqy8OLml/xxXDZbAV4FlWU=
-Message-ID: <667a5b466e7daa22e1901d02cc708542020513b0.camel@saltedge.com>
-Subject: [PATCH][RESEND] drm/amdkfd: add missing 'break' statement
-From:   Alexandr Savca <alexandr.savca@saltedge.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     alexander.deucher@amd.com, christian.koenig@amd.com,
-        David1.Zhou@amd.com, oded.gabbay@gmail.com
-Date:   Fri, 26 Jul 2019 15:07:15 +0300
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 26 Jul 2019 08:18:24 -0400
+Received: from mga09.intel.com ([134.134.136.24]:41703 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbfGZMSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 08:18:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 05:18:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,310,1559545200"; 
+   d="scan'208";a="345809256"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 26 Jul 2019 05:18:21 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id BBB8245; Fri, 26 Jul 2019 15:18:20 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 2/2] extcon: axp288: Use for_each_set_bit() in axp288_extcon_log_rsi()
+Date:   Fri, 26 Jul 2019 15:18:20 +0300
+Message-Id: <20190726121820.69679-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190726121820.69679-1-andriy.shevchenko@linux.intel.com>
+References: <20190726121820.69679-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.100.0 at mail.saltedge.com
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing 'break' statement which was introduced by the previous
-commit.
+This simplifies and standardizes axp288_extcon_log_rsi()
+by using for_each_set_bit() library function.
 
-Signed-off-by: Alexandr Savca <alexandr.savca@saltedge.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_crat.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/extcon/extcon-axp288.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
-b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
-index 792371442195..4e3fc284f6ac 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
-@@ -668,6 +668,7 @@ static int kfd_fill_gpu_cache_info(struct kfd_dev
-*kdev,
-        case CHIP_RAVEN:
-                pcache_info = raven_cache_info;
-                num_of_cache_types = ARRAY_SIZE(raven_cache_info);
-+               break;
-        case CHIP_NAVI10:
-                pcache_info = navi10_cache_info;
-                num_of_cache_types = ARRAY_SIZE(navi10_cache_info);
+diff --git a/drivers/extcon/extcon-axp288.c b/drivers/extcon/extcon-axp288.c
+index 694a8d4a57ff..415afaf479e7 100644
+--- a/drivers/extcon/extcon-axp288.c
++++ b/drivers/extcon/extcon-axp288.c
+@@ -121,7 +121,6 @@ static const char * const axp288_pwr_up_down_info[] = {
+ 	"Last shutdown caused by PMIC UVLO threshold",
+ 	"Last shutdown caused by SOC initiated cold off",
+ 	"Last shutdown caused by user pressing the power button",
+-	NULL,
+ };
+ 
+ /*
+@@ -130,8 +129,8 @@ static const char * const axp288_pwr_up_down_info[] = {
+  */
+ static void axp288_extcon_log_rsi(struct axp288_extcon_info *info)
+ {
+-	const char * const *rsi;
+ 	unsigned int val, i, clear_mask = 0;
++	unsigned long bits;
+ 	int ret;
+ 
+ 	ret = regmap_read(info->regmap, AXP288_PS_BOOT_REASON_REG, &val);
+@@ -140,12 +139,10 @@ static void axp288_extcon_log_rsi(struct axp288_extcon_info *info)
+ 		return;
+ 	}
+ 
+-	for (i = 0, rsi = axp288_pwr_up_down_info; *rsi; rsi++, i++) {
+-		if (val & BIT(i)) {
+-			dev_dbg(info->dev, "%s\n", *rsi);
+-			clear_mask |= BIT(i);
+-		}
+-	}
++	bits = val & GENMASK(ARRAY_SIZE(axp288_pwr_up_down_info) - 1, 0);
++	for_each_set_bit(i, &bits, ARRAY_SIZE(axp288_pwr_up_down_info))
++		dev_dbg(info->dev, "%s\n", axp288_pwr_up_down_info[i]);
++	clear_mask = bits;
+ 
+ 	/* Clear the register value for next reboot (write 1 to clear bit) */
+ 	regmap_write(info->regmap, AXP288_PS_BOOT_REASON_REG, clear_mask);
 -- 
 2.20.1
 
