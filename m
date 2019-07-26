@@ -2,107 +2,140 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC0AC76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F186AC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6F042080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:01:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xElqh+q7"
+	by mail.kernel.org (Postfix) with ESMTP id C858522BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfGZQBB (ORCPT
+        id S1726982AbfGZQDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:01:01 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:16842 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726000AbfGZQBB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:01:01 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6QFuGIF006272;
-        Fri, 26 Jul 2019 18:00:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=Y75BNG+ZG7vXH0PyAhO98l9SHQ/zPoys4fP5bNxiSws=;
- b=xElqh+q7EgccAjNQffkCsqWxvs1nv14CqX4moJ8gnskKJjhmcurLrp+L6KGCmIbqUU+8
- idG0GWPq5KfFQxUHs/pA/fE6LLVPbe7a//MWkqB3C3kuTz85tjREBD/c7kMCXbmU+VDB
- ZC6tyHrW+L6KDVBw1ohv2H7vYRBm05IizZ0hIoVNFb6M+jS+aiJjfX0TQTpcih7j9TTW
- qgnLb3PZdzbMD0Y+9EHvhA/SBUIzrbd4I2DDFeb7ifE2VD2+/+uonT2CbxWm710JcTWu
- +AeFXe3AmdqjLHxLmPQtNZeRXVbkrVWIvDieTT/1KAwarNxxemk09vbJe5BS4jHwJvG7 2w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2tx60abn3e-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 26 Jul 2019 18:00:08 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A40D634;
-        Fri, 26 Jul 2019 16:00:07 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4EF254F17;
-        Fri, 26 Jul 2019 16:00:07 +0000 (GMT)
-Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 26 Jul
- 2019 18:00:06 +0200
-Subject: Re: [PATCH 0/5] Add missing vdda-supply to STM32 ADC
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>, <jic23@kernel.org>,
-        <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1560947398-11592-1-git-send-email-fabrice.gasnier@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <b91163f5-ad6f-0a22-eb8a-ceb0b0c056c6@st.com>
-Date:   Fri, 26 Jul 2019 18:00:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 26 Jul 2019 12:03:03 -0400
+Received: from mga12.intel.com ([192.55.52.136]:26255 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726890AbfGZQDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 12:03:03 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 09:03:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
+   d="scan'208";a="198413741"
+Received: from gliakhov-mobl2.ger.corp.intel.com (HELO ubuntu) ([10.249.35.244])
+  by fmsmga002.fm.intel.com with ESMTP; 26 Jul 2019 09:03:00 -0700
+Date:   Fri, 26 Jul 2019 18:02:59 +0200
+From:   Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 38/40] soundwire: cadence_master: make
+ clock stop exit configurable on init
+Message-ID: <20190726160258.GN16003@ubuntu>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-39-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1560947398-11592-1-git-send-email-fabrice.gasnier@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-26_12:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725234032.21152-39-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrice
-
-On 6/19/19 2:29 PM, Fabrice Gasnier wrote:
-> Add missing vdda-supply, analog power supply, to STM32 ADC. When vdda is
-> an independent supply, it needs to be properly turned on or off to supply
-> the ADC.
-> This series proposes fixes for the dt-bindings, IIO driver and relevant
-> device tree files.
+On Thu, Jul 25, 2019 at 06:40:30PM -0500, Pierre-Louis Bossart wrote:
+> The use of clock stop is not a requirement, the IP can e.g. be
+> completely power gated and not detect any wakes while in s2idle/deep
+> sleep.
 > 
-> Fabrice Gasnier (5):
->    dt-bindings: iio: adc: stm32: add missing vdda supply
->    iio: adc: stm32-adc: add missing vdda-supply
->    ARM: dts: stm32: remove fixed regulator unit address on stm32429i-eval
->    ARM: dts: stm32: add missing vdda-supply to adc on stm32429i-eval
->    ARM: dts: stm32: add missing vdda-supply to adc on stm32h743i-eval
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/cadence_master.c | 15 ++++++++-------
+>  drivers/soundwire/cadence_master.h |  2 +-
+>  drivers/soundwire/intel.c          |  2 +-
+>  3 files changed, 10 insertions(+), 9 deletions(-)
 > 
->   .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |  1 +
->   arch/arm/boot/dts/stm32429i-eval.dts               | 25 +++++++++++-----------
->   arch/arm/boot/dts/stm32h743i-eval.dts              |  1 +
->   drivers/iio/adc/stm32-adc-core.c                   | 21 +++++++++++++++++-
->   4 files changed, 35 insertions(+), 13 deletions(-)
+> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+> index 53278aa2436f..4ab6f70d7705 100644
+> --- a/drivers/soundwire/cadence_master.c
+> +++ b/drivers/soundwire/cadence_master.c
+> @@ -1010,7 +1010,7 @@ static u32 cdns_set_default_frame_shape(int n_rows, int n_cols)
+>   * sdw_cdns_init() - Cadence initialization
+>   * @cdns: Cadence instance
+>   */
+> -int sdw_cdns_init(struct sdw_cdns *cdns)
+> +int sdw_cdns_init(struct sdw_cdns *cdns, bool clock_stop_exit)
+>  {
+>  	struct sdw_bus *bus = &cdns->bus;
+>  	struct sdw_master_prop *prop = &bus->prop;
+> @@ -1018,12 +1018,13 @@ int sdw_cdns_init(struct sdw_cdns *cdns)
+>  	int divider;
+>  	int ret;
+>  
+> -	/* Exit clock stop */
+> -	ret = cdns_clear_bit(cdns, CDNS_MCP_CONTROL,
+> -			     CDNS_MCP_CONTROL_CLK_STOP_CLR);
+> -	if (ret < 0) {
+> -		dev_err(cdns->dev, "Couldn't exit from clock stop\n");
+> -		return ret;
+> +	if (clock_stop_exit) {
+> +		ret = cdns_clear_bit(cdns, CDNS_MCP_CONTROL,
+> +				     CDNS_MCP_CONTROL_CLK_STOP_CLR);
+> +		if (ret < 0) {
+> +			dev_err(cdns->dev, "Couldn't exit from clock stop\n");
+> +			return ret;
+> +		}
+>  	}
+>  
+>  	/* Set clock divider */
+> diff --git a/drivers/soundwire/cadence_master.h b/drivers/soundwire/cadence_master.h
+> index 1a0ba36dd78f..091b771b570d 100644
+> --- a/drivers/soundwire/cadence_master.h
+> +++ b/drivers/soundwire/cadence_master.h
+> @@ -158,7 +158,7 @@ extern struct sdw_master_ops sdw_cdns_master_ops;
+>  irqreturn_t sdw_cdns_irq(int irq, void *dev_id);
+>  irqreturn_t sdw_cdns_thread(int irq, void *dev_id);
+>  
+> -int sdw_cdns_init(struct sdw_cdns *cdns);
+> +int sdw_cdns_init(struct sdw_cdns *cdns, bool clock_stop_exit);
+>  int sdw_cdns_pdi_init(struct sdw_cdns *cdns,
+>  		      struct sdw_cdns_stream_config config);
+>  int sdw_cdns_exit_reset(struct sdw_cdns *cdns);
+> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+> index 1192d5775484..db7bf2912767 100644
+> --- a/drivers/soundwire/intel.c
+> +++ b/drivers/soundwire/intel.c
+> @@ -1043,7 +1043,7 @@ static int intel_init(struct sdw_intel *sdw)
+>  	intel_link_power_up(sdw);
+>  	intel_shim_init(sdw);
+>  
+> -	return sdw_cdns_init(&sdw->cdns);
+> +	return sdw_cdns_init(&sdw->cdns, false);
+
+This is the only caller of this function so far, so, it looks like
+the second argument ATM is always "false." I assume you foresee other
+uses with "true" in the future, otherwise maybe just fix it to false
+in the function?
+
+Thanks
+Guennadi
+
+>  }
+>  
+>  /*
+> -- 
+> 2.20.1
 > 
-
-DT patches applied on stm32-next. I plan to add them in my PR for v5.4.
-However those patches are marked as "fixes", do you see an issue to only 
-send it for v5.4 ?
-
-Regards
-alex
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
