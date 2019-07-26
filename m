@@ -2,82 +2,123 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C49B7C41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C802BC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81FF022BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 970B82173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:29:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="LVruWYJs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfGZX0C (ORCPT
+        id S1727321AbfGZX3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 19:26:02 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:46823 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfGZX0B (ORCPT
+        Fri, 26 Jul 2019 19:29:41 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36413 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfGZX3l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 19:26:01 -0400
-Received: by mail-io1-f70.google.com with SMTP id s83so60364289iod.13
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 16:26:01 -0700 (PDT)
+        Fri, 26 Jul 2019 19:29:41 -0400
+Received: by mail-io1-f65.google.com with SMTP id o9so4544340iom.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 16:29:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=f0NauJHVqo/HIKObdVkdw9yTl/4NywZItEu7j8mg3M0=;
+        b=LVruWYJsd3bjeNXq3I2xolL9voc9Yk1+77O3/kR4rln3y9Svg6v4WdWHkyaFKL0T0f
+         cFfOXSawqqUdLG7bNbuZIZ4hWhi/FEM5ZaCqLQ0Alt/LtYn8sgnlnHCSKSQjF8JaxwVL
+         HPlBrIWyvIwW0JBa476SDk1xrjw/VXS01l/gIp1t/nCo6I10x8XsldgLfDqlbrx43DY4
+         YA5h5hXLyD6tGPppVY74MabkYpC3wmz//jlD+RN9PyFexGFTkrawNpFHSR3A5p4HWVj3
+         HGn6JfMJEMRwafxo6+6gs4TXmwAs/MnXNNR9bJeNJhq+6jE/btoTJJJYbhZwKT422qC3
+         jVqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=jU9fP+7H8MVZejaHdG74+bs1E1cZqrGALTWcbghPSM4=;
-        b=KuCvdjMF7VmLhs0tN8Ok4PTiN/G5Z3WFi/nGNRljSROIXvV9xMD+pWjBpx6L2D+4Zj
-         NluVKwNmPCvpRz67fx8LfuUkjCiTwov4GOigW/uLzqmDp2zGqZvfF0S2VLOXKomD6Qbc
-         +P7n+J9Cdn8BBI5B+JDiLRSWOPV+2OjntucE87BQLeLDEPlQNV365cA09qF9LJoqnNEK
-         elBeTYqIbj2snsFgaeAXw17Wkfh5FOHjBMmZxy/I415TqgNyxugxMYq8jQWVYM/aOUZj
-         TT+dLA37ZnAexNDi7W9yhumEfjLakdDSA9adH5UkY2i1K0/PB8zlxJLE7oz4emg2GXQD
-         R6vw==
-X-Gm-Message-State: APjAAAXQpNoiPKheyaOI5diG28n/+eEjb8mq63Quw6ZJwr6NQcNofKZV
-        MGUxytAM/ESvjmLOd1evi4TnX+O02rN2ZKFa62C0G2ASabUg
-X-Google-Smtp-Source: APXvYqxovLmXIv75laVrMtZvlr79yeQWRntZAt1hwL6RBmKRhi84q3dBc8vJmpG72hkv1CJ8iH3NYbDZi9CnPAFhes4c6TPcq2Lv
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=f0NauJHVqo/HIKObdVkdw9yTl/4NywZItEu7j8mg3M0=;
+        b=PwFtQUEmWhwVHgO0PPEWzDA74RwkPmHAdYlgz1zqn65Qa2BytqHc78OaoTYjOxrtm0
+         2ys+ONU6o8T2u8cc8ZvTIJFVh17D8eboQXxbMcAKtlYA+AJwJ5JQIW0VaiQITY3gvggA
+         2CpNW3AKTq3eYixgXZonAfAhMKizki/IrYXHPTe+SAf4tD0Qr7QeAsOmJ3njof8KxOUY
+         H6rygb485/iVdoRHpxHS/kbQjGBMrwocvKnFpqHrxfai0hbSWsOWJz/uiiOjx8eMRYL8
+         H/3ECsxC7is9RSeT5r+ENOACECZ2SjfwKJcQyzo33XBuF7NrFpLPy4FACOsQpHSgRXB1
+         rcdw==
+X-Gm-Message-State: APjAAAV+FLFj1ngzszO9velfiiXdrC2e7RUO8Xd9KwwHrFGWp+2ni955
+        XdhwpOGUYIVckalf73hVpera/w==
+X-Google-Smtp-Source: APXvYqzrzFt15zIbn3sWYkAdzt0egDJg9bQUJpyBfwuwX6IMgrArgwXByra2h9LIHUx49dHbxOqrAA==
+X-Received: by 2002:a5d:928a:: with SMTP id s10mr64008087iom.29.1564183780127;
+        Fri, 26 Jul 2019 16:29:40 -0700 (PDT)
+Received: from localhost (67-0-24-96.albq.qwest.net. [67.0.24.96])
+        by smtp.gmail.com with ESMTPSA id p25sm44650795iol.48.2019.07.26.16.29.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 26 Jul 2019 16:29:39 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 16:29:38 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Atish Patra <atish.patra@wdc.com>
+cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alan Kao <alankao@andestech.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Allison Randal <allison@lohutok.net>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 3/4] RISC-V: Support case insensitive ISA string
+ parsing.
+In-Reply-To: <a8a6be2c-2dcb-fe58-2c32-e3baa357819c@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1907261625220.26670@viisi.sifive.com>
+References: <20190726194638.8068-1-atish.patra@wdc.com> <20190726194638.8068-3-atish.patra@wdc.com> <alpine.DEB.2.21.9999.1907261346560.26670@viisi.sifive.com> <a8a6be2c-2dcb-fe58-2c32-e3baa357819c@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-X-Received: by 2002:a5e:d611:: with SMTP id w17mr24902658iom.63.1564183560976;
- Fri, 26 Jul 2019 16:26:00 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 16:26:00 -0700
-In-Reply-To: <000000000000edcb3c058e6143d5@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000083ffc4058e9dddf0@google.com>
-Subject: Re: memory leak in kobject_set_name_vargs (2)
-From:   syzbot <syzbot+ad8ca40ecd77896d51e2@syzkaller.appspotmail.com>
-To:     catalin.marinas@arm.com, davem@davemloft.net, dvyukov@google.com,
-        herbert@gondor.apana.org.au, kuznet@ms2.inr.ac.ru,
-        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, luciano.coelho@intel.com,
-        netdev@vger.kernel.org, steffen.klassert@secunet.com,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Fri, 26 Jul 2019, Atish Patra wrote:
 
-commit 0e034f5c4bc408c943f9c4a06244415d75d7108c
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed May 18 18:51:25 2016 +0000
+> On 7/26/19 1:47 PM, Paul Walmsley wrote:
+> > On Fri, 26 Jul 2019, Atish Patra wrote:
+> > 
+> > > As per riscv specification, ISA naming strings are
+> > > case insensitive. However, currently only lower case
+> > > strings are parsed during cpu procfs.
+> > > 
+> > > Support parsing of upper case letters as well.
+> > > 
+> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > 
+> > Is there a use case that's driving this, or 
+> 
+> Currently, we use all lower case isa string in kvmtool. But somebody can have
+> uppercase letters in future as spec allows it.
+>
+> 
+> can we just say, "use
+> > lowercase letters" and leave it at that?
+> > 
+> 
+> In that case, it will not comply with RISC-V spec. Is that okay ?
 
-     iwlwifi: fix mis-merge that breaks the driver
+I think that section of the specification is mostly concerned with someone 
+trying to define "f" as a different extension than "F", or something like 
+that.  I'm not sure that it imposes any constraint that software must 
+accept both upper and lower case ISA strings.  
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10f955f0600000
-start commit:   3bfe1fc4 Merge tag 'for-5.3/dm-changes-2' of git://git.ker..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=12f955f0600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14f955f0600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dcfc65ee492509c6
-dashboard link: https://syzkaller.appspot.com/bug?extid=ad8ca40ecd77896d51e2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=135cbed0600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14dd4e34600000
+What gives me pause here is that this winds up impacting DT schema 
+validation:
 
-Reported-by: syzbot+ad8ca40ecd77896d51e2@syzkaller.appspotmail.com
-Fixes: 0e034f5c4bc4 ("iwlwifi: fix mis-merge that breaks the driver")
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/riscv/cpus.yaml#n41
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+
+- Paul
