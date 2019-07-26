@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2C1C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4A4C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 145A622CEB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F8122CE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149342;
-	bh=EZUN6warFmuHuCAzru1zhkp3J+uC5cuJqeHTnXFdn80=;
+	s=default; t=1564149346;
+	bh=EU5siDgREa5O/B6bp+8ooCim/FYdlIjE/joDcocBlxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kfd6maPwOaCerHfn6QkCyCUTQ1cHnaLdaOwUVUd1MjB0BW54IhZiWSJEjjv0wdZsm
-	 2RC3secbFPh/R9g25D+n/6U/agKv07EXMLnXQrb1ifRRYw6wr2dhqj6ApHaPwgAYmv
-	 sobOdIEUONrSBYmvf+bfINBCEoy3G7Tsy4s/pGnY=
+	b=rRlll1+XW9TgUcOhSjLgiF4vyifhiyuOoEP/mR8ATJ/Ah4+8inT7m3BI8Hp6lPvbS
+	 zebrI9HnHzcrwQVvjCQpPxlzTU7oSIKDubBRTvNJvhJ+XSwnFXaeT4mq1w0xT3iRZj
+	 gQA0nZkqv/I6PAS5K+SpYjetzPE54RYlVdv0lX8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388459AbfGZNym (ORCPT
+        id S1728435AbfGZNzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:54:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50084 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:55:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388026AbfGZNmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:42:45 -0400
+        id S2387450AbfGZNmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:42:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 883C522CC2;
-        Fri, 26 Jul 2019 13:42:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4928822BF5;
+        Fri, 26 Jul 2019 13:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148564;
-        bh=EZUN6warFmuHuCAzru1zhkp3J+uC5cuJqeHTnXFdn80=;
+        s=default; t=1564148534;
+        bh=EU5siDgREa5O/B6bp+8ooCim/FYdlIjE/joDcocBlxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ltk+6fJZ7DGM/RazKyiJ65ESuHFMW0m9Te63bwk3BNkmVYsHYMLernaQKnX166jHx
-         Ed1Dl8esTRPi1wniCTdOl6afRJz1cRBtSpqQjr0qIH+5VYq6+M24Rt/yJQk28jsQhf
-         1YCNFzS12yA5TMZF/VPxYm8Qx55SE63+YeDtXalo=
+        b=NTUvZZV26B+3dIqiPqPQ578xTtDzxGcf2GXMmYvU7hWEuSlp1aPD63ijaZ2p9cTzz
+         xGjNpVTl5/f+VfiU33DN2AAjEQ0/GR8zh+a7wTHqXHHaUjSJK0AVIjYIbNRPABCAx+
+         o5x1ZdGxPSMygkBD9aHmiPdXC9S1HO60qKCuapRU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeff Layton <jlayton@kernel.org>, "Yan, Zheng" <zyan@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 20/47] ceph: return -ERANGE if virtual xattr value didn't fit in buffer
-Date:   Fri, 26 Jul 2019 09:41:43 -0400
-Message-Id: <20190726134210.12156-20-sashal@kernel.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 03/47] ARM: dts: rockchip: Make rk3288-veyron-mickey's emmc work again
+Date:   Fri, 26 Jul 2019 09:41:26 -0400
+Message-Id: <20190726134210.12156-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
 References: <20190726134210.12156-1-sashal@kernel.org>
@@ -59,69 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 3b421018f48c482bdc9650f894aa1747cf90e51d ]
+[ Upstream commit 99fa066710f75f18f4d9a5bc5f6a711968a581d5 ]
 
-The getxattr manpage states that we should return ERANGE if the
-destination buffer size is too small to hold the value.
-ceph_vxattrcb_layout does this internally, but we should be doing
-this for all vxattrs.
+When I try to boot rk3288-veyron-mickey I totally fail to make the
+eMMC work.  Specifically my logs (on Chrome OS 4.19):
 
-Fix the only caller of getxattr_cb to check the returned size
-against the buffer length and return -ERANGE if it doesn't fit.
-Drop the same check in ceph_vxattrcb_layout and just rely on the
-caller to handle it.
+  mmc_host mmc1: card is non-removable.
+  mmc_host mmc1: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
+  mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot req 52000000Hz, actual 50000000HZ div = 0)
+  mmc1: switch to bus width 8 failed
+  mmc1: switch to bus width 4 failed
+  mmc1: new high speed MMC card at address 0001
+  mmcblk1: mmc1:0001 HAG2e 14.7 GiB
+  mmcblk1boot0: mmc1:0001 HAG2e partition 1 4.00 MiB
+  mmcblk1boot1: mmc1:0001 HAG2e partition 2 4.00 MiB
+  mmcblk1rpmb: mmc1:0001 HAG2e partition 3 4.00 MiB, chardev (243:0)
+  mmc_host mmc1: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
+  mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot req 52000000Hz, actual 50000000HZ div = 0)
+  mmc1: switch to bus width 8 failed
+  mmc1: switch to bus width 4 failed
+  mmc1: tried to HW reset card, got error -110
+  mmcblk1: error -110 requesting status
+  mmcblk1: recovery failed!
+  print_req_error: I/O error, dev mmcblk1, sector 0
+  ...
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
-Acked-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+When I remove the '/delete-property/mmc-hs200-1_8v' then everything is
+hunky dory.
+
+That line comes from the original submission of the mickey dts
+upstream, so presumably at the time the HS200 was failing and just
+enumerating things as a high speed device was fine.  ...or maybe it's
+just that some mickey devices work when enumerating at "high speed",
+just not mine?
+
+In any case, hs200 seems good now.  Let's turn it on.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/xattr.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/rk3288-veyron-mickey.dts | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-index 996ee87b1eaf..7e6d3df99f2f 100644
---- a/fs/ceph/xattr.c
-+++ b/fs/ceph/xattr.c
-@@ -79,7 +79,7 @@ static size_t ceph_vxattrcb_layout(struct ceph_inode_info *ci, char *val,
- 	const char *ns_field = " pool_namespace=";
- 	char buf[128];
- 	size_t len, total_len = 0;
--	int ret;
-+	ssize_t ret;
+diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
+index 1e0158acf895..a593d0a998fc 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
+@@ -124,10 +124,6 @@
+ 	};
+ };
  
- 	pool_ns = ceph_try_get_string(ci->i_layout.pool_ns);
- 
-@@ -103,11 +103,8 @@ static size_t ceph_vxattrcb_layout(struct ceph_inode_info *ci, char *val,
- 	if (pool_ns)
- 		total_len += strlen(ns_field) + pool_ns->len;
- 
--	if (!size) {
--		ret = total_len;
--	} else if (total_len > size) {
--		ret = -ERANGE;
--	} else {
-+	ret = total_len;
-+	if (size >= total_len) {
- 		memcpy(val, buf, len);
- 		ret = len;
- 		if (pool_name) {
-@@ -817,8 +814,11 @@ ssize_t __ceph_getxattr(struct inode *inode, const char *name, void *value,
- 		if (err)
- 			return err;
- 		err = -ENODATA;
--		if (!(vxattr->exists_cb && !vxattr->exists_cb(ci)))
-+		if (!(vxattr->exists_cb && !vxattr->exists_cb(ci))) {
- 			err = vxattr->getxattr_cb(ci, value, size);
-+			if (size && size < err)
-+				err = -ERANGE;
-+		}
- 		return err;
- 	}
- 
+-&emmc {
+-	/delete-property/mmc-hs200-1_8v;
+-};
+-
+ &i2c2 {
+ 	status = "disabled";
+ };
 -- 
 2.20.1
 
