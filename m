@@ -2,78 +2,81 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7DBC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF4EC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FDC020823
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A669229F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:23:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ckcCvLk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfGZMSY (ORCPT
+        id S1726857AbfGZMXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:18:24 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20543 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbfGZMSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:18:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 05:18:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,310,1559545200"; 
-   d="scan'208";a="322025492"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 26 Jul 2019 05:18:21 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id B2B10130; Fri, 26 Jul 2019 15:18:20 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ramakrishna Pallala <ramakrishna.pallala@intel.com>
-Subject: [PATCH v2 1/2] extcon: axp288: Add missed error check
-Date:   Fri, 26 Jul 2019 15:18:19 +0300
-Message-Id: <20190726121820.69679-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 26 Jul 2019 08:23:12 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32931 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbfGZMXM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 08:23:12 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f20so15487396pgj.0;
+        Fri, 26 Jul 2019 05:23:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9hyjYvg2SOhR1h3z5jY8x3YZyG64TvBUR90jvmGo2zs=;
+        b=ckcCvLk9nUedm8Aee0E7hamfIGWSj7fqwKIX4PzIO8tqjaTlIgfzDkJokJf3lf4mn5
+         39swBFid2LEqdL8XWkoc2NzZNqm74G/1+31VQFZedpWurkwErJL7Wl3OXmDQhd0g4q2S
+         9XB8wGgY2whPuRKdDLYPkBEw3PdDru5FV3Iiqow79ihpyASIsaKte3lyyYjnANIaTiOR
+         oA+hMyiSTcIz2ZiwauEnb7rq8YusNExVg++LYeEoneS1SKMizNKC54tgONpYD7DtSkTv
+         Nd5BMBcu34XYm5JNLuFwnNihlIFOVMEoVr3VuuP0W3FUMzWTKt4Bn4xYQlK9gOSoajwD
+         VdQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9hyjYvg2SOhR1h3z5jY8x3YZyG64TvBUR90jvmGo2zs=;
+        b=Py2/786ESTfeKQODGQug1EZIMfMh7ZLbE9RJkVY/F1yJYxQcVS2E28TnIAK5Oxslrr
+         PGKmmJ/s5hseR2Ki3AhKl1kEdM35xmgD3u1CKXvQpp6XtRwXXVYBdIkbZZA5jlL0Txwp
+         P6yAh+HsL0OQuRGeRsKBa83ROEKCFrHHRvDGucQimTdKZmjvb5nkB59ZBIWldEgPNwCr
+         somQv7yVNlWiFK6woMy04f9TQ/2fakxE5d72QFz2ckx5I8GPfFkMY1X3QFxiWztUFV7c
+         bBt/Fqv3HBohncwi1f29vJZ4+95GKLGOglY0w8DScea8Ky2bbZ0Qowa0Klj7VsKaGBuR
+         9p6A==
+X-Gm-Message-State: APjAAAU7yFenhfCS0LSlticWakezImwqUjkchl9B/P64dvzAt9lQNwZU
+        GJazLA7f0iqWSDjQIw0qg/Q=
+X-Google-Smtp-Source: APXvYqzO4K96AaGqO98QkzfkfxprJd0bEqKVN8cL8oqAlXnMLGGzafD1WSdywQAu4HPEBBBN27TeDg==
+X-Received: by 2002:a63:1020:: with SMTP id f32mr61801236pgl.203.1564143791381;
+        Fri, 26 Jul 2019 05:23:11 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
+        by smtp.gmail.com with ESMTPSA id z19sm45407894pgv.35.2019.07.26.05.23.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jul 2019 05:23:10 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 17:53:04 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 000/271] 4.19.61-stable review
+Message-ID: <20190726122304.GA4348@bharath12345-Inspiron-5559>
+References: <20190724191655.268628197@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It seems from the very beginning the error check has been missed
-in axp288_extcon_log_rsi(). Add it here.
+Built and booted on my x86_64 system. No dmesg regressions.
 
-Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-- added error message (Chanwoo)
- drivers/extcon/extcon-axp288.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/extcon/extcon-axp288.c b/drivers/extcon/extcon-axp288.c
-index 7254852e6ec0..694a8d4a57ff 100644
---- a/drivers/extcon/extcon-axp288.c
-+++ b/drivers/extcon/extcon-axp288.c
-@@ -135,6 +135,11 @@ static void axp288_extcon_log_rsi(struct axp288_extcon_info *info)
- 	int ret;
- 
- 	ret = regmap_read(info->regmap, AXP288_PS_BOOT_REASON_REG, &val);
-+	if (ret < 0) {
-+		dev_err(info->dev, "failed to read reset source indicator\n");
-+		return;
-+	}
-+
- 	for (i = 0, rsi = axp288_pwr_up_down_info; *rsi; rsi++, i++) {
- 		if (val & BIT(i)) {
- 			dev_dbg(info->dev, "%s\n", *rsi);
--- 
-2.20.1
-
+Thank you
+Bharath
