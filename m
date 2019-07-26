@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B445AC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9BBC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E41F22BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CB222CD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148638;
-	bh=Tv7PQycIOLXUxYYgmZAtDWIzm5x2CssZdmN374BwXI4=;
+	s=default; t=1564148643;
+	bh=f8DpPcbs0QW/h62qopKrOqchVsN4j5wUb77ZcIc2rUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C3qS8D0x3fdC/Xu+WQxqgQYa1i5pUp9MuFh2ah2JO4CjT1CtR4ywCeystlgvaXqlD
-	 7SrzFchZsmU/O3+r1VDwifv8TGBHYE8x7qHxqCp7W8w2y+AW6YTEBzYjcB69+IZN8O
-	 Ctsb7i4G6XLFWUxmW6wj7M01V9qnv+c2dGFQncYc=
+	b=iMAJ7eEl4EeqXj8J8NUJW6Cj0Y1Zb58EGP7wSqrUEeQvevQYhrNRDKC1sedK5zOvf
+	 GpMIbi1m8spnrwdKFG1argRmH+ZDOfuyXy/rKs0HR5yzWE+SzVQm7kXRpCcYETaSSI
+	 rffleXULpX/t7qLGF+z6iclijDGKhuZl8d1NrqXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbfGZNn5 (ORCPT
+        id S2387834AbfGZNoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:43:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51842 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:44:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387799AbfGZNny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:43:54 -0400
+        id S1727913AbfGZNn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:43:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2504022CD3;
-        Fri, 26 Jul 2019 13:43:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECD5522CC0;
+        Fri, 26 Jul 2019 13:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148634;
-        bh=Tv7PQycIOLXUxYYgmZAtDWIzm5x2CssZdmN374BwXI4=;
+        s=default; t=1564148638;
+        bh=f8DpPcbs0QW/h62qopKrOqchVsN4j5wUb77ZcIc2rUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cDDlb1wRW1k910Dr0zG5zldzWfsuKwJmV8tVfeFaoa8319Y4svm07U+RJHE00A8x6
-         /PovpbENu3LupirVIA1QHU5wFgxWNt7drbR0j3eWHBUYaU/L6bjmxl7UmNnzOt69fF
-         7aoHzfC5PAodKMWmO49dqfFvNmhnYrO7I6VIjUV0=
+        b=Y5nxlgXoJ3R4kFD4Op1YO3cYiOmbVCeo3q/8iaexittEzsl2UExTbhI4OvLyy1WH8
+         cn1BIxuYtbWM/5+50+wCXoHfS6CzdeywZ0mTCiU7b4H+/0vW12T686IXg3dOnrEGJ8
+         gpRRE4YOne3a2fPStN5oj5sivu0nyIDa762DeqVQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Block <bblock@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 16/37] scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
-Date:   Fri, 26 Jul 2019 09:43:11 -0400
-Message-Id: <20190726134332.12626-16-sashal@kernel.org>
+Cc:     Phong Tran <tranmanphong@gmail.com>,
+        syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 19/37] ISDN: hfcsusb: checking idx of ep configuration
+Date:   Fri, 26 Jul 2019 09:43:14 -0400
+Message-Id: <20190726134332.12626-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134332.12626-1-sashal@kernel.org>
 References: <20190726134332.12626-1-sashal@kernel.org>
@@ -61,116 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Block <bblock@linux.ibm.com>
+From: Phong Tran <tranmanphong@gmail.com>
 
-[ Upstream commit 484647088826f2f651acbda6bcf9536b8a466703 ]
+[ Upstream commit f384e62a82ba5d85408405fdd6aeff89354deaa9 ]
 
-GCC v9 emits this warning:
-      CC      drivers/s390/scsi/zfcp_erp.o
-    drivers/s390/scsi/zfcp_erp.c: In function 'zfcp_erp_action_enqueue':
-    drivers/s390/scsi/zfcp_erp.c:217:26: warning: 'erp_action' may be used uninitialized in this function [-Wmaybe-uninitialized]
-      217 |  struct zfcp_erp_action *erp_action;
-          |                          ^~~~~~~~~~
+The syzbot test with random endpoint address which made the idx is
+overflow in the table of endpoint configuations.
 
-This is a possible false positive case, as also documented in the GCC
-documentations:
-    https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wmaybe-uninitialized
+this adds the checking for fixing the error report from
+syzbot
 
-The actual code-sequence is like this:
-    Various callers can invoke the function below with the argument "want"
-    being one of:
-    ZFCP_ERP_ACTION_REOPEN_ADAPTER,
-    ZFCP_ERP_ACTION_REOPEN_PORT_FORCED,
-    ZFCP_ERP_ACTION_REOPEN_PORT, or
-    ZFCP_ERP_ACTION_REOPEN_LUN.
+KASAN: stack-out-of-bounds Read in hfcsusb_probe [1]
+The patch tested by syzbot [2]
 
-    zfcp_erp_action_enqueue(want, ...)
-        ...
-        need = zfcp_erp_required_act(want, ...)
-            need = want
-            ...
-            maybe: need = ZFCP_ERP_ACTION_REOPEN_PORT
-            maybe: need = ZFCP_ERP_ACTION_REOPEN_ADAPTER
-            ...
-            return need
-        ...
-        zfcp_erp_setup_act(need, ...)
-            struct zfcp_erp_action *erp_action; // <== line 217
-            ...
-            switch(need) {
-            case ZFCP_ERP_ACTION_REOPEN_LUN:
-                    ...
-                    erp_action = &zfcp_sdev->erp_action;
-                    WARN_ON_ONCE(erp_action->port != port); // <== access
-                    ...
-                    break;
-            case ZFCP_ERP_ACTION_REOPEN_PORT:
-            case ZFCP_ERP_ACTION_REOPEN_PORT_FORCED:
-                    ...
-                    erp_action = &port->erp_action;
-                    WARN_ON_ONCE(erp_action->port != port); // <== access
-                    ...
-                    break;
-            case ZFCP_ERP_ACTION_REOPEN_ADAPTER:
-                    ...
-                    erp_action = &adapter->erp_action;
-                    WARN_ON_ONCE(erp_action->port != NULL); // <== access
-                    ...
-                    break;
-            }
-            ...
-            WARN_ON_ONCE(erp_action->adapter != adapter); // <== access
+Reported-by: syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com
 
-When zfcp_erp_setup_act() is called, 'need' will never be anything else
-than one of the 4 possible enumeration-names that are used in the
-switch-case, and 'erp_action' is initialized for every one of them, before
-it is used. Thus the warning is a false positive, as documented.
+[1]:
+https://syzkaller.appspot.com/bug?id=30a04378dac680c5d521304a00a86156bb913522
+[2]:
+https://groups.google.com/d/msg/syzkaller-bugs/_6HBdge8F3E/OJn7wVNpBAAJ
 
-We introduce the extra if{} in the beginning to create an extra code-flow,
-so the compiler can be convinced that the switch-case will never see any
-other value.
-
-BUG_ON()/BUG() is intentionally not used to not crash anything, should
-this ever happen anyway - right now it's impossible, as argued above; and
-it doesn't introduce a 'default:' switch-case to retain warnings should
-'enum zfcp_erp_act_type' ever be extended and no explicit case be
-introduced. See also v5.0 commit 399b6c8bc9f7 ("scsi: zfcp: drop old
-default switch case which might paper over missing case").
-
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Reviewed-by: Steffen Maier <maier@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/scsi/zfcp_erp.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/isdn/hardware/mISDN/hfcsusb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/s390/scsi/zfcp_erp.c b/drivers/s390/scsi/zfcp_erp.c
-index 6d5065f679ac..64d70de98cdb 100644
---- a/drivers/s390/scsi/zfcp_erp.c
-+++ b/drivers/s390/scsi/zfcp_erp.c
-@@ -11,6 +11,7 @@
- #define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
+diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
+index 17cc879ad2bb..35983c7c3137 100644
+--- a/drivers/isdn/hardware/mISDN/hfcsusb.c
++++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
+@@ -1963,6 +1963,9 @@ hfcsusb_probe(struct usb_interface *intf, const struct usb_device_id *id)
  
- #include <linux/kthread.h>
-+#include <linux/bug.h>
- #include "zfcp_ext.h"
- #include "zfcp_reqlist.h"
- 
-@@ -245,6 +246,12 @@ static struct zfcp_erp_action *zfcp_erp_setup_act(int need, u32 act_status,
- 	struct zfcp_erp_action *erp_action;
- 	struct zfcp_scsi_dev *zfcp_sdev;
- 
-+	if (WARN_ON_ONCE(need != ZFCP_ERP_ACTION_REOPEN_LUN &&
-+			 need != ZFCP_ERP_ACTION_REOPEN_PORT &&
-+			 need != ZFCP_ERP_ACTION_REOPEN_PORT_FORCED &&
-+			 need != ZFCP_ERP_ACTION_REOPEN_ADAPTER))
-+		return NULL;
+ 				/* get endpoint base */
+ 				idx = ((ep_addr & 0x7f) - 1) * 2;
++				if (idx > 15)
++					return -EIO;
 +
- 	switch (need) {
- 	case ZFCP_ERP_ACTION_REOPEN_LUN:
- 		zfcp_sdev = sdev_to_zfcp(sdev);
+ 				if (ep_addr & 0x80)
+ 					idx++;
+ 				attr = ep->desc.bmAttributes;
 -- 
 2.20.1
 
