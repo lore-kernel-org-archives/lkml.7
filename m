@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C21CC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C174DC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4232222CD8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9095E22CD8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148866;
-	bh=tC5pRNLrv8yDsyxhalTw+NQuHuihGvu0nsozsUxgeFc=;
+	s=default; t=1564148871;
+	bh=PhqPNDTFcojs0oO52RI/tBbQomu68POI4dM8VBj0mS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F5a6r6ltGZ6KbVQT7QHMrMUHqOgcAap6YpGVXSqCTU5q2u34YZmLS2kWNM2M8QGZw
-	 NJ0Gl8WPCMNe6KMNFsKGoaV3b84vaeyPQKvpeMVl9X0PiaOvjLKn20SnE/AKVAUK9F
-	 Fs2K3TGE6vKctdoAzGtyaNbEU5wubZhB6emd4Ng8=
+	b=XPSLhLUo+JTv0uZLhTBMTR88YMcYb0r7cvneftUqjVG7vhreD/Ulfpp/dFIMQTu7O
+	 XI/KOzw0uFczQ8Hz0A0BpSmXDGIF4elq2ax0l+HClPs8QfLitgHu1GeHBIDLe7TtqP
+	 xOwQDwtgQ8iEizFCwzXGt4wOwQzzQZc8pRa9X/jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388575AbfGZNpt (ORCPT
+        id S1728242AbfGZNpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:45:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728243AbfGZNpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jul 2019 09:45:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728209AbfGZNpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:45:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 948F622DCC;
-        Fri, 26 Jul 2019 13:45:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 309D722CBF;
+        Fri, 26 Jul 2019 13:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148743;
-        bh=tC5pRNLrv8yDsyxhalTw+NQuHuihGvu0nsozsUxgeFc=;
+        s=default; t=1564148739;
+        bh=PhqPNDTFcojs0oO52RI/tBbQomu68POI4dM8VBj0mS0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v/5ihOjdsvfpM7Dftiygnbcm/urBxkjk0aRnSUtfyAsvMbTGoFqTDVg0NH81btUw4
-         Ne3LFvp12E5YwpVoT/mtAvv4tB4Xj9SR+dfjgPeN+9BEn9AkvANt58RUCjXd9vnU5Z
-         Kf7MhF+YwaT1ElLk4v+6/9ZpkYeWoT+ufAW6j8KE=
+        b=XJHB1zigRhpaT6nM/rVGAAtsKCcsv8Y4mdxfQsmozryFPnCS080JX+og8rWuyrYDC
+         NuRGrpaiYnE5m219d5V1pbHdl56J0OaUxmIbPMrdcS/e+RlQkPEmtGziU6bfM1Z9BK
+         WgGqz2lzxjK2bsXVe0WocCrUsLyHJdNteHFY2JNo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.4 10/23] ACPI: fix false-positive -Wuninitialized warning
-Date:   Fri, 26 Jul 2019 09:45:09 -0400
-Message-Id: <20190726134522.13308-10-sashal@kernel.org>
+Cc:     David Sterba <dsterba@suse.com>, Qu Wenruo <wqu@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 07/23] btrfs: fix minimum number of chunk errors for DUP
+Date:   Fri, 26 Jul 2019 09:45:06 -0400
+Message-Id: <20190726134522.13308-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134522.13308-1-sashal@kernel.org>
 References: <20190726134522.13308-1-sashal@kernel.org>
@@ -62,58 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: David Sterba <dsterba@suse.com>
 
-[ Upstream commit dfd6f9ad36368b8dbd5f5a2b2f0a4705ae69a323 ]
+[ Upstream commit 0ee5f8ae082e1f675a2fb6db601c31ac9958a134 ]
 
-clang gets confused by an uninitialized variable in what looks
-to it like a never executed code path:
+The list of profiles in btrfs_chunk_max_errors lists DUP as a profile
+DUP able to tolerate 1 device missing. Though this profile is special
+with 2 copies, it still needs the device, unlike the others.
 
-arch/x86/kernel/acpi/boot.c:618:13: error: variable 'polarity' is uninitialized when used here [-Werror,-Wuninitialized]
-        polarity = polarity ? ACPI_ACTIVE_LOW : ACPI_ACTIVE_HIGH;
-                   ^~~~~~~~
-arch/x86/kernel/acpi/boot.c:606:32: note: initialize the variable 'polarity' to silence this warning
-        int rc, irq, trigger, polarity;
-                                      ^
-                                       = 0
-arch/x86/kernel/acpi/boot.c:617:12: error: variable 'trigger' is uninitialized when used here [-Werror,-Wuninitialized]
-        trigger = trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE;
-                  ^~~~~~~
-arch/x86/kernel/acpi/boot.c:606:22: note: initialize the variable 'trigger' to silence this warning
-        int rc, irq, trigger, polarity;
-                            ^
-                             = 0
+Looking at the history of changes, thre's no clear reason why DUP is
+there, functions were refactored and blocks of code merged to one
+helper.
 
-This is unfortunately a design decision in clang and won't be fixed.
+d20983b40e828 Btrfs: fix writing data into the seed filesystem
+  - factor code to a helper
 
-Changing the acpi_get_override_irq() macro to an inline function
-reliably avoids the issue.
+de11cc12df173 Btrfs: don't pre-allocate btrfs bio
+  - unrelated change, DUP still in the list with max errors 1
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+a236aed14ccb0 Btrfs: Deal with failed writes in mirrored configurations
+  - introduced the max errors, leaves DUP and RAID1 in the same group
+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/acpi.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/btrfs/volumes.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 3672893b275e..6a30f1e03aa9 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -226,7 +226,10 @@ void acpi_set_irq_model(enum acpi_irq_model_id model,
- #ifdef CONFIG_X86_IO_APIC
- extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
- #else
--#define acpi_get_override_irq(gsi, trigger, polarity) (-1)
-+static inline int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity)
-+{
-+	return -1;
-+}
- #endif
- /*
-  * This function undoes the effect of one call to acpi_register_gsi().
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index 4eb7a6ba7e47..55ce6543050d 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -4942,8 +4942,7 @@ static inline int btrfs_chunk_max_errors(struct map_lookup *map)
+ 
+ 	if (map->type & (BTRFS_BLOCK_GROUP_RAID1 |
+ 			 BTRFS_BLOCK_GROUP_RAID10 |
+-			 BTRFS_BLOCK_GROUP_RAID5 |
+-			 BTRFS_BLOCK_GROUP_DUP)) {
++			 BTRFS_BLOCK_GROUP_RAID5)) {
+ 		max_errors = 1;
+ 	} else if (map->type & BTRFS_BLOCK_GROUP_RAID6) {
+ 		max_errors = 2;
 -- 
 2.20.1
 
