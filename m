@@ -2,69 +2,79 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2A7C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362C6C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E5622C97
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C7422C97
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbfGZJcw (ORCPT
+        id S1726115AbfGZJfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:32:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:40232 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfGZJcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:32:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CAA3344;
-        Fri, 26 Jul 2019 02:32:51 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B89D3F71A;
-        Fri, 26 Jul 2019 02:32:50 -0700 (PDT)
-Subject: Re: [PATCH 4/5] sched/deadline: Cleanup on_dl_rq() handling
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Luca Abeni <luca.abeni@santannapisa.it>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Qais Yousef <Qais.Yousef@arm.com>, linux-kernel@vger.kernel.org
-References: <20190726082756.5525-1-dietmar.eggemann@arm.com>
- <20190726082756.5525-5-dietmar.eggemann@arm.com>
- <0f460dba-4677-00de-59a2-5cd31ffe6e4b@arm.com>
- <20190726092005.GO25636@localhost.localdomain>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <d95ffb59-ad54-f775-7a9d-0806051539e0@arm.com>
-Date:   Fri, 26 Jul 2019 10:32:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 26 Jul 2019 05:35:11 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3174 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725903AbfGZJfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:35:11 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5790F264E7CD27357095;
+        Fri, 26 Jul 2019 17:35:09 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.132) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 26 Jul 2019 17:35:01 +0800
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Nianyao Tang <tangnianyao@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>
+Subject: [PATCH v2] irqchip/gic-v3-its: Free unused vpt_page when alloc vpe table fail
+Date:   Fri, 26 Jul 2019 17:32:57 +0800
+Message-ID: <1564133577-57866-1-git-send-email-zhangshaokun@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1564105905-15410-1-git-send-email-zhangshaokun@hisilicon.com>
+References: <1564105905-15410-1-git-send-email-zhangshaokun@hisilicon.com>
 MIME-Version: 1.0
-In-Reply-To: <20190726092005.GO25636@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.132]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/07/2019 10:20, Juri Lelli wrote:
->> Any idea why a similar error leads to a BUG_ON() in the enqueue path but
->> only a silent return on the dequeue path? I would expect the handling to be
->> almost identical.
->>  
-> 
-> Task could have already been dequeued by update_curr_dl()->throttle
-> called by dequeue_task_dl() before calling __dequeue_task_dl().
-> 
+From: Nianyao Tang <tangnianyao@huawei.com>
 
-Got it, thanks.
+In its_vpe_init, when its_alloc_vpe_table fails, we should free
+vpt_page allocated just before, instead of vpe->vpt_page.
+Let's fix it.
 
-> Thanks,
-> 
-> Juri
-> 
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+---
+ drivers/irqchip/irq-gic-v3-its.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 730fbe0e2a9d..1b5c3672aea2 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -3010,7 +3010,7 @@ static int its_vpe_init(struct its_vpe *vpe)
+ 
+ 	if (!its_alloc_vpe_table(vpe_id)) {
+ 		its_vpe_id_free(vpe_id);
+-		its_free_pending_table(vpe->vpt_page);
++		its_free_pending_table(vpt_page);
+ 		return -ENOMEM;
+ 	}
+ 
+-- 
+2.7.4
+
