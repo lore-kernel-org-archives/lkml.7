@@ -2,114 +2,102 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C977C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1154C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F95218DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B64121734
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:19:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GLd+HRYD";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="X2x19VCL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vDyWyFS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfGZGT3 (ORCPT
+        id S1726329AbfGZGTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 02:19:29 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:56438 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfGZGT2 (ORCPT
+        Fri, 26 Jul 2019 02:19:51 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46674 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfGZGTv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 02:19:28 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id F1AA360312; Fri, 26 Jul 2019 06:19:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564121967;
-        bh=tuIggQu6dJ8EB1vu2q34aTSvJWiTR8Y13JpxH0xY+wo=;
-        h=To:From:Subject:Date:From;
-        b=GLd+HRYDHP2wOvvCi3x5CMnCrbkekNVca/1Uy6EFC1nCpkic07IIESw3d6+OpkGiV
-         YrSi7hXbtLvf/pdv6MER8/MhmWn7PENFg7DOzs0AhGAZQAPavApYcPD6HV1+mJtrje
-         QKcfgbBUywp2EX35TCKd4CvSQLBHQcUE0qBqJx5k=
-Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8042660312;
-        Fri, 26 Jul 2019 06:19:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564121965;
-        bh=tuIggQu6dJ8EB1vu2q34aTSvJWiTR8Y13JpxH0xY+wo=;
-        h=To:From:Subject:Date:From;
-        b=X2x19VCLEvSnVju/55PiYdcmUN1JnwmeqJKkA/dPQldYNU0NOKs2iRXnVAiZBtuK8
-         Qu/tG1PUc1KjCA+tagInUh/4FeAmNhjQwGUEKQNYmeLxdcaNgGX7nZOG8ZPOrBXfcU
-         Rhl88eP28xhYgHGCrITkH09US2tE50OZOOipQn48=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8042660312
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [Regression] Missing device nodes for ETR, ETF and STM after
- CONFIG_UEVENT_HELPER=n
-Message-ID: <cfe09a46-462f-633a-37c2-52f8bfc0ffb2@codeaurora.org>
-Date:   Fri, 26 Jul 2019 11:49:19 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 26 Jul 2019 02:19:51 -0400
+Received: by mail-io1-f65.google.com with SMTP id i10so102434069iol.13;
+        Thu, 25 Jul 2019 23:19:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eZvGCKap3iwT1mY+8gPdtvKT0nqN9NBBfjvGVy5N5Hg=;
+        b=vDyWyFS8OQsVACGHtk57th5hDCLw5TJkJGWNUdcBZlRVaBjRXbjcsxDj0y9R9y4pbJ
+         OUfsnfi5iCUuXJ1M4DAHeiD1+DgzCbktfiHDLixY3xCc3RDIgUQHNXXdoMctU/IoYI6S
+         JPBdcVUdiQoggRPgz2j7v1j0CLzA4lDd+cQdnOiGEw/QU6/IM0f0sQlzxKqp00EuVcPm
+         rxjF7DWoks6U/5MN4BgXiwZx46ziB5H3I0P6yfWAU7IOsTHsnBa1r683hQFN5H7dYjxh
+         odmTZiZjGSwFNioIsg7eUgf/BNeSbPXVjQm5xx5ihuoIALDz95Habuu5P29xUGXisF7N
+         b3zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eZvGCKap3iwT1mY+8gPdtvKT0nqN9NBBfjvGVy5N5Hg=;
+        b=Sk7fTHGdt9yaHFR33EEUn0aWYdxNHhtO6k8TZi+bTmiWwN2KIzlLDT6HeC6I1sNF5R
+         VOZGbfQAzvGTUuO2dGvRQIok7VnI3EQHPDrY7L4h/GPuXimjn8oe787r24sj9AYWTGBd
+         D/w+rEM2KGuLqauXY8L1dCLJWcDgZGW6TFg5pEAWyXu6B9x7uXxQyTjiha5nikb5JgFT
+         0aRi2HHZMvvA1Az8GV460tnniNCWoSsgKcb3evvOYLsUlNHPmxlD3cjylZeya8HMTAFe
+         ZyxchmIx983LeoToOy/Wj7UvdNfq5UmhYSP3OtOivw1PML0s+uQo2k8igqc87wm52TtR
+         L3Cg==
+X-Gm-Message-State: APjAAAXYeuP6epQ+2SPmXFd6V6/YIUpuw/DvcCLFYUfcNSqxaYA9ZTUd
+        gIFtiR8tZ5FY6tje9htElIc=
+X-Google-Smtp-Source: APXvYqxh8+4fV1zcuxBG6oKL4ssWPzKsqMGWwXfSzg66z7BDE4ipgDxgWhmKXTDiN67z8MaUyvYIFA==
+X-Received: by 2002:a02:3093:: with SMTP id q141mr96057778jaq.128.1564121990202;
+        Thu, 25 Jul 2019 23:19:50 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id f17sm48414057ioc.2.2019.07.25.23.19.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 23:19:49 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 00:19:48 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 000/271] 4.19.61-stable review
+Message-ID: <20190726061948.GB4075@JATN>
+References: <20190724191655.268628197@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jul 24, 2019 at 09:17:49PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.61 release.
+> There are 271 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 26 Jul 2019 07:13:35 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.61-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-When trying to test my coresight patches, I found that etr,etf and stm 
-device nodes are missing from /dev.
+Compiled and booted with no regressions on my system.
 
-Bisection gives this as the bad commit.
-
-1be01d4a57142ded23bdb9e0c8d9369e693b26cc is the first bad commit
-commit 1be01d4a57142ded23bdb9e0c8d9369e693b26cc
-Author: Geert Uytterhoeven <geert+renesas@glider.be>
-Date:   Thu Mar 14 12:13:50 2019 +0100
-
-     driver: base: Disable CONFIG_UEVENT_HELPER by default
-
-     Since commit 7934779a69f1184f ("Driver-Core: disable /sbin/hotplug by
-     default"), the help text for the /sbin/hotplug fork-bomb says
-     "This should not be used today [...] creates a high system load, or
-     [...] out-of-memory situations during bootup".  The rationale for this
-     was that no recent mainstream system used this anymore (in 2010!).
-
-     A few years later, the complete uevent helper support was made optional
-     in commit 86d56134f1b67d0c ("kobject: Make support for uevent_helper
-     optional.").  However, if was still left enabled by default, to support
-     ancient userland.
-
-     Time passed by, and nothing should use this anymore, so it can be
-     disabled by default.
-
-     Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-  drivers/base/Kconfig | 1 -
-  1 file changed, 1 deletion(-)
-
-
-Any idea on this?
-
--Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Cheers,
+Kelsey
+ 
