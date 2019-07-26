@@ -2,80 +2,138 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F668C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7C8C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2459721871
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F3E222BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:38:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vj3bSvY8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfGZXdt (ORCPT
+        id S1727569AbfGZXiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 19:33:49 -0400
-Received: from mga18.intel.com ([134.134.136.126]:22318 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbfGZXds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 19:33:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 16:33:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,312,1559545200"; 
-   d="scan'208";a="175767297"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 26 Jul 2019 16:33:48 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id 1371E580107;
-        Fri, 26 Jul 2019 16:33:48 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v6 0/9] Add Error Disconnect Recover (EDR) support
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        keith.busch@intel.com, Austin.Bolen@dell.com, Huong.Nguyen@dell.com
-References: <cover.1564177080.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190726215311.GA8720@localhost.localdomain>
-From:   sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <683fffda-7116-a67b-02ab-503c0efc6853@linux.intel.com>
-Date:   Fri, 26 Jul 2019 16:31:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 26 Jul 2019 19:38:09 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59554 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbfGZXiJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 19:38:09 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6QNXnlx008852;
+        Fri, 26 Jul 2019 23:37:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=sOZ4f2d5NvdcscXZLpkNGln28J/MfY0dpJF0XaxyVXo=;
+ b=vj3bSvY8y/ZwFWZpC8sdlVbNieZyxd3zoWMZrzYpqIvKOOvES4roR1lg/qEsB2YEdnv6
+ 8cOFoFJT3wwS/PD8xnCAHIuOeioGboY7MPalzP37gBSJdeQK93YxIKfA7vgHBZD2TkUD
+ i+5gBwCHmTkQnjLiAN0gj2NaMHtiI7iqBTXmTVu3drmJiANSdcPZOUuQKkvdp+oxJtfA
+ D578lHlomD0i3FmXyv2EwkQ1WbyPP+u9AUX62T7WrABgcjZUcweQ87/ipkRWUt5shFs1
+ VYlk6bcDDq6qYTs5Ka4uSUWuP1Hd3AopkoaU84wRe7P1DfUWcuveYFq6nMKE9tTHyqJx WA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2tx61cdf63-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Jul 2019 23:37:56 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6QNWwpL050294;
+        Fri, 26 Jul 2019 23:37:55 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2tycv8m6bt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Jul 2019 23:37:55 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6QNbsk5003177;
+        Fri, 26 Jul 2019 23:37:54 GMT
+Received: from localhost (/10.145.179.122)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 26 Jul 2019 16:37:54 -0700
+Date:   Fri, 26 Jul 2019 16:37:53 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: lift the xfs writepage code into iomap v3
+Message-ID: <20190726233753.GD2166993@magnolia>
+References: <20190722095024.19075-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20190726215311.GA8720@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722095024.19075-1-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9330 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=866
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907260265
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9330 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=910 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907260265
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Austin , Huong
+On Mon, Jul 23, 2019 at 11:50:12AM +0200, Christoph Hellwig wrote:
+> Hi all,
+> 
+> this series cleans up the xfs writepage code and then lifts it to
+> fs/iomap.c so that it could be use by other file system.  I've been
+> wanting to this for a while so that I could eventually convert gfs2
+> over to it, but I never got to it.  Now Damien has a new zonefs
+> file system for semi-raw access to zoned block devices that would
+> like to use the iomap code instead of reinventing it, so I finally
+> had to do the work.
 
-On 7/26/19 2:53 PM, Keith Busch wrote:
-> On Fri, Jul 26, 2019 at 02:43:10PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> This patchset adds support for following features:
->>
->> 1. Error Disconnect Recover (EDR) support.
->> 2. _OSC based negotiation support for DPC.
->>
->> You can find EDR spec in the following link.
->>
->> https://members.pcisig.com/wg/PCI-SIG/document/12614
-> Thank you for sticking with this. I've reviewed the series and I think
-> this looks good for the next merge window.
->
-> Acked-by: Keith Busch <keith.busch@intel.com>
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+Hmm... I don't like how there are xfs changes mixed in with the iomap
+changes, because were I to take this series as-is then I'd have to
+commit both to adding iomap writeback code /and/ converting xfs at the
+same time.
 
+I think I'd be more comfortable creating a branch to merge the changes
+to list.h and fs/iomap/, and then gfs2/zonefs/xfs can sprout their own
+branches from there to do whatever conversions are necessary.
+
+To me what that means is splitting patch 7 into 7a which does the iomap
+changes and 7b which does the xfs changes.  To get there, I'd create a
+iomap-writeback branch containing:
+
+1 7a 8 9 10 11 12
+
+and then a new xfs-iomap-writeback branch containing:
+
+2 4 7b
+
+This eliminates the need for patches 3, 5, and 6, though the cost is
+that it's less clear from the history that we did some reorganizing of
+the xfs writeback code and then moved it over to iomap.  OTOH, I also
+see this as a way to lower risk because if some patch in the
+xfs-iomap-writeback branch shakes loose a bug that doesn't affect gfs2
+or zonedfs we don't have to hold them up.
+
+I'll try to restructure this series along those lines and report back
+how it went.
+
+--D
+
+> 
+> 
+> Changes since v2:
+>  - rebased to v5.3-rc1
+>  - folded in a few changes from the gfs2 enablement series
+> 
+> Changes since v1:
+>  - rebased to the latest xfs for-next tree
+>  - keep the preallocated transactions for size updates
+>  - rename list_pop to list_pop_entry and related cleanups
+>  - better document the nofs context handling
+>  - document that the iomap tracepoints are not a stable API
