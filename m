@@ -2,157 +2,95 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDDFC76194
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C7AC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D39218B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:28:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCb6Tjmp"
+	by mail.kernel.org (Postfix) with ESMTP id 1534C218B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:33:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726000AbfGZC2q (ORCPT
+        id S1726086AbfGZCdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 22:28:46 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37037 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbfGZC2q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 22:28:46 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i70so13240615pgd.4;
-        Thu, 25 Jul 2019 19:28:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QitlWR7BGQe2SM+KQlNBxgo0bredzcf0/IeR1JG76NY=;
-        b=jCb6TjmpyLLSeXQ3MUagGykwdMFRUMv6VhkyzjoaZeG4GTwVb9VlEthMegMngag0KB
-         ppB5u9zJZ2y1s//sRqXo5X1Sd5WW1kdrkZb1krqeG6+fGsbQiYyROaB+Y2k4hi51NIFD
-         Sb8BxtOo0THaAwZaK7F0GXCu68REQo+IpHhfxeN55TEPSkzdp4g+FI3MLAwoBeheEij+
-         FJYjxVALGhWNWLJjmgUpUnMYUXrsA9caycFYg9TzzBB2VM5h1uoYm6FHvfqouW143eSq
-         dTTR1n6Whx6IM/LNOjrf/JR1gxGEa6E10GopHhswqa3PFSIsbkm24h+92qEi9B5mSTlw
-         pr5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QitlWR7BGQe2SM+KQlNBxgo0bredzcf0/IeR1JG76NY=;
-        b=kyxTZlnY5Zerva//Sfw7AgfgtCU4EPAa532U+Ni9Z7pm26gBIog8HK3qEHtjOLzn3i
-         KFYu+Bf5wad1+szL0f9b6Mf4BD6DdCeIqEGOzXl+5CsPhUwukfJpqeK4afawrlDuKleq
-         5OJiyEKgDvJMrFd/iYv0z9n/lSd5x8NPKcqr438my2D1rF7eL9CNYxzSCBBDcSURr0ng
-         w+/BSKDDFdIyENS1x874K7VNAF62W+lEPD5HI2kEdu7PTPCDdnmSy+LrsUJ1ZyI0kDaN
-         V4JOXGjW8MzXGuARLQ6eGKSZgtGbPbm58amkDQyrHxzKJvmUiLxUvXsyFZUxVrMCrSbi
-         ACRA==
-X-Gm-Message-State: APjAAAXroZWV20N/f5TdGIVh13eSoglRhvpDToRMd+3aUAssfXZ1RZ9B
-        Nbq/YFqQN0P1BfPv/rokSVE=
-X-Google-Smtp-Source: APXvYqy9WzH87WvMloDOGW7Qa6aZclXzMBuMrmKiS002ptHQxAspDYr8nkqPDFew3Bg+Tr3qZW6blw==
-X-Received: by 2002:a17:90a:dac3:: with SMTP id g3mr95331902pjx.45.1564108125770;
-        Thu, 25 Jul 2019 19:28:45 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id t11sm58170506pgb.33.2019.07.25.19.28.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 19:28:44 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Patrick Havelange <patrick.havelange@essensium.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] counter/ftm-quaddec: Use device-managed registration API
-Date:   Fri, 26 Jul 2019 10:28:36 +0800
-Message-Id: <20190726022836.7182-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 25 Jul 2019 22:33:55 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2489 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725854AbfGZCdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 22:33:54 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id B16413CB14A95963F1CF;
+        Fri, 26 Jul 2019 10:33:52 +0800 (CST)
+Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 26 Jul 2019 10:33:52 +0800
+Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
+ (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Fri, 26
+ Jul 2019 10:33:52 +0800
+Subject: Re: [PATCH net-next 07/11] net: hns3: adds debug messages to identify
+ eth down cause
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+CC:     "tanhuazhong@huawei.com" <tanhuazhong@huawei.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "lipeng321@huawei.com" <lipeng321@huawei.com>,
+        "yisen.zhuang@huawei.com" <yisen.zhuang@huawei.com>,
+        "salil.mehta@huawei.com" <salil.mehta@huawei.com>,
+        "linuxarm@huawei.com" <linuxarm@huawei.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
+ <1563938327-9865-8-git-send-email-tanhuazhong@huawei.com>
+ <ffd942e7d7442549a3a6d469709b7f7405928afe.camel@mellanox.com>
+ <30483e38-5e4a-0111-f431-4742ceb1aa62@huawei.com>
+ <75a02bbe5b3b0f2755cd901a8830d4a3026f9383.camel@mellanox.com>
+ <20190725182846.253ae93f@cakuba.netronome.com>
+From:   liuyonglong <liuyonglong@huawei.com>
+Message-ID: <fa64d1c8-c851-46ac-71a7-5eabc2277e54@huawei.com>
+Date:   Fri, 26 Jul 2019 10:33:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20190725182846.253ae93f@cakuba.netronome.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.37.248]
+X-ClientProxiedBy: dggeme713-chm.china.huawei.com (10.1.199.109) To
+ dggeme760-chm.china.huawei.com (10.3.19.106)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of devm_counter_register.
-Then we can remove redundant unregistration API
-usage to make code simpler.
+As Saeed said, we will use netif_msg_drv() which is default off, this
+can be easily open with ethtool.
+Thanks for your reply!
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Use devm_add_action_or_reset to keep
-    resource release order.
-  - _remove() function is redundant now,
-    delete it.
-
- drivers/counter/ftm-quaddec.c | 31 +++++++++++--------------------
- 1 file changed, 11 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/counter/ftm-quaddec.c b/drivers/counter/ftm-quaddec.c
-index 68a9b7393457..76c70a6c3593 100644
---- a/drivers/counter/ftm-quaddec.c
-+++ b/drivers/counter/ftm-quaddec.c
-@@ -100,16 +100,17 @@ static void ftm_quaddec_init(struct ftm_quaddec *ftm)
- 	ftm_set_write_protection(ftm);
- }
- 
--static void ftm_quaddec_disable(struct ftm_quaddec *ftm)
-+static void ftm_quaddec_disable(void *ftm)
- {
--	ftm_clear_write_protection(ftm);
--	ftm_write(ftm, FTM_MODE, 0);
--	ftm_write(ftm, FTM_QDCTRL, 0);
-+	struct ftm_quaddec *ftm_qua = ftm;
-
-+	ftm_clear_write_protection(ftm_qua);
-+	ftm_write(ftm_qua, FTM_MODE, 0);
-+	ftm_write(ftm_qua, FTM_QDCTRL, 0);
- 	/*
- 	 * This is enough to disable the counter. No clock has been
- 	 * selected by writing to FTM_SC in init()
- 	 */
--	ftm_set_write_protection(ftm);
-+	ftm_set_write_protection(ftm_qua);
- }
- 
- static int ftm_quaddec_get_prescaler(struct counter_device *counter,
-@@ -316,22 +317,13 @@ static int ftm_quaddec_probe(struct platform_device *pdev)
- 	mutex_init(&ftm->ftm_quaddec_mutex);
- 
- 	ftm_quaddec_init(ftm);
--
--	ret = counter_register(&ftm->counter);
-+	ret = devm_add_action_or_reset(&pdev->dev, ftm_quaddec_disable, ftm);
- 	if (ret)
--		ftm_quaddec_disable(ftm);
--
--	return ret;
--}
--
--static int ftm_quaddec_remove(struct platform_device *pdev)
--{
--	struct ftm_quaddec *ftm = platform_get_drvdata(pdev);
--
--	counter_unregister(&ftm->counter);
--
--	ftm_quaddec_disable(ftm);
-+		return ret;
- 
-+	ret = devm_counter_register(&pdev->dev, &ftm->counter);
-+	if (ret)
-+		return ret;
- 	return 0;
- }
- 
-@@ -346,7 +338,6 @@ static struct platform_driver ftm_quaddec_driver = {
- 		.of_match_table = ftm_quaddec_match,
- 	},
- 	.probe = ftm_quaddec_probe,
--	.remove = ftm_quaddec_remove,
- };
- 
- module_platform_driver(ftm_quaddec_driver);
--- 
-2.20.1
+On 2019/7/26 9:28, Jakub Kicinski wrote:
+> On Thu, 25 Jul 2019 21:59:08 +0000, Saeed Mahameed wrote:
+>> I couldn't find any rules regarding what to put in kernel log, Maybe
+>> someone can share ?. but i vaguely remember that the recommendation
+>> for device drivers is to put nothing, only error/warning messages.
+> 
+> FWIW my understanding is also that only error/warning messages should
+> be printed. IOW things which should "never happen".
+> 
+> There are some historical exceptions. Probe logs for instance may be
+> useful, because its not trivial to get to the device if probe fails.
+> 
+> Another one is ethtool flashing, if it takes time we used to print into
+> logs some message like "please wait patiently". But since Jiri added
+> the progress messages in devlink that's no longer necessary.
+> 
+> For the messages which are basically printing the name of the function
+> or name of the function and their args - we have ftrace.
+> 
+> That's my $0.02 :)
+> 
+> .
+> 
 
