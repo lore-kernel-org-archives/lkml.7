@@ -2,104 +2,104 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382D5C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36941C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05607208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:26:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IE0RZWx/"
+	by mail.kernel.org (Postfix) with ESMTP id 14ECF21850
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:26:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387459AbfGZO0A (ORCPT
+        id S1727864AbfGZO0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:26:00 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37134 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727432AbfGZO0A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 10:26:00 -0400
-Received: by mail-qt1-f196.google.com with SMTP id y26so52754685qto.4
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 07:25:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=WTNB9/sSUp3RvghC3N7AVUzrEDJYp8g0FPiSPT+2XmY=;
-        b=IE0RZWx//RRo+SUPna44fGwa3H83J/6k6ORc+Rz2IlkOveVpNT1DGd4MnPYXZ+04AV
-         9XQxJEG26nX0gY91WPbL6hMCTPqAfleSp43IEFQhaJ54PMVaProxdSjOFyWv5n4JdvDn
-         o5R3X0qyI6AyUarBkYZVyT7V6WwJZypymVQskeQlX1uSoPnJD3ru+AQq3CvOJFFIJpuE
-         JtVzLWHBhyqcT4pSq2h0Tbv5n7nw/Kp9NGb8fBMnUKSceZrVeNu9YCe2bLVa3zuGIoMW
-         ab4MfMKbtuXDez7tfWTxgQ77j3aYEkeD+4efnKuyjhaIHHimKHhL1vvvi9uH/AASXbA8
-         Wc5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WTNB9/sSUp3RvghC3N7AVUzrEDJYp8g0FPiSPT+2XmY=;
-        b=tANeRDBMGkSa7pY5mhmDF4uE/5nszR3S7hJfxSHM3Z4J/4SqbtVrSRIzSts1X5twUq
-         50QQwcPlI5rjVoR+HTwOyYp+XD/TPhYTRQJX8FEjQH256QdWABZHGK6wZXQ/cLLFfQVm
-         RSSGs9fERlWo0zklHZID8kOMPm/zSgRWzgLwAtIOaGjOjsAWq7DeqOTMzHNPMjtuTZ+Q
-         vvnDrBIqGlp2zrFPjpzV3sAHdRzpiFpNDPDJreDYBGG4Mty+yNYHFXLxPHMUc3A/Avnw
-         VL5NuV+zCXJ81qEhXaxRPf/mK5KqThJmq3wvlnerugMhHsX6tGF0/enPknw3E/2OaBDk
-         twRQ==
-X-Gm-Message-State: APjAAAXrO5947/TEcQP+eo8dHEpdQryvNkFhWyFXmEZs3RNrDWa7/Ssa
-        8DVZDCBvuAGNtNR4O7pjy8Pat97PrAw05Q==
-X-Google-Smtp-Source: APXvYqw7RxbbTRB1wYmPz1aZ7z6CkuQJpFWipr6DnxLizs1HK6WYvq1PfoOxTVIsTZP+MX2WlhfIww==
-X-Received: by 2002:a0c:d066:: with SMTP id d35mr66686999qvh.221.1564151159483;
-        Fri, 26 Jul 2019 07:25:59 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id l19sm30771521qtb.6.2019.07.26.07.25.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 07:25:58 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     martin.petersen@oracle.com
-Cc:     jejb@linux.ibm.com, kashyap.desai@broadcom.com,
-        sumit.saxena@broadcom.com, shivasharan.srikanteshwara@broadcom.com,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] scsi/megaraid_sas: fix a compilation warning
-Date:   Fri, 26 Jul 2019 10:25:43 -0400
-Message-Id: <1564151143-22889-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 26 Jul 2019 10:26:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56390 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727403AbfGZO0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 10:26:33 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CBABBC06511C;
+        Fri, 26 Jul 2019 14:26:32 +0000 (UTC)
+Received: from rules.brq.redhat.com (unknown [10.43.2.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B3B075FCC8;
+        Fri, 26 Jul 2019 14:26:30 +0000 (UTC)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     vdronov@redhat.com, Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Suraj Sumangala <suraj@atheros.com>,
+        Frederic Danis <frederic.danis@linux.intel.com>,
+        Loic Poulain <loic.poulain@intel.com>,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        syzkaller@googlegroups.com
+Subject: [PATCH v2] Bluetooth: hci_ldisc: check for missing tty operations
+Date:   Fri, 26 Jul 2019 16:26:28 +0200
+Message-Id: <20190726142628.20534-1-vdronov@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 26 Jul 2019 14:26:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit de516379e85f ("scsi: megaraid_sas: changes to function
-prototypes") introduced a comilation warning due to it changed the
-function prototype of read_fw_status_reg() to take an instance pointer
-instead, but forgot to remove an unused variable.
+Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
+functions which are called by the certain HCI UART protocols (hci_ath,
+hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
+or directly. This leads to an execution at NULL and can be triggered by
+an unprivileged user. Fix this by adding a check for the missing tty
+operations the same way it is done for write().
 
-drivers/scsi/megaraid/megaraid_sas_fusion.c: In function
-'megasas_fusion_update_can_queue':
-drivers/scsi/megaraid/megaraid_sas_fusion.c:326:39: warning: variable
-'reg_set' set but not used [-Wunused-but-set-variable]
-  struct megasas_register_set __iomem *reg_set;
-                                       ^~~~~~~
-Fixes: de516379e85f ("scsi: megaraid_sas: changes to function prototypes")
-Signed-off-by: Qian Cai <cai@lca.pw>
+This fixes CVE-2019-10207. The Fixes: lines list commits where calls to
+tiocm[gs]et() or hci_uart_set_flow_control() were added to the HCI UART
+protocols.
+
+Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
+Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org # v2.6.36+
+Fixes: c19483cc5e56 ("bluetooth: Fix missing NULL check")
+Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
+Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
+Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate configuration support")
+Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
+Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
 ---
- drivers/scsi/megaraid/megaraid_sas_fusion.c | 3 ---
- 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-index a32b3f0fcd15..e8092d59d575 100644
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-@@ -323,9 +323,6 @@ inline void megasas_return_cmd_fusion(struct megasas_instance *instance,
- {
- 	u16 cur_max_fw_cmds = 0;
- 	u16 ldio_threshold = 0;
--	struct megasas_register_set __iomem *reg_set;
--
--	reg_set = instance->reg_set;
+out-of-commit-message-note:
+
+I believe, this is a good location for the check. This way we protect protocols
+which does not call tiocm[gs]et() or hci_uart_set_flow_control() but may
+change to call them in the future.
+
+Also we do not need hci_uart_has_tiocm_support() helper now.
+
+ drivers/bluetooth/hci_ldisc.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_ldisc.c
+index c84f985f348d..4a85c51d0307 100644
+--- a/drivers/bluetooth/hci_ldisc.c
++++ b/drivers/bluetooth/hci_ldisc.c
+@@ -459,10 +459,11 @@ static int hci_uart_tty_open(struct tty_struct *tty)
  
- 	/* ventura FW does not fill outbound_scratch_pad_2 with queue depth */
- 	if (instance->adapter_type < VENTURA_SERIES)
+ 	BT_DBG("tty %p", tty);
+ 
+-	/* Error if the tty has no write op instead of leaving an exploitable
+-	 * hole
++	/* Error if the tty has no write or tiocm[gs]et ops instead of leaving
++	 * an exploitable hole
+ 	 */
+-	if (tty->ops->write == NULL)
++	if (tty->ops->write == NULL || tty->ops->tiocmget == NULL ||
++	    tty->ops->tiocmset == NULL)
+ 		return -EOPNOTSUPP;
+ 
+ 	hu = kzalloc(sizeof(struct hci_uart), GFP_KERNEL);
 -- 
-1.8.3.1
-
+2.21.0
