@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2163C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28608C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3A522CBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A6B22BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155095;
-	bh=Gmf3x3FBU965p7dUHwskFfW4rkX733qy8oCVaRR3zLY=;
+	s=default; t=1564155100;
+	bh=+WCIbUpYV1UwgnjGTloO4L1hrkUg6Ogk4wZPWUmVDxY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zETsB9XlXGdvepGf+sX1O8qFqsK2OhjFc9eBaVxpeT9AI+zpigxUKgeQxR3szNoVv
-	 +RTUmTvbvv6BowTR0HJJIYe11B4RE29mf0mX5k8wlctG2aqxuGVEq4OxH8KotCEdzO
-	 c3qYDMC/oVnBA2tFM7FWWAOzvXnQng3xTzbkYbQ4=
+	b=Gilz41S4LYV9R9V6JhSbqGvissBeDV5CiMhejDXqmn5auhXnVC5ISLgRHKgAUpw8k
+	 l2KlmmNiU5uxtdJbpZEh1fLCllpXV2Lrqx0SaLzpXWpqXRIZ/smqnmGBX+Qu/vX6RD
+	 i5aEFB3VzZTGYh+lJPNFWCXO3GqwU9NM8Gtd/Z/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387445AbfGZPbe (ORCPT
+        id S2389312AbfGZPbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:31:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46498 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:31:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389280AbfGZPb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:31:28 -0400
+        id S2389297AbfGZPbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:31:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED7A122BF5;
-        Fri, 26 Jul 2019 15:31:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBDDB22CBD;
+        Fri, 26 Jul 2019 15:31:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155087;
-        bh=Gmf3x3FBU965p7dUHwskFfW4rkX733qy8oCVaRR3zLY=;
+        s=default; t=1564155092;
+        bh=+WCIbUpYV1UwgnjGTloO4L1hrkUg6Ogk4wZPWUmVDxY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wOxtH/g9o7yoZye4GFCubE+BZOPNuFTJuLpKf6zVK6CaimLxymofUxt+42GzMzf/o
-         3INVIRbS5ejF4OEoDrcBwDv2fOILcLo7LCIYQNDvKUBW2aYCMXpAAYBt3PFy4jU3ya
-         MIYx6MxY/nXVmARG4xTCI/Q2AwM+mCsmCMxksH3U=
+        b=lfmb3hgVX5kA3VlN2hqX3TNkS742EyyKi1dlcTNrqifH/zMxf5UNuWagvR25ToJed
+         KnakB64tShwgnJYSkvdsMF7wWptTrfzmZP4uGbKP5MITKeNA8027vJ/cuSOSZGorxJ
+         Te+h5nYbkyIrlHh6AfoBf6WsDxqiT1hq8/rwxLQQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.1 61/62] block: Limit zone array allocation size
-Date:   Fri, 26 Jul 2019 17:25:13 +0200
-Message-Id: <20190726152308.297783287@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 5.1 51/62] ext4: dont allow any modifications to an immutable file
+Date:   Fri, 26 Jul 2019 17:25:03 +0200
+Message-Id: <20190726152307.378371128@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -61,136 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <damien.lemoal@wdc.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-commit 26202928fafad8bda8b478edb7e62c885be623d7 upstream.
+commit 2e53840362771c73eb0a5ff71611507e64e8eecd upstream.
 
-Limit the size of the struct blk_zone array used in
-blk_revalidate_disk_zones() to avoid memory allocation failures leading
-to disk revalidation failure. Also further reduce the likelyhood of
-such failures by using kvcalloc() (that is vmalloc()) instead of
-allocating contiguous pages with alloc_pages().
+Don't allow any modifications to a file that's marked immutable, which
+means that we have to flush all the writable pages to make the readonly
+and we have to check the setattr/setflags parameters more closely.
 
-Fixes: 515ce6061312 ("scsi: sd_zbc: Fix sd_zbc_report_zones() buffer allocation")
-Fixes: e76239a3748c ("block: add a report_zones method")
-Cc: stable@vger.kernel.org
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-zoned.c      |   46 ++++++++++++++++++++++++++++++----------------
- include/linux/blkdev.h |    5 +++++
- 2 files changed, 35 insertions(+), 16 deletions(-)
+ fs/ext4/ioctl.c |   46 +++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 45 insertions(+), 1 deletion(-)
 
---- a/block/blk-zoned.c
-+++ b/block/blk-zoned.c
-@@ -13,6 +13,9 @@
- #include <linux/rbtree.h>
- #include <linux/blkdev.h>
- #include <linux/blk-mq.h>
-+#include <linux/mm.h>
-+#include <linux/vmalloc.h>
-+#include <linux/sched/mm.h>
- 
- #include "blk.h"
- 
-@@ -372,22 +375,25 @@ static inline unsigned long *blk_alloc_z
-  * Allocate an array of struct blk_zone to get nr_zones zone information.
-  * The allocated array may be smaller than nr_zones.
-  */
--static struct blk_zone *blk_alloc_zones(int node, unsigned int *nr_zones)
-+static struct blk_zone *blk_alloc_zones(unsigned int *nr_zones)
- {
--	size_t size = *nr_zones * sizeof(struct blk_zone);
--	struct page *page;
--	int order;
--
--	for (order = get_order(size); order >= 0; order--) {
--		page = alloc_pages_node(node, GFP_NOIO | __GFP_ZERO, order);
--		if (page) {
--			*nr_zones = min_t(unsigned int, *nr_zones,
--				(PAGE_SIZE << order) / sizeof(struct blk_zone));
--			return page_address(page);
--		}
-+	struct blk_zone *zones;
-+	size_t nrz = min(*nr_zones, BLK_ZONED_REPORT_MAX_ZONES);
-+
-+	/*
-+	 * GFP_KERNEL here is meaningless as the caller task context has
-+	 * the PF_MEMALLOC_NOIO flag set in blk_revalidate_disk_zones()
-+	 * with memalloc_noio_save().
-+	 */
-+	zones = kvcalloc(nrz, sizeof(struct blk_zone), GFP_KERNEL);
-+	if (!zones) {
-+		*nr_zones = 0;
-+		return NULL;
- 	}
- 
--	return NULL;
-+	*nr_zones = nrz;
-+
-+	return zones;
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@ -269,6 +269,29 @@ static int uuid_is_zero(__u8 u[16])
  }
- 
- void blk_queue_free_zone_bitmaps(struct request_queue *q)
-@@ -414,6 +420,7 @@ int blk_revalidate_disk_zones(struct gen
- 	unsigned long *seq_zones_wlock = NULL, *seq_zones_bitmap = NULL;
- 	unsigned int i, rep_nr_zones = 0, z = 0, nrz;
- 	struct blk_zone *zones = NULL;
-+	unsigned int noio_flag;
- 	sector_t sector = 0;
- 	int ret = 0;
- 
-@@ -426,6 +433,12 @@ int blk_revalidate_disk_zones(struct gen
- 		return 0;
- 	}
- 
-+	/*
-+	 * Ensure that all memory allocations in this context are done as
-+	 * if GFP_NOIO was specified.
-+	 */
-+	noio_flag = memalloc_noio_save();
-+
- 	if (!blk_queue_is_zoned(q) || !nr_zones) {
- 		nr_zones = 0;
- 		goto update;
-@@ -442,7 +455,7 @@ int blk_revalidate_disk_zones(struct gen
- 
- 	/* Get zone information and initialize seq_zones_bitmap */
- 	rep_nr_zones = nr_zones;
--	zones = blk_alloc_zones(q->node, &rep_nr_zones);
-+	zones = blk_alloc_zones(&rep_nr_zones);
- 	if (!zones)
- 		goto out;
- 
-@@ -479,8 +492,9 @@ update:
- 	blk_mq_unfreeze_queue(q);
- 
- out:
--	free_pages((unsigned long)zones,
--		   get_order(rep_nr_zones * sizeof(struct blk_zone)));
-+	memalloc_noio_restore(noio_flag);
-+
-+	kvfree(zones);
- 	kfree(seq_zones_wlock);
- 	kfree(seq_zones_bitmap);
- 
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -344,6 +344,11 @@ struct queue_limits {
- 
- #ifdef CONFIG_BLK_DEV_ZONED
+ #endif
  
 +/*
-+ * Maximum number of zones to report with a single report zones command.
++ * If immutable is set and we are not clearing it, we're not allowed to change
++ * anything else in the inode.  Don't error out if we're only trying to set
++ * immutable on an immutable file.
 + */
-+#define BLK_ZONED_REPORT_MAX_ZONES	8192U
++static int ext4_ioctl_check_immutable(struct inode *inode, __u32 new_projid,
++				      unsigned int flags)
++{
++	struct ext4_inode_info *ei = EXT4_I(inode);
++	unsigned int oldflags = ei->i_flags;
 +
- extern unsigned int blkdev_nr_zones(struct block_device *bdev);
- extern int blkdev_report_zones(struct block_device *bdev,
- 			       sector_t sector, struct blk_zone *zones,
++	if (!(oldflags & EXT4_IMMUTABLE_FL) || !(flags & EXT4_IMMUTABLE_FL))
++		return 0;
++
++	if ((oldflags & ~EXT4_IMMUTABLE_FL) != (flags & ~EXT4_IMMUTABLE_FL))
++		return -EPERM;
++	if (ext4_has_feature_project(inode->i_sb) &&
++	    __kprojid_val(ei->i_projid) != new_projid)
++		return -EPERM;
++
++	return 0;
++}
++
+ static int ext4_ioctl_setflags(struct inode *inode,
+ 			       unsigned int flags)
+ {
+@@ -322,6 +345,20 @@ static int ext4_ioctl_setflags(struct in
+ 			goto flags_out;
+ 	}
+ 
++	/*
++	 * Wait for all pending directio and then flush all the dirty pages
++	 * for this file.  The flush marks all the pages readonly, so any
++	 * subsequent attempt to write to the file (particularly mmap pages)
++	 * will come through the filesystem and fail.
++	 */
++	if (S_ISREG(inode->i_mode) && !IS_IMMUTABLE(inode) &&
++	    (flags & EXT4_IMMUTABLE_FL)) {
++		inode_dio_wait(inode);
++		err = filemap_write_and_wait(inode->i_mapping);
++		if (err)
++			goto flags_out;
++	}
++
+ 	handle = ext4_journal_start(inode, EXT4_HT_INODE, 1);
+ 	if (IS_ERR(handle)) {
+ 		err = PTR_ERR(handle);
+@@ -751,7 +788,11 @@ long ext4_ioctl(struct file *filp, unsig
+ 			return err;
+ 
+ 		inode_lock(inode);
+-		err = ext4_ioctl_setflags(inode, flags);
++		err = ext4_ioctl_check_immutable(inode,
++				from_kprojid(&init_user_ns, ei->i_projid),
++				flags);
++		if (!err)
++			err = ext4_ioctl_setflags(inode, flags);
+ 		inode_unlock(inode);
+ 		mnt_drop_write_file(filp);
+ 		return err;
+@@ -1121,6 +1162,9 @@ resizefs_out:
+ 			goto out;
+ 		flags = (ei->i_flags & ~EXT4_FL_XFLAG_VISIBLE) |
+ 			 (flags & EXT4_FL_XFLAG_VISIBLE);
++		err = ext4_ioctl_check_immutable(inode, fa.fsx_projid, flags);
++		if (err)
++			goto out;
+ 		err = ext4_ioctl_setflags(inode, flags);
+ 		if (err)
+ 			goto out;
 
 
