@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DF2C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90155C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6354022BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A59522BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148379;
-	bh=BLhOaEzJpiBcupFrtwkSwZl9BKQjZCKbWHEf4i+tVgs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bAdHZrj3UbfkXFkwXhf/RhqdCCXnc1xOPNkrXOtZDDr3ui2OSg0osBp1URqHjtVdU
-	 PgjUKIfjA1ZsUzGK7D+nrXNkAwja9hPJ89YqMIdSz/m5Pto+XNY0xX867LEryfbE4t
-	 vu3ab38sGBW4u1jcBBVisT0vsHtBEL+hRTEWkrtY=
+	s=default; t=1564148383;
+	bh=vNz5ZA4xgYaIQ+rZoEpIu5Ec75bCDhG5YgSO6984J2w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tH1vBelMO0jXhMl/wnDOpOOY7hnAVj6NCcxtOHzYHzedAmsN4vf2/1pcVU/lM85VM
+	 LDi94Ey+FxiwlW/xGS/esTCMVg1AZEDe61E26HjtYbsN5VMqccfbD+UJNVRfmheCXz
+	 ZbEsObVpvSnL70uAGSKH4qNas2HbxFSvLOI/OlnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727294AbfGZNji (ORCPT
+        id S1727365AbfGZNjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:39:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45458 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:39:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726434AbfGZNji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:39:38 -0400
+        id S1726434AbfGZNjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:39:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A4C62238C;
-        Fri, 26 Jul 2019 13:39:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19B4722BEF;
+        Fri, 26 Jul 2019 13:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148377;
-        bh=BLhOaEzJpiBcupFrtwkSwZl9BKQjZCKbWHEf4i+tVgs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=o8XecPiq6Q0TxInDoHpzia59CA+uNtJYXboMsbjwdkwEIiCcqO+L7yVogTioR9sWy
-         ORqV95bstScTeBdhV4or48XUT6GRHwddAp5QJwdfasBbjnIb81dk5aDTM267RIH3ny
-         OBWkUdqnAXKDgXX+XvtnUgfKnAh2OPVroVAWm/ZI=
+        s=default; t=1564148378;
+        bh=vNz5ZA4xgYaIQ+rZoEpIu5Ec75bCDhG5YgSO6984J2w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zuetk+Oi+8Lv7Mu9molHwZH1pLdeAilalto0jShWvGF5jlKcvCtbsOK7PbWNnuvWD
+         90mgnEl25OkeJvLFoHkRxdDMJTpMOJ7HD2LTNxwQ8xwT1paNE7r8Fd1/Eiz5aC9FMa
+         zYBQOe98SeqG5ZDM3o+0b+7xLurzQHtxvSk24/jg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 01/85] ARM: riscpc: fix DMA
-Date:   Fri, 26 Jul 2019 09:38:11 -0400
-Message-Id: <20190726133936.11177-1-sashal@kernel.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 02/85] ARM: dts: rockchip: Make rk3288-veyron-minnie run at hs200
+Date:   Fri, 26 Jul 2019 09:38:12 -0400
+Message-Id: <20190726133936.11177-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
+References: <20190726133936.11177-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,48 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit ffd9a1ba9fdb7f2bd1d1ad9b9243d34e96756ba2 ]
+[ Upstream commit 1c0479023412ab7834f2e98b796eb0d8c627cd62 ]
 
-DMA got broken a while back in two different ways:
-1) a change in the behaviour of disable_irq() to wait for the interrupt
-   to finish executing causes us to deadlock at the end of DMA.
-2) a change to avoid modifying the scatterlist left the first transfer
-   uninitialised.
+As some point hs200 was failing on rk3288-veyron-minnie.  See commit
+984926781122 ("ARM: dts: rockchip: temporarily remove emmc hs200 speed
+from rk3288 minnie").  Although I didn't track down exactly when it
+started working, it seems to work OK now, so let's turn it back on.
 
-DMA is only used with expansion cards, so has gone unnoticed.
+To test this, I booted from SD card and then used this script to
+stress the enumeration process after fixing a memory leak [1]:
+  cd /sys/bus/platform/drivers/dwmmc_rockchip
+  for i in $(seq 1 3000); do
+    echo "========================" $i
+    echo ff0f0000.dwmmc > unbind
+    sleep .5
+    echo ff0f0000.dwmmc > bind
+    while true; do
+      if [ -e /dev/mmcblk2 ]; then
+        break;
+      fi
+      sleep .1
+    done
+  done
 
-Fixes: fa4e99899932 ("[ARM] dma: RiscPC: don't modify DMA SG entries")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+It worked fine.
+
+[1] https://lkml.kernel.org/r/20190503233526.226272-1-dianders@chromium.org
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-rpc/dma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/rk3288-veyron-minnie.dts | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/arm/mach-rpc/dma.c b/arch/arm/mach-rpc/dma.c
-index 488d5c3b37f4..799e0b016b62 100644
---- a/arch/arm/mach-rpc/dma.c
-+++ b/arch/arm/mach-rpc/dma.c
-@@ -128,7 +128,7 @@ static irqreturn_t iomd_dma_handle(int irq, void *dev_id)
- 	} while (1);
+diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+index 468a1818545d..ce57881625ec 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+@@ -90,10 +90,6 @@
+ 	pwm-off-delay-ms = <200>;
+ };
  
- 	idma->state = ~DMA_ST_AB;
--	disable_irq(irq);
-+	disable_irq_nosync(irq);
+-&emmc {
+-	/delete-property/mmc-hs200-1_8v;
+-};
+-
+ &gpio_keys {
+ 	pinctrl-0 = <&pwr_key_l &ap_lid_int_l &volum_down_l &volum_up_l>;
  
- 	return IRQ_HANDLED;
- }
-@@ -177,6 +177,9 @@ static void iomd_enable_dma(unsigned int chan, dma_t *dma)
- 				DMA_FROM_DEVICE : DMA_TO_DEVICE);
- 		}
- 
-+		idma->dma_addr = idma->dma.sg->dma_address;
-+		idma->dma_len = idma->dma.sg->length;
-+
- 		iomd_writeb(DMA_CR_C, dma_base + CR);
- 		idma->state = DMA_ST_AB;
- 	}
 -- 
 2.20.1
 
