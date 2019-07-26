@@ -2,51 +2,52 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 250EEC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E86C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F09FA22BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC6B422CD5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148576;
-	bh=xcrPwqvyu0V0LBKurqlo82+0cYsgFDQ2imAbyZfWuw4=;
+	s=default; t=1564148581;
+	bh=Qkv40fafqQomKUgAfGkXE1/nJT1uUnyN1vwBUnVHzKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P3R3tLaJcA+sZ9wIRlk6DaGuyj/yqSmIQIxRN9ufNB9Ph1+7gkVWYhX5zp64bEPQg
-	 AMHxT75MxPAzxrwT+UD8MvQTWL6JrPLcW/hBEm3xEbWRaw1b7tDcVCj6jQX4XP69lH
-	 VE94DpMMKJuQb1j9evabG27C5P60WzzyTyQczt+Q=
+	b=PI+RSathehwgj9/fo1yjWvkimafALtnS+TtgaO3s0dzjRSWnlTH3So2TOk1KJQl1L
+	 KpzWHtlPdj3U8WGvuOG/8jCtg4esd6pqhASj17NBpQKh/nCRfRGJxy/NQghrEgTOwZ
+	 5+vmW82ls+nI3ggnH/evCVWv5Kbcsg+a0IyTXwpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388069AbfGZNmz (ORCPT
+        id S2388112AbfGZNnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:42:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50168 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:43:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388047AbfGZNmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:42:49 -0400
+        id S2387569AbfGZNm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:42:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D88022CBF;
-        Fri, 26 Jul 2019 13:42:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8053022CC0;
+        Fri, 26 Jul 2019 13:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148569;
-        bh=xcrPwqvyu0V0LBKurqlo82+0cYsgFDQ2imAbyZfWuw4=;
+        s=default; t=1564148578;
+        bh=Qkv40fafqQomKUgAfGkXE1/nJT1uUnyN1vwBUnVHzKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I45MlmzvuS/OTGHy2Glg2oyMXykjiqtIN8s2Md0kix+L2OzrkuobjqrCgPLtnqxak
-         S6Qte4rwe/hdcloO5XS+nUQ2GHaEOhDb7TlhoP0HmzUALSv7C2WoCQ3EBoc8Ky8YgC
-         mjiXq+y2a6oKswJAb0ppCwfqLo6HV538wiYn8ELA=
+        b=Q8dwKgMYSGHKzpSmz+a5qKCd8Tcldmgu8z0ihvXyq8TdCijyEt4hQ0yGhl2YuWME5
+         FqyegTZtssEV6lZsgn16bfIGP0tV5uVKn0GmM2Ogg0XQwgfZ41eC37L+DcYWUc8/Mj
+         dMNpULchKurQtS6+gBLTANI6uy42ZB8rffjBfCSw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>,
         clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 24/47] x86: kvm: avoid constant-conversion warning
-Date:   Fri, 26 Jul 2019 09:41:47 -0400
-Message-Id: <20190726134210.12156-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 29/47] x86: math-emu: Hide clang warnings for 16-bit overflow
+Date:   Fri, 26 Jul 2019 09:41:52 -0400
+Message-Id: <20190726134210.12156-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
 References: <20190726134210.12156-1-sashal@kernel.org>
@@ -61,51 +62,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit a6a6d3b1f867d34ba5bd61aa7bb056b48ca67cff ]
+[ Upstream commit 29e7e9664aec17b94a9c8c5a75f8d216a206aa3a ]
 
-clang finds a contruct suspicious that converts an unsigned
-character to a signed integer and back, causing an overflow:
+clang warns about a few parts of the math-emu implementation
+where a 16-bit integer becomes negative during assignment:
 
-arch/x86/kvm/mmu.c:4605:39: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -205 to 51 [-Werror,-Wconstant-conversion]
-                u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
-                   ~~                               ^~
-arch/x86/kvm/mmu.c:4607:38: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -241 to 15 [-Werror,-Wconstant-conversion]
-                u8 uf = (pfec & PFERR_USER_MASK) ? ~u : 0;
-                   ~~                              ^~
-arch/x86/kvm/mmu.c:4609:39: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -171 to 85 [-Werror,-Wconstant-conversion]
-                u8 ff = (pfec & PFERR_FETCH_MASK) ? ~x : 0;
-                   ~~                               ^~
+arch/x86/math-emu/poly_tan.c:88:35: error: implicit conversion from 'int' to 'short' changes value from 49216 to -16320 [-Werror,-Wconstant-conversion]
+                                      (0x41 + EXTENDED_Ebias) | SIGN_Negative);
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+arch/x86/math-emu/fpu_emu.h:180:58: note: expanded from macro 'setexponent16'
+ #define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
+                                                      ~  ^
+arch/x86/math-emu/reg_constant.c:37:32: error: implicit conversion from 'int' to 'short' changes value from 49085 to -16451 [-Werror,-Wconstant-conversion]
+FPU_REG const CONST_PI2extra = MAKE_REG(NEG, -66,
+                               ^~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
+                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:48:28: error: implicit conversion from 'int' to 'short' changes value from 65535 to -1 [-Werror,-Wconstant-conversion]
+FPU_REG const CONST_QNaN = MAKE_REG(NEG, EXP_OVER, 0x00000000, 0xC0000000);
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
+                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Add an explicit cast to tell clang that everything works as
-intended here.
+The code is correct as is, so add a typecast to shut up the warnings.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://github.com/ClangBuiltLinux/linux/issues/95
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190712090816.350668-1-arnd@arndb.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/mmu.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/math-emu/fpu_emu.h      | 2 +-
+ arch/x86/math-emu/reg_constant.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index e0f982e35c96..cdc0c460950f 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -4532,11 +4532,11 @@ static void update_permission_bitmask(struct kvm_vcpu *vcpu,
- 		 */
+diff --git a/arch/x86/math-emu/fpu_emu.h b/arch/x86/math-emu/fpu_emu.h
+index a5a41ec58072..0c122226ca56 100644
+--- a/arch/x86/math-emu/fpu_emu.h
++++ b/arch/x86/math-emu/fpu_emu.h
+@@ -177,7 +177,7 @@ static inline void reg_copy(FPU_REG const *x, FPU_REG *y)
+ #define setexponentpos(x,y) { (*(short *)&((x)->exp)) = \
+   ((y) + EXTENDED_Ebias) & 0x7fff; }
+ #define exponent16(x)         (*(short *)&((x)->exp))
+-#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
++#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (u16)(y); }
+ #define addexponent(x,y)    { (*(short *)&((x)->exp)) += (y); }
+ #define stdexp(x)           { (*(short *)&((x)->exp)) += EXTENDED_Ebias; }
  
- 		/* Faults from writes to non-writable pages */
--		u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
-+		u8 wf = (pfec & PFERR_WRITE_MASK) ? (u8)~w : 0;
- 		/* Faults from user mode accesses to supervisor pages */
--		u8 uf = (pfec & PFERR_USER_MASK) ? ~u : 0;
-+		u8 uf = (pfec & PFERR_USER_MASK) ? (u8)~u : 0;
- 		/* Faults from fetches of non-executable pages*/
--		u8 ff = (pfec & PFERR_FETCH_MASK) ? ~x : 0;
-+		u8 ff = (pfec & PFERR_FETCH_MASK) ? (u8)~x : 0;
- 		/* Faults from kernel mode fetches of user pages */
- 		u8 smepf = 0;
- 		/* Faults from kernel mode accesses of user pages */
+diff --git a/arch/x86/math-emu/reg_constant.c b/arch/x86/math-emu/reg_constant.c
+index 8dc9095bab22..742619e94bdf 100644
+--- a/arch/x86/math-emu/reg_constant.c
++++ b/arch/x86/math-emu/reg_constant.c
+@@ -18,7 +18,7 @@
+ #include "control_w.h"
+ 
+ #define MAKE_REG(s, e, l, h) { l, h, \
+-		((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
++		(u16)((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+ 
+ FPU_REG const CONST_1 = MAKE_REG(POS, 0, 0x00000000, 0x80000000);
+ #if 0
 -- 
 2.20.1
 
