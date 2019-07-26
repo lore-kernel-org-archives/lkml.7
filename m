@@ -6,33 +6,35 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB576C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6EAC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B40ED22C7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF74A22C7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfGZD1u (ORCPT
+        id S1726670AbfGZD15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 23:27:50 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3164 "EHLO huawei.com"
+        Thu, 25 Jul 2019 23:27:57 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3165 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726065AbfGZD1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726405AbfGZD1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jul 2019 23:27:13 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DE6E37045396CF3002CB;
+        by Forcepoint Email with ESMTP id E275C20D583BA8B69D89;
         Fri, 26 Jul 2019 11:27:09 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 26 Jul 2019 11:27:00 +0800
+ 14.3.439.0; Fri, 26 Jul 2019 11:26:59 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 11/11] net: hns3: use dev_info() instead of pr_info()
-Date:   Fri, 26 Jul 2019 11:25:02 +0800
-Message-ID: <1564111502-15504-12-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Yufeng Mo <moyufeng@huawei.com>,
+        lipeng 00277521 <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 05/11] net: hns3: change GFP flag during lock period
+Date:   Fri, 26 Jul 2019 11:24:56 +0800
+Message-ID: <1564111502-15504-6-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564111502-15504-1-git-send-email-tanhuazhong@huawei.com>
 References: <1564111502-15504-1-git-send-email-tanhuazhong@huawei.com>
@@ -45,43 +47,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dev_info() is more appropriate for printing messages when driver
-initialization done, so switch to dev_info().
+From: Yufeng Mo <moyufeng@huawei.com>
 
+When allocating memory, the GFP_KERNEL cannot be used during the
+spin_lock period. This is because it may cause scheduling when holding
+spin_lock. This patch changes GFP flag to GFP_ATOMIC in this case.
+
+Fixes: dd74f815dd41 ("net: hns3: Add support for rule add/delete for flow director")
+Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+Signed-off-by: lipeng 00277521 <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 4 +++-
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 3 ++-
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 3e43dff..588fb42 100644
+index 9329aab..faf60b4 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -8864,7 +8864,9 @@ static int hclge_init_ae_dev(struct hnae3_ae_dev *ae_dev)
- 	hclge_state_init(hdev);
- 	hdev->last_reset_time = jiffies;
+@@ -5798,7 +5798,7 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
+ 			return -ENOSPC;
+ 		}
  
--	pr_info("%s driver initialization finished.\n", HCLGE_DRIVER_NAME);
-+	dev_info(&hdev->pdev->dev, "%s driver initialization finished.\n",
-+		 HCLGE_DRIVER_NAME);
-+
- 	return 0;
- 
- err_mdiobus_unreg:
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index db84782..218fd5d 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -2703,7 +2703,8 @@ static int hclgevf_init_hdev(struct hclgevf_dev *hdev)
- 	}
- 
- 	hdev->last_reset_time = jiffies;
--	pr_info("finished initializing %s driver\n", HCLGEVF_DRIVER_NAME);
-+	dev_info(&hdev->pdev->dev, "finished initializing %s driver\n",
-+		 HCLGEVF_DRIVER_NAME);
- 
- 	return 0;
+-		rule = kzalloc(sizeof(*rule), GFP_KERNEL);
++		rule = kzalloc(sizeof(*rule), GFP_ATOMIC);
+ 		if (!rule) {
+ 			spin_unlock_bh(&hdev->fd_rule_lock);
  
 -- 
 2.7.4
