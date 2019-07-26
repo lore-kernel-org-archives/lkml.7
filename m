@@ -2,114 +2,122 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC78C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAACC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B9520449
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765D82147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149687;
-	bh=FVYNxjJLl/W5Dert07lPwnlV/q5+htxqU2YZhMN4tVA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QW5c0THwadYf1xaOWZZWZQIgbr8qwTUu6V5KEUMUgGF9NJxF5iKcbm7u/sHkW+XEV
-	 p6AqE8zvY2p3Wg5bVp/10AKJDDUomn0+ErMXpkYKaZHTSWb8b7CxTotVsTDIdBUz/n
-	 yCBJ1cAqM09CmVvX2I9D2IfvKuA+Rk5z/nK9LZtk=
+	s=default; t=1564149691;
+	bh=gnAI7TMKcTyegOT0vgw/DwcaWyOPR9eTp+ndZdPTykA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oPf9GXsT+EJbEzANZpssalkAoQ7k6UP8BtivIjNVxIAjaKVSYx/MBjSn1oY2y7dR5
+	 9IlSqCNUQFZooU95jzT/Kxb6EWKlYggERgjR4zj1SDGPBrZ96SA6bu7MPlY9PlOUpd
+	 ud/vi77EcK2EndNed3rhtD6pAgKeOoYQ80TVpcSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388812AbfGZOB0 (ORCPT
+        id S1727412AbfGZNjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:01:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42332 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:39:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388797AbfGZOBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 10:01:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727336AbfGZNjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:39:42 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5712420659;
-        Fri, 26 Jul 2019 14:01:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56E9322BF5;
+        Fri, 26 Jul 2019 13:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564149681;
-        bh=FVYNxjJLl/W5Dert07lPwnlV/q5+htxqU2YZhMN4tVA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mOFvSAqxJtYLjDKCpiywPR/Hj9HyVEoup//WBMEY/mfHLkp6x8koAmiOwLlmv5j9g
-         d7eEUcC+sk7AlJo5/EO6o57O26KLm1D/D101VmY6rnW5jBO60Mh5FdXduz7Lu320y9
-         0eMqTheDx3jighRHdszCAdnWVz/haxkmtwIMqmMA=
-Date:   Fri, 26 Jul 2019 16:01:18 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Chang, Junxiao" <junxiao.chang@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "Li, Lili" <lili.li@intel.com>
-Subject: Re: [PATCH] platform: release resource itself instead of resource
- tree
-Message-ID: <20190726140118.GA23143@kroah.com>
-References: <1556173458-9318-1-git-send-email-junxiao.chang@intel.com>
- <20190725133850.GB11115@kroah.com>
- <840F6BCBBBA89F46BAD0D7D6EF39E6E350F5072A@SHSMSX107.ccr.corp.intel.com>
+        s=default; t=1564148381;
+        bh=gnAI7TMKcTyegOT0vgw/DwcaWyOPR9eTp+ndZdPTykA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RTywxIJfRzEKNevD5GBt33NkJzuRFMulWV1Gqit5nvuSUT1RXws7vWLAo5FlxzIgU
+         cdWvDgCfg4noFAfyTWVSx2MqL4gdGB+QZyrxj5vEwPQ5wxFbz69Fvb8hz7hSIa7IY9
+         aBFJy8zN9a6ANGKkevX2VC/I/PObnyK9n/ayv8J0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 04/85] clk: meson: mpll: properly handle spread spectrum
+Date:   Fri, 26 Jul 2019 09:38:14 -0400
+Message-Id: <20190726133936.11177-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
+References: <20190726133936.11177-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <840F6BCBBBA89F46BAD0D7D6EF39E6E350F5072A@SHSMSX107.ccr.corp.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
-A: Top-posting.
-Q: What is the most annoying thing in e-mail?
+[ Upstream commit f9b3eeebef6aabaa37a351715374de53b6da860c ]
 
-A: No.
-Q: Should I include quotations after my reply?
+The bit 'SSEN' available on some MPLL DSS outputs is not related to the
+fractional part of the divider but to the function called
+'Spread Spectrum'.
 
-http://daringfireball.net/2007/07/on_top
+This function might be used to solve EM issues by adding a jitter on
+clock signal. This widens the signal spectrum and weakens the peaks in it.
 
-On Fri, Jul 26, 2019 at 10:24:22AM +0000, Chang, Junxiao wrote:
-> Hi Greg,
-> 
-> Thank you for looking at it.
-> 
-> Below example is simplified description. Our detail problem is:
-> 1. ACPI driver registers a MEM resource during bootup;
-> 2. Our PUNIT(Intel CPU power management module) platform device reads ACPI driver's resource, and registers same MEM resource;
-> 3. According to current resource management logic, if two resources are same, later registered resource will be parent. That is, PUNIT platform device's resource will be ACPI driver resource's parent.
-> 4. PUNIT kernel module is removed, its resource will be removed. If we use original API "release_resource", ACPI driver's resource will be released as well because it is PUNIT device's child;
+While spread spectrum might be useful for some application, it is
+problematic for others, such as audio.
 
-Why did you remove this module?  That never happens unless you do it "by
-hand", and as root.  Just don't do this if it causes problems in your
-system, right?
+This patch introduce a new flag to the MPLL driver to enable (or not) the
+spread spectrum function.
 
-Anyway, if you create a child reference you should always clean up all
-of your children before removing yourself from memory.  So try fixing
-that up first.
+Fixes: 1f737ffa13ef ("clk: meson: mpll: fix mpll0 fractional part ignored")
+Tested-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/clk/meson/clk-mpll.c | 9 ++++++---
+ drivers/clk/meson/clk-mpll.h | 1 +
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-> 5. Next time PUNIT platform device kernel module is inserted, it might read wrong ACPI MEM resource because it has been released in step 4.
-> 
-> How should we handle this case? :) 
+diff --git a/drivers/clk/meson/clk-mpll.c b/drivers/clk/meson/clk-mpll.c
+index f76850d99e59..d3f42e086431 100644
+--- a/drivers/clk/meson/clk-mpll.c
++++ b/drivers/clk/meson/clk-mpll.c
+@@ -119,9 +119,12 @@ static int mpll_set_rate(struct clk_hw *hw,
+ 	meson_parm_write(clk->map, &mpll->sdm, sdm);
+ 	meson_parm_write(clk->map, &mpll->sdm_en, 1);
+ 
+-	/* Set additional fractional part enable if required */
+-	if (MESON_PARM_APPLICABLE(&mpll->ssen))
+-		meson_parm_write(clk->map, &mpll->ssen, 1);
++	/* Set spread spectrum if possible */
++	if (MESON_PARM_APPLICABLE(&mpll->ssen)) {
++		unsigned int ss =
++			mpll->flags & CLK_MESON_MPLL_SPREAD_SPECTRUM ? 1 : 0;
++		meson_parm_write(clk->map, &mpll->ssen, ss);
++	}
+ 
+ 	/* Set the integer divider part */
+ 	meson_parm_write(clk->map, &mpll->n2, n2);
+diff --git a/drivers/clk/meson/clk-mpll.h b/drivers/clk/meson/clk-mpll.h
+index cf79340006dd..0f948430fed4 100644
+--- a/drivers/clk/meson/clk-mpll.h
++++ b/drivers/clk/meson/clk-mpll.h
+@@ -23,6 +23,7 @@ struct meson_clk_mpll_data {
+ };
+ 
+ #define CLK_MESON_MPLL_ROUND_CLOSEST	BIT(0)
++#define CLK_MESON_MPLL_SPREAD_SPECTRUM	BIT(1)
+ 
+ extern const struct clk_ops meson_clk_mpll_ro_ops;
+ extern const struct clk_ops meson_clk_mpll_ops;
+-- 
+2.20.1
 
-Don't unload kernel modules unless you know what you are doing :)
-
-Seriously, you are creating a dependancy here that you are not
-expressing in your module reference count, and you are not properly
-cleaning up after yourself when removing your devices.  Just delete your
-child devices when unloading yourself and you should be fine, right?
-
-> We should not register same MEM resource in step 2? Or, make change in
-> resource management logic, if two resources are same, later registered
-> resource should be child instead of parent?
-
-I don't know how your resource management logic works, try working with
-the developers who wrote that.  But as you describe it, it is not
-correct at least when you try to clean things up.
-
-thanks,
-
-greg k-h
