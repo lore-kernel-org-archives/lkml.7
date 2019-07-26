@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C58C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8BDC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2BF122CBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 578D4218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564154964;
-	bh=JiuFgkY+17KLtujNkFHlgKRwZi31lbFpMHz3Vr+0Xqk=;
+	s=default; t=1564154969;
+	bh=NfmUCFLiynhvpHzrgnwobc64au4JaTnkhxfA4F/0VZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=POI0tcnTi+7WUuQJ4/PyPeQwBz2JlTIlIILDEGljybF8VcwUPYR7KZzwLWMBHpbzc
-	 9UhSf94Wro2yWsHAV1SHFa4a6iclyK4lzllRw6V4tZl2fHFjXiscgd9RLKiG3qBm1N
-	 HxIeatNnDmW/x4KDihocE+keX4hACOeKt/L02AY0=
+	b=ih6+5eNekHBu5xkh38A74gU7pRJhEJDDSFseB5ow9obR7aK5GmTixQKA6dYHnX2Za
+	 75ip1dqFAjUCUvCrUwV7YrU74b6Tn1w//BTNPdgAgjn9eZn5ibbPu6tXiu62cNwI/K
+	 w9WO1dDH+vHy7VJEmSh40cR7ta92y6J4a9ZT3D+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388795AbfGZP3X (ORCPT
+        id S2388809AbfGZP31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:29:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43962 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:29:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388759AbfGZP3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:29:18 -0400
+        id S2387940AbfGZP3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:29:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B43A322CBD;
-        Fri, 26 Jul 2019 15:29:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBAE4218D4;
+        Fri, 26 Jul 2019 15:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154958;
-        bh=JiuFgkY+17KLtujNkFHlgKRwZi31lbFpMHz3Vr+0Xqk=;
+        s=default; t=1564154964;
+        bh=NfmUCFLiynhvpHzrgnwobc64au4JaTnkhxfA4F/0VZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JRM6MnQEbWXZokz+ZgUwLe/jJ903dCGtgYXixuNHQFLSZ2WxrPXo+OnytjPAn7FlD
-         Jo0ePR2LUArX45Yfo0WhGg5+pIuu0mZA/UYcIs4+luXHw7mcDGPPdnGKw+j1nfvvtN
-         VczI4qpBNVG85TO07rWrOa9updCfZK/k8CTg/wp0=
+        b=ks0ERRTUK7XKGDUuVJJfCABosJGFHak4nwWUzSbYM4cR5M+uJYdPGZ6sCT3ezAN7I
+         QVnOaadez50rSXC3BqE+FMH5qioI8ymDTn15WdkI68eegrF3q6RiQTFB7bHxAfeQ2l
+         E3cOToIYiFFJgp+Ua7zxcyLaTEbESiupm/5/D5qU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Alexander Petrovskiy <alexpe@mellanox.com>,
-        David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 07/62] ipv6: Unlink sibling route in case of failure
-Date:   Fri, 26 Jul 2019 17:24:19 +0200
-Message-Id: <20190726152302.474152642@linuxfoundation.org>
+Subject: [PATCH 5.1 09/62] net: dsa: mv88e6xxx: wait after reset deactivation
+Date:   Fri, 26 Jul 2019 17:24:21 +0200
+Message-Id: <20190726152302.680792877@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -61,61 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Baruch Siach <baruch@tkos.co.il>
 
-[ Upstream commit 54851aa90cf27041d64b12f65ac72e9f97bd90fd ]
+[ Upstream commit 7b75e49de424ceb53d13e60f35d0a73765626fda ]
 
-When a route needs to be appended to an existing multipath route,
-fib6_add_rt2node() first appends it to the siblings list and increments
-the number of sibling routes on each sibling.
+Add a 1ms delay after reset deactivation. Otherwise the chip returns
+bogus ID value. This is observed with 88E6390 (Peridot) chip.
 
-Later, the function notifies the route via call_fib6_entry_notifiers().
-In case the notification is vetoed, the route is not unlinked from the
-siblings list, which can result in a use-after-free.
-
-Fix this by unlinking the route from the siblings list before returning
-an error.
-
-Audited the rest of the call sites from which the FIB notification chain
-is called and could not find more problems.
-
-Fixes: 2233000cba40 ("net/ipv6: Move call_fib6_entry_notifiers up for route adds")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Alexander Petrovskiy <alexpe@mellanox.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/ip6_fib.c |   18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ drivers/net/dsa/mv88e6xxx/chip.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/ipv6/ip6_fib.c
-+++ b/net/ipv6/ip6_fib.c
-@@ -1113,8 +1113,24 @@ add:
- 		err = call_fib6_entry_notifiers(info->nl_net,
- 						FIB_EVENT_ENTRY_ADD,
- 						rt, extack);
--		if (err)
-+		if (err) {
-+			struct fib6_info *sibling, *next_sibling;
-+
-+			/* If the route has siblings, then it first
-+			 * needs to be unlinked from them.
-+			 */
-+			if (!rt->fib6_nsiblings)
-+				return err;
-+
-+			list_for_each_entry_safe(sibling, next_sibling,
-+						 &rt->fib6_siblings,
-+						 fib6_siblings)
-+				sibling->fib6_nsiblings--;
-+			rt->fib6_nsiblings = 0;
-+			list_del_init(&rt->fib6_siblings);
-+			rt6_multipath_rebalance(next_sibling);
- 			return err;
-+		}
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -4910,6 +4910,8 @@ static int mv88e6xxx_probe(struct mdio_d
+ 		err = PTR_ERR(chip->reset);
+ 		goto out;
+ 	}
++	if (chip->reset)
++		usleep_range(1000, 2000);
  
- 		rcu_assign_pointer(rt->fib6_next, iter);
- 		atomic_inc(&rt->fib6_ref);
+ 	err = mv88e6xxx_detect(chip);
+ 	if (err)
 
 
