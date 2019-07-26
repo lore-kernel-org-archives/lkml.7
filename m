@@ -4,56 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66649C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC853C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA0322CD8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C698322CD8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149052;
-	bh=ItV/L+YqpHgl/KAEB0KZea0d2qVCwzkzhqwD8RJx8cU=;
+	s=default; t=1564149055;
+	bh=Nsk0wcbXrDw9o1+zIkA4XGOBBWIf9mehTF+5/qgGej0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VcZuTRPJ/Ckwt+ulYjNz9oSM2q3jW6w7P1VCvAaZwW66rtD85iMiwf/1hhYg0TME9
-	 ZFPI5K8aOIaNVN5aOMdyNJ6Y1QCg5k1Zee6bWExXFivpNNpG0wQdZlANxW/nWzKth9
-	 lmOtw3be7ilwCAJisOw1qbSWu9xPPUChDyvM02sw=
+	b=osPoCRrXjcHlENrFYfbVgNZ2khzwpx+c+F2MKGWuDixrgaT41AfLVuoKdSuXeX68M
+	 HpwquYoYbU4adctJpQ2ImrItFOHe93o3mezX7qFra7N79tdxHxi1IELvEZIXP1o0RD
+	 BI6mgFpNB5JCTHBEHXSygRu90AoVL57DKtm7Ca8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbfGZNoN (ORCPT
+        id S2388663AbfGZNuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:44:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52152 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:50:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727348AbfGZNoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:44:07 -0400
+        id S1728005AbfGZNoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:44:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E74622CC2;
-        Fri, 26 Jul 2019 13:44:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CED6422CC0;
+        Fri, 26 Jul 2019 13:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148646;
-        bh=ItV/L+YqpHgl/KAEB0KZea0d2qVCwzkzhqwD8RJx8cU=;
+        s=default; t=1564148652;
+        bh=Nsk0wcbXrDw9o1+zIkA4XGOBBWIf9mehTF+5/qgGej0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V7jx6t4vWtqHHt59KrWRICnzspkZfmSGLjwyDlSzrzzyl4iL56qUBep2u8Tdph1rh
-         n0mso3R83KiTGBm1/CPYm3WYsVYZNijew/ZR+hT8b6qA7z6z8LMrywDBTMEIaVwJrM
-         SUY7l5Dqt+SREEzLtHo0dMUFOnliVIIPQpo9RADM=
+        b=ABwG+1J/aVdIUla7zrxY9Vh15zKbuO4eJXSgP+x4QUmn9LQg9IhS2QCPlMTul7MF8
+         JRSGqR4nJ4TPNyC7EuH++xerhfZ6XUDQh9gYGwQGMSWEIBjZwqf1/Cr8oQRehRcB5T
+         LPZEpSO3kCyTnza/ItCseq3pEY3UToreVAB8WHZ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Doug Berger <opendmb@gmail.com>,
-        Michal Nazarewicz <mina86@mina86.com>,
-        Yue Hu <huyue2@yulong.com>, Mike Rapoport <rppt@linux.ibm.com>,
-        Laura Abbott <labbott@redhat.com>, Peng Fan <peng.fan@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
+Cc:     Mikko Rapeli <mikko.rapeli@iki.fi>,
+        Jan Harkes <jaharkes@cs.cmu.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Fabian Frederick <fabf@skynet.be>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Yann Droneaud <ydroneaud@opteya.com>,
+        Zhouyang Jia <jiazhouyang09@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.14 23/37] mm/cma.c: fail if fixed declaration can't be honored
-Date:   Fri, 26 Jul 2019 09:43:18 -0400
-Message-Id: <20190726134332.12626-23-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, codalist@coda.cs.cmu.edu
+Subject: [PATCH AUTOSEL 4.14 26/37] uapi linux/coda_psdev.h: move upc_req definition from uapi to kernel side headers
+Date:   Fri, 26 Jul 2019 09:43:21 -0400
+Message-Id: <20190726134332.12626-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134332.12626-1-sashal@kernel.org>
 References: <20190726134332.12626-1-sashal@kernel.org>
@@ -66,68 +69,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Mikko Rapeli <mikko.rapeli@iki.fi>
 
-[ Upstream commit c633324e311243586675e732249339685e5d6faa ]
+[ Upstream commit f90fb3c7e2c13ae829db2274b88b845a75038b8a ]
 
-The description of cma_declare_contiguous() indicates that if the
-'fixed' argument is true the reserved contiguous area must be exactly at
-the address of the 'base' argument.
+Only users of upc_req in kernel side fs/coda/psdev.c and
+fs/coda/upcall.c already include linux/coda_psdev.h.
 
-However, the function currently allows the 'base', 'size', and 'limit'
-arguments to be silently adjusted to meet alignment constraints.  This
-commit enforces the documented behavior through explicit checks that
-return an error if the region does not fit within a specified region.
+Suggested by Jan Harkes <jaharkes@cs.cmu.edu> in
+  https://lore.kernel.org/lkml/20150531111913.GA23377@cs.cmu.edu/
 
-Link: http://lkml.kernel.org/r/1561422051-16142-1-git-send-email-opendmb@gmail.com
-Fixes: 5ea3b1b2f8ad ("cma: add placement specifier for "cma=" kernel parameter")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Michal Nazarewicz <mina86@mina86.com>
-Cc: Yue Hu <huyue2@yulong.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
+Fixes these include/uapi/linux/coda_psdev.h compilation errors in userspace:
+
+  linux/coda_psdev.h:12:19: error: field `uc_chain' has incomplete type
+  struct list_head    uc_chain;
+                   ^
+  linux/coda_psdev.h:13:2: error: unknown type name `caddr_t'
+  caddr_t             uc_data;
+  ^
+  linux/coda_psdev.h:14:2: error: unknown type name `u_short'
+  u_short             uc_flags;
+  ^
+  linux/coda_psdev.h:15:2: error: unknown type name `u_short'
+  u_short             uc_inSize;  /* Size is at most 5000 bytes */
+  ^
+  linux/coda_psdev.h:16:2: error: unknown type name `u_short'
+  u_short             uc_outSize;
+  ^
+  linux/coda_psdev.h:17:2: error: unknown type name `u_short'
+  u_short             uc_opcode;  /* copied from data to save lookup */
+  ^
+  linux/coda_psdev.h:19:2: error: unknown type name `wait_queue_head_t'
+  wait_queue_head_t   uc_sleep;   /* process' wait queue */
+  ^
+
+Link: http://lkml.kernel.org/r/9f99f5ce6a0563d5266e6cf7aa9585aac2cae971.1558117389.git.jaharkes@cs.cmu.edu
+Signed-off-by: Mikko Rapeli <mikko.rapeli@iki.fi>
+Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Colin Ian King <colin.king@canonical.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Fabian Frederick <fabf@skynet.be>
+Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Yann Droneaud <ydroneaud@opteya.com>
+Cc: Zhouyang Jia <jiazhouyang09@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/cma.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ include/linux/coda_psdev.h      | 11 +++++++++++
+ include/uapi/linux/coda_psdev.h | 13 -------------
+ 2 files changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/mm/cma.c b/mm/cma.c
-index 56761e40d191..c4a34c813d47 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -277,6 +277,12 @@ int __init cma_declare_contiguous(phys_addr_t base,
- 	 */
- 	alignment = max(alignment,  (phys_addr_t)PAGE_SIZE <<
- 			  max_t(unsigned long, MAX_ORDER - 1, pageblock_order));
-+	if (fixed && base & (alignment - 1)) {
-+		ret = -EINVAL;
-+		pr_err("Region at %pa must be aligned to %pa bytes\n",
-+			&base, &alignment);
-+		goto err;
-+	}
- 	base = ALIGN(base, alignment);
- 	size = ALIGN(size, alignment);
- 	limit &= ~(alignment - 1);
-@@ -307,6 +313,13 @@ int __init cma_declare_contiguous(phys_addr_t base,
- 	if (limit == 0 || limit > memblock_end)
- 		limit = memblock_end;
+diff --git a/include/linux/coda_psdev.h b/include/linux/coda_psdev.h
+index 15170954aa2b..57d2b2faf6a3 100644
+--- a/include/linux/coda_psdev.h
++++ b/include/linux/coda_psdev.h
+@@ -19,6 +19,17 @@ struct venus_comm {
+ 	struct mutex	    vc_mutex;
+ };
  
-+	if (base + size > limit) {
-+		ret = -EINVAL;
-+		pr_err("Size (%pa) of region at %pa exceeds limit (%pa)\n",
-+			&size, &base, &limit);
-+		goto err;
-+	}
-+
- 	/* Reserve memory */
- 	if (fixed) {
- 		if (memblock_is_region_reserved(base, size) ||
++/* messages between coda filesystem in kernel and Venus */
++struct upc_req {
++	struct list_head	uc_chain;
++	caddr_t			uc_data;
++	u_short			uc_flags;
++	u_short			uc_inSize;  /* Size is at most 5000 bytes */
++	u_short			uc_outSize;
++	u_short			uc_opcode;  /* copied from data to save lookup */
++	int			uc_unique;
++	wait_queue_head_t	uc_sleep;   /* process' wait queue */
++};
+ 
+ static inline struct venus_comm *coda_vcp(struct super_block *sb)
+ {
+diff --git a/include/uapi/linux/coda_psdev.h b/include/uapi/linux/coda_psdev.h
+index aa6623efd2dd..d50d51a57fe4 100644
+--- a/include/uapi/linux/coda_psdev.h
++++ b/include/uapi/linux/coda_psdev.h
+@@ -7,19 +7,6 @@
+ #define CODA_PSDEV_MAJOR 67
+ #define MAX_CODADEVS  5	   /* how many do we allow */
+ 
+-
+-/* messages between coda filesystem in kernel and Venus */
+-struct upc_req {
+-	struct list_head    uc_chain;
+-	caddr_t	            uc_data;
+-	u_short	            uc_flags;
+-	u_short             uc_inSize;  /* Size is at most 5000 bytes */
+-	u_short	            uc_outSize;
+-	u_short	            uc_opcode;  /* copied from data to save lookup */
+-	int		    uc_unique;
+-	wait_queue_head_t   uc_sleep;   /* process' wait queue */
+-};
+-
+ #define CODA_REQ_ASYNC  0x1
+ #define CODA_REQ_READ   0x2
+ #define CODA_REQ_WRITE  0x4
 -- 
 2.20.1
 
