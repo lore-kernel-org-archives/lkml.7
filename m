@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9BBC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4377C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06CB222CD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B42DE22CD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148643;
-	bh=f8DpPcbs0QW/h62qopKrOqchVsN4j5wUb77ZcIc2rUI=;
+	s=default; t=1564148645;
+	bh=neU+KPgUJ+aeKz64xdDye6EMKJnpcX9ePEn4aV9DERk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iMAJ7eEl4EeqXj8J8NUJW6Cj0Y1Zb58EGP7wSqrUEeQvevQYhrNRDKC1sedK5zOvf
-	 GpMIbi1m8spnrwdKFG1argRmH+ZDOfuyXy/rKs0HR5yzWE+SzVQm7kXRpCcYETaSSI
-	 rffleXULpX/t7qLGF+z6iclijDGKhuZl8d1NrqXk=
+	b=Xgoth3t4jcVJzPfwNpuS7Nl0SyNam1SL+dWZYcdA0NM/TQmw0ittoZZesUOeZlgOO
+	 0YsuamP52NWFdeW+HIP5+rXB47xmxVhIsoBS0ulmC9RK6jcW+GGwo9ytzJt03S3STW
+	 DFs+z+GPtEuiZeEsVADRZEGpLd1tk+wtZ78K85MM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387834AbfGZNoB (ORCPT
+        id S1727977AbfGZNoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:44:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51968 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:44:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727913AbfGZNn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:43:59 -0400
+        id S1727922AbfGZNoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:44:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECD5522CC0;
-        Fri, 26 Jul 2019 13:43:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F0F122CD2;
+        Fri, 26 Jul 2019 13:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148638;
-        bh=f8DpPcbs0QW/h62qopKrOqchVsN4j5wUb77ZcIc2rUI=;
+        s=default; t=1564148639;
+        bh=neU+KPgUJ+aeKz64xdDye6EMKJnpcX9ePEn4aV9DERk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y5nxlgXoJ3R4kFD4Op1YO3cYiOmbVCeo3q/8iaexittEzsl2UExTbhI4OvLyy1WH8
-         cn1BIxuYtbWM/5+50+wCXoHfS6CzdeywZ0mTCiU7b4H+/0vW12T686IXg3dOnrEGJ8
-         gpRRE4YOne3a2fPStN5oj5sivu0nyIDa762DeqVQ=
+        b=CcWBQ/j+pMeRvvZPgnh1iAhD3UM3Pkqgg8apYFS/aADCyfo76Wbs39QMTL4zI3Iob
+         O5W/WFoW06y8pxPvNgUh9guONZawhjkPXWv9IWpimIQW6GrpDurs6BAUbfor7gZAO9
+         iPp551Xvjg+czRBt+kh83CTd2+FW19ocK6hwS998=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Phong Tran <tranmanphong@gmail.com>,
-        syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com,
+Cc:     Benjamin Poirier <bpoirier@suse.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 19/37] ISDN: hfcsusb: checking idx of ep configuration
-Date:   Fri, 26 Jul 2019 09:43:14 -0400
-Message-Id: <20190726134332.12626-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 20/37] be2net: Signal that the device cannot transmit during reconfiguration
+Date:   Fri, 26 Jul 2019 09:43:15 -0400
+Message-Id: <20190726134332.12626-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134332.12626-1-sashal@kernel.org>
 References: <20190726134332.12626-1-sashal@kernel.org>
@@ -60,47 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
+From: Benjamin Poirier <bpoirier@suse.com>
 
-[ Upstream commit f384e62a82ba5d85408405fdd6aeff89354deaa9 ]
+[ Upstream commit 7429c6c0d9cb086d8e79f0d2a48ae14851d2115e ]
 
-The syzbot test with random endpoint address which made the idx is
-overflow in the table of endpoint configuations.
+While changing the number of interrupt channels, be2net stops adapter
+operation (including netif_tx_disable()) but it doesn't signal that it
+cannot transmit. This may lead dev_watchdog() to falsely trigger during
+that time.
 
-this adds the checking for fixing the error report from
-syzbot
+Add the missing call to netif_carrier_off(), following the pattern used in
+many other drivers. netif_carrier_on() is already taken care of in
+be_open().
 
-KASAN: stack-out-of-bounds Read in hfcsusb_probe [1]
-The patch tested by syzbot [2]
-
-Reported-by: syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com
-
-[1]:
-https://syzkaller.appspot.com/bug?id=30a04378dac680c5d521304a00a86156bb913522
-[2]:
-https://groups.google.com/d/msg/syzkaller-bugs/_6HBdge8F3E/OJn7wVNpBAAJ
-
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Signed-off-by: Benjamin Poirier <bpoirier@suse.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/hardware/mISDN/hfcsusb.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/emulex/benet/be_main.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
-index 17cc879ad2bb..35983c7c3137 100644
---- a/drivers/isdn/hardware/mISDN/hfcsusb.c
-+++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
-@@ -1963,6 +1963,9 @@ hfcsusb_probe(struct usb_interface *intf, const struct usb_device_id *id)
+diff --git a/drivers/net/ethernet/emulex/benet/be_main.c b/drivers/net/ethernet/emulex/benet/be_main.c
+index 39f399741647..cabeb1790db7 100644
+--- a/drivers/net/ethernet/emulex/benet/be_main.c
++++ b/drivers/net/ethernet/emulex/benet/be_main.c
+@@ -4600,8 +4600,12 @@ int be_update_queues(struct be_adapter *adapter)
+ 	struct net_device *netdev = adapter->netdev;
+ 	int status;
  
- 				/* get endpoint base */
- 				idx = ((ep_addr & 0x7f) - 1) * 2;
-+				if (idx > 15)
-+					return -EIO;
+-	if (netif_running(netdev))
++	if (netif_running(netdev)) {
++		/* device cannot transmit now, avoid dev_watchdog timeouts */
++		netif_carrier_off(netdev);
 +
- 				if (ep_addr & 0x80)
- 					idx++;
- 				attr = ep->desc.bmAttributes;
+ 		be_close(netdev);
++	}
+ 
+ 	be_cancel_worker(adapter);
+ 
 -- 
 2.20.1
 
