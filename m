@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BEBC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEB0C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 721D022BEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D5822BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148405;
-	bh=j4QpKiWOZUwLVM0PO3DDqb7etaR53fFYJO+NvTspFdk=;
+	s=default; t=1564148410;
+	bh=RLsYumlcChrRdNAT+1a34p/7+WhNOBCg+wKS11rYYOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zCrGSXxtCM43YPnJ6pYk4cKL2pAvZY5p5JoFWewJ+H5EiZeXyv7hpCM6uI/Vyu3Cl
-	 duG6JYuiqxra/GmCWEDFDbH63m7HKTWqoNUnw3Ku3fyEYoKAEvuK8rWagCAad9u7J+
-	 O8febn5Z4mSFdt0UTXmscvXRgwL/8AGlS3+FX4dg=
+	b=DMcmYn4yKHDU3gCcOTCfu1BnvC7qb4rtD3Agejhe/T9V1gk2yA9jOfYtXurRHQC7O
+	 abZfErbOSgnFfksGvd+e9qjsdMw2duopRO/ygwdU8OFKGne32317z4FoL8jnEstJiW
+	 tzx6+XBPpwPjsnDY4+7mUaLqepJjsKq/8fO9LT/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfGZNkE (ORCPT
+        id S1727590AbfGZNkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:40:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45918 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:40:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727546AbfGZNkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:40:02 -0400
+        id S1726364AbfGZNkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:40:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 536D522CB8;
-        Fri, 26 Jul 2019 13:40:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B48D22BF5;
+        Fri, 26 Jul 2019 13:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148401;
-        bh=j4QpKiWOZUwLVM0PO3DDqb7etaR53fFYJO+NvTspFdk=;
+        s=default; t=1564148402;
+        bh=RLsYumlcChrRdNAT+1a34p/7+WhNOBCg+wKS11rYYOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zWhMHCdBFwGPGOsuvfBOtBdu2zZHZRatzR2mxP2wiecw3bV7tswFP87sKbCZ6TtJ+
-         D0Qm7+Ir+Se2G+4pkPEtKk0Lnb6CHTxe4lfr66Onwkes6JHKQ3fqwhn6TL2RmpAPbX
-         5D60qnMeR9PWMnJsIIiaA2jkg/0iNHp1r/4C1xe8=
+        b=BBNaR2dJvM1DC5YNjHabfrTivAv/DENdTepFPiJxY33lY3ZHByhUx7/pWT6FUey9H
+         UOlQb/lSYzIwsy7EYmuWlolZFFr+ARaOqUKHZf3dnAVGVd7Qudqmb9QHmLT6HVV/Tw
+         o1yhjHFepgbAG2HzC4gDlK14Y9ebROdZyNuHZV5c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 14/85] PCI: OF: Initialize dev->fwnode appropriately
-Date:   Fri, 26 Jul 2019 09:38:24 -0400
-Message-Id: <20190726133936.11177-14-sashal@kernel.org>
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Olof Johansson <olof@lixom.net>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 15/85] firmware/psci: psci_checker: Park kthreads before stopping them
+Date:   Fri, 26 Jul 2019 09:38:25 -0400
+Message-Id: <20190726133936.11177-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -62,59 +64,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-[ Upstream commit 59b099a6c75e4ddceeaf9676422d8d91d0049755 ]
+[ Upstream commit 92e074acf6f7694e96204265eb18ac113f546e80 ]
 
-For PCI devices that have an OF node, set the fwnode as well. This way
-drivers that rely on fwnode don't need the special case described by
-commit f94277af03ea ("of/platform: Initialise dev->fwnode appropriately").
+Since commit 85f1abe0019f ("kthread, sched/wait: Fix kthread_parkme()
+completion issue"), kthreads that are bound to a CPU must be parked
+before being stopped. At the moment the PSCI checker calls
+kthread_stop() directly on the suspend kthread, which triggers the
+following warning:
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+[    6.068288] WARNING: CPU: 1 PID: 1 at kernel/kthread.c:398 __kthread_bind_mask+0x20/0x78
+               ...
+[    6.190151] Call trace:
+[    6.192566]  __kthread_bind_mask+0x20/0x78
+[    6.196615]  kthread_unpark+0x74/0x80
+[    6.200235]  kthread_stop+0x44/0x1d8
+[    6.203769]  psci_checker+0x3bc/0x484
+[    6.207389]  do_one_initcall+0x48/0x260
+[    6.211180]  kernel_init_freeable+0x2c8/0x368
+[    6.215488]  kernel_init+0x10/0x100
+[    6.218935]  ret_from_fork+0x10/0x1c
+[    6.222467] ---[ end trace e05e22863d043cd3 ]---
+
+kthread_unpark() tries to bind the thread to its CPU and aborts with a
+WARN() if the thread wasn't in TASK_PARKED state. Park the kthreads
+before stopping them.
+
+Fixes: 85f1abe0019f ("kthread, sched/wait: Fix kthread_parkme() completion issue")
 Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/of.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/firmware/psci/psci_checker.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 73d5adec0a28..bc7b27a28795 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -22,12 +22,15 @@ void pci_set_of_node(struct pci_dev *dev)
- 		return;
- 	dev->dev.of_node = of_pci_find_child_device(dev->bus->dev.of_node,
- 						    dev->devfn);
-+	if (dev->dev.of_node)
-+		dev->dev.fwnode = &dev->dev.of_node->fwnode;
- }
- 
- void pci_release_of_node(struct pci_dev *dev)
- {
- 	of_node_put(dev->dev.of_node);
- 	dev->dev.of_node = NULL;
-+	dev->dev.fwnode = NULL;
- }
- 
- void pci_set_bus_of_node(struct pci_bus *bus)
-@@ -41,13 +44,18 @@ void pci_set_bus_of_node(struct pci_bus *bus)
- 		if (node && of_property_read_bool(node, "external-facing"))
- 			bus->self->untrusted = true;
+diff --git a/drivers/firmware/psci/psci_checker.c b/drivers/firmware/psci/psci_checker.c
+index 08c85099d4d0..f3659443f8c2 100644
+--- a/drivers/firmware/psci/psci_checker.c
++++ b/drivers/firmware/psci/psci_checker.c
+@@ -359,16 +359,16 @@ static int suspend_test_thread(void *arg)
+ 	for (;;) {
+ 		/* Needs to be set first to avoid missing a wakeup. */
+ 		set_current_state(TASK_INTERRUPTIBLE);
+-		if (kthread_should_stop()) {
+-			__set_current_state(TASK_RUNNING);
++		if (kthread_should_park())
+ 			break;
+-		}
+ 		schedule();
  	}
+ 
+ 	pr_info("CPU %d suspend test results: success %d, shallow states %d, errors %d\n",
+ 		cpu, nb_suspend, nb_shallow_sleep, nb_err);
+ 
++	kthread_parkme();
 +
- 	bus->dev.of_node = node;
-+
-+	if (bus->dev.of_node)
-+		bus->dev.fwnode = &bus->dev.of_node->fwnode;
+ 	return nb_err;
  }
  
- void pci_release_bus_of_node(struct pci_bus *bus)
- {
- 	of_node_put(bus->dev.of_node);
- 	bus->dev.of_node = NULL;
-+	bus->dev.fwnode = NULL;
- }
+@@ -433,8 +433,10 @@ static int suspend_tests(void)
  
- struct device_node * __weak pcibios_get_phb_of_node(struct pci_bus *bus)
+ 
+ 	/* Stop and destroy all threads, get return status. */
+-	for (i = 0; i < nb_threads; ++i)
++	for (i = 0; i < nb_threads; ++i) {
++		err += kthread_park(threads[i]);
+ 		err += kthread_stop(threads[i]);
++	}
+  out:
+ 	cpuidle_resume_and_unlock();
+ 	kfree(threads);
 -- 
 2.20.1
 
