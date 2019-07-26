@@ -2,191 +2,213 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 705E2C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9A1C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4952A216C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:05:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OX77yu64"
+	by mail.kernel.org (Postfix) with ESMTP id 45B5321842
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564150000;
+	bh=6LfqjPN06gwOLWMwiAbSXnJ6+TV+cegwJWjCipI2Wyk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K/DPOVoPZFFfbDaPyUW1Y71lq3H5+oTbr2+Ektd63r8p5DM/+J5UVV15rZwroDnlO
+	 A1mcY2dqdWNM/hWn0aQkPbKiD4xWBCgEE4zni/WJSIUgHjo33+6HaeTIwsq83eLr6t
+	 RQ6gyDo3VterDnqUyj+c7bT//LD1L7mC7zyTTHIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbfGZOFQ (ORCPT
+        id S1727497AbfGZOGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:05:16 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33786 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbfGZOFP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 10:05:15 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x3so37266920lfc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 07:05:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XRsk0iEI3zTElR2u2jt3WIaXl85qXr9Noy6MPl/LLlU=;
-        b=OX77yu642sxgg1HWdyQx9x41cx1WuDT18/aO9UX6rY4u4nAODv+wC6yhBaw3+9QX5T
-         dBV1+B9FKTO/C+WlDI5n+NiBhKRsKNedmV8BCjk0uTgaB5MapIid4HUVGa8JaZKYD3yD
-         nlg5wjSYvBF7Gf8MnPUS+JftzW8zigSkaenRy2Uw5jyAdHFjkJIQ8Oe3qzzp0Jl3BdRY
-         UvCzsbkTsgl3SeExNSjo80CItXkQUHBePxaN2g7ANgbH7nPjhp5EV5EQ5W5GwhhAT7za
-         mYlEKOBBkzDnZNJeVptuM4S9BVNtUQrKp6ObQSUIgCqUFZn3URJCZvD2air0iweLKLrk
-         Y+Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XRsk0iEI3zTElR2u2jt3WIaXl85qXr9Noy6MPl/LLlU=;
-        b=Wof6LIX2Dpj6iniyBuZrPfufAB2t2KAnIJPWgYWpEzVU+Uad5DeByLaDwjGagP+3kk
-         0sWc1Za6hji+teP72BWuaBd943+vnJ3/kA0Achl5NtiD+AJiaj75iepUsl5H8LLllL4h
-         /0J/mbHLuL4xwSqT7pbglE6XjDV2M+Q2uXfOShWKCy4+t7MZgk73xazfbAzJewP40ify
-         UvwtcdGnvDFcRL6bJTFv3RhsmQcFRrvD3QP7HQulogt9HNhuxXVI3KjyDITcSdyau9le
-         qVVDc9Qhgv5cs0AXfIOCcF3SMdtoc5qNVOAYDl7td1+LAr68A3T0W0X8lrq9TigRHwMN
-         LYTA==
-X-Gm-Message-State: APjAAAVW13Xphu3C9dZxzjoembT26n5M7yAKT/YZAOtntSlOM4BPpqXH
-        OdXehFdKbgaVbISuk+CNJGJymqMCAfwaPC5AmqHw9w==
-X-Google-Smtp-Source: APXvYqwa4920tCYVHHu9I4QKSrBmf0RTIQ5b6Q2RM0JOBEekZMUOdfpLbKuHuoNm3VkGJHdz7S50cU4xJ9G0jxWt3ec=
-X-Received: by 2002:ac2:44b1:: with SMTP id c17mr33687690lfm.87.1564149912518;
- Fri, 26 Jul 2019 07:05:12 -0700 (PDT)
+        Fri, 26 Jul 2019 10:06:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44000 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbfGZOGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 10:06:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38E3621743;
+        Fri, 26 Jul 2019 14:06:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564149997;
+        bh=6LfqjPN06gwOLWMwiAbSXnJ6+TV+cegwJWjCipI2Wyk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VL/IqECoYI4eYvfJUGVC1aH6YMKwuhRuSkd291Mfe4ePuIBtEbWsJpwY2NQU1NjLW
+         2Rn4DKNkoGzdQnlpJyyofZmQFUZQh57Li8DDVikI4X8Nc81RkOUsB58txa8gOBlM5X
+         04i/RLTXM+4sJp1aAUGCYBC64di1c2CfwqVd6QVk=
+Date:   Fri, 26 Jul 2019 16:06:35 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [RFC PATCH 04/40] soundwire: intel: add debugfs register dump
+Message-ID: <20190726140635.GB8767@kroah.com>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-5-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-References: <20190726112705.19000-1-anders.roxell@linaro.org> <86ef2dnfkb.wl-marc.zyngier@arm.com>
-In-Reply-To: <86ef2dnfkb.wl-marc.zyngier@arm.com>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Fri, 26 Jul 2019 16:05:01 +0200
-Message-ID: <CADYN=9+RpC1xkBwvjUO=Figy5VSw-LFxazEE32fx9eLoPPMjRA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: KVM: regmap: Mark expected switch fall-through
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        kvmarm@lists.cs.columbia.edu,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725234032.21152-5-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 at 14:30, Marc Zyngier <marc.zyngier@arm.com> wrote:
->
-> Hi Anders,
->
-> On Fri, 26 Jul 2019 12:27:05 +0100,
-> Anders Roxell <anders.roxell@linaro.org> wrote:
-> >
-> > When fall-through warnings was enabled by default, commit d93512ef0f0e
-> > ("Makefile: Globally enable fall-through warning"), the following
-> > warnings was starting to show up:
-> >
-> > In file included from ../arch/arm64/include/asm/kvm_emulate.h:19,
-> >                  from ../arch/arm64/kvm/regmap.c:13:
-> > ../arch/arm64/kvm/regmap.c: In function =E2=80=98vcpu_write_spsr32=E2=
-=80=99:
-> > ../arch/arm64/include/asm/kvm_hyp.h:31:3: warning: this statement may f=
-all
-> >  through [-Wimplicit-fallthrough=3D]
-> >    asm volatile(ALTERNATIVE(__msr_s(r##nvh, "%x0"), \
-> >    ^~~
-> > ../arch/arm64/include/asm/kvm_hyp.h:46:31: note: in expansion of macro =
-=E2=80=98write_sysreg_elx=E2=80=99
-> >  #define write_sysreg_el1(v,r) write_sysreg_elx(v, r, _EL1, _EL12)
-> >                                ^~~~~~~~~~~~~~~~
-> > ../arch/arm64/kvm/regmap.c:180:3: note: in expansion of macro =E2=80=98=
-write_sysreg_el1=E2=80=99
-> >    write_sysreg_el1(v, SYS_SPSR);
-> >    ^~~~~~~~~~~~~~~~
-> > ../arch/arm64/kvm/regmap.c:181:2: note: here
-> >   case KVM_SPSR_ABT:
-> >   ^~~~
-> > In file included from ../arch/arm64/include/asm/cputype.h:132,
-> >                  from ../arch/arm64/include/asm/cache.h:8,
-> >                  from ../include/linux/cache.h:6,
-> >                  from ../include/linux/printk.h:9,
-> >                  from ../include/linux/kernel.h:15,
-> >                  from ../include/asm-generic/bug.h:18,
-> >                  from ../arch/arm64/include/asm/bug.h:26,
-> >                  from ../include/linux/bug.h:5,
-> >                  from ../include/linux/mmdebug.h:5,
-> >                  from ../include/linux/mm.h:9,
-> >                  from ../arch/arm64/kvm/regmap.c:11:
-> > ../arch/arm64/include/asm/sysreg.h:837:2: warning: this statement may f=
-all
-> >  through [-Wimplicit-fallthrough=3D]
-> >   asm volatile("msr " __stringify(r) ", %x0"  \
-> >   ^~~
-> > ../arch/arm64/kvm/regmap.c:182:3: note: in expansion of macro =E2=80=98=
-write_sysreg=E2=80=99
-> >    write_sysreg(v, spsr_abt);
-> >    ^~~~~~~~~~~~
-> > ../arch/arm64/kvm/regmap.c:183:2: note: here
-> >   case KVM_SPSR_UND:
-> >   ^~~~
-> >
-> > Rework to add a 'break;' in the swich-case since it didn't have that.
-> > That also made the compiler happy and didn't warn about fall-through.
-> >
-> > Cc: stable@vger.kernel.org # v3.16+
->
-> Erm... Are you sure about that?
+On Thu, Jul 25, 2019 at 06:39:56PM -0500, Pierre-Louis Bossart wrote:
+> Add debugfs file to dump the Intel SoundWire registers
+> 
+> Credits: this patch is based on an earlier internal contribution by
+> Vinod Koul, Sanyog Kale, Shreyas Nc and Hardik Shah. The main change
+> is the use of scnprintf to avoid known issues with snprintf.
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/intel.c | 115 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 115 insertions(+)
+> 
+> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+> index 317873bc0555..aeadc341c0a3 100644
+> --- a/drivers/soundwire/intel.c
+> +++ b/drivers/soundwire/intel.c
+> @@ -6,6 +6,7 @@
+>   */
+>  
+>  #include <linux/acpi.h>
+> +#include <linux/debugfs.h>
+>  #include <linux/delay.h>
+>  #include <linux/module.h>
+>  #include <linux/interrupt.h>
+> @@ -16,6 +17,7 @@
+>  #include <linux/soundwire/sdw.h>
+>  #include <linux/soundwire/sdw_intel.h>
+>  #include "cadence_master.h"
+> +#include "bus.h"
+>  #include "intel.h"
+>  
+>  /* Intel SHIM Registers Definition */
+> @@ -98,6 +100,7 @@ struct sdw_intel {
+>  	struct sdw_cdns cdns;
+>  	int instance;
+>  	struct sdw_intel_link_res *res;
+> +	struct dentry *fs;
+>  };
+>  
+>  #define cdns_to_intel(_cdns) container_of(_cdns, struct sdw_intel, cdns)
+> @@ -161,6 +164,115 @@ static int intel_set_bit(void __iomem *base, int offset, u32 value, u32 mask)
+>  	return -EAGAIN;
+>  }
+>  
+> +/*
+> + * debugfs
+> + */
+> +
+> +#define RD_BUF (2 * PAGE_SIZE)
+> +
+> +static ssize_t intel_sprintf(void __iomem *mem, bool l,
+> +			     char *buf, size_t pos, unsigned int reg)
+> +{
+> +	int value;
+> +
+> +	if (l)
+> +		value = intel_readl(mem, reg);
+> +	else
+> +		value = intel_readw(mem, reg);
+> +
+> +	return scnprintf(buf + pos, RD_BUF - pos, "%4x\t%4x\n", reg, value);
+> +}
+> +
+> +static ssize_t intel_reg_read(struct file *file, char __user *user_buf,
+> +			      size_t count, loff_t *ppos)
+> +{
+> +	struct sdw_intel *sdw = file->private_data;
+> +	void __iomem *s = sdw->res->shim;
+> +	void __iomem *a = sdw->res->alh;
+> +	char *buf;
+> +	ssize_t ret;
+> +	int i, j;
+> +	unsigned int links, reg;
+> +
+> +	buf = kzalloc(RD_BUF, GFP_KERNEL);
+> +	if (!buf)
+> +		return -ENOMEM;
+> +
+> +	links = intel_readl(s, SDW_SHIM_LCAP) & GENMASK(2, 0);
+> +
+> +	ret = scnprintf(buf, RD_BUF, "Register  Value\n");
+> +	ret += scnprintf(buf + ret, RD_BUF - ret, "\nShim\n");
+> +
+> +	for (i = 0; i < 4; i++) {
+> +		reg = SDW_SHIM_LCAP + i * 4;
+> +		ret += intel_sprintf(s, true, buf, ret, reg);
+> +	}
+> +
+> +	for (i = 0; i < links; i++) {
+> +		ret += scnprintf(buf + ret, RD_BUF - ret, "\nLink%d\n", i);
+> +		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_CTLSCAP(i));
+> +		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_CTLS0CM(i));
+> +		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_CTLS1CM(i));
+> +		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_CTLS2CM(i));
+> +		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_CTLS3CM(i));
+> +		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_PCMSCAP(i));
+> +
+> +		for (j = 0; j < 8; j++) {
+> +			ret += intel_sprintf(s, false, buf, ret,
+> +					SDW_SHIM_PCMSYCHM(i, j));
+> +			ret += intel_sprintf(s, false, buf, ret,
+> +					SDW_SHIM_PCMSYCHC(i, j));
+> +		}
+> +
+> +		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_PDMSCAP(i));
+> +		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_IOCTL(i));
+> +		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_CTMCTL(i));
+> +	}
+> +
+> +	ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_WAKEEN);
+> +	ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_WAKESTS);
+> +
+> +	ret += scnprintf(buf + ret, RD_BUF - ret, "\nALH\n");
+> +	for (i = 0; i < 8; i++)
+> +		ret += intel_sprintf(a, true, buf, ret, SDW_ALH_STRMZCFG(i));
+> +
+> +	ret = simple_read_from_buffer(user_buf, count, ppos, buf, ret);
+> +	kfree(buf);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct file_operations intel_reg_fops = {
+> +	.open = simple_open,
+> +	.read = intel_reg_read,
+> +	.llseek = default_llseek,
+> +};
 
-I made two mistakes.
-1. saying 3.x instead of 4.x
-2. I said the same kernel that 'git describe' showed and not the later one.
+DEFINE_SIMPLE_ATTRIBUTE()?
 
-I did not know about '--match=3D'.
+> +
+> +static void intel_debugfs_init(struct sdw_intel *sdw)
+> +{
+> +	struct dentry *root = sdw->cdns.bus.debugfs;
+> +
+> +	if (!root)
+> +		return;
+> +
+> +	sdw->fs = debugfs_create_dir("intel-sdw", root);
+> +	if (IS_ERR_OR_NULL(sdw->fs)) {
+> +		dev_err(sdw->cdns.dev, "debugfs root creation failed\n");
 
-> Here's what I have:
->
-> $ git describe --contains  a892819560c4
-> kvm-arm-for-v4.17~44
-> $ git describe --contains --match=3D'v*' a892819560c4
-> v4.17-rc1~72^2~36^2~44
+No, come on, don't do that.  I've been sweeping the kernel tree to
+remove this anti-pattern.
 
-That's correct.
+The debugfs core will print an error if you got something wrong, just
+call the function and move on, you NEVER need to check the return value
+of a debugfs call.
 
->
->
-> > Fixes: a892819560c4 ("KVM: arm64: Prepare to handle deferred save/resto=
-re of 32-bit registers")
-> > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-> > ---
-> >  arch/arm64/kvm/regmap.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/arch/arm64/kvm/regmap.c b/arch/arm64/kvm/regmap.c
-> > index 0d60e4f0af66..a900181e3867 100644
-> > --- a/arch/arm64/kvm/regmap.c
-> > +++ b/arch/arm64/kvm/regmap.c
-> > @@ -178,13 +178,18 @@ void vcpu_write_spsr32(struct kvm_vcpu *vcpu, uns=
-igned long v)
-> >       switch (spsr_idx) {
-> >       case KVM_SPSR_SVC:
-> >               write_sysreg_el1(v, SYS_SPSR);
-> > +             break;
-> >       case KVM_SPSR_ABT:
-> >               write_sysreg(v, spsr_abt);
-> > +             break;
-> >       case KVM_SPSR_UND:
-> >               write_sysreg(v, spsr_und);
-> > +             break;
-> >       case KVM_SPSR_IRQ:
-> >               write_sysreg(v, spsr_irq);
-> > +             break;
-> >       case KVM_SPSR_FIQ:
-> >               write_sysreg(v, spsr_fiq);
-> > +             break;
-> >       }
-> >  }
->
-> Otherwise looks like the right fix to me. Let me know what you think
-> about the Fixes: tag (no need to resend for that).
+thanks,
 
-It should be v4.17+.
-
-Cheers,
-Anders
+greg k-h
