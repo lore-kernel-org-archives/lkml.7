@@ -2,79 +2,82 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362C6C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AADBC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05C7422C97
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4867722C7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:35:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfGZJfL (ORCPT
+        id S1726173AbfGZJfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:35:11 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3174 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725903AbfGZJfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:35:11 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5790F264E7CD27357095;
-        Fri, 26 Jul 2019 17:35:09 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 26 Jul 2019 17:35:01 +0800
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Nianyao Tang <tangnianyao@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>
-Subject: [PATCH v2] irqchip/gic-v3-its: Free unused vpt_page when alloc vpe table fail
-Date:   Fri, 26 Jul 2019 17:32:57 +0800
-Message-ID: <1564133577-57866-1-git-send-email-zhangshaokun@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564105905-15410-1-git-send-email-zhangshaokun@hisilicon.com>
-References: <1564105905-15410-1-git-send-email-zhangshaokun@hisilicon.com>
+        Fri, 26 Jul 2019 05:35:51 -0400
+Received: from mga11.intel.com ([192.55.52.93]:13379 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbfGZJfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:35:51 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 02:35:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,310,1559545200"; 
+   d="scan'208";a="175546022"
+Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.251.89.116]) ([10.251.89.116])
+  by orsmga006.jf.intel.com with ESMTP; 26 Jul 2019 02:35:45 -0700
+Subject: Re: [RFC PATCH 04/40] soundwire: intel: add debugfs register dump
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
+        gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-5-pierre-louis.bossart@linux.intel.com>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Message-ID: <9d5bc940-eadd-4f82-0bac-6a731369436d@intel.com>
+Date:   Fri, 26 Jul 2019 11:35:44 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190725234032.21152-5-pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nianyao Tang <tangnianyao@huawei.com>
+On 2019-07-26 01:39, Pierre-Louis Bossart wrote:
+> +static void intel_debugfs_init(struct sdw_intel *sdw)
+> +{
+> +	struct dentry *root = sdw->cdns.bus.debugfs;
+> +
+> +	if (!root)
+> +		return;
+> +
+> +	sdw->fs = debugfs_create_dir("intel-sdw", root);
+> +	if (IS_ERR_OR_NULL(sdw->fs)) {
+> +		dev_err(sdw->cdns.dev, "debugfs root creation failed\n");
+> +		sdw->fs = NULL;
+> +		return;
+> +	}
+> +
+> +	debugfs_create_file("intel-registers", 0400, sdw->fs, sdw,
+> +			    &intel_reg_fops);
+> +
+> +	sdw_cdns_debugfs_init(&sdw->cdns, sdw->fs);
+> +}
 
-In its_vpe_init, when its_alloc_vpe_table fails, we should free
-vpt_page allocated just before, instead of vpe->vpt_page.
-Let's fix it.
+I believe there should be dummy equivalent of _init and _exit if debugfs 
+is not enabled (if these are defined already and I've missed it, please 
+ignore).
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
----
- drivers/irqchip/irq-gic-v3-its.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 730fbe0e2a9d..1b5c3672aea2 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3010,7 +3010,7 @@ static int its_vpe_init(struct its_vpe *vpe)
- 
- 	if (!its_alloc_vpe_table(vpe_id)) {
- 		its_vpe_id_free(vpe_id);
--		its_free_pending_table(vpe->vpt_page);
-+		its_free_pending_table(vpt_page);
- 		return -ENOMEM;
- 	}
- 
--- 
-2.7.4
-
+> +static void intel_debugfs_exit(struct sdw_intel *sdw)
+> +{
+> +	debugfs_remove_recursive(sdw->fs);
+> +}
