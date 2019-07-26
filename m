@@ -2,160 +2,103 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D769C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C950C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 147F62171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71BE12171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:58:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PF5cAUdu";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fI8H3wgD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gX+qZUfV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfGZJ6Y (ORCPT
+        id S1726265AbfGZJ6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:58:24 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48312 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfGZJ6X (ORCPT
+        Fri, 26 Jul 2019 05:58:35 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40530 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbfGZJ6e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:58:23 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D53256053D; Fri, 26 Jul 2019 09:58:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564135102;
-        bh=j3uQJTmCdq40VmREaWK3WDQwD/oEO5ZQLNR/cHQZdEY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PF5cAUdujLBY8RnoHNG1tNPu/IawbietXTGJVJCajf07HEuJr2W8B+6Fbj3jHIY7w
-         Q62u2hcbjB5x/o6QXZtZVec9behzfiqTcwfhIPh88dnzML1OmEGx/Oe11k80lPMInr
-         nlLkx4cn8alVn4VL7B41OK7XKz2AK6xJurHYRHK8=
-Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 64D976021C;
-        Fri, 26 Jul 2019 09:58:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564135101;
-        bh=j3uQJTmCdq40VmREaWK3WDQwD/oEO5ZQLNR/cHQZdEY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fI8H3wgDWxVBkPo0HmEcdnzAV0cSbAbhaRh35YW7vzmLdA5z0z197ApxN7xfRIxEp
-         ZqP+aNNqAsQ65MwF9OK4lUxvLetTQObl02LynVzFOqnN80lb0dcx49vSchNLUrgeoA
-         76R9iq4lQpxmZujgUTEPaS6CzBAlGaDwdSXgnnwc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 64D976021C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-Subject: Re: [Regression] Missing device nodes for ETR, ETF and STM after
- CONFIG_UEVENT_HELPER=n
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        gregkh@linuxfoundation.org
-Cc:     geert+renesas@glider.be, mathieu.poirier@linaro.org,
-        leo.yan@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <cfe09a46-462f-633a-37c2-52f8bfc0ffb2@codeaurora.org>
- <20190726070429.GA15714@kroah.com>
- <165028a7-ff12-dd28-cc4c-57a3961dbb40@codeaurora.org>
- <20190726084127.GA28470@kroah.com>
- <f72f2fa1-7b1b-d7de-c9b4-cd574400d8e5@arm.com>
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Message-ID: <23fa6b3a-3f86-01f1-1b69-f3d4696ce3e2@codeaurora.org>
-Date:   Fri, 26 Jul 2019 15:28:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 26 Jul 2019 05:58:34 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v19so47193942wmj.5;
+        Fri, 26 Jul 2019 02:58:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mLJorQvghyl6IcdxX7Lb1tw6yVw/dZusj2KL96pJtao=;
+        b=gX+qZUfVV9sP7taGSw8DcFdrYFJqz+Vy9y2Jc6NcxaHwsNgOmxzV/nzxgBAll8eynD
+         AfodXp3+aOFMGPl08WFw5zhIYE3jbJ1H3D4XAob//EubTo7ylRjP0zU/sQW0SZg+fy65
+         4RBndOvHhKyYI3KwMtZ9XGwZsYY27xRGWSRMuIVKRt25Fd4Aw+Ex1LwqRCXldL+Wg/Tk
+         9CraWUBKKBbXY+y3rpuiBMUYULJJqsT6j1i7cG1oVAHN5yYF0mu+g8QTBajplwqwSEEw
+         1L7fm8NPCaN5qyrsS/ctehooWvG+krWXA0xJ/P7HY5SJE9ljmwFUS4Q+i4WkPEF8P+He
+         pJ8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mLJorQvghyl6IcdxX7Lb1tw6yVw/dZusj2KL96pJtao=;
+        b=uDL6kUvnu0p9zskY51YK0UZhU0stXPVAFcb0GtjY8Vbzktmy9bAtuoY80m0X9fvSw3
+         C0jww9X2V2kPoxZrwW5KHuimiAMLUCxMG13iZWlsA+2yUnfPFtULuYHUurHRn2/Qrxdm
+         YspCy9ejVPLOqlECp/PQ7YgMVA/OWKbejGVe/h2q8oXk3K+zKU8nhzaIe9QByAKmDQGA
+         B2Xoyg7MgbluIbiFu6fdsR7CTkUy/FDBO88wdbOG11POSOvhlhmmjZ1qNer4OPfuY4GR
+         hBAF+m1itZra2RGl3h8DvkipmuMZTVg9hqGMhzx+ys0RQdLLgajjOkwy7Wh8f1eqr5cV
+         RW8A==
+X-Gm-Message-State: APjAAAW5XPJZy+v5/Ku5fSuUvBhWtVP13JhY4vEIR/AClFi33qiwAKGE
+        9TLtMDf8KRl7WnVlwbZv88c=
+X-Google-Smtp-Source: APXvYqxaPlO+u5d814OS6J0FqxMEZJQIMhBDcVQn1suHTGRMGAIHcmKiFfpzhsVTgCFprNcqH5Vu3g==
+X-Received: by 2002:a1c:a481:: with SMTP id n123mr78880407wme.123.1564135112469;
+        Fri, 26 Jul 2019 02:58:32 -0700 (PDT)
+Received: from [192.168.8.147] (216.171.185.81.rev.sfr.net. [81.185.171.216])
+        by smtp.gmail.com with ESMTPSA id t6sm58304258wmb.29.2019.07.26.02.58.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jul 2019 02:58:31 -0700 (PDT)
+Subject: Re: [PATCH] Revert "net: get rid of an signed integer overflow in
+ ip_idents_reserve()"
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Yang Guo <guoyang2@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>
+References: <1564132635-57634-1-git-send-email-zhangshaokun@hisilicon.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <afa992f6-eb5e-8104-9a03-f992b184a6b6@gmail.com>
+Date:   Fri, 26 Jul 2019 11:58:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <f72f2fa1-7b1b-d7de-c9b4-cd574400d8e5@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1564132635-57634-1-git-send-email-zhangshaokun@hisilicon.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
 
-On 7/26/2019 2:58 PM, Suzuki K Poulose wrote:
-> 
-> 
-> On 07/26/2019 09:41 AM, Greg Kroah-Hartman wrote:
->> On Fri, Jul 26, 2019 at 01:50:27PM +0530, Sai Prakash Ranjan wrote:
->>> On 7/26/2019 12:34 PM, Greg Kroah-Hartman wrote:
->>>> On Fri, Jul 26, 2019 at 11:49:19AM +0530, Sai Prakash Ranjan wrote:
->>>>> Hi,
->>>>>
->>>>> When trying to test my coresight patches, I found that etr,etf and stm
->>>>> device nodes are missing from /dev.
->>>>
->>>> I have no idea what those device nodes are.
->>>>
->>>>> Bisection gives this as the bad commit.
->>>>>
->>>>> 1be01d4a57142ded23bdb9e0c8d9369e693b26cc is the first bad commit
->>>>> commit 1be01d4a57142ded23bdb9e0c8d9369e693b26cc
->>>>> Author: Geert Uytterhoeven <geert+renesas@glider.be>
->>>>> Date:   Thu Mar 14 12:13:50 2019 +0100
->>>>>
->>>>>       driver: base: Disable CONFIG_UEVENT_HELPER by default
->>>>>
->>>>>       Since commit 7934779a69f1184f ("Driver-Core: disable 
->>>>> /sbin/hotplug by
->>>>>       default"), the help text for the /sbin/hotplug fork-bomb says
->>>>>       "This should not be used today [...] creates a high system 
->>>>> load, or
->>>>>       [...] out-of-memory situations during bootup".  The rationale 
->>>>> for this
->>>>>       was that no recent mainstream system used this anymore (in 
->>>>> 2010!).
->>>>>
->>>>>       A few years later, the complete uevent helper support was 
->>>>> made optional
->>>>>       in commit 86d56134f1b67d0c ("kobject: Make support for 
->>>>> uevent_helper
->>>>>       optional.").  However, if was still left enabled by default, 
->>>>> to support
->>>>>       ancient userland.
->>>>>
->>>>>       Time passed by, and nothing should use this anymore, so it 
->>>>> can be
->>>>>       disabled by default.
->>>>>
->>>>>       Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>>>       Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>>>
->>>>>    drivers/base/Kconfig | 1 -
->>>>>    1 file changed, 1 deletion(-)
->>>>>
->>>>>
->>>>> Any idea on this?
->>>>
->>>> That means that who ever created those device nodes is relying on udev
->>>> to do this, and is not doing the correct thing within the kernel and
->>>> using devtmpfs.
->>>>
->>>> Any pointers to where in the kernel those devices are trying to be
->>>> created?
->>>>
->>>
->>> Somewhere in drivers/hwtracing/coresight/* probably. I am not sure,
->>> Mathieu/Suzuki would be able to point you to the exact code.
->>>
->>> Also just to add on some more details, I am using *initramfs*
-> 
->>
->> Are you using devtmpfs for your /dev/ mount?
-> 
-> I think that should solve the issue ^^
-> 
 
-Yes mounting /dev using devtmpfs does solve the issue. But is this 
-different behaviour OK?
+On 7/26/19 11:17 AM, Shaokun Zhang wrote:
+> From: Yang Guo <guoyang2@huawei.com>
+> 
+> There is an significant performance regression with the following
+> commit-id <adb03115f459>
+> ("net: get rid of an signed integer overflow in ip_idents_reserve()").
+> 
+>
 
--Sai
+So, you jump around and took ownership of this issue, while some of us
+are already working on it ?
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Have you first checked that current UBSAN versions will not complain anymore ?
+
+A revert adding back the original issue would be silly, performance of
+benchmarks is nice but secondary.
+
