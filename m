@@ -2,215 +2,172 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8554BC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 419C8C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C16022CEB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F8522CE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564148850;
+	bh=6/uPIlYL4tXXpClEj4Iy438L3wZe0nAPdUyNVWwWoeY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=le/tApFrXU4SanbJVuSf+Ezz/LBIjjs7XTt2irTh0Hph49V/K/c1vwefWasVWrOCR
+	 iPXLKf85PoP98HAU/9sHWzwu1HWML3AXaLH2EnRskvRuHMwY6l+pM8fGFNQfngpKl5
+	 9zT4cbX6gXy4blVm3cKs2QeKr6S+8lMpzv5E4y7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388750AbfGZNr0 (ORCPT
+        id S2388761AbfGZNr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:47:26 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45547 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388347AbfGZNrX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:47:23 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x22so47690434qtp.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 06:47:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=aREd7oX/KjjR1y+/DoK7i/ri4F4zE0JK5o/p5Emjkas=;
-        b=GeL5D5WRE4VeG63qp/WUJ5gnKVK/ymeYBtSvh8vkNbfcNSs1nMVjWUWxlNzmrtNlVa
-         2XFRsqjplSo6/w/O5Yv4vMUWqva9BN6i/G5BxEq0VFLTbWLSYJT6UCV6esPPIjhOs/nW
-         bRI3wOxhOaNSPpa2AlDszb67kTYfr2S28wx2iuYoNifvie/nIKde45twts4wDH2EY64E
-         uic/rBEHf6vHfuEiLZdQyr4A9NPyU/t602MDVdv/AF4ensslpDlE9wNFB5KCAqSYg9FW
-         KjtQVpt7ejtTV/cn/9iPYp/AF0w73+jLu0jPKch8QLgd7AR+3QNEp3QXx3hsW7wBLHKd
-         j6Lw==
-X-Gm-Message-State: APjAAAVNGpwLo+ZzX+Xy1cM3hUtmt0xOYrjlloNM4IlbvrQhAyKBh4kz
-        z4W6MGRRnTb8KC1Blt1aDAtZMg==
-X-Google-Smtp-Source: APXvYqzVdYsizVTGT9hdpWznFaUhHBwNJSFBNQoI8apQUSuT6ROsP77q6nipE0mfzkXGrjdjl9uw3A==
-X-Received: by 2002:a0c:ba0b:: with SMTP id w11mr68077058qvf.71.1564148842235;
-        Fri, 26 Jul 2019 06:47:22 -0700 (PDT)
-Received: from redhat.com ([212.92.104.165])
-        by smtp.gmail.com with ESMTPSA id g2sm21326394qkm.31.2019.07.26.06.47.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 06:47:21 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 09:47:12 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
-        keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-Subject: Re: WARNING in __mmdrop
-Message-ID: <20190726094353-mutt-send-email-mst@kernel.org>
-References: <20190725012149-mutt-send-email-mst@kernel.org>
- <55e8930c-2695-365f-a07b-3ad169654d28@redhat.com>
- <20190725042651-mutt-send-email-mst@kernel.org>
- <84bb2e31-0606-adff-cf2a-e1878225a847@redhat.com>
- <20190725092332-mutt-send-email-mst@kernel.org>
- <11802a8a-ce41-f427-63d5-b6a4cf96bb3f@redhat.com>
- <20190726074644-mutt-send-email-mst@kernel.org>
- <5cc94f15-b229-a290-55f3-8295266edb2b@redhat.com>
- <20190726082837-mutt-send-email-mst@kernel.org>
- <ada10dc9-6cab-e189-5289-6f9d3ff8fed2@redhat.com>
+        Fri, 26 Jul 2019 09:47:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55350 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388619AbfGZNqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:46:02 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97BE522CBF;
+        Fri, 26 Jul 2019 13:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564148761;
+        bh=6/uPIlYL4tXXpClEj4Iy438L3wZe0nAPdUyNVWwWoeY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RAdwt3HXyLHZSEpPaCcBgBs5B339yacCxzQRzrbvXatX30avfaDt5GHM7F03diQ/O
+         aTQyCbcuVkoC/04nyxgLvc/BtIVjLqj9lBzs2MCzFOAmx9inSSpmlGb4gTFxK3ny4Q
+         h/WKF9y1AC4OGOMjGf1fpKOWojtGiHyt/mUH/MFM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mikko Rapeli <mikko.rapeli@iki.fi>,
+        Jan Harkes <jaharkes@cs.cmu.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Fabian Frederick <fabf@skynet.be>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Yann Droneaud <ydroneaud@opteya.com>,
+        Zhouyang Jia <jiazhouyang09@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, codalist@coda.cs.cmu.edu
+Subject: [PATCH AUTOSEL 4.4 18/23] uapi linux/coda_psdev.h: move upc_req definition from uapi to kernel side headers
+Date:   Fri, 26 Jul 2019 09:45:17 -0400
+Message-Id: <20190726134522.13308-18-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190726134522.13308-1-sashal@kernel.org>
+References: <20190726134522.13308-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ada10dc9-6cab-e189-5289-6f9d3ff8fed2@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 08:53:18PM +0800, Jason Wang wrote:
-> 
-> On 2019/7/26 下午8:38, Michael S. Tsirkin wrote:
-> > On Fri, Jul 26, 2019 at 08:00:58PM +0800, Jason Wang wrote:
-> > > On 2019/7/26 下午7:49, Michael S. Tsirkin wrote:
-> > > > On Thu, Jul 25, 2019 at 10:25:25PM +0800, Jason Wang wrote:
-> > > > > On 2019/7/25 下午9:26, Michael S. Tsirkin wrote:
-> > > > > > > Exactly, and that's the reason actually I use synchronize_rcu() there.
-> > > > > > > 
-> > > > > > > So the concern is still the possible synchronize_expedited()?
-> > > > > > I think synchronize_srcu_expedited.
-> > > > > > 
-> > > > > > synchronize_expedited sends lots of IPI and is bad for realtime VMs.
-> > > > > > 
-> > > > > > > Can I do this
-> > > > > > > on through another series on top of the incoming V2?
-> > > > > > > 
-> > > > > > > Thanks
-> > > > > > > 
-> > > > > > The question is this: is this still a gain if we switch to the
-> > > > > > more expensive srcu? If yes then we can keep the feature on,
-> > > > > I think we only care about the cost on srcu_read_lock() which looks pretty
-> > > > > tiny form my point of view. Which is basically a READ_ONCE() + WRITE_ONCE().
-> > > > > 
-> > > > > Of course I can benchmark to see the difference.
-> > > > > 
-> > > > > 
-> > > > > > if not we'll put it off until next release and think
-> > > > > > of better solutions. rcu->srcu is just a find and replace,
-> > > > > > don't see why we need to defer that. can be a separate patch
-> > > > > > for sure, but we need to know how well it works.
-> > > > > I think I get here, let me try to do that in V2 and let's see the numbers.
-> > > > > 
-> > > > > Thanks
-> > > 
-> > > It looks to me for tree rcu, its srcu_read_lock() have a mb() which is too
-> > > expensive for us.
-> > I will try to ponder using vq lock in some way.
-> > Maybe with trylock somehow ...
-> 
-> 
-> Ok, let me retry if necessary (but I do remember I end up with deadlocks
-> last try).
-> 
-> 
-> > 
-> > 
-> > > If we just worry about the IPI,
-> > With synchronize_rcu what I would worry about is that guest is stalled
-> 
-> 
-> Can this synchronize_rcu() be triggered by guest? If yes, there are several
-> other MMU notifiers that can block. Is vhost something special here?
+From: Mikko Rapeli <mikko.rapeli@iki.fi>
 
-Sorry, let me explain: guests (and tasks in general)
-can trigger activity that will
-make synchronize_rcu take a long time. Thus blocking
-an mmu notifier until synchronize_rcu finishes
-is a bad idea.
+[ Upstream commit f90fb3c7e2c13ae829db2274b88b845a75038b8a ]
 
-> 
-> > because system is busy because of other guests.
-> > With expedited it's the IPIs...
-> > 
-> 
-> The current synchronize_rcu()  can force a expedited grace period:
-> 
-> void synchronize_rcu(void)
-> {
->         ...
->         if (rcu_blocking_is_gp())
-> return;
->         if (rcu_gp_is_expedited())
-> synchronize_rcu_expedited();
-> else
-> wait_rcu_gp(call_rcu);
-> }
-> EXPORT_SYMBOL_GPL(synchronize_rcu);
+Only users of upc_req in kernel side fs/coda/psdev.c and
+fs/coda/upcall.c already include linux/coda_psdev.h.
 
+Suggested by Jan Harkes <jaharkes@cs.cmu.edu> in
+  https://lore.kernel.org/lkml/20150531111913.GA23377@cs.cmu.edu/
 
-An admin can force rcu to finish faster, trading
-interrupts for responsiveness.
+Fixes these include/uapi/linux/coda_psdev.h compilation errors in userspace:
 
-> 
-> > > can we do something like in
-> > > vhost_invalidate_vq_start()?
-> > > 
-> > >          if (map) {
-> > >                  /* In order to avoid possible IPIs with
-> > >                   * synchronize_rcu_expedited() we use call_rcu() +
-> > >                   * completion.
-> > > */
-> > > init_completion(&c.completion);
-> > >                  call_rcu(&c.rcu_head, vhost_finish_vq_invalidation);
-> > > wait_for_completion(&c.completion);
-> > >                  vhost_set_map_dirty(vq, map, index);
-> > > vhost_map_unprefetch(map);
-> > >          }
-> > > 
-> > > ?
-> > Why would that be faster than synchronize_rcu?
-> 
-> 
-> No faster but no IPI.
-> 
+  linux/coda_psdev.h:12:19: error: field `uc_chain' has incomplete type
+  struct list_head    uc_chain;
+                   ^
+  linux/coda_psdev.h:13:2: error: unknown type name `caddr_t'
+  caddr_t             uc_data;
+  ^
+  linux/coda_psdev.h:14:2: error: unknown type name `u_short'
+  u_short             uc_flags;
+  ^
+  linux/coda_psdev.h:15:2: error: unknown type name `u_short'
+  u_short             uc_inSize;  /* Size is at most 5000 bytes */
+  ^
+  linux/coda_psdev.h:16:2: error: unknown type name `u_short'
+  u_short             uc_outSize;
+  ^
+  linux/coda_psdev.h:17:2: error: unknown type name `u_short'
+  u_short             uc_opcode;  /* copied from data to save lookup */
+  ^
+  linux/coda_psdev.h:19:2: error: unknown type name `wait_queue_head_t'
+  wait_queue_head_t   uc_sleep;   /* process' wait queue */
+  ^
 
-Sorry I still don't see the point.
-synchronize_rcu doesn't normally do an IPI either.
+Link: http://lkml.kernel.org/r/9f99f5ce6a0563d5266e6cf7aa9585aac2cae971.1558117389.git.jaharkes@cs.cmu.edu
+Signed-off-by: Mikko Rapeli <mikko.rapeli@iki.fi>
+Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Colin Ian King <colin.king@canonical.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Fabian Frederick <fabf@skynet.be>
+Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Yann Droneaud <ydroneaud@opteya.com>
+Cc: Zhouyang Jia <jiazhouyang09@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/coda_psdev.h      | 11 +++++++++++
+ include/uapi/linux/coda_psdev.h | 13 -------------
+ 2 files changed, 11 insertions(+), 13 deletions(-)
 
-
-> > 
-> > 
-> > > > There's one other thing that bothers me, and that is that
-> > > > for large rings which are not physically contiguous
-> > > > we don't implement the optimization.
-> > > > 
-> > > > For sure, that can wait, but I think eventually we should
-> > > > vmap large rings.
-> > > 
-> > > Yes, worth to try. But using direct map has its own advantage: it can use
-> > > hugepage that vmap can't
-> > > 
-> > > Thanks
-> > Sure, so we can do that for small rings.
-> 
-> 
-> Yes, that's possible but should be done on top.
-> 
-> Thanks
-
-Absolutely. Need to fix up the bugs first.
-
+diff --git a/include/linux/coda_psdev.h b/include/linux/coda_psdev.h
+index 5b8721efa948..fe1466daf291 100644
+--- a/include/linux/coda_psdev.h
++++ b/include/linux/coda_psdev.h
+@@ -19,6 +19,17 @@ struct venus_comm {
+ 	struct mutex	    vc_mutex;
+ };
+ 
++/* messages between coda filesystem in kernel and Venus */
++struct upc_req {
++	struct list_head	uc_chain;
++	caddr_t			uc_data;
++	u_short			uc_flags;
++	u_short			uc_inSize;  /* Size is at most 5000 bytes */
++	u_short			uc_outSize;
++	u_short			uc_opcode;  /* copied from data to save lookup */
++	int			uc_unique;
++	wait_queue_head_t	uc_sleep;   /* process' wait queue */
++};
+ 
+ static inline struct venus_comm *coda_vcp(struct super_block *sb)
+ {
+diff --git a/include/uapi/linux/coda_psdev.h b/include/uapi/linux/coda_psdev.h
+index 79d05981fc4b..e2c44d2f7d5b 100644
+--- a/include/uapi/linux/coda_psdev.h
++++ b/include/uapi/linux/coda_psdev.h
+@@ -6,19 +6,6 @@
+ #define CODA_PSDEV_MAJOR 67
+ #define MAX_CODADEVS  5	   /* how many do we allow */
+ 
+-
+-/* messages between coda filesystem in kernel and Venus */
+-struct upc_req {
+-	struct list_head    uc_chain;
+-	caddr_t	            uc_data;
+-	u_short	            uc_flags;
+-	u_short             uc_inSize;  /* Size is at most 5000 bytes */
+-	u_short	            uc_outSize;
+-	u_short	            uc_opcode;  /* copied from data to save lookup */
+-	int		    uc_unique;
+-	wait_queue_head_t   uc_sleep;   /* process' wait queue */
+-};
+-
+ #define CODA_REQ_ASYNC  0x1
+ #define CODA_REQ_READ   0x2
+ #define CODA_REQ_WRITE  0x4
 -- 
-MST
+2.20.1
+
