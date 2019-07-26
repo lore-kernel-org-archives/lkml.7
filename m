@@ -7,72 +7,71 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A916C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 05:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86597C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 05:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A6622C7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 05:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2E922BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 05:40:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="mMz39AGz";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="O9A9eeM3"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="M3HqskOp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gQ50PelC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbfGZFk0 (ORCPT
+        id S1726380AbfGZFkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 01:40:26 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:51403 "EHLO
+        Fri, 26 Jul 2019 01:40:33 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:39889 "EHLO
         out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726238AbfGZFkV (ORCPT
+        by vger.kernel.org with ESMTP id S1726327AbfGZFkb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 01:40:21 -0400
+        Fri, 26 Jul 2019 01:40:31 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id AE12922304;
-        Fri, 26 Jul 2019 01:40:20 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id D42AB22131;
+        Fri, 26 Jul 2019 01:40:30 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 26 Jul 2019 01:40:20 -0400
+  by compute4.internal (MEProxy); Fri, 26 Jul 2019 01:40:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
         :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=FGnrb1We2FOVt
-        /++AKR6ddEpH2XDEzYVw5O9qXjrW4c=; b=mMz39AGz6K22TPx02gYs+cd59F73Q
-        ymNswcu7ZcjW8sC5jQb2+sBNJk2lLnZj/KM/E4Yw6MfYOLeAVSv9/N9Cyxc5dInI
-        ILm4BfzIYhLTVMnb/VA3G8ulzuC7zrALU0t4TLAt2+vTLqgBZb/N6PxeGXj3M1ta
-        m4B1Lph2fv1fVOtWIQDKRJfqZYeFAU4ZBpQkMrTduGMhE3XRVrprjs0caXI4AzqQ
-        nI4CfrUwMJQfFMZry/9Yt7r6aRanLysbRzbtT4R4av26ZcDe082uluVrH6jY/zHB
-        V3zZku9zXXgoUt94WQg6bKflBpEUzCoKIowj8drii6hG6xOjCHPEtDMKw==
+        :mime-version:content-transfer-encoding; s=fm3; bh=Sz5g0+Dl2yQ1i
+        F6zWdflObP+DugVbiRkNpKSed5kVRQ=; b=M3HqskOp669nEECYO+2mMlQLHS0at
+        8mGJjd3E2rx1RXUnz/ZLOuzO92TnBRsgC3WgySQKfv/6lHfLU0iasmyer4dTphQZ
+        fGjlkdWRXQnpE984mAYs7xMXjP8AAyMIzrNthugvem1RsxJ5YeHlpyic7QxJ68Jd
+        Ku6DCBLYkx6V76YAxx85uxhaLc4ZNngG/D4kfN1FTe5ZrLBE601qCRyWqITNLvFz
+        S58npquHNCDphz+3rEHhVqDuzpS38JU8VitVtLVkHu6RB/W8GeFP6x3oU+3MSGIf
+        RefH5rBlcOmozt74qe+dsHjn0w9ekDT+i5++Ik0CwP8M7bSWRCttlOBkw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=FGnrb1We2FOVt/++AKR6ddEpH2XDEzYVw5O9qXjrW4c=; b=O9A9eeM3
-        4BtcB66bgmHNI18lEjrkyqKy9eO+g/Ecx+meEOju5Jn26CgYggOtFLmeU5NxL/Fs
-        JvFNeIkhhOX5OM4Eg5JjDoXhHsRhGmlHgzoSIlHUVyoua9bEdI+cFr0VZcIGSKxS
-        GmH2C8nBpdojs0JHnZ8Tcfzh5wf7oH1342ovzcGhAqD1pqHLQKQfgw8+3LW9UTl2
-        xby2nJ1WEXBwznBBbjHUsjH/SJ7p2TdWnFkExKo+ZCJvlKTnrsviAt42+qS1wN1T
-        SCnhLfkiqoeoR8otGEw7Otb0LYLdaztVe1O55OXyzZIcVd3ayVQqO0Cw+MKYpJwg
-        UUMiXN7/bdnd9g==
-X-ME-Sender: <xms:RJI6XaQrHM3bllWNNzUdCXWaPW2UuhkmQKG9ygJpgMYg8U5npw4unQ>
+        fm3; bh=Sz5g0+Dl2yQ1iF6zWdflObP+DugVbiRkNpKSed5kVRQ=; b=gQ50PelC
+        FRIo7RxYhk8WqEpbdthcrQczqKm4kC3tMoi+dbpoFksjNul329FMbymPdBmrHYqP
+        DgEdGk2fEBU60OS7IZxKmGnRUh+L1bt549fMcMZx/DXNR9VIQftJKrjXNFUnUVrL
+        zm17dRtqSMtcGOjD1HwD56reRFKp8b+L53nRq/nMRFcxpr7wgaFuRHFztRXdPmkO
+        TgX07EbViZ0mUa1IQ9uHpIj1w+r65YOG1lEbFJ8QW/g4oGeA/RmOjEBz970Rmiet
+        nXyDwcB1uHNap9LKXTQRWPqHjE2ZEs1JPIaEFNM1qKRjahi/+1eHk/o+Sa3x2Til
+        K0GoxSklQIIz8g==
+X-ME-Sender: <xms:TpI6XRONu7akzQ89w22D7UhdiCVFTo-CKmTtCW7ZUGK0_rQ6gLqa1w>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrkeefgdeljecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomheptehnughrvgif
-    ucflvghffhgvrhihuceorghnughrvgifsegrjhdrihgurdgruheqnecukfhppedvtddvrd
-    ekuddrudekrdeftdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdr
-    ihgurdgruhenucevlhhushhtvghrufhiiigvpeef
-X-ME-Proxy: <xmx:RJI6XdLEgXOUllC0AhkhBvsi8jHtnpu1jcBQrlD8G7zLr4ucZIEaHg>
-    <xmx:RJI6XfLwrysAEgLKcPaFS5aa4FmlIxEQguEWkANwXclTjpeX355g0A>
-    <xmx:RJI6XQhsOzujfQ4yGGF-QAISLMsI7bt7MZVpWQ7-rCJgfR8ax30U2A>
-    <xmx:RJI6Xd4D749w7J3o9KEiMOEU-GWvHneHbHE3qyiE8eHfXvi5OCMicw>
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
+    ertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghj
+    rdhiugdrrghuqeenucfkphepvddtvddrkedurddukedrfedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgep
+    je
+X-ME-Proxy: <xmx:TpI6XWtvaP5vkzUO0x0DgE_ZXPurQ9HOUQHpkU57bmlCF-lhX9dGRw>
+    <xmx:TpI6XdItkjrYbTUkJ4XEt7t_GlhXDfe2_vOORuLIS-hQOkVvbNTLNg>
+    <xmx:TpI6XVPf_psBKf-WqiMAixAfjlFg4AjFuHxo_ZLhAx_6kNzKeNe0Gw>
+    <xmx:TpI6XWC_C2q7edRFFvq41OnZO4cBMZesLTnbsvqP1tuS19jzN7T4iA>
 Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 84613380079;
-        Fri, 26 Jul 2019 01:40:17 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id D9D43380076;
+        Fri, 26 Jul 2019 01:40:27 -0400 (EDT)
 From:   Andrew Jeffery <andrew@aj.id.au>
 To:     linux-aspeed@lists.ozlabs.org
 Cc:     Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org,
         mark.rutland@arm.com, joel@jms.id.au, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        John Wang <wangzqbj@inspur.com>
-Subject: [PATCH 05/17] ARM: dts: fp5280g2: Cleanup gpio-keys-polled properties
-Date:   Fri, 26 Jul 2019 15:09:47 +0930
-Message-Id: <20190726053959.2003-6-andrew@aj.id.au>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 08/17] ARM: dts: aspeed: Cleanup lpc-ctrl and snoop regs
+Date:   Fri, 26 Jul 2019 15:09:50 +0930
+Message-Id: <20190726053959.2003-9-andrew@aj.id.au>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726053959.2003-1-andrew@aj.id.au>
 References: <20190726053959.2003-1-andrew@aj.id.au>
@@ -83,29 +82,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dtbs_check gave the following warning:
+Fix the following warning:
 
-    Warning (avoid_unnecessary_addr_size): /gpio-keys-polled: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+    arch/arm/boot/dts/aspeed-g5.dtsi:409.27-414.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-host@80/lpc-ctrl@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-host@80/lpc-snoop@0)
 
-Cc: John Wang <wangzqbj@inspur.com>
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm/boot/dts/aspeed-g4.dtsi | 6 +++---
+ arch/arm/boot/dts/aspeed-g5.dtsi | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts b/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts
-index 2dd664bff928..aa5efd1dfa70 100644
---- a/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-inspur-fp5280g2.dts
-@@ -94,8 +94,6 @@
+diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+index dd4b0b15afcf..ed78020f6269 100644
+--- a/arch/arm/boot/dts/aspeed-g4.dtsi
++++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+@@ -296,14 +296,14 @@
  
- 	gpio-keys-polled {
- 		compatible = "gpio-keys-polled";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		poll-interval = <1000>;
+ 					lpc_ctrl: lpc-ctrl@0 {
+ 						compatible = "aspeed,ast2400-lpc-ctrl";
+-						reg = <0x0 0x80>;
++						reg = <0x0 0x10>;
+ 						clocks = <&syscon ASPEED_CLK_GATE_LCLK>;
+ 						status = "disabled";
+ 					};
  
- 		fan0-presence {
+-					lpc_snoop: lpc-snoop@0 {
++					lpc_snoop: lpc-snoop@10 {
+ 						compatible = "aspeed,ast2400-lpc-snoop";
+-						reg = <0x0 0x80>;
++						reg = <0x10 0x8>;
+ 						interrupts = <8>;
+ 						status = "disabled";
+ 					};
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index 3b4af88f9b80..a8a593dd2240 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -408,14 +408,14 @@
+ 
+ 					lpc_ctrl: lpc-ctrl@0 {
+ 						compatible = "aspeed,ast2500-lpc-ctrl";
+-						reg = <0x0 0x80>;
++						reg = <0x0 0x10>;
+ 						clocks = <&syscon ASPEED_CLK_GATE_LCLK>;
+ 						status = "disabled";
+ 					};
+ 
+-					lpc_snoop: lpc-snoop@0 {
++					lpc_snoop: lpc-snoop@10 {
+ 						compatible = "aspeed,ast2500-lpc-snoop";
+-						reg = <0x0 0x80>;
++						reg = <0x10 0x8>;
+ 						interrupts = <8>;
+ 						status = "disabled";
+ 					};
 -- 
 2.20.1
 
