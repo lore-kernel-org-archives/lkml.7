@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E28D7C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E161FC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B572922CBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF14822CB9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155209;
-	bh=I8lIdewyWN4WEkd5GZx92YtQgBlT9zMW79sYzkF9Ko0=;
+	s=default; t=1564155212;
+	bh=69rKnTvgyN+qeWnLwOG5ZuEexG9hRf9rbl27ZPHs/BA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HbErExIWcO6DojdF1r8AlHTNjULaIqQISb4HCSU1SIg12nIpbLD50fkziERzDEhLP
-	 /tIVEdKp4ci5voG2T8RfGLwpJqCfq4ePkJlybBd5jaNHUyZvuEQgaxrLzQXtoTl58R
-	 BCXeIN5ZpxSYTiILIRuqpfjqKZjBQXngMWlDwyA4=
+	b=DBqF+2BZ0yiZRLMiIA/jQseRBwMidcv7QeGJ5cgu9O2P2qwTWBNi879eq3CqSfPbN
+	 c2b2bqtZ5wt0/6p0eAHj/z/Cbg6vACJvBpahTrpj3Shh2rw8VgbM5EVHq7dGXZmF6i
+	 sek3vISehfeS2dD1i5VBxb/IZv6XWnJ6n9DomsBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389651AbfGZPd2 (ORCPT
+        id S2389661AbfGZPdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:33:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48772 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:33:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389628AbfGZPdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:33:22 -0400
+        id S2389652AbfGZPd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:33:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A051218D4;
-        Fri, 26 Jul 2019 15:33:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 925D6205F4;
+        Fri, 26 Jul 2019 15:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155201;
-        bh=I8lIdewyWN4WEkd5GZx92YtQgBlT9zMW79sYzkF9Ko0=;
+        s=default; t=1564155208;
+        bh=69rKnTvgyN+qeWnLwOG5ZuEexG9hRf9rbl27ZPHs/BA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZQEqnH/4pT/9rASHrYe7ihDSdrMuBiP2c0zbpugh/eWQ79IFvAwFsU530lKU+E1Kz
-         uF3YIahBrzGEIKkcX1spNLHYVECzCMerFdim675xVw40fJiWA5SjJPP1d3H9Eul4Jx
-         xOcu8NGkS2uWFZyMc140dvZtK+B7cUSU/j7S2mOU=
+        b=mb4XBR9J52ePmw2aUNJXlPdJhsC6LDOjb1l2cfgX1eTtg7P3WFQoprkcR3+dwJt8r
+         qe5PeX6q8TUDji7Q8yntSZjlwQZG5Vt8yh411fyPC6oVTP4/t2+MSlx7p+BRLgatnY
+         B7ZqaZzfZjR/eaPbEEAGGYuI/47DtkCJmO6EdwKg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 29/50] net_sched: unset TCQ_F_CAN_BYPASS when adding filters
-Date:   Fri, 26 Jul 2019 17:25:04 +0200
-Message-Id: <20190726152303.612362667@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, od@zcrc.me,
+        linux-mips@vger.kernel.org
+Subject: [PATCH 4.19 39/50] MIPS: lb60: Fix pin mappings
+Date:   Fri, 26 Jul 2019 17:25:14 +0200
+Message-Id: <20190726152304.692128452@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -60,77 +63,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit 3f05e6886a595c9a29a309c52f45326be917823c ]
+commit 1323c3b72a987de57141cabc44bf9cd83656bc70 upstream.
 
-For qdisc's that support TC filters and set TCQ_F_CAN_BYPASS,
-notably fq_codel, it makes no sense to let packets bypass the TC
-filters we setup in any scenario, otherwise our packets steering
-policy could not be enforced.
+The pin mappings introduced in commit 636f8ba67fb6
+("MIPS: JZ4740: Qi LB60: Add pinctrl configuration for several drivers")
+are completely wrong. The pinctrl driver name is incorrect, and the
+function and group fields are swapped.
 
-This can be reproduced easily with the following script:
-
- ip li add dev dummy0 type dummy
- ifconfig dummy0 up
- tc qd add dev dummy0 root fq_codel
- tc filter add dev dummy0 parent 8001: protocol arp basic action mirred egress redirect dev lo
- tc filter add dev dummy0 parent 8001: protocol ip basic action mirred egress redirect dev lo
- ping -I dummy0 192.168.112.1
-
-Without this patch, packets are sent directly to dummy0 without
-hitting any of the filters. With this patch, packets are redirected
-to loopback as expected.
-
-This fix is not perfect, it only unsets the flag but does not set it back
-because we have to save the information somewhere in the qdisc if we
-really want that. Note, both fq_codel and sfq clear this flag in their
-->bind_tcf() but this is clearly not sufficient when we don't use any
-class ID.
-
-Fixes: 23624935e0c4 ("net_sched: TCQ_F_CAN_BYPASS generalization")
-Cc: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 636f8ba67fb6 ("MIPS: JZ4740: Qi LB60: Add pinctrl configuration for several drivers")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: od@zcrc.me
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/cls_api.c      |    1 +
- net/sched/sch_fq_codel.c |    2 --
- net/sched/sch_sfq.c      |    2 --
- 3 files changed, 1 insertion(+), 4 deletions(-)
 
---- a/net/sched/cls_api.c
-+++ b/net/sched/cls_api.c
-@@ -1325,6 +1325,7 @@ replay:
- 			tcf_chain_tp_insert(chain, &chain_info, tp);
- 		tfilter_notify(net, skb, n, tp, block, q, parent, fh,
- 			       RTM_NEWTFILTER, false);
-+		q->flags &= ~TCQ_F_CAN_BYPASS;
- 	} else {
- 		if (tp_created)
- 			tcf_proto_destroy(tp, NULL);
---- a/net/sched/sch_fq_codel.c
-+++ b/net/sched/sch_fq_codel.c
-@@ -600,8 +600,6 @@ static unsigned long fq_codel_find(struc
- static unsigned long fq_codel_bind(struct Qdisc *sch, unsigned long parent,
- 			      u32 classid)
- {
--	/* we cannot bypass queue discipline anymore */
--	sch->flags &= ~TCQ_F_CAN_BYPASS;
- 	return 0;
- }
+---
+ arch/mips/jz4740/board-qi_lb60.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+--- a/arch/mips/jz4740/board-qi_lb60.c
++++ b/arch/mips/jz4740/board-qi_lb60.c
+@@ -471,27 +471,27 @@ static unsigned long pin_cfg_bias_disabl
+ static struct pinctrl_map pin_map[] __initdata = {
+ 	/* NAND pin configuration */
+ 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-nand",
+-			"10010000.jz4740-pinctrl", "nand", "nand-cs1"),
++			"10010000.pin-controller", "nand-cs1", "nand"),
  
---- a/net/sched/sch_sfq.c
-+++ b/net/sched/sch_sfq.c
-@@ -828,8 +828,6 @@ static unsigned long sfq_find(struct Qdi
- static unsigned long sfq_bind(struct Qdisc *sch, unsigned long parent,
- 			      u32 classid)
- {
--	/* we cannot bypass queue discipline anymore */
--	sch->flags &= ~TCQ_F_CAN_BYPASS;
- 	return 0;
- }
+ 	/* fbdev pin configuration */
+ 	PIN_MAP_MUX_GROUP("jz4740-fb", PINCTRL_STATE_DEFAULT,
+-			"10010000.jz4740-pinctrl", "lcd", "lcd-8bit"),
++			"10010000.pin-controller", "lcd-8bit", "lcd"),
+ 	PIN_MAP_MUX_GROUP("jz4740-fb", PINCTRL_STATE_SLEEP,
+-			"10010000.jz4740-pinctrl", "lcd", "lcd-no-pins"),
++			"10010000.pin-controller", "lcd-no-pins", "lcd"),
+ 
+ 	/* MMC pin configuration */
+ 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-mmc.0",
+-			"10010000.jz4740-pinctrl", "mmc", "mmc-1bit"),
++			"10010000.pin-controller", "mmc-1bit", "mmc"),
+ 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-mmc.0",
+-			"10010000.jz4740-pinctrl", "mmc", "mmc-4bit"),
++			"10010000.pin-controller", "mmc-4bit", "mmc"),
+ 	PIN_MAP_CONFIGS_PIN_DEFAULT("jz4740-mmc.0",
+-			"10010000.jz4740-pinctrl", "PD0", pin_cfg_bias_disable),
++			"10010000.pin-controller", "PD0", pin_cfg_bias_disable),
+ 	PIN_MAP_CONFIGS_PIN_DEFAULT("jz4740-mmc.0",
+-			"10010000.jz4740-pinctrl", "PD2", pin_cfg_bias_disable),
++			"10010000.pin-controller", "PD2", pin_cfg_bias_disable),
+ 
+ 	/* PWM pin configuration */
+ 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-pwm",
+-			"10010000.jz4740-pinctrl", "pwm4", "pwm4"),
++			"10010000.pin-controller", "pwm4", "pwm4"),
+ };
+ 
  
 
 
