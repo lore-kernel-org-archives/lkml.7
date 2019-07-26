@@ -4,48 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57E8C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02080C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 880B1206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E85229F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfGZJi2 (ORCPT
+        id S1726180AbfGZJjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:38:28 -0400
-Received: from mga04.intel.com ([192.55.52.120]:27786 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726129AbfGZJi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:38:27 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 02:38:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,310,1559545200"; 
-   d="scan'208";a="175546381"
-Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.251.89.116]) ([10.251.89.116])
-  by orsmga006.jf.intel.com with ESMTP; 26 Jul 2019 02:38:20 -0700
-Subject: Re: [RFC PATCH 03/40] soundwire: cadence_master: align debugfs to 8
- digits
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
-        gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-4-pierre-louis.bossart@linux.intel.com>
-From:   Cezary Rojewski <cezary.rojewski@intel.com>
-Message-ID: <500e2f21-3ec9-342c-ab4d-e222d9adb42c@intel.com>
-Date:   Fri, 26 Jul 2019 11:38:18 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 26 Jul 2019 05:39:41 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:42905 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725903AbfGZJjl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:39:41 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R841e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TXq-pnk_1564133977;
+Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0TXq-pnk_1564133977)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 26 Jul 2019 17:39:38 +0800
+Subject: Re: [PATCH 3/3] fs: ocfs2: Fix a possible null-pointer dereference in
+ ocfs2_info_scan_inode_alloc()
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>, mark@fasheh.com,
+        jlbec@evilplan.org
+Cc:     ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+References: <20190726033717.32359-1-baijiaju1990@gmail.com>
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+Message-ID: <3db34626-a87f-9de8-6f9c-e4a35f863cd6@linux.alibaba.com>
+Date:   Fri, 26 Jul 2019 17:39:37 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190725234032.21152-4-pierre-louis.bossart@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190726033717.32359-1-baijiaju1990@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,28 +46,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-26 01:39, Pierre-Louis Bossart wrote:
-> SQUASHME
-> 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->   drivers/soundwire/cadence_master.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
-> index 91e8bacb83e3..9f611a1fff0a 100644
-> --- a/drivers/soundwire/cadence_master.c
-> +++ b/drivers/soundwire/cadence_master.c
-> @@ -234,7 +234,7 @@ static ssize_t cdns_sprintf(struct sdw_cdns *cdns,
->   			    char *buf, size_t pos, unsigned int reg)
->   {
->   	return scnprintf(buf + pos, RD_BUF - pos,
-> -			 "%4x\t%4x\n", reg, cdns_readl(cdns, reg));
-> +			 "%4x\t%8x\n", reg, cdns_readl(cdns, reg));
->   }
->   
->   static ssize_t cdns_reg_read(struct file *file, char __user *user_buf,
-> 
 
-Should just be merged together with the introducing commit. Guess it's 
-posted unintentionally.
+
+On 19/7/26 11:37, Jia-Ju Bai wrote:
+> In ocfs2_info_scan_inode_alloc(), there is an if statement on line 283
+> to check whether inode_alloc is NULL:
+>     if (inode_alloc)
+> 
+> When inode_alloc is NULL, it is used on line 287:
+>     ocfs2_inode_lock(inode_alloc, &bh, 0);
+>         ocfs2_inode_lock_full_nested(inode, ...)
+>             struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
+> 
+> Thus, a possible null-pointer dereference may occur.
+> 
+> To fix this bug, inode_alloc is checked on line 286.
+> 
+> This bug is found by a static analysis tool STCheck written by us.       
+> 
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+
+Looks good.
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+> ---
+>  fs/ocfs2/ioctl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
+> index d6f7b299eb23..efeea208fdeb 100644
+> --- a/fs/ocfs2/ioctl.c
+> +++ b/fs/ocfs2/ioctl.c
+> @@ -283,7 +283,7 @@ static int ocfs2_info_scan_inode_alloc(struct ocfs2_super *osb,
+>  	if (inode_alloc)
+>  		inode_lock(inode_alloc);
+>  
+> -	if (o2info_coherent(&fi->ifi_req)) {
+> +	if (inode_alloc && o2info_coherent(&fi->ifi_req)) {
+>  		status = ocfs2_inode_lock(inode_alloc, &bh, 0);
+>  		if (status < 0) {
+>  			mlog_errno(status);
+> 
