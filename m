@@ -2,87 +2,121 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D538C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB8FC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A18822C97
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8931522BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbfGZJSt (ORCPT
+        id S1726183AbfGZJTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:18:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:40018 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfGZJSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:18:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC2D6344;
-        Fri, 26 Jul 2019 02:18:48 -0700 (PDT)
-Received: from why (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCBA93F71A;
-        Fri, 26 Jul 2019 02:18:47 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 10:18:44 +0100
-From:   Marc Zyngier <marc.zyngier@arm.com>
-To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc:     <linux-kernel@vger.kernel.org>,
-        Nianyao Tang <tangnianyao@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH] irqchip/gic-v3-its: Free unused vpt_page when alloc vpe
- table fail
-Message-ID: <20190726101844.79cb10b5@why>
-In-Reply-To: <1564105905-15410-1-git-send-email-zhangshaokun@hisilicon.com>
-References: <1564105905-15410-1-git-send-email-zhangshaokun@hisilicon.com>
-Organization: ARM Ltd
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 26 Jul 2019 05:19:43 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2778 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725815AbfGZJTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:19:43 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C2D0C9EE189CFEC56772;
+        Fri, 26 Jul 2019 17:19:41 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.132) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 26 Jul 2019 17:19:31 +0800
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+To:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Yang Guo <guoyang2@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>
+Subject: [PATCH] Revert "net: get rid of an signed integer overflow in ip_idents_reserve()"
+Date:   Fri, 26 Jul 2019 17:17:15 +0800
+Message-ID: <1564132635-57634-1-git-send-email-zhangshaokun@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.132]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 09:51:45 +0800
-Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
+From: Yang Guo <guoyang2@huawei.com>
 
-> From: Nianyao Tang <tangnianyao@huawei.com>
-> 
-> In its_vpe_init, when its_alloc_vpe_table fails, we should free
-> vpt_page allocated just before, instead of vpe->vpt_page.
-> Let's fix it.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de> 
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
-> ---
->  drivers/irqchip/irq-gic-v3-its.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index 730fbe0..1b5c367 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -3010,7 +3010,7 @@ static int its_vpe_init(struct its_vpe *vpe)
->  
->  	if (!its_alloc_vpe_table(vpe_id)) {
->  		its_vpe_id_free(vpe_id);
-> -		its_free_pending_table(vpe->vpt_page);
-> +		its_free_pending_table(vpt_page);
->  		return -ENOMEM;
->  	}
->  
+There is an significant performance regression with the following
+commit-id <adb03115f459>
+("net: get rid of an signed integer overflow in ip_idents_reserve()").
 
-Oops, well caught. Please repost this patch with your own SoB added
-though, as you're posting the patch on behalf of someone else.
+Both on x86 server(Skylake) and ARM64 server, when cpu core number
+increase, the function ip_idents_reserve() of cpu usage is very high, 
+and the performance will become bad. After revert the patch, we can
+avoid this problem when cpu core number increases.
 
-Thanks,
+With the patch on x86, ip_idents_reserve() cpu usage is 63.05% when
+iperf3 is run with 32 cpu cores.
+Samples: 18K of event 'cycles:ppp', Event count (approx.)
+  Children      Self  Command  Shared Object      Symbol
+    63.18%    63.05%  iperf3   [kernel.vmlinux]   [k] ip_idents_reserve
 
-	M.
+And the IOPS is 4483830pps.
+10:46:13 AM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s
+10:46:14 AM        lo 4483830.00 4483830.00 192664.57 192664.57
+
+Resert the patch, ip_idents_reserve() cpu usage is 17.05%.
+Samples: 37K of event 'cycles:ppp', 4000 Hz, Event count (approx.)
+  Children      Self  Shared Object      Symbol
+    17.07%    17.05%  [kernel]           [k] ip_idents_reserve
+
+And the IOPS is 1160021pps.
+05:03:15 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s
+05:03:16 PM        lo 11600213.00 11600213.00 498446.65 498446.65
+
+The performance regression was also found on ARM64 server and discussed
+a few days ago:
+https://lore.kernel.org/netdev/98b95fbe-adcc-c95f-7f3d-6c57122f4586
+@pengutronix.de/T/#t
+
+Cc: "David S. Miller" <davem@davemloft.net> 
+Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru> 
+Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Signed-off-by: Yang Guo <guoyang2@huawei.com>
+---
+ net/ipv4/route.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+index 517300d..dff457b 100644
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -489,18 +489,12 @@ u32 ip_idents_reserve(u32 hash, int segs)
+ 	atomic_t *p_id = ip_idents + hash % IP_IDENTS_SZ;
+ 	u32 old = READ_ONCE(*p_tstamp);
+ 	u32 now = (u32)jiffies;
+-	u32 new, delta = 0;
++	u32 delta = 0;
+ 
+ 	if (old != now && cmpxchg(p_tstamp, old, now) == old)
+ 		delta = prandom_u32_max(now - old);
+ 
+-	/* Do not use atomic_add_return() as it makes UBSAN unhappy */
+-	do {
+-		old = (u32)atomic_read(p_id);
+-		new = old + delta + segs;
+-	} while (atomic_cmpxchg(p_id, old, new) != old);
+-
+-	return new - segs;
++	return atomic_add_return(segs + delta, p_id) - segs;
+ }
+ EXPORT_SYMBOL(ip_idents_reserve);
+ 
 -- 
-Without deviation from the norm, progress is not possible.
+1.8.3.1
+
