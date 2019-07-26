@@ -2,190 +2,86 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4E2C76194
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A353EC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5760A22C7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8194922C97
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbfGZCqj (ORCPT
+        id S1726240AbfGZCqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 22:46:39 -0400
-Received: from anchovy2.45ru.net.au ([203.30.46.146]:45084 "EHLO
-        anchovy2.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfGZCqi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 22:46:38 -0400
-X-Greylist: delayed 363 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Jul 2019 22:46:38 EDT
-Received: (qmail 30833 invoked by uid 5089); 26 Jul 2019 02:46:34 -0000
-Received: by simscan 1.2.0 ppid: 30700, pid: 30704, t: 0.4346s
-         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950 spam: 3.1.4
-Received: from unknown (HELO ?192.168.0.34?) (rtresidd@electromag.com.au@203.59.235.95)
-  by anchovy3.45ru.net.au with ESMTPA; 26 Jul 2019 02:46:33 -0000
-Subject: Re: [PATCH 1/1] power/supply/sbs-battery: Fix confusing battery
- status when idle or empty
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Nick Crews <ncrews@chromium.org>, andrew.smirnov@gmail.com,
-        Guenter Roeck <groeck@chromium.org>, david@lechnology.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rfontana@redhat.com, allison@lohutok.net, baolin.wang@linaro.org,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <1564043102-25298-1-git-send-email-rtresidd@electromag.com.au>
- <CABXOdTdz=+P-HXaUbGAuLBjNE1GA0C8o4OPmF996DOrXxkQJAg@mail.gmail.com>
-From:   Richard Tresidder <rtresidd@electromag.com.au>
-Message-ID: <71a968f7-88c9-aa6c-6822-edfc12484d91@electromag.com.au>
-Date:   Fri, 26 Jul 2019 10:46:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 22:46:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725942AbfGZCqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 22:46:45 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E14462238C;
+        Fri, 26 Jul 2019 02:46:42 +0000 (UTC)
+Date:   Thu, 25 Jul 2019 22:46:41 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     syzbot <syzbot+b2098bc44728a4efb3e9@syzkaller.appspotmail.com>
+Cc:     bsingharora@gmail.com, coreteam@netfilter.org, davem@davemloft.net,
+        dri-devel@lists.freedesktop.org, duwe@suse.de, dvyukov@google.com,
+        kaber@trash.net, kadlec@blackhole.kfki.hu,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, mingo@redhat.com, mpe@ellerman.id.au,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, sumit.semwal@linaro.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: memory leak in dma_buf_ioctl
+Message-ID: <20190725224641.5d8baeb7@oasis.local.home>
+In-Reply-To: <00000000000005dbbc058e8c608d@google.com>
+References: <000000000000b68e04058e6a3421@google.com>
+        <00000000000005dbbc058e8c608d@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CABXOdTdz=+P-HXaUbGAuLBjNE1GA0C8o4OPmF996DOrXxkQJAg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-AU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter
-    Yep sorry there was a merge that I missed during that initial send 
-of the patch.
-I sent a version 2 shortly after.
+On Thu, 25 Jul 2019 19:34:01 -0700
+syzbot <syzbot+b2098bc44728a4efb3e9@syzkaller.appspotmail.com> wrote:
 
-Regards
-    Richard Tresidder
+> syzbot has bisected this bug to:
+> 
+> commit 04cf31a759ef575f750a63777cee95500e410994
+> Author: Michael Ellerman <mpe@ellerman.id.au>
+> Date:   Thu Mar 24 11:04:01 2016 +0000
+> 
+>      ftrace: Make ftrace_location_range() global
 
-On 25/07/2019 9:39 pm, Guenter Roeck wrote:
-> On Thu, Jul 25, 2019 at 1:25 AM Richard Tresidder
-> <rtresidd@electromag.com.au> wrote:
->> When a battery or batteries in a system are in parallel then one or more
->> may not be providing any current to the system.
->> This fixes an incorrect
->> status indication of FULL for the battery simply because it wasn't
->> discharging at that point in time.
->> The battery will now be flagged as IDLE.
->> Have also added the additional check for the battery FULL DISCHARGED flag
->> which will now flag a status of EMPTY.
->>
->> Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
->> ---
->>
->> Notes:
->>      power/supply/sbs-battery: Fix confusing battery status when idle or empty
->>
->>      When a battery or batteries in a system are in parallel then one or more
->>      may not be providing any current to the system.
->>      This fixes an incorrect
->>      status indication of FULL for the battery simply because it wasn't
->>      discharging at that point in time.
->>      The battery will now be flagged as IDLE.
->>      Have also added the additional check for the battery FULL DISCHARGED flag
->>      which will now flag a status of EMPTY.
->>
->>   drivers/power/supply/power_supply_sysfs.c |  3 ++-
->>   drivers/power/supply/sbs-battery.c        | 28 ++++++++++++++--------------
->>   include/linux/power_supply.h              |  2 ++
->>   3 files changed, 18 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
->> index ce6671c..68ec49d 100644
->> --- a/drivers/power/supply/power_supply_sysfs.c
->> +++ b/drivers/power/supply/power_supply_sysfs.c
->> @@ -51,7 +51,8 @@
->>   };
->>
->>   static const char * const power_supply_status_text[] = {
->> -       "Unknown", "Charging", "Discharging", "Not charging", "Full"
->> +       "Unknown", "Charging", "Discharging", "Not charging", "Full",
->> +       "Empty", "Idle"
->>   };
->>
->>   static const char * const power_supply_charge_type_text[] = {
->> diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
->> index ea8ba3e..e6c636c 100644
->> --- a/drivers/power/supply/sbs-battery.c
->> +++ b/drivers/power/supply/sbs-battery.c
->> @@ -294,14 +294,10 @@ static int sbs_status_correct(struct i2c_client *client, int *intval)
->>
->>          ret = (s16)ret;
->>
->> -       /* Not drawing current means full (cannot be not charging) */
->> -       if (ret == 0)
->> -               *intval = POWER_SUPPLY_STATUS_FULL;
->> -
->> -       if (*intval == POWER_SUPPLY_STATUS_FULL) {
->> -               /* Drawing or providing current when full */
->> -               if (ret > 0)
->> -                       *intval = POWER_SUPPLY_STATUS_CHARGING;
->> +       if (*intval == POWER_SUPPLY_STATUS_DISCHARGING) {
->> +               /* Charging indicator not set in battery */
->> +               if (ret == 0)
->> +                       *intval = POWER_SUPPLY_STATUS_IDLE;
-> But doesn't the above already indicate that it _is_ discharging ?
->
->>                  else if (ret < 0)
->>                          *intval = POWER_SUPPLY_STATUS_DISCHARGING;
-> This doesn't make sense. *intval is already set to
-> POWER_SUPPLY_STATUS_DISCHARGING
-> in this situation.
->
->>          }
->> @@ -424,10 +420,12 @@ static int sbs_get_battery_property(struct i2c_client *client,
->>
->>                  if (ret & BATTERY_FULL_CHARGED)
->>                          val->intval = POWER_SUPPLY_STATUS_FULL;
->> -               else if (ret & BATTERY_DISCHARGING)
->> -                       val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
->> -               else
->> +               else if (ret & BATTERY_FULL_DISCHARGED)
->> +                       val->intval = POWER_SUPPLY_STATUS_EMPTY;
->> +               else if (!(ret & BATTERY_DISCHARGING))
->>                          val->intval = POWER_SUPPLY_STATUS_CHARGING;
->> +               else
->> +                       val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
->>
->>                  sbs_status_correct(client, &val->intval);
->>
->> @@ -781,10 +779,12 @@ static void sbs_delayed_work(struct work_struct *work)
->>
->>          if (ret & BATTERY_FULL_CHARGED)
->>                  ret = POWER_SUPPLY_STATUS_FULL;
->> -       else if (ret & BATTERY_DISCHARGING)
->> -               ret = POWER_SUPPLY_STATUS_DISCHARGING;
->> -       else
->> +       else if (ret & BATTERY_FULL_DISCHARGED)
->> +               ret = POWER_SUPPLY_STATUS_EMPTY;
->> +       else if (!(ret & BATTERY_DISCHARGING))
->>                  ret = POWER_SUPPLY_STATUS_CHARGING;
->> +       else
->> +               ret = POWER_SUPPLY_STATUS_DISCHARGING;
->>
->>          sbs_status_correct(chip->client, &ret);
->>
->> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
->> index 28413f7..c9f3347 100644
->> --- a/include/linux/power_supply.h
->> +++ b/include/linux/power_supply.h
->> @@ -37,6 +37,8 @@ enum {
->>          POWER_SUPPLY_STATUS_DISCHARGING,
->>          POWER_SUPPLY_STATUS_NOT_CHARGING,
->>          POWER_SUPPLY_STATUS_FULL,
->> +       POWER_SUPPLY_STATUS_EMPTY,
->> +       POWER_SUPPLY_STATUS_IDLE,
->>   };
->>
->>   /* What algorithm is the charger using? */
->> --
->> 1.8.3.1
->>
->
+It's sad that I have yet to find a single syzbot bisect useful. Really?
+setting a function from static to global will cause a memory leak in a
+completely unrelated area of the kernel?
+
+I'm about to set these to my /dev/null folder.
+
+-- Steve
+
+
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=154293f4600000
+> start commit:   abdfd52a Merge tag 'armsoc-defconfig' of git://git.kernel...
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=174293f4600000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=134293f4600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d31de3d88059b7fa
+> dashboard link: https://syzkaller.appspot.com/bug?extid=b2098bc44728a4efb3e9
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12526e58600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=161784f0600000
+> 
+> Reported-by: syzbot+b2098bc44728a4efb3e9@syzkaller.appspotmail.com
+> Fixes: 04cf31a759ef ("ftrace: Make ftrace_location_range() global")
+> 
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
