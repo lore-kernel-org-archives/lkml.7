@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8017AC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F22C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513C222CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BA7322CE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149405;
-	bh=nzndwPSgzd3yxlgIMwo/8KxyQSBYjo653wm/221bf28=;
+	s=default; t=1564149413;
+	bh=L5GRMqW6T+Rn63DLArCqUXTLNh1W6RnUtXaJUtWF/mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gEBn/2G776zx8CN9dLePO7PYYmUBr09fCrMDCFm6f//Oi6RZ7t+EygjuPSk+1TOnN
-	 we0i1r56DOg3gfzapbTFWcrFb0F5rJejav3hmM5Dn+Z8gnp+4z4WH+vfE0nLW3fAGQ
-	 dFV6B+p14VeCckAFsVX+gLT3Fg0Z4c6vpcZDfTGo=
+	b=ANqs3aBIh14GTIY6PclXeeh0QA0Z9cNY5zX9WL/0reQdX8S3gI2lRUe3nI3+Nsd57
+	 k8EIpcL2vjFHhj5Razjsf6AkSsqE3jxYHbHDRst0sGJOgyOhbUI/rfNPstPHqTD8pR
+	 UA+ak8CsobhrUX+R1DN8YkSdPXV2O0JkOrck5IMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbfGZN4o (ORCPT
+        id S2387692AbfGZNla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:56:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48400 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:41:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387753AbfGZNlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:41:47 -0400
+        id S2387667AbfGZNl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:41:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9003A22CD4;
-        Fri, 26 Jul 2019 13:41:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 699F422BE8;
+        Fri, 26 Jul 2019 13:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148506;
-        bh=nzndwPSgzd3yxlgIMwo/8KxyQSBYjo653wm/221bf28=;
+        s=default; t=1564148486;
+        bh=L5GRMqW6T+Rn63DLArCqUXTLNh1W6RnUtXaJUtWF/mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HVpAbMX1NYUg2q5lNUPHRnun6wGDm5q+dxLO+PpdPmv4v7ZgxS+bU7DogomzbFJAb
-         t3Grcezc7Tzo75QnyAUPeZoyHlzlqelDHrHDEVbphMeTELS1pYfu7AzX/vwuaMrXnf
-         wzdo5JHw1ZKB2IAOtQYYz6ITmkbLVsEQsNb42380=
+        b=JFJEbsfPsfC+dlcmXZzPSuRHNUZu0dVOCrapdofz0WVtcREt7sU1HhW2XQHthkRXP
+         Zg+x5n1w2BNdKTFzhjpUTnMy61lrfzbOhYIX7yLPZTRrsnatUQG93BWGJeDZboW5qv
+         R2CZ7gIg3FTe28uMrLIHrc9AKlig1csSYthl/dhg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Vegard Nossum <vegard.nossum@oracle.com>,
-        Eiichi Tsukata <devel@etsukata.com>,
+Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Joel Fernandes <joel@joelfernandes.org>,
+        Rodolfo Giometti <giometti@enneenne.com>,
+        Greg KH <greg@kroah.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 72/85] stacktrace: Force USER_DS for stack_trace_save_user()
-Date:   Fri, 26 Jul 2019 09:39:22 -0400
-Message-Id: <20190726133936.11177-72-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 64/85] drivers/pps/pps.c: clear offset flags in PPS_SETPARAMS ioctl
+Date:   Fri, 26 Jul 2019 09:39:14 -0400
+Message-Id: <20190726133936.11177-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -62,47 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Miroslav Lichvar <mlichvar@redhat.com>
 
-[ Upstream commit cac9b9a4b08304f11daace03b8b48659355e44c1 ]
+[ Upstream commit 5515e9a6273b8c02034466bcbd717ac9f53dab99 ]
 
-When walking userspace stacks, USER_DS needs to be set, otherwise
-access_ok() will not function as expected.
+The PPS assert/clear offset corrections are set by the PPS_SETPARAMS
+ioctl in the pps_ktime structs, which also contain flags.  The flags are
+not initialized by applications (using the timepps.h header) and they
+are not used by the kernel for anything except returning them back in
+the PPS_GETPARAMS ioctl.
 
-Reported-by: Vegard Nossum <vegard.nossum@oracle.com>
-Reported-by: Eiichi Tsukata <devel@etsukata.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Vegard Nossum <vegard.nossum@oracle.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Link: https://lkml.kernel.org/r/20190718085754.GM3402@hirez.programming.kicks-ass.net
+Set the flags to zero to make it clear they are unused and avoid leaking
+uninitialized data of the PPS_SETPARAMS caller to other applications
+that have a read access to the PPS device.
+
+Link: http://lkml.kernel.org/r/20190702092251.24303-1-mlichvar@redhat.com
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Rodolfo Giometti <giometti@enneenne.com>
+Cc: Greg KH <greg@kroah.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/stacktrace.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/pps/pps.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
-index 36139de0a3c4..899b726c9e98 100644
---- a/kernel/stacktrace.c
-+++ b/kernel/stacktrace.c
-@@ -226,12 +226,17 @@ unsigned int stack_trace_save_user(unsigned long *store, unsigned int size)
- 		.store	= store,
- 		.size	= size,
- 	};
-+	mm_segment_t fs;
+diff --git a/drivers/pps/pps.c b/drivers/pps/pps.c
+index 3a546ec10d90..22a65ad4e46e 100644
+--- a/drivers/pps/pps.c
++++ b/drivers/pps/pps.c
+@@ -152,6 +152,14 @@ static long pps_cdev_ioctl(struct file *file,
+ 			pps->params.mode |= PPS_CANWAIT;
+ 		pps->params.api_version = PPS_API_VERS;
  
- 	/* Trace user stack if not a kernel thread */
- 	if (!current->mm)
- 		return 0;
- 
-+	fs = get_fs();
-+	set_fs(USER_DS);
- 	arch_stack_walk_user(consume_entry, &c, task_pt_regs(current));
-+	set_fs(fs);
++		/*
++		 * Clear unused fields of pps_kparams to avoid leaking
++		 * uninitialized data of the PPS_SETPARAMS caller via
++		 * PPS_GETPARAMS
++		 */
++		pps->params.assert_off_tu.flags = 0;
++		pps->params.clear_off_tu.flags = 0;
 +
- 	return c.len;
- }
- #endif
+ 		spin_unlock_irq(&pps->lock);
+ 
+ 		break;
 -- 
 2.20.1
 
