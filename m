@@ -2,87 +2,116 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EB3C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D8FC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7AB22C7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F67622CBA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:54:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfGZIyp (ORCPT
+        id S1726616AbfGZIyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 04:54:45 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48491 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfGZIyp (ORCPT
+        Fri, 26 Jul 2019 04:54:53 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:50063 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725945AbfGZIyx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 04:54:45 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hqvzp-0005Xo-N2; Fri, 26 Jul 2019 10:54:37 +0200
-Date:   Fri, 26 Jul 2019 10:54:36 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-cc:     mingo@redhat.com, bp@alien8.de, peterz@infradead.org,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
-        yamada.masahiro@socionext.com,
-        Vaibhav Rustagi <vaibhavrustagi@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Subject: Re: [PATCH v4 2/2] x86/purgatory: use CFLAGS_REMOVE rather than
- reset KBUILD_CFLAGS
-In-Reply-To: <20190725200625.174838-2-ndesaulniers@google.com>
-Message-ID: <alpine.DEB.2.21.1907261012140.1791@nanos.tec.linutronix.de>
-References: <20190725200625.174838-1-ndesaulniers@google.com> <20190725200625.174838-2-ndesaulniers@google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 26 Jul 2019 04:54:53 -0400
+X-UUID: a03d0d82d18447fe8430d1072d1de8e4-20190726
+X-UUID: a03d0d82d18447fe8430d1072d1de8e4-20190726
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <gtk_ruiwang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 891292867; Fri, 26 Jul 2019 16:54:45 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 26 Jul 2019 16:54:45 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 26 Jul 2019 16:54:45 +0800
+From:   <gtk_ruiwang@mediatek.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Tiffany Lin <tiffany.lin@mediatek.com>
+CC:     Longfei Wang <longfei.wang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        gtk_ruiwang <gtk_ruiwang@mediatek.com>
+Subject: media: mtk-vcodec: Handle H264 error bitstreams
+Date:   Fri, 26 Jul 2019 16:54:33 +0800
+Message-ID: <20190726085433.15612-1-gtk_ruiwang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jul 2019, Nick Desaulniers wrote:
+From: gtk_ruiwang <gtk_ruiwang@mediatek.com>
 
-> KBUILD_CFLAGS is very carefully built up in the top level Makefile,
-> particularly when cross compiling or using different build tools.
-> Resetting KBUILD_CFLAGS via := assignment is an antipattern.
-> 
-> The comment above the reset mentions that -pg is problematic.  Other
-> Makefiles use `CFLAGS_REMOVE_file.o = $(CC_FLAGS_FTRACE)` when
-> CONFIG_FUNCTION_TRACER is set. Prefer that pattern to wiping out all of
-> the important KBUILD_CFLAGS then manually having to re-add them. Seems
-> also that __stack_chk_fail references are generated when using
-> CONFIG_STACKPROTECTOR or CONFIG_STACKPROTECTOR_STRONG.
+Error h264 bitstreams which picture info are out range of
+decoder hardware specification, and no nal start code at the
+beginning of the buffer, stop decoding and exit.
 
-Looking at the resulting build flags. Most stuff looks correct but there
-are a few which need to be looked at twice.
+Signed-off-by: gtk_ruiwang <gtk_ruiwang@mediatek.com>
+---
+ .../platform/mtk-vcodec/vdec/vdec_h264_if.c      | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-removes:
+diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+index c5f8f1fca44c..49aa85a9bb5a 100644
+--- a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
++++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+@@ -29,6 +29,9 @@
+ #define H264_MAX_FB_NUM				17
+ #define HDR_PARSING_BUF_SZ			1024
+ 
++#define DEC_ERR_RET(ret)			((ret) >> 16)
++#define H264_ERR_NOT_VALID			3
++
+ /**
+  * struct h264_fb - h264 decode frame buffer information
+  * @vdec_fb_va  : virtual address of struct vdec_fb
+@@ -357,8 +360,11 @@ static int vdec_h264_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
+ 	buf = (unsigned char *)bs->va;
+ 	buf_sz = bs->size;
+ 	nal_start_idx = find_start_code(buf, buf_sz);
+-	if (nal_start_idx < 0)
++	if (nal_start_idx < 0) {
++		mtk_vcodec_err(inst, "invalid nal start code");
++		err = -EIO;
+ 		goto err_free_fb_out;
++	}
+ 
+ 	nal_start = buf[nal_start_idx];
+ 	nal_type = NAL_TYPE(buf[nal_start_idx]);
+@@ -382,8 +388,14 @@ static int vdec_h264_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
+ 	data[0] = buf_sz;
+ 	data[1] = nal_start;
+ 	err = vpu_dec_start(vpu, data, 2);
+-	if (err)
++	if (err) {
++		if (err > 0 && (DEC_ERR_RET(err) == H264_ERR_NOT_VALID)) {
++			mtk_vcodec_err(inst, "- error bitstream - err = %d -",
++				       err);
++			err = -EIO;
++		}
+ 		goto err_free_fb_out;
++	}
+ 
+ 	*res_chg = inst->vsi->dec.resolution_changed;
+ 	if (*res_chg) {
+-- 
+2.18.0
 
- -ffreestanding
- -fno-builtin
- -fno-zero-initialized-in-bss
-
-changes:
-
- -mcmodel=large to -mcmodel=kernel
-
-adds:
-
-  -mindirect-branch-register
-  -mindirect-branch=thunk-extern
-
-The latter makes me nervous. That probably wants to have retpoline disabled
-as well. It's not having an instance right now, but ...
-
-Thanks,
-
-	tglx
