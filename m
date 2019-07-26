@@ -2,109 +2,88 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6780C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E4EC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEBF521734
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E551217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:29:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JsisJ/fp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="etENTVA7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbfGZQ1N (ORCPT
+        id S1728868AbfGZQ3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:27:13 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:27616 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727554AbfGZQ1M (ORCPT
+        Fri, 26 Jul 2019 12:29:30 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43022 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728826AbfGZQ33 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:27:12 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6QG7fWq014148;
-        Fri, 26 Jul 2019 18:27:03 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=n6HKe0PgjUg51eRmGPMx0Q+MwoGoF4rstkH/lFHzWaM=;
- b=JsisJ/fpUkrGVDfSbnAzLrhU0vpu091fbUaYeaRC1Do+Xg5R8AE1Wdflko+wosp4+R7F
- ya+MTVXY6X0yGUrx2znky65+IAwBMKRttphn0UXtGe3GuDxucpAACX+UQmTk3q3poqeC
- /DcYKUe81hr1OIfNwuVYApiAUVhWiMLl2SDq6d1fn6P/iPB0ORPk8iXb+1Hy1XIeQQA8
- gM2gLphuWIzte4rglgFqd7h56FKz+gcjVNe5DiVtVuYPCroIYfnHwgXM83CWu3yPYQGz
- X3sch1vB/47ieQ44MWFKSwACSBmJYcw/smxwLA/hkavoRMvNjBkqXJ9CtUS6zsD0HViW dw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2tx60absu1-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 26 Jul 2019 18:27:03 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 10B1231;
-        Fri, 26 Jul 2019 16:27:03 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DF60D4FD0;
-        Fri, 26 Jul 2019 16:27:02 +0000 (GMT)
-Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 26 Jul
- 2019 18:27:02 +0200
-Subject: Re: [PATCH] ARM: dts: stm32: fix -Wall W=1 compilation warnings for
- can1_sleep pinctrl
-To:     Erwan Le Ray <erwan.leray@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bich.hemon@st.com>
-References: <1561972686-23281-1-git-send-email-erwan.leray@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <8cb628b9-dbbf-98d6-e09a-2ecc082315d4@st.com>
-Date:   Fri, 26 Jul 2019 18:27:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 26 Jul 2019 12:29:29 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y17so27479458ljk.10;
+        Fri, 26 Jul 2019 09:29:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=+CW43oDjjf97uXnO1yFBC+kyjGo7bEowuJ7murd1juw=;
+        b=etENTVA7DjvU2AiUuoCuuykKkMYl2+TSQPOT5X3qJ2eZJFHwPPg0VsEjVW85mww7Vo
+         8dweWbEnm97EKHJbmAQyycY83tIVmIr0uF2b+bZ4SgIPfeygo9kYob5bayq+fMf0MN18
+         u7ZTEVCKjZqtWYRhM5yH7hMftMbRB6JSJ+BRLgic48AlReU1gHBV2OsRoaea77ad41PE
+         hQYBMynd8gncuWog2CXD09tp6FhhWDsOpCK7ILsUcTt684Bzasil8XiGIosjpGPSyqFJ
+         0uNfzXDT8PERLi0DHPN1eiLJVYUczXEAWKqt3EKJ4WmO1PKPVqeVLmn7S8qObocWoBjB
+         JJMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=+CW43oDjjf97uXnO1yFBC+kyjGo7bEowuJ7murd1juw=;
+        b=TQ910LPL/i8H/qYSAkk3A/63uNBZnINnGozZge/w/+hm/90rJPC1+J/9lzr1lIttBh
+         opzZolmvFbiYv2FpWRymai/mG+VJwPiPv9l99WkwLEHq7znSLx0b/Wkn7kp35XPD7NcD
+         c0eXN16SScPf5jzLAS2Lc6uZNNPhqIqIu3DuU1Ywi0N9PervHkN/pgnC0A+nbrD0k5Jh
+         DwWai+w0s/F/oyqM1Yhrr1u4fbcXnN1UihKY22WbryQyGn0NA0BoHbesNAsKvhKmB+Zb
+         /V9V/u61z8m4XPlYRjh9b5B5C29c4Bo1JlP+h/hLAgEFoDOq5Ol4OTQuOo/4CP83rLEe
+         ZEkw==
+X-Gm-Message-State: APjAAAXLXXhLCUvohe4iTCmLSR9UrywJfE4F5AZfvmU/3lltqaOk60kX
+        qtEJ4HGuWk7r5TlpzToSJMuyYfWlEHZ9bU3JLT8=
+X-Google-Smtp-Source: APXvYqyduOFi8NImu0AzMAEfao7/6RCtL069JVxtRYJcG7ZxY2sDnpNyZhwel7yXqUTnvDofI8d+F0LuvM32vbsAM7s=
+X-Received: by 2002:a2e:5b5b:: with SMTP id p88mr14059332ljb.192.1564158567371;
+ Fri, 26 Jul 2019 09:29:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1561972686-23281-1-git-send-email-erwan.leray@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-26_12:,,
- signatures=0
+Received: by 2002:a2e:94c:0:0:0:0:0 with HTTP; Fri, 26 Jul 2019 09:29:26 -0700 (PDT)
+In-Reply-To: <20190726100614.6924-1-colin.king@canonical.com>
+References: <20190726100614.6924-1-colin.king@canonical.com>
+From:   Stanislav Yakovlev <stas.yakovlev@gmail.com>
+Date:   Fri, 26 Jul 2019 20:29:26 +0400
+Message-ID: <CA++WF2PS_3X-fs7nKuxipizXE3QAPYXbYk=AV9waxDEc9JVJNg@mail.gmail.com>
+Subject: Re: [PATCH] ipw2x00: remove redundant assignment to err
+To:     Colin King <colin.king@canonical.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Erwan		
+On 26/07/2019, Colin King <colin.king@canonical.com> wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Variable err is initialized to a value that is never read and it
+> is re-assigned later.  The initialization is redundant and can
+> be removed.
+>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/net/wireless/intel/ipw2x00/ipw2100.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 7/1/19 11:18 AM, Erwan Le Ray wrote:
-> Fix compilations warnings detected by -Wall W=1 compilation option:
-> - node has a unit name, but no reg property
-> 
-> Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-> index 140a983..ce98fd8 100644
-> --- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-> @@ -427,7 +427,7 @@
->   				};
->   			};
->   
-> -			m_can1_sleep_pins_a: m_can1-sleep@0 {
-> +			m_can1_sleep_pins_a: m_can1-sleep-0 {
->   				pins {
->   					pinmux = <STM32_PINMUX('H', 13, ANALOG)>, /* CAN1_TX */
->   						 <STM32_PINMUX('I', 9, ANALOG)>; /* CAN1_RX */
-> 
+Looks fine, thanks!
 
-Thanks for cleaning the STM32 DT. Applied on stm32-next. Note that I 
-changed commit title to indicate which STM32 platform is targeted by 
-this patch.
-
-Regards
-Alex
+Stanislav.
