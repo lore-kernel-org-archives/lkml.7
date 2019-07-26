@@ -4,53 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8CCC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56F2C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D4622CE9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE4320449
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149445;
-	bh=dbhU8J/ANE/G/844c8cbLui83Q3d6YR6YMZ/39ABKWA=;
+	s=default; t=1564149452;
+	bh=IgZ/JnLoiVjrT3w8KorZHfvOFwhhvs/8VuFR+G8IZyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0TqdRfGrlin9Uck8NZuFpQug1F+hr1xmhY+kSLTJQSUqgyRQrXm/IuYmVlIg7PiZU
-	 YIT+u+rIA57pGwc6uzR8+g8QwaO0xv3C5rrAOjm/2qb/gSWlN8HQgzN6jeZ9gWloQP
-	 JruUfgCUUk90JfrZv51u6jPdtyudk0b715/PcRA0=
+	b=vaBoAQjtSu6RFKKTlx8MUK+km0zbCbXH9ZKdjkwNBdumAdT0qa0695fi1Eh6v4USQ
+	 Fl39MBG79c7iA+2cvlKsmtZMWTNp0Csq1qS4qblmjxqUZkZSTRq5WCuX43Ptl+afKL
+	 Q4+K06tdo+4uMUWyLjGMws4gbXjOmvQA8qs4Iscg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbfGZN5X (ORCPT
+        id S1728574AbfGZN5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:57:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47566 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:57:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727835AbfGZNlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:41:12 -0400
+        id S2387637AbfGZNlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:41:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED31B2238C;
-        Fri, 26 Jul 2019 13:41:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE4C522CB8;
+        Fri, 26 Jul 2019 13:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148471;
-        bh=dbhU8J/ANE/G/844c8cbLui83Q3d6YR6YMZ/39ABKWA=;
+        s=default; t=1564148465;
+        bh=IgZ/JnLoiVjrT3w8KorZHfvOFwhhvs/8VuFR+G8IZyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KgKf+3P39ooBlXP7aGp18IfdiF8ZOxP7CtV1VNWVZgaXEabBy6pUUh41TNBv2lLfO
-         nv+7YVxNHzHrnMvYdOSdwZvpLzp3SUSbAg7EnytfItcsL6VXACVoa8S4gEHITkIpU3
-         SnKW0AdqSGk0oqfBZTf8HcHahfADflKKIaoVejo8=
+        b=CNueJRgqX94yiNzo0fxM8k6v5uzB54U8n2USzQfi6VoSOq9A2TZwkmYeYmdG8h2+e
+         CKeL5c/gACngLZYqFFrtEJ+veEy4ueq9x1c1ixRNP96iJHYNJQR6Ixs0n9rC1kYlf5
+         ul+jW52es3Ev2+shy6UJNgF2DAMtn9+fIPfK1UiQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 57/85] lib/test_overflow.c: avoid tainting the kernel and fix wrap size
-Date:   Fri, 26 Jul 2019 09:39:07 -0400
-Message-Id: <20190726133936.11177-57-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 54/85] x86/apic: Silence -Wtype-limits compiler warnings
+Date:   Fri, 26 Jul 2019 09:39:04 -0400
+Message-Id: <20190726133936.11177-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -63,54 +58,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 8e060c21ae2c265a2b596e9e7f9f97ec274151a4 ]
+[ Upstream commit ec6335586953b0df32f83ef696002063090c7aef ]
 
-This adds __GFP_NOWARN to the kmalloc()-portions of the overflow test to
-avoid tainting the kernel.  Additionally fixes up the math on wrap size
-to be architecture and page size agnostic.
+There are many compiler warnings like this,
 
-Link: http://lkml.kernel.org/r/201905282012.0A8767E24@keescook
-Fixes: ca90800a91ba ("test_overflow: Add memory allocation overflow tests")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Joe Perches <joe@perches.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+In file included from ./arch/x86/include/asm/smp.h:13,
+                 from ./arch/x86/include/asm/mmzone_64.h:11,
+                 from ./arch/x86/include/asm/mmzone.h:5,
+                 from ./include/linux/mmzone.h:969,
+                 from ./include/linux/gfp.h:6,
+                 from ./include/linux/mm.h:10,
+                 from arch/x86/kernel/apic/io_apic.c:34:
+arch/x86/kernel/apic/io_apic.c: In function 'check_timer':
+./arch/x86/include/asm/apic.h:37:11: warning: comparison of unsigned
+expression >= 0 is always true [-Wtype-limits]
+   if ((v) <= apic_verbosity) \
+           ^~
+arch/x86/kernel/apic/io_apic.c:2160:2: note: in expansion of macro
+'apic_printk'
+  apic_printk(APIC_QUIET, KERN_INFO "..TIMER: vector=0x%02X "
+  ^~~~~~~~~~~
+./arch/x86/include/asm/apic.h:37:11: warning: comparison of unsigned
+expression >= 0 is always true [-Wtype-limits]
+   if ((v) <= apic_verbosity) \
+           ^~
+arch/x86/kernel/apic/io_apic.c:2207:4: note: in expansion of macro
+'apic_printk'
+    apic_printk(APIC_QUIET, KERN_ERR "..MP-BIOS bug: "
+    ^~~~~~~~~~~
+
+APIC_QUIET is 0, so silence them by making apic_verbosity type int.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1562621805-24789-1-git-send-email-cai@lca.pw
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_overflow.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/apic.h | 2 +-
+ arch/x86/kernel/apic/apic.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/test_overflow.c b/lib/test_overflow.c
-index fc680562d8b6..7a4b6f6c5473 100644
---- a/lib/test_overflow.c
-+++ b/lib/test_overflow.c
-@@ -486,16 +486,17 @@ static int __init test_overflow_shift(void)
-  * Deal with the various forms of allocator arguments. See comments above
-  * the DEFINE_TEST_ALLOC() instances for mapping of the "bits".
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index 1340fa53b575..2e599384abd8 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -49,7 +49,7 @@ static inline void generic_apic_probe(void)
+ 
+ #ifdef CONFIG_X86_LOCAL_APIC
+ 
+-extern unsigned int apic_verbosity;
++extern int apic_verbosity;
+ extern int local_apic_timer_c2_ok;
+ 
+ extern int disable_apic;
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 16c21ed97cb2..530cf1fd68a2 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -183,7 +183,7 @@ EXPORT_SYMBOL_GPL(local_apic_timer_c2_ok);
+ /*
+  * Debug level, exported for io_apic.c
   */
--#define alloc010(alloc, arg, sz) alloc(sz, GFP_KERNEL)
--#define alloc011(alloc, arg, sz) alloc(sz, GFP_KERNEL, NUMA_NO_NODE)
-+#define alloc_GFP		 (GFP_KERNEL | __GFP_NOWARN)
-+#define alloc010(alloc, arg, sz) alloc(sz, alloc_GFP)
-+#define alloc011(alloc, arg, sz) alloc(sz, alloc_GFP, NUMA_NO_NODE)
- #define alloc000(alloc, arg, sz) alloc(sz)
- #define alloc001(alloc, arg, sz) alloc(sz, NUMA_NO_NODE)
--#define alloc110(alloc, arg, sz) alloc(arg, sz, GFP_KERNEL)
-+#define alloc110(alloc, arg, sz) alloc(arg, sz, alloc_GFP)
- #define free0(free, arg, ptr)	 free(ptr)
- #define free1(free, arg, ptr)	 free(arg, ptr)
+-unsigned int apic_verbosity;
++int apic_verbosity;
  
--/* Wrap around to 8K */
--#define TEST_SIZE		(9 << PAGE_SHIFT)
-+/* Wrap around to 16K */
-+#define TEST_SIZE		(5 * 4096)
+ int pic_mode;
  
- #define DEFINE_TEST_ALLOC(func, free_func, want_arg, want_gfp, want_node)\
- static int __init test_ ## func (void *arg)				\
 -- 
 2.20.1
 
