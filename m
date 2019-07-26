@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E54C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 420ACC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9203C22CB9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1296122C7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:30:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155052;
-	bh=D8JO664rZXtKd/XKwSNtzw8qz/FhTPtMJC/Z6cXlN18=;
+	s=default; t=1564155057;
+	bh=Zk3VFGdLnxj6L7eRlPZ1f8TcfgA404w4coNzKazCWhI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S8nUJbPK+2OBUqom/fb/+jHSoCp/NRCQCi5I7lUTmxC2dWAmIG29BfLj5LstlJqbN
-	 qOhQYZ/Vr//7RF9smqxS7UWdJYT+rQzDHILhe2HMb/fYR6b0BAIqm0ukQrFVdfDybq
-	 4S9KF73e5pAiH4GDWT/cG6hO8+M3lF7U4BxdSolM=
+	b=N11fSo3IoXrPA0rnwEyXfjhzb2Ueh7xtKCX1qNAKNGZf5ko4bjUcQvn1HgH2R1Yom
+	 wrTYDyvBXpK6qfc1NGXenNq6w5DCvJ1byXHw6QgeYmsFAMw0VoWY7NLIBUDnAb/GE8
+	 n4Dh5mR6sn+Fp0I/GrUzrut+Oh/tE24phXlteHN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388633AbfGZPau (ORCPT
+        id S2389160AbfGZPaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:30:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45634 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:30:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389134AbfGZPan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:30:43 -0400
+        id S2389142AbfGZPaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:30:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45D7C22BF5;
-        Fri, 26 Jul 2019 15:30:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEFE622BF5;
+        Fri, 26 Jul 2019 15:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155042;
-        bh=D8JO664rZXtKd/XKwSNtzw8qz/FhTPtMJC/Z6cXlN18=;
+        s=default; t=1564155046;
+        bh=Zk3VFGdLnxj6L7eRlPZ1f8TcfgA404w4coNzKazCWhI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vf7pAJxTKqIxdwPVAzMSPUk0/3a880MaaUZK6ek4ivd0gOdzbJqmRHd580yI1jXfl
-         CKOqI/3GWAJoKMUxHou4lK9XYXrr39SfuVuZNTLpkaR1o6gC/BIByW/rArWwuWrzee
-         j8fb2XXvGj1FApYRlIaetzLcdEOfuclYjVtgkJNo=
+        b=n8U2yBeNp5N56sDDURvLEmrQ3MblhBk5WvueoFPokPHqGX7aawDmHX/FPVGol/tPn
+         NZKaKvzzZ1hPqAp//KLEblycVdzzgSl15b/HmkPno3E0ZDCU6hddvoq6bApSnRep4h
+         Q1tetQq/CixYhorWATzaPxEjUxwiM8V5XNPzjn5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH 5.1 44/62] dma-buf: Discard old fence_excl on retrying get_fences_rcu for realloc
-Date:   Fri, 26 Jul 2019 17:24:56 +0200
-Message-Id: <20190726152306.587203423@linuxfoundation.org>
+        stable@vger.kernel.org, Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 5.1 45/62] gpiolib: of: fix a memory leak in of_gpio_flags_quirks()
+Date:   Fri, 26 Jul 2019 17:24:57 +0200
+Message-Id: <20190726152306.727590027@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -63,42 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Nishka Dasgupta <nishkadg.linux@gmail.com>
 
-commit f5b07b04e5f090a85d1e96938520f2b2b58e4a8e upstream.
+commit 89fea04c85e85f21ef4937611055abce82330d48 upstream.
 
-If we have to drop the seqcount & rcu lock to perform a krealloc, we
-have to restart the loop. In doing so, be careful not to lose track of
-the already acquired exclusive fence.
+Each iteration of for_each_child_of_node puts the previous node, but in
+the case of a break from the middle of the loop, there is no put, thus
+causing a memory leak. Hence add an of_node_put before the break.
+Issue found with Coccinelle.
 
-Fixes: fedf54132d24 ("dma-buf: Restart reservation_object_get_fences_rcu() after writes")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Christian König <christian.koenig@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: stable@vger.kernel.org #v4.10
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190604125323.21396-1-chris@chris-wilson.co.uk
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+[Bartosz: tweaked the commit message]
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma-buf/reservation.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpio/gpiolib-of.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/dma-buf/reservation.c
-+++ b/drivers/dma-buf/reservation.c
-@@ -357,6 +357,10 @@ int reservation_object_get_fences_rcu(st
- 					   GFP_NOWAIT | __GFP_NOWARN);
- 			if (!nshared) {
- 				rcu_read_unlock();
-+
-+				dma_fence_put(fence_excl);
-+				fence_excl = NULL;
-+
- 				nshared = krealloc(shared, sz, GFP_KERNEL);
- 				if (nshared) {
- 					shared = nshared;
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -155,6 +155,7 @@ static void of_gpio_flags_quirks(struct
+ 							of_node_full_name(child));
+ 					*flags |= OF_GPIO_ACTIVE_LOW;
+ 				}
++				of_node_put(child);
+ 				break;
+ 			}
+ 		}
 
 
