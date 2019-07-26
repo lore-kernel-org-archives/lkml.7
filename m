@@ -2,140 +2,74 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFE7C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCF7C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97ED522BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:15:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dNqzYdVq"
+	by mail.kernel.org (Postfix) with ESMTP id 7E4FC216F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:21:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbfGZSPC (ORCPT
+        id S1728744AbfGZSVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 14:15:02 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37381 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbfGZSPC (ORCPT
+        Fri, 26 Jul 2019 14:21:41 -0400
+Received: from smtprelay0147.hostedemail.com ([216.40.44.147]:57285 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726103AbfGZSVl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 14:15:02 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f17so48395842wme.2;
-        Fri, 26 Jul 2019 11:15:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JKw39pI2llb7A01NXuEKDfaC4+iRUymYwQL0imdPSKs=;
-        b=dNqzYdVqcZfPAziZ23MpFrZNMRjes+fGTgZkSQ1C+5pbkn7xHFhvm8aXQ1gHZJW9ZH
-         El2HrLr604GsqqIFQg5uuc+Zg0CY4Ust2WMYx5pWJnVbQFNF9lbeDcv6H/gu5PRS3x8B
-         nBp3Aut03vN4wALa1S8wR/68wgUpJxD8UlMbQdqpvaj1ca03j5ULZ+UB5HD6pmjTQjzR
-         gg/ttUspqIuZ9YJdsrWGXq0oolILm02GG1l9aflkLD+c/+MOup7a5dV9pNvTTCSTp8uD
-         qs/fL5gzo4gnV+OBdwvaDSLxDtbf6s7lprq1Q9wPXS6IT8NucSkx2or0ekft2KeT1Ahm
-         zlXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JKw39pI2llb7A01NXuEKDfaC4+iRUymYwQL0imdPSKs=;
-        b=ffhg1Hl2sxi1CDhgpLTgrdvghFHnLaONSZcBb1+Ps/f57AsTJrXluGijcE+CQ3W2ic
-         cgCFMzZlIoHWIFYigmI8r2FnpFAO/lKnqFpeFAYAGdIBJUHjxm7FszaVBM9mhNECD/8Z
-         P67odqxA6iCVoodR0jFMnCdduyEYom3nvxgscwxg+yUX55r9JZESx9XCOOdkrCpQm+oY
-         PQGeYR5MIr02QG7uapWLDw3FIfr5PzEpzSJSe3QeCg9zDC+fuq5/gDcZhnmEXV+3GmV/
-         m/OLxDLec0VaKYvj88nzPXDG0lcr7jnbZLxNk45DFsa9cTQGo9meFcOBc0QzS7xyFSlr
-         XFtQ==
-X-Gm-Message-State: APjAAAWlGmE5LZGSSXreYO7Se0eZnOXInJql37hrIjcsZjc7EU9uQ2Nt
-        0EPw173Ts8rD3Vis0yk0fCM=
-X-Google-Smtp-Source: APXvYqxYXMQI2HJ97cUHUaomwuteph1EY3UXRjsSSsubmMq20Bid28heJ2nMYVrj8lNHRSbGUubIAw==
-X-Received: by 2002:a05:600c:230c:: with SMTP id 12mr83673655wmo.166.1564164899711;
-        Fri, 26 Jul 2019 11:14:59 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f43:4200:55f1:e404:698f:358? (p200300EA8F43420055F1E404698F0358.dip0.t-ipconnect.de. [2003:ea:8f43:4200:55f1:e404:698f:358])
-        by smtp.googlemail.com with ESMTPSA id u6sm54367668wml.9.2019.07.26.11.14.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 11:14:59 -0700 (PDT)
-Subject: Re: [RFC] net: phy: read link status twice when
- phy_check_link_status()
-To:     Yonglong Liu <liuyonglong@huawei.com>, andrew@lunn.ch,
-        davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, salil.mehta@huawei.com,
-        yisen.zhuang@huawei.com, shiju.jose@huawei.com
-References: <1564134831-24962-1-git-send-email-liuyonglong@huawei.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <92f42ee8-3659-87a7-ac96-d312a98046ba@gmail.com>
-Date:   Fri, 26 Jul 2019 20:14:28 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 26 Jul 2019 14:21:41 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 8B0CE18225DE2;
+        Fri, 26 Jul 2019 18:21:39 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: crate84_2b5cc4a52181d
+X-Filterd-Recvd-Size: 1705
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf15.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 26 Jul 2019 18:21:37 +0000 (UTC)
+Message-ID: <0440fc0b1e8599df3cf0728261f74faf25fc4408.camel@perches.com>
+Subject: Re: [PATCH 1/6] staging: rtl8188eu: add spaces around '+' in
+ usb_halinit.c
+From:   Joe Perches <joe@perches.com>
+To:     Michael Straube <straube.linux@gmail.com>,
+        gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 26 Jul 2019 11:21:36 -0700
+In-Reply-To: <20190726180448.2290-1-straube.linux@gmail.com>
+References: <20190726180448.2290-1-straube.linux@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-In-Reply-To: <1564134831-24962-1-git-send-email-liuyonglong@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.07.2019 11:53, Yonglong Liu wrote:
-> According to the datasheet of Marvell phy and Realtek phy, the
-> copper link status should read twice, or it may get a fake link
-> up status, and cause up->down->up at the first time when link up.
-> This happens more oftem at Realtek phy.
-> 
-This is not correct, there is no fake link up status.
-Read the comment in genphy_update_link, only link-down events
-are latched. Means if the first read returns link up, then there
-is no need for a second read. And in polling mode we don't do a
-second read because we want to detect also short link drops.
+On Fri, 2019-07-26 at 20:04 +0200, Michael Straube wrote:
+> Add spaces around '+' to improve readability and follow kernel
+> coding style. Reported by checkpatch.
 
-It would be helpful if you could describe your actual problem
-and whether you use polling or interrupt mode.
+My preference would be to do all the horizontal whitespace
+changes for the entire driver in one go without worrying
+about long lines.
 
-> I add a fake status read, and can solve this problem.
-> 
-> I also see that in genphy_update_link(), had delete the fake
-> read in polling mode, so I don't know whether my solution is
-> correct.
-> 
-> Or provide a phydev->drv->read_status functions for the phy I
-> used is more acceptable?
-> 
-> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-> ---
->  drivers/net/phy/phy.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-> index ef7aa73..0c03edc 100644
-> --- a/drivers/net/phy/phy.c
-> +++ b/drivers/net/phy/phy.c
-> @@ -1,4 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0+
-> +	err = phy_read_status(phydev);
-> +	if (err)
-> +		return err;
+$ git ls-files -- 'drivers/staging/rtl8188eu/*.[ch]' | \
+  xargs ./scripts/checkpatch.pl -f --types=SPACING --fix-inplace
+$ git diff -w drivers/staging/rtl8188eu/
+$ git diff --shortstat drivers/staging/rtl8188eu
+ 35 files changed, 603 insertions(+), 603 deletions(-)
 
-This seems to be completely wrong at that place.
+Mention that git diff -w shows no difference and
+verify that object files are unchanged and mention
+both in the changelog.
 
->  /* Framework for configuring and reading PHY devices
->   * Based on code in sungem_phy.c and gianfar_phy.c
->   *
-> @@ -525,6 +528,11 @@ static int phy_check_link_status(struct phy_device *phydev)
->  
->  	WARN_ON(!mutex_is_locked(&phydev->lock));
->  
-> +	/* Do a fake read */
-> +	err = phy_read(phydev, MII_BMSR);
-> +	if (err < 0)
-> +		return err;
-> +
->  	err = phy_read_status(phydev);
->  	if (err)
->  		return err;
-> 
+Subject could be something like:
+
+staging: rtl8188eu: Use typical kernel horizontal whitespace
+
 
