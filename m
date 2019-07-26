@@ -2,207 +2,149 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93B0C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60179C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7B621852
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3565322C7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:27:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="p8YIubdm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ePOopMHV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387468AbfGZWYb (ORCPT
+        id S1728728AbfGZW1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 18:24:31 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:3585 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387405AbfGZWYa (ORCPT
+        Fri, 26 Jul 2019 18:27:05 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36254 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728471AbfGZW1E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 18:24:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1564179870; x=1595715870;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=if3brqcdHB/fxxSNFjpR7EE+qJbzAZzvUpJK8gt9Dh8=;
-  b=p8YIubdmm3b0IHKhSmDCE1aHVdajmHG9DGC1kbf+dy/maXctGQkXBIgx
-   TrQAWfTJ99XFi73LOKTwhLGbaA0Tnjcyv+IEG3qosB1nkiCyCQGiRxADo
-   ks/pgn5N8VXhJcx0jEz1Cmky0xS2gK3C0wUhNQMvojCx9kWJgZOtz+rM6
-   rMTrSjkvUrStL3PtpgJEhBfkyVAJvtm/NmGVGK+85jl+Iul6vZakgEOrx
-   e224GKmACp3WLZValFZoQYexaSOvwgkDd5/SeXXb60Z0GP+0PgJyOfyzb
-   OLoUN0If4WA9E7HMuyLyDNy+ULO2hDVG+Ul07QxxWLTdZbTLcAK7haTRd
-   Q==;
-IronPort-SDR: 4WFVCFba+z+Fy0G9WNZGJMNUpq8Fwvo/sSATHAV2pLtZniKpFwvwIy2Y4nvWZI9YYR+LbycPgr
- 4s8T7WnkKqSihun2+n7D1VtxYZb/cvoxkTgiJhTTc6K6zG1PnxgG/+ye1dvkarcoXZ2Yt+P3fg
- hav4CN2r0nufDJOf/xncZ94GwUIWRUgNDg7Lf0rDzd+eD4oeSB9J0/Vcd80Mw1bMTSV+YYMgdb
- vPmwj6mMQjlHdyZNbQDS8vq4zijy2PRPWWRjOXIZyYbbSeiSGq9f+FapJVeJcqyUy5NLdnybpZ
- mUY=
-X-IronPort-AV: E=Sophos;i="5.64,312,1559491200"; 
-   d="scan'208";a="115280892"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 27 Jul 2019 06:24:30 +0800
-IronPort-SDR: d7GaB12dGZu9LsY2v07NwI825WDG08la0pWr9n0cwMKLeJFdP7/Y6eSqsyswfdYN3rU+KciiOw
- JQRVBbmVNHAnPsvk9vKhmZcNoMJBWco7m5vYIoxQTRHNJNKFIMqGfW29apC4Mj+7tfOqmAHDMb
- z9SIeUWVnsnNIUFhU8iRubHMRxMeVsYR88E03SaiQZLCbpTqmsbguy3fyITxzbESBACKDirSLq
- OTqSldX7EnH8qXevnukQXl6X+N2IAVyHYnZZoEmQGocUzmizLshSe5uL+InigeeRlIiMKfDwYt
- nbKapwhtWfACLMHgl9gRdnJw
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP; 26 Jul 2019 15:22:38 -0700
-IronPort-SDR: jRa8eOdP/YuKfEzPjVyDpyFtNg+MPlqfk2n4XP6iJpn3/YPiLpWo2zO1hehiqWcxAZoTWjXrOS
- PMiNzCPi9bKZujDpYd8JGTCq3CXFvimIPZGZVgKpJvCipV8kZ5xKQY/gMnZZ0L5LBw/5/Ewi9E
- DDOaSpHgzou0PU1mik3wZdm5gyNssOF/044AidN0g/98RaHIjx8fg7+6BX11AYs+5IlC67Z9ND
- ReDmbdOQZovtt4wDXzhyLz/ZLfZ++jQSeS2q1QoXkx7YR1DKeloXqM7zVlasNSC0Y9euP9wISO
- rxI=
-Received: from unknown (HELO [10.225.104.231]) ([10.225.104.231])
-  by uls-op-cesaip01.wdc.com with ESMTP; 26 Jul 2019 15:24:29 -0700
-Subject: Re: [PATCH] docs: riscv: convert boot-image-header.txt to ReST
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Karsten Merker <merker@debian.org>
-References: <57eaa99a-d644-7b79-7177-a45d3ef1e71a@wdc.com>
- <1eaeb3fbb74de55af0b3f6d93ab40776dcbbb5c8.1564174903.git.mchehab+samsung@kernel.org>
-From:   Atish Patra <atish.patra@wdc.com>
-Message-ID: <40e0f516-402b-29eb-d69b-fda1af26801e@wdc.com>
-Date:   Fri, 26 Jul 2019 15:24:24 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Fri, 26 Jul 2019 18:27:04 -0400
+Received: by mail-wm1-f67.google.com with SMTP id g67so44717795wme.1;
+        Fri, 26 Jul 2019 15:27:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pLIvL1ELNjaZefRkSo34EEeqZ5ctkKw3Nhc4gJBc33s=;
+        b=ePOopMHVtBJWVbqlKtDxoGAEJq2W+MrKFCPb2aExEk+4Js7x0XFa33YynjU0aYy+Zd
+         cy8SOMYIf8ILafKjZKdQNPmN5l+a6/AtmSX16476xaqtwIhafaF+Tkr3Hhy8mEupfqD1
+         l1Fxv4/EWdfc3Znt515XrTWt1Gpj/K2hQoYPL5Cr9SGL6Y1I8TqxbhGeL1OoCedTXnsz
+         WDJ33syVp6qDMLPxtq5zlNFdpUAgGk8NfG0/NIPKuHicwUUS0OIkT0oli/9bAznmh+rR
+         IPghhpH766v1ZEoaeXrdL+5+dmvIE7ZsoovhwgJdcWh2/YKaxv8k+WD3GA7eCwtwaCLI
+         a9nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pLIvL1ELNjaZefRkSo34EEeqZ5ctkKw3Nhc4gJBc33s=;
+        b=bO22VTu4vtev8BcMp6FGcxh3SQKf2HTS2EtEc+bue1CQod3DiJrMBUXtvGuaOZDxkE
+         FJYI4mrpmFS0KBSGQa/E56xs2l8i0LRDmz9GT8vqvfKjL02UahMDahHGMx4f3vAmOfeT
+         V8I7SDakzRf14PWdd+chgnLZJ2JKgQcW8C3WLb8/FH70hdQT2U1Yu9/t8UmPoZg+vO8E
+         PxQr6+7kIP9RNb0ELCPpeDci+9xyr7ptq7D9YZsRzype4Gt6yIwkuzFO9ia8j+Wug4Cj
+         X2JFUxFo1vrO/Evp3Lsm3JmP1aACjTLDdJpCKhNaw7Onlf20O2E2kBuCifYIT6tyvi4s
+         4qCA==
+X-Gm-Message-State: APjAAAX76wy+lEoicfZTNLjCuMA4dUfT1LHq6T5qyZGeQ+TSihw17BSw
+        2ZMS23+Uy9NajE6F/PeLNZ9OC+LXSxHm8nxxcBs=
+X-Google-Smtp-Source: APXvYqxg4Ing4cAKxRNOyIS5IE4D6JXVjbgrCbkFHO/3jK45VR23Z9xnWOALa5i4VOTyOCbFR45W/I9i3pdpSHZMPSA=
+X-Received: by 2002:a1c:96c7:: with SMTP id y190mr80069646wmd.87.1564180022241;
+ Fri, 26 Jul 2019 15:27:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1eaeb3fbb74de55af0b3f6d93ab40776dcbbb5c8.1564174903.git.mchehab+samsung@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190705045612.27665-1-Anson.Huang@nxp.com> <20190705045612.27665-5-Anson.Huang@nxp.com>
+In-Reply-To: <20190705045612.27665-5-Anson.Huang@nxp.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Sat, 27 Jul 2019 01:26:50 +0300
+Message-ID: <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
+Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Carlo Caione <ccaione@baylibre.com>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        linux-pm@vger.kernel.org,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-clk@vger.kernel.org, dl-linux-imx <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/26/19 2:02 PM, Mauro Carvalho Chehab wrote:
-> Convert this small file to ReST format by:
->     - Using a proper markup for the document title;
->     - marking a code block as such;
->     - use tags for Author and date;
->     - use tables for bit map fields.
-> 
-> While here, fix a broken reference for a document with is
-> planned but is not here yet.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Hi all,
+
+latest linux-next hangs at boot.
+
+commit fde50b96be821ac9673a7e00847cc4605bd88f34 (HEAD -> master, tag:
+next-20190726, origin/master, origin/HEAD)
+Author: Stephen Rothwell <sfr@canb.auug.org.au>
+Date:   Fri Jul 26 15:18:02 2019 +1000
+
+    Add linux-next specific files for 20190726
+
+    Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+
+
+I know this is crazy but reverting commit:
+
+commit 431bdd1df48ee2896ea9980d9153e3aeaf0c81ef (refs/bisect/bad)
+Author: Anson Huang <Anson.Huang@nxp.com>
+Date:   Fri Jul 5 12:56:11 2019 +0800
+
+    clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT
+
+    IMX8MQ_CLK_TMU_ROOT is ONLY used for thermal module, the driver
+    should manage this clock, so no need to have CLK_IS_CRITICAL flag
+    set.
+
+
+
+makes the boot work again.
+
+Any idea?
+
+On Fri, Jul 5, 2019 at 8:07 AM <Anson.Huang@nxp.com> wrote:
+>
+> From: Anson Huang <Anson.Huang@nxp.com>
+>
+> IMX8MQ_CLK_TMU_ROOT is ONLY used for thermal module, the driver
+> should manage this clock, so no need to have CLK_IS_CRITICAL flag
+> set.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->   ...image-header.txt => boot-image-header.rst} | 39 ++++++++++++-------
->   Documentation/riscv/index.rst                 |  1 +
->   2 files changed, 26 insertions(+), 14 deletions(-)
->   rename Documentation/riscv/{boot-image-header.txt => boot-image-header.rst} (72%)
-> 
-> diff --git a/Documentation/riscv/boot-image-header.txt b/Documentation/riscv/boot-image-header.rst
-> similarity index 72%
-> rename from Documentation/riscv/boot-image-header.txt
-> rename to Documentation/riscv/boot-image-header.rst
-> index 1b73fea23b39..43e9bd0731d5 100644
-> --- a/Documentation/riscv/boot-image-header.txt
-> +++ b/Documentation/riscv/boot-image-header.rst
-> @@ -1,22 +1,25 @@
-> -				Boot image header in RISC-V Linux
-> -			=============================================
-> +=================================
-> +Boot image header in RISC-V Linux
-> +=================================
->   
-> -Author: Atish Patra <atish.patra@wdc.com>
-> -Date  : 20 May 2019
-> +:Author: Atish Patra <atish.patra@wdc.com>
-> +:Date:   20 May 2019
->   
->   This document only describes the boot image header details for RISC-V Linux.
-> -The complete booting guide will be available at Documentation/riscv/booting.txt.
->   
-> -The following 64-byte header is present in decompressed Linux kernel image.
-> +TODO:
-> +  Write a complete booting guide.
-> +
-> +The following 64-byte header is present in decompressed Linux kernel image::
->   
->   	u32 code0;		  /* Executable code */
-> -	u32 code1; 		  /* Executable code */
-> +	u32 code1;		  /* Executable code */
->   	u64 text_offset;	  /* Image load offset, little endian */
->   	u64 image_size;		  /* Effective Image size, little endian */
->   	u64 flags;		  /* kernel flags, little endian */
->   	u32 version;		  /* Version of this header */
-> -	u32 res1  = 0;		  /* Reserved */
-> -	u64 res2  = 0;    	  /* Reserved */
-> +	u32 res1 = 0;		  /* Reserved */
-> +	u64 res2 = 0;		  /* Reserved */
->   	u64 magic = 0x5643534952; /* Magic number, little endian, "RISCV" */
->   	u32 res3;		  /* Reserved for additional RISC-V specific header */
->   	u32 res4;		  /* Reserved for PE COFF offset */
-> @@ -25,16 +28,21 @@ This header format is compliant with PE/COFF header and largely inspired from
->   ARM64 header. Thus, both ARM64 & RISC-V header can be combined into one common
->   header in future.
->   
-> -Notes:
-> +Notes
-> +=====
-> +
->   - This header can also be reused to support EFI stub for RISC-V in future. EFI
->     specification needs PE/COFF image header in the beginning of the kernel image
->     in order to load it as an EFI application. In order to support EFI stub,
->     code0 should be replaced with "MZ" magic string and res5(at offset 0x3c) should
->     point to the rest of the PE/COFF header.
->   
-> -- version field indicate header version number.
-> -	Bits 0:15  - Minor version
-> -	Bits 16:31 - Major version
-> +- version field indicate header version number
-> +
-> +	==========  =============
-> +	Bits 0:15   Minor version
-> +	Bits 16:31  Major version
-> +	==========  =============
->   
->     This preserves compatibility across newer and older version of the header.
->     The current version is defined as 0.1.
-> @@ -44,7 +52,10 @@ Notes:
->     extension for RISC-V in future. For current version, it is set to be zero.
->   
->   - In current header, the flag field has only one field.
-> -	Bit 0: Kernel endianness. 1 if BE, 0 if LE.
-> +
-> +	=====  ====================================
-> +	Bit 0  Kernel endianness. 1 if BE, 0 if LE.
-> +	=====  ====================================
->   
->   - Image size is mandatory for boot loader to load kernel image. Booting will
->     fail otherwise.
-> diff --git a/Documentation/riscv/index.rst b/Documentation/riscv/index.rst
-> index e3ca0922a8c2..215fd3c1f2d5 100644
-> --- a/Documentation/riscv/index.rst
-> +++ b/Documentation/riscv/index.rst
-> @@ -5,6 +5,7 @@ RISC-V architecture
->   .. toctree::
->       :maxdepth: 1
->   
-> +    boot-image-header
->       pmu
->   
->   .. only::  subproject and html
-> 
-
-Thanks for the quick patch.
-
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
-
--- 
-Regards,
-Atish
+>  drivers/clk/imx/clk-imx8mq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+> index d407a07..91de69a 100644
+> --- a/drivers/clk/imx/clk-imx8mq.c
+> +++ b/drivers/clk/imx/clk-imx8mq.c
+> @@ -539,7 +539,7 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
+>         clks[IMX8MQ_CLK_DISP_AXI_ROOT]  = imx_clk_gate2_shared2("disp_axi_root_clk", "disp_axi", base + 0x45d0, 0, &share_count_dcss);
+>         clks[IMX8MQ_CLK_DISP_APB_ROOT]  = imx_clk_gate2_shared2("disp_apb_root_clk", "disp_apb", base + 0x45d0, 0, &share_count_dcss);
+>         clks[IMX8MQ_CLK_DISP_RTRM_ROOT] = imx_clk_gate2_shared2("disp_rtrm_root_clk", "disp_rtrm", base + 0x45d0, 0, &share_count_dcss);
+> -       clks[IMX8MQ_CLK_TMU_ROOT] = imx_clk_gate4_flags("tmu_root_clk", "ipg_root", base + 0x4620, 0, CLK_IS_CRITICAL);
+> +       clks[IMX8MQ_CLK_TMU_ROOT] = imx_clk_gate4("tmu_root_clk", "ipg_root", base + 0x4620, 0);
+>         clks[IMX8MQ_CLK_VPU_DEC_ROOT] = imx_clk_gate2_flags("vpu_dec_root_clk", "vpu_bus", base + 0x4630, 0, CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE);
+>         clks[IMX8MQ_CLK_CSI1_ROOT] = imx_clk_gate4("csi1_root_clk", "csi1_core", base + 0x4650, 0);
+>         clks[IMX8MQ_CLK_CSI2_ROOT] = imx_clk_gate4("csi2_root_clk", "csi2_core", base + 0x4660, 0);
+> --
+> 2.7.4
+>
