@@ -2,155 +2,134 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610A0C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD63C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20EE822BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:35:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZUPSK9iA"
+	by mail.kernel.org (Postfix) with ESMTP id 99BC722BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbfGZTfb (ORCPT
+        id S1727643AbfGZTfv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 15:35:31 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45546 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfGZTfb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 15:35:31 -0400
-Received: by mail-qk1-f193.google.com with SMTP id s22so39931612qkj.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 12:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=9rZxd8VlixOlt9zfomJK4+5/qXD8hXRfD7GJqGB6X9U=;
-        b=ZUPSK9iAYNIhz/pAuQzPdbv97MxD6VdG+EGmXpFKU6hvFq5Rg6BUBfTHrYr61YsmJe
-         RqdKZbg0FStQeo3I4qm6IDF21NSYAOZ/HdGjGFz17M+RngzYC140ASrBRHVtWU4ZrujI
-         eZevzK5KR+6DlWv4t6aSsnqfrR1GfPVeNYJqTQ8ISXcVlekwzDe0yDXNa/QJRerBnmFX
-         MhsiVNGwhRM2cULQ8te5NpkUpUizHYOJqNnnZBOGnD2yw1TP+EKnQLfBZFicfEtMDXHz
-         fYx7lax0XlWYbcneW97TaK9nWY1o7d2N12D6oB2wyhyrSklCkOEESR4rdmm9gnsluQtz
-         IisQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=9rZxd8VlixOlt9zfomJK4+5/qXD8hXRfD7GJqGB6X9U=;
-        b=odPxtJYyfGSyJAHv7gUB3OBkcrIO5cxi+98EcvwsNVRfjY6GMkBNXJAdxX95cGUYZu
-         c6T3N0DSL2asYmaxhBmazWEOPQoyyg3PnJz+h/gktDYJWB09qXVvTZij2MFYGxQVgOvN
-         LWBE0oKbszKc4kRq+2GwfeSzF53R0adZR5RjoeHWI0GXJHauVolgQ6c7Gzj+QG4rY39I
-         IWV8zs+M+h+x8pYpcTtB5LtAu2NNWJxABrO4Z4plgJV1JQau/rTzdaCP/XpUVAWC18Wl
-         pG1Wg6n5MJfpkXCboi6VrBtr0ZaQy3mUgq1yfZpxUzRFPZBk7ix34GPVNh7XKt1QReAJ
-         qOSw==
-X-Gm-Message-State: APjAAAXtv8rwIJa38yHGVOplYVMRSaUfI2sifvEbQOmuV2K5YRG4QVOL
-        P1Rb5jJG/shP2Bj9N1ASe0E=
-X-Google-Smtp-Source: APXvYqz2Z7i28hZM+M4lbb8YD+uC39dWedzDQMekatgaWQtcfJU4UDdKKM/73crOYiB5vczjfwhUwg==
-X-Received: by 2002:a37:815:: with SMTP id 21mr63769478qki.257.1564169730335;
-        Fri, 26 Jul 2019 12:35:30 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id h18sm22574293qkk.93.2019.07.26.12.35.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 12:35:29 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1BFD940340; Fri, 26 Jul 2019 16:35:27 -0300 (-03)
-Date:   Fri, 26 Jul 2019 16:35:27 -0300
-To:     Numfor Mbiziwo-Tiapo <nums@google.com>
-Cc:     peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, songliubraving@fb.com, mbd@fb.com,
-        linux-kernel@vger.kernel.org, irogers@google.com,
-        eranian@google.com
-Subject: Re: [PATCH 2/3] Fix ordered-events.c array-bounds error
-Message-ID: <20190726193527.GA24867@kernel.org>
-References: <20190724184512.162887-1-nums@google.com>
- <20190724184512.162887-3-nums@google.com>
+        Fri, 26 Jul 2019 15:35:51 -0400
+Received: from mga07.intel.com ([134.134.136.100]:45515 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726279AbfGZTfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 15:35:51 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 12:35:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,312,1559545200"; 
+   d="scan'208";a="181973736"
+Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
+  by orsmga002.jf.intel.com with ESMTP; 26 Jul 2019 12:35:50 -0700
+Received: from orsmsx161.amr.corp.intel.com (10.22.240.84) by
+ ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 26 Jul 2019 12:35:50 -0700
+Received: from orsmsx110.amr.corp.intel.com ([169.254.10.211]) by
+ ORSMSX161.amr.corp.intel.com ([169.254.4.246]) with mapi id 14.03.0439.000;
+ Fri, 26 Jul 2019 12:35:50 -0700
+From:   "Moore, Robert" <robert.moore@intel.com>
+To:     Qian Cai <cai@lca.pw>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
+CC:     "Schmauss, Erik" <erik.schmauss@intel.com>,
+        "jkim@FreeBSD.org" <jkim@FreeBSD.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "ndesaulniers@google.com" <ndesaulniers@google.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] acpica: fix -Wnull-pointer-arithmetic warnings
+Thread-Topic: [PATCH v2] acpica: fix -Wnull-pointer-arithmetic warnings
+Thread-Index: AQHVPaHylXmfzBauvEybJLDaugeeCqbdV0WA
+Date:   Fri, 26 Jul 2019 19:35:49 +0000
+Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B9661CBD@ORSMSX110.amr.corp.intel.com>
+References: <20190718194846.1880-1-cai@lca.pw>
+In-Reply-To: <20190718194846.1880-1-cai@lca.pw>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjJiMzAxZTctOWE5ZS00MjJhLWE4NDAtYzI2NzI2OWNkNGNjIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRWo5bWtmaEIrbVlsZUZ3SVNjVVwvR3dsRGdcL2RCa0tId2VMSUZBYndYXC9SdGNzbk1hdTQ2QkFaWHZvV3NocGlhWCJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190724184512.162887-3-nums@google.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Jul 24, 2019 at 11:45:11AM -0700, Numfor Mbiziwo-Tiapo escreveu:
-> Perf does not build with the ubsan (undefined behavior sanitizer)
-> and there is an error that says:
-> 
-> tools/perf/util/debug.h:38:2:
->  error: array subscript is above array bounds [-Werror=array-bounds]
->   eprintf_time(n, var, t, fmt, ##__VA_ARGS__)
->   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> tools/perf/util/debug.h:40:34:
->  note: in expansion of macro ‘pr_time_N’
->  #define pr_oe_time(t, fmt, ...)  pr_time_N(1, debug_ordered_events,
->  t, pr_fmt(fmt), ##__VA_ARGS__)
-> 
-> util/ordered-events.c:329:2: note: in expansion of macro ‘pr_oe_time’
->   pr_oe_time(oe->next_flush, "next_flush - ordered_events__flush
->   POST %s, nr_events %u\n",
-> 
-> This can be reproduced by running (from the tip directory):
-> make -C tools/perf USE_CLANG=1 EXTRA_CFLAGS="-fsanitize=undefined"
-> 
-> The error stems from the 'str' array in the __ordered_events__flush
-> function in tools/perf/util/ordered-events.c. On line 319 of this
-> file, they use values of the variable 'how' (which has the type enum
-> oeflush - defined in ordered-events.h) as indices for the 'str' array.
-> Since 'how' has 5 values and the 'str' array only has 3, when the 4th
-> and 5th values of 'how' (OE_FLUSH__TOP and OE_FLUSH__TIME) are used as
-> indices, this will go out of the bounds of the 'str' array.
-> Adding the matching strings from the enum values into the 'str' array
-> fixes this.
-> 
-> Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-> ---
->  tools/perf/util/ordered-events.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/tools/perf/util/ordered-events.c b/tools/perf/util/ordered-events.c
-> index 897589507d97..c092b0c39d2b 100644
-> --- a/tools/perf/util/ordered-events.c
-> +++ b/tools/perf/util/ordered-events.c
-> @@ -270,6 +270,8 @@ static int __ordered_events__flush(struct ordered_events *oe, enum oe_flush how,
->  		"FINAL",
->  		"ROUND",
->  		"HALF ",
-> +		"TOP",
-> +		"TIME",
->  	};
->  	int err;
->  	bool show_progress = false;
+We've taken the change to ACPI_TO_POINTER.
+Thanks,
+Bob
 
-Humm, this was fixed already by:
 
-commit 1e5b0cf8672e622257df024074e6e09bfbcb7750
-Author: Changbin Du <changbin.du@gmail.com>
-Date:   Sat Mar 16 16:05:52 2019 +0800
+-----Original Message-----
+From: Qian Cai [mailto:cai@lca.pw] 
+Sent: Thursday, July 18, 2019 12:49 PM
+To: Wysocki, Rafael J <rafael.j.wysocki@intel.com>
+Cc: Moore, Robert <robert.moore@intel.com>; Schmauss, Erik <erik.schmauss@intel.com>; jkim@FreeBSD.org; lenb@kernel.org; ndesaulniers@google.com; linux-acpi@vger.kernel.org; devel@acpica.org; clang-built-linux@googlegroups.com; linux-kernel@vger.kernel.org; Qian Cai <cai@lca.pw>
+Subject: [PATCH v2] acpica: fix -Wnull-pointer-arithmetic warnings
 
-    perf top: Fix global-buffer-overflow issue
+Clang generate quite a few of those warnings.
 
-    The array str[] should have six elements.
+drivers/acpi/scan.c:759:28: warning: arithmetic on a null pointer treated as a cast from integer to pointer is a GNU extension [-Wnull-pointer-arithmetic]
+		status = acpi_get_handle(ACPI_ROOT_OBJECT,
+obj->string.pointer,
+                                         ^~~~~~~~~~~~~~~~
+./include/acpi/actypes.h:458:56: note: expanded from macro 'ACPI_ROOT_OBJECT'
+ #define ACPI_ROOT_OBJECT                ((acpi_handle) ACPI_TO_POINTER
+(ACPI_MAX_PTR))
+							^~~~~~~~~~~~~~~
+./include/acpi/actypes.h:509:41: note: expanded from macro 'ACPI_TO_POINTER'
+ #define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, (void *) 0,
+(acpi_size) (i))
+                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/acpi/actypes.h:503:84: note: expanded from macro 'ACPI_ADD_PTR'
+ #define ACPI_ADD_PTR(t, a, b)           ACPI_CAST_PTR (t,
+(ACPI_CAST_PTR (u8, (a)) + (acpi_size)(b)))
+                                         ^~~~~~~~~~~~~~~~~
+./include/acpi/actypes.h:501:66: note: expanded from macro 'ACPI_CAST_PTR'
+ #define ACPI_CAST_PTR(t, p)             ((t *) (acpi_uintptr_t) (p))
+                                                                 ^ This is because pointer arithmetic on a pointer not pointing to an array is an undefined behavior (C11 6.5.6, constraint 8). Fix it by just casting the corresponding pointers using ACPI_CAST_PTR() and skip the arithmetic. Also, fix a checkpatch warning together.
 
-      =================================================================
-      ==4322==ERROR: AddressSanitizer: global-buffer-overflow on address 0x56463844e300 at pc 0x564637e7ad0d bp 0x7f30c8c89d10 sp 0x7f30c8c89d00
-      READ of size 8 at 0x56463844e300 thread T9
-          #0 0x564637e7ad0c in __ordered_events__flush util/ordered-events.c:316
-          #1 0x564637e7b0e4 in ordered_events__flush util/ordered-events.c:338
-          #2 0x564637c6a57d in process_thread /home/changbin/work/linux/tools/perf/builtin-top.c:1073
-          #3 0x7f30d173a163 in start_thread (/lib/x86_64-linux-gnu/libpthread.so.0+0x8163)
-          #4 0x7f30cfffbdee in __clone (/lib/x86_64-linux-gnu/libc.so.6+0x11adee)
+ERROR: Macros with complex values should be enclosed in parentheses
+ #45: FILE: include/acpi/actypes.h:509:
++#define ACPI_TO_POINTER(i)              ACPI_CAST_PTR (void, i)
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+
+v2: Use ACPI_CAST_PTR() in ACPI_TO_POINTER() directly without
+    arithmetic.
+
+ include/acpi/actypes.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h index ad6892a24015..163181e2d884 100644
+--- a/include/acpi/actypes.h
++++ b/include/acpi/actypes.h
+@@ -506,7 +506,7 @@ typedef u64 acpi_integer;
+ 
+ /* Pointer/Integer type conversions */
+ 
+-#define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, (void *) 0, (acpi_size) (i))
++#define ACPI_TO_POINTER(i)              (ACPI_CAST_PTR (void, i))
+ #define ACPI_TO_INTEGER(p)              ACPI_PTR_DIFF (p, (void *) 0)
+ #define ACPI_OFFSET(d, f)               ACPI_PTR_DIFF (&(((d *) 0)->f), (void *) 0)
+ #define ACPI_PHYSADDR_TO_PTR(i)         ACPI_TO_POINTER(i)
+--
+2.20.1 (Apple Git-117)
+
