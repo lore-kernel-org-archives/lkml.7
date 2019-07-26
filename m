@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C71C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 448FBC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 714062166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D40A12166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PV6UmmpT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E/8yDjb7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfGZHVm (ORCPT
+        id S1726591AbfGZHVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 03:21:42 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33932 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbfGZHVk (ORCPT
+        Fri, 26 Jul 2019 03:21:47 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42691 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfGZHVp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 03:21:40 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n9so18111207pgc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 00:21:40 -0700 (PDT)
+        Fri, 26 Jul 2019 03:21:45 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q10so24055118pff.9
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 00:21:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=NWVsUkkDHIuRmUj9QU93X+5+YMySiLs15Fa6SS5cpaE=;
-        b=PV6UmmpTsl4qyL9YLpPEkrDLpNgZumlLqQgJL5tf2AhWNCYTaorte9k2Pj6IBUNSly
-         P3k2AtwrjF3ASvtlPfbzMtob1Cg03Jd+goAm4I7kOQisa12ZR8ojvxgnuaesv3WCzKFe
-         Pq4rBflmWmlGTT2BdXqwa0x25C5sGnY4r3dCX5ZxUlkDj23l8P1xT5sr2XjxSPYPgErI
-         6schkzFTtMrRNHU3fT2UZrOgBpsicdyIYMZgQj3x1b4OkZNx911u9ycHBJuLm7pEVZda
-         IlKXw2hSsZESskRI+3b+vVA34+9nm2QXl2cxQB7Nb6VGGObnFHwYVgBPu6WvUEsFzssY
-         vvvQ==
+        bh=UKHcPnP1X/YH0KxOMapb8zoNNla2jhYhzX+lsHS5cTM=;
+        b=E/8yDjb7ZXAoXz4rohf7xtU4fhLLX5e2g+HPtRaZkv3EEOnRi93Lc23PAFcSQlkXjb
+         J3Wa6rERdfomrw2OTiK4FH5qYxtfwCfuIP5rQTWocufBjT6s+yyn1isAdW1mS7TBlhF9
+         zqljjj5O16ddI36qYavzuNIlDPSDILRII6NiiRPPmJihn6ZmtXZXEsUy2qxRn9toErIe
+         4pfyj+dW/0gFmCbyCGfQd+hC89i8hZK+dH8qwarrCFKd4U4csbslNRiqS39I2iAeb36O
+         DbPPLxMS6drd93OWQxQEkAus7EIMyOpygAFaoynlbckmOxeAGcmfGvzwBIlPb3h08hLh
+         3cYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=NWVsUkkDHIuRmUj9QU93X+5+YMySiLs15Fa6SS5cpaE=;
-        b=Y+Or2/DDUXYPwgSWBgAFITAleGBM6HtGe44dhSRhQ0n30w4PnUTCYlCJ0z8VFhLzXi
-         1ErSX6QEQ6Di+Avnm6ky0vwH+M9IT89K9hi5hKYIQVBz/gDfNqmIzV51/yCHYlbqRSYW
-         4hHd9m1bodBb7MBCfShovCF5winh6qvlk8UOONeZ3iQWeQf4qxbOQ6ymKT8QkTwwRzBy
-         I349eOV+dEV5up0Z+1+GpnNavfOJqoLl3GeTf6XqjSVwIBbav3ysttuRP2qDt4f2I60j
-         bG6795XRsLvgu2gbSyb2KPJsWcyCROSIUMduc6iaSo02LdldbT0PUz+pSjVin48rN4k4
-         qXGw==
-X-Gm-Message-State: APjAAAWUPABVvtX3eiGlvFUyfz63pAM4sVLWtE0Sa9Evn4CVOHT+EGTW
-        cjS60LxW+7eVgMee5Yx4N4kobQ==
-X-Google-Smtp-Source: APXvYqyysUnX0wySMncWO4KIIl78EKADDoXzDUyhNNMPwEIaoBIbQZFiErLNKUuc3bxwyzllKRQx9Q==
-X-Received: by 2002:a63:7358:: with SMTP id d24mr89898767pgn.224.1564125700079;
-        Fri, 26 Jul 2019 00:21:40 -0700 (PDT)
+        bh=UKHcPnP1X/YH0KxOMapb8zoNNla2jhYhzX+lsHS5cTM=;
+        b=kLjev8eYmL0diM0FSNs3Bp+x4thwIxGkB3Z6PuQkYjdUYaLuTFBa/qLKZ2Iq0poZpN
+         dgY90kRVx/tuENDMPvxyNJCm+JFXAWlgsNjARFRzfapc7ViJWYMkdX39xqfjVI47x/sm
+         z516VN8BlskuY3nLQAxILNRgSDKiN4m5Rd3POCFuc2pSpNZnt4yjNXbT0z7agCW+Zq9y
+         OX3m1rmM0WtJTytxIYGvkkoKVyQt1U3Avv1ATEkscdWUSHOPN2dQUorBoXa0xkDI700y
+         pi5XfIqnf1PiF9HsXdTwdRqJdstbzEwFcUXeVw/Gxqk+jbP//9Iy91XpRkkGOGH94EZe
+         amzw==
+X-Gm-Message-State: APjAAAVuO66sqaU7rKlIbDZuc1QIMtVm1iL1ood1qBK6WLXqrrBdQYST
+        UMtZZu8yIhpdDFUKXbW3fVOPqg==
+X-Google-Smtp-Source: APXvYqx0MzCJG7d9iPnuvF6O22gUq9ll3iEEBUmjoDkNejDovvr6c+hOVWesySnuyHKOJNCRdJYZtg==
+X-Received: by 2002:a63:b747:: with SMTP id w7mr36749242pgt.205.1564125704234;
+        Fri, 26 Jul 2019 00:21:44 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id o12sm39216152pjr.22.2019.07.26.00.21.36
+        by smtp.gmail.com with ESMTPSA id o12sm39216152pjr.22.2019.07.26.00.21.40
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 26 Jul 2019 00:21:39 -0700 (PDT)
+        Fri, 26 Jul 2019 00:21:43 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
 To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         orsonzhai@gmail.com, zhang.lyra@gmail.com
 Cc:     weicx@spreadst.com, sherry.zong@unisoc.com, baolin.wang@linaro.org,
         vincent.guittot@linaro.org, linux-spi@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] spi: sprd: adi: Change hwlock to be optional
-Date:   Fri, 26 Jul 2019 15:20:52 +0800
-Message-Id: <2abe7dcf210e4197f8c5ece7fc6d6cc1eda8c655.1564125131.git.baolin.wang@linaro.org>
+Subject: [PATCH 6/6] dt-bindings: spi: sprd: Change the hwlock support to be optional
+Date:   Fri, 26 Jul 2019 15:20:53 +0800
+Message-Id: <23d51f5d9c9cc647ad0c5a1fb950d3d9fb9c1303.1564125131.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1564125131.git.baolin.wang@linaro.org>
 References: <cover.1564125131.git.baolin.wang@linaro.org>
@@ -75,126 +75,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now Spreadtrum ADI controller supplies multiple master accessing channel
-to support multiple subsystems accessing, instead of using a hardware
-spinlock to synchronize between the multiple subsystems.
-
-To keep backward compatibility, we should change the hardware spinlock
-to be optional. Moreover change to use of_hwspin_lock_get_id() function
-which return -ENOENT error number to indicate no hwlock support.
+No need to add hardware spinlock proctection due to add multiple
+msater channel, so change it to be optional in documentation.
 
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/spi/spi-sprd-adi.c |   68 +++++++++++++++++++++++++++-----------------
- 1 file changed, 42 insertions(+), 26 deletions(-)
+ .../devicetree/bindings/spi/spi-sprd-adi.txt       |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-sprd-adi.c b/drivers/spi/spi-sprd-adi.c
-index 0d767eb..9a05128 100644
---- a/drivers/spi/spi-sprd-adi.c
-+++ b/drivers/spi/spi-sprd-adi.c
-@@ -165,14 +165,16 @@ static int sprd_adi_read(struct sprd_adi *sadi, u32 reg_paddr, u32 *read_val)
- 	int read_timeout = ADI_READ_TIMEOUT;
- 	unsigned long flags;
- 	u32 val, rd_addr;
--	int ret;
--
--	ret = hwspin_lock_timeout_irqsave(sadi->hwlock,
--					  ADI_HWSPINLOCK_TIMEOUT,
--					  &flags);
--	if (ret) {
--		dev_err(sadi->dev, "get the hw lock failed\n");
--		return ret;
-+	int ret = 0;
+diff --git a/Documentation/devicetree/bindings/spi/spi-sprd-adi.txt b/Documentation/devicetree/bindings/spi/spi-sprd-adi.txt
+index 8de589b..2567c82 100644
+--- a/Documentation/devicetree/bindings/spi/spi-sprd-adi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-sprd-adi.txt
+@@ -25,18 +25,23 @@ data by ADI software channels at the same time, or two parallel routine of setti
+ ADI registers will make ADI controller registers chaos to lead incorrect results.
+ Then we need one hardware spinlock to synchronize between the multiple subsystems.
+ 
++The new version ADI controller supplies multiple master channels for different
++subsystem accessing, that means no need to add hardware spinlock to synchronize,
++thus change the hardware spinlock support to be optional to keep backward
++compatibility.
 +
-+	if (sadi->hwlock) {
-+		ret = hwspin_lock_timeout_irqsave(sadi->hwlock,
-+						  ADI_HWSPINLOCK_TIMEOUT,
-+						  &flags);
-+		if (ret) {
-+			dev_err(sadi->dev, "get the hw lock failed\n");
-+			return ret;
-+		}
- 	}
+ Required properties:
+ - compatible: Should be "sprd,sc9860-adi".
+ - reg: Offset and length of ADI-SPI controller register space.
+-- hwlocks: Reference to a phandle of a hwlock provider node.
+-- hwlock-names: Reference to hwlock name strings defined in the same order
+-	as the hwlocks, should be "adi".
+ - #address-cells: Number of cells required to define a chip select address
+ 	on the ADI-SPI bus. Should be set to 1.
+ - #size-cells: Size of cells required to define a chip select address size
+ 	on the ADI-SPI bus. Should be set to 0.
  
- 	/*
-@@ -219,7 +221,8 @@ static int sprd_adi_read(struct sprd_adi *sadi, u32 reg_paddr, u32 *read_val)
- 	*read_val = val & RD_VALUE_MASK;
- 
- out:
--	hwspin_unlock_irqrestore(sadi->hwlock, &flags);
-+	if (sadi->hwlock)
-+		hwspin_unlock_irqrestore(sadi->hwlock, &flags);
- 	return ret;
- }
- 
-@@ -230,12 +233,14 @@ static int sprd_adi_write(struct sprd_adi *sadi, u32 reg_paddr, u32 val)
- 	unsigned long flags;
- 	int ret;
- 
--	ret = hwspin_lock_timeout_irqsave(sadi->hwlock,
--					  ADI_HWSPINLOCK_TIMEOUT,
--					  &flags);
--	if (ret) {
--		dev_err(sadi->dev, "get the hw lock failed\n");
--		return ret;
-+	if (sadi->hwlock) {
-+		ret = hwspin_lock_timeout_irqsave(sadi->hwlock,
-+						  ADI_HWSPINLOCK_TIMEOUT,
-+						  &flags);
-+		if (ret) {
-+			dev_err(sadi->dev, "get the hw lock failed\n");
-+			return ret;
-+		}
- 	}
- 
- 	ret = sprd_adi_drain_fifo(sadi);
-@@ -261,7 +266,8 @@ static int sprd_adi_write(struct sprd_adi *sadi, u32 reg_paddr, u32 val)
- 	}
- 
- out:
--	hwspin_unlock_irqrestore(sadi->hwlock, &flags);
-+	if (sadi->hwlock)
-+		hwspin_unlock_irqrestore(sadi->hwlock, &flags);
- 	return ret;
- }
- 
-@@ -476,16 +482,26 @@ static int sprd_adi_probe(struct platform_device *pdev)
- 	sadi->slave_pbase = res->start + ADI_SLAVE_OFFSET;
- 	sadi->ctlr = ctlr;
- 	sadi->dev = &pdev->dev;
--	ret = of_hwspin_lock_get_id_byname(np, "adi");
--	if (ret < 0) {
--		dev_err(&pdev->dev, "can not get the hardware spinlock\n");
--		goto put_ctlr;
--	}
--
--	sadi->hwlock = devm_hwspin_lock_request_specific(&pdev->dev, ret);
--	if (!sadi->hwlock) {
--		ret = -ENXIO;
--		goto put_ctlr;
-+	ret = of_hwspin_lock_get_id(np, 0);
-+	if (ret > 0 || (IS_ENABLED(CONFIG_HWSPINLOCK) && ret == 0)) {
-+		sadi->hwlock =
-+			devm_hwspin_lock_request_specific(&pdev->dev, ret);
-+		if (!sadi->hwlock) {
-+			ret = -ENXIO;
-+			goto put_ctlr;
-+		}
-+	} else {
-+		switch (ret) {
-+		case -ENOENT:
-+			dev_info(&pdev->dev, "no hardware spinlock supplied\n");
-+			break;
-+		default:
-+			dev_err(&pdev->dev,
-+				"failed to find hwlock id, %d\n", ret);
-+			/* fall-through */
-+		case -EPROBE_DEFER:
-+			goto put_ctlr;
-+		}
- 	}
- 
- 	sprd_adi_hw_init(sadi);
+ Optional properties:
++- hwlocks: Reference to a phandle of a hwlock provider node.
++- hwlock-names: Reference to hwlock name strings defined in the same order
++	as the hwlocks, should be "adi".
+ - sprd,hw-channels: This is an array of channel values up to 49 channels.
+ 	The first value specifies the hardware channel id which is used to
+ 	transfer data triggered by hardware automatically, and the second
 -- 
 1.7.9.5
 
