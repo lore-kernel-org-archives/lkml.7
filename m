@@ -2,131 +2,139 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDE2C76194
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3244AC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8E022BEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF8B22CB8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:20:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfGZJUc (ORCPT
+        id S1726319AbfGZJU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:20:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44002 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725815AbfGZJUb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:20:31 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6Q9HWpo097299
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 05:20:30 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tywrh315x-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 05:20:29 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Fri, 26 Jul 2019 10:20:28 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 26 Jul 2019 10:20:24 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6Q9KNF652559878
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Jul 2019 09:20:23 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA0C3AE051;
-        Fri, 26 Jul 2019 09:20:23 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DE303AE056;
-        Fri, 26 Jul 2019 09:20:21 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 26 Jul 2019 09:20:21 +0000 (GMT)
-Date:   Fri, 26 Jul 2019 14:50:21 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Rik van Riel <riel@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, jhladky@redhat.com,
-        lvenanci@redhat.com, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH RESEND] autonuma: Fix scan period updating
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20190725080124.494-1-ying.huang@intel.com>
- <20190725173516.GA16399@linux.vnet.ibm.com>
- <87y30l5jdo.fsf@yhuang-dev.intel.com>
+        Fri, 26 Jul 2019 05:20:56 -0400
+Received: from 8bytes.org ([81.169.241.247]:45424 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbfGZJU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:20:56 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id D3E5D284; Fri, 26 Jul 2019 11:20:54 +0200 (CEST)
+Date:   Fri, 26 Jul 2019 11:20:53 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: [git pull] IOMMU Fixes for Linux v5.3-rc1
+Message-ID: <20190726092048.GA3957@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
 Content-Disposition: inline
-In-Reply-To: <87y30l5jdo.fsf@yhuang-dev.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19072609-0016-0000-0000-0000029661A1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19072609-0017-0000-0000-000032F46133
-Message-Id: <20190726092021.GA5273@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-26_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907260120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Huang, Ying <ying.huang@intel.com> [2019-07-26 15:45:39]:
 
-> Hi, Srikar,
-> 
-> >
-> > More Remote + Private page Accesses:
-> > Most likely the Private accesses are going to be local accesses.
-> >
-> > In the unlikely event of the private accesses not being local, we should
-> > scan faster so that the memory and task consolidates.
-> >
-> > More Remote + Shared page Accesses: This means the workload has not
-> > consolidated and needs to scan faster. So we need to scan faster.
-> 
-> This sounds reasonable.  But
-> 
-> lr_ratio < NUMA_PERIOD_THRESHOLD
-> 
-> doesn't indicate More Remote.  If Local = Remote, it is also true.  If
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-less lr_ratio means more remote.
+Hi Linus,
 
-> there are also more Shared, we should slow down the scanning.  So, the
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
-Why should we slowing down if there are more remote shared accesses?
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
-> logic could be
-> 
-> if (lr_ratio >= NUMA_PERIOD_THRESHOLD)
->     slow down scanning
-> else if (sp_ratio >= NUMA_PERIOD_THRESHOLD) {
->     if (NUMA_PERIOD_SLOTS - lr_ratio >= NUMA_PERIOD_THRESHOLD)
->         speed up scanning
->     else
->         slow down scanning
-> } else
->    speed up scanning
-> 
-> This follows your idea better?
-> 
-> Best Regards,
-> Huang, Ying
+are available in the Git repository at:
 
--- 
-Thanks and Regards
-Srikar Dronamraju
+  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.3-rc1
 
+for you to fetch changes up to 66929812955bbec808c94d7a3916f41638a98a0a:
+
+  iommu/amd: Add support for X2APIC IOMMU interrupts (2019-07-23 17:41:52 +0200)
+
+----------------------------------------------------------------
+IOMMU Fixes for Linux v5.3-rc1
+
+Including:
+
+	- Revert an Intel VT-d patch that caused boot problems on some
+	  machines
+
+	- Fix AMD IOMMU interrupts with x2apic enabled
+
+	- Fix a potential crash when Intel VT-d domain allocation fails
+
+	- Fix crash in Intel VT-d driver when accessing a domain without
+	  a flush queue
+
+	- Formatting fix for new Intel VT-d debugfs code
+
+	- Fix for use-after-free bug in IOVA code
+
+	- Fix for a NULL-pointer dereference in Intel VT-d driver when
+	  PCI hotplug is used
+
+	- Compilation fix for one of the previous fixes
+
+----------------------------------------------------------------
+Chris Wilson (1):
+      iommu/iova: Remove stale cached32_node
+
+Dmitry Safonov (2):
+      iommu/vt-d: Don't queue_iova() if there is no flush queue
+      iommu/vt-d: Check if domain->pgd was allocated
+
+Joerg Roedel (2):
+      Revert "iommu/vt-d: Consolidate domain_init() to avoid duplication"
+      iommu/iova: Fix compilation error with !CONFIG_IOMMU_IOVA
+
+Lu Baolu (1):
+      iommu/vt-d: Avoid duplicated pci dma alias consideration
+
+Sai Praneeth Prakhya (1):
+      iommu/vt-d: Print pasid table entries MSB to LSB in debugfs
+
+Suthikulpanit, Suravee (1):
+      iommu/amd: Add support for X2APIC IOMMU interrupts
+
+ drivers/iommu/amd_iommu_init.c      |  90 +++++++++++++++++
+ drivers/iommu/amd_iommu_types.h     |   9 ++
+ drivers/iommu/intel-iommu-debugfs.c |   4 +-
+ drivers/iommu/intel-iommu.c         | 189 ++++++++++++++++++------------------
+ drivers/iommu/iova.c                |  23 +++--
+ include/linux/iova.h                |   6 ++
+ 6 files changed, 220 insertions(+), 101 deletions(-)
+
+Please pull.
+
+Thanks,
+
+	Joerg
+
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAl06xe8ACgkQK/BELZcB
+GuN9rRAApQnbSOnNQGGaB7lVEIquMXgk28hAf/IHYIss8lPtxJDxDgZhgKyAxsLC
+/Qn9dvZ1HHvZvvs7FMxWRYcdTmKSijlDUSjd50pOOyDFhIcycXvLWuP9hvP8xOLT
+Rl3niH2QcSXN5c08oAcuwISwvn1t96bezVz+2vgAXqkYiJsg1avVnDwkJrAMmU1P
+RPG2ZiYu39EAxnU0tUY+wUb9xebCwcCGoag3iV/lZ0QqffEwqBJkfUPO1SEKEuxr
+gOfCxHQVhAqB/wRqr/5NOrQWXW+Lf0NPcFAU3atd6FVh3xG8MNUQmvd/kFNPj/Jn
+//+1mtT6N4TuBdbSAiRUOdCZxPhfygnhL6MyO+th+e3lWjOlOmKp+vy3gW5OyGEG
+zJpA8280Itz5Yz+ZrbDQZkJXrxvIkIccwjnDbf4jEVxgN8Vn+R2e0D3TckhzOnl7
+yXAO3IFR1obEINpDplV5C+B8m7mNOryj6/RGqCujs8+XwklaHmZu6cBa61R25jZ6
+oBzQEp/EG3Ymv84x9UWIr57zqXAiepfE5kxGP+d4KAa5bjK8M1gTdPbRi4o74V0j
+xoKL7MgEmhCuqWEHgmkgQSZSJHFKK73gEz1DWs9048wjTkPsAJetKf38n8rsgxBB
+Fz9dUuC1zb5qajpv4N0Fwr16OVjHFrJGxJq6UKoJXZOVpdZjZlM=
+=uh7j
+-----END PGP SIGNATURE-----
+
+--vtzGhvizbBRQ85DL--
