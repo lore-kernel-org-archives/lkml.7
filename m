@@ -2,108 +2,97 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B45C2C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC68C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8050C2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4EE62166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:03:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CQwAma3P"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HynS/ASw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbfGZID2 (ORCPT
+        id S1726482AbfGZIDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 04:03:28 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46185 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfGZID2 (ORCPT
+        Fri, 26 Jul 2019 04:03:36 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46525 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbfGZIDf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 04:03:28 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k189so5347411pgk.13;
-        Fri, 26 Jul 2019 01:03:28 -0700 (PDT)
+        Fri, 26 Jul 2019 04:03:35 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c2so24431706plz.13
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 01:03:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=aNZ6zNbsaKjh51lz8tJIfnHcrXSDVIs4DFqNHJ79L3E=;
-        b=CQwAma3Pu8O0jCDic//Euaxbbj1NkYvWFtvRH+Dax4Y2t1g9x8oY1qNcwARAvQwCv3
-         DmXnyVNtcuaFGEKh1wU5hTiE/eknjrSgFkCJg6jcudveZkfGdjY8mXeyaUBctSpH6aGT
-         +3YS2vWMOwuqagfWH4mKiy8UUKboVeRggtmR50fiuqjPsF94g912m1V3KbiL3PcKUX8G
-         oxva2u+G8QHjsSQ7XChFH5r39SiQrql6mP2GnztLW5P6atAPn0w3Al184igFsI8iHHJL
-         BRWBmGfvUqvW1q3zsfyfk0c3hjBdMCK3S7QkKfZ2eElregu9hPvgcjT34az8gVcnzI9E
-         bczQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=V6zPBev9xQgiBqMyHVwiFqQKL5cx+sR2tLt2bKc/lVQ=;
+        b=HynS/ASw3Ys3ZyhOwYmGKzl1m1kwEE7nhm8gNvbojrDBb+rqjQ9hmTAP92o9YJlhz0
+         aj+aQeSIN6AmLljyuVNRQm9hKkmsP3BfsnY6Wg4fJ57DD5Nh5FLPsSydLc1zd1/vIgQo
+         ZoLDbBxJWLgD7RMdTjZPu0VwaQITz47QSC5Uv9xnyTa8hqqJ+GzW+WM7ommW+BeSRik+
+         H5hOMdwjoCoEFOI3NUWqYKYbzmFdcqlISmkJ1ff28H/CiE4DUUrxP9EEktKHnuutBIwf
+         r26wI9R4XxfMoyPcU29ZUU29FLjWh7Lw5LO+TDJIXbHjcdsQB/w8yS1yjatI9gyD0fdt
+         i8TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=aNZ6zNbsaKjh51lz8tJIfnHcrXSDVIs4DFqNHJ79L3E=;
-        b=cAK4zCBKQ/81C5IySC6DIKUDWqhR2hNiWg+T8q4Bq2en1drnOQYiql61itmDHnyRD5
-         AzLVIQ3NHJLfJT2HcKNo5Tp4AFhi2vlryYddCGats1NnVynacu68xec3yPR5hA++1DQF
-         yUe9bHG1DBGcbgtKQI8hKf4+6n75fO2+CGxpKEwkTs/BhSBj/JILdbs8y+/3EMLxrfAx
-         Zc4cQ1r6Vv9T1D17Pb+GJ6gjdJjTPOkzx8DJsS/Mg5EVYizV17G/Yc0TBXmodyyf/ot8
-         70F3W7kS3Y7YBszM/XMpqSEhI760z/3Dr0SHFwBOrh3YOzrQeloyB4jdpXNSrX8uLn6l
-         1x7A==
-X-Gm-Message-State: APjAAAXolK2TVeTCCbjRYD39piBK/0yR1gnOe7hbe9la9AbbBCeYfZrL
-        GCdsWSDo7oAlwk0QT3zn3F4=
-X-Google-Smtp-Source: APXvYqy6vAuLBnR+hOegMSm522XbZmn+L9+SYmZ2SWYpWAIunYNoCmlj8nB4Fvijx/H1Rp9DkGGu2g==
-X-Received: by 2002:a63:36cc:: with SMTP id d195mr49258558pga.157.1564128207719;
-        Fri, 26 Jul 2019 01:03:27 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id b26sm59386976pfo.129.2019.07.26.01.03.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=V6zPBev9xQgiBqMyHVwiFqQKL5cx+sR2tLt2bKc/lVQ=;
+        b=Ub3rd68lkN2tMZ5Y1akuTzckTCqJ0XJpKdFvkAQJwVGHxz+h6lVQphftvUap4kgBzC
+         0rIWiSP1NLseE2pedi2pxNKHcCSargSy8njXxJUvlv12r0GGyaOHoDL4laQv3QjR+D08
+         1k3duxErFIZxeeCAaYClIrFumjFqsxsy0fFEWF3r5lmgYnCrIO6fYpRedArBwFInAxN+
+         UakeNxC+39YUEjru+0eimNFgsz2Dj6DthYp8KiC5sIc87zNqzYmgNaYkkJC0z1/gp9P/
+         LMyBKZi5SVnjJdWMWtwBIaoBYcT3XTsv/WVRpXF+C73cXDaUcfxh24nKzXTdNHzbzNbg
+         J0zQ==
+X-Gm-Message-State: APjAAAV8dS9oZ5q5r2p9XucNh4J4/F1WiRZunKZm5iFAcsxjdXXuOwhG
+        llQrIWEznCCCVTov+Dhv5iaamQ==
+X-Google-Smtp-Source: APXvYqwYoNk6LUyHsrgO48OvfBPvyGjR8jqkVPjQWqjKXtuBa5adbQy6aRQy3AbSY5sRUgiAxHwLFw==
+X-Received: by 2002:a17:902:ff05:: with SMTP id f5mr92070283plj.116.1564128214872;
+        Fri, 26 Jul 2019 01:03:34 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id q22sm47092154pgh.49.2019.07.26.01.03.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 01:03:27 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH 2/2] net: ipv6: Fix a possible null-pointer dereference in vti6_link_config()
-Date:   Fri, 26 Jul 2019 16:03:21 +0800
-Message-Id: <20190726080321.4466-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Fri, 26 Jul 2019 01:03:33 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 13:33:31 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
+        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/14] opp: Add dev_pm_opp_find_level_exact()
+Message-ID: <20190726080331.qzvi737nj4oflghz@vireshk-i7>
+References: <20190725104144.22924-1-niklas.cassel@linaro.org>
+ <20190725104144.22924-2-niklas.cassel@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725104144.22924-2-niklas.cassel@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In vti6_link_config(), there is an if statement on line 649 to check
-whether rt is NULL:
-    if (rt)
+On 25-07-19, 12:41, Niklas Cassel wrote:
+> When using performance states, there is usually not any opp-hz property
+> specified, so the dev_pm_opp_find_freq_exact() function cannot be used.
 
-When rt is NULL, it is used on line 651:
-    ip6_rt_put(rt);
-        dst_release(&rt->dst);
+Removed above two lines while applying.
 
-Thus, a possible null-pointer dereference may occur.
+> Since the performance states in the OPP table are unique, implement a
+> dev_pm_opp_find_level_exact() in order to be able to fetch a specific OPP.
+> 
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> ---
+>  drivers/opp/core.c     | 48 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_opp.h |  8 +++++++
+>  2 files changed, 56 insertions(+)
 
-To fix this bug, ip6_rt_put() is called when rt is not NULL.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- net/ipv6/ip6_vti.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/net/ipv6/ip6_vti.c b/net/ipv6/ip6_vti.c
-index 024db17386d2..572647205c52 100644
---- a/net/ipv6/ip6_vti.c
-+++ b/net/ipv6/ip6_vti.c
-@@ -646,9 +646,10 @@ static void vti6_link_config(struct ip6_tnl *t, bool keep_mtu)
- 						 &p->raddr, &p->laddr,
- 						 p->link, NULL, strict);
- 
--		if (rt)
-+		if (rt) {
- 			tdev = rt->dst.dev;
--		ip6_rt_put(rt);
-+			ip6_rt_put(rt);
-+		}
- 	}
- 
- 	if (!tdev && p->link)
 -- 
-2.17.0
-
+viresh
