@@ -2,124 +2,128 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E16CC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584BAC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D04C9218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E16218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:44:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564181068;
+	bh=CLc5TFw3wuFbBkx7QqcwcsboybeIIIr82PaiAeaZURI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=S9Xf2p2UWeqLyaG0xuRYPnE1IfgxQsZ/1HRdxCK4JihNd+/id3DsT+R1vrDR/UU75
+	 U5+/bGEi+Qt+osCWXOuqXUOlzomn/kVYqhCD9CcnOBgmdI9piMM+QcfBmn2tZyTfG3
+	 JkDQUczHOCmCYHB1Aj2t9pNFKYnx9HvDnEcDf/LY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbfGZWhf (ORCPT
+        id S1728571AbfGZWo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 18:37:35 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:40494 "EHLO ale.deltatee.com"
+        Fri, 26 Jul 2019 18:44:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727328AbfGZWhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 18:37:35 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hr8q5-0001Wp-HP; Fri, 26 Jul 2019 16:37:26 -0600
-To:     Sagi Grimberg <sagi@grimberg.me>, Hannes Reinecke <hare@suse.de>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-        Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <1f202de3-1122-f4a3-debd-0d169f545047@suse.de>
- <8fd8813f-f8e1-2139-13bf-b0635a03bc30@deltatee.com>
- <175fa142-4815-ee48-82a4-18eb411db1ae@grimberg.me>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <76f617b9-1137-48b6-f10d-bfb1be2301df@deltatee.com>
-Date:   Fri, 26 Jul 2019 16:37:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726581AbfGZWo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 18:44:26 -0400
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 264E8218B0;
+        Fri, 26 Jul 2019 22:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564181065;
+        bh=CLc5TFw3wuFbBkx7QqcwcsboybeIIIr82PaiAeaZURI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DCGy87YJbkmZsb/Ha+fHYv9YEbPpbBeaKdIN7CHFAiY7iURJALNMUHRxFYjpzIEdb
+         EhGTU7wxeglgJy+I+sAcB11TFt0kwbVG3ZeO58yNk0sO27h6TM+2KgnGTDnbUHRYVM
+         MGtBHxJ0Y9PapbGqKUv7fXI2uwDnzi0UTNXpdDfM=
+Received: by mail-qt1-f179.google.com with SMTP id z4so54247907qtc.3;
+        Fri, 26 Jul 2019 15:44:25 -0700 (PDT)
+X-Gm-Message-State: APjAAAX/Bw5i27y/pf4ZKI9XrL4HJ/QE+9cPFCaDoaI3o9Jl0H2/hiGw
+        fNNi26i2aoSxWpLvtYfgYY2G9iYuARPMn18tBw==
+X-Google-Smtp-Source: APXvYqxWbAMLJC6c7Xc4QqDY6F9OJBxE9tj/Bik5yNXGhD2rsFGEjjqB0wTQ1wQTSrFO0k9ziwgLsUW6JLDmNollelA=
+X-Received: by 2002:a0c:8a43:: with SMTP id 3mr71794002qvu.138.1564181064285;
+ Fri, 26 Jul 2019 15:44:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <175fa142-4815-ee48-82a4-18eb411db1ae@grimberg.me>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, hch@lst.de, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, hare@suse.de, sagi@grimberg.me
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v6 00/16] nvmet: add target passthru commands support
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20190708103547.23528-1-jjhiblot@ti.com> <20190708103547.23528-3-jjhiblot@ti.com>
+ <20190724164757.GA3723@bogus> <753b2c8d-e8fc-ec6e-f372-a84d4452fd33@ti.com> <20190726100607.j5bdmuuk33zpwa2r@holly.lan>
+In-Reply-To: <20190726100607.j5bdmuuk33zpwa2r@holly.lan>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 26 Jul 2019 16:44:13 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLhSKi1o-WE=02oz1__F=c5fo1FRH=qrs_1XG7jdz_9Uw@mail.gmail.com>
+Message-ID: <CAL_JsqLhSKi1o-WE=02oz1__F=c5fo1FRH=qrs_1XG7jdz_9Uw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: leds: document new "power-supply" property
+To:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 26, 2019 at 4:06 AM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Thu, Jul 25, 2019 at 01:08:46PM +0200, Jean-Jacques Hiblot wrote:
+> > Hi Rob,
+> >
+> > On 24/07/2019 18:47, Rob Herring wrote:
+> > > On Mon, Jul 08, 2019 at 12:35:47PM +0200, Jean-Jacques Hiblot wrote:
+> > > > Most of the LEDs are powered by a voltage/current regulator. describing in
+> > > > the device-tree makes it possible for the LED core to enable/disable it
+> > > > when needed.
+> > > >
+> > > > Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> > > > ---
+> > > >   Documentation/devicetree/bindings/leds/common.txt | 5 +++++
+> > > >   1 file changed, 5 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> > > > index 70876ac11367..e093a2b7eb90 100644
+> > > > --- a/Documentation/devicetree/bindings/leds/common.txt
+> > > > +++ b/Documentation/devicetree/bindings/leds/common.txt
+> > > > @@ -61,6 +61,11 @@ Optional properties for child nodes:
+> > > >   - panic-indicator : This property specifies that the LED should be used,
+> > > >                       if at all possible, as a panic indicator.
+> > > > +- power-supply : A voltage/current regulator used to to power the LED. When a
+> > > > +          LED is turned off, the LED core disable its regulator. The
+> > > > +          same regulator can power many LED (or other) devices. It is
+> > > > +          turned off only when all of its users disabled it.
+> > > Not sure this should be common. It wouldn't apply to cases where we have
+> > > an LED controller parent nor gpio and pwm LEDs and those are most cases.
+> >
+> > It does make sense for GPIO and PWM bindings if the anode of LED is tied to
+> > a regulated voltage and the cathod to the control line.
 
+Okay. Is one of those your case, or you only have regulator control?
+The latter would need a new binding. If you want to use power-supply
+with either GPIO and PWM LED bindings, then it should still be listed
+in those as an applicable property.
 
-On 2019-07-26 4:21 p.m., Sagi Grimberg wrote:
->> I don't think it necessarily makes sense for the target subsynqn and the
->> target's device nqn to be the same. It would be weird for a user to want
->> to use the same device and a passed through device (through a loop) as
->> part of the same subsystem. That being said, it's possible for the user
->> to use the subsysnqn from the passed through device for the name of the
->> subsys of the target. I tried this and it works except for the fact that
->> the device I'm passing through doesn't set id->cmic.
-> 
-> I don't see why should the subsystem nqn should be the same name. Its
-> just like any other nvmet subsystem, just happens to have a nvme
-> controller in the backend (which it knows about). No reason to have
-> the same name IMO.
+> > The same is true for a certain class of true LED controller that do not
+> > deliver power but act like current sinks.
+> >
+> > JJ
+> >
+> > >
+> > > Perhaps what makes sense here is an regulator-led binding.
+>
+> You didn't comment on this alternative... and I confess I'm not quite
+> sure what Rob means by a regulator-led binding so I can't really comment
+> either.
+>
+> Rob, is there any analogous example for a regulator-<something-else> binding
+> to compare with?
 
-Agreed.
+regulator-haptic is the only one I found in a quick search.
 
->>> Similarly: how do you propose to handle multipath devices?
->>> Any NVMe with several paths will be enabling NVMe multipathing
->>> automatically, presenting you with a single multipathed namespace.
->>> How will these devices be treated?
->>
->> Well passthru works on the controller level not on the namespace level.
->> So it can't make use of the multipath handling on the target system.
-> 
-> Why? if nvmet is capable, why shouldn't we support it?
-
-I'm saying that passthru is exporting a specific controller and submits
-commands (both admin and IO) straight to the nvme_ctrl's queues. It's
-not exporting an nvme_subsys and I think it would be troublesome to do
-so; for example, if the target receives an admin command which ctrl of
-the subsystem should it send it to? There's also no userspace handle for
-a given subsystem we'd maybe have to use the subsysnqn.
-
->> The one case that I think makes sense to me, but I don't know how if we
->> can handle, is if the user had a couple multipath enabled controllers
->> with the same subsynqn
-> 
-> That is usually the case, there is no multipathing defined across NVM
-> subsystems (at least for now).
-> 
->> and wanted to passthru all of them to another
->> system and use multipath on the host with both controllers. This would
->> require having multiple target subsystems with the same name which I
->> don't think will work too well.
-> 
-> Don't understand why this is the case?
-> 
-> AFAICT, all nvmet needs to do is:
-> 1. override cimc
-> 2. allow allocating multiple controllers to the pt ctrl as long as the
-> hostnqn match.
-> 3. answer all the ana stuff.
-
-But with this scheme the host will only see one controller and then the
-target would have to make decisions on which ctrl to send any commands
-to. Maybe it could be done for I/O but I don't see how it could be done
-correctly for admin commands.
-
-And from the hosts perspective, having cimc set doesn't help anything
-because we've limited the passthru code to only accept one connection
-from one host so the host can only actually have one route to this
-controller.
-
-Logan
+Rob
