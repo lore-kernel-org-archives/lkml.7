@@ -2,115 +2,177 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FCEC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B692CC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8012B22CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149364;
-	bh=QbcCrcYP0/ZaPPQaKsY9QH7x/pjhlz95ZsQjyztPYys=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2v/Vfs3P9gd3LNNpS4bUjl+qejEK7h62SoHBGMumahWeeeVHnswHDnTfVi/VeyQWv
-	 L7lETHt+5K4BKcR9/4pgvr6JmXraVv/c16OwWBuUn4uGVqr2py2pqr/Oaxjfch384Q
-	 8C1j2/8riMMSccmLaOoJv+nc4yOtTgXE1s7BtK/Q=
+	by mail.kernel.org (Postfix) with ESMTP id 8A01322CE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbfGZN4D (ORCPT
+        id S1728468AbfGZN4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:56:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387813AbfGZNl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:41:57 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AEDA22CBF;
-        Fri, 26 Jul 2019 13:41:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148517;
-        bh=QbcCrcYP0/ZaPPQaKsY9QH7x/pjhlz95ZsQjyztPYys=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=buoQ0UQtgXPRX5nVwbWTwdgr2nWSWYEFQiZnBloMY//geCM6wlaJ8hpGdGs1YNlG1
-         55bVlgzwTuIAzN9SHj38GiCj9AuZBifNNZgus7DRaefSG9aDixW+HAtOZ7GkiPPprD
-         d8sXjGTOCU1VacvWNGOKA13WWFH/zL88Se3Pb81Q=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 79/85] x86/paravirt: Fix callee-saved function ELF sizes
-Date:   Fri, 26 Jul 2019 09:39:29 -0400
-Message-Id: <20190726133936.11177-79-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
-References: <20190726133936.11177-1-sashal@kernel.org>
+        Fri, 26 Jul 2019 09:56:08 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39926 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728452AbfGZN4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:56:05 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 358F2D34AB62BD8B557C;
+        Fri, 26 Jul 2019 21:56:01 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Fri, 26 Jul 2019
+ 21:55:52 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
+        <shivasharan.srikanteshwara@broadcom.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <megaraidlinux.pdl@broadcom.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] scsi: megaraid_sas: Make a bunch of functions static
+Date:   Fri, 26 Jul 2019 21:55:40 +0800
+Message-ID: <20190726135540.48780-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+Fix sparse warnings:
 
-[ Upstream commit 083db6764821996526970e42d09c1ab2f4155dd4 ]
+drivers/scsi/megaraid/megaraid_sas_fusion.c:3369:1: warning: symbol 'complete_cmd_fusion' was not declared. Should it be static?
+drivers/scsi/megaraid/megaraid_sas_fusion.c:3535:6: warning: symbol 'megasas_sync_irqs' was not declared. Should it be static?
+drivers/scsi/megaraid/megaraid_sas_fusion.c:3554:1: warning: symbol 'megasas_complete_cmd_dpc_fusion' was not declared. Should it be static?
+drivers/scsi/megaraid/megaraid_sas_fusion.c:3573:13: warning: symbol 'megasas_isr_fusion' was not declared. Should it be static?
+drivers/scsi/megaraid/megaraid_sas_fusion.c:3604:1: warning: symbol 'build_mpt_mfi_pass_thru' was not declared. Should it be static?
+drivers/scsi/megaraid/megaraid_sas_fusion.c:3661:40: warning: symbol 'build_mpt_cmd' was not declared. Should it be static?
+drivers/scsi/megaraid/megaraid_sas_fusion.c:3688:1: warning: symbol 'megasas_issue_dcmd_fusion' was not declared. Should it be static?
+drivers/scsi/megaraid/megaraid_sas_fusion.c:3881:5: warning: symbol 'megasas_wait_for_outstanding_fusion' was not declared. Should it be static?
+drivers/scsi/megaraid/megaraid_sas_fusion.c:4005:6: warning: symbol 'megasas_refire_mgmt_cmd' was not declared. Should it be static?
+drivers/scsi/megaraid/megaraid_sas_fusion.c:4525:25: warning: symbol 'megasas_get_peer_instance' was not declared. Should it be static?
+drivers/scsi/megaraid/megaraid_sas_fusion.c:4825:7: warning: symbol 'megasas_fusion_crash_dump' was not declared. Should it be static?
 
-The __raw_callee_save_*() functions have an ELF symbol size of zero,
-which confuses objtool and other tools.
-
-Fixes a bunch of warnings like the following:
-
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_pte_val() is missing an ELF size annotation
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_pgd_val() is missing an ELF size annotation
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_make_pte() is missing an ELF size annotation
-  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_make_pgd() is missing an ELF size annotation
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/afa6d49bb07497ca62e4fc3b27a2d0cece545b4e.1563413318.git.jpoimboe@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- arch/x86/include/asm/paravirt.h | 1 +
- arch/x86/kernel/kvm.c           | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/scsi/megaraid/megaraid_sas_fusion.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index c25c38a05c1c..d6f5ae2c79ab 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -746,6 +746,7 @@ bool __raw_callee_save___native_vcpu_is_preempted(long cpu);
- 	    PV_RESTORE_ALL_CALLER_REGS					\
- 	    FRAME_END							\
- 	    "ret;"							\
-+	    ".size " PV_THUNK_NAME(func) ", .-" PV_THUNK_NAME(func) ";"	\
- 	    ".popsection")
+diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+index 120e3c4..10ef99e 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+@@ -3511,7 +3511,7 @@ megasas_complete_r1_command(struct megasas_instance *instance,
+  * @instance:			Adapter soft state
+  * Completes all commands that is in reply descriptor queue
+  */
+-int
++static int
+ complete_cmd_fusion(struct megasas_instance *instance, u32 MSIxIndex,
+ 		    struct megasas_irq_context *irq_context)
+ {
+@@ -3702,7 +3702,7 @@ static void megasas_enable_irq_poll(struct megasas_instance *instance)
+  * megasas_sync_irqs -	Synchronizes all IRQs owned by adapter
+  * @instance:			Adapter soft state
+  */
+-void megasas_sync_irqs(unsigned long instance_addr)
++static void megasas_sync_irqs(unsigned long instance_addr)
+ {
+ 	u32 count, i;
+ 	struct megasas_instance *instance =
+@@ -3760,7 +3760,7 @@ int megasas_irqpoll(struct irq_poll *irqpoll, int budget)
+  *
+  * Tasklet to complete cmds
+  */
+-void
++static void
+ megasas_complete_cmd_dpc_fusion(unsigned long instance_addr)
+ {
+ 	struct megasas_instance *instance =
+@@ -3780,7 +3780,7 @@ megasas_complete_cmd_dpc_fusion(unsigned long instance_addr)
+ /**
+  * megasas_isr_fusion - isr entry point
+  */
+-irqreturn_t megasas_isr_fusion(int irq, void *devp)
++static irqreturn_t megasas_isr_fusion(int irq, void *devp)
+ {
+ 	struct megasas_irq_context *irq_context = devp;
+ 	struct megasas_instance *instance = irq_context->instance;
+@@ -3816,7 +3816,7 @@ irqreturn_t megasas_isr_fusion(int irq, void *devp)
+  * mfi_cmd:			megasas_cmd pointer
+  *
+  */
+-void
++static void
+ build_mpt_mfi_pass_thru(struct megasas_instance *instance,
+ 			struct megasas_cmd *mfi_cmd)
+ {
+@@ -3874,7 +3874,7 @@ build_mpt_mfi_pass_thru(struct megasas_instance *instance,
+  * @cmd:			mfi cmd to build
+  *
+  */
+-union MEGASAS_REQUEST_DESCRIPTOR_UNION *
++static union MEGASAS_REQUEST_DESCRIPTOR_UNION *
+ build_mpt_cmd(struct megasas_instance *instance, struct megasas_cmd *cmd)
+ {
+ 	union MEGASAS_REQUEST_DESCRIPTOR_UNION *req_desc = NULL;
+@@ -3900,7 +3900,7 @@ build_mpt_cmd(struct megasas_instance *instance, struct megasas_cmd *cmd)
+  * @cmd:			mfi cmd pointer
+  *
+  */
+-void
++static void
+ megasas_issue_dcmd_fusion(struct megasas_instance *instance,
+ 			  struct megasas_cmd *cmd)
+ {
+@@ -4096,8 +4096,9 @@ static inline void megasas_trigger_snap_dump(struct megasas_instance *instance)
+ }
  
- /* Get a reference to a callee-save function */
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 5169b8cc35bb..320b70acb211 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -817,6 +817,7 @@ asm(
- "cmpb	$0, " __stringify(KVM_STEAL_TIME_preempted) "+steal_time(%rax);"
- "setne	%al;"
- "ret;"
-+".size __raw_callee_save___kvm_vcpu_is_preempted, .-__raw_callee_save___kvm_vcpu_is_preempted;"
- ".popsection");
+ /* This function waits for outstanding commands on fusion to complete */
+-int megasas_wait_for_outstanding_fusion(struct megasas_instance *instance,
+-					int reason, int *convert)
++static int
++megasas_wait_for_outstanding_fusion(struct megasas_instance *instance,
++				    int reason, int *convert)
+ {
+ 	int i, outstanding, retval = 0, hb_seconds_missed = 0;
+ 	u32 fw_state, abs_state;
+@@ -4221,7 +4222,7 @@ void  megasas_reset_reply_desc(struct megasas_instance *instance)
+  * megasas_refire_mgmt_cmd :	Re-fire management commands
+  * @instance:				Controller's soft instance
+ */
+-void megasas_refire_mgmt_cmd(struct megasas_instance *instance)
++static void megasas_refire_mgmt_cmd(struct megasas_instance *instance)
+ {
+ 	int j;
+ 	struct megasas_cmd_fusion *cmd_fusion;
+@@ -4747,7 +4748,8 @@ int megasas_reset_target_fusion(struct scsi_cmnd *scmd)
+ }
  
- #endif
+ /*SRIOV get other instance in cluster if any*/
+-struct megasas_instance *megasas_get_peer_instance(struct megasas_instance *instance)
++static struct
++megasas_instance *megasas_get_peer_instance(struct megasas_instance *instance)
+ {
+ 	int i;
+ 
+@@ -5053,7 +5055,7 @@ int megasas_reset_fusion(struct Scsi_Host *shost, int reason)
+ }
+ 
+ /* Fusion Crash dump collection */
+-void  megasas_fusion_crash_dump(struct megasas_instance *instance)
++static void  megasas_fusion_crash_dump(struct megasas_instance *instance)
+ {
+ 	u32 status_reg;
+ 	u8 partial_copy = 0;
 -- 
-2.20.1
+2.7.4
+
 
