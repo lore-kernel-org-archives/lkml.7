@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8687CC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53727C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6028322CD3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7D822CD2
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148604;
-	bh=jDYthrTEGclmOg2T6WE69S5AIUGsUkMk/TbxqsyMRIk=;
+	s=default; t=1564148611;
+	bh=0kudCVZymItfY2vIseUNDRKTDpXzOwBjQd6hek9VwnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oCS1QI7TYgsmp94o50nlmzin7Jrpc3es9qh2IN3Xh5xMs/iVZB+k+fwX2MqHJ26X1
-	 2E9k8QsInIesu2u7+BJpGWtzuubEQkPkB9M62hfHpRfRM1DL/PQvRDJa9tYFycnmL4
-	 VgKgat9dKw7aRKYsMovyAbsqhr2LUocKU3rPTrI4=
+	b=BzByx3Do1sHLRQLuEAK3hHrjEaPdwgaNa8LFP/gDjnm2qTR7qlHvg94UY82yq8Lh7
+	 rilHcTOJuFr/mRtYLVxXhGXRvrPpOihiPu9aHY5k8ILmTtbfM/lcXgGbdEgK3crrzt
+	 8ajlPy1/Ii8Zj3LADVAXdfWHBNxgcYgxLSJ6pMEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388184AbfGZNnX (ORCPT
+        id S2388222AbfGZNna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:43:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50938 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:43:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388161AbfGZNnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:43:19 -0400
+        id S2388193AbfGZNn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:43:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFC1922CD8;
-        Fri, 26 Jul 2019 13:43:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B2CD22CD3;
+        Fri, 26 Jul 2019 13:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148597;
-        bh=jDYthrTEGclmOg2T6WE69S5AIUGsUkMk/TbxqsyMRIk=;
+        s=default; t=1564148606;
+        bh=0kudCVZymItfY2vIseUNDRKTDpXzOwBjQd6hek9VwnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vkbPj11hyqnz/ZK2RIkVTfKfh+vA4HB+LYmSg1Acz9uOrbDvEOpe0DnpWjp7w4EzT
-         mtQirRfdBPatm+Bs6s/dmtS7W696hQ+1FNSd8rF0CpXF6h90OsjMpY8Abm78ujEK1x
-         3Cr1bU3BYELtDMatT6179rYi1SnIg17AiAxEMrWk=
+        b=bt2ed8gHAAPXf2ZtM3HBSQbOJog/84o7jhExqsWJEPRbhIR2hK5hHnYQXv33QEm6f
+         72R6Z3Z4tGbYNQb6hCb+nHHujWBeLPvxmoyW2wwtEjrY6PHKwWLp4xASo4anSpNyO2
+         mjrXFn/IacRWWSNndkDrj1bkn62m5VNOa/x6oBcw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andreas Christoforou <andreaschristofo@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 38/47] ipc/mqueue.c: only perform resource calculation if user valid
-Date:   Fri, 26 Jul 2019 09:42:01 -0400
-Message-Id: <20190726134210.12156-38-sashal@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 44/47] x86/kvm: Don't call kvm_spurious_fault() from .fixup
+Date:   Fri, 26 Jul 2019 09:42:07 -0400
+Message-Id: <20190726134210.12156-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
 References: <20190726134210.12156-1-sashal@kernel.org>
@@ -66,103 +61,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit a318f12ed8843cfac53198390c74a565c632f417 ]
+[ Upstream commit 3901336ed9887b075531bffaeef7742ba614058b ]
 
-Andreas Christoforou reported:
+After making a change to improve objtool's sibling call detection, it
+started showing the following warning:
 
-  UBSAN: Undefined behaviour in ipc/mqueue.c:414:49 signed integer overflow:
-  9 * 2305843009213693951 cannot be represented in type 'long int'
-  ...
+  arch/x86/kvm/vmx/nested.o: warning: objtool: .fixup+0x15: sibling call from callable instruction with modified stack frame
+
+The problem is the ____kvm_handle_fault_on_reboot() macro.  It does a
+fake call by pushing a fake RIP and doing a jump.  That tricks the
+unwinder into printing the function which triggered the exception,
+rather than the .fixup code.
+
+Instead of the hack to make it look like the original function made the
+call, just change the macro so that the original function actually does
+make the call.  This allows removal of the hack, and also makes objtool
+happy.
+
+I triggered a vmx instruction exception and verified that the stack
+trace is still sane:
+
+  kernel BUG at arch/x86/kvm/x86.c:358!
+  invalid opcode: 0000 [#1] SMP PTI
+  CPU: 28 PID: 4096 Comm: qemu-kvm Not tainted 5.2.0+ #16
+  Hardware name: Lenovo THINKSYSTEM SD530 -[7X2106Z000]-/-[7X2106Z000]-, BIOS -[TEE113Z-1.00]- 07/17/2017
+  RIP: 0010:kvm_spurious_fault+0x5/0x10
+  Code: 00 00 00 00 00 8b 44 24 10 89 d2 45 89 c9 48 89 44 24 10 8b 44 24 08 48 89 44 24 08 e9 d4 40 22 00 0f 1f 40 00 0f 1f 44 00 00 <0f> 0b 66 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41 55 49 89 fd 41
+  RSP: 0018:ffffbf91c683bd00 EFLAGS: 00010246
+  RAX: 000061f040000000 RBX: ffff9e159c77bba0 RCX: ffff9e15a5c87000
+  RDX: 0000000665c87000 RSI: ffff9e15a5c87000 RDI: ffff9e159c77bba0
+  RBP: 0000000000000000 R08: 0000000000000000 R09: ffff9e15a5c87000
+  R10: 0000000000000000 R11: fffff8f2d99721c0 R12: ffff9e159c77bba0
+  R13: ffffbf91c671d960 R14: ffff9e159c778000 R15: 0000000000000000
+  FS:  00007fa341cbe700(0000) GS:ffff9e15b7400000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007fdd38356804 CR3: 00000006759de003 CR4: 00000000007606e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  PKRU: 55555554
   Call Trace:
-    mqueue_evict_inode+0x8e7/0xa10 ipc/mqueue.c:414
-    evict+0x472/0x8c0 fs/inode.c:558
-    iput_final fs/inode.c:1547 [inline]
-    iput+0x51d/0x8c0 fs/inode.c:1573
-    mqueue_get_inode+0x8eb/0x1070 ipc/mqueue.c:320
-    mqueue_create_attr+0x198/0x440 ipc/mqueue.c:459
-    vfs_mkobj+0x39e/0x580 fs/namei.c:2892
-    prepare_open ipc/mqueue.c:731 [inline]
-    do_mq_open+0x6da/0x8e0 ipc/mqueue.c:771
+   loaded_vmcs_init+0x4f/0xe0
+   alloc_loaded_vmcs+0x38/0xd0
+   vmx_create_vcpu+0xf7/0x600
+   kvm_vm_ioctl+0x5e9/0x980
+   ? __switch_to_asm+0x40/0x70
+   ? __switch_to_asm+0x34/0x70
+   ? __switch_to_asm+0x40/0x70
+   ? __switch_to_asm+0x34/0x70
+   ? free_one_page+0x13f/0x4e0
+   do_vfs_ioctl+0xa4/0x630
+   ksys_ioctl+0x60/0x90
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x55/0x1c0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7fa349b1ee5b
 
-Which could be triggered by:
-
-        struct mq_attr attr = {
-                .mq_flags = 0,
-                .mq_maxmsg = 9,
-                .mq_msgsize = 0x1fffffffffffffff,
-                .mq_curmsgs = 0,
-        };
-
-        if (mq_open("/testing", 0x40, 3, &attr) == (mqd_t) -1)
-                perror("mq_open");
-
-mqueue_get_inode() was correctly rejecting the giant mq_msgsize, and
-preparing to return -EINVAL.  During the cleanup, it calls
-mqueue_evict_inode() which performed resource usage tracking math for
-updating "user", before checking if there was a valid "user" at all
-(which would indicate that the calculations would be sane).  Instead,
-delay this check to after seeing a valid "user".
-
-The overflow was real, but the results went unused, so while the flaw is
-harmless, it's noisy for kernel fuzzers, so just fix it by moving the
-calculation under the non-NULL "user" where it actually gets used.
-
-Link: http://lkml.kernel.org/r/201906072207.ECB65450@keescook
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reported-by: Andreas Christoforou <andreaschristofo@gmail.com>
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Manfred Spraul <manfred@colorfullife.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/64a9b64d127e87b6920a97afde8e96ea76f6524e.1563413318.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- ipc/mqueue.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 34 ++++++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
 
-diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-index bce7af1546d9..de4070d5472f 100644
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -389,7 +389,6 @@ static void mqueue_evict_inode(struct inode *inode)
- {
- 	struct mqueue_inode_info *info;
- 	struct user_struct *user;
--	unsigned long mq_bytes, mq_treesize;
- 	struct ipc_namespace *ipc_ns;
- 	struct msg_msg *msg, *nmsg;
- 	LIST_HEAD(tmp_msg);
-@@ -412,16 +411,18 @@ static void mqueue_evict_inode(struct inode *inode)
- 		free_msg(msg);
- 	}
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 7014dba23d20..2877e1fbadd8 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1427,25 +1427,29 @@ enum {
+ #define kvm_arch_vcpu_memslots_id(vcpu) ((vcpu)->arch.hflags & HF_SMM_MASK ? 1 : 0)
+ #define kvm_memslots_for_spte_role(kvm, role) __kvm_memslots(kvm, (role).smm)
  
--	/* Total amount of bytes accounted for the mqueue */
--	mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
--		min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
--		sizeof(struct posix_msg_tree_node);
++asmlinkage void __noreturn kvm_spurious_fault(void);
++
+ /*
+  * Hardware virtualization extension instructions may fault if a
+  * reboot turns off virtualization while processes are running.
+- * Trap the fault and ignore the instruction if that happens.
++ * Usually after catching the fault we just panic; during reboot
++ * instead the instruction is ignored.
+  */
+-asmlinkage void kvm_spurious_fault(void);
 -
--	mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
--				  info->attr.mq_msgsize);
--
- 	user = info->user;
- 	if (user) {
-+		unsigned long mq_bytes, mq_treesize;
-+
-+		/* Total amount of bytes accounted for the mqueue */
-+		mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
-+			min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
-+			sizeof(struct posix_msg_tree_node);
-+
-+		mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
-+					  info->attr.mq_msgsize);
-+
- 		spin_lock(&mq_lock);
- 		user->mq_bytes -= mq_bytes;
- 		/*
+-#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)	\
+-	"666: " insn "\n\t" \
+-	"668: \n\t"                           \
+-	".pushsection .fixup, \"ax\" \n" \
+-	"667: \n\t" \
+-	cleanup_insn "\n\t"		      \
+-	"cmpb $0, kvm_rebooting \n\t"	      \
+-	"jne 668b \n\t"      		      \
+-	__ASM_SIZE(push) " $666b \n\t"	      \
+-	"jmp kvm_spurious_fault \n\t"	      \
+-	".popsection \n\t" \
+-	_ASM_EXTABLE(666b, 667b)
++#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)		\
++	"666: \n\t"							\
++	insn "\n\t"							\
++	"jmp	668f \n\t"						\
++	"667: \n\t"							\
++	"call	kvm_spurious_fault \n\t"				\
++	"668: \n\t"							\
++	".pushsection .fixup, \"ax\" \n\t"				\
++	"700: \n\t"							\
++	cleanup_insn "\n\t"						\
++	"cmpb	$0, kvm_rebooting\n\t"					\
++	"je	667b \n\t"						\
++	"jmp	668b \n\t"						\
++	".popsection \n\t"						\
++	_ASM_EXTABLE(666b, 700b)
+ 
+ #define __kvm_handle_fault_on_reboot(insn)		\
+ 	____kvm_handle_fault_on_reboot(insn, "")
 -- 
 2.20.1
 
