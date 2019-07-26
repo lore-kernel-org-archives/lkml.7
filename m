@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE67C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BEBC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D805622CBB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721D022BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148402;
-	bh=6pfJv0Z3H6UEml4/RtAsomE5oH9gg2HYiIJovd7fvfw=;
+	s=default; t=1564148405;
+	bh=j4QpKiWOZUwLVM0PO3DDqb7etaR53fFYJO+NvTspFdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ALuYtsY2K+1MOQ74zJuSXCXxbbdEZDTi4fS0Irw53j88MC4qVvokEgoL1KFfXNY0D
-	 bXCWYxBH6B6hnvBiTPkLBmBpVcKPSI+ar8VAFhqDm6VzY0L24IzdfhXhIrnLAxTOt5
-	 +Rv8+2qn2EyYWJnQ0xwpKqvnUyWlp9I5imdU/SPo=
+	b=zCrGSXxtCM43YPnJ6pYk4cKL2pAvZY5p5JoFWewJ+H5EiZeXyv7hpCM6uI/Vyu3Cl
+	 duG6JYuiqxra/GmCWEDFDbH63m7HKTWqoNUnw3Ku3fyEYoKAEvuK8rWagCAad9u7J+
+	 O8febn5Z4mSFdt0UTXmscvXRgwL/8AGlS3+FX4dg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfGZNkB (ORCPT
+        id S1727570AbfGZNkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:40:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45864 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:40:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726364AbfGZNj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:39:59 -0400
+        id S1727546AbfGZNkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:40:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D79D222BF5;
-        Fri, 26 Jul 2019 13:39:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 536D522CB8;
+        Fri, 26 Jul 2019 13:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148398;
-        bh=6pfJv0Z3H6UEml4/RtAsomE5oH9gg2HYiIJovd7fvfw=;
+        s=default; t=1564148401;
+        bh=j4QpKiWOZUwLVM0PO3DDqb7etaR53fFYJO+NvTspFdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vnP06DDw6/V1a9TgG7pvlYgqhqqFMpAlAZTWaYQXg515zXRYt9Y/7VNCziSqMr+kO
-         RcCLxvEXtYIpzKPy8ZVTFb932Nx2hmEJtBJySaPbDJJOddIja85gzzgBByhpjySihk
-         ZdBa9fgu2pxdP6Gbu4e6YQzZW/0WferYgswofgEc=
+        b=zWhMHCdBFwGPGOsuvfBOtBdu2zZHZRatzR2mxP2wiecw3bV7tswFP87sKbCZ6TtJ+
+         D0Qm7+Ir+Se2G+4pkPEtKk0Lnb6CHTxe4lfr66Onwkes6JHKQ3fqwhn6TL2RmpAPbX
+         5D60qnMeR9PWMnJsIIiaA2jkg/0iNHp1r/4C1xe8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 12/85] arm64: dts: rockchip: fix isp iommu clocks and power domain
-Date:   Fri, 26 Jul 2019 09:38:22 -0400
-Message-Id: <20190726133936.11177-12-sashal@kernel.org>
+Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 14/85] PCI: OF: Initialize dev->fwnode appropriately
+Date:   Fri, 26 Jul 2019 09:38:24 -0400
+Message-Id: <20190726133936.11177-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -61,63 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helen Koike <helen.koike@collabora.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-[ Upstream commit c432a29d3fc9ee928caeca2f5cf68b3aebfa6817 ]
+[ Upstream commit 59b099a6c75e4ddceeaf9676422d8d91d0049755 ]
 
-isp iommu requires wrapper variants of the clocks.
-noc variants are always on and using the wrapper variants will activate
-{A,H}CLK_ISP{0,1} due to the hierarchy.
+For PCI devices that have an OF node, set the fwnode as well. This way
+drivers that rely on fwnode don't need the special case described by
+commit f94277af03ea ("of/platform: Initialise dev->fwnode appropriately").
 
-Tested using the pending isp patch set (which is not upstream
-yet). Without this patch, streaming from the isp stalls.
-
-Also add the respective power domain and remove the "disabled" status.
-
-Refer:
- RK3399 TRM v1.4 Fig. 2-4 RK3399 Clock Architecture Diagram
- RK3399 TRM v1.4 Fig. 8-1 RK3399 Power Domain Partition
-
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/pci/of.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 196ac9b78076..89594a7276f4 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1706,11 +1706,11 @@
- 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
- 		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
- 		interrupt-names = "isp0_mmu";
--		clocks = <&cru ACLK_ISP0_NOC>, <&cru HCLK_ISP0_NOC>;
-+		clocks = <&cru ACLK_ISP0_WRAPPER>, <&cru HCLK_ISP0_WRAPPER>;
- 		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
-+		power-domains = <&power RK3399_PD_ISP0>;
- 		rockchip,disable-mmu-reset;
--		status = "disabled";
- 	};
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 73d5adec0a28..bc7b27a28795 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -22,12 +22,15 @@ void pci_set_of_node(struct pci_dev *dev)
+ 		return;
+ 	dev->dev.of_node = of_pci_find_child_device(dev->bus->dev.of_node,
+ 						    dev->devfn);
++	if (dev->dev.of_node)
++		dev->dev.fwnode = &dev->dev.of_node->fwnode;
+ }
  
- 	isp1_mmu: iommu@ff924000 {
-@@ -1718,11 +1718,11 @@
- 		reg = <0x0 0xff924000 0x0 0x100>, <0x0 0xff925000 0x0 0x100>;
- 		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH 0>;
- 		interrupt-names = "isp1_mmu";
--		clocks = <&cru ACLK_ISP1_NOC>, <&cru HCLK_ISP1_NOC>;
-+		clocks = <&cru ACLK_ISP1_WRAPPER>, <&cru HCLK_ISP1_WRAPPER>;
- 		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
-+		power-domains = <&power RK3399_PD_ISP1>;
- 		rockchip,disable-mmu-reset;
--		status = "disabled";
- 	};
+ void pci_release_of_node(struct pci_dev *dev)
+ {
+ 	of_node_put(dev->dev.of_node);
+ 	dev->dev.of_node = NULL;
++	dev->dev.fwnode = NULL;
+ }
  
- 	hdmi_sound: hdmi-sound {
+ void pci_set_bus_of_node(struct pci_bus *bus)
+@@ -41,13 +44,18 @@ void pci_set_bus_of_node(struct pci_bus *bus)
+ 		if (node && of_property_read_bool(node, "external-facing"))
+ 			bus->self->untrusted = true;
+ 	}
++
+ 	bus->dev.of_node = node;
++
++	if (bus->dev.of_node)
++		bus->dev.fwnode = &bus->dev.of_node->fwnode;
+ }
+ 
+ void pci_release_bus_of_node(struct pci_bus *bus)
+ {
+ 	of_node_put(bus->dev.of_node);
+ 	bus->dev.of_node = NULL;
++	bus->dev.fwnode = NULL;
+ }
+ 
+ struct device_node * __weak pcibios_get_phb_of_node(struct pci_bus *bus)
 -- 
 2.20.1
 
