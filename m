@@ -2,307 +2,278 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AECC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A371C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B92A229F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D865E22CD8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:42:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TjEfMntP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfGZJlu (ORCPT
+        id S1726519AbfGZJmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:41:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58336 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbfGZJlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:41:49 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1974D3092656;
-        Fri, 26 Jul 2019 09:41:49 +0000 (UTC)
-Received: from [10.36.116.244] (ovpn-116-244.ams2.redhat.com [10.36.116.244])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F161B5DA97;
-        Fri, 26 Jul 2019 09:41:46 +0000 (UTC)
-Subject: Re: [PATCH v3 2/5] mm: Introduce a new Vmemmap page-type
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        pasha.tatashin@soleen.com, mhocko@suse.com,
-        anshuman.khandual@arm.com, Jonathan.Cameron@huawei.com,
-        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20190725160207.19579-1-osalvador@suse.de>
- <20190725160207.19579-3-osalvador@suse.de>
- <7e8746ac-6a66-d73c-9f2a-4fc53c7e4c04@redhat.com>
- <20190726092548.GA26268@linux>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <dbd19aea-fe18-ec42-7932-f03109cb399e@redhat.com>
-Date:   Fri, 26 Jul 2019 11:41:46 +0200
+        Fri, 26 Jul 2019 05:42:13 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10090 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725872AbfGZJmN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:42:13 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6Q9ZtYv029674;
+        Fri, 26 Jul 2019 11:41:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=LVVvxI73KteVTSQLUQB0C3OwsMFN3n2yWOleDQX+feE=;
+ b=TjEfMntPKEPBSdbIg1lMy59VAhRtkrQPZs/6mQAUaH+HdEf6dEsO++FikHMtTtbMT0/8
+ oRe6Xbg/Ep+CYlxRGk2tBxhhFDsguNiynEFKCS3LjVUxYudqxaexHxRum9EX1OP5ZJrO
+ ubzEvCkV4yomY22wEbMaWZ/3QCjYVQirkvZR3i+FY54HLI8MkE3Sv1iqTbMxtIb0nkXb
+ fwBSU+Kjwt2p6UH5uznkzqds6epKEw0GreobyiUnW+DUJUz4C8kxBWZ0B76Q25BRmalJ
+ O353FdUAYZKv8e6EnHyO4jNQeCQjw8ZuCINpH2ipGsiiphp8lpnbseoC7Tbvn6DjndYl 0A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2tx60a9qws-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 26 Jul 2019 11:41:59 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CB4C231;
+        Fri, 26 Jul 2019 09:41:58 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9F8D82586;
+        Fri, 26 Jul 2019 09:41:58 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 26 Jul
+ 2019 11:41:58 +0200
+Received: from lmecxl0923.lme.st.com (10.48.0.237) by Webmail-ga.st.com
+ (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 26 Jul
+ 2019 11:41:58 +0200
+Subject: Re: [PATCH V3 1/3] mmc: mmci: fix read status for busy detect
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1559577325-19266-1-git-send-email-ludovic.Barre@st.com>
+ <1559577325-19266-2-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFpJPbpTnfA2cynFURyxFY_YCm7MRXw3m2nQyU+z=ZWsFA@mail.gmail.com>
+From:   Ludovic BARRE <ludovic.barre@st.com>
+Message-ID: <dd5c1e86-f0b1-cdfa-1b91-486f99d4e50c@st.com>
+Date:   Fri, 26 Jul 2019 11:41:57 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190726092548.GA26268@linux>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAPDyKFpJPbpTnfA2cynFURyxFY_YCm7MRXw3m2nQyU+z=ZWsFA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 26 Jul 2019 09:41:49 +0000 (UTC)
+X-Originating-IP: [10.48.0.237]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-26_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.07.19 11:25, Oscar Salvador wrote:
-> On Fri, Jul 26, 2019 at 10:48:54AM +0200, David Hildenbrand wrote:
->>> Signed-off-by: Oscar Salvador <osalvador@suse.de>
->>> ---
->>>  include/linux/mm.h         | 17 +++++++++++++++++
->>>  include/linux/mm_types.h   |  5 +++++
->>>  include/linux/page-flags.h | 19 +++++++++++++++++++
->>>  3 files changed, 41 insertions(+)
->>>
->>> diff --git a/include/linux/mm.h b/include/linux/mm.h
->>> index 45f0ab0ed4f7..432175f8f8d2 100644
->>> --- a/include/linux/mm.h
->>> +++ b/include/linux/mm.h
->>> @@ -2904,6 +2904,23 @@ static inline bool debug_guardpage_enabled(void) { return false; }
->>>  static inline bool page_is_guard(struct page *page) { return false; }
->>>  #endif /* CONFIG_DEBUG_PAGEALLOC */
->>>  
->>> +static __always_inline struct page *vmemmap_head(struct page *page)
->>> +{
->>> +	return (struct page *)page->vmemmap_head;
->>> +}
->>> +
->>> +static __always_inline unsigned long vmemmap_nr_sections(struct page *page)
->>> +{
->>> +	struct page *head = vmemmap_head(page);
->>> +	return head->vmemmap_sections;
->>> +}
->>> +
->>> +static __always_inline unsigned long vmemmap_nr_pages(struct page *page)
->>> +{
->>> +	struct page *head = vmemmap_head(page);
->>> +	return head->vmemmap_pages - (page - head);
->>> +}
->>> +
->>>  #if MAX_NUMNODES > 1
->>>  void __init setup_nr_node_ids(void);
->>>  #else
->>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
->>> index 6a7a1083b6fb..51dd227f2a6b 100644
->>> --- a/include/linux/mm_types.h
->>> +++ b/include/linux/mm_types.h
->>> @@ -170,6 +170,11 @@ struct page {
->>>  			 * pmem backed DAX files are mapped.
->>>  			 */
->>>  		};
->>> +		struct {        /* Vmemmap pages */
->>> +			unsigned long vmemmap_head;
->>> +			unsigned long vmemmap_sections; /* Number of sections */
->>> +			unsigned long vmemmap_pages;    /* Number of pages */
->>> +		};
->>>  
->>>  		/** @rcu_head: You can use this to free a page by RCU. */
->>>  		struct rcu_head rcu_head;
->>> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
->>> index f91cb8898ff0..75f302a532f9 100644
->>> --- a/include/linux/page-flags.h
->>> +++ b/include/linux/page-flags.h
->>> @@ -708,6 +708,7 @@ PAGEFLAG_FALSE(DoubleMap)
->>>  #define PG_kmemcg	0x00000200
->>>  #define PG_table	0x00000400
->>>  #define PG_guard	0x00000800
->>> +#define PG_vmemmap     0x00001000
->>>  
->>>  #define PageType(page, flag)						\
->>>  	((page->page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
->>> @@ -764,6 +765,24 @@ PAGE_TYPE_OPS(Table, table)
->>>   */
->>>  PAGE_TYPE_OPS(Guard, guard)
->>>  
->>> +/*
->>> + * Vmemmap pages refers to those pages that are used to create the memmap
->>> + * array, and reside within the same memory range that was hotppluged, so
->>> + * they are self-hosted. (see include/linux/memory_hotplug.h)
->>> + */
->>> +PAGE_TYPE_OPS(Vmemmap, vmemmap)
->>> +static __always_inline void SetPageVmemmap(struct page *page)
->>> +{
->>> +	__SetPageVmemmap(page);
->>> +	__SetPageReserved(page);
->>
->> So, the issue with some vmemmap pages is that the "struct pages" reside
->> on the memory they manage. (it is nice, but complicated - e.g. when
->> onlining/offlining)
-> 
-> Hi David,
-> 
-> Not really.
-> Vemmap pages are just skipped when onling/offlining handling.
-> We do not need them to a) send to the buddy and b) migrate them over.
-> A look at patch#4 will probably help, as the crux of the matter is there.
+hi Ulf
 
-Right, but you have to hinder onlining code from trying to reinitialize
-the vmemmap - when you try to online the first memory block. Will dive
-into the details (patch #4) next (maybe not today, but early next week) :)
+Thanks to your "Clarify comments ..." commit, like is closes
+I resumed upstream of this series.
+
+On 7/15/19 6:31 PM, Ulf Hansson wrote:
+> On Mon, 3 Jun 2019 at 17:55, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> "busy_detect_flag" is used to read & clear busy value of mmci status.
+>> "busy_detect_mask" is used to manage busy irq of mmci mask.
+>> So to read mmci status the busy_detect_flag must be take account.
+>> if the variant does not support busy detect feature the flag is null
+>> and there is no impact.
+> 
+> By reading the changelog, it doesn't tell me the purpose of this
+> change. When going forward, please work harder on your changelogs.
+> 
+> Make sure to answer the questions, *why* is this change needed,
+> *what/how* does the change do.
+
+Ok, I will explain the differences with the legacy and the needs of 
+sdmmc variant about busy detection.
 
 > 
 >>
->> I would expect that you properly initialize the struct pages for the
->> vmemmap pages (now it gets confusing :) ) when adding memory. The other
->> struct pages are initialized when onlining/offlining.
+>> Not need to re-read the status register in mmci_cmd_irq, the
+>> status parameter can be used.
 >>
->> So, at this point, the pages should already be marked reserved, no? Or
->> are the struct pages for the vmemmap never initialized?
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>> ---
+>>   drivers/mmc/host/mmci.c | 5 +++--
+>>   1 file changed, 3 insertions(+), 2 deletions(-)
 >>
->> What zone do these vmemmap pages have? They are not assigned to any zone
->> and will never be :/
+>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+>> index 356833a..5b5cc45 100644
+>> --- a/drivers/mmc/host/mmci.c
+>> +++ b/drivers/mmc/host/mmci.c
+>> @@ -1240,7 +1240,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>                   */
+>>                  if (!host->busy_status &&
+>>                      !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
+>> -                   (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
+>> +                   (status & host->variant->busy_detect_flag)) {
 > 
-> This patch is only a preparation, the real "fun" is in patch#4.
+> I suggested you to do this change through some of my earlier comments,
+> however I think it should be made as a stand alone change.
 > 
-> Vmemmap pages initialization occurs in mhp_mark_vmemmap_pages, called from
-> __add_pages() (patch#4).
-> In there we a) mark the page as vmemmap and b) initialize the fields we need to
-> track some medata (sections, pages and head).
+> Anyway, when looking at the details in your series, I decided to try
+> to help out a bit, so I have prepared a couple of related patches for
+> cleaning up and clarifying the busy detection code/comments in mmci. I
+> have incorporated the above change, so let me post them asap.
 > 
-> In __init_single_page(), when onlining, the rest of the fields will be set up
-> properly (zone, refcount, etc).
-> 
-> Chunk from patch#4:
-> 
-> static void __meminit __init_single_page(struct page *page, unsigned long pfn,
->                                 unsigned long zone, int nid)
-> {
->         if (PageVmemmap(page))
->                 /*
->                  * Vmemmap pages need to preserve their state.
->                  */
->                 goto preserve_state;
-
-Can you be sure there are no false positives? (if I remember correctly,
-this memory might be completely uninitialized - I might be wrong)
-
-> 
->         mm_zero_struct_page(page);
->         page_mapcount_reset(page);
->         INIT_LIST_HEAD(&page->lru);
-> preserve_state:
->         init_page_count(page);
->         set_page_links(page, zone, nid, pfn);
->         page_cpupid_reset_last(page);
->         page_kasan_tag_reset(page);
-> 
-> So, vmemmap pages will fall within the same zone as the range we are adding,
-> that does not change.
-
-I wonder if that is the right thing to do, hmmmm, because they are
-effectively not part of that zone (not online)
-
-Will have a look at the details :)
-
-> 
->>> +}
->>> +
->>> +static __always_inline void ClearPageVmemmap(struct page *page)
->>> +{
->>> +	__ClearPageVmemmap(page);
->>> +	__ClearPageReserved(page);
 >>
->> You sure you want to clear the reserved flag here? Is this function
->> really needed?
+>>                          /* Clear the busy start IRQ */
+>>                          writel(host->variant->busy_detect_mask,
+>> @@ -1517,7 +1517,8 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+>>                   * to make sure that both start and end interrupts are always
+>>                   * cleared one after the other.
+>>                   */
+>> -               status &= readl(host->base + MMCIMASK0);
+>> +               status &= readl(host->base + MMCIMASK0) |
+>> +                       host->variant->busy_detect_flag;
+> 
+> As I told earlier in the review, this looks wrong to me.
+> 
+> It means that you will add the bit for the ->busy_detect_flag to the
+> status field we have just read from the MMCISTATUS register. That
+> means the busy status may be set when it shouldn't.
+> 
+>>                  if (host->variant->busy_detect)
+>>                          writel(status & ~host->variant->busy_detect_mask,
+>>                                 host->base + MMCICLEAR);
+>> --
+>> 2.7.4
 >>
->> (when you add memory, you can mark all relevant pages as vmemmap pages,
->> which is valid until removing the memory)
->>
->> Let's draw a picture so I am not confused
->>
->> [ ------ added memory ------ ]
->> [ vmemmap]
->>
->> The first page of the added memory is a vmemmap page AND contains its
->> own vmemmap, right?
 > 
-> Not only the first page.
-> Depending on how large is the chunk you are adding, the number of vmemmap
-> pages will vary, because we need to cover the memmaps for the range.
+> By looking at the other changes in the series, I assume @subject patch
+> is intended to prepare for the other changes on top. But it's not
+> really clear.
 > 
-> e.g:
+> Anyway, in that regards, the below is my observations of what seems to
+> be important part, when supporting busy detection for the stm32 sdmmc
+> variant (except the timeout things in patch2, which I intend to
+> comment separately on).
 > 
->  - 128MB (1 section) = 512 vmemmap pages at the beginning of the range
->  - 256MB (2 section) = 1024 vmemmap pages at the beginning of the range
->  ...
+> I figured, these are the involved register bits/masks:
+> 
+> MMCISTATUS:
+> MCI_STM32_BUSYD0 BIT(20)
+> MCI_STM32_BUSYD0END BIT(21)
+> 
+> MMCIMASK0:
+> MCI_STM32_BUSYD0ENDMASK BIT(21)
+
+it's exact:
+MCI_STM32_BUSYD0 BIT(20): This is a hardware status flag only (inverted 
+value of d0 line), it does not generate an interrupt, and so no mask
+bit.
+
+MCI_STM32_BUSYD0ENDMASK BIT(21): This indicates only end of busy
+following a CMD response. On busy to Not busy changes, an interrupt
+is generated (if unmask) and BUSYD0END status flag is set.
+status flag is cleared by writing corresponding interrupt clear bit in 
+MMCICLEAR.
+
+> 
+> For the legacy ST variant, there is only one register bit in
+> MMCISTATUS that is used for indicating busy (MCI_ST_CARDBUSY BIT(24)).
+> There is no dedicated busy-end bit for the busy-end IRQ, which I
+> believe is the reason to why the current code also is bit messy.
+
+yes
+
+> 
+> It seems like the stm32 sdmmc variant have a separate status bit for
+> the busy-end IRQ, correct?
+
+yes
+
+> 
+> If I understand correctly by looking at patch3, you don't use the
+> dedicated busy-end status bit (MCI_STM32_BUSYD0END), right? Then why
+> not?
+
+like your are clarify in previous series, the busy detection is done
+in 3 steps.
+
+if I use:
+.busy_detect_flag	= MCI_STM32_BUSYD0ENDMASK,
+.busy_detect_mask	= MCI_STM32_BUSYD0ENDMASK,
+
+the sdmmc request will be not correctly completed, because the third 
+step can't be happen.
+
+chronologies:
+step1: when busyd0end change to 1
+  => busyd0end interrupt is unmasked
+  => busy_status = cmd_sent | respend
+  => return to mmci_irq
+step2: busyd0end is yet to 1
+  => clear the busyd0end interrupt
+	=> the hardware clear busyd0end status flag on interrupt clear
+  => return to mmci_irq
+
+like MCI_STM32_BUSYD0END interrupt is generated only on change
+busy to not busy, when the interrupt is cleared (status is 0)
+the step 3 can't happen (no irq pending to re-enter in mmci_cmd_irq).
+sdmmc can't complete the request.
+
+If I use:
+.busy_detect_flag	= MCI_STM32_BUSYD0,
+.busy_detect_mask	= MCI_STM32_BUSYD0ENDMASK,
+
+Like there is no MCI_STM32_BUSYD0 irq mask, the status read in mmci_irq
+"status &= readl(host->base + MMCIMASK0)" can't take account the 
+busy_detect_flag (for sdmmc). So the  step 2 can't be passed.
+However we could share re-read between step 1 and step 2.
+
+proposal:
+
++
++		u32 busy_val = readl(base + MMCISTATUS) &
++			host->variant->busy_detect_flag;
++
+  		if (!host->busy_status &&
+-		    !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
+-		    (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
++		    !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) && busy_val) {
+
+  			writel(readl(base + MMCIMASK0) |
+  			       host->variant->busy_detect_mask,
+@@ -1262,8 +1265,7 @@ mmci_cmd_irq(struct mmci_host *host, struct 
+mmc_command *cmd,
+  		 * both the start and the end interrupts needs to be cleared,
+  		 * one after the other. So, clear the busy start IRQ here.
+  		 */
+-		if (host->busy_status &&
+-		    (status & host->variant->busy_detect_flag)) {
++		if (host->busy_status && busy_val) {
+
+
+what do you think about it ?
+
+> 
+> Thoughts?
+> 
+> Kind regards
+> Uffe
 > 
 
-Right.
-
->> When adding memory, you would initialize set all struct pages of the
->> vmemmap (residing on itself) and set them to SetPageVmemmap().
->>
->> When removing memory, there is nothing to do, all struct pages are
->> dropped. So why do we need the ClearPageVmemmap() ?
-> 
-> Well, it is not really needed as we only call ClearPageVmemmap when we are
-> actually removing the memory with vmemmap_free()->...
-> So one could argue that since the memory is going away, there is no need
-> to clear anything in there.
-> 
-> I just made it for consistency purposes.
-> 
-> Can drop it if feeling strong here.
-
-Not strong, was just wondering why that is needed at all in the big
-picture :)
-
--- 
-
-Thanks,
-
-David / dhildenb
+Regards
+Ludo
