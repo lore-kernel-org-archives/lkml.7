@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64F4C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A02C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E66D22CC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D93522CB8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155199;
-	bh=uu3qTDnCNTovUsEE/JifBgDG5Yt/eiY+fHSm5v52wDk=;
+	s=default; t=1564155204;
+	bh=iv41E8Xkoz/Gx491upJuOMOJegDpsEKW4zDDb4NP148=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OFzDqH41AZxtE3/buMTGdgrwUbQN3q0gNe3LapF4J0Xiyl3P3ug01L9GMU6o04Sft
-	 dbL8v+z89wmmstTRHBsZSVbamFST5vMzNcJZO5CMgpIfSn0WhRXJBUrOwCuLrkbfqw
-	 jmI6QySw6X3xl674sh92OU/NYrY/WOIyPmvMrEJw=
+	b=gjn4p+qg+buq4BC602kGqRsKXowaK9IPQpFWqJ/xVGyksOEQzIXzG5tsmKc+an4Ai
+	 /sgBlyxtHLyT4ppZy18WN4mFNoS+4DXmLanyLx/hub6M9juKWz5OzLuf0tVg7VxF5f
+	 bqPiM/VlIED/UZSENRsKc0iZ8/WLQT5VCfdq6uIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389619AbfGZPdR (ORCPT
+        id S2389630AbfGZPdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:33:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48548 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:33:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389223AbfGZPdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:33:14 -0400
+        id S2389616AbfGZPdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:33:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57D2D20644;
-        Fri, 26 Jul 2019 15:33:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF63D22CD0;
+        Fri, 26 Jul 2019 15:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155192;
-        bh=uu3qTDnCNTovUsEE/JifBgDG5Yt/eiY+fHSm5v52wDk=;
+        s=default; t=1564155196;
+        bh=iv41E8Xkoz/Gx491upJuOMOJegDpsEKW4zDDb4NP148=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rQbcCR2q3tZeF6kQF55x/qxq2Eeabl42nst3VHH6OIAIFxHl8IWC1IOnV6o/+3wdD
-         K8Q0LGxA3GdEzw/So0txeFMymuW9ejkzPg7z/YcUZ0ZK/1J4rrO7tVEtEi1bO18AKF
-         flXlj/aVdDozviJl63Aw51Rrt//ypkECRkSkDJqQ=
+        b=xyzjk+mwzcz709SUaAI2RNQXrCCqV2l3rkMxQ1TP4OD+ATJKs/nJYW65gGeouykLV
+         S5dn5r72Q8K/EM6dgSWXwwboQ8f76XpHuHuN1dHoQp1EytySsh+jsQF7mdBMb5mM8C
+         oYQhBa2X4FM3nA/D7LCw2dTckR7qRnM3OFYbc9+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Justin Chen <justinpopo6@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 08/50] net: bcmgenet: use promisc for unsupported filters
-Date:   Fri, 26 Jul 2019 17:24:43 +0200
-Message-Id: <20190726152301.503600968@linuxfoundation.org>
+Subject: [PATCH 4.19 09/50] net: dsa: mv88e6xxx: wait after reset deactivation
+Date:   Fri, 26 Jul 2019 17:24:44 +0200
+Message-Id: <20190726152301.584679551@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -60,126 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Justin Chen <justinpopo6@gmail.com>
+From: Baruch Siach <baruch@tkos.co.il>
 
-[ Upstream commit 35cbef9863640f06107144687bd13151bc2e8ce3 ]
+[ Upstream commit 7b75e49de424ceb53d13e60f35d0a73765626fda ]
 
-Currently we silently ignore filters if we cannot meet the filter
-requirements. This will lead to the MAC dropping packets that are
-expected to pass. A better solution would be to set the NIC to promisc
-mode when the required filters cannot be met.
+Add a 1ms delay after reset deactivation. Otherwise the chip returns
+bogus ID value. This is observed with 88E6390 (Peridot) chip.
 
-Also correct the number of MDF filters supported. It should be 17,
-not 16.
-
-Signed-off-by: Justin Chen <justinpopo6@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c |   57 +++++++++++--------------
- 1 file changed, 26 insertions(+), 31 deletions(-)
+ drivers/net/dsa/mv88e6xxx/chip.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -3086,39 +3086,42 @@ static void bcmgenet_timeout(struct net_
- 	netif_tx_wake_all_queues(dev);
- }
- 
--#define MAX_MC_COUNT	16
-+#define MAX_MDF_FILTER	17
- 
- static inline void bcmgenet_set_mdf_addr(struct bcmgenet_priv *priv,
- 					 unsigned char *addr,
--					 int *i,
--					 int *mc)
-+					 int *i)
- {
--	u32 reg;
--
- 	bcmgenet_umac_writel(priv, addr[0] << 8 | addr[1],
- 			     UMAC_MDF_ADDR + (*i * 4));
- 	bcmgenet_umac_writel(priv, addr[2] << 24 | addr[3] << 16 |
- 			     addr[4] << 8 | addr[5],
- 			     UMAC_MDF_ADDR + ((*i + 1) * 4));
--	reg = bcmgenet_umac_readl(priv, UMAC_MDF_CTRL);
--	reg |= (1 << (MAX_MC_COUNT - *mc));
--	bcmgenet_umac_writel(priv, reg, UMAC_MDF_CTRL);
- 	*i += 2;
--	(*mc)++;
- }
- 
- static void bcmgenet_set_rx_mode(struct net_device *dev)
- {
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
- 	struct netdev_hw_addr *ha;
--	int i, mc;
-+	int i, nfilter;
- 	u32 reg;
- 
- 	netif_dbg(priv, hw, dev, "%s: %08X\n", __func__, dev->flags);
- 
--	/* Promiscuous mode */
-+	/* Number of filters needed */
-+	nfilter = netdev_uc_count(dev) + netdev_mc_count(dev) + 2;
-+
-+	/*
-+	 * Turn on promicuous mode for three scenarios
-+	 * 1. IFF_PROMISC flag is set
-+	 * 2. IFF_ALLMULTI flag is set
-+	 * 3. The number of filters needed exceeds the number filters
-+	 *    supported by the hardware.
-+	*/
- 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
--	if (dev->flags & IFF_PROMISC) {
-+	if ((dev->flags & (IFF_PROMISC | IFF_ALLMULTI)) ||
-+	    (nfilter > MAX_MDF_FILTER)) {
- 		reg |= CMD_PROMISC;
- 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
- 		bcmgenet_umac_writel(priv, 0, UMAC_MDF_CTRL);
-@@ -3128,32 +3131,24 @@ static void bcmgenet_set_rx_mode(struct
- 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -4816,6 +4816,8 @@ static int mv88e6xxx_probe(struct mdio_d
+ 		err = PTR_ERR(chip->reset);
+ 		goto out;
  	}
++	if (chip->reset)
++		usleep_range(1000, 2000);
  
--	/* UniMac doesn't support ALLMULTI */
--	if (dev->flags & IFF_ALLMULTI) {
--		netdev_warn(dev, "ALLMULTI is not supported\n");
--		return;
--	}
--
- 	/* update MDF filter */
- 	i = 0;
--	mc = 0;
- 	/* Broadcast */
--	bcmgenet_set_mdf_addr(priv, dev->broadcast, &i, &mc);
-+	bcmgenet_set_mdf_addr(priv, dev->broadcast, &i);
- 	/* my own address.*/
--	bcmgenet_set_mdf_addr(priv, dev->dev_addr, &i, &mc);
--	/* Unicast list*/
--	if (netdev_uc_count(dev) > (MAX_MC_COUNT - mc))
--		return;
-+	bcmgenet_set_mdf_addr(priv, dev->dev_addr, &i);
- 
--	if (!netdev_uc_empty(dev))
--		netdev_for_each_uc_addr(ha, dev)
--			bcmgenet_set_mdf_addr(priv, ha->addr, &i, &mc);
--	/* Multicast */
--	if (netdev_mc_empty(dev) || netdev_mc_count(dev) >= (MAX_MC_COUNT - mc))
--		return;
-+	/* Unicast */
-+	netdev_for_each_uc_addr(ha, dev)
-+		bcmgenet_set_mdf_addr(priv, ha->addr, &i);
- 
-+	/* Multicast */
- 	netdev_for_each_mc_addr(ha, dev)
--		bcmgenet_set_mdf_addr(priv, ha->addr, &i, &mc);
-+		bcmgenet_set_mdf_addr(priv, ha->addr, &i);
-+
-+	/* Enable filters */
-+	reg = GENMASK(MAX_MDF_FILTER - 1, MAX_MDF_FILTER - nfilter);
-+	bcmgenet_umac_writel(priv, reg, UMAC_MDF_CTRL);
- }
- 
- /* Set the hardware MAC address. */
+ 	err = mv88e6xxx_detect(chip);
+ 	if (err)
 
 
