@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29150C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82631C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8F4722CD8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C44D22CD8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149042;
-	bh=8bKqOjSUUQC1mnRNDLkjrxM4PpNvEvT4NFD5HvX0/1g=;
+	s=default; t=1564149046;
+	bh=WWDUT3heBkJrNGeUFlMj5EXGoxd7CRZ1An8s+5uwkjo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JLVmDqpOkmcS8yvl5d+aRW5q+LhY/vtzJq9vYBx+pv8jyPusSO73cg8nalCdpWdj+
-	 DzsgTIjPbRl1SgBkSev4yWnaiOimB8q3CF2Z9F7D+mFsRgsF+Kb65NTpYqEPrO4iv8
-	 CDhPJor9eVlNFNVvpZchkzJgnR2e0QS7c1dvrtWk=
+	b=wLnujEhUrmO6wXTrr6vjoriDAWRTuCS6/dStvf9HFO/0L/AaXO+Itv82p1CEmeTRV
+	 FD3zXsXmsGEDgzmiYgjdw0zDEEYt4g0hzjaCiODDYxM1VCbNBK9lCDfeV6j3ZlpTVy
+	 WA/OVtHUXpiHgApyuV3bW9Dctda5n6PKn2702U2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387558AbfGZNuk (ORCPT
+        id S1728093AbfGZNoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:50:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52556 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:44:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728096AbfGZNoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:44:22 -0400
+        id S1728047AbfGZNoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:44:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DE5222CD8;
-        Fri, 26 Jul 2019 13:44:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CCB922CD0;
+        Fri, 26 Jul 2019 13:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148661;
-        bh=8bKqOjSUUQC1mnRNDLkjrxM4PpNvEvT4NFD5HvX0/1g=;
+        s=default; t=1564148656;
+        bh=WWDUT3heBkJrNGeUFlMj5EXGoxd7CRZ1An8s+5uwkjo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nPtuQRW0/diSn3YIaUDnob/F7aGKpOXza4ldm6pYi+3h7hMCNJB6uIPzU8x8etQ33
-         pKMnamOPa8Z7IeRRFTCo5nJ9lhl65UkcQ9AS+lOpZr/zU03VeEtODxDkkNcl2reyGD
-         0IH+yX5dLEfr02zQke4U9mCSxheiucCWGC7E9Axs=
+        b=0IMp2eqrcS3ytWHzaNSnjx3OI/rsfeSyFalmtLHTxbR6qPBdfUsR63QEk/WbRMukX
+         cSVZip55QLXrABv3HuOUHdcY5cr3Hjx9FPA2+3LQ/LH8Z9HPhjqal0MmnqNDmTl9HM
+         geLE6AGGoKdGACDkqtxmXNT0uKfOJiooE6PZCOXQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Denis Efremov <efremov@ispras.ru>, Willy Tarreau <w@1wt.eu>,
+Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rodolfo Giometti <giometti@enneenne.com>,
+        Greg KH <greg@kroah.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 31/37] floppy: fix out-of-bounds read in copy_buffer
-Date:   Fri, 26 Jul 2019 09:43:26 -0400
-Message-Id: <20190726134332.12626-31-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 28/37] drivers/pps/pps.c: clear offset flags in PPS_SETPARAMS ioctl
+Date:   Fri, 26 Jul 2019 09:43:23 -0400
+Message-Id: <20190726134332.12626-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134332.12626-1-sashal@kernel.org>
 References: <20190726134332.12626-1-sashal@kernel.org>
@@ -59,52 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@ispras.ru>
+From: Miroslav Lichvar <mlichvar@redhat.com>
 
-[ Upstream commit da99466ac243f15fbba65bd261bfc75ffa1532b6 ]
+[ Upstream commit 5515e9a6273b8c02034466bcbd717ac9f53dab99 ]
 
-This fixes a global out-of-bounds read access in the copy_buffer
-function of the floppy driver.
+The PPS assert/clear offset corrections are set by the PPS_SETPARAMS
+ioctl in the pps_ktime structs, which also contain flags.  The flags are
+not initialized by applications (using the timepps.h header) and they
+are not used by the kernel for anything except returning them back in
+the PPS_GETPARAMS ioctl.
 
-The FDDEFPRM ioctl allows one to set the geometry of a disk.  The sect
-and head fields (unsigned int) of the floppy_drive structure are used to
-compute the max_sector (int) in the make_raw_rw_request function.  It is
-possible to overflow the max_sector.  Next, max_sector is passed to the
-copy_buffer function and used in one of the memcpy calls.
+Set the flags to zero to make it clear they are unused and avoid leaking
+uninitialized data of the PPS_SETPARAMS caller to other applications
+that have a read access to the PPS device.
 
-An unprivileged user could trigger the bug if the device is accessible,
-but requires a floppy disk to be inserted.
-
-The patch adds the check for the .sect * .head multiplication for not
-overflowing in the set_geometry function.
-
-The bug was found by syzkaller.
-
-Signed-off-by: Denis Efremov <efremov@ispras.ru>
-Tested-by: Willy Tarreau <w@1wt.eu>
+Link: http://lkml.kernel.org/r/20190702092251.24303-1-mlichvar@redhat.com
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Rodolfo Giometti <giometti@enneenne.com>
+Cc: Greg KH <greg@kroah.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/floppy.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/pps/pps.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 4c6c20376a83..1205472a9f63 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -3239,8 +3239,10 @@ static int set_geometry(unsigned int cmd, struct floppy_struct *g,
- 	int cnt;
+diff --git a/drivers/pps/pps.c b/drivers/pps/pps.c
+index 6eb0db37dd88..574b08af0d98 100644
+--- a/drivers/pps/pps.c
++++ b/drivers/pps/pps.c
+@@ -166,6 +166,14 @@ static long pps_cdev_ioctl(struct file *file,
+ 			pps->params.mode |= PPS_CANWAIT;
+ 		pps->params.api_version = PPS_API_VERS;
  
- 	/* sanity checking for parameters. */
--	if (g->sect <= 0 ||
--	    g->head <= 0 ||
-+	if ((int)g->sect <= 0 ||
-+	    (int)g->head <= 0 ||
-+	    /* check for overflow in max_sector */
-+	    (int)(g->sect * g->head) <= 0 ||
- 	    /* check for zero in F_SECT_PER_TRACK */
- 	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
- 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
++		/*
++		 * Clear unused fields of pps_kparams to avoid leaking
++		 * uninitialized data of the PPS_SETPARAMS caller via
++		 * PPS_GETPARAMS
++		 */
++		pps->params.assert_off_tu.flags = 0;
++		pps->params.clear_off_tu.flags = 0;
++
+ 		spin_unlock_irq(&pps->lock);
+ 
+ 		break;
 -- 
 2.20.1
 
