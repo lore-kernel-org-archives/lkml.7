@@ -2,165 +2,211 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CFAC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 824FAC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64DDD229F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4807E22BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:12:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="aHKVCn8Y"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ZNuO6j75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbfGZPI7 (ORCPT
+        id S2387718AbfGZPMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:08:59 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40274 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728328AbfGZPI6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:08:58 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a93so24828792pla.7
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 08:08:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dWQZR/3W1JJGAqPUD7hTWyfWfaLoNTQhqklPLc/rCo0=;
-        b=aHKVCn8Yp9k/O48xxeey02lLJNycfqq+nT8pu97tqLat8sXh6527ZcHjiLMjFGs8ZZ
-         SzpXGhN97m6q7LoR5xxBb5fekgPrddIS2ckjFbLcS/b41a8DTKGviU3TjgY2guZy2wOV
-         N7hTZrckEmKJ55qJ5XLQRPA1RD8Ilyo39Glr8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dWQZR/3W1JJGAqPUD7hTWyfWfaLoNTQhqklPLc/rCo0=;
-        b=YX7AVPtBZDG3l64zP7E/NuXOYCvm57r/7G3KIE4JU6i6Z3fYWYrbN0ON5k2EjUQ+Jt
-         ZQgZxybuzmVXppKIeQ06qXzAZXIRGGbXnaHUVwQ/rxS/lygC1kmFcpAm3568aQzZQW+T
-         ZSbKDZO9Oha2BJN4KwE9malHHY9RO7HfFLf9s2sQpwFa6Y1gJZYMkIBg6z6+pfZGAW6R
-         bfhG8nLV5VF0eWqibjPANai8XmbyuiA0oKIZA6pHd5BLSa5Hgz6doZM15EOXCmaS4HWv
-         iH2kR63GHdqtLCMfWN7Zu5azeWMTj7pao4OY453miTvTYzP6XlYn5Ee1RQQvuzoDzafR
-         dk1Q==
-X-Gm-Message-State: APjAAAWaOy/hGJK2b8xZroEpCpBOgmFHyBIBRxF0qbGWSyxXeXB3ZDFi
-        q9Dm5+aQn9ULmj9oBUx2lhFc5JQj
-X-Google-Smtp-Source: APXvYqzXibXZSd6IWrSK+XtEpTCaIi3keajeQLn0VdiXnOjUc33BTq98H530Us64OhTV+XaDB3T7Bw==
-X-Received: by 2002:a17:902:7791:: with SMTP id o17mr98018495pll.27.1564153736559;
-        Fri, 26 Jul 2019 08:08:56 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id k36sm54802352pgl.42.2019.07.26.08.08.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 08:08:55 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
-        fmayer@google.com, joaodias@google.com, joelaf@google.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
-        namhyung@google.com, Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
-        tkjos@google.com, Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, wvw@google.com
-Subject: [PATCH v2 2/2] doc: Update documentation for page_idle virtual address indexing
-Date:   Fri, 26 Jul 2019 11:08:44 -0400
-Message-Id: <20190726150845.95720-2-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-In-Reply-To: <20190726150845.95720-1-joel@joelfernandes.org>
-References: <20190726150845.95720-1-joel@joelfernandes.org>
+        Fri, 26 Jul 2019 11:12:34 -0400
+Received: from mail-eopbgr10052.outbound.protection.outlook.com ([40.107.1.52]:6310
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727391AbfGZPMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:12:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SxdfTHbSJ6j/nX56bxMM26ojtbIy644E6neTv6KgnXus8TcXTdgRV04EOFwG2wSiyO7w4idGFDP1PzSECajs3Eg8J5iNlIVmrWtJDgiYm0Qf+FaMdo27c3Cme5YA7sXYbSJz0O84n8A9c8ldXc2BnltqxVgmR+7RsSQ3nR8/2HtkrJDWWAZeC6bu1qZfWZfLiXx9LAfCbJCToriGTufW+RzakGt7IlqBi6JFFrlrr/tj9MTZD+UI06/SSO96dKZVGRc/gghwE4kIQMPqjWY+CF2+HWiGaP0LxkdHOiyGB95NY/+Oktd0vtUcWpRSZ4P+CjR8XE9POLYBhjofUf772Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=guDTCP/M//u6anzpc/1QhmrqiJYuZRYf9Jq6+WNGuco=;
+ b=RuKXU0w1Rc9JXeMJJssb9pTyYZbjeUlMLpYn0ZXWXeytL2Ko0XbyNtcaH41bKnUM5bq3eSAKpVu/7kYgTaWTZ5m5Qn6bB2YyphBzQ63pyBg/de6fH0Xk6xyqC5/IFXE5uPa/pHIY/Qf0BcX4+NXNO5c3Y5Xkw1ToDMeQhujj1ovxonSJapEcCCITr2Aj5SOLnXVqqhsLAwUZtwnT3ltloE1cMVEtV+mYM2xZ8pWPkSLKv/Fpu8HMteAna135xWU570wOZRGRHitugjyUvd+X6jOwc9bnRC2m9z8TG1sPtrJpCE3eVNCIrQCWi7TopXWp0V4BxB2IYQJhNvTzZ4v0Ew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=mellanox.com;dmarc=pass action=none
+ header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=guDTCP/M//u6anzpc/1QhmrqiJYuZRYf9Jq6+WNGuco=;
+ b=ZNuO6j755OOWN6jcfPR+YqUj46AMMiwQjKIPp2219bqL4tbYXWhJtBnojh2koX3fg0+iaGw5VNGWkTZpsbkVFHIfdwBeDfTQ/mSlIERjGinGVB1IhBrYA6pyB2g5vU6TL6lAk+1PXgcejFPmoEz9Pq/LuojnEeaKvvygPED/R4U=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB4240.eurprd05.prod.outlook.com (52.133.12.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.17; Fri, 26 Jul 2019 15:12:28 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880%4]) with mapi id 15.20.2115.005; Fri, 26 Jul 2019
+ 15:12:27 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        =?utf-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v2 5/7] mm/hmm: make full use of walk_page_range()
+Thread-Topic: [PATCH v2 5/7] mm/hmm: make full use of walk_page_range()
+Thread-Index: AQHVQ00O/Bid1fgONUm4ZfIe8GdLfqbdAnIA
+Date:   Fri, 26 Jul 2019 15:12:27 +0000
+Message-ID: <20190726151222.GA12280@mellanox.com>
+References: <20190726005650.2566-1-rcampbell@nvidia.com>
+ <20190726005650.2566-6-rcampbell@nvidia.com>
+In-Reply-To: <20190726005650.2566-6-rcampbell@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQXPR0101CA0007.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:15::20) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: be4e6cd6-6d82-4bcf-d248-08d711dbabe5
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4240;
+x-ms-traffictypediagnostic: VI1PR05MB4240:
+x-microsoft-antispam-prvs: <VI1PR05MB424072768901574CFF66D0D3CFC00@VI1PR05MB4240.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01106E96F6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(39860400002)(376002)(136003)(189003)(199004)(6916009)(2906002)(54906003)(6116002)(4326008)(3846002)(71190400001)(316002)(68736007)(36756003)(52116002)(102836004)(305945005)(25786009)(8676002)(5660300002)(71200400001)(14454004)(99286004)(446003)(1076003)(2616005)(66066001)(6506007)(11346002)(476003)(386003)(53936002)(76176011)(486006)(26005)(64756008)(66574012)(6246003)(66446008)(229853002)(6486002)(66946007)(256004)(14444005)(81166006)(8936002)(33656002)(7736002)(6512007)(6436002)(86362001)(478600001)(81156014)(66556008)(186003)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4240;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 24PAAw4oyA+EBp2KuaxzMKvlqT4QIAcT+vBHyuq9qAL47dcAetx4UwYQQX+YAC91IiGbY8w+WUtx0jnmTsj8Z7hBXfArsI78yoTmhLiE0rULg1pHHc/Twr7Rwpl6tnum91jy+CyrwGJH7oKUifLkNJLYlu5jcyitu41MEfx9IcBM3mmsOFXjbCguTAkYJZzNYKzO/km8IY3cJSTvYBLc0Q8u1iG53xYovfJr+ZTWD6F7CoPkX1Vr0xKaiuheZwpxtPVt8cbUk+TzScsiOooWBNdwka0ovwRugx3JWlL50GR+KqArqDXkaQnnD7Prs0CGMvh9xkjqH56LgzYt1AQ/BI7W/FmG8N+6CT63/h6khKzojEBrOnKyrxgOyiqgHWsFyGLSl8rdR7buOWS8YAINjLBd/1WrcRHi1TMfJJrm/o4=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F90DE2B4ED0D02498F2593B10870A52B@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: be4e6cd6-6d82-4bcf-d248-08d711dbabe5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2019 15:12:27.8518
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4240
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch updates the documentation with the new page_idle tracking
-feature which uses virtual address indexing.
-
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- .../admin-guide/mm/idle_page_tracking.rst     | 43 ++++++++++++++++---
- 1 file changed, 36 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/admin-guide/mm/idle_page_tracking.rst b/Documentation/admin-guide/mm/idle_page_tracking.rst
-index df9394fb39c2..1eeac78c94a7 100644
---- a/Documentation/admin-guide/mm/idle_page_tracking.rst
-+++ b/Documentation/admin-guide/mm/idle_page_tracking.rst
-@@ -19,10 +19,14 @@ It is enabled by CONFIG_IDLE_PAGE_TRACKING=y.
- 
- User API
- ========
-+There are 2 ways to access the idle page tracking API. One uses physical
-+address indexing, another uses a simpler virtual address indexing scheme.
- 
--The idle page tracking API is located at ``/sys/kernel/mm/page_idle``.
--Currently, it consists of the only read-write file,
--``/sys/kernel/mm/page_idle/bitmap``.
-+Physical address indexing
-+-------------------------
-+The idle page tracking API for physical address indexing using page frame
-+numbers (PFN) is located at ``/sys/kernel/mm/page_idle``.  Currently, it
-+consists of the only read-write file, ``/sys/kernel/mm/page_idle/bitmap``.
- 
- The file implements a bitmap where each bit corresponds to a memory page. The
- bitmap is represented by an array of 8-byte integers, and the page at PFN #i is
-@@ -74,6 +78,31 @@ See :ref:`Documentation/admin-guide/mm/pagemap.rst <pagemap>` for more
- information about ``/proc/pid/pagemap``, ``/proc/kpageflags``, and
- ``/proc/kpagecgroup``.
- 
-+Virtual address indexing
-+------------------------
-+The idle page tracking API for virtual address indexing using virtual page
-+frame numbers (VFN) is located at ``/proc/<pid>/page_idle``. It is a bitmap
-+that follows the same semantics as ``/sys/kernel/mm/page_idle/bitmap``
-+except that it uses virtual instead of physical frame numbers.
-+
-+This idle page tracking API does not need deal with PFN so it does not require
-+prior lookups of ``pagemap`` in order to find if page is idle or not. This is
-+an advantage on some systems where looking up PFN is considered a security
-+issue.  Also in some cases, this interface could be slightly more reliable to
-+use than physical address indexing, since in physical address indexing, address
-+space changes can occur between reading the ``pagemap`` and reading the
-+``bitmap``, while in virtual address indexing, the process's ``mmap_sem`` is
-+held for the duration of the access.
-+
-+To estimate the amount of pages that are not used by a workload one should:
-+
-+ 1. Mark all the workload's pages as idle by setting corresponding bits in
-+    ``/proc/<pid>/page_idle``.
-+
-+ 2. Wait until the workload accesses its working set.
-+
-+ 3. Read ``/proc/<pid>/page_idle`` and count the number of bits set.
-+
- .. _impl_details:
- 
- Implementation Details
-@@ -99,10 +128,10 @@ When a dirty page is written to swap or disk as a result of memory reclaim or
- exceeding the dirty memory limit, it is not marked referenced.
- 
- The idle memory tracking feature adds a new page flag, the Idle flag. This flag
--is set manually, by writing to ``/sys/kernel/mm/page_idle/bitmap`` (see the
--:ref:`User API <user_api>`
--section), and cleared automatically whenever a page is referenced as defined
--above.
-+is set manually, by writing to ``/sys/kernel/mm/page_idle/bitmap`` for physical
-+addressing or by writing to ``/proc/<pid>/page_idle`` for virtual
-+addressing (see the :ref:`User API <user_api>` section), and cleared
-+automatically whenever a page is referenced as defined above.
- 
- When a page is marked idle, the Accessed bit must be cleared in all PTEs it is
- mapped to, otherwise we will not be able to detect accesses to the page coming
--- 
-2.22.0.709.g102302147b-goog
-
+T24gVGh1LCBKdWwgMjUsIDIwMTkgYXQgMDU6NTY6NDhQTSAtMDcwMCwgUmFscGggQ2FtcGJlbGwg
+d3JvdGU6DQo+IGhtbV9yYW5nZV9mYXVsdCgpIGNhbGxzIGZpbmRfdm1hKCkgYW5kIHdhbGtfcGFn
+ZV9yYW5nZSgpIGluIGEgbG9vcC4NCj4gVGhpcyBpcyB1bm5lY2Vzc2FyeSBkdXBsaWNhdGlvbiBz
+aW5jZSB3YWxrX3BhZ2VfcmFuZ2UoKSBjYWxscyBmaW5kX3ZtYSgpDQo+IGluIGEgbG9vcCBhbHJl
+YWR5Lg0KPiBTaW1wbGlmeSBobW1fcmFuZ2VfZmF1bHQoKSBieSBkZWZpbmluZyBhIHdhbGtfdGVz
+dCgpIGNhbGxiYWNrIGZ1bmN0aW9uDQo+IHRvIGZpbHRlciB1bmhhbmRsZWQgdm1hcy4NCj4gDQo+
+IFNpZ25lZC1vZmYtYnk6IFJhbHBoIENhbXBiZWxsIDxyY2FtcGJlbGxAbnZpZGlhLmNvbT4NCj4g
+Q2M6ICJKw6lyw7RtZSBHbGlzc2UiIDxqZ2xpc3NlQHJlZGhhdC5jb20+DQo+IENjOiBKYXNvbiBH
+dW50aG9ycGUgPGpnZ0BtZWxsYW5veC5jb20+DQo+IENjOiBDaHJpc3RvcGggSGVsbHdpZyA8aGNo
+QGxzdC5kZT4NCj4gIG1tL2htbS5jIHwgMTMwICsrKysrKysrKysrKysrKysrKysrKysrKy0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCA1NyBpbnNlcnRp
+b25zKCspLCA3MyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9tbS9obW0uYyBiL21t
+L2htbS5jDQo+IGluZGV4IDFiYzAxNGNkZGQ3OC4uODM4Y2QxZDUwNDk3IDEwMDY0NA0KPiArKysg
+Yi9tbS9obW0uYw0KPiBAQCAtODQwLDEzICs4NDAsNDQgQEAgc3RhdGljIGludCBobW1fdm1hX3dh
+bGtfaHVnZXRsYl9lbnRyeShwdGVfdCAqcHRlLCB1bnNpZ25lZCBsb25nIGhtYXNrLA0KPiAgI2Vu
+ZGlmDQo+ICB9DQo+ICANCj4gLXN0YXRpYyB2b2lkIGhtbV9wZm5zX2NsZWFyKHN0cnVjdCBobW1f
+cmFuZ2UgKnJhbmdlLA0KPiAtCQkJICAgdWludDY0X3QgKnBmbnMsDQo+IC0JCQkgICB1bnNpZ25l
+ZCBsb25nIGFkZHIsDQo+IC0JCQkgICB1bnNpZ25lZCBsb25nIGVuZCkNCj4gK3N0YXRpYyBpbnQg
+aG1tX3ZtYV93YWxrX3Rlc3QodW5zaWduZWQgbG9uZyBzdGFydCwNCj4gKwkJCSAgICAgdW5zaWdu
+ZWQgbG9uZyBlbmQsDQo+ICsJCQkgICAgIHN0cnVjdCBtbV93YWxrICp3YWxrKQ0KPiAgew0KPiAt
+CWZvciAoOyBhZGRyIDwgZW5kOyBhZGRyICs9IFBBR0VfU0laRSwgcGZucysrKQ0KPiAtCQkqcGZu
+cyA9IHJhbmdlLT52YWx1ZXNbSE1NX1BGTl9OT05FXTsNCj4gKwlzdHJ1Y3QgaG1tX3ZtYV93YWxr
+ICpobW1fdm1hX3dhbGsgPSB3YWxrLT5wcml2YXRlOw0KPiArCXN0cnVjdCBobW1fcmFuZ2UgKnJh
+bmdlID0gaG1tX3ZtYV93YWxrLT5yYW5nZTsNCj4gKwlzdHJ1Y3Qgdm1fYXJlYV9zdHJ1Y3QgKnZt
+YSA9IHdhbGstPnZtYTsNCj4gKw0KPiArCS8qIElmIHJhbmdlIGlzIG5vIGxvbmdlciB2YWxpZCwg
+Zm9yY2UgcmV0cnkuICovDQo+ICsJaWYgKCFyYW5nZS0+dmFsaWQpDQo+ICsJCXJldHVybiAtRUJV
+U1k7DQo+ICsNCj4gKwkvKg0KPiArCSAqIFNraXAgdm1hIHJhbmdlcyB0aGF0IGRvbid0IGhhdmUg
+c3RydWN0IHBhZ2UgYmFja2luZyB0aGVtIG9yDQo+ICsJICogbWFwIEkvTyBkZXZpY2VzIGRpcmVj
+dGx5Lg0KPiArCSAqIFRPRE86IGhhbmRsZSBwZWVyLXRvLXBlZXIgZGV2aWNlIG1hcHBpbmdzLg0K
+PiArCSAqLw0KPiArCWlmICh2bWEtPnZtX2ZsYWdzICYgKFZNX0lPIHwgVk1fUEZOTUFQIHwgVk1f
+TUlYRURNQVApKQ0KPiArCQlyZXR1cm4gLUVGQVVMVDsNCj4gKw0KPiArCWlmIChpc192bV9odWdl
+dGxiX3BhZ2Uodm1hKSkgew0KPiArCQlpZiAoaHVnZV9wYWdlX3NoaWZ0KGhzdGF0ZV92bWEodm1h
+KSkgIT0gcmFuZ2UtPnBhZ2Vfc2hpZnQgJiYNCj4gKwkJICAgIHJhbmdlLT5wYWdlX3NoaWZ0ICE9
+IFBBR0VfU0hJRlQpDQo+ICsJCQlyZXR1cm4gLUVJTlZBTDsNCj4gKwl9IGVsc2Ugew0KPiArCQlp
+ZiAocmFuZ2UtPnBhZ2Vfc2hpZnQgIT0gUEFHRV9TSElGVCkNCj4gKwkJCXJldHVybiAtRUlOVkFM
+Ow0KPiArCX0NCj4gKw0KPiArCS8qDQo+ICsJICogSWYgdm1hIGRvZXMgbm90IGFsbG93IHJlYWQg
+YWNjZXNzLCB0aGVuIGFzc3VtZSB0aGF0IGl0IGRvZXMgbm90DQo+ICsJICogYWxsb3cgd3JpdGUg
+YWNjZXNzLCBlaXRoZXIuIEhNTSBkb2VzIG5vdCBzdXBwb3J0IGFyY2hpdGVjdHVyZXMNCj4gKwkg
+KiB0aGF0IGFsbG93IHdyaXRlIHdpdGhvdXQgcmVhZC4NCj4gKwkgKi8NCj4gKwlpZiAoISh2bWEt
+PnZtX2ZsYWdzICYgVk1fUkVBRCkpDQo+ICsJCXJldHVybiAtRVBFUk07DQo+ICsNCj4gKwlyZXR1
+cm4gMDsNCj4gIH0NCj4gIA0KPiAgLyoNCj4gQEAgLTk2NSw4MiArOTk2LDM1IEBAIEVYUE9SVF9T
+WU1CT0woaG1tX3JhbmdlX3VucmVnaXN0ZXIpOw0KPiAgICovDQo+ICBsb25nIGhtbV9yYW5nZV9m
+YXVsdChzdHJ1Y3QgaG1tX3JhbmdlICpyYW5nZSwgdW5zaWduZWQgaW50IGZsYWdzKQ0KPiAgew0K
+PiAtCWNvbnN0IHVuc2lnbmVkIGxvbmcgZGV2aWNlX3ZtYSA9IFZNX0lPIHwgVk1fUEZOTUFQIHwg
+Vk1fTUlYRURNQVA7DQo+IC0JdW5zaWduZWQgbG9uZyBzdGFydCA9IHJhbmdlLT5zdGFydCwgZW5k
+Ow0KPiAtCXN0cnVjdCBobW1fdm1hX3dhbGsgaG1tX3ZtYV93YWxrOw0KPiArCXVuc2lnbmVkIGxv
+bmcgc3RhcnQgPSByYW5nZS0+c3RhcnQ7DQo+ICsJc3RydWN0IGhtbV92bWFfd2FsayBobW1fdm1h
+X3dhbGsgPSB7fTsNCj4gIAlzdHJ1Y3QgaG1tICpobW0gPSByYW5nZS0+aG1tOw0KPiAtCXN0cnVj
+dCB2bV9hcmVhX3N0cnVjdCAqdm1hOw0KPiAtCXN0cnVjdCBtbV93YWxrIG1tX3dhbGs7DQo+ICsJ
+c3RydWN0IG1tX3dhbGsgbW1fd2FsayA9IHt9Ow0KPiAgCWludCByZXQ7DQo+ICANCj4gIAlsb2Nr
+ZGVwX2Fzc2VydF9oZWxkKCZobW0tPm1tLT5tbWFwX3NlbSk7DQo+ICANCj4gLQlkbyB7DQo+IC0J
+CS8qIElmIHJhbmdlIGlzIG5vIGxvbmdlciB2YWxpZCBmb3JjZSByZXRyeS4gKi8NCj4gLQkJaWYg
+KCFyYW5nZS0+dmFsaWQpDQo+IC0JCQlyZXR1cm4gLUVCVVNZOw0KPiArCWhtbV92bWFfd2Fsay5y
+YW5nZSA9IHJhbmdlOw0KPiArCWhtbV92bWFfd2Fsay5sYXN0ID0gc3RhcnQ7DQo+ICsJaG1tX3Zt
+YV93YWxrLmZsYWdzID0gZmxhZ3M7DQo+ICsJbW1fd2Fsay5wcml2YXRlID0gJmhtbV92bWFfd2Fs
+azsNCj4gIA0KPiAtCQl2bWEgPSBmaW5kX3ZtYShobW0tPm1tLCBzdGFydCk7DQo+IC0JCWlmICh2
+bWEgPT0gTlVMTCB8fCAodm1hLT52bV9mbGFncyAmIGRldmljZV92bWEpKQ0KPiAtCQkJcmV0dXJu
+IC1FRkFVTFQ7DQoNCkl0IGlzIGhhcmQgdG8gdGVsbCB3aGF0IGlzIGEgY29uZnVzZWQvd3Jvbmcg
+YW5kIHdoYXQgaXMgZGVsaWJlcmF0ZSBpbg0KdGhpcyBjb2RlLi4uDQoNCkN1cnJlbnRseSB0aGUg
+aG1tX3JhbmdlX2ZhdWx0IGludm9rZXMgd2Fsa19wYWdlX3JhbmdlIG9uIGEgVk1BIGJ5IFZNQQ0K
+YmFzaXMsIGFuZCB0aGUgYWJvdmUgcHJldmVudHMgc29tZSBjYXNlcyBvZiB3YWxrLT52bWEgYmVj
+b21pbmcNCk5VTEwsIGJ1dCBub3QgYWxsIC0gZm9yIGluc3RhbmNlIGl0IGRvZXNuJ3QgY2hlY2sg
+Zm9yIHN0YXJ0IDwgdm1hLT52bV9zdGFydC4NCg0KSG93ZXZlciwgY2hlY2tpbmcgaWYgaXQgY2Fu
+IGFjdHVhbGx5IHRvbGVyYXRlIHRoZSB3YWxrLT52bWEgPT0gTlVMTCBpdA0KbG9va3MgbGlrZSBu
+bzoNCg0KIHdhbGtfcGFnZV9yYW5nZQ0KICBmaW5kX3ZtYSA9PSBOVUxMIHx8IHN0YXJ0IDwgdm1f
+c3RhcnQgLT4gd2Fsay0+dm1hID09IE5VTEwNCiAgX193YWxrX3BhZ2VfcmFuZ2UNCiAgICB3YWxr
+X3BnZF9yYW5nZQ0KICAgICAgcHRlX2hvbGUgLyBobW1fdm1hX3dhbGtfaG9sZQ0KICAgICAgICBo
+bW1fdm1hX3dhbGtfaG9sZV8NCiAgICAgICAgIGhtbV92bWFfZG9fZmF1bHQNCiAgICAgICAgICAg
+IGhhbmRsZV9tbV9mYXVsdCh3YWxrLT52bWEsIGFkZHIsIGZsYWdzKQ0KICAgICAgICAgICAgICB2
+bWEtPnZtX21tIDwtLSBPT1BTDQoNCldoaWNoIGtpbmQgb2Ygc3VnZ2VzdHMgdGhlIGZpbmRfdm1h
+IGFib3ZlIHdhcyBhYm91dCBwcmV2ZW50aW5nDQp3YWxrLT52bWEgPT0gTlVMTD8gRG9lcyBzb21l
+dGhpbmcgZWxzZSB0cmlja3kgcHJldmVudCB0aGlzPw0KDQpUaGlzIHBhdGNoIGFsc28gY2hhbmdl
+cyBiZWhhdmlvciBzbyB0aGF0IG1pc3NpbmcgVk1BcyBkb24ndCBhbHdheXMNCnRyaWdnZXIgRUZB
+VUxUICh3aGljaCBpcyBhIGdvb2QgdGhpbmcsIGJ1dCBuZWVkcyB0byBiZSBpbiB0aGUgY29tbWl0
+DQptZXNzYWdlKQ0KDQpJIHN0cm9uZ2x5IGJlbGlldmUgdGhpcyBpcyB0aGUgY29ycmVjdCBkaXJl
+Y3Rpb24gdG8gZ28gaW4sIGFuZCB0aGUgZmFjdA0KdGhhdCB0aGlzIGZ1bmN0aW9uIHJldHVybnMg
+RUZBVUxUIGlmIHRoZXJlIGlzIG5vIFZNQS9pbmNvbXBhdGlibGUgVk1BDQppcyBhY3R1YWxseSBh
+IHNlbWFudGljIGJ1ZyB3ZSBuZWVkIHRvIGZpeCBiZWZvcmUgaXQgaXMgYSB1c2FibGUgQVBJLg0K
+DQpJZSBjb25zaWRlciB0aGUgdXNlciBkb2VzIHNvbWV0aGluZyBsaWtlDQogIHB0ciA9IG1tYXAo
+MCwgUEFHRV9TSVpFIC4uKQ0KICBtciA9IGliX3JlZ19tcihwdHIgLSBQQUdFX1NJWkUsIHB0ciAr
+IDMqUEFHRV9TSVpFLCBJQlZfQUNDRVNTX09OX0RFTUFORCkNCg0KVGhlbiBpbiB0aGUga2VybmVs
+IEkgd2FudCB0byBkbyBobW1fcmFuZ2VfZmF1bHQoSE1NX0ZBVUxUX1NOQVBTSE9UKQ0KYWNyb3Nz
+IHRoZSBNUiBWQSBhbmQgZ2V0IGEgcGZucyBhcnJheSB0aGF0IHNheXMgUEFHRSAwIGlzIEZBVUxU
+LCBQQUdFDQoxIGlzIFIvVywgUEFHRSAyIGlzIEZBVUxULg0KDQpJbnN0ZWFkIHRoZSBlbnRpcmUg
+Y2FsbCBmYWlscyBiZWNhdXNlIHRoZXJlIGlzIG5vIFZNQSBhdCB0aGUgc3RhcnRpbmcNCm9mZnNl
+dCwgb3IgdGhlIFZNQSBoYWQgdGhlIHdyb25nIGZsYWdzLCBvciBzb21ldGhpbmcuDQoNCldoYXQg
+aXQgc2hvdWxkIGRvIGlzIHBvcHVsYXRlIHRoZSByZXN1bHQgd2l0aCBGQVVMVCBmb3IgdGhlIGdh
+cCBwYXJ0DQpvZiB0aGUgVkEgcmFuZ2UgYW5kIGNvbnRpbnVlIHRvIHRoZSBuZXh0IFZNQS4NCg0K
+VGhlIHNhbWUgY29tbWVudCBhcHBsaWVzIHRvIHRoZSBpbXBsZW1lbnRhdGlvbiBvZiB0aGUgd2Fs
+a2VyIHRlc3QNCmZ1bmN0aW9uLCBpdCBzaG91bGQgcmV0dXJuIDEgdG8gc2tpcCB0aGUgVk1BIGFu
+ZCBmaWxsIFBGTlMgd2l0aCBGQVVMVA0Kd2hlbiB0aGVyZSBpcyBhIG1pc21hdGNoIFZNQSwgbm90
+IGZhaWwgZW50aXJlbHkuDQoNClBlcmhhcHMgdGhlcmUgd2FzIHNvbWUgdGhvdWdodCB0aGF0IHRo
+ZSBmYXVsdCB2ZXJzaW9uIHNob3VsZCBmYWlsIHRvDQp0ZWxsIHRoZSBwYWdlZmF1bHQgaGFuZGxl
+ciB0aGVyZSBpcyBub3RoaW5nIHRvIERNQSwgYnV0IGV2ZW4gdGhhdCBpcw0Kbm90IGVudGlyZWx5
+IGRlc2lyYWJsZSwgSSdkIGxpa2UgdG8gaGF2ZSAnZmF1bHQgYXJvdW5kJyBzZW1hbnRpY3MsIGlm
+DQp3ZSBhcmUgZ29pbmcgdG8gYWxsIHRoZSB3b3JrIG9mIGRvaW5nIGEgZmV3IFBURXMsIGxldHMg
+ZG8gYSBjaHVuay4gSQ0Kb25seSBjYXJlIGlmIHRoZSBjcml0aWNhbCBwYWdlKHMpIHRyaWdnZXJp
+bmcgdGhlIGZhdWx0IGNvdWxkbid0IGJlDQpmYXVsdGVkIGluLCB0aGUgb3RoZXJzIGNhbiByZW1h
+aW4gYXMgcGZuIEZBVUxULg0KDQpUbyBwcm9jZWVkIHdpdGggdGhpcyBwYXRjaCB3ZSBuZWVkIHRv
+IGNvbmZpcm0vZGVueSB0aGUgYWJvdmUgdHJhY2UuIEkNCnRoaW5rIGl0IHByb2JhYmx5IGNhbiBi
+ZSBmaXhlZCBlYXNpbHkgKGFzIGFub3RoZXIgcGF0Y2gpIGJ5IGNoZWNraW5nDQpmb3Igd2Fsay0+
+dm1hID09IE5VTEwgaW4gdGhlIHJpZ2h0IHBsYWNlcy4NCg0KSSByZWFsbHkgd291bGQgbGlrZSB0
+byBzZWUgYSB0ZXN0IGZvciB0aGlzIGZ1bmN0aW9uIHRvbyA6KCBJdCBoYXMgbG90cw0KYW5kIGxv
+dHMgb2YgZWRnZSBjYXNlcyB0aGF0IG5lZWQgdGhlIGJlIGNvbXByZWhlbnNpdmVseSBleHBsb3Jl
+ZA0KYmVmb3JlIHdlIGNhbiBjYWxsIHRoaXMgd29ya2luZy4uDQoNCkphc29uDQo=
