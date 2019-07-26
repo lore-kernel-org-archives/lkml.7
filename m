@@ -2,243 +2,136 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C35C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FCFC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2A322BEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13D02238C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:08:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akcpUf2+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ClS+8s1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbfGZJIg (ORCPT
+        id S1726349AbfGZJIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:08:36 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33781 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfGZJIg (ORCPT
+        Fri, 26 Jul 2019 05:08:46 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41208 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfGZJIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:08:36 -0400
-Received: by mail-pf1-f196.google.com with SMTP id g2so24213511pfq.0;
-        Fri, 26 Jul 2019 02:08:35 -0700 (PDT)
+        Fri, 26 Jul 2019 05:08:46 -0400
+Received: by mail-pg1-f195.google.com with SMTP id x15so14127783pgg.8;
+        Fri, 26 Jul 2019 02:08:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Sl9ak2o2uQzwNPD5/4s22uTgucUrMMNJrOBG4XX3NNQ=;
-        b=akcpUf2+qYcrl7GEwXjRMLmRnhSMBI0S28EtF1EBs4ISYZGuZYFYUL6MhDgnf80NBS
-         JkXh2FWYcJOQD1B9VPLEeOnSNczCl8hw106N4ancPc0st6mmcW/0x4AVJYdTKR5EBejD
-         Cp3dlHwaEV18ZtEtxa4lrlTq/l3Wz76dlZmUvnksq/r6WLlxsOv38/NM63KdZ/Lr5SdO
-         yCh1igmU9qhoP/NGOkvJROUHo/NgPFm+3z6M/ckT8Dqw8Ya2aGvV2r0ZB7PTmJjuh7F+
-         6M1h6pDK6h3YonjTikTwv0g8y/4S40R+bKAgxsTFLIUivMNH4x98DB3MXu1i6TPemQuY
-         kRIQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=qZ3ZKSgzGFIWHktn9t7jIbU1W6udKcTTMQPoVRz+KVo=;
+        b=ClS+8s1Cz7EcO2ub0XocOevCDQKxWYdq0ffymaP7Idft193I1SQDTjCqYCrSYBttsX
+         uKu0lXaiRoHgZD9Rsm2Qm94g1C1WpvIILQxqpbOq0hBaZ9rdo6IMc9vxsKrLZjkpr2TD
+         4ZpIhgGolpTBchOhFNV8/WvHdn1J474k5+0fy+kGOjKVwPa0bI6OmD+QLl3qBrQm47tX
+         oEvlGSibvVJkAKc6fxPw/AWh0Jm/7/9zMEKM6ZZc95a1eQ0NWAZNANAy653R6Yob5WW7
+         W53rKIDmKAOHwtQGCEa3HwAnHtt8Cqj3ef14mxLzjqsGGbR1GdJpGx+/w+s0EUBtC9Pv
+         ND4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Sl9ak2o2uQzwNPD5/4s22uTgucUrMMNJrOBG4XX3NNQ=;
-        b=DAXhhV2bF41pWQsgv1DFzoUGbFnWPC9yClvPKiB4+d1sXD0k8dPet5lFALbPfZ3TEy
-         9ELTMONuLpomuA935F7oj9Bu+3WGDWqz54U/TNrAM1zau1qfeI/k1y6s6QOP96T599fR
-         YmwCJSyivdhIJd2mW2X9ZcKlRTExBNls4gphaUX9xCf2yf7YYfti1aSZGB2GGooeQNk0
-         qJAhmrPg37ro6tPjhHNHRQXy4e4wLpvohzSqPLxG56SmE24DRMoaMOM3uwsvz6ju8g20
-         h77kQln4FZsqg4hu2n8Vhpvxvs2684cxEiXwIFpsWxvxyF6omg1CSpr5CSg8TK2L4EgF
-         dJEg==
-X-Gm-Message-State: APjAAAVi00Dz3BFJom+W9tp7tLO5+LJ6Sw9c8wz+11+7VWLvvx0/qsLt
-        h9cUmHirYjrnDemTrS/jmQM=
-X-Google-Smtp-Source: APXvYqzmH4ONSATgubzOLMnn8csvaEAeMHceOnU9JLK0FdSn4cekseMXU34W0DbTlt/Ieue3yuqqhA==
-X-Received: by 2002:a65:65c5:: with SMTP id y5mr89541205pgv.342.1564132114939;
-        Fri, 26 Jul 2019 02:08:34 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id z24sm93209667pfr.51.2019.07.26.02.08.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 02:08:34 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Kevin Tsai <ktsai@capellamicro.com>,
-        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] iio: light: Use device-managed APIs
-Date:   Fri, 26 Jul 2019 17:08:29 +0800
-Message-Id: <20190726090829.16979-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=qZ3ZKSgzGFIWHktn9t7jIbU1W6udKcTTMQPoVRz+KVo=;
+        b=uNomoiN3xn0eYVyP72PmZyYUmD9H2FWQI1UUTAuOcXhhwRDR6drVW0lCP164/DVkqA
+         BBx4BKI/63peITO3V9GT5yBOcxSe/Ymvd8qPo3XJS1zRQlnT83zo1dg3666rB3Mdu5GH
+         /8wNd+tjQaTpr5vGIkCJSR37FnH7Kcv6UMNhEP0TFC5xG+DwOL7jFo1ySdtqRbsYmLxH
+         mh4bYfvQ5WimEbU3tLlSJQZPzeQZ2/IXIOy3m4whObxNlAFfy3zOje8fqHLngSVvCm3l
+         7KB0pLQrtiHEhws9AtdlcX2so+eluKsCqp0q7G/w1oxleRKA4s6dycFMf9J/ElJ7PMbY
+         3nvw==
+X-Gm-Message-State: APjAAAVvqJwMRp+wXeD7aZE4caWqPUodvKgKZJrA5ofJR/c9hkHeW8Lm
+        9IBTL70Ao09HimigZY2NlHfxeejJoZ0=
+X-Google-Smtp-Source: APXvYqxLxzzjxa5LRT4/eu5YLMxw4OF8Vnun/M9e4pupJJcFwtKj/4Ask1Z/Z0HAcDPyv07OiglrwQ==
+X-Received: by 2002:aa7:8b11:: with SMTP id f17mr21220225pfd.19.1564132125476;
+        Fri, 26 Jul 2019 02:08:45 -0700 (PDT)
+Received: from ?IPv6:2402:f000:4:72:808::177e? ([2402:f000:4:72:808::177e])
+        by smtp.gmail.com with ESMTPSA id b190sm42665669pga.37.2019.07.26.02.08.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jul 2019 02:08:45 -0700 (PDT)
+Subject: Re: [PATCH] input: touchscreen: wm97xx-core: Fix possible
+ null-pointer dereferences in wm97xx_ts_input_open()
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, allison@lohutok.net, rdunlap@infradead.org,
+        patches@opensource.cirrus.com, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190726084816.8487-1-baijiaju1990@gmail.com>
+ <20190726090626.GA54126@ediswmail.ad.cirrus.com>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <8abe9ecd-d6b4-1892-e496-edeeb62199c4@gmail.com>
+Date:   Fri, 26 Jul 2019 17:08:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20190726090626.GA54126@ediswmail.ad.cirrus.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use device-managed APIs to simplify the code.
-The remove functions are redundant now and can
-be deleted.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/iio/light/cm3323.c | 31 ++++++++++-----------------
- drivers/iio/light/si1145.c | 44 ++++++++++++++------------------------
- 2 files changed, 27 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/iio/light/cm3323.c b/drivers/iio/light/cm3323.c
-index 50f3438c2b49..fd352c0a4507 100644
---- a/drivers/iio/light/cm3323.c
-+++ b/drivers/iio/light/cm3323.c
-@@ -101,15 +101,16 @@ static int cm3323_init(struct iio_dev *indio_dev)
- 	return 0;
- }
- 
--static void cm3323_disable(struct iio_dev *indio_dev)
-+static void cm3323_disable(void *data)
- {
- 	int ret;
--	struct cm3323_data *data = iio_priv(indio_dev);
-+	struct iio_dev *indio_dev = data;
-+	struct cm3323_data *cm_data = iio_priv(indio_dev);
- 
--	ret = i2c_smbus_write_word_data(data->client, CM3323_CMD_CONF,
-+	ret = i2c_smbus_write_word_data(cm_data->client, CM3323_CMD_CONF,
- 					CM3323_CONF_SD_BIT);
- 	if (ret < 0)
--		dev_err(&data->client->dev, "Error writing reg_conf\n");
-+		dev_err(&cm_data->client->dev, "Error writing reg_conf\n");
- }
- 
- static int cm3323_set_it_bits(struct cm3323_data *data, int val, int val2)
-@@ -243,25 +244,16 @@ static int cm3323_probe(struct i2c_client *client,
- 		return ret;
- 	}
- 
--	ret = iio_device_register(indio_dev);
-+	ret = devm_add_action_or_reset(&client->dev, cm3323_disable, indio_dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = devm_iio_device_register(&client->dev, indio_dev);
- 	if (ret < 0) {
- 		dev_err(&client->dev, "failed to register iio dev\n");
--		goto err_init;
-+		return ret;
- 	}
- 
--	return 0;
--err_init:
--	cm3323_disable(indio_dev);
--	return ret;
--}
--
--static int cm3323_remove(struct i2c_client *client)
--{
--	struct iio_dev *indio_dev = i2c_get_clientdata(client);
--
--	iio_device_unregister(indio_dev);
--	cm3323_disable(indio_dev);
--
- 	return 0;
- }
- 
-@@ -276,7 +268,6 @@ static struct i2c_driver cm3323_driver = {
- 		.name = CM3323_DRV_NAME,
- 	},
- 	.probe		= cm3323_probe,
--	.remove		= cm3323_remove,
- 	.id_table	= cm3323_id,
- };
- 
-diff --git a/drivers/iio/light/si1145.c b/drivers/iio/light/si1145.c
-index 6579d2418814..61867552b27c 100644
---- a/drivers/iio/light/si1145.c
-+++ b/drivers/iio/light/si1145.c
-@@ -1271,13 +1271,14 @@ static int si1145_probe_trigger(struct iio_dev *indio_dev)
- 	return 0;
- }
- 
--static void si1145_remove_trigger(struct iio_dev *indio_dev)
-+static void si1145_remove_trigger(void *data)
- {
--	struct si1145_data *data = iio_priv(indio_dev);
-+	struct iio_dev *indio_dev = data;
-+	struct si1145_data *si_data = iio_priv(indio_dev);
- 
--	if (data->trig) {
--		iio_trigger_unregister(data->trig);
--		data->trig = NULL;
-+	if (si_data->trig) {
-+		iio_trigger_unregister(si_data->trig);
-+		si_data->trig = NULL;
- 	}
- }
- 
-@@ -1332,7 +1333,8 @@ static int si1145_probe(struct i2c_client *client,
- 	if (ret < 0)
- 		return ret;
- 
--	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-+	ret = devm_iio_triggered_buffer_setup(&client->dev,
-+		indio_dev, NULL,
- 		si1145_trigger_handler, &si1145_buffer_setup_ops);
- 	if (ret < 0)
- 		return ret;
-@@ -1340,23 +1342,21 @@ static int si1145_probe(struct i2c_client *client,
- 	if (client->irq) {
- 		ret = si1145_probe_trigger(indio_dev);
- 		if (ret < 0)
--			goto error_free_buffer;
-+			return ret;
-+
-+		ret = devm_add_action_or_reset(&client->dev,
-+					si1145_remove_trigger, indio_dev);
-+		if (ret < 0)
-+			return ret;
-+
- 	} else {
- 		dev_info(&client->dev, "no irq, using polling\n");
- 	}
- 
--	ret = iio_device_register(indio_dev);
-+	ret = devm_iio_device_register(&client->dev, indio_dev);
- 	if (ret < 0)
--		goto error_free_trigger;
-+		return ret;
- 
- 	return 0;
--
--error_free_trigger:
--	si1145_remove_trigger(indio_dev);
--error_free_buffer:
--	iio_triggered_buffer_cleanup(indio_dev);
--
--	return ret;
- }
- 
- static const struct i2c_device_id si1145_ids[] = {
-@@ -1371,23 +1371,11 @@ static const struct i2c_device_id si1145_ids[] = {
- };
- MODULE_DEVICE_TABLE(i2c, si1145_ids);
- 
--static int si1145_remove(struct i2c_client *client)
--{
--	struct iio_dev *indio_dev = i2c_get_clientdata(client);
--
--	iio_device_unregister(indio_dev);
--	si1145_remove_trigger(indio_dev);
--	iio_triggered_buffer_cleanup(indio_dev);
--
--	return 0;
--}
--
- static struct i2c_driver si1145_driver = {
- 	.driver = {
- 		.name   = "si1145",
- 	},
- 	.probe  = si1145_probe,
--	.remove = si1145_remove,
- 	.id_table = si1145_ids,
- };
- 
--- 
-2.20.1
+On 2019/7/26 17:06, Charles Keepax wrote:
+> On Fri, Jul 26, 2019 at 04:48:16PM +0800, Jia-Ju Bai wrote:
+>> In wm97xx_ts_input_open(), there is an if statement on line 507 to check
+>> whether wm->mach_ops is NULL:
+>>      if (wm->mach_ops && wm->mach_ops->acc_enabled)
+>>
+>> When wm->mach_ops is NULL, it is used on line 521:
+>>      wm97xx_init_pen_irq(wm);
+>>          BUG_ON(!wm->mach_ops->irq_enable);
+>>          BUG_ON(!wm->mach_ops->irq_gpio);
+>>          wm97xx_reg_write(..., reg & ~(wm->mach_ops->irq_gpio))
+>>
+>> Thus, possible null-pointer dereferences may occur.
+>>
+>> To fix these bugs, wm->mach_ops is checked before calling
+>> wm97xx_init_pen_irq().
+>>
+>> These bugs found by a static analysis tool STCheck written by us.
+>>
+>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+>> ---
+>>   drivers/input/touchscreen/wm97xx-core.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/input/touchscreen/wm97xx-core.c b/drivers/input/touchscreen/wm97xx-core.c
+>> index 0a174bd82915..f7bd0726a577 100644
+>> --- a/drivers/input/touchscreen/wm97xx-core.c
+>> +++ b/drivers/input/touchscreen/wm97xx-core.c
+>> @@ -517,7 +517,7 @@ static int wm97xx_ts_input_open(struct input_dev *idev)
+>>   	wm->ts_reader_interval = wm->ts_reader_min_interval;
+>>   
+>>   	wm->pen_is_down = 0;
+>> -	if (wm->pen_irq)
+>> +	if (wm->pen_irq && wm->mach_ops)
+>>   		wm97xx_init_pen_irq(wm);
+>>   	else
+>>   		dev_err(wm->dev, "No IRQ specified\n");
+> This doesn't quite feel like the right fix as it would print an
+> error message saying "No IRQ specified", in the case the IRQ is
+> specified but the mach_ops have not been set.
+>
+> I would suggest either extending the existing BUG_ON or adding a
+> new check in wm97xx_init_pen_irq.
+
+Thanks for the advice.
+I will send a v2 patch of adding a new check in wm97xx_init_pen_irq().
+
+
+Best wishes,
+Jia-Ju Bai
 
