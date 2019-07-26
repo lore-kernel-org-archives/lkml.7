@@ -2,101 +2,70 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D23D9C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7834CC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB03C22CED
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C6A22CED
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfGZJpr (ORCPT
+        id S1726439AbfGZJqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:45:47 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:32956 "EHLO a.mx.secunet.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfGZJpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:45:46 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id C392A20268;
-        Fri, 26 Jul 2019 11:45:44 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id lEmaeQYyVd6U; Fri, 26 Jul 2019 11:45:14 +0200 (CEST)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id 897FB201E1;
-        Fri, 26 Jul 2019 11:45:14 +0200 (CEST)
-Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
- (10.53.40.204) with Microsoft SMTP Server id 14.3.468.0; Fri, 26 Jul 2019
- 11:45:14 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 31D303180409;
- Fri, 26 Jul 2019 11:45:14 +0200 (CEST)
-Date:   Fri, 26 Jul 2019 11:45:14 +0200
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: key: af_key: Fix possible null-pointer dereferences
- in pfkey_send_policy_notify()
-Message-ID: <20190726094514.GD14601@gauss3.secunet.de>
-References: <20190724093509.1676-1-baijiaju1990@gmail.com>
+        Fri, 26 Jul 2019 05:46:15 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42258 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfGZJqP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:46:15 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hqwnk-0007TE-1C; Fri, 26 Jul 2019 09:46:12 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        David Ahern <dsahern@gmail.com>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: neigh: remove redundant assignment to variable bucket
+Date:   Fri, 26 Jul 2019 10:46:11 +0100
+Message-Id: <20190726094611.3597-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190724093509.1676-1-baijiaju1990@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 05:35:09PM +0800, Jia-Ju Bai wrote:
-> In pfkey_send_policy_notify(), there is an if statement on line 3081 to
-> check whether xp is NULL:
->     if (xp && xp->type != XFRM_POLICY_TYPE_MAIN)
-> 
-> When xp is NULL, it is used by key_notify_policy() on line 3090:
->     key_notify_policy(xp, ...)
->         pfkey_xfrm_policy2msg_prep(xp) -- line 2211
->             pfkey_xfrm_policy2msg_size(xp) -- line 2046
->                 for (i=0; i<xp->xfrm_nr; i++) -- line 2026
->                 t = xp->xfrm_vec + i; -- line 2027
->     key_notify_policy(xp, ...)
->         xp_net(xp) -- line 2231
->             return read_pnet(&xp->xp_net); -- line 534
+From: Colin Ian King <colin.king@canonical.com>
 
-Please don't quote random code lines, explain the
-problem instead.
+The variable bucket is being initialized with a value that is never
+read and it is being updated later with a new value in a following
+for-loop. The initialization is redundant and can be removed.
 
-> 
-> Thus, possible null-pointer dereferences may occur.
-> 
-> To fix these bugs, xp is checked before calling key_notify_policy().
-> 
-> These bugs are found by a static analysis tool STCheck written by us.
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
->  net/key/af_key.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/net/key/af_key.c b/net/key/af_key.c
-> index b67ed3a8486c..ced54144d5fd 100644
-> --- a/net/key/af_key.c
-> +++ b/net/key/af_key.c
-> @@ -3087,6 +3087,8 @@ static int pfkey_send_policy_notify(struct xfrm_policy *xp, int dir, const struc
->  	case XFRM_MSG_DELPOLICY:
->  	case XFRM_MSG_NEWPOLICY:
->  	case XFRM_MSG_UPDPOLICY:
-> +		if (!xp)
-> +			break;
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ net/core/neighbour.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I think this can not happen. Who sends one of these notifications
-without a pointer to the policy?
+diff --git a/net/core/neighbour.c b/net/core/neighbour.c
+index f79e61c570ea..5480edff0c86 100644
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -3033,7 +3033,7 @@ static struct neighbour *neigh_get_first(struct seq_file *seq)
+ 	struct net *net = seq_file_net(seq);
+ 	struct neigh_hash_table *nht = state->nht;
+ 	struct neighbour *n = NULL;
+-	int bucket = state->bucket;
++	int bucket;
+ 
+ 	state->flags &= ~NEIGH_SEQ_IS_PNEIGH;
+ 	for (bucket = 0; bucket < (1 << nht->hash_shift); bucket++) {
+-- 
+2.20.1
 
