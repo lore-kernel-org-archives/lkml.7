@@ -2,101 +2,111 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02B0C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7180C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6EE022C7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:18:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="zOS6XRj0"
+	by mail.kernel.org (Postfix) with ESMTP id C2CBB22C7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbfGZCSK (ORCPT
+        id S1726166AbfGZCTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 22:18:10 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:21982 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfGZCSK (ORCPT
+        Thu, 25 Jul 2019 22:19:19 -0400
+Received: from twhmllg4.macronix.com ([122.147.135.202]:60926 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfGZCTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 22:18:10 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x6Q2HpYX016459;
-        Fri, 26 Jul 2019 11:17:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x6Q2HpYX016459
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564107471;
-        bh=sP8514OambOv5RPYsCOuewPkI9Z9loIm68XJqeC4lrU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=zOS6XRj0+hlcW4b/6zpOW0Zr5pw6BuIo22oRb8e9zrpc3c7QXcJXOt2ysHjBDiUjC
-         oolxTvpoAk2+bVVxbnWLGVOv3xKntaKnEZLOwUwTnQfzmD0ZJ+hB7ocnYLcqzM4xJI
-         F/AS2ptsKi8acYM75T8rkRW78vDVY7UHGA1x/YvQ+Lb3WS5kqxp0/DA/KFNu6YjZ/i
-         q76l7DpWrkY9QXA1BWtTA0dWDgy67qNl3HJ+wkcGgs7IEf5ajk4IjkBnJLnTLHpEHb
-         HIOM+ZjBXnKVN0QHr89Q781FphEymRqErOL+SWhZw6JbkGT66LqhqucUYJK6KdpCOx
-         Z4Xd4ohMHRLKQ==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: clean-up subdir-ym computation
-Date:   Fri, 26 Jul 2019 11:17:47 +0900
-Message-Id: <20190726021747.5021-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 25 Jul 2019 22:19:18 -0400
+Received: from localhost.localdomain ([172.17.195.96])
+        by TWHMLLG4.macronix.com with ESMTP id x6Q2Iasl095779;
+        Fri, 26 Jul 2019 10:18:38 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+From:   Mason Yang <masonccyang@mxic.com.tw>
+To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        devicetree@vger.kernel.org
+Cc:     juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>,
+        lee.jones@linaro.org, sergei.shtylyov@cogentembedded.com,
+        Mason Yang <masonccyang@mxic.com.tw>, marek.vasut@gmail.com,
+        miquel.raynal@bootlin.com
+Subject: [PATCH v15 2/2] dt-bindings: spi: Document Renesas R-Car Gen3 RPC-IF controller bindings
+Date:   Fri, 26 Jul 2019 10:42:55 +0800
+Message-Id: <1564108975-27423-3-git-send-email-masonccyang@mxic.com.tw>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1564108975-27423-1-git-send-email-masonccyang@mxic.com.tw>
+References: <1564108975-27423-1-git-send-email-masonccyang@mxic.com.tw>
+X-MAIL: TWHMLLG4.macronix.com x6Q2Iasl095779
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The intermediate variables __subdir-{y,m} are unneeded.
+Dcument the bindings used by the Renesas R-Car Gen3 RPC-IF controller.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
+ .../devicetree/bindings/spi/spi-renesas-rpc.txt    | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
 
- scripts/Makefile.lib | 17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
-
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 41c50f9461e5..444574963cb5 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -20,27 +20,20 @@ obj-m := $(filter-out $(obj-y),$(obj-m))
- # Filter out objects already built-in
- lib-y := $(filter-out $(obj-y), $(sort $(lib-y) $(lib-m)))
- 
-+# Subdirectories we need to descend into
-+subdir-ym := $(sort $(subdir-y) $(subdir-m) $(patsubst %/,%, $(filter %/, $(obj-y) $(obj-m))))
+diff --git a/Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt b/Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
+new file mode 100644
+index 0000000..d929850
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
+@@ -0,0 +1,46 @@
++Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
++---------------------------------------------------------
 +
- # Determine modorder.
- # Unfortunately, we don't have information about ordering between -y
- # and -m subdirs.  Just put -y's first.
- modorder	:= $(patsubst %/,%/modules.order, $(filter %/, $(obj-y)) $(obj-m:.o=.ko))
- 
- # Handle objects in subdirs
--# ---------------------------------------------------------------------------
--# o if we encounter foo/ in $(obj-y), replace it by foo/built-in.a
--#   and add the directory to the list of dirs to descend into: $(subdir-y)
--# o if we encounter foo/ in $(obj-m), remove it from $(obj-m)
--#   and add the directory to the list of dirs to descend into: $(subdir-m)
--__subdir-y	:= $(patsubst %/,%,$(filter %/, $(obj-y)))
--subdir-y	+= $(__subdir-y)
--__subdir-m	:= $(patsubst %/,%,$(filter %/, $(obj-m)))
--subdir-m	+= $(__subdir-m)
-+# When we encounter foo/ in $(obj-y), link foo/built-in.a into vmlinux,
-+# but we do not do that for $(obj-m)
- obj-y		:= $(patsubst %/, %/built-in.a, $(obj-y))
- obj-m		:= $(filter-out %/, $(obj-m))
- 
--# Subdirectories we need to descend into
--subdir-ym	:= $(sort $(subdir-y) $(subdir-m))
--
- # if $(foo-objs), $(foo-y), or $(foo-m) exists, foo.o is a composite object
- multi-used-y := $(sort $(foreach m,$(obj-y), $(if $(strip $($(m:.o=-objs)) $($(m:.o=-y))), $(m))))
- multi-used-m := $(sort $(foreach m,$(obj-m), $(if $(strip $($(m:.o=-objs)) $($(m:.o=-y)) $($(m:.o=-m))), $(m))))
++Required properties:
++- compatible: should be an SoC-specific compatible value, followed by
++		"renesas,rcar-gen3-rpc" as a fallback.
++		supported SoC-specific values are:
++		"renesas,r8a77980-rpc"	(R-Car V3H)
++		"renesas,r8a77995-rpc"	(R-Car D3)
++- reg: should contain three register areas:
++       first for the base address of RPC-IF registers,
++       second for the direct mapping read mode and
++       third for the write buffer area.
++- reg-names: should contain "regs", "dirmap" and "wbuf"
++- clocks: should contain the clock phandle/specifier pair for the module clock.
++- clock-names: should contain "rpc"
++- power-domains: should contain the power domain phandle/secifier pair.
++- resets: should contain the reset controller phandle/specifier pair.
++- #address-cells: should be 1
++- #size-cells: should be 0
++- flash: should be represented by a subnode of the RPC-IF node,
++	 which "compatible" property contains "jedec,spi-nor", it presents
++	 SPI is used.
++
++Example:
++
++	rpc: spi@ee200000 {
++		compatible = "renesas,r8a77995-rpc", "renesas,rcar-gen3-rpc";
++		reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 0x4000000>,
++		      <0 0xee208000 0 0x100>;
++		reg-names = "regs", "dirmap", "wbuf";
++		clocks = <&cpg CPG_MOD 917>;
++		clock-names = "rpc";
++		power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++		resets = <&cpg 917>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		flash@0 {
++			compatible = "jedec,spi-nor";
++			reg = <0>;
++			spi-max-frequency = <40000000>;
++			spi-tx-bus-width = <1>;
++			spi-rx-bus-width = <1>;
++		};
++	};
 -- 
-2.17.1
+1.9.1
 
