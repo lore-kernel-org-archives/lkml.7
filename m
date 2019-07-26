@@ -2,84 +2,160 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82192C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D769C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50FB22171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 147F62171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:58:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PF5cAUdu";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fI8H3wgD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbfGZJ5q (ORCPT
+        id S1726211AbfGZJ6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:57:46 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34308 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfGZJ5q (ORCPT
+        Fri, 26 Jul 2019 05:58:24 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48312 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbfGZJ6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:57:46 -0400
-Received: by mail-qt1-f196.google.com with SMTP id k10so52062515qtq.1;
-        Fri, 26 Jul 2019 02:57:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/iufb0TTF1GAeZGPOnqhrgxVKxrEycW/hHzn4npZ/Lk=;
-        b=G722eRD8jWAb3CJJzKki0E0uH1a8sQkU4UrBTT9nwheBdXXZ/Zip0wP4BcLHBs0tqw
-         F/j57OTGVO9vYXlShXw2Q2OSIoXkpTnL3b3gkZBoiCtFuJ8B0uEPjStXR10ewQgCD+T2
-         fpe9SA36WLUDEbXfHfQDtmwDtOVaEVaz0mWH8Frh1zS51/PBkfTam/jCDBWOZvgVILlO
-         Qz4Fwwjy9RdkVMyXSiZQk4A7bw/IDyBOQKEN3BC+VOZHT2V6uIsTG/GEiHS9p+quzQJP
-         DFowklglHyEf/alNDoyEG2k+iAdyfO78TR9t+X0Vpu2ehcFXztyg21Vh7tfo/JDob1wf
-         2iUA==
-X-Gm-Message-State: APjAAAU8UFKSKF0VNmY/fKNuW++Y12Yc9nfGy9VAYVga0BBrb94EkYuf
-        iQIR06EOCQ00twok+U3g6vQYWSYe9NYxzxXD6W88uYlB
-X-Google-Smtp-Source: APXvYqx8077dqguPqEFI6+OlyN3ofw5NkRSHCv3ii7U127hZoYr0bYgeSV/phYbejddupJV+eJ/33u2deWUNPfAQvk8=
-X-Received: by 2002:aed:33a4:: with SMTP id v33mr63995596qtd.18.1564135065054;
- Fri, 26 Jul 2019 02:57:45 -0700 (PDT)
+        Fri, 26 Jul 2019 05:58:23 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D53256053D; Fri, 26 Jul 2019 09:58:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564135102;
+        bh=j3uQJTmCdq40VmREaWK3WDQwD/oEO5ZQLNR/cHQZdEY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PF5cAUdujLBY8RnoHNG1tNPu/IawbietXTGJVJCajf07HEuJr2W8B+6Fbj3jHIY7w
+         Q62u2hcbjB5x/o6QXZtZVec9behzfiqTcwfhIPh88dnzML1OmEGx/Oe11k80lPMInr
+         nlLkx4cn8alVn4VL7B41OK7XKz2AK6xJurHYRHK8=
+Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 64D976021C;
+        Fri, 26 Jul 2019 09:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564135101;
+        bh=j3uQJTmCdq40VmREaWK3WDQwD/oEO5ZQLNR/cHQZdEY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fI8H3wgDWxVBkPo0HmEcdnzAV0cSbAbhaRh35YW7vzmLdA5z0z197ApxN7xfRIxEp
+         ZqP+aNNqAsQ65MwF9OK4lUxvLetTQObl02LynVzFOqnN80lb0dcx49vSchNLUrgeoA
+         76R9iq4lQpxmZujgUTEPaS6CzBAlGaDwdSXgnnwc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 64D976021C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+Subject: Re: [Regression] Missing device nodes for ETR, ETF and STM after
+ CONFIG_UEVENT_HELPER=n
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        gregkh@linuxfoundation.org
+Cc:     geert+renesas@glider.be, mathieu.poirier@linaro.org,
+        leo.yan@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <cfe09a46-462f-633a-37c2-52f8bfc0ffb2@codeaurora.org>
+ <20190726070429.GA15714@kroah.com>
+ <165028a7-ff12-dd28-cc4c-57a3961dbb40@codeaurora.org>
+ <20190726084127.GA28470@kroah.com>
+ <f72f2fa1-7b1b-d7de-c9b4-cd574400d8e5@arm.com>
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Message-ID: <23fa6b3a-3f86-01f1-1b69-f3d4696ce3e2@codeaurora.org>
+Date:   Fri, 26 Jul 2019 15:28:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190724144651.28272-1-christian@brauner.io> <20190724144651.28272-3-christian@brauner.io>
- <CAK8P3a0+3wqCzQv-A-QmWTtioFRGjYUvq6QiLysqi9OFs3kJsw@mail.gmail.com> <20190726082413.n7srvcrqxmvk67z7@brauner.io>
-In-Reply-To: <20190726082413.n7srvcrqxmvk67z7@brauner.io>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 26 Jul 2019 11:57:28 +0200
-Message-ID: <CAK8P3a3VK77OvRPY-nozEGbcfHks6YdcyE7cY_2UEN9nfy=hRg@mail.gmail.com>
-Subject: Re: [PATCH 2/5] pidfd: add pidfd_wait()
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tejun Heo <tj@kernel.org>, David Howells <dhowells@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <f72f2fa1-7b1b-d7de-c9b4-cd574400d8e5@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 10:24 AM Christian Brauner <christian@brauner.io> wrote:
->
-> > It would be nice to introduce it in a separate patch, and then use it
-> > to kill off
-> > compat_sys_getrusage() and compat_sys_wait4(), and possibly even
-> > compat_sys_waitid() in combination with your copy_siginfo_to_user_any().
-> > That could be done as a cleanup patch afterwards, or as part of your series.
->
-> Right, but we won't go the syscall route but instead go the P_PIDFD
-> route for waitid(). :)
+Hi Suzuki,
 
-Ah, of course, nevermind then. It would still be a useful cleanup, but
-many other things would be as well.
+On 7/26/2019 2:58 PM, Suzuki K Poulose wrote:
+> 
+> 
+> On 07/26/2019 09:41 AM, Greg Kroah-Hartman wrote:
+>> On Fri, Jul 26, 2019 at 01:50:27PM +0530, Sai Prakash Ranjan wrote:
+>>> On 7/26/2019 12:34 PM, Greg Kroah-Hartman wrote:
+>>>> On Fri, Jul 26, 2019 at 11:49:19AM +0530, Sai Prakash Ranjan wrote:
+>>>>> Hi,
+>>>>>
+>>>>> When trying to test my coresight patches, I found that etr,etf and stm
+>>>>> device nodes are missing from /dev.
+>>>>
+>>>> I have no idea what those device nodes are.
+>>>>
+>>>>> Bisection gives this as the bad commit.
+>>>>>
+>>>>> 1be01d4a57142ded23bdb9e0c8d9369e693b26cc is the first bad commit
+>>>>> commit 1be01d4a57142ded23bdb9e0c8d9369e693b26cc
+>>>>> Author: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>>> Date:   Thu Mar 14 12:13:50 2019 +0100
+>>>>>
+>>>>>       driver: base: Disable CONFIG_UEVENT_HELPER by default
+>>>>>
+>>>>>       Since commit 7934779a69f1184f ("Driver-Core: disable 
+>>>>> /sbin/hotplug by
+>>>>>       default"), the help text for the /sbin/hotplug fork-bomb says
+>>>>>       "This should not be used today [...] creates a high system 
+>>>>> load, or
+>>>>>       [...] out-of-memory situations during bootup".  The rationale 
+>>>>> for this
+>>>>>       was that no recent mainstream system used this anymore (in 
+>>>>> 2010!).
+>>>>>
+>>>>>       A few years later, the complete uevent helper support was 
+>>>>> made optional
+>>>>>       in commit 86d56134f1b67d0c ("kobject: Make support for 
+>>>>> uevent_helper
+>>>>>       optional.").  However, if was still left enabled by default, 
+>>>>> to support
+>>>>>       ancient userland.
+>>>>>
+>>>>>       Time passed by, and nothing should use this anymore, so it 
+>>>>> can be
+>>>>>       disabled by default.
+>>>>>
+>>>>>       Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>>>       Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>>>
+>>>>>    drivers/base/Kconfig | 1 -
+>>>>>    1 file changed, 1 deletion(-)
+>>>>>
+>>>>>
+>>>>> Any idea on this?
+>>>>
+>>>> That means that who ever created those device nodes is relying on udev
+>>>> to do this, and is not doing the correct thing within the kernel and
+>>>> using devtmpfs.
+>>>>
+>>>> Any pointers to where in the kernel those devices are trying to be
+>>>> created?
+>>>>
+>>>
+>>> Somewhere in drivers/hwtracing/coresight/* probably. I am not sure,
+>>> Mathieu/Suzuki would be able to point you to the exact code.
+>>>
+>>> Also just to add on some more details, I am using *initramfs*
+> 
+>>
+>> Are you using devtmpfs for your /dev/ mount?
+> 
+> I think that should solve the issue ^^
+> 
 
-      Arnd
+Yes mounting /dev using devtmpfs does solve the issue. But is this 
+different behaviour OK?
+
+-Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
