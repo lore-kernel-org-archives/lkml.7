@@ -2,106 +2,111 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4129C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70136C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D82C621842
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD8D208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387453AbfGZOWZ (ORCPT
+        id S2387474AbfGZOWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:22:25 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:55109 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727502AbfGZOWY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 10:22:24 -0400
-Received: from xps13 ([83.160.161.190])
-        by smtp-cloud9.xs4all.net with ESMTPSA
-        id r16whKvVQAffAr16zhYGlX; Fri, 26 Jul 2019 16:22:21 +0200
-Message-ID: <1876196a0e7fc665f0f50d5e9c0e2641f713e089.camel@tiscali.nl>
-Subject: Re: [PATCH] isdn/gigaset: check endpoint null in gigaset_probe
-From:   Paul Bolle <pebolle@tiscali.nl>
-To:     Phong Tran <tranmanphong@gmail.com>, isdn@linux-pingi.de,
-        gregkh@linuxfoundation.org
-Cc:     gigaset307x-common@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        syzbot+35b1c403a14f5c89eba7@syzkaller.appspotmail.com
-Date:   Fri, 26 Jul 2019 16:22:18 +0200
-In-Reply-To: <20190726133528.11063-1-tranmanphong@gmail.com>
-References: <20190726133528.11063-1-tranmanphong@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Fri, 26 Jul 2019 10:22:33 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34552 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725869AbfGZOWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 10:22:32 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1DB942EE39331E641556;
+        Fri, 26 Jul 2019 22:22:30 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 26 Jul 2019
+ 22:22:23 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <jeesw@melfas.com>, <dmitry.torokhov@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] Input: melfas_mip4 - remove set but not used variables
+Date:   Fri, 26 Jul 2019 22:22:16 +0800
+Message-ID: <20190726142216.35212-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfFJtsA4bTDd5shYb0nHuFZYTI15MEGFgAWw8jsSPvPGvE0A8aew2qYUZToVNF69Zx9q7S/ETRWYGMQcZvIYd2UvKlgrXNZWzR+8/xc90O4NF+w9CE52s
- DV7omZgcXu3jwABtrM17VrnK3vWE46IU5zqsvpgu/P1NX5qeREMX3B1s/9tgwHcPqk7znM+mxwHSGSiD4ZoGrwSQ8VmsRsT/eRIwLPDbRGwL25vKX825bQt6
- qC8+74pGcQvytoBRVcM1oIYzPp3DFBZcUXFoNCja0+WxntwXoH7cZJUrTS54EfIqT9ksPG55rLvzG5EZDJ9wW14gsfnmcVhbhzYUOlFR98DwIWrsiOjLkFeS
- Od0JUnNt1VnCZti3RlidmEsflh0ZPzl613qThvFYFnA9TXFgYPWPHjd9ZRcSTvIIkM4rsbLLk0Df8MSMPE2gXIl4QMqtiZLGEAvOWj+sQtDflRTOEjI+NN/D
- IcBpkByBmDoZ6XDBDLQ1qjsUuthKsQ17nJruug==
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Phong Tran schreef op vr 26-07-2019 om 20:35 [+0700]:
-> This fixed the potential reference NULL pointer while using variable
-> endpoint.
-> 
-> Reported-by: syzbot+35b1c403a14f5c89eba7@syzkaller.appspotmail.com
-> Tested by syzbot:
-> https://groups.google.com/d/msg/syzkaller-bugs/wnHG8eRNWEA/Qn2HhjNdBgAJ
-> 
-> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-> ---
->  drivers/isdn/gigaset/usb-gigaset.c | 9 +++++++++
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-This is now drivers/staging/isdn/gigaset/usb-gigaset.c.
+drivers/input/touchscreen/melfas_mip4.c: In function 'mip4_report_touch':
+drivers/input/touchscreen/melfas_mip4.c:474:5: warning: variable 'size' set but not used [-Wunused-but-set-variable]
+drivers/input/touchscreen/melfas_mip4.c:472:5: warning: variable 'pressure_stage' set but not used [-Wunused-but-set-variable]
+drivers/input/touchscreen/melfas_mip4.c:469:7: warning: variable 'palm' set but not used [-Wunused-but-set-variable]
+drivers/input/touchscreen/melfas_mip4.c:468:7: warning: variable 'hover' set but not used [-Wunused-but-set-variable]
 
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/isdn/gigaset/usb-gigaset.c b/drivers/isdn/gigaset/usb-gigaset.c
-> index 1b9b43659bdf..2e011f3db59e 100644
-> --- a/drivers/isdn/gigaset/usb-gigaset.c
-> +++ b/drivers/isdn/gigaset/usb-gigaset.c
-> @@ -703,6 +703,10 @@ static int gigaset_probe(struct usb_interface *interface,
->  	usb_set_intfdata(interface, cs);
->  
->  	endpoint = &hostif->endpoint[0].desc;
-> +        if (!endpoint) {
-> +		dev_err(cs->dev, "Couldn't get control endpoint\n");
-> +		return -ENODEV;
-> +	}
+They are never used so can be removed.
 
-When can this happen? Is this one of those bugs that one can only trigger with
-a specially crafted (evil) usb device?
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/input/touchscreen/melfas_mip4.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
->  	buffer_size = le16_to_cpu(endpoint->wMaxPacketSize);
->  	ucs->bulk_out_size = buffer_size;
-> @@ -722,6 +726,11 @@ static int gigaset_probe(struct usb_interface *interface,
->  	}
->  
->  	endpoint = &hostif->endpoint[1].desc;
-> +        if (!endpoint) {
-> +		dev_err(cs->dev, "Endpoint not available\n");
-> +		retval = -ENODEV;
-> +		goto error;
-> +	}
->  
->  	ucs->busy = 0;
->  
+diff --git a/drivers/input/touchscreen/melfas_mip4.c b/drivers/input/touchscreen/melfas_mip4.c
+index 247c3aa..d291a82 100644
+--- a/drivers/input/touchscreen/melfas_mip4.c
++++ b/drivers/input/touchscreen/melfas_mip4.c
+@@ -465,13 +465,9 @@ static void mip4_report_keys(struct mip4_ts *ts, u8 *packet)
+ static void mip4_report_touch(struct mip4_ts *ts, u8 *packet)
+ {
+ 	int id;
+-	bool hover;
+-	bool palm;
+ 	bool state;
+ 	u16 x, y;
+-	u8 pressure_stage = 0;
+ 	u8 pressure;
+-	u8 size;
+ 	u8 touch_major;
+ 	u8 touch_minor;
+ 
+@@ -480,14 +476,11 @@ static void mip4_report_touch(struct mip4_ts *ts, u8 *packet)
+ 	case 1:
+ 		/* Touch only */
+ 		state = packet[0] & BIT(7);
+-		hover = packet[0] & BIT(5);
+-		palm = packet[0] & BIT(4);
+ 		id = (packet[0] & 0x0F) - 1;
+ 		x = ((packet[1] & 0x0F) << 8) | packet[2];
+ 		y = (((packet[1] >> 4) & 0x0F) << 8) |
+ 			packet[3];
+ 		pressure = packet[4];
+-		size = packet[5];
+ 		if (ts->event_format == 0) {
+ 			touch_major = packet[5];
+ 			touch_minor = packet[5];
+@@ -501,14 +494,10 @@ static void mip4_report_touch(struct mip4_ts *ts, u8 *packet)
+ 	default:
+ 		/* Touch + Force(Pressure) */
+ 		id = (packet[0] & 0x0F) - 1;
+-		hover = packet[1] & BIT(2);
+-		palm = packet[1] & BIT(1);
+ 		state = packet[1] & BIT(0);
+ 		x = ((packet[2] & 0x0F) << 8) | packet[3];
+ 		y = (((packet[2] >> 4) & 0x0F) << 8) |
+ 			packet[4];
+-		size = packet[6];
+-		pressure_stage = (packet[7] & 0xF0) >> 4;
+ 		pressure = ((packet[7] & 0x0F) << 8) |
+ 			packet[8];
+ 		touch_major = packet[9];
+-- 
+2.7.4
 
-Please note that I'm very close to getting cut off from the ISDN network, so
-the chances of being able to testi this on a live system are getting small. 
-
-Thanks,
-
-
-Paul Bolle
 
