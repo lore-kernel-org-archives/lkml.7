@@ -2,74 +2,137 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2148C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A842C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A00C422CE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D82822CE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388674AbfGZNqQ (ORCPT
+        id S2388414AbfGZNqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:46:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:44018 "EHLO foss.arm.com"
+        Fri, 26 Jul 2019 09:46:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39074 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388641AbfGZNqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:46:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CC2F15A2;
-        Fri, 26 Jul 2019 06:46:05 -0700 (PDT)
-Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5ADEE3F694;
-        Fri, 26 Jul 2019 06:46:04 -0700 (PDT)
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, Peng Fan <peng.fan@nxp.com>,
-        linux-kernel@vger.kernel.org,
-        Bo Zhang <bozhang.zhang@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
-        Gaku Inami <gaku.inami.xh@renesas.com>,
-        Etienne Carriere <etienne.carriere@linaro.org>
-Subject: [PATCH v2 1/6] firmware: arm_scmi: Use the correct style for SPDX License Identifier
-Date:   Fri, 26 Jul 2019 14:45:26 +0100
-Message-Id: <20190726134531.8928-2-sudeep.holla@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190726134531.8928-1-sudeep.holla@arm.com>
-References: <20190726134531.8928-1-sudeep.holla@arm.com>
+        id S2387711AbfGZNqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:46:49 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CFBE630860D1;
+        Fri, 26 Jul 2019 13:46:48 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C2E2579423;
+        Fri, 26 Jul 2019 13:46:47 +0000 (UTC)
+Subject: Re: [PATCH AUTOSEL 5.2 13/85] kernel/module.c: Only return -EEXIST
+ for modules that have finished loading
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Barret Rhoden <brho@google.com>, David Arcari <darcari@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+References: <20190726133936.11177-1-sashal@kernel.org>
+ <20190726133936.11177-13-sashal@kernel.org>
+From:   Prarit Bhargava <prarit@redhat.com>
+Message-ID: <cb703dc8-03a3-a877-2e5f-72a349e0f2d7@redhat.com>
+Date:   Fri, 26 Jul 2019 09:46:46 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20190726133936.11177-13-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 26 Jul 2019 13:46:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix to correct the SPDX License Identifier style in header file related
-to firmware frivers for ARM SCMI message protocol.
 
-For C header files Documentation/process/license-rules.rst mandates
-C-like comments(opposed to C source files where C++ style should be
-used).
 
-While at it, change GPL-2.0 to GPL-2.0-only similar to the ones in
-psci.h and scpi_protocol.h
+On 7/26/19 9:38 AM, Sasha Levin wrote:
+> From: Prarit Bhargava <prarit@redhat.com>
+> 
+> [ Upstream commit 6e6de3dee51a439f76eb73c22ae2ffd2c9384712 ]
+> 
+> Microsoft HyperV disables the X86_FEATURE_SMCA bit on AMD systems, and
+> linux guests boot with repeated errors:
+> 
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- include/linux/scmi_protocol.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hey Sasha, I'd prefer to leave this out of stable branches for now.  Linus is a
+bit nervous about it and I like to get see more soak time before the patch is
+backported to stable.
 
-diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index 9ff2e9357e9a..aa1e791779b4 100644
---- a/include/linux/scmi_protocol.h
-+++ b/include/linux/scmi_protocol.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0-only */
- /*
-  * SCMI Message Protocol driver header
-  *
--- 
-2.17.1
+https://lkml.org/lkml/2019/7/18/680
 
+FWIW we've been running this in RHEL for some time now without any issues.
+
+P.
+
+> amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+> amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+> amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+> amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+> amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+> amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+> 
+> The warnings occur because the module code erroneously returns -EEXIST
+> for modules that have failed to load and are in the process of being
+> removed from the module list.
+> 
+> module amd64_edac_mod has a dependency on module edac_mce_amd.  Using
+> modules.dep, systemd will load edac_mce_amd for every request of
+> amd64_edac_mod.  When the edac_mce_amd module loads, the module has
+> state MODULE_STATE_UNFORMED and once the module load fails and the state
+> becomes MODULE_STATE_GOING.  Another request for edac_mce_amd module
+> executes and add_unformed_module() will erroneously return -EEXIST even
+> though the previous instance of edac_mce_amd has MODULE_STATE_GOING.
+> Upon receiving -EEXIST, systemd attempts to load amd64_edac_mod, which
+> fails because of unknown symbols from edac_mce_amd.
+> 
+> add_unformed_module() must wait to return for any case other than
+> MODULE_STATE_LIVE to prevent a race between multiple loads of
+> dependent modules.
+> 
+> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+> Signed-off-by: Barret Rhoden <brho@google.com>
+> Cc: David Arcari <darcari@redhat.com>
+> Cc: Jessica Yu <jeyu@kernel.org>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Signed-off-by: Jessica Yu <jeyu@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  kernel/module.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/module.c b/kernel/module.c
+> index 80c7c09584cf..8431c3d47c97 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -3385,8 +3385,7 @@ static bool finished_loading(const char *name)
+>  	sched_annotate_sleep();
+>  	mutex_lock(&module_mutex);
+>  	mod = find_module_all(name, strlen(name), true);
+> -	ret = !mod || mod->state == MODULE_STATE_LIVE
+> -		|| mod->state == MODULE_STATE_GOING;
+> +	ret = !mod || mod->state == MODULE_STATE_LIVE;
+>  	mutex_unlock(&module_mutex);
+>  
+>  	return ret;
+> @@ -3576,8 +3575,7 @@ static int add_unformed_module(struct module *mod)
+>  	mutex_lock(&module_mutex);
+>  	old = find_module_all(mod->name, strlen(mod->name), true);
+>  	if (old != NULL) {
+> -		if (old->state == MODULE_STATE_COMING
+> -		    || old->state == MODULE_STATE_UNFORMED) {
+> +		if (old->state != MODULE_STATE_LIVE) {
+>  			/* Wait in case it fails to load. */
+>  			mutex_unlock(&module_mutex);
+>  			err = wait_event_interruptible(module_wq,
+> 
