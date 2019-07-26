@@ -2,93 +2,85 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09668C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB32C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4E9022ADA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B94621850
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:18:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbfGZORy (ORCPT
+        id S1728136AbfGZOS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:17:54 -0400
-Received: from mga01.intel.com ([192.55.52.88]:4937 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727358AbfGZORy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 10:17:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 07:17:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
-   d="scan'208";a="322051074"
-Received: from msmall-mobl.amr.corp.intel.com (HELO [10.251.154.62]) ([10.251.154.62])
-  by orsmga004.jf.intel.com with ESMTP; 26 Jul 2019 07:17:52 -0700
-Subject: Re: [alsa-devel] [RFC PATCH 23/40] soundwire: stream: fix disable
- sequence
-To:     Cezary Rojewski <cezary.rojewski@intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
-        gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-24-pierre-louis.bossart@linux.intel.com>
- <492d7897-973d-f207-46d5-f2f554645df7@intel.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <68948dd2-e131-7ef2-3067-ea5286e2f6d0@linux.intel.com>
-Date:   Fri, 26 Jul 2019 09:17:52 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 26 Jul 2019 10:18:56 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3177 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727358AbfGZOSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 10:18:55 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 35595DFA7654B79619AF;
+        Fri, 26 Jul 2019 22:18:50 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 26 Jul 2019
+ 22:18:43 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <johannes.berg@intel.com>, <emmanuel.grumbach@intel.com>,
+        <luciano.coelho@intel.com>, <linuxwifi@intel.com>,
+        <kvalo@codeaurora.org>, <sara.sharon@intel.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] iwlwifi: mvm: fix old-style declaration
+Date:   Fri, 26 Jul 2019 22:18:38 +0800
+Message-ID: <20190726141838.19424-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <492d7897-973d-f207-46d5-f2f554645df7@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There expect the 'static' keyword to come first in a
+declaration, and we get a warning for this with "make W=1":
+
+drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c:427:1: warning:
+ 'static' is not at beginning of declaration [-Wold-style-declaration]
+drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c:434:1: warning:
+ 'static' is not at beginning of declaration [-Wold-style-declaration]
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+index 55cd49c..6ed0c49 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+@@ -424,14 +424,14 @@ int iwl_mvm_init_fw_regd(struct iwl_mvm *mvm)
+ 	return ret;
+ }
+ 
+-const static u8 he_if_types_ext_capa_sta[] = {
++static const u8 he_if_types_ext_capa_sta[] = {
+ 	 [0] = WLAN_EXT_CAPA1_EXT_CHANNEL_SWITCHING,
+ 	 [2] = WLAN_EXT_CAPA3_MULTI_BSSID_SUPPORT,
+ 	 [7] = WLAN_EXT_CAPA8_OPMODE_NOTIF,
+ 	 [9] = WLAN_EXT_CAPA10_TWT_REQUESTER_SUPPORT,
+ };
+ 
+-const static struct wiphy_iftype_ext_capab he_iftypes_ext_capa[] = {
++static const struct wiphy_iftype_ext_capab he_iftypes_ext_capa[] = {
+ 	{
+ 		.iftype = NL80211_IFTYPE_STATION,
+ 		.extended_capabilities = he_if_types_ext_capa_sta,
+-- 
+2.7.4
 
 
-On 7/26/19 5:14 AM, Cezary Rojewski wrote:
-> On 2019-07-26 01:40, Pierre-Louis Bossart wrote:
->> -    return do_bank_switch(stream);
->> +    ret = do_bank_switch(stream);
->> +    if (ret < 0) {
->> +        dev_err(bus->dev, "Bank switch failed: %d\n", ret);
->> +        return ret;
->> +    }
->> +
->> +    /* make sure alternate bank (previous current) is also disabled */
->> +    list_for_each_entry(m_rt, &stream->master_list, stream_node) {
->> +        bus = m_rt->bus;
->> +        /* Disable port(s) */
->> +        ret = sdw_enable_disable_ports(m_rt, false);
->> +        if (ret < 0) {
->> +            dev_err(bus->dev, "Disable port(s) failed: %d\n", ret);
->> +            return ret;
->> +        }
->> +    }
->> +
->> +    return 0;
->>   }
->>   /**
->>
-> 
-> While not directly connected to this commit, I see that you do:
-> link_for_each_entry(m_rt, &stream->master_list, stream_node)
-> 
-> quite often in /stream.c code. Helpful macro would prove useful.
-
-Yes, but the flip side is that people need to look at what the macro 
-does to figure it out, while everyone knows what list_for_each_entry() 
-means. Not sure about this one.
-And on top of this we'll probably have to rework this code to have a 
-background copy of the current bank in the alternate bank so it'd rather 
-leave it simple for now.
