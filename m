@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D886C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9122CC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A0522CBE
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6543722CB8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564154751;
-	bh=W4FR3wy1jqQSOKX4Wt5Oz9xjrRQFwqw6YChMOwS9VVI=;
+	s=default; t=1564154754;
+	bh=JbLY78NHtun1l2hrXb1d5IX/OCdO4x3sSMEKJIDV+d8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XrwoLRyNqbYvbenE9+DhBc9CFRtZUhP1FveOg47OaQI3aizFZAMzf1F3mNeVfJCwm
-	 8MJFUVOXccKT5hPHiCwq+Jmylj1lz/rH8utvoIV+2Q/pt2z6kl+4ygESqjF/HfZWQD
-	 vcyBp9OKMdUHh0zaCwetnwaMCS9Kfkb7W9pYS2U8=
+	b=V7bZHpKHIQYOFl8DMrALXiOmzlC9kMHWO8P2dkx4hhpDA6d3t2+Vu6bagpyCE58ZH
+	 z/HmB4EVfbCCojucAKUuY22sfzXAfulaW+3joKAKYpyKJ56tx0YDxgiznB1huBD0oG
+	 GR4l6e/RPaI2d6dwK2frx2ItqqDqkrerDvT4xb1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbfGZPZt (ORCPT
+        id S2387539AbfGZPZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:25:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39634 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:25:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728481AbfGZPZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:25:46 -0400
+        id S1728508AbfGZPZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:25:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64B5422CB8;
-        Fri, 26 Jul 2019 15:25:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC3AB22CB8;
+        Fri, 26 Jul 2019 15:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154745;
-        bh=W4FR3wy1jqQSOKX4Wt5Oz9xjrRQFwqw6YChMOwS9VVI=;
+        s=default; t=1564154749;
+        bh=JbLY78NHtun1l2hrXb1d5IX/OCdO4x3sSMEKJIDV+d8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zOn1dPCjIL4/zXTNQtjVlgbL/QwEAuEZGCCs/qpAOU8mCALPbBYQdn0lG/kfMwy04
-         vJawX7FOgIH0XwpXQ1pz8XcjY11XQX3klQmvnDHbFNfn6x6dEdqqhjU1hT70dd57FI
-         Gx6ovhZc+/A4l0d3flwWOoP3HwbMk1Sh1ISFtJCY=
+        b=o1MMBW1t0uVEzvTcN2XXONoIwprQBsAc6YdlsNKPsP4pAts4rhT4VRvS0pYCIoga4
+         4yNbEVQg2JASO1C/3TWRJDU1QmvLDLsH2SX3Thp7rwVA7elB2x8lJxtNFnsLxxVcdM
+         D9kQTQ2h60RZG73rRtqaT19PE0p0NXQvIJiqvEBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
-        David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 05/66] ipv4: dont set IPv6 only flags to IPv4 addresses
-Date:   Fri, 26 Jul 2019 17:24:04 +0200
-Message-Id: <20190726152302.506906618@linuxfoundation.org>
+Subject: [PATCH 5.2 14/66] net_sched: unset TCQ_F_CAN_BYPASS when adding filters
+Date:   Fri, 26 Jul 2019 17:24:13 +0200
+Message-Id: <20190726152303.389623216@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
 References: <20190726152301.936055394@linuxfoundation.org>
@@ -60,56 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 2e60546368165c2449564d71f6005dda9205b5fb ]
+[ Upstream commit 3f05e6886a595c9a29a309c52f45326be917823c ]
 
-Avoid the situation where an IPV6 only flag is applied to an IPv4 address:
+For qdisc's that support TC filters and set TCQ_F_CAN_BYPASS,
+notably fq_codel, it makes no sense to let packets bypass the TC
+filters we setup in any scenario, otherwise our packets steering
+policy could not be enforced.
 
-    # ip addr add 192.0.2.1/24 dev dummy0 nodad home mngtmpaddr noprefixroute
-    # ip -4 addr show dev dummy0
-    2: dummy0: <BROADCAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
-        inet 192.0.2.1/24 scope global noprefixroute dummy0
-           valid_lft forever preferred_lft forever
+This can be reproduced easily with the following script:
 
-Or worse, by sending a malicious netlink command:
+ ip li add dev dummy0 type dummy
+ ifconfig dummy0 up
+ tc qd add dev dummy0 root fq_codel
+ tc filter add dev dummy0 parent 8001: protocol arp basic action mirred egress redirect dev lo
+ tc filter add dev dummy0 parent 8001: protocol ip basic action mirred egress redirect dev lo
+ ping -I dummy0 192.168.112.1
 
-    # ip -4 addr show dev dummy0
-    2: dummy0: <BROADCAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
-        inet 192.0.2.1/24 scope global nodad optimistic dadfailed home tentative mngtmpaddr noprefixroute stable-privacy dummy0
-           valid_lft forever preferred_lft forever
+Without this patch, packets are sent directly to dummy0 without
+hitting any of the filters. With this patch, packets are redirected
+to loopback as expected.
 
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
+This fix is not perfect, it only unsets the flag but does not set it back
+because we have to save the information somewhere in the qdisc if we
+really want that. Note, both fq_codel and sfq clear this flag in their
+->bind_tcf() but this is clearly not sufficient when we don't use any
+class ID.
+
+Fixes: 23624935e0c4 ("net_sched: TCQ_F_CAN_BYPASS generalization")
+Cc: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/devinet.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/sched/cls_api.c      |    1 +
+ net/sched/sch_fq_codel.c |    2 --
+ net/sched/sch_sfq.c      |    2 --
+ 3 files changed, 1 insertion(+), 4 deletions(-)
 
---- a/net/ipv4/devinet.c
-+++ b/net/ipv4/devinet.c
-@@ -62,6 +62,11 @@
- #include <net/net_namespace.h>
- #include <net/addrconf.h>
+--- a/net/sched/cls_api.c
++++ b/net/sched/cls_api.c
+@@ -2160,6 +2160,7 @@ replay:
+ 		tfilter_notify(net, skb, n, tp, block, q, parent, fh,
+ 			       RTM_NEWTFILTER, false, rtnl_held);
+ 		tfilter_put(tp, fh);
++		q->flags &= ~TCQ_F_CAN_BYPASS;
+ 	}
  
-+#define IPV6ONLY_FLAGS	\
-+		(IFA_F_NODAD | IFA_F_OPTIMISTIC | IFA_F_DADFAILED | \
-+		 IFA_F_HOMEADDRESS | IFA_F_TENTATIVE | \
-+		 IFA_F_MANAGETEMPADDR | IFA_F_STABLE_PRIVACY)
-+
- static struct ipv4_devconf ipv4_devconf = {
- 	.data = {
- 		[IPV4_DEVCONF_ACCEPT_REDIRECTS - 1] = 1,
-@@ -468,6 +473,9 @@ static int __inet_insert_ifa(struct in_i
- 	ifa->ifa_flags &= ~IFA_F_SECONDARY;
- 	last_primary = &in_dev->ifa_list;
+ errout:
+--- a/net/sched/sch_fq_codel.c
++++ b/net/sched/sch_fq_codel.c
+@@ -596,8 +596,6 @@ static unsigned long fq_codel_find(struc
+ static unsigned long fq_codel_bind(struct Qdisc *sch, unsigned long parent,
+ 			      u32 classid)
+ {
+-	/* we cannot bypass queue discipline anymore */
+-	sch->flags &= ~TCQ_F_CAN_BYPASS;
+ 	return 0;
+ }
  
-+	/* Don't set IPv6 only flags to IPv4 addresses */
-+	ifa->ifa_flags &= ~IPV6ONLY_FLAGS;
-+
- 	for (ifap = &in_dev->ifa_list; (ifa1 = *ifap) != NULL;
- 	     ifap = &ifa1->ifa_next) {
- 		if (!(ifa1->ifa_flags & IFA_F_SECONDARY) &&
+--- a/net/sched/sch_sfq.c
++++ b/net/sched/sch_sfq.c
+@@ -824,8 +824,6 @@ static unsigned long sfq_find(struct Qdi
+ static unsigned long sfq_bind(struct Qdisc *sch, unsigned long parent,
+ 			      u32 classid)
+ {
+-	/* we cannot bypass queue discipline anymore */
+-	sch->flags &= ~TCQ_F_CAN_BYPASS;
+ 	return 0;
+ }
+ 
 
 
