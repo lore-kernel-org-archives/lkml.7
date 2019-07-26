@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6453CC76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623CBC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31DEE21951
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F682054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155439;
-	bh=mU/cphH8ryHrVmuO9omVALk2fgtD/LhRfsJrntv7E2o=;
+	s=default; t=1564155460;
+	bh=BrtvQnA6t0Sx/oqyb9Dc+rL7Xgk788u0Ct8W+1Gmi80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JLT0PZSMGerzcF+736dxmowcl2Sqg9ODlPe2bgmxWEPJL16JjNgRnQNl3Zphn8e1C
-	 etaVcygFM7WrmTkAOz92XtaHBFunZUqlF6sTjjwEoFzJPi2Sk1mdAsbHKVzLKYK9vc
-	 fWy6eE42yoVYTgI+oRrrZB1qSkrftow8IyrLRfdQ=
+	b=Mp9pVVtE2iMhvUYlRGBwPzT4hE7ObGFcZDJED/aZMiCU9ODT1eg21c7UNjwq1CGP7
+	 hlLc0EhrVVACKD7zv0AkbphHQmIHBKF7JvqR0YUQShxIhFCLcMJt3eyPZKaL7s7jZt
+	 F5GZ9/3FUFLvxm7zTLioeURUrdrN29bUaqxbYWZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbfGZPaC (ORCPT
+        id S2388909AbfGZP3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:30:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44788 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:29:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbfGZP36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:29:58 -0400
+        id S2388866AbfGZP3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:29:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0799922CBD;
-        Fri, 26 Jul 2019 15:29:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 480A322CBE;
+        Fri, 26 Jul 2019 15:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154998;
-        bh=mU/cphH8ryHrVmuO9omVALk2fgtD/LhRfsJrntv7E2o=;
+        s=default; t=1564154983;
+        bh=BrtvQnA6t0Sx/oqyb9Dc+rL7Xgk788u0Ct8W+1Gmi80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gCWuOYUUa7S1+CpTqEb8UsQ/Fl1jmJRv7McEi5yeMvzd5omIfwv0dRNCb9lrlXlNJ
-         H9HfV7zW7fUCUhZtVIsmuPwlgq86VbKXMNlfkEDXIVD1cTPzxoZ0OJACI1B4dvgvtB
-         Fh9Rjkeeuiv5hcLmnVWpnro30u66YAxvSeQjW+08=
+        b=zX8Rv1G728uYRKdLl+CdYg06n1NZKgTMFjsobtanMbK+vKHpURZoBn8C7el/mKVgZ
+         f0hKUS+isuCY+nJXGxE4vwbFOLHL/ARqnzMpyQcG7TvMKjBkbpAsQINGhMfueQjpZ0
+         96m9Fg1wZa4OV6CX/tEOfSlrUpRdlqlj6MK6objI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        stable@vger.kernel.org, Peter Kosyh <p.kosyh@gmail.com>,
+        David Ahern <dsa@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 31/62] net: bridge: stp: dont cache eth dest pointer before skb pull
-Date:   Fri, 26 Jul 2019 17:24:43 +0200
-Message-Id: <20190726152305.002892598@linuxfoundation.org>
+Subject: [PATCH 5.1 26/62] vrf: make sure skb->data contains ip header to make routing
+Date:   Fri, 26 Jul 2019 17:24:38 +0200
+Message-Id: <20190726152304.468425161@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -60,38 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+From: Peter Kosyh <p.kosyh@gmail.com>
 
-[ Upstream commit 2446a68ae6a8cee6d480e2f5b52f5007c7c41312 ]
+[ Upstream commit 107e47cc80ec37cb332bd41b22b1c7779e22e018 ]
 
-Don't cache eth dest pointer before calling pskb_may_pull.
+vrf_process_v4_outbound() and vrf_process_v6_outbound() do routing
+using ip/ipv6 addresses, but don't make sure the header is available
+in skb->data[] (skb_headlen() is less then header size).
 
-Fixes: cf0f02d04a83 ("[BRIDGE]: use llc for receiving STP packets")
-Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Case:
+
+1) igb driver from intel.
+2) Packet size is greater then 255.
+3) MPLS forwards to VRF device.
+
+So, patch adds pskb_may_pull() calls in vrf_process_v4/v6_outbound()
+functions.
+
+Signed-off-by: Peter Kosyh <p.kosyh@gmail.com>
+Reviewed-by: David Ahern <dsa@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_stp_bpdu.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/vrf.c |   58 ++++++++++++++++++++++++++++++++----------------------
+ 1 file changed, 35 insertions(+), 23 deletions(-)
 
---- a/net/bridge/br_stp_bpdu.c
-+++ b/net/bridge/br_stp_bpdu.c
-@@ -147,7 +147,6 @@ void br_send_tcn_bpdu(struct net_bridge_
- void br_stp_rcv(const struct stp_proto *proto, struct sk_buff *skb,
- 		struct net_device *dev)
+--- a/drivers/net/vrf.c
++++ b/drivers/net/vrf.c
+@@ -169,23 +169,29 @@ static int vrf_ip6_local_out(struct net
+ static netdev_tx_t vrf_process_v6_outbound(struct sk_buff *skb,
+ 					   struct net_device *dev)
  {
--	const unsigned char *dest = eth_hdr(skb)->h_dest;
- 	struct net_bridge_port *p;
- 	struct net_bridge *br;
- 	const unsigned char *buf;
-@@ -176,7 +175,7 @@ void br_stp_rcv(const struct stp_proto *
- 	if (p->state == BR_STATE_DISABLED)
- 		goto out;
+-	const struct ipv6hdr *iph = ipv6_hdr(skb);
++	const struct ipv6hdr *iph;
+ 	struct net *net = dev_net(skb->dev);
+-	struct flowi6 fl6 = {
+-		/* needed to match OIF rule */
+-		.flowi6_oif = dev->ifindex,
+-		.flowi6_iif = LOOPBACK_IFINDEX,
+-		.daddr = iph->daddr,
+-		.saddr = iph->saddr,
+-		.flowlabel = ip6_flowinfo(iph),
+-		.flowi6_mark = skb->mark,
+-		.flowi6_proto = iph->nexthdr,
+-		.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF,
+-	};
++	struct flowi6 fl6;
+ 	int ret = NET_XMIT_DROP;
+ 	struct dst_entry *dst;
+ 	struct dst_entry *dst_null = &net->ipv6.ip6_null_entry->dst;
  
--	if (!ether_addr_equal(dest, br->group_addr))
-+	if (!ether_addr_equal(eth_hdr(skb)->h_dest, br->group_addr))
- 		goto out;
++	if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct ipv6hdr)))
++		goto err;
++
++	iph = ipv6_hdr(skb);
++
++	memset(&fl6, 0, sizeof(fl6));
++	/* needed to match OIF rule */
++	fl6.flowi6_oif = dev->ifindex;
++	fl6.flowi6_iif = LOOPBACK_IFINDEX;
++	fl6.daddr = iph->daddr;
++	fl6.saddr = iph->saddr;
++	fl6.flowlabel = ip6_flowinfo(iph);
++	fl6.flowi6_mark = skb->mark;
++	fl6.flowi6_proto = iph->nexthdr;
++	fl6.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF;
++
+ 	dst = ip6_route_output(net, NULL, &fl6);
+ 	if (dst == dst_null)
+ 		goto err;
+@@ -241,21 +247,27 @@ static int vrf_ip_local_out(struct net *
+ static netdev_tx_t vrf_process_v4_outbound(struct sk_buff *skb,
+ 					   struct net_device *vrf_dev)
+ {
+-	struct iphdr *ip4h = ip_hdr(skb);
++	struct iphdr *ip4h;
+ 	int ret = NET_XMIT_DROP;
+-	struct flowi4 fl4 = {
+-		/* needed to match OIF rule */
+-		.flowi4_oif = vrf_dev->ifindex,
+-		.flowi4_iif = LOOPBACK_IFINDEX,
+-		.flowi4_tos = RT_TOS(ip4h->tos),
+-		.flowi4_flags = FLOWI_FLAG_ANYSRC | FLOWI_FLAG_SKIP_NH_OIF,
+-		.flowi4_proto = ip4h->protocol,
+-		.daddr = ip4h->daddr,
+-		.saddr = ip4h->saddr,
+-	};
++	struct flowi4 fl4;
+ 	struct net *net = dev_net(vrf_dev);
+ 	struct rtable *rt;
  
- 	if (p->flags & BR_BPDU_GUARD) {
++	if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct iphdr)))
++		goto err;
++
++	ip4h = ip_hdr(skb);
++
++	memset(&fl4, 0, sizeof(fl4));
++	/* needed to match OIF rule */
++	fl4.flowi4_oif = vrf_dev->ifindex;
++	fl4.flowi4_iif = LOOPBACK_IFINDEX;
++	fl4.flowi4_tos = RT_TOS(ip4h->tos);
++	fl4.flowi4_flags = FLOWI_FLAG_ANYSRC | FLOWI_FLAG_SKIP_NH_OIF;
++	fl4.flowi4_proto = ip4h->protocol;
++	fl4.daddr = ip4h->daddr;
++	fl4.saddr = ip4h->saddr;
++
+ 	rt = ip_route_output_flow(net, &fl4, NULL);
+ 	if (IS_ERR(rt))
+ 		goto err;
 
 
