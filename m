@@ -1,89 +1,74 @@
-Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B22C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBA8C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 769A120869
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 23:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70EB2229F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfGYXzY (ORCPT
+        id S1726952AbfGZAAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 19:55:24 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:57542 "EHLO
+        Thu, 25 Jul 2019 20:00:41 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:57606 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbfGYXzX (ORCPT
+        with ESMTP id S1726380AbfGZAAl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 19:55:23 -0400
+        Thu, 25 Jul 2019 20:00:41 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqnZe-0004a0-QJ; Thu, 25 Jul 2019 23:55:02 +0000
-Date:   Fri, 26 Jul 2019 00:55:02 +0100
+        id 1hqney-0004fd-VN; Fri, 26 Jul 2019 00:00:33 +0000
+Date:   Fri, 26 Jul 2019 01:00:32 +0100
 From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Stephen Bates <sbates@raithlin.com>,
-        linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-        linux-fsdevel@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v6 02/16] chardev: introduce cdev_get_by_path()
-Message-ID: <20190725235502.GJ1131@ZenIV.linux.org.uk>
-References: <20190725172335.6825-3-logang@deltatee.com>
- <20190725174032.GA27818@kroah.com>
- <682ff89f-04e0-7a94-5aeb-895ac65ee7c9@deltatee.com>
- <20190725180816.GA32305@kroah.com>
- <da0eacb7-3738-ddf3-8c61-7ffc61aa41f4@deltatee.com>
- <20190725182701.GA11547@kroah.com>
- <20190725190024.GD30641@bombadil.infradead.org>
- <27943e06-a503-162e-356b-abb9e106ab2e@grimberg.me>
- <20190725191124.GE30641@bombadil.infradead.org>
- <425dd2ac-333d-a8c4-ce49-870c8dadf436@deltatee.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Cyril Hrubis <chrubis@suse.cz>,
+        kernel test robot <rong.a.chen@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>, ltp@lists.linux.it
+Subject: Re: [LTP] 56cbb429d9: ltp.fs_fill.fail
+Message-ID: <20190726000032.GK1131@ZenIV.linux.org.uk>
+References: <20190725110944.GA22106@shao2-debian>
+ <20190725132617.GA23135@rei.lan>
+ <CAHk-=wg+yRjY_AUrjbgrN59OeGAWMF_q=-Dqf2cYtVzoY01j7Q@mail.gmail.com>
+ <20190725180428.GH1131@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <425dd2ac-333d-a8c4-ce49-870c8dadf436@deltatee.com>
+In-Reply-To: <20190725180428.GH1131@ZenIV.linux.org.uk>
 User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 01:24:22PM -0600, Logan Gunthorpe wrote:
+On Thu, Jul 25, 2019 at 07:04:28PM +0100, Al Viro wrote:
+> On Thu, Jul 25, 2019 at 09:32:13AM -0700, Linus Torvalds wrote:
+> > On Thu, Jul 25, 2019 at 6:26 AM Cyril Hrubis <chrubis@suse.cz> wrote:
+> > >
+> > > This looks like mkfs.vfat got EBUSY after the loop device was
+> > > succesfully umounted.
+> > 
+> > Hmm. Smells like the RCU-delaying got triggered again.
+> > 
+> > We have that "synchronize_rcu_expedited()" in namespace_unlock(),
+> > which is so that everything should be done by the time we return to
+> > user space.
+> > 
+> > Al, maybe that RCU synchronization should be after the mntput()s?
 > 
-> 
-> On 2019-07-25 1:11 p.m., Matthew Wilcox wrote:
-> > On Thu, Jul 25, 2019 at 12:05:29PM -0700, Sagi Grimberg wrote:
-> >>
-> >>>>> NVMe-OF is configured using configfs. The target is specified by the
-> >>>>> user writing a path to a configfs attribute. This is the way it works
-> >>>>> today but with blkdev_get_by_path()[1]. For the passthru code, we need
-> >>>>> to get a nvme_ctrl instead of a block_device, but the principal is the same.
-> >>>>
-> >>>> Why isn't a fd being passed in there instead of a random string?
-> >>>
-> >>> I suppose we could echo a string of the file descriptor number there,
-> >>> and look up the fd in the process' file descriptor table ...
-> >>
-> >> Assuming that there is a open handle somewhere out there...
-> 
-> Yes, that would be a step backwards from an interface. The user would
-> then need a special process to open the fd and pass it through configfs.
-> They couldn't just do it with basic bash commands.
+> There are several interesting issues in there, but synchronize_rcu()
+> should be between zeroing ->mnt_ns and dropping the final refs.
+> I'm digging through that crap right now; at least one bug is dealt
+> with by #fixes, but there's more, unfortunately.
 
-First of all, they can, but... WTF not have filp_open() done right there?
-Yes, by name.  With permission checks done.  And pick your object from the
-sodding struct file you'll get.
+No, it's not synchronize_rcu().  It's a bug dealt with in vfs.git #fixes,
+triggering the struct mount leak in mount_subtree(), which is used
+by btrfs.  Immediately prior to vfat in their list...
 
-What's the problem?  Why do you need cdev lookups, etc., when you are
-dealing with files under your full control?  Just open them and use
-->private_data or whatever you set in ->open() to access the damn thing.
-All there is to it...
+(oh, and AFAICS "more" in the above had been a mismerge in -next, so
+it might really be all there is to it)
+
+Folks, see if vfs.git #fixes solves that one.
