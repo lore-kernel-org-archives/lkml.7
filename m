@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28608C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C83C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A6B22BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 225BC22CBE
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155100;
-	bh=+WCIbUpYV1UwgnjGTloO4L1hrkUg6Ogk4wZPWUmVDxY=;
+	s=default; t=1564155104;
+	bh=iuf0BCS8aLr+lbQU9Wd+UhcxJrowPtLhsC7MckbRu7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gilz41S4LYV9R9V6JhSbqGvissBeDV5CiMhejDXqmn5auhXnVC5ISLgRHKgAUpw8k
-	 l2KlmmNiU5uxtdJbpZEh1fLCllpXV2Lrqx0SaLzpXWpqXRIZ/smqnmGBX+Qu/vX6RD
-	 i5aEFB3VzZTGYh+lJPNFWCXO3GqwU9NM8Gtd/Z/4=
+	b=DD98Ees2TtX6LCvPBsIM5hH930NSNn8vfVKcvMTVqU1ZULHO/jLjDPi/sTJ9TtVg6
+	 FOzfIue945SViU7GD12nei4X5iZDBp5H5/bHvSBMsgr/oyrxGcPyCnJuQBw0jdrDeh
+	 ICg8rerE4aCvClQj9NaCG45V7pfjuORLe4REaj8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389312AbfGZPbi (ORCPT
+        id S2388515AbfGZPbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:31:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46632 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:31:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389297AbfGZPbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:31:33 -0400
+        id S2389314AbfGZPbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:31:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBDDB22CBD;
-        Fri, 26 Jul 2019 15:31:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17FE5218D4;
+        Fri, 26 Jul 2019 15:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155092;
-        bh=+WCIbUpYV1UwgnjGTloO4L1hrkUg6Ogk4wZPWUmVDxY=;
+        s=default; t=1564155098;
+        bh=iuf0BCS8aLr+lbQU9Wd+UhcxJrowPtLhsC7MckbRu7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lfmb3hgVX5kA3VlN2hqX3TNkS742EyyKi1dlcTNrqifH/zMxf5UNuWagvR25ToJed
-         KnakB64tShwgnJYSkvdsMF7wWptTrfzmZP4uGbKP5MITKeNA8027vJ/cuSOSZGorxJ
-         Te+h5nYbkyIrlHh6AfoBf6WsDxqiT1hq8/rwxLQQ=
+        b=d+cZU5QtLQlVpBuFmSrfN8FNEDgrougiVf4e6LV6tyS/UjSGg6UgNs5IqOGTqiCmG
+         TNH5E8TZQENzEUv5u2B0r0zhareO0eLa6x+JQKuyV/P7agI41W3FXT0sRixRvaBYM3
+         vvBxODKTcChF2Wh+3zqDM5jO6ZsyMBf4sdZsJ2uA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.1 51/62] ext4: dont allow any modifications to an immutable file
-Date:   Fri, 26 Jul 2019 17:25:03 +0200
-Message-Id: <20190726152307.378371128@linuxfoundation.org>
+        stable@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 5.1 53/62] mm: add filemap_fdatawait_range_keep_errors()
+Date:   Fri, 26 Jul 2019 17:25:05 +0200
+Message-Id: <20190726152307.578233447@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -60,98 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: Ross Zwisler <zwisler@chromium.org>
 
-commit 2e53840362771c73eb0a5ff71611507e64e8eecd upstream.
+commit aa0bfcd939c30617385ffa28682c062d78050eba upstream.
 
-Don't allow any modifications to a file that's marked immutable, which
-means that we have to flush all the writable pages to make the readonly
-and we have to check the setattr/setflags parameters more closely.
+In the spirit of filemap_fdatawait_range() and
+filemap_fdatawait_keep_errors(), introduce
+filemap_fdatawait_range_keep_errors() which both takes a range upon
+which to wait and does not clear errors from the address space.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Ross Zwisler <zwisler@google.com>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/ioctl.c |   46 +++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 45 insertions(+), 1 deletion(-)
+ include/linux/fs.h |    2 ++
+ mm/filemap.c       |   22 ++++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
 
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -269,6 +269,29 @@ static int uuid_is_zero(__u8 u[16])
- }
- #endif
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2703,6 +2703,8 @@ extern int filemap_flush(struct address_
+ extern int filemap_fdatawait_keep_errors(struct address_space *mapping);
+ extern int filemap_fdatawait_range(struct address_space *, loff_t lstart,
+ 				   loff_t lend);
++extern int filemap_fdatawait_range_keep_errors(struct address_space *mapping,
++		loff_t start_byte, loff_t end_byte);
  
-+/*
-+ * If immutable is set and we are not clearing it, we're not allowed to change
-+ * anything else in the inode.  Don't error out if we're only trying to set
-+ * immutable on an immutable file.
-+ */
-+static int ext4_ioctl_check_immutable(struct inode *inode, __u32 new_projid,
-+				      unsigned int flags)
-+{
-+	struct ext4_inode_info *ei = EXT4_I(inode);
-+	unsigned int oldflags = ei->i_flags;
-+
-+	if (!(oldflags & EXT4_IMMUTABLE_FL) || !(flags & EXT4_IMMUTABLE_FL))
-+		return 0;
-+
-+	if ((oldflags & ~EXT4_IMMUTABLE_FL) != (flags & ~EXT4_IMMUTABLE_FL))
-+		return -EPERM;
-+	if (ext4_has_feature_project(inode->i_sb) &&
-+	    __kprojid_val(ei->i_projid) != new_projid)
-+		return -EPERM;
-+
-+	return 0;
-+}
-+
- static int ext4_ioctl_setflags(struct inode *inode,
- 			       unsigned int flags)
+ static inline int filemap_fdatawait(struct address_space *mapping)
  {
-@@ -322,6 +345,20 @@ static int ext4_ioctl_setflags(struct in
- 			goto flags_out;
- 	}
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -548,6 +548,28 @@ int filemap_fdatawait_range(struct addre
+ EXPORT_SYMBOL(filemap_fdatawait_range);
  
-+	/*
-+	 * Wait for all pending directio and then flush all the dirty pages
-+	 * for this file.  The flush marks all the pages readonly, so any
-+	 * subsequent attempt to write to the file (particularly mmap pages)
-+	 * will come through the filesystem and fail.
-+	 */
-+	if (S_ISREG(inode->i_mode) && !IS_IMMUTABLE(inode) &&
-+	    (flags & EXT4_IMMUTABLE_FL)) {
-+		inode_dio_wait(inode);
-+		err = filemap_write_and_wait(inode->i_mapping);
-+		if (err)
-+			goto flags_out;
-+	}
+ /**
++ * filemap_fdatawait_range_keep_errors - wait for writeback to complete
++ * @mapping:		address space structure to wait for
++ * @start_byte:		offset in bytes where the range starts
++ * @end_byte:		offset in bytes where the range ends (inclusive)
++ *
++ * Walk the list of under-writeback pages of the given address space in the
++ * given range and wait for all of them.  Unlike filemap_fdatawait_range(),
++ * this function does not clear error status of the address space.
++ *
++ * Use this function if callers don't handle errors themselves.  Expected
++ * call sites are system-wide / filesystem-wide data flushers: e.g. sync(2),
++ * fsfreeze(8)
++ */
++int filemap_fdatawait_range_keep_errors(struct address_space *mapping,
++		loff_t start_byte, loff_t end_byte)
++{
++	__filemap_fdatawait_range(mapping, start_byte, end_byte);
++	return filemap_check_and_keep_errors(mapping);
++}
++EXPORT_SYMBOL(filemap_fdatawait_range_keep_errors);
 +
- 	handle = ext4_journal_start(inode, EXT4_HT_INODE, 1);
- 	if (IS_ERR(handle)) {
- 		err = PTR_ERR(handle);
-@@ -751,7 +788,11 @@ long ext4_ioctl(struct file *filp, unsig
- 			return err;
- 
- 		inode_lock(inode);
--		err = ext4_ioctl_setflags(inode, flags);
-+		err = ext4_ioctl_check_immutable(inode,
-+				from_kprojid(&init_user_ns, ei->i_projid),
-+				flags);
-+		if (!err)
-+			err = ext4_ioctl_setflags(inode, flags);
- 		inode_unlock(inode);
- 		mnt_drop_write_file(filp);
- 		return err;
-@@ -1121,6 +1162,9 @@ resizefs_out:
- 			goto out;
- 		flags = (ei->i_flags & ~EXT4_FL_XFLAG_VISIBLE) |
- 			 (flags & EXT4_FL_XFLAG_VISIBLE);
-+		err = ext4_ioctl_check_immutable(inode, fa.fsx_projid, flags);
-+		if (err)
-+			goto out;
- 		err = ext4_ioctl_setflags(inode, flags);
- 		if (err)
- 			goto out;
++/**
+  * file_fdatawait_range - wait for writeback to complete
+  * @file:		file pointing to address space structure to wait for
+  * @start_byte:		offset in bytes where the range starts
 
 
