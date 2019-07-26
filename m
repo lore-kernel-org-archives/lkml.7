@@ -2,264 +2,78 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3271C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8E7C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A757A21901
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1614B21901
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564127852;
+	bh=hd9toWKOPWfZT7br01dNJa4LouepRMYI7ERlFYzGv+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tvS7Cr6vukXwkFL2t8oFi1qaJ9OPYyo1eR78wjtTBlULGYf9OWInWIXvqHFf4IFWE
+	 RvfSMZcPgMt95unS3I4flOo2gmjd1k4GvnIFIDMK8waiwtPhy/HqXqMHz+e7UMLA/2
+	 uxLlk6y4vNjQ3jjJCYsHoYjBVbnaJv5qx1hOn7+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfGZHyg (ORCPT
+        id S1726023AbfGZH5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 03:54:36 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2770 "EHLO huawei.com"
+        Fri, 26 Jul 2019 03:57:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53834 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725981AbfGZHxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 03:53:36 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C95AC6CF21C1E42DCC75;
-        Fri, 26 Jul 2019 15:53:34 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 26 Jul 2019 15:53:26 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <saeedm@mellanox.com>,
-        Yonglong Liu <liuyonglong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 06/10] net: hns3: adds debug messages to identify eth down cause
-Date:   Fri, 26 Jul 2019 15:51:26 +0800
-Message-ID: <1564127490-22173-7-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564127490-22173-1-git-send-email-tanhuazhong@huawei.com>
-References: <1564127490-22173-1-git-send-email-tanhuazhong@huawei.com>
+        id S1725842AbfGZH5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 03:57:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A6042B01F;
+        Fri, 26 Jul 2019 07:57:29 +0000 (UTC)
+Date:   Fri, 26 Jul 2019 09:57:29 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v1] ACPI / scan: Acquire device_hotplug_lock in
+ acpi_scan_init()
+Message-ID: <20190726075729.GG6142@dhcp22.suse.cz>
+References: <20190724143017.12841-1-david@redhat.com>
+ <20190725125636.GA3582@dhcp22.suse.cz>
+ <6dc566c2-faf6-565d-4ef1-2ac3a366bc76@redhat.com>
+ <20190725135747.GB3582@dhcp22.suse.cz>
+ <447b74ca-f7c7-0835-fd50-a9f7191fe47c@redhat.com>
+ <20190725191943.GA6142@dhcp22.suse.cz>
+ <e31882cf-3290-ea36-77d6-637eaf66fe77@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e31882cf-3290-ea36-77d6-637eaf66fe77@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+On Thu 25-07-19 22:49:36, David Hildenbrand wrote:
+> On 25.07.19 21:19, Michal Hocko wrote:
+[...]
+> > We need to rationalize the locking here, not to add more hacks.
+> 
+> No, sorry. The real hack is calling a function that is *documented* to
+> be called under lock without it. That is an optimization for a special
+> case. That is the black magic in the code.
 
-Some times just see the eth interface have been down/up via
-dmesg, but can not know why the eth down. So adds some debug
-messages to identify the cause for this.
+OK, let me ask differently. What does the device_hotplug_lock actually
+protects from in the add_memory path? (Which data structures)
 
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 24 ++++++++++++++++++++
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 26 ++++++++++++++++++++++
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c | 14 ++++++++++++
- 3 files changed, 64 insertions(+)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 4d58c53..2e30cfa 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -459,6 +459,10 @@ static int hns3_nic_net_open(struct net_device *netdev)
- 		h->ae_algo->ops->set_timer_task(priv->ae_handle, true);
- 
- 	hns3_config_xps(priv);
-+
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev, "net open\n");
-+
- 	return 0;
- }
- 
-@@ -519,6 +523,9 @@ static int hns3_nic_net_stop(struct net_device *netdev)
- 	if (test_and_set_bit(HNS3_NIC_STATE_DOWN, &priv->state))
- 		return 0;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev, "net stop\n");
-+
- 	if (h->ae_algo->ops->set_timer_task)
- 		h->ae_algo->ops->set_timer_task(priv->ae_handle, false);
- 
-@@ -1550,6 +1557,9 @@ static int hns3_setup_tc(struct net_device *netdev, void *type_data)
- 	h = hns3_get_handle(netdev);
- 	kinfo = &h->kinfo;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev, "setup tc: num_tc=%d\n", tc);
-+
- 	return (kinfo->dcb_ops && kinfo->dcb_ops->setup_tc) ?
- 		kinfo->dcb_ops->setup_tc(h, tc, prio_tc) : -EOPNOTSUPP;
- }
-@@ -1593,6 +1603,11 @@ static int hns3_ndo_set_vf_vlan(struct net_device *netdev, int vf, u16 vlan,
- 	struct hnae3_handle *h = hns3_get_handle(netdev);
- 	int ret = -EIO;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev,
-+			    "set vf vlan: vf=%d, vlan=%d, qos=%d, vlan_proto=%d\n",
-+			    vf, vlan, qos, vlan_proto);
-+
- 	if (h->ae_algo->ops->set_vf_vlan_filter)
- 		ret = h->ae_algo->ops->set_vf_vlan_filter(h, vf, vlan,
- 							  qos, vlan_proto);
-@@ -1611,6 +1626,10 @@ static int hns3_nic_change_mtu(struct net_device *netdev, int new_mtu)
- 	if (!h->ae_algo->ops->set_mtu)
- 		return -EOPNOTSUPP;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev, "change mtu from %d to %d\n",
-+			    netdev->mtu, new_mtu);
-+
- 	ret = h->ae_algo->ops->set_mtu(h, new_mtu);
- 	if (ret)
- 		netdev_err(netdev, "failed to change MTU in hardware %d\n",
-@@ -4395,6 +4414,11 @@ int hns3_set_channels(struct net_device *netdev,
- 	if (kinfo->rss_size == new_tqp_num)
- 		return 0;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev,
-+			    "set channels: tqp_num=%d, rxfh=%d\n",
-+			    new_tqp_num, rxfh_configured);
-+
- 	ret = hns3_reset_notify(h, HNAE3_DOWN_CLIENT);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index e71c92b..08334d7 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -311,6 +311,9 @@ static void hns3_self_test(struct net_device *ndev,
- 	if (eth_test->flags != ETH_TEST_FL_OFFLINE)
- 		return;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(ndev, "self test start\n");
-+
- 	st_param[HNAE3_LOOP_APP][0] = HNAE3_LOOP_APP;
- 	st_param[HNAE3_LOOP_APP][1] =
- 			h->flags & HNAE3_SUPPORT_APP_LOOPBACK;
-@@ -374,6 +377,9 @@ static void hns3_self_test(struct net_device *ndev,
- 
- 	if (if_running)
- 		ndev->netdev_ops->ndo_open(ndev);
-+
-+	if (netif_msg_drv(h))
-+		netdev_info(ndev, "self test end\n");
- }
- 
- static int hns3_get_sset_count(struct net_device *netdev, int stringset)
-@@ -604,6 +610,11 @@ static int hns3_set_pauseparam(struct net_device *netdev,
- {
- 	struct hnae3_handle *h = hns3_get_handle(netdev);
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev,
-+			    "set pauseparam: autoneg=%d, rx:%d, tx:%d\n",
-+			    param->autoneg, param->rx_pause, param->tx_pause);
-+
- 	if (h->ae_algo->ops->set_pauseparam)
- 		return h->ae_algo->ops->set_pauseparam(h, param->autoneg,
- 						       param->rx_pause,
-@@ -743,6 +754,13 @@ static int hns3_set_link_ksettings(struct net_device *netdev,
- 	if (cmd->base.speed == SPEED_1000 && cmd->base.duplex == DUPLEX_HALF)
- 		return -EINVAL;
- 
-+	if (netif_msg_drv(handle))
-+		netdev_info(netdev,
-+			    "set link(%s): autoneg=%d, speed=%d, duplex=%d\n",
-+			    netdev->phydev ? "phy" : "mac",
-+			    cmd->base.autoneg, cmd->base.speed,
-+			    cmd->base.duplex);
-+
- 	/* Only support ksettings_set for netdev with phy attached for now */
- 	if (netdev->phydev)
- 		return phy_ethtool_ksettings_set(netdev->phydev, cmd);
-@@ -984,6 +1002,10 @@ static int hns3_nway_reset(struct net_device *netdev)
- 		return -EINVAL;
- 	}
- 
-+	if (netif_msg_drv(handle))
-+		netdev_info(netdev, "nway reset (using %s)\n",
-+			    phy ? "phy" : "mac");
-+
- 	if (phy)
- 		return genphy_restart_aneg(phy);
- 
-@@ -1308,6 +1330,10 @@ static int hns3_set_fecparam(struct net_device *netdev,
- 	if (!ops->set_fec)
- 		return -EOPNOTSUPP;
- 	fec_mode = eth_to_loc_fec(fec->fec);
-+
-+	if (netif_msg_drv(handle))
-+		netdev_info(netdev, "set fecparam: mode=%d\n", fec_mode);
-+
- 	return ops->set_fec(handle, fec_mode);
- }
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
-index bac4ce1..88138e8 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
-@@ -201,6 +201,7 @@ static int hclge_client_setup_tc(struct hclge_dev *hdev)
- static int hclge_ieee_setets(struct hnae3_handle *h, struct ieee_ets *ets)
- {
- 	struct hclge_vport *vport = hclge_get_vport(h);
-+	struct net_device *netdev = h->kinfo.netdev;
- 	struct hclge_dev *hdev = vport->back;
- 	bool map_changed = false;
- 	u8 num_tc = 0;
-@@ -215,6 +216,9 @@ static int hclge_ieee_setets(struct hnae3_handle *h, struct ieee_ets *ets)
- 		return ret;
- 
- 	if (map_changed) {
-+		if (netif_msg_drv(h))
-+			netdev_info(netdev, "set ets\n");
-+
- 		ret = hclge_notify_client(hdev, HNAE3_DOWN_CLIENT);
- 		if (ret)
- 			return ret;
-@@ -300,6 +304,7 @@ static int hclge_ieee_getpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
- static int hclge_ieee_setpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
- {
- 	struct hclge_vport *vport = hclge_get_vport(h);
-+	struct net_device *netdev = h->kinfo.netdev;
- 	struct hclge_dev *hdev = vport->back;
- 	u8 i, j, pfc_map, *prio_tc;
- 
-@@ -325,6 +330,11 @@ static int hclge_ieee_setpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
- 	hdev->tm_info.hw_pfc_map = pfc_map;
- 	hdev->tm_info.pfc_en = pfc->pfc_en;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev,
-+			    "set pfc: pfc_en=%u, pfc_map=%u, num_tc=%u\n",
-+			    pfc->pfc_en, pfc_map, hdev->tm_info.num_tc);
-+
- 	hclge_tm_pfc_info_update(hdev);
- 
- 	return hclge_pause_setup_hw(hdev, false);
-@@ -345,8 +355,12 @@ static u8 hclge_getdcbx(struct hnae3_handle *h)
- static u8 hclge_setdcbx(struct hnae3_handle *h, u8 mode)
- {
- 	struct hclge_vport *vport = hclge_get_vport(h);
-+	struct net_device *netdev = h->kinfo.netdev;
- 	struct hclge_dev *hdev = vport->back;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev, "set dcbx: mode=%u\n", mode);
-+
- 	/* No support for LLD_MANAGED modes or CEE */
- 	if ((mode & DCB_CAP_DCBX_LLD_MANAGED) ||
- 	    (mode & DCB_CAP_DCBX_VER_CEE) ||
+This function is meant to be used when struct pages and node/zone data
+structures should be updated. Why should we even care about some device
+concept here? This should all be handled a layer up. Not all memory will
+have user space API to control online/offline state.
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
