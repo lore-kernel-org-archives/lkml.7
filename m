@@ -2,133 +2,94 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EF9C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F7BC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF74022CE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149673;
-	bh=zxNYHGwwvu6H+QM75SJ79CX5gCsXOWX7Z0mDThNWd7c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=enNiE62qSiTgsY8l+xJll/xiZFNpaVZiVEKMtstKdIUw3Cn4WPXDC9nsZ9YnI1RB8
-	 db4vPonr5W53cMKG0+4YhHwqudD+gkjI3JB8mgLvvcPAccIaRzacwB1apo2rylS33w
-	 U+aJ7m+pOhqMcOCXhIl66lpmZ2kSLl1Igd89O54c=
+	by mail.kernel.org (Postfix) with ESMTP id CB64620449
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388398AbfGZOBL (ORCPT
+        id S2387877AbfGZOBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:01:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727502AbfGZNjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:39:54 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E9BA22BEF;
-        Fri, 26 Jul 2019 13:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148394;
-        bh=zxNYHGwwvu6H+QM75SJ79CX5gCsXOWX7Z0mDThNWd7c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cNndHS3gaAYFDGnHoF+Cx8GfVUsF1WAXhYnsZPPvYEk4dmWtDDQcAuhBhRs1mkqVN
-         JVKvQsy+Fa5RirpYgXNWIsSQT9Ry+qJJyCid0LtSwKUfEL7CDpHSWsSunr0Wfmmw3l
-         gPFJ5fHSaJDEXyR/DFVjd5muhcB0BpOwBd7tuSOc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 10/85] soc: imx: soc-imx8: Correct return value of error handle
-Date:   Fri, 26 Jul 2019 09:38:20 -0400
-Message-Id: <20190726133936.11177-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
-References: <20190726133936.11177-1-sashal@kernel.org>
+        Fri, 26 Jul 2019 10:01:22 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3176 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388063AbfGZOBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 10:01:19 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4C8AA138C88EDF28DD48;
+        Fri, 26 Jul 2019 22:01:13 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 26 Jul 2019
+ 22:01:03 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <oded.gabbay@gmail.com>, <alexander.deucher@amd.com>,
+        <christian.koenig@amd.com>, <David1.Zhou@amd.com>,
+        <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <linux-kernel@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] drm/amdkfd: remove set but not used variable 'pdd'
+Date:   Fri, 26 Jul 2019 22:00:54 +0800
+Message-ID: <20190726140054.31388-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-[ Upstream commit 4c396a604a57da8f883a8b3368d83181680d6907 ]
+drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c: In function restore_process_worker:
+drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c:949:29: warning:
+ variable pdd set but not used [-Wunused-but-set-variable]
 
-Current implementation of i.MX8 SoC driver returns -ENODEV
-for all cases of error during initialization, this is incorrect.
-This patch fixes them using correct return value according
-to different errors.
+It is not used since
+commit 5b87245faf57 ("drm/amdkfd: Simplify kfd2kgd interface")
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/soc/imx/soc-imx8.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/amdkfd/kfd_process.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-diff --git a/drivers/soc/imx/soc-imx8.c b/drivers/soc/imx/soc-imx8.c
-index fc6429f9170a..e567d866a9d3 100644
---- a/drivers/soc/imx/soc-imx8.c
-+++ b/drivers/soc/imx/soc-imx8.c
-@@ -73,7 +73,7 @@ static int __init imx8_soc_init(void)
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+index 8f1076c..240bf68 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+@@ -1042,7 +1042,6 @@ static void restore_process_worker(struct work_struct *work)
+ {
+ 	struct delayed_work *dwork;
+ 	struct kfd_process *p;
+-	struct kfd_process_device *pdd;
+ 	int ret = 0;
  
- 	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
- 	if (!soc_dev_attr)
--		return -ENODEV;
-+		return -ENOMEM;
+ 	dwork = to_delayed_work(work);
+@@ -1051,16 +1050,6 @@ static void restore_process_worker(struct work_struct *work)
+ 	 * lifetime of this thread, kfd_process p will be valid
+ 	 */
+ 	p = container_of(dwork, struct kfd_process, restore_work);
+-
+-	/* Call restore_process_bos on the first KGD device. This function
+-	 * takes care of restoring the whole process including other devices.
+-	 * Restore can fail if enough memory is not available. If so,
+-	 * reschedule again.
+-	 */
+-	pdd = list_first_entry(&p->per_device_data,
+-			       struct kfd_process_device,
+-			       per_device_list);
+-
+ 	pr_debug("Started restoring pasid %d\n", p->pasid);
  
- 	soc_dev_attr->family = "Freescale i.MX";
- 
-@@ -83,8 +83,10 @@ static int __init imx8_soc_init(void)
- 		goto free_soc;
- 
- 	id = of_match_node(imx8_soc_match, root);
--	if (!id)
-+	if (!id) {
-+		ret = -ENODEV;
- 		goto free_soc;
-+	}
- 
- 	of_node_put(root);
- 
-@@ -96,12 +98,16 @@ static int __init imx8_soc_init(void)
- 	}
- 
- 	soc_dev_attr->revision = imx8_revision(soc_rev);
--	if (!soc_dev_attr->revision)
-+	if (!soc_dev_attr->revision) {
-+		ret = -ENOMEM;
- 		goto free_soc;
-+	}
- 
- 	soc_dev = soc_device_register(soc_dev_attr);
--	if (IS_ERR(soc_dev))
-+	if (IS_ERR(soc_dev)) {
-+		ret = PTR_ERR(soc_dev);
- 		goto free_rev;
-+	}
- 
- 	return 0;
- 
-@@ -110,6 +116,6 @@ static int __init imx8_soc_init(void)
- free_soc:
- 	kfree(soc_dev_attr);
- 	of_node_put(root);
--	return -ENODEV;
-+	return ret;
- }
- device_initcall(imx8_soc_init);
+ 	/* Setting last_restore_timestamp before successful restoration.
 -- 
-2.20.1
+2.7.4
+
 
