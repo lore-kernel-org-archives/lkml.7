@@ -2,88 +2,77 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7245C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3609DC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D0521850
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CB521852
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfGZQIw (ORCPT
+        id S1727388AbfGZQKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:08:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:46838 "EHLO foss.arm.com"
+        Fri, 26 Jul 2019 12:10:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726141AbfGZQIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:08:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E897337;
-        Fri, 26 Jul 2019 09:08:51 -0700 (PDT)
-Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9055D3F71F;
-        Fri, 26 Jul 2019 09:08:50 -0700 (PDT)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
-        coresight@lists.linaro.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH] coresight: acpi: Static funnel support
-Date:   Fri, 26 Jul 2019 17:08:39 +0100
-Message-Id: <20190726160839.12478-1-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.21.0
+        id S1726871AbfGZQKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 12:10:41 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20A4621850;
+        Fri, 26 Jul 2019 16:10:40 +0000 (UTC)
+Date:   Fri, 26 Jul 2019 12:10:38 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Matt Helsley <mhelsley@vmware.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3 08/13] recordmcount: Clarify what cleanup() does
+Message-ID: <20190726121038.6c69548b@gandalf.local.home>
+In-Reply-To: <bf4508b8f5c191473d9f7476f1361e61dd2ae0eb.1563992889.git.mhelsley@vmware.com>
+References: <cover.1563992889.git.mhelsley@vmware.com>
+        <bf4508b8f5c191473d9f7476f1361e61dd2ae0eb.1563992889.git.mhelsley@vmware.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ACPI bindings for CoreSight has been updated to add the device
-id for non-programmable CoreSight funnels (aka static funnels) as of
-v1.1 [0]. Add the ACPI id for static funnels in the driver.
+On Wed, 24 Jul 2019 14:05:02 -0700
+Matt Helsley <mhelsley@vmware.com> wrote:
 
-[0] https://static.docs.arm.com/den0067/a/DEN0067_CoreSight_ACPI_1.1.pdf
+> cleanup() mostly frees/unmaps the malloc'd/privately-mapped
+> copy of the ELF file recordmcount is working on, which is
+> set up in mmap_file(). It also deals with positioning within
+> the pseduo prive-mapping of the file and appending to the ELF
+> file.
+> 
+> Split into two steps:
+> 	mmap_cleanup() for the mapping itself
+> 	file_append_cleanup() for allocations storing the
+> 		appended ELF data.
+> 
+> Also, move the global variable initializations out of the main,
+> per-object-file loop and nearer to the alloc/init (mmap_file())
+> and two cleanup functions so we can more clearly see how they're
+> related.
+> 
+> Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+> ---
+>
 
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- drivers/hwtracing/coresight/coresight-funnel.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Hi Matt,
 
-diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
-index fa97cb9ab4f9..0c99848a5d69 100644
---- a/drivers/hwtracing/coresight/coresight-funnel.c
-+++ b/drivers/hwtracing/coresight/coresight-funnel.c
-@@ -5,6 +5,7 @@
-  * Description: CoreSight Funnel driver
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/types.h>
-@@ -302,11 +303,19 @@ static const struct of_device_id static_funnel_match[] = {
- 	{}
- };
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id static_funnel_ids[] = {
-+	{"ARMHC9FE", 0},
-+	{},
-+};
-+#endif
-+
- static struct platform_driver static_funnel_driver = {
- 	.probe          = static_funnel_probe,
- 	.driver         = {
- 		.name   = "coresight-static-funnel",
- 		.of_match_table = static_funnel_match,
-+		.acpi_match_table = ACPI_PTR(static_funnel_ids),
- 		.pm	= &funnel_dev_pm_ops,
- 		.suppress_bind_attrs = true,
- 	},
--- 
-2.21.0
+I reviewed up to this patch and they look fine. I may pull these in as
+I don't need a review form Josh for these patches.
 
+Thanks!
+
+-- Steve
