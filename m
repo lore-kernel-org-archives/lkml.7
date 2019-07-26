@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8B2C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8017AC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D89FF22CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513C222CE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149401;
-	bh=v4I0YP9S8oq/DoVG4zaJ1ONi/u5H9SWHkZSHNkrTCsM=;
+	s=default; t=1564149405;
+	bh=nzndwPSgzd3yxlgIMwo/8KxyQSBYjo653wm/221bf28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K24izFaOevW1F2GfWbgls4mv3K1mAagio+2tHVTwYvKp3mrZ4BBdS9btoDe2VLCZf
-	 uhQhir3ZWiKlSQiBRsUOCh7eJ0XLHp4aEeBps0oNQOm6LRr6XSBlzywz2csHYsUQGW
-	 Stt/WP8fpPH1Rblxy7VxuKdWp58OEN+oXpdR+9WQ=
+	b=gEBn/2G776zx8CN9dLePO7PYYmUBr09fCrMDCFm6f//Oi6RZ7t+EygjuPSk+1TOnN
+	 we0i1r56DOg3gfzapbTFWcrFb0F5rJejav3hmM5Dn+Z8gnp+4z4WH+vfE0nLW3fAGQ
+	 dFV6B+p14VeCckAFsVX+gLT3Fg0Z4c6vpcZDfTGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387767AbfGZNlr (ORCPT
+        id S1728504AbfGZN4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:41:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48264 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:56:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387732AbfGZNlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:41:42 -0400
+        id S2387753AbfGZNlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:41:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12CF422CC0;
-        Fri, 26 Jul 2019 13:41:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9003A22CD4;
+        Fri, 26 Jul 2019 13:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148501;
-        bh=v4I0YP9S8oq/DoVG4zaJ1ONi/u5H9SWHkZSHNkrTCsM=;
+        s=default; t=1564148506;
+        bh=nzndwPSgzd3yxlgIMwo/8KxyQSBYjo653wm/221bf28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L3xgxuLXFSoENX6FQrBUTNz2Oh/kXrTmrFJ45xUNKOnXpXe5OMiRoStuOExhjdciM
-         WYU70JSrFe3apCgqc/oWELGU2t5QtXJPLeWUT3NNEFjhAxwXg7GhD0OBcHpXlybCDK
-         cbRafXTCnPt3fxNZAh69bj7PmYVpDXpiH39ajJus=
+        b=HVpAbMX1NYUg2q5lNUPHRnun6wGDm5q+dxLO+PpdPmv4v7ZgxS+bU7DogomzbFJAb
+         t3Grcezc7Tzo75QnyAUPeZoyHlzlqelDHrHDEVbphMeTELS1pYfu7AzX/vwuaMrXnf
+         wzdo5JHw1ZKB2IAOtQYYz6ITmkbLVsEQsNb42380=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Denis Efremov <efremov@ispras.ru>, Willy Tarreau <w@1wt.eu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 69/85] floppy: fix div-by-zero in setup_format_params
-Date:   Fri, 26 Jul 2019 09:39:19 -0400
-Message-Id: <20190726133936.11177-69-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        Eiichi Tsukata <devel@etsukata.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 72/85] stacktrace: Force USER_DS for stack_trace_save_user()
+Date:   Fri, 26 Jul 2019 09:39:22 -0400
+Message-Id: <20190726133936.11177-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -59,61 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@ispras.ru>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit f3554aeb991214cbfafd17d55e2bfddb50282e32 ]
+[ Upstream commit cac9b9a4b08304f11daace03b8b48659355e44c1 ]
 
-This fixes a divide by zero error in the setup_format_params function of
-the floppy driver.
+When walking userspace stacks, USER_DS needs to be set, otherwise
+access_ok() will not function as expected.
 
-Two consecutive ioctls can trigger the bug: The first one should set the
-drive geometry with such .sect and .rate values for the F_SECT_PER_TRACK
-to become zero.  Next, the floppy format operation should be called.
-
-A floppy disk is not required to be inserted.  An unprivileged user
-could trigger the bug if the device is accessible.
-
-The patch checks F_SECT_PER_TRACK for a non-zero value in the
-set_geometry function.  The proper check should involve a reasonable
-upper limit for the .sect and .rate fields, but it could change the
-UAPI.
-
-The patch also checks F_SECT_PER_TRACK in the setup_format_params, and
-cancels the formatting operation in case of zero.
-
-The bug was found by syzkaller.
-
-Signed-off-by: Denis Efremov <efremov@ispras.ru>
-Tested-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Vegard Nossum <vegard.nossum@oracle.com>
+Reported-by: Eiichi Tsukata <devel@etsukata.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Vegard Nossum <vegard.nossum@oracle.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Link: https://lkml.kernel.org/r/20190718085754.GM3402@hirez.programming.kicks-ass.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/floppy.c | 5 +++++
+ kernel/stacktrace.c | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 9fb9b312ab6b..51246bc9709a 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -2120,6 +2120,9 @@ static void setup_format_params(int track)
- 	raw_cmd->kernel_data = floppy_track_buffer;
- 	raw_cmd->length = 4 * F_SECT_PER_TRACK;
+diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+index 36139de0a3c4..899b726c9e98 100644
+--- a/kernel/stacktrace.c
++++ b/kernel/stacktrace.c
+@@ -226,12 +226,17 @@ unsigned int stack_trace_save_user(unsigned long *store, unsigned int size)
+ 		.store	= store,
+ 		.size	= size,
+ 	};
++	mm_segment_t fs;
  
-+	if (!F_SECT_PER_TRACK)
-+		return;
+ 	/* Trace user stack if not a kernel thread */
+ 	if (!current->mm)
+ 		return 0;
+ 
++	fs = get_fs();
++	set_fs(USER_DS);
+ 	arch_stack_walk_user(consume_entry, &c, task_pt_regs(current));
++	set_fs(fs);
 +
- 	/* allow for about 30ms for data transport per track */
- 	head_shift = (F_SECT_PER_TRACK + 5) / 6;
- 
-@@ -3232,6 +3235,8 @@ static int set_geometry(unsigned int cmd, struct floppy_struct *g,
- 	/* sanity checking for parameters. */
- 	if (g->sect <= 0 ||
- 	    g->head <= 0 ||
-+	    /* check for zero in F_SECT_PER_TRACK */
-+	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
- 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
- 	    /* check if reserved bits are set */
- 	    (g->stretch & ~(FD_STRETCH | FD_SWAPSIDES | FD_SECTBASEMASK)) != 0)
+ 	return c.len;
+ }
+ #endif
 -- 
 2.20.1
 
