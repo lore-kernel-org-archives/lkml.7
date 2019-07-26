@@ -2,89 +2,115 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6787CC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB5BC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A87521901
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D47921901
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:05:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387716AbfGZPFh (ORCPT
+        id S2387737AbfGZPF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:05:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54518 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727287AbfGZPFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:05:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B3D96ADF1;
-        Fri, 26 Jul 2019 15:05:34 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 85BAADA811; Fri, 26 Jul 2019 17:06:10 +0200 (CEST)
-Date:   Fri, 26 Jul 2019 17:06:09 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Qu Wenruo <quwenruo.btrfs@gmx.com>
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>, clm@fb.com,
-        josef@toxicpanda.com, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs: btrfs: Fix a possible null-pointer dereference in
- insert_inline_extent()
-Message-ID: <20190726150609.GE2868@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Qu Wenruo <quwenruo.btrfs@gmx.com>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>, clm@fb.com,
-        josef@toxicpanda.com, dsterba@suse.com, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190724021132.27378-1-baijiaju1990@gmail.com>
- <df4b5d21-0983-3ca2-44de-ea9f1616df7f@gmx.com>
- <800ae777-928f-2969-d4dd-6f358a039e48@gmail.com>
- <1b708c0d-8ea1-3898-0340-9cbce1fc2602@gmx.com>
+        Fri, 26 Jul 2019 11:05:57 -0400
+Received: from mga03.intel.com ([134.134.136.65]:54533 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387661AbfGZPF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:05:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 08:05:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
+   d="scan'208";a="322060204"
+Received: from msmall-mobl.amr.corp.intel.com (HELO [10.251.154.62]) ([10.251.154.62])
+  by orsmga004.jf.intel.com with ESMTP; 26 Jul 2019 08:05:55 -0700
+Subject: Re: [alsa-devel] [RFC PATCH 23/40] soundwire: stream: fix disable
+ sequence
+To:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-24-pierre-louis.bossart@linux.intel.com>
+ <20190726145129.GI16003@ubuntu>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <8ec39464-81f7-e29d-7a2c-b2903a7fbf60@linux.intel.com>
+Date:   Fri, 26 Jul 2019 10:05:54 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1b708c0d-8ea1-3898-0340-9cbce1fc2602@gmx.com>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+In-Reply-To: <20190726145129.GI16003@ubuntu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:57:24AM +0800, Qu Wenruo wrote:
-> On 2019/7/24 上午10:33, Jia-Ju Bai wrote:
-> > On 2019/7/24 10:21, Qu Wenruo wrote:
-> >> On 2019/7/24 上午10:11, Jia-Ju Bai wrote:
-> >>> In insert_inline_extent(), there is an if statement on line 181 to check
-> >>> whether compressed_pages is NULL:
-> >>>      if (compressed_size && compressed_pages)
-> >>>
-> >>> When compressed_pages is NULL, compressed_pages is used on line 215:
-> >>>      cpage = compressed_pages[i];
-> >>>
-> >>> Thus, a possible null-pointer dereference may occur.
-> >>>
-> >>> To fix this possible bug, compressed_pages is checked on line 214.
-> >> This can only be hit with compressed_size > 0 and compressed_pages !=
-> >> NULL.
-> >>
-> >> It would be better to have an extra ASSERT() to warn developers about
-> >> the impossible case.
-> > 
-> > Thanks for the reply :)
-> > So I should add ASSERT(compressed_size > 0 & compressed_pages) at the
-> > beginning of the function, and remove "if (compressed_size &&
-> > compressed_pages)"?
-> 
-> My suggestion is, ASSERT((compressed_size >0 && compressed_pages) ||
-> (compressed_size == 0 && !compressed_pages))
-> 
-> And keeps the original checks.
-> 
-> Anyway, just a suggestion.
 
-Agreed, the assertion would be good, covering both cases in one
-statement at the beginning of the function.
+> Unrelated to this specific patch, but I looked at _sdw_disable_stream()
+> and I see this there (again, maybe my version is outdated already):
+> 
+> 	struct sdw_master_runtime *m_rt = NULL;
+> 	struct sdw_bus *bus = NULL;
+> 
+> where both those initialisations are redundant. Moreover:
+
+will look at this, thanks.
+
+> 
+> On Thu, Jul 25, 2019 at 06:40:15PM -0500, Pierre-Louis Bossart wrote:
+>> When we disable the stream and then call hw_free, two bank switches
+>> will be handled and as a result we re-enable the stream on hw_free.
+>>
+>> Make sure the stream is disabled on both banks.
+>>
+>> TODO: we need to completely revisit all this and make sure we have a
+>> mirroring mechanism between current and alternate banks.
+>>
+>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>> ---
+>>   drivers/soundwire/stream.c | 19 ++++++++++++++++++-
+>>   1 file changed, 18 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+>> index 53f5e790fcd7..75b9ad1fb1a6 100644
+>> --- a/drivers/soundwire/stream.c
+>> +++ b/drivers/soundwire/stream.c
+>> @@ -1637,7 +1637,24 @@ static int _sdw_disable_stream(struct sdw_stream_runtime *stream)
+>>   		}
+>>   	}
+>>   
+>> -	return do_bank_switch(stream);
+>> +	ret = do_bank_switch(stream);
+>> +	if (ret < 0) {
+>> +		dev_err(bus->dev, "Bank switch failed: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	/* make sure alternate bank (previous current) is also disabled */
+>> +	list_for_each_entry(m_rt, &stream->master_list, stream_node) {
+>> +		bus = m_rt->bus;
+> 
+> "bus" is only used below, so at least take that line under "if (ret < 0)"
+> or even just do "dev_err(m_rt->bus->dev,...)" everywhere in this function
+> and remove the variable altogether...
+
+will look at this, thanks Guennadi
+
+> 
+> Thanks
+> Guennadi
+> 
+>> +		/* Disable port(s) */
+>> +		ret = sdw_enable_disable_ports(m_rt, false);
+>> +		if (ret < 0) {
+>> +			dev_err(bus->dev, "Disable port(s) failed: %d\n", ret);
+>> +			return ret;
