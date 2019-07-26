@@ -2,124 +2,139 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A8FC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C6AC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A25D021850
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149700;
-	bh=Ko/+jmiMwx1Noz+1muVVeKU8VE+QI/+BKre3Eh07Cpw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x4yYUrvHL10QSvHr4Gt+RRYEK4maqzKc2yypaX0DF2ZdLgkJ3VJZ3HQiSq+rLvMcy
-	 T8LWZImPAiav3QEPwapq3How9M9ORWu+6KsHFYqQ9xPVOLWpAoFrb+YMSIDoqhhtaT
-	 WNQoyT1kP2G7gYXBaR+dfTAhr0VU2HjEuXp/ePcs=
+	by mail.kernel.org (Postfix) with ESMTP id 3DA1021850
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:01:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388891AbfGZOBj (ORCPT
+        id S1728252AbfGZOB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:01:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45532 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 10:01:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:45196 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbfGZNjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:39:40 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 342EF22BE8;
-        Fri, 26 Jul 2019 13:39:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148379;
-        bh=Ko/+jmiMwx1Noz+1muVVeKU8VE+QI/+BKre3Eh07Cpw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FBJZiotZcMSfMEj0bztS64AmTbZRx0uMxnnoiOYD9Ee3SjrOjQBEpvOvUpR90Vajj
-         5FvfV5jSMvHanXI/MVQ/x/MgfbqD+MjqVOfAuPa0TpwCfWH30mHCeeH1qD8X4febk/
-         v56Dq9ID1fZecBzF3BgFFx4LxIXMLEiILxtNQZl8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 03/85] ARM: dts: rockchip: Make rk3288-veyron-mickey's emmc work again
-Date:   Fri, 26 Jul 2019 09:38:13 -0400
-Message-Id: <20190726133936.11177-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
-References: <20190726133936.11177-1-sashal@kernel.org>
+        id S1726001AbfGZOB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 10:01:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71582337;
+        Fri, 26 Jul 2019 07:01:56 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 647233F694;
+        Fri, 26 Jul 2019 07:01:55 -0700 (PDT)
+Subject: Re: [PATCH 3/5] sched/fair: rework load_balance
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Phil Auld <pauld@redhat.com>
+References: <1563523105-24673-1-git-send-email-vincent.guittot@linaro.org>
+ <1563523105-24673-4-git-send-email-vincent.guittot@linaro.org>
+ <d55f906e-6e91-9f49-5c2c-7ec2e6bd68b0@arm.com>
+ <CAKfTPtD2hDxnHSaa5C_Jrtabb_ogJSgkLE=5UPyystKZqUmzWA@mail.gmail.com>
+ <4d3a67f5-c9c4-6397-7405-6f0efbd49d5c@arm.com>
+ <CAKfTPtBE5fzycHk33rf7Bky-tYSeCXaKd9oGR5cgaghzbL2TvA@mail.gmail.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <aff49e6a-b4d3-baae-9124-3d5bb5abdbfe@arm.com>
+Date:   Fri, 26 Jul 2019 15:01:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKfTPtBE5fzycHk33rf7Bky-tYSeCXaKd9oGR5cgaghzbL2TvA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+On 26/07/2019 13:30, Vincent Guittot wrote:
+>> We can avoid this entirely by going straight for an active balance when
+>> we are balancing misfit tasks (which we really should be doing TBH).
+> 
+> but your misfit task might not be the running one anymore when
+> load_balance effectively happens
+> 
 
-[ Upstream commit 99fa066710f75f18f4d9a5bc5f6a711968a581d5 ]
+We could add a check in the active balance bits to make sure the current
+task is still a misfit task (albeit not necessarily the one we wanted to
+migrate, since we can't really differentiate them).
 
-When I try to boot rk3288-veyron-mickey I totally fail to make the
-eMMC work.  Specifically my logs (on Chrome OS 4.19):
+Misfit migration shouldn't go through detach_tasks() - if the misfit task
+is still the running task, we want to go for active balance anyway, and if
+it's not the running task anymore then we should try to detect it and give
+up - there's not much else we can do. From a rq's perspective, a task can
+only ever be misfit if it's currently running.
 
-  mmc_host mmc1: card is non-removable.
-  mmc_host mmc1: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
-  mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot req 52000000Hz, actual 50000000HZ div = 0)
-  mmc1: switch to bus width 8 failed
-  mmc1: switch to bus width 4 failed
-  mmc1: new high speed MMC card at address 0001
-  mmcblk1: mmc1:0001 HAG2e 14.7 GiB
-  mmcblk1boot0: mmc1:0001 HAG2e partition 1 4.00 MiB
-  mmcblk1boot1: mmc1:0001 HAG2e partition 2 4.00 MiB
-  mmcblk1rpmb: mmc1:0001 HAG2e partition 3 4.00 MiB, chardev (243:0)
-  mmc_host mmc1: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
-  mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot req 52000000Hz, actual 50000000HZ div = 0)
-  mmc1: switch to bus width 8 failed
-  mmc1: switch to bus width 4 failed
-  mmc1: tried to HW reset card, got error -110
-  mmcblk1: error -110 requesting status
-  mmcblk1: recovery failed!
-  print_req_error: I/O error, dev mmcblk1, sector 0
-  ...
+The current code can totally active balance the wrong task if the load
+balancer saw a misfit task in update_sd_lb_stats() but it moved away in the
+meantime, so making misfit balancing skip detach_tasks() would be a straight
+improvement IMO: we can still get some active balance collaterals, but at
+least we don't wrongfully detach a non-running task that happened to have
+the right load shape.
 
-When I remove the '/delete-property/mmc-hs200-1_8v' then everything is
-hunky dory.
+>>
+>> If we *really* want to be surgical about misfit migration, we could track
+>> the task itself via a pointer to its task_struct, but IIRC Morten
+> 
+> I thought about this but task can have already die at that time and
+> the pointer is no more relevant.
+> Or we should parse the list of task still attached to the cpu and
+> compare them with the saved pointer but then it's not scalable and
+> will consume a lot of time
+> 
+>> purposely avoided this due to all the fun synchronization issues that
+>> come with it.
+>>
+>> With that out of the way, I still believe we should maximize the migrated
+>> load when dealing with several misfit tasks - there's not much else you can
+>> look at anyway to make a decision.
+> 
+> But you can easily select a task that is not misfit so what is the best/worst ?
+> select a fully wrong task or at least one of the real misfit tasks
+> 
 
-That line comes from the original submission of the mickey dts
-upstream, so presumably at the time the HS200 was failing and just
-enumerating things as a high speed device was fine.  ...or maybe it's
-just that some mickey devices work when enumerating at "high speed",
-just not mine?
+Utilization can't help you select a "best" misfit task amongst several 
+since the utilization of misfit tasks is by definition meaningless.
 
-In any case, hs200 seems good now.  Let's turn it on.
+I do agree that looking at utilization when detaching the task prevents
+picking a non-misfit task, but those are two different issues:
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/rk3288-veyron-mickey.dts | 4 ----
- 1 file changed, 4 deletions(-)
+1) Among several rqs/groups with misfit tasks, pick the busiest one
+   (this is where I'm arguing we should use load)
+2) When detaching a task, make sure it's a misfit task (this is where
+   you're arguing we should use utilization).
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-index e852594417b5..b13f87792e9f 100644
---- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-@@ -128,10 +128,6 @@
- 	};
- };
- 
--&emmc {
--	/delete-property/mmc-hs200-1_8v;
--};
--
- &i2c2 {
- 	status = "disabled";
- };
--- 
-2.20.1
+> I'm fine to go back and use load instead of util but it's not robust IMO.
+> 
 
+[...]
+>> What if there is spare capacity but no idle CPUs? In scenarios like this
+>> we should balance utilization. We could wait for a newidle balance to
+> 
+> why should we balance anything ? all tasks have already enough running time.
+> It's better to wait for a cpu to become idle instead of trying to
+> predict which one will be idle first and migrate task uselessly
+> because other tasks can easily wakeup in the meantime
+> 
+
+I probably need to play with this and create some synthetic use cases.
+
+What I had in mind is something like 2 CPUs, CPU0 running a 20% task and
+CPU1 running 6 10% tasks.
+
+If CPU0 runs the load balancer, balancing utilization would mean pulling
+2 tasks from CPU1 to reach the domain-average of 40%. The good side of this
+is that we could save ourselves from running some newidle balances, but
+I'll admit that's all quite "finger in the air".
+
+>> happen, but it'd be a shame to repeatedly do this when we could
+>> preemptively balance utilization.
+>>
