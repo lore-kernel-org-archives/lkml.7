@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3252AC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DDEC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0785222CD3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C02A22CD3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148699;
-	bh=1FOnbSF7WqPxZqQHFLMLT7wGOvQBsSTOeGGZhcbQPnk=;
+	s=default; t=1564148703;
+	bh=wtJ62wUXpvyJ29gnI3Yd0LN4hRouFAIjslcUSPxhoVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ye4Dk3uRL+KhxJomgUWHkRnnjjNot9j+mKqtQX3Joyo6G21MgVoewnJ+wa9ir3WVC
-	 GTJ1YLRfYYXLbFtPVR0oJOTcF1+T/R5LkyvGxt02nSLWcx5PSt4MZMf6EfLwTU52Tc
-	 8s21HJqL/RfL4qICWyTrafPMlH5+Ex4/PLQPXoo4=
+	b=prHBMZv/GThHD843M3FazQvjA245S5lPaHFiAogf+WAstOFJO/4ibQBnls1V72VTV
+	 skOgiyGceGSG2mG8gZRWHLDZhKRQlhNjcKLCN8pAnhivp60rsTsEYUZGaatCe96bci
+	 ChcjHtfbZ6C6/h3rGNx07jzvM21AwH5xG5rNkMmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388473AbfGZNo5 (ORCPT
+        id S2388491AbfGZNpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:44:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53272 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:45:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388439AbfGZNow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:44:52 -0400
+        id S2388052AbfGZNo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:44:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55C2122CD7;
-        Fri, 26 Jul 2019 13:44:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3389022CBF;
+        Fri, 26 Jul 2019 13:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148691;
-        bh=1FOnbSF7WqPxZqQHFLMLT7wGOvQBsSTOeGGZhcbQPnk=;
+        s=default; t=1564148698;
+        bh=wtJ62wUXpvyJ29gnI3Yd0LN4hRouFAIjslcUSPxhoVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b/1gT6wSgapNyF6JThloKi2bQ2TbSD9Tuh3kosZ9Z85tBjP3NDZBirrrPdF/8jF7M
-         rwBMYZbC3nRzWGOBbgi1+0/wSvVNQU2S13r4OSAHAmQiaicswH2dW9U6S4eT0SB4YU
-         SucxtzGnV+hF1KqoHJFZTBnUFA+q9GpxnGxRPC4w=
+        b=s0EsphYu05xhl/mw7m7HJcDDN9CEKY4ASPFcQSlgWCZIIdKHgW3ntEeCiWiRs6F4K
+         2SYi4t8Z1VoUxEiQY2eIE5xF47Afz3kWtk3pbeAu3MmbwbalEvN03vw5CRBj6z54ny
+         R6+HWUOstb/DQiW6c1+juLpIYgxINHWgYkPj+CxM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>,
         clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 14/30] ACPI: fix false-positive -Wuninitialized warning
-Date:   Fri, 26 Jul 2019 09:44:16 -0400
-Message-Id: <20190726134432.12993-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 18/30] x86: math-emu: Hide clang warnings for 16-bit overflow
+Date:   Fri, 26 Jul 2019 09:44:20 -0400
+Message-Id: <20190726134432.12993-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134432.12993-1-sashal@kernel.org>
 References: <20190726134432.12993-1-sashal@kernel.org>
@@ -64,56 +62,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit dfd6f9ad36368b8dbd5f5a2b2f0a4705ae69a323 ]
+[ Upstream commit 29e7e9664aec17b94a9c8c5a75f8d216a206aa3a ]
 
-clang gets confused by an uninitialized variable in what looks
-to it like a never executed code path:
+clang warns about a few parts of the math-emu implementation
+where a 16-bit integer becomes negative during assignment:
 
-arch/x86/kernel/acpi/boot.c:618:13: error: variable 'polarity' is uninitialized when used here [-Werror,-Wuninitialized]
-        polarity = polarity ? ACPI_ACTIVE_LOW : ACPI_ACTIVE_HIGH;
-                   ^~~~~~~~
-arch/x86/kernel/acpi/boot.c:606:32: note: initialize the variable 'polarity' to silence this warning
-        int rc, irq, trigger, polarity;
-                                      ^
-                                       = 0
-arch/x86/kernel/acpi/boot.c:617:12: error: variable 'trigger' is uninitialized when used here [-Werror,-Wuninitialized]
-        trigger = trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE;
-                  ^~~~~~~
-arch/x86/kernel/acpi/boot.c:606:22: note: initialize the variable 'trigger' to silence this warning
-        int rc, irq, trigger, polarity;
-                            ^
-                             = 0
+arch/x86/math-emu/poly_tan.c:88:35: error: implicit conversion from 'int' to 'short' changes value from 49216 to -16320 [-Werror,-Wconstant-conversion]
+                                      (0x41 + EXTENDED_Ebias) | SIGN_Negative);
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+arch/x86/math-emu/fpu_emu.h:180:58: note: expanded from macro 'setexponent16'
+ #define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
+                                                      ~  ^
+arch/x86/math-emu/reg_constant.c:37:32: error: implicit conversion from 'int' to 'short' changes value from 49085 to -16451 [-Werror,-Wconstant-conversion]
+FPU_REG const CONST_PI2extra = MAKE_REG(NEG, -66,
+                               ^~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
+                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:48:28: error: implicit conversion from 'int' to 'short' changes value from 65535 to -1 [-Werror,-Wconstant-conversion]
+FPU_REG const CONST_QNaN = MAKE_REG(NEG, EXP_OVER, 0x00000000, 0xC0000000);
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
+                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is unfortunately a design decision in clang and won't be fixed.
-
-Changing the acpi_get_override_irq() macro to an inline function
-reliably avoids the issue.
+The code is correct as is, so add a typecast to shut up the warnings.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190712090816.350668-1-arnd@arndb.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/acpi.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/math-emu/fpu_emu.h      | 2 +-
+ arch/x86/math-emu/reg_constant.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index ca2b4c4aec42..719eb97217a3 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -309,7 +309,10 @@ void acpi_set_irq_model(enum acpi_irq_model_id model,
- #ifdef CONFIG_X86_IO_APIC
- extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
- #else
--#define acpi_get_override_irq(gsi, trigger, polarity) (-1)
-+static inline int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity)
-+{
-+	return -1;
-+}
- #endif
- /*
-  * This function undoes the effect of one call to acpi_register_gsi().
+diff --git a/arch/x86/math-emu/fpu_emu.h b/arch/x86/math-emu/fpu_emu.h
+index afbc4d805d66..df5aee5402c4 100644
+--- a/arch/x86/math-emu/fpu_emu.h
++++ b/arch/x86/math-emu/fpu_emu.h
+@@ -176,7 +176,7 @@ static inline void reg_copy(FPU_REG const *x, FPU_REG *y)
+ #define setexponentpos(x,y) { (*(short *)&((x)->exp)) = \
+   ((y) + EXTENDED_Ebias) & 0x7fff; }
+ #define exponent16(x)         (*(short *)&((x)->exp))
+-#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
++#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (u16)(y); }
+ #define addexponent(x,y)    { (*(short *)&((x)->exp)) += (y); }
+ #define stdexp(x)           { (*(short *)&((x)->exp)) += EXTENDED_Ebias; }
+ 
+diff --git a/arch/x86/math-emu/reg_constant.c b/arch/x86/math-emu/reg_constant.c
+index 00548354912f..382093c5072b 100644
+--- a/arch/x86/math-emu/reg_constant.c
++++ b/arch/x86/math-emu/reg_constant.c
+@@ -17,7 +17,7 @@
+ #include "control_w.h"
+ 
+ #define MAKE_REG(s, e, l, h) { l, h, \
+-		((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
++		(u16)((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+ 
+ FPU_REG const CONST_1 = MAKE_REG(POS, 0, 0x00000000, 0x80000000);
+ #if 0
 -- 
 2.20.1
 
