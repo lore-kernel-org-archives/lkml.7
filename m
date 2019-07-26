@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85224C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62351C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54AE322CD3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FEA122CBF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148688;
-	bh=t8IlIe2sAIM3LHLH9YgHi/w/giQgepAU/gE/0q3QV/g=;
+	s=default; t=1564148692;
+	bh=rG878YI2kRgajK4jol6RtcXjmLSgt98/dcnrs4emepw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JKucqgcahVwiqLDpFgvYIEr3fQWiXifKR0zrjTLUOqaRo2aWNsuN5G9kPogShC93W
-	 kcHkXvYOvPjR3BAda+SfjAvOTEe/rGp6OwSB94G2xJfO+xkltyEtLH0GuxrVilpnuU
-	 Bl6v16GkyV0kRAMWcGVk641SCDc74tZ1m9ICnmoM=
+	b=Cmrca96ECeqAyaVEENvS90e8xwWdwEFjfrEf3QnyuUsfEDy9KU/t8JvIdNvn4rxdo
+	 EIPEk91Q0vFXSocnBMG2KrSRLCNAbUfSx40lp0+PxvUQ0x/rmQpLm/Tvtj9sP8hpKQ
+	 zpEgLFdR6u8HXn6i1r47n/rqiAOrS0T4VZEf/fBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388417AbfGZNor (ORCPT
+        id S2388437AbfGZNou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:44:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53056 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:44:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388389AbfGZNoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:44:44 -0400
+        id S2387898AbfGZNor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:44:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFB8522CBF;
-        Fri, 26 Jul 2019 13:44:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA18F22CD3;
+        Fri, 26 Jul 2019 13:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148683;
-        bh=t8IlIe2sAIM3LHLH9YgHi/w/giQgepAU/gE/0q3QV/g=;
+        s=default; t=1564148686;
+        bh=rG878YI2kRgajK4jol6RtcXjmLSgt98/dcnrs4emepw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ezMy0f1NrxV4DbwHBtHFnW/WxUai1yW3noWdLXDEC+8v7kst2h+7EJ8FSTQYuGuTU
-         nbSJ6nyy5459QiF6A1esnAHVsPGFtGgJl5lxOgqIvBt6By1P+Isfnwx+jRD1wSvPBl
-         BUVYNn8b/q3QvqTRdyzdJ/LPY5V00E9TRtV3Ub4U=
+        b=KL5lFTdodA8RzLoE4L745kSInsUMR/UnNgrGEmADVqCutKAFLIvgRLlE/VCkaIE9+
+         IO0pNbQ1O8WUQfsPnk+7HDqXazK/KfTqbBAFeo6tbc+N6Wiy6JhVLDM2xIO7KGJZGu
+         UTqQPxPSnxdCr0HayrB4BtXf+tEqyuc116+rZ7K8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 08/30] dmaengine: rcar-dmac: Reject zero-length slave DMA requests
-Date:   Fri, 26 Jul 2019 09:44:10 -0400
-Message-Id: <20190726134432.12993-8-sashal@kernel.org>
+Cc:     David Sterba <dsterba@suse.com>, Qu Wenruo <wqu@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 10/30] btrfs: fix minimum number of chunk errors for DUP
+Date:   Fri, 26 Jul 2019 09:44:12 -0400
+Message-Id: <20190726134432.12993-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134432.12993-1-sashal@kernel.org>
 References: <20190726134432.12993-1-sashal@kernel.org>
@@ -61,46 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: David Sterba <dsterba@suse.com>
 
-[ Upstream commit 78efb76ab4dfb8f74f290ae743f34162cd627f19 ]
+[ Upstream commit 0ee5f8ae082e1f675a2fb6db601c31ac9958a134 ]
 
-While the .device_prep_slave_sg() callback rejects empty scatterlists,
-it still accepts single-entry scatterlists with a zero-length segment.
-These may happen if a driver calls dmaengine_prep_slave_single() with a
-zero len parameter.  The corresponding DMA request will never complete,
-leading to messages like:
+The list of profiles in btrfs_chunk_max_errors lists DUP as a profile
+DUP able to tolerate 1 device missing. Though this profile is special
+with 2 copies, it still needs the device, unlike the others.
 
-    rcar-dmac e7300000.dma-controller: Channel Address Error happen
+Looking at the history of changes, thre's no clear reason why DUP is
+there, functions were refactored and blocks of code merged to one
+helper.
 
-and DMA timeouts.
+d20983b40e828 Btrfs: fix writing data into the seed filesystem
+  - factor code to a helper
 
-Although requesting a zero-length DMA request is a driver bug, rejecting
-it early eases debugging.  Note that the .device_prep_dma_memcpy()
-callback already rejects requests to copy zero bytes.
+de11cc12df173 Btrfs: don't pre-allocate btrfs bio
+  - unrelated change, DUP still in the list with max errors 1
 
-Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Analyzed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+a236aed14ccb0 Btrfs: Deal with failed writes in mirrored configurations
+  - introduced the max errors, leaves DUP and RAID1 in the same group
+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sh/rcar-dmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/volumes.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index f37a6ef4f544..e4fe24be3d7a 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -1111,7 +1111,7 @@ rcar_dmac_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
- 	struct rcar_dmac_chan *rchan = to_rcar_dmac_chan(chan);
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index 94b61afe996c..70aa22a8a9cc 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -5072,8 +5072,7 @@ static inline int btrfs_chunk_max_errors(struct map_lookup *map)
  
- 	/* Someone calling slave DMA on a generic channel? */
--	if (rchan->mid_rid < 0 || !sg_len) {
-+	if (rchan->mid_rid < 0 || !sg_len || !sg_dma_len(sgl)) {
- 		dev_warn(chan->device->dev,
- 			 "%s: bad parameter: len=%d, id=%d\n",
- 			 __func__, sg_len, rchan->mid_rid);
+ 	if (map->type & (BTRFS_BLOCK_GROUP_RAID1 |
+ 			 BTRFS_BLOCK_GROUP_RAID10 |
+-			 BTRFS_BLOCK_GROUP_RAID5 |
+-			 BTRFS_BLOCK_GROUP_DUP)) {
++			 BTRFS_BLOCK_GROUP_RAID5)) {
+ 		max_errors = 1;
+ 	} else if (map->type & BTRFS_BLOCK_GROUP_RAID6) {
+ 		max_errors = 2;
 -- 
 2.20.1
 
