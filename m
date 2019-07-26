@@ -2,128 +2,111 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256B4C76194
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9920C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0AFB2238C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:57:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cp2ZutT6"
+	by mail.kernel.org (Postfix) with ESMTP id 88A4E22C7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:57:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726001AbfGZB5F (ORCPT
+        id S1726109AbfGZB5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 21:57:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43197 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfGZB5F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 21:57:05 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w79so39182708oif.10
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 18:57:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x0ptnVs6ufwHdUe2bXDnes7rPX5LPCdAZDTAzLOU0mg=;
-        b=cp2ZutT6OZJivqpOFZ5qv8yYQljKChM6RQaGffj7XyAYlw5jqK5uHaRUMjLhG/TqBp
-         ZsEqS9W32J1vvPOEWcWJlrz+vmTiGM3btTV2LemgpW12edItyRa2BpTC2IIdDNZCxjCx
-         hTM3qv+H7nfMnq9y3L4APNfSITDXwvPvCdLjjchQ/ZIXA/zkEq8vKgXT4SAOKEjA8jqj
-         gJ6jPffwDMF+PlrXCQES1f5RsfjI0d0l95oxBvscRIvdmTv8u9Xr0pTbcc9FqRDc1s9A
-         VcAZksUMHExU196JOxNPyIZ3hTzmJGZN+20te/DUq6tCQchAYgHeMV9o0zzzPP1QG2pP
-         Km3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x0ptnVs6ufwHdUe2bXDnes7rPX5LPCdAZDTAzLOU0mg=;
-        b=P+XU/3zzKfoWMKCZt6ThzttO4vBTzM+tk7rNg/YqEehJzitNlzx5vTDm/RpBAF9GSX
-         nWKV7l1wg8WcryNl4aM0a1k2x4YD4RafeRii3oi5vRn8AVhi04zSQ9LTgyyYuansbNmO
-         osC6e+FoP2T7GA1t0rqymWall3IK2MG+8NXiitoftDHuY1yGAOwYv1hA2Fo8W0PGhgcr
-         ZsjsCQVYzRLdObrqPGw6HFt3nVmjRLji/nI4KCEiN7xA+CCAIwWbKtWjFY7wwfl1aUcC
-         uJFc9UmI78NU8SWzHp1A3E7+2Zjo1MGaAEqZZiMtiJFWlpGVeQBDYo2bQSSJjqMf9M7e
-         ROrA==
-X-Gm-Message-State: APjAAAUOrTFapKwZ5V7mPG4QMed29Cse6bGrG426c6WsL9OVPyRXEPvX
-        vkP1N/AQguIHAFiAO/0L+iMdkZCkn9zst9RQWPWBdA==
-X-Google-Smtp-Source: APXvYqyDyd5ROlTv8OSC4BboxrM2M+E2lZlC4AR+6tYCydL7ELU5Y56k4Cyf9dH/zfTQv7O4F36NVazwT6wvBETh2+E=
-X-Received: by 2002:aca:d8c2:: with SMTP id p185mr46769844oig.30.1564106224182;
- Thu, 25 Jul 2019 18:57:04 -0700 (PDT)
+        Thu, 25 Jul 2019 21:57:32 -0400
+Received: from mga12.intel.com ([192.55.52.136]:24504 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725851AbfGZB5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 21:57:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 18:57:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,308,1559545200"; 
+   d="scan'208";a="181722703"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 25 Jul 2019 18:57:26 -0700
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH v5 02/10] iommu/vt-d: Use per-device dma_ops
+To:     Christoph Hellwig <hch@lst.de>
+References: <20190725031717.32317-1-baolu.lu@linux.intel.com>
+ <20190725031717.32317-3-baolu.lu@linux.intel.com>
+ <20190725054413.GC24527@lst.de>
+ <bc831f88-5b19-7531-00aa-a7577dd5c1ac@linux.intel.com>
+ <20190725114348.GA30957@lst.de>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <a098359a-0f89-6028-68df-9f83718df256@linux.intel.com>
+Date:   Fri, 26 Jul 2019 09:56:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190724014222.110767-1-saravanak@google.com> <20190725023050.7ggjbwsthoxpkexv@vireshk-i7>
- <CAGETcx_ZHXkjZMBhO8YTW2fMyVqmsj8f9F8d6oJTn=NmRL1q=A@mail.gmail.com> <20190725052229.znf6asnvl44rjqxg@vireshk-i7>
-In-Reply-To: <20190725052229.znf6asnvl44rjqxg@vireshk-i7>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 25 Jul 2019 18:56:28 -0700
-Message-ID: <CAGETcx8VCFW6_XoFxRHkGj7gdHZvTOM4i6ee_EZVK0F7SvQG5g@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] Add required-opps support to devfreq passive gov
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190725114348.GA30957@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:22 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 24-07-19, 20:40, Saravana Kannan wrote:
-> > On Wed, Jul 24, 2019 at 7:30 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >
-> > > On 23-07-19, 18:42, Saravana Kannan wrote:
-> > > > The devfreq passive governor scales the frequency of a "child" device based
-> > > > on the current frequency of a "parent" device (not parent/child in the
-> > > > sense of device hierarchy). As of today, the passive governor requires one
-> > > > of the following to work correctly:
-> > > > 1. The parent and child device have the same number of frequencies
-> > > > 2. The child device driver passes a mapping function to translate from
-> > > >    parent frequency to child frequency.
-> > >
-> > > > v3 -> v4:
-> > > > - Fixed documentation comments
-> > > > - Fixed order of functions in .h file
-> > > > - Renamed the new xlate API
-> > > > - Caused _set_required_opps() to fail if all required opps tables aren't
-> > > >   linked.
-> > >
-> > > We are already in the middle of a discussion for your previous version
-> > > and I haven't said yet that I am happy with what you suggested just 2
-> > > days back. Why send another version so soon ?
-> >
-> > I wanted you to see how I addressed your comments.
->
-> Sure, but that is just half the comments.
->
-> > It didn't look like
-> > you were going to make more comments on the code.
->
-> I posted some queries and you posted your opinions on them. Now
-> shouldn't I get a chance to reply again to see if I agree with your
-> replies or if we can settle to something else ? I only got one day in
-> between where I was busy with other stuff and so couldn't come back to
-> it. Please wait a little longer specially when the comments aren't
-> minor in nature.
+Hi,
 
-Sorry if it came off as trying to rush you. That wasn't the intention.
-Just some misunderstanding on my part.
+On 7/25/19 7:43 PM, Christoph Hellwig wrote:
+> On Thu, Jul 25, 2019 at 03:18:03PM +0800, Lu Baolu wrote:
+>>> Don't we need to keep this bit so that we still allow the IOMMU
+>>> to act if the device has a too small DMA mask to address all memory in
+>>> the system, even if if it should otherwise be identity mapped?
+>>>
+>>
+>> This checking happens only when device is using an identity mapped
+>> domain. If the device has a small DMA mask, swiotlb will be used for
+>> high memory access.
+>>
+>> This is supposed to be handled in dma_direct_map_page():
+>>
+>>          if (unlikely(!dma_direct_possible(dev, dma_addr, size)) &&
+>>              !swiotlb_map(dev, &phys, &dma_addr, size, dir, attrs)) {
+>>                  report_addr(dev, dma_addr, size);
+>>                  return DMA_MAPPING_ERROR;
+>>          }
+> 
+> Well, yes.  But the point is that the current code uses dynamic iommu
+> mappings even if the devices is in the identity mapped domain when the
+> dma mask іs too small to map all memory directly.  Your change means it
+> will now use swiotlb which is most likely going to be a lot more
 
-> Anyway, lets get over it now. Lets continue our discussion on V3 and
-> then we can have a V5 :)
->
-> Have a good day Saravana.
+By default, we use DMA domain. The privileged users are able to change
+this with global kernel parameter or per-group default domain type under
+discussion. In another word, use of identity domain is a choice of the
+privileged user who should consider the possible bounce buffer overhead.
 
-Sounds good. You too Viresh! :)
+I think current code doesn't do the right thing. The user asks the iommu
+driver to use identity domain for a device, but the driver force it back
+to DMA domain because of the device address capability.
 
--Saravana
+> expensive.  I don't think that this change is a good idea, and even if
+> we decide that this is a good idea after all that should be done in a
+> separate prep patch that explains the rationale.
+
+Yes. Make sense.
+
+Best regards,
+Baolu
