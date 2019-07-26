@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C21C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1145AC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B92262054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6AFA205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155371;
-	bh=t8bbuwhxhctVtmpeib9Zw2nbVsJkhqj1i5cLEyLUOnY=;
+	s=default; t=1564155379;
+	bh=Lqpta6U5ZDU31kj4VC9bAn/qwR9Ea3ycMlJ1w1wL8Lk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Aayjjm+5xilhn5Cyy5Gj3W+hh1tC+mEHB4qRniavIBcYWwl/t9I43v7/7gQohYMJy
-	 9jR6s9GdcTSbuIcOeNhUVAc2baiIH883M9Rve/er3MlzENuJzSVoYWt+t4JSxEfDoU
-	 d0lPZk7kobAK6Q4qvS4M9MGIWZx2CFH/lOjtvLuo=
+	b=ePMoAiPC5htiB1I8xABIpPC36lAhOgnhCdLEDv9IoYquoGBMKhprUkJ/944+1sRuM
+	 Fq99T/b6KRI6RKFyQlrE2tPUDGoewtSjf1LwzTFt3pBms/rA+NSSfyUCu/1PASj5ZF
+	 cWPIc/TD/5uVzTwueORE2d/yJWgEIbVRDp20fHOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389344AbfGZPbt (ORCPT
+        id S2387951AbfGZPgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:31:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46844 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:36:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389325AbfGZPbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:31:45 -0400
+        id S2389280AbfGZPbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:31:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BD6222CBD;
-        Fri, 26 Jul 2019 15:31:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9923722BF5;
+        Fri, 26 Jul 2019 15:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155104;
-        bh=t8bbuwhxhctVtmpeib9Zw2nbVsJkhqj1i5cLEyLUOnY=;
+        s=default; t=1564155095;
+        bh=Lqpta6U5ZDU31kj4VC9bAn/qwR9Ea3ycMlJ1w1wL8Lk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A4xYuxlVHCaKzP2a9RsZhSUwKkfLcumaWFwYKOfPc/FsKxRyp3k2YTRtB1ylLQk6l
-         S9HzO+mRTGVAz6Bte/sLMKVCZR3oHGMRv7XPuve3Mo9x4NrwZRJKCXlNTbFFWE5el7
-         iySm+9wmSfbFhd1FzLU3A2UDzATE+kfMoyfoKiIw=
+        b=W2Lp3zBLbibZ0YzRoP3z7Ejum2vx9sQ64bonYCZhRJrnIP4wdMVHdI605xtI/0eNU
+         zF70iCrkQbkTMadOeqhPVXud6sCZ+K4xDT1Km+2c6Qj7KpuxBqED0cuL5gX47iqfGK
+         FjVKtnV9G6Ukwul2qPDLMFCVElazEUEEkoYAqzwI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 5.1 55/62] ext4: use jbd2_inode dirty range scoping
-Date:   Fri, 26 Jul 2019 17:25:07 +0200
-Message-Id: <20190726152307.769532113@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>, stable@kernel.org
+Subject: [PATCH 5.1 52/62] ext4: enforce the immutable flag on open files
+Date:   Fri, 26 Jul 2019 17:25:04 +0200
+Message-Id: <20190726152307.488238287@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -59,96 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ross Zwisler <zwisler@chromium.org>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit 73131fbb003b3691cfcf9656f234b00da497fcd6 upstream.
+commit 02b016ca7f99229ae6227e7b2fc950c4e140d74a upstream.
 
-Use the newly introduced jbd2_inode dirty range scoping to prevent us
-from waiting forever when trying to complete a journal transaction.
+According to the chattr man page, "a file with the 'i' attribute
+cannot be modified..."  Historically, this was only enforced when the
+file was opened, per the rest of the description, "... and the file
+can not be opened in write mode".
 
-Signed-off-by: Ross Zwisler <zwisler@google.com>
+There is general agreement that we should standardize all file systems
+to prevent modifications even for files that were opened at the time
+the immutable flag is set.  Eventually, a change to enforce this at
+the VFS layer should be landing in mainline.  Until then, enforce this
+at the ext4 level to prevent xfstests generic/553 from failing.
+
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@vger.kernel.org
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/ext4_jbd2.h   |   12 ++++++------
- fs/ext4/inode.c       |   13 ++++++++++---
- fs/ext4/move_extent.c |    3 ++-
- 3 files changed, 18 insertions(+), 10 deletions(-)
+ fs/ext4/file.c  |    4 ++++
+ fs/ext4/inode.c |   11 +++++++++++
+ 2 files changed, 15 insertions(+)
 
---- a/fs/ext4/ext4_jbd2.h
-+++ b/fs/ext4/ext4_jbd2.h
-@@ -361,20 +361,20 @@ static inline int ext4_journal_force_com
- }
- 
- static inline int ext4_jbd2_inode_add_write(handle_t *handle,
--					    struct inode *inode)
-+		struct inode *inode, loff_t start_byte, loff_t length)
- {
- 	if (ext4_handle_valid(handle))
--		return jbd2_journal_inode_add_write(handle,
--						    EXT4_I(inode)->jinode);
-+		return jbd2_journal_inode_ranged_write(handle,
-+				EXT4_I(inode)->jinode, start_byte, length);
- 	return 0;
- }
- 
- static inline int ext4_jbd2_inode_add_wait(handle_t *handle,
--					   struct inode *inode)
-+		struct inode *inode, loff_t start_byte, loff_t length)
- {
- 	if (ext4_handle_valid(handle))
--		return jbd2_journal_inode_add_wait(handle,
--						   EXT4_I(inode)->jinode);
-+		return jbd2_journal_inode_ranged_wait(handle,
-+				EXT4_I(inode)->jinode, start_byte, length);
- 	return 0;
- }
- 
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -165,6 +165,10 @@ static ssize_t ext4_write_checks(struct
+ 	ret = generic_write_checks(iocb, from);
+ 	if (ret <= 0)
+ 		return ret;
++
++	if (unlikely(IS_IMMUTABLE(inode)))
++		return -EPERM;
++
+ 	/*
+ 	 * If we have encountered a bitmap-format file, the size limit
+ 	 * is smaller than s_maxbytes, which is for extent-mapped files.
 --- a/fs/ext4/inode.c
 +++ b/fs/ext4/inode.c
-@@ -727,10 +727,16 @@ out_sem:
- 		    !(flags & EXT4_GET_BLOCKS_ZERO) &&
- 		    !ext4_is_quota_file(inode) &&
- 		    ext4_should_order_data(inode)) {
-+			loff_t start_byte =
-+				(loff_t)map->m_lblk << inode->i_blkbits;
-+			loff_t length = (loff_t)map->m_len << inode->i_blkbits;
+@@ -5514,6 +5514,14 @@ int ext4_setattr(struct dentry *dentry,
+ 	if (unlikely(ext4_forced_shutdown(EXT4_SB(inode->i_sb))))
+ 		return -EIO;
+ 
++	if (unlikely(IS_IMMUTABLE(inode)))
++		return -EPERM;
 +
- 			if (flags & EXT4_GET_BLOCKS_IO_SUBMIT)
--				ret = ext4_jbd2_inode_add_wait(handle, inode);
-+				ret = ext4_jbd2_inode_add_wait(handle, inode,
-+						start_byte, length);
- 			else
--				ret = ext4_jbd2_inode_add_write(handle, inode);
-+				ret = ext4_jbd2_inode_add_write(handle, inode,
-+						start_byte, length);
- 			if (ret)
- 				return ret;
- 		}
-@@ -4081,7 +4087,8 @@ static int __ext4_block_zero_page_range(
- 		err = 0;
- 		mark_buffer_dirty(bh);
- 		if (ext4_should_order_data(inode))
--			err = ext4_jbd2_inode_add_write(handle, inode);
-+			err = ext4_jbd2_inode_add_write(handle, inode, from,
-+					length);
- 	}
++	if (unlikely(IS_APPEND(inode) &&
++		     (ia_valid & (ATTR_MODE | ATTR_UID |
++				  ATTR_GID | ATTR_TIMES_SET))))
++		return -EPERM;
++
+ 	error = setattr_prepare(dentry, attr);
+ 	if (error)
+ 		return error;
+@@ -6184,6 +6192,9 @@ vm_fault_t ext4_page_mkwrite(struct vm_f
+ 	get_block_t *get_block;
+ 	int retries = 0;
  
- unlock:
---- a/fs/ext4/move_extent.c
-+++ b/fs/ext4/move_extent.c
-@@ -390,7 +390,8 @@ data_copy:
++	if (unlikely(IS_IMMUTABLE(inode)))
++		return VM_FAULT_SIGBUS;
++
+ 	sb_start_pagefault(inode->i_sb);
+ 	file_update_time(vma->vm_file);
  
- 	/* Even in case of data=writeback it is reasonable to pin
- 	 * inode to transaction, to prevent unexpected data loss */
--	*err = ext4_jbd2_inode_add_write(handle, orig_inode);
-+	*err = ext4_jbd2_inode_add_write(handle, orig_inode,
-+			(loff_t)orig_page_offset << PAGE_SHIFT, replaced_size);
- 
- unlock_pages:
- 	unlock_page(pagep[0]);
 
 
