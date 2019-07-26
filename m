@@ -2,179 +2,106 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58F1C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E92B6C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837E322BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C050E218DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:52:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="BcbB9dYE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbfGZIvt (ORCPT
+        id S1726410AbfGZIwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 04:51:49 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:45332 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfGZIvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 04:51:48 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D69E81A0966;
-        Fri, 26 Jul 2019 10:51:45 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 222B41A0976;
-        Fri, 26 Jul 2019 10:51:42 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8BDA7402A9;
-        Fri, 26 Jul 2019 16:51:37 +0800 (SGT)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     jassisinghbrar@gmail.com, o.rempel@pengutronix.de,
-        aisheng.dong@nxp.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [RFC] mailbox: imx: Add support for i.MX v1 messaging unit
-Date:   Fri, 26 Jul 2019 16:29:36 +0800
-Message-Id: <1564129776-19574-1-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 26 Jul 2019 04:52:44 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46823 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfGZIwn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 04:52:43 -0400
+Received: by mail-io1-f67.google.com with SMTP id i10so103176163iol.13
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 01:52:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ivu7mmuUCBtRCJ9+296IctrbfYNXAVCIQ5a8QkkFxDo=;
+        b=BcbB9dYEb6fL2ssaGCJwDjSepgxhHuOJBsItX3hrLsfKUFk5WZgW0heTRA+zC+/9ki
+         epLl9ANmgYHGtkc3Uqix9qGThZR50Myd2iSEOnydNe8nrEbh5evDIlUXXLW6hWf+6EwY
+         X0n577EY+VzxpMbP8Wy6TqPvogcrYcyOEn6Us=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ivu7mmuUCBtRCJ9+296IctrbfYNXAVCIQ5a8QkkFxDo=;
+        b=Di7on5p4u3dL1azFlPG0dBjAkmuMHN73CFU7ppjMT9Bl6ylGboChegFOixXQ4/vSsp
+         l06bNKX2OltojT2/S8h8CfQ/vip4KSMMdgodd21TOg+ew8OJAuym5yTwhOpBh0I3FJHU
+         FZiFqgBirp0/P0rNyIh5H60aNQa7immPUt4mmtr6dFPwVRQbzBAXHaJb/2a5cP4B5m1a
+         R1nXf6E4J3h5xvJaYPA4opjlZ7HepS+JSMUz1DTxa1D3iIJKGKNmH/xyIxgJOhtBoorM
+         RSP9Oxmnvrfw7fl7XHpnCw/VA6Pj4Tj0mVyjK6F7ktHPevIoE24PTD78vIwFCYsdHVBP
+         P5yw==
+X-Gm-Message-State: APjAAAX255PiSdQ6uK39VSrw3cB5ZRjCtg/p4H2BtH8gQwxT6ZoNSv1X
+        e7s4xnthTVX65b6KlG+aEVNfsHlh33/J8VfTnBU=
+X-Google-Smtp-Source: APXvYqwi441df8XodqoYa2JUoE1MGP2LwR3hrCQfE9nZyRGKSRipZoxCCSSAFMCVBaT7g2c2hNnccWtVKrkKS61oXVQ=
+X-Received: by 2002:a02:ce52:: with SMTP id y18mr92451652jar.78.1564131162681;
+ Fri, 26 Jul 2019 01:52:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <ae19f8ddc770135572323dd431d0efbe3e419582.camel@linux.ibm.com>
+In-Reply-To: <ae19f8ddc770135572323dd431d0efbe3e419582.camel@linux.ibm.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Fri, 26 Jul 2019 10:52:31 +0200
+Message-ID: <CAJfpegsLKY=M6PSBZjgpKkZTxUYBn+H44BxG2HVLsAVzTzyy_Q@mail.gmail.com>
+Subject: Re: Question about vmsplice + SPLICE_F_GIFT
+To:     Leonardo Bras <leonardo@linux.ibm.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a version1.0 MU on i.MX7ULP platform.
-One new version ID register is added, and the offset is 0.
-TRn registers are defined at the offset 0x20 ~ 0x2C.
-RRn registers are defined at the offset 0x40 ~ 0x4C.
-SR/CR registers are defined at 0x60/0x64.
-Extend this driver to support it.
+On Tue, Jul 23, 2019 at 10:33 PM Leonardo Bras <leonardo@linux.ibm.com> wrote:
+>
+> Hello everybody,
+>
+> I am not sure if this is the right place to be asking this. If is not,
+> I apologize for the inconvenience. Also, please tell me where is a
+> better way to as these questions.
+>
+> I am trying to create a basic C code to test vmsplice + SPLICE_F_GIFT
+> for moving memory pages between two processes without copying.
+>
+> I have followed the man pages and several recipes across the web, but I
+> could not reproduce it yet.
+>
+> Basically, I am doing:
+> Sending process:
+> - malloc + memcpy for generating pages to transfer
+> - vmsplice with SPLICE_F_GIFT sending over named pipe (in a loop)
+> Receiving process:
+> - Create mmaped file to receive the pages
+> - splice with SPLICE_F_MOVE receiving from named pipe (in a loop)
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/mailbox/imx-mailbox.c | 45 +++++++++++++++++++++++++++++++++----------
- 1 file changed, 35 insertions(+), 10 deletions(-)
+As the splice(2) man page says SPLICE_F_MOVE is currently a no-op.
 
-diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-index 25be8bb..eb55bbe 100644
---- a/drivers/mailbox/imx-mailbox.c
-+++ b/drivers/mailbox/imx-mailbox.c
-@@ -12,10 +12,14 @@
- #include <linux/of_device.h>
- #include <linux/slab.h>
- 
-+#define MU_VER_ID_V1		0x0100
-+
- /* Transmit Register */
- #define IMX_MU_xTRn(x)		(0x00 + 4 * (x))
-+#define IMX_MU_xTRn_V1(x)	(0x20 + 4 * (x))
- /* Receive Register */
- #define IMX_MU_xRRn(x)		(0x10 + 4 * (x))
-+#define IMX_MU_xRRn_V1(x)	(0x40 + 4 * (x))
- /* Status Register */
- #define IMX_MU_xSR		0x20
- #define IMX_MU_xSR_GIPn(x)	BIT(28 + (3 - (x)))
-@@ -25,6 +29,7 @@
- 
- /* Control Register */
- #define IMX_MU_xCR		0x24
-+#define IMX_MU_xSCR_V1_OFFSET	0x40
- /* General Purpose Interrupt Enable */
- #define IMX_MU_xCR_GIEn(x)	BIT(28 + (3 - (x)))
- /* Receive Interrupt Enable */
-@@ -63,6 +68,7 @@ struct imx_mu_priv {
- 	struct imx_mu_con_priv  con_priv[IMX_MU_CHANS];
- 	struct clk		*clk;
- 	int			irq;
-+	int			version;
- 
- 	bool			side_b;
- };
-@@ -85,13 +91,16 @@ static u32 imx_mu_read(struct imx_mu_priv *priv, u32 offs)
- static u32 imx_mu_xcr_rmw(struct imx_mu_priv *priv, u32 set, u32 clr)
- {
- 	unsigned long flags;
--	u32 val;
-+	u32 val, offset;
-+
-+	offset = unlikely(priv->version == MU_VER_ID_V1) ?
-+			IMX_MU_xSCR_V1_OFFSET : 0;
- 
- 	spin_lock_irqsave(&priv->xcr_lock, flags);
--	val = imx_mu_read(priv, IMX_MU_xCR);
-+	val = imx_mu_read(priv, IMX_MU_xCR + offset);
- 	val &= ~clr;
- 	val |= set;
--	imx_mu_write(priv, val, IMX_MU_xCR);
-+	imx_mu_write(priv, val, IMX_MU_xCR + offset);
- 	spin_unlock_irqrestore(&priv->xcr_lock, flags);
- 
- 	return val;
-@@ -109,10 +118,13 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
- 	struct mbox_chan *chan = p;
- 	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
- 	struct imx_mu_con_priv *cp = chan->con_priv;
--	u32 val, ctrl, dat;
-+	u32 val, ctrl, dat, offset;
-+
-+	offset = unlikely(priv->version == MU_VER_ID_V1) ?
-+			IMX_MU_xSCR_V1_OFFSET : 0;
- 
--	ctrl = imx_mu_read(priv, IMX_MU_xCR);
--	val = imx_mu_read(priv, IMX_MU_xSR);
-+	ctrl = imx_mu_read(priv, IMX_MU_xCR + offset);
-+	val = imx_mu_read(priv, IMX_MU_xSR + offset);
- 
- 	switch (cp->type) {
- 	case IMX_MU_TYPE_TX:
-@@ -138,10 +150,14 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
- 		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx));
- 		mbox_chan_txdone(chan, 0);
- 	} else if (val == IMX_MU_xSR_RFn(cp->idx)) {
--		dat = imx_mu_read(priv, IMX_MU_xRRn(cp->idx));
-+		if (unlikely(priv->version == MU_VER_ID_V1))
-+			dat = imx_mu_read(priv, IMX_MU_xRRn_V1(cp->idx));
-+		else
-+			dat = imx_mu_read(priv, IMX_MU_xRRn(cp->idx));
- 		mbox_chan_received_data(chan, (void *)&dat);
- 	} else if (val == IMX_MU_xSR_GIPn(cp->idx)) {
--		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), IMX_MU_xSR);
-+		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx),
-+				IMX_MU_xSR + offset);
- 		mbox_chan_received_data(chan, NULL);
- 	} else {
- 		dev_warn_ratelimited(priv->dev, "Not handled interrupt\n");
-@@ -159,7 +175,10 @@ static int imx_mu_send_data(struct mbox_chan *chan, void *data)
- 
- 	switch (cp->type) {
- 	case IMX_MU_TYPE_TX:
--		imx_mu_write(priv, *arg, IMX_MU_xTRn(cp->idx));
-+		if (unlikely(priv->version == MU_VER_ID_V1))
-+			imx_mu_write(priv, *arg, IMX_MU_xTRn_V1(cp->idx));
-+		else
-+			imx_mu_write(priv, *arg, IMX_MU_xTRn(cp->idx));
- 		imx_mu_xcr_rmw(priv, IMX_MU_xCR_TIEn(cp->idx), 0);
- 		break;
- 	case IMX_MU_TYPE_TXDB:
-@@ -253,11 +272,17 @@ static struct mbox_chan * imx_mu_xlate(struct mbox_controller *mbox,
- 
- static void imx_mu_init_generic(struct imx_mu_priv *priv)
- {
-+	u32 offset;
-+
- 	if (priv->side_b)
- 		return;
- 
-+	priv->version = imx_mu_read(priv, 0) >> 16;
-+	offset = unlikely(priv->version == MU_VER_ID_V1) ?
-+			IMX_MU_xSCR_V1_OFFSET : 0;
-+
- 	/* Set default MU configuration */
--	imx_mu_write(priv, 0, IMX_MU_xCR);
-+	imx_mu_write(priv, 0, IMX_MU_xCR + offset);
- }
- 
- static int imx_mu_probe(struct platform_device *pdev)
--- 
-2.7.4
+> I have seen the SPLICE_F_MOVE being used on steal ops from the
+> 'pipebuffer', but I couldn't find a way to call it from splice.
+>
+> Questions:
+> It does what I think it does? (reassign memory pages from a process to
+> another)
 
+> If so, does page gifting still works?
+> If so, is there a basic recipe to test it's workings?
+
+What is the end goal?
+
+It is easy to transfer pages using shared memory (see shm_open(3) and
+related API), so why mess with splice?
+
+Thanks,
+Miklos
