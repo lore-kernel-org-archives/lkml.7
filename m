@@ -2,134 +2,70 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD63C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A50D1C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99BC722BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE6C21994
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727643AbfGZTfv convert rfc822-to-8bit (ORCPT
+        id S2387412AbfGZTg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 15:35:51 -0400
-Received: from mga07.intel.com ([134.134.136.100]:45515 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbfGZTfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 15:35:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 12:35:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,312,1559545200"; 
-   d="scan'208";a="181973736"
-Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
-  by orsmga002.jf.intel.com with ESMTP; 26 Jul 2019 12:35:50 -0700
-Received: from orsmsx161.amr.corp.intel.com (10.22.240.84) by
- ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 26 Jul 2019 12:35:50 -0700
-Received: from orsmsx110.amr.corp.intel.com ([169.254.10.211]) by
- ORSMSX161.amr.corp.intel.com ([169.254.4.246]) with mapi id 14.03.0439.000;
- Fri, 26 Jul 2019 12:35:50 -0700
-From:   "Moore, Robert" <robert.moore@intel.com>
-To:     Qian Cai <cai@lca.pw>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-CC:     "Schmauss, Erik" <erik.schmauss@intel.com>,
-        "jkim@FreeBSD.org" <jkim@FreeBSD.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "ndesaulniers@google.com" <ndesaulniers@google.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] acpica: fix -Wnull-pointer-arithmetic warnings
-Thread-Topic: [PATCH v2] acpica: fix -Wnull-pointer-arithmetic warnings
-Thread-Index: AQHVPaHylXmfzBauvEybJLDaugeeCqbdV0WA
-Date:   Fri, 26 Jul 2019 19:35:49 +0000
-Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B9661CBD@ORSMSX110.amr.corp.intel.com>
-References: <20190718194846.1880-1-cai@lca.pw>
-In-Reply-To: <20190718194846.1880-1-cai@lca.pw>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjJiMzAxZTctOWE5ZS00MjJhLWE4NDAtYzI2NzI2OWNkNGNjIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRWo5bWtmaEIrbVlsZUZ3SVNjVVwvR3dsRGdcL2RCa0tId2VMSUZBYndYXC9SdGNzbk1hdTQ2QkFaWHZvV3NocGlhWCJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.139]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 26 Jul 2019 15:36:59 -0400
+Received: from mail1.windriver.com ([147.11.146.13]:63853 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfGZTg7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 15:36:59 -0400
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+        by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x6QJasON004309
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Fri, 26 Jul 2019 12:36:54 -0700 (PDT)
+Received: from [172.25.39.5] (172.25.39.5) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Fri, 26 Jul
+ 2019 12:36:53 -0700
+To:     rt-users <linux-rt-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Chris Friesen <chris.friesen@windriver.com>
+Subject: [RT] hit recently-fixed PREEMPT_RT CFS-bandwidth timer locking issue
+ in the wild
+Message-ID: <feae6d57-e8a9-36cf-56c5-e9334d7df303@windriver.com>
+Date:   Fri, 26 Jul 2019 13:36:51 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.25.39.5]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We've taken the change to ACPI_TO_POINTER.
-Thanks,
-Bob
+Hi all,
 
+I thought people might be interested to hear that we recently hit the 
+bug fixed by git commit c0ad4aa4d8 on multiple lab systems running the 
+RHEL 7 "kernel-rt" kernel.  (But I think other versions are at risk as 
+well.)
 
------Original Message-----
-From: Qian Cai [mailto:cai@lca.pw] 
-Sent: Thursday, July 18, 2019 12:49 PM
-To: Wysocki, Rafael J <rafael.j.wysocki@intel.com>
-Cc: Moore, Robert <robert.moore@intel.com>; Schmauss, Erik <erik.schmauss@intel.com>; jkim@FreeBSD.org; lenb@kernel.org; ndesaulniers@google.com; linux-acpi@vger.kernel.org; devel@acpica.org; clang-built-linux@googlegroups.com; linux-kernel@vger.kernel.org; Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] acpica: fix -Wnull-pointer-arithmetic warnings
+Interestingly, when the bug hit the system just hung completely. Nothing 
+was emitted on netconsole or serial console, neither the hung task timer 
+nor the NMI watchdog triggered, CONFIG_DEBUG_SPINLOCK didn't output 
+anything, and magic sysrq didn't work on the serial console.  As you can 
+imagine this was a bit frustrating.  I was finally able to cause a panic 
+by sending an NMI from the BMC and that allowed kdump to store the core 
+file so I could get stack traces.
 
-Clang generate quite a few of those warnings.
+Given how annoying it was to debug, I'd recommend backporting this fix 
+as far back as it applies.  HRTIMER_MODE_SOFT was introduced in mainline 
+in 4.16, but at least in the RHEL7 kernel-rt package (and I think in the 
+vanilla PREEMPT_RT patches as well) hrtimers are run by default in 
+softirq context and so the fix might apply to all supported PREEMPT_RT 
+versions.
 
-drivers/acpi/scan.c:759:28: warning: arithmetic on a null pointer treated as a cast from integer to pointer is a GNU extension [-Wnull-pointer-arithmetic]
-		status = acpi_get_handle(ACPI_ROOT_OBJECT,
-obj->string.pointer,
-                                         ^~~~~~~~~~~~~~~~
-./include/acpi/actypes.h:458:56: note: expanded from macro 'ACPI_ROOT_OBJECT'
- #define ACPI_ROOT_OBJECT                ((acpi_handle) ACPI_TO_POINTER
-(ACPI_MAX_PTR))
-							^~~~~~~~~~~~~~~
-./include/acpi/actypes.h:509:41: note: expanded from macro 'ACPI_TO_POINTER'
- #define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, (void *) 0,
-(acpi_size) (i))
-                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/acpi/actypes.h:503:84: note: expanded from macro 'ACPI_ADD_PTR'
- #define ACPI_ADD_PTR(t, a, b)           ACPI_CAST_PTR (t,
-(ACPI_CAST_PTR (u8, (a)) + (acpi_size)(b)))
-                                         ^~~~~~~~~~~~~~~~~
-./include/acpi/actypes.h:501:66: note: expanded from macro 'ACPI_CAST_PTR'
- #define ACPI_CAST_PTR(t, p)             ((t *) (acpi_uintptr_t) (p))
-                                                                 ^ This is because pointer arithmetic on a pointer not pointing to an array is an undefined behavior (C11 6.5.6, constraint 8). Fix it by just casting the corresponding pointers using ACPI_CAST_PTR() and skip the arithmetic. Also, fix a checkpatch warning together.
-
-ERROR: Macros with complex values should be enclosed in parentheses
- #45: FILE: include/acpi/actypes.h:509:
-+#define ACPI_TO_POINTER(i)              ACPI_CAST_PTR (void, i)
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
-
-v2: Use ACPI_CAST_PTR() in ACPI_TO_POINTER() directly without
-    arithmetic.
-
- include/acpi/actypes.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h index ad6892a24015..163181e2d884 100644
---- a/include/acpi/actypes.h
-+++ b/include/acpi/actypes.h
-@@ -506,7 +506,7 @@ typedef u64 acpi_integer;
- 
- /* Pointer/Integer type conversions */
- 
--#define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, (void *) 0, (acpi_size) (i))
-+#define ACPI_TO_POINTER(i)              (ACPI_CAST_PTR (void, i))
- #define ACPI_TO_INTEGER(p)              ACPI_PTR_DIFF (p, (void *) 0)
- #define ACPI_OFFSET(d, f)               ACPI_PTR_DIFF (&(((d *) 0)->f), (void *) 0)
- #define ACPI_PHYSADDR_TO_PTR(i)         ACPI_TO_POINTER(i)
---
-2.20.1 (Apple Git-117)
-
+Chris
