@@ -2,209 +2,190 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D07C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4E2C76194
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1BA22C7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564108960;
-	bh=5qGtpZhPlJElxjUE4ervc9hPRYCfhDh4k5TEOGeDdkA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pWtL6OHotMI+S9sqtxxutn+bfSoHJEvRMSxKEvyybukRwDGuHpXAO7gnU59oOQu5r
-	 qE3f2tTHeNcKNt9V6deJa/XWJ5xziMYIH+K9vuYHCMT3pWvXzQbKQAgsgvA6txWoFM
-	 HpMRVqpLK5Sr57RSP5MfmU/oPHf0jUe/QdXgUKrA=
+	by mail.kernel.org (Postfix) with ESMTP id 5760A22C7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbfGZCmj (ORCPT
+        id S1726102AbfGZCqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 22:42:39 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46116 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfGZCmi (ORCPT
+        Thu, 25 Jul 2019 22:46:39 -0400
+Received: from anchovy2.45ru.net.au ([203.30.46.146]:45084 "EHLO
+        anchovy2.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfGZCqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 22:42:38 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c3so586554pfa.13;
-        Thu, 25 Jul 2019 19:42:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Sw8V9bDn7QTKMld9EYLdEeoC4y9pSS5VgcZuqisuwyo=;
-        b=bTVjRsdMvx6I6p695BSxtsIrspfsdgKJAIPjsX2KdorpIuM2cpKeHRrzcV+z9YZy0/
-         4lCEeSW6pC99wy9ByeHaZvvo1R6RXkH5DSdQY+HBDz1qJTDLV/C1jxXbrYU8dN15Bgqq
-         wX/w/LHhkWAiZdYtFuxKWXnkULtBCnlDEwUnWEfh42gfoIQxwp7W/dZuw4fe+yiQOCQ5
-         f+5PksssOh17UeARnHPOEYEPlzCPAO9KJLFqVYZPhLp77PpvMBy0d247PmB1Odlnbhj6
-         Q7BFuYloZfpnnOD3BRABQA6P1AFUCCff9iOLmDCo8NXO7qFPfPjb+bKneMKrGIfaBC0W
-         HSIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=Sw8V9bDn7QTKMld9EYLdEeoC4y9pSS5VgcZuqisuwyo=;
-        b=g5ZU+1IzqfYJATHnWPntKNRuFhqfSz53rEE7B/SAW+1bW2z0uBasuTXkRxN796dtam
-         pbdes+/EtaaTEPTVh49Dn7OHsBLhwyrWUvunHALY194d5k9SsQkWC3YCTUPTLRBdHIl4
-         r32hfzmoto3v0mm4A5MjINN3bkdbmsK4lJ4Cr3akS/CUmAjqSJ1NRej0a0V/5XjB0gBO
-         3vh0Id2szxKxw1urAKBPYfplQsAHzIZhfGFpMk1cGG8pJnecy/C2CMhv5bay7y/slrAB
-         BdQf7X0z/cki4H8aB8jAja6OaK2SjfzkvX9K9Q1Yd3M7UR+rlGopvdhR5fMQj1HSPHBo
-         eByw==
-X-Gm-Message-State: APjAAAUqm+CiaPT4T+HuBC891rL/Jh7G5CVqfr/tapjlXisFd39hh6EK
-        8HhkWmWm9cw4M2yfVFAn6vI=
-X-Google-Smtp-Source: APXvYqzZVWllWaYWh6ED7e60CUOsZLsTeByVz38ebxeCXI+kX7Glzvo1aB92EO2v3XVcEeYwmmRnLA==
-X-Received: by 2002:a17:90a:ac14:: with SMTP id o20mr96850971pjq.114.1564108957648;
-        Thu, 25 Jul 2019 19:42:37 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id q22sm46283450pgh.49.2019.07.25.19.42.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 19:42:36 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 11:42:30 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v7 0/5] Introduce MADV_COLD and MADV_PAGEOUT
-Message-ID: <20190726024230.GA216222@google.com>
-References: <20190726023435.214162-1-minchan@kernel.org>
+        Thu, 25 Jul 2019 22:46:38 -0400
+X-Greylist: delayed 363 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Jul 2019 22:46:38 EDT
+Received: (qmail 30833 invoked by uid 5089); 26 Jul 2019 02:46:34 -0000
+Received: by simscan 1.2.0 ppid: 30700, pid: 30704, t: 0.4346s
+         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950 spam: 3.1.4
+Received: from unknown (HELO ?192.168.0.34?) (rtresidd@electromag.com.au@203.59.235.95)
+  by anchovy3.45ru.net.au with ESMTPA; 26 Jul 2019 02:46:33 -0000
+Subject: Re: [PATCH 1/1] power/supply/sbs-battery: Fix confusing battery
+ status when idle or empty
+To:     Guenter Roeck <groeck@google.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Nick Crews <ncrews@chromium.org>, andrew.smirnov@gmail.com,
+        Guenter Roeck <groeck@chromium.org>, david@lechnology.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rfontana@redhat.com, allison@lohutok.net, baolin.wang@linaro.org,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <1564043102-25298-1-git-send-email-rtresidd@electromag.com.au>
+ <CABXOdTdz=+P-HXaUbGAuLBjNE1GA0C8o4OPmF996DOrXxkQJAg@mail.gmail.com>
+From:   Richard Tresidder <rtresidd@electromag.com.au>
+Message-ID: <71a968f7-88c9-aa6c-6822-edfc12484d91@electromag.com.au>
+Date:   Fri, 26 Jul 2019 10:46:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <CABXOdTdz=+P-HXaUbGAuLBjNE1GA0C8o4OPmF996DOrXxkQJAg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190726023435.214162-1-minchan@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-AU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Hi Guenter
+    Yep sorry there was a merge that I missed during that initial send 
+of the patch.
+I sent a version 2 shortly after.
 
-It's the resend with fixing build errors kbuildbot reported.
-Please take it this version to get more test coverage.
+Regards
+    Richard Tresidder
 
-Thanks.
+On 25/07/2019 9:39 pm, Guenter Roeck wrote:
+> On Thu, Jul 25, 2019 at 1:25 AM Richard Tresidder
+> <rtresidd@electromag.com.au> wrote:
+>> When a battery or batteries in a system are in parallel then one or more
+>> may not be providing any current to the system.
+>> This fixes an incorrect
+>> status indication of FULL for the battery simply because it wasn't
+>> discharging at that point in time.
+>> The battery will now be flagged as IDLE.
+>> Have also added the additional check for the battery FULL DISCHARGED flag
+>> which will now flag a status of EMPTY.
+>>
+>> Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
+>> ---
+>>
+>> Notes:
+>>      power/supply/sbs-battery: Fix confusing battery status when idle or empty
+>>
+>>      When a battery or batteries in a system are in parallel then one or more
+>>      may not be providing any current to the system.
+>>      This fixes an incorrect
+>>      status indication of FULL for the battery simply because it wasn't
+>>      discharging at that point in time.
+>>      The battery will now be flagged as IDLE.
+>>      Have also added the additional check for the battery FULL DISCHARGED flag
+>>      which will now flag a status of EMPTY.
+>>
+>>   drivers/power/supply/power_supply_sysfs.c |  3 ++-
+>>   drivers/power/supply/sbs-battery.c        | 28 ++++++++++++++--------------
+>>   include/linux/power_supply.h              |  2 ++
+>>   3 files changed, 18 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+>> index ce6671c..68ec49d 100644
+>> --- a/drivers/power/supply/power_supply_sysfs.c
+>> +++ b/drivers/power/supply/power_supply_sysfs.c
+>> @@ -51,7 +51,8 @@
+>>   };
+>>
+>>   static const char * const power_supply_status_text[] = {
+>> -       "Unknown", "Charging", "Discharging", "Not charging", "Full"
+>> +       "Unknown", "Charging", "Discharging", "Not charging", "Full",
+>> +       "Empty", "Idle"
+>>   };
+>>
+>>   static const char * const power_supply_charge_type_text[] = {
+>> diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
+>> index ea8ba3e..e6c636c 100644
+>> --- a/drivers/power/supply/sbs-battery.c
+>> +++ b/drivers/power/supply/sbs-battery.c
+>> @@ -294,14 +294,10 @@ static int sbs_status_correct(struct i2c_client *client, int *intval)
+>>
+>>          ret = (s16)ret;
+>>
+>> -       /* Not drawing current means full (cannot be not charging) */
+>> -       if (ret == 0)
+>> -               *intval = POWER_SUPPLY_STATUS_FULL;
+>> -
+>> -       if (*intval == POWER_SUPPLY_STATUS_FULL) {
+>> -               /* Drawing or providing current when full */
+>> -               if (ret > 0)
+>> -                       *intval = POWER_SUPPLY_STATUS_CHARGING;
+>> +       if (*intval == POWER_SUPPLY_STATUS_DISCHARGING) {
+>> +               /* Charging indicator not set in battery */
+>> +               if (ret == 0)
+>> +                       *intval = POWER_SUPPLY_STATUS_IDLE;
+> But doesn't the above already indicate that it _is_ discharging ?
+>
+>>                  else if (ret < 0)
+>>                          *intval = POWER_SUPPLY_STATUS_DISCHARGING;
+> This doesn't make sense. *intval is already set to
+> POWER_SUPPLY_STATUS_DISCHARGING
+> in this situation.
+>
+>>          }
+>> @@ -424,10 +420,12 @@ static int sbs_get_battery_property(struct i2c_client *client,
+>>
+>>                  if (ret & BATTERY_FULL_CHARGED)
+>>                          val->intval = POWER_SUPPLY_STATUS_FULL;
+>> -               else if (ret & BATTERY_DISCHARGING)
+>> -                       val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
+>> -               else
+>> +               else if (ret & BATTERY_FULL_DISCHARGED)
+>> +                       val->intval = POWER_SUPPLY_STATUS_EMPTY;
+>> +               else if (!(ret & BATTERY_DISCHARGING))
+>>                          val->intval = POWER_SUPPLY_STATUS_CHARGING;
+>> +               else
+>> +                       val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
+>>
+>>                  sbs_status_correct(client, &val->intval);
+>>
+>> @@ -781,10 +779,12 @@ static void sbs_delayed_work(struct work_struct *work)
+>>
+>>          if (ret & BATTERY_FULL_CHARGED)
+>>                  ret = POWER_SUPPLY_STATUS_FULL;
+>> -       else if (ret & BATTERY_DISCHARGING)
+>> -               ret = POWER_SUPPLY_STATUS_DISCHARGING;
+>> -       else
+>> +       else if (ret & BATTERY_FULL_DISCHARGED)
+>> +               ret = POWER_SUPPLY_STATUS_EMPTY;
+>> +       else if (!(ret & BATTERY_DISCHARGING))
+>>                  ret = POWER_SUPPLY_STATUS_CHARGING;
+>> +       else
+>> +               ret = POWER_SUPPLY_STATUS_DISCHARGING;
+>>
+>>          sbs_status_correct(chip->client, &ret);
+>>
+>> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+>> index 28413f7..c9f3347 100644
+>> --- a/include/linux/power_supply.h
+>> +++ b/include/linux/power_supply.h
+>> @@ -37,6 +37,8 @@ enum {
+>>          POWER_SUPPLY_STATUS_DISCHARGING,
+>>          POWER_SUPPLY_STATUS_NOT_CHARGING,
+>>          POWER_SUPPLY_STATUS_FULL,
+>> +       POWER_SUPPLY_STATUS_EMPTY,
+>> +       POWER_SUPPLY_STATUS_IDLE,
+>>   };
+>>
+>>   /* What algorithm is the charger using? */
+>> --
+>> 1.8.3.1
+>>
+>
 
-On Fri, Jul 26, 2019 at 11:34:30AM +0900, Minchan Kim wrote:
-> This patch is part of previous series:
-> https://lore.kernel.org/lkml/20190531064313.193437-1-minchan@kernel.org/
-> Originally, it was created for external madvise hinting feature.
-> 
-> https://lkml.org/lkml/2019/5/31/463
-> Michal wanted to separte the discussion from external hinting interface
-> so this patchset includes only first part of my entire patchset
-> 
->   - introduce MADV_COLD and MADV_PAGEOUT hint to madvise.
-> 
-> However, I keep entire description for others for easier understanding
-> why this kinds of hint was born.
-> 
-> Thanks.
-> 
-> This patchset is against on mmotm-mmotm-2019-07-24-21-39.
-> 
-> Below is description of previous entire patchset.
-> 
-> ================= &< =====================
-> 
-> - Background
-> 
-> The Android terminology used for forking a new process and starting an app
-> from scratch is a cold start, while resuming an existing app is a hot start.
-> While we continually try to improve the performance of cold starts, hot
-> starts will always be significantly less power hungry as well as faster so
-> we are trying to make hot start more likely than cold start.
-> 
-> To increase hot start, Android userspace manages the order that apps should
-> be killed in a process called ActivityManagerService. ActivityManagerService
-> tracks every Android app or service that the user could be interacting with
-> at any time and translates that into a ranked list for lmkd(low memory
-> killer daemon). They are likely to be killed by lmkd if the system has to
-> reclaim memory. In that sense they are similar to entries in any other cache.
-> Those apps are kept alive for opportunistic performance improvements but
-> those performance improvements will vary based on the memory requirements of
-> individual workloads.
-> 
-> - Problem
-> 
-> Naturally, cached apps were dominant consumers of memory on the system.
-> However, they were not significant consumers of swap even though they are
-> good candidate for swap. Under investigation, swapping out only begins
-> once the low zone watermark is hit and kswapd wakes up, but the overall
-> allocation rate in the system might trip lmkd thresholds and cause a cached
-> process to be killed(we measured performance swapping out vs. zapping the
-> memory by killing a process. Unsurprisingly, zapping is 10x times faster
-> even though we use zram which is much faster than real storage) so kill
-> from lmkd will often satisfy the high zone watermark, resulting in very
-> few pages actually being moved to swap.
-> 
-> - Approach
-> 
-> The approach we chose was to use a new interface to allow userspace to
-> proactively reclaim entire processes by leveraging platform information.
-> This allowed us to bypass the inaccuracy of the kernel’s LRUs for pages
-> that are known to be cold from userspace and to avoid races with lmkd
-> by reclaiming apps as soon as they entered the cached state. Additionally,
-> it could provide many chances for platform to use much information to
-> optimize memory efficiency.
-> 
-> To achieve the goal, the patchset introduce two new options for madvise.
-> One is MADV_COLD which will deactivate activated pages and the other is
-> MADV_PAGEOUT which will reclaim private pages instantly. These new options
-> complement MADV_DONTNEED and MADV_FREE by adding non-destructive ways to
-> gain some free memory space. MADV_PAGEOUT is similar to MADV_DONTNEED in a way
-> that it hints the kernel that memory region is not currently needed and
-> should be reclaimed immediately; MADV_COLD is similar to MADV_FREE in a way
-> that it hints the kernel that memory region is not currently needed and
-> should be reclaimed when memory pressure rises.
-> 
-> * v6 - http://lore.kernel.org/lkml/20190723062539.198697-1-minchan@kernel.org
-> * v5 - http://lore.kernel.org/lkml/20190714233401.36909-1-minchan@kernel.org
-> * v4 - http://lore.kernel.org/lkml/20190711012528.176050-1-minchan@kernel.org
-> * v3 - http://lore.kernel.org/lkml/20190627115405.255259-1-minchan@kernel.org
-> * v2 - http://lore.kernel.org/lkml/20190610111252.239156-1-minchan@kernel.org
-> * v1 - http://lore.kernel.org/lkml/20190603053655.127730-1-minchan@kernel.org
-> 
-> Minchan Kim (5):
->   mm: introduce MADV_COLD
->   mm: change PAGEREF_RECLAIM_CLEAN with PAGE_REFRECLAIM
->   mm: account nr_isolated_xxx in [isolate|putback]_lru_page
->   mm: introduce MADV_PAGEOUT
->   mm: factor out common parts between MADV_COLD and MADV_PAGEOUT
-> 
->  arch/alpha/include/uapi/asm/mman.h     |   3 +
->  arch/mips/include/uapi/asm/mman.h      |   3 +
->  arch/parisc/include/uapi/asm/mman.h    |   3 +
->  arch/xtensa/include/uapi/asm/mman.h    |   3 +
->  include/linux/swap.h                   |   2 +
->  include/uapi/asm-generic/mman-common.h |   3 +
->  mm/compaction.c                        |   2 -
->  mm/gup.c                               |   7 +-
->  mm/internal.h                          |   2 +-
->  mm/khugepaged.c                        |   3 -
->  mm/madvise.c                           | 274 ++++++++++++++++++++++++-
->  mm/memory-failure.c                    |   3 -
->  mm/memory_hotplug.c                    |   4 -
->  mm/mempolicy.c                         |   3 -
->  mm/migrate.c                           |  37 +---
->  mm/oom_kill.c                          |   2 +-
->  mm/swap.c                              |  42 ++++
->  mm/vmscan.c                            |  83 +++++++-
->  18 files changed, 416 insertions(+), 63 deletions(-)
-> 
-> -- 
-> 2.22.0.709.g102302147b-goog
-> 
