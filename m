@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FC7C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DCDC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF46D218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E1A22BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564154920;
-	bh=HpJ+7nvcg/FsLO6UTuVPOhWi1h82QdrPejqjOwhsQ/U=;
+	s=default; t=1564154923;
+	bh=RDQfSpX0t1h4UabJWi0ujY6Wdg6GrR7VHDOe+NgHGR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mRv3Zvnf02Dh0Q1fyABtVODOMRMe+RDC9OHDhd4qyXS0zUMaaKEt0Ip+gK/Gp+/3C
-	 tX2Uw6VmGK3SQtofTOFKBsY7xAE/2wanVu7kKertJLUiYhuJbwwPbt4t0JhO8/RH22
-	 LX27WEdZ1Xm3IGf/ZKiaN+YbbeMmB3feT/WYVTTY=
+	b=tXtqP2wYa9OEmvZz+DR3y0rb++Nqs0FroT33g7QR6FlQstXcBzsUkXGeG3uE0s9fI
+	 ekv4jvwl2eaqDNIp4eQBcGJa8m2iv/7QcAHvzswS36P2ksjfCDyH6HsQaxFmGRRVYP
+	 ybyYU3/Uiz6veRhcSHPRIrkIrG975MKm+EUsTJE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388550AbfGZP2j (ORCPT
+        id S2388568AbfGZP2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:28:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43162 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:28:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388524AbfGZP2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:28:37 -0400
+        id S2388524AbfGZP2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:28:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C132E22BF5;
-        Fri, 26 Jul 2019 15:28:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74F9622BF5;
+        Fri, 26 Jul 2019 15:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154916;
-        bh=HpJ+7nvcg/FsLO6UTuVPOhWi1h82QdrPejqjOwhsQ/U=;
+        s=default; t=1564154920;
+        bh=RDQfSpX0t1h4UabJWi0ujY6Wdg6GrR7VHDOe+NgHGR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MVPCRXr8tcNA/Z6vUOuPnBsk5Z0UlzEIURL1wguU+IBk1FmgEPqcrQrzBygcEpR/g
-         g6COAB/Guzzsx1m5JVvFipBOccSUCJvqbfJEEn8LDT3ur1Chwi8S6CyQTjVXIQ43NC
-         9LPqeTFeSMQQLaLsgie3YO6tUHA2Ab9F+urR9Z0o=
+        b=v2nJkI+/IlLc5wY6Wf4foRm6i7ebiC7Ch7hdsD/HIk+PeP6gqJs7pdDyV5cC5KXNb
+         MrbAFHwBpY6Q9fvmnAuHxGexM/Go61kbk40j1aMYbZ0nMyplBZJb8uhHfdDmtw4JhJ
+         JVTZmflhzUhhIGjKDETGH9gfYANc7BJmbeJ4Lv3o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
-        Alex Veber <alexve@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 44/66] mlxsw: spectrum_dcb: Configure DSCP map as the last rule is removed
-Date:   Fri, 26 Jul 2019 17:24:43 +0200
-Message-Id: <20190726152306.737029220@linuxfoundation.org>
+        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.2 45/66] net/mlx5: E-Switch, Fix default encap mode
+Date:   Fri, 26 Jul 2019 17:24:44 +0200
+Message-Id: <20190726152306.844604566@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
 References: <20190726152301.936055394@linuxfoundation.org>
@@ -61,74 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Maor Gottlieb <maorg@mellanox.com>
 
-[ Upstream commit dedfde2fe1c4ccf27179fcb234e2112d065c39bb ]
+[ Upstream commit 9a64144d683a4395f57562d90247c61a0bf5105f ]
 
-Spectrum systems use DSCP rewrite map to update DSCP field in egressing
-packets to correspond to priority that the packet has. Whether rewriting
-will take place is determined at the point when the packet ingresses the
-switch: if the port is in Trust L3 mode, packet priority is determined from
-the DSCP map at the port, and DSCP rewrite will happen. If the port is in
-Trust L2 mode, 802.1p is used for packet prioritization, and no DSCP
-rewrite will happen.
+Encap mode is related to switchdev mode only. Move the init of
+the encap mode to eswitch_offloads. Before this change, we reported
+that eswitch supports encap, even tough the device was in non
+SRIOV mode.
 
-The driver determines the port trust mode based on whether any DSCP
-prioritization rules are in effect at given port. If there are any, trust
-level is L3, otherwise it's L2. When the last DSCP rule is removed, the
-port is switched to trust L2. Under that scenario, if DSCP of a packet
-should be rewritten, it should be rewritten to 0.
-
-However, when switching to Trust L2, the driver neglects to also update the
-DSCP rewrite map. The last DSCP rule thus remains in effect, and packets
-egressing through this port, if they have the right priority, will have
-their DSCP set according to this rule.
-
-Fix by first configuring the rewrite map, and only then switching to trust
-L2 and bailing out.
-
-Fixes: b2b1dab6884e ("mlxsw: spectrum: Support ieee_setapp, ieee_delapp")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Reported-by: Alex Veber <alexve@mellanox.com>
-Tested-by: Alex Veber <alexve@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 7768d1971de67 ('net/mlx5: E-Switch, Add control for encapsulation')
+Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c          |    5 -----
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c |    7 +++++++
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c
-@@ -408,14 +408,6 @@ static int mlxsw_sp_port_dcb_app_update(
- 	have_dscp = mlxsw_sp_port_dcb_app_prio_dscp_map(mlxsw_sp_port,
- 							&prio_map);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -1882,11 +1882,6 @@ int mlx5_eswitch_init(struct mlx5_core_d
+ 	esw->enabled_vports = 0;
+ 	esw->mode = SRIOV_NONE;
+ 	esw->offloads.inline_mode = MLX5_INLINE_MODE_NONE;
+-	if (MLX5_CAP_ESW_FLOWTABLE_FDB(dev, reformat) &&
+-	    MLX5_CAP_ESW_FLOWTABLE_FDB(dev, decap))
+-		esw->offloads.encap = DEVLINK_ESWITCH_ENCAP_MODE_BASIC;
+-	else
+-		esw->offloads.encap = DEVLINK_ESWITCH_ENCAP_MODE_NONE;
  
--	if (!have_dscp) {
--		err = mlxsw_sp_port_dcb_toggle_trust(mlxsw_sp_port,
--					MLXSW_REG_QPTS_TRUST_STATE_PCP);
--		if (err)
--			netdev_err(mlxsw_sp_port->dev, "Couldn't switch to trust L2\n");
--		return err;
--	}
--
- 	mlxsw_sp_port_dcb_app_dscp_prio_map(mlxsw_sp_port, default_prio,
- 					    &dscp_map);
- 	err = mlxsw_sp_port_dcb_app_update_qpdpm(mlxsw_sp_port,
-@@ -432,6 +424,14 @@ static int mlxsw_sp_port_dcb_app_update(
- 		return err;
- 	}
+ 	dev->priv.eswitch = esw;
+ 	return 0;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+@@ -1840,6 +1840,12 @@ int esw_offloads_init(struct mlx5_eswitc
+ {
+ 	int err;
  
-+	if (!have_dscp) {
-+		err = mlxsw_sp_port_dcb_toggle_trust(mlxsw_sp_port,
-+					MLXSW_REG_QPTS_TRUST_STATE_PCP);
-+		if (err)
-+			netdev_err(mlxsw_sp_port->dev, "Couldn't switch to trust L2\n");
-+		return err;
-+	}
++	if (MLX5_CAP_ESW_FLOWTABLE_FDB(esw->dev, reformat) &&
++	    MLX5_CAP_ESW_FLOWTABLE_FDB(esw->dev, decap))
++		esw->offloads.encap = DEVLINK_ESWITCH_ENCAP_MODE_BASIC;
++	else
++		esw->offloads.encap = DEVLINK_ESWITCH_ENCAP_MODE_NONE;
 +
- 	err = mlxsw_sp_port_dcb_toggle_trust(mlxsw_sp_port,
- 					     MLXSW_REG_QPTS_TRUST_STATE_DSCP);
- 	if (err) {
+ 	err = esw_offloads_steering_init(esw, vf_nvports, total_nvports);
+ 	if (err)
+ 		return err;
+@@ -1901,6 +1907,7 @@ void esw_offloads_cleanup(struct mlx5_es
+ 	esw_offloads_devcom_cleanup(esw);
+ 	esw_offloads_unload_all_reps(esw, num_vfs);
+ 	esw_offloads_steering_cleanup(esw);
++	esw->offloads.encap = DEVLINK_ESWITCH_ENCAP_MODE_NONE;
+ }
+ 
+ static int esw_mode_from_devlink(u16 mode, u16 *mlx5_mode)
 
 
