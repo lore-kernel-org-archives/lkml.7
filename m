@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5133EC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2C8C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDAD2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC51D205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155328;
-	bh=FAbVGOf/4NqrHRC4j4DAffgINtihHAgReaZlF9DfIQU=;
+	s=default; t=1564155342;
+	bh=sSpOQg3DGB+OdznWUnm//oWTucUswY7vQ6TMsiW/ux4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D6/6cCUzDfDNuH8v4LtuMAg8goAouyr2x7BRp5HhtMgIEqEyHdIKT6YGJ4f2jmXgR
-	 TXHl+5gLvLyxLQEDpKr2zEkJCIU02B+TGm74TKiWIdWTtGpQ1u+9Xci5s7rVlYDBqf
-	 7A1bT5ljKPo/qMzkp+ASLl4jeGQVnbyDnOsdDkKE=
+	b=rjxzasheWiR/laelKn91IAi4FCYqWNVVCWWET8EyejRMN/rCfaC+1ma3TVSU6aT/P
+	 4rPRGaXkrm62KfHaP1LdB0xDrn2hZ7WTb9TRSTAn/dNeqKL81L/FMb07QE35BVJh0E
+	 J+raPuyB0NwEr+5eP27lwR7yj7H5gRQ1oZ7eZ97w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389480AbfGZPf1 (ORCPT
+        id S2389502AbfGZPfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:35:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48192 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:35:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727622AbfGZPcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:32:55 -0400
+        id S2389467AbfGZPc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:32:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BF692054F;
-        Fri, 26 Jul 2019 15:32:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A56B122BF5;
+        Fri, 26 Jul 2019 15:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155175;
-        bh=FAbVGOf/4NqrHRC4j4DAffgINtihHAgReaZlF9DfIQU=;
+        s=default; t=1564155145;
+        bh=sSpOQg3DGB+OdznWUnm//oWTucUswY7vQ6TMsiW/ux4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nsl/8zv8SU5DaNab4P4ikSuLTzvYeTQSJJ1BGc5Td8uP3nfbFgOLqmERmCCJSo7ke
-         JyRMnG0XY0CAL8H5iIxSE0KNk5l35spGskp/Tl6Vj2ZcVQMEow42E2Ned/NhTN+hGC
-         ceAESyJpcuckVUBWVWfMm+V6cTbxl8VPpzep2Cxc=
+        b=lL4LR6USvezZv+QnO4MG4+u+iVFvjYM88v2g4ZCb0M+oMssKrD895J7NnoJDD8/Ug
+         ouXBTBO0RyLu7HNrJPM6c/0vH1UIEQ5VLuEZo59+ljQ2lWwXR+yfAWfxojJRQlzLqG
+         DYK+JiM8PbMOclABK7mVz8HAmT7ARJtn/7p3CIPA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+d6636a36d3c34bd88938@syzkaller.appspotmail.com,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot+c1a380d42b190ad1e559@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Neil Horman <nhorman@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 27/50] netrom: fix a memory leak in nr_rx_frame()
-Date:   Fri, 26 Jul 2019 17:25:02 +0200
-Message-Id: <20190726152303.423302107@linuxfoundation.org>
+Subject: [PATCH 4.19 18/50] sctp: fix error handling on stream scheduler initialization
+Date:   Fri, 26 Jul 2019 17:24:53 +0200
+Message-Id: <20190726152302.447932256@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -61,40 +63,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 
-[ Upstream commit c8c8218ec5af5d2598381883acbefbf604e56b5e ]
+[ Upstream commit 4d1415811e492d9a8238f8a92dd0d51612c788e9 ]
 
-When the skb is associated with a new sock, just assigning
-it to skb->sk is not sufficient, we have to set its destructor
-to free the sock properly too.
+It allocates the extended area for outbound streams only on sendmsg
+calls, if they are not yet allocated.  When using the priority
+stream scheduler, this initialization may imply into a subsequent
+allocation, which may fail.  In this case, it was aborting the stream
+scheduler initialization but leaving the ->ext pointer (allocated) in
+there, thus in a partially initialized state.  On a subsequent call to
+sendmsg, it would notice the ->ext pointer in there, and trip on
+uninitialized stuff when trying to schedule the data chunk.
 
-Reported-by: syzbot+d6636a36d3c34bd88938@syzkaller.appspotmail.com
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+The fix is undo the ->ext initialization if the stream scheduler
+initialization fails and avoid the partially initialized state.
+
+Although syzkaller bisected this to commit 4ff40b86262b ("sctp: set
+chunk transport correctly when it's a new asoc"), this bug was actually
+introduced on the commit I marked below.
+
+Reported-by: syzbot+c1a380d42b190ad1e559@syzkaller.appspotmail.com
+Fixes: 5bbbbe32a431 ("sctp: introduce stream scheduler foundations")
+Tested-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Acked-by: Neil Horman <nhorman@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netrom/af_netrom.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sctp/stream.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/net/netrom/af_netrom.c
-+++ b/net/netrom/af_netrom.c
-@@ -872,7 +872,7 @@ int nr_rx_frame(struct sk_buff *skb, str
- 	unsigned short frametype, flags, window, timeout;
- 	int ret;
+--- a/net/sctp/stream.c
++++ b/net/sctp/stream.c
+@@ -253,13 +253,20 @@ out:
+ int sctp_stream_init_ext(struct sctp_stream *stream, __u16 sid)
+ {
+ 	struct sctp_stream_out_ext *soute;
++	int ret;
  
--	skb->sk = NULL;		/* Initially we don't know who it's for */
-+	skb_orphan(skb);
+ 	soute = kzalloc(sizeof(*soute), GFP_KERNEL);
+ 	if (!soute)
+ 		return -ENOMEM;
+ 	SCTP_SO(stream, sid)->ext = soute;
  
- 	/*
- 	 *	skb->data points to the netrom frame start
-@@ -971,6 +971,7 @@ int nr_rx_frame(struct sk_buff *skb, str
- 	window = skb->data[20];
+-	return sctp_sched_init_sid(stream, sid, GFP_KERNEL);
++	ret = sctp_sched_init_sid(stream, sid, GFP_KERNEL);
++	if (ret) {
++		kfree(SCTP_SO(stream, sid)->ext);
++		SCTP_SO(stream, sid)->ext = NULL;
++	}
++
++	return ret;
+ }
  
- 	skb->sk             = make;
-+	skb->destructor     = sock_efree;
- 	make->sk_state	    = TCP_ESTABLISHED;
- 
- 	/* Fill in his circuit details */
+ void sctp_stream_free(struct sctp_stream *stream)
 
 
