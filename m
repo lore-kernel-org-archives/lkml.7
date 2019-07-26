@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78317C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841F6C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 482EB2238C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA4D22BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148439;
-	bh=fMIlE96iPeuJpA5NvQKZPass3MD+QVHBbBgG4YrBypA=;
+	s=default; t=1564148443;
+	bh=kNoMF9+Fdf7r8iUMfcif+NeJblciIOS13GV/ZPm1khU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lz+aGIto6rrr4E94rJHAdU/11S8dZCIi25YHBdhwAJ8izwiz5g1FqoFOQv/yRkKCj
-	 yzxfHye7koSNZ6diyefvNk6Lkc2d61sZ3BIJBWtFdJO+2PBjoRI1lmyFOT1teSTGgt
-	 tNMH30DPDJ3CjYkkExXPdMDyFf4kdlxRZKYIl824=
+	b=guQG/Lf4N+MZOmMDg71xlslZy+EG6E0mFYpvIvw8U1BUkYjytmA6ddTeKZfzKN5Z1
+	 4UuKNW3WggSqgOWFAR5iW3Zaa15Fp8XiPN+/vvnAtIRazwFirPMEQeXZRr7XI9Khk4
+	 P37nbEC7mfF9GVHZ4cYUTqs2yhSMZanvbYhZv+sw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387529AbfGZNki (ORCPT
+        id S2387555AbfGZNkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:40:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46722 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:40:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387507AbfGZNkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:40:36 -0400
+        id S2387512AbfGZNkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:40:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90E2C22BF5;
-        Fri, 26 Jul 2019 13:40:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF52322BE8;
+        Fri, 26 Jul 2019 13:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148435;
-        bh=fMIlE96iPeuJpA5NvQKZPass3MD+QVHBbBgG4YrBypA=;
+        s=default; t=1564148436;
+        bh=kNoMF9+Fdf7r8iUMfcif+NeJblciIOS13GV/ZPm1khU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uUH8bzv1cXOQ/Nf9kr1FxlpkZChwmhJYclCAVPT+KRQOB2azvZ5sgH9suRfnqa7Rz
-         Js9xgHjT76gkrlWFtY3eWy+KlJgzofDTjn8yPhu7hSdwl0EDjLJRvyjWw3Zc8ZeXhc
-         c0n+YN3M0pH/an4nS1fCgalOQMa+WS5L0RWLa3mM=
+        b=QVv1aSsgRlm00f38XptmrQlIObeQTpfyRTCGagu3JxJiuyanmwHVkhydH1T5rxhSt
+         Z1FRm4Xtg0/ULhPyN7lyR8mX12vTdwghXUE6SLUv45jKgyfVumC2ibE5mamQ1Kt4OZ
+         AGWJ5p0YPCuoEiQeMQFhS5znGBbtNGTMJ30oVwpI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.2 37/85] ACPI: blacklist: fix clang warning for unused DMI table
-Date:   Fri, 26 Jul 2019 09:38:47 -0400
-Message-Id: <20190726133936.11177-37-sashal@kernel.org>
+Cc:     Benjamin Block <bblock@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 38/85] scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
+Date:   Fri, 26 Jul 2019 09:38:48 -0400
+Message-Id: <20190726133936.11177-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -61,51 +61,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Benjamin Block <bblock@linux.ibm.com>
 
-[ Upstream commit b80d6a42bdc97bdb6139107d6034222e9843c6e2 ]
+[ Upstream commit 484647088826f2f651acbda6bcf9536b8a466703 ]
 
-When CONFIG_DMI is disabled, we only have a tentative declaration,
-which causes a warning from clang:
+GCC v9 emits this warning:
+      CC      drivers/s390/scsi/zfcp_erp.o
+    drivers/s390/scsi/zfcp_erp.c: In function 'zfcp_erp_action_enqueue':
+    drivers/s390/scsi/zfcp_erp.c:217:26: warning: 'erp_action' may be used uninitialized in this function [-Wmaybe-uninitialized]
+      217 |  struct zfcp_erp_action *erp_action;
+          |                          ^~~~~~~~~~
 
-drivers/acpi/blacklist.c:20:35: error: tentative array definition assumed to have one element [-Werror]
-static const struct dmi_system_id acpi_rev_dmi_table[] __initconst;
+This is a possible false positive case, as also documented in the GCC
+documentations:
+    https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wmaybe-uninitialized
 
-As the variable is not actually used here, hide it entirely
-in an #ifdef to shut up the warning.
+The actual code-sequence is like this:
+    Various callers can invoke the function below with the argument "want"
+    being one of:
+    ZFCP_ERP_ACTION_REOPEN_ADAPTER,
+    ZFCP_ERP_ACTION_REOPEN_PORT_FORCED,
+    ZFCP_ERP_ACTION_REOPEN_PORT, or
+    ZFCP_ERP_ACTION_REOPEN_LUN.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    zfcp_erp_action_enqueue(want, ...)
+        ...
+        need = zfcp_erp_required_act(want, ...)
+            need = want
+            ...
+            maybe: need = ZFCP_ERP_ACTION_REOPEN_PORT
+            maybe: need = ZFCP_ERP_ACTION_REOPEN_ADAPTER
+            ...
+            return need
+        ...
+        zfcp_erp_setup_act(need, ...)
+            struct zfcp_erp_action *erp_action; // <== line 217
+            ...
+            switch(need) {
+            case ZFCP_ERP_ACTION_REOPEN_LUN:
+                    ...
+                    erp_action = &zfcp_sdev->erp_action;
+                    WARN_ON_ONCE(erp_action->port != port); // <== access
+                    ...
+                    break;
+            case ZFCP_ERP_ACTION_REOPEN_PORT:
+            case ZFCP_ERP_ACTION_REOPEN_PORT_FORCED:
+                    ...
+                    erp_action = &port->erp_action;
+                    WARN_ON_ONCE(erp_action->port != port); // <== access
+                    ...
+                    break;
+            case ZFCP_ERP_ACTION_REOPEN_ADAPTER:
+                    ...
+                    erp_action = &adapter->erp_action;
+                    WARN_ON_ONCE(erp_action->port != NULL); // <== access
+                    ...
+                    break;
+            }
+            ...
+            WARN_ON_ONCE(erp_action->adapter != adapter); // <== access
+
+When zfcp_erp_setup_act() is called, 'need' will never be anything else
+than one of the 4 possible enumeration-names that are used in the
+switch-case, and 'erp_action' is initialized for every one of them, before
+it is used. Thus the warning is a false positive, as documented.
+
+We introduce the extra if{} in the beginning to create an extra code-flow,
+so the compiler can be convinced that the switch-case will never see any
+other value.
+
+BUG_ON()/BUG() is intentionally not used to not crash anything, should
+this ever happen anyway - right now it's impossible, as argued above; and
+it doesn't introduce a 'default:' switch-case to retain warnings should
+'enum zfcp_erp_act_type' ever be extended and no explicit case be
+introduced. See also v5.0 commit 399b6c8bc9f7 ("scsi: zfcp: drop old
+default switch case which might paper over missing case").
+
+Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Reviewed-by: Steffen Maier <maier@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/blacklist.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/s390/scsi/zfcp_erp.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/acpi/blacklist.c b/drivers/acpi/blacklist.c
-index ad2c565f5cbe..a86a770c9b79 100644
---- a/drivers/acpi/blacklist.c
-+++ b/drivers/acpi/blacklist.c
-@@ -17,7 +17,9 @@
+diff --git a/drivers/s390/scsi/zfcp_erp.c b/drivers/s390/scsi/zfcp_erp.c
+index e8fc28dba8df..96f0d34e9459 100644
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -11,6 +11,7 @@
+ #define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
  
- #include "internal.h"
+ #include <linux/kthread.h>
++#include <linux/bug.h>
+ #include "zfcp_ext.h"
+ #include "zfcp_reqlist.h"
  
-+#ifdef CONFIG_DMI
- static const struct dmi_system_id acpi_rev_dmi_table[] __initconst;
-+#endif
+@@ -217,6 +218,12 @@ static struct zfcp_erp_action *zfcp_erp_setup_act(enum zfcp_erp_act_type need,
+ 	struct zfcp_erp_action *erp_action;
+ 	struct zfcp_scsi_dev *zfcp_sdev;
  
- /*
-  * POLICY: If *anything* doesn't work, put it on the blacklist.
-@@ -61,7 +63,9 @@ int __init acpi_blacklisted(void)
- 	}
- 
- 	(void)early_acpi_osi_init();
-+#ifdef CONFIG_DMI
- 	dmi_check_system(acpi_rev_dmi_table);
-+#endif
- 
- 	return blacklisted;
- }
++	if (WARN_ON_ONCE(need != ZFCP_ERP_ACTION_REOPEN_LUN &&
++			 need != ZFCP_ERP_ACTION_REOPEN_PORT &&
++			 need != ZFCP_ERP_ACTION_REOPEN_PORT_FORCED &&
++			 need != ZFCP_ERP_ACTION_REOPEN_ADAPTER))
++		return NULL;
++
+ 	switch (need) {
+ 	case ZFCP_ERP_ACTION_REOPEN_LUN:
+ 		zfcp_sdev = sdev_to_zfcp(sdev);
 -- 
 2.20.1
 
