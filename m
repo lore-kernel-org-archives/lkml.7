@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E11BC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 091CAC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0623B22CF8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3EEC22CD3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148511;
-	bh=f52hWbXYvHnXkysoq3U1icOl2H8UpjMDUhfyg78YYUM=;
+	s=default; t=1564148515;
+	bh=+Q4MS4mg58LWCTZtdP/Zw3UzF8hkUtxnW9TUrrHA0ms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OR8tqnfUFkXmXa/IdhN6uffhWdRyh4OXnfd18i6M3oMAGJuJ9sWdBu5XAzV/XaP5l
-	 MJ0TAzftKiAiidlCtQHqoLJek2gjsaUfZbvaiQWQA/nMH+xnytxppORS32Erhhe2b5
-	 P9QNBbv834C6D2DsobtITfb9O4EaRDO4Ro+wL4og=
+	b=Ak7dgU7ffm9nVTQNlZho73+H4asXPBVs1WaQGBxhmydaPcoxBYcnc6zY4HuRnc9yp
+	 mdNnwghsO9nIe2TfOkD6+dz2HC9rDgT5AoFA0giinWRqHVKyAEF7iwWwfmxXT2R/tq
+	 vcdkh1ey1nj9Mf10nh/UtRKJZX1zVvBKX8Ecwv04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387783AbfGZNlt (ORCPT
+        id S1727559AbfGZNly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:41:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48292 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:41:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387737AbfGZNln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:41:43 -0400
+        id S2387768AbfGZNlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:41:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A54B22CD2;
-        Fri, 26 Jul 2019 13:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF37322BF5;
+        Fri, 26 Jul 2019 13:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148502;
-        bh=f52hWbXYvHnXkysoq3U1icOl2H8UpjMDUhfyg78YYUM=;
+        s=default; t=1564148507;
+        bh=+Q4MS4mg58LWCTZtdP/Zw3UzF8hkUtxnW9TUrrHA0ms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0igVgYOOjZHB4hsPZ5MY+Ij1SPa4kmZYFTvBvZHGbsk+9t0K1y/8fVtnBpqG6tmfG
-         cnir6LBYHri6tDAaP3YC9T9PmbG9F/MnBORRygydaxzucbRu5xwGMSoaL4CJlFYY+i
-         5MXcquOadzouG7XfUgUjnVNp3NOO7oApBq0y1abE=
+        b=ONs/B1i/1JR9fdyOlg8cBEqfh3/WH8FyaycC79zdG6603vbr5rd49U1Od9b83LSZS
+         7T66iQbAjABKmhiWftYs9mC1HWzs/rvdbzT6njrp6VAso+zABUxB5/trjrnxzda4UZ
+         2I7NEDD4yltZAJosxJnrcOu6Vd+spANF6DgRX/4Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Denis Efremov <efremov@ispras.ru>, Willy Tarreau <w@1wt.eu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 70/85] floppy: fix out-of-bounds read in copy_buffer
-Date:   Fri, 26 Jul 2019 09:39:20 -0400
-Message-Id: <20190726133936.11177-70-sashal@kernel.org>
+Cc:     David Rientjes <rientjes@google.com>, Cfir Cohen <cfir@google.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary R Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 73/85] crypto: ccp - Fix SEV_VERSION_GREATER_OR_EQUAL
+Date:   Fri, 26 Jul 2019 09:39:23 -0400
+Message-Id: <20190726133936.11177-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -59,52 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@ispras.ru>
+From: David Rientjes <rientjes@google.com>
 
-[ Upstream commit da99466ac243f15fbba65bd261bfc75ffa1532b6 ]
+[ Upstream commit 83bf42510d7f7e1daa692c096e8e9919334d7b57 ]
 
-This fixes a global out-of-bounds read access in the copy_buffer
-function of the floppy driver.
+SEV_VERSION_GREATER_OR_EQUAL() will fail if upgrading from 2.2 to 3.1, for
+example, because the minor version is not equal to or greater than the
+major.
 
-The FDDEFPRM ioctl allows one to set the geometry of a disk.  The sect
-and head fields (unsigned int) of the floppy_drive structure are used to
-compute the max_sector (int) in the make_raw_rw_request function.  It is
-possible to overflow the max_sector.  Next, max_sector is passed to the
-copy_buffer function and used in one of the memcpy calls.
+Fix this and move to a static inline function for appropriate type
+checking.
 
-An unprivileged user could trigger the bug if the device is accessible,
-but requires a floppy disk to be inserted.
-
-The patch adds the check for the .sect * .head multiplication for not
-overflowing in the set_geometry function.
-
-The bug was found by syzkaller.
-
-Signed-off-by: Denis Efremov <efremov@ispras.ru>
-Tested-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: edd303ff0e9e ("crypto: ccp - Add DOWNLOAD_FIRMWARE SEV command")
+Reported-by: Cfir Cohen <cfir@google.com>
+Signed-off-by: David Rientjes <rientjes@google.com>
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Acked-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/floppy.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/crypto/ccp/psp-dev.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 51246bc9709a..6787fe0c06f8 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -3233,8 +3233,10 @@ static int set_geometry(unsigned int cmd, struct floppy_struct *g,
- 	int cnt;
+diff --git a/drivers/crypto/ccp/psp-dev.c b/drivers/crypto/ccp/psp-dev.c
+index de5a8ca70d3d..6b17d179ef8a 100644
+--- a/drivers/crypto/ccp/psp-dev.c
++++ b/drivers/crypto/ccp/psp-dev.c
+@@ -24,10 +24,6 @@
+ #include "sp-dev.h"
+ #include "psp-dev.h"
  
- 	/* sanity checking for parameters. */
--	if (g->sect <= 0 ||
--	    g->head <= 0 ||
-+	if ((int)g->sect <= 0 ||
-+	    (int)g->head <= 0 ||
-+	    /* check for overflow in max_sector */
-+	    (int)(g->sect * g->head) <= 0 ||
- 	    /* check for zero in F_SECT_PER_TRACK */
- 	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
- 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
+-#define SEV_VERSION_GREATER_OR_EQUAL(_maj, _min)	\
+-		((psp_master->api_major) >= _maj &&	\
+-		 (psp_master->api_minor) >= _min)
+-
+ #define DEVICE_NAME		"sev"
+ #define SEV_FW_FILE		"amd/sev.fw"
+ #define SEV_FW_NAME_SIZE	64
+@@ -47,6 +43,15 @@ MODULE_PARM_DESC(psp_probe_timeout, " default timeout value, in seconds, during
+ static bool psp_dead;
+ static int psp_timeout;
+ 
++static inline bool sev_version_greater_or_equal(u8 maj, u8 min)
++{
++	if (psp_master->api_major > maj)
++		return true;
++	if (psp_master->api_major == maj && psp_master->api_minor >= min)
++		return true;
++	return false;
++}
++
+ static struct psp_device *psp_alloc_struct(struct sp_device *sp)
+ {
+ 	struct device *dev = sp->dev;
+@@ -588,7 +593,7 @@ static int sev_ioctl_do_get_id2(struct sev_issue_cmd *argp)
+ 	int ret;
+ 
+ 	/* SEV GET_ID is available from SEV API v0.16 and up */
+-	if (!SEV_VERSION_GREATER_OR_EQUAL(0, 16))
++	if (!sev_version_greater_or_equal(0, 16))
+ 		return -ENOTSUPP;
+ 
+ 	if (copy_from_user(&input, (void __user *)argp->data, sizeof(input)))
+@@ -651,7 +656,7 @@ static int sev_ioctl_do_get_id(struct sev_issue_cmd *argp)
+ 	int ret;
+ 
+ 	/* SEV GET_ID available from SEV API v0.16 and up */
+-	if (!SEV_VERSION_GREATER_OR_EQUAL(0, 16))
++	if (!sev_version_greater_or_equal(0, 16))
+ 		return -ENOTSUPP;
+ 
+ 	/* SEV FW expects the buffer it fills with the ID to be
+@@ -1053,7 +1058,7 @@ void psp_pci_init(void)
+ 		psp_master->sev_state = SEV_STATE_UNINIT;
+ 	}
+ 
+-	if (SEV_VERSION_GREATER_OR_EQUAL(0, 15) &&
++	if (sev_version_greater_or_equal(0, 15) &&
+ 	    sev_update_firmware(psp_master->dev) == 0)
+ 		sev_get_api_version();
+ 
 -- 
 2.20.1
 
