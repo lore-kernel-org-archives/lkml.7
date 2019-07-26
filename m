@@ -2,52 +2,51 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D04DC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC8EC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A1B22C7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F51F22C7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfGZJ2G (ORCPT
+        id S1726400AbfGZJ2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:28:06 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:56760 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfGZJ2G (ORCPT
+        Fri, 26 Jul 2019 05:28:12 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:51187 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfGZJ2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jul 2019 05:28:06 -0400
-Received: by mail-io1-f69.google.com with SMTP id u25so57661169iol.23
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 02:28:05 -0700 (PDT)
+Received: by mail-io1-f70.google.com with SMTP id m26so58102751ioh.17
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 02:28:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=N6WhCKShM4LNQj7FFoXGbLqE7BK2p7Oc3KCbLQcERuo=;
-        b=s7mIdoKtPjVWQ1o40k27EMSCx6+Tz4mfrcwlo4WTtiYZrKT2+KAKuMR2+7nHrOpfGk
-         DBMY9YpTrup44QTaMqvKTtKqKtnwf72e6PDWUhUdo+FfWuZHEAo2pyMz87rwfzwGRlht
-         +zyKWuYNGacfsTVrlaj+KmX/Vt5lqWKM952//yPtTWj9kRmGup/NFE68l6iF/9rTVjyH
-         5CsxRBG7vqqCAHdlPjT6g2JuJeQSm7yIqAgXzd7jJXMfGSBNJO/lfQvFSO2OQN4RhAOT
-         p2bmyvm6dSfS4mIit5EhG/O9lG6rO2sMiSLSK3+iu4mPLK9SpaCuWcSsZt1KsWEPjKVr
-         eiQQ==
-X-Gm-Message-State: APjAAAVCtoNHy6cGZbiYhKssZmEGxsWg7pOLh5NLMPaCeZHFcKEKyozv
-        sbXM3UHF0pYSyulMRTvWmYP8RXAiAa3yXqMu2OQQcTVw08Ze
-X-Google-Smtp-Source: APXvYqyxxW+mlSyxlEitOMyN9HQFiD4Y3xK5ypEcIatqjfP5trCTyOhnKeYAq6SoHlRrRf0Zr4kK/rctAqNXHkQGviXQWfFMt/30
+        bh=6davJOYz8NFOOdWsY5H1NvS4PxoFkTXvVpfk5Cm4qBE=;
+        b=MzyMfuQbtuSd0GDHWOP+9H1t6+UI6UmjnP4N+I36aj0FqSnXVZKp++Crw+u0QGQ26T
+         p7UE9+nNA3OQiyHcvrBP7Js8MFZQdYHx95OqorIs6csibWBRTmiq7ZvT7UOXCAUQYkEG
+         i+miNnydnQFbSauYjNE2bCBd8RBS95HSK/QyxH3u0Sd186ZkQ0MauppHMu54ITgjVD93
+         g7IaMqeL8I7ocfxLQv5mHEK8/ouWG01uG38bjFfv6LjVN1Pu0qSB+QI9mcMo9u1xqsOm
+         sQz9XjtqMidjFdpovTLwUwXOVxeFm8VUcy34z5C5CQFWj1msVplVRlWc3RIXm/NNH+Ac
+         SeSw==
+X-Gm-Message-State: APjAAAXJNt+BIU7Z5nclhn7rYQHZWQMSuJN4jgqT70NcPAU+dLbBK9YP
+        ctweibnE8XNY81TWhiRDdMLDbcyzalHmz9BqR3m7VhyUYpws
+X-Google-Smtp-Source: APXvYqxFwdBHIFL4jYOt6rFHQ+cmxmrkxCIZEIZznM0dTKOWBgCT2oVFgIqjeKqMaGUtGf98TsimqOV1imyM+Sgd2xJfVoqJC0R1
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8404:: with SMTP id i4mr16679815ion.146.1564133285421;
+X-Received: by 2002:a05:6638:c8:: with SMTP id w8mr99608159jao.52.1564133285664;
  Fri, 26 Jul 2019 02:28:05 -0700 (PDT)
 Date:   Fri, 26 Jul 2019 02:28:05 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dbe98e058e92286d@google.com>
-Subject: general protection fault in tls_sk_proto_close
-From:   syzbot <syzbot+fb2a31b9c0676ea410e3@syzkaller.appspotmail.com>
-To:     aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
-        davejwatson@fb.com, davem@davemloft.net, john.fastabend@gmail.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000df9d48058e9228cd@google.com>
+Subject: KASAN: use-after-free Read in psi_task_change
+From:   syzbot <syzbot+f17ba6f9b8d9cc0498d0@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,82 +57,85 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    9e6dfe80 Add linux-next specific files for 20190724
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=11ff2594600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6cbb8fc2cf2842d7
-dashboard link: https://syzkaller.appspot.com/bug?extid=fb2a31b9c0676ea410e3
+HEAD commit:    bed38c3e Merge tag 'powerpc-5.3-2' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=160b9ef0600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9aec8cb13b5f7389
+dashboard link: https://syzkaller.appspot.com/bug?extid=f17ba6f9b8d9cc0498d0
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13eb6a7c600000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10dc7b34600000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+fb2a31b9c0676ea410e3@syzkaller.appspotmail.com
+Reported-by: syzbot+f17ba6f9b8d9cc0498d0@syzkaller.appspotmail.com
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 9180 Comm: syz-executor.0 Not tainted 5.3.0-rc1-next-20190724  
-#50
+==================================================================
+BUG: KASAN: use-after-free in raw_write_seqcount_begin  
+include/linux/seqlock.h:228 [inline]
+BUG: KASAN: use-after-free in write_seqcount_begin_nested  
+include/linux/seqlock.h:376 [inline]
+BUG: KASAN: use-after-free in write_seqcount_begin  
+include/linux/seqlock.h:382 [inline]
+BUG: KASAN: use-after-free in psi_group_change kernel/sched/psi.c:689  
+[inline]
+BUG: KASAN: use-after-free in psi_task_change+0x89b/0x9d0  
+kernel/sched/psi.c:780
+Read of size 4 at addr ffff888039cd9460 by task syz-executor.3/9140
+
+CPU: 1 PID: 9140 Comm: syz-executor.3 Not tainted 5.3.0-rc1+ #83
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-RIP: 0010:tls_sk_proto_close+0x90/0x4a0 net/tls/tls_main.c:348
-Code: 3c 02 00 0f 85 dd 03 00 00 49 8b 84 24 c0 02 00 00 4d 8d 75 14 4c 89  
-f2 48 c1 ea 03 48 89 45 b8 48 b8 00 00 00 00 00 fc ff df <0f> b6 04 02 4c  
-89 f2 83 e2 07 38 d0 7f 08 84 c0 0f 85 67 03 00 00
-RSP: 0018:ffff8880a6497c70 EFLAGS: 00010203
-RAX: dffffc0000000000 RBX: 00000000fffffff0 RCX: ffffffff8629731c
-RDX: 0000000000000002 RSI: ffffffff862970cd RDI: ffff88808b204f00
-RBP: ffff8880a6497cb8 R08: ffff8880a76c4700 R09: fffffbfff14a8151
-R10: fffffbfff14a8150 R11: ffffffff8a540a87 R12: ffff88808b204c40
-R13: 0000000000000000 R14: 0000000000000014 R15: 0000000000000001
-FS:  000055555741a940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000780000 CR3: 000000008ff7d000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  tls_sk_proto_close+0x2a9/0x4a0 net/tls/tls_main.c:369
-  tcp_bpf_close+0x17c/0x390 net/ipv4/tcp_bpf.c:578
-  inet_release+0xed/0x200 net/ipv4/af_inet.c:427
-  inet6_release+0x53/0x80 net/ipv6/af_inet6.c:470
-  __sock_release+0xce/0x280 net/socket.c:590
-  sock_close+0x1e/0x30 net/socket.c:1268
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+  kasan_report+0x12/0x17 mm/kasan/common.c:612
+  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
+  raw_write_seqcount_begin include/linux/seqlock.h:228 [inline]
+  write_seqcount_begin_nested include/linux/seqlock.h:376 [inline]
+  write_seqcount_begin include/linux/seqlock.h:382 [inline]
+  psi_group_change kernel/sched/psi.c:689 [inline]
+  psi_task_change+0x89b/0x9d0 kernel/sched/psi.c:780
+  psi_dequeue kernel/sched/stats.h:100 [inline]
+  dequeue_task kernel/sched/core.c:1191 [inline]
+  deactivate_task+0x2f3/0x420 kernel/sched/core.c:1215
+  __schedule+0xecc/0x1580 kernel/sched/core.c:3844
+  schedule+0xa8/0x270 kernel/sched/core.c:3944
+  freezable_schedule include/linux/freezer.h:172 [inline]
+  do_nanosleep+0x201/0x6a0 kernel/time/hrtimer.c:1679
+  hrtimer_nanosleep+0x2a6/0x570 kernel/time/hrtimer.c:1733
+  __do_sys_nanosleep kernel/time/hrtimer.c:1767 [inline]
+  __se_sys_nanosleep kernel/time/hrtimer.c:1754 [inline]
+  __x64_sys_nanosleep+0x1a6/0x220 kernel/time/hrtimer.c:1754
+  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4134f0
-Code: 01 f0 ff ff 0f 83 30 1b 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
-44 00 00 83 3d 9d 2d 66 00 00 75 14 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff
-RSP: 002b:00007ffc6f204768 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000006 RCX: 00000000004134f0
-RDX: 0000001b30d20000 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: 0000000000000001 R08: 0000000000000000 R09: ffffffffffffffff
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000075bf20
-R13: 0000000000000003 R14: 0000000000761178 R15: ffffffffffffffff
-Modules linked in:
----[ end trace 5143786da0160ad0 ]---
-RIP: 0010:tls_sk_proto_close+0x90/0x4a0 net/tls/tls_main.c:348
-Code: 3c 02 00 0f 85 dd 03 00 00 49 8b 84 24 c0 02 00 00 4d 8d 75 14 4c 89  
-f2 48 c1 ea 03 48 89 45 b8 48 b8 00 00 00 00 00 fc ff df <0f> b6 04 02 4c  
-89 f2 83 e2 07 38 d0 7f 08 84 c0 0f 85 67 03 00 00
-RSP: 0018:ffff8880a6497c70 EFLAGS: 00010203
-RAX: dffffc0000000000 RBX: 00000000fffffff0 RCX: ffffffff8629731c
-RDX: 0000000000000002 RSI: ffffffff862970cd RDI: ffff88808b204f00
-RBP: ffff8880a6497cb8 R08: ffff8880a76c4700 R09: fffffbfff14a8151
-R10: fffffbfff14a8150 R11: ffffffff8a540a87 R12: ffff88808b204c40
-R13: 0000000000000000 R14: 0000000000000014 R15: 0000000000000001
-FS:  000055555741a940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000780000 CR3: 000000008ff7d000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+RIP: 0033:0x457cd0
+Code: c0 5b 5d c3 66 0f 1f 44 00 00 8b 04 24 48 83 c4 18 5b 5d c3 66 0f 1f  
+44 00 00 83 3d 81 ea 61 00 00 75 14 b8 23 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 24 d3 fb ff c3 48 83 ec 08 e8 ea 46 00 00
+RSP: 002b:00007fff3ad23fa8 EFLAGS: 00000246 ORIG_RAX: 0000000000000023
+RAX: ffffffffffffffda RBX: 000000000001555c RCX: 0000000000457cd0
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007fff3ad23fb0
+RBP: 0000000000000038 R08: 0000000000000001 R09: 00005555557ca940
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000008
+R13: 00007fff3ad24000 R14: 0000000000015503 R15: 00007fff3ad24010
+
+The buggy address belongs to the page:
+page:ffffea0000e73640 refcount:0 mapcount:0 mapping:0000000000000000  
+index:0x0
+flags: 0x1fffc0000000000()
+raw: 01fffc0000000000 ffffea0000e73648 ffffea0000e73648 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff888039cd9300: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+  ffff888039cd9380: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> ffff888039cd9400: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                                        ^
+  ffff888039cd9480: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+  ffff888039cd9500: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
 
 
 ---
