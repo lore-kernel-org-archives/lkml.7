@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69957C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6ED3C76194
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4229122CE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 912CE22CE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149097;
-	bh=tkiLADUTcUdV6ynKUj8SgvQBjOlu9A4vwPtyAlQ+mE4=;
+	s=default; t=1564149101;
+	bh=BfZ4s6f42mD9uFecUPofM7fiW/0Wm5NgAwY4qFaz8CI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QDd/i9xeJqvFRsms055zX6kjusBtnak8+fODCCuX1mB/WTNq9r438BKiZ60BkRmqt
-	 ryzy4xARe/9y672eWrPtMkgRSRYy6lFZ+1w1TXyMBnEnrd/GNw+C9dfVRq3+2ClvBM
-	 poU/F+qwRPAeBrvk0/kUTQUjc6eh5pjxNDFiQtYk=
+	b=KLMBEfRrSNaUEeMCIsvrMXjV/dUl9OnXkKnD1GEfNqWsq4abNqSG2q7gKGBh1SJed
+	 z1qwuGiWa28dGqGnE+QhmypYm5l5FFd+0UfRyd1tAOQnypk9TUQWmKGRePwFov0/Jt
+	 pnqr5kjk66mrAZY/8evI4LOvM1mP8Al37uqh16co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbfGZNvf (ORCPT
+        id S1727546AbfGZNnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:51:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51794 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:43:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727212AbfGZNnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:43:51 -0400
+        id S2388298AbfGZNnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:43:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96AC822CD0;
-        Fri, 26 Jul 2019 13:43:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 350F722CD0;
+        Fri, 26 Jul 2019 13:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148630;
-        bh=tkiLADUTcUdV6ynKUj8SgvQBjOlu9A4vwPtyAlQ+mE4=;
+        s=default; t=1564148625;
+        bh=BfZ4s6f42mD9uFecUPofM7fiW/0Wm5NgAwY4qFaz8CI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MOyGbOiBR9yiJYf0dLJq1b3e+bL47OaBJ4vYEY1Xleq75DKH8mQWTIYEO8fdSeCwz
-         7wWYUZGQIWCw2CKl476h7UDTERwiPPyMuq2Fxsqs9FRO2b5KXEGM+cIBLmWvvjCyGA
-         VyhukRAV+IQB5zNMSsQo2KyhaOb3T1pBb5T1Ab2Y=
+        b=vO0AQThwYsMWCBpRsAw7mu/r1RNpI7IZeWgonKp79RD8MbmehZ2jeDUt7tEPb3kp2
+         1pGoOollSRf0pCrCRnFcBkHUCawdwUQRYTxw4qN9VL7w509zJtLFVB2qu/cBT7SQFA
+         KrrwfWga70SDITky8zp5dYpPT/Np4/XwsGz3iXgc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 13/37] ceph: fix improper use of smp_mb__before_atomic()
-Date:   Fri, 26 Jul 2019 09:43:08 -0400
-Message-Id: <20190726134332.12626-13-sashal@kernel.org>
+Cc:     JC Kuo <jckuo@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 09/37] clk: tegra210: fix PLLU and PLLU_OUT1
+Date:   Fri, 26 Jul 2019 09:43:04 -0400
+Message-Id: <20190726134332.12626-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134332.12626-1-sashal@kernel.org>
 References: <20190726134332.12626-1-sashal@kernel.org>
@@ -61,44 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <andrea.parri@amarulasolutions.com>
+From: JC Kuo <jckuo@nvidia.com>
 
-[ Upstream commit 749607731e26dfb2558118038c40e9c0c80d23b5 ]
+[ Upstream commit 0d34dfbf3023cf119b83f6470692c0b10c832495 ]
 
-This barrier only applies to the read-modify-write operations; in
-particular, it does not apply to the atomic64_set() primitive.
+Full-speed and low-speed USB devices do not work with Tegra210
+platforms because of incorrect PLLU/PLLU_OUT1 clock settings.
 
-Replace the barrier with an smp_mb().
+When full-speed device is connected:
+[   14.059886] usb 1-3: new full-speed USB device number 2 using tegra-xusb
+[   14.196295] usb 1-3: device descriptor read/64, error -71
+[   14.436311] usb 1-3: device descriptor read/64, error -71
+[   14.675749] usb 1-3: new full-speed USB device number 3 using tegra-xusb
+[   14.812335] usb 1-3: device descriptor read/64, error -71
+[   15.052316] usb 1-3: device descriptor read/64, error -71
+[   15.164799] usb usb1-port3: attempt power cycle
 
-Fixes: fdd4e15838e59 ("ceph: rework dcache readdir")
-Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Reported-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+When low-speed device is connected:
+[   37.610949] usb usb1-port3: Cannot enable. Maybe the USB cable is bad?
+[   38.557376] usb usb1-port3: Cannot enable. Maybe the USB cable is bad?
+[   38.564977] usb usb1-port3: attempt power cycle
+
+This commit fixes the issue by:
+ 1. initializing PLLU_OUT1 before initializing XUSB_FS_SRC clock
+    because PLLU_OUT1 is parent of XUSB_FS_SRC.
+ 2. changing PLLU post-divider to /2 (DIVP=1) according to Technical
+    Reference Manual.
+
+Fixes: e745f992cf4b ("clk: tegra: Rework pll_u")
+Signed-off-by: JC Kuo <jckuo@nvidia.com>
+Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/super.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/clk/tegra/clk-tegra210.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-index 3e27a28aa44a..60b70f0985f6 100644
---- a/fs/ceph/super.h
-+++ b/fs/ceph/super.h
-@@ -517,7 +517,12 @@ static inline void __ceph_dir_set_complete(struct ceph_inode_info *ci,
- 					   long long release_count,
- 					   long long ordered_count)
- {
--	smp_mb__before_atomic();
-+	/*
-+	 * Makes sure operations that setup readdir cache (update page
-+	 * cache and i_size) are strongly ordered w.r.t. the following
-+	 * atomic64_set() operations.
-+	 */
-+	smp_mb();
- 	atomic64_set(&ci->i_complete_seq[0], release_count);
- 	atomic64_set(&ci->i_complete_seq[1], ordered_count);
- }
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+index b92867814e2d..cb2be154db3b 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -2057,9 +2057,9 @@ static struct div_nmp pllu_nmp = {
+ };
+ 
+ static struct tegra_clk_pll_freq_table pll_u_freq_table[] = {
+-	{ 12000000, 480000000, 40, 1, 0, 0 },
+-	{ 13000000, 480000000, 36, 1, 0, 0 }, /* actual: 468.0 MHz */
+-	{ 38400000, 480000000, 25, 2, 0, 0 },
++	{ 12000000, 480000000, 40, 1, 1, 0 },
++	{ 13000000, 480000000, 36, 1, 1, 0 }, /* actual: 468.0 MHz */
++	{ 38400000, 480000000, 25, 2, 1, 0 },
+ 	{        0,         0,  0, 0, 0, 0 },
+ };
+ 
+@@ -2983,6 +2983,7 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA210_CLK_DFLL_REF, TEGRA210_CLK_PLL_P, 51000000, 1 },
+ 	{ TEGRA210_CLK_SBC4, TEGRA210_CLK_PLL_P, 12000000, 1 },
+ 	{ TEGRA210_CLK_PLL_RE_VCO, TEGRA210_CLK_CLK_MAX, 672000000, 1 },
++	{ TEGRA210_CLK_PLL_U_OUT1, TEGRA210_CLK_CLK_MAX, 48000000, 1 },
+ 	{ TEGRA210_CLK_XUSB_GATE, TEGRA210_CLK_CLK_MAX, 0, 1 },
+ 	{ TEGRA210_CLK_XUSB_SS_SRC, TEGRA210_CLK_PLL_U_480M, 120000000, 0 },
+ 	{ TEGRA210_CLK_XUSB_FS_SRC, TEGRA210_CLK_PLL_U_48M, 48000000, 0 },
+@@ -3008,7 +3009,6 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA210_CLK_PLL_DP, TEGRA210_CLK_CLK_MAX, 270000000, 0 },
+ 	{ TEGRA210_CLK_SOC_THERM, TEGRA210_CLK_PLL_P, 51000000, 0 },
+ 	{ TEGRA210_CLK_CCLK_G, TEGRA210_CLK_CLK_MAX, 0, 1 },
+-	{ TEGRA210_CLK_PLL_U_OUT1, TEGRA210_CLK_CLK_MAX, 48000000, 1 },
+ 	{ TEGRA210_CLK_PLL_U_OUT2, TEGRA210_CLK_CLK_MAX, 60000000, 1 },
+ 	/* This MUST be the last entry. */
+ 	{ TEGRA210_CLK_CLK_MAX, TEGRA210_CLK_CLK_MAX, 0, 0 },
 -- 
 2.20.1
 
