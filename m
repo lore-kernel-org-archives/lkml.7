@@ -2,364 +2,445 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABACCC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF14CC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5FD218B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:35:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564108516;
-	bh=bh3SCv9WFdfvPS1A+l+YplvZdsiV7LiRoGy1T5w5jRk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HEaCaOk4s4NDCCuSqabWbY8Fx15Pdvwkjk05qSQtOrXtvhyMIBgxgiUK4MEy2my06
-	 V9ph/CvZlUhx5HRxsocQu+VhCPOnXKvjMCrn6+UFxFDh83ogynMxghWk4xK0VTbRJU
-	 qGlET4B3V3zPGeWaoAPbo6++VBBYyFSKkReIL4Y8=
+	by mail.kernel.org (Postfix) with ESMTP id B54A72238C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:40:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfGZCfP (ORCPT
+        id S1726043AbfGZCk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 22:35:15 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37432 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfGZCfO (ORCPT
+        Thu, 25 Jul 2019 22:40:56 -0400
+Received: from mx0a-00010702.pphosted.com ([148.163.156.75]:52708 "EHLO
+        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725909AbfGZCk4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 22:35:14 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i70so13248057pgd.4;
-        Thu, 25 Jul 2019 19:35:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Q30YVPvUX3JGM2I0+DyGeQCKX2+K88lPFkslb0rMb3A=;
-        b=YLR9hvoYu1W/oZRoUhC8RM52d7UHrKWR7/bpWn0fqe4QguWRF3O+NgHQaQ1qrytgEA
-         rfSUKU8VxiFgNwxGvXLRDZj7hyeaopHWPEfwqi8YYq5fbANe99xNyeBPP6yuyIQj9ODK
-         jXR9nWVOmCl6PSFSt4d5mYygk5w+iXMm9kv98YWobWNBrgpPlEHtDeLYWpqc/To5SAy1
-         x6vQiNUeKn0P+HLzSaX3gpPQ3XDV4mURPLqUCVa679ctL9yPl7hkoCo39G7LQjzGMUQN
-         kaNijnQjuf8A6PBq+S5PaR+8vNFGRfIg/NZ5hTg3f84iUDLU7faOEa3pD/wib0p5W7zp
-         JmGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=Q30YVPvUX3JGM2I0+DyGeQCKX2+K88lPFkslb0rMb3A=;
-        b=g7Bwz6o3FdQCdxtXWWmyESMBpN9D60yktqYRvUDypninQe3qhv1r4vRUi0kAi+VUCA
-         ZDanttXJJK7sq0a6SbfgjlKWbdoS6ztlt44CXlwZlWt+UO0zPmDbKPDdmCWH0vDTgFB/
-         Ut2yagBwEAXmSC12df79JXMhSPtBkYDxMdPOls7tgSg7F/Jv2mmP4zLLmQbYGTacSnFr
-         MCLMMOSMwP09AhMCCLdiI1L0511EpEe9KARyIiVholFt8ZbCwnKB78mIDLzgsCRETG6i
-         8MpEO/ZprD31mA/JHZqN92v0TZZtw1xbGIZ2wOuUCl4bCYfAdZ4hY0VYrPRus3UGJUrD
-         gy7Q==
-X-Gm-Message-State: APjAAAXGfqJzP6ixDlbDKuo1rB4Dq3r1ITqJnrt4q40dOC3tGcodBIRP
-        V/ToQek+WbR8Z1H1U7qRgT0=
-X-Google-Smtp-Source: APXvYqyy2hrsqR1fSZ3dc6IWHJTQa/8XvoFf1/1yCu8fXgywe6vHznXwamB7QK5HhknOKACRJ2jDdg==
-X-Received: by 2002:a62:6c1:: with SMTP id 184mr19175390pfg.230.1564108513527;
-        Thu, 25 Jul 2019 19:35:13 -0700 (PDT)
-Received: from bbox-2.seo.corp.google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id l31sm88958450pgm.63.2019.07.25.19.35.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 19:35:12 -0700 (PDT)
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>
-Subject: [PATCH v7 5/5] mm: factor out common parts between MADV_COLD and MADV_PAGEOUT
-Date:   Fri, 26 Jul 2019 11:34:35 +0900
-Message-Id: <20190726023435.214162-6-minchan@kernel.org>
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-In-Reply-To: <20190726023435.214162-1-minchan@kernel.org>
-References: <20190726023435.214162-1-minchan@kernel.org>
+        Thu, 25 Jul 2019 22:40:56 -0400
+Received: from pps.filterd (m0098780.ppops.net [127.0.0.1])
+        by mx0a-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x6Q2Zi0Q029142;
+        Thu, 25 Jul 2019 21:40:54 -0500
+Received: from ni.com (skprod2.natinst.com [130.164.80.23])
+        by mx0a-00010702.pphosted.com with ESMTP id 2tx62hje49-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jul 2019 21:40:54 -0500
+Received: from us-aus-exhub1.ni.corp.natinst.com (us-aus-exhub1.ni.corp.natinst.com [130.164.68.41])
+        by us-aus-skprod2.natinst.com (8.16.0.27/8.16.0.27) with ESMTPS id x6Q2eroc019985
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jul 2019 21:40:53 -0500
+Received: from us-aus-exch3.ni.corp.natinst.com (130.164.68.13) by
+ us-aus-exhub1.ni.corp.natinst.com (130.164.68.41) with Microsoft SMTP Server
+ (TLS) id 15.0.1395.4; Thu, 25 Jul 2019 21:40:53 -0500
+Received: from us-aus-exhub1.ni.corp.natinst.com (130.164.68.41) by
+ us-aus-exch3.ni.corp.natinst.com (130.164.68.13) with Microsoft SMTP Server
+ (TLS) id 15.0.1395.4; Thu, 25 Jul 2019 21:40:53 -0500
+Received: from my-pen-rd9.apac.corp.natinst.com (130.164.49.7) by
+ us-aus-exhub1.ni.corp.natinst.com (130.164.68.41) with Microsoft SMTP Server
+ id 15.0.1395.4 via Frontend Transport; Thu, 25 Jul 2019 21:40:52 -0500
+From:   jeyentam <je.yen.tam@ni.com>
+To:     <gregkh@linuxfoundation.org>
+CC:     <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        jeyentam <je.yen.tam@ni.com>
+Subject: [PATCH v5] serial/8250: Add support for NI-Serial PXI/PXIe+485 devices
+Date:   Fri, 26 Jul 2019 10:40:46 +0800
+Message-ID: <20190726024046.5873-1-je.yen.tam@ni.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
+ definitions=2019-07-26_01:2019-07-26,2019-07-26 signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are many common parts between MADV_COLD and MADV_PAGEOUT.
-This patch factor them out to save code duplication.
+Add support for NI-Serial PXIe-RS232, PXI-RS485 and PXIe-RS485 devices.
 
-Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Minchan Kim <minchan@kernel.org>
+Signed-off-by: jeyentam <je.yen.tam@ni.com>
 ---
- mm/madvise.c | 194 ++++++++++++---------------------------------------
- 1 file changed, 46 insertions(+), 148 deletions(-)
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 78aa6802b95ad..52f9bddbab19c 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -30,6 +30,11 @@
- 
- #include "internal.h"
- 
-+struct madvise_walk_private {
-+	struct mmu_gather *tlb;
-+	bool pageout;
-+};
-+
- /*
-  * Any behaviour which results in changes to the vma->vm_flags needs to
-  * take mmap_sem for writing. Others, which simply traverse vmas, need
-@@ -310,15 +315,22 @@ static long madvise_willneed(struct vm_area_struct *vma,
- 	return 0;
+v4 -> v5
+- Remove blank lines between variable definitions.
+- Remove trace_printk().
+
+v3 -> v4:
+- Add changes description.
+
+v2 -> v3:
+- Add "full" name for author
+- Use BIT() macro for bits definition
+- Remove unnecessary WARN_ON()
+- Change debugging interface to ftrace
+- Fix indentation
+- Add NI PXIe-RS232 and PXI/PXIe-RS485 device IDs #defines
+
+v1 -> v2:
+- Fix unintended indentation
+
+v1:
+- Add and rename #defines for 16550 UART Port Control Register
+- Add configuration for RS485 port.
+- Add device setup for NI PXI/PXIe-RS485 family.
+- Add PCI board attributes for NI PXIe-RS232 and PXI/PXIe-RS485 devices.
+
+ drivers/tty/serial/8250/8250_pci.c | 292 ++++++++++++++++++++++++++++-
+ 1 file changed, 288 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
+index df41397de478..a675069571b2 100644
+--- a/drivers/tty/serial/8250/8250_pci.c
++++ b/drivers/tty/serial/8250/8250_pci.c
+@@ -730,8 +730,16 @@ static int pci_ni8430_init(struct pci_dev *dev)
  }
  
--static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
--				unsigned long end, struct mm_walk *walk)
-+static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
-+				unsigned long addr, unsigned long end,
-+				struct mm_walk *walk)
- {
--	struct mmu_gather *tlb = walk->private;
-+	struct madvise_walk_private *private = walk->private;
-+	struct mmu_gather *tlb = private->tlb;
-+	bool pageout = private->pageout;
- 	struct mm_struct *mm = tlb->mm;
- 	struct vm_area_struct *vma = walk->vma;
- 	pte_t *orig_pte, *pte, ptent;
- 	spinlock_t *ptl;
--	struct page *page;
-+	struct page *page = NULL;
-+	LIST_HEAD(page_list);
-+
-+	if (fatal_signal_pending(current))
-+		return -EINTR;
+ /* UART Port Control Register */
+-#define NI8430_PORTCON	0x0f
+-#define NI8430_PORTCON_TXVR_ENABLE	(1 << 3)
++#define NI16550_PCR_OFFSET	0x0f
++#define NI16550_PCR_RS422	0x00
++#define NI16550_PCR_ECHO_RS485	0x01
++#define NI16550_PCR_DTR_RS485	0x02
++#define NI16550_PCR_AUTO_RS485	0x03
++#define NI16550_PCR_WIRE_MODE_MASK	0x03
++#define NI16550_PCR_TXVR_ENABLE_BIT	BIT(3)
++#define NI16550_PCR_RS485_TERMINATION_BIT	BIT(6)
++#define NI16550_ACR_DTR_AUTO_DTR	(0x2 << 3)
++#define NI16550_ACR_DTR_MANUAL_DTR	(0x0 << 3)
  
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 	if (pmd_trans_huge(*pmd)) {
-@@ -366,10 +378,17 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
- 			tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
- 		}
+ static int
+ pci_ni8430_setup(struct serial_private *priv,
+@@ -753,14 +761,117 @@ pci_ni8430_setup(struct serial_private *priv,
+ 		return -ENOMEM;
  
-+		ClearPageReferenced(page);
- 		test_and_clear_page_young(page);
--		deactivate_page(page);
-+		if (pageout) {
-+			if (!isolate_lru_page(page))
-+				list_add(&page->lru, &page_list);
-+		} else
-+			deactivate_page(page);
- huge_unlock:
- 		spin_unlock(ptl);
-+		if (pageout)
-+			reclaim_pages(&page_list);
- 		return 0;
- 	}
+ 	/* enable the transceiver */
+-	writeb(readb(p + offset + NI8430_PORTCON) | NI8430_PORTCON_TXVR_ENABLE,
+-	       p + offset + NI8430_PORTCON);
++	writeb(readb(p + offset + NI16550_PCR_OFFSET) | NI16550_PCR_TXVR_ENABLE_BIT,
++	       p + offset + NI16550_PCR_OFFSET);
  
-@@ -437,12 +456,19 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
- 		 * As a side effect, it makes confuse idle-page tracking
- 		 * because they will miss recent referenced history.
- 		 */
-+		ClearPageReferenced(page);
- 		test_and_clear_page_young(page);
--		deactivate_page(page);
-+		if (pageout) {
-+			if (!isolate_lru_page(page))
-+				list_add(&page->lru, &page_list);
-+		} else
-+			deactivate_page(page);
- 	}
+ 	iounmap(p);
  
- 	arch_leave_lazy_mmu_mode();
- 	pte_unmap_unlock(orig_pte, ptl);
-+	if (pageout)
-+		reclaim_pages(&page_list);
- 	cond_resched();
- 
- 	return 0;
-@@ -452,10 +478,15 @@ static void madvise_cold_page_range(struct mmu_gather *tlb,
- 			     struct vm_area_struct *vma,
- 			     unsigned long addr, unsigned long end)
- {
-+	struct madvise_walk_private walk_private = {
-+		.tlb = tlb,
-+		.pageout = false,
-+	};
-+
- 	struct mm_walk cold_walk = {
--		.pmd_entry = madvise_cold_pte_range,
-+		.pmd_entry = madvise_cold_or_pageout_pte_range,
- 		.mm = vma->vm_mm,
--		.private = tlb,
-+		.private = &walk_private,
- 	};
- 
- 	tlb_start_vma(tlb, vma);
-@@ -482,152 +513,19 @@ static long madvise_cold(struct vm_area_struct *vma,
- 	return 0;
+ 	return setup_port(priv, port, bar, offset, board->reg_shift);
  }
  
--static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
--				unsigned long end, struct mm_walk *walk)
--{
--	struct mmu_gather *tlb = walk->private;
--	struct mm_struct *mm = tlb->mm;
--	struct vm_area_struct *vma = walk->vma;
--	pte_t *orig_pte, *pte, ptent;
--	spinlock_t *ptl;
--	LIST_HEAD(page_list);
--	struct page *page;
--
--	if (fatal_signal_pending(current))
--		return -EINTR;
--
--#ifdef CONFIG_TRANSPARENT_HUGEPAGE
--	if (pmd_trans_huge(*pmd)) {
--		pmd_t orig_pmd;
--		unsigned long next = pmd_addr_end(addr, end);
--
--		tlb_change_page_size(tlb, HPAGE_PMD_SIZE);
--		ptl = pmd_trans_huge_lock(pmd, vma);
--		if (!ptl)
--			return 0;
--
--		orig_pmd = *pmd;
--		if (is_huge_zero_pmd(orig_pmd))
--			goto huge_unlock;
--
--		if (unlikely(!pmd_present(orig_pmd))) {
--			VM_BUG_ON(thp_migration_supported() &&
--					!is_pmd_migration_entry(orig_pmd));
--			goto huge_unlock;
--		}
--
--		page = pmd_page(orig_pmd);
--		if (next - addr != HPAGE_PMD_SIZE) {
--			int err;
--
--			if (page_mapcount(page) != 1)
--				goto huge_unlock;
--			get_page(page);
--			spin_unlock(ptl);
--			lock_page(page);
--			err = split_huge_page(page);
--			unlock_page(page);
--			put_page(page);
--			if (!err)
--				goto regular_page;
--			return 0;
--		}
--
--		if (pmd_young(orig_pmd)) {
--			pmdp_invalidate(vma, addr, pmd);
--			orig_pmd = pmd_mkold(orig_pmd);
--
--			set_pmd_at(mm, addr, pmd, orig_pmd);
--			tlb_remove_tlb_entry(tlb, pmd, addr);
--		}
--
--		ClearPageReferenced(page);
--		test_and_clear_page_young(page);
--
--		if (!isolate_lru_page(page))
--			list_add(&page->lru, &page_list);
--huge_unlock:
--		spin_unlock(ptl);
--		reclaim_pages(&page_list);
--		return 0;
--	}
--
--	if (pmd_trans_unstable(pmd))
--		return 0;
--regular_page:
--#endif
--	tlb_change_page_size(tlb, PAGE_SIZE);
--	orig_pte = pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
--	flush_tlb_batched_pending(mm);
--	arch_enter_lazy_mmu_mode();
--	for (; addr < end; pte++, addr += PAGE_SIZE) {
--		ptent = *pte;
--		if (!pte_present(ptent))
--			continue;
--
--		page = vm_normal_page(vma, addr, ptent);
--		if (!page)
--			continue;
--
--		/*
--		 * creating a THP page is expensive so split it only if we
--		 * are sure it's worth. Split it if we are only owner.
--		 */
--		if (PageTransCompound(page)) {
--			if (page_mapcount(page) != 1)
--				break;
--			get_page(page);
--			if (!trylock_page(page)) {
--				put_page(page);
--				break;
--			}
--			pte_unmap_unlock(orig_pte, ptl);
--			if (split_huge_page(page)) {
--				unlock_page(page);
--				put_page(page);
--				pte_offset_map_lock(mm, pmd, addr, &ptl);
--				break;
--			}
--			unlock_page(page);
--			put_page(page);
--			pte = pte_offset_map_lock(mm, pmd, addr, &ptl);
--			pte--;
--			addr -= PAGE_SIZE;
--			continue;
--		}
--
--		VM_BUG_ON_PAGE(PageTransCompound(page), page);
--
--		if (pte_young(ptent)) {
--			ptent = ptep_get_and_clear_full(mm, addr, pte,
--							tlb->fullmm);
--			ptent = pte_mkold(ptent);
--			set_pte_at(mm, addr, pte, ptent);
--			tlb_remove_tlb_entry(tlb, pte, addr);
--		}
--		ClearPageReferenced(page);
--		test_and_clear_page_young(page);
--
--		if (!isolate_lru_page(page))
--			list_add(&page->lru, &page_list);
--	}
--
--	arch_leave_lazy_mmu_mode();
--	pte_unmap_unlock(orig_pte, ptl);
--	reclaim_pages(&page_list);
--	cond_resched();
--
--	return 0;
--}
--
- static void madvise_pageout_page_range(struct mmu_gather *tlb,
- 			     struct vm_area_struct *vma,
- 			     unsigned long addr, unsigned long end)
- {
-+	struct madvise_walk_private walk_private = {
-+		.pageout = true,
-+		.tlb = tlb,
-+	};
++static int pci_ni8431_config_rs485(struct uart_port *port,
++	struct serial_rs485 *rs485)
++{
++	u8 pcr, acr;
++	struct uart_8250_port *up;
 +
- 	struct mm_walk pageout_walk = {
--		.pmd_entry = madvise_pageout_pte_range,
-+		.pmd_entry = madvise_cold_or_pageout_pte_range,
- 		.mm = vma->vm_mm,
--		.private = tlb,
-+		.private = &walk_private,
- 	};
++	up = container_of(port, struct uart_8250_port, port);
++	acr = up->acr;
++	pcr = port->serial_in(port, NI16550_PCR_OFFSET);
++	pcr &= ~NI16550_PCR_WIRE_MODE_MASK;
++
++	if (rs485->flags & SER_RS485_ENABLED) {
++		/* RS-485 */
++		if ((rs485->flags & SER_RS485_RX_DURING_TX) &&
++			(rs485->flags & SER_RS485_RTS_ON_SEND)) {
++			dev_dbg(port->dev, "Invalid 2-wire mode\n");
++			return -EINVAL;
++		}
++
++		if (rs485->flags & SER_RS485_RX_DURING_TX) {
++			/* Echo */
++			dev_vdbg(port->dev, "2-wire DTR with echo\n");
++			pcr |= NI16550_PCR_ECHO_RS485;
++			acr |= NI16550_ACR_DTR_MANUAL_DTR;
++		} else {
++			/* Auto or DTR */
++			if (rs485->flags & SER_RS485_RTS_ON_SEND) {
++				/* Auto */
++				dev_vdbg(port->dev, "2-wire Auto\n");
++				pcr |= NI16550_PCR_AUTO_RS485;
++				acr |= NI16550_ACR_DTR_AUTO_DTR;
++			} else {
++				/* DTR-controlled */
++				/* No Echo */
++				dev_vdbg(port->dev, "2-wire DTR no echo\n");
++				pcr |= NI16550_PCR_DTR_RS485;
++				acr |= NI16550_ACR_DTR_MANUAL_DTR;
++			}
++		}
++	} else {
++		/* RS-422 */
++		dev_vdbg(port->dev, "4-wire\n");
++		pcr |= NI16550_PCR_RS422;
++		acr |= NI16550_ACR_DTR_MANUAL_DTR;
++	}
++
++	dev_dbg(port->dev, "write pcr: 0x%08x\n", pcr);
++	port->serial_out(port, NI16550_PCR_OFFSET, pcr);
++
++	up->acr = acr;
++	port->serial_out(port, UART_SCR, UART_ACR);
++	port->serial_out(port, UART_ICR, up->acr);
++
++	/* Update the cache. */
++	port->rs485 = *rs485;
++
++	return 0;
++}
++
++static int pci_ni8431_setup(struct serial_private *priv,
++		 const struct pciserial_board *board,
++		 struct uart_8250_port *uart, int idx)
++{
++	u8 pcr, acr;
++	struct pci_dev *dev = priv->dev;
++	void __iomem *addr;
++	unsigned int bar, offset = board->first_offset;
++
++	if (idx >= board->num_ports)
++		return 1;
++
++	bar = FL_GET_BASE(board->flags);
++	offset += idx * board->uart_offset;
++
++	addr = pci_ioremap_bar(dev, bar);
++	if (!addr)
++		return -ENOMEM;
++
++	/* enable the transceiver */
++	writeb(readb(addr + NI16550_PCR_OFFSET) | NI16550_PCR_TXVR_ENABLE_BIT,
++		addr + NI16550_PCR_OFFSET);
++
++	pcr = readb(addr + NI16550_PCR_OFFSET);
++	pcr &= ~NI16550_PCR_WIRE_MODE_MASK;
++
++	/* set wire mode to default RS-422 */
++	pcr |= NI16550_PCR_RS422;
++	acr = NI16550_ACR_DTR_MANUAL_DTR;
++
++	/* write port configuration to register */
++	writeb(pcr, addr + NI16550_PCR_OFFSET);
++
++	/* access and write to UART acr register */
++	writeb(UART_ACR, addr + UART_SCR);
++	writeb(acr, addr + UART_ICR);
++
++	uart->port.rs485_config = &pci_ni8431_config_rs485;
++
++	iounmap(addr);
++
++	return setup_port(priv, uart, bar, offset, board->reg_shift);
++}
++
+ static int pci_netmos_9900_setup(struct serial_private *priv,
+ 				const struct pciserial_board *board,
+ 				struct uart_8250_port *port, int idx)
+@@ -1731,6 +1842,15 @@ pci_wch_ch38x_setup(struct serial_private *priv,
+ #define PCI_DEVICE_ID_ACCESIO_PCIE_COM_8SM	0x10E9
+ #define PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4SM	0x11D8
  
- 	tlb_start_vma(tlb, vma);
++#define PCIE_DEVICE_ID_NI_PXIE8430_2328	0x74C2
++#define PCIE_DEVICE_ID_NI_PXIE8430_23216	0x74C1
++#define PCI_DEVICE_ID_NI_PXI8431_4852	0x7081
++#define PCI_DEVICE_ID_NI_PXI8431_4854	0x70DE
++#define PCI_DEVICE_ID_NI_PXI8431_4858	0x70E3
++#define PCI_DEVICE_ID_NI_PXI8433_4852	0x70E9
++#define PCI_DEVICE_ID_NI_PXI8433_4854	0x70ED
++#define PCIE_DEVICE_ID_NI_PXIE8431_4858	0x74C4
++#define PCIE_DEVICE_ID_NI_PXIE8431_48516	0x74C3
+ 
+ 
+ /* Unknown vendors/cards - this should not be in linux/pci_ids.h */
+@@ -1956,6 +2076,87 @@ static struct pci_serial_quirk pci_serial_quirks[] __refdata = {
+ 		.setup		= pci_ni8430_setup,
+ 		.exit		= pci_ni8430_exit,
+ 	},
++	{
++		.vendor		= PCI_VENDOR_ID_NI,
++		.device		= PCIE_DEVICE_ID_NI_PXIE8430_2328,
++		.subvendor	= PCI_ANY_ID,
++		.subdevice	= PCI_ANY_ID,
++		.init		= pci_ni8430_init,
++		.setup		= pci_ni8430_setup,
++		.exit		= pci_ni8430_exit,
++	},
++	{
++		.vendor		= PCI_VENDOR_ID_NI,
++		.device		= PCIE_DEVICE_ID_NI_PXIE8430_23216,
++		.subvendor	= PCI_ANY_ID,
++		.subdevice	= PCI_ANY_ID,
++		.init		= pci_ni8430_init,
++		.setup		= pci_ni8430_setup,
++		.exit		= pci_ni8430_exit,
++	},
++	{
++		.vendor		= PCI_VENDOR_ID_NI,
++		.device		= PCI_DEVICE_ID_NI_PXI8431_4852,
++		.subvendor	= PCI_ANY_ID,
++		.subdevice	= PCI_ANY_ID,
++		.init		= pci_ni8430_init,
++		.setup		= pci_ni8431_setup,
++		.exit		= pci_ni8430_exit,
++	},
++	{
++		.vendor		= PCI_VENDOR_ID_NI,
++		.device		= PCI_DEVICE_ID_NI_PXI8431_4854,
++		.subvendor	= PCI_ANY_ID,
++		.subdevice	= PCI_ANY_ID,
++		.init		= pci_ni8430_init,
++		.setup		= pci_ni8431_setup,
++		.exit		= pci_ni8430_exit,
++	},
++	{
++		.vendor		= PCI_VENDOR_ID_NI,
++		.device		= PCI_DEVICE_ID_NI_PXI8431_4858,
++		.subvendor	= PCI_ANY_ID,
++		.subdevice	= PCI_ANY_ID,
++		.init		= pci_ni8430_init,
++		.setup		= pci_ni8431_setup,
++		.exit		= pci_ni8430_exit,
++	},
++	{
++		.vendor		= PCI_VENDOR_ID_NI,
++		.device		= PCI_DEVICE_ID_NI_PXI8433_4852,
++		.subvendor	= PCI_ANY_ID,
++		.subdevice	= PCI_ANY_ID,
++		.init		= pci_ni8430_init,
++		.setup		= pci_ni8431_setup,
++		.exit		= pci_ni8430_exit,
++	},
++	{
++		.vendor		= PCI_VENDOR_ID_NI,
++		.device		= PCI_DEVICE_ID_NI_PXI8433_4854,
++		.subvendor	= PCI_ANY_ID,
++		.subdevice	= PCI_ANY_ID,
++		.init		= pci_ni8430_init,
++		.setup		= pci_ni8431_setup,
++		.exit		= pci_ni8430_exit,
++	},
++	{
++		.vendor		= PCI_VENDOR_ID_NI,
++		.device		= PCIE_DEVICE_ID_NI_PXIE8431_4858,
++		.subvendor	= PCI_ANY_ID,
++		.subdevice	= PCI_ANY_ID,
++		.init		= pci_ni8430_init,
++		.setup		= pci_ni8431_setup,
++		.exit		= pci_ni8430_exit,
++	},
++	{
++		.vendor		= PCI_VENDOR_ID_NI,
++		.device		= PCIE_DEVICE_ID_NI_PXIE8431_48516,
++		.subvendor	= PCI_ANY_ID,
++		.subdevice	= PCI_ANY_ID,
++		.init		= pci_ni8430_init,
++		.setup		= pci_ni8431_setup,
++		.exit		= pci_ni8430_exit,
++	},
+ 	/* Quatech */
+ 	{
+ 		.vendor		= PCI_VENDOR_ID_QUATECH,
+@@ -2679,6 +2880,13 @@ enum pci_board_num_t {
+ 	pbn_ni8430_4,
+ 	pbn_ni8430_8,
+ 	pbn_ni8430_16,
++	pbn_ni8430_pxie_8,
++	pbn_ni8430_pxie_16,
++	pbn_ni8431_2,
++	pbn_ni8431_4,
++	pbn_ni8431_8,
++	pbn_ni8431_pxie_8,
++	pbn_ni8431_pxie_16,
+ 	pbn_ADDIDATA_PCIe_1_3906250,
+ 	pbn_ADDIDATA_PCIe_2_3906250,
+ 	pbn_ADDIDATA_PCIe_4_3906250,
+@@ -3320,6 +3528,55 @@ static struct pciserial_board pci_boards[] = {
+ 		.uart_offset	= 0x10,
+ 		.first_offset	= 0x800,
+ 	},
++	[pbn_ni8430_pxie_16] = {
++		.flags		= FL_BASE0,
++		.num_ports	= 16,
++		.base_baud	= 3125000,
++		.uart_offset	= 0x10,
++		.first_offset	= 0x800,
++	},
++	[pbn_ni8430_pxie_8] = {
++		.flags		= FL_BASE0,
++		.num_ports	= 8,
++		.base_baud	= 3125000,
++		.uart_offset	= 0x10,
++		.first_offset	= 0x800,
++	},
++	[pbn_ni8431_8] = {
++		.flags		= FL_BASE0,
++		.num_ports	= 8,
++		.base_baud	= 3686400,
++		.uart_offset	= 0x10,
++		.first_offset	= 0x800,
++	},
++	[pbn_ni8431_4] = {
++		.flags		= FL_BASE0,
++		.num_ports	= 4,
++		.base_baud	= 3686400,
++		.uart_offset	= 0x10,
++		.first_offset	= 0x800,
++	},
++	[pbn_ni8431_2] = {
++		.flags		= FL_BASE0,
++		.num_ports	= 2,
++		.base_baud	= 3686400,
++		.uart_offset	= 0x10,
++		.first_offset	= 0x800,
++	},
++	[pbn_ni8431_pxie_16] = {
++		.flags		= FL_BASE0,
++		.num_ports	= 16,
++		.base_baud	= 3125000,
++		.uart_offset	= 0x10,
++		.first_offset	= 0x800,
++	},
++	[pbn_ni8431_pxie_8] = {
++		.flags		= FL_BASE0,
++		.num_ports	= 8,
++		.base_baud	= 3125000,
++		.uart_offset	= 0x10,
++		.first_offset	= 0x800,
++	},
+ 	/*
+ 	 * ADDI-DATA GmbH PCI-Express communication cards <info@addi-data.com>
+ 	 */
+@@ -5003,6 +5260,33 @@ static const struct pci_device_id serial_pci_tbl[] = {
+ 	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PCI8432_2324,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_ni8430_4 },
++	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8430_2328,
++		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
++		pbn_ni8430_pxie_8 },
++	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8430_23216,
++		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
++		pbn_ni8430_pxie_16 },
++	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8431_4852,
++		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
++		pbn_ni8431_2 },
++	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8431_4854,
++		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
++		pbn_ni8431_4 },
++	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8431_4858,
++		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
++		pbn_ni8431_8 },
++	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8431_4858,
++		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
++		pbn_ni8431_pxie_8 },
++	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8431_48516,
++		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
++		pbn_ni8431_pxie_16 },
++	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8433_4852,
++		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
++		pbn_ni8431_2 },
++	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8433_4854,
++		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
++		pbn_ni8431_4 },
+ 
+ 	/*
+ 	* ADDI-DATA GmbH communication cards <info@addi-data.com>
 -- 
-2.22.0.709.g102302147b-goog
+2.17.1
 
