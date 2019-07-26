@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC24FC76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E707BC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB8882054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16C922CB8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155564;
-	bh=9ZoUA2md95a4e1zQraQn12A8rw4C7V5MRn3nbzB9NUk=;
+	s=default; t=1564155565;
+	bh=tqF1FyZcllZIxd/XY7UlUE+/BwiFoe4vQugb4Ud9Rj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gj+qxkWGVnUO2koss/R50JxTkYcxqDVhhfhcaXsaubO4WtWcstHCezRCy/fhFPMhN
-	 hDLsHshQ/nuiFd0sw0CIeD+gODjTMTqzbUmGKDf70u6oQ4iq9j7UdYRBqxpMKEE6qQ
-	 77WhTo8Mgspw4plLPnXE8Rt/vgI4iO0MxWoZ+9VY=
+	b=OewaDZbWOyUb1TGj2fHgzKl65GN9W33E4agUg2wyp8uJGA0mQjMzXO/KU6CNl/bQ+
+	 ptyvPpuodrKwC8dqOAEMW2O5pg1RatJZzjKR2d6i7TIsb8quo4JPHyqZL+P6Vz4+7q
+	 GGGwHf+3Sx7IGaadB7PPvrxeiJGCIKIEA0xJXT0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387810AbfGZP0G (ORCPT
+        id S2387773AbfGZP0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:26:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39938 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:26:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387764AbfGZP0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:26:03 -0400
+        id S2387681AbfGZPZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:25:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64F8D22CB9;
-        Fri, 26 Jul 2019 15:26:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17D0422CB8;
+        Fri, 26 Jul 2019 15:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154761;
-        bh=9ZoUA2md95a4e1zQraQn12A8rw4C7V5MRn3nbzB9NUk=;
+        s=default; t=1564154758;
+        bh=tqF1FyZcllZIxd/XY7UlUE+/BwiFoe4vQugb4Ud9Rj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zWQg7fgLQUaKjyj7GOLuH3wddoQq0IP4Ra8Cpz/enHBZ9ldjCH/YI/fdMU8HXyTby
-         THjGJbG9bnmcFNkZ/gm7Ut7L5OjlGE3IU3yHOqlA2TAF5bwY6LWjycFKdbhkAYflzn
-         DXL/EnU+IsHrJQNM2gMF9QaHe/AMroigw9UsT+/Q=
+        b=d3zQbJEXagkYKwofAsxMosRy+sRBP45qDYRsDR4/S8xxl8Fw+P3YhlY1wB982pb8y
+         H//CwYd6o6WHg2arWwN5OxwbAIceohwQSoyEnNEpSuC8is+kHP3kJmLweN/SKaFp+0
+         WSkaqXyDWVr6Cwe/B+33I9q6+8qpYDR/g4VB0FHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ionut Radu <ionut.radu@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
+        stable@vger.kernel.org, Yang Wei <albin_yang@163.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 18/66] r8169: fix issue with confused RX unit after PHY power-down on RTL8411b
-Date:   Fri, 26 Jul 2019 17:24:17 +0200
-Message-Id: <20190726152303.752970145@linuxfoundation.org>
+Subject: [PATCH 5.2 17/66] nfc: fix potential illegal memory access
+Date:   Fri, 26 Jul 2019 17:24:16 +0200
+Message-Id: <20190726152303.663617053@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
 References: <20190726152301.936055394@linuxfoundation.org>
@@ -60,173 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Yang Wei <albin_yang@163.com>
 
-[ Upstream commit fe4e8db0392a6c2e795eb89ef5fcd86522e66248 ]
+[ Upstream commit dd006fc434e107ef90f7de0db9907cbc1c521645 ]
 
-On RTL8411b the RX unit gets confused if the PHY is powered-down.
-This was reported in [0] and confirmed by Realtek. Realtek provided
-a sequence to fix the RX unit after PHY wakeup.
+The frags_q is not properly initialized, it may result in illegal memory
+access when conn_info is NULL.
+The "goto free_exit" should be replaced by "goto exit".
 
-The issue itself seems to have been there longer, the Fixes tag
-refers to where the fix applies properly.
-
-[0] https://bugzilla.redhat.com/show_bug.cgi?id=1692075
-
-Fixes: a99790bf5c7f ("r8169: Reinstate ASPM Support")
-Tested-by: Ionut Radu <ionut.radu@gmail.com>
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: Yang Wei <albin_yang@163.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/realtek/r8169.c |  137 +++++++++++++++++++++++++++++++++++
- 1 file changed, 137 insertions(+)
+ net/nfc/nci/data.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/realtek/r8169.c
-+++ b/drivers/net/ethernet/realtek/r8169.c
-@@ -5157,6 +5157,143 @@ static void rtl_hw_start_8411_2(struct r
- 	/* disable aspm and clock request before access ephy */
- 	rtl_hw_aspm_clkreq_enable(tp, false);
- 	rtl_ephy_init(tp, e_info_8411_2);
-+
-+	/* The following Realtek-provided magic fixes an issue with the RX unit
-+	 * getting confused after the PHY having been powered-down.
-+	 */
-+	r8168_mac_ocp_write(tp, 0xFC28, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xFC2A, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xFC2C, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xFC2E, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xFC30, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xFC32, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xFC34, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xFC36, 0x0000);
-+	mdelay(3);
-+	r8168_mac_ocp_write(tp, 0xFC26, 0x0000);
-+
-+	r8168_mac_ocp_write(tp, 0xF800, 0xE008);
-+	r8168_mac_ocp_write(tp, 0xF802, 0xE00A);
-+	r8168_mac_ocp_write(tp, 0xF804, 0xE00C);
-+	r8168_mac_ocp_write(tp, 0xF806, 0xE00E);
-+	r8168_mac_ocp_write(tp, 0xF808, 0xE027);
-+	r8168_mac_ocp_write(tp, 0xF80A, 0xE04F);
-+	r8168_mac_ocp_write(tp, 0xF80C, 0xE05E);
-+	r8168_mac_ocp_write(tp, 0xF80E, 0xE065);
-+	r8168_mac_ocp_write(tp, 0xF810, 0xC602);
-+	r8168_mac_ocp_write(tp, 0xF812, 0xBE00);
-+	r8168_mac_ocp_write(tp, 0xF814, 0x0000);
-+	r8168_mac_ocp_write(tp, 0xF816, 0xC502);
-+	r8168_mac_ocp_write(tp, 0xF818, 0xBD00);
-+	r8168_mac_ocp_write(tp, 0xF81A, 0x074C);
-+	r8168_mac_ocp_write(tp, 0xF81C, 0xC302);
-+	r8168_mac_ocp_write(tp, 0xF81E, 0xBB00);
-+	r8168_mac_ocp_write(tp, 0xF820, 0x080A);
-+	r8168_mac_ocp_write(tp, 0xF822, 0x6420);
-+	r8168_mac_ocp_write(tp, 0xF824, 0x48C2);
-+	r8168_mac_ocp_write(tp, 0xF826, 0x8C20);
-+	r8168_mac_ocp_write(tp, 0xF828, 0xC516);
-+	r8168_mac_ocp_write(tp, 0xF82A, 0x64A4);
-+	r8168_mac_ocp_write(tp, 0xF82C, 0x49C0);
-+	r8168_mac_ocp_write(tp, 0xF82E, 0xF009);
-+	r8168_mac_ocp_write(tp, 0xF830, 0x74A2);
-+	r8168_mac_ocp_write(tp, 0xF832, 0x8CA5);
-+	r8168_mac_ocp_write(tp, 0xF834, 0x74A0);
-+	r8168_mac_ocp_write(tp, 0xF836, 0xC50E);
-+	r8168_mac_ocp_write(tp, 0xF838, 0x9CA2);
-+	r8168_mac_ocp_write(tp, 0xF83A, 0x1C11);
-+	r8168_mac_ocp_write(tp, 0xF83C, 0x9CA0);
-+	r8168_mac_ocp_write(tp, 0xF83E, 0xE006);
-+	r8168_mac_ocp_write(tp, 0xF840, 0x74F8);
-+	r8168_mac_ocp_write(tp, 0xF842, 0x48C4);
-+	r8168_mac_ocp_write(tp, 0xF844, 0x8CF8);
-+	r8168_mac_ocp_write(tp, 0xF846, 0xC404);
-+	r8168_mac_ocp_write(tp, 0xF848, 0xBC00);
-+	r8168_mac_ocp_write(tp, 0xF84A, 0xC403);
-+	r8168_mac_ocp_write(tp, 0xF84C, 0xBC00);
-+	r8168_mac_ocp_write(tp, 0xF84E, 0x0BF2);
-+	r8168_mac_ocp_write(tp, 0xF850, 0x0C0A);
-+	r8168_mac_ocp_write(tp, 0xF852, 0xE434);
-+	r8168_mac_ocp_write(tp, 0xF854, 0xD3C0);
-+	r8168_mac_ocp_write(tp, 0xF856, 0x49D9);
-+	r8168_mac_ocp_write(tp, 0xF858, 0xF01F);
-+	r8168_mac_ocp_write(tp, 0xF85A, 0xC526);
-+	r8168_mac_ocp_write(tp, 0xF85C, 0x64A5);
-+	r8168_mac_ocp_write(tp, 0xF85E, 0x1400);
-+	r8168_mac_ocp_write(tp, 0xF860, 0xF007);
-+	r8168_mac_ocp_write(tp, 0xF862, 0x0C01);
-+	r8168_mac_ocp_write(tp, 0xF864, 0x8CA5);
-+	r8168_mac_ocp_write(tp, 0xF866, 0x1C15);
-+	r8168_mac_ocp_write(tp, 0xF868, 0xC51B);
-+	r8168_mac_ocp_write(tp, 0xF86A, 0x9CA0);
-+	r8168_mac_ocp_write(tp, 0xF86C, 0xE013);
-+	r8168_mac_ocp_write(tp, 0xF86E, 0xC519);
-+	r8168_mac_ocp_write(tp, 0xF870, 0x74A0);
-+	r8168_mac_ocp_write(tp, 0xF872, 0x48C4);
-+	r8168_mac_ocp_write(tp, 0xF874, 0x8CA0);
-+	r8168_mac_ocp_write(tp, 0xF876, 0xC516);
-+	r8168_mac_ocp_write(tp, 0xF878, 0x74A4);
-+	r8168_mac_ocp_write(tp, 0xF87A, 0x48C8);
-+	r8168_mac_ocp_write(tp, 0xF87C, 0x48CA);
-+	r8168_mac_ocp_write(tp, 0xF87E, 0x9CA4);
-+	r8168_mac_ocp_write(tp, 0xF880, 0xC512);
-+	r8168_mac_ocp_write(tp, 0xF882, 0x1B00);
-+	r8168_mac_ocp_write(tp, 0xF884, 0x9BA0);
-+	r8168_mac_ocp_write(tp, 0xF886, 0x1B1C);
-+	r8168_mac_ocp_write(tp, 0xF888, 0x483F);
-+	r8168_mac_ocp_write(tp, 0xF88A, 0x9BA2);
-+	r8168_mac_ocp_write(tp, 0xF88C, 0x1B04);
-+	r8168_mac_ocp_write(tp, 0xF88E, 0xC508);
-+	r8168_mac_ocp_write(tp, 0xF890, 0x9BA0);
-+	r8168_mac_ocp_write(tp, 0xF892, 0xC505);
-+	r8168_mac_ocp_write(tp, 0xF894, 0xBD00);
-+	r8168_mac_ocp_write(tp, 0xF896, 0xC502);
-+	r8168_mac_ocp_write(tp, 0xF898, 0xBD00);
-+	r8168_mac_ocp_write(tp, 0xF89A, 0x0300);
-+	r8168_mac_ocp_write(tp, 0xF89C, 0x051E);
-+	r8168_mac_ocp_write(tp, 0xF89E, 0xE434);
-+	r8168_mac_ocp_write(tp, 0xF8A0, 0xE018);
-+	r8168_mac_ocp_write(tp, 0xF8A2, 0xE092);
-+	r8168_mac_ocp_write(tp, 0xF8A4, 0xDE20);
-+	r8168_mac_ocp_write(tp, 0xF8A6, 0xD3C0);
-+	r8168_mac_ocp_write(tp, 0xF8A8, 0xC50F);
-+	r8168_mac_ocp_write(tp, 0xF8AA, 0x76A4);
-+	r8168_mac_ocp_write(tp, 0xF8AC, 0x49E3);
-+	r8168_mac_ocp_write(tp, 0xF8AE, 0xF007);
-+	r8168_mac_ocp_write(tp, 0xF8B0, 0x49C0);
-+	r8168_mac_ocp_write(tp, 0xF8B2, 0xF103);
-+	r8168_mac_ocp_write(tp, 0xF8B4, 0xC607);
-+	r8168_mac_ocp_write(tp, 0xF8B6, 0xBE00);
-+	r8168_mac_ocp_write(tp, 0xF8B8, 0xC606);
-+	r8168_mac_ocp_write(tp, 0xF8BA, 0xBE00);
-+	r8168_mac_ocp_write(tp, 0xF8BC, 0xC602);
-+	r8168_mac_ocp_write(tp, 0xF8BE, 0xBE00);
-+	r8168_mac_ocp_write(tp, 0xF8C0, 0x0C4C);
-+	r8168_mac_ocp_write(tp, 0xF8C2, 0x0C28);
-+	r8168_mac_ocp_write(tp, 0xF8C4, 0x0C2C);
-+	r8168_mac_ocp_write(tp, 0xF8C6, 0xDC00);
-+	r8168_mac_ocp_write(tp, 0xF8C8, 0xC707);
-+	r8168_mac_ocp_write(tp, 0xF8CA, 0x1D00);
-+	r8168_mac_ocp_write(tp, 0xF8CC, 0x8DE2);
-+	r8168_mac_ocp_write(tp, 0xF8CE, 0x48C1);
-+	r8168_mac_ocp_write(tp, 0xF8D0, 0xC502);
-+	r8168_mac_ocp_write(tp, 0xF8D2, 0xBD00);
-+	r8168_mac_ocp_write(tp, 0xF8D4, 0x00AA);
-+	r8168_mac_ocp_write(tp, 0xF8D6, 0xE0C0);
-+	r8168_mac_ocp_write(tp, 0xF8D8, 0xC502);
-+	r8168_mac_ocp_write(tp, 0xF8DA, 0xBD00);
-+	r8168_mac_ocp_write(tp, 0xF8DC, 0x0132);
-+
-+	r8168_mac_ocp_write(tp, 0xFC26, 0x8000);
-+
-+	r8168_mac_ocp_write(tp, 0xFC2A, 0x0743);
-+	r8168_mac_ocp_write(tp, 0xFC2C, 0x0801);
-+	r8168_mac_ocp_write(tp, 0xFC2E, 0x0BE9);
-+	r8168_mac_ocp_write(tp, 0xFC30, 0x02FD);
-+	r8168_mac_ocp_write(tp, 0xFC32, 0x0C25);
-+	r8168_mac_ocp_write(tp, 0xFC34, 0x00A9);
-+	r8168_mac_ocp_write(tp, 0xFC36, 0x012D);
-+
- 	rtl_hw_aspm_clkreq_enable(tp, true);
- }
+--- a/net/nfc/nci/data.c
++++ b/net/nfc/nci/data.c
+@@ -107,7 +107,7 @@ static int nci_queue_tx_data_frags(struc
+ 	conn_info = nci_get_conn_info_by_conn_id(ndev, conn_id);
+ 	if (!conn_info) {
+ 		rc = -EPROTO;
+-		goto free_exit;
++		goto exit;
+ 	}
  
+ 	__skb_queue_head_init(&frags_q);
 
 
