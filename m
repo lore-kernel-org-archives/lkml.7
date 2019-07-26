@@ -7,53 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D3CC41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2092DC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEC222CD8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C3D22CD8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148905;
-	bh=kO52KThU4opQaTxinGELJ0K7qWXZU/I58JEAGFrPfDk=;
+	s=default; t=1564148909;
+	bh=W4fZ8DD3pnoKGAOR/q9xgxz0qgwyyfT3ltot2nCOB+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UaL8h5NHpe7GmBYYxiNinAmPtcWQFaJDXHlrl8zKSm2kydl5vHQPJyAKmlIvnsZat
-	 YSO2zMBD6imv/BgSoJluPsdTdxhdZuJWG58hQO8yUXKOSNXG/D1LLJ4OFXih5ytHBf
-	 XfEjYfHxzaqLoVzcIRNEqwVmvqMD9YE0s9XDz11I=
+	b=05AOzG6LBNRGn74h33gvwLi8qG9Jpq8Spzw1NCMRz1zTdnEHNWB1N3ShWZcerkC40
+	 okcsCOAVttnrIJvUAXGNzPMVJn0zVjdw6N3ezf6OjguHHH9I34wNYHVGZqGNa8tHJe
+	 u7c8D9jRcX2ww7JpztFog/NOS9qRMdXd4L3la9tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388517AbfGZNpR (ORCPT
+        id S1727985AbfGZNs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:45:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54044 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:48:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387797AbfGZNpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:45:15 -0400
+        id S2388511AbfGZNpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:45:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D97622CBF;
-        Fri, 26 Jul 2019 13:45:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2C0122CE8;
+        Fri, 26 Jul 2019 13:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148714;
-        bh=kO52KThU4opQaTxinGELJ0K7qWXZU/I58JEAGFrPfDk=;
+        s=default; t=1564148716;
+        bh=W4fZ8DD3pnoKGAOR/q9xgxz0qgwyyfT3ltot2nCOB+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A+7t9iB1xjf7xAmoO6Jvu7CLyvP2Rf5e8q7KS34moTk4gPFKtPZt4WACMmHDQz+UQ
-         C9SdR8FwkmXUgg/fV1wbzVG78Ou6UG2gjkp1WowvXzU49gU+Msoupa79INN1xv3hEW
-         JAxA27glw0m+v6nKnrbKYj9hMWayzmVm8pcmAjx4=
+        b=XYVhADWWqaTRnfmht/wB1lqT+U5DZTkr7lxqC2YYgCxyQK9KT28BFD+JvhBXK6H1s
+         Gfeg4OPCqsgDDFqtzcpYe56ifFxUURgktuIPOhADoOE+5BEDmn6DKbqk0Njz/1Rgu1
+         18Nn03WPmN/2alvLiDJ1bnL/3gXnGsHYzFp/SGAQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andreas Christoforou <andreaschristofo@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+Cc:     Denis Efremov <efremov@ispras.ru>, Willy Tarreau <w@1wt.eu>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 25/30] ipc/mqueue.c: only perform resource calculation if user valid
-Date:   Fri, 26 Jul 2019 09:44:27 -0400
-Message-Id: <20190726134432.12993-25-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 27/30] floppy: fix out-of-bounds read in copy_buffer
+Date:   Fri, 26 Jul 2019 09:44:29 -0400
+Message-Id: <20190726134432.12993-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134432.12993-1-sashal@kernel.org>
 References: <20190726134432.12993-1-sashal@kernel.org>
@@ -66,103 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Denis Efremov <efremov@ispras.ru>
 
-[ Upstream commit a318f12ed8843cfac53198390c74a565c632f417 ]
+[ Upstream commit da99466ac243f15fbba65bd261bfc75ffa1532b6 ]
 
-Andreas Christoforou reported:
+This fixes a global out-of-bounds read access in the copy_buffer
+function of the floppy driver.
 
-  UBSAN: Undefined behaviour in ipc/mqueue.c:414:49 signed integer overflow:
-  9 * 2305843009213693951 cannot be represented in type 'long int'
-  ...
-  Call Trace:
-    mqueue_evict_inode+0x8e7/0xa10 ipc/mqueue.c:414
-    evict+0x472/0x8c0 fs/inode.c:558
-    iput_final fs/inode.c:1547 [inline]
-    iput+0x51d/0x8c0 fs/inode.c:1573
-    mqueue_get_inode+0x8eb/0x1070 ipc/mqueue.c:320
-    mqueue_create_attr+0x198/0x440 ipc/mqueue.c:459
-    vfs_mkobj+0x39e/0x580 fs/namei.c:2892
-    prepare_open ipc/mqueue.c:731 [inline]
-    do_mq_open+0x6da/0x8e0 ipc/mqueue.c:771
+The FDDEFPRM ioctl allows one to set the geometry of a disk.  The sect
+and head fields (unsigned int) of the floppy_drive structure are used to
+compute the max_sector (int) in the make_raw_rw_request function.  It is
+possible to overflow the max_sector.  Next, max_sector is passed to the
+copy_buffer function and used in one of the memcpy calls.
 
-Which could be triggered by:
+An unprivileged user could trigger the bug if the device is accessible,
+but requires a floppy disk to be inserted.
 
-        struct mq_attr attr = {
-                .mq_flags = 0,
-                .mq_maxmsg = 9,
-                .mq_msgsize = 0x1fffffffffffffff,
-                .mq_curmsgs = 0,
-        };
+The patch adds the check for the .sect * .head multiplication for not
+overflowing in the set_geometry function.
 
-        if (mq_open("/testing", 0x40, 3, &attr) == (mqd_t) -1)
-                perror("mq_open");
+The bug was found by syzkaller.
 
-mqueue_get_inode() was correctly rejecting the giant mq_msgsize, and
-preparing to return -EINVAL.  During the cleanup, it calls
-mqueue_evict_inode() which performed resource usage tracking math for
-updating "user", before checking if there was a valid "user" at all
-(which would indicate that the calculations would be sane).  Instead,
-delay this check to after seeing a valid "user".
-
-The overflow was real, but the results went unused, so while the flaw is
-harmless, it's noisy for kernel fuzzers, so just fix it by moving the
-calculation under the non-NULL "user" where it actually gets used.
-
-Link: http://lkml.kernel.org/r/201906072207.ECB65450@keescook
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reported-by: Andreas Christoforou <andreaschristofo@gmail.com>
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Manfred Spraul <manfred@colorfullife.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Denis Efremov <efremov@ispras.ru>
+Tested-by: Willy Tarreau <w@1wt.eu>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- ipc/mqueue.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/block/floppy.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-index d5491a880751..3f7dc5f341f7 100644
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -369,7 +369,6 @@ static void mqueue_evict_inode(struct inode *inode)
- {
- 	struct mqueue_inode_info *info;
- 	struct user_struct *user;
--	unsigned long mq_bytes, mq_treesize;
- 	struct ipc_namespace *ipc_ns;
- 	struct msg_msg *msg, *nmsg;
- 	LIST_HEAD(tmp_msg);
-@@ -392,16 +391,18 @@ static void mqueue_evict_inode(struct inode *inode)
- 		free_msg(msg);
- 	}
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index bb9b50d1d828..de76b66893aa 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3236,8 +3236,10 @@ static int set_geometry(unsigned int cmd, struct floppy_struct *g,
+ 	int cnt;
  
--	/* Total amount of bytes accounted for the mqueue */
--	mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
--		min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
--		sizeof(struct posix_msg_tree_node);
--
--	mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
--				  info->attr.mq_msgsize);
--
- 	user = info->user;
- 	if (user) {
-+		unsigned long mq_bytes, mq_treesize;
-+
-+		/* Total amount of bytes accounted for the mqueue */
-+		mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
-+			min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
-+			sizeof(struct posix_msg_tree_node);
-+
-+		mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
-+					  info->attr.mq_msgsize);
-+
- 		spin_lock(&mq_lock);
- 		user->mq_bytes -= mq_bytes;
- 		/*
+ 	/* sanity checking for parameters. */
+-	if (g->sect <= 0 ||
+-	    g->head <= 0 ||
++	if ((int)g->sect <= 0 ||
++	    (int)g->head <= 0 ||
++	    /* check for overflow in max_sector */
++	    (int)(g->sect * g->head) <= 0 ||
+ 	    /* check for zero in F_SECT_PER_TRACK */
+ 	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
+ 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
 -- 
 2.20.1
 
