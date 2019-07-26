@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD31C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4744FC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D8321994
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C59D218B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:10:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eWslAz7r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/5A5PY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388465AbfGZTJ7 (ORCPT
+        id S2388476AbfGZTKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 15:09:59 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40724 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbfGZTJ6 (ORCPT
+        Fri, 26 Jul 2019 15:10:41 -0400
+Received: from mail-qt1-f173.google.com ([209.85.160.173]:39854 "EHLO
+        mail-qt1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbfGZTKl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 15:09:58 -0400
-Received: by mail-qt1-f195.google.com with SMTP id a15so53643624qtn.7
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 12:09:58 -0700 (PDT)
+        Fri, 26 Jul 2019 15:10:41 -0400
+Received: by mail-qt1-f173.google.com with SMTP id l9so53635317qtu.6
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 12:10:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=I10/oU0PFDARVAgkqlcuLI1H2p3iKjf7ry3uMpP3L8s=;
-        b=eWslAz7r23Ss2BSZeYLM1wHW6ES45e3i+imLBE8tIsIPLdOfqxdy+cjTx+4Qe3qE5W
-         ePhDO7TNxUF1TYmz1OGoAeEAy+I1oyEriwBO+G0nwe0ygxPhnINwk4KF+rJS04jtb5i1
-         CCwNGiPuJOnFCil6rgnmcW/lYk+JoUoecvuhj5LiFUiC2HOWoJHU+XOjhEFz+NjJovwx
-         9pksWOMVoD+NxTtgeIg3Vh/51ab+jVlOLrKCwGrcPDX7j9h19ISjROUN5TAriGGSTnj1
-         mlSsFF9ax/LNpyEX8j4NO/sGxy0UL8JHVL74Wgtay7MCZSubd3zqYGAaJvF7JHCN8TKT
-         3KvA==
+        bh=gX3Eb+Fjvx8r5No+CO4k0lYtNXprjjGKTOuHlUYQHqU=;
+        b=Z/5A5PY7jKNpx8muq/lBXWCc/tBIo+d73kBSLnbN1AtOx94n69lUZZJmwNDVOMUqtO
+         7CJsl7KfqmBqVVBsdnXHTUJ/zKzLkkHbMkn56EH5ANHwjwucJ7GeSfRvQ1Brd1nuoCX9
+         MohYl6xeOveKsfmuY/xFNai6AnVodsRXUgCCfHrQyloPmvnuTHr4SIO+whYeHBG0wPGX
+         U3RF8/hVVEABrImG3jd1Tb5qLnQv4zuOclzlum7o1MHz6hQeC41hScHwmqeJHOj5h4fq
+         GpWOQvyImtpZRwwnIiAbsFAprlQbwZOzQ0OREzNlhK0+oM10LyjzYKgl49HhgON5ojeO
+         DULA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I10/oU0PFDARVAgkqlcuLI1H2p3iKjf7ry3uMpP3L8s=;
-        b=Z/NuDaeo4thPF5OtB1Azb5aa3xTBu3nQ8dwLgTJJKpdptUVV74togJIUw/O3yGkkcj
-         Jy838rQvhai62MJzbT36eeWkK3BejBSujOZP9lOsidwG9IEf6TjUu8/R4+jppoIR8GdG
-         MkDpeIyFWm83otoLuqFmeZ0K5j6u1IRXhkmofpTo/rGz74soii8Ahyyb2mPv9bBeMDLO
-         5Yhi8CP+u51Rc0ey7AjS+znpHnnz4PRg0E2YzKxDAVSzMX+Pknx+IMZsMUwlNJSddZe9
-         GM2i+gCNffjUo3ygJs7q2L+AptpEJqF//Ui4XttvG7+AY7VrK9kNl3cWaiG00q6rpWjM
-         1T6Q==
-X-Gm-Message-State: APjAAAUAiq+DpWIkA03z8JS5FSv3pIV23WqFNJVINngODrryvTJQpLL0
-        4S6yQesk77nE6GYPhlTZoAE=
-X-Google-Smtp-Source: APXvYqybrE7kK+lLH0U48/mylzNlORjCn0eBxqVD5xDyu7f11v0Rpvw1atEEqp+K8m0eIeKucy97Ww==
-X-Received: by 2002:aed:22af:: with SMTP id p44mr69273443qtc.348.1564168197593;
-        Fri, 26 Jul 2019 12:09:57 -0700 (PDT)
+        bh=gX3Eb+Fjvx8r5No+CO4k0lYtNXprjjGKTOuHlUYQHqU=;
+        b=E9JKVJ+YfjMIjARwS3A20jRubg54Xb8SA+BDU6aJn/vAFx2RvL3HWfB/LX/G8SiJNq
+         VWS7/tyVdWb6CnLWvadJn5QQR9qz6csMGm8KilTqk1ixz9FxC2YG4JrvMwiUloXK011J
+         PH0RbUwkO9rSFK+IieDUzWoX9dSUOY3yxvavXXL9Xf6f7XAwuY8BWAJ7ZAiGrWrAwxhV
+         wWKGOrbdZzPkGQNgxduk02MqUQvjB6Tbxb9Ob+vzgcldoQlJB4ucbrKj9mVMlE74m6ZJ
+         hHQjfX0aeJVU/eGXhz4MR7AGKdbxicWVo5sjoSsXhLTLev0ucDdwih5OO+LfHBCib6ME
+         lQUA==
+X-Gm-Message-State: APjAAAVRSSc1V8Lkg36aDDagvltp8pLz0m1kMOYPAfXLt2HlYXQRFyH4
+        /XsJtCzN981D8ssJQv8lyVo=
+X-Google-Smtp-Source: APXvYqw267p/YeI+cxFK6b9kPG6Z9A5iK6AR+9TjG1o1WqG72vuLi+L9VID4XKne3teQLO0M8Rd02Q==
+X-Received: by 2002:ac8:374b:: with SMTP id p11mr66461662qtb.316.1564168240415;
+        Fri, 26 Jul 2019 12:10:40 -0700 (PDT)
 Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id z19sm25052511qkg.28.2019.07.26.12.09.57
+        by smtp.gmail.com with ESMTPSA id p59sm25060392qtd.75.2019.07.26.12.10.39
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 12:09:57 -0700 (PDT)
+        Fri, 26 Jul 2019 12:10:39 -0700 (PDT)
 From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0E1EA40340; Fri, 26 Jul 2019 16:09:53 -0300 (-03)
-Date:   Fri, 26 Jul 2019 16:09:53 -0300
+        id B95BC40340; Fri, 26 Jul 2019 16:10:37 -0300 (-03)
+Date:   Fri, 26 Jul 2019 16:10:37 -0300
 To:     Vince Weaver <vincent.weaver@maine.edu>
 Cc:     linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
@@ -70,12 +70,13 @@ Cc:     linux-kernel@vger.kernel.org,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>
 Subject: Re: [patch] perf report segfault with 0-sized strings
-Message-ID: <20190726190953.GD20482@kernel.org>
+Message-ID: <20190726191037.GE20482@kernel.org>
 References: <alpine.DEB.2.21.1907251423410.22624@macbook-air>
+ <alpine.DEB.2.21.1907251501290.22624@macbook-air>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907251423410.22624@macbook-air>
+In-Reply-To: <alpine.DEB.2.21.1907251501290.22624@macbook-air>
 X-Url:  http://acmel.wordpress.com
 User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,50 +84,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Jul 25, 2019 at 02:27:14PM -0400, Vince Weaver escreveu:
-> Hello,
+Em Thu, Jul 25, 2019 at 03:04:32PM -0400, Vince Weaver escreveu:
 > 
-> the perf_data_fuzzer found an issue when strings have size 0.
-> malloc() in do_read_string() is happy to allocate a string of 
-> size 0 but when code (in this case the pmu parser) tries to work with 
-> those it will segfault.
+> probably all perf_header_strings are affected by this.  The fuzzer just 
+> tripped up cmdline now, which needs this fix.
 
-So here are two fixes, i.e. one is to make do_read_string() to return
-NULL when len is 0, which do_read_string() already returns for failure
-(NULL) and most of the callers I looked handle that.
-
-The other is to make print_pmu_mappings() deal with a NULL
-ff->ph->env.pmu_mappings, agreed?
+I think we have to catch this earlier, i.e. when processing each
+feature, lemme check...
 
 - Arnaldo
  
 > Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
 > 
 > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index c24db7f4909c..641129efa987 100644
+> index c24db7f4909c..631aa1911f3a 100644
 > --- a/tools/perf/util/header.c
 > +++ b/tools/perf/util/header.c
-> @@ -251,6 +252,9 @@ static char *do_read_string(struct feat_fd *ff)
->  	if (do_read_u32(ff, &len))
->  		return NULL;
+> @@ -1427,6 +1430,8 @@ static void print_cmdline(struct feat_fd *ff, FILE *fp)
 >  
-> +	if (len==0)
-> +		return NULL;
-> +
->  	buf = malloc(len);
->  	if (!buf)
->  		return NULL;
-> @@ -1781,6 +1785,10 @@ static void print_pmu_mappings(struct feat_fd *ff, FILE *fp)
->  	str = ff->ph->env.pmu_mappings;
+>  	fprintf(fp, "# cmdline : ");
 >  
->  	while (pmu_num) {
+> +	if (ff->ph->env.cmdline_argv==NULL) return;
 > +
-> +		if (str==NULL)
-> +			goto error;
-> +
->  		type = strtoul(str, &tmp, 0);
->  		if (*tmp != ':')
->  			goto error;
+>  	for (i = 0; i < nr; i++) {
+>  		char *argv_i = strdup(ff->ph->env.cmdline_argv[i]);
+>  		if (!argv_i) {
 
 -- 
 
