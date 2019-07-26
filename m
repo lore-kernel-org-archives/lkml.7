@@ -2,133 +2,92 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4B4C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF4FC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17E821852
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3B721850
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:07:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="vFtaHMqb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfGZQHA convert rfc822-to-8bit (ORCPT
+        id S1728261AbfGZQHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:07:00 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53012 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727208AbfGZQG5 (ORCPT
+        Fri, 26 Jul 2019 12:07:13 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38582 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728040AbfGZQHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:06:57 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6QG6AeY100606
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 12:06:56 -0400
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.93])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u040haq4w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 12:06:56 -0400
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
-        Fri, 26 Jul 2019 16:06:55 -0000
-Received: from us1a3-smtp08.a3.dal06.isc4sb.com (10.146.103.57)
-        by smtp.notes.na.collabserv.com (10.106.227.39) with smtp.notes.na.collabserv.com ESMTP;
-        Fri, 26 Jul 2019 16:06:49 -0000
-Received: from us1a3-mail162.a3.dal06.isc4sb.com ([10.146.71.4])
-          by us1a3-smtp08.a3.dal06.isc4sb.com
-          with ESMTP id 2019072616064906-639764 ;
-          Fri, 26 Jul 2019 16:06:49 +0000 
-In-Reply-To: <20190726092540.22467-1-anders.roxell@linaro.org>
-From:   "Bernard Metzler" <BMT@zurich.ibm.com>
-To:     "Anders Roxell" <anders.roxell@linaro.org>
-Cc:     dledford@redhat.com, jgg@ziepe.ca, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 26 Jul 2019 16:06:48 +0000
+        Fri, 26 Jul 2019 12:07:12 -0400
+Received: by mail-pl1-f196.google.com with SMTP id az7so24912170plb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 09:07:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hXc0pZiVWKjur2BLw/ku9fM4A01QRuSRSkb/F5o/xVY=;
+        b=vFtaHMqbUAY8NIcGxImZaowBoZD3FtEGHtEk5cvbGEE6BOJsDTr8bjBY5/0f5GFUeC
+         NnR9PnAYhtUvRrMxqjoNEodOV1bPBXfnkRaPrKQJudR6G3bAe8dzLNMiMNOwYGNwMdN5
+         GUEXMnZPEM6ma+VgxnH/LlcQ56dx2SISe8BYNSx5uN4hX8xmmV5pfvL6FCtAFK9MCQtW
+         8AFzYL3fk8sTsxgHDscFdNW2HcbLmnthESc9HB0C+UjwyBviLjh3wQWi6soZOSMYLrVo
+         cPnsKXTuwV4qBYe5FulKOxEvC8LYw2/PZEd9Et42EAdQ6Bdtz7a4EWS/h/FibU0G/vM8
+         VirA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hXc0pZiVWKjur2BLw/ku9fM4A01QRuSRSkb/F5o/xVY=;
+        b=sMCLmTn8skdFGPp99HXXE1CpK5ftOzaWr4sJM0IIRwxeuF874UIaun69cUBatqnarj
+         xfTQNR8xokTG1MuceyTR/13Ekdjigze9KoU1YGXY1i+rMHMGTuzBCrtOMkrJfm5+SMDe
+         7w9T9v9wQdCp/gCCVqupWA22L0ENRCpjzUzWRPq0KuPVoRCKeQS+pskEVyO2zC0sly6d
+         lklYSvzOoC91wj11imDNpnYX/3WLNpeICNYv6ei3QreOvHJt7+45FwLI9WKAAqvEgJr+
+         UOzQYwxHNsb1bi/qvN845J6PaxABw0Ulz0y6pG6HgDJGsTRj2z9nKFJ0tZpGI4OFp2KV
+         Kkng==
+X-Gm-Message-State: APjAAAUE0XugFBdDE/hW9T6JZljJ5UgHMo3qyo9cQ/HgXypBymLjcNSI
+        Qu0FZdQKwQlJ3OHP+MPeMoI=
+X-Google-Smtp-Source: APXvYqz+cpopy4IRVxM3FBu86nwokurwX3Vcuk+ZP44JHWSAPzHKtBARuxUKaJmz6Z6ohYQtq9e/vg==
+X-Received: by 2002:a17:902:106:: with SMTP id 6mr98958928plb.64.1564157231065;
+        Fri, 26 Jul 2019 09:07:11 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id n128sm9076932pfn.46.2019.07.26.09.07.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 26 Jul 2019 09:07:10 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 09:07:09 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     "Himadri Pandya" <himadrispandya@gmail.com>
+Cc:     "Michael Kelley" <Michael.H.Kelley@microsoft.com>,
+        "KY Srinivasan" <kys@messages.microsoft.com>,
+        "Haiyang Zhang" <haiyangz@microsoft.com>,
+        "Stephen Hemminger" <sthemmin@microsoft.com>, <sashal@kernel.org>,
+        <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "himadri18.07" <himadri18.07@gmail.com>
+Subject: Re: [PATCH 1/2] Drivers: hv: Specify receive buffer size using
+ Hyper-V page size
+Message-ID: <20190726090709.31aaeef0@hermes.lan>
+In-Reply-To: <20190725050315.6935-2-himadri18.07@gmail.com>
+References: <20190725050315.6935-1-himadri18.07@gmail.com>
+        <20190725050315.6935-2-himadri18.07@gmail.com>
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <20190726092540.22467-1-anders.roxell@linaro.org>
-X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
- SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
-X-LLNOutbound: False
-X-Disclaimed: 1223
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=UTF-8
-x-cbid: 19072616-1799-0000-0000-00000C64BADF
-X-IBM-SpamModules-Scores: BY=0; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.40962; ST=0; TS=0; UL=0; ISC=; MB=0.062086
-X-IBM-SpamModules-Versions: BY=3.00011497; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01237770; UDB=6.00652490; IPR=6.01019151;
- BA=6.00006357; NDR=6.00000001; ZLA=6.00000005; ZF=6.00000009; ZB=6.00000000;
- ZP=6.00000000; ZH=6.00000000; ZU=6.00000002; MB=3.00027905; XFM=3.00000015;
- UTC=2019-07-26 16:06:53
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2019-07-26 15:06:58 - 6.00010212
-x-cbparentid: 19072616-1800-0000-0000-0000008BD7F1
-Message-Id: <OFE52012B8.B3E39B05-ON00258443.0057F9D5-00258443.005883B6@notes.na.collabserv.com>
-Subject: Re:  [PATCH] rdma: siw: remove unused variable
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-26_12:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------"Anders Roxell" <anders.roxell@linaro.org> wrote: -----
+On Wed, 24 Jul 2019 22:03:14 -0700
+"Himadri Pandya" <himadrispandya@gmail.com> wrote:
 
->To: bmt@zurich.ibm.com, dledford@redhat.com, jgg@ziepe.ca
->From: "Anders Roxell" <anders.roxell@linaro.org>
->Date: 07/26/2019 11:26AM
->Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, "Anders
->Roxell" <anders.roxell@linaro.org>
->Subject: [EXTERNAL] [PATCH] rdma: siw: remove unused variable
->
->The variable 'p' si no longer used and the compiler rightly complains
->that it should be removed.
->
->../drivers/infiniband/sw/siw/siw_mem.c: In function ‘siw_free_plist’:
->../drivers/infiniband/sw/siw/siw_mem.c:66:16: warning: unused
->variable
-> ‘p’ [-Wunused-variable]
->  struct page **p = chunk->plist;
->                ^
->
->Rework to remove unused variable.
->
->Fixes: 8288d030447f ("mm/gup: add make_dirty arg to
->put_user_pages_dirty_lock()")
->Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
->---
-> drivers/infiniband/sw/siw/siw_mem.c | 2 --
-> 1 file changed, 2 deletions(-)
->
->diff --git a/drivers/infiniband/sw/siw/siw_mem.c
->b/drivers/infiniband/sw/siw/siw_mem.c
->index 358d440efa11..ab83a9cec562 100644
->--- a/drivers/infiniband/sw/siw/siw_mem.c
->+++ b/drivers/infiniband/sw/siw/siw_mem.c
->@@ -63,8 +63,6 @@ struct siw_mem *siw_mem_id2obj(struct siw_device
->*sdev, int stag_index)
-> static void siw_free_plist(struct siw_page_chunk *chunk, int
->num_pages,
-> 			   bool dirty)
-> {
->-	struct page **p = chunk->plist;
->-
-> 	put_user_pages_dirty_lock(chunk->plist, num_pages, dirty);
-> }
+> The recv_buffer is used to retrieve data from the VMbus ring buffer.
+> VMbus ring buffers are sized based on the guest page size which
+> Hyper-V assumes to be 4KB. But it may be different on some
+> architectures. So use the Hyper-V page size to allocate the
+> recv_buffer and set the maximum size to receive.
 > 
->-- 
->2.20.1
->
->
+> Signed-off-by: Himadri Pandya <himadri18.07@gmail.com>
 
-If we can cut down siw_free_plist() to just calling
-put_user_pages_dirty_lock(), we shall better call it directly
-and not obfuscate that by another function. 
-
-Reviewed-by: Bernard Metzler <bmt@zurich.ibm.com>
-
+If pagesize is 64K, then doing it this way will waste lots of
+memory.
