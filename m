@@ -2,215 +2,148 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E76C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 936E7C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C01422BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E02022BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:16:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Fb1/iCLj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=azazel.net header.i=@azazel.net header.b="l2mWC2Zm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbfGZUP2 (ORCPT
+        id S1727124AbfGZUQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 16:15:28 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:47024 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfGZUP1 (ORCPT
+        Fri, 26 Jul 2019 16:16:06 -0400
+Received: from kadath.azazel.net ([81.187.231.250]:43578 "EHLO
+        kadath.azazel.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfGZUQF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 16:15:27 -0400
-Received: by mail-io1-f65.google.com with SMTP id i10so107267944iol.13
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 13:15:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=9WyyFtGDa/oI2K0SoorWyGV62gLsK5AqqZUD+AVwi30=;
-        b=Fb1/iCLjf/NTOtNNhbSpzOTh2HSJi8m3cogsN6IlhBqqXfIsc8b6/c5d54iSoV9tf2
-         4IXGW09arBQ1PLR9BDnrrDFFZeThGRlGJb1zcCHOBX/uSTmXUxjsHC5Wtn6a5v+3nRf1
-         oJ+3ikPkGPiZj3GBLWuU4dq/hVwWrnpaCbKsm+AtPr1gurUkCfgxi0HX4Wk1tLHikQWj
-         wT6aPzheIXgs4SsO5mbwNoQsUAkKQE6saF99TaAMGMeKeDLlNQIkXR1NdUvfX7qT7FYa
-         eTNtjQNzwfQ9/SFfxUX4M5xnr2uLMMhN3nt8caAvX1DdPVHS/1ToO3yYaSeHBD04DYMw
-         oJSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=9WyyFtGDa/oI2K0SoorWyGV62gLsK5AqqZUD+AVwi30=;
-        b=iGTuVwNrHuwn4CeF1NpPR2XELjzdvbzqh+EGodTaLGuYqRG/F9s2NUGp+sGTi70XoD
-         aiwhI66enF0MrPXGbFMJd/ZdbKPIOs9hjh0B71SbJohqfiJ+NVx52eGT3SzIT3gASBCw
-         McH0yjjbWiL3do0ZPiD4E5NxlBeRImBTnLkPij6rinbjuynnJaXxHf9AHAlRLBdi40Bp
-         u/m3xNfRCNw5LdezCNUw1Y6733k+fcqse7xsPE2kjB3od67WdNxVL5T/soicnQpfEMgg
-         xNtFTtPJjY0plyH52sOtmVn0HIV7FltQOk9svBCDlo7m578LrGUQXQoFK8OQc95D9NbT
-         HIFQ==
-X-Gm-Message-State: APjAAAU0+A9qzPiRbDbnMQwKvxPeI0/hWazNl64QglmKcydBpTqKfa5z
-        91/cWbPhYpXk1guSqztVh5nVFg==
-X-Google-Smtp-Source: APXvYqzsqQtosoZzCBtwEUSq2JCLj43JNgQACq9apPNl9xsQbwBsE8qGPx2yPCPSFW8euGk6L+kJ2A==
-X-Received: by 2002:a02:5185:: with SMTP id s127mr28951962jaa.44.1564172126478;
-        Fri, 26 Jul 2019 13:15:26 -0700 (PDT)
-Received: from localhost (67-0-24-96.albq.qwest.net. [67.0.24.96])
-        by smtp.gmail.com with ESMTPSA id a8sm40604193ioh.29.2019.07.26.13.15.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 13:15:25 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 13:15:24 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Alexandre Ghiti <alex@ghiti.fr>
-cc:     linux-arm-kernel@lists.infradead.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Paul Burton <paul.burton@mips.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        James Hogan <jhogan@kernel.org>, linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mips@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        linux-riscv@lists.infradead.org,
-        Daniel Cashman <dcashman@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [PATCH REBASE v4 14/14] riscv: Make mmap allocation top-down by
- default
-In-Reply-To: <6b2b45a5-0ac4-db73-8f50-ab182a0cb621@ghiti.fr>
-Message-ID: <alpine.DEB.2.21.9999.1907261310490.26670@viisi.sifive.com>
-References: <20190724055850.6232-1-alex@ghiti.fr> <20190724055850.6232-15-alex@ghiti.fr> <alpine.DEB.2.21.9999.1907251655310.32766@viisi.sifive.com> <6b2b45a5-0ac4-db73-8f50-ab182a0cb621@ghiti.fr>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 26 Jul 2019 16:16:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=azazel.net;
+         s=20190108; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=++d9OzFu4bcaSfReguJO8laE0J8Mf9ha36t3Tu6yPwM=; b=l2mWC2ZmRCzgwBpeeafFPMuXKJ
+        mzfLPy690HuloO9JpUVs1kfuRcK6NxVGqYCSlaC8T7Hz/SBAj0x31HjsHJQg07koOrFCIk+Rrhn8p
+        25C+hCLrwEO/UecYoUPj9ZRcSyr3TvDI8kf8HmqpBc7vdyWhdW/6zHWmgWcXyauek9r66ZyfXEnIn
+        2UhQkkDStW6PnxWloxSwvDikCxu4BgJedhBzdOEcx62Sv/y1QOHgpdLdI7WglVNPNzvB3IT+jmEEA
+        dX00S/3r/dqSEsqSK/Bf1/JPYQFvPCJkK7W4kSXPPAPGwZ2fh32lZH8XcViw/Hxr/2ncYNcrlExjH
+        OaFlDDVA==;
+Received: from celephais.dreamlands ([192.168.96.3] helo=azazel.net)
+        by kadath.azazel.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <jeremy@azazel.net>)
+        id 1hr6dA-000331-Tc; Fri, 26 Jul 2019 21:15:56 +0100
+Date:   Fri, 26 Jul 2019 21:15:55 +0100
+From:   Jeremy Sowden <jeremy@azazel.net>
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>, herbert@gondor.apana.org.au,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: key: af_key: Fix possible null-pointer dereferences
+ in pfkey_send_policy_notify()
+Message-ID: <20190726201555.GA4745@azazel.net>
+References: <20190724093509.1676-1-baijiaju1990@gmail.com>
+ <20190726094514.GD14601@gauss3.secunet.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
+Content-Disposition: inline
+In-Reply-To: <20190726094514.GD14601@gauss3.secunet.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 192.168.96.3
+X-SA-Exim-Mail-From: jeremy@azazel.net
+X-SA-Exim-Scanned: No (on kadath.azazel.net); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019, Alexandre Ghiti wrote:
 
-> On 7/26/19 2:20 AM, Paul Walmsley wrote:
-> > 
-> > On Wed, 24 Jul 2019, Alexandre Ghiti wrote:
-> > 
-> > > In order to avoid wasting user address space by using bottom-up mmap
-> > > allocation scheme, prefer top-down scheme when possible.
-> > > 
-> > > Before:
-> > > root@qemuriscv64:~# cat /proc/self/maps
-> > > 00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
-> > > 00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
-> > > 00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
-> > > 00018000-00039000 rw-p 00000000 00:00 0          [heap]
-> > > 1555556000-155556d000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
-> > > 155556d000-155556e000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
-> > > 155556e000-155556f000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
-> > > 155556f000-1555570000 rw-p 00000000 00:00 0
-> > > 1555570000-1555572000 r-xp 00000000 00:00 0      [vdso]
-> > > 1555574000-1555576000 rw-p 00000000 00:00 0
-> > > 1555576000-1555674000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
-> > > 1555674000-1555678000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
-> > > 1555678000-155567a000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
-> > > 155567a000-15556a0000 rw-p 00000000 00:00 0
-> > > 3fffb90000-3fffbb1000 rw-p 00000000 00:00 0      [stack]
-> > > 
-> > > After:
-> > > root@qemuriscv64:~# cat /proc/self/maps
-> > > 00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
-> > > 00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
-> > > 00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
-> > > 2de81000-2dea2000 rw-p 00000000 00:00 0          [heap]
-> > > 3ff7eb6000-3ff7ed8000 rw-p 00000000 00:00 0
-> > > 3ff7ed8000-3ff7fd6000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
-> > > 3ff7fd6000-3ff7fda000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
-> > > 3ff7fda000-3ff7fdc000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
-> > > 3ff7fdc000-3ff7fe2000 rw-p 00000000 00:00 0
-> > > 3ff7fe4000-3ff7fe6000 r-xp 00000000 00:00 0      [vdso]
-> > > 3ff7fe6000-3ff7ffd000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
-> > > 3ff7ffd000-3ff7ffe000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
-> > > 3ff7ffe000-3ff7fff000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
-> > > 3ff7fff000-3ff8000000 rw-p 00000000 00:00 0
-> > > 3fff888000-3fff8a9000 rw-p 00000000 00:00 0      [stack]
-> > > 
-> > > Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> > > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> > > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > >   arch/riscv/Kconfig | 11 +++++++++++
-> > >   1 file changed, 11 insertions(+)
-> > > 
-> > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > > index 59a4727ecd6c..6a63973873fd 100644
-> > > --- a/arch/riscv/Kconfig
-> > > +++ b/arch/riscv/Kconfig
-> > > @@ -54,6 +54,17 @@ config RISCV
-> > >   	select EDAC_SUPPORT
-> > >   	select ARCH_HAS_GIGANTIC_PAGE
-> > >   	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
-> > > +	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
-> > > +	select HAVE_ARCH_MMAP_RND_BITS
-> > > +
-> > > +config ARCH_MMAP_RND_BITS_MIN
-> > > +	default 18
-> > Could you help me understand the rationale behind this constant?
-> 
-> 
-> Indeed, I took that from arm64 code and I did not think enough about it: 
-> that's great you spotted this because that's a way too large value for 
-> 32 bits as it would, at minimum, make mmap random offset go up to 1GB 
-> (18 + 12), which is a big hole for this small address space :)
-> 
-> arm and mips propose 8 as default value for 32bits systems which is 1MB offset
-> at minimum.
+--XsQoSWH+UP9D9v3l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-8 seems like a fine minimum for Sv32.
+On 2019-07-26, at 11:45:14 +0200, Steffen Klassert wrote:
+> On Wed, Jul 24, 2019 at 05:35:09PM +0800, Jia-Ju Bai wrote:
+> > In pfkey_send_policy_notify(), there is an if statement on line 3081
+> > to check whether xp is NULL:
+> >     if (xp && xp->type != XFRM_POLICY_TYPE_MAIN)
+> >
+> > When xp is NULL, it is used by key_notify_policy() on line 3090:
+> >     key_notify_policy(xp, ...)
+> >         pfkey_xfrm_policy2msg_prep(xp) -- line 2211
+> >             pfkey_xfrm_policy2msg_size(xp) -- line 2046
+> >                 for (i=0; i<xp->xfrm_nr; i++) -- line 2026
+> >                 t = xp->xfrm_vec + i; -- line 2027
+> >     key_notify_policy(xp, ...)
+> >         xp_net(xp) -- line 2231
+> >             return read_pnet(&xp->xp_net); -- line 534
+>
+> Please don't quote random code lines, explain the problem instead.
+>
+> >
+> > Thus, possible null-pointer dereferences may occur.
+> >
+> > To fix these bugs, xp is checked before calling key_notify_policy().
+> >
+> > These bugs are found by a static analysis tool STCheck written by
+> > us.
+> >
+> > Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> > ---
+> >  net/key/af_key.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/net/key/af_key.c b/net/key/af_key.c
+> > index b67ed3a8486c..ced54144d5fd 100644
+> > --- a/net/key/af_key.c
+> > +++ b/net/key/af_key.c
+> > @@ -3087,6 +3087,8 @@ static int pfkey_send_policy_notify(struct xfrm_policy *xp, int dir, const struc
+> >  	case XFRM_MSG_DELPOLICY:
+> >  	case XFRM_MSG_NEWPOLICY:
+> >  	case XFRM_MSG_UPDPOLICY:
+> > +		if (!xp)
+> > +			break;
+>
+> I think this can not happen. Who sends one of these notifications
+> without a pointer to the policy?
 
-> > > +
-> > > +# max bits determined by the following formula:
-> > > +#  VA_BITS - PAGE_SHIFT - 3
-> > I realize that these lines are probably copied from arch/arm64/Kconfig.
-> > But the rationale behind the "- 3" is not immediately obvious.  This
-> > apparently originates from commit 8f0d3aa9de57 ("arm64: mm: support
-> > ARCH_MMAP_RND_BITS"). Can you provide any additional context here?
-> 
-> 
-> The formula comes from commit d07e22597d1d ("mm: mmap: add new /proc 
-> tunable for mmap_base ASLR"), where the author states that "generally a 
-> 3-4 bits less than the number of bits in the user-space accessible 
-> virtual address space [allows to] give the greatest flexibility without 
-> generating an invalid mmap_base address".
-> 
-> In practice, that limits the mmap random offset to at maximum 1/8 (for - 
-> 3) of the total address space.
+I had a quick grep and found two places where km_policy_notify is passed
+NULL as the policy:
 
-OK.
+  $ grep -rn '\<km_policy_notify(NULL,' net/
+  net/xfrm/xfrm_user.c:2154:      km_policy_notify(NULL, 0, &c);
+  net/key/af_key.c:2788:  km_policy_notify(NULL, 0, &c);
 
-> > > +config ARCH_MMAP_RND_BITS_MAX
-> > > +	default 33 if 64BIT # SV48 based
-> > The rationale here is clear for Sv48, per the above formula:
-> > 
-> >     (48 - 12 - 3) = 33
-> > 
-> > > +	default 18
-> > However, here it is less clear to me.  For Sv39, shouldn't this be
-> > 
-> >     (39 - 12 - 3) = 24
-> > 
-> > ?  And what about Sv32?
-> 
-> 
-> You're right. Is there a way to distinguish between sv39 and sv48 here ?
+They occur in xfrm_flush_policy() and pfkey_spdflush() respectively.
 
-This patch has just been posted:
+J.
 
-https://lore.kernel.org/linux-riscv/alpine.DEB.2.21.9999.1907261259420.26670@viisi.sifive.com/T/#u
+--XsQoSWH+UP9D9v3l
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Assuming there are no negative comments, we'll plan to send it upstream 
-during v5.3-rc.  Your patch should be able to set different minimums and 
-maximums based on the value of CONFIG_RISCV_VM_SV*
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEEZ8d+2N/NBLDbUxIF0Z7UzfnX9sMFAl07X18ACgkQ0Z7UzfnX
+9sOaoRAAvKLpbuopo+hlUE9ONE3qQud6k9dgKtFWq6UYUlrFJbO3lZglmzUuAj/M
+GrEiZNgUmwvtO7/uqzps4ajTvq2ZOhi3QtjqJtplp/qqZ36MILoaYWeLCANmA3Zq
+eg2Tu6A+lAiuqYkmL9J+peCOe/0yoOW9BvcXuwNWs0Ca78zBQWYh0WnfiIbJ9nPJ
+6Lj5OQpTJXEXU/Uidi1ZUo/S+woAP7f6DITUoPkBGJpNyxCxraPcaw1TARfNx+xW
+TfP7/MQXmrJSsRetXy4WjNCENa752BPTZWRj6JmkDUQadVu+8GNvaamL5d+DJBh/
+zAlKd6UOFVIe2SEnai/Zwx/jDjC5SIYoMLdJ8Gabl6sQ/5VCWrNlXU3EDUEdyT9h
+H9GW8+No3EokPwPhu5EYm4sFfOPWLThvfSiQlrripuVKc9frlTEdbbQQNhHSuHy6
+6U9+20JNQtBp/TzXA+sEqwE/Q+jCG7MemapIKyZTk+o0LSQYnWzMlCcPwPmDreOE
+zmA0nwj8Zvss2fbuth9Agj5y+1LQORnRHLdUHBpfHds3cLGvKFHaFHIwwCiWimgC
+ic69DH+BdC9ckML6/WZv0/e0Ku7RH4k3Gss4jLtYqudAfluc3AdLudBsbLiVK53x
+V+YzNRsdzP9+wVNiuCUCgroCL/gTSN1sT77lYvXvIc+4tqFTPeE=
+=RdeT
+-----END PGP SIGNATURE-----
 
-- Paul
+--XsQoSWH+UP9D9v3l--
