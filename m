@@ -2,185 +2,111 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA058C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82405C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4C6C22BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155146;
-	bh=sgiH1nr+fxCZQp0g+9HvvoCks0KuNYIZ5VeqiQlyx5A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gV5I/IgIkSHvxgZZajUv72dVZFOsTep6TKga+9IgmjxPjtYkt+JifWssh1WRJD2Io
-	 jb2B1ZJln0ME+pS70TFPhlXn9czmcYXBhWZnF9cXiS0x28jyAGEm/h2gJzMJgfLRM6
-	 ZHLn8uzuUnn/9bndHE846Y/pBNQbQyZuN457sLOU=
+	by mail.kernel.org (Postfix) with ESMTP id 5466D22CBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Puc8e40e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389471AbfGZPc0 (ORCPT
+        id S2389484AbfGZPc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:32:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47550 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389460AbfGZPcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:32:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0509120644;
-        Fri, 26 Jul 2019 15:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155142;
-        bh=sgiH1nr+fxCZQp0g+9HvvoCks0KuNYIZ5VeqiQlyx5A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IOxTWWCBEumbWDBDtThQiKs4GRMrpi7m/I/OiCOcZ20Agc2jfwee/e8R+8A7XFN1e
-         lIaN8FIKcjMQUUlTV84O4l2wJISqP7L4qvC568vk7Hf/eCZjYtNLjcE4AemxxwnPDy
-         OG/csF82MP2/AZ0a4HlgwsatWQK1f+P1414gSAI8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+7966f2a0b2c7da8939b4@syzkaller.appspotmail.com,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 17/50] rxrpc: Fix send on a connected, but unbound socket
-Date:   Fri, 26 Jul 2019 17:24:52 +0200
-Message-Id: <20190726152302.332604716@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
-References: <20190726152300.760439618@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 26 Jul 2019 11:32:28 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46806 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389457AbfGZPcW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:32:22 -0400
+Received: by mail-io1-f66.google.com with SMTP id i10so105546755iol.13
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 08:32:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xg5b8BlVT1CecDZYXkFG2LcPfV6yetu3UFLFNO/Imrs=;
+        b=Puc8e40edWWISfZ8FP/VLFn6j+uAaOByUyxtX2s7TDS+HB8gHUQULp0VysTKwlA6BB
+         4PGg05qDUKpMutISbKsAUBwMRhf43PJmcHblr7DmjsX2Vb7av9ObZSXjoRpRj0/Ep2jU
+         LeGcdpZ86VLS2LU2vuyp2X9YKTva2NEqGz+hx6DAPwUxtXS8LbL2L3xUOXieKY9fuOtb
+         5JFVE2FzJzKHipRZE57oRZTXnPS0v7EeZqldZs/fgrhpKMaJ5ezOpdHyhbMItiTBNHiv
+         l1itArkAsCSFPivOpR5Jnrnu+Y+306lCqNa8ptJQS3SMHJE0QRPLsmAQ9MibFwtzcU6C
+         0APQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xg5b8BlVT1CecDZYXkFG2LcPfV6yetu3UFLFNO/Imrs=;
+        b=CtMW3ujGMo0/yUDVUhi+5fXLYpRg2wpVoVe2T+U/bZ9lJPvI1WTagkfx4v2G8066ci
+         zaGe0qr9bmO9Qkac3HMtzVMMRM8VoHYVDIt7ZfIE7BQi3NOCSQyZTYihE7zbp7L0EVdW
+         CZfkGfkPu7C7ROkKaha6u46lq3Uk0CHpbffQFU2JUQxSHqbH1L4/jZ27ukRA1a65xOOI
+         p+jx5eWlc2MQ4b1h7O1J/J8MlEPjYcmJW7XgFQ7p712bVcwwoK4r/bJwUaSzdgTJr+Jl
+         /ACAQiKdhgcHxcg+C3YNyduv+SatUVtRA8W3nSCDCdNauNaXntn8hLUbOyE1qBzqsKNU
+         tGxQ==
+X-Gm-Message-State: APjAAAXe7iU5dhPZHt+tH7fwzSPhHHYlF1btAgQbD1yTIUwRUQFSBb8d
+        SbyHrAErQbPjrB8T0rR7TtIihzHo/9NBXILVE1NZ+Q==
+X-Google-Smtp-Source: APXvYqytvqDwtW9OW9SfYMiBWE74iHuPdV6mU7d7Xi0IhVBU5SL2atvFz+UX757RpvwAOwI6qAEtRlGFrSDwmdeIAKM=
+X-Received: by 2002:a5e:de0d:: with SMTP id e13mr63896312iok.144.1564155141743;
+ Fri, 26 Jul 2019 08:32:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1ada9248-6406-1afb-2b37-a25a1c3d6e03@oracle.com>
+ <6d1a7a20-a420-7e3b-2dde-e924717012d9@oracle.com> <CAPhKKr9rAAf=47MLp2-sMkw9ns=a96ck=g-si8yVYsDeg_h_dQ@mail.gmail.com>
+In-Reply-To: <CAPhKKr9rAAf=47MLp2-sMkw9ns=a96ck=g-si8yVYsDeg_h_dQ@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 26 Jul 2019 17:32:10 +0200
+Message-ID: <CACT4Y+a_Qqf6soROcL==NAk+nKD-rTp1ynZd6dow4Chb7MqmzA@mail.gmail.com>
+Subject: Re: LPC 2019 distros microconference proposal: "Distros and Syzkaller
+ - Why bother?"
+To:     Dhaval Giani <dhaval.giani@gmail.com>
+Cc:     George Kennedy <george.kennedy@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, Jiri Kosina <jkosina@suse.cz>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Tim Bird <tim.bird@sony.com>,
+        syzkaller <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
-
-[ Upstream commit e835ada07091f40dcfb1bc735082bd0a7c005e59 ]
-
-If sendmsg() or sendmmsg() is called on a connected socket that hasn't had
-bind() called on it, then an oops will occur when the kernel tries to
-connect the call because no local endpoint has been allocated.
-
-Fix this by implicitly binding the socket if it is in the
-RXRPC_CLIENT_UNBOUND state, just like it does for the RXRPC_UNBOUND state.
-
-Further, the state should be transitioned to RXRPC_CLIENT_BOUND after this
-to prevent further attempts to bind it.
-
-This can be tested with:
-
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <string.h>
-	#include <sys/socket.h>
-	#include <arpa/inet.h>
-	#include <linux/rxrpc.h>
-	static const unsigned char inet6_addr[16] = {
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0xac, 0x14, 0x14, 0xaa
-	};
-	int main(void)
-	{
-		struct sockaddr_rxrpc srx;
-		struct cmsghdr *cm;
-		struct msghdr msg;
-		unsigned char control[16];
-		int fd;
-		memset(&srx, 0, sizeof(srx));
-		srx.srx_family = 0x21;
-		srx.srx_service = 0;
-		srx.transport_type = AF_INET;
-		srx.transport_len = 0x1c;
-		srx.transport.sin6.sin6_family = AF_INET6;
-		srx.transport.sin6.sin6_port = htons(0x4e22);
-		srx.transport.sin6.sin6_flowinfo = htons(0x4e22);
-		srx.transport.sin6.sin6_scope_id = htons(0xaa3b);
-		memcpy(&srx.transport.sin6.sin6_addr, inet6_addr, 16);
-		cm = (struct cmsghdr *)control;
-		cm->cmsg_len	= CMSG_LEN(sizeof(unsigned long));
-		cm->cmsg_level	= SOL_RXRPC;
-		cm->cmsg_type	= RXRPC_USER_CALL_ID;
-		*(unsigned long *)CMSG_DATA(cm) = 0;
-		msg.msg_name = NULL;
-		msg.msg_namelen = 0;
-		msg.msg_iov = NULL;
-		msg.msg_iovlen = 0;
-		msg.msg_control = control;
-		msg.msg_controllen = cm->cmsg_len;
-		msg.msg_flags = 0;
-		fd = socket(AF_RXRPC, SOCK_DGRAM, AF_INET);
-		connect(fd, (struct sockaddr *)&srx, sizeof(srx));
-		sendmsg(fd, &msg, 0);
-		return 0;
-	}
-
-Leading to the following oops:
-
-	BUG: kernel NULL pointer dereference, address: 0000000000000018
-	#PF: supervisor read access in kernel mode
-	#PF: error_code(0x0000) - not-present page
-	...
-	RIP: 0010:rxrpc_connect_call+0x42/0xa01
-	...
-	Call Trace:
-	 ? mark_held_locks+0x47/0x59
-	 ? __local_bh_enable_ip+0xb6/0xba
-	 rxrpc_new_client_call+0x3b1/0x762
-	 ? rxrpc_do_sendmsg+0x3c0/0x92e
-	 rxrpc_do_sendmsg+0x3c0/0x92e
-	 rxrpc_sendmsg+0x16b/0x1b5
-	 sock_sendmsg+0x2d/0x39
-	 ___sys_sendmsg+0x1a4/0x22a
-	 ? release_sock+0x19/0x9e
-	 ? reacquire_held_locks+0x136/0x160
-	 ? release_sock+0x19/0x9e
-	 ? find_held_lock+0x2b/0x6e
-	 ? __lock_acquire+0x268/0xf73
-	 ? rxrpc_connect+0xdd/0xe4
-	 ? __local_bh_enable_ip+0xb6/0xba
-	 __sys_sendmsg+0x5e/0x94
-	 do_syscall_64+0x7d/0x1bf
-	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: 2341e0775747 ("rxrpc: Simplify connect() implementation and simplify sendmsg() op")
-Reported-by: syzbot+7966f2a0b2c7da8939b4@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/rxrpc/af_rxrpc.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/net/rxrpc/af_rxrpc.c
-+++ b/net/rxrpc/af_rxrpc.c
-@@ -552,6 +552,7 @@ static int rxrpc_sendmsg(struct socket *
- 
- 	switch (rx->sk.sk_state) {
- 	case RXRPC_UNBOUND:
-+	case RXRPC_CLIENT_UNBOUND:
- 		rx->srx.srx_family = AF_RXRPC;
- 		rx->srx.srx_service = 0;
- 		rx->srx.transport_type = SOCK_DGRAM;
-@@ -576,10 +577,9 @@ static int rxrpc_sendmsg(struct socket *
- 		}
- 
- 		rx->local = local;
--		rx->sk.sk_state = RXRPC_CLIENT_UNBOUND;
-+		rx->sk.sk_state = RXRPC_CLIENT_BOUND;
- 		/* Fall through */
- 
--	case RXRPC_CLIENT_UNBOUND:
- 	case RXRPC_CLIENT_BOUND:
- 		if (!m->msg_name &&
- 		    test_bit(RXRPC_SOCK_CONNECTED, &rx->flags)) {
+On Fri, Jul 26, 2019 at 5:21 PM Dhaval Giani <dhaval.giani@gmail.com> wrote:
+>
+> Adding a bunch of people.
+>
+> On Fri, Jul 26, 2019, 8:06 AM George Kennedy <george.kennedy@oracle.com> wrote:
+>>
+>> + <dhaval.giani@gmail.com>
+>>
+>> On 7/26/2019 10:48 AM, George Kennedy wrote:
+>> > I have proposed "Distros and Syzkaller - Why bother?" for the LPC 2019
+>> > distros microconference.
+>> >
+>> > I am curious as to how other distros are using Syzkaller and if there
+>> > are ways for us to collaborate.
+>> >
+>> > I am curious how Syzkaller fits into the distro's development cycle,
+>> > release cycle and if it is part
+>> > of the distro's Continuous Integration (CI) process?
+>> >
+>> > Any insights would be appreciated.
+>> >
+>> > Thank you,
+>> > George Kennedy
 
 
+Cool! Will try to be there.
+
+Note syzbot also tests LTS releases now:
+https://syzkaller.appspot.com/linux-4.14
+https://syzkaller.appspot.com/linux-4.19
+Though, results are only delivered to
+https://groups.google.com/forum/#!forum/syzkaller-lts-bugs
+
+We could test some distro trees as well with the relevant configs.
+Details are discussable.
