@@ -4,49 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D2DC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34603C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B5922CD8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C98B22CD8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148896;
-	bh=Sl9FWxb34YXWvjKPk/0vEOlM9hNTxWM1rB1FxiM1Hs0=;
+	s=default; t=1564148903;
+	bh=Ev4bULy0h2A0hB7svWgw9Hev4kR3poghVKw8Ioiju5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WvQqQprYPVnft1piLydCYGbR+Ij4KNx+BMPUWztorpTWlG7km9dWXDGlBWWamBhfd
-	 vFD5KwYxLer8R7MRPtcd1DlMmxBeHp82hRUqh8ZP2KBkO5RMsnU/FHiRmcXyZk0ivG
-	 Ry2bEtzVk4UOrEliB4tDso7stAMSMh6zZj+Z5rdo=
+	b=ymPkK0HVGUSNg+Vsh4b37drspNJ8bGYxbxzX8GMVMFXyq7sHjt+/ExKTGsGtuP/dP
+	 cr4J/R/czuJ8KWwHvKhLcZEEVeGkT24X9qtwxyWkCo5O5yMbbg7if1tUnSwPtUdasS
+	 ihp7/9jJ2dq7pRqR1dBeTEbIkUrP0rXks5XgaVo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388560AbfGZNpZ (ORCPT
+        id S2388469AbfGZNsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:45:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54262 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:48:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388545AbfGZNpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:45:22 -0400
+        id S2388518AbfGZNpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:45:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F02122CEB;
-        Fri, 26 Jul 2019 13:45:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D93D322CEC;
+        Fri, 26 Jul 2019 13:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148721;
-        bh=Sl9FWxb34YXWvjKPk/0vEOlM9hNTxWM1rB1FxiM1Hs0=;
+        s=default; t=1564148717;
+        bh=Ev4bULy0h2A0hB7svWgw9Hev4kR3poghVKw8Ioiju5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DWVM4RD/6AI6nvdM3w+6fcyq82OazxwueeyJJYhMyofNM3MgCAZY5pxumUzifLcWo
-         0UX2AWGY7bBPPOrSZEqwWmRB/aX175ec/q+wFsao6pcbgP4vCpZpgpUmTNfaHoeWHZ
-         O9A68y5kUFjWFLf+GQmZcAci4wUMDc/V/+trzYfA=
+        b=Up07vSW62WTO8PStfRc9SEYrs+inhN1iwad8Ptz0K7yRHqG06HU8aA+7DRGR33Wde
+         vVMnxi+1xNlLTVK8jXpdRSkXtxAMJ3Sndz+hykZoeP31xGpUcVZ6XtYktB7rNEtvfn
+         k4fKeQ9/zsgwL2TLywBG9keq2nfYO8VOcGh07TgU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 30/30] x86, boot: Remove multiple copy of static function sanitize_boot_params()
-Date:   Fri, 26 Jul 2019 09:44:32 -0400
-Message-Id: <20190726134432.12993-30-sashal@kernel.org>
+Cc:     Juergen Gross <jgross@suse.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 28/30] xen: let alloc_xenballooned_pages() fail if not enough memory free
+Date:   Fri, 26 Jul 2019 09:44:30 -0400
+Message-Id: <20190726134432.12993-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134432.12993-1-sashal@kernel.org>
 References: <20190726134432.12993-1-sashal@kernel.org>
@@ -59,58 +57,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+From: Juergen Gross <jgross@suse.com>
 
-[ Upstream commit 8c5477e8046ca139bac250386c08453da37ec1ae ]
+[ Upstream commit a1078e821b605813b63bf6bca414a85f804d5c66 ]
 
-Kernel build warns:
- 'sanitize_boot_params' defined but not used [-Wunused-function]
+Instead of trying to allocate pages with GFP_USER in
+add_ballooned_pages() check the available free memory via
+si_mem_available(). GFP_USER is far less limiting memory exhaustion
+than the test via si_mem_available().
 
-at below files:
-  arch/x86/boot/compressed/cmdline.c
-  arch/x86/boot/compressed/error.c
-  arch/x86/boot/compressed/early_serial_console.c
-  arch/x86/boot/compressed/acpi.c
+This will avoid dom0 running out of memory due to excessive foreign
+page mappings especially on ARM and on x86 in PVH mode, as those don't
+have a pre-ballooned area which can be used for foreign mappings.
 
-That's becausethey each include misc.h which includes a definition of
-sanitize_boot_params() via bootparam_utils.h.
+As the normal ballooning suffers from the same problem don't balloon
+down more than si_mem_available() pages in one iteration. At the same
+time limit the default maximum number of retries.
 
-Remove the inclusion from misc.h and have the c file including
-bootparam_utils.h directly.
+This is part of XSA-300.
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1563283092-1189-1-git-send-email-zhenzhong.duan@oracle.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/compressed/misc.c | 1 +
- arch/x86/boot/compressed/misc.h | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ drivers/xen/balloon.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index d86e68d3c794..1912b2671f10 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -15,6 +15,7 @@
- #include "error.h"
- #include "../string.h"
- #include "../voffset.h"
-+#include <asm/bootparam_utils.h>
+diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+index e4db19e88ab1..6af117af9780 100644
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -591,8 +591,15 @@ static void balloon_process(struct work_struct *work)
+ 				state = reserve_additional_memory();
+ 		}
  
- /*
-  * WARNING!!
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 2728e1b7e4a6..a8789aa647b4 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -19,7 +19,6 @@
- #include <asm/page.h>
- #include <asm/boot.h>
- #include <asm/bootparam.h>
--#include <asm/bootparam_utils.h>
+-		if (credit < 0)
+-			state = decrease_reservation(-credit, GFP_BALLOON);
++		if (credit < 0) {
++			long n_pages;
++
++			n_pages = min(-credit, si_mem_available());
++			state = decrease_reservation(n_pages, GFP_BALLOON);
++			if (state == BP_DONE && n_pages != -credit &&
++			    n_pages < totalreserve_pages)
++				state = BP_EAGAIN;
++		}
  
- #define BOOT_BOOT_H
- #include "../ctype.h"
+ 		state = update_schedule(state);
+ 
+@@ -631,6 +638,9 @@ static int add_ballooned_pages(int nr_pages)
+ 		}
+ 	}
+ 
++	if (si_mem_available() < nr_pages)
++		return -ENOMEM;
++
+ 	st = decrease_reservation(nr_pages, GFP_USER);
+ 	if (st != BP_DONE)
+ 		return -ENOMEM;
+@@ -754,7 +764,7 @@ static int __init balloon_init(void)
+ 	balloon_stats.schedule_delay = 1;
+ 	balloon_stats.max_schedule_delay = 32;
+ 	balloon_stats.retry_count = 1;
+-	balloon_stats.max_retry_count = RETRY_UNLIMITED;
++	balloon_stats.max_retry_count = 4;
+ 
+ #ifdef CONFIG_XEN_BALLOON_MEMORY_HOTPLUG
+ 	set_online_page_callback(&xen_online_page);
 -- 
 2.20.1
 
