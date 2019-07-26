@@ -7,96 +7,86 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E416BC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D17C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE0021880
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C0A421880
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:29:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564169371;
-	bh=ICvx3CVZ/Ksnc94PCP/Th9alSnOX1VnCJo3NlW5p1CE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Iwl+gXrBTry1lyzsVDojjOc92r6Xxm4V4xlRQV1ji+HbceKzKHPATUNSSASs7VgFH
-	 t2Abulcr5Xnas+HyG7b8ExWO9mN5lHY8uNihbLQcx0J7mIxfYCfQUWtbixEKKpsJyE
-	 CVI3DTjxuz0Hq1hTgbMpC9/uPwNmyEoopPr3pXM0=
+	s=default; t=1564169375;
+	bh=KFOZssiYH5r++KiSWweD0Gz2GtaeqF7rPsazVa48kyE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=crFlvlUjOfL65htKhF/7RQbW6QiD2dfCxX/gzJA1p7nzx5cxJi9VSNTdT6+R9vgyx
+	 ILj0WUlh49L69uFZjmSS2JBGH6Ft1t7a826+kMtLT/G8vM22BSl89S1okalfZLMk7P
+	 jJGmf15c2sOdVkMkp3G2Ey5JuLG9yhGzeetKXC5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfGZT3T (ORCPT
+        id S1727164AbfGZT3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 15:29:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33888 "EHLO
+        Fri, 26 Jul 2019 15:29:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33902 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfGZT3T (ORCPT
+        with ESMTP id S1726650AbfGZT3T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jul 2019 15:29:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=m8kf/sPEYGMDUeP6JoO5tSRSz84bxy3DCh0yf5UUIs0=; b=CelJnS/c4Xzu7s5d91k3foSXuG
-        UQh6mku33sviwqWU2K6acBiqmR5Y0FhNi5DwcAO9T/KorPIFMd9PLDz/UECUpFx90TS7oZFOFnWxR
-        liK7HAzFQq63s3NX6rfwaobmqbN/47fZ6UYLXuX2AFPkn1rLNIRYy0micCfJxfgCSdyCmYSg7BluF
-        uDsgdBP1l0oWDTVKXLzt7pA6WxX6jmJy1ASd070RTjlFmVhk8LXNp8IDgWB9gcaP56Lb30GuNk+95
-        0kTIl3Qvi6Cmk9cT8OSpfE2meXGVNyl3KTr/Fwcfo4BtVwqlcKpktAeUvw9D4R27gTCDvJp4T7CG/
-        ggcLft/A==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=oaP33TUD0GPNPC3aziO7sbnb5RBnJ34Mg4kqpJwklQA=; b=Tz2O93fXP7Gl0lBjDsAO3/uUk
+        IbG/Lm/dnbvEOdcJexAA04Xu/KLHMZAC+FYa4YXHGTTVkreccAV8m+eN9lzcE7ojiULAx63ljqU1q
+        lCFJTxFVQHLT08mGbAqHcn8H+ar3W7mWUJhj5bXmYLtDdX1SWn4DfIPNzNvUoPR/B4EhXKVP6dlVz
+        o3RrX0oqtEOzvtYmMEznl47f5ZCUFu7vSCQZ1lP5RZpsNfWbL8CC2PXtJMXNoTggSQNirpd378R6b
+        t0m9iomuPpUYvWgq1SDWeKDYmS8d0cbT/nREPZBTSQm93C5mVTw95wExZyJ25EN7sxQOiTaEwLeT2
+        T8pi7BLGQ==;
 Received: from [179.95.31.157] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hr5u1-00046s-TI; Fri, 26 Jul 2019 19:29:17 +0000
+        id 1hr5u2-00046u-6u; Fri, 26 Jul 2019 19:29:18 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hr5tz-0004yq-MW; Fri, 26 Jul 2019 16:29:15 -0300
+        id 1hr5tz-0004yb-J3; Fri, 26 Jul 2019 16:29:15 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        SeongJae Park <sj38.park@gmail.com>
-Subject: [PATCH 5/5] docs: zh_CN: howto.rst: fix a broken reference
-Date:   Fri, 26 Jul 2019 16:29:14 -0300
-Message-Id: <36ee207d43dd40be23639a3b00de4216a8465624.1564169297.git.mchehab+samsung@kernel.org>
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: [PATCH 1/5] MAINTAINERS: fix broken ref for ABI sysfs-bus-counter-ftm-quaddec
+Date:   Fri, 26 Jul 2019 16:29:10 -0300
+Message-Id: <5c44856436bbaeb4f2d4b750365b82de973ad054.1564169297.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <5c44856436bbaeb4f2d4b750365b82de973ad054.1564169297.git.mchehab+samsung@kernel.org>
-References: <5c44856436bbaeb4f2d4b750365b82de973ad054.1564169297.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's a broken reference there pointing to the long gone
-DocBook dir.
+There's a typo here:
 
-While I don't read chinese, Google translator translates it
-to:
-	"The generated documentation will be placed in
-	 the Documentation/DocBook/ directory."
-
-Well, we know that the output will be Documentation/output
-dir. So, let's fix this one.
+	sysfs-bus-counter-ftm-quadddec -> sysfs-bus-counter-ftm-quaddec
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/translations/zh_CN/process/howto.rst | 2 +-
+ MAINTAINERS | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/translations/zh_CN/process/howto.rst b/Documentation/translations/zh_CN/process/howto.rst
-index 5b671178b17b..c4ff8356b88d 100644
---- a/Documentation/translations/zh_CN/process/howto.rst
-+++ b/Documentation/translations/zh_CN/process/howto.rst
-@@ -147,7 +147,7 @@ Linux内核代码中包含有大量的文档。这些文档对于学习如何与
-     关于补丁是什么以及如何将它打在不同内核开发分支上的好介绍
- 
- 内核还拥有大量从代码自动生成的文档。它包含内核内部API的全面介绍以及如何
--妥善处理加锁的规则。生成的文档会放在 Documentation/DocBook/目录下。在内
-+妥善处理加锁的规则。生成的文档会放在 Documentation/output/目录下。在内
- 核源码的主目录中使用以下不同命令将会分别生成PDF、Postscript、HTML和手册
- 页等不同格式的文档::
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4b59bdc1aaf2..506ac266cf57 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6317,7 +6317,7 @@ FLEXTIMER FTM-QUADDEC DRIVER
+ M:	Patrick Havelange <patrick.havelange@essensium.com>
+ L:	linux-iio@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/ABI/testing/sysfs-bus-counter-ftm-quadddec
++F:	Documentation/ABI/testing/sysfs-bus-counter-ftm-quaddec
+ F:	Documentation/devicetree/bindings/counter/ftm-quaddec.txt
+ F:	drivers/counter/ftm-quaddec.c
  
 -- 
 2.21.0
