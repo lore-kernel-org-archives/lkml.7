@@ -2,131 +2,189 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 462D3C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A346DC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24518218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7377B229F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:21:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3DFbTYo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfGZNUn (ORCPT
+        id S1727303AbfGZNV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:20:43 -0400
-Received: from mga04.intel.com ([192.55.52.120]:39874 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbfGZNUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:20:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 06:20:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,310,1559545200"; 
-   d="scan'208";a="178404040"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by FMSMGA003.fm.intel.com with ESMTP; 26 Jul 2019 06:20:39 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hr09F-0002E6-QO; Fri, 26 Jul 2019 16:20:37 +0300
-Date:   Fri, 26 Jul 2019 16:20:37 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v1 1/4] lib/vsprintf: Print time64_t in human readable
- format
-Message-ID: <20190726132037.GX9224@smile.fi.intel.com>
-References: <20190104193009.30907-1-andriy.shevchenko@linux.intel.com>
- <20190108152528.utr3a5huran52gsf@pathway.suse.cz>
- <20190110215858.GG2362@piout.net>
+        Fri, 26 Jul 2019 09:21:27 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44231 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfGZNV0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:21:26 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k8so53232246edr.11;
+        Fri, 26 Jul 2019 06:21:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=aEPGoQmeQt4va0p2hGnrM5rQgBeB6NOs8t/gLhx0kGI=;
+        b=J3DFbTYocQneB6oHubp9dHGTI2iL0Rx4t3mTkLiBOW2oRrQ5Dx4o7aQuMpww/UUMl+
+         UCVhhHd286oIqAlTYWbrlTfSb/34zb4jSF5rCHiDv1K+wdM72yC2dk1pSyDgINAw1wFj
+         JrR5jK7srTYboiGt9fPLXKlDSrEMNs/VacIVcK17vNdUDlEiv0ne0MV2DYzroF+onS2q
+         oPJlAVRfQIKXFFjIpjwVnCctqATCbVbpu8197lKXjp2SlMx1J80n3mu8uDqvwGtBja8c
+         Sb6thrqNTUGu2TFdackYNxJhVJq8y8jcKs4xKjyPY0bUQQTGbDWc227zGP/ldr+JHzSn
+         iEbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=aEPGoQmeQt4va0p2hGnrM5rQgBeB6NOs8t/gLhx0kGI=;
+        b=XSn9B6LynWVou1MyjGyjP9jVpgEB/SB7faP22dgVa9lB8UkLbiybyq5lcK8nMTJUKd
+         Z1j66znAGEsEDdBHganYv4jbmlE8xWosEruSK/WcW9Si+LLo+noG58Dx5gS+Omk86k0F
+         VeUBEfNb4CEuXJkLlUqX9XrMamhjvH9TRnXwao1uQR9AhIG1ajHVxBgiGoqaFGd0haG3
+         Cw5XwNVfmBz8Stj6Krxt+xltRUUGmCzA7BqRDj34/iChzQS/gkT+Ra5lscJRVcPjNFU1
+         pJziFfu6ujaac5/JepT0YFRJQi0eaKSvAIm7zVYNBoQ1l/6jRZXku6IJq4yNTyMhLwUt
+         J7OA==
+X-Gm-Message-State: APjAAAUhPzdvY/lsxcAVzkSdRAtetpI0xo9eerSUF3TUyIH49Zfbei6C
+        3+OBo4k8P9n6a2OtKPdvnb8RZX/8rlZObfzVmao=
+X-Google-Smtp-Source: APXvYqzbxn/aUzm9t7YNHRy11YRjgXr3D4RCTMRYzXKzStfRn2jaR8dRB/UpDeutOze0783Eexm6xW1m00L9hhbNX/M=
+X-Received: by 2002:a17:906:6d2:: with SMTP id v18mr72287447ejb.279.1564147284696;
+ Fri, 26 Jul 2019 06:21:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190110215858.GG2362@piout.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190726022836.7182-1-hslester96@gmail.com> <CAKKE0ZG9hKqOnPHCfmW8Mpe2tdcdpdv4Njvx7XNuw6ykJf3P0w@mail.gmail.com>
+In-Reply-To: <CAKKE0ZG9hKqOnPHCfmW8Mpe2tdcdpdv4Njvx7XNuw6ykJf3P0w@mail.gmail.com>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Fri, 26 Jul 2019 21:21:13 +0800
+Message-ID: <CANhBUQ2Qu3Ttvi3PNWyyTNhZhVF7q2VE_TXgBcog6gah=cGxyw@mail.gmail.com>
+Subject: Re: [PATCH v2] counter/ftm-quaddec: Use device-managed registration API
+To:     Patrick Havelange <patrick.havelange@essensium.com>
+Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 10, 2019 at 10:58:58PM +0100, Alexandre Belloni wrote:
-> On 08/01/2019 16:25:28+0100, Petr Mladek wrote:
-> > On Fri 2019-01-04 21:30:06, Andy Shevchenko wrote:
-> > > There are users which print time and date represented by content of
-> > > time64_t type in human readable format.
-> > > 
-> > > Instead of open coding that each time introduce %ptT[dt][r] specifier.
-> > > 
-> > > Few test cases for %ptT specifier has been added as well.
-
-> > > +void time64_to_rtc_time(time64_t time, struct rtc_time *rtc_time)
-> > > +{
-> > > +#ifdef CONFIG_RTC_LIB
-> > > +	rtc_time64_to_tm(time, rtc_time);
-
-> > I wonder if the conversion between struct tm and rtc_time
-> > might be useful in general.
+Patrick Havelange <patrick.havelange@essensium.com> =E4=BA=8E2019=E5=B9=B47=
+=E6=9C=8826=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=888:51=E5=86=99=E9=
+=81=93=EF=BC=9A
+>
+> Hello,
+>
+> On Fri, Jul 26, 2019 at 4:28 AM Chuhong Yuan <hslester96@gmail.com> wrote=
+:
 > >
-> > It might make sense to de-duplicate time64_to_tm() and
-> > rtc_time64_to_tm() implementations.
+> > Make use of devm_counter_register.
+> > Then we can remove redundant unregistration API
+> > usage to make code simpler.
+> >
+> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> > ---
+> > Changes in v2:
+> >   - Use devm_add_action_or_reset to keep
+> >     resource release order.
+>
+> This is better now indeed.
+>
+> However it seems there is an issue with the mail/patch format, I'm
+> unable to apply it with git am, and if you look at
+> https://lore.kernel.org/patchwork/patch/1105782/ the diff section is
+> missing the beginning of the patch. I don't know why, but I think it
+> should be looked into.
+>
+> Otherwise, it's fine by me.
+>
+> Regards,
+>
+> Patrick Havelange
 
-> Looking at 57f1f0874f42, this seemed to be the plan at the time
-> time_to_tm was introduced but this was never done. Seeing that tm and
-> rtc_time are quite similar, we could probably always use time64_to_tm as
-> it is more accurate than rtc_time64_to_tm as the latter assumes a
-> specific year range.
-
-So, do I understand correctly that dropping #ifdef along with
-rtc_time64_to_tm() call is sufficient for now?
-
-> Maybe be rtc_str should take a struct tm instead of an rtc_time so
-> time64_to_rtc_time always uses time64_to_tm.
-
-Because this one, while sounding plausible, maybe too invasive on current
-state of affairs.
-
-> > > +#else
-> > > +	struct tm tm;
-> > > +
-> > > +	time64_to_tm(time, 0, &tm);
-> > > +
-> > > +	rtc_time->tm_sec = tm.tm_sec;
-> > > +	rtc_time->tm_min = tm.tm_min;
-> > > +	rtc_time->tm_hour = tm.tm_hour;
-> > > +	rtc_time->tm_mday = tm.tm_mday;
-> > > +	rtc_time->tm_mon = tm.tm_mon;
-> > > +	rtc_time->tm_year = tm.tm_year;
-> > > +	rtc_time->tm_wday = tm.tm_wday;
-> > > +	rtc_time->tm_yday = tm.tm_yday;
-> > > +
-> > > +	rtc_time->tm_isdst = 0;
-> > > +#endif
-> > > +}
-> > > +
-> > > +static noinline_for_stack
-> > > +char *time64_str(char *buf, char *end, const time64_t *t, const char *fmt)
-> > > +{
-> > > +	struct rtc_time tm;
-> > > +
-> > > +	time64_to_rtc_time(*t, &tm);
-> > > +
-> > > +	return rtc_str(buf, end, &tm, fmt);
-> > > +}
-
--- 
-With Best Regards,
-Andy Shevchenko
+I am also not clear about why this issue happened.
+Maybe it is caused by changelog format.
+I will revise changelog and resend it later.
 
 
+
+>
+>
+> >   - _remove() function is redundant now,
+> >     delete it.
+> >
+> >  drivers/counter/ftm-quaddec.c | 31 +++++++++++--------------------
+> >  1 file changed, 11 insertions(+), 20 deletions(-)
+> >
+> > diff --git a/drivers/counter/ftm-quaddec.c b/drivers/counter/ftm-quadde=
+c.c
+> > index 68a9b7393457..76c70a6c3593 100644
+> > --- a/drivers/counter/ftm-quaddec.c
+> > +++ b/drivers/counter/ftm-quaddec.c
+> > @@ -100,16 +100,17 @@ static void ftm_quaddec_init(struct ftm_quaddec *=
+ftm)
+> >         ftm_set_write_protection(ftm);
+> >  }
+> >
+> > -static void ftm_quaddec_disable(struct ftm_quaddec *ftm)
+> > +static void ftm_quaddec_disable(void *ftm)
+> >  {
+> > -       ftm_clear_write_protection(ftm);
+> > -       ftm_write(ftm, FTM_MODE, 0);
+> > -       ftm_write(ftm, FTM_QDCTRL, 0);
+> > +       struct ftm_quaddec *ftm_qua =3D ftm;
+> >
+> > +       ftm_clear_write_protection(ftm_qua);
+> > +       ftm_write(ftm_qua, FTM_MODE, 0);
+> > +       ftm_write(ftm_qua, FTM_QDCTRL, 0);
+> >         /*
+> >          * This is enough to disable the counter. No clock has been
+> >          * selected by writing to FTM_SC in init()
+> >          */
+> > -       ftm_set_write_protection(ftm);
+> > +       ftm_set_write_protection(ftm_qua);
+> >  }
+> >
+> >  static int ftm_quaddec_get_prescaler(struct counter_device *counter,
+> > @@ -316,22 +317,13 @@ static int ftm_quaddec_probe(struct platform_devi=
+ce *pdev)
+> >         mutex_init(&ftm->ftm_quaddec_mutex);
+> >
+> >         ftm_quaddec_init(ftm);
+> > -
+> > -       ret =3D counter_register(&ftm->counter);
+> > +       ret =3D devm_add_action_or_reset(&pdev->dev, ftm_quaddec_disabl=
+e, ftm);
+> >         if (ret)
+> > -               ftm_quaddec_disable(ftm);
+> > -
+> > -       return ret;
+> > -}
+> > -
+> > -static int ftm_quaddec_remove(struct platform_device *pdev)
+> > -{
+> > -       struct ftm_quaddec *ftm =3D platform_get_drvdata(pdev);
+> > -
+> > -       counter_unregister(&ftm->counter);
+> > -
+> > -       ftm_quaddec_disable(ftm);
+> > +               return ret;
+> >
+> > +       ret =3D devm_counter_register(&pdev->dev, &ftm->counter);
+> > +       if (ret)
+> > +               return ret;
+> >         return 0;
+> >  }
+> >
+> > @@ -346,7 +338,6 @@ static struct platform_driver ftm_quaddec_driver =
+=3D {
+> >                 .of_match_table =3D ftm_quaddec_match,
+> >         },
+> >         .probe =3D ftm_quaddec_probe,
+> > -       .remove =3D ftm_quaddec_remove,
+> >  };
+> >
+> >  module_platform_driver(ftm_quaddec_driver);
+> > --
+> > 2.20.1
+> >
