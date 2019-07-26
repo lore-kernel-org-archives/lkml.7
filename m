@@ -4,38 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B468C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA0EC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1C8A2238C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CFBA22C7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfGZD1h (ORCPT
+        id S1726461AbfGZD1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 23:27:37 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3170 "EHLO huawei.com"
+        Thu, 25 Jul 2019 23:27:14 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3166 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726432AbfGZD1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 23:27:15 -0400
+        id S1726400AbfGZD1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 23:27:12 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E620316CC283D5E6317A;
+        by Forcepoint Email with ESMTP id EABE093DF53EFE9EB3FF;
         Fri, 26 Jul 2019 11:27:09 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 26 Jul 2019 11:26:59 +0800
+ 14.3.439.0; Fri, 26 Jul 2019 11:27:00 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Yufeng Mo <moyufeng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
+        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 06/11] net: hns3: modify firmware version display format
-Date:   Fri, 26 Jul 2019 11:24:57 +0800
-Message-ID: <1564111502-15504-7-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 08/11] net: hns3: make hclge_service use delayed workqueue
+Date:   Fri, 26 Jul 2019 11:24:59 +0800
+Message-ID: <1564111502-15504-9-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564111502-15504-1-git-send-email-tanhuazhong@huawei.com>
 References: <1564111502-15504-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,116 +46,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufeng Mo <moyufeng@huawei.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-This patch modifies firmware version display format in
-hclge(vf)_cmd_init() and hns3_get_drvinfo(). Also, adds
-some optimizations for firmware version display format.
+Use delayed work instead of using timers to trigger the
+hclge_serive.
 
-Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
+Simplify the code with one less middle function and in order
+to support misc irq affinity.
+
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Reviewed-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hnae3.h              |  9 +++++++++
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c       | 15 +++++++++++++--
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c   | 10 +++++++++-
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 10 +++++++++-
- 4 files changed, 40 insertions(+), 4 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 52 +++++++++-------------
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  3 +-
+ 2 files changed, 21 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index 48c7b70..a4624db 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -179,6 +179,15 @@ struct hnae3_vector_info {
- #define HNAE3_RING_GL_RX 0
- #define HNAE3_RING_GL_TX 1
- 
-+#define HNAE3_FW_VERSION_BYTE3_SHIFT	24
-+#define HNAE3_FW_VERSION_BYTE3_MASK	GENMASK(31, 24)
-+#define HNAE3_FW_VERSION_BYTE2_SHIFT	16
-+#define HNAE3_FW_VERSION_BYTE2_MASK	GENMASK(23, 16)
-+#define HNAE3_FW_VERSION_BYTE1_SHIFT	8
-+#define HNAE3_FW_VERSION_BYTE1_MASK	GENMASK(15, 8)
-+#define HNAE3_FW_VERSION_BYTE0_SHIFT	0
-+#define HNAE3_FW_VERSION_BYTE0_MASK	GENMASK(7, 0)
-+
- struct hnae3_ring_chain_node {
- 	struct hnae3_ring_chain_node *next;
- 	u32 tqp_index;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index 5bff98a..e71c92b 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -527,6 +527,7 @@ static void hns3_get_drvinfo(struct net_device *netdev,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index faf60b4..e804a19 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -2515,8 +2515,12 @@ static void hclge_task_schedule(struct hclge_dev *hdev)
  {
- 	struct hns3_nic_priv *priv = netdev_priv(netdev);
- 	struct hnae3_handle *h = priv->ae_handle;
-+	u32 fw_version;
- 
- 	if (!h->ae_algo->ops->get_fw_version) {
- 		netdev_err(netdev, "could not get fw version!\n");
-@@ -545,8 +546,18 @@ static void hns3_get_drvinfo(struct net_device *netdev,
- 		sizeof(drvinfo->bus_info));
- 	drvinfo->bus_info[ETHTOOL_BUSINFO_LEN - 1] = '\0';
- 
--	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version), "0x%08x",
--		 priv->ae_handle->ae_algo->ops->get_fw_version(h));
-+	fw_version = priv->ae_handle->ae_algo->ops->get_fw_version(h);
-+
-+	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version),
-+		 "%lu.%lu.%lu.%lu",
-+		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE3_MASK,
-+				 HNAE3_FW_VERSION_BYTE3_SHIFT),
-+		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE2_MASK,
-+				 HNAE3_FW_VERSION_BYTE2_SHIFT),
-+		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE1_MASK,
-+				 HNAE3_FW_VERSION_BYTE1_SHIFT),
-+		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE0_MASK,
-+				 HNAE3_FW_VERSION_BYTE0_SHIFT));
+ 	if (!test_bit(HCLGE_STATE_DOWN, &hdev->state) &&
+ 	    !test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
+-	    !test_and_set_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state))
+-		(void)schedule_work(&hdev->service_task);
++	    !test_and_set_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state)) {
++		hdev->hw_stats.stats_timer++;
++		hdev->fd_arfs_expire_timer++;
++		mod_delayed_work(system_wq, &hdev->service_task,
++				 round_jiffies_relative(HZ));
++	}
  }
  
- static u32 hns3_get_link(struct net_device *netdev)
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-index 22f6acd..d9858f2 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-@@ -419,7 +419,15 @@ int hclge_cmd_init(struct hclge_dev *hdev)
+ static int hclge_get_mac_link_status(struct hclge_dev *hdev)
+@@ -2731,25 +2735,6 @@ static int hclge_get_status(struct hnae3_handle *handle)
+ 	return hdev->hw.mac.link;
+ }
+ 
+-static void hclge_service_timer(struct timer_list *t)
+-{
+-	struct hclge_dev *hdev = from_timer(hdev, t, service_timer);
+-
+-	mod_timer(&hdev->service_timer, jiffies + HZ);
+-	hdev->hw_stats.stats_timer++;
+-	hdev->fd_arfs_expire_timer++;
+-	hclge_task_schedule(hdev);
+-}
+-
+-static void hclge_service_complete(struct hclge_dev *hdev)
+-{
+-	WARN_ON(!test_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state));
+-
+-	/* Flush memory before next watchdog */
+-	smp_mb__before_atomic();
+-	clear_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state);
+-}
+-
+ static u32 hclge_check_event_cause(struct hclge_dev *hdev, u32 *clearval)
+ {
+ 	u32 rst_src_reg, cmdq_src_reg, msix_src_reg;
+@@ -3596,7 +3581,9 @@ static void hclge_update_vport_alive(struct hclge_dev *hdev)
+ static void hclge_service_task(struct work_struct *work)
+ {
+ 	struct hclge_dev *hdev =
+-		container_of(work, struct hclge_dev, service_task);
++		container_of(work, struct hclge_dev, service_task.work);
++
++	clear_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state);
+ 
+ 	if (hdev->hw_stats.stats_timer >= HCLGE_STATS_TIMER_INTERVAL) {
+ 		hclge_update_stats_for_all(hdev);
+@@ -3611,7 +3598,8 @@ static void hclge_service_task(struct work_struct *work)
+ 		hclge_rfs_filter_expire(hdev);
+ 		hdev->fd_arfs_expire_timer = 0;
  	}
- 	hdev->fw_version = version;
+-	hclge_service_complete(hdev);
++
++	hclge_task_schedule(hdev);
+ }
  
--	dev_info(&hdev->pdev->dev, "The firmware version is %08x\n", version);
-+	dev_info(&hdev->pdev->dev, "The firmware version is %lu.%lu.%lu.%lu\n",
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE3_MASK,
-+				 HNAE3_FW_VERSION_BYTE3_SHIFT),
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE2_MASK,
-+				 HNAE3_FW_VERSION_BYTE2_SHIFT),
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE1_MASK,
-+				 HNAE3_FW_VERSION_BYTE1_SHIFT),
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE0_MASK,
-+				 HNAE3_FW_VERSION_BYTE0_SHIFT));
+ struct hclge_vport *hclge_get_vport(struct hnae3_handle *handle)
+@@ -6150,10 +6138,13 @@ static void hclge_set_timer_task(struct hnae3_handle *handle, bool enable)
+ 	struct hclge_dev *hdev = vport->back;
  
- 	return 0;
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-index 652b796..8f21eb3 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-@@ -405,7 +405,15 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
+ 	if (enable) {
+-		mod_timer(&hdev->service_timer, jiffies + HZ);
++		hclge_task_schedule(hdev);
+ 	} else {
+-		del_timer_sync(&hdev->service_timer);
+-		cancel_work_sync(&hdev->service_task);
++		/* Set the DOWN flag here to disable the service to be
++		 * scheduled again
++		 */
++		set_bit(HCLGE_STATE_DOWN, &hdev->state);
++		cancel_delayed_work_sync(&hdev->service_task);
+ 		clear_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state);
  	}
- 	hdev->fw_version = version;
+ }
+@@ -8592,12 +8583,10 @@ static void hclge_state_uninit(struct hclge_dev *hdev)
+ 	set_bit(HCLGE_STATE_DOWN, &hdev->state);
+ 	set_bit(HCLGE_STATE_REMOVING, &hdev->state);
  
--	dev_info(&hdev->pdev->dev, "The firmware version is %08x\n", version);
-+	dev_info(&hdev->pdev->dev, "The firmware version is %lu.%lu.%lu.%lu\n",
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE3_MASK,
-+				 HNAE3_FW_VERSION_BYTE3_SHIFT),
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE2_MASK,
-+				 HNAE3_FW_VERSION_BYTE2_SHIFT),
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE1_MASK,
-+				 HNAE3_FW_VERSION_BYTE1_SHIFT),
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE0_MASK,
-+				 HNAE3_FW_VERSION_BYTE0_SHIFT));
+-	if (hdev->service_timer.function)
+-		del_timer_sync(&hdev->service_timer);
+ 	if (hdev->reset_timer.function)
+ 		del_timer_sync(&hdev->reset_timer);
+-	if (hdev->service_task.func)
+-		cancel_work_sync(&hdev->service_task);
++	if (hdev->service_task.work.func)
++		cancel_delayed_work_sync(&hdev->service_task);
+ 	if (hdev->rst_service_task.func)
+ 		cancel_work_sync(&hdev->rst_service_task);
+ 	if (hdev->mbx_service_task.func)
+@@ -8802,9 +8791,8 @@ static int hclge_init_ae_dev(struct hnae3_ae_dev *ae_dev)
  
- 	return 0;
+ 	hclge_dcb_ops_set(hdev);
+ 
+-	timer_setup(&hdev->service_timer, hclge_service_timer, 0);
+ 	timer_setup(&hdev->reset_timer, hclge_reset_timer, 0);
+-	INIT_WORK(&hdev->service_task, hclge_service_task);
++	INIT_DELAYED_WORK(&hdev->service_task, hclge_service_task);
+ 	INIT_WORK(&hdev->rst_service_task, hclge_reset_service_task);
+ 	INIT_WORK(&hdev->mbx_service_task, hclge_mailbox_service_task);
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 6a12285..dde8f22 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -806,9 +806,8 @@ struct hclge_dev {
+ 	u16 adminq_work_limit; /* Num of admin receive queue desc to process */
+ 	unsigned long service_timer_period;
+ 	unsigned long service_timer_previous;
+-	struct timer_list service_timer;
+ 	struct timer_list reset_timer;
+-	struct work_struct service_task;
++	struct delayed_work service_task;
+ 	struct work_struct rst_service_task;
+ 	struct work_struct mbx_service_task;
  
 -- 
 2.7.4
