@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2A9C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B397C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A80622ADA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22AB422BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:14:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfGZNOx (ORCPT
+        id S1727195AbfGZNO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:14:53 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:36368 "EHLO honk.sigxcpu.org"
+        Fri, 26 Jul 2019 09:14:57 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:36338 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbfGZNOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:14:47 -0400
+        id S1726491AbfGZNOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:14:46 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id D501CFB05;
-        Fri, 26 Jul 2019 15:14:44 +0200 (CEST)
+        by honk.sigxcpu.org (Postfix) with ESMTP id 082F9FB02;
+        Fri, 26 Jul 2019 15:14:43 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nICvhURxg7dB; Fri, 26 Jul 2019 15:14:41 +0200 (CEST)
+        with ESMTP id rl7091_wxe66; Fri, 26 Jul 2019 15:14:42 +0200 (CEST)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 23A0446AA3; Fri, 26 Jul 2019 15:14:40 +0200 (CEST)
+        id 1A20646AA0; Fri, 26 Jul 2019 15:14:40 +0200 (CEST)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
         Purism Kernel Team <kernel@puri.sm>,
@@ -36,9 +36,9 @@ To:     =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/4] drm/panel: jh057n00900: Move panel DSI init to enable()
-Date:   Fri, 26 Jul 2019 15:14:36 +0200
-Message-Id: <12c3495b234952aafe11980a9e06cfd246134660.1564146727.git.agx@sigxcpu.org>
+Subject: [PATCH v2 2/4] drm/panel: jh057n00900: Move mipi_dsi_dcs_set_display_off to disable()
+Date:   Fri, 26 Jul 2019 15:14:37 +0200
+Message-Id: <e2c31d34ce1f917065d590297e5115a4ca954874.1564146727.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1564146727.git.agx@sigxcpu.org>
 References: <cover.1564146727.git.agx@sigxcpu.org>
@@ -50,53 +50,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the panel is wrapped in a panel_bridge it gets prepar()ed before the
-upstream DSI bridge which can cause hangs (e.g. with imx-nwl since clocks
-are not enabled yet). To avoid this move the panel's first DSI access to
-enable() so the upstream bridge can prepare the DSI host controller in
-it's pre_enable().
-
-This is also in line with other panel drivers.
+This makes it symmetric with the panel init happening in enable().
 
 Signed-off-by: Guido Günther <agx@sigxcpu.org>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 ---
- .../gpu/drm/panel/panel-rocktech-jh057n00900.c    | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-index 1274b54f2672..c6b4bfd79fde 100644
+index c6b4bfd79fde..fed24c51d48b 100644
 --- a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
 +++ b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-@@ -143,6 +143,14 @@ static int jh057n_init_sequence(struct jh057n *ctx)
- static int jh057n_enable(struct drm_panel *panel)
+@@ -158,19 +158,19 @@ static int jh057n_enable(struct drm_panel *panel)
+ static int jh057n_disable(struct drm_panel *panel)
  {
  	struct jh057n *ctx = panel_to_jh057n(panel);
-+	int ret;
-+
-+	ret = jh057n_init_sequence(ctx);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(ctx->dev, "Panel init sequence failed: %d\n",
-+			      ret);
-+		return ret;
-+	}
++	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
  
- 	return backlight_enable(ctx->backlight);
+-	return backlight_disable(ctx->backlight);
++	backlight_disable(ctx->backlight);
++	return mipi_dsi_dcs_set_display_off(dsi);
  }
-@@ -197,13 +205,6 @@ static int jh057n_prepare(struct drm_panel *panel)
- 	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
- 	msleep(20);
  
--	ret = jh057n_init_sequence(ctx);
--	if (ret < 0) {
--		DRM_DEV_ERROR(ctx->dev, "Panel init sequence failed: %d\n",
--			      ret);
--		return ret;
--	}
--
- 	ctx->prepared = true;
+ static int jh057n_unprepare(struct drm_panel *panel)
+ {
+ 	struct jh057n *ctx = panel_to_jh057n(panel);
+-	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
  
- 	return 0;
+ 	if (!ctx->prepared)
+ 		return 0;
+ 
+-	mipi_dsi_dcs_set_display_off(dsi);
+ 	regulator_disable(ctx->iovcc);
+ 	regulator_disable(ctx->vcc);
+ 	ctx->prepared = false;
 -- 
 2.20.1
 
