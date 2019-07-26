@@ -6,35 +6,36 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD87C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB53C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DBAB21901
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B10C921901
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:54:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfGZHyV (ORCPT
+        id S1726797AbfGZHyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 03:54:21 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2776 "EHLO huawei.com"
+        Fri, 26 Jul 2019 03:54:20 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2772 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726455AbfGZHxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726461AbfGZHxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jul 2019 03:53:37 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E58D25A7804BC5C3529C;
+        by Forcepoint Email with ESMTP id E0FCAFC67969271E1755;
         Fri, 26 Jul 2019 15:53:34 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 26 Jul 2019 15:53:27 +0800
+ 14.3.439.0; Fri, 26 Jul 2019 15:53:25 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <saeedm@mellanox.com>,
-        Yunsheng Lin <linyunsheng@huawei.com>,
+        Yufeng Mo <moyufeng@huawei.com>,
+        lipeng 00277521 <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 09/10] net: hns3: Add support for using order 1 pages with a 4K buffer
-Date:   Fri, 26 Jul 2019 15:51:29 +0800
-Message-ID: <1564127490-22173-10-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 04/10] net: hns3: change GFP flag during lock period
+Date:   Fri, 26 Jul 2019 15:51:24 +0800
+Message-ID: <1564127490-22173-5-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564127490-22173-1-git-send-email-tanhuazhong@huawei.com>
 References: <1564127490-22173-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,104 +48,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Yufeng Mo <moyufeng@huawei.com>
 
-Hardware supports 0.5K, 1K, 2K, 4K RX buffer size, the
-RX buffer can not be reused because the hns3_page_order
-return 0 when page size and RX buffer size are both 4096.
+When allocating memory, the GFP_KERNEL cannot be used during the
+spin_lock period. This is because it may cause scheduling when holding
+spin_lock. This patch changes GFP flag to GFP_ATOMIC in this case.
 
-So this patch changes the hns3_page_order to return 1 when
-RX buffer is greater than half of the page size and page size
-is less the 8192, and dev_alloc_pages has already been used
-to allocate the compound page for RX buffer.
-
-This patch also changes hnae3_* to hns3_* for page order
-and RX buffer size calculation because they are used in
-hns3 module.
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Reviewed-by: Peng Li <lipeng321@huawei.com>
+Fixes: dd74f815dd41 ("net: hns3: Add support for rule add/delete for flow director")
+Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+Signed-off-by: lipeng 00277521 <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 10 +++++-----
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h | 15 ++++++++++++---
- 2 files changed, 17 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 2e30cfa..3a93bef 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2086,7 +2086,7 @@ static void hns3_set_default_feature(struct net_device *netdev)
- static int hns3_alloc_buffer(struct hns3_enet_ring *ring,
- 			     struct hns3_desc_cb *cb)
- {
--	unsigned int order = hnae3_page_order(ring);
-+	unsigned int order = hns3_page_order(ring);
- 	struct page *p;
- 
- 	p = dev_alloc_pages(order);
-@@ -2097,7 +2097,7 @@ static int hns3_alloc_buffer(struct hns3_enet_ring *ring,
- 	cb->page_offset = 0;
- 	cb->reuse_flag = 0;
- 	cb->buf  = page_address(p);
--	cb->length = hnae3_page_size(ring);
-+	cb->length = hns3_page_size(ring);
- 	cb->type = DESC_TYPE_PAGE;
- 
- 	return 0;
-@@ -2400,7 +2400,7 @@ static void hns3_nic_reuse_page(struct sk_buff *skb, int i,
- {
- 	struct hns3_desc *desc = &ring->desc[ring->next_to_clean];
- 	int size = le16_to_cpu(desc->rx.size);
--	u32 truesize = hnae3_buf_size(ring);
-+	u32 truesize = hns3_buf_size(ring);
- 
- 	skb_add_rx_frag(skb, i, desc_cb->priv, desc_cb->page_offset + pull_len,
- 			size - pull_len, truesize);
-@@ -2415,7 +2415,7 @@ static void hns3_nic_reuse_page(struct sk_buff *skb, int i,
- 	/* Move offset up to the next cache line */
- 	desc_cb->page_offset += truesize;
- 
--	if (desc_cb->page_offset + truesize <= hnae3_page_size(ring)) {
-+	if (desc_cb->page_offset + truesize <= hns3_page_size(ring)) {
- 		desc_cb->reuse_flag = 1;
- 		/* Bump ref count on page before it is given */
- 		get_page(desc_cb->priv);
-@@ -2697,7 +2697,7 @@ static int hns3_add_frag(struct hns3_enet_ring *ring, struct hns3_desc *desc,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 3c64d70..14199c4 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -5796,7 +5796,7 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
+ 			return -ENOSPC;
  		}
  
- 		if (ring->tail_skb) {
--			head_skb->truesize += hnae3_buf_size(ring);
-+			head_skb->truesize += hns3_buf_size(ring);
- 			head_skb->data_len += le16_to_cpu(desc->rx.size);
- 			head_skb->len += le16_to_cpu(desc->rx.size);
- 			skb = ring->tail_skb;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-index 848b866..1a17856 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-@@ -608,9 +608,18 @@ static inline bool hns3_nic_resetting(struct net_device *netdev)
+-		rule = kzalloc(sizeof(*rule), GFP_KERNEL);
++		rule = kzalloc(sizeof(*rule), GFP_ATOMIC);
+ 		if (!rule) {
+ 			spin_unlock_bh(&hdev->fd_rule_lock);
  
- #define tx_ring_data(priv, idx) ((priv)->ring_data[idx])
- 
--#define hnae3_buf_size(_ring) ((_ring)->buf_size)
--#define hnae3_page_order(_ring) (get_order(hnae3_buf_size(_ring)))
--#define hnae3_page_size(_ring) (PAGE_SIZE << (u32)hnae3_page_order(_ring))
-+#define hns3_buf_size(_ring) ((_ring)->buf_size)
-+
-+static inline unsigned int hns3_page_order(struct hns3_enet_ring *ring)
-+{
-+#if (PAGE_SIZE < 8192)
-+	if (ring->buf_size > (PAGE_SIZE / 2))
-+		return 1;
-+#endif
-+	return 0;
-+}
-+
-+#define hns3_page_size(_ring) (PAGE_SIZE << hns3_page_order(_ring))
- 
- /* iterator for handling rings in ring group */
- #define hns3_for_each_ring(pos, head) \
 -- 
 2.7.4
 
