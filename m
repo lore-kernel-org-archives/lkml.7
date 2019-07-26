@@ -2,232 +2,154 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33355C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354D3C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8E721994
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:44:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564184671;
-	bh=yWxWBz+n/FglaRlNQjOLwl4G1oo9xmWPi4dnFejpz3E=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=i40hKlWrOD5tE1fZkjwmpC6ySKB72iocgW3mxGRI2WC7SxVpb4fUTSnqMJCfHpPBL
-	 I815QUPH7dmmtP2VJYYP8wKIUtwm3JEue4atcGMKGmBmOpNJ2yZLY9i7d0CAMjM47p
-	 SiT3epSsFyutjCIvyaYd/02kjeITZYoZRZI+DOmE=
+	by mail.kernel.org (Postfix) with ESMTP id EFC0621994
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:45:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DImgnqbm";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="K53at5KC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbfGZXo3 (ORCPT
+        id S1728320AbfGZXpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 19:44:29 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42784 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727368AbfGZXo3 (ORCPT
+        Fri, 26 Jul 2019 19:45:19 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:40244 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727260AbfGZXpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 19:44:29 -0400
-Received: by mail-io1-f68.google.com with SMTP id e20so77791053iob.9;
-        Fri, 26 Jul 2019 16:44:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=isOGfonjSVlz/20It2ApZb+DJMa7oypnD9utkEMLW8A=;
-        b=U+fSrliFl0j2dfnW9kp8Z/JDaN4mSf21VK3ykFsSd4I7wcGjzCMAjxDqKKgHcT0x44
-         YjgZtMGlrhFgZxjUvehj4cpHOEc9BOoyV+X8VP1wAD3YNUoXCjz9UxIF4955K9INHk2M
-         V/jLWiTikS9sewRLJts2GarJZAGf4npi9G5YouV/rV1xduktvs6p4TGkN4nUKeJid2U5
-         JQfh005t1SUCjWqBq1bvKwd8NEiPBvKArZirZhRQY0/oqfY/g8nUInnsCMCCd60tLZlQ
-         qov7aLtVQRTtiZv+cgBlJuhAyL+mrhg8jGvOA6ny1CW/qjRxDbfVIK3H3Ohaev85hs1I
-         AYDw==
-X-Gm-Message-State: APjAAAUkdmmFPghkmk/ktPXOKVPsLm52uqSpxCnK+t1v7lIFhx/KK9XH
-        xUoF3yge+THNwZ1Ji7I2rcpbR2Q=
-X-Google-Smtp-Source: APXvYqxqOigAeDJ+2leQBiW4TqZw24zT+ar5DyGuvO6nrp/2jiBfdDy6PdfQH670DHIRG7tvxuUNjA==
-X-Received: by 2002:a05:6638:149:: with SMTP id y9mr100565982jao.76.1564184667858;
-        Fri, 26 Jul 2019 16:44:27 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.254])
-        by smtp.googlemail.com with ESMTPSA id e84sm65576304iof.39.2019.07.26.16.44.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 16:44:27 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: Fix more $id value mismatches filenames
-Date:   Fri, 26 Jul 2019 17:44:26 -0600
-Message-Id: <20190726234426.16267-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 26 Jul 2019 19:45:19 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6QNiOYH004626;
+        Fri, 26 Jul 2019 16:44:37 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=IjXJt58OQmKJLLz95X4E2W/q0+CgRirWuNUC5Rg1S8E=;
+ b=DImgnqbmWDXS10uyXvlapAn4F2xUhnVj9udKnm0yInjyz5ebVYuS1vBk324uLXXyL2Lh
+ FITn6MEnqt2QroyRpOaejYBWFrjd2iP0hp8N8aPkPF+p3ej3ZnuEQE2HqQvGlnoMXVdf
+ kTIYUwUrAoTg9Gu7Q3mr8M5YgH1MW0ZPWF4= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2u08d18n0t-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 26 Jul 2019 16:44:37 -0700
+Received: from ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) by
+ ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 26 Jul 2019 16:44:36 -0700
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 26 Jul 2019 16:44:36 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I9OkcIT4qMffsavY2LM01CzgVBYEdgTSAs+m3RPfuhFZfBG92RpEUIcJ0ZAbdbXIBGc88BF/PaMt+8PPUHYGCaIgtZHqLxD1jItFLNksS4m149AurxN4zPeEp5yLKWSxQMpZvpyn9rzZEPvWu/rC6nANJdvGCR8geFRlHHWwuuSDGL3g3oH8QY1nKuEuw5kuxY/zPa5irCdK/grPtHq1NQ6h8NyGpVqSVX5k66fTAyBVnX6/qkt1vB6AaFhsZGUIFoO6D1sjmbqqA9ytmXxXGuveU342y2qIq2AiLEGq/UcVShhm/C1WGWa7vG4r0e3LNlVg9vnsTZRSTP0iOqVCSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IjXJt58OQmKJLLz95X4E2W/q0+CgRirWuNUC5Rg1S8E=;
+ b=PdjKmudbHmGIlc8Io1SzL5atpgcZGxkAhzbr6qzdf2aPtzu9AEpfU6voaMb9BDxgjMQRDcjnmTiSc2QZUe2qc3eUA0UC9eMBLEX/vScEVogaFyaPEo2Y5YpMvHQcGcKLQTJdilFM4ZFJAtAZaaPUWdV8S2/7Xy1nplfRKKO2830Q1dDCa/chtv49EvhtY5Lasapv2Es1IXsl4ziz/oWJVkxDchZgDKlINOv8IwwctQ+bKxtkZBF9yNeVs65bwj4DlpqNAZSpGUpxq27scecgcVdFbcpbWXPfbOc5klczTacjWyISWZpuFNz3ZYmXgUw7waeiARY+hH93J1D7/EnMkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=fb.com;dmarc=pass action=none header.from=fb.com;dkim=pass
+ header.d=fb.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IjXJt58OQmKJLLz95X4E2W/q0+CgRirWuNUC5Rg1S8E=;
+ b=K53at5KCSMXlp09Ul9i1Jqo1HErTOck3w4RC5+W16ax6MbadFMmY/LQv7a/jIe8MhGDsnwz7ml29S0tDpoqoik6tFkfyVUDoKB8jjdfSZXfdytG8SkyDTZHoRzdrQSquID17B8km3emTtV7tCJ9W717lm0njHML+Pm8MzFA7bBA=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1439.namprd15.prod.outlook.com (10.173.235.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.16; Fri, 26 Jul 2019 23:44:34 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::4066:b41c:4397:27b7]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::4066:b41c:4397:27b7%7]) with mapi id 15.20.2094.013; Fri, 26 Jul 2019
+ 23:44:34 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     lkml <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
+        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
+        "srikar@linux.vnet.ibm.com" <srikar@linux.vnet.ibm.com>
+Subject: Re: [PATCH v9 4/4] uprobe: use FOLL_SPLIT_PMD instead of FOLL_SPLIT
+Thread-Topic: [PATCH v9 4/4] uprobe: use FOLL_SPLIT_PMD instead of FOLL_SPLIT
+Thread-Index: AQHVQ3ZlmP2L+/3PqE2yConlr9Gmr6bdhYSAgAALtYA=
+Date:   Fri, 26 Jul 2019 23:44:34 +0000
+Message-ID: <509AB060-6E17-40AB-A773-DF3FB8EBDB62@fb.com>
+References: <20190726054654.1623433-1-songliubraving@fb.com>
+ <20190726054654.1623433-5-songliubraving@fb.com>
+ <20190726160239.68f538a79913df343308b473@linux-foundation.org>
+In-Reply-To: <20190726160239.68f538a79913df343308b473@linux-foundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:180::1:bb04]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 44653ef3-abe8-4261-1e21-08d712233693
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1439;
+x-ms-traffictypediagnostic: MWHPR15MB1439:
+x-microsoft-antispam-prvs: <MWHPR15MB1439DAD43321E07A11114DCFB3C00@MWHPR15MB1439.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01106E96F6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(396003)(366004)(346002)(39860400002)(54534003)(189003)(199004)(486006)(64756008)(6916009)(7736002)(46003)(6486002)(6436002)(57306001)(256004)(4744005)(14454004)(99286004)(14444005)(66946007)(53546011)(66556008)(68736007)(6246003)(4326008)(25786009)(6116002)(66446008)(71190400001)(71200400001)(76176011)(86362001)(305945005)(81166006)(11346002)(2616005)(8676002)(6506007)(446003)(66476007)(76116006)(229853002)(186003)(33656002)(7416002)(36756003)(81156014)(54906003)(316002)(53936002)(50226002)(476003)(6512007)(102836004)(8936002)(5660300002)(478600001)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1439;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BDqgwmsfAz1NdKtsWpSFa+LF9pOrkwnO9c1fzeXYLHyBzLPXBAIHeLNF0bw4SrasOdv42JCpixIwfLf5uA5456b6RQ89BELMviOY/t80YiuOH+g3dKjs3ISJQDSEJMzFJgVKchNai+jnoxV0Oqng5OrmbKmze3JlIsPeRE+bbLU/Iw/zU5BlfNR0gBVFTVU05IeiCzMxpU8S3KxWl51aJ/4CFDKf96OHjqS9yTGd0mTvi7R/Rc1qk2LetpocowjHATsBVWFTLPvGjq7Yxxsv2OjtobbweJxXw9MiT5O673H26pZAauAQpb/VONYolyHMUW4B0En81Fmp9bP1TjdBti82O6yYSKO0QE/0cAfFUm2JMSZkqPkTe0jp6rM2BxMvZAkvLnSvlDqZP2GnVP46uqyV10/U2el8bI7IHu+c4zo=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E8B2CEF1332099498FA36A82D993CEB1@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44653ef3-abe8-4261-1e21-08d712233693
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2019 23:44:34.2599
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1439
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-26_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=823 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907260267
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The path in the schema '$id' values are wrong. Fix them.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/arm/renesas.yaml              | 2 +-
- Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml   | 2 +-
- Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml        | 2 +-
- .../firmware/intel,ixp4xx-network-processing-engine.yaml        | 2 +-
- Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml    | 2 +-
- Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml    | 2 +-
- .../bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml   | 2 +-
- ...x-queue-manager.yaml => intel,ixp4xx-ahb-queue-manager.yaml} | 2 +-
- .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml      | 2 +-
- .../devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml  | 2 +-
- Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml | 2 +-
- 11 files changed, 11 insertions(+), 11 deletions(-)
- rename Documentation/devicetree/bindings/misc/{intel,ixp4xx-queue-manager.yaml => intel,ixp4xx-ahb-queue-manager.yaml} (95%)
 
-diff --git a/Documentation/devicetree/bindings/arm/renesas.yaml b/Documentation/devicetree/bindings/arm/renesas.yaml
-index 08c923f8c257..28eb458f761a 100644
---- a/Documentation/devicetree/bindings/arm/renesas.yaml
-+++ b/Documentation/devicetree/bindings/arm/renesas.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/arm/shmobile.yaml#
-+$id: http://devicetree.org/schemas/arm/renesas.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Renesas SH-Mobile, R-Mobile, and R-Car Platform Device Tree Bindings
-diff --git a/Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml b/Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml
-index aae53fc3cb1e..2bd519d2e855 100644
---- a/Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml
-+++ b/Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/arm/milbeaut.yaml#
-+$id: http://devicetree.org/schemas/arm/socionext/milbeaut.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Milbeaut platforms device tree bindings
-diff --git a/Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml b/Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
-index 4326d2cfa15d..a8765ba29476 100644
---- a/Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
-+++ b/Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/arm/ti/davinci.yaml#
-+$id: http://devicetree.org/schemas/arm/ti/ti,davinci.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Texas Instruments DaVinci Platforms Device Tree Bindings
-diff --git a/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml b/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
-index 8cb136c376fb..4f0db8ee226a 100644
---- a/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
-+++ b/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
-@@ -2,7 +2,7 @@
- # Copyright 2019 Linaro Ltd.
- %YAML 1.2
- ---
--$id: "http://devicetree.org/schemas/firmware/intel-ixp4xx-network-processing-engine.yaml#"
-+$id: "http://devicetree.org/schemas/firmware/intel,ixp4xx-network-processing-engine.yaml#"
- $schema: "http://devicetree.org/meta-schemas/core.yaml#"
- 
- title: Intel IXP4xx Network Processing Engine
-diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-index 7ba167e2e1ea..c602b6fe1c0c 100644
---- a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-+++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/iio/accelerometers/adi,adxl345.yaml#
-+$id: http://devicetree.org/schemas/iio/accel/adi,adxl345.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Analog Devices ADXL345/ADXL375 3-Axis Digital Accelerometers
-diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
-index a7fafb9bf5c6..e7daffec88d3 100644
---- a/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
-+++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/iio/accelerometers/adi,adxl372.yaml#
-+$id: http://devicetree.org/schemas/iio/accel/adi,adxl372.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml b/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
-index bae10e261fa9..507c141ea760 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
-@@ -2,7 +2,7 @@
- # Copyright 2018 Linaro Ltd.
- %YAML 1.2
- ---
--$id: "http://devicetree.org/schemas/interrupt/intel-ixp4xx-interrupt.yaml#"
-+$id: "http://devicetree.org/schemas/interrupt-controller/intel,ixp4xx-interrupt.yaml#"
- $schema: "http://devicetree.org/meta-schemas/core.yaml#"
- 
- title: Intel IXP4xx XScale Networking Processors Interrupt Controller
-diff --git a/Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml b/Documentation/devicetree/bindings/misc/intel,ixp4xx-ahb-queue-manager.yaml
-similarity index 95%
-rename from Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml
-rename to Documentation/devicetree/bindings/misc/intel,ixp4xx-ahb-queue-manager.yaml
-index d2313b1d9405..0ea21a6f70b4 100644
---- a/Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml
-+++ b/Documentation/devicetree/bindings/misc/intel,ixp4xx-ahb-queue-manager.yaml
-@@ -2,7 +2,7 @@
- # Copyright 2019 Linaro Ltd.
- %YAML 1.2
- ---
--$id: "http://devicetree.org/schemas/misc/intel-ixp4xx-ahb-queue-manager.yaml#"
-+$id: "http://devicetree.org/schemas/misc/intel,ixp4xx-ahb-queue-manager.yaml#"
- $schema: "http://devicetree.org/meta-schemas/core.yaml#"
- 
- title: Intel IXP4xx AHB Queue Manager
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-index d4084c149768..3fb0714e761e 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/net/allwinner,sun8i-a83t-gmac.yaml#
-+$id: http://devicetree.org/schemas/net/allwinner,sun8i-a83t-emac.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Allwinner A83t EMAC Device Tree Bindings
-diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
-index 250f9d5aabdf..fa46670de299 100644
---- a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
-+++ b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/display/allwinner,sun6i-a31-mipi-dphy.yaml#
-+$id: http://devicetree.org/schemas/phy/allwinner,sun6i-a31-mipi-dphy.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Allwinner A31 MIPI D-PHY Controller Device Tree Bindings
-diff --git a/Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml b/Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml
-index a36a0746c056..2807225db902 100644
---- a/Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml
-+++ b/Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml
-@@ -2,7 +2,7 @@
- # Copyright 2018 Linaro Ltd.
- %YAML 1.2
- ---
--$id: "http://devicetree.org/schemas/timer/intel-ixp4xx-timer.yaml#"
-+$id: "http://devicetree.org/schemas/timer/intel,ixp4xx-timer.yaml#"
- $schema: "http://devicetree.org/meta-schemas/core.yaml#"
- 
- title: Intel IXP4xx XScale Networking Processors Timers
--- 
-2.20.1
+> On Jul 26, 2019, at 4:02 PM, Andrew Morton <akpm@linux-foundation.org> wr=
+ote:
+>=20
+> On Thu, 25 Jul 2019 22:46:54 -0700 Song Liu <songliubraving@fb.com> wrote=
+:
+>=20
+>> This patches uses newly added FOLL_SPLIT_PMD in uprobe. This enables eas=
+y
+>> regroup of huge pmd after the uprobe is disabled (in next patch).
+>=20
+> Confused.  There is no "next patch".
 
+That was the patch 5, which was in earlier versions. I am working on=20
+addressing Kirill's feedback for it.=20
+
+Do I need to resubmit 4/4 with modified change log?=20
+
+Thanks,
+Song=
