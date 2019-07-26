@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F12C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E7BC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 763AB22BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B898205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564154940;
-	bh=i4TRmu1fUBZFRG8S4fuS1qYx+hkUoT595nTsFf2200M=;
+	s=default; t=1564154942;
+	bh=X2FF89FPtZ9iDNWY3iamf/vlsbahOtCxF9omaR74wN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pc/hkewPLk6FA7EwAcUtQrmMGV3zcglcevbZT/+Cb0c1s/K30MRJRwYaVAVNnRZQb
-	 xUA+pQiTisI7D6iWsh6ugBIHRXcKH6JtRdDWepKPCVcXDZybqe+4sFyI50h0MhnoON
-	 CyY3OeOVtoJYNsSlnln5xBkzYQtJSbBsEvZpOvow=
+	b=Kjg+8TiQlULtlfoNHyZmlim7QEPp4XtIslbgHd5eTvcuiC21a8I7HGergyXyXmUH7
+	 9JE48pN4sJ5R91c/25bdRUDPfCgIgo5zh1U0VHWHUvpiEM2XTtQuq1paq+06k9qzWR
+	 /rZoU2cQ4JNlW9CDivgKWEBWiUeivc6tTMd0YnI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388635AbfGZP27 (ORCPT
+        id S2388663AbfGZP3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:28:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43508 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:29:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388632AbfGZP24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:28:56 -0400
+        id S2388221AbfGZP27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:28:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B972F205F4;
-        Fri, 26 Jul 2019 15:28:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 383D3205F4;
+        Fri, 26 Jul 2019 15:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154935;
-        bh=i4TRmu1fUBZFRG8S4fuS1qYx+hkUoT595nTsFf2200M=;
+        s=default; t=1564154938;
+        bh=X2FF89FPtZ9iDNWY3iamf/vlsbahOtCxF9omaR74wN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pk3vGKnxBrBSf6G8tw6b+CtsdUf+RSG4OBCUSQPlNoXx8wWgXdv9B42dyIubfTWBV
-         TFx07ObN+jIlu5C42KXj1bWzo+ds4Tgk26tfNY9kOVqEXMOauGj4p1N7Bf2Po9BTtr
-         8ZcqpLWdeY+kknykE5ppry/gJqesVWZI1cA13wH4=
+        b=NM0qeS7NKjD9LC9LzunYITUdezB/FogNXxx7CzNe1FXCXAbXPbYiRjc/JzJ8n/jsN
+         aPn28TrhOAUBCjPDFe1gtfPP5qfCTky7FR/Eb7Zc3MijTM/atcX2VJ9J3Lr17LNIP2
+         bBfUgGPCBYLvmfHkToM9gRJEd1iwqGv07200XvBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian King <brking@linux.vnet.ibm.com>,
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 01/62] bnx2x: Prevent load reordering in tx completion processing
-Date:   Fri, 26 Jul 2019 17:24:13 +0200
-Message-Id: <20190726152301.872603634@linuxfoundation.org>
+Subject: [PATCH 5.1 10/62] net: make skb_dst_force return true when dst is refcounted
+Date:   Fri, 26 Jul 2019 17:24:22 +0200
+Message-Id: <20190726152302.784171823@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,33 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian King <brking@linux.vnet.ibm.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit ea811b795df24644a8eb760b493c43fba4450677 ]
+[ Upstream commit b60a77386b1d4868f72f6353d35dabe5fbe981f2 ]
 
-This patch fixes an issue seen on Power systems with bnx2x which results
-in the skb is NULL WARN_ON in bnx2x_free_tx_pkt firing due to the skb
-pointer getting loaded in bnx2x_free_tx_pkt prior to the hw_cons
-load in bnx2x_tx_int. Adding a read memory barrier resolves the issue.
+netfilter did not expect that skb_dst_force() can cause skb to lose its
+dst entry.
 
-Signed-off-by: Brian King <brking@linux.vnet.ibm.com>
+I got a bug report with a skb->dst NULL dereference in netfilter
+output path.  The backtrace contains nf_reinject(), so the dst might have
+been cleared when skb got queued to userspace.
+
+Other users were fixed via
+if (skb_dst(skb)) {
+	skb_dst_force(skb);
+	if (!skb_dst(skb))
+		goto handle_err;
+}
+
+But I think its preferable to make the 'dst might be cleared' part
+of the function explicit.
+
+In netfilter case, skb with a null dst is expected when queueing in
+prerouting hook, so drop skb for the other hooks.
+
+v2:
+ v1 of this patch returned true in case skb had no dst entry.
+ Eric said:
+   Say if we have two skb_dst_force() calls for some reason
+   on the same skb, only the first one will return false.
+
+ This now returns false even when skb had no dst, as per Erics
+ suggestion, so callers might need to check skb_dst() first before
+ skb_dst_force().
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c |    3 +++
- 1 file changed, 3 insertions(+)
+ include/net/dst.h        |    5 ++++-
+ net/netfilter/nf_queue.c |    6 +++++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-@@ -285,6 +285,9 @@ int bnx2x_tx_int(struct bnx2x *bp, struc
- 	hw_cons = le16_to_cpu(*txdata->tx_cons_sb);
- 	sw_cons = txdata->tx_pkt_cons;
+--- a/include/net/dst.h
++++ b/include/net/dst.h
+@@ -313,8 +313,9 @@ static inline bool dst_hold_safe(struct
+  * @skb: buffer
+  *
+  * If dst is not yet refcounted and not destroyed, grab a ref on it.
++ * Returns true if dst is refcounted.
+  */
+-static inline void skb_dst_force(struct sk_buff *skb)
++static inline bool skb_dst_force(struct sk_buff *skb)
+ {
+ 	if (skb_dst_is_noref(skb)) {
+ 		struct dst_entry *dst = skb_dst(skb);
+@@ -325,6 +326,8 @@ static inline void skb_dst_force(struct
  
-+	/* Ensure subsequent loads occur after hw_cons */
-+	smp_rmb();
+ 		skb->_skb_refdst = (unsigned long)dst;
+ 	}
 +
- 	while (sw_cons != hw_cons) {
- 		u16 pkt_cons;
++	return skb->_skb_refdst != 0UL;
+ }
  
+ 
+--- a/net/netfilter/nf_queue.c
++++ b/net/netfilter/nf_queue.c
+@@ -190,6 +190,11 @@ static int __nf_queue(struct sk_buff *sk
+ 		goto err;
+ 	}
+ 
++	if (!skb_dst_force(skb) && state->hook != NF_INET_PRE_ROUTING) {
++		status = -ENETDOWN;
++		goto err;
++	}
++
+ 	*entry = (struct nf_queue_entry) {
+ 		.skb	= skb,
+ 		.state	= *state,
+@@ -198,7 +203,6 @@ static int __nf_queue(struct sk_buff *sk
+ 	};
+ 
+ 	nf_queue_entry_get_refs(entry);
+-	skb_dst_force(skb);
+ 
+ 	switch (entry->state.pf) {
+ 	case AF_INET:
 
 
