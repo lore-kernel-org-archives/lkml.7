@@ -2,88 +2,87 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F3AC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1B7C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC52218B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1AD1218B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388492AbfGZTLP (ORCPT
+        id S2388518AbfGZTSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 15:11:15 -0400
-Received: from mga05.intel.com ([192.55.52.43]:4356 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726970AbfGZTLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 15:11:15 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 12:11:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
-   d="scan'208";a="181963387"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga002.jf.intel.com with ESMTP; 26 Jul 2019 12:11:10 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hr5cS-0006eY-Of; Fri, 26 Jul 2019 22:11:08 +0300
-Date:   Fri, 26 Jul 2019 22:11:08 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [RFC PATCH 17/40] soundwire: bus: use
- runtime_pm_get_sync/pm when enabled
-Message-ID: <20190726191108.GE9224@smile.fi.intel.com>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-18-pierre-louis.bossart@linux.intel.com>
- <45a912c5-134b-8642-70ef-8c1060389300@linux.intel.com>
- <20190726182534.GO16003@ubuntu>
+        Fri, 26 Jul 2019 15:18:39 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50173 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387455AbfGZTSj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 15:18:39 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hr5jc-00018V-Sk; Fri, 26 Jul 2019 21:18:33 +0200
+Date:   Fri, 26 Jul 2019 21:18:32 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] drm/i915: Remove redundant user_access_end() from
+ __copy_from_user() error path
+In-Reply-To: <156416793450.30723.5556760526480191131@skylake-alporthouse-com>
+Message-ID: <alpine.DEB.2.21.1907262116530.1791@nanos.tec.linutronix.de>
+References: <51a4155c5bc2ca847a9cbe85c1c11918bb193141.1564086017.git.jpoimboe@redhat.com> <alpine.DEB.2.21.1907252355150.1791@nanos.tec.linutronix.de> <156416793450.30723.5556760526480191131@skylake-alporthouse-com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190726182534.GO16003@ubuntu>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 08:25:35PM +0200, Guennadi Liakhovetski wrote:
-> On Fri, Jul 26, 2019 at 01:08:57PM -0500, Pierre-Louis Bossart wrote:
-> > On 7/25/19 6:40 PM, Pierre-Louis Bossart wrote:
-> > > Not all platforms support runtime_pm for now, let's use runtime_pm
-> > > only when enabled.
-
-> > option2 (suggested by Jan Kotas): catch the -EACCESS error code
+On Fri, 26 Jul 2019, Chris Wilson wrote:
+> Quoting Thomas Gleixner (2019-07-25 22:55:45)
+> > On Thu, 25 Jul 2019, Josh Poimboeuf wrote:
 > > 
-> >  	ret = pm_runtime_get_sync(slave->bus->dev);
-> > -	if (ret < 0)
-> > +	if (ret < 0 && ret != -EACCES)
-> >  		return ret;
-
-> Otherwise I'd go with (2), I think, since
-> that's also the official purpose of the -EACCESS return code:
+> > > Objtool reports:
+> > > 
+> > >   drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x36: redundant UACCESS disable
+> > > 
+> > > __copy_from_user() already does both STAC and CLAC, so the
+> > > user_access_end() in its error path adds an extra unnecessary CLAC.
+> > > 
+> > > Fixes: 0b2c8f8b6b0c ("i915: fix missing user_access_end() in page fault exception case")
+> > > Reported-by: Thomas Gleixner <tglx@linutronix.de>
+> > > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> > > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > > Link: https://github.com/ClangBuiltLinux/linux/issues/617
+> > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > 
+> > Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 > 
-> https://lists.linuxfoundation.org/pipermail/linux-pm/2011-June/031930.html
+> Which tree do you plan to apply it to? I can put in drm-intel, and with
+> the fixes tag it will percolate through to 5.3 and beyond, but if you
+> want to apply it directly to squash the build warnings, feel free.
 
-And at least we have examples in the kernel
+It would be nice to get it into 5.3. I can route it linuxwards if you give
+an Acked-by, but I'm happy to hand it to you :)
 
-drivers/gpu/drm/radeon/radeon_fb.c:57:  if (ret < 0 && ret != -EACCES) {
+Thanks,
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+	tglx
