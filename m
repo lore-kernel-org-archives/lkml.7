@@ -2,189 +2,131 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BDAC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCBAC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0EB2206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BDDE206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:06:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YUIjQlO8";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MroH+pOC"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="XF3e3qGf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbfGZJGh (ORCPT
+        id S1726255AbfGZJGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:06:37 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49442 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfGZJGh (ORCPT
+        Fri, 26 Jul 2019 05:06:47 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:18574 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725815AbfGZJGr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:06:37 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 51BEF602F5; Fri, 26 Jul 2019 09:06:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564131996;
-        bh=GKjKfqyAh4cCg4+6N91NJvwSKC6Qu5ao+iivvHJtC6Q=;
-        h=Subject:From:To:References:Date:In-Reply-To:From;
-        b=YUIjQlO8ilnDXgutsoVkzHgSV88P8urhYlhxjYXvXUqtGB7O4ESWRRiSBhMnDJkJJ
-         B+98kfPkxKkD05ADCUbC1oOYJsk2uIajYJ4uokuEoIhgWPZJF8AxjjeqZxvW3PW2E/
-         fiH3OtJJudiy/uLWkDztJalvgeB7fZHzw/QEHaeg=
-Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 64918602B7;
-        Fri, 26 Jul 2019 09:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564131995;
-        bh=GKjKfqyAh4cCg4+6N91NJvwSKC6Qu5ao+iivvHJtC6Q=;
-        h=Subject:From:To:References:Date:In-Reply-To:From;
-        b=MroH+pOCY/ucecR5eM6PPFpOONutxzd6qqYXf7lmbB5aYutG3pQeyv1twAytxvNFx
-         NoSUYw/PVmA27WuhB3cZp/LqyV0IcdyGgG4E2UAZtw9pZj4AL3jvcNAOaKD9ghUdI6
-         Cim+qntonu7h4DY7EVr961g2IKfOSMOjpbcG3Xhw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 64918602B7
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH RESEND V4 0/1] perf: Add CPU hotplug support for events
-From:   Mukesh Ojha <mojha@codeaurora.org>
-To:     lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Olsa <jolsa@redhat.com>, mingo@redhat.com, acme@kernel.org
-References: <1560848091-15694-1-git-send-email-mojha@codeaurora.org>
- <1560865617-7881-1-git-send-email-mojha@codeaurora.org>
- <8becbdff-6924-29d8-304a-8382e8fdb2d3@codeaurora.org>
-Message-ID: <ce9626af-7f11-a556-1281-267b9f4422b4@codeaurora.org>
-Date:   Fri, 26 Jul 2019 14:36:29 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 26 Jul 2019 05:06:47 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x6Q901AN006003;
+        Fri, 26 Jul 2019 04:06:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=yCdlKcUvwHv3Ow3tYdzgUhwXtv26pm/Mvpcsdawejhk=;
+ b=XF3e3qGffloXD1JUaWFG3tK3o1qOQQIY3pys5uHnxi0tgNUA+7V5yqAEVCiXQrbQu05q
+ EKQJpUGac1Hk4Km808SwgMNPEJO08LMQdp+yoHRs+vwZskc8C5qPg/zxBuh3frohwAhZ
+ uDLd2YF/GApVovjtAekfuU7V9orNN0h0LRg+Dimg65eeys9JudfGZRc0PiCWI9T2PInX
+ ci3925kZmV+RdoOTD7HqjqSRRZnGMOFH1ZkNINcfxKMzQvGiW7edye/P0LlooOokl8Pu
+ S7OwvYLAHUZmJNapWaWWc/0GoYOBL338lCkttP4fjqk+uxFb5gJjX8FNMzOKPC8Cx606 /Q== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2tx61s51t5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 26 Jul 2019 04:06:28 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 26 Jul
+ 2019 10:06:26 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Fri, 26 Jul 2019 10:06:26 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 5C8E145;
+        Fri, 26 Jul 2019 10:06:26 +0100 (BST)
+Date:   Fri, 26 Jul 2019 10:06:26 +0100
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+CC:     <dmitry.torokhov@gmail.com>, <gregkh@linuxfoundation.org>,
+        <tglx@linutronix.de>, <allison@lohutok.net>,
+        <rdunlap@infradead.org>, <patches@opensource.cirrus.com>,
+        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] input: touchscreen: wm97xx-core: Fix possible
+ null-pointer dereferences in wm97xx_ts_input_open()
+Message-ID: <20190726090626.GA54126@ediswmail.ad.cirrus.com>
+References: <20190726084816.8487-1-baijiaju1990@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <8becbdff-6924-29d8-304a-8382e8fdb2d3@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190726084816.8487-1-baijiaju1990@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=913 suspectscore=0
+ lowpriorityscore=0 malwarescore=0 priorityscore=1501 spamscore=0
+ adultscore=0 bulkscore=0 impostorscore=0 phishscore=0 clxscore=1011
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1907260116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+On Fri, Jul 26, 2019 at 04:48:16PM +0800, Jia-Ju Bai wrote:
+> In wm97xx_ts_input_open(), there is an if statement on line 507 to check
+> whether wm->mach_ops is NULL:
+>     if (wm->mach_ops && wm->mach_ops->acc_enabled)
+> 
+> When wm->mach_ops is NULL, it is used on line 521:
+>     wm97xx_init_pen_irq(wm);
+>         BUG_ON(!wm->mach_ops->irq_enable);
+>         BUG_ON(!wm->mach_ops->irq_gpio);
+>         wm97xx_reg_write(..., reg & ~(wm->mach_ops->irq_gpio))
+> 
+> Thus, possible null-pointer dereferences may occur.
+> 
+> To fix these bugs, wm->mach_ops is checked before calling
+> wm97xx_init_pen_irq().
+> 
+> These bugs found by a static analysis tool STCheck written by us.
+> 
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> ---
+>  drivers/input/touchscreen/wm97xx-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/touchscreen/wm97xx-core.c b/drivers/input/touchscreen/wm97xx-core.c
+> index 0a174bd82915..f7bd0726a577 100644
+> --- a/drivers/input/touchscreen/wm97xx-core.c
+> +++ b/drivers/input/touchscreen/wm97xx-core.c
+> @@ -517,7 +517,7 @@ static int wm97xx_ts_input_open(struct input_dev *idev)
+>  	wm->ts_reader_interval = wm->ts_reader_min_interval;
+>  
+>  	wm->pen_is_down = 0;
+> -	if (wm->pen_irq)
+> +	if (wm->pen_irq && wm->mach_ops)
+>  		wm97xx_init_pen_irq(wm);
+>  	else
+>  		dev_err(wm->dev, "No IRQ specified\n");
 
-Can you please review this ?
+This doesn't quite feel like the right fix as it would print an
+error message saying "No IRQ specified", in the case the IRQ is
+specified but the mach_ops have not been set.
+
+I would suggest either extending the existing BUG_ON or adding a
+new check in wm97xx_init_pen_irq.
 
 Thanks,
-Mukesh
+Charles
 
-On 6/24/2019 2:31 PM, Mukesh Ojha wrote:
-> Friendly ping.
->
-> On 6/18/2019 7:16 PM, Mukesh Ojha wrote:
->> The embedded world, specifically Android mobile SoCs, rely on CPU
->> hotplugs to manage power and thermal constraints. These hotplugs
->> can happen at a very rapid pace. Adjacently, they also relies on
->> many perf event counters for its management. Therefore, there is
->> a need to preserve these events across hotplugs.
->>
->> In such a scenario, a perf client (kernel or user-space) can create
->> events even when the CPU is offline. If the CPU comes online during
->> the lifetime of the event, the registered event can start counting
->> spontaneously. As an extension to this, the events' count can also
->> be preserved across CPU hotplugs. This takes the burden off of the
->> clients to monitor the state of the CPU.
->>
->> The tests were conducted on arm64 device.
->> /* CPU-1 is offline: Event created when CPU1 is offline */
->>
->> / # cat /sys/devices/system/cpu/cpu1/online
->> 1
->> / # echo 0 > /sys/devices/system/cpu/cpu1/online
->>
->> Test used for testing
->> #!/bin/sh
->>
->> chmod +x *
->>
->> # Count the cycles events on cpu-1 for every 200 ms
->> ./perf stat -e cycles -I 200 -C 1 &
->>
->> # Make the CPU-1 offline and online continuously
->> while true; do
->>          sleep 2
->>          echo 0 > /sys/devices/system/cpu/cpu1/online
->>          sleep 2
->>          echo 1 > /sys/devices/system/cpu/cpu1/online
->> done
->>
->> Results:
->> / # ./test.sh
->> #           time             counts unit events
->>       0.200145885      <not counted>      cycles
->>       0.410115208      <not counted>      cycles
->>       0.619922551      <not counted>      cycles
->>       0.829904635      <not counted>      cycles
->>       1.039751614      <not counted>      cycles
->>       1.249547603      <not counted>      cycles
->>       1.459228280      <not counted>      cycles
->>       1.665606561      <not counted>      cycles
->>       1.874981926      <not counted>      cycles
->>       2.084297811      <not counted>      cycles
->>       2.293471249      <not counted>      cycles
->>       2.503231561      <not counted>      cycles
->>       2.712993332      <not counted>      cycles
->>       2.922744478      <not counted>      cycles
->>       3.132502186      <not counted>      cycles
->>       3.342255050      <not counted>      cycles
->>       3.552010102      <not counted>      cycles
->>       3.761760363      <not counted>      cycles
->>
->>      /* CPU-1 made online: Event started counting */
->>
->>       3.971459269            1925429      cycles
->>       4.181325206           19391145      cycles
->>       4.391074164             113894      cycles
->>       4.599130519            3150152      cycles
->>       4.805564737             487122      cycles
->>       5.015164581             247533      cycles
->>       5.224764529             103622      cycles
->> #           time             counts unit events
->>       5.434360831             238179      cycles
->>       5.645293799             238895      cycles
->>       5.854909320             367543      cycles
->>       6.064487966            2383428      cycles
->>
->>       /* CPU-1 made offline: counting stopped
->>
->>       6.274289476      <not counted>      cycles
->>       6.483493903      <not counted>      cycles
->>       6.693202705      <not counted>      cycles
->>       6.902956195      <not counted>      cycles
->>       7.112714268      <not counted>      cycles
->>       7.322465570      <not counted>      cycles
->>       7.532222340      <not counted>      cycles
->>       7.741975830      <not counted>      cycles
->>       7.951686246      <not counted>      cycles
->>
->>      /* CPU-1 made online: Event started counting
->>
->>       8.161469892           22040750      cycles
->>       8.371219528             114977      cycles
->>       8.580979111             259952      cycles
->>       8.790757132             444661      cycles
->>       9.000559215             248512      cycles
->>       9.210385256             246590      cycles
->>       9.420187704             243819      cycles
->>       9.630052287            7102438      cycles
->>       9.839848225             337454      cycles
->>      10.049645048             644072      cycles
->>      10.259476246            1855410      cycles
->>
->> Mukesh Ojha (1):
->>    perf: event preserve and create across cpu hotplug
->>
->>   include/linux/perf_event.h |   1 +
->>   kernel/events/core.c       | 122 
->> +++++++++++++++++++++++++++++----------------
->>   2 files changed, 79 insertions(+), 44 deletions(-)
->>
+> -- 
+> 2.17.0
+> 
