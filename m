@@ -2,451 +2,159 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C460C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB38FC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 675942189F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90C32189F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:41:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbfGZHkU (ORCPT
+        id S1726279AbfGZHlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 03:40:20 -0400
-Received: from mx0a-00010702.pphosted.com ([148.163.156.75]:51716 "EHLO
-        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725867AbfGZHkT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 03:40:19 -0400
-Received: from pps.filterd (m0098780.ppops.net [127.0.0.1])
-        by mx0a-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x6Q7ZkTQ029295;
-        Fri, 26 Jul 2019 02:40:17 -0500
-Received: from ni.com (skprod2.natinst.com [130.164.80.23])
-        by mx0a-00010702.pphosted.com with ESMTP id 2tx62hkb9k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jul 2019 02:40:17 -0500
-Received: from us-aus-exhub2.ni.corp.natinst.com (us-aus-exhub2.ni.corp.natinst.com [130.164.68.32])
-        by us-aus-skprod2.natinst.com (8.16.0.27/8.16.0.27) with ESMTPS id x6Q7eGaX027992
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jul 2019 02:40:17 -0500
-Received: from us-aus-exch3.ni.corp.natinst.com (130.164.68.13) by
- us-aus-exhub2.ni.corp.natinst.com (130.164.68.32) with Microsoft SMTP Server
- (TLS) id 15.0.1395.4; Fri, 26 Jul 2019 02:40:16 -0500
-Received: from us-aus-exhub1.ni.corp.natinst.com (130.164.68.41) by
- us-aus-exch3.ni.corp.natinst.com (130.164.68.13) with Microsoft SMTP Server
- (TLS) id 15.0.1395.4; Fri, 26 Jul 2019 02:40:16 -0500
-Received: from my-pen-rd9.apac.corp.natinst.com (130.164.49.7) by
- us-aus-exhub1.ni.corp.natinst.com (130.164.68.41) with Microsoft SMTP Server
- id 15.0.1395.4 via Frontend Transport; Fri, 26 Jul 2019 02:40:15 -0500
-From:   Je Yen Tam <je.yen.tam@ni.com>
-To:     <gregkh@linuxfoundation.org>
-CC:     <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Je Yen Tam <je.yen.tam@ni.com>
-Subject: [PATCH v7] serial/8250: Add support for NI-Serial PXI/PXIe+485 devices
-Date:   Fri, 26 Jul 2019 15:40:12 +0800
-Message-ID: <20190726074012.2590-1-je.yen.tam@ni.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 26 Jul 2019 03:41:32 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2766 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725867AbfGZHlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 03:41:32 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CEFB2AD5269EB315813C;
+        Fri, 26 Jul 2019 15:41:30 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 26 Jul 2019 15:41:23 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>, Chen Gong <gongchen4@huawei.com>
+Subject: [PATCH v2] f2fs: allocate memory in batch in build_sit_info()
+Date:   Fri, 26 Jul 2019 15:41:20 +0800
+Message-ID: <20190726074120.3278-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
- definitions=2019-07-26_04:2019-07-26,2019-07-26 signatures=0
-X-Proofpoint-Spam-Reason: safe
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for NI-Serial PXIe-RS232, PXI-RS485 and PXIe-RS485 devices.
+build_sit_info() allocate all bitmaps for each segment one by one,
+it's quite low efficiency, this pach changes to allocate large
+continuous memory at a time, and divide it and assign for each bitmaps
+of segment. For large size image, it can expect improving its mount
+speed.
 
-Signed-off-by: Je Yen Tam <je.yen.tam@ni.com>
+Signed-off-by: Chen Gong <gongchen4@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
+v2:
+- fix warning triggered in kmalloc() if requested memory size exceeds 4MB.
+ fs/f2fs/segment.c | 51 +++++++++++++++++++++--------------------------
+ fs/f2fs/segment.h |  1 +
+ 2 files changed, 24 insertions(+), 28 deletions(-)
 
-v6 -> v7
-- Fix sender full name.
-
-v5 -> v6
-- Fix author full name.
-
-v4 -> v5
-- Remove blank lines between variable definitions.
-- Remove trace_printk().
-
-v3 -> v4:
-- Add changes description.
-
-v2 -> v3:
-- Add "full" name for author
-- Use BIT() macro for bits definition
-- Remove unnecessary WARN_ON()
-- Change debugging interface to ftrace
-- Fix indentation
-- Add NI PXIe-RS232 and PXI/PXIe-RS485 device IDs #defines
-
-v1 -> v2:
-- Fix unintended indentation
-
-v1:
-- Add and rename #defines for 16550 UART Port Control Register
-- Add configuration for RS485 port.
-- Add device setup for NI PXI/PXIe-RS485 family.
-- Add PCI board attributes for NI PXIe-RS232 and PXI/PXIe-RS485 devices.
-
- drivers/tty/serial/8250/8250_pci.c | 292 ++++++++++++++++++++++++++++-
- 1 file changed, 288 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
-index df41397de478..a675069571b2 100644
---- a/drivers/tty/serial/8250/8250_pci.c
-+++ b/drivers/tty/serial/8250/8250_pci.c
-@@ -730,8 +730,16 @@ static int pci_ni8430_init(struct pci_dev *dev)
- }
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index a661ac32e829..d720eacd9c57 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3941,7 +3941,7 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
+ 	struct f2fs_super_block *raw_super = F2FS_RAW_SUPER(sbi);
+ 	struct sit_info *sit_i;
+ 	unsigned int sit_segs, start;
+-	char *src_bitmap;
++	char *src_bitmap, *bitmap;
+ 	unsigned int bitmap_size;
  
- /* UART Port Control Register */
--#define NI8430_PORTCON	0x0f
--#define NI8430_PORTCON_TXVR_ENABLE	(1 << 3)
-+#define NI16550_PCR_OFFSET	0x0f
-+#define NI16550_PCR_RS422	0x00
-+#define NI16550_PCR_ECHO_RS485	0x01
-+#define NI16550_PCR_DTR_RS485	0x02
-+#define NI16550_PCR_AUTO_RS485	0x03
-+#define NI16550_PCR_WIRE_MODE_MASK	0x03
-+#define NI16550_PCR_TXVR_ENABLE_BIT	BIT(3)
-+#define NI16550_PCR_RS485_TERMINATION_BIT	BIT(6)
-+#define NI16550_ACR_DTR_AUTO_DTR	(0x2 << 3)
-+#define NI16550_ACR_DTR_MANUAL_DTR	(0x0 << 3)
- 
- static int
- pci_ni8430_setup(struct serial_private *priv,
-@@ -753,14 +761,117 @@ pci_ni8430_setup(struct serial_private *priv,
+ 	/* allocate memory for SIT information */
+@@ -3964,27 +3964,31 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
+ 	if (!sit_i->dirty_sentries_bitmap)
  		return -ENOMEM;
  
- 	/* enable the transceiver */
--	writeb(readb(p + offset + NI8430_PORTCON) | NI8430_PORTCON_TXVR_ENABLE,
--	       p + offset + NI8430_PORTCON);
-+	writeb(readb(p + offset + NI16550_PCR_OFFSET) | NI16550_PCR_TXVR_ENABLE_BIT,
-+	       p + offset + NI16550_PCR_OFFSET);
- 
- 	iounmap(p);
- 
- 	return setup_port(priv, port, bar, offset, board->reg_shift);
- }
- 
-+static int pci_ni8431_config_rs485(struct uart_port *port,
-+	struct serial_rs485 *rs485)
-+{
-+	u8 pcr, acr;
-+	struct uart_8250_port *up;
-+
-+	up = container_of(port, struct uart_8250_port, port);
-+	acr = up->acr;
-+	pcr = port->serial_in(port, NI16550_PCR_OFFSET);
-+	pcr &= ~NI16550_PCR_WIRE_MODE_MASK;
-+
-+	if (rs485->flags & SER_RS485_ENABLED) {
-+		/* RS-485 */
-+		if ((rs485->flags & SER_RS485_RX_DURING_TX) &&
-+			(rs485->flags & SER_RS485_RTS_ON_SEND)) {
-+			dev_dbg(port->dev, "Invalid 2-wire mode\n");
-+			return -EINVAL;
-+		}
-+
-+		if (rs485->flags & SER_RS485_RX_DURING_TX) {
-+			/* Echo */
-+			dev_vdbg(port->dev, "2-wire DTR with echo\n");
-+			pcr |= NI16550_PCR_ECHO_RS485;
-+			acr |= NI16550_ACR_DTR_MANUAL_DTR;
-+		} else {
-+			/* Auto or DTR */
-+			if (rs485->flags & SER_RS485_RTS_ON_SEND) {
-+				/* Auto */
-+				dev_vdbg(port->dev, "2-wire Auto\n");
-+				pcr |= NI16550_PCR_AUTO_RS485;
-+				acr |= NI16550_ACR_DTR_AUTO_DTR;
-+			} else {
-+				/* DTR-controlled */
-+				/* No Echo */
-+				dev_vdbg(port->dev, "2-wire DTR no echo\n");
-+				pcr |= NI16550_PCR_DTR_RS485;
-+				acr |= NI16550_ACR_DTR_MANUAL_DTR;
-+			}
-+		}
-+	} else {
-+		/* RS-422 */
-+		dev_vdbg(port->dev, "4-wire\n");
-+		pcr |= NI16550_PCR_RS422;
-+		acr |= NI16550_ACR_DTR_MANUAL_DTR;
-+	}
-+
-+	dev_dbg(port->dev, "write pcr: 0x%08x\n", pcr);
-+	port->serial_out(port, NI16550_PCR_OFFSET, pcr);
-+
-+	up->acr = acr;
-+	port->serial_out(port, UART_SCR, UART_ACR);
-+	port->serial_out(port, UART_ICR, up->acr);
-+
-+	/* Update the cache. */
-+	port->rs485 = *rs485;
-+
-+	return 0;
-+}
-+
-+static int pci_ni8431_setup(struct serial_private *priv,
-+		 const struct pciserial_board *board,
-+		 struct uart_8250_port *uart, int idx)
-+{
-+	u8 pcr, acr;
-+	struct pci_dev *dev = priv->dev;
-+	void __iomem *addr;
-+	unsigned int bar, offset = board->first_offset;
-+
-+	if (idx >= board->num_ports)
-+		return 1;
-+
-+	bar = FL_GET_BASE(board->flags);
-+	offset += idx * board->uart_offset;
-+
-+	addr = pci_ioremap_bar(dev, bar);
-+	if (!addr)
++#ifdef CONFIG_F2FS_CHECK_FS
++	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * 4;
++#else
++	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * 3;
++#endif
++	sit_i->bitmap = f2fs_kvzalloc(sbi, bitmap_size, GFP_KERNEL);
++	if (!sit_i->bitmap)
 +		return -ENOMEM;
 +
-+	/* enable the transceiver */
-+	writeb(readb(addr + NI16550_PCR_OFFSET) | NI16550_PCR_TXVR_ENABLE_BIT,
-+		addr + NI16550_PCR_OFFSET);
++	bitmap = sit_i->bitmap;
 +
-+	pcr = readb(addr + NI16550_PCR_OFFSET);
-+	pcr &= ~NI16550_PCR_WIRE_MODE_MASK;
+ 	for (start = 0; start < MAIN_SEGS(sbi); start++) {
+-		sit_i->sentries[start].cur_valid_map
+-			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+-		sit_i->sentries[start].ckpt_valid_map
+-			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+-		if (!sit_i->sentries[start].cur_valid_map ||
+-				!sit_i->sentries[start].ckpt_valid_map)
+-			return -ENOMEM;
++		sit_i->sentries[start].cur_valid_map = bitmap;
++		bitmap += SIT_VBLOCK_MAP_SIZE;
 +
-+	/* set wire mode to default RS-422 */
-+	pcr |= NI16550_PCR_RS422;
-+	acr = NI16550_ACR_DTR_MANUAL_DTR;
-+
-+	/* write port configuration to register */
-+	writeb(pcr, addr + NI16550_PCR_OFFSET);
-+
-+	/* access and write to UART acr register */
-+	writeb(UART_ACR, addr + UART_SCR);
-+	writeb(acr, addr + UART_ICR);
-+
-+	uart->port.rs485_config = &pci_ni8431_config_rs485;
-+
-+	iounmap(addr);
-+
-+	return setup_port(priv, uart, bar, offset, board->reg_shift);
-+}
-+
- static int pci_netmos_9900_setup(struct serial_private *priv,
- 				const struct pciserial_board *board,
- 				struct uart_8250_port *port, int idx)
-@@ -1731,6 +1842,15 @@ pci_wch_ch38x_setup(struct serial_private *priv,
- #define PCI_DEVICE_ID_ACCESIO_PCIE_COM_8SM	0x10E9
- #define PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4SM	0x11D8
++		sit_i->sentries[start].ckpt_valid_map = bitmap;
++		bitmap += SIT_VBLOCK_MAP_SIZE;
  
-+#define PCIE_DEVICE_ID_NI_PXIE8430_2328	0x74C2
-+#define PCIE_DEVICE_ID_NI_PXIE8430_23216	0x74C1
-+#define PCI_DEVICE_ID_NI_PXI8431_4852	0x7081
-+#define PCI_DEVICE_ID_NI_PXI8431_4854	0x70DE
-+#define PCI_DEVICE_ID_NI_PXI8431_4858	0x70E3
-+#define PCI_DEVICE_ID_NI_PXI8433_4852	0x70E9
-+#define PCI_DEVICE_ID_NI_PXI8433_4854	0x70ED
-+#define PCIE_DEVICE_ID_NI_PXIE8431_4858	0x74C4
-+#define PCIE_DEVICE_ID_NI_PXIE8431_48516	0x74C3
+ #ifdef CONFIG_F2FS_CHECK_FS
+-		sit_i->sentries[start].cur_valid_map_mir
+-			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+-		if (!sit_i->sentries[start].cur_valid_map_mir)
+-			return -ENOMEM;
++		sit_i->sentries[start].cur_valid_map_mir = bitmap;
++		bitmap += SIT_VBLOCK_MAP_SIZE;
+ #endif
  
+-		sit_i->sentries[start].discard_map
+-			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE,
+-							GFP_KERNEL);
+-		if (!sit_i->sentries[start].discard_map)
+-			return -ENOMEM;
++		sit_i->sentries[start].discard_map = bitmap;
++		bitmap += SIT_VBLOCK_MAP_SIZE;
+ 	}
  
- /* Unknown vendors/cards - this should not be in linux/pci_ids.h */
-@@ -1956,6 +2076,87 @@ static struct pci_serial_quirk pci_serial_quirks[] __refdata = {
- 		.setup		= pci_ni8430_setup,
- 		.exit		= pci_ni8430_exit,
- 	},
-+	{
-+		.vendor		= PCI_VENDOR_ID_NI,
-+		.device		= PCIE_DEVICE_ID_NI_PXIE8430_2328,
-+		.subvendor	= PCI_ANY_ID,
-+		.subdevice	= PCI_ANY_ID,
-+		.init		= pci_ni8430_init,
-+		.setup		= pci_ni8430_setup,
-+		.exit		= pci_ni8430_exit,
-+	},
-+	{
-+		.vendor		= PCI_VENDOR_ID_NI,
-+		.device		= PCIE_DEVICE_ID_NI_PXIE8430_23216,
-+		.subvendor	= PCI_ANY_ID,
-+		.subdevice	= PCI_ANY_ID,
-+		.init		= pci_ni8430_init,
-+		.setup		= pci_ni8430_setup,
-+		.exit		= pci_ni8430_exit,
-+	},
-+	{
-+		.vendor		= PCI_VENDOR_ID_NI,
-+		.device		= PCI_DEVICE_ID_NI_PXI8431_4852,
-+		.subvendor	= PCI_ANY_ID,
-+		.subdevice	= PCI_ANY_ID,
-+		.init		= pci_ni8430_init,
-+		.setup		= pci_ni8431_setup,
-+		.exit		= pci_ni8430_exit,
-+	},
-+	{
-+		.vendor		= PCI_VENDOR_ID_NI,
-+		.device		= PCI_DEVICE_ID_NI_PXI8431_4854,
-+		.subvendor	= PCI_ANY_ID,
-+		.subdevice	= PCI_ANY_ID,
-+		.init		= pci_ni8430_init,
-+		.setup		= pci_ni8431_setup,
-+		.exit		= pci_ni8430_exit,
-+	},
-+	{
-+		.vendor		= PCI_VENDOR_ID_NI,
-+		.device		= PCI_DEVICE_ID_NI_PXI8431_4858,
-+		.subvendor	= PCI_ANY_ID,
-+		.subdevice	= PCI_ANY_ID,
-+		.init		= pci_ni8430_init,
-+		.setup		= pci_ni8431_setup,
-+		.exit		= pci_ni8430_exit,
-+	},
-+	{
-+		.vendor		= PCI_VENDOR_ID_NI,
-+		.device		= PCI_DEVICE_ID_NI_PXI8433_4852,
-+		.subvendor	= PCI_ANY_ID,
-+		.subdevice	= PCI_ANY_ID,
-+		.init		= pci_ni8430_init,
-+		.setup		= pci_ni8431_setup,
-+		.exit		= pci_ni8430_exit,
-+	},
-+	{
-+		.vendor		= PCI_VENDOR_ID_NI,
-+		.device		= PCI_DEVICE_ID_NI_PXI8433_4854,
-+		.subvendor	= PCI_ANY_ID,
-+		.subdevice	= PCI_ANY_ID,
-+		.init		= pci_ni8430_init,
-+		.setup		= pci_ni8431_setup,
-+		.exit		= pci_ni8430_exit,
-+	},
-+	{
-+		.vendor		= PCI_VENDOR_ID_NI,
-+		.device		= PCIE_DEVICE_ID_NI_PXIE8431_4858,
-+		.subvendor	= PCI_ANY_ID,
-+		.subdevice	= PCI_ANY_ID,
-+		.init		= pci_ni8430_init,
-+		.setup		= pci_ni8431_setup,
-+		.exit		= pci_ni8430_exit,
-+	},
-+	{
-+		.vendor		= PCI_VENDOR_ID_NI,
-+		.device		= PCIE_DEVICE_ID_NI_PXIE8431_48516,
-+		.subvendor	= PCI_ANY_ID,
-+		.subdevice	= PCI_ANY_ID,
-+		.init		= pci_ni8430_init,
-+		.setup		= pci_ni8431_setup,
-+		.exit		= pci_ni8430_exit,
-+	},
- 	/* Quatech */
- 	{
- 		.vendor		= PCI_VENDOR_ID_QUATECH,
-@@ -2679,6 +2880,13 @@ enum pci_board_num_t {
- 	pbn_ni8430_4,
- 	pbn_ni8430_8,
- 	pbn_ni8430_16,
-+	pbn_ni8430_pxie_8,
-+	pbn_ni8430_pxie_16,
-+	pbn_ni8431_2,
-+	pbn_ni8431_4,
-+	pbn_ni8431_8,
-+	pbn_ni8431_pxie_8,
-+	pbn_ni8431_pxie_16,
- 	pbn_ADDIDATA_PCIe_1_3906250,
- 	pbn_ADDIDATA_PCIe_2_3906250,
- 	pbn_ADDIDATA_PCIe_4_3906250,
-@@ -3320,6 +3528,55 @@ static struct pciserial_board pci_boards[] = {
- 		.uart_offset	= 0x10,
- 		.first_offset	= 0x800,
- 	},
-+	[pbn_ni8430_pxie_16] = {
-+		.flags		= FL_BASE0,
-+		.num_ports	= 16,
-+		.base_baud	= 3125000,
-+		.uart_offset	= 0x10,
-+		.first_offset	= 0x800,
-+	},
-+	[pbn_ni8430_pxie_8] = {
-+		.flags		= FL_BASE0,
-+		.num_ports	= 8,
-+		.base_baud	= 3125000,
-+		.uart_offset	= 0x10,
-+		.first_offset	= 0x800,
-+	},
-+	[pbn_ni8431_8] = {
-+		.flags		= FL_BASE0,
-+		.num_ports	= 8,
-+		.base_baud	= 3686400,
-+		.uart_offset	= 0x10,
-+		.first_offset	= 0x800,
-+	},
-+	[pbn_ni8431_4] = {
-+		.flags		= FL_BASE0,
-+		.num_ports	= 4,
-+		.base_baud	= 3686400,
-+		.uart_offset	= 0x10,
-+		.first_offset	= 0x800,
-+	},
-+	[pbn_ni8431_2] = {
-+		.flags		= FL_BASE0,
-+		.num_ports	= 2,
-+		.base_baud	= 3686400,
-+		.uart_offset	= 0x10,
-+		.first_offset	= 0x800,
-+	},
-+	[pbn_ni8431_pxie_16] = {
-+		.flags		= FL_BASE0,
-+		.num_ports	= 16,
-+		.base_baud	= 3125000,
-+		.uart_offset	= 0x10,
-+		.first_offset	= 0x800,
-+	},
-+	[pbn_ni8431_pxie_8] = {
-+		.flags		= FL_BASE0,
-+		.num_ports	= 8,
-+		.base_baud	= 3125000,
-+		.uart_offset	= 0x10,
-+		.first_offset	= 0x800,
-+	},
- 	/*
- 	 * ADDI-DATA GmbH PCI-Express communication cards <info@addi-data.com>
- 	 */
-@@ -5003,6 +5260,33 @@ static const struct pci_device_id serial_pci_tbl[] = {
- 	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PCI8432_2324,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
- 		pbn_ni8430_4 },
-+	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8430_2328,
-+		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
-+		pbn_ni8430_pxie_8 },
-+	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8430_23216,
-+		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
-+		pbn_ni8430_pxie_16 },
-+	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8431_4852,
-+		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
-+		pbn_ni8431_2 },
-+	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8431_4854,
-+		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
-+		pbn_ni8431_4 },
-+	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8431_4858,
-+		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
-+		pbn_ni8431_8 },
-+	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8431_4858,
-+		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
-+		pbn_ni8431_pxie_8 },
-+	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8431_48516,
-+		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
-+		pbn_ni8431_pxie_16 },
-+	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8433_4852,
-+		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
-+		pbn_ni8431_2 },
-+	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8433_4854,
-+		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
-+		pbn_ni8431_4 },
+ 	sit_i->tmp_map = f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+@@ -4492,21 +4496,12 @@ static void destroy_free_segmap(struct f2fs_sb_info *sbi)
+ static void destroy_sit_info(struct f2fs_sb_info *sbi)
+ {
+ 	struct sit_info *sit_i = SIT_I(sbi);
+-	unsigned int start;
  
- 	/*
- 	* ADDI-DATA GmbH communication cards <info@addi-data.com>
+ 	if (!sit_i)
+ 		return;
+ 
+-	if (sit_i->sentries) {
+-		for (start = 0; start < MAIN_SEGS(sbi); start++) {
+-			kvfree(sit_i->sentries[start].cur_valid_map);
+-#ifdef CONFIG_F2FS_CHECK_FS
+-			kvfree(sit_i->sentries[start].cur_valid_map_mir);
+-#endif
+-			kvfree(sit_i->sentries[start].ckpt_valid_map);
+-			kvfree(sit_i->sentries[start].discard_map);
+-		}
+-	}
++	if (sit_i->sentries)
++		kvfree(sit_i->bitmap);
+ 	kvfree(sit_i->tmp_map);
+ 
+ 	kvfree(sit_i->sentries);
+diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+index b74602813a05..ec4d568fd58c 100644
+--- a/fs/f2fs/segment.h
++++ b/fs/f2fs/segment.h
+@@ -226,6 +226,7 @@ struct sit_info {
+ 	block_t sit_base_addr;		/* start block address of SIT area */
+ 	block_t sit_blocks;		/* # of blocks used by SIT area */
+ 	block_t written_valid_blocks;	/* # of valid blocks in main area */
++	char *bitmap;			/* all bitmaps pointer */
+ 	char *sit_bitmap;		/* SIT bitmap pointer */
+ #ifdef CONFIG_F2FS_CHECK_FS
+ 	char *sit_bitmap_mir;		/* SIT bitmap mirror */
 -- 
-2.17.1
+2.18.0.rc1
 
