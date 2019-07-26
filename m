@@ -3,79 +3,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6693C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896E9C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F2D20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69CA122BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727760AbfGZSGi (ORCPT
+        id S1728133AbfGZSHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 14:06:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51426 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbfGZSGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 14:06:38 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FBF420838;
-        Fri, 26 Jul 2019 18:06:36 +0000 (UTC)
-Date:   Fri, 26 Jul 2019 14:06:34 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] kprobes: Allow kprobes coexist with livepatch
-Message-ID: <20190726140634.7d0ca4dd@gandalf.local.home>
-In-Reply-To: <ddda9253-27df-755b-ed51-8abc2859f076@redhat.com>
-References: <156403587671.30117.5233558741694155985.stgit@devnote2>
-        <20190726020752.GA6388@redhat.com>
-        <20190726121449.22f0989e@gandalf.local.home>
-        <ddda9253-27df-755b-ed51-8abc2859f076@redhat.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 26 Jul 2019 14:07:20 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:38375 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfGZSHU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 14:07:20 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 4F52F8023F; Fri, 26 Jul 2019 20:07:06 +0200 (CEST)
+Date:   Fri, 26 Jul 2019 20:07:16 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 097/158] media: coda: fix mpeg2 sequence
+ number handling
+Message-ID: <20190726180716.GA3909@xo-6d-61-c0.localdomain>
+References: <20190715141809.8445-1-sashal@kernel.org>
+ <20190715141809.8445-97-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190715141809.8445-97-sashal@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 13:38:41 -0400
-Joe Lawrence <joe.lawrence@redhat.com> wrote:
+Hi!
 
-> On 7/26/19 12:14 PM, Steven Rostedt wrote:
-> > On Thu, 25 Jul 2019 22:07:52 -0400
-> > Joe Lawrence <joe.lawrence@redhat.com> wrote:
-> >   
-> >> These results reflect my underestanding of FTRACE_OPS_FL_IPMODIFY in
-> >> light of your changes, so feel free to add my:
-> >>
-> >> Acked-by: Joe Lawrence <joe.lawrence@redhat.com>  
-> > 
-> > Is this an urgent patch (needs to go in now and not wait for the next
-> > merge window) and if so, should it be marked for stable?
-> >   
+> From: Philipp Zabel <p.zabel@pengutronix.de>
 > 
-> Hi Steve,
+> [ Upstream commit 56d159a4ec6d8da7313aac6fcbb95d8fffe689ba ]
 > 
-> IMHO, it's not urgent..  so unless Josh or other livepatch folks say 
-> otherwise, I'm ok with waiting for next merge window.  Given summer 
-> holiday schedules, that would give them more time to comment if they like.
+> Sequence number handling assumed that the BIT processor frame number
+> starts counting at 1, but this is not true for the MPEG-2 decoder,
+> which starts at 0. Fix the sequence counter offset detection to handle
+> this.
 
-I added it to my next merge window queue. If someone thinks it's more
-urgent, I can move it to my urgent queue. I wont post to linux-next for
-a few weeks, so there's time to extract it if need be.
+> +++ b/drivers/media/platform/coda/coda-bit.c
+> @@ -1728,6 +1728,7 @@ static int __coda_start_decoding(struct coda_ctx *ctx)
+>  		v4l2_err(&dev->v4l2_dev, "CODA_COMMAND_SEQ_INIT timeout\n");
+>  		return ret;
+>  	}
+> +	ctx->sequence_offset = ~0U;
+>  	ctx->initialized = 1;
+>  
+>  	/* Update kfifo out pointer from coda bitstream read pointer */
+> @@ -2147,7 +2148,9 @@ static void coda_finish_decode(struct coda_ctx *ctx)
+>  		v4l2_err(&dev->v4l2_dev,
+>  			 "decoded frame index out of range: %d\n", decoded_idx);
+>  	} else {
+> -		val = coda_read(dev, CODA_RET_DEC_PIC_FRAME_NUM) - 1;
+> +		val = coda_read(dev, CODA_RET_DEC_PIC_FRAME_NUM);
+> +		if (ctx->sequence_offset == -1)
+> +			ctx->sequence_offset = val;
 
-Thanks!
+For consistency, would it be better to use == ~0U here, too? Variable is unsigned...
 
--- Steve
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
