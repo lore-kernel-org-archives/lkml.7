@@ -2,98 +2,175 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24732C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514B8C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FDB22CBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5952189F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbfGZQs2 (ORCPT
+        id S2387608AbfGZQtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:48:28 -0400
-Received: from mga06.intel.com ([134.134.136.31]:8827 "EHLO mga06.intel.com"
+        Fri, 26 Jul 2019 12:49:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:47322 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726827AbfGZQs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:48:28 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 09:48:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
-   d="scan'208";a="322083350"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga004.jf.intel.com with ESMTP; 26 Jul 2019 09:48:25 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hr3OJ-000539-MC; Fri, 26 Jul 2019 19:48:23 +0300
-Date:   Fri, 26 Jul 2019 19:48:23 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Shaohua Li <shli@kernel.org>, linux-raid@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, Mike Snitzer <snitzer@redhat.com>,
-        Coly Li <colyli@suse.de>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] md: Convert to use int_pow()
-Message-ID: <20190726164823.GB9224@smile.fi.intel.com>
-References: <20190723204155.71531-1-andriy.shevchenko@linux.intel.com>
+        id S2387437AbfGZQtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 12:49:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 003E3337;
+        Fri, 26 Jul 2019 09:49:35 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E05B3F71F;
+        Fri, 26 Jul 2019 09:49:32 -0700 (PDT)
+Subject: Re: [PATCH v3 2/4] edac: Add support for Amazon's Annapurna Labs L1
+ EDAC
+To:     Hanna Hawa <hhhawa@amazon.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de,
+        mchehab@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, linus.walleij@linaro.org,
+        Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com,
+        paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com,
+        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
+        hanochu@amazon.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+References: <1563197049-12679-1-git-send-email-hhhawa@amazon.com>
+ <1563197049-12679-3-git-send-email-hhhawa@amazon.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <a2dc6760-50e2-6e98-5b61-002836d92dd2@arm.com>
+Date:   Fri, 26 Jul 2019 17:49:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723204155.71531-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1563197049-12679-3-git-send-email-hhhawa@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 11:41:55PM +0300, Andy Shevchenko wrote:
-> Instead of linear approach to calculate power of 10, use generic int_pow()
-> which does it better.
+Hi Hanna,
 
-I took into Cc drivers/dm guys as they might have known something about md raid
-state of affairs. Sorry if I mistakenly added somebody.
+On 15/07/2019 14:24, Hanna Hawa wrote:
+> Adds support for Amazon's Annapurna Labs L1 EDAC driver to detect and
+> report L1 errors.
 
-Who is doing this?
-Should it be orphaned?
+> diff --git a/drivers/edac/al_l1_edac.c b/drivers/edac/al_l1_edac.c
+> new file mode 100644
+> index 0000000..70510ea
+> --- /dev/null
+> +++ b/drivers/edac/al_l1_edac.c
+> @@ -0,0 +1,156 @@
 
-(I got a bounce from Shaohua address)
+> +#include <linux/bitfield.h>
 
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/md/md.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 24638ccedce4..3f1252440ad0 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -3664,11 +3664,7 @@ int strict_strtoul_scaled(const char *cp, unsigned long *res, int scale)
->  		return -EINVAL;
->  	if (decimals < 0)
->  		decimals = 0;
-> -	while (decimals < scale) {
-> -		result *= 10;
-> -		decimals ++;
-> -	}
-> -	*res = result;
-> +	*res = result * int_pow(10, scale - decimals);
->  	return 0;
->  }
->  
-> -- 
-> 2.20.1
-> 
+You need <linux/smp.h> for on-each_cpu().
 
--- 
-With Best Regards,
-Andy Shevchenko
+> +#include "edac_device.h"
+> +#include "edac_module.h"
+
+You need <asm/sysreg.h> for the sys_reg() macro. The ARCH_ALPINE dependency doesn't stop
+this from being built on 32bit arm, where this sys_reg() won't work/exist.
+
+[...]
+
+> +static void al_l1_edac_cpumerrsr(void *arg)
+> +{
+> +	struct edac_device_ctl_info *edac_dev = arg;
+> +	int cpu, i;
+> +	u32 ramid, repeat, other, fatal;
+> +	u64 val = read_sysreg_s(ARM_CA57_CPUMERRSR_EL1);
+> +	char msg[AL_L1_EDAC_MSG_MAX];
+> +	int space, count;
+> +	char *p;
+> +	if (!(FIELD_GET(ARM_CA57_CPUMERRSR_VALID, val)))
+> +		return;
+> +	space = sizeof(msg);
+> +	p = msg;
+> +	count = snprintf(p, space, "CPU%d L1 %serror detected", cpu,
+> +			 (fatal) ? "Fatal " : "");
+> +	p += count;
+> +	space -= count;
+
+snprintf() will return the number of characters it would have generated, even if that is
+more than space. If this happen, space becomes negative, p points outside msg[] and msg[]
+isn't NULL terminated...
+
+It looks like you want scnprintf(), which returns the number of characters written to buf
+instead. (I don't see how 256 characters would be printed by this code)
 
 
+> +	switch (ramid) {
+> +	case ARM_CA57_L1_I_TAG_RAM:
+> +		count = snprintf(p, space, " RAMID='L1-I Tag RAM'");
+> +		break;
+> +	case ARM_CA57_L1_I_DATA_RAM:
+> +		count = snprintf(p, space, " RAMID='L1-I Data RAM'");
+> +		break;
+> +	case ARM_CA57_L1_D_TAG_RAM:
+> +		count = snprintf(p, space, " RAMID='L1-D Tag RAM'");
+> +		break;
+> +	case ARM_CA57_L1_D_DATA_RAM:
+> +		count = snprintf(p, space, " RAMID='L1-D Data RAM'");
+> +		break;
+> +	case ARM_CA57_L2_TLB_RAM:
+> +		count = snprintf(p, space, " RAMID='L2 TLB RAM'");
+> +		break;
+> +	default:
+> +		count = snprintf(p, space, " RAMID='unknown'");
+> +		break;
+> +	}
+> +
+> +	p += count;
+> +	space -= count;
+> +	count = snprintf(p, space,
+> +			 " repeat=%d, other=%d (CPUMERRSR_EL1=0x%llx)",
+> +			 repeat, other, val);
+> +
+> +	for (i = 0; i < repeat; i++) {
+> +		if (fatal)
+> +			edac_device_handle_ue(edac_dev, 0, 0, msg);
+> +		else
+> +			edac_device_handle_ce(edac_dev, 0, 0, msg);
+> +	}
+> +
+> +	write_sysreg_s(0, ARM_CA57_CPUMERRSR_EL1);
+
+Writing 0 just after you've read the value would minimise the window where repeat could
+have increased behind your back, or another error was counted as other, when it could have
+been reported more accurately.
+
+
+> +}
+
+
+> +static int al_l1_edac_probe(struct platform_device *pdev)
+> +{
+> +	struct edac_device_ctl_info *edac_dev;
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +
+> +	edac_dev = edac_device_alloc_ctl_info(0, (char *)dev_name(dev), 1, "L",
+> +					      1, 1, NULL, 0,
+> +					      edac_device_alloc_index());
+> +	if (IS_ERR(edac_dev))
+
+edac_device_alloc_ctl_info() returns NULL, or dev_ctl, which comes from kzalloc(). I think
+you need to check for NULL here, IS_ERR() only catches the -errno range. (there is an
+IS_ERR_OR_NULL() if you really needed both)
+
+
+> +		return -ENOMEM;
+
+
+With the header-includes and edac_device_alloc_ctl_info() NULL check:
+Reviewed-by: James Morse <james.morse@arm.com>
+
+
+Thanks,
+
+James
