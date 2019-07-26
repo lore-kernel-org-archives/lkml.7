@@ -2,111 +2,182 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85874C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AA6C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AEF621873
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:53:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pnHEfHfv"
+	by mail.kernel.org (Postfix) with ESMTP id AA34121873
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:55:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387899AbfGZPx2 (ORCPT
+        id S1726591AbfGZPzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:53:28 -0400
-Received: from mail-eopbgr20049.outbound.protection.outlook.com ([40.107.2.49]:39497
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387865AbfGZPx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:53:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bvVJnsYc51YIyyyr82J42+ySLxTImm7WGTw7zgSkxHqn1TCeqOFT+fr9L9IQ36nfqjvg0BxjTgo861tHVb+bctPCgO8cLEonNVCxxDm01WGmiS17mrT6/HvF6y26gUAtUyS8ZYs4ajZr8k/SjUDMapL0UrzMXbKdMnhwzvMNOCLwX26b3V0e1OVgg1dkALWqYkCenymBnihoXEbhIV7fZKMLLLWD48liHDpJRa/HaGlchYHbsPoGD7Q6vQnjsED5KCH1xLP2OQ94xqtEfYrMSG4271bdiERAoKqwkcN1zOogdR23ez+t/ACEFSyYgmgUMZFxM0EerxKV7uioetKXig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wM4mTTHbcKSkTsMbyOcIt13vc9lVrRU6hxtbHOQNQIc=;
- b=H0l+9m3Wf0gJ5uJhnTlE7PoJDjM+aibVX6m/cz4QLLRdF4d/u0FeNohhUHemq7mxiKF35zw6Bh6RBCZAYQrPolBBuoqwb6uM7hSrw1EtCHA6brMps3QkIs4M8CrKANL340uYboLE1i54Wea9Yv9jnO2CQ4E01u++kyR6aW/00g0+zbRtIB1crgwGfpI+jf8r9608tIqpOUAvNDjc6wMHfwOBnX2JZzzehe0LPpvXm6CfuJ4yWMjuAr99J1BNjm6lchHZSefjL3UIS+F7rWX54DtaL0TUplzNi+9Xl2+7MX9QqMxz0V24WlHvqeBgOfH2JLhkCSy97aPvftSndH31lA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wM4mTTHbcKSkTsMbyOcIt13vc9lVrRU6hxtbHOQNQIc=;
- b=pnHEfHfvA1JBjTT5UzDKwTInPGZ0VFe+WxTCQJV1xWIDWtXUcyRSW7oKnUcyWOC0NCuMuqIw4CS8yr3aoFvo1Za/N0baTTDPgrWGRsBSiFInkPl3dkJIJoeVBx7tstNtH1tH8kbSDWF+MKe77F8Vh4vKqbH7W7j+fu/eeqvvZ4Y=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3472.eurprd04.prod.outlook.com (52.134.3.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.17; Fri, 26 Jul 2019 15:53:23 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::7c64:5296:4607:e10]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::7c64:5296:4607:e10%5]) with mapi id 15.20.2094.017; Fri, 26 Jul 2019
- 15:53:23 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v3 11/14] crypto: caam - free resources in case caam_rng
- registration failed
-Thread-Topic: [PATCH v3 11/14] crypto: caam - free resources in case caam_rng
- registration failed
-Thread-Index: AQHVQvERu4ZDykuEyEWKG/zLTBxy8Q==
-Date:   Fri, 26 Jul 2019 15:53:23 +0000
-Message-ID: <VI1PR0402MB3485406F10306B19151611B198C00@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <1564063106-9552-1-git-send-email-iuliana.prodan@nxp.com>
- <1564063106-9552-12-git-send-email-iuliana.prodan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [79.118.216.219]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dcdb26c3-0c8b-4653-b5ef-08d711e163a8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3472;
-x-ms-traffictypediagnostic: VI1PR0402MB3472:
-x-microsoft-antispam-prvs: <VI1PR0402MB347265DBD8566083A760B95D98C00@VI1PR0402MB3472.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01106E96F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(136003)(366004)(39860400002)(189003)(199004)(81156014)(71190400001)(2906002)(6246003)(81166006)(6506007)(66066001)(256004)(66946007)(6436002)(91956017)(6116002)(74316002)(53546011)(76176011)(52536014)(305945005)(4326008)(76116006)(64756008)(66446008)(14444005)(66556008)(7696005)(8676002)(66476007)(9686003)(55016002)(102836004)(316002)(3846002)(71200400001)(68736007)(6636002)(8936002)(110136005)(26005)(86362001)(14454004)(229853002)(7736002)(186003)(478600001)(476003)(25786009)(44832011)(4744005)(99286004)(5660300002)(486006)(53936002)(54906003)(33656002)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3472;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wusNE/+VkqCwsr3MJn9lqv7Ul0aWY07BPB3u0xWobwxWyIxzGXLiFCJ+G2EuYgGIff7sl4DPaKgjvQOKIZYMWKMt4XcUID0moxIXm5bH4LwxJ1AM/idw+VeE3vtWkNjBwaqRdK2WcD9xuYYETZalTR2pRfzzS9rcIBEzUwOtMg1BwANq16/gnS+B+IRE0QbNUGnW3/GfWW0e2t80Pk1qOCONe3vkHYamUCp2NhkpOWDNeQZEV8vcOzdoYatRECwxBoOzrjeUptice0qRda10S4+Doikq/lwOFrJkHL0TpbUzql9v8tOREBKpXG7oCpMpfqX+9snubpLrvqljL/hGP0XLH0eVFYwcp0awmyQ1kM78sjv+CKQsTb+AWjMcUPHdZDsG8T9DvnKi+TJDJAWpn8tbjRGw5UEwu6Pbw2+CcN8=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 26 Jul 2019 11:55:25 -0400
+Received: from mga18.intel.com ([134.134.136.126]:59152 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726026AbfGZPzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:55:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 08:55:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
+   d="scan'208";a="172261960"
+Received: from gliakhov-mobl2.ger.corp.intel.com (HELO ubuntu) ([10.249.35.244])
+  by fmsmga007.fm.intel.com with ESMTP; 26 Jul 2019 08:55:21 -0700
+Date:   Fri, 26 Jul 2019 17:55:20 +0200
+From:   Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 36/40] soundwire: intel: disable
+ interrupts on suspend
+Message-ID: <20190726155520.GL16003@ubuntu>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-37-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dcdb26c3-0c8b-4653-b5ef-08d711e163a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2019 15:53:23.1140
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3472
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725234032.21152-37-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/25/2019 4:58 PM, Iuliana Prodan wrote:=0A=
-> Check the return value of the hardware registration for caam_rng and free=
-=0A=
-> resources in case of failure.=0A=
-> =0A=
-> Fixes: e24f7c9 ("crypto: caam - hwrng support")=0A=
-> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-but please use at least 12 characters for the SHA1.=0A=
-=0A=
-Horia=0A=
+On Thu, Jul 25, 2019 at 06:40:28PM -0500, Pierre-Louis Bossart wrote:
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/cadence_master.c | 42 +++++++++++++++++-------------
+>  drivers/soundwire/cadence_master.h |  2 +-
+>  drivers/soundwire/intel.c          |  6 +++--
+>  3 files changed, 29 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+> index f486fe15fb46..fa7230b0f200 100644
+> --- a/drivers/soundwire/cadence_master.c
+> +++ b/drivers/soundwire/cadence_master.c
+> @@ -814,33 +814,39 @@ EXPORT_SYMBOL(sdw_cdns_exit_reset);
+>   * sdw_cdns_enable_interrupt() - Enable SDW interrupts and update config
+>   * @cdns: Cadence instance
+>   */
+> -int sdw_cdns_enable_interrupt(struct sdw_cdns *cdns)
+> +int sdw_cdns_enable_interrupt(struct sdw_cdns *cdns, bool state)
+>  {
+>  	u32 mask;
+>  
+> -	cdns_writel(cdns, CDNS_MCP_SLAVE_INTMASK0,
+> -		    CDNS_MCP_SLAVE_INTMASK0_MASK);
+> -	cdns_writel(cdns, CDNS_MCP_SLAVE_INTMASK1,
+> -		    CDNS_MCP_SLAVE_INTMASK1_MASK);
+> +	if (state) {
+> +		cdns_writel(cdns, CDNS_MCP_SLAVE_INTMASK0,
+> +			    CDNS_MCP_SLAVE_INTMASK0_MASK);
+> +		cdns_writel(cdns, CDNS_MCP_SLAVE_INTMASK1,
+> +			    CDNS_MCP_SLAVE_INTMASK1_MASK);
+>  
+> -	/* enable detection of slave state changes */
+> -	mask = CDNS_MCP_INT_SLAVE_RSVD | CDNS_MCP_INT_SLAVE_ALERT |
+> -		CDNS_MCP_INT_SLAVE_ATTACH | CDNS_MCP_INT_SLAVE_NATTACH;
+> +		/* enable detection of slave state changes */
+> +		mask = CDNS_MCP_INT_SLAVE_RSVD | CDNS_MCP_INT_SLAVE_ALERT |
+> +			CDNS_MCP_INT_SLAVE_ATTACH | CDNS_MCP_INT_SLAVE_NATTACH;
+>  
+> -	/* enable detection of bus issues */
+> -	mask |= CDNS_MCP_INT_CTRL_CLASH | CDNS_MCP_INT_DATA_CLASH |
+> -		CDNS_MCP_INT_PARITY;
+> +		/* enable detection of bus issues */
+> +		mask |= CDNS_MCP_INT_CTRL_CLASH | CDNS_MCP_INT_DATA_CLASH |
+> +			CDNS_MCP_INT_PARITY;
+>  
+> -	/* no detection of port interrupts for now */
+> +		/* no detection of port interrupts for now */
+>  
+> -	/* enable detection of RX fifo level */
+> -	mask |= CDNS_MCP_INT_RX_WL;
+> +		/* enable detection of RX fifo level */
+> +		mask |= CDNS_MCP_INT_RX_WL;
+>  
+> -	/* now enable all of the above */
+> -	mask |= CDNS_MCP_INT_IRQ;
+> +		/* now enable all of the above */
+> +		mask |= CDNS_MCP_INT_IRQ;
+>  
+> -	if (interrupt_mask) /* parameter override */
+> -		mask = interrupt_mask;
+> +		if (interrupt_mask) /* parameter override */
+> +			mask = interrupt_mask;
+> +	} else {
+> +		cdns_writel(cdns, CDNS_MCP_SLAVE_INTMASK0, 0);
+> +		cdns_writel(cdns, CDNS_MCP_SLAVE_INTMASK1, 0);
+> +		mask = 0;
+> +	}
+
+Looks like this should be two functions? Especially since "state" is always a constant
+when it is called. If there is still a lot of common code below, maybe make it a helper
+function.
+
+Thanks
+Guennadi
+
+>  
+>  	cdns_writel(cdns, CDNS_MCP_INTMASK, mask);
+>  
+> diff --git a/drivers/soundwire/cadence_master.h b/drivers/soundwire/cadence_master.h
+> index 2b551f9226f3..1a0ba36dd78f 100644
+> --- a/drivers/soundwire/cadence_master.h
+> +++ b/drivers/soundwire/cadence_master.h
+> @@ -162,7 +162,7 @@ int sdw_cdns_init(struct sdw_cdns *cdns);
+>  int sdw_cdns_pdi_init(struct sdw_cdns *cdns,
+>  		      struct sdw_cdns_stream_config config);
+>  int sdw_cdns_exit_reset(struct sdw_cdns *cdns);
+> -int sdw_cdns_enable_interrupt(struct sdw_cdns *cdns);
+> +int sdw_cdns_enable_interrupt(struct sdw_cdns *cdns, bool state);
+>  
+>  void sdw_cdns_debugfs_init(struct sdw_cdns *cdns, struct dentry *root);
+>  
+> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+> index 9ebe38e4d979..1192d5775484 100644
+> --- a/drivers/soundwire/intel.c
+> +++ b/drivers/soundwire/intel.c
+> @@ -1110,7 +1110,7 @@ static int intel_probe(struct platform_device *pdev)
+>  		goto err_init;
+>  	}
+>  
+> -	ret = sdw_cdns_enable_interrupt(&sdw->cdns);
+> +	ret = sdw_cdns_enable_interrupt(&sdw->cdns, true);
+>  
+>  	ret = sdw_cdns_exit_reset(&sdw->cdns);
+>  
+> @@ -1169,6 +1169,8 @@ static int intel_suspend(struct device *dev)
+>  		return 0;
+>  	}
+>  
+> +	sdw_cdns_enable_interrupt(&sdw->cdns, false);
+> +
+>  	ret = intel_link_power_down(sdw);
+>  	if (ret) {
+>  		dev_err(dev, "Link power down failed: %d", ret);
+> @@ -1199,7 +1201,7 @@ static int intel_resume(struct device *dev)
+>  		return ret;
+>  	}
+>  
+> -	sdw_cdns_enable_interrupt(&sdw->cdns);
+> +	sdw_cdns_enable_interrupt(&sdw->cdns, true);
+>  
+>  	ret = sdw_cdns_exit_reset(&sdw->cdns);
+>  
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
