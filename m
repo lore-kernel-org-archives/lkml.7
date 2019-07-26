@@ -2,131 +2,71 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D86C8C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5496C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3FB22BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A14922BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfGZN2l (ORCPT
+        id S1727172AbfGZN2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:28:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:43526 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbfGZN2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:28:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 738E3337;
-        Fri, 26 Jul 2019 06:28:40 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5354E3F694;
-        Fri, 26 Jul 2019 06:28:39 -0700 (PDT)
-Subject: Re: [PATCH 1/3] arm64: perf: Mark expected switch fall-through
-To:     Will Deacon <will@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190726112716.19104-1-anders.roxell@linaro.org>
- <20190726121056.GA26088@lakrids.cambridge.arm.com>
- <20190726121354.GB26088@lakrids.cambridge.arm.com>
- <20190726122728.jhn4e6wq7rcowyi4@willie-the-truck>
- <1549fe77-367f-fee1-c09c-e429fca91051@arm.com>
- <20190726130523.ftmc2un7fwwcegrr@willie-the-truck>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <0dc7d97f-88bb-6416-d731-afbf0d3c6133@arm.com>
-Date:   Fri, 26 Jul 2019 14:28:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 26 Jul 2019 09:28:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50512 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726001AbfGZN2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:28:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B3936AF1D;
+        Fri, 26 Jul 2019 13:28:46 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id BF30EDA811; Fri, 26 Jul 2019 15:29:22 +0200 (CEST)
+Date:   Fri, 26 Jul 2019 15:29:22 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: BTRFS: Kmemleak errrors with do_sys_ftruncate
+Message-ID: <20190726132922.GA2868@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Paul Menzel <pmenzel@molgen.mpg.de>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+References: <8c9b2f4e-252c-fee7-ef52-4ec2b9b54042@molgen.mpg.de>
 MIME-Version: 1.0
-In-Reply-To: <20190726130523.ftmc2un7fwwcegrr@willie-the-truck>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8c9b2f4e-252c-fee7-ef52-4ec2b9b54042@molgen.mpg.de>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/07/2019 14:05, Will Deacon wrote:
-> On Fri, Jul 26, 2019 at 01:38:24PM +0100, Robin Murphy wrote:
->> On 26/07/2019 13:27, Will Deacon wrote:
->>> On Fri, Jul 26, 2019 at 01:13:54PM +0100, Mark Rutland wrote:
->>>> On Fri, Jul 26, 2019 at 01:10:57PM +0100, Mark Rutland wrote:
->>>>> On Fri, Jul 26, 2019 at 01:27:16PM +0200, Anders Roxell wrote:
->>>>>> When fall-through warnings was enabled by default, commit d93512ef0f0e
->>>>>> ("Makefile: Globally enable fall-through warning"), the following
->>>>>> warnings was starting to show up:
->>>>>>
->>>>>> ../arch/arm64/kernel/hw_breakpoint.c: In function ‘hw_breakpoint_arch_parse’:
->>>>>> ../arch/arm64/kernel/hw_breakpoint.c:540:7: warning: this statement may fall
->>>>>>    through [-Wimplicit-fallthrough=]
->>>>>>       if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
->>>>>>          ^
->>>>>> ../arch/arm64/kernel/hw_breakpoint.c:542:3: note: here
->>>>>>      case 2:
->>>>>>      ^~~~
->>>>>> ../arch/arm64/kernel/hw_breakpoint.c:544:7: warning: this statement may fall
->>>>>>    through [-Wimplicit-fallthrough=]
->>>>>>       if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
->>>>>>          ^
->>>>>> ../arch/arm64/kernel/hw_breakpoint.c:546:3: note: here
->>>>>>      default:
->>>>>>      ^~~~~~~
->>>>>>
->>>>>> Rework so that the compiler doesn't warn about fall-through. Rework so
->>>>>> the code looks like the arm code. Since the comment in the function
->>>>>> indicates taht this is supposed to behave the same way as arm32 because
->>>>>
->>>>> Typo: s/taht/that/
->>>>>
->>>>>> it handles 32-bit tasks also.
->>>>>>
->>>>>> Cc: stable@vger.kernel.org # v3.16+
->>>>>> Fixes: 6ee33c2712fc ("ARM: hw_breakpoint: correct and simplify alignment fixup code")
->>>>>> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
->>>>>
->>>>> The patch itself looks fine, but I don't think this needs a CC to
->>>>> stable, nor does it require that fixes tag, as there's no functional
->>>>> problem.
->>>>
->>>> Hmm... I now see I spoke too soon, and this is making the 1-byte
->>>> breakpoint work at a 3-byte offset.
->>>
->>> I still don't think it's quite right though, since it forbids a 2-byte
->>> watchpoint on a byte-aligned address.
->>
->> Plus, AFAICS, a 1-byte watchpoint on a 2-byte-aligned address.
-
-[and of course, what I missed was that that's the case the fallthrough 
-serves... yuck indeed]
-
->> Not that I know anything about this code, but it does start to look like it
->> might want rewriting without the offending switch statement anyway. At a
->> glance, it looks like the intended semantic might boil down to:
->>
->> 	if (hw->ctrl.len > offset)
->> 		return -EINVAL;
+On Fri, Jul 26, 2019 at 03:16:57PM +0200, Paul Menzel wrote:
+> Dear Linux folks,
 > 
-> Given that it's compat code, I think it's worth staying as close to the
-> arch/arm/ implementation as we can.
+> 
+> On a Power 8 server
+> 
+>     Linux power 5.3.0-rc1+ #1 SMP Fri Jul 26 11:34:28 CEST 2019 ppc64le ppc64le ppc64le GNU/Linux
+> 
+> Kmemleak reports the warnings below.
 
-Right, I also misread the accompanying arch/arm/ patch and got the 
-impression that 32-bit also had a problem such that any fix would happen 
-in parallel - on closer inspection the current arch/arm/ code does 
-actually seem to make sense, even if it is horribly subtle.
+There are memory leaks of struct extent_state introduced in 5.3 pull and
+there's a fix going to 5.3-rc2 (https://patchwork.kernel.org/patch/11060447/).
 
-> Also, beware that the
-> ARM_BREAKPOINT_LEN_* definitions are masks because of the BAS fields in
-> the debug architecture.
+> I believe these have been present for some releases already, but Kmemleak
+> was broken until now on that system, so that I could only report them now.
 
-Fun... Clearly it's a bit too Friday for me to be useful here, so 
-apologies for the confusion :)
-
-Robin.
+We have a leak detector built-in btrfs so I think we'd notice and that
+you observe the known leak. You could try to apply the patch or wait for
+rc2 and restst.
