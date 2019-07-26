@@ -2,196 +2,164 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D085C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5926DC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAE8E2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:24:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aMJ/j5Za"
+	by mail.kernel.org (Postfix) with ESMTP id 332E42083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbfGZVY2 (ORCPT
+        id S1728547AbfGZVYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 17:24:28 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46641 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728454AbfGZVYT (ORCPT
+        Fri, 26 Jul 2019 17:24:35 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50443 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728368AbfGZVYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 17:24:19 -0400
-Received: by mail-qt1-f193.google.com with SMTP id h21so53977877qtn.13
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 14:24:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=owpXJzkwRhTQpFv3YFYd1YLSHkq3ebxH7N/mkMxT22w=;
-        b=aMJ/j5Za4QMl8Pf2M7kaOR415fQRH6rbjYvIyS/i6JoHNO1516z0Q7L7CjFPJ7OSS1
-         51Tf7qtTEW9o3QxpAl09Ian0zWGVtbbD0nG+Um3baSMk8x4ZwW46HfklJgWl9rFAmdxC
-         wOIhrnvM2feyVB+D596KSvP2fwa183EZXUZsR09c5+V9awonePLsdUEd9pE+vVyhKSl4
-         dLsxG2Cd86+m28G2I5cieWpy294e4O+naTmRX3y3ThmoJ7iWdyCdI1EvgPueMmA5RgwT
-         sq/HsxDn/okq7PDtBIalb+vyn7ZR4elNjex9aOv4MTGiRGn9pQe0NeSPFFZAvApATh8c
-         GZdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=owpXJzkwRhTQpFv3YFYd1YLSHkq3ebxH7N/mkMxT22w=;
-        b=f2Kw9wwPU6V8IHC/vDLoDl1Jk9DtwRR/LOx6qpVWYk5MmU/xzj6AcAhdVvaRf9vs9m
-         1E2kCtDB+gxbsB7zC7CLIVN9WjI4MSGTCsruWFHpmKDUT32yyDHqR9A5bm1ny4Any33o
-         FrVkv20RBOHK46l83YXdgL4v5MvfCZgK3zPMgQBOnfmepGXZHDE2tbwWV/3Yk3VbhrbQ
-         lDOWDOrk5yQuXeQf+qdnomW7F75cBW5wWV4e1B9YRAGUsCdhQEavTmTA7fOPufRxJuVm
-         LnyLadvyvcC1RcnSVZM0BdHAY4V4r/VCPM04B0Wi0PJ4JVxGRmf7mfv6wb/onZ4Yz7yu
-         /f6Q==
-X-Gm-Message-State: APjAAAWgjwZ+E9SLZr3yqs+9LsJDpV+DMr++rB1VnB+pBzCVc1AsPDFM
-        qy2UeNoA9yU1mGkfa5VCEv4icFQ2Mob0os6lylzmWw==
-X-Google-Smtp-Source: APXvYqwE2TYMffQJtT7kl52cvJrjGWqA9vEUfORVMtMAylZHsE47npdSnAmrQgan5ft+zsV9NfDaKeUFkLTLYLHvv0Q=
-X-Received: by 2002:a0c:baa1:: with SMTP id x33mr70919945qvf.200.1564176258418;
- Fri, 26 Jul 2019 14:24:18 -0700 (PDT)
+        Fri, 26 Jul 2019 17:24:11 -0400
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hr7hA-000319-U1; Fri, 26 Jul 2019 23:24:09 +0200
+Message-Id: <20190726212124.608488448@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Fri, 26 Jul 2019 23:19:42 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [patch 6/8] x86: Use CONFIG_PREEMPTION
+References: <20190726211936.226129163@linutronix.de>
 MIME-Version: 1.0
-References: <20190717222340.137578-1-saravanak@google.com> <20190717222340.137578-4-saravanak@google.com>
- <20190723102842.t2s45zzylsjuccm4@vireshk-i7> <CAGETcx-6M9Ts8tfMf6aA8GjMyzK5sOLr069ZCxTG7RHMFPLzHw@mail.gmail.com>
- <20190725030712.lx3cjogo5r7kc262@vireshk-i7> <CAGETcx8QTs2Dqqppb_gwiUa2fte92K_q+B+j_CreRgqU52L7EA@mail.gmail.com>
- <20190725051742.mn54pi722txkpddg@vireshk-i7> <CAGETcx9yO7HCz-rvqRMQf6srN_9-O_wc1bb7HadL+4QxvuqyWA@mail.gmail.com>
-In-Reply-To: <CAGETcx9yO7HCz-rvqRMQf6srN_9-O_wc1bb7HadL+4QxvuqyWA@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 26 Jul 2019 14:23:41 -0700
-Message-ID: <CAGETcx9UAAc6u=qFPN49Pn2u4xiMCroL-PhHqLZrBPRSXBbHBw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] OPP: Improve require-opps linking
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 6:52 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Wed, Jul 24, 2019 at 10:17 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 24-07-19, 21:09, Saravana Kannan wrote:
-> > > On Wed, Jul 24, 2019 at 8:07 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > > We should be doing this whenever a new OPP table is created, and see
-> > > > if someone else was waiting for this OPP table to come alive.
-> > >
-> > > Searching the global OPP table list seems a ton more wasteful than
-> > > doing the lazy linking. I'd rather not do this.
-> >
-> > We can see how best to optimize that, but it will be done only once
-> > while a new OPP table is created and putting stress there is the right
-> > thing to do IMO. And doing anything like that in a place like
-> > opp-set-rate is the worst one. It will be a bad choice by design if
-> > you ask me and so I am very much against that.
-> >
-> > > > Also we
-> > > > must make sure that we do this linking only if the new OPP table has
-> > > > its own required-opps links fixed, otherwise delay further.
-> > >
-> > > This can be done. Although even without doing that, this patch is
-> > > making things better by not failing silently like it does today? Can I
-> > > do this later as a separate patch set series?
-> >
-> > I would like this to get fixed now in a proper way, there is no hurry
-> > for a quick fix currently. No band-aids please.
-> >
-> > > > Even then I don't want to add these checks to those places. For the
-> > > > opp-set-rate routine, add another flag to the OPP table which
-> > > > indicates if we are ready to do dvfs or not and mark it true only
-> > > > after the required-opps are all set.
-> > >
-> > > Honestly, this seems like extra memory and micro optimization without
-> > > any data to back it.
-> >
-> > Again, opp-set-rate isn't supposed to do something like this. It
-> > shouldn't handle initializations of things, that is broken design.
-> >
-> > > Show me data that checking all these table
-> > > pointers is noticeably slower than what I'm doing. What's the max
-> > > "required tables count" you've seen in upstream so far?
-> >
-> > Running anything extra (specially some initialization stuff) in
-> > opp-set-rate is wrong as per me and as a Maintainer of the OPP core it
-> > is my responsibility to not allow such things to happen.
->
-> Doing operations lazily right before they are needed isn't something
-> new in the kernel. It's done all over the place (VFP save/restore?).
-> It's not worth arguing though -- so I'll agree to disagree but follow
-> the Maintainer's preference.
->
+CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by
+CONFIG_PREEMPT_RT. Both PREEMPT and PREEMPT_RT require the same
+functionality which today depends on CONFIG_PREEMPT.
 
-I was taking a closer look at the OPP framework code to try and do
-what you ask above, but it's kind of a mess. The whole "the same OPP
-table can be used by multiple devices without the opp-shared flag set"
-is effectively breaking "required-opps" at a minimum and probably a
-lot more cases. I don't think I can rewrite my patch the way you want
-it without fixing the existing bugs.
+Switch the entry code, preempt and kprobes conditionals over to
+CONFIG_PREEMPTION.
 
-Let's take this example DT (leaving out the irrelevant part):
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/entry/entry_32.S      |    6 +++---
+ arch/x86/entry/entry_64.S      |    4 ++--
+ arch/x86/entry/thunk_32.S      |    2 +-
+ arch/x86/entry/thunk_64.S      |    4 ++--
+ arch/x86/include/asm/preempt.h |    2 +-
+ arch/x86/kernel/kprobes/core.c |    2 +-
+ 6 files changed, 10 insertions(+), 10 deletions(-)
 
-OPP table 1:
-    required-opps = <OPP table 2 entry>;
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -63,7 +63,7 @@
+  * enough to patch inline, increasing performance.
+  */
+ 
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ # define preempt_stop(clobbers)	DISABLE_INTERRUPTS(clobbers); TRACE_IRQS_OFF
+ #else
+ # define preempt_stop(clobbers)
+@@ -1084,7 +1084,7 @@ ENTRY(entry_INT80_32)
+ 	INTERRUPT_RETURN
+ 
+ restore_all_kernel:
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	DISABLE_INTERRUPTS(CLBR_ANY)
+ 	cmpl	$0, PER_CPU_VAR(__preempt_count)
+ 	jnz	.Lno_preempt
+@@ -1364,7 +1364,7 @@ ENTRY(xen_hypervisor_callback)
+ ENTRY(xen_do_upcall)
+ 1:	mov	%esp, %eax
+ 	call	xen_evtchn_do_upcall
+-#ifndef CONFIG_PREEMPT
++#ifndef CONFIG_PREEMPTION
+ 	call	xen_maybe_preempt_hcall
+ #endif
+ 	jmp	ret_from_intr
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -662,7 +662,7 @@ GLOBAL(swapgs_restore_regs_and_return_to
+ 
+ /* Returning to kernel space */
+ retint_kernel:
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	/* Interrupts are off */
+ 	/* Check if we need preemption */
+ 	btl	$9, EFLAGS(%rsp)		/* were interrupts off? */
+@@ -1113,7 +1113,7 @@ ENTRY(xen_do_hypervisor_callback)		/* do
+ 	call	xen_evtchn_do_upcall
+ 	LEAVE_IRQ_STACK
+ 
+-#ifndef CONFIG_PREEMPT
++#ifndef CONFIG_PREEMPTION
+ 	call	xen_maybe_preempt_hcall
+ #endif
+ 	jmp	error_exit
+--- a/arch/x86/entry/thunk_32.S
++++ b/arch/x86/entry/thunk_32.S
+@@ -34,7 +34,7 @@
+ 	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller,1
+ #endif
+ 
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	THUNK ___preempt_schedule, preempt_schedule
+ 	THUNK ___preempt_schedule_notrace, preempt_schedule_notrace
+ 	EXPORT_SYMBOL(___preempt_schedule)
+--- a/arch/x86/entry/thunk_64.S
++++ b/arch/x86/entry/thunk_64.S
+@@ -46,7 +46,7 @@
+ 	THUNK lockdep_sys_exit_thunk,lockdep_sys_exit
+ #endif
+ 
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	THUNK ___preempt_schedule, preempt_schedule
+ 	THUNK ___preempt_schedule_notrace, preempt_schedule_notrace
+ 	EXPORT_SYMBOL(___preempt_schedule)
+@@ -55,7 +55,7 @@
+ 
+ #if defined(CONFIG_TRACE_IRQFLAGS) \
+  || defined(CONFIG_DEBUG_LOCK_ALLOC) \
+- || defined(CONFIG_PREEMPT)
++ || defined(CONFIG_PREEMPTION)
+ .L_restore:
+ 	popq %r11
+ 	popq %r10
+--- a/arch/x86/include/asm/preempt.h
++++ b/arch/x86/include/asm/preempt.h
+@@ -102,7 +102,7 @@ static __always_inline bool should_resch
+ 	return unlikely(raw_cpu_read_4(__preempt_count) == preempt_offset);
+ }
+ 
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+   extern asmlinkage void ___preempt_schedule(void);
+ # define __preempt_schedule() \
+ 	asm volatile ("call ___preempt_schedule" : ASM_CALL_CONSTRAINT)
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -580,7 +580,7 @@ static void setup_singlestep(struct kpro
+ 	if (setup_detour_execution(p, regs, reenter))
+ 		return;
+ 
+-#if !defined(CONFIG_PREEMPT)
++#if !defined(CONFIG_PREEMPTION)
+ 	if (p->ainsn.boostable && !p->post_handler) {
+ 		/* Boost up -- we can execute copied instructions directly */
+ 		if (!reenter)
 
-OPP table 2:
-    <opp-shared property not set>
 
-Device A:
-    operating-points-v2 = <&OPP table 1>
-
-Device B:
-    operating-points-v2 = <&OPP table 2>
-
-Device C:
-    operating-points-v2 = <&OPP table 2>
-
-Let's say device B and C add their OPP tables. They both get their own
-"in-memory" copy of the OPP table. They can then enabled/disable
-different OPP entries (rows) and not affect each other's OPP table.
-Which is how it's expected to work.
-
-Now if device A adds its OPP table 1, the "in-memory"
-required_opp_tables pointer of OPP table 1 can end up pointing to
-either Device A's copy of the OPP table or Device B's copy of the OPP
-table depending on which happens to be added first. This effectively
-random linking of OPP tables is mutually exclusive to the point of
-required-opps.
-
-Also, at a DT definition level, OPP table 1 pointing to OPP table 2
-when OPP table 2 is used by more than one device doesn't make any
-sense. Which device/genpd is OPP table 1 saying it "requires to
-operate at a certain level"?
-
-So I propose that we should consider the OPP table DT configuration
-invalid if one OPP table points to another OPP tables that's NOT
-shared but is ALSO pointed to by multiple devices. Basically the
-example above would be considered an invalid DT configuration. Does
-that sound okay to you? If I make changes to enforce that, will that
-be acceptable?
-
-If this sounds okay to you, then in the example above, assume Device C
-isn't present. Then when OPP table 1 is added by device A, if OPP
-table 2 hasn't been added already, I can just go ahead and allocate
-OPP table 2. And then when device B tries to add OPP table 2, I can
-just tie device B to OPP table 2 and fill up any of the missing
-pieces.
-
-This sounds better than trying to loop through existing OPP tables and
-seeing if any other table is waiting for the newly added table and
-marking the waiting tables as "linked". Especially because it gets a
-lot more complicated and inefficient when you consider a chain of OPP
-tables and many-to-many linking of OPP tables.
-
--Saravana
