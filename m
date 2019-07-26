@@ -2,136 +2,164 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3ADC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53902C41517
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6C222BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2894422BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:16:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lGeUakeO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbfGZXNt (ORCPT
+        id S1728540AbfGZXQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 19:13:49 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34755 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbfGZXNt (ORCPT
+        Fri, 26 Jul 2019 19:16:05 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:55303 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727321AbfGZXQE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 19:13:49 -0400
-Received: by mail-pl1-f196.google.com with SMTP id i2so25302821plt.1;
-        Fri, 26 Jul 2019 16:13:48 -0700 (PDT)
+        Fri, 26 Jul 2019 19:16:04 -0400
+Received: by mail-pl1-f201.google.com with SMTP id q11so29243327pll.22
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 16:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=cpXw17kbjpY+4NI0A8ywBRzRbBcUV30TBmJ29JFZSu8=;
+        b=lGeUakeOQjQpoRbjD3eQTccJQgPrsvuP1WdT/liYx7Tq4s/KNjmGm7SiRV+T/GO/9u
+         YWiGATr1gNWtXgVWidLbG4uLV5w27wVYiH72EFZ5EBpetALJZMJotGMiioYxzJ/7QXF4
+         D3WPjrZ/bGa2vn4yHXpsDyijYQuJOgC8gJw3ebo9oU9IAzsEP+O84JwPlOy8yym3io0s
+         OVIMEsVaCh7+brCgiFB87+mCAMmIs3QEmHlxASphKIK2SPhxWBgiNl9AhSiPneEENtWn
+         cXwtId0Hz9cKJG0NRap3E9lfm4x0wdY+ycCU+1qZ5uEmAKpZyjh/uW242uPqyM4DaIet
+         iY3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nOIJ+UNszzboHwkoBi08mG0qYHVPcqJMO4vZonVIFD4=;
-        b=XQxCuBS660CxGCKdeO25BOnidyKthxV4fxKWVtqGs0EFi/kYZO1bySpBDTmwCSxhn6
-         uIzVvLlToZWz0KXSCtqakP6Gly40Aj+5gHQEWtXnpsJkXJlJRwd8b3I9ws4XJvQDLcmc
-         P+mXcj15MFfbT8i+ccXNh8dR/jcfbUYe0cjsfV1soTOFXOLwSoj/HTyyKlOYmQ/UhJZB
-         6C6D87AWUwHM5yg35kikoH/1RAyleu2bBt31ee1tsItykDcp/4wiBKqgYl9AVvPdBVjn
-         wI3/viM/RLMKHsv9dC2n3/pBiMxIAOAL6C2mZiF0lpRC56rHp7ovWmKgpPP1dVTd88Oy
-         Efzg==
-X-Gm-Message-State: APjAAAXWDih0pcPs2PyjJkZleRwbMbhnND96Cxl8nNo2c1GuAT/k/BdB
-        nz3njlA0f4xAmuFfWKgrCSsv8R27
-X-Google-Smtp-Source: APXvYqz1ru6FF8t/nDaRN9S4VT6MtDjXT/j3xWKBywz4aPMGhk01+iNL2ydwnuIsT6ix3iTKeJMcMg==
-X-Received: by 2002:a17:902:9a49:: with SMTP id x9mr99490023plv.282.1564182828344;
-        Fri, 26 Jul 2019 16:13:48 -0700 (PDT)
-Received: from ?IPv6:2601:647:4800:973f:3044:7ea3:7e19:4d2c? ([2601:647:4800:973f:3044:7ea3:7e19:4d2c])
-        by smtp.gmail.com with ESMTPSA id i9sm53611928pgo.46.2019.07.26.16.13.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 16:13:47 -0700 (PDT)
-Subject: Re: [PATCH v6 00/16] nvmet: add target passthru commands support
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        Hannes Reinecke <hare@suse.de>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-        Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <1f202de3-1122-f4a3-debd-0d169f545047@suse.de>
- <8fd8813f-f8e1-2139-13bf-b0635a03bc30@deltatee.com>
- <175fa142-4815-ee48-82a4-18eb411db1ae@grimberg.me>
- <76f617b9-1137-48b6-f10d-bfb1be2301df@deltatee.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <e166c392-1548-f0bb-02bc-ced3dd85f301@grimberg.me>
-Date:   Fri, 26 Jul 2019 16:13:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <76f617b9-1137-48b6-f10d-bfb1be2301df@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=cpXw17kbjpY+4NI0A8ywBRzRbBcUV30TBmJ29JFZSu8=;
+        b=A2GXo/e8UdIYlJeu7aDumvWD/jDOUZdLTHO7DuBJ9xMnxd0V3G5/LodZ9Dcjm5Ipr6
+         lvFCg4w9wU4QqXMPMCX2PmUm4nHzxVyjZBHUKyPw+54C2mAhOXGkhK6CA9fN8hkb6DDK
+         NRK5vHNz/Y5vPpmySUvKA1nwZlUm55HPuki1qSHBqJj8POYa3CiwcAo4ybyXgdPxOyC2
+         VoXRuFu3E9+SFL/oBznNM40t8OIMh2UQaXO8qIHAsHvncH9MC/gQKihQB9JG16rhUjWJ
+         ijIHQn65boYT2TxYF0DLrzFurnEpyPfPtP1HHlg46Ff/zVW2nhLbL1I61ENKrrJio1n4
+         TiDA==
+X-Gm-Message-State: APjAAAXUl5A1o6Z6GTgfSyjS4Kg2Raj6qOXcdBLNDCAHbnSPf1CUYQd2
+        coMA7g376It/CjHV+hY3/GrW9BWRNL/DW9Y=
+X-Google-Smtp-Source: APXvYqyLFXzg7wzzQqNVNsI8TFZ+iafyw/A7sv3S5RiRtNoVmsGtyF3JmmM3anWSx8u0e6UhM5jUYxwYZmhQdZo=
+X-Received: by 2002:a63:c442:: with SMTP id m2mr95101718pgg.286.1564182963590;
+ Fri, 26 Jul 2019 16:16:03 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 16:15:54 -0700
+Message-Id: <20190726231558.175130-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
+Subject: [PATCH v4 0/3] Introduce Bandwidth OPPs for interconnects
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
+        daidavid1@codeaurora.org, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        kernel-team@android.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Interconnects and interconnect paths quantify their performance levels in
+terms of bandwidth and not in terms of frequency. So similar to how we have
+frequency based OPP tables in DT and in the OPP framework, we need
+bandwidth OPP table support in DT and in the OPP framework.
 
->> Why? if nvmet is capable, why shouldn't we support it?
-> 
-> I'm saying that passthru is exporting a specific controller and submits
-> commands (both admin and IO) straight to the nvme_ctrl's queues. It's
-> not exporting an nvme_subsys and I think it would be troublesome to do
-> so; for example, if the target receives an admin command which ctrl of
-> the subsystem should it send it to?
+So with the DT bindings added in this patch series, the DT for a GPU
+that does bandwidth voting from GPU to Cache and GPU to DDR would look
+something like this:
 
-Its the same controller in the backend, what is the difference from
-which fabrics controller the admin command came from?
+gpu_cache_opp_table: gpu_cache_opp_table {
+	compatible = "operating-points-v2";
 
-> There's also no userspace handle for
-> a given subsystem we'd maybe have to use the subsysnqn.
+	gpu_cache_3000: opp-3000 {
+		opp-peak-KBps = <3000000>;
+		opp-avg-KBps = <1000000>;
+	};
+	gpu_cache_6000: opp-6000 {
+		opp-peak-KBps = <6000000>;
+		opp-avg-KBps = <2000000>;
+	};
+	gpu_cache_9000: opp-9000 {
+		opp-peak-KBps = <9000000>;
+		opp-avg-KBps = <9000000>;
+	};
+};
 
-Umm, not sure I understand what you mean.
+gpu_ddr_opp_table: gpu_ddr_opp_table {
+	compatible = "operating-points-v2";
 
->>> The one case that I think makes sense to me, but I don't know how if we
->>> can handle, is if the user had a couple multipath enabled controllers
->>> with the same subsynqn
->>
->> That is usually the case, there is no multipathing defined across NVM
->> subsystems (at least for now).
->>
->>> and wanted to passthru all of them to another
->>> system and use multipath on the host with both controllers. This would
->>> require having multiple target subsystems with the same name which I
->>> don't think will work too well.
->>
->> Don't understand why this is the case?
->>
->> AFAICT, all nvmet needs to do is:
->> 1. override cimc
->> 2. allow allocating multiple controllers to the pt ctrl as long as the
->> hostnqn match.
->> 3. answer all the ana stuff.
-> 
-> But with this scheme the host will only see one controller and then the
-> target would have to make decisions on which ctrl to send any commands
-> to. Maybe it could be done for I/O but I don't see how it could be done
-> correctly for admin commands.
+	gpu_ddr_1525: opp-1525 {
+		opp-peak-KBps = <1525000>;
+		opp-avg-KBps = <452000>;
+	};
+	gpu_ddr_3051: opp-3051 {
+		opp-peak-KBps = <3051000>;
+		opp-avg-KBps = <915000>;
+	};
+	gpu_ddr_7500: opp-7500 {
+		opp-peak-KBps = <7500000>;
+		opp-avg-KBps = <3000000>;
+	};
+};
 
-I haven't thought this through so its very possible that I'm missing
-something, but why can't the host see multiple controllers if it has
-more than one path to the target?
+gpu_opp_table: gpu_opp_table {
+	compatible = "operating-points-v2";
+	opp-shared;
 
-What specific admin commands are you concerned about? What exactly
-would clash?
+	opp-200000000 {
+		opp-hz = /bits/ 64 <200000000>;
+	};
+	opp-400000000 {
+		opp-hz = /bits/ 64 <400000000>;
+	};
+};
 
-> And from the hosts perspective, having cimc set doesn't help anything
-> because we've limited the passthru code to only accept one connection
-> from one host so the host can only actually have one route to this
-> controller.
+gpu@7864000 {
+	...
+	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
+	...
+};
 
-And I'm suggesting to allow more than a single controller given that all
-controller allocations match a single hostnqn. It wouldn't make sense to
-expose this controller to multiple hosts (although that might be doable
-but but definitely requires non-trivial infrastructure around it).
+v1 -> v3:
+- Lots of patch additions that were later dropped
+v3 -> v4:
+- Fixed typo bugs pointed out by Sibi.
+- Fixed bug that incorrectly reset rate to 0 all the time
+- Added units documentation
+- Dropped interconnect-opp-table property and related changes
 
-Look, when it comes to fabrics, multipath is a fundamental piece of the
-puzzle. Not supporting multipathing significantly diminishes the value
-of this in my mind (assuming this answers a real-world use-case).
+Cheers,
+Saravana
+
+Saravana Kannan (3):
+  dt-bindings: opp: Introduce opp-peak-KBps and opp-avg-KBps bindings
+  OPP: Add support for bandwidth OPP tables
+  OPP: Add helper function for bandwidth OPP tables
+
+ Documentation/devicetree/bindings/opp/opp.txt | 15 ++++--
+ .../devicetree/bindings/property-units.txt    |  4 ++
+ drivers/opp/core.c                            | 51 +++++++++++++++++++
+ drivers/opp/of.c                              | 41 +++++++++++----
+ drivers/opp/opp.h                             |  4 +-
+ include/linux/pm_opp.h                        | 19 +++++++
+ 6 files changed, 121 insertions(+), 13 deletions(-)
+
+-- 
+2.22.0.709.g102302147b-goog
+
