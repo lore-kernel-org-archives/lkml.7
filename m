@@ -2,256 +2,156 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF8BC76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACAAC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBFDB22ADA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D74C22ADA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:12:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564146742;
+	bh=lS7VU+fYLf9p8y4UAb/u0BkVPuztI5yiv146UfxCQDM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=ni2x6X1c466YS9WAg12/iQtAv5KF41xsNz8KKh0fXyq/j/8Z+7ER4PwkMkMfBkyKh
+	 LF9LHgTrKWkSDbGDG2yzbYPdb6ZIBZVJ1aIdcpKVqoMCJMQfJl9tvuatydGytb2eNB
+	 nMRNHdOtIv5Ou/JPeR8A/kiVnpB8A9w5eixFMQ9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbfGZNME (ORCPT
+        id S1726808AbfGZNMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:12:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47062 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:12:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbfGZNME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:12:04 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1726086AbfGZNMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:12:20 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F2EE218D4;
-        Fri, 26 Jul 2019 13:12:02 +0000 (UTC)
-Date:   Fri, 26 Jul 2019 09:12:00 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Andres Freund <andres@anarazel.de>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH] tools/lib/traceevent, tools/perf: Move struct
- tep_handler definition in a local header file
-Message-ID: <20190726091200.0d1e1f01@gandalf.local.home>
-In-Reply-To: <20190726035829.4xcw5k2exx4omlvg@alap3.anarazel.de>
-References: <20181005122225.522155df@gandalf.local.home>
-        <20190726035829.4xcw5k2exx4omlvg@alap3.anarazel.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AA5F218D4;
+        Fri, 26 Jul 2019 13:12:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564146740;
+        bh=lS7VU+fYLf9p8y4UAb/u0BkVPuztI5yiv146UfxCQDM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HeI8QMV5ptqPEjWImZK/G7ljfbzJwNqBuLFsieHmWMcqdpaYdl2UtrBms5Lh5GX8C
+         3X+EuxET8Bu0ofRypSvw5Ag9692Un3I0nSMkS/9nfNLKduqv5rGCu6F7a6VdMxx8i7
+         yqIeRc3KFTvVuU3p3DRZQ4yMz+SaUS9WbCopSzhk=
+Date:   Fri, 26 Jul 2019 14:12:16 +0100
+From:   Will Deacon <will@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [GIT PULL] arm64: fixes for -rc2
+Message-ID: <20190726131215.2dqryzjvxfyqefuw@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jul 2019 20:58:29 -0700
-Andres Freund <andres@anarazel.de> wrote:
+Hi Linus,
 
-> Hi,
-> 
+Please pull these arm64 fixes for -rc2. There's more here than we usually
+have at this stage, but that's mainly down to the stacktrace changes which
+came in slightly too late for the merge window.
 
-Hi Andres,
+Summary is in the tag.
 
-> On 2018-10-05 12:22:25 -0400, Steven Rostedt wrote:
-> > From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-> >
-> > As traceevent is going to be transferred into a proper library,
-> > its local data should be protected from the library users.
-> > This patch encapsulates struct tep_handler into a local header,
-> > not visible outside of the library. It implements also a bunch
-> > of new APIs, which library users can use to access tep_handler members.  
-> 
-> This commit appears to have broken perf script --gen-script /
-> trace_find_next_event().  As far as I can tell:
-> 
-> @ -192,25 +193,29 @@ struct tep_event_format *trace_find_next_event(struct tep_handle *pevent,
-> >  					       struct tep_event_format *event)
-> >  {
-> >  	static int idx;
-> > +	int events_count;
-> > +	struct tep_event_format *all_events;
-> >
-> > -	if (!pevent || !pevent->events)
-> > +	all_events = tep_get_first_event(pevent);
-> > +	events_count = tep_get_events_count(pevent);
+Thanks,
 
-> 
-> Is just plain wrong, as:
-> 
-> > -		return pevent->events[idx];
-> > +		return (all_events + idx);  
-> 
-> that's not a valid conversion. ->events isn't an array of tep_handle,
-> it's an array of tep_handle* (and even if it were, the previous notation
+Will
 
-You're right, it is wrong, but it's not tep_handle* but
-tep_event_format*.
+--->8
 
-The tep_get_first_event() returns a pointer to the first event, but
-that's not an array. We can't use that to index to other events.
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
-> would have needed to dereference the value to make it comparable). What
-> this does is look idx behind the individually allocated event. Which is
-> incorrect.
-> 
-> 
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
+are available in the git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
 
-> 
-> The fix (in recent kernel versions) appears to just bee to use
-> tep_get_event(), instead of the old pevent->events[...]. But it appears
-> to me that
-> commit 80c5526c8544ae76cba31fb9702ab8accac1f0f3
-> Author: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-> Date:   2019-04-01 12:43:12 -0400
-> 
->     tools lib traceevent: Implement new traceevent APIs for accessing struct tep_handler fields
-> 
-> ommitted adding it to event-parse.h. It appears to be intended as public
-> API however, given that it got documented in
+for you to fetch changes up to 5a46d3f71d5e5a9f82eabc682f996f1281705ac7:
 
-And it appears that we missed to add it ;-)
+  ACPI/IORT: Fix off-by-one check in iort_dev_find_its_id() (2019-07-23 15:45:46 +0100)
 
-> 
-> commit 747e942c3925bb85e2865371664499a98fca83b0
-> Author: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-> Date:   2019-05-10 15:56:23 -0400
-> 
->     tools lib traceevent: Man pages for libtraceevent event get APIs
-> 
-> 
-> The following patch fixes this for me. I can polish it up, but I'm
-> wondering if I'm missing something here?
-> 
-> diff --git i/tools/lib/traceevent/event-parse.h w/tools/lib/traceevent/event-parse.h
-> index 642f68ab5fb2..7ebc9b5308d4 100644
-> --- i/tools/lib/traceevent/event-parse.h
-> +++ w/tools/lib/traceevent/event-parse.h
-> @@ -517,6 +517,7 @@ int tep_read_number_field(struct tep_format_field *field, const void *data,
->  			  unsigned long long *value);
->  
->  struct tep_event *tep_get_first_event(struct tep_handle *tep);
-> +struct tep_event *tep_get_event(struct tep_handle *tep, int index);
+----------------------------------------------------------------
+arm64 fixes for -rc2
 
-I was looking at the tep_get_event() code, and we should switch that to
-"unsigned int index" otherwise passing in a negative number will return
-an address outside the array.
+- Big bad batch of MAINTAINERS updates
 
->  int tep_get_events_count(struct tep_handle *tep);
->  struct tep_event *tep_find_event(struct tep_handle *tep, int id);
->  
-> diff --git i/tools/perf/util/trace-event-parse.c w/tools/perf/util/trace-event-parse.c
-> index 62bc61155dd1..6a035ffd58ac 100644
-> --- i/tools/perf/util/trace-event-parse.c
-> +++ w/tools/perf/util/trace-event-parse.c
-> @@ -179,28 +179,26 @@ struct tep_event *trace_find_next_event(struct tep_handle *pevent,
->  {
->  	static int idx;
->  	int events_count;
-> -	struct tep_event *all_events;
->  
-> -	all_events = tep_get_first_event(pevent);
->  	events_count = tep_get_events_count(pevent);
+- Fix handling of SP alignment fault exceptions
 
-I think we can get rid of the events_count and all its checks, as the
-same check is done within tep_get_event().
+- Fix PSTATE.SSBS handling on heterogeneous systems
 
-> -	if (!pevent || !all_events || events_count < 1)
-> +	if (!pevent || events_count < 1)
+- Fix fallout from moving to the generic vDSO implementation
 
-	if (!pevent)
+- Fix stack unwinding in the face of frame corruption
 
->  		return NULL;
->  
->  	if (!event) {
->  		idx = 0;
-> -		return all_events;
-> +		return tep_get_event(pevent, 0);
->  	}
->  
-> -	if (idx < events_count && event == (all_events + idx)) {
-> +	if (idx < events_count && event == tep_get_event(pevent, idx)) {
+- Fix off-by-one in IORT code
 
-	if (event == tep_get_event(pevent, idx))
-		return tep_get_event(pevent, ++idx);
+- Minor SVE cleanups
 
->  		idx++;
->  		if (idx == events_count)
->  			return NULL;
-> -		return (all_events + idx);
-> +		return tep_get_event(pevent, idx);
->  	}
->  
+----------------------------------------------------------------
+Anshuman Khandual (1):
+      arm64: mm: Drop pte_huge()
 
-	struct tep_event_format *next_event;
+Dave Martin (4):
+      arm64: stacktrace: Constify stacktrace.h functions
+      arm64: stacktrace: Factor out backtrace initialisation
+      arm64/sve: Factor out FPSIMD to SVE state conversion
+      arm64/sve: Fix a couple of magic numbers for the Z-reg count
 
-	for (idx = 0; next_event = tep_get_event(pevent, idx); idx++)
-		if (event == next_event)
-			return tep_get_event(pevent, ++idx);
+James Morse (1):
+      arm64: entry: SP Alignment Fault doesn't write to FAR_EL1
 
-Also, I think setting the idx to 1 in the loop is wrong. Why? think of
-this:
+Jean-Philippe Brucker (1):
+      MAINTAINERS: Update my email address
 
-	first_event = trace_find_next_event(pevent, NULL);
+Julien Thierry (1):
+      MAINTAINERS: Update my email address
 
-	next_event = trace_find_next_event(pevent, first_event);
-	for (i = 0; i < 5; i++)
-		next_event = trace_find_next_event(pevent, next_event);
+Lorenzo Pieralisi (1):
+      ACPI/IORT: Fix off-by-one check in iort_dev_find_its_id()
 
-	second_event = trace_find_next_event(pevent, first_event);
+Marc Zyngier (2):
+      MAINTAINERS: Update my email address to @kernel.org
+      arm64: Force SSBS on context switch
 
-second_event would become NULL.
+Mark Rutland (1):
+      arm64: stacktrace: Better handle corrupted stacks
 
-Care to send a formal patch?
+Naohiro Aota (1):
+      arm64: vdso: fix flip/flop vdso build bug
 
-Thanks!
+Suzuki K Poulose (1):
+      MAINTAINERS: Fix spelling mistake in my name
 
--- Steve
+Vincenzo Frascino (2):
+      arm64: vdso: Fix population of AT_SYSINFO_EHDR for compat vdso
+      arm64: vdso: Cleanup Makefiles
 
-
->  	for (idx = 1; idx < events_count; idx++) {
-> -		if (event == (all_events + (idx - 1)))
-> -			return (all_events + idx);
-> +		if (event == tep_get_event(pevent, idx - 1))
-> +			return tep_get_event(pevent, idx);
->  	}
-
->  	return NULL;
->  }
-> 
-> 
-> 
-> 
-> Not related to this crash, but it also seems that the whole
-> trace_find_next_event() API ought to be removed. Back when it was
-> 
-> -struct event *trace_find_next_event(struct event *event)
-> -{
-> -       if (!event)
-> -               return event_list;
-> -
-> -       return event->next;
-> -}
-> 
-> it made some sense, but the changes in
-> 
-> commit aaf045f72335653b24784d6042be8e4aee114403
-> Author: Steven Rostedt <srostedt@redhat.com>
-> Date:   2012-04-06 00:47:56 +0200
-> 
->     perf: Have perf use the new libtraceevent.a library
-> 
-> seem to make the current API somewhat absurd, as evidenced by the
-> complexity in trace_find_next_event(). I mean even just removing that
-> function and changing the two callsites to simple for loops with
-> tep_get_events_count() & tep_get_event() ought to be a lot better.
-> 
-> Greetings,
-> 
-> Andres Freund
-
+ .mailmap                            |  3 ++
+ MAINTAINERS                         | 14 +++----
+ arch/arm64/include/asm/elf.h        |  2 +-
+ arch/arm64/include/asm/pgtable.h    |  1 -
+ arch/arm64/include/asm/processor.h  | 14 ++++++-
+ arch/arm64/include/asm/stacktrace.h | 78 ++++++++++++++++++++++++++++++-------
+ arch/arm64/kernel/entry.S           | 22 ++++++-----
+ arch/arm64/kernel/fpsimd.c          | 29 +++++++-------
+ arch/arm64/kernel/perf_callchain.c  |  7 +---
+ arch/arm64/kernel/process.c         | 36 ++++++++++++++---
+ arch/arm64/kernel/return_address.c  |  9 ++---
+ arch/arm64/kernel/stacktrace.c      | 59 +++++++++++++++++++++-------
+ arch/arm64/kernel/time.c            |  7 +---
+ arch/arm64/kernel/traps.c           | 13 +++----
+ arch/arm64/kernel/vdso/Makefile     | 13 +++----
+ arch/arm64/kernel/vdso32/Makefile   | 14 ++++---
+ drivers/acpi/arm64/iort.c           |  4 +-
+ 17 files changed, 219 insertions(+), 106 deletions(-)
