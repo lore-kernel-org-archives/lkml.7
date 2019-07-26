@@ -4,52 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B784C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A555C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0307C20644
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD02620840
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155082;
-	bh=p2jxfemamL9OThkkkhp5Ka0e+Tn3mOYTKn4IIiywrSo=;
+	s=default; t=1564155084;
+	bh=EtuxGL0g9cKMmNy6KapyBnlRAz2SyGUAO60uxNSnL+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BZEavpCH5BOVF9QSQq0qLflhI4TjNjvoJqHnylVAKTQIJqFNMtw2oJE9BdXoIIWut
-	 KfNBiDNg0QyjthfSaPjO3DYiIQ8WIcwd4bHy0Kh5rPrMNJm29cwADcpiAI2qdM+i/l
-	 gxzcxNiLmPlU2aBzmayPWNMbIwmpRNPVpoaDG4cQ=
+	b=GJZzZU1VVuDcB7WomWLtJUPOBFMorlI9jshZnMLBObwXlgys2z1R87hYF5qMDuSMf
+	 HNGDYA99/0LCiIl2LM2OOWvJWcVzm/NrVJsuCc5xQ3CMQfm8dN3dzR7PO13oUw8idG
+	 eDED9oa2Fow6ELAOYzSCc3tAnD5tt2R/A5nPOpq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389260AbfGZPbU (ORCPT
+        id S2389269AbfGZPbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:31:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46232 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:31:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389243AbfGZPbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:31:16 -0400
+        id S2389256AbfGZPbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:31:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B1A322BF5;
-        Fri, 26 Jul 2019 15:31:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A663622CB9;
+        Fri, 26 Jul 2019 15:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155075;
-        bh=p2jxfemamL9OThkkkhp5Ka0e+Tn3mOYTKn4IIiywrSo=;
+        s=default; t=1564155079;
+        bh=EtuxGL0g9cKMmNy6KapyBnlRAz2SyGUAO60uxNSnL+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HtM9E1JJ+pmzspkD09T8DahH6v0myefvbzWOwdKp98SQtvODnOqLHBJcEBYytTL0+
-         xODiwhvrsr26R6VbLaCwBrOGPvHtF4on+1Mza9pPGz7v6oR70FtzSFLVSNo9Rhcyk2
-         2m7kSgP0c6gaU5tI36tmRcmBiyHo3yhBGup56/0Y=
+        b=K3HhjBoDQOts8DeuCswMo/V1Ot4aD3j+OFt1a9k6pPeCRYIloMip/VAzOQXDbbeyh
+         CDwesEcklCM5pyB+CCsrt+q/+lNE19V8kbbyflcbw7Bg58DFfLGWdG2eJO1pVED3z7
+         /hecfifP8+rKrXfhOAKbWpGmPdi+KJrair5RNAnQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Hurley <john.hurley@netronome.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Pravin B Shelar <pshelar@ovn.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 12/62] net: openvswitch: fix csum updates for MPLS actions
-Date:   Fri, 26 Jul 2019 17:24:24 +0200
-Message-Id: <20190726152302.979936500@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+a24c397a29ad22d86c98@syzkaller.appspotmail.com,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.1 50/62] perf/core: Fix race between close() and fork()
+Date:   Fri, 26 Jul 2019 17:25:02 +0200
+Message-Id: <20190726152307.283985735@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -62,73 +69,183 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hurley <john.hurley@netronome.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 0e3183cd2a64843a95b62f8bd4a83605a4cf0615 ]
+commit 1cf8dfe8a661f0462925df943140e9f6d1ea5233 upstream.
 
-Skbs may have their checksum value populated by HW. If this is a checksum
-calculated over the entire packet then the CHECKSUM_COMPLETE field is
-marked. Changes to the data pointer on the skb throughout the network
-stack still try to maintain this complete csum value if it is required
-through functions such as skb_postpush_rcsum.
+Syzcaller reported the following Use-after-Free bug:
 
-The MPLS actions in Open vSwitch modify a CHECKSUM_COMPLETE value when
-changes are made to packet data without a push or a pull. This occurs when
-the ethertype of the MAC header is changed or when MPLS lse fields are
-modified.
+	close()						clone()
 
-The modification is carried out using the csum_partial function to get the
-csum of a buffer and add it into the larger checksum. The buffer is an
-inversion of the data to be removed followed by the new data. Because the
-csum is calculated over 16 bits and these values align with 16 bits, the
-effect is the removal of the old value from the CHECKSUM_COMPLETE and
-addition of the new value.
+							  copy_process()
+							    perf_event_init_task()
+							      perf_event_init_context()
+							        mutex_lock(parent_ctx->mutex)
+								inherit_task_group()
+								  inherit_group()
+								    inherit_event()
+								      mutex_lock(event->child_mutex)
+								      // expose event on child list
+								      list_add_tail()
+								      mutex_unlock(event->child_mutex)
+							        mutex_unlock(parent_ctx->mutex)
 
-However, the csum fed into the function and the outcome of the
-calculation are also inverted. This would only make sense if it was the
-new value rather than the old that was inverted in the input buffer.
+							    ...
+							    goto bad_fork_*
 
-Fix the issue by removing the bit inverts in the csum_partial calculation.
+							  bad_fork_cleanup_perf:
+							    perf_event_free_task()
 
-The bug was verified and the fix tested by comparing the folded value of
-the updated CHECKSUM_COMPLETE value with the folded value of a full
-software checksum calculation (reset skb->csum to 0 and run
-skb_checksum_complete(skb)). Prior to the fix the outcomes differed but
-after they produce the same result.
+	  perf_release()
+	    perf_event_release_kernel()
+	      list_for_each_entry()
+		mutex_lock(ctx->mutex)
+		mutex_lock(event->child_mutex)
+		// event is from the failing inherit
+		// on the other CPU
+		perf_remove_from_context()
+		list_move()
+		mutex_unlock(event->child_mutex)
+		mutex_unlock(ctx->mutex)
 
-Fixes: 25cd9ba0abc0 ("openvswitch: Add basic MPLS support to kernel")
-Fixes: bc7cc5999fd3 ("openvswitch: update checksum in {push,pop}_mpls")
-Signed-off-by: John Hurley <john.hurley@netronome.com>
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Acked-by: Pravin B Shelar <pshelar@ovn.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+							      mutex_lock(ctx->mutex)
+							      list_for_each_entry_safe()
+							        // event already stolen
+							      mutex_unlock(ctx->mutex)
+
+							    delayed_free_task()
+							      free_task()
+
+	     list_for_each_entry_safe()
+	       list_del()
+	       free_event()
+	         _free_event()
+		   // and so event->hw.target
+		   // is the already freed failed clone()
+		   if (event->hw.target)
+		     put_task_struct(event->hw.target)
+		       // WHOOPSIE, already quite dead
+
+Which puts the lie to the the comment on perf_event_free_task():
+'unexposed, unused context' not so much.
+
+Which is a 'fun' confluence of fail; copy_process() doing an
+unconditional free_task() and not respecting refcounts, and perf having
+creative locking. In particular:
+
+  82d94856fa22 ("perf/core: Fix lock inversion between perf,trace,cpuhp")
+
+seems to have overlooked this 'fun' parade.
+
+Solve it by using the fact that detached events still have a reference
+count on their (previous) context. With this perf_event_free_task()
+can detect when events have escaped and wait for their destruction.
+
+Debugged-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Reported-by: syzbot+a24c397a29ad22d86c98@syzkaller.appspotmail.com
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Cc: <stable@vger.kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Fixes: 82d94856fa22 ("perf/core: Fix lock inversion between perf,trace,cpuhp")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/openvswitch/actions.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/net/openvswitch/actions.c
-+++ b/net/openvswitch/actions.c
-@@ -175,8 +175,7 @@ static void update_ethertype(struct sk_b
- 	if (skb->ip_summed == CHECKSUM_COMPLETE) {
- 		__be16 diff[] = { ~(hdr->h_proto), ethertype };
+---
+ kernel/events/core.c |   49 +++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 41 insertions(+), 8 deletions(-)
+
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4459,12 +4459,20 @@ static void _free_event(struct perf_even
+ 	if (event->destroy)
+ 		event->destroy(event);
  
--		skb->csum = ~csum_partial((char *)diff, sizeof(diff),
--					~skb->csum);
-+		skb->csum = csum_partial((char *)diff, sizeof(diff), skb->csum);
+-	if (event->ctx)
+-		put_ctx(event->ctx);
+-
++	/*
++	 * Must be after ->destroy(), due to uprobe_perf_close() using
++	 * hw.target.
++	 */
+ 	if (event->hw.target)
+ 		put_task_struct(event->hw.target);
+ 
++	/*
++	 * perf_event_free_task() relies on put_ctx() being 'last', in particular
++	 * all task references must be cleaned up.
++	 */
++	if (event->ctx)
++		put_ctx(event->ctx);
++
+ 	exclusive_event_destroy(event);
+ 	module_put(event->pmu->module);
+ 
+@@ -4644,8 +4652,17 @@ again:
+ 	mutex_unlock(&event->child_mutex);
+ 
+ 	list_for_each_entry_safe(child, tmp, &free_list, child_list) {
++		void *var = &child->ctx->refcount;
++
+ 		list_del(&child->child_list);
+ 		free_event(child);
++
++		/*
++		 * Wake any perf_event_free_task() waiting for this event to be
++		 * freed.
++		 */
++		smp_mb(); /* pairs with wait_var_event() */
++		wake_up_var(var);
  	}
  
- 	hdr->h_proto = ethertype;
-@@ -268,8 +267,7 @@ static int set_mpls(struct sk_buff *skb,
- 	if (skb->ip_summed == CHECKSUM_COMPLETE) {
- 		__be32 diff[] = { ~(stack->label_stack_entry), lse };
+ no_ctx:
+@@ -11506,11 +11523,11 @@ static void perf_free_event(struct perf_
+ }
  
--		skb->csum = ~csum_partial((char *)diff, sizeof(diff),
--					  ~skb->csum);
-+		skb->csum = csum_partial((char *)diff, sizeof(diff), skb->csum);
+ /*
+- * Free an unexposed, unused context as created by inheritance by
+- * perf_event_init_task below, used by fork() in case of fail.
++ * Free a context as created by inheritance by perf_event_init_task() below,
++ * used by fork() in case of fail.
+  *
+- * Not all locks are strictly required, but take them anyway to be nice and
+- * help out with the lockdep assertions.
++ * Even though the task has never lived, the context and events have been
++ * exposed through the child_list, so we must take care tearing it all down.
+  */
+ void perf_event_free_task(struct task_struct *task)
+ {
+@@ -11540,7 +11557,23 @@ void perf_event_free_task(struct task_st
+ 			perf_free_event(event, ctx);
+ 
+ 		mutex_unlock(&ctx->mutex);
+-		put_ctx(ctx);
++
++		/*
++		 * perf_event_release_kernel() could've stolen some of our
++		 * child events and still have them on its free_list. In that
++		 * case we must wait for these events to have been freed (in
++		 * particular all their references to this task must've been
++		 * dropped).
++		 *
++		 * Without this copy_process() will unconditionally free this
++		 * task (irrespective of its reference count) and
++		 * _free_event()'s put_task_struct(event->hw.target) will be a
++		 * use-after-free.
++		 *
++		 * Wait for all events to drop their context reference.
++		 */
++		wait_var_event(&ctx->refcount, refcount_read(&ctx->refcount) == 1);
++		put_ctx(ctx); /* must be last */
  	}
+ }
  
- 	stack->label_stack_entry = lse;
 
 
