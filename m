@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD755C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF919C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F8D229F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9557D22CEB
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149334;
-	bh=FAr2Y4OwpI1SNqxHOwFQI3SQBJHuAdZFWRAgm7Pbr+Y=;
+	s=default; t=1564149338;
+	bh=QfQ3HbAzJQYJ4sG/ui79eueqqCQPSNxSJW+9CctBu3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K0SIOYQZhqWeZSJf4wNxK+fX8Vi989jxcOe/m4Ok3VGqRzqX7XkI/FJdm9Dci1Tf+
-	 0TxJ3q2vTQeXX3SRt8wom3m74R7spR5NV6STKqSEl+cXWRvlxzCmgCF8D8y3+NZr8U
-	 E8qfSmgr1HcdIAddceyL4Abz46FER5N5L5u7LA9U=
+	b=ZvC+e0S2Koa1nyR1FieEcgE3893FKMM86Dvn302HluaCm3DmdV9etHpqyKz+ADinJ
+	 K+Li9X7sv8bvIoP0fBHl7Pu3cnmUeTeSctpRtriHoPivGAThTLX6lGUjvHMzUXrtN7
+	 wYLu4hN/nzft2QDhkRI1Wn2kdoL7x/ZUuq6c+3Uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387929AbfGZNmY (ORCPT
+        id S1728415AbfGZNzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:42:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49460 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:55:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387880AbfGZNmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:42:13 -0400
+        id S2387920AbfGZNmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:42:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24FDE22CD2;
-        Fri, 26 Jul 2019 13:42:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6750322CBF;
+        Fri, 26 Jul 2019 13:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148532;
-        bh=FAr2Y4OwpI1SNqxHOwFQI3SQBJHuAdZFWRAgm7Pbr+Y=;
+        s=default; t=1564148541;
+        bh=QfQ3HbAzJQYJ4sG/ui79eueqqCQPSNxSJW+9CctBu3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S5yJdpdzyZamuLJh+ANiE2W8IA6vk/ISOJC32+huQCXFbiGor8stSeplu2zzpl6TY
-         UbKCFuUUrAL6A6muD3yE35NKG8AZ5ybg++aB9oZbDhlq1HyXUT+oot9bnfXCZegX8z
-         zVDjYCPAP4kkHsroEIV5fC01iAYow6VUMa4AIUO0=
+        b=QfCzEA/eycgAPrr1qPP2NT6hbBIlrimMSStO0gLwdaFtAYznh0Jaw2oS6tDXp+v9P
+         tz9sC6gHCsdwHXAJDJIFSenMRBZjhDmbqua+P39aTJZaAafcsxxGTi9PnZeD6yFV+R
+         UXccyYLZvppuICbUUgXs+SVfuc1O+sa0R6g8HOqs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 02/47] ARM: dts: rockchip: Make rk3288-veyron-minnie run at hs200
-Date:   Fri, 26 Jul 2019 09:41:25 -0400
-Message-Id: <20190726134210.12156-2-sashal@kernel.org>
+Cc:     Prarit Bhargava <prarit@redhat.com>,
+        Barret Rhoden <brho@google.com>,
+        David Arcari <darcari@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 08/47] kernel/module.c: Only return -EEXIST for modules that have finished loading
+Date:   Fri, 26 Jul 2019 09:41:31 -0400
+Message-Id: <20190726134210.12156-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
 References: <20190726134210.12156-1-sashal@kernel.org>
@@ -60,57 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Prarit Bhargava <prarit@redhat.com>
 
-[ Upstream commit 1c0479023412ab7834f2e98b796eb0d8c627cd62 ]
+[ Upstream commit 6e6de3dee51a439f76eb73c22ae2ffd2c9384712 ]
 
-As some point hs200 was failing on rk3288-veyron-minnie.  See commit
-984926781122 ("ARM: dts: rockchip: temporarily remove emmc hs200 speed
-from rk3288 minnie").  Although I didn't track down exactly when it
-started working, it seems to work OK now, so let's turn it back on.
+Microsoft HyperV disables the X86_FEATURE_SMCA bit on AMD systems, and
+linux guests boot with repeated errors:
 
-To test this, I booted from SD card and then used this script to
-stress the enumeration process after fixing a memory leak [1]:
-  cd /sys/bus/platform/drivers/dwmmc_rockchip
-  for i in $(seq 1 3000); do
-    echo "========================" $i
-    echo ff0f0000.dwmmc > unbind
-    sleep .5
-    echo ff0f0000.dwmmc > bind
-    while true; do
-      if [ -e /dev/mmcblk2 ]; then
-        break;
-      fi
-      sleep .1
-    done
-  done
+amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
 
-It worked fine.
+The warnings occur because the module code erroneously returns -EEXIST
+for modules that have failed to load and are in the process of being
+removed from the module list.
 
-[1] https://lkml.kernel.org/r/20190503233526.226272-1-dianders@chromium.org
+module amd64_edac_mod has a dependency on module edac_mce_amd.  Using
+modules.dep, systemd will load edac_mce_amd for every request of
+amd64_edac_mod.  When the edac_mce_amd module loads, the module has
+state MODULE_STATE_UNFORMED and once the module load fails and the state
+becomes MODULE_STATE_GOING.  Another request for edac_mce_amd module
+executes and add_unformed_module() will erroneously return -EEXIST even
+though the previous instance of edac_mce_amd has MODULE_STATE_GOING.
+Upon receiving -EEXIST, systemd attempts to load amd64_edac_mod, which
+fails because of unknown symbols from edac_mce_amd.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+add_unformed_module() must wait to return for any case other than
+MODULE_STATE_LIVE to prevent a race between multiple loads of
+dependent modules.
+
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Signed-off-by: Barret Rhoden <brho@google.com>
+Cc: David Arcari <darcari@redhat.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3288-veyron-minnie.dts | 4 ----
- 1 file changed, 4 deletions(-)
+ kernel/module.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-index f95d0c5fcf71..6e8946052c78 100644
---- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-@@ -90,10 +90,6 @@
- 	pwm-off-delay-ms = <200>;
- };
+diff --git a/kernel/module.c b/kernel/module.c
+index b8f37376856b..3fda10c549a2 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3388,8 +3388,7 @@ static bool finished_loading(const char *name)
+ 	sched_annotate_sleep();
+ 	mutex_lock(&module_mutex);
+ 	mod = find_module_all(name, strlen(name), true);
+-	ret = !mod || mod->state == MODULE_STATE_LIVE
+-		|| mod->state == MODULE_STATE_GOING;
++	ret = !mod || mod->state == MODULE_STATE_LIVE;
+ 	mutex_unlock(&module_mutex);
  
--&emmc {
--	/delete-property/mmc-hs200-1_8v;
--};
--
- &gpio_keys {
- 	pinctrl-0 = <&pwr_key_l &ap_lid_int_l &volum_down_l &volum_up_l>;
- 
+ 	return ret;
+@@ -3559,8 +3558,7 @@ static int add_unformed_module(struct module *mod)
+ 	mutex_lock(&module_mutex);
+ 	old = find_module_all(mod->name, strlen(mod->name), true);
+ 	if (old != NULL) {
+-		if (old->state == MODULE_STATE_COMING
+-		    || old->state == MODULE_STATE_UNFORMED) {
++		if (old->state != MODULE_STATE_LIVE) {
+ 			/* Wait in case it fails to load. */
+ 			mutex_unlock(&module_mutex);
+ 			err = wait_event_interruptible(module_wq,
 -- 
 2.20.1
 
