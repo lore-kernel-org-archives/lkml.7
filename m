@@ -5,65 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F61DC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 902C9C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B6A22BEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 687DA22BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:27:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xG8ocYYA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aFmOhWcw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfGZL1j (ORCPT
+        id S1726972AbfGZL1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 07:27:39 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38784 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbfGZL1j (ORCPT
+        Fri, 26 Jul 2019 07:27:44 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43967 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbfGZL1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 07:27:39 -0400
-Received: by mail-lf1-f66.google.com with SMTP id h28so36808336lfj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 04:27:37 -0700 (PDT)
+        Fri, 26 Jul 2019 07:27:43 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y17so26579660ljk.10
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 04:27:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=WJ4oeV5ZLHJeESLEdUy9aN7H7bQ/Va6Qh1QrIFzI99g=;
-        b=xG8ocYYAMVyrT+fps7Ci3OpR1wI6YXEKPlizWNxS60+b9FbANZFGs/wC2hhclrgCmv
-         55v4U/Zf+1LhEPq7LC1Y1cEQQHtwFwuUvCj5CNmzqYyzQct5/fVjkoTGnd10sSfnC5V0
-         Hf+hL1vZACofkVZT/824XWihTsoLfe4Thp+o/40y9kSdsqD/HUVj++MnnfFRl7qYzdvF
-         +5ExUCQXug6wUu6+Z3l6cuXe+29DSYpXZRRB9Zrfg69tWctJwzzxCBftUTTRdBIa8MhL
-         bg/B/cPhoW0/TOldXnTgHzrzw5FfOpbMXBFcTYGl9OaxoQgUc7kD+JzWlPamB6tU+ytk
-         0Kvw==
+        bh=9OLH6fxuKgLOy3IQNpiLiTZEw036dSX/erXeaZiU+1g=;
+        b=aFmOhWcwR9JZPomPlhuEjiQ+iDEneB3Fn7cOkOKbodtgm6JD4c5v+z03CMnc9Z1qxk
+         N5BYlfwLuDrPYCgVEx3uT5AJu0lXJ0ERfEsfhZesnJczUQcmNVsgebr6Ip3WG9BeVgwT
+         bhCer7qih/avaGN3NiV+P8ETiX3PBCjSocV402MD4r7vy4Mi73g9fagGvPdB2JtMOFEt
+         WsTuzZ9t9fqOfCp5llHvN45J2SFvaESDfV1PoRj7h/LrkPxUJsgfIkZ+9b7g+XWoDhfn
+         TL9as95m50nAnioG6EYMQZMj9cSITWohs2eXIEiiz2BGvN2Dj1b0Z16QjRT4Xo81Nrvz
+         a45g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=WJ4oeV5ZLHJeESLEdUy9aN7H7bQ/Va6Qh1QrIFzI99g=;
-        b=WhOqkpiLNQs81EN+LjdRyNBaU7beeTxrc2PtiQ3M88E6Ur3jn4WzpkYDJ+AjlcMOSm
-         prj2xfRssYWbmyY/aPljCHO1jIUzylwkdyUvhvR/lSM6EKEstoQfZVZdts7SBgRbW1ie
-         6BRC6rAL3X7egPuq+LTpZu9YDAA9lPleCfB2OAxe+7lXxk6f5Wu5OKMIejVSYz8IhSfd
-         fRg+An3L+WUD0SpokcC5IS+vOY2599qAyQeDzW0veTcvpRqRlwHqFIYcVAQdbwxqp7Sz
-         UheeuHPCq5M8Nx4nRhyPQL5M8h9TTJd6KdVxYjbhQ9Td+nuuLY6mDoS0bBzvKiGbPcQR
-         LUFg==
-X-Gm-Message-State: APjAAAW3NbwLBuEQGtIA+GfOXAS0AFXvKG2iCuRoJpZFOAn4DRcvWKba
-        TPVvK5+UhtV8SNFmJyUK7XmXXg==
-X-Google-Smtp-Source: APXvYqy19sSMEhoiwI1rduoX5SnYPS74HR9JH6CK0bVMOr3rdq3xpST/Q6wPbjIyPh4IZqzaDa1XzA==
-X-Received: by 2002:ac2:518d:: with SMTP id u13mr9418914lfi.40.1564140456984;
-        Fri, 26 Jul 2019 04:27:36 -0700 (PDT)
+        bh=9OLH6fxuKgLOy3IQNpiLiTZEw036dSX/erXeaZiU+1g=;
+        b=UG1T9fm+KiysndcX3cAdtXWHJWN1LrRKx6AnPSAffwsoRtEatg55kBRJ3Hh+vOgacf
+         oWQkWOKnJhCQY+qES3Wh8ZLqPaj9kyj9TLrvOjGtw+gs9JdROYmZnzC1g0eyTEO6kL7K
+         hkeYO2glOsp6vPK0C7oJNhoQoA3cASlGD8Wdt6oVUL+fWp3w3BtKAx+GZvBgw+p5MCiJ
+         B1Cq+LzC+tBWcilT3FAeTFEYTKPgMDwCpEICPqQXwB+NEZsGDZWpH1rrlh8Hv1tJs+Z0
+         GBjjs0EET4HNZcDuJ8+IxSwdRZmQY+kgnipO3420QWA0pUdErLmv/5kjjR9vpppdpMDZ
+         VJcw==
+X-Gm-Message-State: APjAAAUrDIgUfysLhugUT+bwwGEU9BnomEEMi2aukvyIZB55R1x60xfE
+        OwDBA5YeOJAc6whC5zogHei1sA==
+X-Google-Smtp-Source: APXvYqyLlEuVsq4S+ikz5rfIdN4QEBYo9a6hy0bII9lPMm8U6np7eGIUoQxz+vtDcvLauvKnwlRzhw==
+X-Received: by 2002:a2e:9250:: with SMTP id v16mr48826921ljg.89.1564140461541;
+        Fri, 26 Jul 2019 04:27:41 -0700 (PDT)
 Received: from localhost (c-243c70d5.07-21-73746f28.bbcust.telenor.se. [213.112.60.36])
-        by smtp.gmail.com with ESMTPSA id c1sm8257268lfh.13.2019.07.26.04.27.36
+        by smtp.gmail.com with ESMTPSA id w6sm8239195lff.80.2019.07.26.04.27.40
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 04:27:36 -0700 (PDT)
+        Fri, 26 Jul 2019 04:27:40 -0700 (PDT)
 From:   Anders Roxell <anders.roxell@linaro.org>
 To:     will@kernel.org, mark.rutland@arm.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>,
-        stable@vger.kernel.org
-Subject: [PATCH] arm: perf: Mark expected switch fall-through
-Date:   Fri, 26 Jul 2019 13:27:32 +0200
-Message-Id: <20190726112732.19257-1-anders.roxell@linaro.org>
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH] arm_pmu: Mark expected switch fall-through
+Date:   Fri, 26 Jul 2019 13:27:37 +0200
+Message-Id: <20190726112737.19309-1-anders.roxell@linaro.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -73,64 +72,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When fall-through warnings was enabled by default, d93512ef0f0e
-("Makefile: Globally enable fall-through warning"), we could see the
-following warnings was starting to show up. However, this was originally
-introduced in commit 6ee33c2712fc ("ARM: hw_breakpoint: correct and
-simplify alignment fixup code"). Commit d968d2b801d8 ("ARM: 7497/1:
-hw_breakpoint: allow single-byte watchpoints on all addresses") was
-written with the intent to allow single-byte watchpoints on all
-addresses but forgot to move 'case 1:' down below 'case 2:'.
+When fall-through warnings was enabled by default the following warning
+was starting to show up:
 
-../arch/arm/kernel/hw_breakpoint.c: In function ‘hw_breakpoint_arch_parse’:
-../arch/arm/kernel/hw_breakpoint.c:609:7: warning: this statement may fall
+../drivers/perf/arm_pmu.c: In function ‘cpu_pm_pmu_notify’:
+../drivers/perf/arm_pmu.c:726:3: warning: this statement may fall
  through [-Wimplicit-fallthrough=]
-    if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
-       ^
-../arch/arm/kernel/hw_breakpoint.c:611:3: note: here
-   case 3:
-   ^~~~
-../arch/arm/kernel/hw_breakpoint.c:613:7: warning: this statement may fall
- through [-Wimplicit-fallthrough=]
-    if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
-       ^
-../arch/arm/kernel/hw_breakpoint.c:615:3: note: here
-   default:
-   ^~~~~~~
+   cpu_pm_pmu_setup(armpmu, cmd);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/perf/arm_pmu.c:727:2: note: here
+  case CPU_PM_ENTER_FAILED:
+  ^~~~
 
-Rework so 'case 1:' are next to 'case 3:' and also add '/* Fall through
-*/' so that the compiler doesn't warn about fall-through.
+Rework so that the compiler doesn't warn about fall-through.
 
-Cc: stable@vger.kernel.org # v3.16
-Fixes: 6ee33c2712fc ("ARM: hw_breakpoint: correct and simplify alignment fixup code")
+Fixes: d93512ef0f0e ("Makefile: Globally enable fall-through warning")
 Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 ---
- arch/arm/kernel/hw_breakpoint.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
-index af8b8e15f589..c14d506969ba 100644
---- a/arch/arm/kernel/hw_breakpoint.c
-+++ b/arch/arm/kernel/hw_breakpoint.c
-@@ -603,15 +603,17 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 	case 0:
- 		/* Aligned */
+I'm not convinced that this is the correct patch to fix this issue.
+However, I can't see why we do 'armpmu->start(armpmu);' only in 'case
+CPU_PM_ENTER_FAILED' and why we not call function cpu_pm_pmu_setup()
+there also, since in cpu_pm_pmu_setup() has a case prepared for
+CPU_PM_ENTER_FAILED.
+
+ drivers/perf/arm_pmu.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+index 2d06b8095a19..465a15705bab 100644
+--- a/drivers/perf/arm_pmu.c
++++ b/drivers/perf/arm_pmu.c
+@@ -724,6 +724,7 @@ static int cpu_pm_pmu_notify(struct notifier_block *b, unsigned long cmd,
  		break;
--	case 1:
- 	case 2:
- 		/* Allow halfword watchpoints and breakpoints. */
- 		if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
- 			break;
+ 	case CPU_PM_EXIT:
+ 		cpu_pm_pmu_setup(armpmu, cmd);
 +		/* Fall through */
-+	case 1:
- 	case 3:
- 		/* Allow single byte watchpoint. */
- 		if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
- 			break;
-+		/* Fall through */
- 	default:
- 		ret = -EINVAL;
- 		goto out;
+ 	case CPU_PM_ENTER_FAILED:
+ 		armpmu->start(armpmu);
+ 		break;
 -- 
 2.20.1
 
