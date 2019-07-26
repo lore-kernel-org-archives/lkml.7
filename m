@@ -2,333 +2,86 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9814EC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 17:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BFDC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 17:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BAA821734
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 17:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5691321734
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 17:11:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BtXkSUiE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387872AbfGZRJ5 (ORCPT
+        id S1728089AbfGZRLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 13:09:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50672 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387790AbfGZRJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 13:09:53 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ABCE330B9BF6;
-        Fri, 26 Jul 2019 17:09:52 +0000 (UTC)
-Received: from [10.36.116.102] (ovpn-116-102.ams2.redhat.com [10.36.116.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 31D1A620CA;
-        Fri, 26 Jul 2019 17:09:47 +0000 (UTC)
-Subject: Re: [PATCH v8 1/6] vfio/type1: Introduce iova list and add iommu
- aperture validity check
-To:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        alex.williamson@redhat.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linuxarm@huawei.com,
-        john.garry@huawei.com, xuwei5@hisilicon.com, kevin.tian@intel.com
-References: <20190723160637.8384-1-shameerali.kolothum.thodi@huawei.com>
- <20190723160637.8384-2-shameerali.kolothum.thodi@huawei.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <929cc8b2-af38-5245-e463-3b3f21d7af7b@redhat.com>
-Date:   Fri, 26 Jul 2019 19:09:46 +0200
+        Fri, 26 Jul 2019 13:11:54 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:10585 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfGZRLx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 13:11:53 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d3b34610000>; Fri, 26 Jul 2019 10:12:01 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 26 Jul 2019 10:11:53 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 26 Jul 2019 10:11:53 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 26 Jul
+ 2019 17:11:48 +0000
+Subject: Re: [PATCH v2 2/7] mm/hmm: a few more C style and comment clean ups
+To:     Christoph Hellwig <hch@lst.de>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <nouveau@lists.freedesktop.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+References: <20190726005650.2566-1-rcampbell@nvidia.com>
+ <20190726005650.2566-3-rcampbell@nvidia.com> <20190726062320.GA22881@lst.de>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <6673dc71-f43e-849f-ca36-0b20805fc092@nvidia.com>
+Date:   Fri, 26 Jul 2019 10:11:48 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190723160637.8384-2-shameerali.kolothum.thodi@huawei.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190726062320.GA22881@lst.de>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 26 Jul 2019 17:09:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564161121; bh=esO7QnCCyx9dzKTMgBFciVXyQ2aruZtdaUPoDfDZZgU=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=BtXkSUiESCykynn98aAUZOYyg4yz7jKnWyWlQeuTkJgRs1pzxbnG+tdWelFiuNWFf
+         lk2A6TLLDs6cQLe2Yo2AGejt/oTzYMtS1amgKmn2dm5v84UdJRMTYaGngk6xAfFfNb
+         p99GEAtPQKu0WpF74vtOAbWCO1P3EV8HcGsPjmb/CtOUwIfsJf4d4RzpBS0UZFOFl5
+         mKy6fFTJpky1hLxVBJ8kIaj3ucax+hLNkEj3Rb1EYWFnVqCmhNJAyxMjR01QHESrZT
+         ZRtQfwyfeh21KLwAKZ3N0lRnAXuC9Yp0RdEq+oNcbACTXWG+Ly+6gcvZF0sXLDUj4M
+         vgXH0/SGBnYgA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shameer,
 
-On 7/23/19 6:06 PM, Shameer Kolothum wrote:
-> This introduces an iova list that is valid for dma mappings. Make
-> sure the new iommu aperture window doesn't conflict with the current
-> one or with any existing dma mappings during attach.
+On 7/25/19 11:23 PM, Christoph Hellwig wrote:
+> Note: it seems like you've only CCed me on patches 2-7, but not on the
+> cover letter and patch 1.  I'll try to find them later, but to make Ccs
+> useful they should normally cover the whole series.
 > 
-> Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> Otherwise this looks fine to me:
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> 
 
-Thanks
-
-Eric
-> ---
-> v7-->v8
->  -Addressed suggestions by Eric to update comments.
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 184 +++++++++++++++++++++++++++++++-
->  1 file changed, 181 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 054391f30fa8..6a69652b406b 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -62,6 +62,7 @@ MODULE_PARM_DESC(dma_entry_limit,
->  
->  struct vfio_iommu {
->  	struct list_head	domain_list;
-> +	struct list_head	iova_list;
->  	struct vfio_domain	*external_domain; /* domain for external user */
->  	struct mutex		lock;
->  	struct rb_root		dma_list;
-> @@ -97,6 +98,12 @@ struct vfio_group {
->  	bool			mdev_group;	/* An mdev group */
->  };
->  
-> +struct vfio_iova {
-> +	struct list_head	list;
-> +	dma_addr_t		start;
-> +	dma_addr_t		end;
-> +};
-> +
->  /*
->   * Guest RAM pinning working set or DMA target
->   */
-> @@ -1388,6 +1395,146 @@ static int vfio_mdev_iommu_device(struct device *dev, void *data)
->  	return 0;
->  }
->  
-> +/*
-> + * This is a helper function to insert an address range to iova list.
-> + * The list is initially created with a single entry corresponding to
-> + * the IOMMU domain geometry to which the device group is attached.
-> + * The list aperture gets modified when a new domain is added to the
-> + * container if the new aperture doesn't conflict with the current one
-> + * or with any existing dma mappings. The list is also modified to
-> + * exclude any reserved regions associated with the device group.
-> + */
-> +static int vfio_iommu_iova_insert(struct list_head *head,
-> +				  dma_addr_t start, dma_addr_t end)
-> +{
-> +	struct vfio_iova *region;
-> +
-> +	region = kmalloc(sizeof(*region), GFP_KERNEL);
-> +	if (!region)
-> +		return -ENOMEM;
-> +
-> +	INIT_LIST_HEAD(&region->list);
-> +	region->start = start;
-> +	region->end = end;
-> +
-> +	list_add_tail(&region->list, head);
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Check the new iommu aperture conflicts with existing aper or with any
-> + * existing dma mappings.
-> + */
-> +static bool vfio_iommu_aper_conflict(struct vfio_iommu *iommu,
-> +				     dma_addr_t start, dma_addr_t end)
-> +{
-> +	struct vfio_iova *first, *last;
-> +	struct list_head *iova = &iommu->iova_list;
-> +
-> +	if (list_empty(iova))
-> +		return false;
-> +
-> +	/* Disjoint sets, return conflict */
-> +	first = list_first_entry(iova, struct vfio_iova, list);
-> +	last = list_last_entry(iova, struct vfio_iova, list);
-> +	if (start > last->end || end < first->start)
-> +		return true;
-> +
-> +	/* Check for any existing dma mappings below the new start */
-> +	if (start > first->start) {
-> +		if (vfio_find_dma(iommu, first->start, start - first->start))
-> +			return true;
-> +	}
-> +
-> +	/* Check for any existing dma mappings beyond the new end */
-> +	if (end < last->end) {
-> +		if (vfio_find_dma(iommu, end + 1, last->end - end))
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +/*
-> + * Resize iommu iova aperture window. This is called only if the new
-> + * aperture has no conflict with existing aperture and dma mappings.
-> + */
-> +static int vfio_iommu_aper_resize(struct list_head *iova,
-> +				  dma_addr_t start, dma_addr_t end)
-> +{
-> +	struct vfio_iova *node, *next;
-> +
-> +	if (list_empty(iova))
-> +		return vfio_iommu_iova_insert(iova, start, end);
-> +
-> +	/* Adjust iova list start */
-> +	list_for_each_entry_safe(node, next, iova, list) {
-> +		if (start < node->start)
-> +			break;
-> +		if (start >= node->start && start < node->end) {
-> +			node->start = start;
-> +			break;
-> +		}
-> +		/* Delete nodes before new start */
-> +		list_del(&node->list);
-> +		kfree(node);
-> +	}
-> +
-> +	/* Adjust iova list end */
-> +	list_for_each_entry_safe(node, next, iova, list) {
-> +		if (end > node->end)
-> +			continue;
-> +		if (end > node->start && end <= node->end) {
-> +			node->end = end;
-> +			continue;
-> +		}
-> +		/* Delete nodes after new end */
-> +		list_del(&node->list);
-> +		kfree(node);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void vfio_iommu_iova_free(struct list_head *iova)
-> +{
-> +	struct vfio_iova *n, *next;
-> +
-> +	list_for_each_entry_safe(n, next, iova, list) {
-> +		list_del(&n->list);
-> +		kfree(n);
-> +	}
-> +}
-> +
-> +static int vfio_iommu_iova_get_copy(struct vfio_iommu *iommu,
-> +				    struct list_head *iova_copy)
-> +{
-> +	struct list_head *iova = &iommu->iova_list;
-> +	struct vfio_iova *n;
-> +	int ret;
-> +
-> +	list_for_each_entry(n, iova, list) {
-> +		ret = vfio_iommu_iova_insert(iova_copy, n->start, n->end);
-> +		if (ret)
-> +			goto out_free;
-> +	}
-> +
-> +	return 0;
-> +
-> +out_free:
-> +	vfio_iommu_iova_free(iova_copy);
-> +	return ret;
-> +}
-> +
-> +static void vfio_iommu_iova_insert_copy(struct vfio_iommu *iommu,
-> +					struct list_head *iova_copy)
-> +{
-> +	struct list_head *iova = &iommu->iova_list;
-> +
-> +	vfio_iommu_iova_free(iova);
-> +
-> +	list_splice_tail(iova_copy, iova);
-> +}
->  static int vfio_iommu_type1_attach_group(void *iommu_data,
->  					 struct iommu_group *iommu_group)
->  {
-> @@ -1398,6 +1545,8 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  	int ret;
->  	bool resv_msi, msi_remap;
->  	phys_addr_t resv_msi_base;
-> +	struct iommu_domain_geometry geo;
-> +	LIST_HEAD(iova_copy);
->  
->  	mutex_lock(&iommu->lock);
->  
-> @@ -1474,6 +1623,29 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  	if (ret)
->  		goto out_domain;
->  
-> +	/* Get aperture info */
-> +	iommu_domain_get_attr(domain->domain, DOMAIN_ATTR_GEOMETRY, &geo);
-> +
-> +	if (vfio_iommu_aper_conflict(iommu, geo.aperture_start,
-> +				     geo.aperture_end)) {
-> +		ret = -EINVAL;
-> +		goto out_detach;
-> +	}
-> +
-> +	/*
-> +	 * We don't want to work on the original iova list as the list
-> +	 * gets modified and in case of failure we have to retain the
-> +	 * original list. Get a copy here.
-> +	 */
-> +	ret = vfio_iommu_iova_get_copy(iommu, &iova_copy);
-> +	if (ret)
-> +		goto out_detach;
-> +
-> +	ret = vfio_iommu_aper_resize(&iova_copy, geo.aperture_start,
-> +				     geo.aperture_end);
-> +	if (ret)
-> +		goto out_detach;
-> +
->  	resv_msi = vfio_iommu_has_sw_msi(iommu_group, &resv_msi_base);
->  
->  	INIT_LIST_HEAD(&domain->group_list);
-> @@ -1507,8 +1679,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  				list_add(&group->next, &d->group_list);
->  				iommu_domain_free(domain->domain);
->  				kfree(domain);
-> -				mutex_unlock(&iommu->lock);
-> -				return 0;
-> +				goto done;
->  			}
->  
->  			ret = vfio_iommu_attach_group(domain, group);
-> @@ -1531,7 +1702,9 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  	}
->  
->  	list_add(&domain->next, &iommu->domain_list);
-> -
-> +done:
-> +	/* Delete the old one and insert new iova list */
-> +	vfio_iommu_iova_insert_copy(iommu, &iova_copy);
->  	mutex_unlock(&iommu->lock);
->  
->  	return 0;
-> @@ -1540,6 +1713,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  	vfio_iommu_detach_group(domain, group);
->  out_domain:
->  	iommu_domain_free(domain->domain);
-> +	vfio_iommu_iova_free(&iova_copy);
->  out_free:
->  	kfree(domain);
->  	kfree(group);
-> @@ -1679,6 +1853,7 @@ static void *vfio_iommu_type1_open(unsigned long arg)
->  	}
->  
->  	INIT_LIST_HEAD(&iommu->domain_list);
-> +	INIT_LIST_HEAD(&iommu->iova_list);
->  	iommu->dma_list = RB_ROOT;
->  	iommu->dma_avail = dma_entry_limit;
->  	mutex_init(&iommu->lock);
-> @@ -1722,6 +1897,9 @@ static void vfio_iommu_type1_release(void *iommu_data)
->  		list_del(&domain->next);
->  		kfree(domain);
->  	}
-> +
-> +	vfio_iommu_iova_free(&iommu->iova_list);
-> +
->  	kfree(iommu);
->  }
->  
-> 
+Thanks for the review and sorry about the oversight on CCs.
