@@ -2,221 +2,144 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26602C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A901C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA24E22BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564145378;
-	bh=mR8iRrHh0/qxKD79lWNG1cQfK88lcs/LK7vj0fU6tYI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rIZwGEq+fLZ8RCtzcLiTrUw25lbBZ81/U666YoqRI3fnmb2IWbYzeIhFJC/BFrK8Q
-	 a04ZCO+inm8jveWp0m1RiBbUy9u0MO0aEyFco62oTAYOJOn7bwG59g5mOkWDukcpHR
-	 eQ2IbTA8nC6MUlzKvjhiWMAuGgxuSxxx8javIGJI=
+	by mail.kernel.org (Postfix) with ESMTP id 65D3622BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbfGZMtg (ORCPT
+        id S1726413AbfGZMu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:49:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36842 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726000AbfGZMtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:49:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3C11AAFE4;
-        Fri, 26 Jul 2019 12:49:34 +0000 (UTC)
-Date:   Fri, 26 Jul 2019 14:49:33 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Miles Chen <miles.chen@mediatek.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        wsd_upstream@mediatek.com
-Subject: Re: [PATCH v2] mm: memcontrol: fix use after free in
- mem_cgroup_iter()
-Message-ID: <20190726124933.GN6142@dhcp22.suse.cz>
-References: <20190726021247.16162-1-miles.chen@mediatek.com>
+        Fri, 26 Jul 2019 08:50:56 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:38407 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfGZMu4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 08:50:56 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 89D6C20004;
+        Fri, 26 Jul 2019 12:50:53 +0000 (UTC)
+Date:   Fri, 26 Jul 2019 14:50:53 +0200
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     netdev@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net] mvpp2: refactor MTU change code
+Message-ID: <20190726125053.GA5031@kwain>
+References: <20190725231931.24073-1-mcroce@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190726021247.16162-1-miles.chen@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190725231931.24073-1-mcroce@redhat.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 26-07-19 10:12:47, Miles Chen wrote:
-> This patch is sent to report an use after free in mem_cgroup_iter()
-> after merging commit: be2657752e9e "mm: memcg: fix use after free in
-> mem_cgroup_iter()".
-> 
-> I work with android kernel tree (4.9 & 4.14), and the commit:
-> be2657752e9e "mm: memcg: fix use after free in mem_cgroup_iter()" has
-> been merged to the trees. However, I can still observe use after free
-> issues addressed in the commit be2657752e9e.
-> (on low-end devices, a few times this month)
-> 
-> backtrace:
-> 	css_tryget <- crash here
-> 	mem_cgroup_iter
-> 	shrink_node
-> 	shrink_zones
-> 	do_try_to_free_pages
-> 	try_to_free_pages
-> 	__perform_reclaim
-> 	__alloc_pages_direct_reclaim
-> 	__alloc_pages_slowpath
-> 	__alloc_pages_nodemask
-> 
-> To debug, I poisoned mem_cgroup before freeing it:
-> 
-> static void __mem_cgroup_free(struct mem_cgroup *memcg)
-> 	for_each_node(node)
-> 	free_mem_cgroup_per_node_info(memcg, node);
-> 	free_percpu(memcg->stat);
-> +       /* poison memcg before freeing it */
-> +       memset(memcg, 0x78, sizeof(struct mem_cgroup));
-> 	kfree(memcg);
-> }
-> 
-> The coredump shows the position=0xdbbc2a00 is freed.
-> 
-> (gdb) p/x ((struct mem_cgroup_per_node *)0xe5009e00)->iter[8]
-> $13 = {position = 0xdbbc2a00, generation = 0x2efd}
-> 
-> 0xdbbc2a00:     0xdbbc2e00      0x00000000      0xdbbc2800      0x00000100
-> 0xdbbc2a10:     0x00000200      0x78787878      0x00026218      0x00000000
-> 0xdbbc2a20:     0xdcad6000      0x00000001      0x78787800      0x00000000
-> 0xdbbc2a30:     0x78780000      0x00000000      0x0068fb84      0x78787878
-> 0xdbbc2a40:     0x78787878      0x78787878      0x78787878      0xe3fa5cc0
-> 0xdbbc2a50:     0x78787878      0x78787878      0x00000000      0x00000000
-> 0xdbbc2a60:     0x00000000      0x00000000      0x00000000      0x00000000
-> 0xdbbc2a70:     0x00000000      0x00000000      0x00000000      0x00000000
-> 0xdbbc2a80:     0x00000000      0x00000000      0x00000000      0x00000000
-> 0xdbbc2a90:     0x00000001      0x00000000      0x00000000      0x00100000
-> 0xdbbc2aa0:     0x00000001      0xdbbc2ac8      0x00000000      0x00000000
-> 0xdbbc2ab0:     0x00000000      0x00000000      0x00000000      0x00000000
-> 0xdbbc2ac0:     0x00000000      0x00000000      0xe5b02618      0x00001000
-> 0xdbbc2ad0:     0x00000000      0x78787878      0x78787878      0x78787878
-> 0xdbbc2ae0:     0x78787878      0x78787878      0x78787878      0x78787878
-> 0xdbbc2af0:     0x78787878      0x78787878      0x78787878      0x78787878
-> 0xdbbc2b00:     0x78787878      0x78787878      0x78787878      0x78787878
-> 0xdbbc2b10:     0x78787878      0x78787878      0x78787878      0x78787878
-> 0xdbbc2b20:     0x78787878      0x78787878      0x78787878      0x78787878
-> 0xdbbc2b30:     0x78787878      0x78787878      0x78787878      0x78787878
-> 0xdbbc2b40:     0x78787878      0x78787878      0x78787878      0x78787878
-> 0xdbbc2b50:     0x78787878      0x78787878      0x78787878      0x78787878
-> 0xdbbc2b60:     0x78787878      0x78787878      0x78787878      0x78787878
-> 0xdbbc2b70:     0x78787878      0x78787878      0x78787878      0x78787878
-> 0xdbbc2b80:     0x78787878      0x78787878      0x00000000      0x78787878
-> 0xdbbc2b90:     0x78787878      0x78787878      0x78787878      0x78787878
-> 0xdbbc2ba0:     0x78787878      0x78787878      0x78787878      0x78787878
-> 
-> In the reclaim path, try_to_free_pages() does not setup
-> sc.target_mem_cgroup and sc is passed to do_try_to_free_pages(), ...,
-> shrink_node().
-> 
-> In mem_cgroup_iter(), root is set to root_mem_cgroup because
-> sc->target_mem_cgroup is NULL.
-> It is possible to assign a memcg to root_mem_cgroup.nodeinfo.iter in
-> mem_cgroup_iter().
-> 
-> 	try_to_free_pages
-> 		struct scan_control sc = {...}, target_mem_cgroup is 0x0;
-> 	do_try_to_free_pages
-> 	shrink_zones
-> 	shrink_node
-> 		 mem_cgroup *root = sc->target_mem_cgroup;
-> 		 memcg = mem_cgroup_iter(root, NULL, &reclaim);
-> 	mem_cgroup_iter()
-> 		if (!root)
-> 			root = root_mem_cgroup;
-> 		...
-> 
-> 		css = css_next_descendant_pre(css, &root->css);
-> 		memcg = mem_cgroup_from_css(css);
-> 		cmpxchg(&iter->position, pos, memcg);
-> 
-> My device uses memcg non-hierarchical mode.
-> When we release a memcg: invalidate_reclaim_iterators() reaches only
-> dead_memcg and its parents. If non-hierarchical mode is used,
-> invalidate_reclaim_iterators() never reaches root_mem_cgroup.
-> 
-> static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-> {
-> 	struct mem_cgroup *memcg = dead_memcg;
-> 
-> 	for (; memcg; memcg = parent_mem_cgroup(memcg)
-> 	...
-> }
-> 
-> So the use after free scenario looks like:
-> 
-> CPU1						CPU2
-> 
-> try_to_free_pages
-> do_try_to_free_pages
-> shrink_zones
-> shrink_node
-> mem_cgroup_iter()
->     if (!root)
->     	root = root_mem_cgroup;
->     ...
->     css = css_next_descendant_pre(css, &root->css);
->     memcg = mem_cgroup_from_css(css);
->     cmpxchg(&iter->position, pos, memcg);
-> 
-> 					invalidate_reclaim_iterators(memcg);
-> 					...
-> 					__mem_cgroup_free()
-> 						kfree(memcg);
-> 
-> try_to_free_pages
-> do_try_to_free_pages
-> shrink_zones
-> shrink_node
-> mem_cgroup_iter()
->     if (!root)
->     	root = root_mem_cgroup;
->     ...
->     mz = mem_cgroup_nodeinfo(root, reclaim->pgdat->node_id);
->     iter = &mz->iter[reclaim->priority];
->     pos = READ_ONCE(iter->position);
->     css_tryget(&pos->css) <- use after free
+Hi Matteo,
 
-Thanks for the write up. This is really useful.
+On Fri, Jul 26, 2019 at 01:19:31AM +0200, Matteo Croce wrote:
+> The MTU change code can call napi_disable() with the device already down,
+> leading to a deadlock. Also, lot of code is duplicated unnecessarily.
+> 
+> Rework mvpp2_change_mtu() to avoid the deadlock and remove duplicated code.
+> 
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 
-> To avoid this, we should also invalidate root_mem_cgroup.nodeinfo.iter in
-> invalidate_reclaim_iterators().
+As this is a fix sent to net, you could add a Fixes: tag.
 
-I am sorry, I didn't get to comment an earlier version but I am
-wondering whether it makes more sense to do and explicit invalidation.
+Otherwise this looks good,
+Acked-by: Antoine Tenart <antoine.tenart@bootlin.com>
 
-[...]
-> +static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-> +{
-> +	struct mem_cgroup *memcg = dead_memcg;
-> +	int invalidate_root = 0;
-> +
-> +	for (; memcg; memcg = parent_mem_cgroup(memcg))
-> +		__invalidate_reclaim_iterators(memcg, dead_memcg);
+Thanks!
+Antoine
 
-	/* here goes your comment */
-	if (!dead_memcg->use_hierarchy)
-		__invalidate_reclaim_iterators(root_mem_cgroup,	dead_memcg);
-> +
-> +}
+> ---
+>  .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 41 ++++++-------------
+>  1 file changed, 13 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> index 2f7286bd203b..60eb98f99571 100644
+> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> @@ -3612,6 +3612,7 @@ static int mvpp2_set_mac_address(struct net_device *dev, void *p)
+>  static int mvpp2_change_mtu(struct net_device *dev, int mtu)
+>  {
+>  	struct mvpp2_port *port = netdev_priv(dev);
+> +	bool running = netif_running(dev);
+>  	int err;
+>  
+>  	if (!IS_ALIGNED(MVPP2_RX_PKT_SIZE(mtu), 8)) {
+> @@ -3620,40 +3621,24 @@ static int mvpp2_change_mtu(struct net_device *dev, int mtu)
+>  		mtu = ALIGN(MVPP2_RX_PKT_SIZE(mtu), 8);
+>  	}
+>  
+> -	if (!netif_running(dev)) {
+> -		err = mvpp2_bm_update_mtu(dev, mtu);
+> -		if (!err) {
+> -			port->pkt_size =  MVPP2_RX_PKT_SIZE(mtu);
+> -			return 0;
+> -		}
+> -
+> -		/* Reconfigure BM to the original MTU */
+> -		err = mvpp2_bm_update_mtu(dev, dev->mtu);
+> -		if (err)
+> -			goto log_error;
+> -	}
+> -
+> -	mvpp2_stop_dev(port);
+> +	if (running)
+> +		mvpp2_stop_dev(port);
+>  
+>  	err = mvpp2_bm_update_mtu(dev, mtu);
+> -	if (!err) {
+> +	if (err) {
+> +		netdev_err(dev, "failed to change MTU\n");
+> +		/* Reconfigure BM to the original MTU */
+> +		mvpp2_bm_update_mtu(dev, dev->mtu);
+> +	} else {
+>  		port->pkt_size =  MVPP2_RX_PKT_SIZE(mtu);
+> -		goto out_start;
+>  	}
+>  
+> -	/* Reconfigure BM to the original MTU */
+> -	err = mvpp2_bm_update_mtu(dev, dev->mtu);
+> -	if (err)
+> -		goto log_error;
+> -
+> -out_start:
+> -	mvpp2_start_dev(port);
+> -	mvpp2_egress_enable(port);
+> -	mvpp2_ingress_enable(port);
+> +	if (running) {
+> +		mvpp2_start_dev(port);
+> +		mvpp2_egress_enable(port);
+> +		mvpp2_ingress_enable(port);
+> +	}
+>  
+> -	return 0;
+> -log_error:
+> -	netdev_err(dev, "failed to change MTU\n");
+>  	return err;
+>  }
+>  
+> -- 
+> 2.21.0
+> 
 
-Other than that the patch looks good to me.
-
-Acked-by: Michal Hocko <mhocko@suse.com>
 -- 
-Michal Hocko
-SUSE Labs
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
