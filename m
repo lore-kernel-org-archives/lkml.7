@@ -2,125 +2,137 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AAFC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E7EC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A49522BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:21:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pmprGLF2"
+	by mail.kernel.org (Postfix) with ESMTP id 83FCF20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:22:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564183332;
+	bh=xZCsGQBcnTpWVW9JP/BUO/9vB+I+O251akBSutWP4a8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CpNC6lZT1zQVGMtRd6ynyJUR+xG+fjLfi/dm+UDKO6m3v/tqd/e3t2IrkpQkaub/h
+	 vL5mOqqZCfkjkEgrnjLWHS5jqvj54DEYGgP0Li/GOHlqP2yyueXb+SPe9iRxiXqwdI
+	 3ZkOXNF1vef08+fysRn3x1jvKo7tiWD9jwdcCHtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbfGZXVK (ORCPT
+        id S1727668AbfGZXWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 19:21:10 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43600 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbfGZXVK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 19:21:10 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m14so14616657qka.10
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 16:21:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ds6Pn84xnJTs59aQRjsfc8MfNMObGqVIqTNdYf6jDF8=;
-        b=pmprGLF2LW0+Sp8wpilnKxyQ9fpy3RtVaI/uwKChRR6jU8kYntVB/SBwjs2iJ/Ef8t
-         AgoaxKSIaFJe7S7BnUBMzaU5bXb26v3v8TOCHBgGl7orVWxAEikEx7zs9FYVRZ2Kuhq4
-         LSTUWhQCKjMaQS5eEZ+BcJitwk4cPKvlrXSZDX1iHbS8B0nL0AA6pOZy4QXcTcQMysE5
-         AythhYvQwGo01Exhcg+nMLtnS5XdBJBKrjciS0HpJOZvZWTfMOeSAbBRtlq3DFoVJ+4G
-         xBuI0RwArlsSejlPmK0YyqwlQDzixITgfEA6xxl4awy3u7kqIvjgYTSSMEYLmZZ99w5Y
-         y/EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ds6Pn84xnJTs59aQRjsfc8MfNMObGqVIqTNdYf6jDF8=;
-        b=GJLtpmIqKPKqXf8yiU6g5bEzUfUZ4q7HA1AB7P9RdOzbg7ZlMNe+a4DncyvVfO4cSo
-         FEeE7Glxkdj7IKavPaQQuRpRewDMPG3+pexVR6rTJUTq6xDZz1U5sxGLdoghUjv71X8V
-         p8vomGDOyXZjsl3wCNJT0g9o9lt0biz1oG8jBrlYvppWJiQspSO60LvJkDcNUblfeqkz
-         osGhDQHYDKTL9ShW7vBJOrnimBsr1g4D25F+Hvpp7LNrDh2a2fXf/5dbcgPoJMLb/+lA
-         ff64sPu2+v7SZcx5c2SQ1GzRzsRp2/diu1tAB3MkpEqUXxv5TqOI9N7dhCS+YeuWlhHs
-         OQQg==
-X-Gm-Message-State: APjAAAWrAmXyiQsUKtC1oc/RK3acLF+ih2d7RRaSLGqFLdjfxuhelMio
-        xKsBx26rQv2N8JsirkxGWityxdlBwz4l4GRAG/Io
-X-Google-Smtp-Source: APXvYqxKsvOaZxq1HqBf7Rf4YiQTcQkrpQGtj9XSIYZVHNSOdDHelqirkEJK9WTuzvgEgdBC2jX6zOfxq5cVBDabxl8=
-X-Received: by 2002:a37:9ac9:: with SMTP id c192mr65323076qke.30.1564183268223;
- Fri, 26 Jul 2019 16:21:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190726224810.79660-1-henryburns@google.com> <20190726224810.79660-2-henryburns@google.com>
-In-Reply-To: <20190726224810.79660-2-henryburns@google.com>
-From:   Jonathan Adams <jwadams@google.com>
-Date:   Fri, 26 Jul 2019 16:20:32 -0700
-Message-ID: <CA+VK+GPC+akF0qGrKFivtNneweEfdC9uEx=QgmztB4M_xvMeKQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/z3fold.c: Fix z3fold_destroy_pool() race condition
-To:     Henry Burns <henryburns@google.com>
-Cc:     Vitaly Vul <vitaly.vul@sony.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 26 Jul 2019 19:22:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33436 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726429AbfGZXWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 19:22:10 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1138822BE8;
+        Fri, 26 Jul 2019 23:22:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564183329;
+        bh=xZCsGQBcnTpWVW9JP/BUO/9vB+I+O251akBSutWP4a8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BFxWE/pI683Fjxg2Ui8ufJCnzeRtwusslCY9xyT2yn2JsAOXJfGPcGPjleE+qoOcz
+         qaBX19N4SIbbwll9coIJwwUmMGwCRMrVM4IYWaewmluBgJfXFayljAeQuuDHWjTz7w
+         ObXKy8cwWfL8WnnVLA450L9XU6pkSLdTl5vOPpwI=
+Date:   Fri, 26 Jul 2019 16:22:08 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Roman Penyaev <rpenyaev@suse.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Azat Khuzhin <azat@libevent.org>, Eric Wong <e@80x24.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/14] epoll: support pollable epoll from userspace
+Message-Id: <20190726162208.0a9a244d41d9384fb94d9210@linux-foundation.org>
+In-Reply-To: <20190611145458.9540-1-rpenyaev@suse.de>
+References: <20190611145458.9540-1-rpenyaev@suse.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 3:48 PM Henry Burns <henryburns@google.com> wrote:
->
-> The constraint from the zpool use of z3fold_destroy_pool() is there are no
-> outstanding handles to memory (so no active allocations), but it is possible
-> for there to be outstanding work on either of the two wqs in the pool.
->
-> Calling z3fold_deregister_migration() before the workqueues are drained
-> means that there can be allocated pages referencing a freed inode,
-> causing any thread in compaction to be able to trip over the bad
-> pointer in PageMovable().
->
-> Fixes: 1f862989b04a ("mm/z3fold.c: support page migration")
->
-> Signed-off-by: Henry Burns <henryburns@google.com>
+On Tue, 11 Jun 2019 16:54:44 +0200 Roman Penyaev <rpenyaev@suse.de> wrote:
 
-Reviewed-by: Jonathan Adams <jwadams@google.com>
+> Hi all,
+> 
+> This is v4 which introduces pollable epoll from userspace.
 
-> Cc: <stable@vger.kernel.org>
-> ---
->  mm/z3fold.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+A nicely presented patchset.
+
 >
-> diff --git a/mm/z3fold.c b/mm/z3fold.c
-> index 43de92f52961..ed19d98c9dcd 100644
-> --- a/mm/z3fold.c
-> +++ b/mm/z3fold.c
-> @@ -817,16 +817,19 @@ static struct z3fold_pool *z3fold_create_pool(const char *name, gfp_t gfp,
->  static void z3fold_destroy_pool(struct z3fold_pool *pool)
->  {
->         kmem_cache_destroy(pool->c_handle);
-> -       z3fold_unregister_migration(pool);
+> ...
 >
->         /*
->          * We need to destroy pool->compact_wq before pool->release_wq,
->          * as any pending work on pool->compact_wq will call
->          * queue_work(pool->release_wq, &pool->work).
-> +        *
-> +        * There are still outstanding pages until both workqueues are drained,
-> +        * so we cannot unregister migration until then.
->          */
+> ** Measurements
+> 
+> In order to measure polling from userspace libevent was modified [1] and
+> bench_http benchmark (client and server) was used:
+> 
+>  o EPOLLET, original epoll:
+> 
+>     20000 requests in 0.551306 sec. (36277.49 throughput)
+>     Each took about 5.54 msec latency
+>     1600000bytes read. 0 errors.
+> 
+>  o EPOLLET + polling from userspace:
+> 
+>     20000 requests in 0.475585 sec. (42053.47 throughput)
+>     Each took about 4.78 msec latency
+>     1600000bytes read. 0 errors.
+
+It would be useful to include some words which describe the
+significance of this to real-world userspace.  If a real application is
+sped up 0.000000001% then this isn't very exciting ;)
+
 >
->         destroy_workqueue(pool->compact_wq);
->         destroy_workqueue(pool->release_wq);
-> +       z3fold_unregister_migration(pool);
->         kfree(pool);
->  }
+> ...
 >
-> --
-> 2.22.0.709.g102302147b-goog
->
+>    epoll_create2(EPOLL_USERPOLL, max_items_nr);
+
+So a manpage update is due.  It would be useful to send this along
+while people are reviewing the code changes.  Please cc Michael Kerrisk
+and linux-man@vger.kernel.org on everything.
+
+> 
+>  arch/alpha/kernel/syscalls/syscall.tbl        |   2 +
+>  arch/arm/tools/syscall.tbl                    |   1 +
+>  arch/arm64/include/asm/unistd.h               |   2 +-
+>  arch/arm64/include/asm/unistd32.h             |   2 +
+>  arch/ia64/kernel/syscalls/syscall.tbl         |   2 +
+>  arch/m68k/kernel/syscalls/syscall.tbl         |   2 +
+>  arch/microblaze/kernel/syscalls/syscall.tbl   |   1 +
+>  arch/mips/kernel/syscalls/syscall_n32.tbl     |   2 +
+>  arch/mips/kernel/syscalls/syscall_n64.tbl     |   2 +
+>  arch/mips/kernel/syscalls/syscall_o32.tbl     |   2 +
+>  arch/parisc/kernel/syscalls/syscall.tbl       |   2 +
+>  arch/powerpc/kernel/syscalls/syscall.tbl      |   2 +
+>  arch/s390/kernel/syscalls/syscall.tbl         |   2 +
+>  arch/sh/kernel/syscalls/syscall.tbl           |   2 +
+>  arch/sparc/kernel/syscalls/syscall.tbl        |   2 +
+>  arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
+>  arch/xtensa/kernel/syscalls/syscall.tbl       |   1 +
+>  fs/eventpoll.c                                | 925 ++++++++++++++++--
+
+Wow.
+
+>  include/linux/syscalls.h                      |   1 +
+>  include/uapi/asm-generic/unistd.h             |   4 +-
+>  include/uapi/linux/eventpoll.h                |  47 +-
+>  kernel/sys_ni.c                               |   1 +
+>  tools/testing/selftests/Makefile              |   1 +
+>  tools/testing/selftests/uepoll/.gitignore     |   1 +
+>  tools/testing/selftests/uepoll/Makefile       |  16 +
+>  .../uepoll/atomic-builtins-support.c          |  13 +
+>  tools/testing/selftests/uepoll/uepoll-test.c  | 603 ++++++++++++
+
+There's a lot to look at here.  I guess now would be a good time to
+refresh and resend.
+
