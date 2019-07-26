@@ -2,95 +2,146 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E28CCC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D04DC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2AAF22CB8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A1B22C7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfGZJ0k (ORCPT
+        id S1726252AbfGZJ2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:26:40 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38540 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726007AbfGZJ0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:26:40 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AE30A344AC963379B5BE;
-        Fri, 26 Jul 2019 17:26:38 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Fri, 26 Jul 2019
- 17:26:33 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <eric@anholt.net>, <wahrenst@gmx.net>,
-        <gregkh@linuxfoundation.org>, <inf.braun@fau.de>,
-        <nishkadg.linux@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 -next] staging: vc04_services: fix used-but-set-variable warning
-Date:   Fri, 26 Jul 2019 17:26:21 +0800
-Message-ID: <20190726092621.27972-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190725142716.49276-1-yuehaibing@huawei.com>
-References: <20190725142716.49276-1-yuehaibing@huawei.com>
+        Fri, 26 Jul 2019 05:28:06 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:56760 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfGZJ2G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:28:06 -0400
+Received: by mail-io1-f69.google.com with SMTP id u25so57661169iol.23
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 02:28:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=N6WhCKShM4LNQj7FFoXGbLqE7BK2p7Oc3KCbLQcERuo=;
+        b=s7mIdoKtPjVWQ1o40k27EMSCx6+Tz4mfrcwlo4WTtiYZrKT2+KAKuMR2+7nHrOpfGk
+         DBMY9YpTrup44QTaMqvKTtKqKtnwf72e6PDWUhUdo+FfWuZHEAo2pyMz87rwfzwGRlht
+         +zyKWuYNGacfsTVrlaj+KmX/Vt5lqWKM952//yPtTWj9kRmGup/NFE68l6iF/9rTVjyH
+         5CsxRBG7vqqCAHdlPjT6g2JuJeQSm7yIqAgXzd7jJXMfGSBNJO/lfQvFSO2OQN4RhAOT
+         p2bmyvm6dSfS4mIit5EhG/O9lG6rO2sMiSLSK3+iu4mPLK9SpaCuWcSsZt1KsWEPjKVr
+         eiQQ==
+X-Gm-Message-State: APjAAAVCtoNHy6cGZbiYhKssZmEGxsWg7pOLh5NLMPaCeZHFcKEKyozv
+        sbXM3UHF0pYSyulMRTvWmYP8RXAiAa3yXqMu2OQQcTVw08Ze
+X-Google-Smtp-Source: APXvYqyxxW+mlSyxlEitOMyN9HQFiD4Y3xK5ypEcIatqjfP5trCTyOhnKeYAq6SoHlRrRf0Zr4kK/rctAqNXHkQGviXQWfFMt/30
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a5d:8404:: with SMTP id i4mr16679815ion.146.1564133285421;
+ Fri, 26 Jul 2019 02:28:05 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 02:28:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dbe98e058e92286d@google.com>
+Subject: general protection fault in tls_sk_proto_close
+From:   syzbot <syzbot+fb2a31b9c0676ea410e3@syzkaller.appspotmail.com>
+To:     aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
+        davejwatson@fb.com, davem@davemloft.net, john.fastabend@gmail.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix gcc used-but-set-variable warning:
+Hello,
 
-drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c: In function vchiq_release_internal:
-drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c:2827:16: warning:
- variable local_entity_uc set but not used [-Wunused-but-set-variable]
-drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c:2827:6: warning:
- variable local_uc set but not used [-Wunused-but-set-variable]
+syzbot found the following crash on:
 
-Remove the unused variables 'local_entity_uc' and 'local_uc'
+HEAD commit:    9e6dfe80 Add linux-next specific files for 20190724
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=11ff2594600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6cbb8fc2cf2842d7
+dashboard link: https://syzkaller.appspot.com/bug?extid=fb2a31b9c0676ea410e3
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13eb6a7c600000
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+fb2a31b9c0676ea410e3@syzkaller.appspotmail.com
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 9180 Comm: syz-executor.0 Not tainted 5.3.0-rc1-next-20190724  
+#50
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:tls_sk_proto_close+0x90/0x4a0 net/tls/tls_main.c:348
+Code: 3c 02 00 0f 85 dd 03 00 00 49 8b 84 24 c0 02 00 00 4d 8d 75 14 4c 89  
+f2 48 c1 ea 03 48 89 45 b8 48 b8 00 00 00 00 00 fc ff df <0f> b6 04 02 4c  
+89 f2 83 e2 07 38 d0 7f 08 84 c0 0f 85 67 03 00 00
+RSP: 0018:ffff8880a6497c70 EFLAGS: 00010203
+RAX: dffffc0000000000 RBX: 00000000fffffff0 RCX: ffffffff8629731c
+RDX: 0000000000000002 RSI: ffffffff862970cd RDI: ffff88808b204f00
+RBP: ffff8880a6497cb8 R08: ffff8880a76c4700 R09: fffffbfff14a8151
+R10: fffffbfff14a8150 R11: ffffffff8a540a87 R12: ffff88808b204c40
+R13: 0000000000000000 R14: 0000000000000014 R15: 0000000000000001
+FS:  000055555741a940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000780000 CR3: 000000008ff7d000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  tls_sk_proto_close+0x2a9/0x4a0 net/tls/tls_main.c:369
+  tcp_bpf_close+0x17c/0x390 net/ipv4/tcp_bpf.c:578
+  inet_release+0xed/0x200 net/ipv4/af_inet.c:427
+  inet6_release+0x53/0x80 net/ipv6/af_inet6.c:470
+  __sock_release+0xce/0x280 net/socket.c:590
+  sock_close+0x1e/0x30 net/socket.c:1268
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4134f0
+Code: 01 f0 ff ff 0f 83 30 1b 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
+44 00 00 83 3d 9d 2d 66 00 00 75 14 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff
+RSP: 002b:00007ffc6f204768 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000006 RCX: 00000000004134f0
+RDX: 0000001b30d20000 RSI: 0000000000000000 RDI: 0000000000000005
+RBP: 0000000000000001 R08: 0000000000000000 R09: ffffffffffffffff
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000075bf20
+R13: 0000000000000003 R14: 0000000000761178 R15: ffffffffffffffff
+Modules linked in:
+---[ end trace 5143786da0160ad0 ]---
+RIP: 0010:tls_sk_proto_close+0x90/0x4a0 net/tls/tls_main.c:348
+Code: 3c 02 00 0f 85 dd 03 00 00 49 8b 84 24 c0 02 00 00 4d 8d 75 14 4c 89  
+f2 48 c1 ea 03 48 89 45 b8 48 b8 00 00 00 00 00 fc ff df <0f> b6 04 02 4c  
+89 f2 83 e2 07 38 d0 7f 08 84 c0 0f 85 67 03 00 00
+RSP: 0018:ffff8880a6497c70 EFLAGS: 00010203
+RAX: dffffc0000000000 RBX: 00000000fffffff0 RCX: ffffffff8629731c
+RDX: 0000000000000002 RSI: ffffffff862970cd RDI: ffff88808b204f00
+RBP: ffff8880a6497cb8 R08: ffff8880a76c4700 R09: fffffbfff14a8151
+R10: fffffbfff14a8150 R11: ffffffff8a540a87 R12: ffff88808b204c40
+R13: 0000000000000000 R14: 0000000000000014 R15: 0000000000000001
+FS:  000055555741a940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000780000 CR3: 000000008ff7d000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
-v2: remove the unused variable
----
- drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-index cc4383d..b1595b1 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-@@ -2824,7 +2824,6 @@ vchiq_release_internal(struct vchiq_state *state, struct vchiq_service *service)
- 	VCHIQ_STATUS_T ret = VCHIQ_SUCCESS;
- 	char entity[16];
- 	int *entity_uc;
--	int local_uc, local_entity_uc;
- 
- 	if (!arm_state)
- 		goto out;
-@@ -2849,8 +2848,8 @@ vchiq_release_internal(struct vchiq_state *state, struct vchiq_service *service)
- 		ret = VCHIQ_ERROR;
- 		goto unlock;
- 	}
--	local_uc = --arm_state->videocore_use_count;
--	local_entity_uc = --(*entity_uc);
-+	--arm_state->videocore_use_count;
-+	--(*entity_uc);
- 
- 	if (!vchiq_videocore_wanted(state)) {
- 		if (vchiq_platform_use_suspend_timer() &&
--- 
-2.7.4
-
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
