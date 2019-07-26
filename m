@@ -2,146 +2,152 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F620C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8716AC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A4E2238C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54FB722BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:54:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="gQuH0Ric"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfGZMyG convert rfc822-to-8bit (ORCPT
+        id S1727169AbfGZMyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:54:06 -0400
-Received: from mail-oln040092255037.outbound.protection.outlook.com ([40.92.255.37]:30828
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726099AbfGZMyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:54:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HzR5b5TyJDDkSlJrZ2sDfS1Gpnb7rczZq+VYBymmjqMKhZWceWlW2dKe6zrGctmqOHK3+pSzResxCQdW1LMRQbNbj2A6mTkH0+JVcr6qjw7zsg3dCODXzkYJvrV7Iwhtks2UDOwVD2gFNchN6s5mzu52wxd7Xp4n2uMru1CRuLcD6GqqFc1j5HbLU7t7k+bVVOMOVdn5f/9vZwuwsfPTAtAk3HDiKNM3sPa10KBtFf+TCQ1CWpRhMh0L03rBusBltDY0udczST3+ugp0IgAFHrqlzHdYX9qApk69kyseymCUQkhxRc85nRIYa7mCeRd0yE1nGnJGOkQx8hLw4BkqQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h95AShb0IzNRXB2Y+PVKPBL6mIzyZW8Bgm+PslKgUwk=;
- b=dqHmTw2q8uJPoIvPTCXX8Ed83szhXBHo3rL5mzMoYfQDScjlIeZq9VxDJSJjz2o/3fV/9/mszr4vK7jNfdZ+ynFl18/HjYsMFhEBnE2Ieuq6HjSKBuJDtRxbzGKvyBl0mxaZr4vANwAgtbpuT2I2bXq2MKs3KYdn/PLM7lVD0kO8655dvfU5Jk1uCe7G5frmp9Q0ixEk3qdXMVHnA68XhQAfI/k+prpylPnXv2sQUzSGA5L2JDMW/2+Y3pen9FDd8CROEBI3rmF0SccfpuptlG9iIYfr3mv/1C6d3Ax0gPeR1yKw4HTXU/Sk31q7d5DLLiBYEP9aSAoTDhp4TE0Akw==
-ARC-Authentication-Results: i=1; mx.microsoft.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-Received: from PU1APC01FT060.eop-APC01.prod.protection.outlook.com
- (10.152.252.51) by PU1APC01HT026.eop-APC01.prod.protection.outlook.com
- (10.152.253.50) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2115.10; Fri, 26 Jul
- 2019 12:54:01 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.59) by
- PU1APC01FT060.mail.protection.outlook.com (10.152.253.44) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2115.10 via Frontend Transport; Fri, 26 Jul 2019 12:54:01 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::1cba:d572:7a30:ff0d]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::1cba:d572:7a30:ff0d%3]) with mapi id 15.20.2094.013; Fri, 26 Jul 2019
- 12:54:01 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: [PATCH v8 3/6] PCI: Change extend_bridge_window() to set resource
- size directly
-Thread-Topic: [PATCH v8 3/6] PCI: Change extend_bridge_window() to set
- resource size directly
-Thread-Index: AQHVQ7Ey0201Fxl9REW2IdRoQKj8pw==
-Date:   Fri, 26 Jul 2019 12:54:01 +0000
-Message-ID: <SL2P216MB018777F9E124D364769E5D4680C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYBPR01CA0051.ausprd01.prod.outlook.com
- (2603:10c6:10:2::15) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:22::19)
-x-incomingtopheadermarker: OriginalChecksum:154BFDD2D37B044337751C8DCCB5E70F7B1A8D941F5415933C992A7EBE8164B6;UpperCasedChecksum:AAD482AD1817F7218B36E01865ED4E911D35A93553C3BCECF5D64705425438CB;SizeAsReceived:7711;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [NVOOK9tH2swPS60slPaB/iYu6BX0OcZOp0L2NQCU80uoTdeCQVLjRP6++EDADvM75Ps1aAJgSYM=]
-x-microsoft-original-message-id: <20190726125345.GA2692@nicholas-usb>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:PU1APC01HT026;
-x-ms-traffictypediagnostic: PU1APC01HT026:
-x-microsoft-antispam-message-info: EcLc2TPa307/jmqiJAMEnkwRR2S7B/3xoz+YVoIImwhwt12OOyKatRTrXkEqlUBkH5j0YzlwyitXmeefA5BmzneYfRNWUKgx2+JcLE1CNCSL166WNOoEEgS1CS5zcBJFxnQiCqHr7ed8D7rOm6OWY+2JYo17+Eji9IIrMnYkwnso/p3x3/8UHV2PVu5njudU
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7149B4BCC9BD9D4C8ECF79A528E731D0@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Fri, 26 Jul 2019 08:54:25 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46680 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbfGZMyY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 08:54:24 -0400
+Received: by mail-pg1-f196.google.com with SMTP id k189so5714901pgk.13
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 05:54:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1CV30Ulmhw3UVs5wZJSfxlQX22PQyu6508MpeQYH9hA=;
+        b=gQuH0RicdNOowMPYfbO1oCrLPCJQ7RG5vRhySY5uKbNmTPgJ9gjJhxIQlgovgpa61j
+         /fesyTgUhfC6NkYtNzLPj9OFsHLRlFOnE6bQDcY/2tkHHiMxdFrnqXA8ZynuSTScFhap
+         MsVrgmBpEcAREpwym2Gd4zS7Og3lnANQ201d0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1CV30Ulmhw3UVs5wZJSfxlQX22PQyu6508MpeQYH9hA=;
+        b=VeuhzZG0bS3Gjq3WuxEa6YKcaH/+B4EYXsPG7Ofo0wDiBLHJ2bysCXbcU+GsRpeogR
+         5yR+KSqPtdLmAyml2b6BLQinG+OtUwK5bTxuyjQZNe9diH1ifCnrGo4r9FwtSXbzPyNQ
+         JoWKXK0Uvr7s+UgjVbLHFxGBwYIEw1XkV3mptCbqz64lYT8txbvmx1jHO2pKrIBSpL0k
+         urcnQiHNpgg0WF2kwaHqBxgJ1UELFyQxcupQdFyl9qLiya9r3miY/Pnp8C//BpKVTlsx
+         nKrfVY0RTekv+dgGfOmNuQANtMBkL1skI49HU6OeczteL5h1/GJPwExueh/QN74urIf5
+         T3ow==
+X-Gm-Message-State: APjAAAU53pGPG6dJzUcb/gCu/Dfgrx5AKdvHihw4DRtS+mpabxie1xPn
+        6i2qmwiiD7i6870a0IKmoVI=
+X-Google-Smtp-Source: APXvYqzilkkbU1jvUSqJ7GWTJJgame/K3EOovYUFU8dAxa/kz5mkVmVgYiB/rX3VOXqDrSKNafzHjQ==
+X-Received: by 2002:a63:ee0c:: with SMTP id e12mr92603350pgi.184.1564145663513;
+        Fri, 26 Jul 2019 05:54:23 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id o129sm23051451pfg.1.2019.07.26.05.54.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 26 Jul 2019 05:54:22 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 08:54:21 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
+        vdavydov.dev@gmail.com, Brendan Gregg <bgregg@netflix.com>,
+        kernel-team@android.com, Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        carmenjackson@google.com, Christian Hansen <chansen3@cisco.com>,
+        Colin Ian King <colin.king@canonical.com>, dancol@google.com,
+        David Howells <dhowells@redhat.com>, fmayer@google.com,
+        joaodias@google.com, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>, namhyung@google.com,
+        sspatil@google.com
+Subject: Re: [PATCH v1 1/2] mm/page_idle: Add support for per-pid page_idle
+ using virtual indexing
+Message-ID: <20190726125421.GA103959@google.com>
+References: <20190722213205.140845-1-joel@joelfernandes.org>
+ <20190723061358.GD128252@google.com>
+ <20190723142049.GC104199@google.com>
+ <20190724042842.GA39273@google.com>
+ <20190724141052.GB9945@google.com>
+ <c116f836-5a72-c6e6-498f-a904497ef557@yandex-team.ru>
+ <20190726000654.GB66718@google.com>
+ <9cba9acb-9451-a53e-278d-92f7b66ae20b@yandex-team.ru>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d10ad79-8409-4a63-a47e-08d711c8551c
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2019 12:54:01.7735
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT026
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9cba9acb-9451-a53e-278d-92f7b66ae20b@yandex-team.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change extend_bridge_window() to set resource size directly instead of
-using additional resource lists.
+On Fri, Jul 26, 2019 at 02:16:20PM +0300, Konstantin Khlebnikov wrote:
+> On 26.07.2019 3:06, Joel Fernandes wrote:
+> > On Thu, Jul 25, 2019 at 11:15:53AM +0300, Konstantin Khlebnikov wrote:
+> > [snip]
+> > > > > > Thanks for bringing up the swapping corner case..  Perhaps we can improve
+> > > > > > the heap profiler to detect this by looking at bits 0-4 in pagemap. While it
+> > > > > 
+> > > > > Yeb, that could work but it could add overhead again what you want to remove?
+> > > > > Even, userspace should keep metadata to identify that page was already swapped
+> > > > > in last period or newly swapped in new period.
+> > > > 
+> > > > Yep.
+> > > Between samples page could be read from swap and swapped out back multiple times.
+> > > For tracking this swap ptes could be marked with idle bit too.
+> > > I believe it's not so hard to find free bit for this.
+> > > 
+> > > Refault\swapout will automatically clear this bit in pte even if
+> > > page goes nowhere stays if swap-cache.
+> > 
+> > Could you clarify more about your idea? Do you mean swapout will clear the new
+> > idle swap-pte bit if the page was accessed just before the swapout? >
+> > Instead, I thought of using is_swap_pte() to detect if the PTE belong to a
+> > page that was swapped. And if so, then assume the page was idle. Sure we
+> > would miss data that the page was accessed before the swap out in the
+> > sampling window, however if the page was swapped out, then it is likely idle
+> > anyway.
+> 
+> 
+> I mean page might be in swap when you mark pages idle and
+> then been accessed and swapped back before second pass.
+> 
+> I propose marking swap pte with idle bit which will be automatically
+> cleared by following swapin/swapout pair:
+> 
+> page alloc -> install page pte
+> page swapout -> install swap entry in pte
+> mark vm idle -> set swap-idle bit in swap pte
+> access/swapin -> install page pte (clear page idle if set)
+> page swapout -> install swap entry in pte (without swap idle bit)
+> scan vm idle -> see swap entry without idle bit -> page has been accessed since marking idle
+> 
+> One bit in pte is enough for tracking. This does not needs any propagation for
+> idle bits between page and swap, or marking pages as idle in swap cache.
 
-Because additional resource lists are optional resources, any algorithm
-that requires guaranteed allocation that uses them cannot be guaranteed
-to work.
+Ok I see the case you are referring to now. This can be a follow-up patch to
+address the case, because.. the limitation you mentioned is also something
+inherrent in the (traditional) physical page_idle tracking if that were used.
+The reason being, after swapping, the PTE is not mapped to any page so there
+is nothing to mark as idle. So if the page gets swapped out and in in the
+meanwhile, then you would run into the same issue.
 
-Remove the resource from add_list. If it is set to zero size and left,
-it can cause significant problems when it comes to assigning resources.
+But yes, we should certainly address it in the future. I just want to keep
+things simple at the moment. I will make a note about your suggestion but you
+are welcomed to write a patch for it on top of my patch. I am about to send
+another revision shortly for futhre review.
 
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
----
- drivers/pci/setup-bus.c | 17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
+thanks,
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 3b3055e0e..a072781ab 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1818,7 +1818,7 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
- 				 struct list_head *add_list,
- 				 resource_size_t new_size)
- {
--	struct pci_dev_resource *dev_res;
-+	resource_size_t add_size;
- 
- 	if (res->parent)
- 		return;
-@@ -1826,17 +1826,10 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
- 	if (resource_size(res) >= new_size)
- 		return;
- 
--	dev_res = res_to_dev_res(add_list, res);
--	if (!dev_res)
--		return;
--
--	/* Is there room to extend the window? */
--	if (new_size - resource_size(res) <= dev_res->add_size)
--		return;
--
--	dev_res->add_size = new_size - resource_size(res);
--	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
--		&dev_res->add_size);
-+	add_size = new_size - resource_size(res);
-+	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
-+	res->end = res->start + new_size - 1;
-+	remove_from_list(add_list, res);
- }
- 
- static void pci_bus_distribute_available_resources(struct pci_bus *bus,
--- 
-2.22.0
+ - Joel
 
