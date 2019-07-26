@@ -6,139 +6,94 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C607C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24732C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18B632189F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2FDB22CBF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbfGZQrr (ORCPT
+        id S1728979AbfGZQs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:47:47 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:47941 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726827AbfGZQrq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:47:46 -0400
-X-Originating-IP: 109.190.253.11
-Received: from localhost (unknown [109.190.253.11])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 839B91BF207;
-        Fri, 26 Jul 2019 16:47:41 +0000 (UTC)
-Date:   Fri, 26 Jul 2019 18:36:01 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Torsten Duwe <duwe@lst.de>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6a/7] dt-bindings: Add ANX6345 DP/eDP transmitter
- binding
-Message-ID: <20190726163601.o32bxqew5xavjgyi@flea>
-References: <20190722150414.9F97668B20@verein.lst.de>
- <20190725151829.DC20968B02@verein.lst.de>
+        Fri, 26 Jul 2019 12:48:28 -0400
+Received: from mga06.intel.com ([134.134.136.31]:8827 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726827AbfGZQs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 12:48:28 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 09:48:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
+   d="scan'208";a="322083350"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga004.jf.intel.com with ESMTP; 26 Jul 2019 09:48:25 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hr3OJ-000539-MC; Fri, 26 Jul 2019 19:48:23 +0300
+Date:   Fri, 26 Jul 2019 19:48:23 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Shaohua Li <shli@kernel.org>, linux-raid@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>, Mike Snitzer <snitzer@redhat.com>,
+        Coly Li <colyli@suse.de>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] md: Convert to use int_pow()
+Message-ID: <20190726164823.GB9224@smile.fi.intel.com>
+References: <20190723204155.71531-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190725151829.DC20968B02@verein.lst.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190723204155.71531-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Jul 23, 2019 at 11:41:55PM +0300, Andy Shevchenko wrote:
+> Instead of linear approach to calculate power of 10, use generic int_pow()
+> which does it better.
 
-On Thu, Jul 25, 2019 at 05:18:29PM +0200, Torsten Duwe wrote:
-> The anx6345 is an ultra-low power DisplayPort/eDP transmitter designed
-> for portable devices.
->
-> Add a binding document for it.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+I took into Cc drivers/dm guys as they might have known something about md raid
+state of affairs. Sorry if I mistakenly added somebody.
+
+Who is doing this?
+Should it be orphaned?
+
+(I got a bounce from Shaohua address)
+
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  .../devicetree/bindings/display/bridge/anx6345.yaml |   90 ++++++++++
->  1 file changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/bridge/anx6345.yaml b/Documentation/devicetree/bindings/display/bridge/anx6345.yaml
-> new file mode 100644
-> index 000000000000..0af092d101c5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/anx6345.yaml
-> @@ -0,0 +1,90 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/anx6345.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analogix ANX6345 eDP Transmitter Device Tree Bindings
-> +
-> +maintainers:
-> +  - Torsten Duwe <duwe@lst.de>
-> +
-> +description: |
-> +  The ANX6345 is an ultra-low power Full-HD eDP transmitter designed for
-> +  portable devices.
-> +
-> +properties:
-> +  compatible:
-> +    const: analogix,anx6345
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: I2C address of the device
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: active low GPIO to use for reset
-> +
-> +  dvdd12-supply:
-> +    maxItems: 1
-> +    description: Regulator for 1.2V digital core power.
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  dvdd25-supply:
-> +    maxItems: 1
-> +    description: Regulator for 2.5V digital core power.
-> +    $ref: /schemas/types.yaml#/definitions/phandle
+>  drivers/md/md.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 24638ccedce4..3f1252440ad0 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -3664,11 +3664,7 @@ int strict_strtoul_scaled(const char *cp, unsigned long *res, int scale)
+>  		return -EINVAL;
+>  	if (decimals < 0)
+>  		decimals = 0;
+> -	while (decimals < scale) {
+> -		result *= 10;
+> -		decimals ++;
+> -	}
+> -	*res = result;
+> +	*res = result * int_pow(10, scale - decimals);
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.20.1
+> 
 
-There's no need to specify the type here, all the properties ending in
--supply are already checked for that type
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> +  ports:
-> +    type: object
-> +    minItems: 1
-> +    maxItems: 2
-> +    description: |
-> +      Video port 0 for LVTTL input,
-> +      Video port 1 for eDP output (panel or connector)
-> +      using the DT bindings defined in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
 
-You should probably describe the port@0 and port@1 nodes here as
-well. It would allow you to express that the port 0 is mandatory and
-the port 1 optional, which got dropped in the conversion.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
