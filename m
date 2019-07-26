@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49629C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B08C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1987C22CD8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4798322CE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148987;
-	bh=AG13s3HdxuZRKVRsb0ywcmrGYozXwPlhLeYJUXH+RFM=;
+	s=default; t=1564148991;
+	bh=8HA8IjR33J2fJ3Pv+GKfU7B00lyYztzgYhQloIpGWUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bFTbIK5EoTC0aKELFG2M8DnO+wjlw4JXdQkTM2N6PI6sJbtZOvuljNl6u7cPME/3b
-	 GZo6PC/clKpXXUgKtYkiPHUsDIDTOg+JGUS7HFxhfAP98FhMjO2nv5gw6GzpH2Vbjh
-	 PlBVPIOVAHp4IDl2vDDECdqXhF1lWyykDIiNcNdY=
+	b=M9DZFPidJhSzMATLpjPl5v6zUwygjwjHD2RyNtgSvAFhH6LcW6JJMevuXcOWmmHLk
+	 GBuklObx6aQcaawVPcS1NFT1/MteFFWRHG93+ZqaGy5pBX2p/XTPJh1PqLvrgY/C7k
+	 mcq5XwYhRp3RkU/fnZlBLIHnTdwOM0WftXjKOhLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388385AbfGZNoi (ORCPT
+        id S2388819AbfGZNtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:44:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52902 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:49:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388360AbfGZNog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:44:36 -0400
+        id S2388378AbfGZNoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:44:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA3C322CEB;
-        Fri, 26 Jul 2019 13:44:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD34A22CD0;
+        Fri, 26 Jul 2019 13:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148675;
-        bh=AG13s3HdxuZRKVRsb0ywcmrGYozXwPlhLeYJUXH+RFM=;
+        s=default; t=1564148677;
+        bh=8HA8IjR33J2fJ3Pv+GKfU7B00lyYztzgYhQloIpGWUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KUsE9MrD88mV+15H341vcJ0SdTtTnXLEb2NGvMAgaSTg7q995K21GQ99433DrBswa
-         9n7e6VnPbg2V3Hn/oyj8AgbWK0692zq5miudCU4XT74AeIvGlh38kPQHFdrnv3N7nC
-         /RsTBCSdijRolrGYJkefsO8o9/KDtQhzMff7bu+o=
+        b=rkGhSE7BSR8usdfPLeEbw1HBDH26ENuAHmYjcM+wSCI6ni1XmvUE3N09W8F6XwGVp
+         384kyNMcICFrCTaKiunKzomikoRS9RWDRcMEzur5SdjS/VkMTiO7vHMhF1xLp4YhqB
+         ivfcUrP9MVq8hNH1SUM0dzylx+Nje6k+EKmMbhic=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Douglas Anderson <dianders@chromium.org>,
         Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>,
         linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 02/30] ARM: dts: rockchip: Make rk3288-veyron-minnie run at hs200
-Date:   Fri, 26 Jul 2019 09:44:04 -0400
-Message-Id: <20190726134432.12993-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 04/30] ARM: dts: rockchip: Mark that the rk3288 timer might stop in suspend
+Date:   Fri, 26 Jul 2019 09:44:06 -0400
+Message-Id: <20190726134432.12993-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134432.12993-1-sashal@kernel.org>
 References: <20190726134432.12993-1-sashal@kernel.org>
@@ -62,55 +62,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 1c0479023412ab7834f2e98b796eb0d8c627cd62 ]
+[ Upstream commit 8ef1ba39a9fa53d2205e633bc9b21840a275908e ]
 
-As some point hs200 was failing on rk3288-veyron-minnie.  See commit
-984926781122 ("ARM: dts: rockchip: temporarily remove emmc hs200 speed
-from rk3288 minnie").  Although I didn't track down exactly when it
-started working, it seems to work OK now, so let's turn it back on.
+This is similar to commit e6186820a745 ("arm64: dts: rockchip: Arch
+counter doesn't tick in system suspend").  Specifically on the rk3288
+it can be seen that the timer stops ticking in suspend if we end up
+running through the "osc_disable" path in rk3288_slp_mode_set().  In
+that path the 24 MHz clock will turn off and the timer stops.
 
-To test this, I booted from SD card and then used this script to
-stress the enumeration process after fixing a memory leak [1]:
-  cd /sys/bus/platform/drivers/dwmmc_rockchip
-  for i in $(seq 1 3000); do
-    echo "========================" $i
-    echo ff0f0000.dwmmc > unbind
-    sleep .5
-    echo ff0f0000.dwmmc > bind
-    while true; do
-      if [ -e /dev/mmcblk2 ]; then
-        break;
-      fi
-      sleep .1
-    done
-  done
+To test this, I ran this on a Chrome OS filesystem:
+  before=$(date); \
+  suspend_stress_test -c1 --suspend_min=30 --suspend_max=31; \
+  echo ${before}; date
 
-It worked fine.
+...and I found that unless I plug in a device that requests USB wakeup
+to be active that the two calls to "date" would show that fewer than
+30 seconds passed.
 
-[1] https://lkml.kernel.org/r/20190503233526.226272-1-dianders@chromium.org
+NOTE: deep suspend (where the 24 MHz clock gets disabled) isn't
+supported yet on upstream Linux so this was tested on a downstream
+kernel.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3288-veyron-minnie.dts | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm/boot/dts/rk3288.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-index f72d616d1bf8..9647d9b6b299 100644
---- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-@@ -125,10 +125,6 @@
- 	power-supply = <&backlight_regulator>;
- };
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 17ec2e2d7a60..30f1384f619b 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -210,6 +210,7 @@
+ 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		clock-frequency = <24000000>;
++		arm,no-tick-in-suspend;
+ 	};
  
--&emmc {
--	/delete-property/mmc-hs200-1_8v;
--};
--
- &gpio_keys {
- 	pinctrl-0 = <&pwr_key_l &ap_lid_int_l &volum_down_l &volum_up_l>;
- 
+ 	timer: timer@ff810000 {
 -- 
 2.20.1
 
