@@ -2,92 +2,120 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B677C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C58C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B996218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2BF122CBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:29:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564154964;
+	bh=JiuFgkY+17KLtujNkFHlgKRwZi31lbFpMHz3Vr+0Xqk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=POI0tcnTi+7WUuQJ4/PyPeQwBz2JlTIlIILDEGljybF8VcwUPYR7KZzwLWMBHpbzc
+	 9UhSf94Wro2yWsHAV1SHFa4a6iclyK4lzllRw6V4tZl2fHFjXiscgd9RLKiG3qBm1N
+	 HxIeatNnDmW/x4KDihocE+keX4hACOeKt/L02AY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388780AbfGZP3V (ORCPT
+        id S2388795AbfGZP3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:29:21 -0400
-Received: from mga18.intel.com ([134.134.136.126]:57548 "EHLO mga18.intel.com"
+        Fri, 26 Jul 2019 11:29:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388739AbfGZP3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:29:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 08:29:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
-   d="scan'208";a="322065695"
-Received: from msmall-mobl.amr.corp.intel.com (HELO [10.251.154.62]) ([10.251.154.62])
-  by orsmga004.jf.intel.com with ESMTP; 26 Jul 2019 08:29:13 -0700
-Subject: Re: [RFC PATCH 01/40] soundwire: add debugfs support
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-2-pierre-louis.bossart@linux.intel.com>
- <20190726140411.GA8767@kroah.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <1c9448c3-2a98-e5c3-fadf-910e361187ab@linux.intel.com>
-Date:   Fri, 26 Jul 2019 10:29:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2388759AbfGZP3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:29:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B43A322CBD;
+        Fri, 26 Jul 2019 15:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564154958;
+        bh=JiuFgkY+17KLtujNkFHlgKRwZi31lbFpMHz3Vr+0Xqk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JRM6MnQEbWXZokz+ZgUwLe/jJ903dCGtgYXixuNHQFLSZ2WxrPXo+OnytjPAn7FlD
+         Jo0ePR2LUArX45Yfo0WhGg5+pIuu0mZA/UYcIs4+luXHw7mcDGPPdnGKw+j1nfvvtN
+         VczI4qpBNVG85TO07rWrOa9updCfZK/k8CTg/wp0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Alexander Petrovskiy <alexpe@mellanox.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 07/62] ipv6: Unlink sibling route in case of failure
+Date:   Fri, 26 Jul 2019 17:24:19 +0200
+Message-Id: <20190726152302.474152642@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
+References: <20190726152301.720139286@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190726140411.GA8767@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Ido Schimmel <idosch@mellanox.com>
 
->> diff --git a/drivers/soundwire/debugfs.c b/drivers/soundwire/debugfs.c
->> new file mode 100644
->> index 000000000000..8d86e100516e
->> --- /dev/null
->> +++ b/drivers/soundwire/debugfs.c
->> @@ -0,0 +1,156 @@
->> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> 
-> No, for debugfs-specific code, that dual license makes no sense, right?
-> Don't cargo-cult SPDX identifiers please.
+[ Upstream commit 54851aa90cf27041d64b12f65ac72e9f97bd90fd ]
 
-It's a miss, I used EXPORT_GPL and missed this line, will fix.
+When a route needs to be appended to an existing multipath route,
+fib6_add_rt2node() first appends it to the siblings list and increments
+the number of sibling routes on each sibling.
 
-> 
->> +// Copyright(c) 2017-19 Intel Corporation.
-> 
-> Spell the year out fully unless you want lawyers knocking on your door :)
+Later, the function notifies the route via call_fib6_entry_notifiers().
+In case the notification is vetoed, the route is not unlinked from the
+siblings list, which can result in a use-after-free.
 
-haha, will fix.
+Fix this by unlinking the route from the siblings list before returning
+an error.
 
-> 
->> +
->> +#include <linux/device.h>
->> +#include <linux/debugfs.h>
->> +#include <linux/mod_devicetable.h>
->> +#include <linux/slab.h>
->> +#include <linux/soundwire/sdw.h>
->> +#include <linux/soundwire/sdw_registers.h>
->> +#include "bus.h"
->> +
->> +#ifdef CONFIG_DEBUG_FS
->> +struct dentry *sdw_debugfs_root;
->> +#endif
-> 
-> This whole file is not built if that option is not enabled, so why the
-> #ifdef?
+Audited the rest of the call sites from which the FIB notification chain
+is called and could not find more problems.
 
-Ah, will look into this, thanks!
+Fixes: 2233000cba40 ("net/ipv6: Move call_fib6_entry_notifiers up for route adds")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Alexander Petrovskiy <alexpe@mellanox.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ipv6/ip6_fib.c |   18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+--- a/net/ipv6/ip6_fib.c
++++ b/net/ipv6/ip6_fib.c
+@@ -1113,8 +1113,24 @@ add:
+ 		err = call_fib6_entry_notifiers(info->nl_net,
+ 						FIB_EVENT_ENTRY_ADD,
+ 						rt, extack);
+-		if (err)
++		if (err) {
++			struct fib6_info *sibling, *next_sibling;
++
++			/* If the route has siblings, then it first
++			 * needs to be unlinked from them.
++			 */
++			if (!rt->fib6_nsiblings)
++				return err;
++
++			list_for_each_entry_safe(sibling, next_sibling,
++						 &rt->fib6_siblings,
++						 fib6_siblings)
++				sibling->fib6_nsiblings--;
++			rt->fib6_nsiblings = 0;
++			list_del_init(&rt->fib6_siblings);
++			rt6_multipath_rebalance(next_sibling);
+ 			return err;
++		}
+ 
+ 		rcu_assign_pointer(rt->fib6_next, iter);
+ 		atomic_inc(&rt->fib6_ref);
+
+
