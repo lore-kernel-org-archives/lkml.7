@@ -2,188 +2,111 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBE6C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DC2C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE38E21994
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D2821994
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:00:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pvKKUb3x"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6gTe21N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbfGZK7x (ORCPT
+        id S1726762AbfGZLAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 06:59:53 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44573 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfGZK7x (ORCPT
+        Fri, 26 Jul 2019 07:00:05 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42844 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfGZLAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 06:59:53 -0400
-Received: by mail-io1-f67.google.com with SMTP id s7so103773390iob.11
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 03:59:52 -0700 (PDT)
+        Fri, 26 Jul 2019 07:00:04 -0400
+Received: by mail-pl1-f196.google.com with SMTP id ay6so24673271plb.9;
+        Fri, 26 Jul 2019 04:00:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/2Qkyg89gM8E4GiN52BSgJrYKhgOHFEX8MPsTOQQb/8=;
-        b=pvKKUb3xOgOs5idwxVhzJYYdgRH/f/hAG+mKTXBqLzmghnIB+xujpY1bBX9Y7LdVMd
-         aa+9Jt3AuO0Z+wHmXBs10VaaQaWws08Jo7yKOGYxFZaomRSCzixATWN007WGKlzn48EA
-         MfTec8I68rvjBmvtB214HMPqY9bMtNJPjysQehKPbyefTroUBtvIkPufc//tKBw+3Q3W
-         GhxC8/QO4NqmtXKDkFTfzoSVaEKnICoXOwH0JuyFLRh7ZV/6ndmdlqe1FttJgKV/DPAQ
-         4zOxvgJqZo2nlpiVPA7khQNbyK3zr3GiFarRbnSzEbNe8EtRuu6bdZIPpCGdVa+nJwyf
-         P6Mg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=GZk1YBh8K1nF7b/BG0aJDKLlYWK7vgDFFQWFrUTZFzA=;
+        b=c6gTe21NfZlHeMmzBg1Z75RsvgsPNWl9dWqZyeki1vTtEStPyxBnNCiGiMBiDP0xWu
+         KjxYYQyZujbishNMkirEBOjr/FJ5NObejW3xu/FLWt72aMHSXN38DE0AK7Nj3ywn0sc2
+         M7QupNSZVxzNUTBnTqKgXWZwfPGyFqHqCW++ZTZ+IuayQ3byxx7dzA8MnDFrlBSNGVpx
+         ICtTcxqWNXy/0k9pv7mJXiTB7mYuqtlEQTplUuJTiCYjB831EiXxGrucawDOa3KiA6fB
+         pyEEQYPipeh3XJ7JCFuJepY8vv9Ru8Tq2Bq08Ana1vSiy8lVwTzyguTF1zpk2NH5Rwkn
+         V6oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/2Qkyg89gM8E4GiN52BSgJrYKhgOHFEX8MPsTOQQb/8=;
-        b=CHqOiFUOPSX5UIDzlCl3GNcaWVBmSkVPxxufsEKiU+B0qCTs8knsgZFHzjayMR5r61
-         xL7ke0+r+qUmS9tqbaMiYkJZi9TqFZUIPqyhk71JYhY3D5KsX+CakiUYW+9H0ojRZtnz
-         DH1adMmydJKpT9UsVVsSsq5f9XzQMeLyiFR0r1SA7J3KPmTsiRzvQzEHb9g6FnkAIt+o
-         IA96PpZO00vSi9odkk1YUbMtb9X7pK3gZPIEtM8M+GljsSipXrBNXwoY2/L0A3xShTi2
-         DmtNqBsPGbUmcKXT9RlxeDeS1OwptWNPmgFowWDKTmJ8bD7F7R7s1bEQKra/rjFhA12M
-         yItw==
-X-Gm-Message-State: APjAAAVDg6D65PqdWCO8OPR1gp329Axcbg/NqNiMh+Iv91/0cZHjZWIg
-        lNXhMiOIYlTnzGXZ3UStWKn8NEnNMPkabpDP+HHSJg==
-X-Google-Smtp-Source: APXvYqwy0DspGrxpJRfm+kJx/feLb96cqxdHBXTbxWdZC6ECQstx1/+jNOE+Dzwx0A8fEiu4b7xFBoluWw/tmZ/Q6DY=
-X-Received: by 2002:a02:c7c9:: with SMTP id s9mr38357516jao.82.1564138791753;
- Fri, 26 Jul 2019 03:59:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <000000000000b7abcc058e924c12@google.com>
-In-Reply-To: <000000000000b7abcc058e924c12@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 26 Jul 2019 12:59:40 +0200
-Message-ID: <CACT4Y+aigCawAqjh=W83uAvbC+n3FXfsiYSA0sbMSn8kkPMSNA@mail.gmail.com>
-Subject: Re: possible deadlock in rxrpc_put_peer
-To:     syzbot <syzbot+72af434e4b3417318f84@syzkaller.appspotmail.com>,
-        David Howells <dhowells@redhat.com>,
-        David Miller <davem@davemloft.net>,
-        linux-afs@lists.infradead.org, netdev <netdev@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GZk1YBh8K1nF7b/BG0aJDKLlYWK7vgDFFQWFrUTZFzA=;
+        b=Z1VhsZC04UPeOzYPb+DUCBDOazcpFDbjDWC2+qVIF69ZqO/ojhtZaK52HHQT0Dk411
+         uRXdYtzNgKS9Ko3eQHYjNC1OPy3GCvn8yW2h3u6Xhq3yQD729k1bUnxTWND/9spHgKhU
+         M9DuhkvZ296Q3wQlhhgVNhwWgqu0TOAnv/iNHdRp4D3PlQuSdRkMsELh96wpl3AXHzac
+         XNHi0AcBNgXU/FUT04IKCl5NBtDTplWGLn9FHTKqdXdLMVMsbq18vZ/kgIlte+AArBB+
+         cOhTExHyMOjsRV6Em9idxiDQ308v6BRAmO4x9X4UP3irqU3tw3S58AsmEUXV5WOOMNT3
+         kSag==
+X-Gm-Message-State: APjAAAUOtrB7lu6Bn9qcINpR3tKpL0+Cop7xju5+vJY+JPPcgH1afuLH
+        N//e/7xRLcyp1Nbyqfqqsj0=
+X-Google-Smtp-Source: APXvYqztCs7PmCw0xLyCRDhnZ13GR6eat7Pm3QNuFtZtK9/gtnOOCYbuMTEOukIOh01EGkwcc9cl/g==
+X-Received: by 2002:a17:902:9a85:: with SMTP id w5mr95803057plp.221.1564138803975;
+        Fri, 26 Jul 2019 04:00:03 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id t10sm51967367pjr.13.2019.07.26.04.00.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jul 2019 04:00:03 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: [PATCH] dmaengine: pl330: use the same attributes when freeing pl330->mcode_cpu
+Date:   Fri, 26 Jul 2019 18:59:47 +0800
+Message-Id: <20190726105947.25342-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 11:38 AM syzbot
-<syzbot+72af434e4b3417318f84@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    6d21a41b Add linux-next specific files for 20190718
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=174e3af0600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
-> dashboard link: https://syzkaller.appspot.com/bug?extid=72af434e4b3417318f84
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+72af434e4b3417318f84@syzkaller.appspotmail.com
+In function dmac_alloc_resources(), pl330->mcode_cpu is allocated using
+dma_alloc_attrs() but freed with dma_free_coherent().
+Use the correct dma_free_attrs() function to free pl330->mcode_cpu.
 
-+net/rxrpc/peer_object.c maintainers
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+---
+ drivers/dma/pl330.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-> ============================================
-> WARNING: possible recursive locking detected
-> 5.2.0-next-20190718 #41 Not tainted
-> --------------------------------------------
-> kworker/0:3/21678 is trying to acquire lock:
-> 00000000aa5eecdf (&(&rxnet->peer_hash_lock)->rlock){+.-.}, at: spin_lock_bh
-> /./include/linux/spinlock.h:343 [inline]
-> 00000000aa5eecdf (&(&rxnet->peer_hash_lock)->rlock){+.-.}, at:
-> __rxrpc_put_peer /net/rxrpc/peer_object.c:415 [inline]
-> 00000000aa5eecdf (&(&rxnet->peer_hash_lock)->rlock){+.-.}, at:
-> rxrpc_put_peer+0x2d3/0x6a0 /net/rxrpc/peer_object.c:435
->
-> but task is already holding lock:
-> 00000000aa5eecdf (&(&rxnet->peer_hash_lock)->rlock){+.-.}, at: spin_lock_bh
-> /./include/linux/spinlock.h:343 [inline]
-> 00000000aa5eecdf (&(&rxnet->peer_hash_lock)->rlock){+.-.}, at:
-> rxrpc_peer_keepalive_dispatch /net/rxrpc/peer_event.c:378 [inline]
-> 00000000aa5eecdf (&(&rxnet->peer_hash_lock)->rlock){+.-.}, at:
-> rxrpc_peer_keepalive_worker+0x6b3/0xd02 /net/rxrpc/peer_event.c:430
->
-> other info that might help us debug this:
->   Possible unsafe locking scenario:
->
->         CPU0
->         ----
->    lock(&(&rxnet->peer_hash_lock)->rlock);
->    lock(&(&rxnet->peer_hash_lock)->rlock);
->
->   *** DEADLOCK ***
->
->   May be due to missing lock nesting notation
->
-> 3 locks held by kworker/0:3/21678:
->   #0: 000000007c4c2bc3 ((wq_completion)krxrpcd){+.+.}, at: __write_once_size
-> /./include/linux/compiler.h:226 [inline]
->   #0: 000000007c4c2bc3 ((wq_completion)krxrpcd){+.+.}, at: arch_atomic64_set
-> /./arch/x86/include/asm/atomic64_64.h:34 [inline]
->   #0: 000000007c4c2bc3 ((wq_completion)krxrpcd){+.+.}, at: atomic64_set
-> /./include/asm-generic/atomic-instrumented.h:855 [inline]
->   #0: 000000007c4c2bc3 ((wq_completion)krxrpcd){+.+.}, at: atomic_long_set
-> /./include/asm-generic/atomic-long.h:40 [inline]
->   #0: 000000007c4c2bc3 ((wq_completion)krxrpcd){+.+.}, at: set_work_data
-> /kernel/workqueue.c:620 [inline]
->   #0: 000000007c4c2bc3 ((wq_completion)krxrpcd){+.+.}, at:
-> set_work_pool_and_clear_pending /kernel/workqueue.c:647 [inline]
->   #0: 000000007c4c2bc3 ((wq_completion)krxrpcd){+.+.}, at:
-> process_one_work+0x88b/0x1740 /kernel/workqueue.c:2240
->   #1: 000000006782bc7f
-> ((work_completion)(&rxnet->peer_keepalive_work)){+.+.}, at:
-> process_one_work+0x8c1/0x1740 /kernel/workqueue.c:2244
->   #2: 00000000aa5eecdf (&(&rxnet->peer_hash_lock)->rlock){+.-.}, at:
-> spin_lock_bh /./include/linux/spinlock.h:343 [inline]
->   #2: 00000000aa5eecdf (&(&rxnet->peer_hash_lock)->rlock){+.-.}, at:
-> rxrpc_peer_keepalive_dispatch /net/rxrpc/peer_event.c:378 [inline]
->   #2: 00000000aa5eecdf (&(&rxnet->peer_hash_lock)->rlock){+.-.}, at:
-> rxrpc_peer_keepalive_worker+0x6b3/0xd02 /net/rxrpc/peer_event.c:430
->
-> stack backtrace:
-> CPU: 0 PID: 21678 Comm: kworker/0:3 Not tainted 5.2.0-next-20190718 #41
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: krxrpcd rxrpc_peer_keepalive_worker
-> Call Trace:
->   __dump_stack /lib/dump_stack.c:77 [inline]
->   dump_stack+0x172/0x1f0 /lib/dump_stack.c:113
->   print_deadlock_bug /kernel/locking/lockdep.c:2301 [inline]
->   check_deadlock /kernel/locking/lockdep.c:2342 [inline]
->   validate_chain /kernel/locking/lockdep.c:2881 [inline]
->   __lock_acquire.cold+0x194/0x398 /kernel/locking/lockdep.c:3880
->   lock_acquire+0x190/0x410 /kernel/locking/lockdep.c:4413
->   __raw_spin_lock_bh /./include/linux/spinlock_api_smp.h:135 [inline]
->   _raw_spin_lock_bh+0x33/0x50 /kernel/locking/spinlock.c:175
->   spin_lock_bh /./include/linux/spinlock.h:343 [inline]
->   __rxrpc_put_peer /net/rxrpc/peer_object.c:415 [inline]
->   rxrpc_put_peer+0x2d3/0x6a0 /net/rxrpc/peer_object.c:435
->   rxrpc_peer_keepalive_dispatch /net/rxrpc/peer_event.c:381 [inline]
->   rxrpc_peer_keepalive_worker+0x7a6/0xd02 /net/rxrpc/peer_event.c:430
->   process_one_work+0x9af/0x1740 /kernel/workqueue.c:2269
->   worker_thread+0x98/0xe40 /kernel/workqueue.c:2415
->   kthread+0x361/0x430 /kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 /arch/x86/entry/entry_64.S:352
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000b7abcc058e924c12%40google.com.
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 1163af2ba4a3..6cce9ef61b29 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -1922,9 +1922,10 @@ static int dmac_alloc_resources(struct pl330_dmac *pl330)
+ 	if (ret) {
+ 		dev_err(pl330->ddma.dev, "%s:%d Can't to create channels for DMAC!\n",
+ 			__func__, __LINE__);
+-		dma_free_coherent(pl330->ddma.dev,
++		dma_free_attrs(pl330->ddma.dev,
+ 				chans * pl330->mcbufsz,
+-				pl330->mcode_cpu, pl330->mcode_bus);
++				pl330->mcode_cpu, pl330->mcode_bus,
++				DMA_ATTR_PRIVILEGED);
+ 		return ret;
+ 	}
+ 
+@@ -2003,9 +2004,9 @@ static void pl330_del(struct pl330_dmac *pl330)
+ 	/* Free DMAC resources */
+ 	dmac_free_threads(pl330);
+ 
+-	dma_free_coherent(pl330->ddma.dev,
++	dma_free_attrs(pl330->ddma.dev,
+ 		pl330->pcfg.num_chan * pl330->mcbufsz, pl330->mcode_cpu,
+-		pl330->mcode_bus);
++		pl330->mcode_bus, DMA_ATTR_PRIVILEGED);
+ }
+ 
+ /* forward declaration */
+-- 
+2.11.0
+
