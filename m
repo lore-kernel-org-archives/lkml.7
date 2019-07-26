@@ -2,147 +2,124 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3BDC76194
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D87C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDBA2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:42:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qKSd1EDb"
+	by mail.kernel.org (Postfix) with ESMTP id 826E02075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726000AbfGZBmW (ORCPT
+        id S1726005AbfGZBpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 21:42:22 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46433 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfGZBmV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 21:42:21 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z23so25397442ote.13
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 18:42:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4xZv/cnujU0oqDcp877dW2V6UxgQGvLsyyGAH+W7I5Q=;
-        b=qKSd1EDbUaxk7Iml18aMNgKB1KOluUzbqTK8JoXGWgOObVnyonZySJSebDxiRunuzG
-         ONV9GJmMyrbKV1mWeZVfLP8vBOai9WA5JH2ETG9fSWiZjygeP6B3wYHrbD9kaGqCJigF
-         hHeBo47AFH/uGAExbpBWJfFRCd5rEVaa2/zoEpiWHzfs45skGgYWqW15xuFuU8qSDNN9
-         MaWTiHUQznOw7F7Ert6XCD9UZrFjEMo/tG7a5Yc37JAgzSedkrtRNQB1z32tqhcibVh1
-         c01SnJBiAu0lndpZProKdtv4Jh04By4fyCt74wCAJ8OiIghLfU0f61I7gDdy/XXG6a4Q
-         2zzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4xZv/cnujU0oqDcp877dW2V6UxgQGvLsyyGAH+W7I5Q=;
-        b=Bci8LsYNP/snMrap+hjIw3VdpTE7clJP90li/Uc5mfm7MLkyDalleF/hu/CwSLgeTJ
-         iSJgELJJByV11EcpI6/ZsKQp6kvkIY1iIfYkvbJGDefE4C43GG7YXC2lb/sol6e2Jkiv
-         edETBvn61ppFodYSMdHXfXvbYOu8hU6wrvoae2Q51EWOufxuFJD7mJwwcoK0DsdRT4yI
-         o5JFHqY8ZXj1uIU1Y3fKGhz7DHTB4oLePdIoYXsHKXi26y/CaraDf6jGz7xC1s2Vslrt
-         h03yHQEg7io2SLZta3InF16CaBPSu1FYFs066RRkUQVNqvsQvG7oKur3om+1f4e5mz3a
-         T+Zw==
-X-Gm-Message-State: APjAAAX3+do143m9cxSkoas85F7FybwPRapZ3fNhuqlG1gMB8yG/3oe3
-        LJp0QdDw5hWDeKNuj3bIoI9ylsxrP3fSlHixi/TOzQ==
-X-Google-Smtp-Source: APXvYqzBT6V8BKTmErDkTC6/DiTsYm+9qsuAcDebvhWuQludZowll3Hh8C7QVnHF58QiogxuxCzCliIKfabB9C+OTbw=
-X-Received: by 2002:a9d:6256:: with SMTP id i22mr46575918otk.139.1564105340461;
- Thu, 25 Jul 2019 18:42:20 -0700 (PDT)
+        Thu, 25 Jul 2019 21:45:41 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41058 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725852AbfGZBpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 21:45:41 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8EF18370B50BB262F715;
+        Fri, 26 Jul 2019 09:45:38 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 26 Jul 2019 09:45:31 +0800
+From:   Xiaofei Tan <tanxiaofei@huawei.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Xiaofei Tan <tanxiaofei@huawei.com>, <linux-acpi@vger.kernel.org>,
+        <linux-efi@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <lenb@kernel.org>, <tony.luck@intel.com>, <bp@alien8.de>,
+        <ying.huang@intel.com>, <ross.lagerwall@citrix.com>,
+        <ard.biesheuvel@linaro.org>, <james.morse@arm.com>
+Subject: [PATCH v2 1/1] efi: cper: print AER info of PCIe fatal error
+Date:   Fri, 26 Jul 2019 09:43:37 +0800
+Message-ID: <1564105417-232048-1-git-send-email-tanxiaofei@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-References: <20190717222340.137578-1-saravanak@google.com> <20190717222340.137578-3-saravanak@google.com>
- <20190723095316.t5ltprixxd5veuj7@vireshk-i7> <CAGETcx-r6fZH0xYea-YXyXDwe33pimtfNerLzzBn4UHT2qQVvA@mail.gmail.com>
- <20190725025849.y2xyxmqmgorrny6k@vireshk-i7> <CAGETcx8r3C_=Y0vSwqekCZPUeYkNQ6EOUDK4bUJksDHG6zPUjA@mail.gmail.com>
- <20190725053823.yqaxnk2a7geebmqw@vireshk-i7>
-In-Reply-To: <20190725053823.yqaxnk2a7geebmqw@vireshk-i7>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 25 Jul 2019 18:41:44 -0700
-Message-ID: <CAGETcx9thoqwAuGOc3t9oiw9fzB_-Gcsb4qBAESb0rfwk9T75Q@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] OPP: Add function to look up required OPP's for a
- given OPP
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:38 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 24-07-19, 20:46, Saravana Kannan wrote:
-> > On Wed, Jul 24, 2019 at 7:58 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > On 23-07-19, 17:23, Saravana Kannan wrote:
->
-> > > > I almost said "not sure. Let me just compare pointers".
-> > > > I think (not sure) it has to do with the same OPP table being used to
-> > > > create multiple OPP table copies if the "shared OPP table" flag isn't
-> > > > set?
-> > > > Can you confirm if this makes sense? If so, I can add a comment patch
-> > > > that adds comments to the existing code and then copies it into this
-> > > > function in this patch.
-> > >
-> > > Right, that was the reason but we also need to fix ...
-> >
-> > I know I gave that explanation but I'm still a bit confused by the
-> > existing logic. If the same DT OPP table is used to create multiple in
-> > memory OPP tables, how do you device which in memory OPP table is the
-> > right one to point to?
->
-> This is a bit broken actually, we don't see any problems right now but
-> may eventually have to fix it someday.
->
-> We pick the first in-memory OPP table that was created using the DT
-> OPP table. This is done because the DT doesn't provide any explicit
-> linking to the required-opp device right now.
->
-> Right now the required-opps is only used for power domains and so it
-> is working fine. It may work fine for your case as well. But once we
-> have a case we want to use required-opps in a single OPP table for
-> both power-domains and master/slave thing you are proposing, we may
-> see more problems.
->
-> > > > > > +                     break;
-> > > > > > +     }
-> > > > > > +
-> > > > > > +     if (unlikely(i == src_table->required_opp_count)) {
-> > > > > > +             pr_err("%s: Couldn't find matching OPP table (%p: %p)\n",
-> > > > > > +                    __func__, src_table, dst_table);
-> > > > > > +             return NULL;
-> > > > > > +     }
-> > > > > > +
-> > > > > > +     mutex_lock(&src_table->lock);
-> > > > > > +
-> > > > > > +     list_for_each_entry(opp, &src_table->opp_list, node) {
-> > > > > > +             if (opp == src_opp) {
-> > >
-> > > ... this as well. We must be comparing node pointers here as well.
-> >
-> > Not really, if an in memory OPP entry is not part of an in memory OPP
-> > table list, I don't think it should be considered part of the OPP
-> > table just because the node pointer is the same. I think that's
-> > explicitly wrong and the above code is correct as is.
->
-> I understand what you are saying, but because we match the very first
-> OPP table that was there in the list we need to match the DT node here
-> as well.
->
-> Or somehow we make sure to have the correct in-memory OPP table being
-> pointed by the required-opp-table array. Then we don't need the node
-> pointer anywhere here.
+AER info of PCIe fatal error is not printed in the current driver.
+Because APEI driver will panic directly for fatal error, and can't
+run to the place of printing AER info.
 
-Ah, right. I'll fix this.
+An example log is as following:
+{763}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 11
+{763}[Hardware Error]: event severity: fatal
+{763}[Hardware Error]:  Error 0, type: fatal
+{763}[Hardware Error]:   section_type: PCIe error
+{763}[Hardware Error]:   port_type: 0, PCIe end point
+{763}[Hardware Error]:   version: 4.0
+{763}[Hardware Error]:   command: 0x0000, status: 0x0010
+{763}[Hardware Error]:   device_id: 0000:82:00.0
+{763}[Hardware Error]:   slot: 0
+{763}[Hardware Error]:   secondary_bus: 0x00
+{763}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10fb
+{763}[Hardware Error]:   class_code: 000002
+Kernel panic - not syncing: Fatal hardware error!
 
--Saravana
+This issue was imported by the patch, '37448adfc7ce ("aerdrv: Move
+cper_print_aer() call out of interrupt context")'. To fix this issue,
+this patch adds print of AER info in cper_print_pcie() for fatal error.
+
+Here is the example log after this patch applied:
+{24}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 10
+{24}[Hardware Error]: event severity: fatal
+{24}[Hardware Error]:  Error 0, type: fatal
+{24}[Hardware Error]:   section_type: PCIe error
+{24}[Hardware Error]:   port_type: 0, PCIe end point
+{24}[Hardware Error]:   version: 4.0
+{24}[Hardware Error]:   command: 0x0546, status: 0x4010
+{24}[Hardware Error]:   device_id: 0000:01:00.0
+{24}[Hardware Error]:   slot: 0
+{24}[Hardware Error]:   secondary_bus: 0x00
+{24}[Hardware Error]:   vendor_id: 0x15b3, device_id: 0x1019
+{24}[Hardware Error]:   class_code: 000002
+{24}[Hardware Error]:   aer_uncor_status: 0x00040000, aer_uncor_mask: 0x00000000
+{24}[Hardware Error]:   aer_uncor_severity: 0x00062010
+{24}[Hardware Error]:   TLP Header: 000000c0 01010000 00000001 00000000
+Kernel panic - not syncing: Fatal hardware error!
+
+Fixes: 37448adfc7ce ("aerdrv: Move cper_print_aer() call out of interrupt context")
+Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+Reviewed-by: James Morse <james.morse@arm.com>
+---
+ drivers/firmware/efi/cper.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index 8fa977c..78b8922 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -390,6 +390,21 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
+ 		printk(
+ 	"%s""bridge: secondary_status: 0x%04x, control: 0x%04x\n",
+ 	pfx, pcie->bridge.secondary_status, pcie->bridge.control);
++
++	/* Fatal errors call __ghes_panic() before AER handler prints this */
++	if (pcie->validation_bits & CPER_PCIE_VALID_AER_INFO &&
++	    gdata->error_severity & CPER_SEV_FATAL) {
++		struct aer_capability_regs *aer;
++
++		aer = (struct aer_capability_regs *)pcie->aer_info;
++		printk("%saer_uncor_status: 0x%08x, aer_uncor_mask: 0x%08x\n",
++		       pfx, aer->uncor_status, aer->uncor_mask);
++		printk("%saer_uncor_severity: 0x%08x\n",
++		       pfx, aer->uncor_severity);
++		printk("%sTLP Header: %08x %08x %08x %08x\n", pfx,
++		       aer->header_log.dw0, aer->header_log.dw1,
++		       aer->header_log.dw2, aer->header_log.dw3);
++	}
+ }
+ 
+ static void cper_print_tstamp(const char *pfx,
+-- 
+2.8.1
+
