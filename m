@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22922C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D2DC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F128822CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B5922CD8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148891;
-	bh=yW7TGlrP4rOvaiUM/u3oVyJsef4Xl1+aBQt0r6KEkMg=;
+	s=default; t=1564148896;
+	bh=Sl9FWxb34YXWvjKPk/0vEOlM9hNTxWM1rB1FxiM1Hs0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bvtH3Hnn1UvGMUIUBaJwjCAUXae7hml8zG619KAIcJbAQK4pTxRkiORfVoTZ2bSVO
-	 rvPTlZeRFAwfbngNuJ+Zm5WrkuiETLg+q62D2CLqaOCF1pu/aYERS/B9N6XgwTgcIM
-	 w3rbGjzpooXeXkbrjzZETIvUwKQHTQp9gTMocqag=
+	b=WvQqQprYPVnft1piLydCYGbR+Ij4KNx+BMPUWztorpTWlG7km9dWXDGlBWWamBhfd
+	 vFD5KwYxLer8R7MRPtcd1DlMmxBeHp82hRUqh8ZP2KBkO5RMsnU/FHiRmcXyZk0ivG
+	 Ry2bEtzVk4UOrEliB4tDso7stAMSMh6zZj+Z5rdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388771AbfGZNsK (ORCPT
+        id S2388560AbfGZNpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:48:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388559AbfGZNpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jul 2019 09:45:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54262 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388545AbfGZNpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:45:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E90B22CF6;
-        Fri, 26 Jul 2019 13:45:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F02122CEB;
+        Fri, 26 Jul 2019 13:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148725;
-        bh=yW7TGlrP4rOvaiUM/u3oVyJsef4Xl1+aBQt0r6KEkMg=;
+        s=default; t=1564148721;
+        bh=Sl9FWxb34YXWvjKPk/0vEOlM9hNTxWM1rB1FxiM1Hs0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yIfrOwwxSynw2Cd0OhYCaw4+E9PeNW30DPhvs/VpxE8uwFpjtVC1r9vM+8moBZzSl
-         TwbKRcghxz+r05JE3Gmh+rvwEsxN/LC6U4Dd3OJlrEIZOMg1MMiDPnaAuphjmIdxdm
-         4eiVHc/LK4c4qyOfWXFcaqz90CPcikb0hKJVP7dI=
+        b=DWVM4RD/6AI6nvdM3w+6fcyq82OazxwueeyJJYhMyofNM3MgCAZY5pxumUzifLcWo
+         0UX2AWGY7bBPPOrSZEqwWmRB/aX175ec/q+wFsao6pcbgP4vCpZpgpUmTNfaHoeWHZ
+         O9A68y5kUFjWFLf+GQmZcAci4wUMDc/V/+trzYfA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/23] ARM: dts: rockchip: Mark that the rk3288 timer might stop in suspend
-Date:   Fri, 26 Jul 2019 09:45:01 -0400
-Message-Id: <20190726134522.13308-2-sashal@kernel.org>
+Cc:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 30/30] x86, boot: Remove multiple copy of static function sanitize_boot_params()
+Date:   Fri, 26 Jul 2019 09:44:32 -0400
+Message-Id: <20190726134432.12993-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726134522.13308-1-sashal@kernel.org>
-References: <20190726134522.13308-1-sashal@kernel.org>
+In-Reply-To: <20190726134432.12993-1-sashal@kernel.org>
+References: <20190726134432.12993-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,48 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 
-[ Upstream commit 8ef1ba39a9fa53d2205e633bc9b21840a275908e ]
+[ Upstream commit 8c5477e8046ca139bac250386c08453da37ec1ae ]
 
-This is similar to commit e6186820a745 ("arm64: dts: rockchip: Arch
-counter doesn't tick in system suspend").  Specifically on the rk3288
-it can be seen that the timer stops ticking in suspend if we end up
-running through the "osc_disable" path in rk3288_slp_mode_set().  In
-that path the 24 MHz clock will turn off and the timer stops.
+Kernel build warns:
+ 'sanitize_boot_params' defined but not used [-Wunused-function]
 
-To test this, I ran this on a Chrome OS filesystem:
-  before=$(date); \
-  suspend_stress_test -c1 --suspend_min=30 --suspend_max=31; \
-  echo ${before}; date
+at below files:
+  arch/x86/boot/compressed/cmdline.c
+  arch/x86/boot/compressed/error.c
+  arch/x86/boot/compressed/early_serial_console.c
+  arch/x86/boot/compressed/acpi.c
 
-...and I found that unless I plug in a device that requests USB wakeup
-to be active that the two calls to "date" would show that fewer than
-30 seconds passed.
+That's becausethey each include misc.h which includes a definition of
+sanitize_boot_params() via bootparam_utils.h.
 
-NOTE: deep suspend (where the 24 MHz clock gets disabled) isn't
-supported yet on upstream Linux so this was tested on a downstream
-kernel.
+Remove the inclusion from misc.h and have the c file including
+bootparam_utils.h directly.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1563283092-1189-1-git-send-email-zhenzhong.duan@oracle.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3288.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/boot/compressed/misc.c | 1 +
+ arch/x86/boot/compressed/misc.h | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 04ea209f1737..98abb053b7da 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -205,6 +205,7 @@
- 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
- 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 		clock-frequency = <24000000>;
-+		arm,no-tick-in-suspend;
- 	};
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index d86e68d3c794..1912b2671f10 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -15,6 +15,7 @@
+ #include "error.h"
+ #include "../string.h"
+ #include "../voffset.h"
++#include <asm/bootparam_utils.h>
  
- 	timer: timer@ff810000 {
+ /*
+  * WARNING!!
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 2728e1b7e4a6..a8789aa647b4 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -19,7 +19,6 @@
+ #include <asm/page.h>
+ #include <asm/boot.h>
+ #include <asm/bootparam.h>
+-#include <asm/bootparam_utils.h>
+ 
+ #define BOOT_BOOT_H
+ #include "../ctype.h"
 -- 
 2.20.1
 
