@@ -2,207 +2,216 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44916C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C37C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01AA321880
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8A621880
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:15:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Acd9lTsJ";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Acd9lTsJ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XInh940T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbfGZIPA (ORCPT
+        id S1726514AbfGZIPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 04:15:00 -0400
-Received: from mail-eopbgr20063.outbound.protection.outlook.com ([40.107.2.63]:30457
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725815AbfGZIPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 04:15:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pgY8oeibiBD6WrixfYc+P2BmrPVYxKZ9bPd3a85T118=;
- b=Acd9lTsJFx6lWgfhvUNwZBk19sMSBHglND4QOEq12VV+rIoDSHG7HHZl3k7uauuVjCvabSmgbQWxxL84G6fN9/3E5jFtkra/C7pfrYbwrqANu7Dwvw4RVklq3DR5pN5rRKWNMmrWkFqu0Nckdu+ZtYkj6Yv5Gm9/LeyQ9ZiRp8Y=
-Received: from VI1PR08CA0230.eurprd08.prod.outlook.com (2603:10a6:802:15::39)
- by DB6PR0801MB1845.eurprd08.prod.outlook.com (2603:10a6:4:39::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2094.16; Fri, 26 Jul
- 2019 08:13:15 +0000
-Received: from AM5EUR03FT054.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e08::205) by VI1PR08CA0230.outlook.office365.com
- (2603:10a6:802:15::39) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2094.14 via Frontend
- Transport; Fri, 26 Jul 2019 08:13:14 +0000
-Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=temperror action=none
- header.from=arm.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of arm.com: DNS Timeout)
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT054.mail.protection.outlook.com (10.152.16.212) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2052.18 via Frontend Transport; Fri, 26 Jul 2019 08:13:13 +0000
-Received: ("Tessian outbound 1e6e633a5b56:v26"); Fri, 26 Jul 2019 08:13:09 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 4ee8ac99b27cfc05
-X-CR-MTA-TID: 64aa7808
-Received: from 80f38c3bcd16.1 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.12.53])
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 0FEB74C8-7CCA-4665-83DD-D8C3D92E91BB.1;
-        Fri, 26 Jul 2019 08:13:04 +0000
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04lp2053.outbound.protection.outlook.com [104.47.12.53])
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 80f38c3bcd16.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 26 Jul 2019 08:13:04 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kkoU2Q7ex90ktMFBYpm9mjFnSk58voEPAsJCiuFi3I2y6vcsLy5wpJhsHkWyTvTwBkxWjayhLtoTADM3bzLKLoI4j+P7tkppF03aQknMx8c/Dg0zG8aYK6/1aknC9ivcNzwJYx+o9KFMKcrKtgOdBMQDSi17ichyMx7FRQqrN6o6+ldPpips4H8ok3QTAo+LSUGrrKITRQ7druTkarP9wqTwe7QmHhljsMUqUQtxszfceO+amyMUX8Fz06bRDDUhU/+OvXRpnSPnhOKWlHBFRXIBkG3x9qjhsGE9eXWGCxdMw3/iOpK6XKVV89ZKpOILnr6sLuYEP+lQjongUPsgqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pgY8oeibiBD6WrixfYc+P2BmrPVYxKZ9bPd3a85T118=;
- b=C+7rf14WSksmPakiN8i6hrh4hPIuKXyFjCnkG7GaIK2pPwJBMSCMqRW5v523N45Zwo25JCayoFiTqnHRVjCWIYEUVAVbItq3RTT3e4pbcl+p2oWOuRMtURhbEwRqojwJG7GjmkF1o/21wsB5qcf11m6OAZ/VKK55dtSm/VLq2L3ctBT1f3KL2+h7WnY28jrdyPT2M1p8S58YboAWs0AILBhUrzAol7kck+KgDUXxg1wA49o+1YPFZyyXxjSc98jhTQEJXyw7kaaCY0e23kWTxd9CqCMLqktHuXRgQP4HBfgOyW0AElY7/Q9pYdb8Hwe2lsbaMI4Vd1yyhBS743h0Zg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=arm.com;dmarc=pass action=none header.from=arm.com;dkim=pass
- header.d=arm.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pgY8oeibiBD6WrixfYc+P2BmrPVYxKZ9bPd3a85T118=;
- b=Acd9lTsJFx6lWgfhvUNwZBk19sMSBHglND4QOEq12VV+rIoDSHG7HHZl3k7uauuVjCvabSmgbQWxxL84G6fN9/3E5jFtkra/C7pfrYbwrqANu7Dwvw4RVklq3DR5pN5rRKWNMmrWkFqu0Nckdu+ZtYkj6Yv5Gm9/LeyQ9ZiRp8Y=
-Received: from VI1PR08MB5488.eurprd08.prod.outlook.com (52.133.246.150) by
- VI1PR08MB3806.eurprd08.prod.outlook.com (20.178.14.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.17; Fri, 26 Jul 2019 08:13:01 +0000
-Received: from VI1PR08MB5488.eurprd08.prod.outlook.com
- ([fe80::c091:c28c:bb1a:5236]) by VI1PR08MB5488.eurprd08.prod.outlook.com
- ([fe80::c091:c28c:bb1a:5236%2]) with mapi id 15.20.2115.005; Fri, 26 Jul 2019
- 08:13:01 +0000
-From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-To:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>
-CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: [PATCH] drm/komeda: Skips the invalid writeback job
-Thread-Topic: [PATCH] drm/komeda: Skips the invalid writeback job
-Thread-Index: AQHVQ4nw7K9FV7USuUuF4ik2yHSO+g==
-Date:   Fri, 26 Jul 2019 08:13:00 +0000
-Message-ID: <1564128758-23553-1-git-send-email-lowry.li@arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK0PR03CA0039.apcprd03.prod.outlook.com
- (2603:1096:203:2f::27) To VI1PR08MB5488.eurprd08.prod.outlook.com
- (2603:10a6:803:137::22)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Lowry.Li@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.9.1
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-Correlation-Id: 842e31ef-2046-40ee-e394-08d711a11ae7
-X-MS-Office365-Filtering-HT: Tenant
-X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR08MB3806;
-X-MS-TrafficTypeDiagnostic: VI1PR08MB3806:|DB6PR0801MB1845:
-X-Microsoft-Antispam-PRVS: <DB6PR0801MB18453C12534D03F60C156FEB9FC00@DB6PR0801MB1845.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:972;OLM:972;
-x-forefront-prvs: 01106E96F6
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(346002)(396003)(366004)(376002)(189003)(199004)(66946007)(478600001)(2201001)(4326008)(26005)(2501003)(36756003)(25786009)(66476007)(186003)(53936002)(5660300002)(386003)(6486002)(2906002)(55236004)(64756008)(66446008)(6506007)(8936002)(66556008)(102836004)(6636002)(99286004)(68736007)(81166006)(110136005)(66066001)(71200400001)(486006)(8676002)(71190400001)(14454004)(54906003)(50226002)(7736002)(2616005)(6512007)(6116002)(316002)(6436002)(256004)(3846002)(305945005)(14444005)(86362001)(476003)(81156014)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3806;H:VI1PR08MB5488.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info-Original: cMjaXxZo/5zeBnMzoPoPivur9Ki73FfV08C64Uq8iiQoA1Y1WKvStXnIkHZzeEW65km3ySEFLYBNxcu73DbavRrlj3FJdmMxiJnRSo5KOlpEvhxV4SRriOQxCqn8Q5QP2seYzLCfFjuNAT9kN/TuNGzbewUo3z5fjNSEIYG5UZdW2QQP62aLzvkukE8dZtQfN8ftLW7Ff0kefjru3py6i8B0HKg5rfMQme7Hpnl7GtwI55Vlmm1FhCh5oXQzeyjdm7BLmR6XUlU6JMXZByL75hODIFCIP+1bzKfFnOVg1VOJeRk4/1pjVJdunKqzOBw5OFktKWQBUn7YZ0vbb7JWzK+SLiWPIySCRDKFv+MsPhzJ7WlNeQ6xa3SdcUmJmI+MEvE85FcRJRMwH0mm2rqeUYKMVkkOH1btqK+2yKhsYBE=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 26 Jul 2019 04:15:10 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:50632 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfGZIPI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 04:15:08 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190726081506euoutp01c132f4d23cc5c1115135a300e2f48df2~05vQjfvE-2569825698euoutp01P
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 08:15:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190726081506euoutp01c132f4d23cc5c1115135a300e2f48df2~05vQjfvE-2569825698euoutp01P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1564128906;
+        bh=wEDUjZQ2UkeoX7Xa2YAqEXlb+2reqAVeBZifIn1wMqM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XInh940TGzOUBA3uQmwuVH4O9Q8fsqLKcKd6IkpZ7hm73Z2Fyi0Bt1BAtYE/T3epc
+         AD8G6kG/OfxIP7dtJHAiOzDJKXBMFqLrcZx04Ed/Jd9yZlaYCIMZM7T2IUHbSlnfHe
+         6V5w+kvD2zSV1qFQ1/JV8UYkeoibVmB57E6uNQWM=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190726081506eucas1p2493d67572ca7c1249973f9c0f1862008~05vP2OeTo2692026920eucas1p24;
+        Fri, 26 Jul 2019 08:15:06 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id A9.C1.04325.986BA3D5; Fri, 26
+        Jul 2019 09:15:05 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190726081505eucas1p22472e5d1e81180b7bca4f0c0af302af5~05vPMA_q92703027030eucas1p2z;
+        Fri, 26 Jul 2019 08:15:05 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190726081505eusmtrp2b1387fc73459937259fab67b07f3cc2e~05vO96tLU3187231872eusmtrp2q;
+        Fri, 26 Jul 2019 08:15:05 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-40-5d3ab6890277
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id CC.7C.04146.986BA3D5; Fri, 26
+        Jul 2019 09:15:05 +0100 (BST)
+Received: from AMDC2765.DIGITAL.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190726081504eusmtip295ae75f0a45ec3f08f0569134994123b~05vOZYZ2z3050030500eusmtip29;
+        Fri, 26 Jul 2019 08:15:04 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        =?UTF-8?q?M=C3=A5ns=20Rullg=C3=A5rd?= <mans@mansr.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Peter Chen <peter.chen@nxp.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v2 1/3] dt-bindings: switch Exynos EHCI/OHCI bindings to use
+ array of generic PHYs
+Date:   Fri, 26 Jul 2019 10:14:51 +0200
+Message-Id: <20190726081453.9456-2-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190726081453.9456-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3806
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Lowry.Li@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT054.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(39860400002)(376002)(2980300002)(199004)(189003)(26005)(2501003)(86362001)(2616005)(14444005)(186003)(386003)(76130400001)(63370400001)(6116002)(126002)(25786009)(2906002)(476003)(63350400001)(6506007)(81166006)(36906005)(81156014)(36756003)(8676002)(486006)(478600001)(3846002)(336012)(22756006)(102836004)(2201001)(6636002)(26826003)(14454004)(110136005)(5660300002)(54906003)(8746002)(4326008)(50226002)(8936002)(6512007)(66066001)(47776003)(6486002)(50466002)(316002)(7736002)(99286004)(70586007)(356004)(70206006)(305945005)(23756003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0801MB1845;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 8fb0ef02-f817-402f-b68b-08d711a11335
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(710020)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB6PR0801MB1845;
-NoDisclaimer: True
-X-Forefront-PRVS: 01106E96F6
-X-Microsoft-Antispam-Message-Info: 4lJMLjF5kHkHPoGeqS2HToNKL99yvtCo9ENZGP3fUTFqoZMalbGVkod0P5hAJSpwJNpUrfYH6eJM4jfIQGi51Ylt5P3lWcLy/zJcZ4kCSzeNO202Tr3/s89b+ij2ivScgQL1+wZF7VwoR9HBRa1EIZmctdGhoBX6c4Rlk2RVYQp62/+3GJvFLI9JpSW3ZQm52U/xsq9UsPjCkmoIsEuC1Tv/YRhFfj1+lYK28wtT5Oyb8pWvwQc8EVo0pZXmbAmnTJPjLRrAhOPw68SF92Y7/fja0YimN+sjWwF8qRUwLvTlaq18DiRtXteiAv5j1mSILi+cOMTSPv1gCWGzFQiJHS7AzGMRcT8yoH4tl/TmmIIZX7U12eysZBfXcL4HR3edtfVhB6tIVXe74Rnh6zlw+mdoqPd6pl0QtEj22eQTZMg=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jul 2019 08:13:13.4275
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 842e31ef-2046-40ee-e394-08d711a11ae7
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0801MB1845
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNKsWRmVeSWpSXmKPExsWy7djPc7qd26xiDc7uMrLYOGM9q8X8I+dY
+        LZoXr2ezOH9+A7vF5V1z2CxmnN/HZLFoWSuzxcsjPxgt1h65y27x4+F0Jos/9+6wWrTuPcJu
+        MeH3BTYHXo9bd+o9Nq3qZPPYP3cNu8eb06fYPTa+28HkMfvuD0aPvi2rGD0+b5IL4IjisklJ
+        zcksSy3St0vgyphyfg5rwVGZij1vNrI0MC4X62Lk5JAQMJF4vPQ9SxcjF4eQwApGif8vpzBC
+        OF8YJf7O3MsO4XxmlNjS8Ym1i5EDrGXCjESI+HJGiT+PHrODjALruPkgBcRmEzCU6HrbxQZi
+        iwg4SCxZeocNpIFZ4ByzxOKfHUwgCWGBFIkvz1tYQGwWAVWJ88duMoPYvAI2Et/bGpgg7pOX
+        WL3hAFicU8BWovfZWiaIGkGJkzOfgPUyA9U0b53NDLJAQuARu8Seoy/YIJpdJI7N/swOYQtL
+        vDq+BcqWkfi/cz4TREMzo8TDc2vZIZweRonLTTMYIaqsJQ4fvwj2M7OApsT6XfoQYUeJGTtv
+        M0OCgk/ixltBiCP4JCZtmw4V5pXoaBOCqFaTmHV8HdzagxcuMUPYHhILO48yTmBUnIXknVlI
+        3pmFsHcBI/MqRvHU0uLc9NRi47zUcr3ixNzi0rx0veT83E2MwCR2+t/xrzsY9/1JOsQowMGo
+        xMOrscoyVog1say4MvcQowQHs5II79YdQCHelMTKqtSi/Pii0pzU4kOM0hwsSuK81QwPooUE
+        0hNLUrNTUwtSi2CyTBycUg2Mnup7uVT2lwhIb+1RePUuxOzyKYnu+em9N2b6KiSoTb5aa7XW
+        7nXSgY2XFj2cYfk0+aH6khLnwCkv+UqSmCI2L9gTrtPWFLo0Z7723mvHP3fabjxxz/aDi8Je
+        te2JGcE7XJ6fNw+OLsndqmx30lSrMadoWpbLNIs2hfs/ejYtL8/exCDzrlRViaU4I9FQi7mo
+        OBEAId5OdV4DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPIsWRmVeSWpSXmKPExsVy+t/xe7qd26xiDe7NYbXYOGM9q8X8I+dY
+        LZoXr2ezOH9+A7vF5V1z2CxmnN/HZLFoWSuzxcsjPxgt1h65y27x4+F0Jos/9+6wWrTuPcJu
+        MeH3BTYHXo9bd+o9Nq3qZPPYP3cNu8eb06fYPTa+28HkMfvuD0aPvi2rGD0+b5IL4IjSsynK
+        Ly1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy5hyfg5rwVGZ
+        ij1vNrI0MC4X62Lk4JAQMJGYMCOxi5GLQ0hgKaPEsp5Z7F2MnEBxGYmT0xpYIWxhiT/Xutgg
+        ij4xSlz8PhkswSZgKNH1FiTBySEi4CTRufY0WBGzwDVmiR0XO8ESwgJJEl07foA1sAioSpw/
+        dpMZxOYVsJH43tbABLFBXmL1hgNgcU4BW4neZ2vB4kJANft/7WaDqBeUODnzCQvI1cwC6hLr
+        5wmBhJmBWpu3zmaewCg4C0nVLISqWUiqFjAyr2IUSS0tzk3PLTbUK07MLS7NS9dLzs/dxAiM
+        zG3Hfm7ewXhpY/AhRgEORiUe3gvLLWOFWBPLiitzDzFKcDArifBu3QEU4k1JrKxKLcqPLyrN
+        SS0+xGgK9NpEZinR5Hxg0sgriTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliSmp2aWpBaBNPH
+        xMEp1cDoZebCG6Fre1jd/te9XUoTOjOcXQprmgwVuv7f2SxzQ3n2vR81r6LmqhueTOaZ1qtl
+        X8JZcSbyqM/WshkR9kueq9omp/5WOxb1/6BG0JKl3R8fM9l5LWFLvz7rEyP/1DVHwzbl5EZr
+        9EzZvjrvtvHpjaVNzT5aT0vLdi3+xVH+V/j7sTvfzmoosRRnJBpqMRcVJwIA9RR7+uICAAA=
+X-CMS-MailID: 20190726081505eucas1p22472e5d1e81180b7bca4f0c0af302af5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190726081505eucas1p22472e5d1e81180b7bca4f0c0af302af5
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190726081505eucas1p22472e5d1e81180b7bca4f0c0af302af5
+References: <20190726081453.9456-1-m.szyprowski@samsung.com>
+        <CGME20190726081505eucas1p22472e5d1e81180b7bca4f0c0af302af5@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current DRM-CORE accepts the writeback_job with a empty fb, but that
-is an invalid job for HW, so need to skip it when commit it to HW.
+Commit 69bec7259853 ("USB: core: let USB device know device node") added
+support for attaching devicetree node for USB devices. Those nodes are
+children of their USB host controller. However Exynos EHCI and OHCI
+driver bindings already define child-nodes for each physical root hub
+port and assigns respective PHY controller and parameters to them. This
+leads to the conflict. A workaround for it has been merged as commit
+01d4071486fe ("usb: exynos: add workaround for the USB device bindings
+conflict"), but it disabled support for USB device binding for Exynos
+EHCI/OHCI controllers.
 
-Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+To resolve it properly, lets move PHYs from the sub-nodes to a standard
+array under the 'phys' property.
+
+Suggested-by: Måns Rullgård <mans@mansr.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
- drivers/gpu/drm/arm/display/komeda/komeda_crtc.c         | 2 +-
- drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c | 9 ++++++++-
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/usb/exynos-usb.txt    | 41 +++++++------------
+ 1 file changed, 14 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/gpu=
-/drm/arm/display/komeda/komeda_crtc.c
-index 2fed1f6..372e99a 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
-@@ -265,7 +265,7 @@ void komeda_crtc_handle_event(struct komeda_crtc *kcrtc=
-,
- 		komeda_pipeline_update(slave, old->state);
-=20
- 	conn_st =3D wb_conn ? wb_conn->base.base.state : NULL;
--	if (conn_st && conn_st->writeback_job)
-+	if (conn_st && conn_st->writeback_job && conn_st->writeback_job->fb)
- 		drm_writeback_queue_job(&wb_conn->base, conn_st);
-=20
- 	/* step 2: notify the HW to kickoff the update */
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c b/dri=
-vers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
-index 9787745..8e2ef63 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
-@@ -52,9 +52,16 @@
- 	struct komeda_data_flow_cfg dflow;
- 	int err;
-=20
--	if (!writeback_job || !writeback_job->fb)
-+	if (!writeback_job)
- 		return 0;
-=20
-+	if (!writeback_job->fb) {
-+		if (writeback_job->out_fence)
-+			DRM_DEBUG_ATOMIC("Out fence required on a invalid writeback job.\n");
-+
-+		return writeback_job->out_fence ? -EINVAL : 0;
-+	}
-+
- 	if (!crtc_st->active) {
- 		DRM_DEBUG_ATOMIC("Cannot write the composition result out on a inactive =
-CRTC.\n");
- 		return -EINVAL;
---=20
-1.9.1
+diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+index b7111f43fa59..66c394f9e11f 100644
+--- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
++++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+@@ -12,13 +12,11 @@ Required properties:
+  - interrupts: interrupt number to the cpu.
+  - clocks: from common clock binding: handle to usb clock.
+  - clock-names: from common clock binding: Shall be "usbhost".
+- - port: if in the SoC there are EHCI phys, they should be listed here.
+-   One phy per port. Each port should have following entries:
+-	- reg: port number on EHCI controller, e.g
+-	       On Exynos5250, port 0 is USB2.0 otg phy
+-			      port 1 is HSIC phy0
+-			      port 2 is HSIC phy1
+-	- phys: from the *Generic PHY* bindings; specifying phy used by port.
++ - phys: from the *Generic PHY* bindings; array specifying phy(s) used
++   by the root port.
++ - phy-names: from the *Generic PHY* bindings; array of the names for
++   each phy for the root ports, must be a subset of the following:
++   "host", "hsic0", "hsic1".
+ 
+ Optional properties:
+  - samsung,vbus-gpio:  if present, specifies the GPIO that
+@@ -35,12 +33,8 @@ Example:
+ 		clocks = <&clock 285>;
+ 		clock-names = "usbhost";
+ 
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		port@0 {
+-		    reg = <0>;
+-		    phys = <&usb2phy 1>;
+-		};
++		phys = <&usb2phy 1>;
++		phy-names = "host";
+ 	};
+ 
+ OHCI
+@@ -52,13 +46,11 @@ Required properties:
+  - interrupts: interrupt number to the cpu.
+  - clocks: from common clock binding: handle to usb clock.
+  - clock-names: from common clock binding: Shall be "usbhost".
+- - port: if in the SoC there are OHCI phys, they should be listed here.
+-   One phy per port. Each port should have following entries:
+-	- reg: port number on OHCI controller, e.g
+-	       On Exynos5250, port 0 is USB2.0 otg phy
+-			      port 1 is HSIC phy0
+-			      port 2 is HSIC phy1
+-	- phys: from the *Generic PHY* bindings, specifying phy used by port.
++ - phys: from the *Generic PHY* bindings; array specifying phy(s) used
++   by the root port.
++ - phy-names: from the *Generic PHY* bindings; array of the names for
++   each phy for the root ports, must be a subset of the following:
++   "host", "hsic0", "hsic1".
+ 
+ Example:
+ 	usb@12120000 {
+@@ -69,13 +61,8 @@ Example:
+ 		clocks = <&clock 285>;
+ 		clock-names = "usbhost";
+ 
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		port@0 {
+-		    reg = <0>;
+-		    phys = <&usb2phy 1>;
+-		};
+-
++		phys = <&usb2phy 1>;
++		phy-names = "host";
+ 	};
+ 
+ DWC3
+-- 
+2.17.1
 
