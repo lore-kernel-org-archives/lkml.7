@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC081C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8FBC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEEE2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A83218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155238;
-	bh=GzdrERlVciSo6HfVAEApRX/1niK8SDg3s81xyoCbM6M=;
+	s=default; t=1564155240;
+	bh=T1Jxpb4wbUn3ZOVq1UmI4f/S3ZJAQaQftHqki6Lqt2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jrH3C4dJIgbEMOtkuhSg9L5meZ+XNmRrYwVol558zphY7F0EpYHhuxwv6uTfSEB0b
-	 2ZiuJqgFXXjP51pJZEiUmrZImd1aehgu876zuR5JuV5wTZgX34/PriXm3sijYJizo1
-	 0jWG49bWWEocvNMUPaqFgazRx58mdE2YWzOExSwo=
+	b=09KnWVeAHogBdO5n6jV75wXA2Tfv5YmQZ5i6/wrqHnnrc3MEZspTu0cMxbnDYVVri
+	 rK542Qd4lZxGTv9IqcnlCdOmLPhPdkbHi+O0t0KZr55xyQo4lr9Uq8w3EoiYVM8oBY
+	 i+ELw64NLC0f3i4iTuxcHUV6WT5P1iRtg8oCOSfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389757AbfGZPd5 (ORCPT
+        id S2388545AbfGZPd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:33:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49396 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:33:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389733AbfGZPdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:33:54 -0400
+        id S2389755AbfGZPd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:33:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B19F2054F;
-        Fri, 26 Jul 2019 15:33:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADF62205F4;
+        Fri, 26 Jul 2019 15:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155233;
-        bh=GzdrERlVciSo6HfVAEApRX/1niK8SDg3s81xyoCbM6M=;
+        s=default; t=1564155237;
+        bh=T1Jxpb4wbUn3ZOVq1UmI4f/S3ZJAQaQftHqki6Lqt2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yBkG49qb4BxH66oRCCiMN0caqzrsvw7y4lnQUUfuCAB2iY5cmjfoGnj/19se//Y0e
-         MqIpsOjKh0akgDWApGRvN8vVMM/dWZquAKMsNT4/l/d9HeEJTLcg/WtUOLN9YmUpO2
-         r1PI8s+DHBxriG76vYQG+zUHDvNJ2lAaVNpeB8dE=
+        b=F0cqRbTkqmXdHHPG2OWtfEsy5U1I25o6xjhPk4L2WxJ+YRrvlb5ShLTDUs7UnNk8e
+         6gVaDKGNySvFdDzb+Ay/rMuo9bKIT6X0uIa0hGRBHIuSLk65mwDDmA3HrEKkEz9wW9
+         WoBhfgwYgcYGHtRqILCSJqZna2lh4Sf7uOmfoz7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 30/50] net/tls: make sure offload also gets the keys wiped
-Date:   Fri, 26 Jul 2019 17:25:05 +0200
-Message-Id: <20190726152303.707657736@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 48/50] KVM: nVMX: do not use dangling shadow VMCS after guest reset
+Date:   Fri, 26 Jul 2019 17:25:23 +0200
+Message-Id: <20190726152305.813155612@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -61,57 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit acd3e96d53a24d219f720ed4012b62723ae05da1 ]
+commit 88dddc11a8d6b09201b4db9d255b3394d9bc9e57 upstream.
 
-Commit 86029d10af18 ("tls: zero the crypto information from tls_context
-before freeing") added memzero_explicit() calls to clear the key material
-before freeing struct tls_context, but it missed tls_device.c has its
-own way of freeing this structure. Replace the missing free.
+If a KVM guest is reset while running a nested guest, free_nested will
+disable the shadow VMCS execution control in the vmcs01.  However,
+on the next KVM_RUN vmx_vcpu_run would nevertheless try to sync
+the VMCS12 to the shadow VMCS which has since been freed.
 
-Fixes: 86029d10af18 ("tls: zero the crypto information from tls_context before freeing")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This causes a vmptrld of a NULL pointer on my machime, but Jan reports
+the host to hang altogether.  Let's see how much this trivial patch fixes.
+
+Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Liran Alon <liran.alon@oracle.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/tls.h    |    1 +
- net/tls/tls_device.c |    2 +-
- net/tls/tls_main.c   |    2 +-
- 3 files changed, 3 insertions(+), 2 deletions(-)
 
---- a/include/net/tls.h
-+++ b/include/net/tls.h
-@@ -234,6 +234,7 @@ struct tls_offload_context_rx {
- 	(ALIGN(sizeof(struct tls_offload_context_rx), sizeof(void *)) + \
- 	 TLS_DRIVER_STATE_SIZE)
- 
-+void tls_ctx_free(struct tls_context *ctx);
- int wait_on_pending_writer(struct sock *sk, long *timeo);
- int tls_sk_query(struct sock *sk, int optname, char __user *optval,
- 		int __user *optlen);
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -61,7 +61,7 @@ static void tls_device_free_ctx(struct t
- 	if (ctx->rx_conf == TLS_HW)
- 		kfree(tls_offload_ctx_rx(ctx));
- 
--	kfree(ctx);
-+	tls_ctx_free(ctx);
- }
- 
- static void tls_device_gc_task(struct work_struct *work)
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -241,7 +241,7 @@ static void tls_write_space(struct sock
- 	ctx->sk_write_space(sk);
- }
- 
--static void tls_ctx_free(struct tls_context *ctx)
-+void tls_ctx_free(struct tls_context *ctx)
+
+---
+ arch/x86/kvm/vmx.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -8457,6 +8457,7 @@ static void vmx_disable_shadow_vmcs(stru
  {
- 	if (!ctx)
- 		return;
+ 	vmcs_clear_bits(SECONDARY_VM_EXEC_CONTROL, SECONDARY_EXEC_SHADOW_VMCS);
+ 	vmcs_write64(VMCS_LINK_POINTER, -1ull);
++	vmx->nested.sync_shadow_vmcs = false;
+ }
+ 
+ static inline void nested_release_vmcs12(struct vcpu_vmx *vmx)
+@@ -8468,7 +8469,6 @@ static inline void nested_release_vmcs12
+ 		/* copy to memory all shadowed fields in case
+ 		   they were modified */
+ 		copy_shadow_to_vmcs12(vmx);
+-		vmx->nested.sync_shadow_vmcs = false;
+ 		vmx_disable_shadow_vmcs(vmx);
+ 	}
+ 	vmx->nested.posted_intr_nv = -1;
+@@ -8668,6 +8668,9 @@ static void copy_shadow_to_vmcs12(struct
+ 	u64 field_value;
+ 	struct vmcs *shadow_vmcs = vmx->vmcs01.shadow_vmcs;
+ 
++	if (WARN_ON(!shadow_vmcs))
++		return;
++
+ 	preempt_disable();
+ 
+ 	vmcs_load(shadow_vmcs);
+@@ -8706,6 +8709,9 @@ static void copy_vmcs12_to_shadow(struct
+ 	u64 field_value = 0;
+ 	struct vmcs *shadow_vmcs = vmx->vmcs01.shadow_vmcs;
+ 
++	if (WARN_ON(!shadow_vmcs))
++		return;
++
+ 	vmcs_load(shadow_vmcs);
+ 
+ 	for (q = 0; q < ARRAY_SIZE(fields); q++) {
 
 
