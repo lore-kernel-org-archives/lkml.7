@@ -2,228 +2,146 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 854CFC76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC485C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5180721871
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:55:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564145737;
-	bh=MOzRHEE6UW3RMXBn4LahnAicvr5IR8qZyuiPP7jLFUA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oSn9XHJprf7O6UIZrSoTU+py7pJ9ur0S0XcmGS8Ps8J4uv64x0st49F9UyB3R4ohC
-	 FMz7iKPqFZvYFNSwOd6zd1OoMh+PZjL3ode2WA8vIrVNv6+kG+Mtt7BLou55KZB47I
-	 nR5fg6jY5lPdFI3fZmzckPZIWz9ZQavbzC85PDH8=
+	by mail.kernel.org (Postfix) with ESMTP id C91B821871
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfGZMzg (ORCPT
+        id S1726819AbfGZM4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:55:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38710 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726074AbfGZMzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:55:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BA2EFABB2;
-        Fri, 26 Jul 2019 12:55:33 +0000 (UTC)
-Date:   Fri, 26 Jul 2019 14:55:33 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Miles Chen <miles.chen@mediatek.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        wsd_upstream@mediatek.com
-Subject: Re: [PATCH v2] mm: memcontrol: fix use after free in
- mem_cgroup_iter()
-Message-ID: <20190726125533.GO6142@dhcp22.suse.cz>
-References: <20190726021247.16162-1-miles.chen@mediatek.com>
- <20190726124933.GN6142@dhcp22.suse.cz>
+        Fri, 26 Jul 2019 08:56:18 -0400
+Received: from [101.11.20.158] ([101.11.20.158]:35906 "EHLO
+        E6440.gar.corp.intel.com" rhost-flags-FAIL-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726001AbfGZM4S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 08:56:18 -0400
+X-Greylist: delayed 4199 seconds by postgrey-1.27 at vger.kernel.org; Fri, 26 Jul 2019 08:56:17 EDT
+Received: from E6440.gar.corp.intel.com (localhost [127.0.0.1])
+        by E6440.gar.corp.intel.com (Postfix) with ESMTP id 0F6EAC18BF;
+        Fri, 26 Jul 2019 17:08:49 +0800 (CST)
+From:   Harry Pan <harry.pan@intel.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     gs0622@gmail.com, Harry Pan <harry.pan@intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH] perf/x86/intel: Update ICL Core and Package C-state event counters
+Date:   Fri, 26 Jul 2019 17:08:46 +0800
+Message-Id: <20190726090846.6109-1-harry.pan@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190726124933.GN6142@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 26-07-19 14:49:33, Michal Hocko wrote:
-> On Fri 26-07-19 10:12:47, Miles Chen wrote:
-> > This patch is sent to report an use after free in mem_cgroup_iter()
-> > after merging commit: be2657752e9e "mm: memcg: fix use after free in
-> > mem_cgroup_iter()".
-> > 
-> > I work with android kernel tree (4.9 & 4.14), and the commit:
-> > be2657752e9e "mm: memcg: fix use after free in mem_cgroup_iter()" has
-> > been merged to the trees. However, I can still observe use after free
-> > issues addressed in the commit be2657752e9e.
-> > (on low-end devices, a few times this month)
-> > 
-> > backtrace:
-> > 	css_tryget <- crash here
-> > 	mem_cgroup_iter
-> > 	shrink_node
-> > 	shrink_zones
-> > 	do_try_to_free_pages
-> > 	try_to_free_pages
-> > 	__perform_reclaim
-> > 	__alloc_pages_direct_reclaim
-> > 	__alloc_pages_slowpath
-> > 	__alloc_pages_nodemask
-> > 
-> > To debug, I poisoned mem_cgroup before freeing it:
-> > 
-> > static void __mem_cgroup_free(struct mem_cgroup *memcg)
-> > 	for_each_node(node)
-> > 	free_mem_cgroup_per_node_info(memcg, node);
-> > 	free_percpu(memcg->stat);
-> > +       /* poison memcg before freeing it */
-> > +       memset(memcg, 0x78, sizeof(struct mem_cgroup));
-> > 	kfree(memcg);
-> > }
-> > 
-> > The coredump shows the position=0xdbbc2a00 is freed.
-> > 
-> > (gdb) p/x ((struct mem_cgroup_per_node *)0xe5009e00)->iter[8]
-> > $13 = {position = 0xdbbc2a00, generation = 0x2efd}
-> > 
-> > 0xdbbc2a00:     0xdbbc2e00      0x00000000      0xdbbc2800      0x00000100
-> > 0xdbbc2a10:     0x00000200      0x78787878      0x00026218      0x00000000
-> > 0xdbbc2a20:     0xdcad6000      0x00000001      0x78787800      0x00000000
-> > 0xdbbc2a30:     0x78780000      0x00000000      0x0068fb84      0x78787878
-> > 0xdbbc2a40:     0x78787878      0x78787878      0x78787878      0xe3fa5cc0
-> > 0xdbbc2a50:     0x78787878      0x78787878      0x00000000      0x00000000
-> > 0xdbbc2a60:     0x00000000      0x00000000      0x00000000      0x00000000
-> > 0xdbbc2a70:     0x00000000      0x00000000      0x00000000      0x00000000
-> > 0xdbbc2a80:     0x00000000      0x00000000      0x00000000      0x00000000
-> > 0xdbbc2a90:     0x00000001      0x00000000      0x00000000      0x00100000
-> > 0xdbbc2aa0:     0x00000001      0xdbbc2ac8      0x00000000      0x00000000
-> > 0xdbbc2ab0:     0x00000000      0x00000000      0x00000000      0x00000000
-> > 0xdbbc2ac0:     0x00000000      0x00000000      0xe5b02618      0x00001000
-> > 0xdbbc2ad0:     0x00000000      0x78787878      0x78787878      0x78787878
-> > 0xdbbc2ae0:     0x78787878      0x78787878      0x78787878      0x78787878
-> > 0xdbbc2af0:     0x78787878      0x78787878      0x78787878      0x78787878
-> > 0xdbbc2b00:     0x78787878      0x78787878      0x78787878      0x78787878
-> > 0xdbbc2b10:     0x78787878      0x78787878      0x78787878      0x78787878
-> > 0xdbbc2b20:     0x78787878      0x78787878      0x78787878      0x78787878
-> > 0xdbbc2b30:     0x78787878      0x78787878      0x78787878      0x78787878
-> > 0xdbbc2b40:     0x78787878      0x78787878      0x78787878      0x78787878
-> > 0xdbbc2b50:     0x78787878      0x78787878      0x78787878      0x78787878
-> > 0xdbbc2b60:     0x78787878      0x78787878      0x78787878      0x78787878
-> > 0xdbbc2b70:     0x78787878      0x78787878      0x78787878      0x78787878
-> > 0xdbbc2b80:     0x78787878      0x78787878      0x00000000      0x78787878
-> > 0xdbbc2b90:     0x78787878      0x78787878      0x78787878      0x78787878
-> > 0xdbbc2ba0:     0x78787878      0x78787878      0x78787878      0x78787878
-> > 
-> > In the reclaim path, try_to_free_pages() does not setup
-> > sc.target_mem_cgroup and sc is passed to do_try_to_free_pages(), ...,
-> > shrink_node().
-> > 
-> > In mem_cgroup_iter(), root is set to root_mem_cgroup because
-> > sc->target_mem_cgroup is NULL.
-> > It is possible to assign a memcg to root_mem_cgroup.nodeinfo.iter in
-> > mem_cgroup_iter().
-> > 
-> > 	try_to_free_pages
-> > 		struct scan_control sc = {...}, target_mem_cgroup is 0x0;
-> > 	do_try_to_free_pages
-> > 	shrink_zones
-> > 	shrink_node
-> > 		 mem_cgroup *root = sc->target_mem_cgroup;
-> > 		 memcg = mem_cgroup_iter(root, NULL, &reclaim);
-> > 	mem_cgroup_iter()
-> > 		if (!root)
-> > 			root = root_mem_cgroup;
-> > 		...
-> > 
-> > 		css = css_next_descendant_pre(css, &root->css);
-> > 		memcg = mem_cgroup_from_css(css);
-> > 		cmpxchg(&iter->position, pos, memcg);
-> > 
-> > My device uses memcg non-hierarchical mode.
-> > When we release a memcg: invalidate_reclaim_iterators() reaches only
-> > dead_memcg and its parents. If non-hierarchical mode is used,
-> > invalidate_reclaim_iterators() never reaches root_mem_cgroup.
-> > 
-> > static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-> > {
-> > 	struct mem_cgroup *memcg = dead_memcg;
-> > 
-> > 	for (; memcg; memcg = parent_mem_cgroup(memcg)
-> > 	...
-> > }
-> > 
-> > So the use after free scenario looks like:
-> > 
-> > CPU1						CPU2
-> > 
-> > try_to_free_pages
-> > do_try_to_free_pages
-> > shrink_zones
-> > shrink_node
-> > mem_cgroup_iter()
-> >     if (!root)
-> >     	root = root_mem_cgroup;
-> >     ...
-> >     css = css_next_descendant_pre(css, &root->css);
-> >     memcg = mem_cgroup_from_css(css);
-> >     cmpxchg(&iter->position, pos, memcg);
-> > 
-> > 					invalidate_reclaim_iterators(memcg);
-> > 					...
-> > 					__mem_cgroup_free()
-> > 						kfree(memcg);
-> > 
-> > try_to_free_pages
-> > do_try_to_free_pages
-> > shrink_zones
-> > shrink_node
-> > mem_cgroup_iter()
-> >     if (!root)
-> >     	root = root_mem_cgroup;
-> >     ...
-> >     mz = mem_cgroup_nodeinfo(root, reclaim->pgdat->node_id);
-> >     iter = &mz->iter[reclaim->priority];
-> >     pos = READ_ONCE(iter->position);
-> >     css_tryget(&pos->css) <- use after free
-> 
-> Thanks for the write up. This is really useful.
-> 
-> > To avoid this, we should also invalidate root_mem_cgroup.nodeinfo.iter in
-> > invalidate_reclaim_iterators().
-> 
-> I am sorry, I didn't get to comment an earlier version but I am
-> wondering whether it makes more sense to do and explicit invalidation.
-> 
-> [...]
-> > +static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-> > +{
-> > +	struct mem_cgroup *memcg = dead_memcg;
-> > +	int invalidate_root = 0;
-> > +
-> > +	for (; memcg; memcg = parent_mem_cgroup(memcg))
-> > +		__invalidate_reclaim_iterators(memcg, dead_memcg);
-> 
-> 	/* here goes your comment */
-> 	if (!dead_memcg->use_hierarchy)
-> 		__invalidate_reclaim_iterators(root_mem_cgroup,	dead_memcg);
-> > +
-> > +}
-> 
-> Other than that the patch looks good to me.
-> 
-> Acked-by: Michal Hocko <mhocko@suse.com>
+Ice Lake microarchitecture inherits Cannon Lake, it has CC1/PC8/PC9/PC10
+residency counters.
 
-Btw. I believe we want to push this to stable trees as well. I think it
-goes all the way down to 5ac8fb31ad2e ("mm: memcontrol: convert reclaim
-iterator to simple css refcounting"). Unless I am missing something a
-Fixes: tag would be really helpful.
+Update the list of Ice Lake PMU event counters from the snb_cstates[] list
+of events to the cnl_cstates[] list of events, which keeps all previously
+supported events and also adds the CORE_C1, PKG_C8, PKG_C9, and PKG_C10
+residency counters.
+
+This benefits users to profile them through the perf interface.
+
+Signed-off-by: Harry Pan <harry.pan@intel.com>
+
+---
+
+ arch/x86/events/intel/cstate.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index 688592b34564..08291233f5c9 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -40,51 +40,53 @@
+  * Model specific counters:
+  *	MSR_CORE_C1_RES: CORE C1 Residency Counter
+  *			 perf code: 0x00
+- *			 Available model: SLM,AMT,GLM,CNL
++ *			 Available model: SLM,AMT,GLM,CNL,ICL
+  *			 Scope: Core (each processor core has a MSR)
+  *	MSR_CORE_C3_RESIDENCY: CORE C3 Residency Counter
+  *			       perf code: 0x01
+  *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,GLM,
+-						CNL
++						CNL,ICL
+  *			       Scope: Core
+  *	MSR_CORE_C6_RESIDENCY: CORE C6 Residency Counter
+  *			       perf code: 0x02
+  *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
+- *						SKL,KNL,GLM,CNL
++ *						SKL,KNL,GLM,CNL,ICL
+  *			       Scope: Core
+  *	MSR_CORE_C7_RESIDENCY: CORE C7 Residency Counter
+  *			       perf code: 0x03
+- *			       Available model: SNB,IVB,HSW,BDW,SKL,CNL
++ *			       Available model: SNB,IVB,HSW,BDW,SKL,CNL,ICL
+  *			       Scope: Core
+  *	MSR_PKG_C2_RESIDENCY:  Package C2 Residency Counter.
+  *			       perf code: 0x00
+- *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL
++ *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
++						ICL
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
+  *			       perf code: 0x01
+  *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,KNL,
+- *						GLM,CNL
++ *						GLM,CNL,ICL
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C6_RESIDENCY:  Package C6 Residency Counter.
+  *			       perf code: 0x02
+  *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW
+- *						SKL,KNL,GLM,CNL
++ *						SKL,KNL,GLM,CNL,ICL
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C7_RESIDENCY:  Package C7 Residency Counter.
+  *			       perf code: 0x03
+  *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,CNL
++						ICL
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C8_RESIDENCY:  Package C8 Residency Counter.
+  *			       perf code: 0x04
+- *			       Available model: HSW ULT,KBL,CNL
++ *			       Available model: HSW ULT,KBL,CNL,ICL
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C9_RESIDENCY:  Package C9 Residency Counter.
+  *			       perf code: 0x05
+- *			       Available model: HSW ULT,KBL,CNL
++ *			       Available model: HSW ULT,KBL,CNL,ICL
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C10_RESIDENCY: Package C10 Residency Counter.
+  *			       perf code: 0x06
+- *			       Available model: HSW ULT,KBL,GLM,CNL
++ *			       Available model: HSW ULT,KBL,GLM,CNL,ICL
+  *			       Scope: Package (physical package)
+  *
+  */
+@@ -625,8 +627,8 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_PLUS, glm_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_MOBILE, snb_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_DESKTOP, snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_MOBILE, cnl_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_DESKTOP, cnl_cstates),
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
