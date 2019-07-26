@@ -2,248 +2,131 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB4BC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F26C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8923F21734
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC6B421734
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:26:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FMr7HUFn"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oSxV5e5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728745AbfGZQZN (ORCPT
+        id S1728797AbfGZQ0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:25:13 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44137 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728340AbfGZQZM (ORCPT
+        Fri, 26 Jul 2019 12:26:21 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44167 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727554AbfGZQ0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:25:12 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r15so20477217lfm.11
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 09:25:10 -0700 (PDT)
+        Fri, 26 Jul 2019 12:26:20 -0400
+Received: by mail-io1-f67.google.com with SMTP id s7so105853512iob.11
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 09:26:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jJr+mv+3Bku2kcxf6e7N0HYCTZd2RY5/zWLci9WVBdY=;
-        b=FMr7HUFndh/+mlDCOhrYAubF+h/5Wh04nOfHpjDKkgiz7k+J82TnFn/DYzZJooHjQK
-         Y8GOVxxSt61fAe4fGOSexE7oS3DDozGg7r/3YxG7QVqtlBf/sm3FvNbtHQjcYN0ioi+P
-         seUeVr3PsyvcFU1IhqG0dGtpx2L9/lRkU/jFJuVaCNADmPB5PUjTd0uyfpwxCjR9c2XB
-         R/CP2v9+fC8b9yK7DsRN0K1omvxBnipsLsaQhu5YN1Zvxn4aDM593UxnLhMrIruCn2gu
-         MS722OBFU+z0BwbnCK+ab8XxDLFLBZm1mPLtC0pH/aZxci26KUfkNxFqDPfpOAJR2SU3
-         KnRA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=49yfm4zari4iNgyc4c8iUnGnNiF8H5iDhklR2GX7QUY=;
+        b=oSxV5e5bNKAEOl0HwhKJhFqS6oocpVP8oUntBD5al/WdfjqqJtsIfjWUwUDx29tEVj
+         Ocox6SNSxTgTxci3S8uus+9f4v048jOPUOqwuyvdGpFBolmfQvjuixpWQTQ5t5g8nuwr
+         Sy9w9ffMso7C/QX4f1ZEvHSPRs5SJNYv6cimfjMXpAyHuG6KjU7Rsm1uupYDv1xHZZxm
+         U9VXVqwxnRXp45lR+vyNSgiPcH8dTiR7z+dw7MCbH2Yt6OKPOLKCfrRN86ogxLxP1o2E
+         CbNgCMUgLLBu374M3UiEjVmgk6BDWDqRqVAPodQaRsA6oqmCQhhul6kJGPCrPdH4BVfB
+         3cNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jJr+mv+3Bku2kcxf6e7N0HYCTZd2RY5/zWLci9WVBdY=;
-        b=uYFZLV9BqgRmBk8ZTGEhMq38d0IkN3gmHuoL81DgDinXU5UFIgmGdQZwCaz7bAt+ZH
-         TwGY7CjDd2nMtO24U41hJT9cb0WtAOCw0LWe2PGFxwXhADDIHrlbyyas3TSmxTkiDZ/r
-         xR5T7X142ePtpfFHJbcCgC5jI5gMa4HGwVvg9T6T8mEsXpCPn/fAUcJ52MUV5E6NbNp9
-         k4nJq1fzqslm2cjcKBsBmyotYG8TfdSM408wm7a04zdbsbTfGwAm789A6LvH2rhET/g5
-         H3LYJruqpYxeaDe6xIVzcXF97ygB0FCW8dz1P2DIL4KVcrblhONhsUUH21BkAD1hLVI/
-         MmQw==
-X-Gm-Message-State: APjAAAW/lqMMG6+Di8UQ6lNMIPedWT+818Z3cBEl+7Jgka+5dsNBRq9+
-        1SxBki3yTjb0WSbzhIblcP/mJtnzwcM=
-X-Google-Smtp-Source: APXvYqwAOv7nMvSXK7zBLGzWO2lkM4lXZ2foX0Ydk01HBVMN7bP2yVrDQqjXAjBtpwThlj+DgA8dSA==
-X-Received: by 2002:a19:c1cc:: with SMTP id r195mr43881045lff.95.1564158309555;
-        Fri, 26 Jul 2019 09:25:09 -0700 (PDT)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id i9sm8563026lfl.10.2019.07.26.09.25.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 09:25:09 -0700 (PDT)
-Subject: Re: [PATCH v3 6/6] interconnect: Add OPP table support for
- interconnects
-To:     Saravana Kannan <saravanak@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        sibis@codeaurora.org, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, kernel-team@android.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190703011020.151615-1-saravanak@google.com>
- <20190703011020.151615-7-saravanak@google.com>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <fde02417-dc72-acad-727d-452a3ae3cbd0@linaro.org>
-Date:   Fri, 26 Jul 2019 19:25:06 +0300
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=49yfm4zari4iNgyc4c8iUnGnNiF8H5iDhklR2GX7QUY=;
+        b=QGQS5wLoGvbM4QV+tpCeSQutCHhlRIIMX2zDcMwA+RWQ6k4eNm8EtsoD8kIwHi7Huq
+         ylrmXGNp1jGrlJW6PuEo+mA0pGJCHQxu7k9dtg+Gc5LuH9dgshb1fGB0RkylOf63+OJA
+         wQgfx2hGBWQ1fyLF6H+YsUFYC080Q/Rowk7aC4SvJf0vuYtxwwV5iBQ0vom8vIV/Dfsn
+         AUEpiSdRCpRmqYqt1KqOjhvyVHXfpufRX4wnjhwpLoK5xj110YvZsWo/cfo90Aykpdx0
+         MM5A02IKY2gTVNYnTYceLJT3dlMKPz+nxtwry/arM0CdooL450w9gOysM/X6bQTSPbNp
+         DiYg==
+X-Gm-Message-State: APjAAAXgjzhVEpwZnidEMOFiwelAqgPrOK9eN+WR6WY189e37d7v84ho
+        1I3VOmJXOdIqVqx0AN/tj1+6VpJ/JRGFmgctkPfmiw==
+X-Google-Smtp-Source: APXvYqyjf4GbmLPhL55X+s5p3TCQUBLJfRXVKJ2wZzfFHaTvxUziKKWb5psRA8Z3KyOrSCo3gRDt5OcQAS+5PqQqTdQ=
+X-Received: by 2002:a5d:80d6:: with SMTP id h22mr65658210ior.231.1564158379700;
+ Fri, 26 Jul 2019 09:26:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190703011020.151615-7-saravanak@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <00000000000052ad6b058e722ba4@google.com> <20190726130013.GC2368@arrakis.emea.arm.com>
+ <CACT4Y+b5H4jvY34iT2K0m6a2HCpzgKd3dtv+YFsApp=-18B+pw@mail.gmail.com>
+ <20190726155732.GA30211@e109758.arm.com> <CACT4Y+Zf-p7CTRZd8x+2ymAXho2tM_5hLCn3ODJXPVuocMxwbw@mail.gmail.com>
+ <20190726161530.GE2368@arrakis.emea.arm.com>
+In-Reply-To: <20190726161530.GE2368@arrakis.emea.arm.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 26 Jul 2019 18:26:08 +0200
+Message-ID: <CACT4Y+bDSnocDe_VB4VhXaJv+q83YMnvpn+KCuW3hENiBfCNTw@mail.gmail.com>
+Subject: Re: memory leak in vq_meta_prefetch
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     syzbot <syzbot+a871c1e6ea00685e73d7@syzkaller.appspotmail.com>,
+        alexandre.belloni@free-electrons.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, nicolas.ferre@atmel.com,
+        Rob Herring <robh@kernel.org>, sre@kernel.org,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Saravana,
+On Fri, Jul 26, 2019 at 6:15 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > > > On Wed, Jul 24, 2019 at 12:18:07PM -0700, syzbot wrote:
+> > > > > > syzbot found the following crash on:
+> > > > > >
+> > > > > > HEAD commit:    c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
+> > > > > > git tree:       upstream
+> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=15fffef4600000
+> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=8de7d700ea5ac607
+> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=a871c1e6ea00685e73d7
+> > > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=127b0334600000
+> > > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12609e94600000
+> > > > > >
+> > > > > > The bug was bisected to:
+> > > > > >
+> > > > > > commit 0e5f7d0b39e1f184dc25e3adb580c79e85332167
+> > > > > > Author: Nicolas Ferre <nicolas.ferre@atmel.com>
+> > > > > > Date:   Wed Mar 16 13:19:49 2016 +0000
+> > > > > >
+> > > > > >     ARM: dts: at91: shdwc binding: add new shutdown controller documentation
+> > > > >
+> > > > > That's another wrong commit identification (a documentation patch should
+> > > > > not cause a memory leak).
+> > > > >
+> > > > > I don't really think kmemleak, with its relatively high rate of false
+> > > > > positives, is suitable for automated testing like syzbot. You could
+> > > >
+> > > > Do you mean automated testing in general, or bisection only?
+> > > > The wrong commit identification is related to bisection only, but you
+> > > > generalized it to automated testing in general. So which exactly you
+> > > > mean?
+> > >
+> > > I probably meant both. In terms of automated testing and reporting, if
+> > > the false positives rate is high, people start ignoring the reports. So
+> > > it requires some human checking first (or make the tool more robust).
+> [...]
+> > Do you have any data points wrt automated testing in general? This
+> > disagrees with what I see.
+>
+> I'm fine with automated testing in general. Just that automated
+> reporting for kmemleak could be improved a bit to reduce the false
+> positives (e.g. run it a few times to confirm that it is a real leak).
 
-On 7/3/19 04:10, Saravana Kannan wrote:
-> Interconnect paths can have different performance points. Now that OPP
-> framework supports bandwidth OPP tables, add OPP table support for
-> interconnects.
-> 
-> Devices can use the interconnect-opp-table DT property to specify OPP
-> tables for interconnect paths. And the driver can obtain the OPP table for
-> an interconnect path by calling icc_get_opp_table().
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/interconnect/core.c  | 27 ++++++++++++++++++++++++++-
->  include/linux/interconnect.h |  7 +++++++
->  2 files changed, 33 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> index 871eb4bc4efc..881bac80bc1e 100644
-> --- a/drivers/interconnect/core.c
-> +++ b/drivers/interconnect/core.c
-> @@ -47,6 +47,7 @@ struct icc_req {
->   */
->  struct icc_path {
->  	size_t num_nodes;
-> +	struct opp_table *opp_table;
 
-I am a bit worried that these tables might be abused and size of the DT will
-grow with many OPP tables of all existing paths.
+I did a bunch of various external measures in syzkaller to improve
+kmemleak quality. As far as I see the current rate is close to 100%
+true positives. We already have 40 leaks (>50%) fixed.
 
->  	struct icc_req reqs[];
->  };
->  
-> @@ -313,7 +314,7 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
->  {
->  	struct icc_path *path = ERR_PTR(-EPROBE_DEFER);
->  	struct icc_node *src_node, *dst_node;
-> -	struct device_node *np = NULL;
-> +	struct device_node *np = NULL, *opp_node;
->  	struct of_phandle_args src_args, dst_args;
->  	int idx = 0;
->  	int ret;
-> @@ -381,10 +382,34 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
->  		dev_err(dev, "%s: invalid path=%ld\n", __func__, PTR_ERR(path));
->  	mutex_unlock(&icc_lock);
->  
-> +	opp_node = of_parse_phandle(np, "interconnect-opp-table", idx);
+Though, kmemleak can be improved too (stop-the-world, etc what we
+discussed). That would make kmemleak directly usable e.g. during
+unit-testing, something that's badly needed for kernel.
 
-Can't we figure out if the device OPP table contains bandwidth even without this
-property?
 
-Thanks,
-Georgi
-
-> +	if (opp_node) {
-> +		path->opp_table = dev_pm_opp_of_find_table_from_node(opp_node);
-> +		of_node_put(opp_node);
-> +	}
-> +
-> +
->  	return path;
->  }
->  EXPORT_SYMBOL_GPL(of_icc_get);
->  
-> +/**
-> + * icc_get_opp_table() - Get the OPP table that corresponds to a path
-> + * @path: reference to the path returned by icc_get()
-> + *
-> + * This function will return the OPP table that corresponds to a path handle.
-> + * If the interconnect API is disabled, NULL is returned and the consumer
-> + * drivers will still build. Drivers are free to handle this specifically, but
-> + * they don't have to.
-> + *
-> + * Return: opp_table pointer on success. NULL is returned when the API is
-> + * disabled or the OPP table is missing.
-> + */
-> +struct opp_table *icc_get_opp_table(struct icc_path *path)
-> +{
-> +	return path->opp_table;
-> +}
-> +
->  /**
->   * icc_set_bw() - set bandwidth constraints on an interconnect path
->   * @path: reference to the path returned by icc_get()
-> diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-> index dc25864755ba..0c0bc55f0e89 100644
-> --- a/include/linux/interconnect.h
-> +++ b/include/linux/interconnect.h
-> @@ -9,6 +9,7 @@
->  
->  #include <linux/mutex.h>
->  #include <linux/types.h>
-> +#include <linux/pm_opp.h>
->  
->  /* macros for converting to icc units */
->  #define Bps_to_icc(x)	((x) / 1000)
-> @@ -28,6 +29,7 @@ struct device;
->  struct icc_path *icc_get(struct device *dev, const int src_id,
->  			 const int dst_id);
->  struct icc_path *of_icc_get(struct device *dev, const char *name);
-> +struct opp_table *icc_get_opp_table(struct icc_path *path);
->  void icc_put(struct icc_path *path);
->  int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
->  
-> @@ -49,6 +51,11 @@ static inline void icc_put(struct icc_path *path)
->  {
->  }
->  
-> +static inline struct opp_table *icc_get_opp_table(struct icc_path *path)
-> +{
-> +	return NULL;
-> +}
-> +
->  static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
->  {
->  	return 0;
-> 
+> Just to be clear, I'm not talking about syzbot in general, it's a great
+> tool, only about improving kmemleak reporting and bisecting.
