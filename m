@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19391C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BAFC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0F1522CBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C8422CB9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155268;
-	bh=QOAORFFSoIgj6olZjTHeJxdeVZ/k9XluFJeK97Pn3B0=;
+	s=default; t=1564155271;
+	bh=68b9tyJ/KEnKnueCpYzHNa+diWF1/PGhoVHcbhTV4WI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OMctu0COJKtqPDnLz+lwGzOIGZJOLeJu6DneWXphDl1kdg4aT3NVupXYWI8DbkBh1
-	 GifyXsZR6N2Ic3apWc/8XAE2FAnQMpdgfz9xV631Nsl0zZ/Y5sfSgMolwXWF66Klit
-	 bkQQvHl3trC5U+OUuKRRnzJxBQ+wfmsLdjiR5rOs=
+	b=a7kKk3CePVb6oMEWDz/c8lnU8BGLOJoxcGkqkuLrBrGiUDsKslNJBujmxQ0QkjMry
+	 EdNNQof1+FgFh/91r6ZYenTKAw3pj9a/5VwgI99rI/9/Fj8Jt1T0jr7EEjLKhbBjL/
+	 LG+m3mUsingo3N6mz99vIkq/fvDObMPAPlXU7Y1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389838AbfGZPe0 (ORCPT
+        id S2389845AbfGZPe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:34:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50004 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:34:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389823AbfGZPeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:34:20 -0400
+        id S2389414AbfGZPe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:34:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E6DD2054F;
-        Fri, 26 Jul 2019 15:34:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD00B218D4;
+        Fri, 26 Jul 2019 15:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155259;
-        bh=QOAORFFSoIgj6olZjTHeJxdeVZ/k9XluFJeK97Pn3B0=;
+        s=default; t=1564155265;
+        bh=68b9tyJ/KEnKnueCpYzHNa+diWF1/PGhoVHcbhTV4WI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x6FWzX3miONmF3QIg6gjmqnAT55iBBvhlwVngLXfnoBqfNBwsLfbrJHa43YFkfs/O
-         6kxXdt20TGDZAdeaaRgwWOQ454y+kvdSqQyLqmA23FXs1sVQfabZuys90TU3cCIiUx
-         HTS/0VSkWZoj7bROExf43TS45S/WNo8X712oLS0o=
+        b=N4hq2Pkzg0IERO5/NiWfMfD5pnkhGBjVIqaU2ez7XIFXLTmfzRhze51LN/ctJ9CHX
+         U1ZE+A6hpQG5Bw47kpLvfzgsC6vldgW4lGZ/99n1sykhpNdOy/nvJM5DwR1fNiko5+
+         wcX7pHtNO9Gb+gUAVwYdspRCyGJVZIaDtQbDDNw4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org,
-        =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>
-Subject: [PATCH 4.19 36/50] dma-buf: balance refcount inbalance
-Date:   Fri, 26 Jul 2019 17:25:11 +0200
-Message-Id: <20190726152304.356080005@linuxfoundation.org>
+        stable@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+622bdabb128acc33427d@syzkaller.appspotmail.com,
+        syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com,
+        syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com,
+        syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 28/50] netrom: hold sock when setting skb->destructor
+Date:   Fri, 26 Jul 2019 17:25:03 +0200
+Message-Id: <20190726152303.521488942@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -65,39 +64,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jérôme Glisse <jglisse@redhat.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit 5e383a9798990c69fc759a4930de224bb497e62c upstream.
+[ Upstream commit 4638faac032756f7eab5524be7be56bee77e426b ]
 
-The debugfs take reference on fence without dropping them.
+sock_efree() releases the sock refcnt, if we don't hold this refcnt
+when setting skb->destructor to it, the refcnt would not be balanced.
+This leads to several bug reports from syzbot.
 
-Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-Cc: Christian König <christian.koenig@amd.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: linux-media@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: linaro-mm-sig@lists.linaro.org
-Cc: Stéphane Marchesin <marcheu@chromium.org>
-Cc: stable@vger.kernel.org
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20181206161840.6578-1-jglisse@redhat.com
+I have checked other users of sock_efree(), all of them hold the
+sock refcnt.
+
+Fixes: c8c8218ec5af ("netrom: fix a memory leak in nr_rx_frame()")
+Reported-and-tested-by: <syzbot+622bdabb128acc33427d@syzkaller.appspotmail.com>
+Reported-and-tested-by: <syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com>
+Reported-and-tested-by: <syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com>
+Reported-and-tested-by: <syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/dma-buf/dma-buf.c |    1 +
+ net/netrom/af_netrom.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -1069,6 +1069,7 @@ static int dma_buf_debug_show(struct seq
- 				   fence->ops->get_driver_name(fence),
- 				   fence->ops->get_timeline_name(fence),
- 				   dma_fence_is_signaled(fence) ? "" : "un");
-+			dma_fence_put(fence);
- 		}
- 		rcu_read_unlock();
+--- a/net/netrom/af_netrom.c
++++ b/net/netrom/af_netrom.c
+@@ -970,6 +970,7 @@ int nr_rx_frame(struct sk_buff *skb, str
  
+ 	window = skb->data[20];
+ 
++	sock_hold(make);
+ 	skb->sk             = make;
+ 	skb->destructor     = sock_efree;
+ 	make->sk_state	    = TCP_ESTABLISHED;
 
 
