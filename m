@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F982C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDB9C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C9F22CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E805222CEB
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388777AbfGZNwE (ORCPT
+        id S2388493AbfGZNwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:52:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:44550 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388680AbfGZNwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jul 2019 09:52:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:44508 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728291AbfGZNv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:51:56 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06B9F152D;
-        Fri, 26 Jul 2019 06:52:02 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6D42337;
+        Fri, 26 Jul 2019 06:51:55 -0700 (PDT)
 Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8C9303F694;
-        Fri, 26 Jul 2019 06:52:00 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6E2F93F694;
+        Fri, 26 Jul 2019 06:51:54 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Sudeep Holla <sudeep.holla@arm.com>, Peng Fan <peng.fan@nxp.com>,
@@ -34,11 +33,10 @@ Cc:     Sudeep Holla <sudeep.holla@arm.com>, Peng Fan <peng.fan@nxp.com>,
         Jim Quinlan <james.quinlan@broadcom.com>,
         Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
         Gaku Inami <gaku.inami.xh@renesas.com>,
-        Etienne Carriere <etienne.carriere@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH v2 10/10] firmware: arm_scmi: Use asynchronous CLOCK_RATE_SET when possible
-Date:   Fri, 26 Jul 2019 14:51:38 +0100
-Message-Id: <20190726135138.9858-11-sudeep.holla@arm.com>
+        Etienne Carriere <etienne.carriere@linaro.org>
+Subject: [PATCH v2 06/10] firmware: arm_scmi: Add support for asynchronous commands and delayed response
+Date:   Fri, 26 Jul 2019 14:51:34 +0100
+Message-Id: <20190726135138.9858-7-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190726135138.9858-1-sudeep.holla@arm.com>
 References: <20190726135138.9858-1-sudeep.holla@arm.com>
@@ -47,80 +45,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CLOCK_PROTOCOL_ATTRIBUTES provides attributes to indicate the maximum
-number of pending asynchronous clock rate changes supported by the
-platform. If it's non-zero, then we should be able to use asynchronous
-clock rate set for any clocks until the maximum limit is reached.
+Messages that are sent to platform, also known as commands and can be:
 
-Tracking the current count of pending asynchronous clock set rate
-requests, we can decide if the incoming/new request for clock set rate
-can be handled asynchronously or not until the maximum limit is
-reached.
+1. Synchronous commands that block the channel until the requested work
+has been completed. The platform responds to these commands over the
+same channel and hence can't be used to send another command until the
+previous command has completed.
 
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org
+2. Asynchronous commands on the other hand, the platform schedules the
+requested work to complete later in time and returns almost immediately
+freeing the channel for new commands. The response indicates the success
+or failure in the ability to schedule the requested work. When the work
+has completed, the platform sends an additional delayed response message.
+
+Using the same transmit buffer used for sending the asynchronous command
+even for the delayed response corresponding to it simplifies handling of
+the delayed response. It's the caller of asynchronous command that is
+responsible for allocating the completion flag that scmi driver can
+complete to indicate the arrival of delayed response.
+
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_scmi/clock.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ drivers/firmware/arm_scmi/common.h |  6 ++++-
+ drivers/firmware/arm_scmi/driver.c | 43 ++++++++++++++++++++++++++++--
+ 2 files changed, 46 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
-index dd215bd11a58..4a32ae1822a3 100644
---- a/drivers/firmware/arm_scmi/clock.c
-+++ b/drivers/firmware/arm_scmi/clock.c
-@@ -56,7 +56,7 @@ struct scmi_msg_resp_clock_describe_rates {
- struct scmi_clock_set_rate {
- 	__le32 flags;
- #define CLOCK_SET_ASYNC		BIT(0)
--#define CLOCK_SET_DELAYED	BIT(1)
-+#define CLOCK_SET_IGNORE_RESP	BIT(1)
- #define CLOCK_SET_ROUND_UP	BIT(2)
- #define CLOCK_SET_ROUND_AUTO	BIT(3)
- 	__le32 id;
-@@ -67,6 +67,7 @@ struct scmi_clock_set_rate {
- struct clock_info {
- 	int num_clocks;
- 	int max_async_req;
-+	atomic_t cur_async_req;
- 	struct scmi_clock_info *clk;
+diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
+index a9eee62c7142..43884e4ceac5 100644
+--- a/drivers/firmware/arm_scmi/common.h
++++ b/drivers/firmware/arm_scmi/common.h
+@@ -84,17 +84,21 @@ struct scmi_msg {
+  * @rx: Receive message, the buffer should be pre-allocated to store
+  *	message. If request-ACK protocol is used, we can reuse the same
+  *	buffer for the rx path as we use for the tx path.
+- * @done: completion event
++ * @done: command message transmit completion event
++ * @async: pointer to delayed response message received event completion
+  */
+ struct scmi_xfer {
+ 	struct scmi_msg_hdr hdr;
+ 	struct scmi_msg tx;
+ 	struct scmi_msg rx;
+ 	struct completion done;
++	struct completion *async_done;
  };
  
-@@ -221,21 +222,33 @@ static int scmi_clock_rate_set(const struct scmi_handle *handle, u32 clk_id,
- 			       u64 rate)
+ void scmi_xfer_put(const struct scmi_handle *h, struct scmi_xfer *xfer);
+ int scmi_do_xfer(const struct scmi_handle *h, struct scmi_xfer *xfer);
++int scmi_do_xfer_with_response(const struct scmi_handle *h,
++			       struct scmi_xfer *xfer);
+ int scmi_xfer_get_init(const struct scmi_handle *h, u8 msg_id, u8 prot_id,
+ 		       size_t tx_size, size_t rx_size, struct scmi_xfer **p);
+ int scmi_handle_put(const struct scmi_handle *handle);
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index 9a670918b050..59f7db1a66c2 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -345,6 +345,8 @@ __scmi_xfer_put(struct scmi_xfers_info *minfo, struct scmi_xfer *xfer)
+  */
+ static void scmi_rx_callback(struct mbox_client *cl, void *m)
  {
- 	int ret;
-+	u32 flags = 0;
- 	struct scmi_xfer *t;
- 	struct scmi_clock_set_rate *cfg;
-+	struct clock_info *ci = handle->clk_priv;
++	u8 msg_type;
++	u32 msg_hdr;
+ 	u16 xfer_id;
+ 	struct scmi_xfer *xfer;
+ 	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
+@@ -353,7 +355,12 @@ static void scmi_rx_callback(struct mbox_client *cl, void *m)
+ 	struct scmi_xfers_info *minfo = &info->tx_minfo;
+ 	struct scmi_shared_mem __iomem *mem = cinfo->payload;
  
- 	ret = scmi_xfer_get_init(handle, CLOCK_RATE_SET, SCMI_PROTOCOL_CLOCK,
- 				 sizeof(*cfg), 0, &t);
- 	if (ret)
- 		return ret;
- 
-+	if (ci->max_async_req &&
-+	    atomic_inc_return(&ci->cur_async_req) < ci->max_async_req)
-+		flags |= CLOCK_SET_ASYNC;
+-	xfer_id = MSG_XTRACT_TOKEN(ioread32(&mem->msg_header));
++	msg_hdr = ioread32(&mem->msg_header);
++	msg_type = MSG_XTRACT_TYPE(msg_hdr);
++	xfer_id = MSG_XTRACT_TOKEN(msg_hdr);
 +
- 	cfg = t->tx.buf;
--	cfg->flags = cpu_to_le32(0);
-+	cfg->flags = cpu_to_le32(flags);
- 	cfg->id = cpu_to_le32(clk_id);
- 	cfg->value_low = cpu_to_le32(rate & 0xffffffff);
- 	cfg->value_high = cpu_to_le32(rate >> 32);
++	if (msg_type == MSG_TYPE_NOTIFICATION)
++		return; /* Notifications not yet supported */
  
--	ret = scmi_do_xfer(handle, t);
-+	if (flags & CLOCK_SET_ASYNC)
-+		ret = scmi_do_xfer_with_response(handle, t);
+ 	/* Are we even expecting this? */
+ 	if (!test_bit(xfer_id, minfo->xfer_alloc_table)) {
+@@ -366,7 +373,11 @@ static void scmi_rx_callback(struct mbox_client *cl, void *m)
+ 	scmi_dump_header_dbg(dev, &xfer->hdr);
+ 
+ 	scmi_fetch_response(xfer, mem);
+-	complete(&xfer->done);
++
++	if (msg_type == MSG_TYPE_DELAYED_RESP)
++		complete(xfer->async_done);
 +	else
-+		ret = scmi_do_xfer(handle, t);
-+
-+	if (ci->max_async_req)
-+		atomic_dec(&ci->cur_async_req);
++		complete(&xfer->done);
+ }
  
- 	scmi_xfer_put(handle, t);
+ /**
+@@ -470,6 +481,34 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
  	return ret;
+ }
+ 
++#define SCMI_MAX_RESPONSE_TIMEOUT	(2 * MSEC_PER_SEC)
++
++/**
++ * scmi_do_xfer_with_response() - Do one transfer and wait until the delayed
++ *	response is received
++ *
++ * @handle: Pointer to SCMI entity handle
++ * @xfer: Transfer to initiate and wait for response
++ *
++ * Return: -ETIMEDOUT in case of no delayed response, if transmit error,
++ *	return corresponding error, else if all goes well, return 0.
++ */
++int scmi_do_xfer_with_response(const struct scmi_handle *handle,
++			       struct scmi_xfer *xfer)
++{
++	int ret, timeout = msecs_to_jiffies(SCMI_MAX_RESPONSE_TIMEOUT);
++	DECLARE_COMPLETION_ONSTACK(async_response);
++
++	xfer->async_done = &async_response;
++
++	ret = scmi_do_xfer(handle, xfer);
++	if (!ret && !wait_for_completion_timeout(xfer->async_done, timeout))
++		ret = -ETIMEDOUT;
++
++	xfer->async_done = NULL;
++	return ret;
++}
++
+ /**
+  * scmi_xfer_get_init() - Allocate and initialise one message for transmit
+  *
 -- 
 2.17.1
 
