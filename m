@@ -2,167 +2,215 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E37C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8554BC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FCC222CE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148839;
-	bh=KksOCRP5oAAMVGFAqWVrf0Id1TYALXnhRYE2PxfZghw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WXibwtNshT/fUCgfNL9ea3xh+oQVY29XP0RR8SKCJ3G9/dCilYDyxB6rh399E2b80
-	 COh52RQHepacIldBM+9/N4p1ZVyIKgaUeJtlSA0QNbxfKcvWUGsWUOappOnkYD3Eza
-	 zvTUMoFjGBLJT216Mjs1sVFLBnBEpHTUOF43jclQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5C16022CEB
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388745AbfGZNrS (ORCPT
+        id S2388750AbfGZNr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:47:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388639AbfGZNqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:46:06 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD02F22CEB;
-        Fri, 26 Jul 2019 13:46:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148765;
-        bh=KksOCRP5oAAMVGFAqWVrf0Id1TYALXnhRYE2PxfZghw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jOk4QPj6MRCzPisdduveUsBw4O0kcg98OaCuPRlr632C6jERMjVZGByCvY4roQm4d
-         TXbOzHwkqwStDAV7z0vq+bGBm6qZZ1LQGEZn0icXxHrppr0+pHz4gzboN/F5aIUZ0S
-         6AxHGarBF9R/EUZ4DPgeMayi9Qe+UiPGih4B1H7s=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andreas Christoforou <andreaschristofo@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 20/23] ipc/mqueue.c: only perform resource calculation if user valid
-Date:   Fri, 26 Jul 2019 09:45:19 -0400
-Message-Id: <20190726134522.13308-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726134522.13308-1-sashal@kernel.org>
-References: <20190726134522.13308-1-sashal@kernel.org>
+        Fri, 26 Jul 2019 09:47:26 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:45547 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388347AbfGZNrX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:47:23 -0400
+Received: by mail-qt1-f193.google.com with SMTP id x22so47690434qtp.12
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 06:47:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=aREd7oX/KjjR1y+/DoK7i/ri4F4zE0JK5o/p5Emjkas=;
+        b=GeL5D5WRE4VeG63qp/WUJ5gnKVK/ymeYBtSvh8vkNbfcNSs1nMVjWUWxlNzmrtNlVa
+         2XFRsqjplSo6/w/O5Yv4vMUWqva9BN6i/G5BxEq0VFLTbWLSYJT6UCV6esPPIjhOs/nW
+         bRI3wOxhOaNSPpa2AlDszb67kTYfr2S28wx2iuYoNifvie/nIKde45twts4wDH2EY64E
+         uic/rBEHf6vHfuEiLZdQyr4A9NPyU/t602MDVdv/AF4ensslpDlE9wNFB5KCAqSYg9FW
+         KjtQVpt7ejtTV/cn/9iPYp/AF0w73+jLu0jPKch8QLgd7AR+3QNEp3QXx3hsW7wBLHKd
+         j6Lw==
+X-Gm-Message-State: APjAAAVNGpwLo+ZzX+Xy1cM3hUtmt0xOYrjlloNM4IlbvrQhAyKBh4kz
+        z4W6MGRRnTb8KC1Blt1aDAtZMg==
+X-Google-Smtp-Source: APXvYqzVdYsizVTGT9hdpWznFaUhHBwNJSFBNQoI8apQUSuT6ROsP77q6nipE0mfzkXGrjdjl9uw3A==
+X-Received: by 2002:a0c:ba0b:: with SMTP id w11mr68077058qvf.71.1564148842235;
+        Fri, 26 Jul 2019 06:47:22 -0700 (PDT)
+Received: from redhat.com ([212.92.104.165])
+        by smtp.gmail.com with ESMTPSA id g2sm21326394qkm.31.2019.07.26.06.47.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 26 Jul 2019 06:47:21 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 09:47:12 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+Subject: Re: WARNING in __mmdrop
+Message-ID: <20190726094353-mutt-send-email-mst@kernel.org>
+References: <20190725012149-mutt-send-email-mst@kernel.org>
+ <55e8930c-2695-365f-a07b-3ad169654d28@redhat.com>
+ <20190725042651-mutt-send-email-mst@kernel.org>
+ <84bb2e31-0606-adff-cf2a-e1878225a847@redhat.com>
+ <20190725092332-mutt-send-email-mst@kernel.org>
+ <11802a8a-ce41-f427-63d5-b6a4cf96bb3f@redhat.com>
+ <20190726074644-mutt-send-email-mst@kernel.org>
+ <5cc94f15-b229-a290-55f3-8295266edb2b@redhat.com>
+ <20190726082837-mutt-send-email-mst@kernel.org>
+ <ada10dc9-6cab-e189-5289-6f9d3ff8fed2@redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ada10dc9-6cab-e189-5289-6f9d3ff8fed2@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+On Fri, Jul 26, 2019 at 08:53:18PM +0800, Jason Wang wrote:
+> 
+> On 2019/7/26 下午8:38, Michael S. Tsirkin wrote:
+> > On Fri, Jul 26, 2019 at 08:00:58PM +0800, Jason Wang wrote:
+> > > On 2019/7/26 下午7:49, Michael S. Tsirkin wrote:
+> > > > On Thu, Jul 25, 2019 at 10:25:25PM +0800, Jason Wang wrote:
+> > > > > On 2019/7/25 下午9:26, Michael S. Tsirkin wrote:
+> > > > > > > Exactly, and that's the reason actually I use synchronize_rcu() there.
+> > > > > > > 
+> > > > > > > So the concern is still the possible synchronize_expedited()?
+> > > > > > I think synchronize_srcu_expedited.
+> > > > > > 
+> > > > > > synchronize_expedited sends lots of IPI and is bad for realtime VMs.
+> > > > > > 
+> > > > > > > Can I do this
+> > > > > > > on through another series on top of the incoming V2?
+> > > > > > > 
+> > > > > > > Thanks
+> > > > > > > 
+> > > > > > The question is this: is this still a gain if we switch to the
+> > > > > > more expensive srcu? If yes then we can keep the feature on,
+> > > > > I think we only care about the cost on srcu_read_lock() which looks pretty
+> > > > > tiny form my point of view. Which is basically a READ_ONCE() + WRITE_ONCE().
+> > > > > 
+> > > > > Of course I can benchmark to see the difference.
+> > > > > 
+> > > > > 
+> > > > > > if not we'll put it off until next release and think
+> > > > > > of better solutions. rcu->srcu is just a find and replace,
+> > > > > > don't see why we need to defer that. can be a separate patch
+> > > > > > for sure, but we need to know how well it works.
+> > > > > I think I get here, let me try to do that in V2 and let's see the numbers.
+> > > > > 
+> > > > > Thanks
+> > > 
+> > > It looks to me for tree rcu, its srcu_read_lock() have a mb() which is too
+> > > expensive for us.
+> > I will try to ponder using vq lock in some way.
+> > Maybe with trylock somehow ...
+> 
+> 
+> Ok, let me retry if necessary (but I do remember I end up with deadlocks
+> last try).
+> 
+> 
+> > 
+> > 
+> > > If we just worry about the IPI,
+> > With synchronize_rcu what I would worry about is that guest is stalled
+> 
+> 
+> Can this synchronize_rcu() be triggered by guest? If yes, there are several
+> other MMU notifiers that can block. Is vhost something special here?
 
-[ Upstream commit a318f12ed8843cfac53198390c74a565c632f417 ]
+Sorry, let me explain: guests (and tasks in general)
+can trigger activity that will
+make synchronize_rcu take a long time. Thus blocking
+an mmu notifier until synchronize_rcu finishes
+is a bad idea.
 
-Andreas Christoforou reported:
+> 
+> > because system is busy because of other guests.
+> > With expedited it's the IPIs...
+> > 
+> 
+> The current synchronize_rcu()  can force a expedited grace period:
+> 
+> void synchronize_rcu(void)
+> {
+>         ...
+>         if (rcu_blocking_is_gp())
+> return;
+>         if (rcu_gp_is_expedited())
+> synchronize_rcu_expedited();
+> else
+> wait_rcu_gp(call_rcu);
+> }
+> EXPORT_SYMBOL_GPL(synchronize_rcu);
 
-  UBSAN: Undefined behaviour in ipc/mqueue.c:414:49 signed integer overflow:
-  9 * 2305843009213693951 cannot be represented in type 'long int'
-  ...
-  Call Trace:
-    mqueue_evict_inode+0x8e7/0xa10 ipc/mqueue.c:414
-    evict+0x472/0x8c0 fs/inode.c:558
-    iput_final fs/inode.c:1547 [inline]
-    iput+0x51d/0x8c0 fs/inode.c:1573
-    mqueue_get_inode+0x8eb/0x1070 ipc/mqueue.c:320
-    mqueue_create_attr+0x198/0x440 ipc/mqueue.c:459
-    vfs_mkobj+0x39e/0x580 fs/namei.c:2892
-    prepare_open ipc/mqueue.c:731 [inline]
-    do_mq_open+0x6da/0x8e0 ipc/mqueue.c:771
 
-Which could be triggered by:
+An admin can force rcu to finish faster, trading
+interrupts for responsiveness.
 
-        struct mq_attr attr = {
-                .mq_flags = 0,
-                .mq_maxmsg = 9,
-                .mq_msgsize = 0x1fffffffffffffff,
-                .mq_curmsgs = 0,
-        };
+> 
+> > > can we do something like in
+> > > vhost_invalidate_vq_start()?
+> > > 
+> > >          if (map) {
+> > >                  /* In order to avoid possible IPIs with
+> > >                   * synchronize_rcu_expedited() we use call_rcu() +
+> > >                   * completion.
+> > > */
+> > > init_completion(&c.completion);
+> > >                  call_rcu(&c.rcu_head, vhost_finish_vq_invalidation);
+> > > wait_for_completion(&c.completion);
+> > >                  vhost_set_map_dirty(vq, map, index);
+> > > vhost_map_unprefetch(map);
+> > >          }
+> > > 
+> > > ?
+> > Why would that be faster than synchronize_rcu?
+> 
+> 
+> No faster but no IPI.
+> 
 
-        if (mq_open("/testing", 0x40, 3, &attr) == (mqd_t) -1)
-                perror("mq_open");
+Sorry I still don't see the point.
+synchronize_rcu doesn't normally do an IPI either.
 
-mqueue_get_inode() was correctly rejecting the giant mq_msgsize, and
-preparing to return -EINVAL.  During the cleanup, it calls
-mqueue_evict_inode() which performed resource usage tracking math for
-updating "user", before checking if there was a valid "user" at all
-(which would indicate that the calculations would be sane).  Instead,
-delay this check to after seeing a valid "user".
 
-The overflow was real, but the results went unused, so while the flaw is
-harmless, it's noisy for kernel fuzzers, so just fix it by moving the
-calculation under the non-NULL "user" where it actually gets used.
+> > 
+> > 
+> > > > There's one other thing that bothers me, and that is that
+> > > > for large rings which are not physically contiguous
+> > > > we don't implement the optimization.
+> > > > 
+> > > > For sure, that can wait, but I think eventually we should
+> > > > vmap large rings.
+> > > 
+> > > Yes, worth to try. But using direct map has its own advantage: it can use
+> > > hugepage that vmap can't
+> > > 
+> > > Thanks
+> > Sure, so we can do that for small rings.
+> 
+> 
+> Yes, that's possible but should be done on top.
+> 
+> Thanks
 
-Link: http://lkml.kernel.org/r/201906072207.ECB65450@keescook
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reported-by: Andreas Christoforou <andreaschristofo@gmail.com>
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Manfred Spraul <manfred@colorfullife.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- ipc/mqueue.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+Absolutely. Need to fix up the bugs first.
 
-diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-index 6ed74825ab54..2a39784d5704 100644
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -371,7 +371,6 @@ static void mqueue_evict_inode(struct inode *inode)
- {
- 	struct mqueue_inode_info *info;
- 	struct user_struct *user;
--	unsigned long mq_bytes, mq_treesize;
- 	struct ipc_namespace *ipc_ns;
- 	struct msg_msg *msg, *nmsg;
- 	LIST_HEAD(tmp_msg);
-@@ -394,16 +393,18 @@ static void mqueue_evict_inode(struct inode *inode)
- 		free_msg(msg);
- 	}
- 
--	/* Total amount of bytes accounted for the mqueue */
--	mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
--		min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
--		sizeof(struct posix_msg_tree_node);
--
--	mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
--				  info->attr.mq_msgsize);
--
- 	user = info->user;
- 	if (user) {
-+		unsigned long mq_bytes, mq_treesize;
-+
-+		/* Total amount of bytes accounted for the mqueue */
-+		mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
-+			min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
-+			sizeof(struct posix_msg_tree_node);
-+
-+		mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
-+					  info->attr.mq_msgsize);
-+
- 		spin_lock(&mq_lock);
- 		user->mq_bytes -= mq_bytes;
- 		/*
 -- 
-2.20.1
-
+MST
