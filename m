@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313BFC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E238C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 096742064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 191E422C7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564154783;
-	bh=nZSVqgw+OyqqsSoivuJYlq5EHO9EKgyOIuXLfB6vaIM=;
+	s=default; t=1564154790;
+	bh=kQogq5q7TgVnT/79suhILfXBjUEJhKtEX/sKEyHCqPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mko3TtVVCkdu4BRoQoA2+fI37Y0yH3o+PlqsPnbPduOrBXdArfzqOu69/v5iyZ/d4
-	 45vmVq0P0gx+s95cQ/m3jV/mAwi9XhOoEX8aPs+WH9I04uXJPnHa29Ui/8gTT2xrKf
-	 wmzP7Ruvf/PsZZxsDbRSbHkWXBJbv1/T2dogbMuY=
+	b=maytaWPY3e+ie/+3lMvPxGR0fgplIUs/FdtxdwPDrMUiSn7DQLKouc4pE/6ENRPYk
+	 3WAKcXia2eUg4PhquHbOgTEB390dL2m6qo1XTOcmLWPtXS2atVWgDieIK2VSpljz6H
+	 9oYEm5ehSFQ0BnqNhLwFH3ILzLFoSR/nQj7KXOuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387909AbfGZP0W (ORCPT
+        id S2387950AbfGZP03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:26:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40266 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:26:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387867AbfGZP0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:26:17 -0400
+        id S2387894AbfGZP0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:26:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46E2F22CBE;
-        Fri, 26 Jul 2019 15:26:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0205C218D4;
+        Fri, 26 Jul 2019 15:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154776;
-        bh=nZSVqgw+OyqqsSoivuJYlq5EHO9EKgyOIuXLfB6vaIM=;
+        s=default; t=1564154780;
+        bh=kQogq5q7TgVnT/79suhILfXBjUEJhKtEX/sKEyHCqPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h630sKoDb+iIstxMudBnu1QkRs03uXkLybuY3geP4Tnt+pN9fcKERrJxDbbtIRsKu
-         4cjDsS8ldhbDcs+/M3wk3Tp/RQMJ5JeeSU0MXlJMD5OcBBSLq8iSSQ3zEa86+9tbgU
-         UER00h6txEEvOnuI8+Nco2gbwv/3lEPwUQAb3fvU=
+        b=RT0wlzP/GtmlHQpgOR1++aRA0nsLD7jELMd2G4JLcHXP8EsUoyLfx0R7xTd+BZdQN
+         //3UMIJ7l72xAZJjoL3Q5DP86CVQDC4WsXqYfkgKayUR/IFiwWf7MYCkPB3Gt96ZQc
+         TSt+e0Vz7Z0zllSC/CfXrWzejQnjc5AOcY23T9tA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Andrew Prout <aprout@ll.mit.edu>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        Neal Cardwell <ncardwell@google.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        Christoph Paasch <cpaasch@apple.com>,
-        Jonathan Looney <jtl@netflix.com>,
+        stable@vger.kernel.org, Paul Donohue <linux-kernel@PaulSD.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 23/66] tcp: be more careful in tcp_fragment()
-Date:   Fri, 26 Jul 2019 17:24:22 +0200
-Message-Id: <20190726152304.335263429@linuxfoundation.org>
+Subject: [PATCH 5.2 06/66] ipv6: rt6_check should return NULL if from is NULL
+Date:   Fri, 26 Jul 2019 17:24:05 +0200
+Message-Id: <20190726152302.607408339@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
 References: <20190726152301.936055394@linuxfoundation.org>
@@ -66,94 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit b617158dc096709d8600c53b6052144d12b89fab ]
+[ Upstream commit 49d05fe2c9d1b4a27761c9807fec39b8155bef9e ]
 
-Some applications set tiny SO_SNDBUF values and expect
-TCP to just work. Recent patches to address CVE-2019-11478
-broke them in case of losses, since retransmits might
-be prevented.
+Paul reported that l2tp sessions were broken after the commit referenced
+in the Fixes tag. Prior to this commit rt6_check returned NULL if the
+rt6_info 'from' was NULL - ie., the dst_entry was disconnected from a FIB
+entry. Restore that behavior.
 
-We should allow these flows to make progress.
-
-This patch allows the first and last skb in retransmit queue
-to be split even if memory limits are hit.
-
-It also adds the some room due to the fact that tcp_sendmsg()
-and tcp_sendpage() might overshoot sk_wmem_queued by about one full
-TSO skb (64KB size). Note this allowance was already present
-in stable backports for kernels < 4.15
-
-Note for < 4.15 backports :
- tcp_rtx_queue_tail() will probably look like :
-
-static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
-{
-	struct sk_buff *skb = tcp_send_head(sk);
-
-	return skb ? tcp_write_queue_prev(sk, skb) : tcp_write_queue_tail(sk);
-}
-
-Fixes: f070ef2ac667 ("tcp: tcp_fragment() should apply sane memory limits")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Andrew Prout <aprout@ll.mit.edu>
-Tested-by: Andrew Prout <aprout@ll.mit.edu>
-Tested-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Tested-by: Michal Kubecek <mkubecek@suse.cz>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Yuchung Cheng <ycheng@google.com>
-Acked-by: Christoph Paasch <cpaasch@apple.com>
-Cc: Jonathan Looney <jtl@netflix.com>
+Fixes: 93531c674315 ("net/ipv6: separate handling of FIB entries from dst based routes")
+Reported-by: Paul Donohue <linux-kernel@PaulSD.com>
+Tested-by: Paul Donohue <linux-kernel@PaulSD.com>
+Signed-off-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/tcp.h     |    5 +++++
- net/ipv4/tcp_output.c |   13 +++++++++++--
- 2 files changed, 16 insertions(+), 2 deletions(-)
+ net/ipv6/route.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -1675,6 +1675,11 @@ static inline struct sk_buff *tcp_rtx_qu
- 	return skb_rb_first(&sk->tcp_rtx_queue);
- }
- 
-+static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
-+{
-+	return skb_rb_last(&sk->tcp_rtx_queue);
-+}
-+
- static inline struct sk_buff *tcp_write_queue_head(const struct sock *sk)
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -2215,7 +2215,7 @@ static struct dst_entry *rt6_check(struc
  {
- 	return skb_peek(&sk->sk_write_queue);
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -1286,6 +1286,7 @@ int tcp_fragment(struct sock *sk, enum t
- 	struct tcp_sock *tp = tcp_sk(sk);
- 	struct sk_buff *buff;
- 	int nsize, old_factor;
-+	long limit;
- 	int nlen;
- 	u8 flags;
+ 	u32 rt_cookie = 0;
  
-@@ -1296,8 +1297,16 @@ int tcp_fragment(struct sock *sk, enum t
- 	if (nsize < 0)
- 		nsize = 0;
+-	if ((from && !fib6_get_cookie_safe(from, &rt_cookie)) ||
++	if (!from || !fib6_get_cookie_safe(from, &rt_cookie) ||
+ 	    rt_cookie != cookie)
+ 		return NULL;
  
--	if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf &&
--		     tcp_queue != TCP_FRAG_IN_WRITE_QUEUE)) {
-+	/* tcp_sendmsg() can overshoot sk_wmem_queued by one full size skb.
-+	 * We need some allowance to not penalize applications setting small
-+	 * SO_SNDBUF values.
-+	 * Also allow first and last skb in retransmit queue to be split.
-+	 */
-+	limit = sk->sk_sndbuf + 2 * SKB_TRUESIZE(GSO_MAX_SIZE);
-+	if (unlikely((sk->sk_wmem_queued >> 1) > limit &&
-+		     tcp_queue != TCP_FRAG_IN_WRITE_QUEUE &&
-+		     skb != tcp_rtx_queue_head(sk) &&
-+		     skb != tcp_rtx_queue_tail(sk))) {
- 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
- 		return -ENOMEM;
- 	}
 
 
