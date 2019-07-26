@@ -7,53 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE23C41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3FFC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1588522CE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 172A822CEB
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149203;
-	bh=DPG1C/gKzo4kTxSy4m0aVqqud6lbxvx3CL1zkPkmGsg=;
+	s=default; t=1564149207;
+	bh=+ji7mFsUFkSIoN123yX2W9OUGZf68/Hsg61RzvHrGZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o4Wk7A0G2+kpN+9dk3nglZ3Uv3ajvk+nylpSynD1xnNw8jBCuo07VZX1/CXPW7FoD
-	 xK/h2udVomCX54Pr29e2AHb/RIuo9ADxVvDjptPp30tmFQBMldjE5z9JHSCjVYrXyk
-	 befPUAY7ppHQQWSHIgCWi7XhtxPnRxLZPIrMwUdk=
+	b=iCYGYFd1/VHgL8wt96kKEO5xq59ocKoxLgonhdnuCWO4m2Np5itmsYBsmYf8QzMkb
+	 XZkguzVcVlEiuE1hzpkhxo1qC4j6QVjpG4fcMF9TID6MxNv42XC0sIaiN0FbcCM0HO
+	 WQIvc4M+Mgg78eCIRhcf+uXqXmYwq8B0ZBeJkf2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388207AbfGZNn2 (ORCPT
+        id S2388190AbfGZNn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:43:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51116 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387697AbfGZNn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jul 2019 09:43:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388171AbfGZNnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:43:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B318122CBD;
-        Fri, 26 Jul 2019 13:43:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67DDE22BF5;
+        Fri, 26 Jul 2019 13:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148605;
-        bh=DPG1C/gKzo4kTxSy4m0aVqqud6lbxvx3CL1zkPkmGsg=;
+        s=default; t=1564148600;
+        bh=+ji7mFsUFkSIoN123yX2W9OUGZf68/Hsg61RzvHrGZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vxrDxzuKUu+6pS5SkcG8h4mPFtN1D2AGHFU1fM4tojdEL22XQs9esa4fPCj0S8Iq8
-         H6VTAg64p8i5Q8MhgQ0cJlB/oJEEvQbVCUWoESVRYddXuUbvZdsNPB6mR5v6VILvIJ
-         HVjlp1+RbZRK8ksItxesKLOU7yw5O1jIN2/BicUQ=
+        b=hxO83RbQvgLYww6IV3AivStxozIKbdTBkMekw2UDAL1bmzoGLE3noOQ29WyUt1boL
+         NRmfUF9BnWkzgwd18w0PlPUbC3NmqodMfxfnaNS89amRR+iu78m9PRCgkLZctT4QHN
+         xlKUOCCYeu4KToPb4BLS77lnVpeFRMZARimLEjxU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 43/47] xen/pv: Fix a boot up hang revealed by int3 self test
-Date:   Fri, 26 Jul 2019 09:42:06 -0400
-Message-Id: <20190726134210.12156-43-sashal@kernel.org>
+Cc:     Denis Efremov <efremov@ispras.ru>, Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 40/47] floppy: fix out-of-bounds read in copy_buffer
+Date:   Fri, 26 Jul 2019 09:42:03 -0400
+Message-Id: <20190726134210.12156-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
 References: <20190726134210.12156-1-sashal@kernel.org>
@@ -66,117 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+From: Denis Efremov <efremov@ispras.ru>
 
-[ Upstream commit b23e5844dfe78a80ba672793187d3f52e4b528d7 ]
+[ Upstream commit da99466ac243f15fbba65bd261bfc75ffa1532b6 ]
 
-Commit 7457c0da024b ("x86/alternatives: Add int3_emulate_call()
-selftest") is used to ensure there is a gap setup in int3 exception stack
-which could be used for inserting call return address.
+This fixes a global out-of-bounds read access in the copy_buffer
+function of the floppy driver.
 
-This gap is missed in XEN PV int3 exception entry path, then below panic
-triggered:
+The FDDEFPRM ioctl allows one to set the geometry of a disk.  The sect
+and head fields (unsigned int) of the floppy_drive structure are used to
+compute the max_sector (int) in the make_raw_rw_request function.  It is
+possible to overflow the max_sector.  Next, max_sector is passed to the
+copy_buffer function and used in one of the memcpy calls.
 
-[    0.772876] general protection fault: 0000 [#1] SMP NOPTI
-[    0.772886] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0+ #11
-[    0.772893] RIP: e030:int3_magic+0x0/0x7
-[    0.772905] RSP: 3507:ffffffff82203e98 EFLAGS: 00000246
-[    0.773334] Call Trace:
-[    0.773334]  alternative_instructions+0x3d/0x12e
-[    0.773334]  check_bugs+0x7c9/0x887
-[    0.773334]  ? __get_locked_pte+0x178/0x1f0
-[    0.773334]  start_kernel+0x4ff/0x535
-[    0.773334]  ? set_init_arg+0x55/0x55
-[    0.773334]  xen_start_kernel+0x571/0x57a
+An unprivileged user could trigger the bug if the device is accessible,
+but requires a floppy disk to be inserted.
 
-For 64bit PV guests, Xen's ABI enters the kernel with using SYSRET, with
-%rcx/%r11 on the stack. To convert back to "normal" looking exceptions,
-the xen thunks do 'xen_*: pop %rcx; pop %r11; jmp *'.
+The patch adds the check for the .sect * .head multiplication for not
+overflowing in the set_geometry function.
 
-E.g. Extracting 'xen_pv_trap xenint3' we have:
-xen_xenint3:
- pop %rcx;
- pop %r11;
- jmp xenint3
+The bug was found by syzkaller.
 
-As xenint3 and int3 entry code are same except xenint3 doesn't generate
-a gap, we can fix it by using int3 and drop useless xenint3.
-
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Denis Efremov <efremov@ispras.ru>
+Tested-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/entry/entry_64.S    | 1 -
- arch/x86/include/asm/traps.h | 2 +-
- arch/x86/xen/enlighten_pv.c  | 2 +-
- arch/x86/xen/xen-asm_64.S    | 1 -
- 4 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/block/floppy.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 206df099950e..e7572a209fbe 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1196,7 +1196,6 @@ idtentry stack_segment		do_stack_segment	has_error_code=1
- #ifdef CONFIG_XEN
- idtentry xennmi			do_nmi			has_error_code=0
- idtentry xendebug		do_debug		has_error_code=0
--idtentry xenint3		do_int3			has_error_code=0
- #endif
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index b1425b218606..0d43e90eb252 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3244,8 +3244,10 @@ static int set_geometry(unsigned int cmd, struct floppy_struct *g,
+ 	int cnt;
  
- idtentry general_protection	do_general_protection	has_error_code=1
-diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
-index afbc87206886..b771bb3d159b 100644
---- a/arch/x86/include/asm/traps.h
-+++ b/arch/x86/include/asm/traps.h
-@@ -40,7 +40,7 @@ asmlinkage void simd_coprocessor_error(void);
- asmlinkage void xen_divide_error(void);
- asmlinkage void xen_xennmi(void);
- asmlinkage void xen_xendebug(void);
--asmlinkage void xen_xenint3(void);
-+asmlinkage void xen_int3(void);
- asmlinkage void xen_overflow(void);
- asmlinkage void xen_bounds(void);
- asmlinkage void xen_invalid_op(void);
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 782f98b332f0..1730a26ff6ab 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -597,12 +597,12 @@ struct trap_array_entry {
- 
- static struct trap_array_entry trap_array[] = {
- 	{ debug,                       xen_xendebug,                    true },
--	{ int3,                        xen_xenint3,                     true },
- 	{ double_fault,                xen_double_fault,                true },
- #ifdef CONFIG_X86_MCE
- 	{ machine_check,               xen_machine_check,               true },
- #endif
- 	{ nmi,                         xen_xennmi,                      true },
-+	{ int3,                        xen_int3,                        false },
- 	{ overflow,                    xen_overflow,                    false },
- #ifdef CONFIG_IA32_EMULATION
- 	{ entry_INT80_compat,          xen_entry_INT80_compat,          false },
-diff --git a/arch/x86/xen/xen-asm_64.S b/arch/x86/xen/xen-asm_64.S
-index 417b339e5c8e..3a6feed76dfc 100644
---- a/arch/x86/xen/xen-asm_64.S
-+++ b/arch/x86/xen/xen-asm_64.S
-@@ -30,7 +30,6 @@ xen_pv_trap divide_error
- xen_pv_trap debug
- xen_pv_trap xendebug
- xen_pv_trap int3
--xen_pv_trap xenint3
- xen_pv_trap xennmi
- xen_pv_trap overflow
- xen_pv_trap bounds
+ 	/* sanity checking for parameters. */
+-	if (g->sect <= 0 ||
+-	    g->head <= 0 ||
++	if ((int)g->sect <= 0 ||
++	    (int)g->head <= 0 ||
++	    /* check for overflow in max_sector */
++	    (int)(g->sect * g->head) <= 0 ||
+ 	    /* check for zero in F_SECT_PER_TRACK */
+ 	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
+ 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
 -- 
 2.20.1
 
