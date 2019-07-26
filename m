@@ -2,114 +2,190 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C667DC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C85DC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3B5216B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:21:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N0w2rApM"
+	by mail.kernel.org (Postfix) with ESMTP id EC7C722CB8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:21:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbfGZPVM (ORCPT
+        id S1728372AbfGZPVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:21:12 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44693 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbfGZPVK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:21:10 -0400
-Received: by mail-io1-f68.google.com with SMTP id s7so105411329iob.11
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 08:21:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F9G1CH0Ps2FRcZ/NwMc7CwEB3cMwgOdfmNpmMO9HdoM=;
-        b=N0w2rApMLkoaZxE6gBTrU8k8luxL61ZdCWczIF69GZlKQMFUb4lG2guayRg6yAIpbk
-         H1X366pDlqnI3DIuEPp2eBW6njqlQnGw537yrxBAD3BJ8WtV/88SiHMNhsFBE5NfC8Mc
-         6pFDGGrtahrlAC+muBEsD3Uw/mU6kjLtiI4R5g3tYOUIQwjj+xGug574LijMJ9525yyM
-         PBE6JWBDuqPjDFgkXCHTfNPmGyDCt/onMSaEIBQ8DSyYxWlpz9e/7Zj/YiwrwWq4N/JH
-         c1tG2fhMhAiOJtHrldKpL6DVeLTIm6XxQznNCdMNS+EWp3QiFKDkpkNeDLme62XdCPgV
-         PtnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F9G1CH0Ps2FRcZ/NwMc7CwEB3cMwgOdfmNpmMO9HdoM=;
-        b=ddYwkNme2Olsn/6/ibToIf5LFGxw+ufXwTMDSQaPw6NR6PCtPNJ2jV6nHPaq0y1GTw
-         gJ3A3uOiWSUmYZgrOJ0XAi76D8GJYKWvizyhIfFPHf8lz9isOBdUQIYTHhZmmB/EAvPn
-         Qct4xZ8FqKXrTH4MjEUNv83FjKDiB0khYAiXy2pavj1t5hZJn9sb996Fjrp3XKiDiD45
-         NbDeCoI6fEKiYE+WdUi+Jg3GGzkK94Ak7L6ecCSNZON8hoky1Di2iXoXUbPhOgDmeGw4
-         U4Hrb9yeDgJgaOXMFg9E/EB8H6+59B2NqE1po3ZAX4Yn5Dei3WYLpxiRsZGVIWshD7qT
-         RoyQ==
-X-Gm-Message-State: APjAAAWr0kagDp9BymO9T3zEUcYMCSoP0BTYOnygC2kEpvCqgM5pUUXQ
-        Uh50DhgBNMgXKCbRhuPGqZGWnDhSGnQdkC2sgZo8/A==
-X-Google-Smtp-Source: APXvYqzWkKaER3d1SoL4pM51luD5r76GIZCi5wBc/4zHT9xYg4/8N5PMzy6UISLqCi9oNf8Xd9jLBaT9T4dOYpBVyvo=
-X-Received: by 2002:a5d:80d6:: with SMTP id h22mr65334094ior.231.1564154468687;
- Fri, 26 Jul 2019 08:21:08 -0700 (PDT)
+        Fri, 26 Jul 2019 11:21:36 -0400
+Received: from smtp.infotech.no ([82.134.31.41]:52302 "EHLO smtp.infotech.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726731AbfGZPVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:21:36 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp.infotech.no (Postfix) with ESMTP id 3618C204194;
+        Fri, 26 Jul 2019 17:21:33 +0200 (CEST)
+X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
+Received: from smtp.infotech.no ([127.0.0.1])
+        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id WrYd0Hozk3az; Fri, 26 Jul 2019 17:21:26 +0200 (CEST)
+Received: from [192.168.48.23] (host-23-251-188-50.dyn.295.ca [23.251.188.50])
+        by smtp.infotech.no (Postfix) with ESMTPA id 473D7204187;
+        Fri, 26 Jul 2019 17:21:24 +0200 (CEST)
+Reply-To: dgilbert@interlog.com
+Subject: Re: [RFC PATCH] usb: typec: tcpm: Ignore unsupported/unknown
+ alternate mode requests
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1564029037-22929-1-git-send-email-linux@roeck-us.net>
+From:   Douglas Gilbert <dgilbert@interlog.com>
+Message-ID: <a6bff0eb-6b6f-5724-ddca-42bc46e794b8@interlog.com>
+Date:   Fri, 26 Jul 2019 11:21:23 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <00000000000052ad6b058e722ba4@google.com> <20190726130013.GC2368@arrakis.emea.arm.com>
-In-Reply-To: <20190726130013.GC2368@arrakis.emea.arm.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 26 Jul 2019 17:20:55 +0200
-Message-ID: <CACT4Y+b5H4jvY34iT2K0m6a2HCpzgKd3dtv+YFsApp=-18B+pw@mail.gmail.com>
-Subject: Re: memory leak in vq_meta_prefetch
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     syzbot <syzbot+a871c1e6ea00685e73d7@syzkaller.appspotmail.com>,
-        alexandre.belloni@free-electrons.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, nicolas.ferre@atmel.com,
-        Rob Herring <robh@kernel.org>, sre@kernel.org,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1564029037-22929-1-git-send-email-linux@roeck-us.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 3:00 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
->
-> On Wed, Jul 24, 2019 at 12:18:07PM -0700, syzbot wrote:
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=15fffef4600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8de7d700ea5ac607
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=a871c1e6ea00685e73d7
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=127b0334600000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12609e94600000
-> >
-> > The bug was bisected to:
-> >
-> > commit 0e5f7d0b39e1f184dc25e3adb580c79e85332167
-> > Author: Nicolas Ferre <nicolas.ferre@atmel.com>
-> > Date:   Wed Mar 16 13:19:49 2016 +0000
-> >
-> >     ARM: dts: at91: shdwc binding: add new shutdown controller documentation
->
-> That's another wrong commit identification (a documentation patch should
-> not cause a memory leak).
->
-> I don't really think kmemleak, with its relatively high rate of false
-> positives, is suitable for automated testing like syzbot. You could
+On 2019-07-25 12:30 a.m., Guenter Roeck wrote:
+> TCPM may receive PD messages associated with unknown or unsupported
+> alternate modes. If that happens, calls to typec_match_altmode()
+> will return NULL. The tcpm code does not currently take this into
+> account. This results in crashes.
+> 
+> Unable to handle kernel NULL pointer dereference at virtual address 000001f0
+> pgd = 41dad9a1
+> [000001f0] *pgd=00000000
+> Internal error: Oops: 5 [#1] THUMB2
+> Modules linked in: tcpci tcpm
+> CPU: 0 PID: 2338 Comm: kworker/u2:0 Not tainted 5.1.18-sama5-armv7-r2 #6
+> Hardware name: Atmel SAMA5
+> Workqueue: 2-0050 tcpm_pd_rx_handler [tcpm]
+> PC is at typec_altmode_attention+0x0/0x14
+> LR is at tcpm_pd_rx_handler+0xa3b/0xda0 [tcpm]
+> ...
+> [<c03fbee8>] (typec_altmode_attention) from [<bf8030fb>]
+> 				(tcpm_pd_rx_handler+0xa3b/0xda0 [tcpm])
+> [<bf8030fb>] (tcpm_pd_rx_handler [tcpm]) from [<c012082b>]
+> 				(process_one_work+0x123/0x2a8)
+> [<c012082b>] (process_one_work) from [<c0120a6d>]
+> 				(worker_thread+0xbd/0x3b0)
+> [<c0120a6d>] (worker_thread) from [<c012431f>] (kthread+0xcf/0xf4)
+> [<c012431f>] (kthread) from [<c01010f9>] (ret_from_fork+0x11/0x38)
+> 
+> Ignore PD messages if the asociated alternate mode is not supported.
+> 
+> Reported-by: Douglas Gilbert <dgilbert@interlog.com>
+> Cc: Douglas Gilbert <dgilbert@interlog.com>
+> Fixes: e9576fe8e605c ("usb: typec: tcpm: Support for Alternate Modes")
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+> Taking a stab at the problem. I don't really know if this is the correct
+> fix, or even if my understanding of the problem is correct, thus marking
+> the patch as RFC.
 
-Hi Catalin,
+Tested-by: Douglas Gilbert <dgilbert@interlog.com>
 
-Do you mean automated testing in general, or bisection only?
-The wrong commit identification is related to bisection only, but you
-generalized it to automated testing in general. So which exactly you
-mean?
+Took a little while because I was changing my Linux end to being based
+on a Acme Systems Arietta (at91sam9g25). Reason: on the sama5d2xplained
+I can't have the shield plugged into the Arduino sockets because it
+drives the pin used by the OM13588 for its interrupt (nalert). So I
+need to "jump" the pins needed (SDA, SCL, nALERT, 3v3 and ground) to
+get this working (and 'cat /proc/interrupts' shows me its working
+with >0 interrupts on "2-0050").
+
+Anyway the DUT is a OM13588+sama5d2xplained running lk 5.1.18 and the
+other end of the USB-C cable is a OM13588+KL27Z running NXP PD
+software. Both ends can "play" sink or source (power). The oops
+occurred when the DUT was source and the other end sent a "send
+attention" ("l") command. With this patch I do not see the oops.
 
 
-> reduce the false positives if you add support for scanning in
-> stop_machine(). Otherwise, in order to avoid locking the kernel for long
-> periods, kmemleak runs concurrently with other threads (even on the
-> current CPU) and under high load, pointers are missed (e.g. they are in
-> CPU registers rather than stack).
+BTW I have tried to run lk 5.2.1 on the sama5d2xplained and the
+kernel wouldn't start :-( Zilch after u-boot said it was loading
+the kernel.
+
+>   drivers/usb/typec/tcpm/tcpm.c | 38 ++++++++++++++++++++++++--------------
+>   1 file changed, 24 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+> index 77f71f602f73..1df2844469aa 100644
+> --- a/drivers/usb/typec/tcpm/tcpm.c
+> +++ b/drivers/usb/typec/tcpm/tcpm.c
+> @@ -1096,7 +1096,8 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
+>   			break;
+>   		case CMD_ATTENTION:
+>   			/* Attention command does not have response */
+> -			typec_altmode_attention(adev, p[1]);
+> +			if (adev)
+> +				typec_altmode_attention(adev, p[1]);
+>   			return 0;
+>   		default:
+>   			break;
+> @@ -1148,20 +1149,26 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
+>   			}
+>   			break;
+>   		case CMD_ENTER_MODE:
+> -			typec_altmode_update_active(pdev, true);
+> -
+> -			if (typec_altmode_vdm(adev, p[0], &p[1], cnt)) {
+> -				response[0] = VDO(adev->svid, 1, CMD_EXIT_MODE);
+> -				response[0] |= VDO_OPOS(adev->mode);
+> -				return 1;
+> +			if (adev && pdev) {
+> +				typec_altmode_update_active(pdev, true);
+> +
+> +				if (typec_altmode_vdm(adev, p[0], &p[1], cnt)) {
+> +					response[0] = VDO(adev->svid, 1,
+> +							  CMD_EXIT_MODE);
+> +					response[0] |= VDO_OPOS(adev->mode);
+> +					return 1;
+> +				}
+>   			}
+>   			return 0;
+>   		case CMD_EXIT_MODE:
+> -			typec_altmode_update_active(pdev, false);
+> +			if (adev && pdev) {
+> +				typec_altmode_update_active(pdev, false);
+>   
+> -			/* Back to USB Operation */
+> -			WARN_ON(typec_altmode_notify(adev, TYPEC_STATE_USB,
+> -						     NULL));
+> +				/* Back to USB Operation */
+> +				WARN_ON(typec_altmode_notify(adev,
+> +							     TYPEC_STATE_USB,
+> +							     NULL));
+> +			}
+>   			break;
+>   		default:
+>   			break;
+> @@ -1171,8 +1178,10 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
+>   		switch (cmd) {
+>   		case CMD_ENTER_MODE:
+>   			/* Back to USB Operation */
+> -			WARN_ON(typec_altmode_notify(adev, TYPEC_STATE_USB,
+> -						     NULL));
+> +			if (adev)
+> +				WARN_ON(typec_altmode_notify(adev,
+> +							     TYPEC_STATE_USB,
+> +							     NULL));
+>   			break;
+>   		default:
+>   			break;
+> @@ -1183,7 +1192,8 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
+>   	}
+>   
+>   	/* Informing the alternate mode drivers about everything */
+> -	typec_altmode_vdm(adev, p[0], &p[1], cnt);
+> +	if (adev)
+> +		typec_altmode_vdm(adev, p[0], &p[1], cnt);
+>   
+>   	return rlen;
+>   }
+> 
+
