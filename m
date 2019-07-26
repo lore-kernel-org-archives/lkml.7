@@ -2,92 +2,108 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A7FC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74444C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53C6218DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48344218EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:18:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GhJtb6y3"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="U88KFzuV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbfGZQQA (ORCPT
+        id S1726999AbfGZQSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:16:00 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35200 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbfGZQP7 (ORCPT
+        Fri, 26 Jul 2019 12:18:55 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:52813 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726007AbfGZQSy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:15:59 -0400
-Received: by mail-pg1-f193.google.com with SMTP id s1so18698605pgr.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 09:15:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9pxdI8Q1eQGc6MFJDXbX8IPKQf5e9FjRtdij/Ccdk+g=;
-        b=GhJtb6y3IvR2euTrzUQLBPzuWpMC1r078nOKLTS2B26A9HymM6QBFZfT03uDUsxGMt
-         qEU5Dj5ZPRoFY2MiQMolT8V6egN2ZpXNx0R/y1ExRSFTnrcIQQkTlH+qisWgVrr+fhu5
-         fwWtJB/yQ5JNCDew1FsG+XjvLgH1fzf99fEmQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9pxdI8Q1eQGc6MFJDXbX8IPKQf5e9FjRtdij/Ccdk+g=;
-        b=peRftu/kLmlNqJpDGeVUdqSB7GqXw/3DaG7RwA8vpVTwodrLdcnmRGOIDZRStqHdJ7
-         7VXUREj96bPedxCW2fUt7QaVVeVh5O1olhKo+IGC0reqfGaRPOrvL9lMMEwIYbCYlFJV
-         nMEv5Nhwl0G7A/qUNisyhjTT2SgpE507ExSnvgLrIr7u0tELaD0FhF7Q7ZXPv2Lsysyt
-         oPii6+ycDFsYR4zF2/q7HA04eMGdco2yxDam4IUMPYFwH8vcS7U7hLjT5RhEyyLKicOT
-         vUvI19CpKPeFegkids2HewqDIaBFbh6ucVNsVo9ZRsv+HlA+qihRiNAM+hKrXSs6pgds
-         mRDQ==
-X-Gm-Message-State: APjAAAVhsxvz/5rDT2o1oA4DRgNqGhb7n3BnwIB0eoHzzpMaoBuqNoF/
-        5t1pHtCwDhrqRxu5V96GpGbalA==
-X-Google-Smtp-Source: APXvYqxorBpjLgP/KwuMcH8kC+695azPg68CPTEJ3NXXlbisGsg21F6WBT3zy6Q5jm5oFPVjAt8Owg==
-X-Received: by 2002:a62:5344:: with SMTP id h65mr23349574pfb.32.1564157758990;
-        Fri, 26 Jul 2019 09:15:58 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i126sm61479400pfb.32.2019.07.26.09.15.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Jul 2019 09:15:58 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 09:15:57 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        diana.craciun@nxp.com, christophe.leroy@c-s.fr,
-        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        wangkefeng.wang@huawei.com, yebin10@huawei.com,
-        thunder.leizhen@huawei.com, jingxiangfeng@huawei.com,
-        fanchengyang@huawei.com
-Subject: Re: [RFC PATCH 00/10] implement KASLR for powerpc/fsl_booke/32
-Message-ID: <201907260914.E37F9B041@keescook>
-References: <20190717080621.40424-1-yanaijie@huawei.com>
- <e6ad41bc-5d5a-cf3f-b308-e1863b4fef99@huawei.com>
- <201907251252.0C58037@keescook>
- <877d818d-b3ec-1cea-d024-4ad6aea7af60@huawei.com>
+        Fri, 26 Jul 2019 12:18:54 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6QG6Hpo030144;
+        Fri, 26 Jul 2019 18:18:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=IXxLWvTNmiUU59JMUeszE0o+fXSHf9wp+bJ4iqAv/do=;
+ b=U88KFzuVSXQpIKzDDIIFqcilRxMXyICiEVyjCMNY+rbxk9rSKnFDcH/P278PPIbd4rLf
+ aPDtJWnkFTk9gQFloRyeusVw4Dx/TADtO+SHjPK2xrfnFjXoc0gGkfxP8zWKu7IN5wFh
+ AiC+yx8mYfw3irtzXVPlv690ZPfQvA1xaKmmxypjVC2uIeQC6vfR9w8T6W4QnM85zDet
+ wWQNU8sEubADekjpmE28/XSiEcRq/cGjNXAqKvvmfW5X3HCC/8IJOIOffSRUpFb9yljP
+ CuB400jQn4GQzeKNj69eW6R8Okf8JVlYPImBfQCVDv7HKdhS2zXXb62smI2pbOKo8rhJ bA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2tx604bj0f-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 26 Jul 2019 18:18:39 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 08D2E31;
+        Fri, 26 Jul 2019 16:18:39 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D00874FB7;
+        Fri, 26 Jul 2019 16:18:38 +0000 (GMT)
+Received: from lmecxl0912.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 26 Jul
+ 2019 18:18:37 +0200
+Subject: Re: [PATCH v4 0/8] stm32 m4 remoteproc on STM32MP157c
+To:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>
+CC:     Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+References: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <334f2829-fa5e-3f81-5872-730b2aa8b757@st.com>
+Date:   Fri, 26 Jul 2019 18:18:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <877d818d-b3ec-1cea-d024-4ad6aea7af60@huawei.com>
+In-Reply-To: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-26_12:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 03:20:26PM +0800, Jason Yan wrote:
-> The boot code only maps one 64M zone at early start. If the kernel crosses
-> two 64M zones, we need to map two 64M zones. Keep the kernel in one 64M
-> saves a lot of complex codes.
+Hi Fabien
 
-Ah-ha. Gotcha. Thanks for the clarification.
+On 5/14/19 10:26 AM, Fabien Dessenne wrote:
+> STMicrolectronics STM32MP157 MPU are based on a Dual Arm Cortex-A7 core and a
+> Cortex-M4.
+> This patchset adds the support of the stm32_rproc driver allowing to control
+> the M4 remote processor.
+> 
 
-> Yes, if this feature can be accepted, I will start to work with powerpc64
-> KASLR and other things like CONFIG_RANDOMIZE_MEMORY.
+...
 
-Awesome. :)
+>      driver
+>    remoteproc: stm32: add an ST stm32_rproc driver
+>    ARM: dts: stm32: add m4 remoteproc support on STM32MP157c
+>    ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
+>    ARM: dts: stm32: enable m4 coprocessor support on STM32MP157c-ed1
+>    ARM: dts: stm32: declare copro reserved memories on STM32MP157a-dk1
+>    ARM: dts: stm32: enable m4 coprocessor support on STM32MP157a-dk1
+> 
 
--- 
-Kees Cook
+DT patches applied on stm32-next.
+
+Regards
+Alexandre
