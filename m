@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7706C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB84C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E45218B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37FE4218B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 19:19:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388588AbfGZTTA (ORCPT
+        id S2388625AbfGZTTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 15:19:00 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50193 "EHLO
+        Fri, 26 Jul 2019 15:19:04 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50208 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388523AbfGZTS6 (ORCPT
+        with ESMTP id S2388586AbfGZTTB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 15:18:58 -0400
+        Fri, 26 Jul 2019 15:19:01 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hr5k1-0001Al-0Y; Fri, 26 Jul 2019 21:18:57 +0200
-Message-Id: <20190726185753.262895510@linutronix.de>
+        id 1hr5k2-0001BU-Uo; Fri, 26 Jul 2019 21:18:59 +0200
+Message-Id: <20190726185753.551967692@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 26 Jul 2019 20:30:54 +0200
+Date:   Fri, 26 Jul 2019 20:30:57 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -36,8 +36,8 @@ Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Jiri Olsa <jolsa@redhat.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Juergen Gross <jgross@suse.com>
-Subject: [patch 06/12] watchdog: Mark watchdog_hrtimer to expire in hard
- interrupt context
+Subject: [patch 09/12] hrtimer: Move unmarked hrtimers to soft interrupt
+ expiry on RT
 References: <20190726183048.982726647@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -48,30 +48,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-The watchdog hrtimer must expire in hard interrupt context even on
-PREEMPT_RT=y kernels as otherwise the hard/softlockup detection logic would
-not work.
+On PREEMPT_RT not all hrtimers can be expired in hard interrupt context
+even if that is perfectly fine on a PREEMPT_RT=n kernel, e.g. because they
+take regular spinlocks. Also for latency reasons PREEMPT_RT tries to defer
+most hrtimers' expiry into softirq context.
 
-No functional change.
+hrtimers marked with HRTIMER_MODE_HARD must be kept in hard interrupt
+context expiry mode. Add the required logic.
 
-[ tglx: Split out from larger combo patch. Added changelog ]
+No functional change for PREEMPT_RT=n kernels.
+
+[ tglx: Split out of a larger combo patch. Added changelog ]
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/watchdog.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/time/hrtimer.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -490,7 +490,7 @@ static void watchdog_enable(unsigned int
- 	 * Start the timer first to prevent the NMI watchdog triggering
- 	 * before the timer has a chance to fire.
- 	 */
--	hrtimer_init(hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_init(hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
- 	hrtimer->function = watchdog_timer_fn;
- 	hrtimer_start(hrtimer, ns_to_ktime(sample_period),
- 		      HRTIMER_MODE_REL_PINNED);
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -1271,8 +1271,16 @@ static void __hrtimer_init(struct hrtime
+ 			   enum hrtimer_mode mode)
+ {
+ 	bool softtimer = !!(mode & HRTIMER_MODE_SOFT);
+-	int base = softtimer ? HRTIMER_MAX_CLOCK_BASES / 2 : 0;
+ 	struct hrtimer_cpu_base *cpu_base;
++	int base;
++
++	/*
++	 * On PREEMPT_RT enabled kernels hrtimers which are not explicitely
++	 * marked for hard interrupt expiry mode are moved into soft
++	 * interrupt context for latency reasons.
++	 */
++	if (IS_ENABLED(CONFIG_PREEMPT_RT) && !(mode & HRTIMER_MODE_HARD))
++		softtimer = true;
+ 
+ 	memset(timer, 0, sizeof(struct hrtimer));
+ 
+@@ -1286,6 +1294,7 @@ static void __hrtimer_init(struct hrtime
+ 	if (clock_id == CLOCK_REALTIME && mode & HRTIMER_MODE_REL)
+ 		clock_id = CLOCK_MONOTONIC;
+ 
++	base = softtimer ? HRTIMER_MAX_CLOCK_BASES / 2 : 0;
+ 	base += hrtimer_clockid_to_base(clock_id);
+ 	timer->is_soft = softtimer;
+ 	timer->base = &cpu_base->clock_base[base];
 
 
