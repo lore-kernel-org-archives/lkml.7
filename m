@@ -2,100 +2,146 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4681CC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8570FC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA6022CD8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:49:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="aVDDRB+z";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yiu5fdhU"
+	by mail.kernel.org (Postfix) with ESMTP id 613F722CD8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388524AbfGZNtv (ORCPT
+        id S2388633AbfGZNt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:49:51 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:47311 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388765AbfGZNts (ORCPT
+        Fri, 26 Jul 2019 09:49:58 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41373 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388813AbfGZNtt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:49:48 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id F00E15C9;
-        Fri, 26 Jul 2019 09:49:46 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Fri, 26 Jul 2019 09:49:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=motsW62/zDKPXGCLrT7MqZ29ytZ
-        w59P9Qz8xs3ekSRg=; b=aVDDRB+zax/ku7QQ5cjTDGVh7dRXVJO7keafLqzQQNk
-        1X4raI1/HMUuJt14w6nbNtAIHmLyrnWLIaQPCVK5e+JwrI2bif6EJl/bSvxKDxRd
-        tyYX/JxBvH3QiwVsLaz2fahvQDexwQ4r8X8mx9Tt3p64g5U2YdYx8SphmLqxYAON
-        1E89TqiIjDZHbJxGDskIfpVhesxstcY8sKShZLfwCYpeLXexAeqBuymf/uw6AreC
-        MiI6ieTnqI4P8h9d9l/jNxG/YvpAbINFe92mP01bvrexIIvMdJU3vCi6Iwcpv/eq
-        GTcfxeoZl/qg/tBwEx8VuSmRSKJxVQsos0j3xkV8BqQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=motsW6
-        2/zDKPXGCLrT7MqZ29ytZw59P9Qz8xs3ekSRg=; b=yiu5fdhUcPkBy7xm4u7X8C
-        UMQ6OLqoMfAIOfGvPx4M5LHpNW7A74j4Te/PK479oa4eUI39ZzU27wczzWCs8oBC
-        arIYaDxbFOqTBdmLImD7jRL9xp9s0ShU2uAmGapevAXoQgtazYbI9nZ1mpRm/gxf
-        bTiibrzKM/uWMc1TdFpgMoYMACFPGQSJWGMOvibKDMUvBvXnre/mTsuwUE3bTuz4
-        2pK7ez9WGoSvcMHwctuZM1K9aDaX74NqmswTJnNHbye3rJ7o0v9xKBL4KNKqUTj3
-        SQzojnWYiGPQ/sGuxaviq198wDlNtgPPNGFhTp9QDfXY9gNHqDRp+otbYqudHykA
-        ==
-X-ME-Sender: <xms:-gQ7XTvBeiatOwXS8KwV3f58eu4a2ROmO0gQC59aAHJBgLG7PNzE2g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrkeeggdeilecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedv
-X-ME-Proxy: <xmx:-gQ7XdY89d0Cinh3qP3tBJ3seK1uE1fPZ6_WEEHwgRGDggIT5x1AcQ>
-    <xmx:-gQ7XfhQ1-W8hMsLqI9kLU8Z1iLO35VA6AzrElY7ga37YXS8Na7bdQ>
-    <xmx:-gQ7XVVkli7gn4vuX6RTEUPAq3xTUEaCfHpmONQ6UGrN_c1XTz_ysA>
-    <xmx:-gQ7Xf8kThzapeyEozunRzL5KdfaXoVrn0ak3OK0NS7ZHct_liiUaA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1CB16380074;
-        Fri, 26 Jul 2019 09:49:46 -0400 (EDT)
-Date:   Fri, 26 Jul 2019 15:49:44 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     stable@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH stable-5.1 0/3] KVM: x86: FPU and nested VMX guest reset
- fixes
-Message-ID: <20190726134944.GC23085@kroah.com>
-References: <20190725114938.3976-1-vkuznets@redhat.com>
+        Fri, 26 Jul 2019 09:49:49 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d17so52532561qtj.8
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 06:49:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Arc7jiA/gNfqVVW7QNfgaMfkpV6mHYMiv3nUsNQh21Q=;
+        b=C1TOqzmGmMDDx5+78B9o2F0tV4pBewaMghEvZOibsG9uBC0iJjkWS10rScwGb8MQXu
+         E8bEdIgx7GxELdWy39CftqcUVHWOHAJBWh8FWM+gAd6lE9NUWhuKbjU+ZwO2L/+tr0l0
+         CsDOeGuvxwMReKnskimxKVhc7XdbQ6CEiU085ZNuD2nTpGtlJR0J0f0bmrNUKj6GarUc
+         JnHNRBh8b1FGthdRayHxiUkTozJRSQVRVKM2sdpj9qXR7min1Vew+27oUKVbjoPjPtVu
+         R8OXeNZ8WfF893RbAGWvvoOakIfjii4ya7icgVJp7UKgmLPdaRtXl9QCB5Ix6woCkJOo
+         mmeA==
+X-Gm-Message-State: APjAAAWyA48PT8RjQuWfni+DeYhMXEk15FBnGxRY2AtwnVrawZIh3pza
+        VGnWqJVTdAwAE3VEgB4xu2TkcQ==
+X-Google-Smtp-Source: APXvYqwJQHLCc1j1lFY5aAZTn5kwYloU8xFZNwjN11XBjJ1dY1OXNTBegRGc33x5aUh2wiZJ7uMG3w==
+X-Received: by 2002:a0c:9233:: with SMTP id a48mr67054287qva.66.1564148988892;
+        Fri, 26 Jul 2019 06:49:48 -0700 (PDT)
+Received: from redhat.com ([212.92.104.165])
+        by smtp.gmail.com with ESMTPSA id w19sm20959381qkj.66.2019.07.26.06.49.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 26 Jul 2019 06:49:48 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 09:49:39 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+Subject: Re: WARNING in __mmdrop
+Message-ID: <20190726094756-mutt-send-email-mst@kernel.org>
+References: <55e8930c-2695-365f-a07b-3ad169654d28@redhat.com>
+ <20190725042651-mutt-send-email-mst@kernel.org>
+ <84bb2e31-0606-adff-cf2a-e1878225a847@redhat.com>
+ <20190725092332-mutt-send-email-mst@kernel.org>
+ <11802a8a-ce41-f427-63d5-b6a4cf96bb3f@redhat.com>
+ <20190726074644-mutt-send-email-mst@kernel.org>
+ <5cc94f15-b229-a290-55f3-8295266edb2b@redhat.com>
+ <20190726082837-mutt-send-email-mst@kernel.org>
+ <ada10dc9-6cab-e189-5289-6f9d3ff8fed2@redhat.com>
+ <aaefa93e-a0de-1c55-feb0-509c87aae1f3@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190725114938.3976-1-vkuznets@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aaefa93e-a0de-1c55-feb0-509c87aae1f3@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 01:49:35PM +0200, Vitaly Kuznetsov wrote:
-> Few patches were recently marked for stable@ but commits are not
-> backportable as-is and require a few tweaks. Here is 5.1 stable backport.
+On Fri, Jul 26, 2019 at 09:36:18PM +0800, Jason Wang wrote:
 > 
-> [PATCH2 of the series applies as-is, I have it here for completeness]
+> On 2019/7/26 下午8:53, Jason Wang wrote:
+> > 
+> > On 2019/7/26 下午8:38, Michael S. Tsirkin wrote:
+> > > On Fri, Jul 26, 2019 at 08:00:58PM +0800, Jason Wang wrote:
+> > > > On 2019/7/26 下午7:49, Michael S. Tsirkin wrote:
+> > > > > On Thu, Jul 25, 2019 at 10:25:25PM +0800, Jason Wang wrote:
+> > > > > > On 2019/7/25 下午9:26, Michael S. Tsirkin wrote:
+> > > > > > > > Exactly, and that's the reason actually I use
+> > > > > > > > synchronize_rcu() there.
+> > > > > > > > 
+> > > > > > > > So the concern is still the possible synchronize_expedited()?
+> > > > > > > I think synchronize_srcu_expedited.
+> > > > > > > 
+> > > > > > > synchronize_expedited sends lots of IPI and is bad for realtime VMs.
+> > > > > > > 
+> > > > > > > > Can I do this
+> > > > > > > > on through another series on top of the incoming V2?
+> > > > > > > > 
+> > > > > > > > Thanks
+> > > > > > > > 
+> > > > > > > The question is this: is this still a gain if we switch to the
+> > > > > > > more expensive srcu? If yes then we can keep the feature on,
+> > > > > > I think we only care about the cost on srcu_read_lock()
+> > > > > > which looks pretty
+> > > > > > tiny form my point of view. Which is basically a
+> > > > > > READ_ONCE() + WRITE_ONCE().
+> > > > > > 
+> > > > > > Of course I can benchmark to see the difference.
+> > > > > > 
+> > > > > > 
+> > > > > > > if not we'll put it off until next release and think
+> > > > > > > of better solutions. rcu->srcu is just a find and replace,
+> > > > > > > don't see why we need to defer that. can be a separate patch
+> > > > > > > for sure, but we need to know how well it works.
+> > > > > > I think I get here, let me try to do that in V2 and
+> > > > > > let's see the numbers.
+> > > > > > 
+> > > > > > Thanks
+> > > > 
+> > > > It looks to me for tree rcu, its srcu_read_lock() have a mb()
+> > > > which is too
+> > > > expensive for us.
+> > > I will try to ponder using vq lock in some way.
+> > > Maybe with trylock somehow ...
+> > 
+> > 
+> > Ok, let me retry if necessary (but I do remember I end up with deadlocks
+> > last try).
 > 
-> Jan Kiszka (1):
->   KVM: nVMX: Clear pending KVM_REQ_GET_VMCS12_PAGES when leaving nested
 > 
-> Paolo Bonzini (2):
->   KVM: nVMX: do not use dangling shadow VMCS after guest reset
->   Revert "kvm: x86: Use task structs fpu field for user"
+> Ok, I play a little with this. And it works so far. Will do more testing
+> tomorrow.
+> 
+> One reason could be I switch to use get_user_pages_fast() to
+> __get_user_pages_fast() which doesn't need mmap_sem.
+> 
+> Thanks
 
-All now applied, thanks!
+OK that sounds good. If we also set a flag to make
+vhost_exceeds_weight exit, then I think it will be all good.
 
-greg k-h
+-- 
+MST
