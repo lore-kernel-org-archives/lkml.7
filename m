@@ -2,102 +2,61 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6743AC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C75AC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E74521850
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:29:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WedAVQL7"
+	by mail.kernel.org (Postfix) with ESMTP id 08BFD218D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:30:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbfGZO3l (ORCPT
+        id S1727908AbfGZOav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:29:41 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42576 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfGZO3l (ORCPT
+        Fri, 26 Jul 2019 10:30:51 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:40122 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfGZOav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 10:29:41 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6QETP9c039059;
-        Fri, 26 Jul 2019 09:29:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564151365;
-        bh=Fb5rzjRMdVxF8BnVs/BBQy8Bg0VXLqTuycf8mt6VBzc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WedAVQL7i9gIPo52SLHsm7mGi8Cb+tIVPWoLiUtzSxl/KoRNWaIyIn8fjdcNfKy4M
-         WDjFCURkU6Zjmf13iDR3pdTa0liEFMOGpqAgZvFlSvmIBO3lazv9331io2lhlkFWyY
-         XPRFNsk3LdsSecsC/kI8M4Bvp+Zz8MNK7S2+Zb5Q=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6QETP8v005677
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Jul 2019 09:29:25 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 26
- Jul 2019 09:29:24 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 26 Jul 2019 09:29:24 -0500
-Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6QETKad101559;
-        Fri, 26 Jul 2019 09:29:21 -0500
-Subject: Re: [PATCH] media: staging: davinci: remove vpfe driver
-To:     Arnd Bergmann <arnd@arndb.de>,
-        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-CC:     <laurent.pinchart@ideasonboard.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <devel@driverdev.osuosl.org>
-References: <20190723104602.3215243-1-arnd@arndb.de>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <baa4ea4f-f498-b114-4eb9-af469b644a95@ti.com>
-Date:   Fri, 26 Jul 2019 19:59:20 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 26 Jul 2019 10:30:51 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hr1FA-0006Yw-Nm; Fri, 26 Jul 2019 14:30:48 +0000
+Date:   Fri, 26 Jul 2019 15:30:48 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [git pull] struct mount leak fix
+Message-ID: <20190726143048.GL1131@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20190723104602.3215243-1-arnd@arndb.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/07/19 4:14 PM, Arnd Bergmann wrote:
-> The davinci_vpfe driver was merged into staging back in 2012 by Manjunath
-> Hadli from TI, with a long TODO list.
-> 
-> For all I can tell, since then it has only seen fixes for compile-time
-> issues and global cleanups, but nobody has actually worked on the items
-> on the TODO list.
-> 
-> To make things worse, the driver in its current form is incompatible with
-> the platform code in arch/arm/mach-davinci, i.e. the driver expects to
-> get its platform_data passed to the device as a 'struct vpfe_config',
-> but uses a differnet definition for that structure compared to what the
-> platform uses.
-> 
-> Finally, there is another driver for the same device in
-> drivers/media/platform/davinci/vpfe_capture.c. From all I can tell, the
-> staging version was originally a copy of a more featureful driver in TI's
-> downstream kernels. However, that kernel no longer supports dm365 after
-> linux-2.6.37, and the mainline version moved in a different direction.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+	Braino introduced in "switch the remnants of releasing the mountpoint
+away from fs_pin"; the most visible result is leaking struct mount when
+mounting btrfs, making it impossible to shut down.
 
-Acked-by: Sekhar Nori <nsekhar@ti.com>
+The following changes since commit 18253e034d2aeee140f82fc9fe89c4bce5c81799:
 
-Thanks,
-Sekhar
+  Merge branch 'work.dcache2' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs (2019-07-20 09:15:51 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
+
+for you to fetch changes up to 19a1c4092e7ca1ad1a72ac5535f902c483372cd5:
+
+  fix the struct mount leak in umount_tree() (2019-07-26 07:59:06 -0400)
+
+----------------------------------------------------------------
+Al Viro (1):
+      fix the struct mount leak in umount_tree()
+
+ fs/namespace.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
