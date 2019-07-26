@@ -2,126 +2,190 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7A9C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB5FC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25947218DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:00:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="PuesO2NF"
+	by mail.kernel.org (Postfix) with ESMTP id 8A86B22CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:00:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfGZMAJ (ORCPT
+        id S1726910AbfGZMAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:00:09 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34506 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbfGZMAI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:00:08 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so18468377pgc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 05:00:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=oI0R97fuUqdE0I/gmsxQ15AS3vPjppH94eLX72HdVQw=;
-        b=PuesO2NFf6GdG9qQn54lobuItpHnil0Wxxng8M67UvgTIIUysJoYXduIe4MvOkNTWl
-         OD4IWjiPDRDl+PdwxuwHyZJicwWd+0Qz0y+plyrJH1lLkOiDpjByvUNQ5Mi2y2Ewt+wt
-         IqO0vcW6eTRmFG5agc4tOof+Mk5d025MsBWGOgTBC1O0pOvkFQ8WtjRdC5EWLIT+aisZ
-         Oyp5gvdFlR+5oy1OaY29wW3PM1F6X3NCA0mlegY0IW2zvbvCH/k5MKs0ccqp0i3Q+C+u
-         ac3AX9K4mQz6WngyWKlIezz3G7LfWxMOBqHbCb8+1RlfYkym4jij9kuyTpci1T2l4u9V
-         TKOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=oI0R97fuUqdE0I/gmsxQ15AS3vPjppH94eLX72HdVQw=;
-        b=BDXvztdeKkfvS5wawx31kofqPrQ8trotnPbliRUOwg/97JRhQUQbxXDSQqh0H84q8O
-         Lq7nA3AEl8tfCfwfB5MqyW4VDJ2f+jVDlFynT7JuXD3xM2nWJOh1toU3CDCoPLSl/LIB
-         Oxm5orc7ZSuAzqJqtoD8ec3k+Ui4Z9Ra38kzakY5iCMcbiTMIpCTClfSCvoPG/XX1dG2
-         DIQQJZ7+god+SKsMsT4jsFhXPmnXyIO/35cr3pCv0jRr5+HqBID4m2qj/KWaG+FQm8vo
-         2q7KCImps50JOsgEro9IDdL/C6jh7ENtBTDPB+aYJpvikflC0rrqr50/svuJl4Ks98kf
-         nByg==
-X-Gm-Message-State: APjAAAVval2AYIfxxWutPTwOaTyjdDt6BW4/CWM/2nx8Y/vj+5KTLwua
-        Dpp7pT55bfCXu1dW7tf/WpCNL8Bt9gM=
-X-Google-Smtp-Source: APXvYqx819gN2+zWvFVhXTwxqLv7So4wMoGBA003enGDBW04aZp+5++DAbdRI7GEgDudVXrIf/T1zQ==
-X-Received: by 2002:a17:90a:71ca:: with SMTP id m10mr44092840pjs.27.1564142406990;
-        Fri, 26 Jul 2019 05:00:06 -0700 (PDT)
-Received: from brauner.io ([172.58.30.217])
-        by smtp.gmail.com with ESMTPSA id q1sm62253913pfg.84.2019.07.26.05.00.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 05:00:06 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 13:59:59 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Regression in 5.3 for some FS_USERNS_MOUNT (aka
- user-namespace-mountable) filesystems
-Message-ID: <20190726115956.ifj5j4apn3tmwk64@brauner.io>
+        Fri, 26 Jul 2019 08:00:18 -0400
+Received: from relay.sw.ru ([185.231.240.75]:54716 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726267AbfGZMAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 08:00:17 -0400
+Received: from [172.16.25.12]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1hqytE-0007LO-Dd; Fri, 26 Jul 2019 15:00:00 +0300
+Subject: Re: [PATCH v3] kasan: add memory corruption identification for
+ software tag-based mode
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>
+References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
+ <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
+ <1560447999.15814.15.camel@mtksdccf07> <1560479520.15814.34.camel@mtksdccf07>
+ <1560744017.15814.49.camel@mtksdccf07>
+ <CACT4Y+Y3uS59rXf92ByQuFK_G4v0H8NNnCY1tCbr4V+PaZF3ag@mail.gmail.com>
+ <1560774735.15814.54.camel@mtksdccf07> <1561974995.18866.1.camel@mtksdccf07>
+ <CACT4Y+aMXTBE0uVkeZz+MuPx3X1nESSBncgkScWvAkciAxP1RA@mail.gmail.com>
+ <ebc99ee1-716b-0b18-66ab-4e93de02ce50@virtuozzo.com>
+ <1562640832.9077.32.camel@mtksdccf07>
+ <d9fd1d5b-9516-b9b9-0670-a1885e79f278@virtuozzo.com>
+ <1562839579.5846.12.camel@mtksdccf07>
+ <37897fb7-88c1-859a-dfcc-0a5e89a642e0@virtuozzo.com>
+ <1563160001.4793.4.camel@mtksdccf07>
+ <9ab1871a-2605-ab34-3fd3-4b44a0e17ab7@virtuozzo.com>
+ <1563789162.31223.3.camel@mtksdccf07>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <e62da62a-2a63-3a1c-faeb-9c5561a5170c@virtuozzo.com>
+Date:   Fri, 26 Jul 2019 15:00:00 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <1563789162.31223.3.camel@mtksdccf07>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey everyone,
 
-We have another mount api regression. With current 5.3-rc1 it is not
-possible anymore to mount filesystems that have FS_USERNS_MOUNT set and
-their fs_context's global member set to true. At least sysfs is
-affected, likely also cgroup{2}fs.
 
-The commit that introduced the regression is:
+On 7/22/19 12:52 PM, Walter Wu wrote:
+> On Thu, 2019-07-18 at 19:11 +0300, Andrey Ryabinin wrote:
+>>
+>> On 7/15/19 6:06 AM, Walter Wu wrote:
+>>> On Fri, 2019-07-12 at 13:52 +0300, Andrey Ryabinin wrote:
+>>>>
+>>>> On 7/11/19 1:06 PM, Walter Wu wrote:
+>>>>> On Wed, 2019-07-10 at 21:24 +0300, Andrey Ryabinin wrote:
+>>>>>>
+>>>>>> On 7/9/19 5:53 AM, Walter Wu wrote:
+>>>>>>> On Mon, 2019-07-08 at 19:33 +0300, Andrey Ryabinin wrote:
+>>>>>>>>
+>>>>>>>> On 7/5/19 4:34 PM, Dmitry Vyukov wrote:
+>>>>>>>>> On Mon, Jul 1, 2019 at 11:56 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+>>>>>>
+>>>>>>>>>
+>>>>>>>>> Sorry for delays. I am overwhelm by some urgent work. I afraid to
+>>>>>>>>> promise any dates because the next week I am on a conference, then
+>>>>>>>>> again a backlog and an intern starting...
+>>>>>>>>>
+>>>>>>>>> Andrey, do you still have concerns re this patch? This change allows
+>>>>>>>>> to print the free stack.
+>>>>>>>>
+>>>>>>>> I 'm not sure that quarantine is a best way to do that. Quarantine is made to delay freeing, but we don't that here.
+>>>>>>>> If we want to remember more free stacks wouldn't be easier simply to remember more stacks in object itself?
+>>>>>>>> Same for previously used tags for better use-after-free identification.
+>>>>>>>>
+>>>>>>>
+>>>>>>> Hi Andrey,
+>>>>>>>
+>>>>>>> We ever tried to use object itself to determine use-after-free
+>>>>>>> identification, but tag-based KASAN immediately released the pointer
+>>>>>>> after call kfree(), the original object will be used by another
+>>>>>>> pointer, if we use object itself to determine use-after-free issue, then
+>>>>>>> it has many false negative cases. so we create a lite quarantine(ring
+>>>>>>> buffers) to record recent free stacks in order to avoid those false
+>>>>>>> negative situations.
+>>>>>>
+>>>>>> I'm telling that *more* than one free stack and also tags per object can be stored.
+>>>>>> If object reused we would still have information about n-last usages of the object.
+>>>>>> It seems like much easier and more efficient solution than patch you proposing.
+>>>>>>
+>>>>> To make the object reused, we must ensure that no other pointers uses it
+>>>>> after kfree() release the pointer.
+>>>>> Scenario:
+>>>>> 1). The object reused information is valid when no another pointer uses
+>>>>> it.
+>>>>> 2). The object reused information is invalid when another pointer uses
+>>>>> it.
+>>>>> Do you mean that the object reused is scenario 1) ?
+>>>>> If yes, maybe we can change the calling quarantine_put() location. It
+>>>>> will be fully use that quarantine, but at scenario 2) it looks like to
+>>>>> need this patch.
+>>>>> If no, maybe i miss your meaning, would you tell me how to use invalid
+>>>>> object information? or?
+>>>>>
+>>>>
+>>>>
+>>>> KASAN keeps information about object with the object, right after payload in the kasan_alloc_meta struct.
+>>>> This information is always valid as long as slab page allocated. Currently it keeps only one last free stacktrace.
+>>>> It could be extended to record more free stacktraces and also record previously used tags which will allow you
+>>>> to identify use-after-free and extract right free stacktrace.
+>>>
+>>> Thanks for your explanation.
+>>>
+>>> For extend slub object, if one record is 9B (sizeof(u8)+ sizeof(struct
+>>> kasan_track)) and add five records into slub object, every slub object
+>>> may add 45B usage after the system runs longer. 
+>>> Slub object number is easy more than 1,000,000(maybe it may be more
+>>> bigger), then the extending object memory usage should be 45MB, and
+>>> unfortunately it is no limit. The memory usage is more bigger than our
+>>> patch.
+>>
+>> No, it's not necessarily more.
+>> And there are other aspects to consider such as performance, how simple reliable the code is.
+>>
+>>>
+>>> We hope tag-based KASAN advantage is smaller memory usage. If it’s
+>>> possible, we should spend less memory in order to identify
+>>> use-after-free. Would you accept our patch after fine tune it?
+>>
+>> Sure, if you manage to fix issues and demonstrate that performance penalty of your
+>> patch is close to zero.
+> 
+> 
+> I remember that there are already the lists which you concern. Maybe we
+> can try to solve those problems one by one.
+> 
+> 1. deadlock issue? cause by kmalloc() after kfree()?
 
-commit 0ce0cf12fc4c6a089717ff613d76457052cf4303
-Author: Al Viro <viro@zeniv.linux.org.uk>
-Date:   Sun May 12 15:42:48 2019 -0400
+smp_call_on_cpu()
 
-    consolidate the capability checks in sget_{fc,userns}()
+> 2. decrease allocation fail, to modify GFP_NOWAIT flag to GFP_KERNEL?
 
-    ... into a common helper - mount_capable(type, userns)
+No, this is not gonna work. Ideally we shouldn't have any allocations there.
+It's not reliable and it hurts performance.
 
-    Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 
-mount_capable() will select the user namespace in which to check for
-CAP_SYS_ADMIN based on the global property of the filesystem's
-fs_context.
+> 3. check whether slim 48 bytes (sizeof (qlist_object) +
+> sizeof(kasan_alloc_meta)) and additional unique stacktrace in
+> stackdepot?
+> 4. duplicate struct 'kasan_track' information in two different places
+> 
 
-Since sysfs has global set to true mount_capable() will check for
-CAP_SYS_ADMIN in init_user_ns and fail the mount with EPERM for any
-non-init userns root. The same check is present in sget_fc().
+Yup.
 
-To me it looks like that global is overriding FS_USERNS_MOUNT which
-seems odd. Afaict, there are two ways to fix this:
-- remove global from sysfs
-- remove the global check from mount_capable() and possibly sget_fc()
+> Would you have any other concern? or?
+> 
 
-The latter feels more correct but I'm not sure *why* that global thing
-got introduced. Seems there could be an additional flag on affected
-filesystems instead of this "global" thing. But not sure.
+It would be nice to see some performance numbers. Something that uses slab allocations a lot, e.g. netperf STREAM_STREAM test.
 
-I can whip up a patch in case that does make sense.
-And it would probably be a good thing if we had some sort of test (if
-there isn't one already) so that this doesn't happen again. It could be
-as simple as:
 
-unshare -U -m --map-root -n
-mkdir whatever
-mount -t sysfs sysfs ./whatever
-
-Thanks!
-Christian
