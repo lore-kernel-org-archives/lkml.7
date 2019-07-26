@@ -2,245 +2,91 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D69CC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B435C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 554E822C7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E2822C7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:11:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="eAQTARqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbfGZCIA (ORCPT
+        id S1726005AbfGZCLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 22:08:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53084 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbfGZCH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 22:07:58 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F2552308424C;
-        Fri, 26 Jul 2019 02:07:56 +0000 (UTC)
-Received: from redhat.com (ovpn-120-92.rdu2.redhat.com [10.10.120.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1E37A36FB;
-        Fri, 26 Jul 2019 02:07:54 +0000 (UTC)
-Date:   Thu, 25 Jul 2019 22:07:52 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] kprobes: Allow kprobes coexist with livepatch
-Message-ID: <20190726020752.GA6388@redhat.com>
-References: <156403587671.30117.5233558741694155985.stgit@devnote2>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156403587671.30117.5233558741694155985.stgit@devnote2>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 26 Jul 2019 02:07:57 +0000 (UTC)
+        Thu, 25 Jul 2019 22:11:41 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:63576 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfGZCLl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 22:11:41 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id x6Q2B03n020523;
+        Fri, 26 Jul 2019 11:11:05 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x6Q2B03n020523
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564107066;
+        bh=tnYEZud056hAhoewZO62tSceN4oWh0Eu5vKNqgUHTuA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eAQTARqBJdu5M8oLYd9bZGW5wUIXU99lD2ThtL6eLuFOMuxsHICMGHymnGXmleVYg
+         Qa74aWIuWW6Sy5XLCpWzGV3rzgw2M5BplNz2l7owILS32xrbkw713nPjK+MobFaugG
+         Ppf0wkHQYTPKDkYTF9hsbNZIMxzYT2gVQmhkQzEttDwwpKbogmjgpS0xxjjrTwAGiD
+         aB5qreWN5KaHdUPdDN/C1Cnmv/FO/LW4b/1Gr359v3j5x2ycE4oH+Dy0sMBBUQt69K
+         wk+ZYdETNjLFXjjtyaKw7R6nh6tHDhf/Ms3iRL4cvNbtrEeoI5A4XcFPKj7u0AEh2v
+         GFccDlB1DNNnA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH 5/5] EVM: use obj-y for non-modular objects
+Date:   Fri, 26 Jul 2019 11:10:58 +0900
+Message-Id: <20190726021058.4212-6-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190726021058.4212-1-yamada.masahiro@socionext.com>
+References: <20190726021058.4212-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 03:24:37PM +0900, Masami Hiramatsu wrote:
-> Allow kprobes which do not modify regs->ip, coexist with livepatch
-> by dropping FTRACE_OPS_FL_IPMODIFY from ftrace_ops.
-> 
-> User who wants to modify regs->ip (e.g. function fault injection)
-> must set a dummy post_handler to its kprobes when registering.
-> However, if such regs->ip modifying kprobes is set on a function,
-> that function can not be livepatched.
-> 
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  kernel/kprobes.c |   56 +++++++++++++++++++++++++++++++++++++++---------------
->  1 file changed, 40 insertions(+), 16 deletions(-)
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 9873fc627d61..29065380dad0 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -961,9 +961,16 @@ static struct kprobe *alloc_aggr_kprobe(struct kprobe *p)
->  
->  #ifdef CONFIG_KPROBES_ON_FTRACE
->  static struct ftrace_ops kprobe_ftrace_ops __read_mostly = {
-> +	.func = kprobe_ftrace_handler,
-> +	.flags = FTRACE_OPS_FL_SAVE_REGS,
-> +};
-> +
-> +static struct ftrace_ops kprobe_ipmodify_ops __read_mostly = {
->  	.func = kprobe_ftrace_handler,
->  	.flags = FTRACE_OPS_FL_SAVE_REGS | FTRACE_OPS_FL_IPMODIFY,
->  };
-> +
-> +static int kprobe_ipmodify_enabled;
->  static int kprobe_ftrace_enabled;
->  
->  /* Must ensure p->addr is really on ftrace */
-> @@ -976,58 +983,75 @@ static int prepare_kprobe(struct kprobe *p)
->  }
->  
->  /* Caller must lock kprobe_mutex */
-> -static int arm_kprobe_ftrace(struct kprobe *p)
-> +static int __arm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
-> +			       int *cnt)
->  {
->  	int ret = 0;
->  
-> -	ret = ftrace_set_filter_ip(&kprobe_ftrace_ops,
-> -				   (unsigned long)p->addr, 0, 0);
-> +	ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 0, 0);
->  	if (ret) {
->  		pr_debug("Failed to arm kprobe-ftrace at %pS (%d)\n",
->  			 p->addr, ret);
->  		return ret;
->  	}
->  
-> -	if (kprobe_ftrace_enabled == 0) {
-> -		ret = register_ftrace_function(&kprobe_ftrace_ops);
-> +	if (*cnt == 0) {
-> +		ret = register_ftrace_function(ops);
->  		if (ret) {
->  			pr_debug("Failed to init kprobe-ftrace (%d)\n", ret);
->  			goto err_ftrace;
->  		}
->  	}
->  
-> -	kprobe_ftrace_enabled++;
-> +	(*cnt)++;
->  	return ret;
->  
->  err_ftrace:
->  	/*
-> -	 * Note: Since kprobe_ftrace_ops has IPMODIFY set, and ftrace requires a
-> -	 * non-empty filter_hash for IPMODIFY ops, we're safe from an accidental
-> -	 * empty filter_hash which would undesirably trace all functions.
-> +	 * At this point, sinec ops is not registered, we should be sefe from
-> +	 * registering empty filter.
->  	 */
-> -	ftrace_set_filter_ip(&kprobe_ftrace_ops, (unsigned long)p->addr, 1, 0);
-> +	ftrace_set_filter_ip(ops, (unsigned long)p->addr, 1, 0);
->  	return ret;
->  }
->  
-> +static int arm_kprobe_ftrace(struct kprobe *p)
-> +{
-> +	bool ipmodify = (p->post_handler != NULL);
-> +
-> +	return __arm_kprobe_ftrace(p,
-> +		ipmodify ? &kprobe_ipmodify_ops : &kprobe_ftrace_ops,
-> +		ipmodify ? &kprobe_ipmodify_enabled : &kprobe_ftrace_enabled);
-> +}
-> +
->  /* Caller must lock kprobe_mutex */
-> -static int disarm_kprobe_ftrace(struct kprobe *p)
-> +static int __disarm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
-> +				  int *cnt)
->  {
->  	int ret = 0;
->  
-> -	if (kprobe_ftrace_enabled == 1) {
-> -		ret = unregister_ftrace_function(&kprobe_ftrace_ops);
-> +	if (*cnt == 1) {
-> +		ret = unregister_ftrace_function(ops);
->  		if (WARN(ret < 0, "Failed to unregister kprobe-ftrace (%d)\n", ret))
->  			return ret;
->  	}
->  
-> -	kprobe_ftrace_enabled--;
-> +	(*cnt)--;
->  
-> -	ret = ftrace_set_filter_ip(&kprobe_ftrace_ops,
-> -			   (unsigned long)p->addr, 1, 0);
-> +	ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 1, 0);
->  	WARN_ONCE(ret < 0, "Failed to disarm kprobe-ftrace at %pS (%d)\n",
->  		  p->addr, ret);
->  	return ret;
->  }
-> +
-> +static int disarm_kprobe_ftrace(struct kprobe *p)
-> +{
-> +	bool ipmodify = (p->post_handler != NULL);
-> +
-> +	return __disarm_kprobe_ftrace(p,
-> +		ipmodify ? &kprobe_ipmodify_ops : &kprobe_ftrace_ops,
-> +		ipmodify ? &kprobe_ipmodify_enabled : &kprobe_ftrace_enabled);
-> +}
->  #else	/* !CONFIG_KPROBES_ON_FTRACE */
->  #define prepare_kprobe(p)	arch_prepare_kprobe(p)
->  #define arm_kprobe_ftrace(p)	(-ENODEV)
-> 
+CONFIG_EVM is a boolean option, so none of these objects is linked
+into a module.
 
-Thanks for the quick patch, Masami!
+All the objects in this directory are compiled only when CONFIG_EVM=y
+since this directory is guarded by the parent Makefile:
 
-I gave it a spin and here are my new testing results:
+  obj-$(CONFIG_EVM)                       += evm/
 
+So, there is no point in creating the composite object, evm.o
 
-perf probe, then livepatch
---------------------------
+Flatten the code into the obj-$(CONFIG_...) form.
 
-% perf probe --add cmdline_proc_show
-Added new event:
-  probe:cmdline_proc_show (on cmdline_proc_show)
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-You can now use it in all perf tools, such as:
+ security/integrity/evm/Makefile | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-        perf record -e probe:cmdline_proc_show -aR sleep 1
+diff --git a/security/integrity/evm/Makefile b/security/integrity/evm/Makefile
+index a56f5613be79..ace8e4ef5a96 100644
+--- a/security/integrity/evm/Makefile
++++ b/security/integrity/evm/Makefile
+@@ -2,7 +2,5 @@
+ #
+ # Makefile for building the Extended Verification Module(EVM)
+ #
+-obj-$(CONFIG_EVM) += evm.o
+-
+-evm-y := evm_main.o evm_crypto.o evm_secfs.o
+-evm-$(CONFIG_FS_POSIX_ACL) += evm_posix_acl.o
++obj-y := evm_main.o evm_crypto.o evm_secfs.o
++obj-$(CONFIG_FS_POSIX_ACL) += evm_posix_acl.o
+-- 
+2.17.1
 
-% perf record -e probe:cmdline_proc_show -aR sleep 30 &
-[1] 980
-
-% insmod samples/livepatch/livepatch-sample.ko
-
-% cat /proc/cmdline 
-this has been live patched
-
-% fg
-perf record -e probe:cmdline_proc_show -aR sleep 30
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.177 MB perf.data (2 samples) ]
-
-% perf script
-          insmod   983 [000]   157.126556: probe:cmdline_proc_show: (ffffffff9bf74890)
-             cat   985 [000]   162.304028: probe:cmdline_proc_show: (ffffffff9bf74890)
-
-
-livepatch, then perf probe
---------------------------
-
-% insmod samples/livepatch/livepatch-sample.ko
-
-% cat /proc/cmdline 
-this has been live patched
-
-% perf record -e probe:cmdline_proc_show -aR sleep 30
-event syntax error: 'probe:cmdline_proc_show'
-                     \___ unknown tracepoint
-
-Error:  File /sys/kernel/debug/tracing/events/probe/cmdline_proc_show not found.
-Hint:   Perhaps this kernel misses some CONFIG_ setting to enable this feature?.
-
-Run 'perf list' for a list of valid events
-
- Usage: perf record [<options>] [<command>]
-    or: perf record [<options>] -- <command> [<options>]
-
-    -e, --event <event>   event selector. use 'perf list' to list available events
-
-
-These results reflect my underestanding of FTRACE_OPS_FL_IPMODIFY in
-light of your changes, so feel free to add my:
-
-Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
-
--- Joe
