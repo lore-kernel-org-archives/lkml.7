@@ -2,131 +2,114 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BFAC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D886C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8786C218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:25:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=wiesinger.com header.i=@wiesinger.com header.b="rh4n4TLW"
+	by mail.kernel.org (Postfix) with ESMTP id 03A0522CBE
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:25:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564154751;
+	bh=W4FR3wy1jqQSOKX4Wt5Oz9xjrRQFwqw6YChMOwS9VVI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XrwoLRyNqbYvbenE9+DhBc9CFRtZUhP1FveOg47OaQI3aizFZAMzf1F3mNeVfJCwm
+	 8MJFUVOXccKT5hPHiCwq+Jmylj1lz/rH8utvoIV+2Q/pt2z6kl+4ygESqjF/HfZWQD
+	 vcyBp9OKMdUHh0zaCwetnwaMCS9Kfkb7W9pYS2U8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbfGZPZn (ORCPT
+        id S1728509AbfGZPZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:25:43 -0400
-Received: from vps01.wiesinger.com ([46.36.37.179]:45074 "EHLO
-        vps01.wiesinger.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728369AbfGZPZj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:25:39 -0400
-Received: from wiesinger.com (wiesinger.com [84.113.44.87])
-        by vps01.wiesinger.com (Postfix) with ESMTPS id 88D6A9F1FD;
-        Fri, 26 Jul 2019 17:25:36 +0200 (CEST)
-Received: from [192.168.0.14] ([192.168.0.14])
-        (authenticated bits=0)
-        by wiesinger.com (8.15.2/8.15.2) with ESMTPSA id x6QFPYAM011882
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 26 Jul 2019 17:25:35 +0200
-DKIM-Filter: OpenDKIM Filter v2.11.0 wiesinger.com x6QFPYAM011882
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiesinger.com;
-        s=default; t=1564154735;
-        bh=y4jI+N3udLkUBt/fdlluM+w0Q7vkRjreRmtO4xFTGMc=;
-        h=Subject:References:To:From:Cc:Date:In-Reply-To:From;
-        b=rh4n4TLWnQdWhmU5yzvkShXSQWJY7ncWE7fsOBg28ZJcMils48RwZxjhUXpyX0k5B
-         i7EnWgys+08L+eb5a6xOxHtolE7be5K1zMsxX75foKVQhYNU61M58uUae0K1dnr0ey
-         jdSnZHR+MomzLLOpMwwHxhpuZ6nznn75V6o4RRJhd6fD/+lbsvfjqzCtwRxkE+7PQs
-         zGWUYJclWfmLHdOyZMJOzM1Olefe7GtEN5p2VUxtftjBdtMOEnvBUvpAn0bFmXK+Dc
-         7cN6e37ccsknS+fYi+caZwVhab4Iv5oILeWfukquRmj3J/VS1aDv4y1upx1TH3Cupi
-         /jfkrseu5mHMdDkhqYvdEFCgSLVqXa0+ud9tynlOsRFf/HQvqJY62kzKCpf3kCAJgC
-         ceX7M2Qalhvv1tw+Gwd5JkMpvfhIc9jdadCcCJmFSlCTuOdbmsc3fytAUF0W5VWX7I
-         geHj/Rw0YnU2yerNyXhAwLvEYGyzlD/sn0p+ah5JvGLa1G5RrxCi3POrYraOvsx/62
-         AuzQ+Lp1tthpBCy75fhcrBGmvpliElzSGEkExHS4MZci8v8zidL1J6mp0vdp79DVOY
-         4kd6tCPL+mwW4uzevhwNhImH3kiJba6CuAy3IFcPKyPGezoJoT+75sJ1ZVF//2wN1I
-         aXosbySzGCo+Hk3Iv2pMTci0=
-Subject: platform/x86/pcengines-apuv2: Missing apu4
-References: <02b34d18-27bc-cb48-f698-03df61df7d91@wiesinger.com>
-To:     Florian Eckert <fe@dev.tdt.de>, Eckert.Florian@googlemail.com,
-        info@metux.net, dvhart@infradead.org, andy@infradead.org
-From:   Gerhard Wiesinger <lists@wiesinger.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Forwarded-Message-Id: <02b34d18-27bc-cb48-f698-03df61df7d91@wiesinger.com>
-Message-ID: <2f22106f-4d13-f3a7-0862-3a71762d62ab@wiesinger.com>
-Date:   Fri, 26 Jul 2019 17:25:34 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 26 Jul 2019 11:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728481AbfGZPZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:25:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64B5422CB8;
+        Fri, 26 Jul 2019 15:25:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564154745;
+        bh=W4FR3wy1jqQSOKX4Wt5Oz9xjrRQFwqw6YChMOwS9VVI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zOn1dPCjIL4/zXTNQtjVlgbL/QwEAuEZGCCs/qpAOU8mCALPbBYQdn0lG/kfMwy04
+         vJawX7FOgIH0XwpXQ1pz8XcjY11XQX3klQmvnDHbFNfn6x6dEdqqhjU1hT70dd57FI
+         Gx6ovhZc+/A4l0d3flwWOoP3HwbMk1Sh1ISFtJCY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 05/66] ipv4: dont set IPv6 only flags to IPv4 addresses
+Date:   Fri, 26 Jul 2019 17:24:04 +0200
+Message-Id: <20190726152302.506906618@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
+References: <20190726152301.936055394@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <02b34d18-27bc-cb48-f698-03df61df7d91@wiesinger.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Matteo Croce <mcroce@redhat.com>
 
-I saw that the apu4 board is completly missing (also on 5.3rc1). Can you 
-please add it. Should be very easy, see below.
+[ Upstream commit 2e60546368165c2449564d71f6005dda9205b5fb ]
 
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/platform/x86/pcengines-apuv2.c?h=v5.1.20
+Avoid the situation where an IPV6 only flag is applied to an IPv4 address:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/pcengines-apuv2.c?h=v5.3-rc1
+    # ip addr add 192.0.2.1/24 dev dummy0 nodad home mngtmpaddr noprefixroute
+    # ip -4 addr show dev dummy0
+    2: dummy0: <BROADCAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+        inet 192.0.2.1/24 scope global noprefixroute dummy0
+           valid_lft forever preferred_lft forever
 
+Or worse, by sending a malicious netlink command:
 
-For further rference:
+    # ip -4 addr show dev dummy0
+    2: dummy0: <BROADCAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+        inet 192.0.2.1/24 scope global nodad optimistic dadfailed home tentative mngtmpaddr noprefixroute stable-privacy dummy0
+           valid_lft forever preferred_lft forever
 
-https://www.pcengines.ch/apu2.htm
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ipv4/devinet.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-https://www.pcengines.ch/apu4c2.htm
+--- a/net/ipv4/devinet.c
++++ b/net/ipv4/devinet.c
+@@ -62,6 +62,11 @@
+ #include <net/net_namespace.h>
+ #include <net/addrconf.h>
+ 
++#define IPV6ONLY_FLAGS	\
++		(IFA_F_NODAD | IFA_F_OPTIMISTIC | IFA_F_DADFAILED | \
++		 IFA_F_HOMEADDRESS | IFA_F_TENTATIVE | \
++		 IFA_F_MANAGETEMPADDR | IFA_F_STABLE_PRIVACY)
++
+ static struct ipv4_devconf ipv4_devconf = {
+ 	.data = {
+ 		[IPV4_DEVCONF_ACCEPT_REDIRECTS - 1] = 1,
+@@ -468,6 +473,9 @@ static int __inet_insert_ifa(struct in_i
+ 	ifa->ifa_flags &= ~IFA_F_SECONDARY;
+ 	last_primary = &in_dev->ifa_list;
+ 
++	/* Don't set IPv6 only flags to IPv4 addresses */
++	ifa->ifa_flags &= ~IPV6ONLY_FLAGS;
++
+ 	for (ifap = &in_dev->ifa_list; (ifa1 = *ifap) != NULL;
+ 	     ifap = &ifa1->ifa_next) {
+ 		if (!(ifa1->ifa_flags & IFA_F_SECONDARY) &&
 
-https://www.pcengines.ch/apu4c4.htm
-
-Please backport it also to 5.1.x and 5.2.x.
-
-
-Thnx.
-
-Ciao,
-
-Gerhard
-
-
-     /* APU4 w/ legacy bios < 4.0.8 */
-     {
-         .ident        = "apu4",
-         .matches    = {
-             DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-             DMI_MATCH(DMI_BOARD_NAME, "APU4")
-         },
-         .driver_data = (void *)&board_apu2,
-     },
-     /* APU4 w/ legacy bios >= 4.0.8 */
-     {
-         .ident       = "apu4",
-         .matches     = {
-             DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-             DMI_MATCH(DMI_BOARD_NAME, "apu4)
-         },
-         .driver_data = (void *)&board_apu2,
-     },
-     /* APU4 w/ mainline bios */
-     {
-         .ident       = "apu4",
-         .matches     = {
-             DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-             DMI_MATCH(DMI_BOARD_NAME, "PC Engines apu4")
-         },
-         .driver_data = (void *)&board_apu2,
-     },
-
-
-|
-
-MODULE_DESCRIPTION("PC Engines APUv2/APUv3/APUv4 board GPIO/LED/keys 
-driver"); |
 
