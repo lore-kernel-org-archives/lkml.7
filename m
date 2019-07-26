@@ -2,96 +2,88 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31077C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82460C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A940217D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:26:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QY77d0th"
+	by mail.kernel.org (Postfix) with ESMTP id 586AE217D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbfGZG0x (ORCPT
+        id S1726109AbfGZG2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 02:26:53 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35409 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbfGZG0x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 02:26:53 -0400
-Received: by mail-lf1-f66.google.com with SMTP id p197so36241838lfa.2;
-        Thu, 25 Jul 2019 23:26:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nnLng03yKzoOCov75qSA3MqCcOmyhGOuTFn/YZRC6bw=;
-        b=QY77d0thwiUD4ElvhVAy5MKyD6fafSxKbtUv9VmsptPFHHlvme/Z5bDd9kco83+dOz
-         CJ1t8DkfHzgcMv66CGkufSFrQ6n5xX1QBja5olBDwVAevTLMlXef1BbefBr3tHHrLpFK
-         XK01aB7P2BDn2Bn8YP/I4KGqK7/vKpw7Qf7Q6C7hz31pREPZpTvVdpMWcJGUILzoTv+T
-         QM6N/YfrpJzm0vXuptrAaE2BUOax/gA9Y3ArgX4Lhrqb9QsDVllkWQd5TBNvmVWvVc/a
-         dMXl4XuC6Dq3uFjwMkRbaAVeIAnCwIOoXUe76JsyaUS7+cqO1ASTJmQDItIWMIvv+66A
-         tbVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nnLng03yKzoOCov75qSA3MqCcOmyhGOuTFn/YZRC6bw=;
-        b=oArE1I4lE9NBJ91fqswpzYjAt80Zj4u+z34Oj5Bzg0fZbuXtOSWgjc4tU047gvnuHu
-         i9MIqMLyXd2NLkBotlWhYo96Cf//9ZiAoqffohWAVa0FZ9R2bnhPLrnKg00nKD5LN3se
-         zprugjYnNh494kywRxdt5Zvnfbxg55aI/+DlFOLy/6Pw6Gr8k38UAMSAVOvmXw5s6U7g
-         9+3VLZXce2xI3JZEji5IYPzY4TB8ozIQz1aZ74vRaYBg5koxvOiZQvKXPbOrChaURFc0
-         aOo5hhME2CxEVOM7t5oO/67/fnG6tBjdHBldZlSNvXI7kNXyJZjGTV8g1lbWRTdFaDl8
-         CUhg==
-X-Gm-Message-State: APjAAAWdo0I/zJ3VjjhZZi6cQuFw1HZj/Wdb7F4odKzGCi/k25xNTmnw
-        U4LRZYU5lVSSK8s+k+Eys2Q=
-X-Google-Smtp-Source: APXvYqxQGcfDkp5SBeDAZqV+MRX5iBECRKA/CnzStUstMtYBdbgt64kzQ037siw3JTVdCCysd7N8QQ==
-X-Received: by 2002:ac2:59c6:: with SMTP id x6mr8532542lfn.169.1564122411084;
-        Thu, 25 Jul 2019 23:26:51 -0700 (PDT)
-Received: from dimatab (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.gmail.com with ESMTPSA id z12sm8129347lfe.2.2019.07.25.23.26.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Jul 2019 23:26:50 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 09:30:55 +0300
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>,
-        <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH V6 17/21] arm64: tegra: Enable wake from deep sleep on
- RTC alarm.
-Message-ID: <20190726093055.4d8fe3ff@dimatab>
-In-Reply-To: <1563738060-30213-18-git-send-email-skomatineni@nvidia.com>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
-        <1563738060-30213-18-git-send-email-skomatineni@nvidia.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; arm-unknown-linux-gnueabihf)
+        Fri, 26 Jul 2019 02:28:54 -0400
+Received: from verein.lst.de ([213.95.11.211]:41795 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbfGZG2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 02:28:53 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id CA18068B02; Fri, 26 Jul 2019 08:28:49 +0200 (CEST)
+Date:   Fri, 26 Jul 2019 08:28:49 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     dafna.hirschfeld@collabora.com, hch@lst.de,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dma-contiguous: do not overwrite align in
+ dma_alloc_contiguous()
+Message-ID: <20190726062849.GE22881@lst.de>
+References: <20190725233959.15129-1-nicoleotsuka@gmail.com> <20190725233959.15129-2-nicoleotsuka@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725233959.15129-2-nicoleotsuka@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D0=92 Sun, 21 Jul 2019 12:40:56 -0700
-Sowjanya Komatineni <skomatineni@nvidia.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+On Thu, Jul 25, 2019 at 04:39:58PM -0700, Nicolin Chen wrote:
+> The dma_alloc_contiguous() limits align at CONFIG_CMA_ALIGNMENT for
+> cma_alloc() however it does not restore it for the fallback routine.
+> This will result in a size mismatch between the allocation and free
+> when running in the fallback routines, if the align is larger than
+> CONFIG_CMA_ALIGNMENT.
+> 
+> This patch adds a cma_align to take care of cma_alloc() and prevent
+> the align from being overwritten.
+> 
+> Fixes: fdaeec198ada ("dma-contiguous: add dma_{alloc,free}_contiguous() helpers")
+> Reported-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> ---
+>  kernel/dma/contiguous.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+> index bfc0c17f2a3d..fa8cd0f0512e 100644
+> --- a/kernel/dma/contiguous.c
+> +++ b/kernel/dma/contiguous.c
+> @@ -233,6 +233,7 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+>  	int node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+>  	size_t count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+>  	size_t align = get_order(PAGE_ALIGN(size));
+> +	size_t cma_align = CONFIG_CMA_ALIGNMENT;
+>  	struct page *page = NULL;
+>  	struct cma *cma = NULL;
+>  
+> @@ -241,11 +242,11 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+>  	else if (count > 1)
+>  		cma = dma_contiguous_default_area;
+>  
+> +	cma_align = min_t(size_t, align, cma_align);
+> +
+>  	/* CMA can be used only in the context which permits sleeping */
+> -	if (cma && gfpflags_allow_blocking(gfp)) {
+> -		align = min_t(size_t, align, CONFIG_CMA_ALIGNMENT);
+> -		page = cma_alloc(cma, count, align, gfp & __GFP_NOWARN);
+> -	}
+> +	if (cma && gfpflags_allow_blocking(gfp))
+> +		page = cma_alloc(cma, count, cma_align, gfp & __GFP_NOWARN);
 
-> This patch updates device tree for RTC and PMC to allow system wake
-> from deep sleep on RTC alarm.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-
-The dot in the end of the commit's title is unnecessary.
+Shouldn't cma_align be confined to the block guarded by
+"if (cma && gfpflags_allow_blocking(gfp))" so that we can optimize it
+away for configurations that do not support CMA?
