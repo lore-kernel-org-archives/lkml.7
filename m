@@ -2,145 +2,115 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BE5C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A813C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6342189F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:05:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="rvVZeqt6"
+	by mail.kernel.org (Postfix) with ESMTP id 04AA52189F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:06:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564124780;
+	bh=E5hcRJjUln+Y6J7enPT4yz1TeyFg261iY7wVmgHXkUE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I/Dam1p7aOh1PwF8V8nXSQ4bqEq/P51d/9HMi4JHpaQxggzugwAtPk/3qFwUKbVIg
+	 rcBF0zbgf04cOppG9QTK1P0TdIv7A8uBYoJ9ul/eWEDlmGeObLn0DnxRN0vwg20heS
+	 K8/JLq5jMKdeooq3Pv+jh2eBzR3H12zxnZ2TRhQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbfGZHFW (ORCPT
+        id S1726268AbfGZHGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 03:05:22 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:65401 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfGZHFW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 03:05:22 -0400
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x6Q752an012469;
-        Fri, 26 Jul 2019 16:05:02 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x6Q752an012469
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564124703;
-        bh=hf3V59I5cEBKminI065xbdxm3L9O5Fl0uGomw+56D08=;
-        h=References:In-Reply-To:From:Date:Subject:To:From;
-        b=rvVZeqt68sq4elNmUHxFKFkzb91btDIX43mcwq2hjNYQxd1TF6kT8UiCP1Jkvisca
-         qBlbKboUt9XCxFhWcWvZak9fMsYLzBtNCL4TQYfsQjoMyTUTB+gTYodqQke8Ft4C/q
-         cpuqt8cylEebo/fSDxr8l3VYIFZvAcXEujVcrr40NBPgWHmqKv6CD8xrikJCK2LcQT
-         lEouJ8kpVN6Q/yYRb3++/X+Tv66azlAJkdRB5QZmYet2tzNq2E3ou959Qnc6fXAFxd
-         I2tsqF+vC59UJH8MkvR34QqGm4UVK4byzhOFjFdYqFKZlliiUghorBAK5oXS6jB+iF
-         LRuIDt29e1Kew==
-X-Nifty-SrcIP: [209.85.217.51]
-Received: by mail-vs1-f51.google.com with SMTP id 190so35434283vsf.9;
-        Fri, 26 Jul 2019 00:05:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAXAHjh1REvDsFlVTSJihdCBQSUapnbpTgES7FxhZC6a6La9ui26
-        qYwerTGGTfu6Qzr6QjdZH8btYIPFkTxFv9v2cnw=
-X-Google-Smtp-Source: APXvYqxICz+MjfLEujejITXMpQhAs6T5RoUN7yEeG79RQzzeORmsaKPiKHGvtyFlhUAyAGr6hXde53fpb62/UEcp97U=
-X-Received: by 2002:a67:f495:: with SMTP id o21mr58544872vsn.54.1564124701676;
- Fri, 26 Jul 2019 00:05:01 -0700 (PDT)
+        Fri, 26 Jul 2019 03:06:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40562 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725869AbfGZHGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 03:06:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 810CAB128;
+        Fri, 26 Jul 2019 07:06:16 +0000 (UTC)
+Date:   Fri, 26 Jul 2019 09:06:15 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 2/2] /proc/kpageflags: do not use uninitialized struct
+ pages
+Message-ID: <20190726070615.GB6142@dhcp22.suse.cz>
+References: <20190725023100.31141-1-t-fukasawa@vx.jp.nec.com>
+ <20190725023100.31141-3-t-fukasawa@vx.jp.nec.com>
+ <20190725090341.GC13855@dhcp22.suse.cz>
+ <40b3078e-fb8b-87ef-5c4e-6321956cc940@vx.jp.nec.com>
 MIME-Version: 1.0
-References: <20190726021058.4212-1-yamada.masahiro@socionext.com>
- <20190726021058.4212-5-yamada.masahiro@socionext.com> <20190726043719.GB643@sol.localdomain>
-In-Reply-To: <20190726043719.GB643@sol.localdomain>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 26 Jul 2019 16:04:25 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARfUkJTfRHHxkL-4nOq6wG+Y9sDbBHZE97UVOdSrA_1CQ@mail.gmail.com>
-Message-ID: <CAK7LNARfUkJTfRHHxkL-4nOq6wG+Y9sDbBHZE97UVOdSrA_1CQ@mail.gmail.com>
-Subject: Re: [PATCH 4/5] IMA: use obj-y for non-modular objects
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <40b3078e-fb8b-87ef-5c4e-6321956cc940@vx.jp.nec.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 1:37 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Fri, Jul 26, 2019 at 11:10:57AM +0900, Masahiro Yamada wrote:
-> > CONFIG_IMA is a boolean option, so none of these objects is linked
-> > into a module.
-> >
-> > All the objects in this directory are compiled only when CONFIG_IMA=y
-> > since this directory is guarded by the parent Makefile:
-> >
-> >   obj-$(CONFIG_IMA)                       += ima/
-> >
-> > So, there is no point in creating the composite object, ima.o
-> >
-> > Flatten the code into the obj-$(CONFIG_...) form.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  security/integrity/ima/Makefile | 8 +++-----
-> >  1 file changed, 3 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/security/integrity/ima/Makefile b/security/integrity/ima/Makefile
-> > index d921dc4f9eb0..5517486c9154 100644
-> > --- a/security/integrity/ima/Makefile
-> > +++ b/security/integrity/ima/Makefile
-> > @@ -4,10 +4,8 @@
-> >  # Measurement Architecture(IMA).
-> >  #
-> >
-> > -obj-$(CONFIG_IMA) += ima.o
-> > -
-> > -ima-y := ima_fs.o ima_queue.o ima_init.o ima_main.o ima_crypto.o ima_api.o \
-> > +obj-y := ima_fs.o ima_queue.o ima_init.o ima_main.o ima_crypto.o ima_api.o \
-> >        ima_policy.o ima_template.o ima_template_lib.o
-> > -ima-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
-> > -ima-$(CONFIG_HAVE_IMA_KEXEC) += ima_kexec.o
-> > +obj-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
-> > +obj-$(CONFIG_HAVE_IMA_KEXEC) += ima_kexec.o
-> >  obj-$(CONFIG_IMA_BLACKLIST_KEYRING) += ima_mok.o
-> > --
->
-> This patch changes the kernel command line options
->
->         ima.ahash_minsize
->         ima.ahash_bufsize
->
-> to
->         ima_crypto.ahash_minsize
->         ima_crypto.ahash_bufsize
->
-> Intentional?
+On Fri 26-07-19 06:25:49, Toshiki Fukasawa wrote:
+> 
+> 
+> On 2019/07/25 18:03, Michal Hocko wrote:
+> > On Thu 25-07-19 02:31:18, Toshiki Fukasawa wrote:
+> >> A kernel panic was observed during reading /proc/kpageflags for
+> >> first few pfns allocated by pmem namespace:
+> >>
+> >> BUG: unable to handle page fault for address: fffffffffffffffe
+> >> [  114.495280] #PF: supervisor read access in kernel mode
+> >> [  114.495738] #PF: error_code(0x0000) - not-present page
+> >> [  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
+> >> [  114.496713] Oops: 0000 [#1] SMP PTI
+> >> [  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1 #1
+> >> [  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
+> >> [  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
+> >> [  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
+> >> [  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
+> >> [  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
+> >> [  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
+> >> [  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
+> >> [  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
+> >> [  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
+> >> [  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
+> >> [  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >> [  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
+> >> [  114.506401] Call Trace:
+> >> [  114.506660]  kpageflags_read+0xb1/0x130
+> >> [  114.507051]  proc_reg_read+0x39/0x60
+> >> [  114.507387]  vfs_read+0x8a/0x140
+> >> [  114.507686]  ksys_pread64+0x61/0xa0
+> >> [  114.508021]  do_syscall_64+0x5f/0x1a0
+> >> [  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >> [  114.508844] RIP: 0033:0x7f0266ba426b
+> >>
+> >> The reason for the panic is that stable_page_flags() which parses
+> >> the page flags uses uninitialized struct pages reserved by the
+> >> ZONE_DEVICE driver.
+> > 
+> > Why pmem hasn't initialized struct pages? 
+> 
+> We proposed to initialize in previous approach but that wasn't merged.
+> (See https://marc.info/?l=linux-mm&m=152964792500739&w=2)
+> 
+> > Isn't that a bug that should be addressed rather than paper over it like this?
+> 
+> I'm not sure. What do you think, Dan?
 
-No.
-I missed those kernel parameters.
-So, please drop this patch.
-
-I see no problem in 3/5, 5/5, but
-if composite object is preferred for consistency,
-please feel free to drop them as well.
-
-Thanks.
-
-
-
-
-> Note that these are documented in
-> Documentation/admin-guide/kernel-parameters.txt.
-
-
-
-
-
-
+Yeah, I am really curious about details. Why do we keep uninitialized
+struct pages at all? What is a random pfn walker supposed to do? What
+kind of metadata would be clobbered? In other words much more details
+please.
 -- 
-Best Regards
-Masahiro Yamada
+Michal Hocko
+SUSE Labs
