@@ -2,90 +2,84 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD9EC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82192C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC152171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50FB22171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:57:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbfGZJ5K (ORCPT
+        id S1726184AbfGZJ5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:57:10 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:45098 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725815AbfGZJ5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:57:10 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A574AA3A8054CBAEA764;
-        Fri, 26 Jul 2019 17:57:07 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 26 Jul 2019 17:56:59 +0800
-From:   Yonglong Liu <liuyonglong@huawei.com>
-To:     <andrew@lunn.ch>, <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <salil.mehta@huawei.com>,
-        <yisen.zhuang@huawei.com>, <shiju.jose@huawei.com>
-Subject: [RFC] net: phy: read link status twice when phy_check_link_status()
-Date:   Fri, 26 Jul 2019 17:53:51 +0800
-Message-ID: <1564134831-24962-1-git-send-email-liuyonglong@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Fri, 26 Jul 2019 05:57:46 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34308 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfGZJ5q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:57:46 -0400
+Received: by mail-qt1-f196.google.com with SMTP id k10so52062515qtq.1;
+        Fri, 26 Jul 2019 02:57:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/iufb0TTF1GAeZGPOnqhrgxVKxrEycW/hHzn4npZ/Lk=;
+        b=G722eRD8jWAb3CJJzKki0E0uH1a8sQkU4UrBTT9nwheBdXXZ/Zip0wP4BcLHBs0tqw
+         F/j57OTGVO9vYXlShXw2Q2OSIoXkpTnL3b3gkZBoiCtFuJ8B0uEPjStXR10ewQgCD+T2
+         fpe9SA36WLUDEbXfHfQDtmwDtOVaEVaz0mWH8Frh1zS51/PBkfTam/jCDBWOZvgVILlO
+         Qz4Fwwjy9RdkVMyXSiZQk4A7bw/IDyBOQKEN3BC+VOZHT2V6uIsTG/GEiHS9p+quzQJP
+         DFowklglHyEf/alNDoyEG2k+iAdyfO78TR9t+X0Vpu2ehcFXztyg21Vh7tfo/JDob1wf
+         2iUA==
+X-Gm-Message-State: APjAAAU8UFKSKF0VNmY/fKNuW++Y12Yc9nfGy9VAYVga0BBrb94EkYuf
+        iQIR06EOCQ00twok+U3g6vQYWSYe9NYxzxXD6W88uYlB
+X-Google-Smtp-Source: APXvYqx8077dqguPqEFI6+OlyN3ofw5NkRSHCv3ii7U127hZoYr0bYgeSV/phYbejddupJV+eJ/33u2deWUNPfAQvk8=
+X-Received: by 2002:aed:33a4:: with SMTP id v33mr63995596qtd.18.1564135065054;
+ Fri, 26 Jul 2019 02:57:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+References: <20190724144651.28272-1-christian@brauner.io> <20190724144651.28272-3-christian@brauner.io>
+ <CAK8P3a0+3wqCzQv-A-QmWTtioFRGjYUvq6QiLysqi9OFs3kJsw@mail.gmail.com> <20190726082413.n7srvcrqxmvk67z7@brauner.io>
+In-Reply-To: <20190726082413.n7srvcrqxmvk67z7@brauner.io>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 26 Jul 2019 11:57:28 +0200
+Message-ID: <CAK8P3a3VK77OvRPY-nozEGbcfHks6YdcyE7cY_2UEN9nfy=hRg@mail.gmail.com>
+Subject: Re: [PATCH 2/5] pidfd: add pidfd_wait()
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tejun Heo <tj@kernel.org>, David Howells <dhowells@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the datasheet of Marvell phy and Realtek phy, the
-copper link status should read twice, or it may get a fake link
-up status, and cause up->down->up at the first time when link up.
-This happens more oftem at Realtek phy.
+On Fri, Jul 26, 2019 at 10:24 AM Christian Brauner <christian@brauner.io> wrote:
+>
+> > It would be nice to introduce it in a separate patch, and then use it
+> > to kill off
+> > compat_sys_getrusage() and compat_sys_wait4(), and possibly even
+> > compat_sys_waitid() in combination with your copy_siginfo_to_user_any().
+> > That could be done as a cleanup patch afterwards, or as part of your series.
+>
+> Right, but we won't go the syscall route but instead go the P_PIDFD
+> route for waitid(). :)
 
-I add a fake status read, and can solve this problem.
+Ah, of course, nevermind then. It would still be a useful cleanup, but
+many other things would be as well.
 
-I also see that in genphy_update_link(), had delete the fake
-read in polling mode, so I don't know whether my solution is
-correct.
-
-Or provide a phydev->drv->read_status functions for the phy I
-used is more acceptable?
-
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
----
- drivers/net/phy/phy.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index ef7aa73..0c03edc 100644
---- a/drivers/net/phy/phy.c
-+++ b/drivers/net/phy/phy.c
-@@ -1,4 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0+
-+	err = phy_read_status(phydev);
-+	if (err)
-+		return err;
- /* Framework for configuring and reading PHY devices
-  * Based on code in sungem_phy.c and gianfar_phy.c
-  *
-@@ -525,6 +528,11 @@ static int phy_check_link_status(struct phy_device *phydev)
- 
- 	WARN_ON(!mutex_is_locked(&phydev->lock));
- 
-+	/* Do a fake read */
-+	err = phy_read(phydev, MII_BMSR);
-+	if (err < 0)
-+		return err;
-+
- 	err = phy_read_status(phydev);
- 	if (err)
- 		return err;
--- 
-2.8.1
-
+      Arnd
