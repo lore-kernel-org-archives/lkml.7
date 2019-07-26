@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B14C9C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA36C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9106922BEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A8922BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:17:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbfGZXRq (ORCPT
+        id S1728789AbfGZXRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 19:17:46 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:44596 "EHLO
+        Fri, 26 Jul 2019 19:17:48 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:44592 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727160AbfGZXRo (ORCPT
+        with ESMTP id S1726767AbfGZXRo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jul 2019 19:17:44 -0400
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id E7576202DEE5;
+        by linux.microsoft.com (Postfix) with ESMTPSA id EA8D1202DEE6;
         Fri, 26 Jul 2019 16:17:42 -0700 (PDT)
 From:   Nuno Das Neves <nudasnev@microsoft.com>
 To:     nudasnev@microsoft.com, gregkh@linuxfoundation.org,
         sthemmin@microsoft.com, Alexander.Levin@microsoft.com,
         haiyangz@microsoft.com, kys@microsoft.com, mikelley@microsoft.com
 Cc:     linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 1/2] sys-hypervisor: /sys/hypervisor/type for Hyper-V
-Date:   Fri, 26 Jul 2019 16:17:25 -0700
-Message-Id: <1564183046-128211-2-git-send-email-nudasnev@microsoft.com>
+Subject: [RFC PATCH 2/2] sys-hypervisor: version information for Hyper-V
+Date:   Fri, 26 Jul 2019 16:17:26 -0700
+Message-Id: <1564183046-128211-3-git-send-email-nudasnev@microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1564183046-128211-1-git-send-email-nudasnev@microsoft.com>
 References: <1564183046-128211-1-git-send-email-nudasnev@microsoft.com>
@@ -39,114 +39,207 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Populate /sys/hypervisor with entries for Hyper-V.
-This patch adds /sys/hypervisor/type which contains "Hyper-V".
+This patch introduces the /sys/hypervisor/version directory, which contains
+files with version information about the underlying Windows hypervisor, namely:
+major, minor, build_number, service_number, service_pack, service_branch
 
 Signed-off-by: Nuno Das Neves <nudasnev@microsoft.com>
 ---
- .../ABI/stable/sysfs-hypervisor-hyperv        |  7 ++++
- drivers/hv/Kconfig                            | 10 +++++
- drivers/hv/Makefile                           |  7 ++--
- drivers/hv/sys-hypervisor.c                   | 41 +++++++++++++++++++
- 4 files changed, 62 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/ABI/stable/sysfs-hypervisor-hyperv
- create mode 100644 drivers/hv/sys-hypervisor.c
+ .../ABI/stable/sysfs-hypervisor-hyperv        |  54 ++++++++++
+ drivers/hv/sys-hypervisor.c                   | 102 ++++++++++++++++++
+ 2 files changed, 156 insertions(+)
 
 diff --git a/Documentation/ABI/stable/sysfs-hypervisor-hyperv b/Documentation/ABI/stable/sysfs-hypervisor-hyperv
-new file mode 100644
-index 000000000000..58380ea81315
---- /dev/null
+index 58380ea81315..9bb50e37b083 100644
+--- a/Documentation/ABI/stable/sysfs-hypervisor-hyperv
 +++ b/Documentation/ABI/stable/sysfs-hypervisor-hyperv
-@@ -0,0 +1,7 @@
-+What:		/sys/hypervisor/type
+@@ -5,3 +5,57 @@ Contact:	linux-hyperv@vger.kernel.org
+ Description:	If running under Hyper-V:
+ 		Type of hypervisor:
+ 		"Hyper-V": Hyper-V hypervisor
++
++What:		/sys/hypervisor/version/major
 +Date:		July 2019
 +KernelVersion:	5.2.1
 +Contact:	linux-hyperv@vger.kernel.org
 +Description:	If running under Hyper-V:
-+		Type of hypervisor:
-+		"Hyper-V": Hyper-V hypervisor
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 1c1a2514d6f3..e693adf0b77f 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -25,4 +25,14 @@ config HYPERV_BALLOON
- 	help
- 	  Select this option to enable Hyper-V Balloon driver.
- 
-+config HYPERV_SYS_HYPERVISOR
-+	bool "Create Hyper-V entries under /sys/hypervisor"
-+	depends on HYPERV && SYSFS
-+	select SYS_HYPERVISOR
-+	default y
-+	help
-+	  Create Hyper-V entries under /sys/hypervisor (e.g., type). When running
-+	  native or on another hypervisor, /sys/hypervisor may still be
-+	  present, but it will have no Hyper-V entries.
++		The Hyper-V version is in the format:
++		<major>.<minor>.<build_number>.<service_number>-<service_pack>-<service_branch>
++		This is the <major> part of it.
 +
- endmenu
-diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-index a1eec7177c2d..87f569659555 100644
---- a/drivers/hv/Makefile
-+++ b/drivers/hv/Makefile
-@@ -1,7 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
--obj-$(CONFIG_HYPERV)		+= hv_vmbus.o
--obj-$(CONFIG_HYPERV_UTILS)	+= hv_utils.o
--obj-$(CONFIG_HYPERV_BALLOON)	+= hv_balloon.o
-+obj-$(CONFIG_HYPERV)			+= hv_vmbus.o
-+obj-$(CONFIG_HYPERV_UTILS)		+= hv_utils.o
-+obj-$(CONFIG_HYPERV_BALLOON)		+= hv_balloon.o
-+obj-$(CONFIG_HYPERV_SYS_HYPERVISOR)	+= sys-hypervisor.o
- 
- CFLAGS_hv_trace.o = -I$(src)
- CFLAGS_hv_balloon.o = -I$(src)
++What:		/sys/hypervisor/version/minor
++Date:		July 2019
++KernelVersion:	5.2.1
++Contact:	linux-hyperv@vger.kernel.org
++Description:	If running under Hyper-V:
++		The Hyper-V version is in the format:
++		<major>.<minor>.<build_number>.<service_number>-<service_pack>-<service_branch>
++		This is the <minor> part of it.
++
++What:		/sys/hypervisor/version/build_number
++Date:		July 2019
++KernelVersion:	5.2.1
++Contact:	linux-hyperv@vger.kernel.org
++Description:	If running under Hyper-V:
++		The Hyper-V version is in the format:
++		<major>.<minor>.<build_number>.<service_number>-<service_pack>-<service_branch>
++		This is the <build_number> part of it.
++
++What:		/sys/hypervisor/version/service_number
++Date:		July 2019
++KernelVersion:	5.2.1
++Contact:	linux-hyperv@vger.kernel.org
++Description:	If running under Hyper-V:
++		The Hyper-V version is in the format:
++		<major>.<minor>.<build_number>.<service_number>-<service_pack>-<service_branch>
++		This is the <service_number> part of it.
++
++What:		/sys/hypervisor/version/service_pack
++Date:		July 2019
++KernelVersion:	5.2.1
++Contact:	linux-hyperv@vger.kernel.org
++Description:	If running under Hyper-V:
++		The Hyper-V version is in the format:
++		<major>.<minor>.<build_number>.<service_number>-<service_pack>-<service_branch>
++		This is the <service_pack> part of it.
++
++What:		/sys/hypervisor/version/service_branch
++Date:		July 2019
++KernelVersion:	5.2.1
++Contact:	linux-hyperv@vger.kernel.org
++Description:	If running under Hyper-V:
++		The Hyper-V version is in the format:
++		<major>.<minor>.<build_number>.<service_number>-<service_pack>-<service_branch>
++		This is the <service_branch> part of it.
 diff --git a/drivers/hv/sys-hypervisor.c b/drivers/hv/sys-hypervisor.c
-new file mode 100644
-index 000000000000..eb3d2a6502c4
---- /dev/null
+index eb3d2a6502c4..d157636c2db9 100644
+--- a/drivers/hv/sys-hypervisor.c
 +++ b/drivers/hv/sys-hypervisor.c
-@@ -0,0 +1,41 @@
-+// SPDX-License-Identifier: GPL-2.0
+@@ -10,7 +10,9 @@
+ #include <linux/init.h>
+ #include <linux/kobject.h>
+ #include <linux/err.h>
++#include <linux/processor.h>
+ 
++#include <asm/hyperv-tlfs.h>
+ #include <asm/hypervisor.h>
+ 
+ static ssize_t type_show(struct kobject *obj,
+@@ -27,6 +29,95 @@ static int __init hyperv_sysfs_type_init(void)
+ 	return sysfs_create_file(hypervisor_kobj, &type_attr.attr);
+ }
+ 
++/* version info */
 +
-+/*
-+ * Copyright (C) 2019, Microsoft, Inc.
-+ *
-+ * Authored by: Nuno Das Neves <nudasnev@microsoft.com>
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/kobject.h>
-+#include <linux/err.h>
-+
-+#include <asm/hypervisor.h>
-+
-+static ssize_t type_show(struct kobject *obj,
++static ssize_t major_show(struct kobject *obj,
 +			struct kobj_attribute *attr,
 +			char *buf)
 +{
-+	return sprintf(buf, "Hyper-V\n");
++	unsigned int hv_host_info_ebx = cpuid_ebx(HYPERV_CPUID_VERSION);
++
++	return sprintf(buf, "%u\n", hv_host_info_ebx >> 16);
 +}
 +
-+static struct kobj_attribute type_attr = __ATTR_RO(type);
++static struct kobj_attribute major_attr = __ATTR_RO(major);
 +
-+static int __init hyperv_sysfs_type_init(void)
++static ssize_t minor_show(struct kobject *obj,
++			struct kobj_attribute *attr,
++			char *buf)
 +{
-+	return sysfs_create_file(hypervisor_kobj, &type_attr.attr);
++	unsigned int hv_host_info_ebx = cpuid_ebx(HYPERV_CPUID_VERSION);
++
++	return sprintf(buf, "%u\n", hv_host_info_ebx & 0xFFFF);
 +}
 +
-+static int __init hyper_sysfs_init(void)
++static struct kobj_attribute minor_attr = __ATTR_RO(minor);
++
++static ssize_t build_number_show(struct kobject *obj,
++			struct kobj_attribute *attr,
++			char *buf)
 +{
-+	int ret;
++	unsigned int hv_host_info_eax = cpuid_eax(HYPERV_CPUID_VERSION);
 +
-+	if (!hypervisor_is_type(X86_HYPER_MS_HYPERV))
-+		return -ENODEV;
-+
-+	ret = hyperv_sysfs_type_init();
-+
-+	return ret;
++	return sprintf(buf, "%u\n", hv_host_info_eax);
 +}
-+device_initcall(hyper_sysfs_init);
++
++static struct kobj_attribute build_number_attr = __ATTR_RO(build_number);
++
++static ssize_t service_number_show(struct kobject *obj,
++			struct kobj_attribute *attr,
++			char *buf)
++{
++	unsigned int hv_host_info_edx = cpuid_edx(HYPERV_CPUID_VERSION);
++
++	return sprintf(buf, "%u\n", hv_host_info_edx & 0xFFFFFF);
++}
++
++static struct kobj_attribute service_number_attr = __ATTR_RO(service_number);
++
++static ssize_t service_pack_show(struct kobject *obj,
++			struct kobj_attribute *attr,
++			char *buf)
++{
++	unsigned int hv_host_info_ecx = cpuid_ecx(HYPERV_CPUID_VERSION);
++
++	return sprintf(buf, "%u\n", hv_host_info_ecx);
++}
++
++static struct kobj_attribute service_pack_attr = __ATTR_RO(service_pack);
++
++static ssize_t service_branch_show(struct kobject *obj,
++			struct kobj_attribute *attr,
++			char *buf)
++{
++	unsigned int hv_host_info_edx = cpuid_edx(HYPERV_CPUID_VERSION);
++
++	return sprintf(buf, "%u\n", hv_host_info_edx >> 24);
++}
++
++static struct kobj_attribute service_branch_attr = __ATTR_RO(service_branch);
++
++static struct attribute *version_attrs[] = {
++	&major_attr.attr,
++	&minor_attr.attr,
++	&build_number_attr.attr,
++	&service_number_attr.attr,
++	&service_pack_attr.attr,
++	&service_branch_attr.attr,
++	NULL
++};
++
++static const struct attribute_group version_group = {
++	.name = "version",
++	.attrs = version_attrs,
++};
++
++static int __init hyperv_sysfs_version_init(void)
++{
++	return sysfs_create_group(hypervisor_kobj, &version_group);
++}
++
++
+ static int __init hyper_sysfs_init(void)
+ {
+ 	int ret;
+@@ -35,7 +126,18 @@ static int __init hyper_sysfs_init(void)
+ 		return -ENODEV;
+ 
+ 	ret = hyperv_sysfs_type_init();
++	if (ret)
++		goto out;
++
++	ret = hyperv_sysfs_version_init();
++	if (ret)
++		goto version_out;
++
++	goto out;
+ 
++version_out:
++	sysfs_remove_file(hypervisor_kobj, &type_attr.attr);
++out:
+ 	return ret;
+ }
+ device_initcall(hyper_sysfs_init);
 -- 
 2.17.1
 
