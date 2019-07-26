@@ -2,124 +2,91 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7B5C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FAFC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B8222CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:59:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149598;
-	bh=qUDUVLtmZIyXHd2fhXS7k3Cp3hGJM9arf5K+CPuawhs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vM6iRNc+QhsCehZjrt3Ij3S7ukwbt3wG7TmjXmJBP+8uZJibslrJwgAZJtL/LApVf
-	 3+Yz4/RlT5j5L/pp1U+n/DAvSIzUANQCSCN5ddMOs85CTsTppRByEWjVCQoATx9v3e
-	 Gap++hpFgnzrucyKTcsoAsTyZ3htvQf9YqQW7Pok=
+	by mail.kernel.org (Postfix) with ESMTP id 99AC320449
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfGZN75 (ORCPT
+        id S1728260AbfGZOAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:59:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46418 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 10:00:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:44942 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387395AbfGZNkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:40:23 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C9F622CBB;
-        Fri, 26 Jul 2019 13:40:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148422;
-        bh=qUDUVLtmZIyXHd2fhXS7k3Cp3hGJM9arf5K+CPuawhs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2f6oeWvW17t1G62zvSmS+wl6Q3nBw4LFTwrL6a6QcaGpkq74r91jVSqn0hS+lIRNw
-         HOrmaXiZSjtZyGL+5qgNGumajAo4+paK5GH8sknIFLvsfMGO3djT5ZHDPNNOnhyg/S
-         znwSf2g6ckP2gkP9mT2yFfhMTC2r5MOR0KVfyehg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vicente Bergas <vicencb@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 25/85] arm64: dts: rockchip: Fix USB3 Type-C on rk3399-sapphire
-Date:   Fri, 26 Jul 2019 09:38:35 -0400
-Message-Id: <20190726133936.11177-25-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
-References: <20190726133936.11177-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S1727100AbfGZOAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 10:00:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42007337;
+        Fri, 26 Jul 2019 07:00:06 -0700 (PDT)
+Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5AC803F694;
+        Fri, 26 Jul 2019 07:00:04 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, Peng Fan <peng.fan@nxp.com>,
+        linux-kernel@vger.kernel.org,
+        Bo Zhang <bozhang.zhang@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
+        Gaku Inami <gaku.inami.xh@renesas.com>,
+        aidapala@qti.qualcomm.com, pajay@qti.qualcomm.com,
+        Etienne Carriere <etienne.carriere@linaro.org>,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
+        wesleys@xilinx.com, Felix Burton <fburton@xilinx.com>,
+        Saeed Nowshadi <saeed.nowshadi@xilinx.com>
+Subject: [PATCH 0/5] firmware: arm_scmi: add SCMI v2.0 fastchannels and reset protocol support
+Date:   Fri, 26 Jul 2019 14:59:49 +0100
+Message-Id: <20190726135954.11078-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vicente Bergas <vicencb@gmail.com>
+SCMI v2.0[1] released recently adds support for:
 
-[ Upstream commit e1d9149e8389f1690cdd4e4056766dd26488a0fe ]
+1. Performance protocol fast channels
+2. Reset Management Protocol
+among several other features.
 
-Before this patch, the Type-C port on the Sapphire board is dead.
-If setting the 'regulator-always-on' property to 'vcc5v0_typec0'
-then the port works for about 4 seconds at start-up. This is a
-sample trace with a memory stick plugged in:
-1.- The memory stick LED lights on and kernel reports:
-[    4.782999] scsi 0:0:0:0: Direct-Access USB DISK PMAP PQ: 0 ANSI: 4
-[    5.904580] sd 0:0:0:0: [sdb] 3913344 512-byte logical blocks: (2.00 GB/1.87 GiB)
-[    5.906860] sd 0:0:0:0: [sdb] Write Protect is off
-[    5.908973] sd 0:0:0:0: [sdb] Mode Sense: 23 00 00 00
-[    5.909122] sd 0:0:0:0: [sdb] No Caching mode page found
-[    5.911214] sd 0:0:0:0: [sdb] Assuming drive cache: write through
-[    5.951585]  sdb: sdb1
-[    5.954816] sd 0:0:0:0: [sdb] Attached SCSI removable disk
-2.- 4 seconds later the memory stick LED lights off and kernel reports:
-[    9.082822] phy phy-ff770000.syscon:usb2-phy@e450.2: charger = USB_DCP_CHARGER
-3.- After a minute the kernel reports:
-[   71.666761] usb 5-1: USB disconnect, device number 2
-It has been checked that, although the LED is off, VBUS is present.
+This series adds support for the above 2.
 
-If, instead, the dr_mode is changed to host and the phy-supply changed
-accordingly, then it works. It has only been tested in host mode.
+The code is based on the cleanup[2] and Rx/async/delayed response series[3]
+and is available @[4]
 
-Signed-off-by: Vicente Bergas <vicencb@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+--
+Regards,
+Sudeep
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-index 04623e52ac5d..1bc1579674e5 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-@@ -565,12 +565,11 @@
- 	status = "okay";
- 
- 	u2phy0_otg: otg-port {
--		phy-supply = <&vcc5v0_typec0>;
- 		status = "okay";
- 	};
- 
- 	u2phy0_host: host-port {
--		phy-supply = <&vcc5v0_host>;
-+		phy-supply = <&vcc5v0_typec0>;
- 		status = "okay";
- 	};
- };
-@@ -620,7 +619,7 @@
- 
- &usbdrd_dwc3_0 {
- 	status = "okay";
--	dr_mode = "otg";
-+	dr_mode = "host";
- };
- 
- &usbdrd3_1 {
--- 
-2.20.1
+[1] http://infocenter.arm.com/help/topic/com.arm.doc.den0056b/DEN0056B_System_Control_and_Management_Interface_v2_0.pdf
+[2] https://lore.kernel.org/lkml/20190726134531.8928-1-sudeep.holla@arm.com
+[3] https://lore.kernel.org/lkml/20190726135138.9858-1-sudeep.holla@arm.com/
+[4] git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git scmi_updates
+
+Sudeep Holla (5):
+  firmware: arm_scmi: Add discovery of SCMI v2.0 performance fastchannels
+  firmware: arm_scmi: Make use SCMI v2.0 fastchannel for performance protocol
+  dt-bindings: arm: Extend SCMI to support new reset protocol
+  firmware: arm_scmi: Add RESET protocol in SCMI v2.0
+  reset: Add support for resets provided by SCMI
+
+ .../devicetree/bindings/arm/arm,scmi.txt      |  17 ++
+ MAINTAINERS                                   |   1 +
+ drivers/firmware/arm_scmi/Makefile            |   2 +-
+ drivers/firmware/arm_scmi/perf.c              | 257 +++++++++++++++++-
+ drivers/firmware/arm_scmi/reset.c             | 231 ++++++++++++++++
+ drivers/reset/Kconfig                         |  10 +
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-scmi.c                    | 133 +++++++++
+ include/linux/scmi_protocol.h                 |  26 ++
+ 9 files changed, 669 insertions(+), 9 deletions(-)
+ create mode 100644 drivers/firmware/arm_scmi/reset.c
+ create mode 100644 drivers/reset/reset-scmi.c
+
+--
+2.17.1
 
