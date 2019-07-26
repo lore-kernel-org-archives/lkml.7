@@ -2,114 +2,117 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55868C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 814B3C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0E622BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B6822BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:36:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="SlRUOX1q"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="DwJAR0l/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfGZKdV (ORCPT
+        id S1726481AbfGZKgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 06:33:21 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:47188 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726074AbfGZKdU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 06:33:20 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x6QATkM6022536;
-        Fri, 26 Jul 2019 05:33:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=efZFnW5lzkbmhOQo8URSwv2VRRH5b1wiAs28rX/8rXI=;
- b=SlRUOX1qE8MOoZl5sN7q7+tN1MU5FJBFTOuHNCUM6Gy9I2Aijiwdl2VA913hBwdkKJos
- ZbHNXFzNaBZT0jBz97F1xYu0TOmlpnPz/vtB/mcv2v0+cLpcYOzE3HPvkjA1s7HdmcHK
- keNmALSMPJhDRlsnfO9PvprRQqeurtwzUXye0D7zypvSS9UxwuhsilDsvDd9D4LZbY/y
- cdmAAgGlFObSwGamngxIPo11pnFHywxj+NLO/+P71CzwAAmeZ2sdi9koUx4wYzgzuRqf
- K/wjd1NFijfJtcGPkN3GCwDzydA3DT4+kKwla0by8JdmizzKpf0y5Ko1s8tafBr1BTNM Gg== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex02.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2tx61nmr0v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 26 Jul 2019 05:33:09 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 26 Jul
- 2019 11:33:07 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Fri, 26 Jul 2019 11:33:07 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id ADBD62DD;
-        Fri, 26 Jul 2019 11:33:07 +0100 (BST)
-Date:   Fri, 26 Jul 2019 11:33:07 +0100
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-CC:     <dmitry.torokhov@gmail.com>, <allison@lohutok.net>,
-        <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
-        <rdunlap@infradead.org>, <patches@opensource.cirrus.com>,
-        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] input: touchscreen: wm97xx-core: Fix possible
- null-pointer dereferences in wm97xx_ts_input_open()
-Message-ID: <20190726103307.GC54126@ediswmail.ad.cirrus.com>
-References: <20190726102326.9266-1-baijiaju1990@gmail.com>
+        Fri, 26 Jul 2019 06:36:08 -0400
+Received: from onstation.org ([52.200.56.107]:52052 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbfGZKgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 06:36:07 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 458643E911;
+        Fri, 26 Jul 2019 10:36:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1564137366;
+        bh=lKvd7xwHN2gTtBvSBeM80nkC5+jI2IdP2zf9IWcj8NI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DwJAR0l/PlTB8EKtJeyHiFIrEplJUNzBELIsGzBbyaeN0ET539lJkNE8ewsKzw7IO
+         bqIsQ4nMVsWps0/XoPEAe3PKLqr+5O24jkruC/66WXF+F9K9XuyHmcDJ14z7qAgMZH
+         YyiT7dtR45ZxeDvE0fBNU1pmyozMlJ4lgCdvGZBg=
+Date:   Fri, 26 Jul 2019 06:36:05 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com,
+        andy.gross@linaro.org, Andy Gross <agross@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, marc.w.gonzalez@free.fr,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 00/15] thermal: qcom: tsens: Add interrupt support
+Message-ID: <20190726103605.GB3327@onstation.org>
+References: <cover.1564091601.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190726102326.9266-1-baijiaju1990@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 mlxscore=0
- impostorscore=0 priorityscore=1501 adultscore=0 bulkscore=0 suspectscore=0
- malwarescore=0 lowpriorityscore=0 mlxlogscore=733 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
- definitions=main-1907260135
+In-Reply-To: <cover.1564091601.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 06:23:26PM +0800, Jia-Ju Bai wrote:
-> In wm97xx_ts_input_open(), there is an if statement on line 507 to check
-> whether wm->mach_ops is NULL:
->     if (wm->mach_ops && wm->mach_ops->acc_enabled)
-> 
-> When wm->mach_ops is NULL, it is used on line 521:
->     wm97xx_init_pen_irq(wm);
->         BUG_ON(!wm->mach_ops->irq_enable);
->         BUG_ON(!wm->mach_ops->irq_gpio);
->         wm97xx_reg_write(..., reg & ~(wm->mach_ops->irq_gpio))
-> 
-> Thus, possible null-pointer dereferences may occur.
-> 
-> To fix these bugs, wm->mach_ops is checked at the beginning of
-> wm97xx_init_pen_irq().
-> 
-> These bugs found by a static analysis tool STCheck written by us.
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
-> v2:
-> * Add a new check of wm->mach_ops in wm97xx_init_pen_irq().
->   Thank Charles for helpful advice.
-> 
-> v3:
-> * Print a message if wm->mach_ops is NULL in wm97xx_init_pen_irq().
->   Thank Charles for helpful advice.
-> 
-> ---
+Hi Amit,
 
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+On Fri, Jul 26, 2019 at 03:48:35AM +0530, Amit Kucheria wrote:
+> Add interrupt support to TSENS. The first 6 patches are general fixes and
+> cleanups to the driver before interrupt support is introduced.
+> 
+> This series has been developed against qcs404 and sdm845 and then tested on
+> msm8916. Testing on msm8998 and msm8974 would be appreciated since I don't
+> have hardware handy. Further, I plan to test on msm8996 and also submit to
+> kernelci.
+> 
+> I'm sending this out for more review to get help with testing.
 
-Thanks,
-Charles
+I can test this on msm8974 for you using a Nexus 5. Here's what I've
+done so far:
+
+The device tree nodes appear in sysfs:
+
+/ # ls -1 /sys/class/thermal/
+cooling_device0
+cooling_device1
+thermal_zone0
+thermal_zone1
+thermal_zone2
+thermal_zone3
+thermal_zone4
+thermal_zone5
+thermal_zone6
+thermal_zone7
+thermal_zone8
+thermal_zone9
+
+The various temperatures were in the upper 40s and I threw some work at
+all four CPU cores to warm up the phone and watched the various
+temperatures rise:
+
+/ # for i in $(seq 0 9) ; do
+> TYPE=$(cat /sys/class/thermal/thermal_zone$i/type)
+> TEMP=$(cat /sys/class/thermal/thermal_zone$i/temp)
+> echo "$TYPE = $TEMP"
+> done
+cpu-thermal0 = 66000
+cpu-thermal1 = 66000
+cpu-thermal2 = 66000
+cpu-thermal3 = 66000
+q6-dsp-thermal = 60000
+modemtx-thermal = 57000
+video-thermal = 61000
+wlan-thermal = 65000
+gpu-thermal-top = 61000
+gpu-thermal-bottom = 59000
+
+To test the interrupt support, I lowered all of the temperature trips to
+51C but I'm not sure where to read that notification. I assume one of
+the cooling devices or a governor should be started? Sorry but I haven't
+done any work in the thermal subsystem yet and I'm short on time this
+morning to investigate right now.
+
+Brian
