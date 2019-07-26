@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582DEC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE699C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2417B22CF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C753B22CBF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148728;
-	bh=XVZDi/FcugkfghNrPmbRihgKx/wSKSciVCIePbMGChM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=cwnHFwVEDxqwcQYwpWDOJNhZ39bSQSZ/tsk8mXxhMuAR/TC7ZJVtjAXKj2yDC0pDf
-	 /1QblqPzKQDi0PFOMrdUWh2iHJd6q3uhOBtuCFW8IRmYtVfHrrxrhUFScwagR7L4fE
-	 6ynFJ0goq0rCQ/D+eyR4L3yZW0ykiFMIVNRkj8W8=
+	s=default; t=1564148731;
+	bh=PAj6zUAmFM17o7AjZUCKjS16bLP6pFFJOAO8OFZD/kA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cuOU2c3rzAl7yY7PieykvUpoVgulswgn54TffTVu0Zy9Uq2uEH7U3WLqiFP9NgPUL
+	 S7KrAman4DrPQkIXzI5ugGYNif5hTLJt6d3GweyYotcm1El8Y8ZFf3BkshZRizkhSb
+	 hh3b4CsjH+Rc91YkFGxbDBYSVxLX8CKFsuetlXCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388567AbfGZNp0 (ORCPT
+        id S1728145AbfGZNpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:45:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54360 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:45:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388550AbfGZNpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:45:24 -0400
+        id S2387751AbfGZNp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:45:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82CE122CEC;
-        Fri, 26 Jul 2019 13:45:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8436022CE9;
+        Fri, 26 Jul 2019 13:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148724;
-        bh=XVZDi/FcugkfghNrPmbRihgKx/wSKSciVCIePbMGChM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AkMkdni077qKJ5Hf0i8R/fluFAVEnActXSrJ3Zw2ugbX+CGthzN/095XvKyhdMn6s
-         XpHFpq5Nl8Ee79FNhG6CiVkVurixTHIEEFPBb4ZGIm8R6md2Yp+mG5xveIiK7/tqfA
-         HE7nEhyALZbu+6L9pNbVp5dMdP9LPVhswMD8kV0Y=
+        s=default; t=1564148726;
+        bh=PAj6zUAmFM17o7AjZUCKjS16bLP6pFFJOAO8OFZD/kA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XXnhMX4a6L00XqDxq3b64jp6IHRknimgdSxLtVzyoSBYhRRak+crqrBopgySO9BWz
+         0+ws/lG1bOkPvH7aqJ6jrq5HLbWdeZeU1XOMJeqaCeS60k6FtvHOw62C4vjKB7yQ5g
+         DNhuO93VPUkyJjTpaWxgRim+Sj9A0E+e0pREfmAc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+Cc:     Prarit Bhargava <prarit@redhat.com>,
+        Barret Rhoden <brho@google.com>,
+        David Arcari <darcari@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 01/23] ARM: riscpc: fix DMA
-Date:   Fri, 26 Jul 2019 09:45:00 -0400
-Message-Id: <20190726134522.13308-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 03/23] kernel/module.c: Only return -EEXIST for modules that have finished loading
+Date:   Fri, 26 Jul 2019 09:45:02 -0400
+Message-Id: <20190726134522.13308-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190726134522.13308-1-sashal@kernel.org>
+References: <20190726134522.13308-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,48 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Prarit Bhargava <prarit@redhat.com>
 
-[ Upstream commit ffd9a1ba9fdb7f2bd1d1ad9b9243d34e96756ba2 ]
+[ Upstream commit 6e6de3dee51a439f76eb73c22ae2ffd2c9384712 ]
 
-DMA got broken a while back in two different ways:
-1) a change in the behaviour of disable_irq() to wait for the interrupt
-   to finish executing causes us to deadlock at the end of DMA.
-2) a change to avoid modifying the scatterlist left the first transfer
-   uninitialised.
+Microsoft HyperV disables the X86_FEATURE_SMCA bit on AMD systems, and
+linux guests boot with repeated errors:
 
-DMA is only used with expansion cards, so has gone unnoticed.
+amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
 
-Fixes: fa4e99899932 ("[ARM] dma: RiscPC: don't modify DMA SG entries")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+The warnings occur because the module code erroneously returns -EEXIST
+for modules that have failed to load and are in the process of being
+removed from the module list.
+
+module amd64_edac_mod has a dependency on module edac_mce_amd.  Using
+modules.dep, systemd will load edac_mce_amd for every request of
+amd64_edac_mod.  When the edac_mce_amd module loads, the module has
+state MODULE_STATE_UNFORMED and once the module load fails and the state
+becomes MODULE_STATE_GOING.  Another request for edac_mce_amd module
+executes and add_unformed_module() will erroneously return -EEXIST even
+though the previous instance of edac_mce_amd has MODULE_STATE_GOING.
+Upon receiving -EEXIST, systemd attempts to load amd64_edac_mod, which
+fails because of unknown symbols from edac_mce_amd.
+
+add_unformed_module() must wait to return for any case other than
+MODULE_STATE_LIVE to prevent a race between multiple loads of
+dependent modules.
+
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Signed-off-by: Barret Rhoden <brho@google.com>
+Cc: David Arcari <darcari@redhat.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-rpc/dma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kernel/module.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mach-rpc/dma.c b/arch/arm/mach-rpc/dma.c
-index 6d3517dc4772..82aac38fa2cf 100644
---- a/arch/arm/mach-rpc/dma.c
-+++ b/arch/arm/mach-rpc/dma.c
-@@ -131,7 +131,7 @@ static irqreturn_t iomd_dma_handle(int irq, void *dev_id)
- 	} while (1);
+diff --git a/kernel/module.c b/kernel/module.c
+index bcc78f4c15e9..b940b2825b7b 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3225,8 +3225,7 @@ static bool finished_loading(const char *name)
+ 	sched_annotate_sleep();
+ 	mutex_lock(&module_mutex);
+ 	mod = find_module_all(name, strlen(name), true);
+-	ret = !mod || mod->state == MODULE_STATE_LIVE
+-		|| mod->state == MODULE_STATE_GOING;
++	ret = !mod || mod->state == MODULE_STATE_LIVE;
+ 	mutex_unlock(&module_mutex);
  
- 	idma->state = ~DMA_ST_AB;
--	disable_irq(irq);
-+	disable_irq_nosync(irq);
- 
- 	return IRQ_HANDLED;
- }
-@@ -174,6 +174,9 @@ static void iomd_enable_dma(unsigned int chan, dma_t *dma)
- 				DMA_FROM_DEVICE : DMA_TO_DEVICE);
- 		}
- 
-+		idma->dma_addr = idma->dma.sg->dma_address;
-+		idma->dma_len = idma->dma.sg->length;
-+
- 		iomd_writeb(DMA_CR_C, dma_base + CR);
- 		idma->state = DMA_ST_AB;
- 	}
+ 	return ret;
+@@ -3385,8 +3384,7 @@ static int add_unformed_module(struct module *mod)
+ 	mutex_lock(&module_mutex);
+ 	old = find_module_all(mod->name, strlen(mod->name), true);
+ 	if (old != NULL) {
+-		if (old->state == MODULE_STATE_COMING
+-		    || old->state == MODULE_STATE_UNFORMED) {
++		if (old->state != MODULE_STATE_LIVE) {
+ 			/* Wait in case it fails to load. */
+ 			mutex_unlock(&module_mutex);
+ 			err = wait_event_interruptible(module_wq,
 -- 
 2.20.1
 
