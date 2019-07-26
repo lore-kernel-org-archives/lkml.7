@@ -4,49 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78252C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F13F7C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 482B622BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5F122BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148459;
-	bh=4K0/PokKs96CriHHqnGm0AfBmcQdKLj/goskU7lYKmY=;
+	s=default; t=1564148464;
+	bh=+djP42l890PRgPpyfSuCFeOV38wuWwlVMb3pz0E+Mag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z5/VdIVWFPShDFQNLE2113T6aPNcxY9MgQ6tBCROgf3FXPTaR+NI0NxioEis7m1XX
-	 EDYOFpmn8gyEqCirGTpjKCVAzq0BFr3KevxcobWjsNYk20jtioTFFUdmM2Koi0XHkN
-	 iF6jvNi+q8bBYk0sT6Hh4zXqQmIBJD1lhHJ1aTf8=
+	b=LA+TVjgPf271MCN2qq64oBkG7qPBAbcvJkvxJpx27kUice25YqNH4PugLMqGuxgXw
+	 ki9JHYHr54XDUXhpW26y9dathDmEBf4haKa3PZ2SaMBCJRFcM2XWw9rKqISI13JGgE
+	 p4z1iuVlXm4AHBYvhDhhpHfqnuxYttFlLQSXWQd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387629AbfGZNk6 (ORCPT
+        id S2387631AbfGZNlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:40:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47146 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:41:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387613AbfGZNky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:40:54 -0400
+        id S2387625AbfGZNk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:40:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28D6522CBD;
-        Fri, 26 Jul 2019 13:40:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EA4E22CB8;
+        Fri, 26 Jul 2019 13:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148453;
-        bh=4K0/PokKs96CriHHqnGm0AfBmcQdKLj/goskU7lYKmY=;
+        s=default; t=1564148458;
+        bh=+djP42l890PRgPpyfSuCFeOV38wuWwlVMb3pz0E+Mag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2A2fVa9RhlG4Arl60GEIThNu3lTFkPLooqp/q2nVuBNmhZmaEkhSyv/8GrLBhV8kS
-         KCIMpjINzWa4kSUhL9/aEih/4kTGP5iD49xFBtaphgM1igBgYDhZmVF8ZNjjQ2fMJ3
-         uNNj+NCp3xvTSMBh9QB99z51Ukj1KUbZ4Aqz8a8k=
+        b=ELrxyKFQDLqS1N5c45EI7brqIhCoo9ezXaunRAkZNDL3vpyy6+ZfRXRWB1FAluPLh
+         Qdjvq9/47PBveEgpJTgU/EAi6ElyHoYEJE8J/Ejb1B0gqRLDBR+qKeD1PMwz08kP7U
+         3c31vM3g2rLrw6seYjiqD294n+lVi3mTgSjoQtxY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Poirier <bpoirier@suse.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 49/85] be2net: Signal that the device cannot transmit during reconfiguration
-Date:   Fri, 26 Jul 2019 09:38:59 -0400
-Message-Id: <20190726133936.11177-49-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.2 51/85] mm/slab_common.c: work around clang bug #42570
+Date:   Fri, 26 Jul 2019 09:39:01 -0400
+Message-Id: <20190726133936.11177-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -59,44 +70,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Poirier <bpoirier@suse.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 7429c6c0d9cb086d8e79f0d2a48ae14851d2115e ]
+[ Upstream commit a07057dce2823e10d64a2b73cefbf09d8645efe9 ]
 
-While changing the number of interrupt channels, be2net stops adapter
-operation (including netif_tx_disable()) but it doesn't signal that it
-cannot transmit. This may lead dev_watchdog() to falsely trigger during
-that time.
+Clang gets rather confused about two variables in the same special
+section when one of them is not initialized, leading to an assembler
+warning later:
 
-Add the missing call to netif_carrier_off(), following the pattern used in
-many other drivers. netif_carrier_on() is already taken care of in
-be_open().
+  /tmp/slab_common-18f869.s: Assembler messages:
+  /tmp/slab_common-18f869.s:7526: Warning: ignoring changed section attributes for .data..ro_after_init
 
-Signed-off-by: Benjamin Poirier <bpoirier@suse.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Adding an initialization to kmalloc_caches is rather silly here
+but does avoid the issue.
+
+Link: https://bugs.llvm.org/show_bug.cgi?id=42570
+Link: http://lkml.kernel.org/r/20190712090455.266021-1-arnd@arndb.de
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: David Rientjes <rientjes@google.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/emulex/benet/be_main.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ mm/slab_common.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/emulex/benet/be_main.c b/drivers/net/ethernet/emulex/benet/be_main.c
-index 82015c8a5ed7..b7a246b33599 100644
---- a/drivers/net/ethernet/emulex/benet/be_main.c
-+++ b/drivers/net/ethernet/emulex/benet/be_main.c
-@@ -4697,8 +4697,12 @@ int be_update_queues(struct be_adapter *adapter)
- 	struct net_device *netdev = adapter->netdev;
- 	int status;
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 58251ba63e4a..cbd3411f644e 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1003,7 +1003,8 @@ struct kmem_cache *__init create_kmalloc_cache(const char *name,
+ }
  
--	if (netif_running(netdev))
-+	if (netif_running(netdev)) {
-+		/* device cannot transmit now, avoid dev_watchdog timeouts */
-+		netif_carrier_off(netdev);
-+
- 		be_close(netdev);
-+	}
+ struct kmem_cache *
+-kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1] __ro_after_init;
++kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1] __ro_after_init =
++{ /* initialization for https://bugs.llvm.org/show_bug.cgi?id=42570 */ };
+ EXPORT_SYMBOL(kmalloc_caches);
  
- 	be_cancel_worker(adapter);
- 
+ /*
 -- 
 2.20.1
 
