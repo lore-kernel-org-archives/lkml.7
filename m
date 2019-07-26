@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8A8C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C01C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B65F122CBB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEC9122CB9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148431;
-	bh=dyzX37OIZYCFr2Y7qa+NiiW8n2qepCp8LuDQKdwJyfM=;
+	s=default; t=1564148436;
+	bh=u8mihk7BMaBudNZAbfb+ZXvceZCfjoz1RKteTCz+rjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kWPzZCA8wtXGvDFaQ9mipzTLlwO6NFVWxUYAPKe5G20DRNgSBDzt1Jzs5CwSJH2B1
-	 98evetyX37zSMX46UnweczKxLca8UHXG4eF2qnjFyLSfX3LWEyLOTWNAAeDOeFuzR5
-	 HbKBoKZERZ/VsQIU5in5LiAXClHJ4jd5SU6QaOLk=
+	b=03f/WqtKX4d2TOMdekBvZWZpA0U/KgoP0s7OQiZUYRXyq4Qw3Nykyds/cnUXQgWxf
+	 B5hQ4PFE73HuO9un2Gn9rFVwTlXdbZFC+muHq2C/jCS/s9kk6i7u54InHlMUyDl4r1
+	 i5Hmi4bkGc6l4Fhet5FVobMKfwO4iY5E0ccIGAJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbfGZNka (ORCPT
+        id S2387501AbfGZNkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:40:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46476 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:40:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387451AbfGZNk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:40:26 -0400
+        id S1727692AbfGZNkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:40:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 796D622CBF;
-        Fri, 26 Jul 2019 13:40:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2E6222CBD;
+        Fri, 26 Jul 2019 13:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148425;
-        bh=dyzX37OIZYCFr2Y7qa+NiiW8n2qepCp8LuDQKdwJyfM=;
+        s=default; t=1564148429;
+        bh=u8mihk7BMaBudNZAbfb+ZXvceZCfjoz1RKteTCz+rjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BpJ9+SzBGqk5mr539sMCbpy5Th/0rezfIqCWMqCzSD86jZHW+fAtAgHGHsTCszvtD
-         1qi1fO17TPpYgmQ/MvcMS1+NVKoeI4/PBXhmVqtBMxrYtceB2/7EoL8ipaXdgSFV6K
-         y5cwEWhG+E09OM9MqKOQQqI0miFL/Lp+Oe42Q6wc=
+        b=PWZNAD4eWFMJTGz1owVDvO3s4yEOk/PcZMBu+qxa/MN0AjYAEIVbyVIZvQ4G6rwPC
+         S8u9eghoUCDbodKwdIK/9SGfGol77x+XTVlNJymHrblb4DWS9z5veQmA4trKnAaQ7i
+         aAZ8NPtt6NDxa5Ownnt7SMA11+wkvUUDjoyi1q10=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 28/85] btrfs: Flush before reflinking any extent to prevent NOCOW write falling back to COW without data reservation
-Date:   Fri, 26 Jul 2019 09:38:38 -0400
-Message-Id: <20190726133936.11177-28-sashal@kernel.org>
+Cc:     David Disseldorp <ddiss@suse.de>, "Yan, Zheng" <zyan@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 32/85] ceph: fix listxattr vxattr buffer length calculation
+Date:   Fri, 26 Jul 2019 09:38:42 -0400
+Message-Id: <20190726133936.11177-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -59,111 +59,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: David Disseldorp <ddiss@suse.de>
 
-[ Upstream commit a94d1d0cb3bf1983fcdf05b59d914dbff4f1f52c ]
+[ Upstream commit 2b2abcac8c251d1c77a4cc9d9f248daefae0fb4e ]
 
-[BUG]
-The following script can cause unexpected fsync failure:
+ceph_listxattr() incorrectly returns a length based on the static
+ceph_vxattrs_name_size() value, which only takes into account whether
+vxattrs are hidden, ignoring vxattr.exists_cb().
 
-  #!/bin/bash
+When filling the xattr buffer ceph_listxattr() checks VXATTR_FLAG_HIDDEN
+and vxattr.exists_cb(). If both are false, we return an incorrect
+(oversize) length.
 
-  dev=/dev/test/test
-  mnt=/mnt/btrfs
+Fix this behaviour by always calculating the vxattrs length at runtime,
+taking both vxattr.hidden and vxattr.exists_cb() into account.
 
-  mkfs.btrfs -f $dev -b 512M > /dev/null
-  mount $dev $mnt -o nospace_cache
+This bug is only exposed with the new "ceph.snap.btime" vxattr, as all
+other vxattrs with a non-null exists_cb also carry VXATTR_FLAG_HIDDEN.
 
-  # Prealloc one extent
-  xfs_io -f -c "falloc 8k 64m" $mnt/file1
-  # Fill the remaining data space
-  xfs_io -f -c "pwrite 0 -b 4k 512M" $mnt/padding
-  sync
-
-  # Write into the prealloc extent
-  xfs_io -c "pwrite 1m 16m" $mnt/file1
-
-  # Reflink then fsync, fsync would fail due to ENOSPC
-  xfs_io -c "reflink $mnt/file1 8k 0 4k" -c "fsync" $mnt/file1
-  umount $dev
-
-The fsync fails with ENOSPC, and the last page of the buffered write is
-lost.
-
-[CAUSE]
-This is caused by:
-- Btrfs' back reference only has extent level granularity
-  So write into shared extent must be COWed even only part of the extent
-  is shared.
-
-So for above script we have:
-- fallocate
-  Create a preallocated extent where we can do NOCOW write.
-
-- fill all the remaining data and unallocated space
-
-- buffered write into preallocated space
-  As we have not enough space available for data and the extent is not
-  shared (yet) we fall into NOCOW mode.
-
-- reflink
-  Now part of the large preallocated extent is shared, later write
-  into that extent must be COWed.
-
-- fsync triggers writeback
-  But now the extent is shared and therefore we must fallback into COW
-  mode, which fails with ENOSPC since there's not enough space to
-  allocate data extents.
-
-[WORKAROUND]
-The workaround is to ensure any buffered write in the related extents
-(not just the reflink source range) get flushed before reflink/dedupe,
-so that NOCOW writes succeed that happened before reflinking succeed.
-
-The workaround is expensive, we could do it better by only flushing
-NOCOW range, but that needs extra accounting for NOCOW range.
-For now, fix the possible data loss first.
-
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Disseldorp <ddiss@suse.de>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ioctl.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ fs/ceph/xattr.c | 54 +++++++++++++++++++++++++++----------------------
+ 1 file changed, 30 insertions(+), 24 deletions(-)
 
-diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index 2a1be0d1a698..5b4beebf138c 100644
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -3999,6 +3999,27 @@ static int btrfs_remap_file_range_prep(struct file *file_in, loff_t pos_in,
- 	if (!same_inode)
- 		inode_dio_wait(inode_out);
+diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
+index 0cc42c8879e9..b9df49e13d9c 100644
+--- a/fs/ceph/xattr.c
++++ b/fs/ceph/xattr.c
+@@ -897,10 +897,9 @@ ssize_t ceph_listxattr(struct dentry *dentry, char *names, size_t size)
+ 	struct inode *inode = d_inode(dentry);
+ 	struct ceph_inode_info *ci = ceph_inode(inode);
+ 	struct ceph_vxattr *vxattrs = ceph_inode_vxattrs(inode);
+-	u32 vir_namelen = 0;
++	bool len_only = (size == 0);
+ 	u32 namelen;
+ 	int err;
+-	u32 len;
+ 	int i;
  
-+	/*
-+	 * Workaround to make sure NOCOW buffered write reach disk as NOCOW.
-+	 *
-+	 * Btrfs' back references do not have a block level granularity, they
-+	 * work at the whole extent level.
-+	 * NOCOW buffered write without data space reserved may not be able
-+	 * to fall back to CoW due to lack of data space, thus could cause
-+	 * data loss.
-+	 *
-+	 * Here we take a shortcut by flushing the whole inode, so that all
-+	 * nocow write should reach disk as nocow before we increase the
-+	 * reference of the extent. We could do better by only flushing NOCOW
-+	 * data, but that needs extra accounting.
-+	 *
-+	 * Also we don't need to check ASYNC_EXTENT, as async extent will be
-+	 * CoWed anyway, not affecting nocow part.
-+	 */
-+	ret = filemap_flush(inode_in->i_mapping);
-+	if (ret < 0)
-+		return ret;
+ 	spin_lock(&ci->i_ceph_lock);
+@@ -919,38 +918,45 @@ ssize_t ceph_listxattr(struct dentry *dentry, char *names, size_t size)
+ 	err = __build_xattrs(inode);
+ 	if (err < 0)
+ 		goto out;
+-	/*
+-	 * Start with virtual dir xattr names (if any) (including
+-	 * terminating '\0' characters for each).
+-	 */
+-	vir_namelen = ceph_vxattrs_name_size(vxattrs);
+ 
+-	/* adding 1 byte per each variable due to the null termination */
++	/* add 1 byte for each xattr due to the null termination */
+ 	namelen = ci->i_xattrs.names_size + ci->i_xattrs.count;
+-	err = -ERANGE;
+-	if (size && vir_namelen + namelen > size)
+-		goto out;
+-
+-	err = namelen + vir_namelen;
+-	if (size == 0)
+-		goto out;
++	if (!len_only) {
++		if (namelen > size) {
++			err = -ERANGE;
++			goto out;
++		}
++		names = __copy_xattr_names(ci, names);
++		size -= namelen;
++	}
+ 
+-	names = __copy_xattr_names(ci, names);
+ 
+ 	/* virtual xattr names, too */
+-	err = namelen;
+ 	if (vxattrs) {
+ 		for (i = 0; vxattrs[i].name; i++) {
+-			if (!(vxattrs[i].flags & VXATTR_FLAG_HIDDEN) &&
+-			    !(vxattrs[i].exists_cb &&
+-			      !vxattrs[i].exists_cb(ci))) {
+-				len = sprintf(names, "%s", vxattrs[i].name);
+-				names += len + 1;
+-				err += len + 1;
++			size_t this_len;
 +
- 	ret = btrfs_wait_ordered_range(inode_in, ALIGN_DOWN(pos_in, bs),
- 				       wb_len);
- 	if (ret < 0)
++			if (vxattrs[i].flags & VXATTR_FLAG_HIDDEN)
++				continue;
++			if (vxattrs[i].exists_cb && !vxattrs[i].exists_cb(ci))
++				continue;
++
++			this_len = strlen(vxattrs[i].name) + 1;
++			namelen += this_len;
++			if (len_only)
++				continue;
++
++			if (this_len > size) {
++				err = -ERANGE;
++				goto out;
+ 			}
++
++			memcpy(names, vxattrs[i].name, this_len);
++			names += this_len;
++			size -= this_len;
+ 		}
+ 	}
+-
++	err = namelen;
+ out:
+ 	spin_unlock(&ci->i_ceph_lock);
+ 	return err;
 -- 
 2.20.1
 
