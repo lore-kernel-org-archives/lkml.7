@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E1EC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE56C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF8122CE9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C6EA22CE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149089;
-	bh=vzNNaYikDY21v23/2zO3IPUtpcgrGZDW0AIPcGzNqA8=;
+	s=default; t=1564149094;
+	bh=gbcc84ARd22giqHzhSk4zUe9cJYXraCr4L0P/X85fLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IJiqILdTcF1wL7hlgA7froPQPhdOnXxhLQgqSFRM4SFkp4DX1ZqcN01MuzJg/J9iY
-	 GhxNiei4BIj6GYZ56U8BUmjTCFlQN/2rP2q/fcIFF6UKx90MZ57gNThbBfyJzNlAF3
-	 5Lzlfol/CEY5waJoQKqw00BalyDc1mMKSUV5TY2I=
+	b=jNRpADmCnmulWtKh2Yomkks/iT2NUIGpzCajHfI/0CKm4Tos5qKUn4C9k7giE9RBW
+	 bBM7/ZzMVYbzk2Te0j5aeSwdj+T0IwI/5HbUOuCUk93KP16lD6wVoO3n1U7/qQ8u33
+	 oTAdM0kNwGmFC0h5b4vJdbBjenRf/0iKOipuVfgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbfGZNv1 (ORCPT
+        id S1727670AbfGZNnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:51:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51826 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:43:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727686AbfGZNnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:43:53 -0400
+        id S2388267AbfGZNnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:43:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB44F22BF5;
-        Fri, 26 Jul 2019 13:43:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9159E22BF5;
+        Fri, 26 Jul 2019 13:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148632;
-        bh=vzNNaYikDY21v23/2zO3IPUtpcgrGZDW0AIPcGzNqA8=;
+        s=default; t=1564148628;
+        bh=gbcc84ARd22giqHzhSk4zUe9cJYXraCr4L0P/X85fLM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YOmDqrtj4oVBkidZnkzhNq+Y5NXnscfqIYPqN2zRixs/WcVWsqRs4Gwd8GUivU3dL
-         TixBA+kcHCivm0ynX0RhNPCqVwyWNbzWbLWapHHOgYhWsXvcDYFUiEMR0pXo8ZeyIF
-         GrlpdqFTWN+XJUIPdgNanC3iU5LsAqC6u7d+LsNM=
+        b=tVfoVl5nJe/QQjbxgkg5ACrvQOVHxJbmsywUiEB5fV2M8pCVZCKL8aTZ1g+m0DwC5
+         9wC8taG7WyonGPyVrWFYvlVTIU+NCp8nwreF5VxRsYQm7cqsBSFGDx52TUAjzRwlqu
+         bNdJ+CZLq3q3kaQ3AsIkiQJMV+LSA5J/JkcE8hUE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 15/37] ACPI: blacklist: fix clang warning for unused DMI table
-Date:   Fri, 26 Jul 2019 09:43:10 -0400
-Message-Id: <20190726134332.12626-15-sashal@kernel.org>
+Cc:     David Sterba <dsterba@suse.com>, Qu Wenruo <wqu@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 11/37] btrfs: fix minimum number of chunk errors for DUP
+Date:   Fri, 26 Jul 2019 09:43:06 -0400
+Message-Id: <20190726134332.12626-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134332.12626-1-sashal@kernel.org>
 References: <20190726134332.12626-1-sashal@kernel.org>
@@ -61,51 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: David Sterba <dsterba@suse.com>
 
-[ Upstream commit b80d6a42bdc97bdb6139107d6034222e9843c6e2 ]
+[ Upstream commit 0ee5f8ae082e1f675a2fb6db601c31ac9958a134 ]
 
-When CONFIG_DMI is disabled, we only have a tentative declaration,
-which causes a warning from clang:
+The list of profiles in btrfs_chunk_max_errors lists DUP as a profile
+DUP able to tolerate 1 device missing. Though this profile is special
+with 2 copies, it still needs the device, unlike the others.
 
-drivers/acpi/blacklist.c:20:35: error: tentative array definition assumed to have one element [-Werror]
-static const struct dmi_system_id acpi_rev_dmi_table[] __initconst;
+Looking at the history of changes, thre's no clear reason why DUP is
+there, functions were refactored and blocks of code merged to one
+helper.
 
-As the variable is not actually used here, hide it entirely
-in an #ifdef to shut up the warning.
+d20983b40e828 Btrfs: fix writing data into the seed filesystem
+  - factor code to a helper
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+de11cc12df173 Btrfs: don't pre-allocate btrfs bio
+  - unrelated change, DUP still in the list with max errors 1
+
+a236aed14ccb0 Btrfs: Deal with failed writes in mirrored configurations
+  - introduced the max errors, leaves DUP and RAID1 in the same group
+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/blacklist.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/btrfs/volumes.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/blacklist.c b/drivers/acpi/blacklist.c
-index 995c4d8922b1..761f0c19a451 100644
---- a/drivers/acpi/blacklist.c
-+++ b/drivers/acpi/blacklist.c
-@@ -30,7 +30,9 @@
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index 85294fef1051..358e930df4ac 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -5019,8 +5019,7 @@ static inline int btrfs_chunk_max_errors(struct map_lookup *map)
  
- #include "internal.h"
- 
-+#ifdef CONFIG_DMI
- static const struct dmi_system_id acpi_rev_dmi_table[] __initconst;
-+#endif
- 
- /*
-  * POLICY: If *anything* doesn't work, put it on the blacklist.
-@@ -74,7 +76,9 @@ int __init acpi_blacklisted(void)
- 	}
- 
- 	(void)early_acpi_osi_init();
-+#ifdef CONFIG_DMI
- 	dmi_check_system(acpi_rev_dmi_table);
-+#endif
- 
- 	return blacklisted;
- }
+ 	if (map->type & (BTRFS_BLOCK_GROUP_RAID1 |
+ 			 BTRFS_BLOCK_GROUP_RAID10 |
+-			 BTRFS_BLOCK_GROUP_RAID5 |
+-			 BTRFS_BLOCK_GROUP_DUP)) {
++			 BTRFS_BLOCK_GROUP_RAID5)) {
+ 		max_errors = 1;
+ 	} else if (map->type & BTRFS_BLOCK_GROUP_RAID6) {
+ 		max_errors = 2;
 -- 
 2.20.1
 
