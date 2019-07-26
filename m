@@ -2,98 +2,130 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A01DC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D55C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65A13229F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98BF4229F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:25:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfGZJYV (ORCPT
+        id S1726177AbfGZJZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:24:21 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35880 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725903AbfGZJYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:24:21 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 67D8CFC61B5C23688CC1;
-        Fri, 26 Jul 2019 17:24:19 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Fri, 26 Jul 2019
- 17:24:13 +0800
-Subject: Re: [PATCH] irqchip/gic-v3-its: Free unused vpt_page when alloc vpe
- table fail
-To:     Marc Zyngier <marc.zyngier@arm.com>
-References: <1564105905-15410-1-git-send-email-zhangshaokun@hisilicon.com>
- <20190726101844.79cb10b5@why>
-CC:     <linux-kernel@vger.kernel.org>,
-        Nianyao Tang <tangnianyao@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-From:   Zhangshaokun <zhangshaokun@hisilicon.com>
-Message-ID: <d33b8161-3ed0-07d6-af8a-d7fcca47f300@hisilicon.com>
-Date:   Fri, 26 Jul 2019 17:24:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+        Fri, 26 Jul 2019 05:25:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:40132 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbfGZJZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:25:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0630344;
+        Fri, 26 Jul 2019 02:25:38 -0700 (PDT)
+Received: from [192.168.0.21] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B4C23F71A;
+        Fri, 26 Jul 2019 02:25:37 -0700 (PDT)
+Subject: Re: [Regression] Missing device nodes for ETR, ETF and STM after
+ CONFIG_UEVENT_HELPER=n
+To:     gregkh@linuxfoundation.org, saiprakash.ranjan@codeaurora.org
+Cc:     geert+renesas@glider.be, mathieu.poirier@linaro.org,
+        leo.yan@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <cfe09a46-462f-633a-37c2-52f8bfc0ffb2@codeaurora.org>
+ <20190726070429.GA15714@kroah.com>
+ <165028a7-ff12-dd28-cc4c-57a3961dbb40@codeaurora.org>
+ <20190726084127.GA28470@kroah.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <f72f2fa1-7b1b-d7de-c9b4-cd574400d8e5@arm.com>
+Date:   Fri, 26 Jul 2019 10:28:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190726101844.79cb10b5@why>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <20190726084127.GA28470@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
 
-On 2019/7/26 17:18, Marc Zyngier wrote:
-> On Fri, 26 Jul 2019 09:51:45 +0800
-> Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
-> 
->> From: Nianyao Tang <tangnianyao@huawei.com>
+
+On 07/26/2019 09:41 AM, Greg Kroah-Hartman wrote:
+> On Fri, Jul 26, 2019 at 01:50:27PM +0530, Sai Prakash Ranjan wrote:
+>> On 7/26/2019 12:34 PM, Greg Kroah-Hartman wrote:
+>>> On Fri, Jul 26, 2019 at 11:49:19AM +0530, Sai Prakash Ranjan wrote:
+>>>> Hi,
+>>>>
+>>>> When trying to test my coresight patches, I found that etr,etf and stm
+>>>> device nodes are missing from /dev.
+>>>
+>>> I have no idea what those device nodes are.
+>>>
+>>>> Bisection gives this as the bad commit.
+>>>>
+>>>> 1be01d4a57142ded23bdb9e0c8d9369e693b26cc is the first bad commit
+>>>> commit 1be01d4a57142ded23bdb9e0c8d9369e693b26cc
+>>>> Author: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>> Date:   Thu Mar 14 12:13:50 2019 +0100
+>>>>
+>>>>       driver: base: Disable CONFIG_UEVENT_HELPER by default
+>>>>
+>>>>       Since commit 7934779a69f1184f ("Driver-Core: disable /sbin/hotplug by
+>>>>       default"), the help text for the /sbin/hotplug fork-bomb says
+>>>>       "This should not be used today [...] creates a high system load, or
+>>>>       [...] out-of-memory situations during bootup".  The rationale for this
+>>>>       was that no recent mainstream system used this anymore (in 2010!).
+>>>>
+>>>>       A few years later, the complete uevent helper support was made optional
+>>>>       in commit 86d56134f1b67d0c ("kobject: Make support for uevent_helper
+>>>>       optional.").  However, if was still left enabled by default, to support
+>>>>       ancient userland.
+>>>>
+>>>>       Time passed by, and nothing should use this anymore, so it can be
+>>>>       disabled by default.
+>>>>
+>>>>       Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>>       Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>>
+>>>>    drivers/base/Kconfig | 1 -
+>>>>    1 file changed, 1 deletion(-)
+>>>>
+>>>>
+>>>> Any idea on this?
+>>>
+>>> That means that who ever created those device nodes is relying on udev
+>>> to do this, and is not doing the correct thing within the kernel and
+>>> using devtmpfs.
+>>>
+>>> Any pointers to where in the kernel those devices are trying to be
+>>> created?
+>>>
 >>
->> In its_vpe_init, when its_alloc_vpe_table fails, we should free
->> vpt_page allocated just before, instead of vpe->vpt_page.
->> Let's fix it.
+>> Somewhere in drivers/hwtracing/coresight/* probably. I am not sure,
+>> Mathieu/Suzuki would be able to point you to the exact code.
 >>
->> Cc: Thomas Gleixner <tglx@linutronix.de> 
->> Cc: Jason Cooper <jason@lakedaemon.net>
->> Cc: Marc Zyngier <marc.zyngier@arm.com>
->> Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
->> ---
->>  drivers/irqchip/irq-gic-v3-its.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
->> index 730fbe0..1b5c367 100644
->> --- a/drivers/irqchip/irq-gic-v3-its.c
->> +++ b/drivers/irqchip/irq-gic-v3-its.c
->> @@ -3010,7 +3010,7 @@ static int its_vpe_init(struct its_vpe *vpe)
->>  
->>  	if (!its_alloc_vpe_table(vpe_id)) {
->>  		its_vpe_id_free(vpe_id);
->> -		its_free_pending_table(vpe->vpt_page);
->> +		its_free_pending_table(vpt_page);
->>  		return -ENOMEM;
->>  	}
->>  
-> 
-> Oops, well caught. Please repost this patch with your own SoB added
-> though, as you're posting the patch on behalf of someone else.
-> 
+>> Also just to add on some more details, I am using *initramfs*
 
-Thanks your reminder and I will do it in v2 version.
-
-Shaokun
-
-> Thanks,
 > 
-> 	M.
-> 
+> Are you using devtmpfs for your /dev/ mount?
 
+I think that should solve the issue ^^
+
+> 
+> If you enable this option, what does:
+> 	ls -l /dev/etr
+> 	ls -l /dev/etf
+> 	ls -l /dev/stm
+> result in?
+> 
+> What are these device nodes for?  Are they symlinks?  Real devices that
+> show up in /sys/dev/char/ as a real value?  Or something else?
+
+Greg, those are registered as miscellaneous devices to export the trace 
+collected (for etfs and etrs) in sysfs mode and for user-space access to
+allow STM tracing. So they are real devices.
+
+
+Suzuki
