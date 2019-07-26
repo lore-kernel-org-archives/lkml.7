@@ -2,137 +2,79 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB0AC76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA19C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6224520823
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69B9720823
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:14:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=saltedge.com header.i=@saltedge.com header.b="WFgDVPyn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfGZMN7 (ORCPT
+        id S1727219AbfGZMOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:13:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:42330 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbfGZMN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:13:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1E78337;
-        Fri, 26 Jul 2019 05:13:57 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A0F5C3F694;
-        Fri, 26 Jul 2019 05:13:56 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 13:13:54 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     will@kernel.org, catalin.marinas@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH 1/3] arm64: perf: Mark expected switch fall-through
-Message-ID: <20190726121354.GB26088@lakrids.cambridge.arm.com>
-References: <20190726112716.19104-1-anders.roxell@linaro.org>
- <20190726121056.GA26088@lakrids.cambridge.arm.com>
+        Fri, 26 Jul 2019 08:14:11 -0400
+Received: from mail.saltedge.com ([148.251.41.210]:48540 "EHLO
+        mail.saltedge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbfGZMOK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 08:14:10 -0400
+X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Fri, 26 Jul 2019 08:14:10 EDT
+Received: from [192.168.100.145] (unknown [195.22.227.78])
+        by mail.saltedge.com (Postfix) with ESMTPSA id 8238060538;
+        Fri, 26 Jul 2019 12:07:00 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.9.2 mail.saltedge.com 8238060538
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=saltedge.com;
+        s=mail; t=1564142821;
+        bh=x+Z5a9e8cJYLnAWaP567zFw2cFIDZlyHj4wl4q4yb28=;
+        h=Subject:From:To:Cc:Date:From;
+        b=WFgDVPynf+7Gr9tbYyHNLsmEWubiJz39Z8O6fkbxNhUm2xX1rFXCRKmGyv1+jhYqQ
+         HUvEGIaY8DjCZkLZJUPHwNJ0uw9vdfujBUJUKo2iBXPZLy+Mkoy8yYJpN6pfOfs4Ho
+         7PdoFXe78twwr9PXRySqy8OLml/xxXDZbAV4FlWU=
+Message-ID: <667a5b466e7daa22e1901d02cc708542020513b0.camel@saltedge.com>
+Subject: [PATCH][RESEND] drm/amdkfd: add missing 'break' statement
+From:   Alexandr Savca <alexandr.savca@saltedge.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     alexander.deucher@amd.com, christian.koenig@amd.com,
+        David1.Zhou@amd.com, oded.gabbay@gmail.com
+Date:   Fri, 26 Jul 2019 15:07:15 +0300
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190726121056.GA26088@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.100.0 at mail.saltedge.com
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 01:10:57PM +0100, Mark Rutland wrote:
-> On Fri, Jul 26, 2019 at 01:27:16PM +0200, Anders Roxell wrote:
-> > When fall-through warnings was enabled by default, commit d93512ef0f0e
-> > ("Makefile: Globally enable fall-through warning"), the following
-> > warnings was starting to show up:
-> > 
-> > ../arch/arm64/kernel/hw_breakpoint.c: In function ‘hw_breakpoint_arch_parse’:
-> > ../arch/arm64/kernel/hw_breakpoint.c:540:7: warning: this statement may fall
-> >  through [-Wimplicit-fallthrough=]
-> >     if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
-> >        ^
-> > ../arch/arm64/kernel/hw_breakpoint.c:542:3: note: here
-> >    case 2:
-> >    ^~~~
-> > ../arch/arm64/kernel/hw_breakpoint.c:544:7: warning: this statement may fall
-> >  through [-Wimplicit-fallthrough=]
-> >     if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
-> >        ^
-> > ../arch/arm64/kernel/hw_breakpoint.c:546:3: note: here
-> >    default:
-> >    ^~~~~~~
-> > 
-> > Rework so that the compiler doesn't warn about fall-through. Rework so
-> > the code looks like the arm code. Since the comment in the function
-> > indicates taht this is supposed to behave the same way as arm32 because
-> 
-> Typo: s/taht/that/
-> 
-> > it handles 32-bit tasks also.
-> > 
-> > Cc: stable@vger.kernel.org # v3.16+
-> > Fixes: 6ee33c2712fc ("ARM: hw_breakpoint: correct and simplify alignment fixup code")
-> > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-> 
-> The patch itself looks fine, but I don't think this needs a CC to
-> stable, nor does it require that fixes tag, as there's no functional
-> problem.
+Add missing 'break' statement which was introduced by the previous
+commit.
 
-Hmm... I now see I spoke too soon, and this is making the 1-byte
-breakpoint work at a 3-byte offset.
+Signed-off-by: Alexandr Savca <alexandr.savca@saltedge.com>
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_crat.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Given that:
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
+b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
+index 792371442195..4e3fc284f6ac 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
+@@ -668,6 +668,7 @@ static int kfd_fill_gpu_cache_info(struct kfd_dev
+*kdev,
+        case CHIP_RAVEN:
+                pcache_info = raven_cache_info;
+                num_of_cache_types = ARRAY_SIZE(raven_cache_info);
++               break;
+        case CHIP_NAVI10:
+                pcache_info = navi10_cache_info;
+                num_of_cache_types = ARRAY_SIZE(navi10_cache_info);
+-- 
+2.20.1
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-... and the fixes and stable tags are appropriate for that portion of
-the patch.
-
-Sorry for the noise.
-
-Thanks,
-Mark.
-
-
-> > ---
-> >  arch/arm64/kernel/hw_breakpoint.c | 11 +++++++----
-> >  1 file changed, 7 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-> > index dceb84520948..ea616adf1cf1 100644
-> > --- a/arch/arm64/kernel/hw_breakpoint.c
-> > +++ b/arch/arm64/kernel/hw_breakpoint.c
-> > @@ -535,14 +535,17 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
-> >  		case 0:
-> >  			/* Aligned */
-> >  			break;
-> > -		case 1:
-> > -			/* Allow single byte watchpoint. */
-> > -			if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
-> > -				break;
-> >  		case 2:
-> >  			/* Allow halfword watchpoints and breakpoints. */
-> >  			if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
-> >  				break;
-> > +			/* Fall through */
-> > +		case 1:
-> > +		case 3:
-> > +			/* Allow single byte watchpoint. */
-> > +			if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
-> > +				break;
-> > +			/* Fall through */
-> >  		default:
-> >  			return -EINVAL;
-> >  		}
-> > -- 
-> > 2.20.1
-> > 
