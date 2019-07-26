@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6606FC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2B1C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7D92054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42969205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155407;
-	bh=TtIz97idgvK/ebngtPfSIyiQsgALKx7b8XEflyfLeM4=;
+	s=default; t=1564155414;
+	bh=ynITI96xOYS/YnM3K3IXtr5J/DO4b/4b2SJSjMHq1M0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WiK3BX7MhYPXLHjdcc16S2y8/6UH/j5KpKHWQdjhJWAalxyrtkWAUNPRcgvJeZosD
-	 EKHtWgadsajLgpv+33u/kPZksNC8RYB5uAoOQxuAMzHaGAlo09BhsgHGljqSx85sfq
-	 Z187USKKQAvzAg6FIA5rLLD9VbAfGeiFhwjFNHzE=
+	b=nT5Hd6GSLRqT65sdb02/iRi6JtDT5aP2bwiS9Fy+kX+04w35byZYOl9gBVWcmdfzN
+	 8fPJ/IGnvicN+2jFa0UZJeAm4HaCu5gyBONqejO6+yKBWd9tdowIeLaJD10iJOMG8c
+	 J9YpqEogX6TDtUfG9jVv2WmOlOD+zhB6bhqoX5xM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389174AbfGZPa7 (ORCPT
+        id S2388555AbfGZPaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:30:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45764 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:30:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389146AbfGZPat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:30:49 -0400
+        id S2387516AbfGZPaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:30:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F87B205F4;
-        Fri, 26 Jul 2019 15:30:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DA8E205F4;
+        Fri, 26 Jul 2019 15:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155048;
-        bh=TtIz97idgvK/ebngtPfSIyiQsgALKx7b8XEflyfLeM4=;
+        s=default; t=1564155033;
+        bh=ynITI96xOYS/YnM3K3IXtr5J/DO4b/4b2SJSjMHq1M0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wh8t8mNQC15XbX9VQfJQjN8Ju5jMJ6l6PtNd1JHLiXb+86+HuL3TKPbrMK301QRSN
-         wuP5tUPZ2XSpg/WILIEBmj/5hMkFpuNyJ/ecqsRmeoPdKZeI5k8Pvzr0iP2ADD58/V
-         WsXNIOC546iQpN5G+d/JbpT1ZX7x+AsqVYpJGqz0=
+        b=Dn9milyQEAU88Tj0aEaQRofcz4Z0E4LBunP96EQgkWfQJoGqlaH2SY8UVM5CV5Tbj
+         3EtOvXS5ve9mATYTq0Kpqc+4R2abHIzM6aiwhhdDvOwHb03/TBA9BH2xoFmBCODejn
+         /SZeFOLJgeplsjI+Sq9ozVj5OLmLAZw7o4+daOoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 5.1 46/62] gpio: davinci: silence error prints in case of EPROBE_DEFER
-Date:   Fri, 26 Jul 2019 17:24:58 +0200
-Message-Id: <20190726152306.862106492@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 15/62] net: stmmac: Re-work the queue selection for TSO packets
+Date:   Fri, 26 Jul 2019 17:24:27 +0200
+Message-Id: <20190726152303.301501074@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -59,35 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keerthy <j-keerthy@ti.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-commit 541e4095f388c196685685633c950cb9b97f8039 upstream.
+[ Upstream commit 4993e5b37e8bcb55ac90f76eb6d2432647273747 ]
 
-Silence error prints in case of EPROBE_DEFER. This avoids
-multiple/duplicate defer prints during boot.
+Ben Hutchings says:
+	"This is the wrong place to change the queue mapping.
+	stmmac_xmit() is called with a specific TX queue locked,
+	and accessing a different TX queue results in a data race
+	for all of that queue's state.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+	I think this commit should be reverted upstream and in all
+	stable branches.  Instead, the driver should implement the
+	ndo_select_queue operation and override the queue mapping there."
+
+Fixes: c5acdbee22a1 ("net: stmmac: Send TSO packets always from Queue 0")
+Suggested-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/gpio/gpio-davinci.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |   29 ++++++++++++++--------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -242,8 +242,9 @@ static int davinci_gpio_probe(struct pla
- 	for (i = 0; i < nirq; i++) {
- 		chips->irqs[i] = platform_get_irq(pdev, i);
- 		if (chips->irqs[i] < 0) {
--			dev_info(dev, "IRQ not populated, err = %d\n",
--				 chips->irqs[i]);
-+			if (chips->irqs[i] != -EPROBE_DEFER)
-+				dev_info(dev, "IRQ not populated, err = %d\n",
-+					 chips->irqs[i]);
- 			return chips->irqs[i];
- 		}
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3058,17 +3058,8 @@ static netdev_tx_t stmmac_xmit(struct sk
+ 
+ 	/* Manage oversized TCP frames for GMAC4 device */
+ 	if (skb_is_gso(skb) && priv->tso) {
+-		if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6)) {
+-			/*
+-			 * There is no way to determine the number of TSO
+-			 * capable Queues. Let's use always the Queue 0
+-			 * because if TSO is supported then at least this
+-			 * one will be capable.
+-			 */
+-			skb_set_queue_mapping(skb, 0);
+-
++		if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6))
+ 			return stmmac_tso_xmit(skb, dev);
+-		}
  	}
+ 
+ 	if (unlikely(stmmac_tx_avail(priv, queue) < nfrags + 1)) {
+@@ -3885,6 +3876,23 @@ static int stmmac_setup_tc(struct net_de
+ 	}
+ }
+ 
++static u16 stmmac_select_queue(struct net_device *dev, struct sk_buff *skb,
++			       struct net_device *sb_dev,
++			       select_queue_fallback_t fallback)
++{
++	if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6)) {
++		/*
++		 * There is no way to determine the number of TSO
++		 * capable Queues. Let's use always the Queue 0
++		 * because if TSO is supported then at least this
++		 * one will be capable.
++		 */
++		return 0;
++	}
++
++	return fallback(dev, skb, NULL) % dev->real_num_tx_queues;
++}
++
+ static int stmmac_set_mac_address(struct net_device *ndev, void *addr)
+ {
+ 	struct stmmac_priv *priv = netdev_priv(ndev);
+@@ -4101,6 +4109,7 @@ static const struct net_device_ops stmma
+ 	.ndo_tx_timeout = stmmac_tx_timeout,
+ 	.ndo_do_ioctl = stmmac_ioctl,
+ 	.ndo_setup_tc = stmmac_setup_tc,
++	.ndo_select_queue = stmmac_select_queue,
+ #ifdef CONFIG_NET_POLL_CONTROLLER
+ 	.ndo_poll_controller = stmmac_poll_controller,
+ #endif
 
 
