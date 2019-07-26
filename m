@@ -2,190 +2,102 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB5FC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A82C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A86B22CC2
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE923218DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfGZMAS (ORCPT
+        id S1726923AbfGZMBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:00:18 -0400
-Received: from relay.sw.ru ([185.231.240.75]:54716 "EHLO relay.sw.ru"
+        Fri, 26 Jul 2019 08:01:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:42078 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbfGZMAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:00:17 -0400
-Received: from [172.16.25.12]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1hqytE-0007LO-Dd; Fri, 26 Jul 2019 15:00:00 +0300
-Subject: Re: [PATCH v3] kasan: add memory corruption identification for
- software tag-based mode
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>
-References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
- <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
- <1560447999.15814.15.camel@mtksdccf07> <1560479520.15814.34.camel@mtksdccf07>
- <1560744017.15814.49.camel@mtksdccf07>
- <CACT4Y+Y3uS59rXf92ByQuFK_G4v0H8NNnCY1tCbr4V+PaZF3ag@mail.gmail.com>
- <1560774735.15814.54.camel@mtksdccf07> <1561974995.18866.1.camel@mtksdccf07>
- <CACT4Y+aMXTBE0uVkeZz+MuPx3X1nESSBncgkScWvAkciAxP1RA@mail.gmail.com>
- <ebc99ee1-716b-0b18-66ab-4e93de02ce50@virtuozzo.com>
- <1562640832.9077.32.camel@mtksdccf07>
- <d9fd1d5b-9516-b9b9-0670-a1885e79f278@virtuozzo.com>
- <1562839579.5846.12.camel@mtksdccf07>
- <37897fb7-88c1-859a-dfcc-0a5e89a642e0@virtuozzo.com>
- <1563160001.4793.4.camel@mtksdccf07>
- <9ab1871a-2605-ab34-3fd3-4b44a0e17ab7@virtuozzo.com>
- <1563789162.31223.3.camel@mtksdccf07>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <e62da62a-2a63-3a1c-faeb-9c5561a5170c@virtuozzo.com>
-Date:   Fri, 26 Jul 2019 15:00:00 +0300
+        id S1726026AbfGZMBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 08:01:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F185344;
+        Fri, 26 Jul 2019 05:01:04 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B2B983F694;
+        Fri, 26 Jul 2019 05:01:03 -0700 (PDT)
+Subject: Re: [PATCH] iommu: arm-smmu-v3: Mark expected switch fall-through
+To:     Anders Roxell <anders.roxell@linaro.org>, will@kernel.org,
+        joro@8bytes.org
+Cc:     stable@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190726112821.19775-1-anders.roxell@linaro.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <522507e5-96e6-2bf4-cf91-73963a77358d@arm.com>
+Date:   Fri, 26 Jul 2019 13:01:02 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1563789162.31223.3.camel@mtksdccf07>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190726112821.19775-1-anders.roxell@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 26/07/2019 12:28, Anders Roxell wrote:
+> When fall-through warnings was enabled by default, commit d93512ef0f0e
 
+That commit ID only exists in a handful of old linux-next tags.
 
-On 7/22/19 12:52 PM, Walter Wu wrote:
-> On Thu, 2019-07-18 at 19:11 +0300, Andrey Ryabinin wrote:
->>
->> On 7/15/19 6:06 AM, Walter Wu wrote:
->>> On Fri, 2019-07-12 at 13:52 +0300, Andrey Ryabinin wrote:
->>>>
->>>> On 7/11/19 1:06 PM, Walter Wu wrote:
->>>>> On Wed, 2019-07-10 at 21:24 +0300, Andrey Ryabinin wrote:
->>>>>>
->>>>>> On 7/9/19 5:53 AM, Walter Wu wrote:
->>>>>>> On Mon, 2019-07-08 at 19:33 +0300, Andrey Ryabinin wrote:
->>>>>>>>
->>>>>>>> On 7/5/19 4:34 PM, Dmitry Vyukov wrote:
->>>>>>>>> On Mon, Jul 1, 2019 at 11:56 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
->>>>>>
->>>>>>>>>
->>>>>>>>> Sorry for delays. I am overwhelm by some urgent work. I afraid to
->>>>>>>>> promise any dates because the next week I am on a conference, then
->>>>>>>>> again a backlog and an intern starting...
->>>>>>>>>
->>>>>>>>> Andrey, do you still have concerns re this patch? This change allows
->>>>>>>>> to print the free stack.
->>>>>>>>
->>>>>>>> I 'm not sure that quarantine is a best way to do that. Quarantine is made to delay freeing, but we don't that here.
->>>>>>>> If we want to remember more free stacks wouldn't be easier simply to remember more stacks in object itself?
->>>>>>>> Same for previously used tags for better use-after-free identification.
->>>>>>>>
->>>>>>>
->>>>>>> Hi Andrey,
->>>>>>>
->>>>>>> We ever tried to use object itself to determine use-after-free
->>>>>>> identification, but tag-based KASAN immediately released the pointer
->>>>>>> after call kfree(), the original object will be used by another
->>>>>>> pointer, if we use object itself to determine use-after-free issue, then
->>>>>>> it has many false negative cases. so we create a lite quarantine(ring
->>>>>>> buffers) to record recent free stacks in order to avoid those false
->>>>>>> negative situations.
->>>>>>
->>>>>> I'm telling that *more* than one free stack and also tags per object can be stored.
->>>>>> If object reused we would still have information about n-last usages of the object.
->>>>>> It seems like much easier and more efficient solution than patch you proposing.
->>>>>>
->>>>> To make the object reused, we must ensure that no other pointers uses it
->>>>> after kfree() release the pointer.
->>>>> Scenario:
->>>>> 1). The object reused information is valid when no another pointer uses
->>>>> it.
->>>>> 2). The object reused information is invalid when another pointer uses
->>>>> it.
->>>>> Do you mean that the object reused is scenario 1) ?
->>>>> If yes, maybe we can change the calling quarantine_put() location. It
->>>>> will be fully use that quarantine, but at scenario 2) it looks like to
->>>>> need this patch.
->>>>> If no, maybe i miss your meaning, would you tell me how to use invalid
->>>>> object information? or?
->>>>>
->>>>
->>>>
->>>> KASAN keeps information about object with the object, right after payload in the kasan_alloc_meta struct.
->>>> This information is always valid as long as slab page allocated. Currently it keeps only one last free stacktrace.
->>>> It could be extended to record more free stacktraces and also record previously used tags which will allow you
->>>> to identify use-after-free and extract right free stacktrace.
->>>
->>> Thanks for your explanation.
->>>
->>> For extend slub object, if one record is 9B (sizeof(u8)+ sizeof(struct
->>> kasan_track)) and add five records into slub object, every slub object
->>> may add 45B usage after the system runs longer. 
->>> Slub object number is easy more than 1,000,000(maybe it may be more
->>> bigger), then the extending object memory usage should be 45MB, and
->>> unfortunately it is no limit. The memory usage is more bigger than our
->>> patch.
->>
->> No, it's not necessarily more.
->> And there are other aspects to consider such as performance, how simple reliable the code is.
->>
->>>
->>> We hope tag-based KASAN advantage is smaller memory usage. If it’s
->>> possible, we should spend less memory in order to identify
->>> use-after-free. Would you accept our patch after fine tune it?
->>
->> Sure, if you manage to fix issues and demonstrate that performance penalty of your
->> patch is close to zero.
+> ("Makefile: Globally enable fall-through warning"), the following
+> warning was starting to show up:
 > 
+> ../drivers/iommu/arm-smmu-v3.c: In function ‘arm_smmu_write_strtab_ent’:
+> ../drivers/iommu/arm-smmu-v3.c:1189:7: warning: this statement may fall
+>   through [-Wimplicit-fallthrough=]
+>      if (disable_bypass)
+>         ^
+> ../drivers/iommu/arm-smmu-v3.c:1191:3: note: here
+>     default:
+>     ^~~~~~~
 > 
-> I remember that there are already the lists which you concern. Maybe we
-> can try to solve those problems one by one.
+> Rework so that the compiler doesn't warn about fall-through. Make it
+> clearer by calling 'BUG()' when disable_bypass is set, and always
+> 'break;'
 > 
-> 1. deadlock issue? cause by kmalloc() after kfree()?
+> Cc: stable@vger.kernel.org # v4.2+
+> Fixes: 5bc0a11664e1 ("iommu/arm-smmu: Don't BUG() if we find aborting STEs with disable_bypass")
 
-smp_call_on_cpu()
+Why? There's no actual bug, and not even current kernels have that 
+warning enabled.
 
-> 2. decrease allocation fail, to modify GFP_NOWAIT flag to GFP_KERNEL?
-
-No, this is not gonna work. Ideally we shouldn't have any allocations there.
-It's not reliable and it hurts performance.
-
-
-> 3. check whether slim 48 bytes (sizeof (qlist_object) +
-> sizeof(kasan_alloc_meta)) and additional unique stacktrace in
-> stackdepot?
-> 4. duplicate struct 'kasan_track' information in two different places
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> ---
+>   drivers/iommu/arm-smmu-v3.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
 > 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index a9a9fabd3968..8e5f0565996d 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -1186,8 +1186,9 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
+>   			ste_live = true;
+>   			break;
+>   		case STRTAB_STE_0_CFG_ABORT:
+> -			if (disable_bypass)
+> -				break;
+> +			if (!disable_bypass)
+> +				BUG();
 
-Yup.
+You may as well just use BUG_ON().
 
-> Would you have any other concern? or?
+Robin.
+
+> +			break;
+>   		default:
+>   			BUG(); /* STE corruption */
+>   		}
 > 
-
-It would be nice to see some performance numbers. Something that uses slab allocations a lot, e.g. netperf STREAM_STREAM test.
-
-
