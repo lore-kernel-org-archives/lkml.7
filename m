@@ -2,59 +2,52 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 522EAC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2538C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA55208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CFA1218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155385;
-	bh=NM1tO4Ym7QfymXZyFFhNxVvQL0vcQJkAOMfVEMFgLMc=;
+	s=default; t=1564155394;
+	bh=UzBZKX+YAvWDWmYQ+tmNB5ZGSrCDrz9XJDigPe6VYhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RPyWSOBdGeEsaMgcQrZGrLv/f16whIFpAvPkO/INBEEnFIvFeovfBms4lSasE8wRr
-	 HZlAp1oBTE3FqHRaWwmH3LYowlhNTGnWcAH9CTU+X/5e+gslAHHwr/ajDWtovG2Za1
-	 ZB/CAHBbrRe6EyydAlwShpl2rLoVLBjSMhftggYk=
+	b=QmYmdHJaar0M3MXA0LUppy70fm7lSs65QRECk/24VkjQEjjuDNEValrlY2M2amE9z
+	 iNxKiQqaCbku7H9GrdJuZFy0SMtTjZ1n5aKXVMEYP93innl7Vm79lkHvXfU1Hk8/bA
+	 Qt1244UPdyopVbEmTXMXQqf/fbPgk2jHV1xArrDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388192AbfGZPgX (ORCPT
+        id S2389214AbfGZPbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:36:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46556 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:31:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388790AbfGZPba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:31:30 -0400
+        id S2389191AbfGZPbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:31:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E0A622BF5;
-        Fri, 26 Jul 2019 15:31:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A974A205F4;
+        Fri, 26 Jul 2019 15:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155089;
-        bh=NM1tO4Ym7QfymXZyFFhNxVvQL0vcQJkAOMfVEMFgLMc=;
+        s=default; t=1564155062;
+        bh=UzBZKX+YAvWDWmYQ+tmNB5ZGSrCDrz9XJDigPe6VYhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1rJYRRI2aLpKaITkM5De6x0lW2xfMVvGej71V7YqSGIQ699E+Pn6kWwigr1aga0Xh
-         t6GnZk890UP9GD0hf0wFRfRzFW3WEBLt9deKCjE4nvjsRHvzMhuzNjFmWYjApA5xAl
-         vaAGjpXIEiDOfeJn1kK8MpyHzavDZLt7N0aLpTcM=
+        b=V9pUyL236k3UKJQrPQCSO5qENqSYG6PBGP/ZXeoQnshg8M7tK0/8XuGZ1oMReLNgH
+         rqPvWsWtCFxM2fNkClxYmzyorIPRBbqic552EATb5d7eZImzKhEwcN5xsTVsxRDAMI
+         gh99lMyA0ftP7YwwwbAhlnSzIRDP6AeeIqfveM9g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kuo-Hsin Yang <vovoy@chromium.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Sonny Rao <sonnyrao@chromium.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@redhat.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 62/62] mm: vmscan: scan anonymous pages on file refaults
-Date:   Fri, 26 Jul 2019 17:25:14 +0200
-Message-Id: <20190726152308.374803957@linuxfoundation.org>
+        stable@vger.kernel.org, Ionut Radu <ionut.radu@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 18/62] r8169: fix issue with confused RX unit after PHY power-down on RTL8411b
+Date:   Fri, 26 Jul 2019 17:24:30 +0200
+Message-Id: <20190726152303.624067402@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -67,241 +60,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuo-Hsin Yang <vovoy@chromium.org>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-commit 2c012a4ad1a2cd3fb5a0f9307b9d219f84eda1fa upstream.
+[ Upstream commit fe4e8db0392a6c2e795eb89ef5fcd86522e66248 ]
 
-When file refaults are detected and there are many inactive file pages,
-the system never reclaim anonymous pages, the file pages are dropped
-aggressively when there are still a lot of cold anonymous pages and
-system thrashes.  This issue impacts the performance of applications
-with large executable, e.g.  chrome.
+On RTL8411b the RX unit gets confused if the PHY is powered-down.
+This was reported in [0] and confirmed by Realtek. Realtek provided
+a sequence to fix the RX unit after PHY wakeup.
 
-With this patch, when file refault is detected, inactive_list_is_low()
-always returns true for file pages in get_scan_count() to enable
-scanning anonymous pages.
+The issue itself seems to have been there longer, the Fixes tag
+refers to where the fix applies properly.
 
-The problem can be reproduced by the following test program.
+[0] https://bugzilla.redhat.com/show_bug.cgi?id=1692075
 
----8<---
-void fallocate_file(const char *filename, off_t size)
-{
-	struct stat st;
-	int fd;
-
-	if (!stat(filename, &st) && st.st_size >= size)
-		return;
-
-	fd = open(filename, O_WRONLY | O_CREAT, 0600);
-	if (fd < 0) {
-		perror("create file");
-		exit(1);
-	}
-	if (posix_fallocate(fd, 0, size)) {
-		perror("fallocate");
-		exit(1);
-	}
-	close(fd);
-}
-
-long *alloc_anon(long size)
-{
-	long *start = malloc(size);
-	memset(start, 1, size);
-	return start;
-}
-
-long access_file(const char *filename, long size, long rounds)
-{
-	int fd, i;
-	volatile char *start1, *end1, *start2;
-	const int page_size = getpagesize();
-	long sum = 0;
-
-	fd = open(filename, O_RDONLY);
-	if (fd == -1) {
-		perror("open");
-		exit(1);
-	}
-
-	/*
-	 * Some applications, e.g. chrome, use a lot of executable file
-	 * pages, map some of the pages with PROT_EXEC flag to simulate
-	 * the behavior.
-	 */
-	start1 = mmap(NULL, size / 2, PROT_READ | PROT_EXEC, MAP_SHARED,
-		      fd, 0);
-	if (start1 == MAP_FAILED) {
-		perror("mmap");
-		exit(1);
-	}
-	end1 = start1 + size / 2;
-
-	start2 = mmap(NULL, size / 2, PROT_READ, MAP_SHARED, fd, size / 2);
-	if (start2 == MAP_FAILED) {
-		perror("mmap");
-		exit(1);
-	}
-
-	for (i = 0; i < rounds; ++i) {
-		struct timeval before, after;
-		volatile char *ptr1 = start1, *ptr2 = start2;
-		gettimeofday(&before, NULL);
-		for (; ptr1 < end1; ptr1 += page_size, ptr2 += page_size)
-			sum += *ptr1 + *ptr2;
-		gettimeofday(&after, NULL);
-		printf("File access time, round %d: %f (sec)
-", i,
-		       (after.tv_sec - before.tv_sec) +
-		       (after.tv_usec - before.tv_usec) / 1000000.0);
-	}
-	return sum;
-}
-
-int main(int argc, char *argv[])
-{
-	const long MB = 1024 * 1024;
-	long anon_mb, file_mb, file_rounds;
-	const char filename[] = "large";
-	long *ret1;
-	long ret2;
-
-	if (argc != 4) {
-		printf("usage: thrash ANON_MB FILE_MB FILE_ROUNDS
-");
-		exit(0);
-	}
-	anon_mb = atoi(argv[1]);
-	file_mb = atoi(argv[2]);
-	file_rounds = atoi(argv[3]);
-
-	fallocate_file(filename, file_mb * MB);
-	printf("Allocate %ld MB anonymous pages
-", anon_mb);
-	ret1 = alloc_anon(anon_mb * MB);
-	printf("Access %ld MB file pages
-", file_mb);
-	ret2 = access_file(filename, file_mb * MB, file_rounds);
-	printf("Print result to prevent optimization: %ld
-",
-	       *ret1 + ret2);
-	return 0;
-}
----8<---
-
-Running the test program on 2GB RAM VM with kernel 5.2.0-rc5, the program
-fills ram with 2048 MB memory, access a 200 MB file for 10 times.  Without
-this patch, the file cache is dropped aggresively and every access to the
-file is from disk.
-
-  $ ./thrash 2048 200 10
-  Allocate 2048 MB anonymous pages
-  Access 200 MB file pages
-  File access time, round 0: 2.489316 (sec)
-  File access time, round 1: 2.581277 (sec)
-  File access time, round 2: 2.487624 (sec)
-  File access time, round 3: 2.449100 (sec)
-  File access time, round 4: 2.420423 (sec)
-  File access time, round 5: 2.343411 (sec)
-  File access time, round 6: 2.454833 (sec)
-  File access time, round 7: 2.483398 (sec)
-  File access time, round 8: 2.572701 (sec)
-  File access time, round 9: 2.493014 (sec)
-
-With this patch, these file pages can be cached.
-
-  $ ./thrash 2048 200 10
-  Allocate 2048 MB anonymous pages
-  Access 200 MB file pages
-  File access time, round 0: 2.475189 (sec)
-  File access time, round 1: 2.440777 (sec)
-  File access time, round 2: 2.411671 (sec)
-  File access time, round 3: 1.955267 (sec)
-  File access time, round 4: 0.029924 (sec)
-  File access time, round 5: 0.000808 (sec)
-  File access time, round 6: 0.000771 (sec)
-  File access time, round 7: 0.000746 (sec)
-  File access time, round 8: 0.000738 (sec)
-  File access time, round 9: 0.000747 (sec)
-
-Checked the swap out stats during the test [1], 19006 pages swapped out
-with this patch, 3418 pages swapped out without this patch. There are
-more swap out, but I think it's within reasonable range when file backed
-data set doesn't fit into the memory.
-
-$ ./thrash 2000 100 2100 5 1 # ANON_MB FILE_EXEC FILE_NOEXEC ROUNDS
-PROCESSES Allocate 2000 MB anonymous pages active_anon: 1613644,
-inactive_anon: 348656, active_file: 892, inactive_file: 1384 (kB)
-pswpout: 7972443, pgpgin: 478615246 Access 100 MB executable file pages
-Access 2100 MB regular file pages File access time, round 0: 12.165,
-(sec) active_anon: 1433788, inactive_anon: 478116, active_file: 17896,
-inactive_file: 24328 (kB) File access time, round 1: 11.493, (sec)
-active_anon: 1430576, inactive_anon: 477144, active_file: 25440,
-inactive_file: 26172 (kB) File access time, round 2: 11.455, (sec)
-active_anon: 1427436, inactive_anon: 476060, active_file: 21112,
-inactive_file: 28808 (kB) File access time, round 3: 11.454, (sec)
-active_anon: 1420444, inactive_anon: 473632, active_file: 23216,
-inactive_file: 35036 (kB) File access time, round 4: 11.479, (sec)
-active_anon: 1413964, inactive_anon: 471460, active_file: 31728,
-inactive_file: 32224 (kB) pswpout: 7991449 (+ 19006), pgpgin: 489924366
-(+ 11309120)
-
-With 4 processes accessing non-overlapping parts of a large file, 30316
-pages swapped out with this patch, 5152 pages swapped out without this
-patch.  The swapout number is small comparing to pgpgin.
-
-[1]: https://github.com/vovo/testing/blob/master/mem_thrash.c
-
-Link: http://lkml.kernel.org/r/20190701081038.GA83398@google.com
-Fixes: e9868505987a ("mm,vmscan: only evict file pages when we have plenty")
-Fixes: 7c5bd705d8f9 ("mm: memcg: only evict file pages when we have plenty")
-Signed-off-by: Kuo-Hsin Yang <vovoy@chromium.org>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Sonny Rao <sonnyrao@chromium.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Rik van Riel <riel@redhat.com>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: <stable@vger.kernel.org>	[4.12+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[backported to 4.14.y, 4.19.y, 5.1.y: adjust context]
-Signed-off-by: Kuo-Hsin Yang <vovoy@chromium.org>
+Fixes: a99790bf5c7f ("r8169: Reinstate ASPM Support")
+Tested-by: Ionut Radu <ionut.radu@gmail.com>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- mm/vmscan.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/realtek/r8169.c |  137 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 137 insertions(+)
 
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2176,7 +2176,7 @@ static void shrink_active_list(unsigned
-  *   10TB     320        32GB
-  */
- static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
--				 struct scan_control *sc, bool actual_reclaim)
-+				 struct scan_control *sc, bool trace)
- {
- 	enum lru_list active_lru = file * LRU_FILE + LRU_ACTIVE;
- 	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
-@@ -2202,7 +2202,7 @@ static bool inactive_list_is_low(struct
- 	 * rid of the stale workingset quickly.
- 	 */
- 	refaults = lruvec_page_state(lruvec, WORKINGSET_ACTIVATE);
--	if (file && actual_reclaim && lruvec->refaults != refaults) {
-+	if (file && lruvec->refaults != refaults) {
- 		inactive_ratio = 0;
- 	} else {
- 		gb = (inactive + active) >> (30 - PAGE_SHIFT);
-@@ -2212,7 +2212,7 @@ static bool inactive_list_is_low(struct
- 			inactive_ratio = 1;
- 	}
+--- a/drivers/net/ethernet/realtek/r8169.c
++++ b/drivers/net/ethernet/realtek/r8169.c
+@@ -5241,6 +5241,143 @@ static void rtl_hw_start_8411_2(struct r
+ 	/* disable aspm and clock request before access ephy */
+ 	rtl_hw_aspm_clkreq_enable(tp, false);
+ 	rtl_ephy_init(tp, e_info_8411_2, ARRAY_SIZE(e_info_8411_2));
++
++	/* The following Realtek-provided magic fixes an issue with the RX unit
++	 * getting confused after the PHY having been powered-down.
++	 */
++	r8168_mac_ocp_write(tp, 0xFC28, 0x0000);
++	r8168_mac_ocp_write(tp, 0xFC2A, 0x0000);
++	r8168_mac_ocp_write(tp, 0xFC2C, 0x0000);
++	r8168_mac_ocp_write(tp, 0xFC2E, 0x0000);
++	r8168_mac_ocp_write(tp, 0xFC30, 0x0000);
++	r8168_mac_ocp_write(tp, 0xFC32, 0x0000);
++	r8168_mac_ocp_write(tp, 0xFC34, 0x0000);
++	r8168_mac_ocp_write(tp, 0xFC36, 0x0000);
++	mdelay(3);
++	r8168_mac_ocp_write(tp, 0xFC26, 0x0000);
++
++	r8168_mac_ocp_write(tp, 0xF800, 0xE008);
++	r8168_mac_ocp_write(tp, 0xF802, 0xE00A);
++	r8168_mac_ocp_write(tp, 0xF804, 0xE00C);
++	r8168_mac_ocp_write(tp, 0xF806, 0xE00E);
++	r8168_mac_ocp_write(tp, 0xF808, 0xE027);
++	r8168_mac_ocp_write(tp, 0xF80A, 0xE04F);
++	r8168_mac_ocp_write(tp, 0xF80C, 0xE05E);
++	r8168_mac_ocp_write(tp, 0xF80E, 0xE065);
++	r8168_mac_ocp_write(tp, 0xF810, 0xC602);
++	r8168_mac_ocp_write(tp, 0xF812, 0xBE00);
++	r8168_mac_ocp_write(tp, 0xF814, 0x0000);
++	r8168_mac_ocp_write(tp, 0xF816, 0xC502);
++	r8168_mac_ocp_write(tp, 0xF818, 0xBD00);
++	r8168_mac_ocp_write(tp, 0xF81A, 0x074C);
++	r8168_mac_ocp_write(tp, 0xF81C, 0xC302);
++	r8168_mac_ocp_write(tp, 0xF81E, 0xBB00);
++	r8168_mac_ocp_write(tp, 0xF820, 0x080A);
++	r8168_mac_ocp_write(tp, 0xF822, 0x6420);
++	r8168_mac_ocp_write(tp, 0xF824, 0x48C2);
++	r8168_mac_ocp_write(tp, 0xF826, 0x8C20);
++	r8168_mac_ocp_write(tp, 0xF828, 0xC516);
++	r8168_mac_ocp_write(tp, 0xF82A, 0x64A4);
++	r8168_mac_ocp_write(tp, 0xF82C, 0x49C0);
++	r8168_mac_ocp_write(tp, 0xF82E, 0xF009);
++	r8168_mac_ocp_write(tp, 0xF830, 0x74A2);
++	r8168_mac_ocp_write(tp, 0xF832, 0x8CA5);
++	r8168_mac_ocp_write(tp, 0xF834, 0x74A0);
++	r8168_mac_ocp_write(tp, 0xF836, 0xC50E);
++	r8168_mac_ocp_write(tp, 0xF838, 0x9CA2);
++	r8168_mac_ocp_write(tp, 0xF83A, 0x1C11);
++	r8168_mac_ocp_write(tp, 0xF83C, 0x9CA0);
++	r8168_mac_ocp_write(tp, 0xF83E, 0xE006);
++	r8168_mac_ocp_write(tp, 0xF840, 0x74F8);
++	r8168_mac_ocp_write(tp, 0xF842, 0x48C4);
++	r8168_mac_ocp_write(tp, 0xF844, 0x8CF8);
++	r8168_mac_ocp_write(tp, 0xF846, 0xC404);
++	r8168_mac_ocp_write(tp, 0xF848, 0xBC00);
++	r8168_mac_ocp_write(tp, 0xF84A, 0xC403);
++	r8168_mac_ocp_write(tp, 0xF84C, 0xBC00);
++	r8168_mac_ocp_write(tp, 0xF84E, 0x0BF2);
++	r8168_mac_ocp_write(tp, 0xF850, 0x0C0A);
++	r8168_mac_ocp_write(tp, 0xF852, 0xE434);
++	r8168_mac_ocp_write(tp, 0xF854, 0xD3C0);
++	r8168_mac_ocp_write(tp, 0xF856, 0x49D9);
++	r8168_mac_ocp_write(tp, 0xF858, 0xF01F);
++	r8168_mac_ocp_write(tp, 0xF85A, 0xC526);
++	r8168_mac_ocp_write(tp, 0xF85C, 0x64A5);
++	r8168_mac_ocp_write(tp, 0xF85E, 0x1400);
++	r8168_mac_ocp_write(tp, 0xF860, 0xF007);
++	r8168_mac_ocp_write(tp, 0xF862, 0x0C01);
++	r8168_mac_ocp_write(tp, 0xF864, 0x8CA5);
++	r8168_mac_ocp_write(tp, 0xF866, 0x1C15);
++	r8168_mac_ocp_write(tp, 0xF868, 0xC51B);
++	r8168_mac_ocp_write(tp, 0xF86A, 0x9CA0);
++	r8168_mac_ocp_write(tp, 0xF86C, 0xE013);
++	r8168_mac_ocp_write(tp, 0xF86E, 0xC519);
++	r8168_mac_ocp_write(tp, 0xF870, 0x74A0);
++	r8168_mac_ocp_write(tp, 0xF872, 0x48C4);
++	r8168_mac_ocp_write(tp, 0xF874, 0x8CA0);
++	r8168_mac_ocp_write(tp, 0xF876, 0xC516);
++	r8168_mac_ocp_write(tp, 0xF878, 0x74A4);
++	r8168_mac_ocp_write(tp, 0xF87A, 0x48C8);
++	r8168_mac_ocp_write(tp, 0xF87C, 0x48CA);
++	r8168_mac_ocp_write(tp, 0xF87E, 0x9CA4);
++	r8168_mac_ocp_write(tp, 0xF880, 0xC512);
++	r8168_mac_ocp_write(tp, 0xF882, 0x1B00);
++	r8168_mac_ocp_write(tp, 0xF884, 0x9BA0);
++	r8168_mac_ocp_write(tp, 0xF886, 0x1B1C);
++	r8168_mac_ocp_write(tp, 0xF888, 0x483F);
++	r8168_mac_ocp_write(tp, 0xF88A, 0x9BA2);
++	r8168_mac_ocp_write(tp, 0xF88C, 0x1B04);
++	r8168_mac_ocp_write(tp, 0xF88E, 0xC508);
++	r8168_mac_ocp_write(tp, 0xF890, 0x9BA0);
++	r8168_mac_ocp_write(tp, 0xF892, 0xC505);
++	r8168_mac_ocp_write(tp, 0xF894, 0xBD00);
++	r8168_mac_ocp_write(tp, 0xF896, 0xC502);
++	r8168_mac_ocp_write(tp, 0xF898, 0xBD00);
++	r8168_mac_ocp_write(tp, 0xF89A, 0x0300);
++	r8168_mac_ocp_write(tp, 0xF89C, 0x051E);
++	r8168_mac_ocp_write(tp, 0xF89E, 0xE434);
++	r8168_mac_ocp_write(tp, 0xF8A0, 0xE018);
++	r8168_mac_ocp_write(tp, 0xF8A2, 0xE092);
++	r8168_mac_ocp_write(tp, 0xF8A4, 0xDE20);
++	r8168_mac_ocp_write(tp, 0xF8A6, 0xD3C0);
++	r8168_mac_ocp_write(tp, 0xF8A8, 0xC50F);
++	r8168_mac_ocp_write(tp, 0xF8AA, 0x76A4);
++	r8168_mac_ocp_write(tp, 0xF8AC, 0x49E3);
++	r8168_mac_ocp_write(tp, 0xF8AE, 0xF007);
++	r8168_mac_ocp_write(tp, 0xF8B0, 0x49C0);
++	r8168_mac_ocp_write(tp, 0xF8B2, 0xF103);
++	r8168_mac_ocp_write(tp, 0xF8B4, 0xC607);
++	r8168_mac_ocp_write(tp, 0xF8B6, 0xBE00);
++	r8168_mac_ocp_write(tp, 0xF8B8, 0xC606);
++	r8168_mac_ocp_write(tp, 0xF8BA, 0xBE00);
++	r8168_mac_ocp_write(tp, 0xF8BC, 0xC602);
++	r8168_mac_ocp_write(tp, 0xF8BE, 0xBE00);
++	r8168_mac_ocp_write(tp, 0xF8C0, 0x0C4C);
++	r8168_mac_ocp_write(tp, 0xF8C2, 0x0C28);
++	r8168_mac_ocp_write(tp, 0xF8C4, 0x0C2C);
++	r8168_mac_ocp_write(tp, 0xF8C6, 0xDC00);
++	r8168_mac_ocp_write(tp, 0xF8C8, 0xC707);
++	r8168_mac_ocp_write(tp, 0xF8CA, 0x1D00);
++	r8168_mac_ocp_write(tp, 0xF8CC, 0x8DE2);
++	r8168_mac_ocp_write(tp, 0xF8CE, 0x48C1);
++	r8168_mac_ocp_write(tp, 0xF8D0, 0xC502);
++	r8168_mac_ocp_write(tp, 0xF8D2, 0xBD00);
++	r8168_mac_ocp_write(tp, 0xF8D4, 0x00AA);
++	r8168_mac_ocp_write(tp, 0xF8D6, 0xE0C0);
++	r8168_mac_ocp_write(tp, 0xF8D8, 0xC502);
++	r8168_mac_ocp_write(tp, 0xF8DA, 0xBD00);
++	r8168_mac_ocp_write(tp, 0xF8DC, 0x0132);
++
++	r8168_mac_ocp_write(tp, 0xFC26, 0x8000);
++
++	r8168_mac_ocp_write(tp, 0xFC2A, 0x0743);
++	r8168_mac_ocp_write(tp, 0xFC2C, 0x0801);
++	r8168_mac_ocp_write(tp, 0xFC2E, 0x0BE9);
++	r8168_mac_ocp_write(tp, 0xFC30, 0x02FD);
++	r8168_mac_ocp_write(tp, 0xFC32, 0x0C25);
++	r8168_mac_ocp_write(tp, 0xFC34, 0x00A9);
++	r8168_mac_ocp_write(tp, 0xFC36, 0x012D);
++
+ 	rtl_hw_aspm_clkreq_enable(tp, true);
+ }
  
--	if (actual_reclaim)
-+	if (trace)
- 		trace_mm_vmscan_inactive_list_is_low(pgdat->node_id, sc->reclaim_idx,
- 			lruvec_lru_size(lruvec, inactive_lru, MAX_NR_ZONES), inactive,
- 			lruvec_lru_size(lruvec, active_lru, MAX_NR_ZONES), active,
 
 
