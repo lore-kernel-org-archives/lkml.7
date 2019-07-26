@@ -2,117 +2,115 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED385C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35E5C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C44372238C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8173B2238C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:14:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I61Gsocz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfGZJLJ (ORCPT
+        id S1726007AbfGZJOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:11:09 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3173 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725815AbfGZJLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:11:09 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6AA88FF0175CD0D1D039;
-        Fri, 26 Jul 2019 17:11:06 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 26 Jul 2019
- 17:11:01 +0800
-Subject: Re: [PATCH 4.4 stable net] net: tcp: Fix use-after-free in
- tcp_write_xmit
-To:     Eric Dumazet <eric.dumazet@gmail.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190724091715.137033-1-maowenan@huawei.com>
- <2e09f4d1-8a47-27e9-60f9-63d3b19a98ec@gmail.com>
- <13ffa2fe-d064-9786-bc52-e4281d26ed1d@huawei.com>
- <44f0ba0d-fd19-d44b-9c5c-686e2f8ef988@gmail.com>
- <9a8d6a5a-9a9d-9cb5-caa9-5c12ba04a43c@huawei.com>
- <510109e3-101f-517c-22b4-921432f04fe5@gmail.com>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <69faf3d1-ee37-8fc5-fedf-25284e45d6bb@huawei.com>
-Date:   Fri, 26 Jul 2019 17:10:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <510109e3-101f-517c-22b4-921432f04fe5@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+        Fri, 26 Jul 2019 05:14:45 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35537 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfGZJOo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:14:44 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u14so24235774pfn.2;
+        Fri, 26 Jul 2019 02:14:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=TYiDJjF4yOS8bkmjhmB2OznvRayOVVC1oxEpAkjtmTY=;
+        b=I61GsoczxdHQtaJ6fHWGIB4x4LyJFbsdK7l2wJZBTM8JstVMhrNZuzZUEfXnocjdD7
+         yVW4nrN9xNDsJYYymIPOQ+1TgmY9cqEMM5hAM7Z0ZnxahB/dFGJJF/FgHKMY2EnmDuF6
+         81mqT7wx5lhXqI1xVYHgFcAWk7LWkuwy5fRbvWCIqGo1OvH6nyouRgROWhEciCu9dn3u
+         74Gku8Q9fbvNP2dSm5q2L/lflTNBXi8cUXfM5pNrtViUxxcX5B80TvJd7jIbdTi0HDCS
+         Fl605ATEigDLBGWTTlGI9lyO1mjTgwt4mma/cMy75D3CMPKpyz6owXurOGVJFwi07FHk
+         PJ3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TYiDJjF4yOS8bkmjhmB2OznvRayOVVC1oxEpAkjtmTY=;
+        b=PjsdDRXs6Do+fL3fBaXJdeDmI5jjmNjtdfpPtg3zMJ/vJ4Wv90gtDcT6wtW0DrD+rQ
+         56V5MuTFjzWwaS2NBfJgT4Vh5TpqIiZ7E6ZEr0+tKwugoHUewy/pymnlpLrz+GMGT8wQ
+         cDGViPJwd0QMYwxYOdjb2lI+WmBBmFLU5xGlCDS7npSgus60JV5ZHRfH4OJ/eB/ypQPO
+         SwMwSb2yPloE/+Nh2eSjPMEeZZU9sq1byGo2TnGFK45xCr5iGVTG9JWvM+Vyx+25cYdp
+         gyJebwfiUSGd8ngMQt34Wq8JwdPoDjCeq2WiCJwLg0Cs8gafDCYHev3pO2Yk+JA017be
+         o1sg==
+X-Gm-Message-State: APjAAAVXjNvn/0pmVbrRtaM5WS9b+tqE1qaILmIKdrpkSv+n1GBbvQlz
+        gPwNuAFJ0uE1ms6/RW/qcyc=
+X-Google-Smtp-Source: APXvYqyzGncQMVpBKteXwxGu8JqgLDcbIaKfg9VkHM8Tr2D5sXtgT/oUseLrE64Vg0RtdqCDvWN0RA==
+X-Received: by 2002:a17:90a:1b4a:: with SMTP id q68mr96898848pjq.61.1564132484301;
+        Fri, 26 Jul 2019 02:14:44 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id g11sm54686920pgu.11.2019.07.26.02.14.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jul 2019 02:14:43 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     dmitry.torokhov@gmail.com, tglx@linutronix.de,
+        gregkh@linuxfoundation.org, allison@lohutok.net,
+        rdunlap@infradead.org
+Cc:     patches@opensource.cirrus.com, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH v2] input: touchscreen: wm97xx-core: Fix possible null-pointer dereferences in wm97xx_ts_input_open()
+Date:   Fri, 26 Jul 2019 17:14:36 +0800
+Message-Id: <20190726091436.8866-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In wm97xx_ts_input_open(), there is an if statement on line 507 to check
+whether wm->mach_ops is NULL:
+    if (wm->mach_ops && wm->mach_ops->acc_enabled)
 
+When wm->mach_ops is NULL, it is used on line 521:
+    wm97xx_init_pen_irq(wm);
+        BUG_ON(!wm->mach_ops->irq_enable);
+        BUG_ON(!wm->mach_ops->irq_gpio);
+        wm97xx_reg_write(..., reg & ~(wm->mach_ops->irq_gpio))
 
-On 2019/7/25 14:19, Eric Dumazet wrote:
-> 
-> 
-> On 7/25/19 6:29 AM, maowenan wrote:
->>
-> 
->>>>>> Syzkaller reproducer():
->>>>>> r0 = socket$packet(0x11, 0x3, 0x300)
->>>>>> r1 = socket$inet_tcp(0x2, 0x1, 0x0)
->>>>>> bind$inet(r1, &(0x7f0000000300)={0x2, 0x4e21, @multicast1}, 0x10)
->>>>>> connect$inet(r1, &(0x7f0000000140)={0x2, 0x1000004e21, @loopback}, 0x10)
->>>>>> recvmmsg(r1, &(0x7f0000001e40)=[{{0x0, 0x0, &(0x7f0000000100)=[{&(0x7f00000005c0)=""/88, 0x58}], 0x1}}], 0x1, 0x40000000, 0x0)
->>>>>> sendto$inet(r1, &(0x7f0000000000)="e2f7ad5b661c761edf", 0x9, 0x8080, 0x0, 0x0)
->>>>>> r2 = fcntl$dupfd(r1, 0x0, r0)
->>>>>> connect$unix(r2, &(0x7f00000001c0)=@file={0x0, './file0\x00'}, 0x6e)
->>>>>>
->>>
->>> It does call tcp_disconnect(), by one of the connect() call.
->>
->> yes, __inet_stream_connect will call tcp_disconnect when sa_family == AF_UNSPEC, in c repro if it
->> passes sa_family with AF_INET it won't call disconnect, and then sk_send_head won't be NULL when tcp_connect.
->>
-> 
-> 
-> Look again at the Syzkaller reproducer()
-> 
-> It definitely uses tcp_disconnect()
-> 
-> Do not be fooled by connect$unix(), this is a connect() call really, with AF_UNSPEC
+Thus, possible null-pointer dereferences may occur.
 
-Right, in syzkaller reproducer, it calls connect() with AF_UNSPEC, actually I can reproduce the issue only with C repro(https://syzkaller.appspot.com/text?tag=ReproC&x=14db474f800000).
-syscall procedure in C:
-__NR_socket
-__NR_bind
-__NR_sendto  (flag=0x20000000,MSG_FASTOPEN, it will call __inet_stream_connect with sa_family = AF_INET, sk->sk_send_head = NULL)
-__NR_write
-__NR_connect (call __inet_stream_connect with sa_family = AF_UNSPEC, it will call tcp_disconnect and set sk->sk_send_head = NULL)
-__NR_connect (call __inet_stream_connect with sa_family = AF_INET, if sk->sk_send_head != NULL UAF happen)
+To fix these bugs, wm->mach_ops is checked at the beginning of 
+wm97xx_init_pen_irq().
 
-I debug why tcp_disconnect has already set sk->sk_send_head = NULL, but it is NOT NULL after next __NR_connect.
-I find that some packets send out before second __NR_connect(with AF_INET), so the sk_send_head is modified by: tcp_sendmsg->skb_entail->tcp_add_write_queue_tail
-static inline void tcp_add_write_queue_tail(struct sock *sk, struct sk_buff *skb)
-{
-	__tcp_add_write_queue_tail(sk, skb);
+These bugs found by a static analysis tool STCheck written by us.
 
-	/* Queue it, remembering where we must start sending. */
-	if (sk->sk_send_head == NULL) {
-		sk->sk_send_head = skb;  //here, sk->sk_send_head is changed.
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+v2:
+* Add a new check of wm->mach_ops in wm97xx_init_pen_irq().
+  Thank Charles for helpful advice.
 
-		if (tcp_sk(sk)->highest_sack == NULL)
-			tcp_sk(sk)->highest_sack = skb;
-	}
-}
+---
+ drivers/input/touchscreen/wm97xx-core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-
-
-
-> 
-> 
-
-
+diff --git a/drivers/input/touchscreen/wm97xx-core.c b/drivers/input/touchscreen/wm97xx-core.c
+index 0a174bd82915..50b016abf492 100644
+--- a/drivers/input/touchscreen/wm97xx-core.c
++++ b/drivers/input/touchscreen/wm97xx-core.c
+@@ -374,6 +374,9 @@ static int wm97xx_init_pen_irq(struct wm97xx *wm)
+ {
+ 	u16 reg;
+ 
++	if (!wm->mach_ops)
++		return -EINVAL;
++
+ 	/* If an interrupt is supplied an IRQ enable operation must also be
+ 	 * provided. */
+ 	BUG_ON(!wm->mach_ops->irq_enable);
+-- 
+2.17.0
 
