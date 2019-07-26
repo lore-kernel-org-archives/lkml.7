@@ -2,98 +2,94 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E29DC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58511C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8A42166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241762166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbfGZVqc (ORCPT
+        id S1728130AbfGZVrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 17:46:32 -0400
-Received: from mga14.intel.com ([192.55.52.115]:28904 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727934AbfGZVpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 17:45:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 14:45:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,312,1559545200"; 
-   d="scan'208";a="369671130"
-Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
-  by fmsmga005.fm.intel.com with ESMTP; 26 Jul 2019 14:45:49 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v6 1/9] PCI/ERR: Update error status after reset_link()
-Date:   Fri, 26 Jul 2019 14:43:11 -0700
-Message-Id: <6be594215ae2ea0935d949537bfb84ff9e656a36.1564177080.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1564177080.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <cover.1564177080.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        Fri, 26 Jul 2019 17:47:06 -0400
+Received: from hera.aquilenet.fr ([185.233.100.1]:41062 "EHLO
+        hera.aquilenet.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfGZVrF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 17:47:05 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by hera.aquilenet.fr (Postfix) with ESMTP id 3556D19315;
+        Fri, 26 Jul 2019 23:47:04 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at aquilenet.fr
+Received: from hera.aquilenet.fr ([127.0.0.1])
+        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id HgFx9HJp6DC3; Fri, 26 Jul 2019 23:47:03 +0200 (CEST)
+Received: from function (105.251.129.77.rev.sfr.net [77.129.251.105])
+        by hera.aquilenet.fr (Postfix) with ESMTPSA id 861ED19312;
+        Fri, 26 Jul 2019 23:47:03 +0200 (CEST)
+Received: from samy by function with local (Exim 4.92)
+        (envelope-from <samuel.thibault@ens-lyon.org>)
+        id 1hr83K-00012p-Gb; Fri, 26 Jul 2019 23:47:02 +0200
+Date:   Fri, 26 Jul 2019 23:47:02 +0200
+From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        931507@bugs.debian.org
+Subject: [PATCHv2] hda: Fix 1-minute detection delay when i915 module is not
+ available
+Message-ID: <20190726214702.kxi2gavlieiwyf7q@function>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        931507@bugs.debian.org
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Distribution installation images such as Debian include different sets
+of modules which can be downloaded dynamically.  Such images may notably
+include the hda sound modules but not the i915 DRM module, even if the
+latter was enabled at build time, as reported on
+https://bugs.debian.org/931507
 
-Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery") uses
-reset_link() to recover from fatal errors. But, if the reset is
-successful there is no need to continue the rest of the error recovery
-checks. Also, during fatal error recovery, if the initial value of error
-status is PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER then
-even after successful recovery (using reset_link()) pcie_do_recovery()
-will report the recovery result as failure. So update the status of
-error after reset_link().
+In such a case hdac_i915 would be linked in and try to load the i915
+module, fail since it is not there, but still wait for a whole minute
+before giving up binding with it.
 
-Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+This fixes such as case by only waiting for the binding if the module
+was properly loaded (or module support is disabled, in which case i915
+is already compiled-in anyway).
+
+Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
 ---
- drivers/pci/pcie/err.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ sound/hda/hdac_i915.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 773197a12568..aecec124a829 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -204,9 +204,13 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
- 	else
- 		pci_walk_bus(bus, report_normal_detected, &status);
- 
--	if (state == pci_channel_io_frozen &&
--	    reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
--		goto failed;
-+	if (state == pci_channel_io_frozen) {
-+		status = reset_link(dev, service);
-+		if (status != PCI_ERS_RESULT_RECOVERED)
-+			goto failed;
-+		else
-+			goto done;
-+	}
- 
- 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
- 		status = PCI_ERS_RESULT_RECOVERED;
-@@ -228,6 +232,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
- 	if (status != PCI_ERS_RESULT_RECOVERED)
- 		goto failed;
- 
-+done:
- 	pci_dbg(dev, "broadcast resume message\n");
- 	pci_walk_bus(bus, report_resume, &status);
- 
--- 
-2.21.0
-
+--- a/sound/hda/hdac_i915.c
++++ b/sound/hda/hdac_i915.c
+@@ -136,10 +136,13 @@ int snd_hdac_i915_init(struct hdac_bus *
+ 	if (!acomp)
+ 		return -ENODEV;
+ 	if (!acomp->ops) {
+-		request_module("i915");
+-		/* 60s timeout */
+-		wait_for_completion_timeout(&bind_complete,
+-					    msecs_to_jiffies(60 * 1000));
++		if (!IS_ENABLED(CONFIG_MODULES) ||
++		    !request_module("i915"))
++		{
++			/* 60s timeout */
++			wait_for_completion_timeout(&bind_complete,
++						   msecs_to_jiffies(60 * 1000));
++		}
+ 	}
+ 	if (!acomp->ops) {
+ 		dev_info(bus->dev, "couldn't bind with audio component\n");
