@@ -6,140 +6,107 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E53EC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BFCC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 538BA218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EA60217D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbfGZCVd (ORCPT
+        id S1726178AbfGZCWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 22:21:33 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2431 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725808AbfGZCVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 22:21:32 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 1352BF589A1FF2D3A17D;
-        Fri, 26 Jul 2019 10:21:30 +0800 (CST)
-Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 26 Jul 2019 10:21:29 +0800
-Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
- (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Fri, 26
- Jul 2019 10:21:29 +0800
-Subject: Re: [PATCH net-next 07/11] net: hns3: adds debug messages to identify
- eth down cause
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        "tanhuazhong@huawei.com" <tanhuazhong@huawei.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "lipeng321@huawei.com" <lipeng321@huawei.com>,
-        "yisen.zhuang@huawei.com" <yisen.zhuang@huawei.com>,
-        "salil.mehta@huawei.com" <salil.mehta@huawei.com>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
- <1563938327-9865-8-git-send-email-tanhuazhong@huawei.com>
- <ffd942e7d7442549a3a6d469709b7f7405928afe.camel@mellanox.com>
- <30483e38-5e4a-0111-f431-4742ceb1aa62@huawei.com>
- <75a02bbe5b3b0f2755cd901a8830d4a3026f9383.camel@mellanox.com>
-From:   liuyonglong <liuyonglong@huawei.com>
-Message-ID: <9ae85be2-b958-ecb4-2980-ca7e977606a1@huawei.com>
-Date:   Fri, 26 Jul 2019 10:21:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 25 Jul 2019 22:22:16 -0400
+Received: from mga05.intel.com ([192.55.52.43]:47983 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725808AbfGZCWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 22:22:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 19:22:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,308,1559545200"; 
+   d="scan'208";a="181729461"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 25 Jul 2019 19:22:11 -0700
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 06/10] swiotlb: Zero out bounce buffer for untrusted
+ device
+To:     Christoph Hellwig <hch@lst.de>
+References: <20190725031717.32317-1-baolu.lu@linux.intel.com>
+ <20190725031717.32317-7-baolu.lu@linux.intel.com>
+ <20190725114903.GB31065@lst.de>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <ed113403-6ae6-6730-0567-4c2eb8df94de@linux.intel.com>
+Date:   Fri, 26 Jul 2019 10:21:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <75a02bbe5b3b0f2755cd901a8830d4a3026f9383.camel@mellanox.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190725114903.GB31065@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.37.248]
-X-ClientProxiedBy: dggeme701-chm.china.huawei.com (10.1.199.97) To
- dggeme760-chm.china.huawei.com (10.3.19.106)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We will change all of them to netif_msg_drv() which is default off
-Thanks for your reply!
+Hi,
 
-On 2019/7/26 5:59, Saeed Mahameed wrote:
-> On Thu, 2019-07-25 at 20:28 +0800, liuyonglong wrote:
->>
->> On 2019/7/25 3:12, Saeed Mahameed wrote:
->>> On Wed, 2019-07-24 at 11:18 +0800, Huazhong Tan wrote:
->>>> From: Yonglong Liu <liuyonglong@huawei.com>
->>>>
->>>> Some times just see the eth interface have been down/up via
->>>> dmesg, but can not know why the eth down. So adds some debug
->>>> messages to identify the cause for this.
->>>>
->>>
->>> I really don't like this. your default msg lvl has NETIF_MSG_IFDOWN
->>> turned on .. dumping every single operation that happens on your
->>> device
->>> by default to kernel log is too much ! 
->>>
->>> We should really consider using trace buffers with well defined
->>> structures for vendor specific events. so we can use bpf filters
->>> and
->>> state of the art tools for netdev debugging.
->>>
->>
->> We do this because we can just see a link down message in dmesg, and
->> had
->> take a long time to found the cause of link down, just because
->> another
->> user changed the settings.
->>
->> We can change the net_open/net_stop/dcbnl_ops to msg_drv (not default
->> turned on),  and want to keep the others default print to kernel log,
->> is it acceptable?
->>
+On 7/25/19 7:49 PM, Christoph Hellwig wrote:
+>> index 43c88626a1f3..edc84a00b9f9 100644
+>> --- a/kernel/dma/swiotlb.c
+>> +++ b/kernel/dma/swiotlb.c
+>> @@ -35,6 +35,7 @@
+>>   #include <linux/scatterlist.h>
+>>   #include <linux/mem_encrypt.h>
+>>   #include <linux/set_memory.h>
+>> +#include <linux/pci.h>
+>>   #ifdef CONFIG_DEBUG_FS
+>>   #include <linux/debugfs.h>
+>>   #endif
+>> @@ -562,6 +563,11 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
+>>   	 */
+>>   	for (i = 0; i < nslots; i++)
+>>   		io_tlb_orig_addr[index+i] = orig_addr + (i << IO_TLB_SHIFT);
+>> +
+>> +	/* Zero out the bounce buffer if the consumer is untrusted. */
+>> +	if (dev_is_untrusted(hwdev))
+>> +		memset(phys_to_virt(tlb_addr), 0, alloc_size);
 > 
-> acceptable as long as debug information are kept off by default and
-> your driver doens't spam the kernel log.
+> Hmm.  Maybe we need to move the untrusted flag to struct device?
+> Directly poking into the pci_dev from swiotlb is a bit of a layering
+> violation.
+
+Yes. We can consider this. But I tend to think that it's worth of a
+separated series. That's a reason why I defined dev_is_untrusted(). This
+helper keeps the caller same when moving the untrusted flag.
+
 > 
-> you should use dynamic debug [1] and/or "off by default" msg lvls for
-> debugging information..
+>> +
+>>   	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
+>>   	    (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL))
+>>   		swiotlb_bounce(orig_addr, tlb_addr, mapping_size, DMA_TO_DEVICE);
 > 
-> I couldn't find any rules regarding what to put in kernel log, Maybe
-> someone can share ?. but i vaguely remember that the recommendation
-> for device drivers is to put nothing, only error/warning messages.
-> 
-> [1] 
-> https://www.kernel.org/doc/html/v4.15/admin-guide/dynamic-debug-howto.html
-> 
->>>> @@ -1593,6 +1603,11 @@ static int hns3_ndo_set_vf_vlan(struct
->>>> net_device *netdev, int vf, u16 vlan,
->>>>  	struct hnae3_handle *h = hns3_get_handle(netdev);
->>>>  	int ret = -EIO;
->>>>  
->>>> +	if (netif_msg_ifdown(h))
->>>
->>> why msg_ifdown ? looks like netif_msg_drv is more appropriate, for
->>> many
->>> of the cases in this patch.
->>>
->>
->> This operation may cause link down, so we use msg_ifdown.
->>
-> 
-> ifdown isn't link down.. 
-> 
-> to be honest, I couldn't find any documentation explaining how/when to
-> use msg lvls, (i didn't look too deep though), by looking at other
-> drivers, my interpretations is:
-> 
-> ifdup (open/boot up flow)
-> ifdwon (close/teardown flow)
-> drv (driver based or dynamic flows) 
-> etc .. 
-> 
-> -Saeed.
+> Also for the case where we bounce here we only need to zero the padding
+> (if there is any), so I think we could optimize this a bit.
 > 
 
+Yes. There's duplication here.
+
+Best regards,
+Baolu
