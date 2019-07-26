@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87007C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECF3C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56CCF22CBB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E558C22CD5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:57:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Y+Fdrsy5"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dDhXdZ0f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfGZA5V (ORCPT
+        id S1727343AbfGZA5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 20:57:21 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:11338 "EHLO
+        Thu, 25 Jul 2019 20:57:25 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:11343 "EHLO
         hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727266AbfGZA5O (ORCPT
+        with ESMTP id S1727290AbfGZA5P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 20:57:14 -0400
+        Thu, 25 Jul 2019 20:57:15 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d3a4fe90000>; Thu, 25 Jul 2019 17:57:14 -0700
+        id <B5d3a4feb0000>; Thu, 25 Jul 2019 17:57:15 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 25 Jul 2019 17:57:13 -0700
+  Thu, 25 Jul 2019 17:57:14 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 17:57:13 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 26 Jul
- 2019 00:57:11 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 26 Jul 2019 00:57:11 +0000
+        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 17:57:14 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 26 Jul
+ 2019 00:57:13 +0000
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 26 Jul
+ 2019 00:57:08 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 26 Jul 2019 00:57:08 +0000
 Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d3a4fe70000>; Thu, 25 Jul 2019 17:57:11 -0700
+        id <B5d3a4fe40001>; Thu, 25 Jul 2019 17:57:08 -0700
 From:   Ralph Campbell <rcampbell@nvidia.com>
 To:     <linux-mm@kvack.org>
 CC:     <linux-kernel@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
         <dri-devel@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>,
         "Ralph Campbell" <rcampbell@nvidia.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v2 7/7] mm/hmm: remove hmm_range vma
-Date:   Thu, 25 Jul 2019 17:56:50 -0700
-Message-ID: <20190726005650.2566-8-rcampbell@nvidia.com>
+Subject: [PATCH v2 6/7] mm/hmm: remove hugetlbfs check in hmm_vma_walk_pmd
+Date:   Thu, 25 Jul 2019 17:56:49 -0700
+Message-ID: <20190726005650.2566-7-rcampbell@nvidia.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726005650.2566-1-rcampbell@nvidia.com>
 References: <20190726005650.2566-1-rcampbell@nvidia.com>
@@ -57,84 +60,48 @@ X-NVConfidentiality: public
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564102634; bh=NZUo+DqUJdY6mTpO9a6/Oba2m7JMCHGUDDnmqd09n1Y=;
+        t=1564102635; bh=D2MJs2fZHD43Md8ZpV6DlNuTDZTSVoq5UF6AxcLBY88=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
          Content-Type:Content-Transfer-Encoding;
-        b=Y+Fdrsy5YTiGjTNAPneWU7N67hB8atyhiYSL7w1D9fRjSIU0CfPzTBs1+TJzPLeRd
-         lZg+U+KeM5lIDv23Uued3ANTxSgkBOSMlBDcqTqFQrMZetgu7wTZJ/18nJTgFUlQH7
-         9M9bqjlekVURUgBu+xXY9uNZnDjVOHAMuds+n9WmwMP9IafFxNItlvDkk5+7xf168C
-         /jBL6ulVlFTzr3sEKhNy9uO7sVIGou26UW/rn8gdQOF2MPV5eBWbEIWuUlRjHkUVyb
-         MyIizWpUTiSts0J7sLQ9gk5Raxzo7iAUIw4fsLk+jXjvBR9uvF6CPcFSA49r+/WBWC
-         ev8fK2+UEnDJg==
+        b=dDhXdZ0fq+/bJJsVQCR7FJrU8TlXvz2itR9WvHA+D+zGwHRjQv48omdl45RnxXmpB
+         lVwB46LJQ7I1jmYZq8f2HDTONx4QL6yNAHgoDlCDzhsrayuWPJZUlqCiHsvrejtQAo
+         IzffaEtC6GLs+mrZgw+/TfanZcDKiKjQzJg6UcKUCcQzs0xxBR7vdmXnZdWx1QuO65
+         lsl3wTSKpIjNMBnruP2rDqPtA1oWApYCh1VuHm12T+FlHh0ONlL8rrfRqIuenKDf4H
+         l85a/V9vbnHfXJYcg4Hz8fOoowAC4ZLQH9YSs7dtBwWkS9sagT3o5JY0D0Y19kfUqB
+         dfO9F2MBE+xGg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since hmm_range_fault() doesn't use the struct hmm_range vma field,
-remove it.
+walk_page_range() will only call hmm_vma_walk_hugetlb_entry() for
+hugetlbfs pages and doesn't call hmm_vma_walk_pmd() in this case.
+Therefore, it is safe to remove the check for vma->vm_flags & VM_HUGETLB
+in hmm_vma_walk_pmd().
 
-Suggested-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
 Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
 Cc: Christoph Hellwig <hch@lst.de>
 ---
- drivers/gpu/drm/nouveau/nouveau_svm.c | 7 +++----
- include/linux/hmm.h                   | 1 -
- 2 files changed, 3 insertions(+), 5 deletions(-)
+ mm/hmm.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouvea=
-u/nouveau_svm.c
-index 49b520c60fc5..a74530b5a523 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -496,12 +496,12 @@ nouveau_range_fault(struct hmm_mirror *mirror, struct=
- hmm_range *range)
- 				 range->start, range->end,
- 				 PAGE_SHIFT);
- 	if (ret) {
--		up_read(&range->vma->vm_mm->mmap_sem);
-+		up_read(&range->hmm->mm->mmap_sem);
- 		return (int)ret;
- 	}
+diff --git a/mm/hmm.c b/mm/hmm.c
+index 838cd1d50497..29f322ca5d58 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -630,9 +630,6 @@ static int hmm_vma_walk_pmd(pmd_t *pmdp,
+ 	if (pmd_none(pmd))
+ 		return hmm_vma_walk_hole(start, end, walk);
 =20
- 	if (!hmm_range_wait_until_valid(range, HMM_RANGE_DEFAULT_TIMEOUT)) {
--		up_read(&range->vma->vm_mm->mmap_sem);
-+		up_read(&range->hmm->mm->mmap_sem);
- 		return -EBUSY;
- 	}
-=20
-@@ -509,7 +509,7 @@ nouveau_range_fault(struct hmm_mirror *mirror, struct h=
-mm_range *range)
- 	if (ret <=3D 0) {
- 		if (ret =3D=3D 0)
- 			ret =3D -EBUSY;
--		up_read(&range->vma->vm_mm->mmap_sem);
-+		up_read(&range->hmm->mm->mmap_sem);
- 		hmm_range_unregister(range);
- 		return ret;
- 	}
-@@ -682,7 +682,6 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 			 args.i.p.addr + args.i.p.size, fn - fi);
-=20
- 		/* Have HMM fault pages within the fault window to the GPU. */
--		range.vma =3D vma;
- 		range.start =3D args.i.p.addr;
- 		range.end =3D args.i.p.addr + args.i.p.size;
- 		range.pfns =3D args.phys;
-diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index f3693dcc8b98..68949cf815f9 100644
---- a/include/linux/hmm.h
-+++ b/include/linux/hmm.h
-@@ -164,7 +164,6 @@ enum hmm_pfn_value_e {
-  */
- struct hmm_range {
- 	struct hmm		*hmm;
--	struct vm_area_struct	*vma;
- 	struct list_head	list;
- 	unsigned long		start;
- 	unsigned long		end;
+-	if (pmd_huge(pmd) && (range->vma->vm_flags & VM_HUGETLB))
+-		return hmm_pfns_bad(start, end, walk);
+-
+ 	if (thp_migration_supported() && is_pmd_migration_entry(pmd)) {
+ 		bool fault, write_fault;
+ 		unsigned long npages;
 --=20
 2.20.1
 
