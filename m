@@ -2,144 +2,144 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348C6C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67E6C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0859E217D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75C212238C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:52:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QSMLORbC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbfGZBun (ORCPT
+        id S1726067AbfGZBwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 21:50:43 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2729 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725854AbfGZBum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 21:50:42 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D45B9F512131EE80859A;
-        Fri, 26 Jul 2019 09:50:40 +0800 (CST)
-Received: from [127.0.0.1] (10.74.149.191) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 26 Jul 2019
- 09:50:33 +0800
-Subject: Re: [PATCH net-next 06/11] net: hns3: modify firmware version display
- format
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "lipeng321@huawei.com" <lipeng321@huawei.com>,
-        "yisen.zhuang@huawei.com" <yisen.zhuang@huawei.com>,
-        "salil.mehta@huawei.com" <salil.mehta@huawei.com>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moyufeng@huawei.com" <moyufeng@huawei.com>
-References: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
- <1563938327-9865-7-git-send-email-tanhuazhong@huawei.com>
- <4c4ce27c9a9372340c0e2b0f654b3fb9cd85b3e4.camel@mellanox.com>
- <95783289-9b3b-f085-876b-49815b07d595@huawei.com>
- <d6a32434af7e9c883f104ae66e62b7b376abb39c.camel@mellanox.com>
-From:   tanhuazhong <tanhuazhong@huawei.com>
-Message-ID: <6c51adfc-b587-428a-2617-0532095d3d0a@huawei.com>
-Date:   Fri, 26 Jul 2019 09:50:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Thu, 25 Jul 2019 21:52:50 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38568 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfGZBwu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 21:52:50 -0400
+Received: by mail-ot1-f66.google.com with SMTP id d17so53809348oth.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 18:52:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TiousANIM8Ym1d99fpbOzWaRdwbbqZlUg00mIz18Zzs=;
+        b=QSMLORbC76eYIkEJoBLupfx/zQ8ufC6hcV0EJNWlC9L1gDKgU9axM65c6GyR4Zk2sL
+         qenZTXiQk/OnWyleJmxfTnm2MiSNYQDKqgTEi7ooH7Cf1lTdIBG+L2MM+iu2wiQewP4P
+         oiqxtP0wmi3DTCWlx6JKh/Pv+4DP2yyWN4iLjywmEvSmhyHuyUQBR3KaYTP+eEcgI1Bs
+         zMERjZiMuH2snJ8G/wnF2K/7lk3MmZr/FjeF8RKBTJYDeddu49izpxJcqmhVhUxX4tnp
+         8KrG6fCpd4x0P8PCcXC7fWzWIdOLSS1DQG4QMUdXOZN6Njt2jsgiXXFwVnpWIdJHNOja
+         V4aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TiousANIM8Ym1d99fpbOzWaRdwbbqZlUg00mIz18Zzs=;
+        b=mwL2qzmU4XIOnl72rroAtiTfSP8b38ocd/f7+3cpGdUTTdjlA648aGF40KO7sIhatG
+         uW2iCBuZOIPYiZuxpjEhEdSGNiG6dS7HWATfPNAYEZxEjlx/GlpN1p1T26uMdWIrJxAg
+         MvQUMq8rZEIXkBe8QiaeDzcFWn/26Meckxar0J0zgMaNycma9xsxD1ARmBoK7cjcq8jz
+         evbVTWar0CvYeLn0dyOjk++2OEza+fRm2UTPhc1phVgzshTNVou927y2J58p9PLcwqH/
+         9lakW9Rgm8gaveXTh+uhBvWfFz5GrRtKbmYwtfOlo7BGhuqzlV519diE3xZ9rNYwv3jv
+         AW2w==
+X-Gm-Message-State: APjAAAWMIDk8IbhFBWRl7RVf7SZnUzxQTNVBGpsIL/JXhHw5wKbxbu03
+        AUVS36/CISt59lTiyrmwA6LEaVXW+0l5/8brsW0ttQ==
+X-Google-Smtp-Source: APXvYqxcYuMUWiDwRwA2OJ6MD9+ZDILLOWvrJDjR6OvjPD3hun3BBu9PeDPdULURc2DNhKHtgkiBXezSPtLjUKh7A7E=
+X-Received: by 2002:a05:6830:160c:: with SMTP id g12mr12061343otr.231.1564105969661;
+ Thu, 25 Jul 2019 18:52:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d6a32434af7e9c883f104ae66e62b7b376abb39c.camel@mellanox.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.149.191]
-X-CFilter-Loop: Reflected
+References: <20190717222340.137578-1-saravanak@google.com> <20190717222340.137578-4-saravanak@google.com>
+ <20190723102842.t2s45zzylsjuccm4@vireshk-i7> <CAGETcx-6M9Ts8tfMf6aA8GjMyzK5sOLr069ZCxTG7RHMFPLzHw@mail.gmail.com>
+ <20190725030712.lx3cjogo5r7kc262@vireshk-i7> <CAGETcx8QTs2Dqqppb_gwiUa2fte92K_q+B+j_CreRgqU52L7EA@mail.gmail.com>
+ <20190725051742.mn54pi722txkpddg@vireshk-i7>
+In-Reply-To: <20190725051742.mn54pi722txkpddg@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 25 Jul 2019 18:52:13 -0700
+Message-ID: <CAGETcx9yO7HCz-rvqRMQf6srN_9-O_wc1bb7HadL+4QxvuqyWA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] OPP: Improve require-opps linking
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 24, 2019 at 10:17 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 24-07-19, 21:09, Saravana Kannan wrote:
+> > On Wed, Jul 24, 2019 at 8:07 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > We should be doing this whenever a new OPP table is created, and see
+> > > if someone else was waiting for this OPP table to come alive.
+> >
+> > Searching the global OPP table list seems a ton more wasteful than
+> > doing the lazy linking. I'd rather not do this.
+>
+> We can see how best to optimize that, but it will be done only once
+> while a new OPP table is created and putting stress there is the right
+> thing to do IMO. And doing anything like that in a place like
+> opp-set-rate is the worst one. It will be a bad choice by design if
+> you ask me and so I am very much against that.
+>
+> > > Also we
+> > > must make sure that we do this linking only if the new OPP table has
+> > > its own required-opps links fixed, otherwise delay further.
+> >
+> > This can be done. Although even without doing that, this patch is
+> > making things better by not failing silently like it does today? Can I
+> > do this later as a separate patch set series?
+>
+> I would like this to get fixed now in a proper way, there is no hurry
+> for a quick fix currently. No band-aids please.
+>
+> > > Even then I don't want to add these checks to those places. For the
+> > > opp-set-rate routine, add another flag to the OPP table which
+> > > indicates if we are ready to do dvfs or not and mark it true only
+> > > after the required-opps are all set.
+> >
+> > Honestly, this seems like extra memory and micro optimization without
+> > any data to back it.
+>
+> Again, opp-set-rate isn't supposed to do something like this. It
+> shouldn't handle initializations of things, that is broken design.
+>
+> > Show me data that checking all these table
+> > pointers is noticeably slower than what I'm doing. What's the max
+> > "required tables count" you've seen in upstream so far?
+>
+> Running anything extra (specially some initialization stuff) in
+> opp-set-rate is wrong as per me and as a Maintainer of the OPP core it
+> is my responsibility to not allow such things to happen.
 
+Doing operations lazily right before they are needed isn't something
+new in the kernel. It's done all over the place (VFP save/restore?).
+It's not worth arguing though -- so I'll agree to disagree but follow
+the Maintainer's preference.
 
-On 2019/7/26 5:32, Saeed Mahameed wrote:
-> On Thu, 2019-07-25 at 10:34 +0800, tanhuazhong wrote:
->>
->> On 2019/7/25 2:34, Saeed Mahameed wrote:
->>> On Wed, 2019-07-24 at 11:18 +0800, Huazhong Tan wrote:
->>>> From: Yufeng Mo <moyufeng@huawei.com>
->>>>
->>>> This patch modifies firmware version display format in
->>>> hclge(vf)_cmd_init() and hns3_get_drvinfo(). Also, adds
->>>> some optimizations for firmware version display format.
->>>>
->>>> Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
->>>> Signed-off-by: Peng Li <lipeng321@huawei.com>
->>>> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
->>>> ---
->>>>    drivers/net/ethernet/hisilicon/hns3/hnae3.h              |  9
->>>> +++++++++
->>>>    drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c       | 15
->>>> +++++++++++++--
->>>>    drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c   | 10
->>>> +++++++++-
->>>>    drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 11
->>>> +++++++++--
->>>>    4 files changed, 40 insertions(+), 5 deletions(-)
->>>>
->>>>
-> 
-> [...]
-> 
->>>> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
->>>> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
->>>> @@ -419,7 +419,15 @@ int hclge_cmd_init(struct hclge_dev *hdev)
->>>>    	}
->>>>    	hdev->fw_version = version;
->>>>    
->>>> -	dev_info(&hdev->pdev->dev, "The firmware version is %08x\n",
->>>> version);
->>>> +	pr_info_once("The firmware version is %lu.%lu.%lu.%lu\n",
->>>> +		     hnae3_get_field(version,
->>>> HNAE3_FW_VERSION_BYTE3_MASK,
->>>> +				     HNAE3_FW_VERSION_BYTE3_SHIFT),
->>>> +		     hnae3_get_field(version,
->>>> HNAE3_FW_VERSION_BYTE2_MASK,
->>>> +				     HNAE3_FW_VERSION_BYTE2_SHIFT),
->>>> +		     hnae3_get_field(version,
->>>> HNAE3_FW_VERSION_BYTE1_MASK,
->>>> +				     HNAE3_FW_VERSION_BYTE1_SHIFT),
->>>> +		     hnae3_get_field(version,
->>>> HNAE3_FW_VERSION_BYTE0_MASK,
->>>> +				     HNAE3_FW_VERSION_BYTE0_SHIFT));
->>>>    
->>>
->>> Device name/string will not be printed now, what happens if i have
->>> multiple devices ? at least print the device name as it was before
->>>
->> Since on each board we only have one firmware, the firmware
->> version is same per device, and will not change when running.
->> So pr_info_once() looks good for this case.
->>
-> 
-> boards change too often to have such static assumption.
+> > I'd even argue that doing it the way I do might actually reduce the
+> > cache misses/warm the cache because those pointers are going to be
+> > searched/used right after anyway.
+>
+> So you want to make the cache hot with data, by running some code at a
+> place where it is not required to be run really, and the fact that
+> most of the data cached may not get used anyway ? And that is an
+> improvement somehow ?
 
-Ok, I will use dev_info instead of pr_info here.
+My point is that both of us are hypothesizing and for some
+micro-optimization like this, data is needed.
 
-> 
->> BTW, maybe we should change below print in the end of
->> hclge_init_ae_dev(), use dev_info() instead of pr_info(),
->> then we can know that which device has already initialized.
->> I will send other patch to do that, is it acceptable for you?
->>
->> "pr_info("%s driver initialization finished.\n", HCLGE_DRIVER_NAME);"
->>
-> 
-> I would avoid using pr_info when i can ! if you have the option to
-> print with dev information as it was before that is preferable.
-> 
-> Thanks,
-> Saeed.
-> 
-
-Thanks,
-Huazhong.
-
+-Saravana
