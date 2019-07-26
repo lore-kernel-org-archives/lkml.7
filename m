@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7568C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC51C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B06E522CD8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4826722CD8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148962;
-	bh=DW0/+b386S6BxIhF3lTqJDjxgcYxjRg3twB+teXfVt4=;
+	s=default; t=1564148966;
+	bh=xDfCWhVDseD5mMcFkZluXYrX2Kjuu5L7Kf1DwzxIokc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=plca2RR39k32/xwXs4jy4rlYbyzTlxIs61eIMRkgOwJ87uG5VQVodOT8Kh7ZH03VM
-	 4ERrveFAsFtN1eL7zARjxAVAnbHVs1o3xf19fDtr0HSPs5PDLUgkII6YxJU5M//ipD
-	 ch9k9dTPs4d+MiDBIROzBLiMbqAPcsr6rGD+EIQ4=
+	b=vyUWAN3zs+TK8WIrqjgQfWFPTNK7/9g23oAzkAYIiC5XHuzQbJixFHM7w1fcltnMq
+	 H5HErhSXM8QnIvjtgphyyf1P2dCLVsrWslPJ10n26ndeCQOcA0loC4XVTBovHdJI/X
+	 c8/i7NPbUW6Wvco26/ZCTpO0MvZXYlBaWbfWs28E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388395AbfGZNom (ORCPT
+        id S2388167AbfGZNtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:44:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52918 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:49:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388368AbfGZNoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:44:37 -0400
+        id S2387657AbfGZNop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:44:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C418922CC2;
-        Fri, 26 Jul 2019 13:44:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE1F822CD0;
+        Fri, 26 Jul 2019 13:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148676;
-        bh=DW0/+b386S6BxIhF3lTqJDjxgcYxjRg3twB+teXfVt4=;
+        s=default; t=1564148685;
+        bh=xDfCWhVDseD5mMcFkZluXYrX2Kjuu5L7Kf1DwzxIokc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ADT0auT/1o9R968ugjIzeaKL9pjowHFg5ZYpG+r8HamfkOPOarnHVZsYFmnFyZnJq
-         rijUWlbBbv5Lt1eoY0RStmqaMQO5UZusn2Si+C+yyMQXfrrXgm+7hg5Q6GqrR06tNW
-         Q98kJOlVFHUIiPETXqJpIlMRo3/RQ5lfXrmih9lM=
+        b=Yk6Ai07vMVP0fxCisyx72EW3NnLhe74QccezAVvX37vcT6YL0B+lPIgglZMvXTmIy
+         Ve291i1YGQNRmvYCnA0+X/NNZ4ZKmjtqcWoEI2KsKcCTqf+fEo9CS/gNaM2YZKTVvz
+         5brzwea6dv795hldL3R8/aEUFslPSaN+7U7RETJ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 03/30] ARM: dts: rockchip: Make rk3288-veyron-mickey's emmc work again
-Date:   Fri, 26 Jul 2019 09:44:05 -0400
-Message-Id: <20190726134432.12993-3-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 09/30] fs/adfs: super: fix use-after-free bug
+Date:   Fri, 26 Jul 2019 09:44:11 -0400
+Message-Id: <20190726134432.12993-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134432.12993-1-sashal@kernel.org>
 References: <20190726134432.12993-1-sashal@kernel.org>
@@ -60,66 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 99fa066710f75f18f4d9a5bc5f6a711968a581d5 ]
+[ Upstream commit 5808b14a1f52554de612fee85ef517199855e310 ]
 
-When I try to boot rk3288-veyron-mickey I totally fail to make the
-eMMC work.  Specifically my logs (on Chrome OS 4.19):
+Fix a use-after-free bug during filesystem initialisation, where we
+access the disc record (which is stored in a buffer) after we have
+released the buffer.
 
-  mmc_host mmc1: card is non-removable.
-  mmc_host mmc1: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
-  mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot req 52000000Hz, actual 50000000HZ div = 0)
-  mmc1: switch to bus width 8 failed
-  mmc1: switch to bus width 4 failed
-  mmc1: new high speed MMC card at address 0001
-  mmcblk1: mmc1:0001 HAG2e 14.7 GiB
-  mmcblk1boot0: mmc1:0001 HAG2e partition 1 4.00 MiB
-  mmcblk1boot1: mmc1:0001 HAG2e partition 2 4.00 MiB
-  mmcblk1rpmb: mmc1:0001 HAG2e partition 3 4.00 MiB, chardev (243:0)
-  mmc_host mmc1: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
-  mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot req 52000000Hz, actual 50000000HZ div = 0)
-  mmc1: switch to bus width 8 failed
-  mmc1: switch to bus width 4 failed
-  mmc1: tried to HW reset card, got error -110
-  mmcblk1: error -110 requesting status
-  mmcblk1: recovery failed!
-  print_req_error: I/O error, dev mmcblk1, sector 0
-  ...
-
-When I remove the '/delete-property/mmc-hs200-1_8v' then everything is
-hunky dory.
-
-That line comes from the original submission of the mickey dts
-upstream, so presumably at the time the HS200 was failing and just
-enumerating things as a high speed device was fine.  ...or maybe it's
-just that some mickey devices work when enumerating at "high speed",
-just not mine?
-
-In any case, hs200 seems good now.  Let's turn it on.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3288-veyron-mickey.dts | 4 ----
- 1 file changed, 4 deletions(-)
+ fs/adfs/super.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-index f36f6f459225..365382ab9ebd 100644
---- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-@@ -161,10 +161,6 @@
- 	};
- };
+diff --git a/fs/adfs/super.c b/fs/adfs/super.c
+index c9fdfb112933..e42c30001509 100644
+--- a/fs/adfs/super.c
++++ b/fs/adfs/super.c
+@@ -368,6 +368,7 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
+ 	struct buffer_head *bh;
+ 	struct object_info root_obj;
+ 	unsigned char *b_data;
++	unsigned int blocksize;
+ 	struct adfs_sb_info *asb;
+ 	struct inode *root;
+ 	int ret = -EINVAL;
+@@ -419,8 +420,10 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
+ 		goto error_free_bh;
+ 	}
  
--&emmc {
--	/delete-property/mmc-hs200-1_8v;
--};
--
- &i2c2 {
- 	status = "disabled";
- };
++	blocksize = 1 << dr->log2secsize;
+ 	brelse(bh);
+-	if (sb_set_blocksize(sb, 1 << dr->log2secsize)) {
++
++	if (sb_set_blocksize(sb, blocksize)) {
+ 		bh = sb_bread(sb, ADFS_DISCRECORD / sb->s_blocksize);
+ 		if (!bh) {
+ 			adfs_error(sb, "couldn't read superblock on "
 -- 
 2.20.1
 
