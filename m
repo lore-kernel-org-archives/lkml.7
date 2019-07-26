@@ -4,38 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED84C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC64EC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 916D72238C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB7582238C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfGZD1K (ORCPT
+        id S1726545AbfGZD1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 23:27:10 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2763 "EHLO huawei.com"
+        Thu, 25 Jul 2019 23:27:15 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3167 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726065AbfGZD1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 23:27:07 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E28EC6CC46D6951A2826;
-        Fri, 26 Jul 2019 11:27:04 +0800 (CST)
+        id S1726404AbfGZD1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 23:27:12 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id EFB1A1697C4B6D9DBD1B;
+        Fri, 26 Jul 2019 11:27:09 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 26 Jul 2019 11:26:58 +0800
+ 14.3.439.0; Fri, 26 Jul 2019 11:27:00 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Yonglong Liu <liuyonglong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
+        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 04/11] net: hns3: fix mis-counting IRQ vector numbers issue
-Date:   Fri, 26 Jul 2019 11:24:55 +0800
-Message-ID: <1564111502-15504-5-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 10/11] net: hns3: Add support for using order 1 pages with a 4K buffer
+Date:   Fri, 26 Jul 2019 11:25:01 +0800
+Message-ID: <1564111502-15504-11-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564111502-15504-1-git-send-email-tanhuazhong@huawei.com>
 References: <1564111502-15504-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,80 +46,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-The num_msi_left means the vector numbers of NIC, but if the
-PF supported RoCE, it contains the vector numbers of NIC and
-RoCE(Not expected).
+Hardware supports 0.5K, 1K, 2K, 4K RX buffer size, the
+RX buffer can not be reused because the hns3_page_order
+return 0 when page size and RX buffer size are both 4096.
 
-This may cause interrupts lost in some case, because of the
-NIC module used the vector resources which belongs to RoCE.
+So this patch changes the hns3_page_order to return 1 when
+RX buffer is greater than half of the page size and page size
+is less the 8192, and dev_alloc_pages has already been used
+to allocate the compound page for RX buffer.
 
-This patch corrects the value of num_msi_left to be equals to
-the vector numbers of NIC, and adjust the default tqp numbers
-according to the value of num_msi_left. Also, adds a little
-cleanup about checking whether the device is supporting RoCE
-before allocating IRQ vector.
+This patch also changes hnae3_* to hns3_* for page order
+and RX buffer size calculation because they are used in
+hns3 module.
 
-Fixes: 46a3df9f9718 ("net: hns3: Add HNS3 Acceleration Engine & Compatibility Layer Support")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Reviewed-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   |  2 ++
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 12 ++++++++++--
- 2 files changed, 12 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 10 +++++-----
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.h | 15 ++++++++++++---
+ 2 files changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 3c64d70..9329aab 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -1476,6 +1476,8 @@ static int hclge_vport_setup(struct hclge_vport *vport, u16 num_tqps)
- 	nic->ae_algo = &ae_algo;
- 	nic->numa_node_mask = hdev->numa_node_mask;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 2e30cfa..3a93bef 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -2086,7 +2086,7 @@ static void hns3_set_default_feature(struct net_device *netdev)
+ static int hns3_alloc_buffer(struct hns3_enet_ring *ring,
+ 			     struct hns3_desc_cb *cb)
+ {
+-	unsigned int order = hnae3_page_order(ring);
++	unsigned int order = hns3_page_order(ring);
+ 	struct page *p;
  
-+	num_tqps = min_t(u16, hdev->roce_base_msix_offset - 1, num_tqps);
-+
- 	ret = hclge_knic_setup(vport, num_tqps,
- 			       hdev->num_tx_desc, hdev->num_rx_desc);
- 	if (ret)
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index a13a0e1..db84782 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -287,6 +287,14 @@ static int hclgevf_get_queue_info(struct hclgevf_dev *hdev)
- 	memcpy(&hdev->rss_size_max, &resp_msg[2], sizeof(u16));
- 	memcpy(&hdev->rx_buf_len, &resp_msg[4], sizeof(u16));
+ 	p = dev_alloc_pages(order);
+@@ -2097,7 +2097,7 @@ static int hns3_alloc_buffer(struct hns3_enet_ring *ring,
+ 	cb->page_offset = 0;
+ 	cb->reuse_flag = 0;
+ 	cb->buf  = page_address(p);
+-	cb->length = hnae3_page_size(ring);
++	cb->length = hns3_page_size(ring);
+ 	cb->type = DESC_TYPE_PAGE;
  
-+	/* if irq is not enough, let tqps have the same value of irqs,
-+	 * to make sure one irq just bind to one tqp, this can improve
-+	 * the performance
-+	 */
-+	hdev->num_tqps = min_t(u16, hdev->roce_base_msix_offset - 1,
-+			       hdev->num_tqps);
-+	hdev->rss_size_max = min_t(u16, hdev->rss_size_max, hdev->num_tqps);
-+
  	return 0;
- }
+@@ -2400,7 +2400,7 @@ static void hns3_nic_reuse_page(struct sk_buff *skb, int i,
+ {
+ 	struct hns3_desc *desc = &ring->desc[ring->next_to_clean];
+ 	int size = le16_to_cpu(desc->rx.size);
+-	u32 truesize = hnae3_buf_size(ring);
++	u32 truesize = hns3_buf_size(ring);
  
-@@ -2208,7 +2216,7 @@ static int hclgevf_init_msi(struct hclgevf_dev *hdev)
- 	int vectors;
- 	int i;
+ 	skb_add_rx_frag(skb, i, desc_cb->priv, desc_cb->page_offset + pull_len,
+ 			size - pull_len, truesize);
+@@ -2415,7 +2415,7 @@ static void hns3_nic_reuse_page(struct sk_buff *skb, int i,
+ 	/* Move offset up to the next cache line */
+ 	desc_cb->page_offset += truesize;
  
--	if (hnae3_get_bit(hdev->ae_dev->flag, HNAE3_DEV_SUPPORT_ROCE_B))
-+	if (hnae3_dev_roce_supported(hdev))
- 		vectors = pci_alloc_irq_vectors(pdev,
- 						hdev->roce_base_msix_offset + 1,
- 						hdev->num_msi,
-@@ -2495,7 +2503,7 @@ static int hclgevf_query_vf_resource(struct hclgevf_dev *hdev)
+-	if (desc_cb->page_offset + truesize <= hnae3_page_size(ring)) {
++	if (desc_cb->page_offset + truesize <= hns3_page_size(ring)) {
+ 		desc_cb->reuse_flag = 1;
+ 		/* Bump ref count on page before it is given */
+ 		get_page(desc_cb->priv);
+@@ -2697,7 +2697,7 @@ static int hns3_add_frag(struct hns3_enet_ring *ring, struct hns3_desc *desc,
+ 		}
  
- 	req = (struct hclgevf_query_res_cmd *)desc.data;
+ 		if (ring->tail_skb) {
+-			head_skb->truesize += hnae3_buf_size(ring);
++			head_skb->truesize += hns3_buf_size(ring);
+ 			head_skb->data_len += le16_to_cpu(desc->rx.size);
+ 			head_skb->len += le16_to_cpu(desc->rx.size);
+ 			skb = ring->tail_skb;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+index 848b866..1a17856 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+@@ -608,9 +608,18 @@ static inline bool hns3_nic_resetting(struct net_device *netdev)
  
--	if (hnae3_get_bit(hdev->ae_dev->flag, HNAE3_DEV_SUPPORT_ROCE_B)) {
-+	if (hnae3_dev_roce_supported(hdev)) {
- 		hdev->roce_base_msix_offset =
- 		hnae3_get_field(__le16_to_cpu(req->msixcap_localid_ba_rocee),
- 				HCLGEVF_MSIX_OFT_ROCEE_M,
+ #define tx_ring_data(priv, idx) ((priv)->ring_data[idx])
+ 
+-#define hnae3_buf_size(_ring) ((_ring)->buf_size)
+-#define hnae3_page_order(_ring) (get_order(hnae3_buf_size(_ring)))
+-#define hnae3_page_size(_ring) (PAGE_SIZE << (u32)hnae3_page_order(_ring))
++#define hns3_buf_size(_ring) ((_ring)->buf_size)
++
++static inline unsigned int hns3_page_order(struct hns3_enet_ring *ring)
++{
++#if (PAGE_SIZE < 8192)
++	if (ring->buf_size > (PAGE_SIZE / 2))
++		return 1;
++#endif
++	return 0;
++}
++
++#define hns3_page_size(_ring) (PAGE_SIZE << hns3_page_order(_ring))
+ 
+ /* iterator for handling rings in ring group */
+ #define hns3_for_each_ring(pos, head) \
 -- 
 2.7.4
 
