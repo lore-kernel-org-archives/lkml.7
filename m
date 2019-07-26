@@ -2,130 +2,147 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE8FC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D062C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83AB321994
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F33218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:54:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S58mOK6k"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="m+fsM1k5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfGZWxa (ORCPT
+        id S1727620AbfGZWyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 18:53:30 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:32784 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfGZWxa (ORCPT
+        Fri, 26 Jul 2019 18:54:00 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34640 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727483AbfGZWyA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 18:53:30 -0400
-Received: by mail-yw1-f67.google.com with SMTP id l124so20868318ywd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 15:53:29 -0700 (PDT)
+        Fri, 26 Jul 2019 18:54:00 -0400
+Received: by mail-ot1-f67.google.com with SMTP id n5so56954932otk.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 15:53:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m8/4TDGoTP0YJOmmNh1QY5sjP7utSN3T4GKeg0uRKkI=;
-        b=S58mOK6kmyfjaqk1fnTJ++/++kcxrVvJPN9KcacKz65Ijo+9nbPY62HM1CffSp86Gu
-         /dPN5MfoF9x3qzmvRf4i/6AryZbuh86DENdsSJKo1zLveUuyHt3BmI5KngT42emGLpRg
-         LfE5/fDELYjpJFgZ6/3aEWoIOYp7eIVl/VMYJO3P6dhqng+w41uZfFsmu2hMSxMur74E
-         cjujptrMLPPTtmOt4Ya3Uv+rKDOFMywYfHOEFwqVFz7D2oHaFLDQNzYLJ324mImcBbId
-         h3rDRv/vOKwwLN7nnncz9jasy9fPT3hIXPkkvg9QeXHJnJnt2ZVEQ6gEW6zaDfc0rSja
-         EY0Q==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=9yHKSH2nyrMOIGNyd4CyMcnUdirfGb0YWEy2r0HnXdM=;
+        b=m+fsM1k54XE4l7Y52Rhdx4f6VkwEeRHjELBA+I2opnzo8BChnkBi+nWCp1/u+0Zzq6
+         ZvAue14znBPJb5hRMhgpvnah1jfLjorbivaiwWENClta8GSdohIK26jSG0LeaxCoyTbn
+         I+I+bwIxe7kgCCti111wRuoG3MqDY5six9EKOl7pu0y9+pLG3g53Ew4MhVOADh65+/bB
+         l3quZNvoqrVfTNtnOeIpMDAm2BQpee37zNSDx4caUe8n4X9Ah2NDfwxvh/IL0YTkBaAX
+         8KXqUQtQ8DEh6jkKXms/C83uYNLukuZb4fctkwhO2GyNZfajirB5HJZFAMChPsZcF/Al
+         qlsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m8/4TDGoTP0YJOmmNh1QY5sjP7utSN3T4GKeg0uRKkI=;
-        b=mu/Dr/xDseszRRSSvzuOV4bWp/p1QyGargMAjGaDQsQEhMtSUza/6VkE7y5y2wOnc+
-         pqnvVf9UTCPcYhJasy6H0TUMqBfKnMPVVf94lQ5RcaLrHypj9EOTaOoba4nHj8MzBhh4
-         yD0v8p4AzOIBTDpW3jlvdfWQ8GtSjujRu51UN7NA/SqtZa7DlzIRnVg6vYbe83F+FniF
-         36+QvgwBpqgM5RbgOstIiRKKupd4SmGQOZkaa/k3Hx313NtNHm867SrvyKbijJwTylyl
-         1WbdctPTQ1X2IIBd8+Kv0HIcOo1QrLqRv8WQI1S2U4TAGAz3qDmkosTphQxOQhGZie0S
-         DfCg==
-X-Gm-Message-State: APjAAAVIhtfWwIZmWBQ74Vl0S9tMZ4Dh4BsHlGEf+CrPk7iWJ1uLTnUf
-        pfr0fG6lq/MTptmwyapPNtDhTvJU1X3BbeArbHdwDQ==
-X-Google-Smtp-Source: APXvYqzNhimbC8mzTJcKYV0Wi6pTpAOpfQ/Ahx7/RLFgCd5sUCIjXXqqjCww0QbPgslVApm1LWoPGyUTAhbML+xsfXs=
-X-Received: by 2002:a81:19c6:: with SMTP id 189mr57026739ywz.296.1564181608700;
- Fri, 26 Jul 2019 15:53:28 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=9yHKSH2nyrMOIGNyd4CyMcnUdirfGb0YWEy2r0HnXdM=;
+        b=j9L61UAGsUyfGlSx0VJpCreIErnH/xHFEzwxq1W0njxGCmnMJsckqHibym3Bh1bq8E
+         NWPEdbh2kewHJdMawlpzKnaAeMK3UQVOKUb+VL+1kkfTmGSca07JmeBoyLqxOk+k2Sru
+         jykY6j1sEsxDzXfy7xW18cuwvGb7xlFBkMsIOBh7/tThjhSpi9GZoKZpm8xOZWEaDtdY
+         8K4yoEjorPd+IkDz9Ym/xWOu094KQZoPZQQJF1wQGikQXuIChNCiBXR19G5+ob8A4a5B
+         KpV32ri6dKf3IgNx0ZcuFZyo9wxPlFsUVjoM1OOouDVq7caeL3bs8k6nO2mOlTZr+JLb
+         BkDA==
+X-Gm-Message-State: APjAAAX3PvOXo4UAlI4UfrqbfUrzw6e+JHwPSwiS7iYD9FtSy//Mjtck
+        SoVMy40V8LxMDH/+HEQLA5j2K9yFvrfs75i9LtvnfpZ2hKI=
+X-Google-Smtp-Source: APXvYqz4Uvodp449SpQfppdw+t/cXgvDGwkwTvwh7UY4Ms1pF+6kuQ9VjwgbAYP1RwIe4MoqUCAC2Qf4MJiEBRYC6Kw=
+X-Received: by 2002:a9d:7a9a:: with SMTP id l26mr65596750otn.71.1564181639248;
+ Fri, 26 Jul 2019 15:53:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190726224810.79660-1-henryburns@google.com>
-In-Reply-To: <20190726224810.79660-1-henryburns@google.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 26 Jul 2019 15:53:17 -0700
-Message-ID: <CALvZod7Q_86F=aH6zP0TRFZ_6N5e2oFnjoSTPv=mcAdi0HEg3A@mail.gmail.com>
-Subject: Re: [PATCH] mm/z3fold.c: Fix z3fold_destroy_pool() ordering
-To:     Henry Burns <henryburns@google.com>
-Cc:     Vitaly Vul <vitaly.vul@sony.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Adams <jwadams@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 26 Jul 2019 15:53:47 -0700
+Message-ID: <CAPcyv4gqE6zOoSibTgjbWWHE3VVQ0wSJN-NxwF288nTe2Z3yzA@mail.gmail.com>
+Subject: [GIT PULL] libnvdimm fixes for 5.3-rc2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 3:48 PM Henry Burns <henryburns@google.com> wrote:
->
-> The constraint from the zpool use of z3fold_destroy_pool() is there are no
-> outstanding handles to memory (so no active allocations), but it is possible
-> for there to be outstanding work on either of the two wqs in the pool.
->
-> If there is work queued on pool->compact_workqueue when it is called,
-> z3fold_destroy_pool() will do:
->
->    z3fold_destroy_pool()
->      destroy_workqueue(pool->release_wq)
->      destroy_workqueue(pool->compact_wq)
->        drain_workqueue(pool->compact_wq)
->          do_compact_page(zhdr)
->            kref_put(&zhdr->refcount)
->              __release_z3fold_page(zhdr, ...)
->                queue_work_on(pool->release_wq, &pool->work) *BOOM*
->
-> So compact_wq needs to be destroyed before release_wq.
->
-> Fixes: 5d03a6613957 ("mm/z3fold.c: use kref to prevent page free/compact race")
->
-> Signed-off-by: Henry Burns <henryburns@google.com>
+Hi Linus, please pull from:
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/libnvdimm-fixes-5.3-rc2
 
-> Cc: <stable@vger.kernel.org>
-> ---
->  mm/z3fold.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/z3fold.c b/mm/z3fold.c
-> index 1a029a7432ee..43de92f52961 100644
-> --- a/mm/z3fold.c
-> +++ b/mm/z3fold.c
-> @@ -818,8 +818,15 @@ static void z3fold_destroy_pool(struct z3fold_pool *pool)
->  {
->         kmem_cache_destroy(pool->c_handle);
->         z3fold_unregister_migration(pool);
-> -       destroy_workqueue(pool->release_wq);
-> +
-> +       /*
-> +        * We need to destroy pool->compact_wq before pool->release_wq,
-> +        * as any pending work on pool->compact_wq will call
-> +        * queue_work(pool->release_wq, &pool->work).
-> +        */
-> +
->         destroy_workqueue(pool->compact_wq);
-> +       destroy_workqueue(pool->release_wq);
->         kfree(pool);
->  }
->
-> --
-> 2.22.0.709.g102302147b-goog
->
+...to receive a collection of locking and async operations fixes for
+v5.3-rc2. These had been soaking in a branch targeting the merge
+window, but missed due to a regression hunt. This fixed up version has
+otherwise been in -next this past week with no reported issues.
+
+In order to gain confidence in the locking changes the pull also
+includes a debug / instrumentation patch to enable lockdep coverage
+for libnvdimm subsystem operations that depend on the device_lock for
+exclusion. As mentioned in the changelog it is a hack, but it works
+and documents the locking expectations of the sub-system in a way that
+others can use lockdep to verify. The driver core touches got an ack
+from Greg.
+
+Please pull, but I'll understand if you want a resend with the debug
+patch dropped.
+
+---
+
+The following changes since commit d1fdb6d8f6a4109a4263176c84b899076a5f8008:
+
+  Linux 5.2-rc4 (2019-06-08 20:24:46 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/libnvdimm-fixes-5.3-rc2
+
+for you to fetch changes up to 87a30e1f05d73a34e6d1895065541369131aaf1c:
+
+  driver-core, libnvdimm: Let device subsystems add local lockdep
+coverage (2019-07-18 16:23:27 -0700)
+
+----------------------------------------------------------------
+libnvdimm fixes v5.3-rc2
+
+- Fix duplicate device_unregister() calls (multiple threads competing to
+  do unregister work when scheduling device removal from a sysfs attribute
+  of the self-same device).
+
+- Fix badblocks registration order bug. Ensure region badblocks are
+  initialized in advance of namespace registration.
+
+- Fix a deadlock between the bus lock and probe operations.
+
+- Export device-core infrastructure to coordinate async operations via
+  the device ->dead state.
+
+- Add device-core infrastructure to validate device_lock() usage with
+  lockdep.
+
+----------------------------------------------------------------
+Dan Williams (7):
+      drivers/base: Introduce kill_device()
+      libnvdimm/bus: Prevent duplicate device_unregister() calls
+      libnvdimm/region: Register badblocks before namespaces
+      libnvdimm/bus: Prepare the nd_ioctl() path to be re-entrant
+      libnvdimm/bus: Stop holding nvdimm_bus_list_mutex over __nd_ioctl()
+      libnvdimm/bus: Fix wait_nvdimm_bus_probe_idle() ABBA deadlock
+      driver-core, libnvdimm: Let device subsystems add local lockdep coverage
+
+ drivers/acpi/nfit/core.c        |  28 +++---
+ drivers/acpi/nfit/nfit.h        |  24 +++++
+ drivers/base/core.c             |  30 ++++--
+ drivers/nvdimm/btt_devs.c       |  16 +--
+ drivers/nvdimm/bus.c            | 210 ++++++++++++++++++++++++++--------------
+ drivers/nvdimm/core.c           |  10 +-
+ drivers/nvdimm/dimm_devs.c      |   4 +-
+ drivers/nvdimm/namespace_devs.c |  36 +++----
+ drivers/nvdimm/nd-core.h        |  71 +++++++++++++-
+ drivers/nvdimm/pfn_devs.c       |  24 ++---
+ drivers/nvdimm/pmem.c           |   4 +-
+ drivers/nvdimm/region.c         |  24 ++---
+ drivers/nvdimm/region_devs.c    |  12 ++-
+ drivers/nvdimm/region.c         |  24 ++---
+ drivers/nvdimm/region_devs.c    |  12 ++-
+ include/linux/device.h          |   6 ++
+ 14 files changed, 343 insertions(+), 156 deletions(-)
