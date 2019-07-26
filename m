@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DD4C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56061C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A611218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BDD922CBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564154830;
-	bh=Sz43Jk6K+0CKPBk/2oB4wkkSjf+IM1nACiGhVNWupgQ=;
+	s=default; t=1564154832;
+	bh=rA2FqFUvc1PoYNeLlUKoLtsNwAP3/mdz2JPQVmHyk50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C0lzM3p0XNyafKbcUSrOGImecEWg6hOZxGzNIWXWt1JqyFROUIfHycNxgGpOlCiqG
-	 M+k7IejpPpvR+vQuRvKDKBDUGP2NRxh8qQ+IsSqcE/Guqb7IO0uEWUSbomkrsOJ94J
-	 2CropwHzW8gTkNtxCKi+OudCkHoXGyihh62ndnnQ=
+	b=Rw0R7gQCgBZjVaEKViKyTccaSU3EPN7t1uJMNXOWNOss0ctK73rDYAxYVctCDIP5B
+	 kZFr21k0Qvo2UzIxMxxo07i2SgVvQ2IwvoMGGyjzzeZ9OyHiTG8HrdG7qd1ZO2n+6r
+	 bPelKqWnMrv4zeAQLNC3kXqrq/ofON5w3l+ao0Wk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388209AbfGZP1J (ORCPT
+        id S2388228AbfGZP1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:27:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41250 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:27:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388169AbfGZP1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:27:06 -0400
+        id S2388203AbfGZP1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:27:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D24122CBF;
-        Fri, 26 Jul 2019 15:27:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51FF8218D4;
+        Fri, 26 Jul 2019 15:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154825;
-        bh=Sz43Jk6K+0CKPBk/2oB4wkkSjf+IM1nACiGhVNWupgQ=;
+        s=default; t=1564154827;
+        bh=rA2FqFUvc1PoYNeLlUKoLtsNwAP3/mdz2JPQVmHyk50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IJ7y9QyhpspysskAEZKMAZaVsBe+DRoCidvdGAbMD8yRdlD5ncWIaaen/kBquXGuT
-         a6U8MM8fjsgVh9l+yqqEnV4dbdXQY0GapVvVNwkMYV1Vx1E3GrIY0vmoXInBD56UgX
-         yCa7PJd34JUAOtbnV2jrmLl+VEpDG3qtevRYQJS4=
+        b=ApqxpRMpr+rFlgjrTzxEaMEjIlZPnCnKkl59/xs0djuDQiX6Aoy/2WBOn+Vnzjl9B
+         8zWek7hgre23diJyVc3CCpn17s1QePxQbeCHlIlbetkV9taGZ7Ca0c2MPXS1yZH/nL
+         3z9MQ72p+SafqQ3YuPX3QDu/6Bh1OUcaFo0H6CAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        David Beckett <david.beckett@netronome.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 37/66] net/tls: fix poll ignoring partially copied records
-Date:   Fri, 26 Jul 2019 17:24:36 +0200
-Message-Id: <20190726152306.042706186@linuxfoundation.org>
+Subject: [PATCH 5.2 38/66] net/tls: reject offload of TLS 1.3
+Date:   Fri, 26 Jul 2019 17:24:37 +0200
+Message-Id: <20190726152306.144992521@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
 References: <20190726152301.936055394@linuxfoundation.org>
@@ -64,40 +63,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 13aecb17acabc2a92187d08f7ca93bb8aad62c6f ]
+[ Upstream commit 618bac45937a3dc6126ac0652747481e97000f99 ]
 
-David reports that RPC applications which use epoll() occasionally
-get stuck, and that TLS ULP causes the kernel to not wake applications,
-even though read() will return data.
+Neither drivers nor the tls offload code currently supports TLS
+version 1.3. Check the TLS version when installing connection
+state. TLS 1.3 will just fallback to the kernel crypto for now.
 
-This is indeed true. The ctx->rx_list which holds partially copied
-records is not consulted when deciding whether socket is readable.
-
-Note that SO_RCVLOWAT with epoll() is and has always been broken for
-kernel TLS. We'd need to parse all records from the TCP layer, instead
-of just the first one.
-
-Fixes: 692d7b5d1f91 ("tls: Fix recvmsg() to be able to peek across multiple records")
-Reported-by: David Beckett <david.beckett@netronome.com>
+Fixes: 130b392c6cd6 ("net: tls: Add tls 1.3 support")
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tls/tls_sw.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/tls/tls_device.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -1958,7 +1958,8 @@ bool tls_sw_stream_read(const struct soc
- 		ingress_empty = list_empty(&psock->ingress_msg);
- 	rcu_read_unlock();
+--- a/net/tls/tls_device.c
++++ b/net/tls/tls_device.c
+@@ -742,6 +742,11 @@ int tls_set_device_offload(struct sock *
+ 	}
  
--	return !ingress_empty || ctx->recv_pkt;
-+	return !ingress_empty || ctx->recv_pkt ||
-+		!skb_queue_empty(&ctx->rx_list);
- }
+ 	crypto_info = &ctx->crypto_send.info;
++	if (crypto_info->version != TLS_1_2_VERSION) {
++		rc = -EOPNOTSUPP;
++		goto free_offload_ctx;
++	}
++
+ 	switch (crypto_info->cipher_type) {
+ 	case TLS_CIPHER_AES_GCM_128:
+ 		nonce_size = TLS_CIPHER_AES_GCM_128_IV_SIZE;
+@@ -876,6 +881,9 @@ int tls_set_device_offload_rx(struct soc
+ 	struct net_device *netdev;
+ 	int rc = 0;
  
- static int tls_read_size(struct strparser *strp, struct sk_buff *skb)
++	if (ctx->crypto_recv.info.version != TLS_1_2_VERSION)
++		return -EOPNOTSUPP;
++
+ 	/* We support starting offload on multiple sockets
+ 	 * concurrently, so we only need a read lock here.
+ 	 * This lock must precede get_netdev_for_sock to prevent races between
 
 
