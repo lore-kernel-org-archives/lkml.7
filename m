@@ -2,147 +2,106 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CBCC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A977CC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F409D206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84359206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:04:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FujUel+p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725981AbfGZGCn (ORCPT
+        id S1726043AbfGZGEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 02:02:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:38422 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfGZGCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 02:02:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CE59337;
-        Thu, 25 Jul 2019 23:02:42 -0700 (PDT)
-Received: from [10.163.1.197] (unknown [10.163.1.197])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F3E03F694;
-        Thu, 25 Jul 2019 23:04:40 -0700 (PDT)
-Subject: Re: [PATCH v9 00/21] Generic page walk and ptdump
-To:     Will Deacon <will@kernel.org>
-Cc:     Steven Price <steven.price@arm.com>, linux-mm@kvack.org,
-        Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20190722154210.42799-1-steven.price@arm.com>
- <835a0f2e-328d-7f7f-e52a-b754137789f9@arm.com>
- <c9d2042f-c731-4705-4148-b38deccf7963@arm.com>
- <6f59521e-1f3e-6765-9a6f-c8eca4c0c154@arm.com>
- <20190725093036.dzn6uulcihhkohm2@willie-the-truck>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <40adc5ea-1125-d821-267d-3621732775d6@arm.com>
-Date:   Fri, 26 Jul 2019 11:33:14 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 26 Jul 2019 02:04:49 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52344 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfGZGEs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 02:04:48 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6Q64evF046817;
+        Fri, 26 Jul 2019 01:04:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564121080;
+        bh=CUxqPox0uX06JCD6vGANt8OVjWmeI7cTyeQ3nqPOa/0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=FujUel+pmaCvLTkgAXMhHWL+M+Nlswu/bHjkS1errglYmLdClnZpIh2vDbMyhXUfK
+         qK7fPhWd0l8ItaSNyie/6HtHq30nGXii1C/zelZSB2OmPpaM95T0IBopi1qjZuKWz5
+         wUuZPvfYfs4wEE7kGUzjj/Hb2EY1Br1rvbclWSxU=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6Q64ehh077344
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 26 Jul 2019 01:04:40 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 26
+ Jul 2019 01:04:39 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 26 Jul 2019 01:04:39 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6Q64ad4046027;
+        Fri, 26 Jul 2019 01:04:37 -0500
+Subject: Re: linux-next: Fixes tag needs some work in the sound-asoc tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190726072752.2acb2149@canb.auug.org.au>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <14710d5e-7dfd-84e0-2ea1-712863c4e455@ti.com>
+Date:   Fri, 26 Jul 2019 09:04:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190725093036.dzn6uulcihhkohm2@willie-the-truck>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190726072752.2acb2149@canb.auug.org.au>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Stephen,
 
-
-On 07/25/2019 03:00 PM, Will Deacon wrote:
-> On Thu, Jul 25, 2019 at 02:39:22PM +0530, Anshuman Khandual wrote:
->> On 07/24/2019 07:05 PM, Steven Price wrote:
->>> There isn't any problem as such with using p?d_large macros. However the
->>> name "large" has caused confusion in the past. In particular there are
->>> two types of "large" page:
->>>
->>> 1. leaf entries at high levels than normal ('sections' on Arm, for 4K
->>> pages this gives you 2MB and 1GB pages).
->>>
->>> 2. sets of contiguous entries that can share a TLB entry (the
->>> 'Contiguous bit' on Arm - which for 4K pages gives you 16 entries = 64
->>> KB 'pages').
->>
->> This is arm64 specific and AFAIK there are no other architectures where there
->> will be any confusion wrt p?d_large() not meaning a single entry.
->>
->> As you have noted before if we are printing individual entries with PTE_CONT
->> then they need not be identified as p??d_large(). In which case p?d_large()
->> can just safely point to p?d_sect() identifying regular huge leaf entries.
+On 26/07/2019 0.27, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Steven's stuck in the middle of things here, but I do object to p?d_large()
-> because I find it bonkers to have p?d_large() and p?d_huge() mean completely
-> different things when they are synonyms in the English language.
-
-Agreed that both p?d_large() and p?d_huge() should not exist at the same time
-when they imply the same thing. I believe all these name proliferation happened
-because THP, HugeTLB and kernel large mappings like linear, vmemmap, ioremap etc
-which the platform code had to deal with in various forms.
-
+> In commit
 > 
-> Yes, p?d_leaf() matches the terminology used by the Arm architecture, but
-> given that most page table structures are arranged as a 'tree', then it's
-> not completely unreasonable, in my opinion. If you have a more descriptive
-> name, we could use that instead. We could also paint it blue.
-
-The alternate name chosen p?d_leaf() is absolutely fine and it describes the
-entry as intended. There is no disagreement over that. My original concern
-was introduction of yet another page table helper.
-
+>   9fcf9139a2fd ("ASoC: ti: davinci-mcasp: Fix clk PDIR handling for i2s master mode")
 > 
->>> In many cases both give the same effect (reduce pressure on TLBs and
->>> requires contiguous and aligned physical addresses). But for this case
->>> we only care about the 'leaf' case (because the contiguous bit makes no
->>> difference to walking the page tables).
->>
->> Right and we can just safely identify section entries with it. What will be
->> the problem with that ? Again this is only arm64 specific.
->>
->>>
->>> As far as I'm aware p?d_large() currently implements the first and
->>> p?d_(trans_)huge() implements either 1 or 2 depending on the architecture.
->>
->> AFAIK option 2 exists only on arm6 platform. IIUC generic MM requires two
->> different huge page dentition from platform. HugeTLB identifies large entries
->> at PGD|PUD|PMD after converting it's content into PTE first. So there is no
->> need for direct large page definitions for other levels.
->>
->> 1. THP		- pmd_trans_huge()
->> 2. HugeTLB	- pte_huge()	   CONFIG_ARCH_WANT_GENERAL_HUGETLB is set
->>
->> A simple check for p?d_large() on mm/ and include/linux shows that there are
->> no existing usage for these in generic MM. Hence it is available.
+> Fixes tag
 > 
-> Alternatively, it means we have a good opportunity to give it a better name
-> before it spreads into the core code.
-
-Fair enough, that is another way. So you expect existing platform definitions
-for p?d_large()/p?d_huge() getting cleaned up and to start using new p?d_leaf()
-instead ?
-
+>   Fixes: 2302be4126f52 ("ASoC: davinci-mcasp: Update PDIR (pin direction) register handling")
 > 
->> IMHO the new addition of p?d_leaf() can be avoided and p?d_large() should be
->> cleaned up (if required) in platforms and used in generic functions.
+> has these problem(s):
 > 
-> Again, I disagree and think p?d_large() should be confined to arch code
-> if it sticks around at all.
+>   - Target SHA1 does not exist
+> 
+> Did you mean
+> 
+> Fixes: ca3d9433349e ("ASoC: davinci-mcasp: Update PDIR (pin direction) register handling")
 
-All of those instances should migrate to using p?d_leaf() eventually else
-there will be three different helpers which probably mean the same thing.
+Indeed this is the correct SHA1, looks like the 2302be4126f52 is on TI's
+4.19-LTS branch and it got into the commit message because I have
+validated first on that before moving on to linux-next.
+
+Mark: can you either drop the patch and I'll send a new one with fixed
+SHA1 or can you fix the commit message in place?
+
+Sorry.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
