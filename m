@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A59C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3961BC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D76218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13E7920644
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155193;
-	bh=1tzAILFEnFOxvmk+bcKc+0/O/eBffjJhaQCUsy6WV6Q=;
+	s=default; t=1564155196;
+	bh=QES9UIyXj5twZIQAprQMZjZfdU3sm00oOsc3BxDN6dY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uiCkljSqBKLXH3wKx9+wSZ+0uCd4Vr2PcP5y/7iQLUXx5TAyLTvGiBh/3b4p2/ts0
-	 EE2W3wSc/G4RUq7wXGMyG6ZGr8idQLtlxJ/3jA02EDK7NqagbrbWCgG771ro71mRfj
-	 5dEz++IPphMyieKDin0FkKhrepzV/nBLbLRBxvT4=
+	b=dqf812z4vHonKiNUWkrbk2zmPb9N5pWUkFKkkG2U3AYfKwj3AYHQCXX9MFo7aif4I
+	 re6dHlVdOdgD1ow4Y6J19lnbMNVzQlkMqDbee200ylR3Z45XPmlwSNqlZ/qsJ18I4s
+	 6NKQdd7Y+Z64JyDRDiX0/AjgEYe4m+BJZdzgbhEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388501AbfGZPdL (ORCPT
+        id S2389611AbfGZPdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:33:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48440 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:33:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389595AbfGZPdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:33:07 -0400
+        id S2388932AbfGZPdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:33:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ED7420644;
-        Fri, 26 Jul 2019 15:33:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA8AB218D4;
+        Fri, 26 Jul 2019 15:33:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155186;
-        bh=1tzAILFEnFOxvmk+bcKc+0/O/eBffjJhaQCUsy6WV6Q=;
+        s=default; t=1564155189;
+        bh=QES9UIyXj5twZIQAprQMZjZfdU3sm00oOsc3BxDN6dY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lGHAkEZbLvW1P1vllJwa6T5S0n571s48HkuX/RlE6hSc6331YC517Yk/OEAcb+4FX
-         C+xd8ZmhlyHLH3xEZ2SuI6dphjJyYzRrgWikN9p+vmBjFFEWUWD1XnHIqPu/y51TiI
-         j7frqCQa2eU5cqa1tGftICLa7pH+R8u3zixDcH6c=
+        b=m8tOPS6Covet+Mi5Qyxg0EqYSqdfFBjz9h/+F6mfSavSCLOb/pOFPR8YCcBc4jN0a
+         3RrBpbKBF5bEmTXQHAkiWshqztJcbIhgodLQgJJHtnvyy9fW8f6/jNllUxVa+0bIqf
+         x2200i2E7S4WBo6KFFUWVJBrmBGfM/1onCDCQ5Z8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Donohue <linux-kernel@PaulSD.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Alexander Petrovskiy <alexpe@mellanox.com>,
         David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 06/50] ipv6: rt6_check should return NULL if from is NULL
-Date:   Fri, 26 Jul 2019 17:24:41 +0200
-Message-Id: <20190726152301.335828258@linuxfoundation.org>
+Subject: [PATCH 4.19 07/50] ipv6: Unlink sibling route in case of failure
+Date:   Fri, 26 Jul 2019 17:24:42 +0200
+Message-Id: <20190726152301.419360355@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -60,35 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 49d05fe2c9d1b4a27761c9807fec39b8155bef9e ]
+[ Upstream commit 54851aa90cf27041d64b12f65ac72e9f97bd90fd ]
 
-Paul reported that l2tp sessions were broken after the commit referenced
-in the Fixes tag. Prior to this commit rt6_check returned NULL if the
-rt6_info 'from' was NULL - ie., the dst_entry was disconnected from a FIB
-entry. Restore that behavior.
+When a route needs to be appended to an existing multipath route,
+fib6_add_rt2node() first appends it to the siblings list and increments
+the number of sibling routes on each sibling.
 
-Fixes: 93531c674315 ("net/ipv6: separate handling of FIB entries from dst based routes")
-Reported-by: Paul Donohue <linux-kernel@PaulSD.com>
-Tested-by: Paul Donohue <linux-kernel@PaulSD.com>
-Signed-off-by: David Ahern <dsahern@gmail.com>
+Later, the function notifies the route via call_fib6_entry_notifiers().
+In case the notification is vetoed, the route is not unlinked from the
+siblings list, which can result in a use-after-free.
+
+Fix this by unlinking the route from the siblings list before returning
+an error.
+
+Audited the rest of the call sites from which the FIB notification chain
+is called and could not find more problems.
+
+Fixes: 2233000cba40 ("net/ipv6: Move call_fib6_entry_notifiers up for route adds")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Alexander Petrovskiy <alexpe@mellanox.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/route.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv6/ip6_fib.c |   18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -2214,7 +2214,7 @@ static struct dst_entry *rt6_check(struc
- {
- 	u32 rt_cookie = 0;
+--- a/net/ipv6/ip6_fib.c
++++ b/net/ipv6/ip6_fib.c
+@@ -1081,8 +1081,24 @@ add:
+ 		err = call_fib6_entry_notifiers(info->nl_net,
+ 						FIB_EVENT_ENTRY_ADD,
+ 						rt, extack);
+-		if (err)
++		if (err) {
++			struct fib6_info *sibling, *next_sibling;
++
++			/* If the route has siblings, then it first
++			 * needs to be unlinked from them.
++			 */
++			if (!rt->fib6_nsiblings)
++				return err;
++
++			list_for_each_entry_safe(sibling, next_sibling,
++						 &rt->fib6_siblings,
++						 fib6_siblings)
++				sibling->fib6_nsiblings--;
++			rt->fib6_nsiblings = 0;
++			list_del_init(&rt->fib6_siblings);
++			rt6_multipath_rebalance(next_sibling);
+ 			return err;
++		}
  
--	if ((from && !fib6_get_cookie_safe(from, &rt_cookie)) ||
-+	if (!from || !fib6_get_cookie_safe(from, &rt_cookie) ||
- 	    rt_cookie != cookie)
- 		return NULL;
- 
+ 		rcu_assign_pointer(rt->fib6_next, iter);
+ 		atomic_inc(&rt->fib6_ref);
 
 
