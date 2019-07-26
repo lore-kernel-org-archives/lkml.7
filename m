@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A19C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4DFC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 786CD22CBB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4779922CBB
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:57:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rXZjgdHY"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jkL74WID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfGZA5J (ORCPT
+        id S1727278AbfGZA5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 20:57:09 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:11322 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbfGZA5F (ORCPT
+        Thu, 25 Jul 2019 20:57:14 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:11773 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727224AbfGZA5K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 20:57:05 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d3a4fe10001>; Thu, 25 Jul 2019 17:57:05 -0700
+        Thu, 25 Jul 2019 20:57:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d3a4fe10000>; Thu, 25 Jul 2019 17:57:05 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 25 Jul 2019 17:57:04 -0700
+  Thu, 25 Jul 2019 17:57:07 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 17:57:04 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 26 Jul
- 2019 00:57:04 +0000
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 26 Jul
- 2019 00:57:02 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 26 Jul 2019 00:57:02 +0000
+        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 17:57:07 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 26 Jul
+ 2019 00:57:06 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 26 Jul 2019 00:57:07 +0000
 Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d3a4fdd0002>; Thu, 25 Jul 2019 17:57:01 -0700
+        id <B5d3a4fe20000>; Thu, 25 Jul 2019 17:57:06 -0700
 From:   Ralph Campbell <rcampbell@nvidia.com>
 To:     <linux-mm@kvack.org>
 CC:     <linux-kernel@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
         <dri-devel@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>,
-        "Christoph Hellwig" <hch@lst.de>,
-        Ralph Campbell <rcampbell@nvidia.com>,
+        "Ralph Campbell" <rcampbell@nvidia.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH v2 3/7] mm/hmm: replace the block argument to hmm_range_fault with a flags value
-Date:   Thu, 25 Jul 2019 17:56:46 -0700
-Message-ID: <20190726005650.2566-4-rcampbell@nvidia.com>
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v2 5/7] mm/hmm: make full use of walk_page_range()
+Date:   Thu, 25 Jul 2019 17:56:48 -0700
+Message-ID: <20190726005650.2566-6-rcampbell@nvidia.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726005650.2566-1-rcampbell@nvidia.com>
 References: <20190726005650.2566-1-rcampbell@nvidia.com>
@@ -60,239 +57,194 @@ X-NVConfidentiality: public
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564102625; bh=BVcR9FOkcQWKlh12sJ9h4SDAhWYtefde9yC9fidSqE0=;
+        t=1564102625; bh=GyZ3LYNDHdPknOwN7r8eo0WLWm3OjKPNgGYZWHO3koQ=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
          Content-Type:Content-Transfer-Encoding;
-        b=rXZjgdHY8rHwjV8iDsfZ2U8drIU14TZmcOsA6OvqghZ46qvpINYq9DOZbmsybzGQg
-         dBxnKm1+4HEQE0psP+UP69x7VkDOVUnE2sBy5cfP6GiNRwAqPdZ5IjVgIL83Uvscrk
-         wpfHV1Ecfx9gfcjYyWh9k/IlmM3t0MHGLZLOAPczL/1KnkieDvgflWD+WOBb4DElgK
-         ir+IydhQ7eANkDONcV2jAiUC8aSwkxhZZfSbY1mDYBRdti04SWSlnS7/Bos5gqsmSj
-         vefJoL3PtYtPNoRlLLcn8ipSzfzJzwp3dD2O0Ws2DCz4EWPhPHGAPUwi1gUW8nmjex
-         0tVy0PRdT8nwg==
+        b=jkL74WIDmQa1QlupaV/bl/KqbTUH1ksEkEBYqKDVCv0gPT18+fIWkOYzYvA/JhIOQ
+         WoaBiatsfQp4apyOEgWJmHcoEdUPR4iyjTzywVKgyNNm8afzWbdQXMTa9/hxtthL6D
+         /LE78tMf67hTVoBMr8RtJYQVzlwb6HbvgmT6F/zz/N1x6ESVVbuCpM+rz7BljsWl27
+         uC5J4Fa93NYNIxPT1yRulAC0TfLgGY7Kah/fiFeHkpm+tBTYaVXBUZGdk4m3bkr4fB
+         RJUcwZpJbDqishirX9ybkZn+bh2oq918k2LQCl/jh1pLxkW0lN0hR53X03mm8AOhfy
+         4ymbSl04N3uMQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+hmm_range_fault() calls find_vma() and walk_page_range() in a loop.
+This is unnecessary duplication since walk_page_range() calls find_vma()
+in a loop already.
+Simplify hmm_range_fault() by defining a walk_test() callback function
+to filter unhandled vmas.
 
-This allows easier expansion to other flags, and also makes the
-callers a little easier to read.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
 Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
 Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Christoph Hellwig <hch@lst.de>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c |  2 +-
- drivers/gpu/drm/nouveau/nouveau_svm.c   |  2 +-
- include/linux/hmm.h                     | 11 +++-
- mm/hmm.c                                | 74 ++++++++++++-------------
- 4 files changed, 48 insertions(+), 41 deletions(-)
+ mm/hmm.c | 130 ++++++++++++++++++++++++-------------------------------
+ 1 file changed, 57 insertions(+), 73 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/=
-amdgpu/amdgpu_ttm.c
-index e51b48ac48eb..12a59ac83f72 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-@@ -832,7 +832,7 @@ int amdgpu_ttm_tt_get_user_pages(struct amdgpu_bo *bo, =
-struct page **pages)
-=20
- 	down_read(&mm->mmap_sem);
-=20
--	r =3D hmm_range_fault(range, true);
-+	r =3D hmm_range_fault(range, 0);
- 	if (unlikely(r < 0)) {
- 		if (likely(r =3D=3D -EAGAIN)) {
- 			/*
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouvea=
-u/nouveau_svm.c
-index 79b29c918717..49b520c60fc5 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -505,7 +505,7 @@ nouveau_range_fault(struct hmm_mirror *mirror, struct h=
-mm_range *range)
- 		return -EBUSY;
- 	}
-=20
--	ret =3D hmm_range_fault(range, true);
-+	ret =3D hmm_range_fault(range, 0);
- 	if (ret <=3D 0) {
- 		if (ret =3D=3D 0)
- 			ret =3D -EBUSY;
-diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index 659e25a15700..15f1b113be3c 100644
---- a/include/linux/hmm.h
-+++ b/include/linux/hmm.h
-@@ -406,12 +406,19 @@ int hmm_range_register(struct hmm_range *range,
- 		       unsigned long end,
- 		       unsigned page_shift);
- void hmm_range_unregister(struct hmm_range *range);
-+
-+/*
-+ * Retry fault if non-blocking, drop mmap_sem and return -EAGAIN in that c=
-ase.
-+ */
-+#define HMM_FAULT_ALLOW_RETRY		(1 << 0)
-+
- long hmm_range_snapshot(struct hmm_range *range);
--long hmm_range_fault(struct hmm_range *range, bool block);
-+long hmm_range_fault(struct hmm_range *range, unsigned int flags);
-+
- long hmm_range_dma_map(struct hmm_range *range,
- 		       struct device *device,
- 		       dma_addr_t *daddrs,
--		       bool block);
-+		       unsigned int flags);
- long hmm_range_dma_unmap(struct hmm_range *range,
- 			 struct vm_area_struct *vma,
- 			 struct device *device,
 diff --git a/mm/hmm.c b/mm/hmm.c
-index 362944b0fbca..84f2791d3510 100644
+index 1bc014cddd78..838cd1d50497 100644
 --- a/mm/hmm.c
 +++ b/mm/hmm.c
-@@ -281,7 +281,7 @@ struct hmm_vma_walk {
- 	struct dev_pagemap	*pgmap;
- 	unsigned long		last;
- 	bool			fault;
--	bool			block;
-+	unsigned int		flags;
- };
-=20
- static int hmm_vma_do_fault(struct mm_walk *walk, unsigned long addr,
-@@ -293,8 +293,11 @@ static int hmm_vma_do_fault(struct mm_walk *walk, unsi=
-gned long addr,
- 	struct vm_area_struct *vma =3D walk->vma;
- 	vm_fault_t ret;
-=20
--	flags |=3D hmm_vma_walk->block ? 0 : FAULT_FLAG_ALLOW_RETRY;
--	flags |=3D write_fault ? FAULT_FLAG_WRITE : 0;
-+	if (hmm_vma_walk->flags & HMM_FAULT_ALLOW_RETRY)
-+		flags |=3D FAULT_FLAG_ALLOW_RETRY;
-+	if (write_fault)
-+		flags |=3D FAULT_FLAG_WRITE;
-+
- 	ret =3D handle_mm_fault(vma, addr, flags);
- 	if (ret & VM_FAULT_RETRY) {
- 		/* Note, handle_mm_fault did up_read(&mm->mmap_sem)) */
-@@ -1012,26 +1015,26 @@ long hmm_range_snapshot(struct hmm_range *range)
+@@ -840,13 +840,44 @@ static int hmm_vma_walk_hugetlb_entry(pte_t *pte, uns=
+igned long hmask,
+ #endif
  }
- EXPORT_SYMBOL(hmm_range_snapshot);
 =20
--/*
-- * hmm_range_fault() - try to fault some address in a virtual address rang=
-e
-- * @range: range being faulted
-- * @block: allow blocking on fault (if true it sleeps and do not drop mmap=
-_sem)
-- * Return: number of valid pages in range->pfns[] (from range start
-- *          address). This may be zero. If the return value is negative,
-- *          then one of the following values may be returned:
-+/**
-+ * hmm_range_fault - try to fault some address in a virtual address range
-+ * @range:	range being faulted
-+ * @flags:	HMM_FAULT_* flags
-  *
-- *           -EINVAL  invalid arguments or mm or virtual address are in an
-- *                    invalid vma (for instance device file vma).
-- *           -ENOMEM: Out of memory.
-- *           -EPERM:  Invalid permission (for instance asking for write an=
-d
-- *                    range is read only).
-- *           -EAGAIN: If you need to retry and mmap_sem was drop. This can=
- only
-- *                    happens if block argument is false.
-- *           -EBUSY:  If the the range is being invalidated and you should=
- wait
-- *                    for invalidation to finish.
-- *           -EFAULT: Invalid (ie either no valid vma or it is illegal to =
-access
-- *                    that range), number of valid pages in range->pfns[] =
-(from
-- *                    range start address).
-+ * Return: the number of valid pages in range->pfns[] (from range start
-+ * address), which may be zero.  On error one of the following status code=
-s
-+ * can be returned:
-+ *
-+ * -EINVAL:	Invalid arguments or mm or virtual address is in an invalid vm=
-a
-+ *		(e.g., device file vma).
-+ * -ENOMEM:	Out of memory.
-+ * -EPERM:	Invalid permission (e.g., asking for write and range is read
-+ *		only).
-+ * -EAGAIN:	A page fault needs to be retried and mmap_sem was dropped.
-+ * -EBUSY:	The range has been invalidated and the caller needs to wait for
-+ *		the invalidation to finish.
-+ * -EFAULT:	Invalid (i.e., either no valid vma or it is illegal to access
-+ *		that range) number of valid pages in range->pfns[] (from
-+ *              range start address).
-  *
-  * This is similar to a regular CPU page fault except that it will not tri=
-gger
-  * any memory migration if the memory being faulted is not accessible by C=
-PUs
-@@ -1040,7 +1043,7 @@ EXPORT_SYMBOL(hmm_range_snapshot);
-  * On error, for one virtual address in the range, the function will mark =
-the
-  * corresponding HMM pfn entry with an error flag.
-  */
--long hmm_range_fault(struct hmm_range *range, bool block)
-+long hmm_range_fault(struct hmm_range *range, unsigned int flags)
+-static void hmm_pfns_clear(struct hmm_range *range,
+-			   uint64_t *pfns,
+-			   unsigned long addr,
+-			   unsigned long end)
++static int hmm_vma_walk_test(unsigned long start,
++			     unsigned long end,
++			     struct mm_walk *walk)
  {
- 	const unsigned long device_vma =3D VM_IO | VM_PFNMAP | VM_MIXEDMAP;
- 	unsigned long start =3D range->start, end;
-@@ -1086,7 +1089,7 @@ long hmm_range_fault(struct hmm_range *range, bool bl=
-ock)
- 		hmm_vma_walk.pgmap =3D NULL;
- 		hmm_vma_walk.last =3D start;
- 		hmm_vma_walk.fault =3D true;
--		hmm_vma_walk.block =3D block;
-+		hmm_vma_walk.flags =3D flags;
- 		hmm_vma_walk.range =3D range;
- 		mm_walk.private =3D &hmm_vma_walk;
- 		end =3D min(range->end, vma->vm_end);
-@@ -1125,25 +1128,22 @@ long hmm_range_fault(struct hmm_range *range, bool =
-block)
- EXPORT_SYMBOL(hmm_range_fault);
+-	for (; addr < end; addr +=3D PAGE_SIZE, pfns++)
+-		*pfns =3D range->values[HMM_PFN_NONE];
++	struct hmm_vma_walk *hmm_vma_walk =3D walk->private;
++	struct hmm_range *range =3D hmm_vma_walk->range;
++	struct vm_area_struct *vma =3D walk->vma;
++
++	/* If range is no longer valid, force retry. */
++	if (!range->valid)
++		return -EBUSY;
++
++	/*
++	 * Skip vma ranges that don't have struct page backing them or
++	 * map I/O devices directly.
++	 * TODO: handle peer-to-peer device mappings.
++	 */
++	if (vma->vm_flags & (VM_IO | VM_PFNMAP | VM_MIXEDMAP))
++		return -EFAULT;
++
++	if (is_vm_hugetlb_page(vma)) {
++		if (huge_page_shift(hstate_vma(vma)) !=3D range->page_shift &&
++		    range->page_shift !=3D PAGE_SHIFT)
++			return -EINVAL;
++	} else {
++		if (range->page_shift !=3D PAGE_SHIFT)
++			return -EINVAL;
++	}
++
++	/*
++	 * If vma does not allow read access, then assume that it does not
++	 * allow write access, either. HMM does not support architectures
++	 * that allow write without read.
++	 */
++	if (!(vma->vm_flags & VM_READ))
++		return -EPERM;
++
++	return 0;
+ }
 =20
- /**
-- * hmm_range_dma_map() - hmm_range_fault() and dma map page all in one.
-- * @range: range being faulted
-- * @device: device against to dma map page to
-- * @daddrs: dma address of mapped pages
-- * @block: allow blocking on fault (if true it sleeps and do not drop mmap=
-_sem)
-- * Return: number of pages mapped on success, -EAGAIN if mmap_sem have bee=
-n
-- *          drop and you need to try again, some other error value otherwi=
-se
-+ * hmm_range_dma_map - hmm_range_fault() and dma map page all in one.
-+ * @range:	range being faulted
-+ * @device:	device to map page to
-+ * @daddrs:	array of dma addresses for the mapped pages
-+ * @flags:	HMM_FAULT_*
-  *
-- * Note same usage pattern as hmm_range_fault().
-+ * Return: the number of pages mapped on success (including zero), or any
-+ * status return from hmm_range_fault() otherwise.
+ /*
+@@ -965,82 +996,35 @@ EXPORT_SYMBOL(hmm_range_unregister);
   */
--long hmm_range_dma_map(struct hmm_range *range,
--		       struct device *device,
--		       dma_addr_t *daddrs,
--		       bool block)
-+long hmm_range_dma_map(struct hmm_range *range, struct device *device,
-+		dma_addr_t *daddrs, unsigned int flags)
+ long hmm_range_fault(struct hmm_range *range, unsigned int flags)
  {
- 	unsigned long i, npages, mapped;
- 	long ret;
+-	const unsigned long device_vma =3D VM_IO | VM_PFNMAP | VM_MIXEDMAP;
+-	unsigned long start =3D range->start, end;
+-	struct hmm_vma_walk hmm_vma_walk;
++	unsigned long start =3D range->start;
++	struct hmm_vma_walk hmm_vma_walk =3D {};
+ 	struct hmm *hmm =3D range->hmm;
+-	struct vm_area_struct *vma;
+-	struct mm_walk mm_walk;
++	struct mm_walk mm_walk =3D {};
+ 	int ret;
 =20
--	ret =3D hmm_range_fault(range, block);
-+	ret =3D hmm_range_fault(range, flags);
- 	if (ret <=3D 0)
- 		return ret ? ret : -EBUSY;
+ 	lockdep_assert_held(&hmm->mm->mmap_sem);
 =20
+-	do {
+-		/* If range is no longer valid force retry. */
+-		if (!range->valid)
+-			return -EBUSY;
++	hmm_vma_walk.range =3D range;
++	hmm_vma_walk.last =3D start;
++	hmm_vma_walk.flags =3D flags;
++	mm_walk.private =3D &hmm_vma_walk;
+=20
+-		vma =3D find_vma(hmm->mm, start);
+-		if (vma =3D=3D NULL || (vma->vm_flags & device_vma))
+-			return -EFAULT;
+-
+-		if (is_vm_hugetlb_page(vma)) {
+-			if (huge_page_shift(hstate_vma(vma)) !=3D
+-			    range->page_shift &&
+-			    range->page_shift !=3D PAGE_SHIFT)
+-				return -EINVAL;
+-		} else {
+-			if (range->page_shift !=3D PAGE_SHIFT)
+-				return -EINVAL;
+-		}
++	mm_walk.mm =3D hmm->mm;
++	mm_walk.pud_entry =3D hmm_vma_walk_pud;
++	mm_walk.pmd_entry =3D hmm_vma_walk_pmd;
++	mm_walk.pte_hole =3D hmm_vma_walk_hole;
++	mm_walk.hugetlb_entry =3D hmm_vma_walk_hugetlb_entry;
++	mm_walk.test_walk =3D hmm_vma_walk_test;
+=20
+-		if (!(vma->vm_flags & VM_READ)) {
+-			/*
+-			 * If vma do not allow read access, then assume that it
+-			 * does not allow write access, either. HMM does not
+-			 * support architecture that allow write without read.
+-			 */
+-			hmm_pfns_clear(range, range->pfns,
+-				range->start, range->end);
+-			return -EPERM;
+-		}
++	do {
++		ret =3D walk_page_range(start, range->end, &mm_walk);
++		start =3D hmm_vma_walk.last;
+=20
+-		range->vma =3D vma;
+-		hmm_vma_walk.pgmap =3D NULL;
+-		hmm_vma_walk.last =3D start;
+-		hmm_vma_walk.flags =3D flags;
+-		hmm_vma_walk.range =3D range;
+-		mm_walk.private =3D &hmm_vma_walk;
+-		end =3D min(range->end, vma->vm_end);
+-
+-		mm_walk.vma =3D vma;
+-		mm_walk.mm =3D vma->vm_mm;
+-		mm_walk.pte_entry =3D NULL;
+-		mm_walk.test_walk =3D NULL;
+-		mm_walk.hugetlb_entry =3D NULL;
+-		mm_walk.pud_entry =3D hmm_vma_walk_pud;
+-		mm_walk.pmd_entry =3D hmm_vma_walk_pmd;
+-		mm_walk.pte_hole =3D hmm_vma_walk_hole;
+-		mm_walk.hugetlb_entry =3D hmm_vma_walk_hugetlb_entry;
+-
+-		do {
+-			ret =3D walk_page_range(start, end, &mm_walk);
+-			start =3D hmm_vma_walk.last;
+-
+-			/* Keep trying while the range is valid. */
+-		} while (ret =3D=3D -EBUSY && range->valid);
+-
+-		if (ret) {
+-			unsigned long i;
+-
+-			i =3D (hmm_vma_walk.last - range->start) >> PAGE_SHIFT;
+-			hmm_pfns_clear(range, &range->pfns[i],
+-				hmm_vma_walk.last, range->end);
+-			return ret;
+-		}
+-		start =3D end;
++		/* Keep trying while the range is valid. */
++	} while (ret =3D=3D -EBUSY && range->valid);
+=20
+-	} while (start < range->end);
++	if (ret)
++		return ret;
+=20
+ 	return (hmm_vma_walk.last - range->start) >> PAGE_SHIFT;
+ }
 --=20
 2.20.1
 
