@@ -2,123 +2,87 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B696C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9B2C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E06D20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B43122BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:43:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388033AbfGZSlI (ORCPT
+        id S2388103AbfGZSnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 14:41:08 -0400
-Received: from mailoutvs56.siol.net ([185.57.226.247]:54804 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387834AbfGZSlF (ORCPT
+        Fri, 26 Jul 2019 14:43:11 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:43927 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388035AbfGZSnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 14:41:05 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id A2A8A523033;
-        Fri, 26 Jul 2019 20:41:01 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id ymv40tVszZwP; Fri, 26 Jul 2019 20:41:01 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 61A51523030;
-        Fri, 26 Jul 2019 20:41:01 +0200 (CEST)
-Received: from localhost.localdomain (cpe-194-152-11-237.cable.triera.net [194.152.11.237])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 13799523033;
-        Fri, 26 Jul 2019 20:40:59 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     thierry.reding@gmail.com, mripard@kernel.org, wens@csie.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: [PATCH 3/6] pwm: sun4i: Add a quirk for bus clock
-Date:   Fri, 26 Jul 2019 20:40:42 +0200
-Message-Id: <20190726184045.14669-4-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190726184045.14669-1-jernej.skrabec@siol.net>
-References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+        Fri, 26 Jul 2019 14:43:11 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 3F74320117;
+        Fri, 26 Jul 2019 20:43:08 +0200 (CEST)
+Date:   Fri, 26 Jul 2019 20:43:06 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Purism Kernel Team <kernel@puri.sm>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] drm/panel: jh057n00900: Move dsi init sequence to
+ prepare
+Message-ID: <20190726184306.GA14981@ravnborg.org>
+References: <cover.1564146727.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1564146727.git.agx@sigxcpu.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=8nJEP1OIZ-IA:10 a=ze386MxoAAAA:8
+        a=pGLkceISAAAA:8 a=7gkXJVJtAAAA:8 a=VwQbUJbxAAAA:8 a=D0Xkq8Vs1On2DmSM1iMA:9
+        a=wPNLvfGTeEIA:10 a=iBZjaW-pnkserzjvUTHh:22 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=AjGcO6oz07-iQ99wixmX:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-H6 PWM core needs bus clock to be enabled in order to work.
+Hi Guido.
 
-Add a quirk for it.
+On Fri, Jul 26, 2019 at 03:14:35PM +0200, Guido Günther wrote:
+> 
+> If the panel is wrapped in a panel_bridge it gets prepar()ed before the
+> upstream DSI bridge which can cause hangs (e.g. with imx-nwl since clocks
+> are not enabled yet). To avoid this move the panel's first DSI access to
+> enable() so the upstream bridge can prepare the DSI host controller in
+> it's pre_enable().
+> 
+> The second patch makes the disable() call symmetric to the above and the third
+> one just eases debugging.
+> 
+> Changes from v1:
+> * As per review comments by Sam Ravnborg
+>   * Ignore failures to disable the backlight in jh057n_disable()
+>   * Add 'drm/panel: jh057n00900: Use drm_panel_{unprepare,disable} consistently'
+> * Collected Reviewed-By: Thanks Sam!
+> 
+> To: "Guido Günther" <agx@sigxcpu.org>,Purism Kernel Team <kernel@puri.sm>,Thierry Reding <thierry.reding@gmail.com>,Sam Ravnborg <sam@ravnborg.org>,David Airlie <airlied@linux.ie>,Daniel Vetter <daniel@ffwll.ch>,dri-devel@lists.freedesktop.org,linux-kernel@vger.kernel.org
+> 
+> 
+> Guido Günther (4):
+>   drm/panel: jh057n00900: Move panel DSI init to enable()
+>   drm/panel: jh057n00900: Move mipi_dsi_dcs_set_display_off to disable()
+>   drm/panel: jh057n00900: Print error code on all DRM_DEV_ERROR()s
+>   drm/panel: jh057n00900: Use drm_panel_{unprepare,disable} consistently
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- drivers/pwm/pwm-sun4i.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Looks good. Series applied to drm-misc-next and pushed out.
 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 1b7be8fbde86..7d3ac3f2dc3f 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -72,6 +72,7 @@ static const u32 prescaler_table[] =3D {
- };
-=20
- struct sun4i_pwm_data {
-+	bool has_bus_clock;
- 	bool has_prescaler_bypass;
- 	bool has_reset;
- 	unsigned int npwm;
-@@ -79,6 +80,7 @@ struct sun4i_pwm_data {
-=20
- struct sun4i_pwm_chip {
- 	struct pwm_chip chip;
-+	struct clk *bus_clk;
- 	struct clk *clk;
- 	struct reset_control *rst;
- 	void __iomem *base;
-@@ -382,6 +384,16 @@ static int sun4i_pwm_probe(struct platform_device *p=
-dev)
- 		reset_control_deassert(pwm->rst);
- 	}
-=20
-+	if (pwm->data->has_bus_clock) {
-+		pwm->bus_clk =3D devm_clk_get(&pdev->dev, "bus");
-+		if (IS_ERR(pwm->bus_clk)) {
-+			ret =3D PTR_ERR(pwm->bus_clk);
-+			goto err_bus;
-+		}
-+
-+		clk_prepare_enable(pwm->bus_clk);
-+	}
-+
- 	pwm->chip.dev =3D &pdev->dev;
- 	pwm->chip.ops =3D &sun4i_pwm_ops;
- 	pwm->chip.base =3D -1;
-@@ -402,6 +414,8 @@ static int sun4i_pwm_probe(struct platform_device *pd=
-ev)
- 	return 0;
-=20
- err_pwm_add:
-+	clk_disable_unprepare(pwm->bus_clk);
-+err_bus:
- 	reset_control_assert(pwm->rst);
-=20
- 	return ret;
-@@ -416,6 +430,7 @@ static int sun4i_pwm_remove(struct platform_device *p=
-dev)
- 	if (ret)
- 		return ret;
-=20
-+	clk_disable_unprepare(pwm->bus_clk);
- 	reset_control_assert(pwm->rst);
-=20
- 	return 0;
---=20
-2.22.0
-
+	Sam
