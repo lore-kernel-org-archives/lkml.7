@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEB0C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F0FC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D5822BEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A9D22C7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148410;
-	bh=RLsYumlcChrRdNAT+1a34p/7+WhNOBCg+wKS11rYYOI=;
+	s=default; t=1564148412;
+	bh=iRNqSiuw0WWltpKRN5X7jUlnCo+TpcQGXiHSgh5eqMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DMcmYn4yKHDU3gCcOTCfu1BnvC7qb4rtD3Agejhe/T9V1gk2yA9jOfYtXurRHQC7O
-	 abZfErbOSgnFfksGvd+e9qjsdMw2duopRO/ygwdU8OFKGne32317z4FoL8jnEstJiW
-	 tzx6+XBPpwPjsnDY4+7mUaLqepJjsKq/8fO9LT/c=
+	b=Wd6MUzgmCubmqzGJrPnqcVLJ5ISijbkiE8deK2ZsiS3ss9plhn4yAlGb6Xoz/NUhm
+	 4MYH/axnBM7jd9BpVXRCdoeir+M6jtWPyLXGyO2kJRHfpzV3in5zgVTDhVx8ODg6cJ
+	 M5k3wG7H9VD9HwzxHTMcDTE9OP5u1jfxhECToVVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfGZNkJ (ORCPT
+        id S1727613AbfGZNkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:40:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45936 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:40:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726364AbfGZNkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:40:03 -0400
+        id S1727575AbfGZNkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:40:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B48D22BF5;
-        Fri, 26 Jul 2019 13:40:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47FB622BF5;
+        Fri, 26 Jul 2019 13:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148402;
-        bh=RLsYumlcChrRdNAT+1a34p/7+WhNOBCg+wKS11rYYOI=;
+        s=default; t=1564148406;
+        bh=iRNqSiuw0WWltpKRN5X7jUlnCo+TpcQGXiHSgh5eqMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BBNaR2dJvM1DC5YNjHabfrTivAv/DENdTepFPiJxY33lY3ZHByhUx7/pWT6FUey9H
-         UOlQb/lSYzIwsy7EYmuWlolZFFr+ARaOqUKHZf3dnAVGVd7Qudqmb9QHmLT6HVV/Tw
-         o1yhjHFepgbAG2HzC4gDlK14Y9ebROdZyNuHZV5c=
+        b=0+BZ9qO3HO3Lv+2S1zOxKsRWPrk2zCm93HAagGr/eJJN7r5xAIZvHT83Bva7RN/S5
+         sVRMKhd4gdnMh52/No96VpnxSWUj9nelRpUqQpNQg+Pyc4wNTil0vUyh5mc9SjZQRc
+         XhSrT0zK8H1fTq2+xGRpixzfrACKqP+9+ykCm7MI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 15/85] firmware/psci: psci_checker: Park kthreads before stopping them
-Date:   Fri, 26 Jul 2019 09:38:25 -0400
-Message-Id: <20190726133936.11177-15-sashal@kernel.org>
+Cc:     Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 16/85] soc: imx8: Fix potential kernel dump in error path
+Date:   Fri, 26 Jul 2019 09:38:26 -0400
+Message-Id: <20190726133936.11177-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -62,79 +58,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 92e074acf6f7694e96204265eb18ac113f546e80 ]
+[ Upstream commit 1bcbe7300815e91fef18ee905b04f65490ad38c9 ]
 
-Since commit 85f1abe0019f ("kthread, sched/wait: Fix kthread_parkme()
-completion issue"), kthreads that are bound to a CPU must be parked
-before being stopped. At the moment the PSCI checker calls
-kthread_stop() directly on the suspend kthread, which triggers the
-following warning:
+When SoC's revision value is 0, SoC driver will print out
+"unknown" in sysfs's revision node, this "unknown" is a
+static string which can NOT be freed, this will caused below
+kernel dump in later error path which calls kfree:
 
-[    6.068288] WARNING: CPU: 1 PID: 1 at kernel/kthread.c:398 __kthread_bind_mask+0x20/0x78
-               ...
-[    6.190151] Call trace:
-[    6.192566]  __kthread_bind_mask+0x20/0x78
-[    6.196615]  kthread_unpark+0x74/0x80
-[    6.200235]  kthread_stop+0x44/0x1d8
-[    6.203769]  psci_checker+0x3bc/0x484
-[    6.207389]  do_one_initcall+0x48/0x260
-[    6.211180]  kernel_init_freeable+0x2c8/0x368
-[    6.215488]  kernel_init+0x10/0x100
-[    6.218935]  ret_from_fork+0x10/0x1c
-[    6.222467] ---[ end trace e05e22863d043cd3 ]---
+kernel BUG at mm/slub.c:3942!
+Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc4-next-20190611-00023-g705146c-dirty #2197
+Hardware name: NXP i.MX8MQ EVK (DT)
+pstate: 60000005 (nZCv daif -PAN -UAO)
+pc : kfree+0x170/0x1b0
+lr : imx8_soc_init+0xc0/0xe4
+sp : ffff00001003bd10
+x29: ffff00001003bd10 x28: ffff00001121e0a0
+x27: ffff000011482000 x26: ffff00001117068c
+x25: ffff00001121e100 x24: ffff000011482000
+x23: ffff000010fe2b58 x22: ffff0000111b9ab0
+x21: ffff8000bd9dfba0 x20: ffff0000111b9b70
+x19: ffff7e000043f880 x18: 0000000000001000
+x17: ffff000010d05fa0 x16: ffff0000122e0000
+x15: 0140000000000000 x14: 0000000030360000
+x13: ffff8000b94b5bb0 x12: 0000000000000038
+x11: ffffffffffffffff x10: ffffffffffffffff
+x9 : 0000000000000003 x8 : ffff8000b9488147
+x7 : ffff00001003bc00 x6 : 0000000000000000
+x5 : 0000000000000003 x4 : 0000000000000003
+x3 : 0000000000000003 x2 : b8793acd604edf00
+x1 : ffff7e000043f880 x0 : ffff7e000043f888
+Call trace:
+ kfree+0x170/0x1b0
+ imx8_soc_init+0xc0/0xe4
+ do_one_initcall+0x58/0x1b8
+ kernel_init_freeable+0x1cc/0x288
+ kernel_init+0x10/0x100
+ ret_from_fork+0x10/0x18
 
-kthread_unpark() tries to bind the thread to its CPU and aborts with a
-WARN() if the thread wasn't in TASK_PARKED state. Park the kthreads
-before stopping them.
+This patch fixes this potential kernel dump when a chip's
+revision is "unknown", it is done by checking whether the
+revision space can be freed.
 
-Fixes: 85f1abe0019f ("kthread, sched/wait: Fix kthread_parkme() completion issue")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Fixes: a7e26f356ca1 ("soc: imx: Add generic i.MX8 SoC driver")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/psci/psci_checker.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/soc/imx/soc-imx8.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/psci/psci_checker.c b/drivers/firmware/psci/psci_checker.c
-index 08c85099d4d0..f3659443f8c2 100644
---- a/drivers/firmware/psci/psci_checker.c
-+++ b/drivers/firmware/psci/psci_checker.c
-@@ -359,16 +359,16 @@ static int suspend_test_thread(void *arg)
- 	for (;;) {
- 		/* Needs to be set first to avoid missing a wakeup. */
- 		set_current_state(TASK_INTERRUPTIBLE);
--		if (kthread_should_stop()) {
--			__set_current_state(TASK_RUNNING);
-+		if (kthread_should_park())
- 			break;
--		}
- 		schedule();
- 	}
+diff --git a/drivers/soc/imx/soc-imx8.c b/drivers/soc/imx/soc-imx8.c
+index e567d866a9d3..79a3d922a4a9 100644
+--- a/drivers/soc/imx/soc-imx8.c
++++ b/drivers/soc/imx/soc-imx8.c
+@@ -112,7 +112,8 @@ static int __init imx8_soc_init(void)
+ 	return 0;
  
- 	pr_info("CPU %d suspend test results: success %d, shallow states %d, errors %d\n",
- 		cpu, nb_suspend, nb_shallow_sleep, nb_err);
- 
-+	kthread_parkme();
-+
- 	return nb_err;
- }
- 
-@@ -433,8 +433,10 @@ static int suspend_tests(void)
- 
- 
- 	/* Stop and destroy all threads, get return status. */
--	for (i = 0; i < nb_threads; ++i)
-+	for (i = 0; i < nb_threads; ++i) {
-+		err += kthread_park(threads[i]);
- 		err += kthread_stop(threads[i]);
-+	}
-  out:
- 	cpuidle_resume_and_unlock();
- 	kfree(threads);
+ free_rev:
+-	kfree(soc_dev_attr->revision);
++	if (strcmp(soc_dev_attr->revision, "unknown"))
++		kfree(soc_dev_attr->revision);
+ free_soc:
+ 	kfree(soc_dev_attr);
+ 	of_node_put(root);
 -- 
 2.20.1
 
