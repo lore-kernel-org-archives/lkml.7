@@ -2,62 +2,57 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F13F7C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2219CC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5F122BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9E422C7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148464;
-	bh=+djP42l890PRgPpyfSuCFeOV38wuWwlVMb3pz0E+Mag=;
+	s=default; t=1564148469;
+	bh=kL3mlcYcc+Q9jAb4Pl1atYrXYmTb6HeWN92nUpHLk3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LA+TVjgPf271MCN2qq64oBkG7qPBAbcvJkvxJpx27kUice25YqNH4PugLMqGuxgXw
-	 ki9JHYHr54XDUXhpW26y9dathDmEBf4haKa3PZ2SaMBCJRFcM2XWw9rKqISI13JGgE
-	 p4z1iuVlXm4AHBYvhDhhpHfqnuxYttFlLQSXWQd0=
+	b=Hs2yffOgmws1pef/duXK634ybnPkNpsvwW0dGXmpbyi7hsD74JrDuswkUYWS/T9fA
+	 kP2B+2fCiRf4gKr9u8XyH5oIrY6q7OlfdMLOXdJ216JR+rUR2db6yNSvhmtkGRaPgI
+	 Vrfle7f1jXB58+1aBzygfCpgJ7+fNR5mb5LSuGM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387631AbfGZNlE (ORCPT
+        id S1727823AbfGZNlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:41:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47226 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:41:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387625AbfGZNk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:40:58 -0400
+        id S1727260AbfGZNlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:41:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EA4E22CB8;
-        Fri, 26 Jul 2019 13:40:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 935C122CD5;
+        Fri, 26 Jul 2019 13:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148458;
-        bh=+djP42l890PRgPpyfSuCFeOV38wuWwlVMb3pz0E+Mag=;
+        s=default; t=1564148459;
+        bh=kL3mlcYcc+Q9jAb4Pl1atYrXYmTb6HeWN92nUpHLk3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ELrxyKFQDLqS1N5c45EI7brqIhCoo9ezXaunRAkZNDL3vpyy6+ZfRXRWB1FAluPLh
-         Qdjvq9/47PBveEgpJTgU/EAi6ElyHoYEJE8J/Ejb1B0gqRLDBR+qKeD1PMwz08kP7U
-         3c31vM3g2rLrw6seYjiqD294n+lVi3mTgSjoQtxY=
+        b=Fw6HTIlJ+dAqBanjdLDnU16zhOoRdqUtIylBtdNW2WzzF5FvL2Cx8vuj8jhqG1j9M
+         M3B+u6aLF4Gk3rzzT/VYncTazb8cwYNb5xdX3nivM5JTBdyB7WLV2x2rmt8R/F2hxY
+         U7BmMX8rV2rgejZsHmQ2yjPpYzbhRRGaDk4MvuHs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
+Cc:     Yafang Shao <laoar.shao@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
         Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
+        Yafang Shao <shaoyafang@didiglobal.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.2 51/85] mm/slab_common.c: work around clang bug #42570
-Date:   Fri, 26 Jul 2019 09:39:01 -0400
-Message-Id: <20190726133936.11177-51-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, cgroups@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 5.2 52/85] mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones
+Date:   Fri, 26 Jul 2019 09:39:02 -0400
+Message-Id: <20190726133936.11177-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -70,54 +65,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Yafang Shao <laoar.shao@gmail.com>
 
-[ Upstream commit a07057dce2823e10d64a2b73cefbf09d8645efe9 ]
+[ Upstream commit 766a4c19d880887c457811b86f1f68525e416965 ]
 
-Clang gets rather confused about two variables in the same special
-section when one of them is not initialized, leading to an assembler
-warning later:
+After commit 815744d75152 ("mm: memcontrol: don't batch updates of local
+VM stats and events"), the local VM counter are not in sync with the
+hierarchical ones.
 
-  /tmp/slab_common-18f869.s: Assembler messages:
-  /tmp/slab_common-18f869.s:7526: Warning: ignoring changed section attributes for .data..ro_after_init
+Below is one example in a leaf memcg on my server (with 8 CPUs):
 
-Adding an initialization to kmalloc_caches is rather silly here
-but does avoid the issue.
+	inactive_file 3567570944
+	total_inactive_file 3568029696
 
-Link: https://bugs.llvm.org/show_bug.cgi?id=42570
-Link: http://lkml.kernel.org/r/20190712090455.266021-1-arnd@arndb.de
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: David Rientjes <rientjes@google.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Shakeel Butt <shakeelb@google.com>
+We find that the deviation is very great because the 'val' in
+__mod_memcg_state() is in pages while the effective value in
+memcg_stat_show() is in bytes.
+
+So the maximum of this deviation between local VM stats and total VM
+stats can be (32 * number_of_cpu * PAGE_SIZE), that may be an
+unacceptably great value.
+
+We should keep the local VM stats in sync with the total stats.  In
+order to keep this behavior the same across counters, this patch updates
+__mod_lruvec_state() and __count_memcg_events() as well.
+
+Link: http://lkml.kernel.org/r/1562851979-10610-1-git-send-email-laoar.shao@gmail.com
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
 Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
+Cc: Yafang Shao <shaoyafang@didiglobal.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slab_common.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/memcontrol.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 58251ba63e4a..cbd3411f644e 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -1003,7 +1003,8 @@ struct kmem_cache *__init create_kmalloc_cache(const char *name,
- }
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index ba9138a4a1de..07b4ca559bcc 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -691,12 +691,15 @@ void __mod_memcg_state(struct mem_cgroup *memcg, int idx, int val)
+ 	if (mem_cgroup_disabled())
+ 		return;
  
- struct kmem_cache *
--kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1] __ro_after_init;
-+kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1] __ro_after_init =
-+{ /* initialization for https://bugs.llvm.org/show_bug.cgi?id=42570 */ };
- EXPORT_SYMBOL(kmalloc_caches);
+-	__this_cpu_add(memcg->vmstats_local->stat[idx], val);
+-
+ 	x = val + __this_cpu_read(memcg->vmstats_percpu->stat[idx]);
+ 	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
+ 		struct mem_cgroup *mi;
  
- /*
++		/*
++		 * Batch local counters to keep them in sync with
++		 * the hierarchical ones.
++		 */
++		__this_cpu_add(memcg->vmstats_local->stat[idx], x);
+ 		for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
+ 			atomic_long_add(x, &mi->vmstats[idx]);
+ 		x = 0;
+@@ -745,13 +748,15 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
+ 	/* Update memcg */
+ 	__mod_memcg_state(memcg, idx, val);
+ 
+-	/* Update lruvec */
+-	__this_cpu_add(pn->lruvec_stat_local->count[idx], val);
+-
+ 	x = val + __this_cpu_read(pn->lruvec_stat_cpu->count[idx]);
+ 	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
+ 		struct mem_cgroup_per_node *pi;
+ 
++		/*
++		 * Batch local counters to keep them in sync with
++		 * the hierarchical ones.
++		 */
++		__this_cpu_add(pn->lruvec_stat_local->count[idx], x);
+ 		for (pi = pn; pi; pi = parent_nodeinfo(pi, pgdat->node_id))
+ 			atomic_long_add(x, &pi->lruvec_stat[idx]);
+ 		x = 0;
+@@ -773,12 +778,15 @@ void __count_memcg_events(struct mem_cgroup *memcg, enum vm_event_item idx,
+ 	if (mem_cgroup_disabled())
+ 		return;
+ 
+-	__this_cpu_add(memcg->vmstats_local->events[idx], count);
+-
+ 	x = count + __this_cpu_read(memcg->vmstats_percpu->events[idx]);
+ 	if (unlikely(x > MEMCG_CHARGE_BATCH)) {
+ 		struct mem_cgroup *mi;
+ 
++		/*
++		 * Batch local counters to keep them in sync with
++		 * the hierarchical ones.
++		 */
++		__this_cpu_add(memcg->vmstats_local->events[idx], x);
+ 		for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
+ 			atomic_long_add(x, &mi->vmevents[idx]);
+ 		x = 0;
 -- 
 2.20.1
 
