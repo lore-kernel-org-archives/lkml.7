@@ -2,81 +2,199 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631A0C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498B2C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7B822BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FBEA22BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:17:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Ex27TQ7C"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LK/US9Wb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbfGZUQk (ORCPT
+        id S1727467AbfGZURQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 16:16:40 -0400
-Received: from mout.gmx.net ([212.227.17.20]:57705 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbfGZUQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 16:16:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1564172192;
-        bh=pg8zq+CZhNiOEC5sm0oHNvU69LZ40YKxW+JPQuOe788=;
-        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=Ex27TQ7C/i6uPBiHt9QlmEWGt0dUnss/cY/qSZrmwDC+4LNfea6+I9Uqba0nZ5VEQ
-         +qYBReLvpudtgeOIrELN6GDDiu66/pGeTndomyJpnlQru1gbnglGYjd5iVznGWRLYV
-         Bv92CPeQdwAQ04qKfau0sOpiLrqmbLJXNWH4BZeU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.4] ([88.65.58.128]) by mail.gmx.com (mrgmx101
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0MKu9E-1hr6dk0noW-0006lL; Fri, 26
- Jul 2019 22:16:32 +0200
-To:     linux-kernel@vger.kernel.org,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>
-From:   Bernhard Held <berny156@gmx.de>
-Subject: [REGRESSION] 5.3-rc1: r8169: remove 1000/Half from supported modes
-Message-ID: <a291af45-310c-8b60-ae7e-392e73e3bad1@gmx.de>
-Date:   Fri, 26 Jul 2019 22:16:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 26 Jul 2019 16:17:16 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40486 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbfGZURP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 16:17:15 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w10so25277855pgj.7
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 13:17:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=j/IRcBqVskGgCakuPtG7Hutcm/XW9ghuXgQa4VWoPlM=;
+        b=LK/US9WbkyS77sGoAMWZy8gc2tGLtDUIhGi4KMKrm9oXRfVinKUyR1ssB6V7E0lSPF
+         t/FBIGuDdkXVBs+1IGdLW0u4vU7EhC8ye6/SumBvlCByTHKDzSPQANwc2+Cz5KG93322
+         DxJth4doKg55yaBKLnxxhquhCyOPSzH0DfcrLstq3TIPdIfoqLAhdPV2sW/jW5uOEgZh
+         9dNoVlQg4Fd0RgDO2d3e7R3Sc/NQM7WAwGpOyVBMibzfmrm1SxYT0p4MtOVewLloU9/U
+         dg8autDLELzhHkbhQ0F+N69b27WnOJG4toZ032w1oSfL/RGxxCMWWcFDcxTzJ3oZGhWY
+         RzmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=j/IRcBqVskGgCakuPtG7Hutcm/XW9ghuXgQa4VWoPlM=;
+        b=UANdowcFus9hCrfjMYa+Qd0GxtxQZyr4paVxPXwj/Gp0Izk/epYivwrU1FtlIMbEUA
+         rad08lQlMSuDpux4rgJN5OfOch7lkt7JwYOB96sRVgB6wHWlO27uJi+6nlQ4iwqqh+ff
+         JkgrgR/ZGKvv8FLBmwLM+K1+vsvadBmCiyixbQTe4KiurFZM7plspGvgH44RSa8naTTg
+         Avl8wAQaULZFL/9AlIzbu0nGcSvc3DJK9TRv4KqUvWqa9Yfx6C/h+nTYa/uLP9pfhX67
+         1NLPChibfEGNwh7AgMoNdLGQiSQ0Q5cNkGiHFtJmUNyJ2A6zcCT2Jur69iAba6M1uYwS
+         +x4w==
+X-Gm-Message-State: APjAAAV5pecurpvb1etmm7ko5nTqiQ5kmccirjc3951Fy6OvQZ6AuIV4
+        FIrb3K1Yng3KCsRcV6mGexcr1Q==
+X-Google-Smtp-Source: APXvYqwxUiBPlc83U36uwiE/oXy5nDvLjq7p224Nm5j2u8JgOtNcB6axsTT2TqGR7rpxgANLPkrqZg==
+X-Received: by 2002:a17:90a:220a:: with SMTP id c10mr101547847pje.33.1564172234495;
+        Fri, 26 Jul 2019 13:17:14 -0700 (PDT)
+Received: from sspatil-workstation.mtv.corp.google.com ([2620:15c:211:0:fb21:5c58:d6bc:4bef])
+        by smtp.gmail.com with ESMTPSA id s185sm80459064pgs.67.2019.07.26.13.17.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 26 Jul 2019 13:17:12 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 13:17:10 -0700
+From:   sspatil@google.com
+To:     joel@joelfernandes.org, linux-kernel@vger.kernel.org,
+        adobriyan@gmail.com, akpm@linux-foundation.org, bgregg@netflix.com,
+        chansen3@cisco.com, dancol@google.com, fmayer@google.com,
+        joaodias@google.com, joelaf@google.com, corbet@lwn.net,
+        keescook@chromium.org, kernel-team@android.com,
+        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
+        rppt@linux.ibm.com, minchan@kernel.org, namhyung@google.com,
+        guro@fb.com, sfr@canb.auug.org.au, surenb@google.com,
+        tkjos@google.com, vdavydov.dev@gmail.com, vbabka@suse.cz,
+        wvw@google.com, sspatil+mutt@google.com
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
+        fmayer@google.com, joaodias@google.com, joelaf@google.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
+        namhyung@google.com, Roman Gushchin <guro@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
+        tkjos@google.com, Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, wvw@google.com
+Subject: Re: [PATCH v3 2/2] doc: Update documentation for page_idle virtual
+ address indexing
+Message-ID: <20190726201710.GA144547@google.com>
+References: <20190726152319.134152-1-joel@joelfernandes.org>
+ <20190726152319.134152-2-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:SivSbK+NTl7kvns1hcjaz6NqweA2reql9s5I0bOwLMVvKMKDnnE
- 1wyppjRKRDxNoT3Zx9aiYLutaKTAysRqwUgeFROufbARI2kuowvERDsZn682gjcqlqJ1jGL
- MS5DXQnzgo4FQ6qMjSTDesyemEdVlUY0AvXGI0WzXbjT+rQshlWUFykRhbLB7Zc3A9E2J0E
- VTfGRFsOM3JbLtXYUtf6g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qDVvnRojMc0=:raMaAE+PFOTpvkoLiTlFUk
- TNbWbChcmTyG+A+vCJ6Gz4zDxNsAKrDnJq4Qe7ZpWeLVoou03wxerlZyyVeFbJ00rQDiZ2b4p
- 3RzVEFjVqJO/hnlMqpezk/zXVF+WJqzZgFoBQV0f1Jwqr/oVE67ZVfmNEYLPW93zCp20tTwaz
- /dkdvZV1n46shd0WlXJXD3lTF8Ypcai94BcuR/jshqm7BqLQ3p6704ZQu72deG7X4t7IWVQXg
- nBHqX+QH2Z29voure3BiI0UlB5FrWILFe1KyeVojkg3sxbJ/aToDQt6eREUXDed3CsHBJu2TE
- fYcZvhl6al01KtJciYVuPZry2gHLPtYbj9aLmcPuPPHWDYCbzyX+LOG6brgxhkIZdLNpVggnp
- sf0qdLk5EZHreQWN3I/Dr+BIhJHjqSF6MSW3ixhSnxmP4FYNrHx96cj9ELzDY4hPVyFM4BY54
- di0BmWKbt7rlQk1FYDZW1Y3VGxwvd5/8UphIpuk7WOuLQdzjaxpnXvxZo73JxwQaEPBVboPkD
- xF4fLPmi+uBEc6nQVKk7R4mvmTVELKGTZAe1PivXCi4xhENv9CvqeOc6p+2GFgTCRQ7ry+L4j
- p0fDk/28ERA2yNYtU9dBDq8Unpsf8ksKveIVFrXDLskqUMnMY7rxF5zU28CJeBW81PopquK1v
- /TaUeq+GBAH+QklFs+LzoRYk1OvPevIAGX9q8ARahNV/MxGcdEwB2qfX28LzpjywxVmlCVuSB
- iHvbBtfQnu+Btl6G1XI3UDnuFOW63WvzGnPXHTypRxpaLRDJKXr6m3yXVgLIhlNKw3SHLiTJY
- eweYtE1/gIs4gTeH6k01sXUMfD62FwZSPh4QIbofXQT87gAtw7kEI4c14ms2JSWfJ2yJWwj1V
- yseLLIXDKJWiMEueO3mRCFdwROgF7V7bgLZ0G9DQOf213wagR4RD6imsMytrMAHYCbzZYqo/x
- UYlTn7Efe5XTjcUYk8gYY9gD9gQhSfRbLfeIsxuu674G3/al5j4d9EZ00jfmiaD1xknuF4ao6
- 97VgTzNAwnY39aP3ukxSoisMU+xnUi4ZWx6/wNnmoA+rYPXT2kAyDA1zt8nvIP0t3j86wjiCI
- q8Uwc5XnIU5y+o=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190726152319.134152-2-joel@joelfernandes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiner,
+Thanks Joel, just a couple of nits for the doc inline below. Other than that,
 
-with commit a6851c613fd7 "r8169: remove 1000/Half from supported modes" my RTL8111B GB-link stops working. It thinks that it established a link, however nothing is actually transmitted. Setting the mode with `mii-tool -F 100baseTx-HD` establishes a successful connection.
+Reviewed-by: Sandeep Patil <sspatil@google.com>
 
-Reverting a6851c613fd7 (while considering the file name change) fixes autonegotiation for me.
+I'll plan on making changes to Android to use this instead of the pagemap +
+page_idle. I think it will also be considerably faster.
 
-Kind regards
-Bernhard
+On Fri, Jul 26, 2019 at 11:23:19AM -0400, Joel Fernandes (Google) wrote:
+> This patch updates the documentation with the new page_idle tracking
+> feature which uses virtual address indexing.
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+>  .../admin-guide/mm/idle_page_tracking.rst     | 43 ++++++++++++++++---
+>  1 file changed, 36 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/mm/idle_page_tracking.rst b/Documentation/admin-guide/mm/idle_page_tracking.rst
+> index df9394fb39c2..1eeac78c94a7 100644
+> --- a/Documentation/admin-guide/mm/idle_page_tracking.rst
+> +++ b/Documentation/admin-guide/mm/idle_page_tracking.rst
+> @@ -19,10 +19,14 @@ It is enabled by CONFIG_IDLE_PAGE_TRACKING=y.
+>  
+>  User API
+>  ========
+> +There are 2 ways to access the idle page tracking API. One uses physical
+> +address indexing, another uses a simpler virtual address indexing scheme.
+>  
+> -The idle page tracking API is located at ``/sys/kernel/mm/page_idle``.
+> -Currently, it consists of the only read-write file,
+> -``/sys/kernel/mm/page_idle/bitmap``.
+> +Physical address indexing
+> +-------------------------
+> +The idle page tracking API for physical address indexing using page frame
+> +numbers (PFN) is located at ``/sys/kernel/mm/page_idle``.  Currently, it
+> +consists of the only read-write file, ``/sys/kernel/mm/page_idle/bitmap``.
+>  
+>  The file implements a bitmap where each bit corresponds to a memory page. The
+>  bitmap is represented by an array of 8-byte integers, and the page at PFN #i is
+> @@ -74,6 +78,31 @@ See :ref:`Documentation/admin-guide/mm/pagemap.rst <pagemap>` for more
+>  information about ``/proc/pid/pagemap``, ``/proc/kpageflags``, and
+>  ``/proc/kpagecgroup``.
+>  
+> +Virtual address indexing
+> +------------------------
+> +The idle page tracking API for virtual address indexing using virtual page
+> +frame numbers (VFN) is located at ``/proc/<pid>/page_idle``. It is a bitmap
+> +that follows the same semantics as ``/sys/kernel/mm/page_idle/bitmap``
+> +except that it uses virtual instead of physical frame numbers.
+> +
+> +This idle page tracking API does not need deal with PFN so it does not require
+
+s/need//
+
+> +prior lookups of ``pagemap`` in order to find if page is idle or not. This is
+
+s/in order to find if page is idle or not//
+
+> +an advantage on some systems where looking up PFN is considered a security
+> +issue.  Also in some cases, this interface could be slightly more reliable to
+> +use than physical address indexing, since in physical address indexing, address
+> +space changes can occur between reading the ``pagemap`` and reading the
+> +``bitmap``, while in virtual address indexing, the process's ``mmap_sem`` is
+> +held for the duration of the access.
+> +
+> +To estimate the amount of pages that are not used by a workload one should:
+> +
+> + 1. Mark all the workload's pages as idle by setting corresponding bits in
+> +    ``/proc/<pid>/page_idle``.
+> +
+> + 2. Wait until the workload accesses its working set.
+> +
+> + 3. Read ``/proc/<pid>/page_idle`` and count the number of bits set.
+> +
+>  .. _impl_details:
+>  
+>  Implementation Details
+> @@ -99,10 +128,10 @@ When a dirty page is written to swap or disk as a result of memory reclaim or
+>  exceeding the dirty memory limit, it is not marked referenced.
+>  
+>  The idle memory tracking feature adds a new page flag, the Idle flag. This flag
+> -is set manually, by writing to ``/sys/kernel/mm/page_idle/bitmap`` (see the
+> -:ref:`User API <user_api>`
+> -section), and cleared automatically whenever a page is referenced as defined
+> -above.
+> +is set manually, by writing to ``/sys/kernel/mm/page_idle/bitmap`` for physical
+> +addressing or by writing to ``/proc/<pid>/page_idle`` for virtual
+> +addressing (see the :ref:`User API <user_api>` section), and cleared
+> +automatically whenever a page is referenced as defined above.
+>  
+>  When a page is marked idle, the Accessed bit must be cleared in all PTEs it is
+>  mapped to, otherwise we will not be able to detect accesses to the page coming
+> -- 
+> 2.22.0.709.g102302147b-goog
+> 
+> -- 
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+> 
