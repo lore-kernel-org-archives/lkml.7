@@ -2,92 +2,88 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF4FC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7245C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE3B721850
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:07:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="vFtaHMqb"
+	by mail.kernel.org (Postfix) with ESMTP id C0D0521850
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:08:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbfGZQHN (ORCPT
+        id S1727161AbfGZQIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:07:13 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38582 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728040AbfGZQHM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:07:12 -0400
-Received: by mail-pl1-f196.google.com with SMTP id az7so24912170plb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 09:07:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hXc0pZiVWKjur2BLw/ku9fM4A01QRuSRSkb/F5o/xVY=;
-        b=vFtaHMqbUAY8NIcGxImZaowBoZD3FtEGHtEk5cvbGEE6BOJsDTr8bjBY5/0f5GFUeC
-         NnR9PnAYhtUvRrMxqjoNEodOV1bPBXfnkRaPrKQJudR6G3bAe8dzLNMiMNOwYGNwMdN5
-         GUEXMnZPEM6ma+VgxnH/LlcQ56dx2SISe8BYNSx5uN4hX8xmmV5pfvL6FCtAFK9MCQtW
-         8AFzYL3fk8sTsxgHDscFdNW2HcbLmnthESc9HB0C+UjwyBviLjh3wQWi6soZOSMYLrVo
-         cPnsKXTuwV4qBYe5FulKOxEvC8LYw2/PZEd9Et42EAdQ6Bdtz7a4EWS/h/FibU0G/vM8
-         VirA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hXc0pZiVWKjur2BLw/ku9fM4A01QRuSRSkb/F5o/xVY=;
-        b=sMCLmTn8skdFGPp99HXXE1CpK5ftOzaWr4sJM0IIRwxeuF874UIaun69cUBatqnarj
-         xfTQNR8xokTG1MuceyTR/13Ekdjigze9KoU1YGXY1i+rMHMGTuzBCrtOMkrJfm5+SMDe
-         7w9T9v9wQdCp/gCCVqupWA22L0ENRCpjzUzWRPq0KuPVoRCKeQS+pskEVyO2zC0sly6d
-         lklYSvzOoC91wj11imDNpnYX/3WLNpeICNYv6ei3QreOvHJt7+45FwLI9WKAAqvEgJr+
-         UOzQYwxHNsb1bi/qvN845J6PaxABw0Ulz0y6pG6HgDJGsTRj2z9nKFJ0tZpGI4OFp2KV
-         Kkng==
-X-Gm-Message-State: APjAAAUE0XugFBdDE/hW9T6JZljJ5UgHMo3qyo9cQ/HgXypBymLjcNSI
-        Qu0FZdQKwQlJ3OHP+MPeMoI=
-X-Google-Smtp-Source: APXvYqz+cpopy4IRVxM3FBu86nwokurwX3Vcuk+ZP44JHWSAPzHKtBARuxUKaJmz6Z6ohYQtq9e/vg==
-X-Received: by 2002:a17:902:106:: with SMTP id 6mr98958928plb.64.1564157231065;
-        Fri, 26 Jul 2019 09:07:11 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id n128sm9076932pfn.46.2019.07.26.09.07.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 09:07:10 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 09:07:09 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     "Himadri Pandya" <himadrispandya@gmail.com>
-Cc:     "Michael Kelley" <Michael.H.Kelley@microsoft.com>,
-        "KY Srinivasan" <kys@messages.microsoft.com>,
-        "Haiyang Zhang" <haiyangz@microsoft.com>,
-        "Stephen Hemminger" <sthemmin@microsoft.com>, <sashal@kernel.org>,
-        <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "himadri18.07" <himadri18.07@gmail.com>
-Subject: Re: [PATCH 1/2] Drivers: hv: Specify receive buffer size using
- Hyper-V page size
-Message-ID: <20190726090709.31aaeef0@hermes.lan>
-In-Reply-To: <20190725050315.6935-2-himadri18.07@gmail.com>
-References: <20190725050315.6935-1-himadri18.07@gmail.com>
-        <20190725050315.6935-2-himadri18.07@gmail.com>
+        Fri, 26 Jul 2019 12:08:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:46838 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726141AbfGZQIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 12:08:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E897337;
+        Fri, 26 Jul 2019 09:08:51 -0700 (PDT)
+Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9055D3F71F;
+        Fri, 26 Jul 2019 09:08:50 -0700 (PDT)
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
+        coresight@lists.linaro.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH] coresight: acpi: Static funnel support
+Date:   Fri, 26 Jul 2019 17:08:39 +0100
+Message-Id: <20190726160839.12478-1-suzuki.poulose@arm.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jul 2019 22:03:14 -0700
-"Himadri Pandya" <himadrispandya@gmail.com> wrote:
+The ACPI bindings for CoreSight has been updated to add the device
+id for non-programmable CoreSight funnels (aka static funnels) as of
+v1.1 [0]. Add the ACPI id for static funnels in the driver.
 
-> The recv_buffer is used to retrieve data from the VMbus ring buffer.
-> VMbus ring buffers are sized based on the guest page size which
-> Hyper-V assumes to be 4KB. But it may be different on some
-> architectures. So use the Hyper-V page size to allocate the
-> recv_buffer and set the maximum size to receive.
-> 
-> Signed-off-by: Himadri Pandya <himadri18.07@gmail.com>
+[0] https://static.docs.arm.com/den0067/a/DEN0067_CoreSight_ACPI_1.1.pdf
 
-If pagesize is 64K, then doing it this way will waste lots of
-memory.
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ drivers/hwtracing/coresight/coresight-funnel.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
+index fa97cb9ab4f9..0c99848a5d69 100644
+--- a/drivers/hwtracing/coresight/coresight-funnel.c
++++ b/drivers/hwtracing/coresight/coresight-funnel.c
+@@ -5,6 +5,7 @@
+  * Description: CoreSight Funnel driver
+  */
+ 
++#include <linux/acpi.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/types.h>
+@@ -302,11 +303,19 @@ static const struct of_device_id static_funnel_match[] = {
+ 	{}
+ };
+ 
++#ifdef CONFIG_ACPI
++static const struct acpi_device_id static_funnel_ids[] = {
++	{"ARMHC9FE", 0},
++	{},
++};
++#endif
++
+ static struct platform_driver static_funnel_driver = {
+ 	.probe          = static_funnel_probe,
+ 	.driver         = {
+ 		.name   = "coresight-static-funnel",
+ 		.of_match_table = static_funnel_match,
++		.acpi_match_table = ACPI_PTR(static_funnel_ids),
+ 		.pm	= &funnel_dev_pm_ops,
+ 		.suppress_bind_attrs = true,
+ 	},
+-- 
+2.21.0
+
