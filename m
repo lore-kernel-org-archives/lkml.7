@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623CBC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C70C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F682054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54FD42054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155460;
-	bh=BrtvQnA6t0Sx/oqyb9Dc+rL7Xgk788u0Ct8W+1Gmi80=;
+	s=default; t=1564155466;
+	bh=VpIPeimaDZTScIZYwamxEAihyRvR6nOM2ax6eEmP+Ag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mp9pVVtE2iMhvUYlRGBwPzT4hE7ObGFcZDJED/aZMiCU9ODT1eg21c7UNjwq1CGP7
-	 hlLc0EhrVVACKD7zv0AkbphHQmIHBKF7JvqR0YUQShxIhFCLcMJt3eyPZKaL7s7jZt
-	 F5GZ9/3FUFLvxm7zTLioeURUrdrN29bUaqxbYWZk=
+	b=Xh4RS5gffuU+H1MGEaU8MQIA9/WILSl3rCofy361goYUJNXLTnZONYhEww39ky54Q
+	 oikTrIw2i0Y0EFKaiNBff2T3gNz31iEL3K0Ad04dvP1SbFuTRDO88JrGqW3PWJJo1s
+	 uDabE+DCZnEAo+Hxd/ZTEpD3TCVBO0hEJC6GJONk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388909AbfGZP3p (ORCPT
+        id S2387437AbfGZP3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:29:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44470 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:29:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388866AbfGZP3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:29:44 -0400
+        id S2388826AbfGZP3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:29:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 480A322CBE;
-        Fri, 26 Jul 2019 15:29:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA26922CC0;
+        Fri, 26 Jul 2019 15:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154983;
-        bh=BrtvQnA6t0Sx/oqyb9Dc+rL7Xgk788u0Ct8W+1Gmi80=;
+        s=default; t=1564154970;
+        bh=VpIPeimaDZTScIZYwamxEAihyRvR6nOM2ax6eEmP+Ag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zX8Rv1G728uYRKdLl+CdYg06n1NZKgTMFjsobtanMbK+vKHpURZoBn8C7el/mKVgZ
-         f0hKUS+isuCY+nJXGxE4vwbFOLHL/ARqnzMpyQcG7TvMKjBkbpAsQINGhMfueQjpZ0
-         96m9Fg1wZa4OV6CX/tEOfSlrUpRdlqlj6MK6objI=
+        b=z2Wlr8CCcF/D+rHrEjw1lodc6B1SEyGXvzWQb2/SFmOe+PSGstPCDNmZ26ET9a5/I
+         NWA3ME23DuXNvBroJ5PJzD24oEHCO/oRHvvVkqfYTo0cxCo+luUe3r7V674MpnQt6A
+         HcNZ4aQn6nkM0h8ptpeUA2XRjf0E+rJW8bfyyow0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Kosyh <p.kosyh@gmail.com>,
-        David Ahern <dsa@cumulusnetworks.com>,
+        stable@vger.kernel.org, chris.healy@zii.aero,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 26/62] vrf: make sure skb->data contains ip header to make routing
-Date:   Fri, 26 Jul 2019 17:24:38 +0200
-Message-Id: <20190726152304.468425161@linuxfoundation.org>
+Subject: [PATCH 5.1 13/62] net: phy: sfp: hwmon: Fix scaling of RX power
+Date:   Fri, 26 Jul 2019 17:24:25 +0200
+Message-Id: <20190726152303.071130218@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -60,113 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Kosyh <p.kosyh@gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
 
-[ Upstream commit 107e47cc80ec37cb332bd41b22b1c7779e22e018 ]
+[ Upstream commit 0cea0e1148fe134a4a3aaf0b1496f09241fb943a ]
 
-vrf_process_v4_outbound() and vrf_process_v6_outbound() do routing
-using ip/ipv6 addresses, but don't make sure the header is available
-in skb->data[] (skb_headlen() is less then header size).
+The RX power read from the SFP uses units of 0.1uW. This must be
+scaled to units of uW for HWMON. This requires a divide by 10, not the
+current 100.
 
-Case:
+With this change in place, sensors(1) and ethtool -m agree:
 
-1) igb driver from intel.
-2) Packet size is greater then 255.
-3) MPLS forwards to VRF device.
+sff2-isa-0000
+Adapter: ISA adapter
+in0:          +3.23 V
+temp1:        +33.1 C
+power1:      270.00 uW
+power2:      200.00 uW
+curr1:        +0.01 A
 
-So, patch adds pskb_may_pull() calls in vrf_process_v4/v6_outbound()
-functions.
+        Laser output power                        : 0.2743 mW / -5.62 dBm
+        Receiver signal average optical power     : 0.2014 mW / -6.96 dBm
 
-Signed-off-by: Peter Kosyh <p.kosyh@gmail.com>
-Reviewed-by: David Ahern <dsa@cumulusnetworks.com>
+Reported-by: chris.healy@zii.aero
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: 1323061a018a ("net: phy: sfp: Add HWMON support for module sensors")
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/vrf.c |   58 ++++++++++++++++++++++++++++++++----------------------
- 1 file changed, 35 insertions(+), 23 deletions(-)
+ drivers/net/phy/sfp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -169,23 +169,29 @@ static int vrf_ip6_local_out(struct net
- static netdev_tx_t vrf_process_v6_outbound(struct sk_buff *skb,
- 					   struct net_device *dev)
- {
--	const struct ipv6hdr *iph = ipv6_hdr(skb);
-+	const struct ipv6hdr *iph;
- 	struct net *net = dev_net(skb->dev);
--	struct flowi6 fl6 = {
--		/* needed to match OIF rule */
--		.flowi6_oif = dev->ifindex,
--		.flowi6_iif = LOOPBACK_IFINDEX,
--		.daddr = iph->daddr,
--		.saddr = iph->saddr,
--		.flowlabel = ip6_flowinfo(iph),
--		.flowi6_mark = skb->mark,
--		.flowi6_proto = iph->nexthdr,
--		.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF,
--	};
-+	struct flowi6 fl6;
- 	int ret = NET_XMIT_DROP;
- 	struct dst_entry *dst;
- 	struct dst_entry *dst_null = &net->ipv6.ip6_null_entry->dst;
+--- a/drivers/net/phy/sfp.c
++++ b/drivers/net/phy/sfp.c
+@@ -515,7 +515,7 @@ static int sfp_hwmon_read_sensor(struct
  
-+	if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct ipv6hdr)))
-+		goto err;
-+
-+	iph = ipv6_hdr(skb);
-+
-+	memset(&fl6, 0, sizeof(fl6));
-+	/* needed to match OIF rule */
-+	fl6.flowi6_oif = dev->ifindex;
-+	fl6.flowi6_iif = LOOPBACK_IFINDEX;
-+	fl6.daddr = iph->daddr;
-+	fl6.saddr = iph->saddr;
-+	fl6.flowlabel = ip6_flowinfo(iph);
-+	fl6.flowi6_mark = skb->mark;
-+	fl6.flowi6_proto = iph->nexthdr;
-+	fl6.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF;
-+
- 	dst = ip6_route_output(net, NULL, &fl6);
- 	if (dst == dst_null)
- 		goto err;
-@@ -241,21 +247,27 @@ static int vrf_ip_local_out(struct net *
- static netdev_tx_t vrf_process_v4_outbound(struct sk_buff *skb,
- 					   struct net_device *vrf_dev)
+ static void sfp_hwmon_to_rx_power(long *value)
  {
--	struct iphdr *ip4h = ip_hdr(skb);
-+	struct iphdr *ip4h;
- 	int ret = NET_XMIT_DROP;
--	struct flowi4 fl4 = {
--		/* needed to match OIF rule */
--		.flowi4_oif = vrf_dev->ifindex,
--		.flowi4_iif = LOOPBACK_IFINDEX,
--		.flowi4_tos = RT_TOS(ip4h->tos),
--		.flowi4_flags = FLOWI_FLAG_ANYSRC | FLOWI_FLAG_SKIP_NH_OIF,
--		.flowi4_proto = ip4h->protocol,
--		.daddr = ip4h->daddr,
--		.saddr = ip4h->saddr,
--	};
-+	struct flowi4 fl4;
- 	struct net *net = dev_net(vrf_dev);
- 	struct rtable *rt;
+-	*value = DIV_ROUND_CLOSEST(*value, 100);
++	*value = DIV_ROUND_CLOSEST(*value, 10);
+ }
  
-+	if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct iphdr)))
-+		goto err;
-+
-+	ip4h = ip_hdr(skb);
-+
-+	memset(&fl4, 0, sizeof(fl4));
-+	/* needed to match OIF rule */
-+	fl4.flowi4_oif = vrf_dev->ifindex;
-+	fl4.flowi4_iif = LOOPBACK_IFINDEX;
-+	fl4.flowi4_tos = RT_TOS(ip4h->tos);
-+	fl4.flowi4_flags = FLOWI_FLAG_ANYSRC | FLOWI_FLAG_SKIP_NH_OIF;
-+	fl4.flowi4_proto = ip4h->protocol;
-+	fl4.daddr = ip4h->daddr;
-+	fl4.saddr = ip4h->saddr;
-+
- 	rt = ip_route_output_flow(net, &fl4, NULL);
- 	if (IS_ERR(rt))
- 		goto err;
+ static void sfp_hwmon_calibrate(struct sfp *sfp, unsigned int slope, int offset,
 
 
