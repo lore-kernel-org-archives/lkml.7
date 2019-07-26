@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DCDC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1A5C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E1A22BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4FBB205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564154923;
-	bh=RDQfSpX0t1h4UabJWi0ujY6Wdg6GrR7VHDOe+NgHGR8=;
+	s=default; t=1564154930;
+	bh=qj3Yu+ZsCVSVuHnZvv8QkWNU/+idoulJXQQsqaUdSyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tXtqP2wYa9OEmvZz+DR3y0rb++Nqs0FroT33g7QR6FlQstXcBzsUkXGeG3uE0s9fI
-	 ekv4jvwl2eaqDNIp4eQBcGJa8m2iv/7QcAHvzswS36P2ksjfCDyH6HsQaxFmGRRVYP
-	 ybyYU3/Uiz6veRhcSHPRIrkIrG975MKm+EUsTJE8=
+	b=AUOSSWIhS4XewR6EtwZIo+PyfIxVl8c4j94zNmLl3M7UwB6jXDOFN+uB3oFdJgQBJ
+	 1jT4xN8eI765q4SSQdTggk2Nck/jbdnYxRhLSF0NBw2r57pMS8TQde1XORqQMYqTIW
+	 Vv1hQ5XCc5JXp/M8lVPJDf3cSLrIi4JdQCs2JesE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388568AbfGZP2m (ORCPT
+        id S2388600AbfGZP2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:28:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43214 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:28:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388524AbfGZP2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:28:40 -0400
+        id S2387941AbfGZP2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:28:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74F9622BF5;
-        Fri, 26 Jul 2019 15:28:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C62C205F4;
+        Fri, 26 Jul 2019 15:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154920;
-        bh=RDQfSpX0t1h4UabJWi0ujY6Wdg6GrR7VHDOe+NgHGR8=;
+        s=default; t=1564154926;
+        bh=qj3Yu+ZsCVSVuHnZvv8QkWNU/+idoulJXQQsqaUdSyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v2nJkI+/IlLc5wY6Wf4foRm6i7ebiC7Ch7hdsD/HIk+PeP6gqJs7pdDyV5cC5KXNb
-         MrbAFHwBpY6Q9fvmnAuHxGexM/Go61kbk40j1aMYbZ0nMyplBZJb8uhHfdDmtw4JhJ
-         JVTZmflhzUhhIGjKDETGH9gfYANc7BJmbeJ4Lv3o=
+        b=fujRO6o1yVjJHVaUOx/S9SfwBBXrFenr+C5NRgFsEXtte9dmy0MaFdN5ZGbhjOego
+         MuwII7NkAsFaVJS8xX7iMrp3TyT0MH49FqrICBr7laaTF1HOUvfWt2iHpxv6lNQLxd
+         VBktOMM+P107/HNmW+W07X8iWmOW/kG6e3nKVz+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.2 45/66] net/mlx5: E-Switch, Fix default encap mode
-Date:   Fri, 26 Jul 2019 17:24:44 +0200
-Message-Id: <20190726152306.844604566@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org,
+        =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>
+Subject: [PATCH 5.2 47/66] dma-buf: balance refcount inbalance
+Date:   Fri, 26 Jul 2019 17:24:46 +0200
+Message-Id: <20190726152307.050532782@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
 References: <20190726152301.936055394@linuxfoundation.org>
@@ -60,61 +65,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maor Gottlieb <maorg@mellanox.com>
+From: Jérôme Glisse <jglisse@redhat.com>
 
-[ Upstream commit 9a64144d683a4395f57562d90247c61a0bf5105f ]
+commit 5e383a9798990c69fc759a4930de224bb497e62c upstream.
 
-Encap mode is related to switchdev mode only. Move the init of
-the encap mode to eswitch_offloads. Before this change, we reported
-that eswitch supports encap, even tough the device was in non
-SRIOV mode.
+The debugfs take reference on fence without dropping them.
 
-Fixes: 7768d1971de67 ('net/mlx5: E-Switch, Add control for encapsulation')
-Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linaro-mm-sig@lists.linaro.org
+Cc: Stéphane Marchesin <marcheu@chromium.org>
+Cc: stable@vger.kernel.org
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181206161840.6578-1-jglisse@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c          |    5 -----
- drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c |    7 +++++++
- 2 files changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -1882,11 +1882,6 @@ int mlx5_eswitch_init(struct mlx5_core_d
- 	esw->enabled_vports = 0;
- 	esw->mode = SRIOV_NONE;
- 	esw->offloads.inline_mode = MLX5_INLINE_MODE_NONE;
--	if (MLX5_CAP_ESW_FLOWTABLE_FDB(dev, reformat) &&
--	    MLX5_CAP_ESW_FLOWTABLE_FDB(dev, decap))
--		esw->offloads.encap = DEVLINK_ESWITCH_ENCAP_MODE_BASIC;
--	else
--		esw->offloads.encap = DEVLINK_ESWITCH_ENCAP_MODE_NONE;
+---
+ drivers/dma-buf/dma-buf.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -1057,6 +1057,7 @@ static int dma_buf_debug_show(struct seq
+ 				   fence->ops->get_driver_name(fence),
+ 				   fence->ops->get_timeline_name(fence),
+ 				   dma_fence_is_signaled(fence) ? "" : "un");
++			dma_fence_put(fence);
+ 		}
+ 		rcu_read_unlock();
  
- 	dev->priv.eswitch = esw;
- 	return 0;
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-@@ -1840,6 +1840,12 @@ int esw_offloads_init(struct mlx5_eswitc
- {
- 	int err;
- 
-+	if (MLX5_CAP_ESW_FLOWTABLE_FDB(esw->dev, reformat) &&
-+	    MLX5_CAP_ESW_FLOWTABLE_FDB(esw->dev, decap))
-+		esw->offloads.encap = DEVLINK_ESWITCH_ENCAP_MODE_BASIC;
-+	else
-+		esw->offloads.encap = DEVLINK_ESWITCH_ENCAP_MODE_NONE;
-+
- 	err = esw_offloads_steering_init(esw, vf_nvports, total_nvports);
- 	if (err)
- 		return err;
-@@ -1901,6 +1907,7 @@ void esw_offloads_cleanup(struct mlx5_es
- 	esw_offloads_devcom_cleanup(esw);
- 	esw_offloads_unload_all_reps(esw, num_vfs);
- 	esw_offloads_steering_cleanup(esw);
-+	esw->offloads.encap = DEVLINK_ESWITCH_ENCAP_MODE_NONE;
- }
- 
- static int esw_mode_from_devlink(u16 mode, u16 *mlx5_mode)
 
 
