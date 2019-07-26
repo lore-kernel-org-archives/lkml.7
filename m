@@ -2,168 +2,207 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AD2C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43176C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F1621734
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C35621734
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D7jepyaj"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="bphLnQl4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726103AbfGZG5o (ORCPT
+        id S1726148AbfGZG7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 02:57:44 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42932 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfGZG5o (ORCPT
+        Fri, 26 Jul 2019 02:59:17 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34814 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbfGZG7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 02:57:44 -0400
-Received: by mail-pl1-f194.google.com with SMTP id ay6so24424147plb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 23:57:43 -0700 (PDT)
+        Fri, 26 Jul 2019 02:59:17 -0400
+Received: by mail-lj1-f194.google.com with SMTP id p17so50432936ljg.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 23:59:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bzQNKaZKw8eToFqDsQXbuB2yvZDO2AGHnxOmbSadekg=;
-        b=D7jepyajIBROtTtVBRHO30NiYXAeVmjGCJbHSHXTuzjnSS8FsQ3UuvfORc1nANBoCV
-         4CKKsTIM5dtsEO607omtllGtCE8qOnJmQCgTbR1fYXDggum829aLmyTii5PkS6fd34od
-         T2cNSa8CjGv9SEDMGaCU33ritC8YGOBNMhBoWe3ZRvwB41GWr9XjgqkBMvZ0QDrcWs4L
-         irdsOPL2P9Fg1+oEAAw1PUVDBjx6voLdFWjdrEsONJ55F1XS6VlJs1SEpAek+1so9BNd
-         NTazoekjIgNqSPfCw/ZOVTRebwGFq8baCu0Xq8yDDvZLf6hFmjfiL7BxVK25Jti7ffq1
-         bx+w==
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WCNBl+Ug67OirRYmmdId1xroOSBlthiYyyJdmUhZr+E=;
+        b=bphLnQl4h6MxwvA8ZiJF1bGWqs65QUNNA0He6fWmoAZ4BWChP8rGV7l5acGIJ8ofPv
+         AvQzxTq/gGVePK5mDfqidXpaA6mgbx+XskXZE8+etrXCdXKGNtrMzouzpgX8lhetn4d7
+         oSfRAFozndPLHn08KxWFRmhVr5fyfLR1zd6Ik=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bzQNKaZKw8eToFqDsQXbuB2yvZDO2AGHnxOmbSadekg=;
-        b=Mt6VSxy+aCqEfjCwqygBzgY2jv54Z0soLjPYFlHrtmT4wydD3SFCMb1kQAQHChvzCA
-         tzQmEOJ6dH97sJR8U4DGW2ix/i1QpszmJ9ilfXd71bgaOAqhuV5F4kB24TG6nB//+3KP
-         nOji1GTCSvrZ4kegtkqNh6npsr8jFABF2TcQobiqiV75/1yIDssfxPvYkugKKRMztJv8
-         XDNHofMIkdn6MhyyiWq3E+0GXeu+KtRvQK6hQyVnzOzP/w7Yrikw6BRya03veMv2oPbg
-         6t7cpvRsywg83Go+V195gHK0db6ziS4Rha7QeReOYiWuAOddXtPvFMkdSBXuiy6Y+dYN
-         eLTg==
-X-Gm-Message-State: APjAAAVdb2IeupSpACqOG0oDgUX2JC0mQj0trFUrSeMAgZ7TJCONcUQ/
-        gm51JGhpsT5na0BV/CaG3qSVFA==
-X-Google-Smtp-Source: APXvYqzzo+ODsFIczIG4j/cy5XNrUcZj88VBcx5YjQ+nwxEcwhFoGe3xWYa2zhp/yiPSVfhcKjKEfw==
-X-Received: by 2002:a17:902:ff11:: with SMTP id f17mr96645555plj.121.1564124263268;
-        Thu, 25 Jul 2019 23:57:43 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id o24sm7949706pgn.93.2019.07.25.23.57.41
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WCNBl+Ug67OirRYmmdId1xroOSBlthiYyyJdmUhZr+E=;
+        b=uT5pHxRmKGVJQCrUWS4BKt3stNYxo/K+k64nCQfbI9izInJL9tjPw9VZRSOIwu7+nV
+         pcZR0HIni2a253NQbFGZQ1aaGs9fmvMnv5uYDsmVgWrpMWLP2BxLc8aryQupG0tYffUx
+         mv98/fe1w76h9c4kcxZICQwPxPa8N7k/FtleFRp2s/ZHXoKiH5GnjvSXnjJPQuLgxkGz
+         pojIcNapXo+gtsquuXSU5om+vCGGdtAXwNpMx4SEW/GbV2tLhKLhGZ7PG60+bs6np655
+         bP9synb85ulzgNwd6qIuIh7TSPbA9BgKem4sDIHrIQ/NC/Vvi5GHBWNxydRNyzdyS72R
+         xMLQ==
+X-Gm-Message-State: APjAAAVfuLpPu+GMoSRvDrfHuFBYxhAUTt+QJwIuHoJ/yAd/cMfZ/PEp
+        d7gdaNT0j3SMTmhEWpKO1SY1exAeq3MeMw==
+X-Google-Smtp-Source: APXvYqzO6G4Vsb2mfV6DZrmgtEEhQdPflr3TLxLyonDnJUm8SF3mdvsPwlBeWMhNCVFyNb/inIoOvw==
+X-Received: by 2002:a2e:834e:: with SMTP id l14mr2719876ljh.158.1564124354332;
+        Thu, 25 Jul 2019 23:59:14 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id z22sm9835284ljz.20.2019.07.25.23.59.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 23:57:41 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 12:27:39 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     "'Rafael J. Wysocki'" <rafael@kernel.org>,
-        'Rafael Wysocki' <rjw@rjwysocki.net>,
-        'Ingo Molnar' <mingo@redhat.com>,
-        'Peter Zijlstra' <peterz@infradead.org>,
-        'Linux PM' <linux-pm@vger.kernel.org>,
-        'Vincent Guittot' <vincent.guittot@linaro.org>,
-        'Joel Fernandes' <joel@joelfernandes.org>,
-        "'v4 . 18+'" <stable@vger.kernel.org>,
-        'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cpufreq: schedutil: Don't skip freq update when limits
- change
-Message-ID: <20190726065739.xjvyvqpkb3o6m4ty@vireshk-i7>
-References: <1563431200-3042-1-git-send-email-dsmythies@telus.net>
- <8091ef83f264feb2feaa827fbeefe08348bcd05d.1563778071.git.viresh.kumar@linaro.org>
- <001201d54125$a6a82350$f3f869f0$@net>
- <20190723091551.nchopfpqlmdmzvge@vireshk-i7>
- <CAJZ5v0ji+ksapJ4kc2m5UM_O+AShAvJWmYhTQHiXiHnpTq+xRg@mail.gmail.com>
- <20190724114327.apmx35c7a4tv3qt5@vireshk-i7>
- <000c01d542fc$703ff850$50bfe8f0$@net>
+        Thu, 25 Jul 2019 23:59:13 -0700 (PDT)
+Subject: Re: [PATCH 1/9] lib/sort.c: implement sort() variant taking context
+ argument
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+References: <20190619121540.29320-1-boris.brezillon@collabora.com>
+ <20190619121540.29320-2-boris.brezillon@collabora.com>
+ <20190725170547.a8a357dd76cc586f475b782d@linux-foundation.org>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <66755c09-53f1-24e9-0160-6bcc78c4d2e1@rasmusvillemoes.dk>
+Date:   Fri, 26 Jul 2019 08:59:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000c01d542fc$703ff850$50bfe8f0$@net>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190725170547.a8a357dd76cc586f475b782d@linux-foundation.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-07-19, 08:20, Doug Smythies wrote:
-> I tried the patch ("patch2"). It did not fix the issue.
+On 26/07/2019 02.05, Andrew Morton wrote:
+> On Wed, 19 Jun 2019 14:15:32 +0200 Boris Brezillon <boris.brezillon@collabora.com> wrote:
 > 
-> To summarize, all kernel 5.2 based, all intel_cpufreq driver and schedutil governor:
+>> From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+>>
+>> Our list_sort() utility has always supported a context argument that
+>> is passed through to the comparison routine. Now there's a use case
+>> for the similar thing for sort().
+>>
+>> This implements sort_r by simply extending the existing sort function
+>> in the obvious way. To avoid code duplication, we want to implement
+>> sort() in terms of sort_r(). The naive way to do that is
+>>
+>> static int cmp_wrapper(const void *a, const void *b, const void *ctx)
+>> {
+>>   int (*real_cmp)(const void*, const void*) = ctx;
+>>   return real_cmp(a, b);
+>> }
+>>
+>> sort(..., cmp) { sort_r(..., cmp_wrapper, cmp) }
+>>
+>> but this would do two indirect calls for each comparison. Instead, do
+>> as is done for the default swap functions - that only adds a cost of a
+>> single easily predicted branch to each comparison call.
+>>
+>> Aside from introducing support for the context argument, this also
+>> serves as preparation for patches that will eliminate the indirect
+>> comparison calls in common cases.
 > 
-> Test: Does a busy system respond to maximum CPU clock frequency reduction?
+> Acked-by: Andrew Morton <akpm@linux-foundation.org>
 > 
-> stock, unaltered: No.
-> revert ecd2884291261e3fddbc7651ee11a20d596bb514: Yes
-> viresh patch: No.
-> fast_switch edit: No.
-> viresh patch2: No.
+>> --- a/lib/sort.c
+>> +++ b/lib/sort.c
+>> @@ -144,6 +144,18 @@ static void do_swap(void *a, void *b, size_t size, swap_func_t swap_func)
+>>  		swap_func(a, b, (int)size);
+>>  }
+>>  
+>> +typedef int (*cmp_func_t)(const void *, const void *);
+>> +typedef int (*cmp_r_func_t)(const void *, const void *, const void *);
+>> +#define _CMP_WRAPPER ((cmp_r_func_t)0L)
+> 
+> Although I can't say I'm a fan of _CMP_WRAPPER.  I don't understand
+> what the name means.  Why not simply open-code NULL in the two sites?
 
-Hmm, so I tried to reproduce your setup on my ARM board.
-- booted only with CPU0 so I hit the sugov_update_single() routine
-- And applied below diff to make CPU look permanently busy:
+That's the preparation part. Once I find time to tie up the loose ends,
+there'll be a
 
--------------------------8<-------------------------
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index 2f382b0959e5..afb47490e5dc 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -121,6 +121,7 @@ static void sugov_fast_switch(struct sugov_policy *sg_policy, u64 time,
-        if (!sugov_update_next_freq(sg_policy, time, next_freq))
-                return;
- 
-+       pr_info("%s: %d: %u\n", __func__, __LINE__, freq);
-        next_freq = cpufreq_driver_fast_switch(policy, next_freq);
-        if (!next_freq)
-                return;
-@@ -424,14 +425,10 @@ static unsigned long sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
- #ifdef CONFIG_NO_HZ_COMMON
- static bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu)
- {
--       unsigned long idle_calls = tick_nohz_get_idle_calls_cpu(sg_cpu->cpu);
--       bool ret = idle_calls == sg_cpu->saved_idle_calls;
--
--       sg_cpu->saved_idle_calls = idle_calls;
--       return ret;
-+       return true;
- }
- #else
--static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return false; }
-+static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return true; }
- #endif /* CONFIG_NO_HZ_COMMON */
- 
- /*
-@@ -565,6 +562,7 @@ static void sugov_work(struct kthread_work *work)
-        sg_policy->work_in_progress = false;
-        raw_spin_unlock_irqrestore(&sg_policy->update_lock, flags);
- 
-+       pr_info("%s: %d: %u\n", __func__, __LINE__, freq);
-        mutex_lock(&sg_policy->work_lock);
-        __cpufreq_driver_target(sg_policy->policy, freq, CPUFREQ_RELATION_L);
-        mutex_unlock(&sg_policy->work_lock);
+  sort_by_key(base, num, swap, key)
 
--------------------------8<-------------------------
+where base must be a pointer to (array of) struct foobar, and key is the
+name of an u32 or u64 (more can be added) member. Internally, that will
+work by calling sort_r with a sentinel _CMP_SORT_U32 (or _CMP_SORT_U64,
+...) as cmp function and offsetof(typeof(*base), key) as the priv argument.
 
-Now, the frequency never gets down and so gets set to the maximum
-possible after a bit.
+In do_cmp, we then check whether the cmp function is a small
+non-negative integer and then do the appropriate comparison directly
+instead of doing an indirect call.
 
-- Then I did:
+And this infrastructure will be shared with list_sort which will grow a
+similar list_sort_by_key(). I think the actual value of _CMP_WRAPPER
+will change to simplify that part, so for that reason alone I won't
+hard-code NULL.
 
-echo <any-low-freq-value> > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
 
-Without my patch applied:
-        The print never gets printed and so frequency doesn't go down.
+>> +static int do_cmp(const void *a, const void *b,
+>> +		  cmp_r_func_t cmp, const void *priv)
+>> +{
+>> +	if (cmp == _CMP_WRAPPER)
+>> +		return ((cmp_func_t)(priv))(a, b);
+>> +	return cmp(a, b, priv);
+>> +}
+>> +
 
-With my patch applied:
-        The print gets printed immediately from sugov_work() and so
-        the frequency reduces.
+i.e., this becomes something like
 
-Can you try with this diff along with my Patch2 ? I suspect there may
-be something wrong with the intel_cpufreq driver as the patch fixes
-the only path we have in the schedutil governor which takes busyness
-of a CPU into account.
+if ((unsigned long)cmp <= ...) {
+  if (cmp == CMP_WRAPPER)
+     // called from sort(), priv is the original cmp_func pointer
+     return ((cmp_func_t)(priv))(a, b);
+  // must be called from sort_by_key, priv is the offset in each struct
+  long offset = (long)priv;
+  a += offset;
+  b += offset;
+  if (cmp == CMP_U32)
+    return *(u32*)a > *(u32*)b;
+  if (cmp == CMP_u64)
+    return *(u64*)a > *(u64*)b;
+  WARN_ONCE() // should be eliminated by smart enough compiler
+  return 0;
+}
+return cmp(a, b, priv);
 
--- 
-viresh
+>>  /**
+>>   * parent - given the offset of the child, find the offset of the parent.
+>>   * @i: the offset of the heap element whose parent is sought.  Non-zero.
+>> @@ -171,12 +183,13 @@ static size_t parent(size_t i, unsigned int lsbit, size_t size)
+>>  }
+>>  
+>>  /**
+>> - * sort - sort an array of elements
+>> + * sort_r - sort an array of elements
+>>   * @base: pointer to data to sort
+>>   * @num: number of elements
+>>   * @size: size of each element
+>>   * @cmp_func: pointer to comparison function
+>>   * @swap_func: pointer to swap function or NULL
+>> + * @priv: third argument passed to comparison function
+> 
+> Passing priv==NULLis part of the interface and should be documented?
+
+No, to sort_r() as a public function @priv is completely opaque, and the
+user can pass anything he likes. Only when sort_r() is called
+"internally" with a sentinel value of cmp_func (e.g. from sort() or
+sort_by_key()) does the priv argument have any meaning, but that's
+implementation details that should absolutely not be documented.
+
+Rasmus
