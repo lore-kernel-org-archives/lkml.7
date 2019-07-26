@@ -2,90 +2,117 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A325C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D05C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5CFC21850
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:07:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EBcVkDbk"
+	by mail.kernel.org (Postfix) with ESMTP id DC7E922C7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:07:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564150073;
+	bh=2uuUK1ifiyV3Y744hTmQ7HeB0GK4yG8UQLMkmVM9zpc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sTZLENCMjgoK750xSgEdM7eMlwCXEL5MEBrdbL3loTLoDjqfDlzr2LZoJMeX1z4pv
+	 9GhEAzUx0zS+M6pRC5MAJEeitVNE+LRwVYx4BkvEkjtWbm7c6nf+NxsE2U8w6yRhsR
+	 2YUSLedvQ/lv3yw5X3lBiu3/1dEUhz4Ik7YKmh0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfGZOHm (ORCPT
+        id S1727743AbfGZOHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:07:42 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44158 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbfGZOHl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 10:07:41 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so53365113edr.11;
-        Fri, 26 Jul 2019 07:07:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=zWt0jo8AMAZchPeNnT8VtD1Yz35B0VOWcsrzm+hetHc=;
-        b=EBcVkDbkQNLVIGiixEGt7/effrRULBIFCXd9TZAffqJ0lq9fLauFVglwd8b2bkfIyN
-         BC2KTJ0r7uFjeAiEasWUgU6aWedhVoGCjUdR79nMIVUDf9eRmgNeFHwfIhnG2q+vPRj7
-         KHU9aOnIUcaakS3x7UtUstN8BEHp6jrdVJM3xQiElzojceQJjqShcUo3suIS3TZKEIa/
-         q+wCSwmyLhAMXWit89VHrabrdm0z8JodaAn4xOccgKrSmNSXuwY7DZP8cbK9m5UDEhTA
-         TbTSj64wO85eM1pq276rMeD9A4c5mKU+DVMlfW5NOSsvxIMd+TxOHofzx8wrdUuqQLLM
-         3rVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=zWt0jo8AMAZchPeNnT8VtD1Yz35B0VOWcsrzm+hetHc=;
-        b=EPCg97zCZQzhPo/OjPa05yATVxc7UIb71QPZXrojpMtn5sQHgL8qIpvlOHmathyFvE
-         azhRQ0ePt5HQsxOPZgYf8lZAp+mChZ3gptS1eoMIlmP/M92N9vNYuETYerEFyQEJMtlY
-         RiTrOBnyHgvGbyntegfOrjGdxvoswFMO5ky9tzxEybw4+7thrUcWjIoNNTCVM0GuyQEJ
-         Wz7KT0HcjazfNegtHhs3Sl6nJWc9gWjWK5dL6BA/gGlSwgaUHtEegsHtGAnPEeXSXbrd
-         dxU+NxC5kh6vOb7MMZJfjuqQvsNHqFYrTXsFFTqjDXchKUvI8V6pajcoJ2lnX2YFwAAQ
-         sunQ==
-X-Gm-Message-State: APjAAAVOOj8inEfFoJU2Ea3SEVxhPHg09lg2KwpHzjVDSEFtpX8FvLOj
-        Chmb04qGoQ7ZqP369tTQoVmZ4r2e3raCotLwVMg=
-X-Google-Smtp-Source: APXvYqziAi2Y22ozLNyzPYiFdK2PgVBXM4KosDiTc3Nx+FjBq2NUFXjGLKY6H8bA/5mLr0Sx4XUxvkaoFm5l8HHo1CM=
-X-Received: by 2002:a50:8b9d:: with SMTP id m29mr82832052edm.248.1564150059833;
- Fri, 26 Jul 2019 07:07:39 -0700 (PDT)
+        Fri, 26 Jul 2019 10:07:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726784AbfGZOHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 10:07:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 179AD218D3;
+        Fri, 26 Jul 2019 14:07:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564150071;
+        bh=2uuUK1ifiyV3Y744hTmQ7HeB0GK4yG8UQLMkmVM9zpc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sWp6qOTpA7EA0QuyZ00iA2kjV0qwj8DZ1fRMijoF4NxjWPJQOQ5BvSC+bVJX2sNaC
+         +b57ip08/KFMI9dpgoX6yZbKyTvu7SYTD8ZFUQ7KIXvSWr5Cu05w5ab6mfFlzd9DqU
+         mrCVTz10XLKAOk4dt7H9S8fHUzIwpAj68zoRAQXo=
+Date:   Fri, 26 Jul 2019 16:07:49 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [RFC PATCH 37/40] soundwire: cadence_master: add hw_reset
+ capability in debugfs
+Message-ID: <20190726140749.GC8767@kroah.com>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-38-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Received: by 2002:a50:b3b9:0:0:0:0:0 with HTTP; Fri, 26 Jul 2019 07:07:39
- -0700 (PDT)
-In-Reply-To: <20190726110135.GO31381@hirez.programming.kicks-ass.net>
-References: <20190724191655.268628197@linuxfoundation.org> <20190724191701.954991110@linuxfoundation.org>
- <5D3AD35E.FB77B44F@gmail.com> <20190726110135.GO31381@hirez.programming.kicks-ass.net>
-From:   Jari Ruusu <jari.ruusu@gmail.com>
-Date:   Fri, 26 Jul 2019 17:07:39 +0300
-Message-ID: <CACMCwJJm++=x0EOXYMvFvybE63rmHEq6f96ahfYUA83wGGHHLw@mail.gmail.com>
-Subject: Re: [PATCH 4.19 079/271] x86/atomic: Fix smp_mb__{before,after}_atomic()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725234032.21152-38-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/26/19, Peter Zijlstra <peterz@infradead.org> wrote:
-> On Fri, Jul 26, 2019 at 01:18:06PM +0300, Jari Ruusu wrote:
->> Shouldn't those clobber contraints actually be:  "memory","cc"
->> That is because addl subl (and other) machine instructions
->> actually modify the flags register too.
->>
->> gcc docs say: The "cc" clobber indicates that the assembler
->> code modifies the flags register.
->
-> GCC x86 assumes any asm() will clobber "cc".
+On Thu, Jul 25, 2019 at 06:40:29PM -0500, Pierre-Louis Bossart wrote:
+> This is to kick devices into reset and see what software does
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/cadence_master.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+> index fa7230b0f200..53278aa2436f 100644
+> --- a/drivers/soundwire/cadence_master.c
+> +++ b/drivers/soundwire/cadence_master.c
+> @@ -331,6 +331,25 @@ static const struct file_operations cdns_reg_fops = {
+>  	.llseek = default_llseek,
+>  };
+>  
+> +static int cdns_hw_reset(void *data, u64 value)
+> +{
+> +	struct sdw_cdns *cdns = data;
+> +	int ret;
+> +
+> +	if (value != 1)
+> +		return 0;
+> +
+> +	dev_info(cdns->dev, "starting link hw_reset\n");
+> +
+> +	ret = sdw_cdns_exit_reset(cdns);
+> +
+> +	dev_info(cdns->dev, "link hw_reset done\n");
 
-No worries then. Thanks for your clarification.
+Do not be noisy for when things always go right.  This looks like
+debuggging code, please remove.
 
--- 
-Jari Ruusu  4096R/8132F189 12D6 4C3A DCDA 0AA4 27BD  ACDF F073 3C80 8132 F189
+> +
+> +	return ret;
+> +}
+> +
+> +DEFINE_DEBUGFS_ATTRIBUTE(cdns_hw_reset_fops, NULL, cdns_hw_reset, "%llu\n");
+> +
+>  /**
+>   * sdw_cdns_debugfs_init() - Cadence debugfs init
+>   * @cdns: Cadence instance
+> @@ -339,6 +358,9 @@ static const struct file_operations cdns_reg_fops = {
+>  void sdw_cdns_debugfs_init(struct sdw_cdns *cdns, struct dentry *root)
+>  {
+>  	debugfs_create_file("cdns-registers", 0400, root, cdns, &cdns_reg_fops);
+> +
+> +	debugfs_create_file_unsafe("cdns-hw-reset", 0200, root, cdns,
+> +				   &cdns_hw_reset_fops);
+
+Why unsafe?
+
+thanks,
+
+greg k-h
