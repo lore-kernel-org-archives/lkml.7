@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4A0C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26782C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCE822CBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F026222CC2
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148524;
-	bh=GEdDCyha1tfVux9t3kYEBrYBenkyndz46G+JFxGWXAI=;
+	s=default; t=1564148530;
+	bh=jwyKKrIH0Sb3LUWowXcuRJ297ShxLiOtHjsxfr0bXBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vh3XAxsjmkhh6H6tJnXobsVlibUtErQjw7WoXGsjdjrwQRpkIn4YLJ02keCGSxGb1
-	 K7yDAPMHYYOl4214oxsUZg3B9AQeNllR0kJ0sKL9BAmqnElL7L7WSf6PEAMFCTS8BA
-	 7sDXDuSS70TXTJNUi3yrMBmWZ2hlIiInEv+pMfH8=
+	b=cGH+cR11XgVTeU9SnndzJfUfd4RuMeSECsOJd9Squ69CvwYG6Efmicug8OULyrN3X
+	 nMlaUC/94gzOzWqxPT/8CAJRPVSsYwglsjbWfixGBvmJPrkbybvkgA+jEJjAjE4Sx/
+	 qYX3oIWQJTgfRdtq1EMl6j/iPHCDw+2IgV6UZOZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387837AbfGZNmD (ORCPT
+        id S2387856AbfGZNmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:42:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49164 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:42:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387825AbfGZNmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:42:01 -0400
+        id S2387418AbfGZNmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:42:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9CD222CC2;
-        Fri, 26 Jul 2019 13:42:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EF6F22BF5;
+        Fri, 26 Jul 2019 13:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148521;
-        bh=GEdDCyha1tfVux9t3kYEBrYBenkyndz46G+JFxGWXAI=;
+        s=default; t=1564148525;
+        bh=jwyKKrIH0Sb3LUWowXcuRJ297ShxLiOtHjsxfr0bXBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xNotDWuijkUV1zsrKoEnAQm+qxVkiaAzdES6g48TKWcMuh0W6Zkbp8mlwTBN3VJ6S
-         +8uqc6ZWDLtkaLmsBbKABHYF9C5AOR4EebdE03x4wOmneQJj8KrAKiCNKoWNrZrrg1
-         TApJwIxAnx/4eWrnaUJfjtMHkB8tWNpum6s2ICDo=
+        b=pO5aPHJxePB3A5na1SQEVi0ksbB8X4/W0lmianAPdtLFJ4Sapxqu0Upn/899C8v56
+         Bav46PtE7M6gNmUjihALnfKi7vW0dOLYuRYb4W3XW6koCN/BsNes+mGnzobjYKd/fr
+         qj69X3excgIFeu6Hx8XSpCCWm274qB/xugGW6LVs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 81/85] x86, boot: Remove multiple copy of static function sanitize_boot_params()
-Date:   Fri, 26 Jul 2019 09:39:31 -0400
-Message-Id: <20190726133936.11177-81-sashal@kernel.org>
+        Alexei Starovoitov <ast@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 82/85] bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()
+Date:   Fri, 26 Jul 2019 09:39:32 -0400
+Message-Id: <20190726133936.11177-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -59,58 +63,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit 8c5477e8046ca139bac250386c08453da37ec1ae ]
+[ Upstream commit 3193c0836f203a91bef96d88c64cccf0be090d9c ]
 
-Kernel build warns:
- 'sanitize_boot_params' defined but not used [-Wunused-function]
+On x86-64, with CONFIG_RETPOLINE=n, GCC's "global common subexpression
+elimination" optimization results in ___bpf_prog_run()'s jumptable code
+changing from this:
 
-at below files:
-  arch/x86/boot/compressed/cmdline.c
-  arch/x86/boot/compressed/error.c
-  arch/x86/boot/compressed/early_serial_console.c
-  arch/x86/boot/compressed/acpi.c
+	select_insn:
+		jmp *jumptable(, %rax, 8)
+		...
+	ALU64_ADD_X:
+		...
+		jmp *jumptable(, %rax, 8)
+	ALU_ADD_X:
+		...
+		jmp *jumptable(, %rax, 8)
 
-That's becausethey each include misc.h which includes a definition of
-sanitize_boot_params() via bootparam_utils.h.
+to this:
 
-Remove the inclusion from misc.h and have the c file including
-bootparam_utils.h directly.
+	select_insn:
+		mov jumptable, %r12
+		jmp *(%r12, %rax, 8)
+		...
+	ALU64_ADD_X:
+		...
+		jmp *(%r12, %rax, 8)
+	ALU_ADD_X:
+		...
+		jmp *(%r12, %rax, 8)
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+The jumptable address is placed in a register once, at the beginning of
+the function.  The function execution can then go through multiple
+indirect jumps which rely on that same register value.  This has a few
+issues:
+
+1) Objtool isn't smart enough to be able to track such a register value
+   across multiple recursive indirect jumps through the jump table.
+
+2) With CONFIG_RETPOLINE enabled, this optimization actually results in
+   a small slowdown.  I measured a ~4.7% slowdown in the test_bpf
+   "tcpdump port 22" selftest.
+
+   This slowdown is actually predicted by the GCC manual:
+
+     Note: When compiling a program using computed gotos, a GCC
+     extension, you may get better run-time performance if you
+     disable the global common subexpression elimination pass by
+     adding -fno-gcse to the command line.
+
+So just disable the optimization for this function.
+
+Fixes: e55a73251da3 ("bpf: Fix ORC unwinding in non-JIT BPF code")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1563283092-1189-1-git-send-email-zhenzhong.duan@oracle.com
+Acked-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/30c3ca29ba037afcbd860a8672eef0021addf9fe.1563413318.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/compressed/misc.c | 1 +
- arch/x86/boot/compressed/misc.h | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ include/linux/compiler-gcc.h   | 2 ++
+ include/linux/compiler_types.h | 4 ++++
+ kernel/bpf/core.c              | 2 +-
+ 3 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index 5a237e8dbf8d..0de54a1d25c0 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -17,6 +17,7 @@
- #include "pgtable.h"
- #include "../string.h"
- #include "../voffset.h"
-+#include <asm/bootparam_utils.h>
+diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+index e8579412ad21..d7ee4c6bad48 100644
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -170,3 +170,5 @@
+ #else
+ #define __diag_GCC_8(s)
+ #endif
++
++#define __no_fgcse __attribute__((optimize("-fno-gcse")))
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 19e58b9138a0..0454d82f8bd8 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -187,6 +187,10 @@ struct ftrace_likely_data {
+ #define asm_volatile_goto(x...) asm goto(x)
+ #endif
  
- /*
-  * WARNING!!
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index d2f184165934..c8181392f70d 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -23,7 +23,6 @@
- #include <asm/page.h>
- #include <asm/boot.h>
- #include <asm/bootparam.h>
--#include <asm/bootparam_utils.h>
++#ifndef __no_fgcse
++# define __no_fgcse
++#endif
++
+ /* Are two types/vars the same type (ignoring qualifiers)? */
+ #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
  
- #define BOOT_CTYPE_H
- #include <linux/acpi.h>
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 080e2bb644cc..ebfd189916dc 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -1295,7 +1295,7 @@ bool bpf_opcode_in_insntable(u8 code)
+  *
+  * Decode and execute eBPF instructions.
+  */
+-static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
++static u64 __no_fgcse ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+ {
+ #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
+ #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
 -- 
 2.20.1
 
