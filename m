@@ -2,127 +2,133 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B45BC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3D2C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B1222CB9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 719AD22CB8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148479;
-	bh=Qkv40fafqQomKUgAfGkXE1/nJT1uUnyN1vwBUnVHzKY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T84MMK9OZaXAX9m4GzEaqjoWyuitd4DHRtBa7dBKLuwxCZex7vD3cglJqBHN3Fxa2
-	 XvY918b6XHBqhPRU0X7Al0nykShYEnw+Bl/hr3Z8efkuTcMSIoHw1QXKJMErxhxx5q
-	 Mf7v7pQzVZj7JBzmW4tN4C6M8yWdzDUE84Ut1nIQ=
+	s=default; t=1564148476;
+	bh=ZYABnSn7vuYTCQJZ7dSWnP9lS/soucNvJhFcIEN0BTU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hS31oFr4ENp1Mp8UrPgXlhHshDd+cB69iNJzJ5fyf3SDFDwtzIV+8MjH3zmtqVzAy
+	 R0hPcK7++f8RnDsZ10NmUqbnOGfVsC424cGHneWdbWNeAoe5ceYsrGhRkhrllYyywm
+	 97rnC52zPCn6/q18vky7tV+Hs3XWl0blK3K7q3VY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfGZNlR (ORCPT
+        id S1727856AbfGZNlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:41:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47482 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:41:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:43760 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727820AbfGZNlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:41:07 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7D9922BE8;
-        Fri, 26 Jul 2019 13:41:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148466;
-        bh=Qkv40fafqQomKUgAfGkXE1/nJT1uUnyN1vwBUnVHzKY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JDwczTeDOgcXtLyJOiNhaFLSXJL8BTrapcafEcX9pe6aJXiQ1ce1SUl5c1juUdjbP
-         wAREVsUXK60ez1Zd2PzrZuVXDcY+be8Dvj0KPNOXEvCLMpTXzatwI9aFQboVbFdRbP
-         xRLef1VgSzxkLa1KmJH2jr2eyXsMF5c0rMC+WDRQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
+        id S1727814AbfGZNlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:41:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A92D337;
+        Fri, 26 Jul 2019 06:41:03 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A54F03F694;
+        Fri, 26 Jul 2019 06:41:01 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 14:41:00 +0100
+Message-ID: <864l38oqvn.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Wen Yang <wen.yang99@zte.com.cn>
+Cc:     <linux-kernel@vger.kernel.org>, <xue.zhihong@zte.com.cn>,
+        <wang.yi59@zte.com.cn>, <cheng.shengyu@zte.com.cn>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.2 55/85] x86: math-emu: Hide clang warnings for 16-bit overflow
-Date:   Fri, 26 Jul 2019 09:39:05 -0400
-Message-Id: <20190726133936.11177-55-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
-References: <20190726133936.11177-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Jason Cooper <jason@lakedaemon.net>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>
+Subject: Re: [PATCH] irqchip: renesas-rza1: fix an use-after-free in rza1_irqc_probe()
+In-Reply-To: <1562566745-7447-3-git-send-email-wen.yang99@zte.com.cn>
+References: <1562566745-7447-1-git-send-email-wen.yang99@zte.com.cn>
+        <1562566745-7447-3-git-send-email-wen.yang99@zte.com.cn>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Mon, 08 Jul 2019 07:19:04 +0100,
+Wen Yang <wen.yang99@zte.com.cn> wrote:
+> 
+> The gic_node is still being used in the rza1_irqc_parse_map() call
+> after the of_node_put() call, which may result in use-after-free.
+> 
+> Fixes: a644ccb819bc ("irqchip: Add Renesas RZ/A1 Interrupt Controller driver")
+> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Chris Brandt <chris.brandt@renesas.com>
+> Cc: Simon Horman <horms+renesas@verge.net.au>
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/irqchip/irq-renesas-rza1.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-renesas-rza1.c b/drivers/irqchip/irq-renesas-rza1.c
+> index b1f19b21..b0d46ac 100644
+> --- a/drivers/irqchip/irq-renesas-rza1.c
+> +++ b/drivers/irqchip/irq-renesas-rza1.c
+> @@ -208,20 +208,19 @@ static int rza1_irqc_probe(struct platform_device *pdev)
+>  		return PTR_ERR(priv->base);
+>  
+>  	gic_node = of_irq_find_parent(np);
+> -	if (gic_node) {
+> +	if (gic_node)
+>  		parent = irq_find_host(gic_node);
+> -		of_node_put(gic_node);
+> -	}
+>  
+>  	if (!parent) {
+>  		dev_err(dev, "cannot find parent domain\n");
+> -		return -ENODEV;
+> +		ret = -ENODEV;
+> +		goto out_put_node;
+>  	}
+>  
+>  	ret = rza1_irqc_parse_map(priv, gic_node);
+>  	if (ret) {
+>  		dev_err(dev, "cannot parse %s: %d\n", "interrupt-map", ret);
+> -		return ret;
+> +		goto out_put_node;
+>  	}
+>  
+>  	priv->chip.name = "rza1-irqc",
+> @@ -237,10 +236,12 @@ static int rza1_irqc_probe(struct platform_device *pdev)
+>  						    priv);
+>  	if (!priv->irq_domain) {
+>  		dev_err(dev, "cannot initialize irq domain\n");
+> -		return -ENOMEM;
+> +		ret = -ENOMEM;
+>  	}
+>  
+> -	return 0;
+> +out_put_node:
+> +	of_node_put(gic_node);
+> +	return ret;
+>  }
+>  
+>  static int rza1_irqc_remove(struct platform_device *pdev)
+> -- 
+> 2.9.5
+> 
 
-[ Upstream commit 29e7e9664aec17b94a9c8c5a75f8d216a206aa3a ]
+Applied, thanks.
 
-clang warns about a few parts of the math-emu implementation
-where a 16-bit integer becomes negative during assignment:
+	M.
 
-arch/x86/math-emu/poly_tan.c:88:35: error: implicit conversion from 'int' to 'short' changes value from 49216 to -16320 [-Werror,-Wconstant-conversion]
-                                      (0x41 + EXTENDED_Ebias) | SIGN_Negative);
-                                      ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
-arch/x86/math-emu/fpu_emu.h:180:58: note: expanded from macro 'setexponent16'
- #define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
-                                                      ~  ^
-arch/x86/math-emu/reg_constant.c:37:32: error: implicit conversion from 'int' to 'short' changes value from 49085 to -16451 [-Werror,-Wconstant-conversion]
-FPU_REG const CONST_PI2extra = MAKE_REG(NEG, -66,
-                               ^~~~~~~~~~~~~~~~~~
-arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
-                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
-                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/x86/math-emu/reg_constant.c:48:28: error: implicit conversion from 'int' to 'short' changes value from 65535 to -1 [-Werror,-Wconstant-conversion]
-FPU_REG const CONST_QNaN = MAKE_REG(NEG, EXP_OVER, 0x00000000, 0xC0000000);
-                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
-                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
-                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The code is correct as is, so add a typecast to shut up the warnings.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190712090816.350668-1-arnd@arndb.de
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/math-emu/fpu_emu.h      | 2 +-
- arch/x86/math-emu/reg_constant.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/math-emu/fpu_emu.h b/arch/x86/math-emu/fpu_emu.h
-index a5a41ec58072..0c122226ca56 100644
---- a/arch/x86/math-emu/fpu_emu.h
-+++ b/arch/x86/math-emu/fpu_emu.h
-@@ -177,7 +177,7 @@ static inline void reg_copy(FPU_REG const *x, FPU_REG *y)
- #define setexponentpos(x,y) { (*(short *)&((x)->exp)) = \
-   ((y) + EXTENDED_Ebias) & 0x7fff; }
- #define exponent16(x)         (*(short *)&((x)->exp))
--#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
-+#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (u16)(y); }
- #define addexponent(x,y)    { (*(short *)&((x)->exp)) += (y); }
- #define stdexp(x)           { (*(short *)&((x)->exp)) += EXTENDED_Ebias; }
- 
-diff --git a/arch/x86/math-emu/reg_constant.c b/arch/x86/math-emu/reg_constant.c
-index 8dc9095bab22..742619e94bdf 100644
---- a/arch/x86/math-emu/reg_constant.c
-+++ b/arch/x86/math-emu/reg_constant.c
-@@ -18,7 +18,7 @@
- #include "control_w.h"
- 
- #define MAKE_REG(s, e, l, h) { l, h, \
--		((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
-+		(u16)((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
- 
- FPU_REG const CONST_1 = MAKE_REG(POS, 0, 0x00000000, 0x80000000);
- #if 0
 -- 
-2.20.1
-
+Jazz is not dead, it just smells funny.
