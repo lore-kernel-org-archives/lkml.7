@@ -2,59 +2,52 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369EDC41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA8EC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FF922CBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D1EA22CBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155253;
-	bh=Zbddla8VV+mKzdfXhWuEssTmkq3nJ7p212+T/dx9BZ0=;
+	s=default; t=1564155257;
+	bh=pbeQDORN6gjVG0+4sDhKbTkgttOdLuzGdZH+0akPEqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q6hAgU5yGAae2H7PZ5lXqwXpiL3aPnixSKOKfBVRAP8lBLGfHs35nt7LjhlR6wbLa
-	 rQ8zO+DIDlnlAG0dDR/EA68EQk7noIAmco0EIPhsAlTrBwkBb5jc3utPv1Bfd8+4XH
-	 Y1N4xu/Jto76UZ1tvzMMwLN+A6owMgvBSwmTTFSo=
+	b=XruU81LNoU6xDO8DbGSN4CLZ9prsoHQQItbS9Sx2vaDiGtFo2FkRJmnFOuAVa4NsX
+	 I2lTR6u+kizIDt9HOYCV+ocFgShuye3cSBKm9Hf7BbVEVjWVYmV1bbquXgSIA+7Sk7
+	 fThNd3825nSGQTuLBiZTqz5XL4aDEdPJh2OkslcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389790AbfGZPeG (ORCPT
+        id S2389809AbfGZPeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49574 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:34:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388449AbfGZPeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:34:04 -0400
+        id S2389782AbfGZPeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:34:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 947BF2054F;
-        Fri, 26 Jul 2019 15:34:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B471D218D4;
+        Fri, 26 Jul 2019 15:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155243;
-        bh=Zbddla8VV+mKzdfXhWuEssTmkq3nJ7p212+T/dx9BZ0=;
+        s=default; t=1564155249;
+        bh=pbeQDORN6gjVG0+4sDhKbTkgttOdLuzGdZH+0akPEqA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U+PaCLx8oyqPVv3zbRLYuohZRXINoNQOxvCnFYWjt6JtfLg8iPcGFmJCmowht/7dN
-         l6vcBL22UMrSGOzQPfnaJG1j8NBVNcXEPrEWSTN+vW2gC2nIeU9nzewu1LyOLX7UmQ
-         /Jp3C2IMnVLmPtbD88dBme37/JddA3UOU0ZYp0S8=
+        b=zAzmc+JRpPPq9BolQVKbkMiCi1C89iaL5tUEyCpV167yLrP1u+AEeRD2+dmWp6rpu
+         8f2Fj4zgSy3t5RFFc/0ZLA7XXOoI2qFwfNBU8E76Acp53r1o2cnHZJw9Vw/U8AM5BU
+         j64OLFzi4mKCRf3gKJLbcBIj6jS6Rge9xREscoiw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kuo-Hsin Yang <vovoy@chromium.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Sonny Rao <sonnyrao@chromium.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@redhat.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 50/50] mm: vmscan: scan anonymous pages on file refaults
-Date:   Fri, 26 Jul 2019 17:25:25 +0200
-Message-Id: <20190726152306.041848000@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Weinelt <martin@linuxlounge.net>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 32/50] net: bridge: mcast: fix stale nsrcs pointer in igmp3/mld2 report handling
+Date:   Fri, 26 Jul 2019 17:25:07 +0200
+Message-Id: <20190726152303.934713855@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -67,241 +60,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuo-Hsin Yang <vovoy@chromium.org>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-commit 2c012a4ad1a2cd3fb5a0f9307b9d219f84eda1fa upstream.
+[ Upstream commit e57f61858b7cf478ed6fa23ed4b3876b1c9625c4 ]
 
-When file refaults are detected and there are many inactive file pages,
-the system never reclaim anonymous pages, the file pages are dropped
-aggressively when there are still a lot of cold anonymous pages and
-system thrashes.  This issue impacts the performance of applications
-with large executable, e.g.  chrome.
+We take a pointer to grec prior to calling pskb_may_pull and use it
+afterwards to get nsrcs so record nsrcs before the pull when handling
+igmp3 and we get a pointer to nsrcs and call pskb_may_pull when handling
+mld2 which again could lead to reading 2 bytes out-of-bounds.
 
-With this patch, when file refault is detected, inactive_list_is_low()
-always returns true for file pages in get_scan_count() to enable
-scanning anonymous pages.
+ ==================================================================
+ BUG: KASAN: use-after-free in br_multicast_rcv+0x480c/0x4ad0 [bridge]
+ Read of size 2 at addr ffff8880421302b4 by task ksoftirqd/1/16
 
-The problem can be reproduced by the following test program.
+ CPU: 1 PID: 16 Comm: ksoftirqd/1 Tainted: G           OE     5.2.0-rc6+ #1
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+ Call Trace:
+  dump_stack+0x71/0xab
+  print_address_description+0x6a/0x280
+  ? br_multicast_rcv+0x480c/0x4ad0 [bridge]
+  __kasan_report+0x152/0x1aa
+  ? br_multicast_rcv+0x480c/0x4ad0 [bridge]
+  ? br_multicast_rcv+0x480c/0x4ad0 [bridge]
+  kasan_report+0xe/0x20
+  br_multicast_rcv+0x480c/0x4ad0 [bridge]
+  ? br_multicast_disable_port+0x150/0x150 [bridge]
+  ? ktime_get_with_offset+0xb4/0x150
+  ? __kasan_kmalloc.constprop.6+0xa6/0xf0
+  ? __netif_receive_skb+0x1b0/0x1b0
+  ? br_fdb_update+0x10e/0x6e0 [bridge]
+  ? br_handle_frame_finish+0x3c6/0x11d0 [bridge]
+  br_handle_frame_finish+0x3c6/0x11d0 [bridge]
+  ? br_pass_frame_up+0x3a0/0x3a0 [bridge]
+  ? virtnet_probe+0x1c80/0x1c80 [virtio_net]
+  br_handle_frame+0x731/0xd90 [bridge]
+  ? select_idle_sibling+0x25/0x7d0
+  ? br_handle_frame_finish+0x11d0/0x11d0 [bridge]
+  __netif_receive_skb_core+0xced/0x2d70
+  ? virtqueue_get_buf_ctx+0x230/0x1130 [virtio_ring]
+  ? do_xdp_generic+0x20/0x20
+  ? virtqueue_napi_complete+0x39/0x70 [virtio_net]
+  ? virtnet_poll+0x94d/0xc78 [virtio_net]
+  ? receive_buf+0x5120/0x5120 [virtio_net]
+  ? __netif_receive_skb_one_core+0x97/0x1d0
+  __netif_receive_skb_one_core+0x97/0x1d0
+  ? __netif_receive_skb_core+0x2d70/0x2d70
+  ? _raw_write_trylock+0x100/0x100
+  ? __queue_work+0x41e/0xbe0
+  process_backlog+0x19c/0x650
+  ? _raw_read_lock_irq+0x40/0x40
+  net_rx_action+0x71e/0xbc0
+  ? __switch_to_asm+0x40/0x70
+  ? napi_complete_done+0x360/0x360
+  ? __switch_to_asm+0x34/0x70
+  ? __switch_to_asm+0x40/0x70
+  ? __schedule+0x85e/0x14d0
+  __do_softirq+0x1db/0x5f9
+  ? takeover_tasklets+0x5f0/0x5f0
+  run_ksoftirqd+0x26/0x40
+  smpboot_thread_fn+0x443/0x680
+  ? sort_range+0x20/0x20
+  ? schedule+0x94/0x210
+  ? __kthread_parkme+0x78/0xf0
+  ? sort_range+0x20/0x20
+  kthread+0x2ae/0x3a0
+  ? kthread_create_worker_on_cpu+0xc0/0xc0
+  ret_from_fork+0x35/0x40
 
----8<---
-void fallocate_file(const char *filename, off_t size)
-{
-	struct stat st;
-	int fd;
+ The buggy address belongs to the page:
+ page:ffffea0001084c00 refcount:0 mapcount:-128 mapping:0000000000000000 index:0x0
+ flags: 0xffffc000000000()
+ raw: 00ffffc000000000 ffffea0000cfca08 ffffea0001098608 0000000000000000
+ raw: 0000000000000000 0000000000000003 00000000ffffff7f 0000000000000000
+ page dumped because: kasan: bad access detected
 
-	if (!stat(filename, &st) && st.st_size >= size)
-		return;
+ Memory state around the buggy address:
+ ffff888042130180: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff888042130200: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ > ffff888042130280: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                     ^
+ ffff888042130300: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff888042130380: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ==================================================================
+ Disabling lock debugging due to kernel taint
 
-	fd = open(filename, O_WRONLY | O_CREAT, 0600);
-	if (fd < 0) {
-		perror("create file");
-		exit(1);
-	}
-	if (posix_fallocate(fd, 0, size)) {
-		perror("fallocate");
-		exit(1);
-	}
-	close(fd);
-}
-
-long *alloc_anon(long size)
-{
-	long *start = malloc(size);
-	memset(start, 1, size);
-	return start;
-}
-
-long access_file(const char *filename, long size, long rounds)
-{
-	int fd, i;
-	volatile char *start1, *end1, *start2;
-	const int page_size = getpagesize();
-	long sum = 0;
-
-	fd = open(filename, O_RDONLY);
-	if (fd == -1) {
-		perror("open");
-		exit(1);
-	}
-
-	/*
-	 * Some applications, e.g. chrome, use a lot of executable file
-	 * pages, map some of the pages with PROT_EXEC flag to simulate
-	 * the behavior.
-	 */
-	start1 = mmap(NULL, size / 2, PROT_READ | PROT_EXEC, MAP_SHARED,
-		      fd, 0);
-	if (start1 == MAP_FAILED) {
-		perror("mmap");
-		exit(1);
-	}
-	end1 = start1 + size / 2;
-
-	start2 = mmap(NULL, size / 2, PROT_READ, MAP_SHARED, fd, size / 2);
-	if (start2 == MAP_FAILED) {
-		perror("mmap");
-		exit(1);
-	}
-
-	for (i = 0; i < rounds; ++i) {
-		struct timeval before, after;
-		volatile char *ptr1 = start1, *ptr2 = start2;
-		gettimeofday(&before, NULL);
-		for (; ptr1 < end1; ptr1 += page_size, ptr2 += page_size)
-			sum += *ptr1 + *ptr2;
-		gettimeofday(&after, NULL);
-		printf("File access time, round %d: %f (sec)
-", i,
-		       (after.tv_sec - before.tv_sec) +
-		       (after.tv_usec - before.tv_usec) / 1000000.0);
-	}
-	return sum;
-}
-
-int main(int argc, char *argv[])
-{
-	const long MB = 1024 * 1024;
-	long anon_mb, file_mb, file_rounds;
-	const char filename[] = "large";
-	long *ret1;
-	long ret2;
-
-	if (argc != 4) {
-		printf("usage: thrash ANON_MB FILE_MB FILE_ROUNDS
-");
-		exit(0);
-	}
-	anon_mb = atoi(argv[1]);
-	file_mb = atoi(argv[2]);
-	file_rounds = atoi(argv[3]);
-
-	fallocate_file(filename, file_mb * MB);
-	printf("Allocate %ld MB anonymous pages
-", anon_mb);
-	ret1 = alloc_anon(anon_mb * MB);
-	printf("Access %ld MB file pages
-", file_mb);
-	ret2 = access_file(filename, file_mb * MB, file_rounds);
-	printf("Print result to prevent optimization: %ld
-",
-	       *ret1 + ret2);
-	return 0;
-}
----8<---
-
-Running the test program on 2GB RAM VM with kernel 5.2.0-rc5, the program
-fills ram with 2048 MB memory, access a 200 MB file for 10 times.  Without
-this patch, the file cache is dropped aggresively and every access to the
-file is from disk.
-
-  $ ./thrash 2048 200 10
-  Allocate 2048 MB anonymous pages
-  Access 200 MB file pages
-  File access time, round 0: 2.489316 (sec)
-  File access time, round 1: 2.581277 (sec)
-  File access time, round 2: 2.487624 (sec)
-  File access time, round 3: 2.449100 (sec)
-  File access time, round 4: 2.420423 (sec)
-  File access time, round 5: 2.343411 (sec)
-  File access time, round 6: 2.454833 (sec)
-  File access time, round 7: 2.483398 (sec)
-  File access time, round 8: 2.572701 (sec)
-  File access time, round 9: 2.493014 (sec)
-
-With this patch, these file pages can be cached.
-
-  $ ./thrash 2048 200 10
-  Allocate 2048 MB anonymous pages
-  Access 200 MB file pages
-  File access time, round 0: 2.475189 (sec)
-  File access time, round 1: 2.440777 (sec)
-  File access time, round 2: 2.411671 (sec)
-  File access time, round 3: 1.955267 (sec)
-  File access time, round 4: 0.029924 (sec)
-  File access time, round 5: 0.000808 (sec)
-  File access time, round 6: 0.000771 (sec)
-  File access time, round 7: 0.000746 (sec)
-  File access time, round 8: 0.000738 (sec)
-  File access time, round 9: 0.000747 (sec)
-
-Checked the swap out stats during the test [1], 19006 pages swapped out
-with this patch, 3418 pages swapped out without this patch. There are
-more swap out, but I think it's within reasonable range when file backed
-data set doesn't fit into the memory.
-
-$ ./thrash 2000 100 2100 5 1 # ANON_MB FILE_EXEC FILE_NOEXEC ROUNDS
-PROCESSES Allocate 2000 MB anonymous pages active_anon: 1613644,
-inactive_anon: 348656, active_file: 892, inactive_file: 1384 (kB)
-pswpout: 7972443, pgpgin: 478615246 Access 100 MB executable file pages
-Access 2100 MB regular file pages File access time, round 0: 12.165,
-(sec) active_anon: 1433788, inactive_anon: 478116, active_file: 17896,
-inactive_file: 24328 (kB) File access time, round 1: 11.493, (sec)
-active_anon: 1430576, inactive_anon: 477144, active_file: 25440,
-inactive_file: 26172 (kB) File access time, round 2: 11.455, (sec)
-active_anon: 1427436, inactive_anon: 476060, active_file: 21112,
-inactive_file: 28808 (kB) File access time, round 3: 11.454, (sec)
-active_anon: 1420444, inactive_anon: 473632, active_file: 23216,
-inactive_file: 35036 (kB) File access time, round 4: 11.479, (sec)
-active_anon: 1413964, inactive_anon: 471460, active_file: 31728,
-inactive_file: 32224 (kB) pswpout: 7991449 (+ 19006), pgpgin: 489924366
-(+ 11309120)
-
-With 4 processes accessing non-overlapping parts of a large file, 30316
-pages swapped out with this patch, 5152 pages swapped out without this
-patch.  The swapout number is small comparing to pgpgin.
-
-[1]: https://github.com/vovo/testing/blob/master/mem_thrash.c
-
-Link: http://lkml.kernel.org/r/20190701081038.GA83398@google.com
-Fixes: e9868505987a ("mm,vmscan: only evict file pages when we have plenty")
-Fixes: 7c5bd705d8f9 ("mm: memcg: only evict file pages when we have plenty")
-Signed-off-by: Kuo-Hsin Yang <vovoy@chromium.org>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Sonny Rao <sonnyrao@chromium.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Rik van Riel <riel@redhat.com>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: <stable@vger.kernel.org>	[4.12+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[backported to 4.14.y, 4.19.y, 5.1.y: adjust context]
-Signed-off-by: Kuo-Hsin Yang <vovoy@chromium.org>
+Fixes: bc8c20acaea1 ("bridge: multicast: treat igmpv3 report with INCLUDE and no sources as a leave")
+Reported-by: Martin Weinelt <martin@linuxlounge.net>
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Tested-by: Martin Weinelt <martin@linuxlounge.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- mm/vmscan.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/bridge/br_multicast.c |   27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2190,7 +2190,7 @@ static void shrink_active_list(unsigned
-  *   10TB     320        32GB
-  */
- static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
--				 struct scan_control *sc, bool actual_reclaim)
-+				 struct scan_control *sc, bool trace)
- {
- 	enum lru_list active_lru = file * LRU_FILE + LRU_ACTIVE;
- 	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
-@@ -2216,7 +2216,7 @@ static bool inactive_list_is_low(struct
- 	 * rid of the stale workingset quickly.
- 	 */
- 	refaults = lruvec_page_state(lruvec, WORKINGSET_ACTIVATE);
--	if (file && actual_reclaim && lruvec->refaults != refaults) {
-+	if (file && lruvec->refaults != refaults) {
- 		inactive_ratio = 0;
- 	} else {
- 		gb = (inactive + active) >> (30 - PAGE_SHIFT);
-@@ -2226,7 +2226,7 @@ static bool inactive_list_is_low(struct
- 			inactive_ratio = 1;
- 	}
+--- a/net/bridge/br_multicast.c
++++ b/net/bridge/br_multicast.c
+@@ -1147,6 +1147,7 @@ static int br_ip4_multicast_igmp3_report
+ 	int type;
+ 	int err = 0;
+ 	__be32 group;
++	u16 nsrcs;
  
--	if (actual_reclaim)
-+	if (trace)
- 		trace_mm_vmscan_inactive_list_is_low(pgdat->node_id, sc->reclaim_idx,
- 			lruvec_lru_size(lruvec, inactive_lru, MAX_NR_ZONES), inactive,
- 			lruvec_lru_size(lruvec, active_lru, MAX_NR_ZONES), active,
+ 	ih = igmpv3_report_hdr(skb);
+ 	num = ntohs(ih->ngrec);
+@@ -1160,8 +1161,9 @@ static int br_ip4_multicast_igmp3_report
+ 		grec = (void *)(skb->data + len - sizeof(*grec));
+ 		group = grec->grec_mca;
+ 		type = grec->grec_type;
++		nsrcs = ntohs(grec->grec_nsrcs);
+ 
+-		len += ntohs(grec->grec_nsrcs) * 4;
++		len += nsrcs * 4;
+ 		if (!pskb_may_pull(skb, len))
+ 			return -EINVAL;
+ 
+@@ -1182,7 +1184,7 @@ static int br_ip4_multicast_igmp3_report
+ 		src = eth_hdr(skb)->h_source;
+ 		if ((type == IGMPV3_CHANGE_TO_INCLUDE ||
+ 		     type == IGMPV3_MODE_IS_INCLUDE) &&
+-		    ntohs(grec->grec_nsrcs) == 0) {
++		    nsrcs == 0) {
+ 			br_ip4_multicast_leave_group(br, port, group, vid, src);
+ 		} else {
+ 			err = br_ip4_multicast_add_group(br, port, group, vid,
+@@ -1217,23 +1219,26 @@ static int br_ip6_multicast_mld2_report(
+ 	len = skb_transport_offset(skb) + sizeof(*icmp6h);
+ 
+ 	for (i = 0; i < num; i++) {
+-		__be16 *nsrcs, _nsrcs;
++		__be16 *_nsrcs, __nsrcs;
++		u16 nsrcs;
+ 
+-		nsrcs = skb_header_pointer(skb,
+-					   len + offsetof(struct mld2_grec,
+-							  grec_nsrcs),
+-					   sizeof(_nsrcs), &_nsrcs);
+-		if (!nsrcs)
++		_nsrcs = skb_header_pointer(skb,
++					    len + offsetof(struct mld2_grec,
++							   grec_nsrcs),
++					    sizeof(__nsrcs), &__nsrcs);
++		if (!_nsrcs)
+ 			return -EINVAL;
+ 
++		nsrcs = ntohs(*_nsrcs);
++
+ 		if (!pskb_may_pull(skb,
+ 				   len + sizeof(*grec) +
+-				   sizeof(struct in6_addr) * ntohs(*nsrcs)))
++				   sizeof(struct in6_addr) * nsrcs))
+ 			return -EINVAL;
+ 
+ 		grec = (struct mld2_grec *)(skb->data + len);
+ 		len += sizeof(*grec) +
+-		       sizeof(struct in6_addr) * ntohs(*nsrcs);
++		       sizeof(struct in6_addr) * nsrcs;
+ 
+ 		/* We treat these as MLDv1 reports for now. */
+ 		switch (grec->grec_type) {
+@@ -1252,7 +1257,7 @@ static int br_ip6_multicast_mld2_report(
+ 		src = eth_hdr(skb)->h_source;
+ 		if ((grec->grec_type == MLD2_CHANGE_TO_INCLUDE ||
+ 		     grec->grec_type == MLD2_MODE_IS_INCLUDE) &&
+-		    ntohs(*nsrcs) == 0) {
++		    nsrcs == 0) {
+ 			br_ip6_multicast_leave_group(br, port, &grec->grec_mca,
+ 						     vid, src);
+ 		} else {
 
 
