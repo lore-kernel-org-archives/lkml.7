@@ -2,170 +2,144 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27691C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EE9C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E423721901
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A81021901
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:21:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u74QyaIa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pha/+B/m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbfGZQUx (ORCPT
+        id S1728730AbfGZQVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:20:53 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33219 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728611AbfGZQUx (ORCPT
+        Fri, 26 Jul 2019 12:21:06 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:57072 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728606AbfGZQUc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:20:53 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n9so55130627wru.0;
-        Fri, 26 Jul 2019 09:20:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=T/qDVf+3dooEMAhruNasjaP2IHvuiWtEmkuvHmBG+jE=;
-        b=u74QyaIaeokVKcRlclbi8ZChTroTb+hxErNprFXFz63Rra5MoMHUzsrbWObUJ9n0Ux
-         7ANAXkMymd83qMr5GScNwcw2aYi3uILh36LndhKYmSk6ed00GJi2B4x8HZ08xB4gQjWX
-         aqlfKimYkJ02s5kxVwcBDzn5ouy8Mb5tK5a7LpJ7Gje454GjWKDTCaYpqL35f/JYeEXa
-         Xr2fLn4cqHSs8Q9sov/srOvuG70bhp7UfBx4vA58SfNFZLxQ1y5tufGPhazUruajAR0x
-         8tpSWrFw+RlYbtQ+LLXAPXew0fL9tOO+6ShaAfoaTduq/lBtsW20YbNWycu3Q6Re0sb2
-         x/YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=T/qDVf+3dooEMAhruNasjaP2IHvuiWtEmkuvHmBG+jE=;
-        b=JT/l2/28218hdsfYg+y6C7smE5Uc1JA5YXC2HgV8uNS3S/leHYD4rv6tcZj86iaZTh
-         yLr/Y72eUMULv6K6E5iDl75zL5iCvwAQFIKF5UzONLFhpX/Bl7n87m6MkVBHH5kPAsbF
-         ZEN2qj0kKanwTheX210UPtQOYliawxpzrTqiaU31fg02efPeQTUp6X02Kq1eRasQvJb/
-         bjLNTa2LqQCDAsmo2QcNcLHNPxXmRDRqcczRAsBDT6uE6DMBNooAmtlMHOjE70bgA2mj
-         nK4WdqrSPwEB7uV2R1xnTYbywCDmUU9gUoMEBRkVtMJ/qtEvzcuhkjhHFWpKn9WwO5jF
-         trQw==
-X-Gm-Message-State: APjAAAX9NOE5r9pJ7hULJImChL74CT3b4h9JGTS7P9313iywapOUucPV
-        vQcxSMrjGZRu2+EHGcYKar0=
-X-Google-Smtp-Source: APXvYqwChD/6H+v/k2i0GRnWa8BPb9pYfF23pSNRnjD9xEwPX6Kks+G03fmvtv+XXTU2gzoC5WPMnw==
-X-Received: by 2002:a5d:53c1:: with SMTP id a1mr323995wrw.185.1564158051059;
-        Fri, 26 Jul 2019 09:20:51 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id u2sm45819941wmc.3.2019.07.26.09.20.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 09:20:49 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kelsey Skunberg <skunberg.kelsey@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] drivers: net: xgene: Move status variable declaration into CONFIG_ACPI block
-Date:   Fri, 26 Jul 2019 09:20:37 -0700
-Message-Id: <20190726162037.37308-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Fri, 26 Jul 2019 12:20:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=JXvlIC4u4F2IkNU/GkwEGhYaRWxhelNM+5dXTenAYmE=; b=pha/+B/mvy8eksAFgaeU6jUHAq
+        D9ts31kx2sujmMlOjBsiDhd7pJIGRGhfRX5yOP5NtHRNRApwdPkOPt63HCbGimu5We8Fzol4WqoBX
+        Xs3MqNKGfH7xQiSP76X7KLKvAtRNAn+YOJXMxgwYvp/z82bvXh6lZ+RB4Z92Mu8jNt7ZXqDBnmSvQ
+        8HOqJpq0kSqNWnplDm0cbctNA+IxdFyORPGZvdloMYcEgmlvh/aBTGXvUzqDOEkR1fVdXJzUl6GWe
+        ZKEwycH7D9PBRsIJYF3WAAXNbS1UbMM3bG6lmwXqcKsVWuEqv2863znKyUokx153k9k2Dwkc48Qfl
+        9FWDM0kg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hr2wy-00066U-Vd; Fri, 26 Jul 2019 16:20:09 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 5442620229752; Fri, 26 Jul 2019 18:20:05 +0200 (CEST)
+Message-Id: <20190726161357.696559863@infradead.org>
+User-Agent: quilt/0.65
+Date:   Fri, 26 Jul 2019 16:54:15 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     mingo@kernel.org, juri.lelli@redhat.com
+Cc:     linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
+        luca.abeni@santannapisa.it, bristot@redhat.com,
+        balsini@android.com, dvyukov@google.com, tglx@linutronix.de,
+        vpillai@digitalocean.com, rostedt@goodmis.org, peterz@infradead.org
+Subject: [RFC][PATCH 06/13] sched/fair: Export newidle_balance()
+References: <20190726145409.947503076@infradead.org>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_ACPI is unset (arm allyesconfig), status is unused.
+For pick_next_task_fair() it is the newidle balance that requires
+dropping the rq->lock; provided we do put_prev_task() early, we can
+also detect the condition for doing newidle early.
 
-drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c:383:14: warning:
-unused variable 'status' [-Wunused-variable]
-        acpi_status status;
-                    ^
-drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c:440:14: warning:
-unused variable 'status' [-Wunused-variable]
-        acpi_status status;
-                    ^
-drivers/net/ethernet/apm/xgene/xgene_enet_hw.c:697:14: warning: unused
-variable 'status' [-Wunused-variable]
-        acpi_status status;
-                    ^
-
-Move the declaration into the CONFIG_ACPI block so that there are no
-compiler warnings.
-
-Fixes: 570d785ba46b ("drivers: net: xgene: Remove acpi_has_method() calls")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- drivers/net/ethernet/apm/xgene/xgene_enet_hw.c    | 3 ++-
- drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c | 3 ++-
- drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c | 3 ++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ kernel/sched/fair.c  |   18 ++++++++----------
+ kernel/sched/sched.h |    4 ++++
+ 2 files changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
-index 79924efd4ab7..5f657879134e 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
-@@ -694,7 +694,6 @@ bool xgene_ring_mgr_init(struct xgene_enet_pdata *p)
- static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
- {
- 	struct device *dev = &pdata->pdev->dev;
--	acpi_status status;
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3635,8 +3635,6 @@ static inline unsigned long cfs_rq_load_
+ 	return cfs_rq->avg.load_avg;
+ }
  
- 	if (!xgene_ring_mgr_init(pdata))
- 		return -ENODEV;
-@@ -713,6 +712,8 @@ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
- 		udelay(5);
- 	} else {
- #ifdef CONFIG_ACPI
-+		acpi_status status;
-+
- 		status = acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
- 					      "_RST", NULL, NULL);
- 		if (ACPI_FAILURE(status)) {
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-index 3b3dc5b25b29..f482ced2cadd 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-@@ -437,7 +437,6 @@ static void xgene_sgmac_tx_disable(struct xgene_enet_pdata *p)
- static int xgene_enet_reset(struct xgene_enet_pdata *p)
+-static int idle_balance(struct rq *this_rq, struct rq_flags *rf);
+-
+ static inline unsigned long task_util(struct task_struct *p)
  {
- 	struct device *dev = &p->pdev->dev;
--	acpi_status status;
+ 	return READ_ONCE(p->se.avg.util_avg);
+@@ -6848,11 +6846,10 @@ done: __maybe_unused;
+ 	return p;
  
- 	if (!xgene_ring_mgr_init(p))
- 		return -ENODEV;
-@@ -461,6 +460,8 @@ static int xgene_enet_reset(struct xgene_enet_pdata *p)
- 		}
- 	} else {
- #ifdef CONFIG_ACPI
-+		acpi_status status;
-+
- 		status = acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
- 					      "_RST", NULL, NULL);
- 		if (ACPI_FAILURE(status)) {
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
-index 78584089d76d..304b5d43f236 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
-@@ -380,7 +380,6 @@ static void xgene_xgmac_tx_disable(struct xgene_enet_pdata *pdata)
- static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
+ idle:
+-	update_misfit_status(NULL, rq);
+-	new_tasks = idle_balance(rq, rf);
++	new_tasks = newidle_balance(rq, rf);
+ 
+ 	/*
+-	 * Because idle_balance() releases (and re-acquires) rq->lock, it is
++	 * Because newidle_balance() releases (and re-acquires) rq->lock, it is
+ 	 * possible for any higher priority task to appear. In that case we
+ 	 * must re-start the pick_next_entity() loop.
+ 	 */
+@@ -9016,10 +9013,10 @@ static int load_balance(int this_cpu, st
+ 	ld_moved = 0;
+ 
+ 	/*
+-	 * idle_balance() disregards balance intervals, so we could repeatedly
+-	 * reach this code, which would lead to balance_interval skyrocketting
+-	 * in a short amount of time. Skip the balance_interval increase logic
+-	 * to avoid that.
++	 * newidle_balance() disregards balance intervals, so we could
++	 * repeatedly reach this code, which would lead to balance_interval
++	 * skyrocketting in a short amount of time. Skip the balance_interval
++	 * increase logic to avoid that.
+ 	 */
+ 	if (env.idle == CPU_NEWLY_IDLE)
+ 		goto out;
+@@ -9729,7 +9726,7 @@ static inline void nohz_newidle_balance(
+  * idle_balance is called by schedule() if this_cpu is about to become
+  * idle. Attempts to pull tasks from other CPUs.
+  */
+-static int idle_balance(struct rq *this_rq, struct rq_flags *rf)
++int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
  {
- 	struct device *dev = &pdata->pdev->dev;
--	acpi_status status;
+ 	unsigned long next_balance = jiffies + HZ;
+ 	int this_cpu = this_rq->cpu;
+@@ -9737,6 +9734,7 @@ static int idle_balance(struct rq *this_
+ 	int pulled_task = 0;
+ 	u64 curr_cost = 0;
  
- 	if (!xgene_ring_mgr_init(pdata))
- 		return -ENODEV;
-@@ -394,6 +393,8 @@ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
- 		udelay(5);
- 	} else {
- #ifdef CONFIG_ACPI
-+		acpi_status status;
++	update_misfit_status(NULL, this_rq);
+ 	/*
+ 	 * We must set idle_stamp _before_ calling idle_balance(), such that we
+ 	 * measure the duration of idle_balance() as idle time.
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1449,10 +1449,14 @@ static inline void unregister_sched_doma
+ }
+ #endif
+ 
++extern int newidle_balance(struct rq *this_rq, struct rq_flags *rf);
 +
- 		status = acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
- 					      "_RST", NULL, NULL);
- 		if (ACPI_FAILURE(status)) {
--- 
-2.22.0
+ #else
+ 
+ static inline void sched_ttwu_pending(void) { }
+ 
++static inline int newidle_balance(struct rq *this_rq, struct rq_flags *rf) { return 0; }
++
+ #endif /* CONFIG_SMP */
+ 
+ #include "stats.h"
+
 
