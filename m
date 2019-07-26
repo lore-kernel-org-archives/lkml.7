@@ -2,140 +2,128 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F186AC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23808C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C858522BEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E88F921852
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:05:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K/SemTMC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfGZQDD (ORCPT
+        id S1727067AbfGZQFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:03:03 -0400
-Received: from mga12.intel.com ([192.55.52.136]:26255 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726890AbfGZQDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:03:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 09:03:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
-   d="scan'208";a="198413741"
-Received: from gliakhov-mobl2.ger.corp.intel.com (HELO ubuntu) ([10.249.35.244])
-  by fmsmga002.fm.intel.com with ESMTP; 26 Jul 2019 09:03:00 -0700
-Date:   Fri, 26 Jul 2019 18:02:59 +0200
-From:   Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [RFC PATCH 38/40] soundwire: cadence_master: make
- clock stop exit configurable on init
-Message-ID: <20190726160258.GN16003@ubuntu>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-39-pierre-louis.bossart@linux.intel.com>
+        Fri, 26 Jul 2019 12:05:46 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44053 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfGZQFq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 12:05:46 -0400
+Received: by mail-io1-f68.google.com with SMTP id s7so105713968iob.11
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 09:05:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AoOpJrER5lkg8Em3wVFNio3C8LuUFynD4kdmk02EVZ0=;
+        b=K/SemTMCiXyHQbxfV2/uM8winVoyG6FtMvMdX/B+Oqq2d1DvUDoowKjgxlbhSDPVEP
+         6N2KrxCjCa3L6kPlOHoOmcyt4p29enh4lTg2fySZvfq2wqMET4gI9XXsxGYZQ30Zgxpx
+         1Yd6fx1meAwrU3ECP7TW7HHVeOujY4aD4OjAWxDNBjmUMU8gThZsy3oReR5/++8YoNjg
+         9YtuwFes1R2FIKfjGXpy8bFLIVBn75lR8c8VZYeGaDyXzPNEgxkWlL6wjU4v0Qch10d4
+         xXy75iwQ/8GTCO7xHgzprutgoPpUT5Cs21giNQHKN69g1Xz2CFHIezxUic9NvJFMkz/a
+         yw1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AoOpJrER5lkg8Em3wVFNio3C8LuUFynD4kdmk02EVZ0=;
+        b=D7pId7iJdKHlpf7jTPJVu+ubXj1dVufI20767Xu1lIPJMiG1rCCvSQeiYHY7aXsVT9
+         KCIzae6g6bBSJPRvyWDLHfkqt4myGU5TJe1axT1YtRSzyapR/a9dlSWITDSbwhU7XpjJ
+         2E1VpcBy9abELGlIg48NVBREw7nXW2CT1nyQtlHgJpseWrv/PKY9CSX0sL0JDbAL9Zk0
+         IrU0bgsyJWXxMiwvkFm1RDIJAuIaY+DsdSk4rwE5/qf3UwVckscV1MT0AFpVD4k4AZcc
+         QqqgUwL0GIGbRdPxFms/5myLsaFa58Chx4CCTR4PoPDNBxkjForX61a469TuGo6vRfDH
+         scDA==
+X-Gm-Message-State: APjAAAW3nCAoJ8RizhmaZXieLx7QucLi6vzDRDpxP11DK7+mRMfJRz3U
+        AnPrFGNeRvhhmg04X7tBD8/gMCCSG2lfSiGkXDZC3Q==
+X-Google-Smtp-Source: APXvYqx1DMdxq/O+3koIzpoMVm15SRd82G8zIAIH2kBNUwLkI3sjNquWgQypNmv9GFwq6RmdFU5SwnkJU44a6givHcA=
+X-Received: by 2002:a6b:4101:: with SMTP id n1mr61984828ioa.138.1564157145336;
+ Fri, 26 Jul 2019 09:05:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725234032.21152-39-pierre-louis.bossart@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <00000000000052ad6b058e722ba4@google.com> <20190726130013.GC2368@arrakis.emea.arm.com>
+ <CACT4Y+b5H4jvY34iT2K0m6a2HCpzgKd3dtv+YFsApp=-18B+pw@mail.gmail.com> <20190726155732.GA30211@e109758.arm.com>
+In-Reply-To: <20190726155732.GA30211@e109758.arm.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 26 Jul 2019 18:05:32 +0200
+Message-ID: <CACT4Y+Zf-p7CTRZd8x+2ymAXho2tM_5hLCn3ODJXPVuocMxwbw@mail.gmail.com>
+Subject: Re: memory leak in vq_meta_prefetch
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     syzbot <syzbot+a871c1e6ea00685e73d7@syzkaller.appspotmail.com>,
+        alexandre.belloni@free-electrons.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, nicolas.ferre@atmel.com,
+        Rob Herring <robh@kernel.org>, sre@kernel.org,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 06:40:30PM -0500, Pierre-Louis Bossart wrote:
-> The use of clock stop is not a requirement, the IP can e.g. be
-> completely power gated and not detect any wakes while in s2idle/deep
-> sleep.
-> 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->  drivers/soundwire/cadence_master.c | 15 ++++++++-------
->  drivers/soundwire/cadence_master.h |  2 +-
->  drivers/soundwire/intel.c          |  2 +-
->  3 files changed, 10 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
-> index 53278aa2436f..4ab6f70d7705 100644
-> --- a/drivers/soundwire/cadence_master.c
-> +++ b/drivers/soundwire/cadence_master.c
-> @@ -1010,7 +1010,7 @@ static u32 cdns_set_default_frame_shape(int n_rows, int n_cols)
->   * sdw_cdns_init() - Cadence initialization
->   * @cdns: Cadence instance
->   */
-> -int sdw_cdns_init(struct sdw_cdns *cdns)
-> +int sdw_cdns_init(struct sdw_cdns *cdns, bool clock_stop_exit)
->  {
->  	struct sdw_bus *bus = &cdns->bus;
->  	struct sdw_master_prop *prop = &bus->prop;
-> @@ -1018,12 +1018,13 @@ int sdw_cdns_init(struct sdw_cdns *cdns)
->  	int divider;
->  	int ret;
->  
-> -	/* Exit clock stop */
-> -	ret = cdns_clear_bit(cdns, CDNS_MCP_CONTROL,
-> -			     CDNS_MCP_CONTROL_CLK_STOP_CLR);
-> -	if (ret < 0) {
-> -		dev_err(cdns->dev, "Couldn't exit from clock stop\n");
-> -		return ret;
-> +	if (clock_stop_exit) {
-> +		ret = cdns_clear_bit(cdns, CDNS_MCP_CONTROL,
-> +				     CDNS_MCP_CONTROL_CLK_STOP_CLR);
-> +		if (ret < 0) {
-> +			dev_err(cdns->dev, "Couldn't exit from clock stop\n");
-> +			return ret;
-> +		}
->  	}
->  
->  	/* Set clock divider */
-> diff --git a/drivers/soundwire/cadence_master.h b/drivers/soundwire/cadence_master.h
-> index 1a0ba36dd78f..091b771b570d 100644
-> --- a/drivers/soundwire/cadence_master.h
-> +++ b/drivers/soundwire/cadence_master.h
-> @@ -158,7 +158,7 @@ extern struct sdw_master_ops sdw_cdns_master_ops;
->  irqreturn_t sdw_cdns_irq(int irq, void *dev_id);
->  irqreturn_t sdw_cdns_thread(int irq, void *dev_id);
->  
-> -int sdw_cdns_init(struct sdw_cdns *cdns);
-> +int sdw_cdns_init(struct sdw_cdns *cdns, bool clock_stop_exit);
->  int sdw_cdns_pdi_init(struct sdw_cdns *cdns,
->  		      struct sdw_cdns_stream_config config);
->  int sdw_cdns_exit_reset(struct sdw_cdns *cdns);
-> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-> index 1192d5775484..db7bf2912767 100644
-> --- a/drivers/soundwire/intel.c
-> +++ b/drivers/soundwire/intel.c
-> @@ -1043,7 +1043,7 @@ static int intel_init(struct sdw_intel *sdw)
->  	intel_link_power_up(sdw);
->  	intel_shim_init(sdw);
->  
-> -	return sdw_cdns_init(&sdw->cdns);
-> +	return sdw_cdns_init(&sdw->cdns, false);
+On Fri, Jul 26, 2019 at 5:57 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+>
+> On Fri, Jul 26, 2019 at 05:20:55PM +0200, Dmitry Vyukov wrote:
+> > On Fri, Jul 26, 2019 at 3:00 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > On Wed, Jul 24, 2019 at 12:18:07PM -0700, syzbot wrote:
+> > > > syzbot found the following crash on:
+> > > >
+> > > > HEAD commit:    c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
+> > > > git tree:       upstream
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=15fffef4600000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=8de7d700ea5ac607
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=a871c1e6ea00685e73d7
+> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=127b0334600000
+> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12609e94600000
+> > > >
+> > > > The bug was bisected to:
+> > > >
+> > > > commit 0e5f7d0b39e1f184dc25e3adb580c79e85332167
+> > > > Author: Nicolas Ferre <nicolas.ferre@atmel.com>
+> > > > Date:   Wed Mar 16 13:19:49 2016 +0000
+> > > >
+> > > >     ARM: dts: at91: shdwc binding: add new shutdown controller documentation
+> > >
+> > > That's another wrong commit identification (a documentation patch should
+> > > not cause a memory leak).
+> > >
+> > > I don't really think kmemleak, with its relatively high rate of false
+> > > positives, is suitable for automated testing like syzbot. You could
+> >
+> > Do you mean automated testing in general, or bisection only?
+> > The wrong commit identification is related to bisection only, but you
+> > generalized it to automated testing in general. So which exactly you
+> > mean?
+>
+> I probably meant both. In terms of automated testing and reporting, if
+> the false positives rate is high, people start ignoring the reports. So
+> it requires some human checking first (or make the tool more robust).
+>
+> W.r.t. bisection, the false negatives (rather than positives) will cause
+> the tool to miss the problematic commit and misreport. I'm not sure you
+> can make the reporting deterministic on successive runs given that you
+> changed the kernel HEAD (for bisection). But it may get better if you
+> have a "stopscan" kmemleak option which freezes the machine during
+> scanning (it has been discussed in the past but I really struggle to
+> find time to work on it; any help appreciated ;)).
 
-This is the only caller of this function so far, so, it looks like
-the second argument ATM is always "false." I assume you foresee other
-uses with "true" in the future, otherwise maybe just fix it to false
-in the function?
 
-Thanks
-Guennadi
+Do you have any data points wrt automated testing in general? This
+disagrees with what I see.
 
->  }
->  
->  /*
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+For bisection, I agree. Need to look at the data we got over the past
+days when it become enabled. But I suspect that, yes, false positives,
+flakes, and other true leaks can make it infeasible.
