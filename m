@@ -2,69 +2,80 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C05C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C3CC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466F9218B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4D7218B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:47:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="d41BIaTH"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="iQLhlbEB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbfGZUq6 (ORCPT
+        id S1727997AbfGZUrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 16:46:58 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33666 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbfGZUq5 (ORCPT
+        Fri, 26 Jul 2019 16:47:36 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38184 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfGZUrg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 16:46:57 -0400
-Received: by mail-qt1-f193.google.com with SMTP id r6so49723658qtt.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 13:46:57 -0700 (PDT)
+        Fri, 26 Jul 2019 16:47:36 -0400
+Received: by mail-io1-f66.google.com with SMTP id j6so32331137ioa.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 13:47:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google;
-        h=from:date:to:cc:subject:message-id:user-agent:mime-version;
-        bh=EkkYyzbKFCkkMpgaoYMPHhbpzI2gyifZuS1BV3t9ELc=;
-        b=d41BIaTHJGxt3X6jmm1ZiRmCWH3HgmROD5JE/8Y/Dlhw0fXAlsi+y4Paiin55JriCt
-         aDf6CbiXAyC4ABcTDSiiAYf38ABXWtJ/MyNFWnewdNN0VcFzfLv/WPtAzjQpbQ31/xJP
-         nXESVzSPK71H1Fi9VXpcwEEjxfmsrF55Fp9AE=
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=mMbJIOT9Mkj81+DURpJRyWnAKm1UiE5G4DSpvnaTnlQ=;
+        b=iQLhlbEBRwr8KtEYt5QkUcHsN7g9ET/3bTou7gUrL0NufVWuLo3Lc3Y4p7zfHTOiPE
+         9qF21HURQiSY3zUkjVj3mLUtscZQdl0SISNvcDw3E2xQ0sdZT3a8q++f1llCEySh1QNx
+         Zqvas98bNAxVX217PC4OnCEI9gxYh/7Sq143WfGc87TEShzOG3D/WQP8w61o0R7H+HQh
+         tpkD2ZTGdX5ev7S3dVHQXZHq7zCZZ56Q2K/x7RN8vw3Nmrtd9HEMBgiP3OXMm7btq9fE
+         yPFe2pDXAszV+q70PEI1DSXKl0pGvqT0MBL/YXcdkdm2oJBMpIfLgs+UNcjSuedXCCeu
+         SXKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=EkkYyzbKFCkkMpgaoYMPHhbpzI2gyifZuS1BV3t9ELc=;
-        b=A3V5uyUuBXrKooGjox3HE6KfuYnVyB84uOGFHuMIYGhSjIhwi9lA07cfUAm5D/EQO1
-         jgWQI0OGUz0PVV/Ti8aV1MfINnvx+hjDkt/DlAHnzLlID/Qa4qFNz0/j2wQ8COYav3pe
-         7eLyTwSqSY37mThwRhhpiYeGhHDcRbqpZ50UPlmyUq5+cyaBbh6zRVyhhqfUJTOM7W4w
-         AU6+drmAsgwuvRxI/WYMx2RgsduSkw/Gegjrun7vRexqLhoqXFfnmXv0Kx4cMo+5OlfQ
-         8NGjfqBjzn/8QXRhP7Esw8qnnh2aRaeDCc/5N55ZGDajRNe2g8phnlr/vyNDWzUPohWw
-         JkOw==
-X-Gm-Message-State: APjAAAUFhIzBO5ciLjJ+00AUycZSNG2gVwimJGVbA9GdnpZLxykCzRHr
-        mswLIAtsUfdzQhC6rnMiBawRyA==
-X-Google-Smtp-Source: APXvYqxl7ywmGwEFcDCqiOH+BMZ8HfahC2V2j0Z79GYZvbYMRgHy7PZ75ZCehW1ufCcDBaNlQDBIsA==
-X-Received: by 2002:aed:34a6:: with SMTP id x35mr67957114qtd.187.1564174016913;
-        Fri, 26 Jul 2019 13:46:56 -0700 (PDT)
-Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id b13sm33271374qtk.55.2019.07.26.13.46.55
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=mMbJIOT9Mkj81+DURpJRyWnAKm1UiE5G4DSpvnaTnlQ=;
+        b=IV/l8biTHYBYFqOR7PgwGAEQ005y4u/D0a38P39Ous8xplafyspdMcTy2M3rCZMF9Y
+         d3AARVIQAtC36tjU5mbDQre4JRERoD81V8zFPHw/N5ELV8HHwQISGaQ4WRkKiYiit3SI
+         Iwqy4sitPER6TGs6I74YvJ8BLn6yOXU8xqBeTQbNc2QJNMoGIB2Q2nHHWo8b1Uaq16tN
+         /zwIeJD6pHAZ2TO5ElbUYHir9pKDCPm75CI6acED/XIvTCtYXCzt1++hBTAaqs1ju8j8
+         zcoW2Me98HvGytCFScuVUiHyFaGFXqeY5R6a82nvTSmh1tiuk0rLGzxDcdCaepBeyGiv
+         Vlkw==
+X-Gm-Message-State: APjAAAVIbuN+R1vAbBzktJTpfoXS4PlWrM4dlrx3zasKiQhxjSWAS9xH
+        xZG8JniyS8UqxewHkgHfX1XnQQ==
+X-Google-Smtp-Source: APXvYqwKKrDjZKa5SshdtHfZGTqeOjqpdefuxyMAWSHZe6JrF8fIyDi3vcyrwB53xGMYGrzjC2LFvA==
+X-Received: by 2002:a05:6638:517:: with SMTP id i23mr24654424jar.71.1564174055390;
+        Fri, 26 Jul 2019 13:47:35 -0700 (PDT)
+Received: from localhost (67-0-24-96.albq.qwest.net. [67.0.24.96])
+        by smtp.gmail.com with ESMTPSA id l11sm39320915ioj.32.2019.07.26.13.47.34
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 13:46:55 -0700 (PDT)
-From:   Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date:   Fri, 26 Jul 2019 16:46:51 -0400 (EDT)
-X-X-Sender: vince@macbook-air
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: perf: perf report stuck in an infinite loop
-Message-ID: <alpine.DEB.2.21.1907261640590.27043@macbook-air>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 26 Jul 2019 13:47:34 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 13:47:33 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Atish Patra <atish.patra@wdc.com>
+cc:     linux-kernel@vger.kernel.org, Alan Kao <alankao@andestech.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Allison Randal <allison@lohutok.net>,
+        Anup Patel <anup.patel@wdc.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 3/4] RISC-V: Support case insensitive ISA string
+ parsing.
+In-Reply-To: <20190726194638.8068-3-atish.patra@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1907261346560.26670@viisi.sifive.com>
+References: <20190726194638.8068-1-atish.patra@wdc.com> <20190726194638.8068-3-atish.patra@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,18 +83,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 26 Jul 2019, Atish Patra wrote:
 
-Currently the perf_data_fuzzer causes perf report to get stuck in an 
-infinite loop.
+> As per riscv specification, ISA naming strings are
+> case insensitive. However, currently only lower case
+> strings are parsed during cpu procfs.
+> 
+> Support parsing of upper case letters as well.
+> 
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
 
-From what I can tell, the issue happens in reader__process_events()
-when an event is mapped using mmap(), but when it goes to process the
-event finds out the internal event header has the size (invalidly) set to 
-something much larger than the mmap buffer size.  This means 
-fetch_mmaped_event() fails, which gotos remap: which tries again with
-the exact same mmap size, and this will loop forever.
+Is there a use case that's driving this, or can we just say, "use 
+lowercase letters" and leave it at that?
 
-I haven't been able to puzzle out how to fix this, but maybe you have a 
-better feel for what's going on here.
 
-Vince
+- Paul
