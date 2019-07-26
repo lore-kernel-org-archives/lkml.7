@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0BFC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D038BC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 044DF22CD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A566822CF7
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148665;
-	bh=ReSA94CIdujhJKUsAsbmby+7RgWf/Uf3BIh9XjxoAcI=;
+	s=default; t=1564148667;
+	bh=Ucqr2C+XMCRm+Qzt8YSulePDv+pQyMACI3l8ABCE9pc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y8Vw9mUiFoF6ZBxjksNoXl5WS2g+5lzuHCgl/pEn3lO4aefpFdT+NlCceAADgVlyZ
-	 nRNf+dYhaKOcqqTKMaeUvOT6/A78Zbhm6PP4edfPIaHaiaDArUJzR75Zs+JJfSmPoX
-	 Et83ap94CJHFpvX0ch8s5HjPDih4iMN+mHCACvxs=
+	b=Mc8+7CKj0Mkrc3bynBCjt+5v2fnO3/JkVaTh/sjN3KZQyFs8wknmIN/Spk5D1ob6I
+	 pTMvjusmonHT71GXbmnEJ8qqTqPJN3Y5cCKBaeBny7C9Hhf0ZNIALrEgoRjKP67HIg
+	 Xc+x2xUb4ocJEr2QQ1PLwUNe3VBdxKoEV+guKr34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387872AbfGZNoX (ORCPT
+        id S2388335AbfGZNo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:44:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52490 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:44:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728067AbfGZNoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:44:19 -0400
+        id S1728082AbfGZNoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:44:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED1AD22CC2;
-        Fri, 26 Jul 2019 13:44:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7416E22CBF;
+        Fri, 26 Jul 2019 13:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148659;
-        bh=ReSA94CIdujhJKUsAsbmby+7RgWf/Uf3BIh9XjxoAcI=;
+        s=default; t=1564148660;
+        bh=Ucqr2C+XMCRm+Qzt8YSulePDv+pQyMACI3l8ABCE9pc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AeCg7SklFefwA5fasKflYJpET6R1MDL9KKPKisE6zwJwFbLaFEcV0SFhAvrw7xt7V
-         QbhZ1Ap7HTUcYq98qPIIBNjeT/FMQ69A9wMCDZrBdXEC7DYhwntVM/mIF1xs4Brgfl
-         1AxIVoVC6yqmREoGltPgQzCAbbX/QyW2P4MDlQn0=
+        b=qBvJfxxq+7epw8jABRLaZmCDrlwk6uT+0uhq80sFCx2hZ40ytA1wrf494RleKab+n
+         eDt9MP99fAByyNu59JSiH1B+2koYGWkQBzcks8EvLAUMi0Voy534vKHnD1QgNOUnxv
+         XEsSoaOLovQyYorDB0A6PsMzW3zKzNIlZ3C6mj7k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andreas Christoforou <andreaschristofo@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+Cc:     Denis Efremov <efremov@ispras.ru>, Willy Tarreau <w@1wt.eu>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 29/37] ipc/mqueue.c: only perform resource calculation if user valid
-Date:   Fri, 26 Jul 2019 09:43:24 -0400
-Message-Id: <20190726134332.12626-29-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 30/37] floppy: fix div-by-zero in setup_format_params
+Date:   Fri, 26 Jul 2019 09:43:25 -0400
+Message-Id: <20190726134332.12626-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134332.12626-1-sashal@kernel.org>
 References: <20190726134332.12626-1-sashal@kernel.org>
@@ -66,103 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Denis Efremov <efremov@ispras.ru>
 
-[ Upstream commit a318f12ed8843cfac53198390c74a565c632f417 ]
+[ Upstream commit f3554aeb991214cbfafd17d55e2bfddb50282e32 ]
 
-Andreas Christoforou reported:
+This fixes a divide by zero error in the setup_format_params function of
+the floppy driver.
 
-  UBSAN: Undefined behaviour in ipc/mqueue.c:414:49 signed integer overflow:
-  9 * 2305843009213693951 cannot be represented in type 'long int'
-  ...
-  Call Trace:
-    mqueue_evict_inode+0x8e7/0xa10 ipc/mqueue.c:414
-    evict+0x472/0x8c0 fs/inode.c:558
-    iput_final fs/inode.c:1547 [inline]
-    iput+0x51d/0x8c0 fs/inode.c:1573
-    mqueue_get_inode+0x8eb/0x1070 ipc/mqueue.c:320
-    mqueue_create_attr+0x198/0x440 ipc/mqueue.c:459
-    vfs_mkobj+0x39e/0x580 fs/namei.c:2892
-    prepare_open ipc/mqueue.c:731 [inline]
-    do_mq_open+0x6da/0x8e0 ipc/mqueue.c:771
+Two consecutive ioctls can trigger the bug: The first one should set the
+drive geometry with such .sect and .rate values for the F_SECT_PER_TRACK
+to become zero.  Next, the floppy format operation should be called.
 
-Which could be triggered by:
+A floppy disk is not required to be inserted.  An unprivileged user
+could trigger the bug if the device is accessible.
 
-        struct mq_attr attr = {
-                .mq_flags = 0,
-                .mq_maxmsg = 9,
-                .mq_msgsize = 0x1fffffffffffffff,
-                .mq_curmsgs = 0,
-        };
+The patch checks F_SECT_PER_TRACK for a non-zero value in the
+set_geometry function.  The proper check should involve a reasonable
+upper limit for the .sect and .rate fields, but it could change the
+UAPI.
 
-        if (mq_open("/testing", 0x40, 3, &attr) == (mqd_t) -1)
-                perror("mq_open");
+The patch also checks F_SECT_PER_TRACK in the setup_format_params, and
+cancels the formatting operation in case of zero.
 
-mqueue_get_inode() was correctly rejecting the giant mq_msgsize, and
-preparing to return -EINVAL.  During the cleanup, it calls
-mqueue_evict_inode() which performed resource usage tracking math for
-updating "user", before checking if there was a valid "user" at all
-(which would indicate that the calculations would be sane).  Instead,
-delay this check to after seeing a valid "user".
+The bug was found by syzkaller.
 
-The overflow was real, but the results went unused, so while the flaw is
-harmless, it's noisy for kernel fuzzers, so just fix it by moving the
-calculation under the non-NULL "user" where it actually gets used.
-
-Link: http://lkml.kernel.org/r/201906072207.ECB65450@keescook
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reported-by: Andreas Christoforou <andreaschristofo@gmail.com>
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Manfred Spraul <manfred@colorfullife.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Denis Efremov <efremov@ispras.ru>
+Tested-by: Willy Tarreau <w@1wt.eu>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- ipc/mqueue.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/block/floppy.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-index 5c0ae912f2f2..dccd4ecb786a 100644
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -372,7 +372,6 @@ static void mqueue_evict_inode(struct inode *inode)
- {
- 	struct mqueue_inode_info *info;
- 	struct user_struct *user;
--	unsigned long mq_bytes, mq_treesize;
- 	struct ipc_namespace *ipc_ns;
- 	struct msg_msg *msg, *nmsg;
- 	LIST_HEAD(tmp_msg);
-@@ -395,16 +394,18 @@ static void mqueue_evict_inode(struct inode *inode)
- 		free_msg(msg);
- 	}
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index 3ea9c3e9acb3..4c6c20376a83 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -2114,6 +2114,9 @@ static void setup_format_params(int track)
+ 	raw_cmd->kernel_data = floppy_track_buffer;
+ 	raw_cmd->length = 4 * F_SECT_PER_TRACK;
  
--	/* Total amount of bytes accounted for the mqueue */
--	mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
--		min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
--		sizeof(struct posix_msg_tree_node);
--
--	mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
--				  info->attr.mq_msgsize);
--
- 	user = info->user;
- 	if (user) {
-+		unsigned long mq_bytes, mq_treesize;
++	if (!F_SECT_PER_TRACK)
++		return;
 +
-+		/* Total amount of bytes accounted for the mqueue */
-+		mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
-+			min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
-+			sizeof(struct posix_msg_tree_node);
-+
-+		mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
-+					  info->attr.mq_msgsize);
-+
- 		spin_lock(&mq_lock);
- 		user->mq_bytes -= mq_bytes;
- 		/*
+ 	/* allow for about 30ms for data transport per track */
+ 	head_shift = (F_SECT_PER_TRACK + 5) / 6;
+ 
+@@ -3238,6 +3241,8 @@ static int set_geometry(unsigned int cmd, struct floppy_struct *g,
+ 	/* sanity checking for parameters. */
+ 	if (g->sect <= 0 ||
+ 	    g->head <= 0 ||
++	    /* check for zero in F_SECT_PER_TRACK */
++	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
+ 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
+ 	    /* check if reserved bits are set */
+ 	    (g->stretch & ~(FD_STRETCH | FD_SWAPSIDES | FD_SECTBASEMASK)) != 0)
 -- 
 2.20.1
 
