@@ -2,98 +2,102 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 083BFC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EA0C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C940822C7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:11:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564150289;
-	bh=hF4P0NSUt1UMtwss/k6Y5M453YUX4ips7z7TFzgxoWM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zhERVw1WYCwxkwJZnjhuQx1IcuhIo+AlD/9u/DcktusWBjTyc8OkGa9v37XRG6Cwt
-	 J8BweyRC0zUVzIvlIMOgBLkXcP2O0VAqVCx6dYuWD/iHGzyEw1dlpMNzP+rTWC0CJt
-	 whuvaHn6XMVRPgInLie651ChQ7lMf2siDuX26OSw=
+	by mail.kernel.org (Postfix) with ESMTP id 5604A22ADA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbfGZOL2 (ORCPT
+        id S1728405AbfGZOLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:11:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727397AbfGZOL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 10:11:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93652218D3;
-        Fri, 26 Jul 2019 14:11:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564150287;
-        bh=hF4P0NSUt1UMtwss/k6Y5M453YUX4ips7z7TFzgxoWM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DrFGCFGe3nGdvNVEPC5e3DkB9dB6UtwpR8gwlmRgYlQ3ZWfmuMCk9mxghyq8A3IuD
-         I+lFzw7xoDMMoRuMIlLkEoJKHdOqXl9EWqnvXCI7PBH46iBa1g8M8eKMio/QnVBXK+
-         fz2UijrKpVM0sQUlhZmxdnZUOSIGSbQjVFO2SK/Q=
-Date:   Fri, 26 Jul 2019 16:11:24 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [RFC PATCH 04/40] soundwire: intel: add debugfs
- register dump
-Message-ID: <20190726141124.GA4253@kroah.com>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-5-pierre-louis.bossart@linux.intel.com>
- <9d5bc940-eadd-4f82-0bac-6a731369436d@intel.com>
- <d231f6b0-555a-8c45-1a9a-215c73171923@linux.intel.com>
+        Fri, 26 Jul 2019 10:11:31 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:54568 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727397AbfGZOL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 10:11:29 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1D65FF879E7F7B9D1E28;
+        Fri, 26 Jul 2019 22:11:27 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 26 Jul 2019
+ 22:11:19 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <nishkadg.linux@gmail.com>,
+        <mamtashukla555@gmail.com>, <hariprasad.kelam@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH 06/10] staging: rtl8723bs: os_dep: remove two set but not used variables
+Date:   Fri, 26 Jul 2019 22:09:59 +0800
+Message-ID: <20190726140959.15008-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d231f6b0-555a-8c45-1a9a-215c73171923@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 09:00:28AM -0500, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 7/26/19 4:35 AM, Cezary Rojewski wrote:
-> > On 2019-07-26 01:39, Pierre-Louis Bossart wrote:
-> > > +static void intel_debugfs_init(struct sdw_intel *sdw)
-> > > +{
-> > > +    struct dentry *root = sdw->cdns.bus.debugfs;
-> > > +
-> > > +    if (!root)
-> > > +        return;
-> > > +
-> > > +    sdw->fs = debugfs_create_dir("intel-sdw", root);
-> > > +    if (IS_ERR_OR_NULL(sdw->fs)) {
-> > > +        dev_err(sdw->cdns.dev, "debugfs root creation failed\n");
-> > > +        sdw->fs = NULL;
-> > > +        return;
-> > > +    }
-> > > +
-> > > +    debugfs_create_file("intel-registers", 0400, sdw->fs, sdw,
-> > > +                &intel_reg_fops);
-> > > +
-> > > +    sdw_cdns_debugfs_init(&sdw->cdns, sdw->fs);
-> > > +}
-> > 
-> > I believe there should be dummy equivalent of _init and _exit if debugfs
-> > is not enabled (if these are defined already and I've missed it, please
-> > ignore).
-> 
-> I think the direction is just to keep going if there is an error or debufs
-> is not enabled.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-You should not care either way :)
+drivers/staging/rtl8723bs//os_dep/osdep_service.c: In function 'rtw_buf_free':
+drivers/staging/rtl8723bs//os_dep/osdep_service.c:321:6: warning:
+ variable 'ori_len' set but not used [-Wunused-but-set-variable]
+drivers/staging/rtl8723bs//os_dep/ioctl_linux.c: In function 'rtw_ioctl_wext_private':
+drivers/staging/rtl8723bs//os_dep/ioctl_linux.c:4915:6: warning:
+ variable 'num_priv' set but not used [-Wunused-but-set-variable]
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/staging/rtl8723bs/os_dep/ioctl_linux.c   | 2 --
+ drivers/staging/rtl8723bs/os_dep/osdep_service.c | 4 ----
+ 2 files changed, 6 deletions(-)
+
+diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+index 99e6b10..90c2997 100644
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+@@ -4912,7 +4912,6 @@ static int rtw_ioctl_wext_private(struct net_device *dev, union iwreq_data *wrq_
+ 	s32 k;
+ 	const iw_handler *priv;		/* Private ioctl */
+ 	const struct iw_priv_args *priv_args;	/* Private ioctl description */
+-	u32 num_priv;				/* Number of ioctl */
+ 	u32 num_priv_args;			/* Number of descriptions */
+ 	iw_handler handler;
+ 	int temp;
+@@ -4948,7 +4947,6 @@ static int rtw_ioctl_wext_private(struct net_device *dev, union iwreq_data *wrq_
+ 
+ 	priv = rtw_private_handler;
+ 	priv_args = rtw_private_args;
+-	num_priv = ARRAY_SIZE(rtw_private_handler);
+ 	num_priv_args = ARRAY_SIZE(rtw_private_args);
+ 
+ 	if (num_priv_args == 0) {
+diff --git a/drivers/staging/rtl8723bs/os_dep/osdep_service.c b/drivers/staging/rtl8723bs/os_dep/osdep_service.c
+index 62fdd24..25a8004 100644
+--- a/drivers/staging/rtl8723bs/os_dep/osdep_service.c
++++ b/drivers/staging/rtl8723bs/os_dep/osdep_service.c
+@@ -318,13 +318,9 @@ int rtw_change_ifname(struct adapter *padapter, const char *ifname)
+ 
+ void rtw_buf_free(u8 **buf, u32 *buf_len)
+ {
+-	u32 ori_len;
+-
+ 	if (!buf || !buf_len)
+ 		return;
+ 
+-	ori_len = *buf_len;
+-
+ 	if (*buf) {
+ 		*buf_len = 0;
+ 		kfree(*buf);
+-- 
+2.7.4
+
+
