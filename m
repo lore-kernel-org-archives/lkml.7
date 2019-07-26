@@ -2,93 +2,140 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C71CFC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E886C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A159222BEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5108922BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:14:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uSAZlnZz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J3AuEJhi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbfGZSNm (ORCPT
+        id S1728328AbfGZSOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 14:13:42 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33169 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfGZSNm (ORCPT
+        Fri, 26 Jul 2019 14:14:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33302 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbfGZSOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 14:13:42 -0400
-Received: by mail-oi1-f195.google.com with SMTP id u15so40918054oiv.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 11:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BjjJlV879zvacGB1X8HxFWmHBaqpdGed0atAco6+GI4=;
-        b=uSAZlnZzyGiKPoCZ8+of5If/Ok6jwYvMpWp47EZKlveWuK/2L7ypuBo3a1g3d+0BsD
-         Ae5DvIsVjS76bw07fhxEcjr4zrD0W3xEMp7QxI4FAsiCKhzS511beMZ6pRLE5IkwVDTL
-         ZS+Ex7H7QOT/SkzeeGu/UUjW89Zg0ghrtRZFyUaBIkq0fuKzMH8sXeeFhZSNyJ7H0xpx
-         NVsQFr4e+BVi1+uGtP1DWFy9tPM9p7xC1nSJolb4uOK9nyVKxpqFidwnmZ6EBSW5U44g
-         Uv7XgZbmIYEusq6JvFiepec7P06UFLs5SQmYGd/yTzAhL2S6hP7bKcl0kNprA9PtqbmY
-         3JNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BjjJlV879zvacGB1X8HxFWmHBaqpdGed0atAco6+GI4=;
-        b=RaCyByO0PbKHZgLy7jBTGCui1Z64dtiFHoSd1Ok79HODPmT9UsnRlsvYaETzvLyCRU
-         LbNkTbaKrX/Uh9YJQv7LhSB4bJzt2cIvx+my8O+hASc5zXFKlfngi38URZ6x5eBWgUAe
-         eL6CoLVFq2ozJ4HebD5mtP6n+cyTeQs9XS2tu8LuixF05hdiG0Kf+p6ge2OkG1nzLoYE
-         U1bEHzhhppNRUv3Hnp5sofZbcpw6iFEm1jXnRiV4oOZNwDCy1qfIYKyTWAlbMMEjDTPW
-         J+eq9FwxdHJV247DqMohF9tGNiW4sUoxQlA8lgD5DH8tFmHVIYhAUQXViK606DBGN0iM
-         dqdg==
-X-Gm-Message-State: APjAAAWfuWvafL14cIwCMmj6XeKPqutWrrjGv0Fy0SzAMUbLEte2Zfl1
-        mHlpREVI6rGqd9f06A8Uo9mZROa6
-X-Google-Smtp-Source: APXvYqxzbcrzWnJw3FqAdbdLrQjkNLG84WMtD4VcLg+nDfDrkn9yp7NmR/WCGhXBsDqr+TBOyuBkaA==
-X-Received: by 2002:aca:ac4d:: with SMTP id v74mr43043303oie.66.1564164820904;
-        Fri, 26 Jul 2019 11:13:40 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id i11sm18347154oia.9.2019.07.26.11.13.40
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 11:13:40 -0700 (PDT)
-Subject: Re: [PATCH 1/6] staging: rtl8188eu: add spaces around '+' in
- usb_halinit.c
-To:     Michael Straube <straube.linux@gmail.com>,
-        gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20190726180448.2290-1-straube.linux@gmail.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <500253ca-41bf-b374-ada1-84607455bcbc@lwfinger.net>
-Date:   Fri, 26 Jul 2019 13:13:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 26 Jul 2019 14:14:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=u+lpT/JDYChvPfnGwY3zyoUNga/MspVT2AZ3BOnHYeQ=; b=J3AuEJhibZaQ59WWz9Dvs5SAk
+        tOZGBHDTys1MvF7IVIK5qPubajsPiDKhUytHxHBBscw9SNUy6DQy/582GKYNvQsg78TR8QXcdScud
+        /bhuddvQ/zZMqs6JwKgaSG8ATDmFg1jnRA4tGWiX+rQPQmgfrYE5toK+TNIlFrIlkqRJsGM8yHD9l
+        ormVs4nN6UzJyvmrohztWz0cHfxy/Fy66kMDw0EgZUQ01XyKe8ytvfUtnvs6SDb1TaU4X+YbIikdA
+        Qtr+thdejB5X7lSa+R9yq9E0Pxscj0Xqi+kjopmF1FpKPBZDYTFwiazYN4pproqO084VLip1k/Uwy
+        LyFo72VLA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hr4jj-0002xL-0n; Fri, 26 Jul 2019 18:14:35 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DA44520227073; Fri, 26 Jul 2019 20:14:32 +0200 (CEST)
+Date:   Fri, 26 Jul 2019 20:14:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Phil Auld <pauld@redhat.com>
+Cc:     Dave Chiluk <chiluk+linux@indeed.com>,
+        Ben Segall <bsegall@google.com>, Peter Oskolkov <posk@posk.io>,
+        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
+        Kyle Anderson <kwa@yelp.com>,
+        Gabriel Munos <gmunoz@netflix.com>,
+        John Hammond <jhammond@indeed.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v6 1/1] sched/fair: Fix low cpu usage with high
+ throttling by removing expiration of cpu-local slices
+Message-ID: <20190726181432.GR31381@hirez.programming.kicks-ass.net>
+References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
+ <1563900266-19734-1-git-send-email-chiluk+linux@indeed.com>
+ <1563900266-19734-2-git-send-email-chiluk+linux@indeed.com>
+ <20190723171307.GC2947@lorien.usersys.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190726180448.2290-1-straube.linux@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723171307.GC2947@lorien.usersys.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/26/19 1:04 PM, Michael Straube wrote:
-> Add spaces around '+' to improve readability and follow kernel
-> coding style. Reported by checkpatch.
+On Tue, Jul 23, 2019 at 01:13:09PM -0400, Phil Auld wrote:
+> Hi Dave,
 > 
-> Signed-off-by: Michael Straube <straube.linux@gmail.com>
-> ---
->   drivers/staging/rtl8188eu/hal/usb_halinit.c | 76 ++++++++++-----------
->   1 file changed, 38 insertions(+), 38 deletions(-)
+> On Tue, Jul 23, 2019 at 11:44:26AM -0500 Dave Chiluk wrote:
+> > It has been observed, that highly-threaded, non-cpu-bound applications
+> > running under cpu.cfs_quota_us constraints can hit a high percentage of
+> > periods throttled while simultaneously not consuming the allocated
+> > amount of quota. This use case is typical of user-interactive non-cpu
+> > bound applications, such as those running in kubernetes or mesos when
+> > run on multiple cpu cores.
+> > 
+> > This has been root caused to cpu-local run queue being allocated per cpu
+> > bandwidth slices, and then not fully using that slice within the period.
+> > At which point the slice and quota expires. This expiration of unused
+> > slice results in applications not being able to utilize the quota for
+> > which they are allocated.
+> > 
+> > The non-expiration of per-cpu slices was recently fixed by
+> > 'commit 512ac999d275 ("sched/fair: Fix bandwidth timer clock drift
+> > condition")'. Prior to that it appears that this had been broken since
+> > at least 'commit 51f2176d74ac ("sched/fair: Fix unlocked reads of some
+> > cfs_b->quota/period")' which was introduced in v3.16-rc1 in 2014. That
+> > added the following conditional which resulted in slices never being
+> > expired.
+> > 
+> > if (cfs_rq->runtime_expires != cfs_b->runtime_expires) {
+> > 	/* extend local deadline, drift is bounded above by 2 ticks */
+> > 	cfs_rq->runtime_expires += TICK_NSEC;
+> > 
+> > Because this was broken for nearly 5 years, and has recently been fixed
+> > and is now being noticed by many users running kubernetes
+> > (https://github.com/kubernetes/kubernetes/issues/67577) it is my opinion
+> > that the mechanisms around expiring runtime should be removed
+> > altogether.
+> > 
+> > This allows quota already allocated to per-cpu run-queues to live longer
+> > than the period boundary. This allows threads on runqueues that do not
+> > use much CPU to continue to use their remaining slice over a longer
+> > period of time than cpu.cfs_period_us. However, this helps prevent the
+> > above condition of hitting throttling while also not fully utilizing
+> > your cpu quota.
+> > 
+> > This theoretically allows a machine to use slightly more than its
+> > allotted quota in some periods. This overflow would be bounded by the
+> > remaining quota left on each per-cpu runqueueu. This is typically no
+> > more than min_cfs_rq_runtime=1ms per cpu. For CPU bound tasks this will
+> > change nothing, as they should theoretically fully utilize all of their
+> > quota in each period. For user-interactive tasks as described above this
+> > provides a much better user/application experience as their cpu
+> > utilization will more closely match the amount they requested when they
+> > hit throttling. This means that cpu limits no longer strictly apply per
+> > period for non-cpu bound applications, but that they are still accurate
+> > over longer timeframes.
+> > 
+> > This greatly improves performance of high-thread-count, non-cpu bound
+> > applications with low cfs_quota_us allocation on high-core-count
+> > machines. In the case of an artificial testcase (10ms/100ms of quota on
+> > 80 CPU machine), this commit resulted in almost 30x performance
+> > improvement, while still maintaining correct cpu quota restrictions.
+> > That testcase is available at https://github.com/indeedeng/fibtest.
+> > 
+> > Fixes: 512ac999d275 ("sched/fair: Fix bandwidth timer clock drift condition")
+> > Signed-off-by: Dave Chiluk <chiluk+linux@indeed.com>
+> > Reviewed-by: Ben Segall <bsegall@google.com>
+> 
+> This still works for me. The documentation reads pretty well, too. Good job.
+> 
+> Feel free to add my Acked-by: or Reviewed-by: Phil Auld <pauld@redhat.com>.
 
-If they apply, all six of these are OK.
-
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
-
-Larry
-
+Thanks guys!
