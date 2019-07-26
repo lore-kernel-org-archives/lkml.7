@@ -6,128 +6,65 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A4AC76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2A7C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 025E522CB8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09E5622C97
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbfGZJaD (ORCPT
+        id S1726108AbfGZJcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:30:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55374 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725872AbfGZJaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:30:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 474DFB609;
-        Fri, 26 Jul 2019 09:30:02 +0000 (UTC)
-Date:   Fri, 26 Jul 2019 11:29:59 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        pasha.tatashin@soleen.com, mhocko@suse.com,
-        anshuman.khandual@arm.com, Jonathan.Cameron@huawei.com,
-        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] mm,memory_hotplug: Introduce MHP_MEMMAP_ON_MEMORY
-Message-ID: <20190726092959.GB26268@linux>
-References: <20190725160207.19579-1-osalvador@suse.de>
- <20190725160207.19579-2-osalvador@suse.de>
- <8b60e40a-1e8a-1f7c-a31d-ad2e511decd5@redhat.com>
+        Fri, 26 Jul 2019 05:32:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:40232 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbfGZJcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:32:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CAA3344;
+        Fri, 26 Jul 2019 02:32:51 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B89D3F71A;
+        Fri, 26 Jul 2019 02:32:50 -0700 (PDT)
+Subject: Re: [PATCH 4/5] sched/deadline: Cleanup on_dl_rq() handling
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Luca Abeni <luca.abeni@santannapisa.it>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Qais Yousef <Qais.Yousef@arm.com>, linux-kernel@vger.kernel.org
+References: <20190726082756.5525-1-dietmar.eggemann@arm.com>
+ <20190726082756.5525-5-dietmar.eggemann@arm.com>
+ <0f460dba-4677-00de-59a2-5cd31ffe6e4b@arm.com>
+ <20190726092005.GO25636@localhost.localdomain>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <d95ffb59-ad54-f775-7a9d-0806051539e0@arm.com>
+Date:   Fri, 26 Jul 2019 10:32:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8b60e40a-1e8a-1f7c-a31d-ad2e511decd5@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190726092005.GO25636@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 10:34:47AM +0200, David Hildenbrand wrote:
-> > Want to add 384MB (3 sections, 3 memory-blocks)
-> > e.g:
-> > 
-> > 	add_memory(0x1000, size_memory_block);
-> > 	add_memory(0x2000, size_memory_block);
-> > 	add_memory(0x3000, size_memory_block);
-> > 
-> > 	[memblock#0  ]
-> > 	[0 - 511 pfns      ] - vmemmaps for section#0
-> > 	[512 - 32767 pfns  ] - normal memory
-> > 
-> > 	[memblock#1 ]
-> > 	[32768 - 33279 pfns] - vmemmaps for section#1
-> > 	[33280 - 65535 pfns] - normal memory
-> > 
-> > 	[memblock#2 ]
-> > 	[65536 - 66047 pfns] - vmemmap for section#2
-> > 	[66048 - 98304 pfns] - normal memory
+On 26/07/2019 10:20, Juri Lelli wrote:
+>> Any idea why a similar error leads to a BUG_ON() in the enqueue path but
+>> only a silent return on the dequeue path? I would expect the handling to be
+>> almost identical.
+>>  
 > 
-> I wouldn't even care about documenting this right now. We have no user
-> so far, so spending 50% of the description on this topic isn't really
-> needed IMHO :)
-
-Fair enough, I could drop it.
-Was just trying to be extra clear.
-
+> Task could have already been dequeued by update_curr_dl()->throttle
+> called by dequeue_task_dl() before calling __dequeue_task_dl().
 > 
-> > 
-> > or
-> > 	add_memory(0x1000, size_memory_block * 3);
-> > 
-> > 	[memblock #0 ]
-> >         [0 - 1533 pfns    ] - vmemmap for section#{0-2}
-> >         [1534 - 98304 pfns] - normal memory
-> > 
-> > When using larger memory blocks (1GB or 2GB), the principle is the same.
-> > 
-> > Of course, per whole-range granularity is nicer when it comes to have a large
-> > contigous area, while per memory-block granularity allows us to have flexibility
-> > when removing the memory.
-> 
-> E.g., in my virtio-mem I am currently adding all memory blocks
-> separately either way (to guranatee that remove_memory() works cleanly -
-> see __release_memory_resource()), and to control the amount of
-> not-offlined memory blocks (e.g., to make user space is actually
-> onlining them). As it's just a prototype, this might change of course in
-> the future.
 
-What is virtio-mem for? Did it that raised from a need?
-Is it something you could try this patch on?
+Got it, thanks.
 
-> >  /*
-> > + * We want memmap (struct page array) to be allocated from the hotadded range.
-> > + * To do so, there are two possible ways depending on what the caller wants.
-> > + * 1) Allocate memmap pages whole hot-added range.
-> > + *    Here the caller will only call any add_memory() variant with the whole
-> > + *    memory address.
-> > + * 2) Allocate memmap pages per memblock
-> > + *    Here, the caller will call any add_memory() variant per memblock
-> > + *    granularity.
-> > + * The former implies that we will use the beginning of the hot-added range
-> > + * to store the memmap pages of the whole range, while the latter implies
-> > + * that we will use the beginning of each memblock to store its own memmap
-> > + * pages.
-> 
-> Can you make this documentation only state how MHP_MEMMAP_ON_MEMORY
-> works? (IOW, shrink it heavily to what we actually implement)
-
-Sure.
-
-> Apart from the requested description/documentation changes
-> 
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-
-Thanks for having a look David ;-)
-> 
-> -- 
-> 
 > Thanks,
 > 
-> David / dhildenb
-
--- 
-Oscar Salvador
-SUSE L3
+> Juri
+> 
