@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AADCC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7B5C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAE9222CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B8222CE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149591;
-	bh=edvf3DTeDzU2yIlOWa9VLhVU3UJsUzw5MBZd+FpJX9k=;
+	s=default; t=1564149598;
+	bh=qUDUVLtmZIyXHd2fhXS7k3Cp3hGJM9arf5K+CPuawhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sYOh1wa0Y8lkY4T036qfYc3NqX25xZlmU7WKEi6JTdwE+9ZcbI7vuSB4HII2fUa5h
-	 nSrRwaZOggOt05RFpH7LSNY7eGL7roNygmYPZJ0l+ys4Zo/i9ZlqH06Pd4p/HHslzR
-	 iaOUIikBHIBzH1fVjcUQFz0/FR4xBa+GkY1NZLPo=
+	b=vM6iRNc+QhsCehZjrt3Ij3S7ukwbt3wG7TmjXmJBP+8uZJibslrJwgAZJtL/LApVf
+	 3+Yz4/RlT5j5L/pp1U+n/DAvSIzUANQCSCN5ddMOs85CTsTppRByEWjVCQoATx9v3e
+	 Gap++hpFgnzrucyKTcsoAsTyZ3htvQf9YqQW7Pok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388577AbfGZN7u (ORCPT
+        id S1727875AbfGZN75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:59:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46470 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:59:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387438AbfGZNkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:40:25 -0400
+        id S2387395AbfGZNkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:40:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8712722BEF;
-        Fri, 26 Jul 2019 13:40:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C9F622CBB;
+        Fri, 26 Jul 2019 13:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148424;
-        bh=edvf3DTeDzU2yIlOWa9VLhVU3UJsUzw5MBZd+FpJX9k=;
+        s=default; t=1564148422;
+        bh=qUDUVLtmZIyXHd2fhXS7k3Cp3hGJM9arf5K+CPuawhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B7L/zlhWceZGhXbqMFwfl7mk5R20Yw4pIKl9eoTNtEzq6gh/xOutBjsgQVfU1WcWm
-         hXrleFBEDAMef8ChlYvTmR1q4xvFGBDvyCfLTLwM8av5WK1tMIfJJTwiY1b6UatDNT
-         OONUVV2evFX6D282ka5cWxwdbVq/I5mXFTBL/K8E=
+        b=2f6oeWvW17t1G62zvSmS+wl6Q3nBw4LFTwrL6a6QcaGpkq74r91jVSqn0hS+lIRNw
+         HOrmaXiZSjtZyGL+5qgNGumajAo4+paK5GH8sknIFLvsfMGO3djT5ZHDPNNOnhyg/S
+         znwSf2g6ckP2gkP9mT2yFfhMTC2r5MOR0KVfyehg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Sterba <dsterba@suse.com>, Qu Wenruo <wqu@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 27/85] btrfs: fix minimum number of chunk errors for DUP
-Date:   Fri, 26 Jul 2019 09:38:37 -0400
-Message-Id: <20190726133936.11177-27-sashal@kernel.org>
+Cc:     Vicente Bergas <vicencb@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 25/85] arm64: dts: rockchip: Fix USB3 Type-C on rk3399-sapphire
+Date:   Fri, 26 Jul 2019 09:38:35 -0400
+Message-Id: <20190726133936.11177-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -58,48 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+From: Vicente Bergas <vicencb@gmail.com>
 
-[ Upstream commit 0ee5f8ae082e1f675a2fb6db601c31ac9958a134 ]
+[ Upstream commit e1d9149e8389f1690cdd4e4056766dd26488a0fe ]
 
-The list of profiles in btrfs_chunk_max_errors lists DUP as a profile
-DUP able to tolerate 1 device missing. Though this profile is special
-with 2 copies, it still needs the device, unlike the others.
+Before this patch, the Type-C port on the Sapphire board is dead.
+If setting the 'regulator-always-on' property to 'vcc5v0_typec0'
+then the port works for about 4 seconds at start-up. This is a
+sample trace with a memory stick plugged in:
+1.- The memory stick LED lights on and kernel reports:
+[    4.782999] scsi 0:0:0:0: Direct-Access USB DISK PMAP PQ: 0 ANSI: 4
+[    5.904580] sd 0:0:0:0: [sdb] 3913344 512-byte logical blocks: (2.00 GB/1.87 GiB)
+[    5.906860] sd 0:0:0:0: [sdb] Write Protect is off
+[    5.908973] sd 0:0:0:0: [sdb] Mode Sense: 23 00 00 00
+[    5.909122] sd 0:0:0:0: [sdb] No Caching mode page found
+[    5.911214] sd 0:0:0:0: [sdb] Assuming drive cache: write through
+[    5.951585]  sdb: sdb1
+[    5.954816] sd 0:0:0:0: [sdb] Attached SCSI removable disk
+2.- 4 seconds later the memory stick LED lights off and kernel reports:
+[    9.082822] phy phy-ff770000.syscon:usb2-phy@e450.2: charger = USB_DCP_CHARGER
+3.- After a minute the kernel reports:
+[   71.666761] usb 5-1: USB disconnect, device number 2
+It has been checked that, although the LED is off, VBUS is present.
 
-Looking at the history of changes, thre's no clear reason why DUP is
-there, functions were refactored and blocks of code merged to one
-helper.
+If, instead, the dr_mode is changed to host and the phy-supply changed
+accordingly, then it works. It has only been tested in host mode.
 
-d20983b40e828 Btrfs: fix writing data into the seed filesystem
-  - factor code to a helper
-
-de11cc12df173 Btrfs: don't pre-allocate btrfs bio
-  - unrelated change, DUP still in the list with max errors 1
-
-a236aed14ccb0 Btrfs: Deal with failed writes in mirrored configurations
-  - introduced the max errors, leaves DUP and RAID1 in the same group
-
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Vicente Bergas <vicencb@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/volumes.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index 1c2a6e4b39da..8508f6028c8d 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -5328,8 +5328,7 @@ static inline int btrfs_chunk_max_errors(struct map_lookup *map)
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+index 04623e52ac5d..1bc1579674e5 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+@@ -565,12 +565,11 @@
+ 	status = "okay";
  
- 	if (map->type & (BTRFS_BLOCK_GROUP_RAID1 |
- 			 BTRFS_BLOCK_GROUP_RAID10 |
--			 BTRFS_BLOCK_GROUP_RAID5 |
--			 BTRFS_BLOCK_GROUP_DUP)) {
-+			 BTRFS_BLOCK_GROUP_RAID5)) {
- 		max_errors = 1;
- 	} else if (map->type & BTRFS_BLOCK_GROUP_RAID6) {
- 		max_errors = 2;
+ 	u2phy0_otg: otg-port {
+-		phy-supply = <&vcc5v0_typec0>;
+ 		status = "okay";
+ 	};
+ 
+ 	u2phy0_host: host-port {
+-		phy-supply = <&vcc5v0_host>;
++		phy-supply = <&vcc5v0_typec0>;
+ 		status = "okay";
+ 	};
+ };
+@@ -620,7 +619,7 @@
+ 
+ &usbdrd_dwc3_0 {
+ 	status = "okay";
+-	dr_mode = "otg";
++	dr_mode = "host";
+ };
+ 
+ &usbdrd3_1 {
 -- 
 2.20.1
 
