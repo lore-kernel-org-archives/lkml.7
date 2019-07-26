@@ -2,68 +2,114 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEC7C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA71AC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11374218B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:25:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564165541;
-	bh=F6p1/heSac+7vu16SkIv9/ELvNLQDsloVhSvb810nkk=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Kf6GIZWLbSnQ1+KzBNvPt99jvsvmtqH9IR10WSl4+2rCaB7YNaQSkLMzfCAQhL82I
-	 kMXmO0t58Nhbnb6FWjb32xUe494uIShtOKJe8OdVLvyOAiDavfzRmpwegn6NYPpUN2
-	 APxlSkAEnTYo8X1sAuKGLiPgG5KNn7PCT+8ZFM0Q=
+	by mail.kernel.org (Postfix) with ESMTP id 8E4B822BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:25:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbfGZSZk (ORCPT
+        id S2387854AbfGZSZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 14:25:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56324 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 14:25:42 -0400
+Received: from mga17.intel.com ([192.55.52.151]:44335 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387533AbfGZSZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 14:25:25 -0400
-Subject: Re: [GIT PULL] sound fixes for 5.3-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564165524;
-        bh=F6p1/heSac+7vu16SkIv9/ELvNLQDsloVhSvb810nkk=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=c3cCybC7N9lOMRrordZnj5Ioy823B7fZ51lBYW7MduiXdSLje8OaKfSt1oy98jf8i
-         oLU/GjZXLeAPRQXGSXtwIPwLJZLKB+B8aPDYcEqegxY8MJsbPx+uButU95PTC6uIRt
-         yVG/FulmspvlI3sthO/hQI5v7T1zmpNFVzfIgbvs=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <s5hd0hxynmh.wl-tiwai@suse.de>
-References: <s5hd0hxynmh.wl-tiwai@suse.de>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <s5hd0hxynmh.wl-tiwai@suse.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
- tags/sound-5.3-rc2
-X-PR-Tracked-Commit-Id: 3f8809499bf02ef7874254c5e23fc764a47a21a0
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 750c930b085ba56cfac3649e8e0dff72a8c5f8a5
-Message-Id: <156416552431.19332.4448523357223769224.pr-tracker-bot@kernel.org>
-Date:   Fri, 26 Jul 2019 18:25:24 +0000
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        id S1727935AbfGZSZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 14:25:39 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 11:25:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
+   d="scan'208";a="370158312"
+Received: from gliakhov-mobl2.ger.corp.intel.com (HELO ubuntu) ([10.249.35.244])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Jul 2019 11:25:36 -0700
+Date:   Fri, 26 Jul 2019 20:25:35 +0200
+From:   Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 17/40] soundwire: bus: use
+ runtime_pm_get_sync/pm when enabled
+Message-ID: <20190726182534.GO16003@ubuntu>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-18-pierre-louis.bossart@linux.intel.com>
+ <45a912c5-134b-8642-70ef-8c1060389300@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <45a912c5-134b-8642-70ef-8c1060389300@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 26 Jul 2019 14:41:10 +0200:
+On Fri, Jul 26, 2019 at 01:08:57PM -0500, Pierre-Louis Bossart wrote:
+> This thread became unreadable with interleaved top-posting, allow me restate
+> the options and ask PM folks what they think
+> 
+> On 7/25/19 6:40 PM, Pierre-Louis Bossart wrote:
+> > Not all platforms support runtime_pm for now, let's use runtime_pm
+> > only when enabled.
+> > 
+> > Suggested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> > ---
+> >   drivers/soundwire/bus.c | 25 ++++++++++++++++---------
+> >   1 file changed, 16 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
+> > index 5ad4109dc72f..0a45dc5713df 100644
+> > --- a/drivers/soundwire/bus.c
+> > +++ b/drivers/soundwire/bus.c
+> > @@ -332,12 +332,16 @@ int sdw_nread(struct sdw_slave *slave, u32 addr, size_t count, u8 *val)
+> >   	if (ret < 0)
+> >   		return ret;
+> > -	ret = pm_runtime_get_sync(slave->bus->dev);
+> > -	if (ret < 0)
+> > -		return ret;
+> > +	if (pm_runtime_enabled(slave->bus->dev)) {
+> > +		ret = pm_runtime_get_sync(slave->bus->dev);
+> > +		if (ret < 0)
+> > +			return ret;
+> > +	}
+> >   	ret = sdw_transfer(slave->bus, &msg);
+> > -	pm_runtime_put(slave->bus->dev);
+> > +
+> > +	if (pm_runtime_enabled(slave->bus->dev))
+> > +		pm_runtime_put(slave->bus->dev);
+> 
+> This is option1: we explicitly test if pm_runtime is enabled before calling
+> _get_sync() and _put()
+> 
+> option2 (suggested by Jan Kotas): catch the -EACCESS error code
+> 
+>  	ret = pm_runtime_get_sync(slave->bus->dev);
+> -	if (ret < 0)
+> +	if (ret < 0 && ret != -EACCES)
+>  		return ret;
+> 
+> option3: ignore the return value as done in quite a few drivers
+> 
+> Are there any other options? I am personally surprised this is not handled
+> in the pm_runtime core, not sure why users need to test for this?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.3-rc2
+option 4: fix this in runtime PM :-) This seems like the best option to me,
+but probably not the easiest one. Otherwise I'd go with (2), I think, since
+that's also the official purpose of the -EACCESS return code:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/750c930b085ba56cfac3649e8e0dff72a8c5f8a5
+https://lists.linuxfoundation.org/pipermail/linux-pm/2011-June/031930.html
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Thanks
+Guennadi
