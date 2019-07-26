@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C10C41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3252AC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 302AF22CD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0785222CD3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148694;
-	bh=oBtKpssrtk9bhbLDtEqB6X5gVClL753A890gQUH2fYg=;
+	s=default; t=1564148699;
+	bh=1FOnbSF7WqPxZqQHFLMLT7wGOvQBsSTOeGGZhcbQPnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zMurB0su1JYCPRKUW+++N2ugSK1kE1WACoaYqBWTcikXNEL3s3Jmc8ywKIwb2F5VD
-	 +Q3J4bNrCDk6UsLz3+AbrGFtvnYw9hvazZk38Jgs26ApLfS7CKyKZzQoL931g9sTxd
-	 HOwndQciJb+T7Cy2RSoDxFQgksXceMr1b+3Lf2lY=
+	b=Ye4Dk3uRL+KhxJomgUWHkRnnjjNot9j+mKqtQX3Joyo6G21MgVoewnJ+wa9ir3WVC
+	 GTJ1YLRfYYXLbFtPVR0oJOTcF1+T/R5LkyvGxt02nSLWcx5PSt4MZMf6EfLwTU52Tc
+	 8s21HJqL/RfL4qICWyTrafPMlH5+Ex4/PLQPXoo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388453AbfGZNox (ORCPT
+        id S2388473AbfGZNo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:44:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53154 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:44:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388424AbfGZNos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:44:48 -0400
+        id S2388439AbfGZNow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:44:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8A3222CBF;
-        Fri, 26 Jul 2019 13:44:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55C2122CD7;
+        Fri, 26 Jul 2019 13:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148687;
-        bh=oBtKpssrtk9bhbLDtEqB6X5gVClL753A890gQUH2fYg=;
+        s=default; t=1564148691;
+        bh=1FOnbSF7WqPxZqQHFLMLT7wGOvQBsSTOeGGZhcbQPnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vc5k0D/a+ZgrdWW30aq4epuctoRNHuHCXl0Is8A68daDilergte6sd8yFsDoF4UOl
-         LEEZPNBGIKWxY8Mx6DWf19GfcbfpzmXc13vD80V0FML81nvdzoOL1PKQ/pYR+AHXjs
-         txaS2o2zcb6LPiwvsgdZOalgMY3THxxveZayo8oU=
+        b=b/1gT6wSgapNyF6JThloKi2bQ2TbSD9Tuh3kosZ9Z85tBjP3NDZBirrrPdF/8jF7M
+         rwBMYZbC3nRzWGOBbgi1+0/wSvVNQU2S13r4OSAHAmQiaicswH2dW9U6S4eT0SB4YU
+         SucxtzGnV+hF1KqoHJFZTBnUFA+q9GpxnGxRPC4w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/30] ceph: fix improper use of smp_mb__before_atomic()
-Date:   Fri, 26 Jul 2019 09:44:13 -0400
-Message-Id: <20190726134432.12993-11-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 14/30] ACPI: fix false-positive -Wuninitialized warning
+Date:   Fri, 26 Jul 2019 09:44:16 -0400
+Message-Id: <20190726134432.12993-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134432.12993-1-sashal@kernel.org>
 References: <20190726134432.12993-1-sashal@kernel.org>
@@ -61,44 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <andrea.parri@amarulasolutions.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 749607731e26dfb2558118038c40e9c0c80d23b5 ]
+[ Upstream commit dfd6f9ad36368b8dbd5f5a2b2f0a4705ae69a323 ]
 
-This barrier only applies to the read-modify-write operations; in
-particular, it does not apply to the atomic64_set() primitive.
+clang gets confused by an uninitialized variable in what looks
+to it like a never executed code path:
 
-Replace the barrier with an smp_mb().
+arch/x86/kernel/acpi/boot.c:618:13: error: variable 'polarity' is uninitialized when used here [-Werror,-Wuninitialized]
+        polarity = polarity ? ACPI_ACTIVE_LOW : ACPI_ACTIVE_HIGH;
+                   ^~~~~~~~
+arch/x86/kernel/acpi/boot.c:606:32: note: initialize the variable 'polarity' to silence this warning
+        int rc, irq, trigger, polarity;
+                                      ^
+                                       = 0
+arch/x86/kernel/acpi/boot.c:617:12: error: variable 'trigger' is uninitialized when used here [-Werror,-Wuninitialized]
+        trigger = trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE;
+                  ^~~~~~~
+arch/x86/kernel/acpi/boot.c:606:22: note: initialize the variable 'trigger' to silence this warning
+        int rc, irq, trigger, polarity;
+                            ^
+                             = 0
 
-Fixes: fdd4e15838e59 ("ceph: rework dcache readdir")
-Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Reported-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+This is unfortunately a design decision in clang and won't be fixed.
+
+Changing the acpi_get_override_irq() macro to an inline function
+reliably avoids the issue.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/super.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ include/linux/acpi.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-index 622d5dd9f616..9bd0d928057b 100644
---- a/fs/ceph/super.h
-+++ b/fs/ceph/super.h
-@@ -476,7 +476,12 @@ static inline void __ceph_dir_set_complete(struct ceph_inode_info *ci,
- 					   long long release_count,
- 					   long long ordered_count)
- {
--	smp_mb__before_atomic();
-+	/*
-+	 * Makes sure operations that setup readdir cache (update page
-+	 * cache and i_size) are strongly ordered w.r.t. the following
-+	 * atomic64_set() operations.
-+	 */
-+	smp_mb();
- 	atomic64_set(&ci->i_complete_seq[0], release_count);
- 	atomic64_set(&ci->i_complete_seq[1], ordered_count);
- }
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index ca2b4c4aec42..719eb97217a3 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -309,7 +309,10 @@ void acpi_set_irq_model(enum acpi_irq_model_id model,
+ #ifdef CONFIG_X86_IO_APIC
+ extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
+ #else
+-#define acpi_get_override_irq(gsi, trigger, polarity) (-1)
++static inline int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity)
++{
++	return -1;
++}
+ #endif
+ /*
+  * This function undoes the effect of one call to acpi_register_gsi().
 -- 
 2.20.1
 
