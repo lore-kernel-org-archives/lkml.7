@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C98FEC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B45BC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A364322C7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B1222CB9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148472;
-	bh=Qt2/1Z3/byDB4IlQk0hOeMb7GKWf8oM+Z2eeZc24UfU=;
+	s=default; t=1564148479;
+	bh=Qkv40fafqQomKUgAfGkXE1/nJT1uUnyN1vwBUnVHzKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lmm2WtqD/EM6otgMQBFZ6g2xV2nd+6Hgrf+z0VJM16HxyA5gkGnL/YnfrDax+fyGk
-	 y4veWKqZyEsGWvJAnZBZ7aNHHfTzAJ4UDPFfw7flNgLOgHVS5OdYlGnTOuVU6CqgDC
-	 pRwYzriBLPPp0JIXcMCy7BB4tJix7yKZqEANEjWg=
+	b=T84MMK9OZaXAX9m4GzEaqjoWyuitd4DHRtBa7dBKLuwxCZex7vD3cglJqBHN3Fxa2
+	 XvY918b6XHBqhPRU0X7Al0nykShYEnw+Bl/hr3Z8efkuTcMSIoHw1QXKJMErxhxx5q
+	 Mf7v7pQzVZj7JBzmW4tN4C6M8yWdzDUE84Ut1nIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbfGZNlL (ORCPT
+        id S1727868AbfGZNlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:41:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47354 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:41:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727806AbfGZNlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:41:03 -0400
+        id S1727820AbfGZNlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:41:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C63222CB9;
-        Fri, 26 Jul 2019 13:41:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7D9922BE8;
+        Fri, 26 Jul 2019 13:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148462;
-        bh=Qt2/1Z3/byDB4IlQk0hOeMb7GKWf8oM+Z2eeZc24UfU=;
+        s=default; t=1564148466;
+        bh=Qkv40fafqQomKUgAfGkXE1/nJT1uUnyN1vwBUnVHzKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OjjpPW7v1GN99vV9Ddsmo5b1CPZ2sil7k8KzGs2GZNcuzZBAlUvo90lUqvgiHWdug
-         9frEFwg7ZguJGpVByRf6CNC5xSp70ex1NqD7AfNzTy/abdPwaJ1Wo2uJ4R/4S48orj
-         o0D5y6ephx5b73+ihstS3t5CBeGDYaa876ddYqMA=
+        b=JDwczTeDOgcXtLyJOiNhaFLSXJL8BTrapcafEcX9pe6aJXiQ1ce1SUl5c1juUdjbP
+         wAREVsUXK60ez1Zd2PzrZuVXDcY+be8Dvj0KPNOXEvCLMpTXzatwI9aFQboVbFdRbP
+         xRLef1VgSzxkLa1KmJH2jr2eyXsMF5c0rMC+WDRQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Henry Burns <henryburns@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vitaly Vul <vitaly.vul@sony.com>,
-        Vitaly Wool <vitalywool@gmail.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.2 53/85] mm/z3fold.c: reinitialize zhdr structs after migration
-Date:   Fri, 26 Jul 2019 09:39:03 -0400
-Message-Id: <20190726133936.11177-53-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.2 55/85] x86: math-emu: Hide clang warnings for 16-bit overflow
+Date:   Fri, 26 Jul 2019 09:39:05 -0400
+Message-Id: <20190726133936.11177-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -64,61 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Henry Burns <henryburns@google.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit c92d2f38563db20c20c8db2f98fa1349290477d5 ]
+[ Upstream commit 29e7e9664aec17b94a9c8c5a75f8d216a206aa3a ]
 
-z3fold_page_migration() calls memcpy(new_zhdr, zhdr, PAGE_SIZE).
-However, zhdr contains fields that can't be directly coppied over (ex:
-list_head, a circular linked list).  We only need to initialize the
-linked lists in new_zhdr, as z3fold_isolate_page() already ensures that
-these lists are empty
+clang warns about a few parts of the math-emu implementation
+where a 16-bit integer becomes negative during assignment:
 
-Additionally it is possible that zhdr->work has been placed in a
-workqueue.  In this case we shouldn't migrate the page, as zhdr->work
-references zhdr as opposed to new_zhdr.
+arch/x86/math-emu/poly_tan.c:88:35: error: implicit conversion from 'int' to 'short' changes value from 49216 to -16320 [-Werror,-Wconstant-conversion]
+                                      (0x41 + EXTENDED_Ebias) | SIGN_Negative);
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+arch/x86/math-emu/fpu_emu.h:180:58: note: expanded from macro 'setexponent16'
+ #define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
+                                                      ~  ^
+arch/x86/math-emu/reg_constant.c:37:32: error: implicit conversion from 'int' to 'short' changes value from 49085 to -16451 [-Werror,-Wconstant-conversion]
+FPU_REG const CONST_PI2extra = MAKE_REG(NEG, -66,
+                               ^~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
+                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:48:28: error: implicit conversion from 'int' to 'short' changes value from 65535 to -1 [-Werror,-Wconstant-conversion]
+FPU_REG const CONST_QNaN = MAKE_REG(NEG, EXP_OVER, 0x00000000, 0xC0000000);
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
+                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Link: http://lkml.kernel.org/r/20190716000520.230595-1-henryburns@google.com
-Fixes: 1f862989b04ade61d3 ("mm/z3fold.c: support page migration")
-Signed-off-by: Henry Burns <henryburns@google.com>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Cc: Vitaly Vul <vitaly.vul@sony.com>
-Cc: Vitaly Wool <vitalywool@gmail.com>
-Cc: Jonathan Adams <jwadams@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+The code is correct as is, so add a typecast to shut up the warnings.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190712090816.350668-1-arnd@arndb.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/z3fold.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/x86/math-emu/fpu_emu.h      | 2 +-
+ arch/x86/math-emu/reg_constant.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/z3fold.c b/mm/z3fold.c
-index e1686bf6d689..7e764b0d8c8a 100644
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -1350,12 +1350,22 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
- 		unlock_page(page);
- 		return -EBUSY;
- 	}
-+	if (work_pending(&zhdr->work)) {
-+		z3fold_page_unlock(zhdr);
-+		return -EAGAIN;
-+	}
- 	new_zhdr = page_address(newpage);
- 	memcpy(new_zhdr, zhdr, PAGE_SIZE);
- 	newpage->private = page->private;
- 	page->private = 0;
- 	z3fold_page_unlock(zhdr);
- 	spin_lock_init(&new_zhdr->page_lock);
-+	INIT_WORK(&new_zhdr->work, compact_page_work);
-+	/*
-+	 * z3fold_page_isolate() ensures that new_zhdr->buddy is empty,
-+	 * so we only have to reinitialize it.
-+	 */
-+	INIT_LIST_HEAD(&new_zhdr->buddy);
- 	new_mapping = page_mapping(page);
- 	__ClearPageMovable(page);
- 	ClearPagePrivate(page);
+diff --git a/arch/x86/math-emu/fpu_emu.h b/arch/x86/math-emu/fpu_emu.h
+index a5a41ec58072..0c122226ca56 100644
+--- a/arch/x86/math-emu/fpu_emu.h
++++ b/arch/x86/math-emu/fpu_emu.h
+@@ -177,7 +177,7 @@ static inline void reg_copy(FPU_REG const *x, FPU_REG *y)
+ #define setexponentpos(x,y) { (*(short *)&((x)->exp)) = \
+   ((y) + EXTENDED_Ebias) & 0x7fff; }
+ #define exponent16(x)         (*(short *)&((x)->exp))
+-#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
++#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (u16)(y); }
+ #define addexponent(x,y)    { (*(short *)&((x)->exp)) += (y); }
+ #define stdexp(x)           { (*(short *)&((x)->exp)) += EXTENDED_Ebias; }
+ 
+diff --git a/arch/x86/math-emu/reg_constant.c b/arch/x86/math-emu/reg_constant.c
+index 8dc9095bab22..742619e94bdf 100644
+--- a/arch/x86/math-emu/reg_constant.c
++++ b/arch/x86/math-emu/reg_constant.c
+@@ -18,7 +18,7 @@
+ #include "control_w.h"
+ 
+ #define MAKE_REG(s, e, l, h) { l, h, \
+-		((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
++		(u16)((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+ 
+ FPU_REG const CONST_1 = MAKE_REG(POS, 0, 0x00000000, 0x80000000);
+ #if 0
 -- 
 2.20.1
 
