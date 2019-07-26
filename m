@@ -4,61 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5E0C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B81DC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 765D0205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1462B2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155124;
-	bh=m0pjgZqAwwp79HXzIMN+N5yibjjUnFB3FUV5X1zWHTU=;
+	s=default; t=1564155129;
+	bh=zRkOIPNoyE8ivzzuFEeKn7cn1eMbQrjTjT9edSUPa4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wAeVmNe3MwHfqYRg8539BGr6xu1OlFBf5zQ6/Rv1bV9Kx6vAcK91rAk1HWkD5ThEj
-	 ZibQOAjq8SZDcAl4qyrBoKmkU356M6sDYW6G1YYWBNOwfWJudjJ1bPBZXCrTrpMI9i
-	 /uEsdvl8wrRnM8IUfkM45yMnh42WRSgzObFAM61Q=
+	b=U/23i0E2zhbkqgn3ZKPgBOJd9AXxeVy0ZzDizpuzsKv4vaS8miWrhw4OUcqu92mSV
+	 VpQgZVSfP3wv13GptQnUjEDVFHwJSzp+o2s9P6Y4eOLFP0klRP7xD/AtM7NHdkPuv6
+	 3ptL8ZwWsjvENMdYt2mjmodIZEuMtF4QvmNKjudM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389376AbfGZPcD (ORCPT
+        id S2389400AbfGZPcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:32:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47044 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:32:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388547AbfGZPb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:31:57 -0400
+        id S2389370AbfGZPcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:32:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2500A2054F;
-        Fri, 26 Jul 2019 15:31:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 766AE205F4;
+        Fri, 26 Jul 2019 15:32:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155116;
-        bh=m0pjgZqAwwp79HXzIMN+N5yibjjUnFB3FUV5X1zWHTU=;
+        s=default; t=1564155121;
+        bh=zRkOIPNoyE8ivzzuFEeKn7cn1eMbQrjTjT9edSUPa4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d7Pc3NM4DnBZQm3OBEnBfrMlnXCvEHTsHyTWkG+ii0sIYUrloBjs5WoK/vTWK0gpF
-         emNKoYVJLhq8JhiewEcle2pVMyLjqhLMoEIzZ1e09h+wEDUnR/Ao/VRvFdy7U/06hi
-         hjO9WkcnFFdXOkBCV3O5Gpus9dTmxZ8mZ/7/4+nI=
+        b=y0TNo1FLvOZbpYo3JDZIf3D9aufs5uVIu8d98jJWkgv899OmiOfi285orqZItJAjx
+         GLShbBgvwQLJyazrxse8Zmy1/N/ZcslBhzngMwT8jPbu/LS+dqQuxvjP+IJNu0Wn4l
+         VCQ1E47HtCj4m0uOeVutM48Yp45Y2ybeVmQdKAvo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        mathieu.poirier@linaro.org, will.deacon@arm.com,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.1 49/62] perf/core: Fix exclusive events grouping
-Date:   Fri, 26 Jul 2019 17:25:01 +0200
-Message-Id: <20190726152307.196264676@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 10/50] net: make skb_dst_force return true when dst is refcounted
+Date:   Fri, 26 Jul 2019 17:24:45 +0200
+Message-Id: <20190726152301.681782579@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
-References: <20190726152301.720139286@linuxfoundation.org>
+In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
+References: <20190726152300.760439618@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -68,171 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit 8a58ddae23796c733c5dfbd717538d89d036c5bd upstream.
+[ Upstream commit b60a77386b1d4868f72f6353d35dabe5fbe981f2 ]
 
-So far, we tried to disallow grouping exclusive events for the fear of
-complications they would cause with moving between contexts. Specifically,
-moving a software group to a hardware context would violate the exclusivity
-rules if both groups contain matching exclusive events.
+netfilter did not expect that skb_dst_force() can cause skb to lose its
+dst entry.
 
-This attempt was, however, unsuccessful: the check that we have in the
-perf_event_open() syscall is both wrong (looks at wrong PMU) and
-insufficient (group leader may still be exclusive), as can be illustrated
-by running:
+I got a bug report with a skb->dst NULL dereference in netfilter
+output path.  The backtrace contains nf_reinject(), so the dst might have
+been cleared when skb got queued to userspace.
 
-  $ perf record -e '{intel_pt//,cycles}' uname
-  $ perf record -e '{cycles,intel_pt//}' uname
+Other users were fixed via
+if (skb_dst(skb)) {
+	skb_dst_force(skb);
+	if (!skb_dst(skb))
+		goto handle_err;
+}
 
-ultimately successfully.
+But I think its preferable to make the 'dst might be cleared' part
+of the function explicit.
 
-Furthermore, we are completely free to trigger the exclusivity violation
-by:
+In netfilter case, skb with a null dst is expected when queueing in
+prerouting hook, so drop skb for the other hooks.
 
-   perf -e '{cycles,intel_pt//}' -e '{intel_pt//,instructions}'
+v2:
+ v1 of this patch returned true in case skb had no dst entry.
+ Eric said:
+   Say if we have two skb_dst_force() calls for some reason
+   on the same skb, only the first one will return false.
 
-even though the helpful perf record will not allow that, the ABI will.
+ This now returns false even when skb had no dst, as per Erics
+ suggestion, so callers might need to check skb_dst() first before
+ skb_dst_force().
 
-The warning later in the perf_event_open() path will also not trigger, because
-it's also wrong.
-
-Fix all this by validating the original group before moving, getting rid
-of broken safeguards and placing a useful one to perf_install_in_context().
-
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <stable@vger.kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: mathieu.poirier@linaro.org
-Cc: will.deacon@arm.com
-Fixes: bed5b25ad9c8a ("perf: Add a pmu capability for "exclusive" events")
-Link: https://lkml.kernel.org/r/20190701110755.24646-1-alexander.shishkin@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- include/linux/perf_event.h |    5 +++++
- kernel/events/core.c       |   34 ++++++++++++++++++++++------------
- 2 files changed, 27 insertions(+), 12 deletions(-)
+ include/net/dst.h        |    5 ++++-
+ net/netfilter/nf_queue.c |    6 +++++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1044,6 +1044,11 @@ static inline int in_software_context(st
- 	return event->ctx->pmu->task_ctx_nr == perf_sw_context;
- }
- 
-+static inline int is_exclusive_pmu(struct pmu *pmu)
-+{
-+	return pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE;
-+}
-+
- extern struct static_key perf_swevent_enabled[PERF_COUNT_SW_MAX];
- 
- extern void ___perf_sw_event(u32, u64, struct pt_regs *, u64);
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2543,6 +2543,9 @@ unlock:
- 	return ret;
- }
- 
-+static bool exclusive_event_installable(struct perf_event *event,
-+					struct perf_event_context *ctx);
-+
- /*
-  * Attach a performance event to a context.
+--- a/include/net/dst.h
++++ b/include/net/dst.h
+@@ -313,8 +313,9 @@ static inline bool dst_hold_safe(struct
+  * @skb: buffer
   *
-@@ -2557,6 +2560,8 @@ perf_install_in_context(struct perf_even
+  * If dst is not yet refcounted and not destroyed, grab a ref on it.
++ * Returns true if dst is refcounted.
+  */
+-static inline void skb_dst_force(struct sk_buff *skb)
++static inline bool skb_dst_force(struct sk_buff *skb)
+ {
+ 	if (skb_dst_is_noref(skb)) {
+ 		struct dst_entry *dst = skb_dst(skb);
+@@ -325,6 +326,8 @@ static inline void skb_dst_force(struct
  
- 	lockdep_assert_held(&ctx->mutex);
- 
-+	WARN_ON_ONCE(!exclusive_event_installable(event, ctx));
+ 		skb->_skb_refdst = (unsigned long)dst;
+ 	}
 +
- 	if (event->cpu != -1)
- 		event->cpu = cpu;
- 
-@@ -4348,7 +4353,7 @@ static int exclusive_event_init(struct p
- {
- 	struct pmu *pmu = event->pmu;
- 
--	if (!(pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE))
-+	if (!is_exclusive_pmu(pmu))
- 		return 0;
- 
- 	/*
-@@ -4379,7 +4384,7 @@ static void exclusive_event_destroy(stru
- {
- 	struct pmu *pmu = event->pmu;
- 
--	if (!(pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE))
-+	if (!is_exclusive_pmu(pmu))
- 		return;
- 
- 	/* see comment in exclusive_event_init() */
-@@ -4399,14 +4404,15 @@ static bool exclusive_event_match(struct
- 	return false;
++	return skb->_skb_refdst != 0UL;
  }
  
--/* Called under the same ctx::mutex as perf_install_in_context() */
- static bool exclusive_event_installable(struct perf_event *event,
- 					struct perf_event_context *ctx)
- {
- 	struct perf_event *iter_event;
- 	struct pmu *pmu = event->pmu;
  
--	if (!(pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE))
-+	lockdep_assert_held(&ctx->mutex);
-+
-+	if (!is_exclusive_pmu(pmu))
- 		return true;
- 
- 	list_for_each_entry(iter_event, &ctx->event_list, event_entry) {
-@@ -10899,11 +10905,6 @@ SYSCALL_DEFINE5(perf_event_open,
- 		goto err_alloc;
+--- a/net/netfilter/nf_queue.c
++++ b/net/netfilter/nf_queue.c
+@@ -174,6 +174,11 @@ static int __nf_queue(struct sk_buff *sk
+ 		goto err;
  	}
  
--	if ((pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE) && group_leader) {
--		err = -EBUSY;
--		goto err_context;
--	}
--
- 	/*
- 	 * Look up the group leader (we will attach this event to it):
- 	 */
-@@ -10991,6 +10992,18 @@ SYSCALL_DEFINE5(perf_event_open,
- 				move_group = 0;
- 			}
- 		}
++	if (!skb_dst_force(skb) && state->hook != NF_INET_PRE_ROUTING) {
++		status = -ENETDOWN;
++		goto err;
++	}
 +
-+		/*
-+		 * Failure to create exclusive events returns -EBUSY.
-+		 */
-+		err = -EBUSY;
-+		if (!exclusive_event_installable(group_leader, ctx))
-+			goto err_locked;
-+
-+		for_each_sibling_event(sibling, group_leader) {
-+			if (!exclusive_event_installable(sibling, ctx))
-+				goto err_locked;
-+		}
- 	} else {
- 		mutex_lock(&ctx->mutex);
- 	}
-@@ -11027,9 +11040,6 @@ SYSCALL_DEFINE5(perf_event_open,
- 	 * because we need to serialize with concurrent event creation.
- 	 */
- 	if (!exclusive_event_installable(event, ctx)) {
--		/* exclusive and group stuff are assumed mutually exclusive */
--		WARN_ON_ONCE(move_group);
--
- 		err = -EBUSY;
- 		goto err_locked;
- 	}
+ 	*entry = (struct nf_queue_entry) {
+ 		.skb	= skb,
+ 		.state	= *state,
+@@ -182,7 +187,6 @@ static int __nf_queue(struct sk_buff *sk
+ 	};
+ 
+ 	nf_queue_entry_get_refs(entry);
+-	skb_dst_force(skb);
+ 
+ 	switch (entry->state.pf) {
+ 	case AF_INET:
 
 
