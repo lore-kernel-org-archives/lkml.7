@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F22C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8788EC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA7322CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F35020449
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149413;
-	bh=L5GRMqW6T+Rn63DLArCqUXTLNh1W6RnUtXaJUtWF/mw=;
+	s=default; t=1564149416;
+	bh=HPOgnfD8kW5F594n0/uyS79f4CfddsymQtmV6609Bg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ANqs3aBIh14GTIY6PclXeeh0QA0Z9cNY5zX9WL/0reQdX8S3gI2lRUe3nI3+Nsd57
-	 k8EIpcL2vjFHhj5Razjsf6AkSsqE3jxYHbHDRst0sGJOgyOhbUI/rfNPstPHqTD8pR
-	 UA+ak8CsobhrUX+R1DN8YkSdPXV2O0JkOrck5IMo=
+	b=at5Bn3GrttVsTM9YX0bpNsWwAKEhmggA0SFA+v9GGrcqzvdZUB7dua2qel+CTGqFC
+	 wxC3TOf6qRBcwmA0hkc1ftV74kQPE95YoqnqnDNeDmd0FZllFoIUCRVeOUIM3xw1aJ
+	 N9XhhEjVgzYLrObTQEWmBClkLq4qjHWmycrSBQ5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387692AbfGZNla (ORCPT
+        id S2387682AbfGZNl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:41:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47898 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:41:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387667AbfGZNl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:41:27 -0400
+        id S2387662AbfGZNlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:41:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 699F422BE8;
-        Fri, 26 Jul 2019 13:41:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B5322084D;
+        Fri, 26 Jul 2019 13:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148486;
-        bh=L5GRMqW6T+Rn63DLArCqUXTLNh1W6RnUtXaJUtWF/mw=;
+        s=default; t=1564148485;
+        bh=HPOgnfD8kW5F594n0/uyS79f4CfddsymQtmV6609Bg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JFJEbsfPsfC+dlcmXZzPSuRHNUZu0dVOCrapdofz0WVtcREt7sU1HhW2XQHthkRXP
-         Zg+x5n1w2BNdKTFzhjpUTnMy61lrfzbOhYIX7yLPZTRrsnatUQG93BWGJeDZboW5qv
-         R2CZ7gIg3FTe28uMrLIHrc9AKlig1csSYthl/dhg=
+        b=xdSO6kWXgy2DvfrW920CyhR8l1SmOCQgAa+kFrV3YwiuhLPgfKBE64abFkhU1Hujx
+         QEFCrF/GOH8afd0IWJ5SVb8Rq5RGljY/3tXq1WIm5AVS0hJ82EWTaz/hahWeIi5Pq3
+         DxfjpHa4XkcgtR+3D2jsd4BKaN+qJomD7jJAYfxQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rodolfo Giometti <giometti@enneenne.com>,
-        Greg KH <greg@kroah.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 64/85] drivers/pps/pps.c: clear offset flags in PPS_SETPARAMS ioctl
-Date:   Fri, 26 Jul 2019 09:39:14 -0400
-Message-Id: <20190726133936.11177-64-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 63/85] drivers/rapidio/devices/rio_mport_cdev.c: NUL terminate some strings
+Date:   Fri, 26 Jul 2019 09:39:13 -0400
+Message-Id: <20190726133936.11177-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -64,52 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Lichvar <mlichvar@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 5515e9a6273b8c02034466bcbd717ac9f53dab99 ]
+[ Upstream commit 156e0b1a8112b76e351684ac948c59757037ac36 ]
 
-The PPS assert/clear offset corrections are set by the PPS_SETPARAMS
-ioctl in the pps_ktime structs, which also contain flags.  The flags are
-not initialized by applications (using the timepps.h header) and they
-are not used by the kernel for anything except returning them back in
-the PPS_GETPARAMS ioctl.
+The dev_info.name[] array has space for RIO_MAX_DEVNAME_SZ + 1
+characters.  But the problem here is that we don't ensure that the user
+put a NUL terminator on the end of the string.  It could lead to an out
+of bounds read.
 
-Set the flags to zero to make it clear they are unused and avoid leaking
-uninitialized data of the PPS_SETPARAMS caller to other applications
-that have a read access to the PPS device.
-
-Link: http://lkml.kernel.org/r/20190702092251.24303-1-mlichvar@redhat.com
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Rodolfo Giometti <giometti@enneenne.com>
-Cc: Greg KH <greg@kroah.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Link: http://lkml.kernel.org/r/20190529110601.GB19119@mwanda
+Fixes: e8de370188d0 ("rapidio: add mport char device driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Alexandre Bounine <alex.bou9@gmail.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pps/pps.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/rapidio/devices/rio_mport_cdev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pps/pps.c b/drivers/pps/pps.c
-index 3a546ec10d90..22a65ad4e46e 100644
---- a/drivers/pps/pps.c
-+++ b/drivers/pps/pps.c
-@@ -152,6 +152,14 @@ static long pps_cdev_ioctl(struct file *file,
- 			pps->params.mode |= PPS_CANWAIT;
- 		pps->params.api_version = PPS_API_VERS;
+diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
+index ce7a90e68042..8155f59ece38 100644
+--- a/drivers/rapidio/devices/rio_mport_cdev.c
++++ b/drivers/rapidio/devices/rio_mport_cdev.c
+@@ -1686,6 +1686,7 @@ static int rio_mport_add_riodev(struct mport_cdev_priv *priv,
  
-+		/*
-+		 * Clear unused fields of pps_kparams to avoid leaking
-+		 * uninitialized data of the PPS_SETPARAMS caller via
-+		 * PPS_GETPARAMS
-+		 */
-+		pps->params.assert_off_tu.flags = 0;
-+		pps->params.clear_off_tu.flags = 0;
-+
- 		spin_unlock_irq(&pps->lock);
+ 	if (copy_from_user(&dev_info, arg, sizeof(dev_info)))
+ 		return -EFAULT;
++	dev_info.name[sizeof(dev_info.name) - 1] = '\0';
  
- 		break;
+ 	rmcd_debug(RDEV, "name:%s ct:0x%x did:0x%x hc:0x%x", dev_info.name,
+ 		   dev_info.comptag, dev_info.destid, dev_info.hopcount);
+@@ -1817,6 +1818,7 @@ static int rio_mport_del_riodev(struct mport_cdev_priv *priv, void __user *arg)
+ 
+ 	if (copy_from_user(&dev_info, arg, sizeof(dev_info)))
+ 		return -EFAULT;
++	dev_info.name[sizeof(dev_info.name) - 1] = '\0';
+ 
+ 	mport = priv->md->mport;
+ 
 -- 
 2.20.1
 
