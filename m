@@ -2,103 +2,150 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C819EC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB32C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A230F2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B9F21734
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:31:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mUP5bp4B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f3ceHyXw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfGZQbI (ORCPT
+        id S2387441AbfGZQbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:31:08 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43888 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728916AbfGZQbF (ORCPT
+        Fri, 26 Jul 2019 12:31:47 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:44632 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727775AbfGZQbq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 12:31:05 -0400
-Received: by mail-pl1-f194.google.com with SMTP id 4so17961446pld.10
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 09:31:05 -0700 (PDT)
+        Fri, 26 Jul 2019 12:31:46 -0400
+Received: by mail-yw1-f66.google.com with SMTP id l79so20507631ywe.11;
+        Fri, 26 Jul 2019 09:31:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=/uapPV30FnuKZOrO/m+jPWlWR9noietQQzXlvKFWtUQ=;
-        b=mUP5bp4BDhvX9Kpssr8T17MpsFdLah6pAxJ5MAWH71gFIWKSggQPSakLOdtYR4zNF4
-         ZW/P5eudklFUK77ocHBWiRLn3aMcU38uxHsul1Xm7j3/Tiaiao2X5rBMnRR6nYb18YPg
-         pFCr/Q67E6TnJx7eTRhKBk+R29Tj6EjP6/dbg=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z0sxhqsLtrLqL5nO6S6ZuBF359LlUdJOnMzgT01lnW8=;
+        b=f3ceHyXwvFBmRmD62TXyO/zGUI8cPi3pY3YE82VSSX50q+WVfSaqeKzbTcPnurD4QW
+         uAAsA9IpyG1m/u+SQirHr9Bq+kSDcDW25WQQXfQigBtJQ/8ByxTomFxhrW9Qn9l9wJPo
+         GeZQENTtOY28dpc0/gBXgkMzQwLvgqx1+1fZZqx2L5kOLlcRwsB9JY7fEVkurO1SlVvz
+         hrFgepqDKMnbPnGT7OVOfHQCl/Mc+gKfhadlhOSoqZ6EUAlz8tow7tPQYYKHUxEmm7hs
+         LndLLn9bmlfDxE8TIDJlRXV4d/YUZobeuZeuRq3uChq15MNLQ5gE0RvHboH9fNkr1vv0
+         r54w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=/uapPV30FnuKZOrO/m+jPWlWR9noietQQzXlvKFWtUQ=;
-        b=cum7s9qAIWtgW0yiy1KMTwyI0Od4BndrwAFKtCzINZdq85qeZa48+0nFOMl13xuLNp
-         tOfiaYZG5LsVSpQINwqjsU7CLRY588C7R8+rJKW498+vcQUGJrlhkYgfh3cWugJH0Iln
-         uNNaOOq+6kXI7R6PS7xvzaBtlNBtgRuGLGFGJZmQYTkA8x5QPHVOBfnxtDpuI98C/Qfc
-         YggEZ79yfaxskSInarcCIUTYpdPkpCDkzXIvcm0LoPZznTrWv8AqQrZrDgEVu+Ja+D9C
-         vXVI0ueH6K8T48/aB7jS8PQZun5DnuNqAttkVTvTOV7PO5PJPZJNH9zWwdY6FP09V00r
-         Rhow==
-X-Gm-Message-State: APjAAAX7uwduG9tRoow6cux0u9GHJMHoG0Bpf6/+yIOxYdxhFpTBTF/1
-        Q4MYxXkCg3G5KdoyEydn9FHYNA==
-X-Google-Smtp-Source: APXvYqyrzAX5xec1X60ADY+BupOXCKep6Mooa/4CsD65Phd1E2IrWJFtk1Zj0jRhyGRx6aBygBW3BQ==
-X-Received: by 2002:a17:902:549:: with SMTP id 67mr96837111plf.86.1564158665090;
-        Fri, 26 Jul 2019 09:31:05 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p2sm72905992pfb.118.2019.07.26.09.31.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Jul 2019 09:31:04 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 09:31:03 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Joe Perches <joe@perches.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yann Droneaud <ydroneaud@opteya.com>,
-        David Laight <David.Laight@aculab.com>,
-        Jonathan Corbet <corbet@lwn.net>, Stephen Kitt <steve@sk2.org>,
-        Nitin Gote <nitin.r.gote@intel.com>,
-        "jannh@google.com" <jannh@google.com>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] strscpy: reject buffer sizes larger than INT_MAX
-Message-ID: <201907260928.23DE35406@keescook>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z0sxhqsLtrLqL5nO6S6ZuBF359LlUdJOnMzgT01lnW8=;
+        b=V4aDOIE3J6hs+3g+G5kO6rpr8ujYlYERDhOCFXEmkNkSXmDJ5TN9WEHfzc9ojLrnoR
+         UsCpZBM7bDDQJG74rcR46rht7U1hIXDwkRBHLd6qkRxiLKxNDw1T/UCTZGJiPYCke3c9
+         E7/FJjTJN/veBQsnex/HrIvubdRgezxRX7vLXggVPhwxmGH2HEiGty6rMwDsssFqbjVa
+         rERblUlTUliGVwTh7gmxfyu04+/ziBgtbJllMw9DMChxnG7P5KxSvdAcCrrui0fRkDpo
+         lfAMSwd8CBq92rYun6XoQC8mxT52Tc8Vt5ASxBHsk+wOsuUf752k38mAJuLkJhj+6W+I
+         aPpQ==
+X-Gm-Message-State: APjAAAUOUH3kEgS0W6GPrubCYQMLD9A0laaarZKURo+5EtTywP/yJUCD
+        8PbRnYHhuroHYrTZTDW5obJGpnoB/lwizuVsmvc=
+X-Google-Smtp-Source: APXvYqwaU9ADwfRQsmwTfz+0RuMQLZIJ+JrrpflGJmMw3xCWYowUHSxrXqWNIv8OG/ROp1Uyuv+fsK8O1vzccRFe2JA=
+X-Received: by 2002:a81:13d4:: with SMTP id 203mr58331909ywt.181.1564158705661;
+ Fri, 26 Jul 2019 09:31:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <0000000000004a3a63058e722b94@google.com> <00000000000086c732058e79cb59@google.com>
+ <CAOQ4uxhAi6sqBR2219ZvzX7izeF_RezN+VKRrHiQ04P=t0uiOg@mail.gmail.com> <CAOQ4uxhRWzjY=RcgFtFZL4VUg7Y8EyRa2eaWuqtVOHDZWWO1PQ@mail.gmail.com>
+In-Reply-To: <CAOQ4uxhRWzjY=RcgFtFZL4VUg7Y8EyRa2eaWuqtVOHDZWWO1PQ@mail.gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Fri, 26 Jul 2019 19:31:34 +0300
+Message-ID: <CAOQ4uxi1w0uJkJzJOMQgeoQXZ0aQqYpwSLyQQmB779DjdY3D_Q@mail.gmail.com>
+Subject: Re: WARNING in ovl_real_fdget_meta
+To:     syzbot <syzbot+032bc63605089a199d30@syzkaller.appspotmail.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As already done for snprintf(), add a check in strscpy() for giant
-(i.e. likely negative and/or miscalculated) copy sizes, WARN, and
-error out.
+On Fri, Jul 26, 2019 at 1:06 PM Amir Goldstein <amir73il@gmail.com> wrote:
+>
+> On Fri, Jul 26, 2019 at 11:11 AM Amir Goldstein <amir73il@gmail.com> wrote:
+> >
+> > On Thu, Jul 25, 2019 at 7:24 AM syzbot
+> > <syzbot+032bc63605089a199d30@syzkaller.appspotmail.com> wrote:
+> > >
+> > > syzbot has bisected this bug to:
+> > >
+> > > commit 387e3746d01c34457d6a73688acd90428725070b
+> > > Author: Amir Goldstein <amir73il@gmail.com>
+> > > Date:   Fri Jun 7 14:24:38 2019 +0000
+> > >
+> > >      locks: eliminate false positive conflicts for write lease
+> > >
+> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15a79594600000
+> > > start commit:   c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
+> > > git tree:       upstream
+> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=17a79594600000
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=13a79594600000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3c8985c08e1f9727
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=032bc63605089a199d30
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15855334600000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17fcc4c8600000
+> > >
+> > > Reported-by: syzbot+032bc63605089a199d30@syzkaller.appspotmail.com
+> > > Fixes: 387e3746d01c ("locks: eliminate false positive conflicts for write
+> > > lease")
+> > >
+> > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> >
+> > The repro:
+> > #{"repeat":true,"procs":1,"sandbox":"none","fault_call":-1,"cgroups":true,"close_fds":true,"tmpdir":true}
+> > mkdir(&(0x7f0000000100)='./file0\x00', 0x0)
+> > mkdirat$cgroup_root(0xffffffffffffff9c,
+> > &(0x7f0000000000)='./cgroup.net/syz1\x00', 0x1ff)
+> > mount$fuse(0x20000000, &(0x7f0000000140)='./file0\x00', 0x0, 0x1004, 0x0)
+> > mount$overlay(0x400000, &(0x7f0000000100)='./file0\x00',
+> > &(0x7f00000001c0)='overlay\x00', 0x0,
+> > &(0x7f0000000040)=ANY=[@ANYBLOB=',lowerdir=.:file0'])
+> > r0 = open(&(0x7f0000000500)='./file0\x00', 0x0, 0x0)
+> > r1 = openat$cgroup_procs(r0, &(0x7f00000004c0)='cgroup.procs\x00', 0x48, 0x0)
+> > dup3(r1, r0, 0x0)
+> > fcntl$setlease(r0, 0x400, 0x1)
+> > lseek(r0, 0x4, 0x0)
+> >
+> > I though we would stop these family of overlapping layers fuzzers with:
+> > 146d62e5a586 ("ovl: detect overlapping layers")
+> >
+> > But syzbot got the upper hand, because we do not check for overlapping layers
+> > that cross fs boundary. Not sure if we should (?).
+>
+> No, we shouldn't care about that.
+> overlayfs doesn't follow cross-fs in underlying layers.
+>
+> >
+> > ./ is a tmpfs dir and ./file0/ is some kind of fuse mount (?)
+> > then after one cycle, ./file0/ itself is an overlapping overlay mount
+> > (lowerdir=./:./file0/)
+> > and after another cycle, ./file0/ is a nested overlapping overlayfs mount.
+> > Fine. Whatever.
+>
+> But damage can still be created if a lower overlayfs layer
+> overlaps with the another nested overlay lower underlying layer.
+> It actually shouldn't be too hard to add a guard also on the
+> nested overlay lower underlying layer inode.
+>
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- lib/string.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Here's a draft
 
-diff --git a/lib/string.c b/lib/string.c
-index 461fb620f85f..913cb945a82a 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -182,7 +182,7 @@ ssize_t strscpy(char *dest, const char *src, size_t count)
- 	size_t max = count;
- 	long res = 0;
- 
--	if (count == 0)
-+	if (count == 0 || WARN_ON_ONCE(count > INT_MAX))
- 		return -E2BIG;
- 
- #ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
--- 
-2.17.1
+#syz test: https://github.com/amir73il/linux.git ovl-check-nested-overlap
 
-
--- 
-Kees Cook
+Thanks,
+Amir.
