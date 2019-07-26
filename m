@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091CAC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DE6C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3EEC22CD3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7881B22CD3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148515;
-	bh=+Q4MS4mg58LWCTZtdP/Zw3UzF8hkUtxnW9TUrrHA0ms=;
+	s=default; t=1564148518;
+	bh=p68XiTC1LTWllQk29SVgoAQsHI6JE9Recy3GGh2LFFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ak7dgU7ffm9nVTQNlZho73+H4asXPBVs1WaQGBxhmydaPcoxBYcnc6zY4HuRnc9yp
-	 mdNnwghsO9nIe2TfOkD6+dz2HC9rDgT5AoFA0giinWRqHVKyAEF7iwWwfmxXT2R/tq
-	 vcdkh1ey1nj9Mf10nh/UtRKJZX1zVvBKX8Ecwv04=
+	b=bpwbQUE4NRzwJR/GgxYCK+HmaKKajzdSTrWuV90e4eywEy7+bbn+SiPW+Rs8pX6mW
+	 QkVur23sFvYeTGbdEh12n1udfKloy21bNaQSME0RTI3agQuy5zxsCpU/RJr3dUsx1v
+	 20iqRRp98GFlaxzIfA2XH3OlTmwBhr9S1+9cDloQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfGZNly (ORCPT
+        id S1727564AbfGZNl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:41:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48504 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:41:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387768AbfGZNlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:41:49 -0400
+        id S1727542AbfGZNly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:41:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF37322BF5;
-        Fri, 26 Jul 2019 13:41:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE6DC22BF5;
+        Fri, 26 Jul 2019 13:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148507;
-        bh=+Q4MS4mg58LWCTZtdP/Zw3UzF8hkUtxnW9TUrrHA0ms=;
+        s=default; t=1564148513;
+        bh=p68XiTC1LTWllQk29SVgoAQsHI6JE9Recy3GGh2LFFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ONs/B1i/1JR9fdyOlg8cBEqfh3/WH8FyaycC79zdG6603vbr5rd49U1Od9b83LSZS
-         7T66iQbAjABKmhiWftYs9mC1HWzs/rvdbzT6njrp6VAso+zABUxB5/trjrnxzda4UZ
-         2I7NEDD4yltZAJosxJnrcOu6Vd+spANF6DgRX/4Y=
+        b=oEFDqa+AfqiuXz9z/Ug67UyN9k7Oxz3YK+CAn3dPnJEA5Pf1Rx5sGEFqYcqUBE03r
+         N8xUiu0gDehocxVgsg5h7uMTtFbjCKpx9Fvs+7SjCQeiD4P5SPF4kUO5slRQUDmuzV
+         xKRk6YmVo2gUsjWEOpegzb+u+SHqKwoGV1Q9txfc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Rientjes <rientjes@google.com>, Cfir Cohen <cfir@google.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary R Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 73/85] crypto: ccp - Fix SEV_VERSION_GREATER_OR_EQUAL
-Date:   Fri, 26 Jul 2019 09:39:23 -0400
-Message-Id: <20190726133936.11177-73-sashal@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 76/85] x86/uaccess: Remove ELF function annotation from copy_user_handle_tail()
+Date:   Fri, 26 Jul 2019 09:39:26 -0400
+Message-Id: <20190726133936.11177-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -61,86 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Rientjes <rientjes@google.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit 83bf42510d7f7e1daa692c096e8e9919334d7b57 ]
+[ Upstream commit 3a6ab4bcc52263dd5b1d2fd2e4ce95a38c798b4d ]
 
-SEV_VERSION_GREATER_OR_EQUAL() will fail if upgrading from 2.2 to 3.1, for
-example, because the minor version is not equal to or greater than the
-major.
+After an objtool improvement, it's complaining about the CLAC in
+copy_user_handle_tail():
 
-Fix this and move to a static inline function for appropriate type
-checking.
+  arch/x86/lib/copy_user_64.o: warning: objtool: .altinstr_replacement+0x12: redundant UACCESS disable
+  arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x6: (alt)
+  arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x2: (alt)
+  arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x0: <=== (func)
 
-Fixes: edd303ff0e9e ("crypto: ccp - Add DOWNLOAD_FIRMWARE SEV command")
-Reported-by: Cfir Cohen <cfir@google.com>
-Signed-off-by: David Rientjes <rientjes@google.com>
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Acked-by: Gary R Hook <gary.hook@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+copy_user_handle_tail() is incorrectly marked as a callable function, so
+objtool is rightfully concerned about the CLAC with no corresponding
+STAC.
+
+Remove the ELF function annotation.  The copy_user_handle_tail() code
+path is already verified by objtool because it's jumped to by other
+callable asm code (which does the corresponding STAC).
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/6b6e436774678b4b9873811ff023bd29935bee5b.1563413318.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/ccp/psp-dev.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ arch/x86/lib/copy_user_64.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/ccp/psp-dev.c b/drivers/crypto/ccp/psp-dev.c
-index de5a8ca70d3d..6b17d179ef8a 100644
---- a/drivers/crypto/ccp/psp-dev.c
-+++ b/drivers/crypto/ccp/psp-dev.c
-@@ -24,10 +24,6 @@
- #include "sp-dev.h"
- #include "psp-dev.h"
+diff --git a/arch/x86/lib/copy_user_64.S b/arch/x86/lib/copy_user_64.S
+index 378a1f70ae7d..4fe1601dbc5d 100644
+--- a/arch/x86/lib/copy_user_64.S
++++ b/arch/x86/lib/copy_user_64.S
+@@ -239,7 +239,7 @@ copy_user_handle_tail:
+ 	ret
  
--#define SEV_VERSION_GREATER_OR_EQUAL(_maj, _min)	\
--		((psp_master->api_major) >= _maj &&	\
--		 (psp_master->api_minor) >= _min)
--
- #define DEVICE_NAME		"sev"
- #define SEV_FW_FILE		"amd/sev.fw"
- #define SEV_FW_NAME_SIZE	64
-@@ -47,6 +43,15 @@ MODULE_PARM_DESC(psp_probe_timeout, " default timeout value, in seconds, during
- static bool psp_dead;
- static int psp_timeout;
+ 	_ASM_EXTABLE_UA(1b, 2b)
+-ENDPROC(copy_user_handle_tail)
++END(copy_user_handle_tail)
  
-+static inline bool sev_version_greater_or_equal(u8 maj, u8 min)
-+{
-+	if (psp_master->api_major > maj)
-+		return true;
-+	if (psp_master->api_major == maj && psp_master->api_minor >= min)
-+		return true;
-+	return false;
-+}
-+
- static struct psp_device *psp_alloc_struct(struct sp_device *sp)
- {
- 	struct device *dev = sp->dev;
-@@ -588,7 +593,7 @@ static int sev_ioctl_do_get_id2(struct sev_issue_cmd *argp)
- 	int ret;
- 
- 	/* SEV GET_ID is available from SEV API v0.16 and up */
--	if (!SEV_VERSION_GREATER_OR_EQUAL(0, 16))
-+	if (!sev_version_greater_or_equal(0, 16))
- 		return -ENOTSUPP;
- 
- 	if (copy_from_user(&input, (void __user *)argp->data, sizeof(input)))
-@@ -651,7 +656,7 @@ static int sev_ioctl_do_get_id(struct sev_issue_cmd *argp)
- 	int ret;
- 
- 	/* SEV GET_ID available from SEV API v0.16 and up */
--	if (!SEV_VERSION_GREATER_OR_EQUAL(0, 16))
-+	if (!sev_version_greater_or_equal(0, 16))
- 		return -ENOTSUPP;
- 
- 	/* SEV FW expects the buffer it fills with the ID to be
-@@ -1053,7 +1058,7 @@ void psp_pci_init(void)
- 		psp_master->sev_state = SEV_STATE_UNINIT;
- 	}
- 
--	if (SEV_VERSION_GREATER_OR_EQUAL(0, 15) &&
-+	if (sev_version_greater_or_equal(0, 15) &&
- 	    sev_update_firmware(psp_master->dev) == 0)
- 		sev_get_api_version();
- 
+ /*
+  * copy_user_nocache - Uncached memory copy with exception handling
 -- 
 2.20.1
 
