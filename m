@@ -2,94 +2,151 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D5FC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2895CC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF5822BEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F241822BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:26:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NqYanJMe"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="OSSRdZkS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387545AbfGZUZD (ORCPT
+        id S1727958AbfGZU0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 16:25:03 -0400
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:42265 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbfGZUZC (ORCPT
+        Fri, 26 Jul 2019 16:26:53 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41706 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727816AbfGZU0u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 16:25:02 -0400
-Received: by mail-wr1-f43.google.com with SMTP id x1so5726774wrr.9;
-        Fri, 26 Jul 2019 13:25:01 -0700 (PDT)
+        Fri, 26 Jul 2019 16:26:50 -0400
+Received: by mail-pg1-f196.google.com with SMTP id x15so14932709pgg.8
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 13:26:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HHa17vzHiWrmjHIgGNiq1sBSijdQrhuWsaVzln+Qeqo=;
-        b=NqYanJMeMlq7f59a5Vx+cpN4OhiLYHISnSWuGi10y8cX0lZ8SwUE/nEjE6gJaQxCLZ
-         vH6G85BNMWNP5MwNCtd3ggpJkONNQEPLA/Aj6ifxIOEBoC4q5lon3pTtlpmCR96gFWVH
-         VB8wH04xYTrBu9jWagarmMvOhd/CoI2Glwd8PDwwhDzsThfVSTswY6+TsflbqN5FTQD5
-         ErsnzeDaTh0J095GiBgFMxQb7vHIy9Ee9u5CK9GuoMBLzMmZV8UhNYe8M+/ZxMl9uXkL
-         zdPax2murb+DLnUM80uLYlaCjzf+bp7Xv+lyYCqcrJeXfkphh0VlQwIAwLubQ5JHSlVA
-         yy8Q==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IE5eJowpyCcGnZE2pKcSc9umsrWgUqBG7zCK+NjEKK4=;
+        b=OSSRdZkSZXg6M+b9FWF3a1q+TiPSBp244enRgIGdVZjUu/SD8K8PRf3KqpHJ6cYWhk
+         n3RevHiDEbDWb3xewyJUfr/5dEQwWqMIwnEbk87NSvS9caP8hIT7G5fh4UfLVUxKM38z
+         JNXY9crOfbFD7ctsGRXt2fiHSx0KEPhd66l6Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HHa17vzHiWrmjHIgGNiq1sBSijdQrhuWsaVzln+Qeqo=;
-        b=JLd2LUcIlfQmWIckmMj2AKK/Eg5DYWgbjFRAe5vCiAOJ1XK27fAX0N0ANHa2+bpGgj
-         RrF6nDkwBh2M6bmZoaxlS1r25jCLL5bbn5SkAb5Ab4CYREJL4lPbL+iTnDI5tWrKK0MC
-         792Q99ANhat1o2FSZl2zfNpaw2JsuJWgtYtpKdjbt1Rqy/gcFd57fVT7GBs1pOXrRP2l
-         zRwwdFE/+EQ2g9VazuAX+FhVEsce/tY2jiGX7hfzCmO/k83WWpg5Gv5P8Dyktbjhopud
-         Af2w8QomWJoOHxLJbmlSlV+VetUhYGSND3f3HV+Ba96xfzvJxx7RWvDWBaoz6Jfe8Y+v
-         YlgQ==
-X-Gm-Message-State: APjAAAUB9fwOlxnuo1gkWLfPm+rY7a43iSZC1ortz+qVWxKXaoUWzanI
-        V4aEZqFto5CHhHcWRbIp45Y=
-X-Google-Smtp-Source: APXvYqwI/jKDZZBIgzVuqZkeovAMfFMCa09B4bwsnOveIrm8rzZDQQbInVD0IpbVLhJ30EZ5bO18PA==
-X-Received: by 2002:adf:f28a:: with SMTP id k10mr25374515wro.343.1564172700616;
-        Fri, 26 Jul 2019 13:25:00 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f43:4200:55f1:e404:698f:358? (p200300EA8F43420055F1E404698F0358.dip0.t-ipconnect.de. [2003:ea:8f43:4200:55f1:e404:698f:358])
-        by smtp.googlemail.com with ESMTPSA id r5sm56829890wmh.35.2019.07.26.13.24.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 13:24:59 -0700 (PDT)
-Subject: Re: [REGRESSION] 5.3-rc1: r8169: remove 1000/Half from supported
- modes
-To:     Bernhard Held <berny156@gmx.de>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>
-References: <a291af45-310c-8b60-ae7e-392e73e3bad1@gmx.de>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <0a48ecd7-7134-222d-833d-c1f65e055c02@gmail.com>
-Date:   Fri, 26 Jul 2019 22:24:54 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IE5eJowpyCcGnZE2pKcSc9umsrWgUqBG7zCK+NjEKK4=;
+        b=ZNl13nG8pBvz0xF/qvif6os/s4rY0H7oYuja5GG4nS6uy/XqK44sYUdL8ldiSUJcWV
+         BubAu2A3tqaBjifdT2iEcdXgXu5hkZ8df0cCan2Ac52x2fXk4TjSH46mxIxI/j82FsmL
+         XkAdDPlHQSuB2YOwr5d+7vG711+ZeiJXJkdGoO0wuyJAf+EKL5R+VQYP94HsiJuM1TJO
+         qmZYLy6A2VLwDZqH10qgIcW0TExcUfEDGpu9BNup3ZKcFKRxH7959AymdrkTMZ15hlpw
+         TcJ+P6thjnS19eVSYNfvGux6yFeVZb920vuxIm/IpVBsDGaIUh+KSgDFVLiDNgYKlMFg
+         9BSA==
+X-Gm-Message-State: APjAAAUeKrz7yipBjQfqle6qk8dXfhvxJYzRSUTZOzb4VsK6sXwI+dpo
+        hvM5YrIyV/nt1ETwcBDGVy0=
+X-Google-Smtp-Source: APXvYqwxNJxyl8AMaL5MbjN3DCH0CGh1VKzKZSR7IsnpnOEC6DeGs6F8TvHMF+yBHu4tkJDhVOJeUA==
+X-Received: by 2002:a17:90a:4f0e:: with SMTP id p14mr96514100pjh.40.1564172810042;
+        Fri, 26 Jul 2019 13:26:50 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id f19sm77269906pfk.180.2019.07.26.13.26.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 26 Jul 2019 13:26:49 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 16:26:47 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     sspatil@google.com
+Cc:     linux-kernel@vger.kernel.org, adobriyan@gmail.com,
+        akpm@linux-foundation.org, bgregg@netflix.com, chansen3@cisco.com,
+        dancol@google.com, fmayer@google.com, joaodias@google.com,
+        corbet@lwn.net, keescook@chromium.org, kernel-team@android.com,
+        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
+        rppt@linux.ibm.com, minchan@kernel.org, namhyung@google.com,
+        guro@fb.com, sfr@canb.auug.org.au, surenb@google.com,
+        tkjos@google.com, vdavydov.dev@gmail.com, vbabka@suse.cz,
+        wvw@google.com, sspatil+mutt@google.com
+Subject: Re: [PATCH v3 2/2] doc: Update documentation for page_idle virtual
+ address indexing
+Message-ID: <20190726202647.GA213712@google.com>
+References: <20190726152319.134152-1-joel@joelfernandes.org>
+ <20190726152319.134152-2-joel@joelfernandes.org>
+ <20190726201710.GA144547@google.com>
 MIME-Version: 1.0
-In-Reply-To: <a291af45-310c-8b60-ae7e-392e73e3bad1@gmx.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190726201710.GA144547@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.07.2019 22:16, Bernhard Held wrote:
-> Hi Heiner,
+On Fri, Jul 26, 2019 at 01:17:10PM -0700, sspatil@google.com wrote:
+> Thanks Joel, just a couple of nits for the doc inline below. Other than that,
 > 
-> with commit a6851c613fd7 "r8169: remove 1000/Half from supported modes" my RTL8111B GB-link stops working. It thinks that it established a link, however nothing is actually transmitted. Setting the mode with `mii-tool -F 100baseTx-HD` establishes a successful connection.
-> 
-Can you provide standard ethtool output w/ and w/o this patch? Also a full dmesg output
-with the patch would be helpful.
-Is "100baseTx-HD" a typo and you mean GBit? And any special reason why you set half duplex?
+> Reviewed-by: Sandeep Patil <sspatil@google.com>
 
-> Reverting a6851c613fd7 (while considering the file name change) fixes autonegotiation for me.
+Thanks!
+
+> I'll plan on making changes to Android to use this instead of the pagemap +
+> page_idle. I think it will also be considerably faster.
+
+Cool, glad to know.
+
+> On Fri, Jul 26, 2019 at 11:23:19AM -0400, Joel Fernandes (Google) wrote:
+> > This patch updates the documentation with the new page_idle tracking
+> > feature which uses virtual address indexing.
+> > 
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > ---
+> >  .../admin-guide/mm/idle_page_tracking.rst     | 43 ++++++++++++++++---
+> >  1 file changed, 36 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/Documentation/admin-guide/mm/idle_page_tracking.rst b/Documentation/admin-guide/mm/idle_page_tracking.rst
+> > index df9394fb39c2..1eeac78c94a7 100644
+> > --- a/Documentation/admin-guide/mm/idle_page_tracking.rst
+> > +++ b/Documentation/admin-guide/mm/idle_page_tracking.rst
+> > @@ -19,10 +19,14 @@ It is enabled by CONFIG_IDLE_PAGE_TRACKING=y.
+> >  
+> >  User API
+> >  ========
+> > +There are 2 ways to access the idle page tracking API. One uses physical
+> > +address indexing, another uses a simpler virtual address indexing scheme.
+> >  
+> > -The idle page tracking API is located at ``/sys/kernel/mm/page_idle``.
+> > -Currently, it consists of the only read-write file,
+> > -``/sys/kernel/mm/page_idle/bitmap``.
+> > +Physical address indexing
+> > +-------------------------
+> > +The idle page tracking API for physical address indexing using page frame
+> > +numbers (PFN) is located at ``/sys/kernel/mm/page_idle``.  Currently, it
+> > +consists of the only read-write file, ``/sys/kernel/mm/page_idle/bitmap``.
+> >  
+> >  The file implements a bitmap where each bit corresponds to a memory page. The
+> >  bitmap is represented by an array of 8-byte integers, and the page at PFN #i is
+> > @@ -74,6 +78,31 @@ See :ref:`Documentation/admin-guide/mm/pagemap.rst <pagemap>` for more
+> >  information about ``/proc/pid/pagemap``, ``/proc/kpageflags``, and
+> >  ``/proc/kpagecgroup``.
+> >  
+> > +Virtual address indexing
+> > +------------------------
+> > +The idle page tracking API for virtual address indexing using virtual page
+> > +frame numbers (VFN) is located at ``/proc/<pid>/page_idle``. It is a bitmap
+> > +that follows the same semantics as ``/sys/kernel/mm/page_idle/bitmap``
+> > +except that it uses virtual instead of physical frame numbers.
+> > +
+> > +This idle page tracking API does not need deal with PFN so it does not require
 > 
-> Kind regards
-> Bernhard
+> s/need//
 > 
-Heiner
+> > +prior lookups of ``pagemap`` in order to find if page is idle or not. This is
+> 
+> s/in order to find if page is idle or not//
+
+Fixed both, thank you! Will send out update soon.
+
+thanks,
+
+ - Joel
+
