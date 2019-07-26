@@ -2,161 +2,142 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B31C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 17:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D534CC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 17:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A17F22BEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 17:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A71AE21994
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 17:46:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="emd7eY/+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387972AbfGZRp1 (ORCPT
+        id S2387993AbfGZRqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 13:45:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387623AbfGZRp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 13:45:27 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEBE421994;
-        Fri, 26 Jul 2019 17:45:25 +0000 (UTC)
-Date:   Fri, 26 Jul 2019 13:45:23 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Matt Helsley <mhelsley@vmware.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3 04/13] recordmcount: Rewrite error/success handling
-Message-ID: <20190726134523.4e7afd55@gandalf.local.home>
-In-Reply-To: <316706a0e2727af0a2639b8e90366746d7a3a84a.1563992889.git.mhelsley@vmware.com>
-References: <cover.1563992889.git.mhelsley@vmware.com>
-        <316706a0e2727af0a2639b8e90366746d7a3a84a.1563992889.git.mhelsley@vmware.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 26 Jul 2019 13:46:42 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39439 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387623AbfGZRqm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 13:46:42 -0400
+Received: by mail-oi1-f193.google.com with SMTP id m202so40834561oig.6;
+        Fri, 26 Jul 2019 10:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WGpliEWlMJR86QQHjNkvOVmi637qgDODhWz90T/enDA=;
+        b=emd7eY/+yhDi/ewbbEtWfJNyj0igS+6kMhiTEYmlNrYCJsXnVBa432o4xJCP4AdQ7b
+         QU+I82y3ekntbHJ7+tw/kXOR4MmaQkSpnQHtfoE7IcNVW7HzDLv6usYXes2madoC7Dfn
+         ZFrhgwcHz6Ch88sThBKbpF80ZOsR/yZuXere6sgxRlTlhoA6obhereqdgR/DBjersHmi
+         WzZqg+H3QfPOjn0d/iLGPiwT8E9Y8OCbm0jBiVt7reLrH4Qq8vHhZe2v7nYiLbCJSduJ
+         wmQPnwRIrkxReKFi6UtlaQ1j13/kerXnTXbSCK7hkdbnsbMABiRBREbmnoHf/zyg4Sza
+         mEiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WGpliEWlMJR86QQHjNkvOVmi637qgDODhWz90T/enDA=;
+        b=aGJjICrIr7cMmwapIUqthuQO7w0JHAfp1qU0so6Eguaj/ppsrMr0KiUjtZf7CZ9Kx9
+         vdAMSW/vQBJBY72CsIV9rscsF48JLz6qDg0Sf/JLbO+TOwybfFPeC4LWzlXnLYhh7P5K
+         URlYYpuOWILVSebv8CIi7f45OMkpvIBoCGk1cKmsDcT9Jbx0q3RMCHP5/HMH9zzOLJ5n
+         rcobge/ypMxHULoj2y74yFYvmwaBeYENaRrPryIhHHqK26DtIZR9K1LKqqIicSNtIkz5
+         YcwFyHN4e0wYfZ+R/uXK4jiTjPBoSoEvDD6HIB72z5vkKiwOolUweQtNZXioT9Vm4dST
+         T5kA==
+X-Gm-Message-State: APjAAAVA8ivEjSumf3uk58BrwkfdJIi/DQxNvb6U59BmS8rHlVaLKvW9
+        gN7loo5UOgGpeFlstL5WG0rlMNQEmTEASIidmrU=
+X-Google-Smtp-Source: APXvYqwBT4rAcuQeOHJxjAVo+7f4dDVhPgouvyax7CqptIx3vwCxyANHomTDgsG9t3gu6Db+jTmJTNDy7Wqr/XjIUWk=
+X-Received: by 2002:a54:4813:: with SMTP id j19mr21421854oij.34.1564163200442;
+ Fri, 26 Jul 2019 10:46:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190623164206.7467-1-tiny.windzz@gmail.com> <CA+E=qVfhDEQER2UTj65hR9erzej9Ey2FrUa9GV=iCFYsWZ2ztw@mail.gmail.com>
+ <CA+E=qVdAUFJM27cNL6WRkk5moX=mEk7WUs6UBoX58Y7ove40oQ@mail.gmail.com>
+In-Reply-To: <CA+E=qVdAUFJM27cNL6WRkk5moX=mEk7WUs6UBoX58Y7ove40oQ@mail.gmail.com>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Fri, 26 Jul 2019 10:46:35 -0700
+Message-ID: <CA+E=qVdw+DG7Bj4xg5-wjatyHMH76q2usanZ7Ty6pGHuaA_=5Q@mail.gmail.com>
+Subject: Re: [PATCH v4 00/11] add thermal driver for h6
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        paulmck@linux.ibm.com, devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jul 2019 14:04:58 -0700
-Matt Helsley <mhelsley@vmware.com> wrote:
+Hey Yangtao,
 
+Are you planning to send v5 anytime soon?
 
-Hi Matt,
-
-As I'm applying these for real, I'm taking a deeper look at the
-patches. This one I have some questions about.
-
-> Recordmcount uses setjmp/longjmp to manage control flow as
-> it reads and then writes the ELF file. This unusual control
-> flow is hard to follow and check in addition to being unlike
-> kernel coding style.
-> 
-> So we rewrite these paths to use regular return values to
-> indicate error/success. When an error or previously-completed object
-> file is found we return an error code following kernel
-> coding conventions -- negative error values and 0 for success when
-> we're not returning a pointer. We return NULL for those that fail
-> and return non-NULL pointers otherwise.
-> 
-> One oddity is already_has_rel_mcount -- there we use pointer comparison
-> rather than string comparison to differentiate between
-> previously-processed object files and returning the name of a text
-> section.
-
-This is fine, but it's got a strange implementation.
-
-
-
-> diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
-> index c1e1b04b4871..909a3e4775c2 100644
-> --- a/scripts/recordmcount.h
-> +++ b/scripts/recordmcount.h
-> @@ -24,7 +24,9 @@
->  #undef mcount_adjust
->  #undef sift_rel_mcount
->  #undef nop_mcount
-> +#undef missing_sym
->  #undef find_secsym_ndx
-> +#undef already_has_rel_mcount
-
-Why do we need these as defines? Can't you just have a single:
-
-const char *already_has_mcount = "success";
-
-in recordmcount.c before recordmcount.h is included?
-
-And same for missing_sym.
-
-Another, probably more robust way of doing this, is change
-find_secsym_ndx() to return 0 on success and -1 on missing symbol, and
-just pass a pointer by reference to fill the recsym (which doesn't have
-to be a constant).
-
-I've applied the first 3 patches of this series, but stopped here. I'll
-continue to take a deeper look at your other patches.
-
-Thanks!
-
--- Steve
-
-
-
->  #undef __has_rel_mcount
->  #undef has_rel_mcount
->  #undef tot_relsize
-> @@ -54,7 +56,9 @@
->  # define append_func		append64
->  # define sift_rel_mcount	sift64_rel_mcount
->  # define nop_mcount		nop_mcount_64
-> +# define missing_sym		missing_sym_64
->  # define find_secsym_ndx	find64_secsym_ndx
-> +# define already_has_rel_mcount	already_has_rel_mcount_64
->  # define __has_rel_mcount	__has64_rel_mcount
->  # define has_rel_mcount		has64_rel_mcount
->  # define tot_relsize		tot64_relsize
-> @@ -87,7 +91,9 @@
->  # define append_func		append32
->  # define sift_rel_mcount	sift32_rel_mcount
->  # define nop_mcount		nop_mcount_32
-> +# define missing_sym		missing_sym_32
->  # define find_secsym_ndx	find32_secsym_ndx
-> +# define already_has_rel_mcount	already_has_rel_mcount_32
->  # define __has_rel_mcount	__has32_rel_mcount
->  # define has_rel_mcount		has32_rel_mcount
->  # define tot_relsize		tot32_relsize
-
-> +static const unsigned int missing_sym = (unsigned int)-1;
->  
->  /*
->   * Find a symbol in the given section, to be used as the base for relocating
-> @@ -443,9 +469,11 @@ static unsigned find_secsym_ndx(unsigned const txtndx,
->  	}
->  	fprintf(stderr, "Cannot find symbol for section %u: %s.\n",
->  		txtndx, txtname);
-> -	fail_file();
-> +	cleanup();
-> +	return missing_sym;
->  }
->  
-> +char const *already_has_rel_mcount = "success"; /* our work here is done! */
->  
->  /* Evade ISO C restriction: no declaration after statement in has_rel_mcount. */
->  static char const *
-> @@ -461,7 +489,8 @@ __has_rel_mcount(Elf_Shdr const *const relhdr,  /* is SHT_REL or SHT_RELA */
->  	if (strcmp("__mcount_loc", txtname) == 0) {
->  		fprintf(stderr, "warning: __mcount_loc already exists: %s\n",
->  			fname);
-> -		succeed_file();
-> +		cleanup();
-> +		return already_has_rel_mcount;
->  	}
->  	if (w(txthdr->sh_type) != SHT_PROGBITS ||
->  	    !(_w(txthdr->sh_flags) & SHF_EXECINSTR))
+On Sat, Jul 13, 2019 at 11:01 AM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> On Wed, Jul 10, 2019 at 4:09 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+> >
+> > On Sun, Jun 23, 2019 at 9:42 AM Yangtao Li <tiny.windzz@gmail.com> wrote:
+> > >
+> > > This patchset add support for H3 and H6 thermal sensor.
+> > >
+> > > BTY, do a cleanup in thermal makfile.
+> > >
+> > > Yangtao Li (11):
+> > >   thermal: sun8i: add thermal driver for h6
+> > >   dt-bindings: thermal: add binding document for h6 thermal controller
+> > >   thermal: fix indentation in makefile
+> > >   thermal: sun8i: get ths sensor number from device compatible
+> > >   thermal: sun8i: rework for sun8i_ths_get_temp()
+> > >   thermal: sun8i: get ths init func from device compatible
+> > >   thermal: sun8i: rework for ths irq handler func
+> > >   thermal: sun8i: support ahb clocks
+> > >   thermal: sun8i: rework for ths calibrate func
+> > >   dt-bindings: thermal: add binding document for h3 thermal controller
+> > >   thermal: sun8i: add thermal driver for h3
+> >
+> > It would be nice to add dts changes to this series. It's unlikely that
+> > you'll get any "Tested-by" otherwise.
+>
+> I added A64 support on top of this series, see
+> https://github.com/anarsoul/linux-2.6/tree/v5.2-thermal
+>
+> Branch also contains patches to enable DVFS on A64, feel free to
+> cherry pick only those related to thermal driver if you want to
+> include A64 support into v5 series.
+>
+> >
+> > >  .../bindings/thermal/sun8i-thermal.yaml       |  94 +++
+> > >  MAINTAINERS                                   |   7 +
+> > >  drivers/thermal/Kconfig                       |  14 +
+> > >  drivers/thermal/Makefile                      |   9 +-
+> > >  drivers/thermal/sun8i_thermal.c               | 534 ++++++++++++++++++
+> > >  5 files changed, 654 insertions(+), 4 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> > >  create mode 100644 drivers/thermal/sun8i_thermal.c
+> > >
+> > > ---
+> > > v4:
+> > > -add h3 support
+> > > -fix yaml file
+> > > ---
+> > > 2.17.1
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
