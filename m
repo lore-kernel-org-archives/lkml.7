@@ -2,165 +2,159 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF9BC41517
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A26CAC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86E6A229F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 743CB229F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:15:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Hbcvsw+j";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OjBrgcz+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Euo5xzhi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbfGZKOq (ORCPT
+        id S1726277AbfGZKPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 06:14:46 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54488 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfGZKOq (ORCPT
+        Fri, 26 Jul 2019 06:15:07 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40416 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfGZKPG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 06:14:46 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id CFFB5602BC; Fri, 26 Jul 2019 10:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564136085;
-        bh=jvQxmzWvpok8BXHCVML4PDBkl58pFVq1DH9k7A72xrI=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=Hbcvsw+jUAUwQUyIS0UEH1vlmY7SG3UGJxFTRFN2VeZ9+HwWFM2suO3MOqNljgdbo
-         nHBGnexfVZVPzvgLbOR7G2OC9q/hGeibKn21XkjU+3O/K3rlVhWHVld69zhmUZG25D
-         7V/d3CxEF63KkXnge/psrRtHmoSaUm612Kg3rXkk=
-Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D408260247;
-        Fri, 26 Jul 2019 10:14:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564136084;
-        bh=jvQxmzWvpok8BXHCVML4PDBkl58pFVq1DH9k7A72xrI=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=OjBrgcz+rtbPEy8asULLePhQI4rc2BAZgXIVXF4aCn4H0/mg66gBhsLZGH3EYpLpO
-         ao5RZP7zE6KeY8usw2suKqShAETpklB5PxtpnhxmleaQ+tuzeAa21s5GpEBVZqJUcK
-         YlOCTw7ajTj3LJNyEWoL5lEugzEY6Hkavzdd8k20=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D408260247
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-Subject: Re: [Regression] Missing device nodes for ETR, ETF and STM after
- CONFIG_UEVENT_HELPER=n
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <cfe09a46-462f-633a-37c2-52f8bfc0ffb2@codeaurora.org>
- <20190726070429.GA15714@kroah.com>
- <165028a7-ff12-dd28-cc4c-57a3961dbb40@codeaurora.org>
- <20190726084127.GA28470@kroah.com>
- <097942a1-6914-2542-450f-65a6147dc7aa@codeaurora.org>
-Message-ID: <6d48f996-6297-dc69-250b-790be6d2670c@codeaurora.org>
-Date:   Fri, 26 Jul 2019 15:44:40 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <097942a1-6914-2542-450f-65a6147dc7aa@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 26 Jul 2019 06:15:06 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w10so24570838pgj.7
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 03:15:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=M9pnPqM6bt2hdIJ4IxtJ5Zv2VYOfZFm6pG5drvI0pp0=;
+        b=Euo5xzhiRCA8Hz/63/lvgO3o2lXGgb+X1DuKd2urtiQfkVuvWpY3bL795/UunVYn79
+         NXm+AA7qPaIj9zmrufY+P/Fqlpoo8PFvPevBd2jkM4MNHPGVqxM5Ikf6t6rcdilrDSZK
+         MnQEhdDwxRT2Lq+pf965lqtDl5SvnW7CdnrQGo7R0EBOK30/voxzyMDvUPx2cFRB+zHR
+         HMamOzfaAhvyXfpNrggbNWc6qd/LZxsnTlh6zxXwJbOo+IvC4Ts7SLf8SuNTZY2gQr9K
+         HlBDL6UBfMn67IxZbOL5vBXzOAkE1IiRbfJdMPFmOVT+Ex01YFHT1UZ5XyLqvx2jObxx
+         AdhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=M9pnPqM6bt2hdIJ4IxtJ5Zv2VYOfZFm6pG5drvI0pp0=;
+        b=ZQfR6y7HeK/tF19DMmKSInP5oLnY5lyqhdIYKZQxXF079eDAEmPrCufDoNrh3SfQfw
+         KjyucfnmuDZ/bDcDaTfCZhNNjiBy3bHubD3+1whTlciN6gnWDPxDKMftQ7K+1ZGHkCn9
+         yZ/Kq5acm69OhgwxD/3YniNEY17vPkBbC7feyOja/8dj9RpUDsCsUzaN47IjS13iWZvT
+         rx0zggYKNICOTozuqF0/XHA1MerjG/g8BrpWjthUqExulByX1Z8m/NAkj+Le1cc0AHvU
+         OYlfssKAup6FV9ohrV8D4dx8Oe6m7U+TL8y+6UabS0vlqfi+T7TBoXCLGPT9wFtHGnA8
+         Xysw==
+X-Gm-Message-State: APjAAAXgUSgReDGkAgSUrlV0hUFWYKYjQkniTaKBOs/PDVHO8noV0lu0
+        hiqeTv9mu//Ebi/frc3R5+k=
+X-Google-Smtp-Source: APXvYqxvhBWlScGmrxvVVaulkMxcZBoXSjNIWboBDpn3bUPIQjcuH3fw1tK1O/3OxtXB2yZHylo/Vg==
+X-Received: by 2002:a63:bf01:: with SMTP id v1mr88736412pgf.278.1564136105888;
+        Fri, 26 Jul 2019 03:15:05 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id 21sm51365965pjh.25.2019.07.26.03.15.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jul 2019 03:15:05 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     mark@fasheh.com, jlbec@evilplan.org, joseph.qi@linux.alibaba.com
+Cc:     ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH 1/3 v2] fs: ocfs2: Fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()
+Date:   Fri, 26 Jul 2019 18:14:47 +0800
+Message-Id: <20190726101447.9153-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/26/2019 3:14 PM, Sai Prakash Ranjan wrote:
-> On 7/26/2019 2:11 PM, Greg Kroah-Hartman wrote:
->> On Fri, Jul 26, 2019 at 01:50:27PM +0530, Sai Prakash Ranjan wrote:
->>> On 7/26/2019 12:34 PM, Greg Kroah-Hartman wrote:
->>>> On Fri, Jul 26, 2019 at 11:49:19AM +0530, Sai Prakash Ranjan wrote:
->>>>> Hi,
->>>>>
->>>>> When trying to test my coresight patches, I found that etr,etf and stm
->>>>> device nodes are missing from /dev.
->>>>
->>>> I have no idea what those device nodes are.
->>>>
->>>>> Bisection gives this as the bad commit.
->>>>>
->>>>> 1be01d4a57142ded23bdb9e0c8d9369e693b26cc is the first bad commit
->>>>> commit 1be01d4a57142ded23bdb9e0c8d9369e693b26cc
->>>>> Author: Geert Uytterhoeven <geert+renesas@glider.be>
->>>>> Date:   Thu Mar 14 12:13:50 2019 +0100
->>>>>
->>>>>       driver: base: Disable CONFIG_UEVENT_HELPER by default
->>>>>
->>>>>       Since commit 7934779a69f1184f ("Driver-Core: disable 
->>>>> /sbin/hotplug by
->>>>>       default"), the help text for the /sbin/hotplug fork-bomb says
->>>>>       "This should not be used today [...] creates a high system 
->>>>> load, or
->>>>>       [...] out-of-memory situations during bootup".  The rationale 
->>>>> for this
->>>>>       was that no recent mainstream system used this anymore (in 
->>>>> 2010!).
->>>>>
->>>>>       A few years later, the complete uevent helper support was 
->>>>> made optional
->>>>>       in commit 86d56134f1b67d0c ("kobject: Make support for 
->>>>> uevent_helper
->>>>>       optional.").  However, if was still left enabled by default, 
->>>>> to support
->>>>>       ancient userland.
->>>>>
->>>>>       Time passed by, and nothing should use this anymore, so it 
->>>>> can be
->>>>>       disabled by default.
->>>>>
->>>>>       Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>>>       Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>>>
->>>>>    drivers/base/Kconfig | 1 -
->>>>>    1 file changed, 1 deletion(-)
->>>>>
->>>>>
->>>>> Any idea on this?
->>>>
->>>> That means that who ever created those device nodes is relying on udev
->>>> to do this, and is not doing the correct thing within the kernel and
->>>> using devtmpfs.
->>>>
->>>> Any pointers to where in the kernel those devices are trying to be
->>>> created?
->>>>
->>>
->>> Somewhere in drivers/hwtracing/coresight/* probably. I am not sure,
->>> Mathieu/Suzuki would be able to point you to the exact code.
->>>
->>> Also just to add on some more details, I am using *initramfs*
->>
->> Are you using devtmpfs for your /dev/ mount?
->>
-> 
-> I am not mounting devtmpfs. However
-> 
->   CONFIG_DEVTMPFS=y
->   CONFIG_DEVTMPFS_MOUNT=y
-> 
+In ocfs2_xa_prepare_entry(), there is an if statement on line 2136 to
+check whether loc->xl_entry is NULL:
+    if (loc->xl_entry)
 
-Ok my initramfs is using mdev:
+When loc->xl_entry is NULL, it is used on line 2158:
+    ocfs2_xa_add_entry(loc, name_hash);
+        loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
+        loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
+and line 2164:
+    ocfs2_xa_add_namevalue(loc, xi);
+        loc->xl_entry->xe_value_size = cpu_to_le64(xi->xi_value_len);
+        loc->xl_entry->xe_name_len = xi->xi_name_len;
 
-*/sbin/mdev -s*
+Thus, possible null-pointer dereferences may occur.
 
-This somehow is not mounting etr, etf, stm devices when uevent-helper is
-disabled. Anyways as Suzuki mentioned, using devtmpfs does fix the issue.
+To fix these bugs, if loc-xl_entry is NULL, ocfs2_xa_prepare_entry()
+abnormally returns with -EINVAL.
 
-Thanks,
-Sai
+These bugs are found by a static analysis tool STCheck written by us.
 
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+v2:
+* Directly return -EINVAL if loc-xl_entry is NULL.
+  Thank Joseph for helpful advice.
+
+---
+ fs/ocfs2/xattr.c | 44 +++++++++++++++++++++++---------------------
+ 1 file changed, 23 insertions(+), 21 deletions(-)
+
+diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
+index 385f3aaa2448..4b876c82a35c 100644
+--- a/fs/ocfs2/xattr.c
++++ b/fs/ocfs2/xattr.c
+@@ -2133,29 +2133,31 @@ static int ocfs2_xa_prepare_entry(struct ocfs2_xa_loc *loc,
+ 	if (rc)
+ 		goto out;
+ 
+-	if (loc->xl_entry) {
+-		if (ocfs2_xa_can_reuse_entry(loc, xi)) {
+-			orig_value_size = loc->xl_entry->xe_value_size;
+-			rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
+-			if (rc)
+-				goto out;
+-			goto alloc_value;
+-		}
++	if (!loc->xl_entry) {
++		rc = -EINVAL;
++		goto out;
++	}
+ 
+-		if (!ocfs2_xattr_is_local(loc->xl_entry)) {
+-			orig_clusters = ocfs2_xa_value_clusters(loc);
+-			rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
+-			if (rc) {
+-				mlog_errno(rc);
+-				ocfs2_xa_cleanup_value_truncate(loc,
+-								"overwriting",
+-								orig_clusters);
+-				goto out;
+-			}
++	if (ocfs2_xa_can_reuse_entry(loc, xi)) {
++		orig_value_size = loc->xl_entry->xe_value_size;
++		rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
++		if (rc)
++			goto out;
++		goto alloc_value;
++	}
++
++	if (!ocfs2_xattr_is_local(loc->xl_entry)) {
++		orig_clusters = ocfs2_xa_value_clusters(loc);
++		rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
++		if (rc) {
++			mlog_errno(rc);
++			ocfs2_xa_cleanup_value_truncate(loc,
++							"overwriting",
++							orig_clusters);
++			goto out;
+ 		}
+-		ocfs2_xa_wipe_namevalue(loc);
+-	} else
+-		ocfs2_xa_add_entry(loc, name_hash);
++	}
++	ocfs2_xa_wipe_namevalue(loc);
+ 
+ 	/*
+ 	 * If we get here, we have a blank entry.  Fill it.  We grow our
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.17.0
+
