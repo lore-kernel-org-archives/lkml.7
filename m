@@ -2,117 +2,190 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDE7C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49656C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6856218D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:17:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aCuPaDhX"
+	by mail.kernel.org (Postfix) with ESMTP id 2CB0021850
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:17:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbfGZORN (ORCPT
+        id S1728352AbfGZORZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:17:13 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42698 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbfGZORN (ORCPT
+        Fri, 26 Jul 2019 10:17:25 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:34022 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727358AbfGZORY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 10:17:13 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so24586986pff.9;
-        Fri, 26 Jul 2019 07:17:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=dNnqQwHX3ETnAbhTD2AqV3KPRBqgqiL6QbUT7t0Db40=;
-        b=aCuPaDhXVM0L+4hA6IRjIBoywOkmHWDMoGVV8FRhqt4MYj3M7Fhzi+b6Lb1sfpBDTn
-         Us31F+UYEGzp/6hNLWyB3wTdQYnV603w845xUBGcOc41Dv5/Qz49XnOqGJDdRkTBTp7M
-         arVmCDNZ0tz54v6N4mLpaTsibLt/xDg93Z5ZNLCM3LbXnHMOoCJkwpfflvm2bA2xeBEG
-         x/GVx1DJejxlYLJanhWmcGZkTU1HVOaznc0cvMIURwMquqM4VqME9UUgzC6YdwzV0yAc
-         NX5hUNourXGvVqvaUPTO7Y5uLX0K1MnPMq5B9epbstfcWpknZOVl2APDjPfqPNGbxgK3
-         UT1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dNnqQwHX3ETnAbhTD2AqV3KPRBqgqiL6QbUT7t0Db40=;
-        b=mliyaJ6yDNbGjQvrcD1cXQUw0xNdyhar29DWAmzymj2RpjmROL1FNCkjlCtXQ+kz9e
-         duLDbzcmDqiuS0QiV5o1SlIhjrloqtMN8BsBJ6GW12upUtbbSaBXDR6irKHUOG75zM/t
-         i3OrazZOur2nl31ba/+dU10bC6m4zQzO/urOhltCsJ5xioD5yhrI4UzJrDi1o4N2/M7n
-         GhcuhY0gUlMHPTV1zxuhpofpTqnGL8tFBUBahlfNWrCHbCpJ7kwCuvhAAcr2eFIRDbYI
-         YpEkj2vBW1qCCefTPSvBkYixLTp2m5Xd1jJjb0IMi99lvAOlrnf08BXEbZ2wR7W4HB1u
-         psGQ==
-X-Gm-Message-State: APjAAAVZqty9QronGIidQxj7hV3+D4hs0zE1xvgTUsE76zk5RUV0uKSF
-        zUXe/m+z9VJWy66pVtHEtn0=
-X-Google-Smtp-Source: APXvYqx9xaENXC9Svdu6KwkHC2A9K/PjsmPxmfUJp6ijl9Wjql7ZHhAQYVndsn6qMVE5bD7MC+MKcg==
-X-Received: by 2002:aa7:9afc:: with SMTP id y28mr22080870pfp.252.1564150632442;
-        Fri, 26 Jul 2019 07:17:12 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id j6sm70251565pjd.19.2019.07.26.07.17.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 07:17:11 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     santosh.shilimkar@oracle.com, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] net: rds: Fix possible null-pointer dereferences in rds_rdma_cm_event_handler_cmn()
-Date:   Fri, 26 Jul 2019 22:17:05 +0800
-Message-Id: <20190726141705.9585-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Fri, 26 Jul 2019 10:17:24 -0400
+Received: (qmail 1779 invoked by uid 2102); 26 Jul 2019 10:17:23 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 26 Jul 2019 10:17:23 -0400
+Date:   Fri, 26 Jul 2019 10:17:23 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+cc:     linux-usb@vger.kernel.org, <linux-samsung-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        =?UTF-8?q?M=C3=A5ns=20Rullg=C3=A5rd?= <mans@mansr.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Peter Chen <peter.chen@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/3] usb: exynos: add support for getting PHYs from
+ the standard dt array
+In-Reply-To: <20190726081453.9456-3-m.szyprowski@samsung.com>
+Message-ID: <Pine.LNX.4.44L0.1907261016440.1569-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In rds_rdma_cm_event_handler_cmn(), there are some if statements to
-check whether conn is NULL, such as on lines 65, 96 and 112.
-But conn is not checked before being used on line 108:
-    trans->cm_connect_complete(conn, event);
-and on lines 140-143:
-    rdsdebug("DISCONNECT event - dropping connection "
-            "%pI6c->%pI6c\n", &conn->c_laddr,
-            &conn->c_faddr);
-    rds_conn_drop(conn);
+On Fri, 26 Jul 2019, Marek Szyprowski wrote:
 
-Thus, possible null-pointer dereferences may occur.
+> Add the code for getting generic PHYs from standard device tree array
+> from the main controller device node. This is a first step in resolving
+> the conflict between Exynos EHCI/OHCI sub-nodes and generic USB device
+> bindings. Later the sub-nodes currently used for assigning PHYs to root
+> ports of the controller will be removed making a place for the generic
+> USB device bindings nodes.
+> 
+> Suggested-by: Måns Rullgård <mans@mansr.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
 
-To fix these bugs, conn is checked before being used.
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
 
-These bugs are found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- net/rds/rdma_transport.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/net/rds/rdma_transport.c b/net/rds/rdma_transport.c
-index ff74c4bbb9fc..9986d6065c4d 100644
---- a/net/rds/rdma_transport.c
-+++ b/net/rds/rdma_transport.c
-@@ -105,7 +105,8 @@ static int rds_rdma_cm_event_handler_cmn(struct rdma_cm_id *cm_id,
- 		break;
- 
- 	case RDMA_CM_EVENT_ESTABLISHED:
--		trans->cm_connect_complete(conn, event);
-+		if (conn)
-+			trans->cm_connect_complete(conn, event);
- 		break;
- 
- 	case RDMA_CM_EVENT_REJECTED:
-@@ -137,6 +138,8 @@ static int rds_rdma_cm_event_handler_cmn(struct rdma_cm_id *cm_id,
- 		break;
- 
- 	case RDMA_CM_EVENT_DISCONNECTED:
-+		if (!conn)
-+			break;
- 		rdsdebug("DISCONNECT event - dropping connection "
- 			 "%pI6c->%pI6c\n", &conn->c_laddr,
- 			 &conn->c_faddr);
--- 
-2.17.0
+>  drivers/usb/host/ehci-exynos.c | 23 +++++++++++++++++++----
+>  drivers/usb/host/ohci-exynos.c | 23 +++++++++++++++++++----
+>  2 files changed, 38 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
+> index 3a29a1a8519c..01debfd03d4a 100644
+> --- a/drivers/usb/host/ehci-exynos.c
+> +++ b/drivers/usb/host/ehci-exynos.c
+> @@ -41,6 +41,7 @@ struct exynos_ehci_hcd {
+>  	struct clk *clk;
+>  	struct device_node *of_node;
+>  	struct phy *phy[PHY_NUMBER];
+> +	bool legacy_phy;
+>  };
+>  
+>  #define to_exynos_ehci(hcd) (struct exynos_ehci_hcd *)(hcd_to_ehci(hcd)->priv)
+> @@ -50,10 +51,22 @@ static int exynos_ehci_get_phy(struct device *dev,
+>  {
+>  	struct device_node *child;
+>  	struct phy *phy;
+> -	int phy_number;
+> +	int phy_number, num_phys;
+>  	int ret;
+>  
+>  	/* Get PHYs for the controller */
+> +	num_phys = of_count_phandle_with_args(dev->of_node, "phys",
+> +					      "#phy-cells");
+> +	for (phy_number = 0; phy_number < num_phys; phy_number++) {
+> +		phy = devm_of_phy_get_by_index(dev, dev->of_node, phy_number);
+> +		if (IS_ERR(phy))
+> +			return PTR_ERR(phy);
+> +		exynos_ehci->phy[phy_number] = phy;
+> +	}
+> +	if (num_phys > 0)
+> +		return 0;
+> +
+> +	/* Get PHYs using legacy bindings */
+>  	for_each_available_child_of_node(dev->of_node, child) {
+>  		ret = of_property_read_u32(child, "reg", &phy_number);
+>  		if (ret) {
+> @@ -84,6 +97,7 @@ static int exynos_ehci_get_phy(struct device *dev,
+>  		}
+>  	}
+>  
+> +	exynos_ehci->legacy_phy = true;
+>  	return 0;
+>  }
+>  
+> @@ -205,11 +219,12 @@ static int exynos_ehci_probe(struct platform_device *pdev)
+>  	ehci->caps = hcd->regs;
+>  
+>  	/*
+> -	 * Workaround: reset of_node pointer to avoid conflict between Exynos
+> -	 * EHCI port subnodes and generic USB device bindings
+> +	 * Workaround: reset of_node pointer to avoid conflict between legacy
+> +	 * Exynos EHCI port subnodes and generic USB device bindings
+>  	 */
+>  	exynos_ehci->of_node = pdev->dev.of_node;
+> -	pdev->dev.of_node = NULL;
+> +	if (exynos_ehci->legacy_phy)
+> +		pdev->dev.of_node = NULL;
+>  
+>  	/* DMA burst Enable */
+>  	writel(EHCI_INSNREG00_ENABLE_DMA_BURST, EHCI_INSNREG00(hcd->regs));
+> diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
+> index 905c6317e0c3..d5ce98e205c7 100644
+> --- a/drivers/usb/host/ohci-exynos.c
+> +++ b/drivers/usb/host/ohci-exynos.c
+> @@ -32,6 +32,7 @@ struct exynos_ohci_hcd {
+>  	struct clk *clk;
+>  	struct device_node *of_node;
+>  	struct phy *phy[PHY_NUMBER];
+> +	bool legacy_phy;
+>  };
+>  
+>  static int exynos_ohci_get_phy(struct device *dev,
+> @@ -39,10 +40,22 @@ static int exynos_ohci_get_phy(struct device *dev,
+>  {
+>  	struct device_node *child;
+>  	struct phy *phy;
+> -	int phy_number;
+> +	int phy_number, num_phys;
+>  	int ret;
+>  
+>  	/* Get PHYs for the controller */
+> +	num_phys = of_count_phandle_with_args(dev->of_node, "phys",
+> +					      "#phy-cells");
+> +	for (phy_number = 0; phy_number < num_phys; phy_number++) {
+> +		phy = devm_of_phy_get_by_index(dev, dev->of_node, phy_number);
+> +		if (IS_ERR(phy))
+> +			return PTR_ERR(phy);
+> +		exynos_ohci->phy[phy_number] = phy;
+> +	}
+> +	if (num_phys > 0)
+> +		return 0;
+> +
+> +	/* Get PHYs using legacy bindings */
+>  	for_each_available_child_of_node(dev->of_node, child) {
+>  		ret = of_property_read_u32(child, "reg", &phy_number);
+>  		if (ret) {
+> @@ -73,6 +86,7 @@ static int exynos_ohci_get_phy(struct device *dev,
+>  		}
+>  	}
+>  
+> +	exynos_ohci->legacy_phy = true;
+>  	return 0;
+>  }
+>  
+> @@ -172,11 +186,12 @@ static int exynos_ohci_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	/*
+> -	 * Workaround: reset of_node pointer to avoid conflict between Exynos
+> -	 * OHCI port subnodes and generic USB device bindings
+> +	 * Workaround: reset of_node pointer to avoid conflict between legacy
+> +	 * Exynos OHCI port subnodes and generic USB device bindings
+>  	 */
+>  	exynos_ohci->of_node = pdev->dev.of_node;
+> -	pdev->dev.of_node = NULL;
+> +	if (exynos_ohci->legacy_phy)
+> +		pdev->dev.of_node = NULL;
+>  
+>  	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
+>  	if (err) {
+> 
 
