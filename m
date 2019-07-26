@@ -4,113 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A813C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090F8C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04AA52189F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB89221852
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564124780;
-	bh=E5hcRJjUln+Y6J7enPT4yz1TeyFg261iY7wVmgHXkUE=;
+	s=default; t=1564125146;
+	bh=QkrAgtdxwcypcCPFUSg9O9Gj9w+cXt1CSKS6LRjmkDw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I/Dam1p7aOh1PwF8V8nXSQ4bqEq/P51d/9HMi4JHpaQxggzugwAtPk/3qFwUKbVIg
-	 rcBF0zbgf04cOppG9QTK1P0TdIv7A8uBYoJ9ul/eWEDlmGeObLn0DnxRN0vwg20heS
-	 K8/JLq5jMKdeooq3Pv+jh2eBzR3H12zxnZ2TRhQs=
+	b=b2T4QCDK5qMNmGfq9y/qbH5ETZN9ap9QYTgrMUDMX7U1DMH3udIgr8YARshSw1XZG
+	 mGKiiRgMJXAVL+SMZ3dr69pgiXfA0UuGu9Yalt4Myl4zRAslx1ozvlHgo3Aj4ikxEV
+	 BPkU8une4sec2gRjR5VD7JcMKd89YBTrxNjkvEwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbfGZHGT (ORCPT
+        id S1726138AbfGZHMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 03:06:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40562 "EHLO mx1.suse.de"
+        Fri, 26 Jul 2019 03:12:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43508 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725869AbfGZHGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 03:06:18 -0400
+        id S1725864AbfGZHMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 03:12:21 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 810CAB128;
-        Fri, 26 Jul 2019 07:06:16 +0000 (UTC)
-Date:   Fri, 26 Jul 2019 09:06:15 +0200
+        by mx1.suse.de (Postfix) with ESMTP id 40D9DB11C;
+        Fri, 26 Jul 2019 07:12:20 +0000 (UTC)
+Date:   Fri, 26 Jul 2019 09:12:19 +0200
 From:   Michal Hocko <mhocko@kernel.org>
-To:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 2/2] /proc/kpageflags: do not use uninitialized struct
- pages
-Message-ID: <20190726070615.GB6142@dhcp22.suse.cz>
-References: <20190725023100.31141-1-t-fukasawa@vx.jp.nec.com>
- <20190725023100.31141-3-t-fukasawa@vx.jp.nec.com>
- <20190725090341.GC13855@dhcp22.suse.cz>
- <40b3078e-fb8b-87ef-5c4e-6321956cc940@vx.jp.nec.com>
+To:     Pengfei Li <lpf.vector@gmail.com>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        mgorman@techsingularity.net, vbabka@suse.cz,
+        aryabinin@virtuozzo.com, osalvador@suse.de, rostedt@goodmis.org,
+        mingo@redhat.com, pavel.tatashin@microsoft.com, rppt@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 00/10] make "order" unsigned int
+Message-ID: <20190726071219.GC6142@dhcp22.suse.cz>
+References: <20190725184253.21160-1-lpf.vector@gmail.com>
+ <1564080768.11067.22.camel@lca.pw>
+ <CAD7_sbEXQt0oHuD01BXdW2_=G4h8U8ogHVt0N1Yez2ajFJkShw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <40b3078e-fb8b-87ef-5c4e-6321956cc940@vx.jp.nec.com>
+In-Reply-To: <CAD7_sbEXQt0oHuD01BXdW2_=G4h8U8ogHVt0N1Yez2ajFJkShw@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 26-07-19 06:25:49, Toshiki Fukasawa wrote:
-> 
-> 
-> On 2019/07/25 18:03, Michal Hocko wrote:
-> > On Thu 25-07-19 02:31:18, Toshiki Fukasawa wrote:
-> >> A kernel panic was observed during reading /proc/kpageflags for
-> >> first few pfns allocated by pmem namespace:
-> >>
-> >> BUG: unable to handle page fault for address: fffffffffffffffe
-> >> [  114.495280] #PF: supervisor read access in kernel mode
-> >> [  114.495738] #PF: error_code(0x0000) - not-present page
-> >> [  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
-> >> [  114.496713] Oops: 0000 [#1] SMP PTI
-> >> [  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1 #1
-> >> [  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
-> >> [  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
-> >> [  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
-> >> [  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
-> >> [  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
-> >> [  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
-> >> [  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
-> >> [  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
-> >> [  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
-> >> [  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
-> >> [  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >> [  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
-> >> [  114.506401] Call Trace:
-> >> [  114.506660]  kpageflags_read+0xb1/0x130
-> >> [  114.507051]  proc_reg_read+0x39/0x60
-> >> [  114.507387]  vfs_read+0x8a/0x140
-> >> [  114.507686]  ksys_pread64+0x61/0xa0
-> >> [  114.508021]  do_syscall_64+0x5f/0x1a0
-> >> [  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >> [  114.508844] RIP: 0033:0x7f0266ba426b
-> >>
-> >> The reason for the panic is that stable_page_flags() which parses
-> >> the page flags uses uninitialized struct pages reserved by the
-> >> ZONE_DEVICE driver.
-> > 
-> > Why pmem hasn't initialized struct pages? 
-> 
-> We proposed to initialize in previous approach but that wasn't merged.
-> (See https://marc.info/?l=linux-mm&m=152964792500739&w=2)
-> 
-> > Isn't that a bug that should be addressed rather than paper over it like this?
-> 
-> I'm not sure. What do you think, Dan?
+On Fri 26-07-19 07:48:36, Pengfei Li wrote:
+[...]
+> For the benefit, "order" may be negative, which is confusing and weird.
 
-Yeah, I am really curious about details. Why do we keep uninitialized
-struct pages at all? What is a random pfn walker supposed to do? What
-kind of metadata would be clobbered? In other words much more details
-please.
+order = -1 has a special meaning.
+
+> There is no good reason not to do this since it can be avoided.
+
+"This is good because we can do it" doesn't really sound like a
+convincing argument to me. I would understand if this reduced a
+generated code, made an overall code readability much better or
+something along those lines. Also we only use MAX_ORDER range of values
+so I could argue that a smaller data type (e.g. short) should be
+sufficient for this data type.
+
+Please note that _any_ change, alebit seemingly small, can introduce a
+subtle bug. Also each patch requires a man power to review so you have
+to understand that "just because we can" is not a strong motivation for
+people to spend their time on such a patch.
 -- 
 Michal Hocko
 SUSE Labs
