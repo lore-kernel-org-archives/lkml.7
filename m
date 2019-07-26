@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2359C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA0EC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2CA72054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560E82054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155363;
-	bh=ppr5BAOLZkqvQ0hhuWwGlJX9zzXOdBVO8hauVU+jdio=;
+	s=default; t=1564155369;
+	bh=H+PFAhJnfasRI2CQQwAOMPBazNoKG0UptdFUcKC+uqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yj6bFQNvQCDy/xi2lJtFZ1C5XdVr1xu373ZC+m7rCZCcROtK+qdZrpcXyVN1VUO51
-	 tK7BVD2dcaWrbYid887ePk1fCzEbtEYF4jyDDBNJYwmBvA2fYnQzeeD0ni/xX1sjZY
-	 KrD0rqlZzUdLVvS+CNUz+nf7LfHVYU4a+pv2mzOE=
+	b=KrfBkQW07FkZsLCzGR9KpfUGO5UW9rB306HA/dpeUZJbjUhmBFKnUDkP1uUYAo4Kc
+	 0ubRiJcxLkpKpqbsPN0VmfNo3hHZuQsIcJ7bgeaRZ3GpY1xeCtDmTSBQLP/5UcT/m8
+	 OEduo0DGh0IIelKAPLECRnmyqr/Nm90DWPpXU9AI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389390AbfGZPcF (ORCPT
+        id S2389367AbfGZPcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:32:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47094 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:32:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388617AbfGZPcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:32:00 -0400
+        id S2388577AbfGZPby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:31:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C188820644;
-        Fri, 26 Jul 2019 15:31:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D366922CD1;
+        Fri, 26 Jul 2019 15:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155119;
-        bh=ppr5BAOLZkqvQ0hhuWwGlJX9zzXOdBVO8hauVU+jdio=;
+        s=default; t=1564155113;
+        bh=H+PFAhJnfasRI2CQQwAOMPBazNoKG0UptdFUcKC+uqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dqvgSTG/13DDYwfl9Ht4afJYtTvJwqDYkL0+eHtWpE71f2Wk5tDE4KVVbiUf4QI5+
-         kOPJTPuTF3CvmKCW9uBif8mRh5YPd9WVIk4hXNqmU7Ys3uBzQoUItWrilgUhdP/0yO
-         UscagVPYIFLns4aX59jKWPllzXgAyoii5zxTE98M=
+        b=qIsx4s1yyGIJzMObshp0+zJc+NZFmGitfuwY8jL61moxe/F+/eTXoLqZ1ZM1g9ZaL
+         +TSoGa6M9TCCusgYp07GH4Ks5BHhKq/JbZGbtphTdR4PLZXoou3ZwDLxypsxnxrtbS
+         73tWcWgvc5NjDpv74gud8LQMuanx2YTZMuZ1NQnM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian King <brking@linux.vnet.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 01/50] bnx2x: Prevent load reordering in tx completion processing
-Date:   Fri, 26 Jul 2019 17:24:36 +0200
-Message-Id: <20190726152300.923718700@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.1 58/62] KVM: nVMX: Clear pending KVM_REQ_GET_VMCS12_PAGES when leaving nested
+Date:   Fri, 26 Jul 2019 17:25:10 +0200
+Message-Id: <20190726152308.052374385@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
-References: <20190726152300.760439618@linuxfoundation.org>
+In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
+References: <20190726152301.720139286@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,33 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian King <brking@linux.vnet.ibm.com>
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
-[ Upstream commit ea811b795df24644a8eb760b493c43fba4450677 ]
+commit cf64527bb33f6cec2ed50f89182fc4688d0056b6 upstream.
 
-This patch fixes an issue seen on Power systems with bnx2x which results
-in the skb is NULL WARN_ON in bnx2x_free_tx_pkt firing due to the skb
-pointer getting loaded in bnx2x_free_tx_pkt prior to the hw_cons
-load in bnx2x_tx_int. Adding a read memory barrier resolves the issue.
+Letting this pend may cause nested_get_vmcs12_pages to run against an
+invalid state, corrupting the effective vmcs of L1.
 
-Signed-off-by: Brian King <brking@linux.vnet.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This was triggerable in QEMU after a guest corruption in L2, followed by
+a L1 reset.
+
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
+Cc: stable@vger.kernel.org
+Fixes: 7f7f1ba33cf2 ("KVM: x86: do not load vmcs12 pages while still in SMM")
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-@@ -286,6 +286,9 @@ int bnx2x_tx_int(struct bnx2x *bp, struc
- 	hw_cons = le16_to_cpu(*txdata->tx_cons_sb);
- 	sw_cons = txdata->tx_pkt_cons;
+---
+ arch/x86/kvm/vmx/nested.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -212,6 +212,8 @@ static void free_nested(struct kvm_vcpu
+ 	if (!vmx->nested.vmxon && !vmx->nested.smm.vmxon)
+ 		return;
  
-+	/* Ensure subsequent loads occur after hw_cons */
-+	smp_rmb();
++	kvm_clear_request(KVM_REQ_GET_VMCS12_PAGES, vcpu);
 +
- 	while (sw_cons != hw_cons) {
- 		u16 pkt_cons;
- 
+ 	vmx->nested.vmxon = false;
+ 	vmx->nested.smm.vmxon = false;
+ 	free_vpid(vmx->nested.vpid02);
 
 
