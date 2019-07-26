@@ -6,34 +6,35 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC64EC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B863FC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB7582238C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3DC2238C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfGZD1P (ORCPT
+        id S1726703AbfGZD1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 23:27:15 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3167 "EHLO huawei.com"
+        Thu, 25 Jul 2019 23:27:20 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3169 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726404AbfGZD1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 23:27:12 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EFB1A1697C4B6D9DBD1B;
-        Fri, 26 Jul 2019 11:27:09 +0800 (CST)
+        id S1726441AbfGZD1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 23:27:16 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1BEE8C55359557F0E3CA;
+        Fri, 26 Jul 2019 11:27:10 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 26 Jul 2019 11:27:00 +0800
+ 14.3.439.0; Fri, 26 Jul 2019 11:26:59 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
+        <linuxarm@huawei.com>, Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 10/11] net: hns3: Add support for using order 1 pages with a 4K buffer
-Date:   Fri, 26 Jul 2019 11:25:01 +0800
-Message-ID: <1564111502-15504-11-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 07/11] net: hns3: adds debug messages to identify eth down cause
+Date:   Fri, 26 Jul 2019 11:24:58 +0800
+Message-ID: <1564111502-15504-8-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564111502-15504-1-git-send-email-tanhuazhong@huawei.com>
 References: <1564111502-15504-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,104 +47,218 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-Hardware supports 0.5K, 1K, 2K, 4K RX buffer size, the
-RX buffer can not be reused because the hns3_page_order
-return 0 when page size and RX buffer size are both 4096.
+Some times just see the eth interface have been down/up via
+dmesg, but can not know why the eth down. So adds some debug
+messages to identify the cause for this.
 
-So this patch changes the hns3_page_order to return 1 when
-RX buffer is greater than half of the page size and page size
-is less the 8192, and dev_alloc_pages has already been used
-to allocate the compound page for RX buffer.
-
-This patch also changes hnae3_* to hns3_* for page order
-and RX buffer size calculation because they are used in
-hns3 module.
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Reviewed-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 10 +++++-----
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h | 15 ++++++++++++---
- 2 files changed, 17 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 24 ++++++++++++++++++++
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 26 ++++++++++++++++++++++
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c | 14 ++++++++++++
+ 3 files changed, 64 insertions(+)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 2e30cfa..3a93bef 100644
+index 4d58c53..2e30cfa 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2086,7 +2086,7 @@ static void hns3_set_default_feature(struct net_device *netdev)
- static int hns3_alloc_buffer(struct hns3_enet_ring *ring,
- 			     struct hns3_desc_cb *cb)
- {
--	unsigned int order = hnae3_page_order(ring);
-+	unsigned int order = hns3_page_order(ring);
- 	struct page *p;
+@@ -459,6 +459,10 @@ static int hns3_nic_net_open(struct net_device *netdev)
+ 		h->ae_algo->ops->set_timer_task(priv->ae_handle, true);
  
- 	p = dev_alloc_pages(order);
-@@ -2097,7 +2097,7 @@ static int hns3_alloc_buffer(struct hns3_enet_ring *ring,
- 	cb->page_offset = 0;
- 	cb->reuse_flag = 0;
- 	cb->buf  = page_address(p);
--	cb->length = hnae3_page_size(ring);
-+	cb->length = hns3_page_size(ring);
- 	cb->type = DESC_TYPE_PAGE;
- 
+ 	hns3_config_xps(priv);
++
++	if (netif_msg_drv(h))
++		netdev_info(netdev, "net open\n");
++
  	return 0;
-@@ -2400,7 +2400,7 @@ static void hns3_nic_reuse_page(struct sk_buff *skb, int i,
+ }
+ 
+@@ -519,6 +523,9 @@ static int hns3_nic_net_stop(struct net_device *netdev)
+ 	if (test_and_set_bit(HNS3_NIC_STATE_DOWN, &priv->state))
+ 		return 0;
+ 
++	if (netif_msg_drv(h))
++		netdev_info(netdev, "net stop\n");
++
+ 	if (h->ae_algo->ops->set_timer_task)
+ 		h->ae_algo->ops->set_timer_task(priv->ae_handle, false);
+ 
+@@ -1550,6 +1557,9 @@ static int hns3_setup_tc(struct net_device *netdev, void *type_data)
+ 	h = hns3_get_handle(netdev);
+ 	kinfo = &h->kinfo;
+ 
++	if (netif_msg_drv(h))
++		netdev_info(netdev, "setup tc: num_tc=%d\n", tc);
++
+ 	return (kinfo->dcb_ops && kinfo->dcb_ops->setup_tc) ?
+ 		kinfo->dcb_ops->setup_tc(h, tc, prio_tc) : -EOPNOTSUPP;
+ }
+@@ -1593,6 +1603,11 @@ static int hns3_ndo_set_vf_vlan(struct net_device *netdev, int vf, u16 vlan,
+ 	struct hnae3_handle *h = hns3_get_handle(netdev);
+ 	int ret = -EIO;
+ 
++	if (netif_msg_drv(h))
++		netdev_info(netdev,
++			    "set vf vlan: vf=%d, vlan=%d, qos=%d, vlan_proto=%d\n",
++			    vf, vlan, qos, vlan_proto);
++
+ 	if (h->ae_algo->ops->set_vf_vlan_filter)
+ 		ret = h->ae_algo->ops->set_vf_vlan_filter(h, vf, vlan,
+ 							  qos, vlan_proto);
+@@ -1611,6 +1626,10 @@ static int hns3_nic_change_mtu(struct net_device *netdev, int new_mtu)
+ 	if (!h->ae_algo->ops->set_mtu)
+ 		return -EOPNOTSUPP;
+ 
++	if (netif_msg_drv(h))
++		netdev_info(netdev, "change mtu from %d to %d\n",
++			    netdev->mtu, new_mtu);
++
+ 	ret = h->ae_algo->ops->set_mtu(h, new_mtu);
+ 	if (ret)
+ 		netdev_err(netdev, "failed to change MTU in hardware %d\n",
+@@ -4395,6 +4414,11 @@ int hns3_set_channels(struct net_device *netdev,
+ 	if (kinfo->rss_size == new_tqp_num)
+ 		return 0;
+ 
++	if (netif_msg_drv(h))
++		netdev_info(netdev,
++			    "set channels: tqp_num=%d, rxfh=%d\n",
++			    new_tqp_num, rxfh_configured);
++
+ 	ret = hns3_reset_notify(h, HNAE3_DOWN_CLIENT);
+ 	if (ret)
+ 		return ret;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index e71c92b..08334d7 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -311,6 +311,9 @@ static void hns3_self_test(struct net_device *ndev,
+ 	if (eth_test->flags != ETH_TEST_FL_OFFLINE)
+ 		return;
+ 
++	if (netif_msg_drv(h))
++		netdev_info(ndev, "self test start\n");
++
+ 	st_param[HNAE3_LOOP_APP][0] = HNAE3_LOOP_APP;
+ 	st_param[HNAE3_LOOP_APP][1] =
+ 			h->flags & HNAE3_SUPPORT_APP_LOOPBACK;
+@@ -374,6 +377,9 @@ static void hns3_self_test(struct net_device *ndev,
+ 
+ 	if (if_running)
+ 		ndev->netdev_ops->ndo_open(ndev);
++
++	if (netif_msg_drv(h))
++		netdev_info(ndev, "self test end\n");
+ }
+ 
+ static int hns3_get_sset_count(struct net_device *netdev, int stringset)
+@@ -604,6 +610,11 @@ static int hns3_set_pauseparam(struct net_device *netdev,
  {
- 	struct hns3_desc *desc = &ring->desc[ring->next_to_clean];
- 	int size = le16_to_cpu(desc->rx.size);
--	u32 truesize = hnae3_buf_size(ring);
-+	u32 truesize = hns3_buf_size(ring);
+ 	struct hnae3_handle *h = hns3_get_handle(netdev);
  
- 	skb_add_rx_frag(skb, i, desc_cb->priv, desc_cb->page_offset + pull_len,
- 			size - pull_len, truesize);
-@@ -2415,7 +2415,7 @@ static void hns3_nic_reuse_page(struct sk_buff *skb, int i,
- 	/* Move offset up to the next cache line */
- 	desc_cb->page_offset += truesize;
- 
--	if (desc_cb->page_offset + truesize <= hnae3_page_size(ring)) {
-+	if (desc_cb->page_offset + truesize <= hns3_page_size(ring)) {
- 		desc_cb->reuse_flag = 1;
- 		/* Bump ref count on page before it is given */
- 		get_page(desc_cb->priv);
-@@ -2697,7 +2697,7 @@ static int hns3_add_frag(struct hns3_enet_ring *ring, struct hns3_desc *desc,
- 		}
- 
- 		if (ring->tail_skb) {
--			head_skb->truesize += hnae3_buf_size(ring);
-+			head_skb->truesize += hns3_buf_size(ring);
- 			head_skb->data_len += le16_to_cpu(desc->rx.size);
- 			head_skb->len += le16_to_cpu(desc->rx.size);
- 			skb = ring->tail_skb;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-index 848b866..1a17856 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-@@ -608,9 +608,18 @@ static inline bool hns3_nic_resetting(struct net_device *netdev)
- 
- #define tx_ring_data(priv, idx) ((priv)->ring_data[idx])
- 
--#define hnae3_buf_size(_ring) ((_ring)->buf_size)
--#define hnae3_page_order(_ring) (get_order(hnae3_buf_size(_ring)))
--#define hnae3_page_size(_ring) (PAGE_SIZE << (u32)hnae3_page_order(_ring))
-+#define hns3_buf_size(_ring) ((_ring)->buf_size)
++	if (netif_msg_drv(h))
++		netdev_info(netdev,
++			    "set pauseparam: autoneg=%d, rx:%d, tx:%d\n",
++			    param->autoneg, param->rx_pause, param->tx_pause);
 +
-+static inline unsigned int hns3_page_order(struct hns3_enet_ring *ring)
-+{
-+#if (PAGE_SIZE < 8192)
-+	if (ring->buf_size > (PAGE_SIZE / 2))
-+		return 1;
-+#endif
-+	return 0;
-+}
-+
-+#define hns3_page_size(_ring) (PAGE_SIZE << hns3_page_order(_ring))
+ 	if (h->ae_algo->ops->set_pauseparam)
+ 		return h->ae_algo->ops->set_pauseparam(h, param->autoneg,
+ 						       param->rx_pause,
+@@ -743,6 +754,13 @@ static int hns3_set_link_ksettings(struct net_device *netdev,
+ 	if (cmd->base.speed == SPEED_1000 && cmd->base.duplex == DUPLEX_HALF)
+ 		return -EINVAL;
  
- /* iterator for handling rings in ring group */
- #define hns3_for_each_ring(pos, head) \
++	if (netif_msg_drv(handle))
++		netdev_info(netdev,
++			    "set link(%s): autoneg=%d, speed=%d, duplex=%d\n",
++			    netdev->phydev ? "phy" : "mac",
++			    cmd->base.autoneg, cmd->base.speed,
++			    cmd->base.duplex);
++
+ 	/* Only support ksettings_set for netdev with phy attached for now */
+ 	if (netdev->phydev)
+ 		return phy_ethtool_ksettings_set(netdev->phydev, cmd);
+@@ -984,6 +1002,10 @@ static int hns3_nway_reset(struct net_device *netdev)
+ 		return -EINVAL;
+ 	}
+ 
++	if (netif_msg_drv(handle))
++		netdev_info(netdev, "nway reset (using %s)\n",
++			    phy ? "phy" : "mac");
++
+ 	if (phy)
+ 		return genphy_restart_aneg(phy);
+ 
+@@ -1308,6 +1330,10 @@ static int hns3_set_fecparam(struct net_device *netdev,
+ 	if (!ops->set_fec)
+ 		return -EOPNOTSUPP;
+ 	fec_mode = eth_to_loc_fec(fec->fec);
++
++	if (netif_msg_drv(handle))
++		netdev_info(netdev, "set fecparam: mode=%d\n", fec_mode);
++
+ 	return ops->set_fec(handle, fec_mode);
+ }
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
+index bac4ce1..07471ba 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
+@@ -201,6 +201,7 @@ static int hclge_client_setup_tc(struct hclge_dev *hdev)
+ static int hclge_ieee_setets(struct hnae3_handle *h, struct ieee_ets *ets)
+ {
+ 	struct hclge_vport *vport = hclge_get_vport(h);
++	struct net_device *netdev = h->kinfo.netdev;
+ 	struct hclge_dev *hdev = vport->back;
+ 	bool map_changed = false;
+ 	u8 num_tc = 0;
+@@ -215,6 +216,9 @@ static int hclge_ieee_setets(struct hnae3_handle *h, struct ieee_ets *ets)
+ 		return ret;
+ 
+ 	if (map_changed) {
++		if (netif_msg_drv(h))
++			netdev_info(netdev, "set ets\n");
++
+ 		ret = hclge_notify_client(hdev, HNAE3_DOWN_CLIENT);
+ 		if (ret)
+ 			return ret;
+@@ -300,6 +304,7 @@ static int hclge_ieee_getpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
+ static int hclge_ieee_setpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
+ {
+ 	struct hclge_vport *vport = hclge_get_vport(h);
++	struct net_device *netdev = h->kinfo.netdev;
+ 	struct hclge_dev *hdev = vport->back;
+ 	u8 i, j, pfc_map, *prio_tc;
+ 
+@@ -325,6 +330,11 @@ static int hclge_ieee_setpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
+ 	hdev->tm_info.hw_pfc_map = pfc_map;
+ 	hdev->tm_info.pfc_en = pfc->pfc_en;
+ 
++	if (netif_msg_drv(h))
++		netdev_info(netdev,
++			    "set pfc: pfc_en=%d, pfc_map=%d, num_tc=%d\n",
++			    pfc->pfc_en, pfc_map, hdev->tm_info.num_tc);
++
+ 	hclge_tm_pfc_info_update(hdev);
+ 
+ 	return hclge_pause_setup_hw(hdev, false);
+@@ -345,8 +355,12 @@ static u8 hclge_getdcbx(struct hnae3_handle *h)
+ static u8 hclge_setdcbx(struct hnae3_handle *h, u8 mode)
+ {
+ 	struct hclge_vport *vport = hclge_get_vport(h);
++	struct net_device *netdev = h->kinfo.netdev;
+ 	struct hclge_dev *hdev = vport->back;
+ 
++	if (netif_msg_drv(h))
++		netdev_info(netdev, "set dcbx: mode=%d\n", mode);
++
+ 	/* No support for LLD_MANAGED modes or CEE */
+ 	if ((mode & DCB_CAP_DCBX_LLD_MANAGED) ||
+ 	    (mode & DCB_CAP_DCBX_VER_CEE) ||
 -- 
 2.7.4
 
