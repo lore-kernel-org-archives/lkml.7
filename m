@@ -2,151 +2,107 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2895CC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37164C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F241822BEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0754822BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:28:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="OSSRdZkS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RL08XvlN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfGZU0x (ORCPT
+        id S1726902AbfGZU2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 16:26:53 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41706 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727816AbfGZU0u (ORCPT
+        Fri, 26 Jul 2019 16:28:19 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43481 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbfGZU2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 16:26:50 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so14932709pgg.8
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 13:26:50 -0700 (PDT)
+        Fri, 26 Jul 2019 16:28:19 -0400
+Received: by mail-qt1-f193.google.com with SMTP id w17so9576502qto.10;
+        Fri, 26 Jul 2019 13:28:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IE5eJowpyCcGnZE2pKcSc9umsrWgUqBG7zCK+NjEKK4=;
-        b=OSSRdZkSZXg6M+b9FWF3a1q+TiPSBp244enRgIGdVZjUu/SD8K8PRf3KqpHJ6cYWhk
-         n3RevHiDEbDWb3xewyJUfr/5dEQwWqMIwnEbk87NSvS9caP8hIT7G5fh4UfLVUxKM38z
-         JNXY9crOfbFD7ctsGRXt2fiHSx0KEPhd66l6Y=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zRwRthds5sxGM5kfR5jug7OQtqPlV1fvrZmHuKtivu4=;
+        b=RL08XvlNq8d34uXmoAGids7utM9j0vfFLnJJu2H6dAgiCfcdLMiXIz0OnK1b9SQeha
+         v9HXyQZ9Q7ZnShzlMlRVIXWGiaUC9xBelNgH0xnFIbUdUVaQESvv9C6LVA6wZ+344Q4a
+         Ru358BRKySgvEYQew4jvPGam+cr4PUGJlO1/H9RiYZly56tjs2+6on7TUW7jK901mx7e
+         HhbM0Nwim7agX87fRH8Zw7rv/NkiQMOXJVPbGE8jkUo/T9oYfQRlpMXFI0hXt7bhT4DI
+         w2iRUwlh4DjGMVZDLm8qbRdnAfaVLbuyfxHVbkwi7ARmgfEHgg3ZodegvZees/p+OT5l
+         2yTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IE5eJowpyCcGnZE2pKcSc9umsrWgUqBG7zCK+NjEKK4=;
-        b=ZNl13nG8pBvz0xF/qvif6os/s4rY0H7oYuja5GG4nS6uy/XqK44sYUdL8ldiSUJcWV
-         BubAu2A3tqaBjifdT2iEcdXgXu5hkZ8df0cCan2Ac52x2fXk4TjSH46mxIxI/j82FsmL
-         XkAdDPlHQSuB2YOwr5d+7vG711+ZeiJXJkdGoO0wuyJAf+EKL5R+VQYP94HsiJuM1TJO
-         qmZYLy6A2VLwDZqH10qgIcW0TExcUfEDGpu9BNup3ZKcFKRxH7959AymdrkTMZ15hlpw
-         TcJ+P6thjnS19eVSYNfvGux6yFeVZb920vuxIm/IpVBsDGaIUh+KSgDFVLiDNgYKlMFg
-         9BSA==
-X-Gm-Message-State: APjAAAUeKrz7yipBjQfqle6qk8dXfhvxJYzRSUTZOzb4VsK6sXwI+dpo
-        hvM5YrIyV/nt1ETwcBDGVy0=
-X-Google-Smtp-Source: APXvYqwxNJxyl8AMaL5MbjN3DCH0CGh1VKzKZSR7IsnpnOEC6DeGs6F8TvHMF+yBHu4tkJDhVOJeUA==
-X-Received: by 2002:a17:90a:4f0e:: with SMTP id p14mr96514100pjh.40.1564172810042;
-        Fri, 26 Jul 2019 13:26:50 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id f19sm77269906pfk.180.2019.07.26.13.26.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 13:26:49 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 16:26:47 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     sspatil@google.com
-Cc:     linux-kernel@vger.kernel.org, adobriyan@gmail.com,
-        akpm@linux-foundation.org, bgregg@netflix.com, chansen3@cisco.com,
-        dancol@google.com, fmayer@google.com, joaodias@google.com,
-        corbet@lwn.net, keescook@chromium.org, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
-        rppt@linux.ibm.com, minchan@kernel.org, namhyung@google.com,
-        guro@fb.com, sfr@canb.auug.org.au, surenb@google.com,
-        tkjos@google.com, vdavydov.dev@gmail.com, vbabka@suse.cz,
-        wvw@google.com, sspatil+mutt@google.com
-Subject: Re: [PATCH v3 2/2] doc: Update documentation for page_idle virtual
- address indexing
-Message-ID: <20190726202647.GA213712@google.com>
-References: <20190726152319.134152-1-joel@joelfernandes.org>
- <20190726152319.134152-2-joel@joelfernandes.org>
- <20190726201710.GA144547@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zRwRthds5sxGM5kfR5jug7OQtqPlV1fvrZmHuKtivu4=;
+        b=JIS3zbiZklARm6Gx642d4vCEITdYJNjR6AMJgyTrD5OMk/vF9pWLFPLmRTn2uFwtLW
+         tUbrSINiXtFG0Ou7IEyduwTmXBJHkYMcSyyD2hAV9JMlHc1G+ckNF9NBHoii0fUU204I
+         mgqnMmoZ/NFM48/sfwzIXmkz0ngoZYQPmeF8Qyc6cZZiYvBgoZTUqUImBfvey/Z0YyGe
+         swOZOxVfw9ww4vDEte814RyxmJHeCd/FpvF4TkBVNRgzLmib7tbz+bXK18aZzdM+gjok
+         KlKbHtOVqOAAcplUGAMC40X+Lw3DnZOgXcWRSDlH96jjts7IaDQ09+7P0F9yox1dtz9m
+         2GIw==
+X-Gm-Message-State: APjAAAX2k6I1+oiICG6umkFadY/4QNKcH2OBWRizwgODgKuKY2QcIUxb
+        m/GFzXP8DOazhXsQOCBtxtD35WRDzgtnuEEMc1SN6Q==
+X-Google-Smtp-Source: APXvYqyN9uAoG3/56GbpRR2bJQadMzuyWHXyuiQK1fINq5tDnhyPXmV9Fi2yXbv5G4D9dNdsZYFSNOBumz+tCqdP9p8=
+X-Received: by 2002:ac8:34aa:: with SMTP id w39mr69149026qtb.118.1564172898646;
+ Fri, 26 Jul 2019 13:28:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190726201710.GA144547@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190723204155.71531-1-andriy.shevchenko@linux.intel.com>
+ <20190726164823.GB9224@smile.fi.intel.com> <F7CF9393-B366-4810-B127-876C6D5A72A1@fb.com>
+ <20190726185825.GC9224@smile.fi.intel.com>
+In-Reply-To: <20190726185825.GC9224@smile.fi.intel.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Fri, 26 Jul 2019 13:28:07 -0700
+Message-ID: <CAPhsuW5Y8XB7tWU+gLN=Z6aXiQm=TNX6jGsJDuZbpoJ7ALcE2g@mail.gmail.com>
+Subject: Re: [PATCH v1] md: Convert to use int_pow()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Song Liu <songliubraving@fb.com>, Shaohua Li <shli@kernel.org>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Mike Snitzer <snitzer@redhat.com>, Coly Li <colyli@suse.de>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 01:17:10PM -0700, sspatil@google.com wrote:
-> Thanks Joel, just a couple of nits for the doc inline below. Other than that,
-> 
-> Reviewed-by: Sandeep Patil <sspatil@google.com>
+On Fri, Jul 26, 2019 at 12:50 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Fri, Jul 26, 2019 at 05:18:09PM +0000, Song Liu wrote:
+> >
+> >
+> > > On Jul 26, 2019, at 9:48 AM, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > On Tue, Jul 23, 2019 at 11:41:55PM +0300, Andy Shevchenko wrote:
+> > >> Instead of linear approach to calculate power of 10, use generic int_pow()
+> > >> which does it better.
+> > >
+> > > I took into Cc drivers/dm guys as they might have known something about md raid
+> > > state of affairs. Sorry if I mistakenly added somebody.
+> > >
+> > > Who is doing this?
+> > > Should it be orphaned?
+> > >
+> > > (I got a bounce from Shaohua address)
+> >
+> > I process the patch. Sorry for the delay.
+>
+> Ah, no problem, thanks!
+>
+> Perhaps someone can update MAINTAINERS data base?
 
-Thanks!
+I will discuss this with Jens.
 
-> I'll plan on making changes to Android to use this instead of the pagemap +
-> page_idle. I think it will also be considerably faster.
+I applied this patch to my local branch. It will go to Jens' tree for 5.4.
 
-Cool, glad to know.
-
-> On Fri, Jul 26, 2019 at 11:23:19AM -0400, Joel Fernandes (Google) wrote:
-> > This patch updates the documentation with the new page_idle tracking
-> > feature which uses virtual address indexing.
-> > 
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > ---
-> >  .../admin-guide/mm/idle_page_tracking.rst     | 43 ++++++++++++++++---
-> >  1 file changed, 36 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/Documentation/admin-guide/mm/idle_page_tracking.rst b/Documentation/admin-guide/mm/idle_page_tracking.rst
-> > index df9394fb39c2..1eeac78c94a7 100644
-> > --- a/Documentation/admin-guide/mm/idle_page_tracking.rst
-> > +++ b/Documentation/admin-guide/mm/idle_page_tracking.rst
-> > @@ -19,10 +19,14 @@ It is enabled by CONFIG_IDLE_PAGE_TRACKING=y.
-> >  
-> >  User API
-> >  ========
-> > +There are 2 ways to access the idle page tracking API. One uses physical
-> > +address indexing, another uses a simpler virtual address indexing scheme.
-> >  
-> > -The idle page tracking API is located at ``/sys/kernel/mm/page_idle``.
-> > -Currently, it consists of the only read-write file,
-> > -``/sys/kernel/mm/page_idle/bitmap``.
-> > +Physical address indexing
-> > +-------------------------
-> > +The idle page tracking API for physical address indexing using page frame
-> > +numbers (PFN) is located at ``/sys/kernel/mm/page_idle``.  Currently, it
-> > +consists of the only read-write file, ``/sys/kernel/mm/page_idle/bitmap``.
-> >  
-> >  The file implements a bitmap where each bit corresponds to a memory page. The
-> >  bitmap is represented by an array of 8-byte integers, and the page at PFN #i is
-> > @@ -74,6 +78,31 @@ See :ref:`Documentation/admin-guide/mm/pagemap.rst <pagemap>` for more
-> >  information about ``/proc/pid/pagemap``, ``/proc/kpageflags``, and
-> >  ``/proc/kpagecgroup``.
-> >  
-> > +Virtual address indexing
-> > +------------------------
-> > +The idle page tracking API for virtual address indexing using virtual page
-> > +frame numbers (VFN) is located at ``/proc/<pid>/page_idle``. It is a bitmap
-> > +that follows the same semantics as ``/sys/kernel/mm/page_idle/bitmap``
-> > +except that it uses virtual instead of physical frame numbers.
-> > +
-> > +This idle page tracking API does not need deal with PFN so it does not require
-> 
-> s/need//
-> 
-> > +prior lookups of ``pagemap`` in order to find if page is idle or not. This is
-> 
-> s/in order to find if page is idle or not//
-
-Fixed both, thank you! Will send out update soon.
-
-thanks,
-
- - Joel
-
+Thanks,
+Song
