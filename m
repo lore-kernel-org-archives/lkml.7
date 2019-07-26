@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA0EC76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C21C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560E82054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B92262054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155369;
-	bh=H+PFAhJnfasRI2CQQwAOMPBazNoKG0UptdFUcKC+uqs=;
+	s=default; t=1564155371;
+	bh=t8bbuwhxhctVtmpeib9Zw2nbVsJkhqj1i5cLEyLUOnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KrfBkQW07FkZsLCzGR9KpfUGO5UW9rB306HA/dpeUZJbjUhmBFKnUDkP1uUYAo4Kc
-	 0ubRiJcxLkpKpqbsPN0VmfNo3hHZuQsIcJ7bgeaRZ3GpY1xeCtDmTSBQLP/5UcT/m8
-	 OEduo0DGh0IIelKAPLECRnmyqr/Nm90DWPpXU9AI=
+	b=Aayjjm+5xilhn5Cyy5Gj3W+hh1tC+mEHB4qRniavIBcYWwl/t9I43v7/7gQohYMJy
+	 9jR6s9GdcTSbuIcOeNhUVAc2baiIH883M9Rve/er3MlzENuJzSVoYWt+t4JSxEfDoU
+	 d0lPZk7kobAK6Q4qvS4M9MGIWZx2CFH/lOjtvLuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389367AbfGZPcB (ORCPT
+        id S2389344AbfGZPbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:32:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46994 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:31:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388577AbfGZPby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:31:54 -0400
+        id S2389325AbfGZPbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:31:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D366922CD1;
-        Fri, 26 Jul 2019 15:31:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BD6222CBD;
+        Fri, 26 Jul 2019 15:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155113;
-        bh=H+PFAhJnfasRI2CQQwAOMPBazNoKG0UptdFUcKC+uqs=;
+        s=default; t=1564155104;
+        bh=t8bbuwhxhctVtmpeib9Zw2nbVsJkhqj1i5cLEyLUOnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qIsx4s1yyGIJzMObshp0+zJc+NZFmGitfuwY8jL61moxe/F+/eTXoLqZ1ZM1g9ZaL
-         +TSoGa6M9TCCusgYp07GH4Ks5BHhKq/JbZGbtphTdR4PLZXoou3ZwDLxypsxnxrtbS
-         73tWcWgvc5NjDpv74gud8LQMuanx2YTZMuZ1NQnM=
+        b=A4xYuxlVHCaKzP2a9RsZhSUwKkfLcumaWFwYKOfPc/FsKxRyp3k2YTRtB1ylLQk6l
+         S9HzO+mRTGVAz6Bte/sLMKVCZR3oHGMRv7XPuve3Mo9x4NrwZRJKCXlNTbFFWE5el7
+         iySm+9wmSfbFhd1FzLU3A2UDzATE+kfMoyfoKiIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.1 58/62] KVM: nVMX: Clear pending KVM_REQ_GET_VMCS12_PAGES when leaving nested
-Date:   Fri, 26 Jul 2019 17:25:10 +0200
-Message-Id: <20190726152308.052374385@linuxfoundation.org>
+        stable@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 5.1 55/62] ext4: use jbd2_inode dirty range scoping
+Date:   Fri, 26 Jul 2019 17:25:07 +0200
+Message-Id: <20190726152307.769532113@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -60,37 +59,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
+From: Ross Zwisler <zwisler@chromium.org>
 
-commit cf64527bb33f6cec2ed50f89182fc4688d0056b6 upstream.
+commit 73131fbb003b3691cfcf9656f234b00da497fcd6 upstream.
 
-Letting this pend may cause nested_get_vmcs12_pages to run against an
-invalid state, corrupting the effective vmcs of L1.
+Use the newly introduced jbd2_inode dirty range scoping to prevent us
+from waiting forever when trying to complete a journal transaction.
 
-This was triggerable in QEMU after a guest corruption in L2, followed by
-a L1 reset.
-
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Cc: stable@vger.kernel.org
-Fixes: 7f7f1ba33cf2 ("KVM: x86: do not load vmcs12 pages while still in SMM")
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/ext4/ext4_jbd2.h   |   12 ++++++------
+ fs/ext4/inode.c       |   13 ++++++++++---
+ fs/ext4/move_extent.c |    3 ++-
+ 3 files changed, 18 insertions(+), 10 deletions(-)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -212,6 +212,8 @@ static void free_nested(struct kvm_vcpu
- 	if (!vmx->nested.vmxon && !vmx->nested.smm.vmxon)
- 		return;
+--- a/fs/ext4/ext4_jbd2.h
++++ b/fs/ext4/ext4_jbd2.h
+@@ -361,20 +361,20 @@ static inline int ext4_journal_force_com
+ }
  
-+	kvm_clear_request(KVM_REQ_GET_VMCS12_PAGES, vcpu);
+ static inline int ext4_jbd2_inode_add_write(handle_t *handle,
+-					    struct inode *inode)
++		struct inode *inode, loff_t start_byte, loff_t length)
+ {
+ 	if (ext4_handle_valid(handle))
+-		return jbd2_journal_inode_add_write(handle,
+-						    EXT4_I(inode)->jinode);
++		return jbd2_journal_inode_ranged_write(handle,
++				EXT4_I(inode)->jinode, start_byte, length);
+ 	return 0;
+ }
+ 
+ static inline int ext4_jbd2_inode_add_wait(handle_t *handle,
+-					   struct inode *inode)
++		struct inode *inode, loff_t start_byte, loff_t length)
+ {
+ 	if (ext4_handle_valid(handle))
+-		return jbd2_journal_inode_add_wait(handle,
+-						   EXT4_I(inode)->jinode);
++		return jbd2_journal_inode_ranged_wait(handle,
++				EXT4_I(inode)->jinode, start_byte, length);
+ 	return 0;
+ }
+ 
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -727,10 +727,16 @@ out_sem:
+ 		    !(flags & EXT4_GET_BLOCKS_ZERO) &&
+ 		    !ext4_is_quota_file(inode) &&
+ 		    ext4_should_order_data(inode)) {
++			loff_t start_byte =
++				(loff_t)map->m_lblk << inode->i_blkbits;
++			loff_t length = (loff_t)map->m_len << inode->i_blkbits;
 +
- 	vmx->nested.vmxon = false;
- 	vmx->nested.smm.vmxon = false;
- 	free_vpid(vmx->nested.vpid02);
+ 			if (flags & EXT4_GET_BLOCKS_IO_SUBMIT)
+-				ret = ext4_jbd2_inode_add_wait(handle, inode);
++				ret = ext4_jbd2_inode_add_wait(handle, inode,
++						start_byte, length);
+ 			else
+-				ret = ext4_jbd2_inode_add_write(handle, inode);
++				ret = ext4_jbd2_inode_add_write(handle, inode,
++						start_byte, length);
+ 			if (ret)
+ 				return ret;
+ 		}
+@@ -4081,7 +4087,8 @@ static int __ext4_block_zero_page_range(
+ 		err = 0;
+ 		mark_buffer_dirty(bh);
+ 		if (ext4_should_order_data(inode))
+-			err = ext4_jbd2_inode_add_write(handle, inode);
++			err = ext4_jbd2_inode_add_write(handle, inode, from,
++					length);
+ 	}
+ 
+ unlock:
+--- a/fs/ext4/move_extent.c
++++ b/fs/ext4/move_extent.c
+@@ -390,7 +390,8 @@ data_copy:
+ 
+ 	/* Even in case of data=writeback it is reasonable to pin
+ 	 * inode to transaction, to prevent unexpected data loss */
+-	*err = ext4_jbd2_inode_add_write(handle, orig_inode);
++	*err = ext4_jbd2_inode_add_write(handle, orig_inode,
++			(loff_t)orig_page_offset << PAGE_SHIFT, replaced_size);
+ 
+ unlock_pages:
+ 	unlock_page(pagep[0]);
 
 
