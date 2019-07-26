@@ -2,79 +2,89 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A24C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEF2C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D68229F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C841229F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:37:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfGZIhP convert rfc822-to-8bit (ORCPT
+        id S1726640AbfGZIhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 04:37:15 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:62992 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725842AbfGZIhO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 04:37:14 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 17620769-1500050 
-        for multiple; Fri, 26 Jul 2019 09:37:08 +0100
-Content-Type: text/plain; charset="utf-8"
+        Fri, 26 Jul 2019 04:37:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:39620 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbfGZIhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 04:37:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2EF41344;
+        Fri, 26 Jul 2019 01:37:32 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2774F3F71A;
+        Fri, 26 Jul 2019 01:37:31 -0700 (PDT)
+Subject: Re: [PATCH 4/5] sched/deadline: Cleanup on_dl_rq() handling
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>
+Cc:     Luca Abeni <luca.abeni@santannapisa.it>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Qais Yousef <Qais.Yousef@arm.com>, linux-kernel@vger.kernel.org
+References: <20190726082756.5525-1-dietmar.eggemann@arm.com>
+ <20190726082756.5525-5-dietmar.eggemann@arm.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <0f460dba-4677-00de-59a2-5cd31ffe6e4b@arm.com>
+Date:   Fri, 26 Jul 2019 09:37:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Chenbo Feng <fengc@google.com>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <20190613223408.139221-3-fengc@google.com>
-Cc:     Sumit Semwal <sumit.semwal@linaro.org>, kernel-team@android.com
-References: <20190613223408.139221-1-fengc@google.com>
- <20190613223408.139221-3-fengc@google.com>
-Message-ID: <156413022619.30723.12163288418173479775@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [PATCH v5 2/3] dma-buf: add DMA_BUF_SET_NAME ioctls
-Date:   Fri, 26 Jul 2019 09:37:06 +0100
+In-Reply-To: <20190726082756.5525-5-dietmar.eggemann@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Chenbo Feng (2019-06-13 23:34:07)
-> From: Greg Hackmann <ghackmann@google.com>
+On 26/07/2019 09:27, Dietmar Eggemann wrote:
+> Remove BUG_ON() in __enqueue_dl_entity() since there is already one in
+> enqueue_dl_entity().
 > 
-> This patch adds complimentary DMA_BUF_SET_NAME  ioctls, which lets
-> userspace processes attach a free-form name to each buffer.
+> Move the check that the dl_se is not on the dl_rq from
+> __dequeue_dl_entity() to dequeue_dl_entity() to align with the enqueue
+> side and use the on_dl_rq() helper function.
 > 
-> This information can be extremely helpful for tracking and accounting
-> shared buffers.  For example, on Android, we know what each buffer will
-> be used for at allocation time: GL, multimedia, camera, etc.  The
-> userspace allocator can use DMA_BUF_SET_NAME to associate that
-> information with the buffer, so we can later give developers a
-> breakdown of how much memory they're allocating for graphics, camera,
-> etc.
+> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> ---
+>  kernel/sched/deadline.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> index 1fa005f79307..a9cb52ceb761 100644
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -1407,8 +1407,6 @@ static void __enqueue_dl_entity(struct sched_dl_entity *dl_se)
+>  	struct sched_dl_entity *entry;
+>  	int leftmost = 1;
+>  
+> -	BUG_ON(!RB_EMPTY_NODE(&dl_se->rb_node));
+> -
+>  	while (*link) {
+>  		parent = *link;
+>  		entry = rb_entry(parent, struct sched_dl_entity, rb_node);
+> @@ -1430,9 +1428,6 @@ static void __dequeue_dl_entity(struct sched_dl_entity *dl_se)
+>  {
+>  	struct dl_rq *dl_rq = dl_rq_of_se(dl_se);
+>  
+> -	if (RB_EMPTY_NODE(&dl_se->rb_node))
+> -		return;
+> -
 
-The name was never freed...
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index d56993238501..0106b96da585 100644
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -104,6 +104,8 @@ static int dma_buf_release(struct inode *inode, struct file *file)
-        list_del(&dmabuf->list_node);
-        mutex_unlock(&db_list.lock);
-
-+       kfree(dmabuf->name);
-+
-        if (dmabuf->resv == (struct reservation_object *)&dmabuf[1])
-                reservation_object_fini(dmabuf->resv);
-
-This trusts that access to the name via the fs is serialised by the
-refcount.
-
-It would have been great if the inode would only be allocated for a
-named dmabuf, but I expect that requires replacing struct file after it
-is exposed (but maybe a struct file can be moved between fs?).
--Chris
+Any idea why a similar error leads to a BUG_ON() in the enqueue path but
+only a silent return on the dequeue path? I would expect the handling to be
+almost identical.
+ 
