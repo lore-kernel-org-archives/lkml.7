@@ -2,95 +2,136 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A588C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 679D8C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2F8229F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:10:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NtCq+FPK"
+	by mail.kernel.org (Postfix) with ESMTP id 4ACE5229F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfGZMKn (ORCPT
+        id S1726910AbfGZMLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:10:43 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:35014 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfGZMKn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:10:43 -0400
-Received: by mail-vs1-f67.google.com with SMTP id u124so35941961vsu.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 05:10:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3Hk/ddKDjoh3rwEJrDhaz3iODFHsGs5iANDx40FYTho=;
-        b=NtCq+FPK94+cvz+LxBD1ik58Euv8pnMYGOB5sJi8/gCvTrdjnxQzLolpowpC9ijbye
-         C59/PhPvLwAPBORN4l7mgwO+HQTjyloYV1GDx/oFwYaJv1XfXqW9k9eUqWz1HQfjtj34
-         LZoMbu4mHtz2br0/8RyvDY/R80R4B4J+9YjaU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3Hk/ddKDjoh3rwEJrDhaz3iODFHsGs5iANDx40FYTho=;
-        b=svPY770NhbXQakKjfBJfW1QqTn25wfnYz0qWPnNum7eD6aI+TJ6MJcM5vmgJLsYCkD
-         PJg/YItRNvvg2jZoQ1E40opegmDMYXO4QOHzIk0+s88i7jMyIf5B5MjAj5QBhvIC3X+3
-         RPn058/CxL1wR6QWmUu9NAB9R99vpF8gBHaeUSjV4yLF2dWI5t3uZnCz6yOxViObMcRO
-         meaqCz0tDVi0t1NpjJnt7ChA6+sCl8oT2txFmzBvvYGdEjwYPAZFTt5Xb1TrNKI4HuP2
-         dW0JnAyHadBupHVszBDypgrqHzUPQpmTIoq5Ag//EMVzwGuwdCOBEvuiohOQa82b8Xwe
-         vBvg==
-X-Gm-Message-State: APjAAAVInMSkOxoWoEfyfTRFDo/gZa3LtrT7EuX8T5zSIDUIUIO0TGyo
-        IuJFhGJ/TANeJg4ccZrf0u8CUR0ElAJW9F4Muikzkg==
-X-Google-Smtp-Source: APXvYqzvjy8zCiVZsbAMpzxFBmwdjzNDLhL/0NIc8p6K0jlM7GCFN0g706IM3lhQXZiAwJDLHY0z+t81Nwo+kvfoFcM=
-X-Received: by 2002:a67:f7cd:: with SMTP id a13mr60241411vsp.163.1564143041404;
- Fri, 26 Jul 2019 05:10:41 -0700 (PDT)
+        Fri, 26 Jul 2019 08:11:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:42250 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726282AbfGZMLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 08:11:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56453344;
+        Fri, 26 Jul 2019 05:11:03 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34CC33F694;
+        Fri, 26 Jul 2019 05:11:02 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 13:10:57 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     will@kernel.org, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH 1/3] arm64: perf: Mark expected switch fall-through
+Message-ID: <20190726121056.GA26088@lakrids.cambridge.arm.com>
+References: <20190726112716.19104-1-anders.roxell@linaro.org>
 MIME-Version: 1.0
-References: <20190726044202.26866-1-cychiang@chromium.org> <20190726111717.GB4902@sirena.org.uk>
-In-Reply-To: <20190726111717.GB4902@sirena.org.uk>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Fri, 26 Jul 2019 20:10:15 +0800
-Message-ID: <CAFv8NwLyTPXJ0x9F-wcGM-XFcCp+Nb1s96u9=_2xhs+=Q=E+fw@mail.gmail.com>
-Subject: Re: [PATCH] Revert "ASoC: rockchip: i2s: Support mono capture"
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Doug Anderson <dianders@chromium.org>,
-        Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190726112716.19104-1-anders.roxell@linaro.org>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 7:17 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Fri, Jul 26, 2019 at 12:42:02PM +0800, Cheng-Yi Chiang wrote:
-> > This reverts commit db51707b9c9aeedd310ebce60f15d5bb006567e0.
-> >
-> > Previous discussion in
->
-> Please use subject lines matching the style for the subsystem.  This
-> makes it easier for people to identify relevant patches.
->
->
-> Please include human readable descriptions of things like commits and
-> issues being discussed in e-mail in your mails, this makes them much
-> easier for humans to read especially when they have no internet access.
-> I do frequently catch up on my mail on flights or while otherwise
-> travelling so this is even more pressing for me than just being about
-> making things a bit easier to read.
-Hi Mark,
-Thank you for the reply.
-Fixed the title and commit messages in v2.
+On Fri, Jul 26, 2019 at 01:27:16PM +0200, Anders Roxell wrote:
+> When fall-through warnings was enabled by default, commit d93512ef0f0e
+> ("Makefile: Globally enable fall-through warning"), the following
+> warnings was starting to show up:
+> 
+> ../arch/arm64/kernel/hw_breakpoint.c: In function ‘hw_breakpoint_arch_parse’:
+> ../arch/arm64/kernel/hw_breakpoint.c:540:7: warning: this statement may fall
+>  through [-Wimplicit-fallthrough=]
+>     if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
+>        ^
+> ../arch/arm64/kernel/hw_breakpoint.c:542:3: note: here
+>    case 2:
+>    ^~~~
+> ../arch/arm64/kernel/hw_breakpoint.c:544:7: warning: this statement may fall
+>  through [-Wimplicit-fallthrough=]
+>     if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
+>        ^
+> ../arch/arm64/kernel/hw_breakpoint.c:546:3: note: here
+>    default:
+>    ^~~~~~~
+> 
+> Rework so that the compiler doesn't warn about fall-through. Rework so
+> the code looks like the arm code. Since the comment in the function
+> indicates taht this is supposed to behave the same way as arm32 because
+
+Typo: s/taht/that/
+
+> it handles 32-bit tasks also.
+> 
+> Cc: stable@vger.kernel.org # v3.16+
+> Fixes: 6ee33c2712fc ("ARM: hw_breakpoint: correct and simplify alignment fixup code")
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+
+The patch itself looks fine, but I don't think this needs a CC to
+stable, nor does it require that fixes tag, as there's no functional
+problem.
+
+If anything, it fixes:
+
+  d93512ef0f0e (" Makefile: Globally enable fall-through warning")
+
+... given the commit message for that patch states:
+
+  Now that all the fall-through warnings have been addressed in the
+  kernel, enable the fall-through warning globally.
+
+... and the existence of this patch implies otherwise.
+
+IIUC that patch isn't even in mainline yet, but given this is simple I
+imagine that Will and Catalin might be happy to pick this up for the
+next rc.
+
+Thanks,
+Mark.
+
+> ---
+>  arch/arm64/kernel/hw_breakpoint.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
+> index dceb84520948..ea616adf1cf1 100644
+> --- a/arch/arm64/kernel/hw_breakpoint.c
+> +++ b/arch/arm64/kernel/hw_breakpoint.c
+> @@ -535,14 +535,17 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+>  		case 0:
+>  			/* Aligned */
+>  			break;
+> -		case 1:
+> -			/* Allow single byte watchpoint. */
+> -			if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
+> -				break;
+>  		case 2:
+>  			/* Allow halfword watchpoints and breakpoints. */
+>  			if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
+>  				break;
+> +			/* Fall through */
+> +		case 1:
+> +		case 3:
+> +			/* Allow single byte watchpoint. */
+> +			if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
+> +				break;
+> +			/* Fall through */
+>  		default:
+>  			return -EINVAL;
+>  		}
+> -- 
+> 2.20.1
+> 
