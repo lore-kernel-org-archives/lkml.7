@@ -2,94 +2,89 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562A6C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6787CC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2769221901
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A87521901
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:05:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbfGZPFd (ORCPT
+        id S2387716AbfGZPFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:05:33 -0400
-Received: from hera.aquilenet.fr ([185.233.100.1]:58088 "EHLO
-        hera.aquilenet.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727287AbfGZPFd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:05:33 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by hera.aquilenet.fr (Postfix) with ESMTP id 95EAB18AFA;
-        Fri, 26 Jul 2019 17:05:31 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at aquilenet.fr
-Received: from hera.aquilenet.fr ([127.0.0.1])
-        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id f04B5gwHognF; Fri, 26 Jul 2019 17:05:31 +0200 (CEST)
-Received: from function (dhcp-13-113.lip.ens-lyon.fr [140.77.13.113])
-        by hera.aquilenet.fr (Postfix) with ESMTPSA id DFBD318AF8;
-        Fri, 26 Jul 2019 17:05:30 +0200 (CEST)
-Received: from samy by function with local (Exim 4.92)
-        (envelope-from <samuel.thibault@ens-lyon.org>)
-        id 1hr1mk-0001Vd-Gv; Fri, 26 Jul 2019 17:05:30 +0200
-Date:   Fri, 26 Jul 2019 17:05:30 +0200
-From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        931507@bugs.debian.org
-Subject: hda: Fix 1-minute detection delay when i915 module is not available
-Message-ID: <20190726150530.cibwiaohhexl5jdc@function>
-Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        931507@bugs.debian.org
+        Fri, 26 Jul 2019 11:05:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54518 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727287AbfGZPFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:05:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B3D96ADF1;
+        Fri, 26 Jul 2019 15:05:34 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 85BAADA811; Fri, 26 Jul 2019 17:06:10 +0200 (CEST)
+Date:   Fri, 26 Jul 2019 17:06:09 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Qu Wenruo <quwenruo.btrfs@gmx.com>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>, clm@fb.com,
+        josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: btrfs: Fix a possible null-pointer dereference in
+ insert_inline_extent()
+Message-ID: <20190726150609.GE2868@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Qu Wenruo <quwenruo.btrfs@gmx.com>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>, clm@fb.com,
+        josef@toxicpanda.com, dsterba@suse.com, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190724021132.27378-1-baijiaju1990@gmail.com>
+ <df4b5d21-0983-3ca2-44de-ea9f1616df7f@gmx.com>
+ <800ae777-928f-2969-d4dd-6f358a039e48@gmail.com>
+ <1b708c0d-8ea1-3898-0340-9cbce1fc2602@gmx.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1b708c0d-8ea1-3898-0340-9cbce1fc2602@gmx.com>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Distribution installation images such as Debian include different sets
-of modules which can be downloaded dynamically.  Such images may notably
-include the hda sound modules but not the i915 DRM module, even if the
-latter was enabled at build time, as reported on
-https://bugs.debian.org/931507
+On Wed, Jul 24, 2019 at 10:57:24AM +0800, Qu Wenruo wrote:
+> On 2019/7/24 上午10:33, Jia-Ju Bai wrote:
+> > On 2019/7/24 10:21, Qu Wenruo wrote:
+> >> On 2019/7/24 上午10:11, Jia-Ju Bai wrote:
+> >>> In insert_inline_extent(), there is an if statement on line 181 to check
+> >>> whether compressed_pages is NULL:
+> >>>      if (compressed_size && compressed_pages)
+> >>>
+> >>> When compressed_pages is NULL, compressed_pages is used on line 215:
+> >>>      cpage = compressed_pages[i];
+> >>>
+> >>> Thus, a possible null-pointer dereference may occur.
+> >>>
+> >>> To fix this possible bug, compressed_pages is checked on line 214.
+> >> This can only be hit with compressed_size > 0 and compressed_pages !=
+> >> NULL.
+> >>
+> >> It would be better to have an extra ASSERT() to warn developers about
+> >> the impossible case.
+> > 
+> > Thanks for the reply :)
+> > So I should add ASSERT(compressed_size > 0 & compressed_pages) at the
+> > beginning of the function, and remove "if (compressed_size &&
+> > compressed_pages)"?
+> 
+> My suggestion is, ASSERT((compressed_size >0 && compressed_pages) ||
+> (compressed_size == 0 && !compressed_pages))
+> 
+> And keeps the original checks.
+> 
+> Anyway, just a suggestion.
 
-In such a case hdac_i915 would be linked in and try to load the i915
-module, fail since it is not there, but still wait for a whole minute
-before giving up binding with it.
-
-This fixes such as case by only waiting for the binding if the module
-was properly loaded (or module support is disabled, in which case i915
-is already compiled-in anyway).
-
-Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
----
- sound/hda/hdac_i915.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
---- a/sound/hda/hdac_i915.c
-+++ b/sound/hda/hdac_i915.c
-@@ -143,10 +143,14 @@ int snd_hdac_i915_init(struct hdac_bus *
- 	if (!acomp)
- 		return -ENODEV;
- 	if (!acomp->ops) {
--		request_module("i915");
--		/* 60s timeout */
--		wait_for_completion_timeout(&bind_complete,
--					    msecs_to_jiffies(60 * 1000));
-+#ifdef CONFIG_MODULES
-+		if (request_module("i915") == 0)
-+#endif
-+		{
-+			/* 60s timeout */
-+			wait_for_completion_timeout(&bind_complete,
-+						   msecs_to_jiffies(60 * 1000));
-+		}
- 	}
- 	if (!acomp->ops) {
- 		dev_info(bus->dev, "couldn't bind with audio component\n");
+Agreed, the assertion would be good, covering both cases in one
+statement at the beginning of the function.
