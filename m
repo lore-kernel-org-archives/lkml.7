@@ -2,229 +2,251 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A61D1C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA9FC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ABC822C97
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A76E22C7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:26:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="H4UbmT7q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfGZJZ6 (ORCPT
+        id S1726526AbfGZJ0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:25:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54696 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726007AbfGZJZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:25:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3E144B603;
-        Fri, 26 Jul 2019 09:25:55 +0000 (UTC)
-Date:   Fri, 26 Jul 2019 11:25:52 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        pasha.tatashin@soleen.com, mhocko@suse.com,
-        anshuman.khandual@arm.com, Jonathan.Cameron@huawei.com,
-        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] mm: Introduce a new Vmemmap page-type
-Message-ID: <20190726092548.GA26268@linux>
-References: <20190725160207.19579-1-osalvador@suse.de>
- <20190725160207.19579-3-osalvador@suse.de>
- <7e8746ac-6a66-d73c-9f2a-4fc53c7e4c04@redhat.com>
+        Fri, 26 Jul 2019 05:26:30 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33838 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfGZJ02 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:26:28 -0400
+Received: by mail-wm1-f67.google.com with SMTP id w9so37572708wmd.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 02:26:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yAlmetSau4JpsYsOXgnMOz5VqkVT3TgR1F5e1YGklgc=;
+        b=H4UbmT7qC9fZxoMDpNMUzt+GXicV51GrqaAEqaxzQSfGvVM7UDEvLPRlCztVDWssXI
+         fURLW8T8DOeAEy2YdtprPkjzVDlyTKxhVxSkc2Cp1K5Pdh95/5figTrOdQkxD7o922Jh
+         dJNLMH7rt7i8cfmlKpnSg5TwooNRjwxX43jG8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yAlmetSau4JpsYsOXgnMOz5VqkVT3TgR1F5e1YGklgc=;
+        b=sykImjw5rN//MG1MM0lu/lamygfzgzX/jo8Uw0OQovESiX17+QqEyxBAQMAHEhaxzN
+         /MQG6VIrQbhIJwyg9P2fXj78kvt8iSPNknRCot+7UUrBA6xayRdbiJ4MB/7ZFVqUFgpr
+         hU9FG2KIJ6K+Cm8YJTQT13dqlphlsQA5PkG/J/u0yeA1uqkhjzcFpqveG5eyAnpVaeXU
+         xMZaagOPVjNWiijEvPskLn8aLg69WYfoKvdacnVGR4eOv0Qi5/jmkYWHC5qKQo6GYANn
+         huQiX1PmgHwjnjyMX4gcMoNzZ7w366nKD6DMd8eDs1Ij68m29afxC4M1DFVGD6JQ8OF6
+         ytDQ==
+X-Gm-Message-State: APjAAAUXG7mWvSb81w8aC+2LraYW9E4RQbHXlwsjfaBGbn9omEA32IXe
+        LGRceX51gTvX7P88DviTs21LQw==
+X-Google-Smtp-Source: APXvYqyskWqXyumKsOoVMV5Xd5XnvR0IWtK4g9S4QSM8XY/CZ7l7B6rqLJslxVZvgMHH0NWBaksV0A==
+X-Received: by 2002:a1c:630a:: with SMTP id x10mr88654134wmb.113.1564133184533;
+        Fri, 26 Jul 2019 02:26:24 -0700 (PDT)
+Received: from [192.168.0.107] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id t140sm47111096wmt.0.2019.07.26.02.26.23
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jul 2019 02:26:23 -0700 (PDT)
+Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     roopa@cumulusnetworks.com, davem@davemloft.net,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, allan.nielsen@microchip.com
+References: <1564055044-27593-1-git-send-email-horatiu.vultur@microchip.com>
+ <7e7a7015-6072-d884-b2ba-0a51177245ab@cumulusnetworks.com>
+ <eef063fe-fd3a-7e02-89c2-e40728a17578@cumulusnetworks.com>
+ <20190725142101.65tusauc6fzxb2yp@soft-dev3.microsemi.net>
+ <b9ce433a-3ef7-fe15-642a-659c5715d992@cumulusnetworks.com>
+Message-ID: <e6ad982f-4706-46f9-b8f0-1337b09de350@cumulusnetworks.com>
+Date:   Fri, 26 Jul 2019 12:26:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e8746ac-6a66-d73c-9f2a-4fc53c7e4c04@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b9ce433a-3ef7-fe15-642a-659c5715d992@cumulusnetworks.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 10:48:54AM +0200, David Hildenbrand wrote:
-> > Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> > ---
-> >  include/linux/mm.h         | 17 +++++++++++++++++
-> >  include/linux/mm_types.h   |  5 +++++
-> >  include/linux/page-flags.h | 19 +++++++++++++++++++
-> >  3 files changed, 41 insertions(+)
-> > 
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index 45f0ab0ed4f7..432175f8f8d2 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -2904,6 +2904,23 @@ static inline bool debug_guardpage_enabled(void) { return false; }
-> >  static inline bool page_is_guard(struct page *page) { return false; }
-> >  #endif /* CONFIG_DEBUG_PAGEALLOC */
-> >  
-> > +static __always_inline struct page *vmemmap_head(struct page *page)
-> > +{
-> > +	return (struct page *)page->vmemmap_head;
-> > +}
-> > +
-> > +static __always_inline unsigned long vmemmap_nr_sections(struct page *page)
-> > +{
-> > +	struct page *head = vmemmap_head(page);
-> > +	return head->vmemmap_sections;
-> > +}
-> > +
-> > +static __always_inline unsigned long vmemmap_nr_pages(struct page *page)
-> > +{
-> > +	struct page *head = vmemmap_head(page);
-> > +	return head->vmemmap_pages - (page - head);
-> > +}
-> > +
-> >  #if MAX_NUMNODES > 1
-> >  void __init setup_nr_node_ids(void);
-> >  #else
-> > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> > index 6a7a1083b6fb..51dd227f2a6b 100644
-> > --- a/include/linux/mm_types.h
-> > +++ b/include/linux/mm_types.h
-> > @@ -170,6 +170,11 @@ struct page {
-> >  			 * pmem backed DAX files are mapped.
-> >  			 */
-> >  		};
-> > +		struct {        /* Vmemmap pages */
-> > +			unsigned long vmemmap_head;
-> > +			unsigned long vmemmap_sections; /* Number of sections */
-> > +			unsigned long vmemmap_pages;    /* Number of pages */
-> > +		};
-> >  
-> >  		/** @rcu_head: You can use this to free a page by RCU. */
-> >  		struct rcu_head rcu_head;
-> > diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> > index f91cb8898ff0..75f302a532f9 100644
-> > --- a/include/linux/page-flags.h
-> > +++ b/include/linux/page-flags.h
-> > @@ -708,6 +708,7 @@ PAGEFLAG_FALSE(DoubleMap)
-> >  #define PG_kmemcg	0x00000200
-> >  #define PG_table	0x00000400
-> >  #define PG_guard	0x00000800
-> > +#define PG_vmemmap     0x00001000
-> >  
-> >  #define PageType(page, flag)						\
-> >  	((page->page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
-> > @@ -764,6 +765,24 @@ PAGE_TYPE_OPS(Table, table)
-> >   */
-> >  PAGE_TYPE_OPS(Guard, guard)
-> >  
-> > +/*
-> > + * Vmemmap pages refers to those pages that are used to create the memmap
-> > + * array, and reside within the same memory range that was hotppluged, so
-> > + * they are self-hosted. (see include/linux/memory_hotplug.h)
-> > + */
-> > +PAGE_TYPE_OPS(Vmemmap, vmemmap)
-> > +static __always_inline void SetPageVmemmap(struct page *page)
-> > +{
-> > +	__SetPageVmemmap(page);
-> > +	__SetPageReserved(page);
+On 26/07/2019 11:41, Nikolay Aleksandrov wrote:
+> On 25/07/2019 17:21, Horatiu Vultur wrote:
+>> Hi Nikolay,
+>>
+>> The 07/25/2019 16:21, Nikolay Aleksandrov wrote:
+>>> External E-Mail
+>>>
+>>>
+>>> On 25/07/2019 16:06, Nikolay Aleksandrov wrote:
+>>>> On 25/07/2019 14:44, Horatiu Vultur wrote:
+>>>>> There is no way to configure the bridge, to receive only specific link
+>>>>> layer multicast addresses. From the description of the command 'bridge
+>>>>> fdb append' is supposed to do that, but there was no way to notify the
+>>>>> network driver that the bridge joined a group, because LLADDR was added
+>>>>> to the unicast netdev_hw_addr_list.
+>>>>>
+>>>>> Therefore update fdb_add_entry to check if the NLM_F_APPEND flag is set
+>>>>> and if the source is NULL, which represent the bridge itself. Then add
+>>>>> address to multicast netdev_hw_addr_list for each bridge interfaces.
+>>>>> And then the .ndo_set_rx_mode function on the driver is called. To notify
+>>>>> the driver that the list of multicast mac addresses changed.
+>>>>>
+>>>>> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+>>>>> ---
+>>>>>  net/bridge/br_fdb.c | 49 ++++++++++++++++++++++++++++++++++++++++++++++---
+>>>>>  1 file changed, 46 insertions(+), 3 deletions(-)
+>>>>>
+>>>>
+>>>> Hi,
+>>>> I'm sorry but this patch is wrong on many levels, some notes below. In general
+>>>> NLM_F_APPEND is only used in vxlan, the bridge does not handle that flag at all.
+>>>> FDB is only for *unicast*, nothing is joined and no multicast should be used with fdbs.
+>>>> MDB is used for multicast handling, but both of these are used for forwarding.
+>>>> The reason the static fdbs are added to the filter is for non-promisc ports, so they can
+>>>> receive traffic destined for these FDBs for forwarding.
+>>>> If you'd like to join any multicast group please use the standard way, if you'd like to join
+>>>> it only on a specific port - join it only on that port (or ports) and the bridge and you'll
+>>>
+>>> And obviously this is for the case where you're not enabling port promisc mode (non-default).
+>>> In general you'll only need to join the group on the bridge to receive traffic for it
+>>> or add it as an mdb entry to forward it.
+>>>
+>>>> have the effect that you're describing. What do you mean there's no way ?
+>>
+>> Thanks for the explanation.
+>> There are few things that are not 100% clear to me and maybe you can
+>> explain them, not to go totally in the wrong direction. Currently I am
+>> writing a network driver on which I added switchdev support. Then I was
+>> looking for a way to configure the network driver to copy link layer
+>> multicast address to the CPU port.
+>>
+>> If I am using bridge mdb I can do it only for IP multicast addreses,
+>> but how should I do it if I want non IP frames with link layer multicast
+>> address to be copy to CPU? For example: all frames with multicast
+>> address '01-21-6C-00-00-01' to be copy to CPU. What is the user space
+>> command for that?
+>>
 > 
-> So, the issue with some vmemmap pages is that the "struct pages" reside
-> on the memory they manage. (it is nice, but complicated - e.g. when
-> onlining/offlining)
+> Check SIOCADDMULTI (ip maddr from iproute2), f.e. add that mac to the port
+> which needs to receive it and the bridge will send it up automatically since
+> it's unknown mcast (note that if there's a querier, you'll have to make the
+> bridge mcast router if it is not the querier itself). It would also flood it to all
 
-Hi David,
+Actually you mentioned non-IP traffic, so the querier stuff is not a problem. This
+traffic will always be flooded by the bridge (and also a copy will be locally sent up).
+Thus only the flooding may need to be controlled.
 
-Not really.
-Vemmap pages are just skipped when onling/offlining handling.
-We do not need them to a) send to the buddy and b) migrate them over.
-A look at patch#4 will probably help, as the crux of the matter is there.
-
+> other ports so you may want to control that. It really depends on the setup
+> and the how the hardware is configured.
 > 
-> I would expect that you properly initialize the struct pages for the
-> vmemmap pages (now it gets confusing :) ) when adding memory. The other
-> struct pages are initialized when onlining/offlining.
+>>>>
+>>>> In addition you're allowing a mix of mcast functions to be called with unicast addresses
+>>>> and vice versa, it is not that big of a deal because the kernel will simply return an error
+>>>> but still makes no sense.
+>>>>
+>>>> Nacked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+>>>>
+>>>>> diff --git a/net/bridge/br_fdb.c b/net/bridge/br_fdb.c
+>>>>> index b1d3248..d93746d 100644
+>>>>> --- a/net/bridge/br_fdb.c
+>>>>> +++ b/net/bridge/br_fdb.c
+>>>>> @@ -175,6 +175,29 @@ static void fdb_add_hw_addr(struct net_bridge *br, const unsigned char *addr)
+>>>>>  	}
+>>>>>  }
+>>>>>  
+>>>>> +static void fdb_add_hw_maddr(struct net_bridge *br, const unsigned char *addr)
+>>>>> +{
+>>>>> +	int err;
+>>>>> +	struct net_bridge_port *p;
+>>>>> +
+>>>>> +	ASSERT_RTNL();
+>>>>> +
+>>>>> +	list_for_each_entry(p, &br->port_list, list) {
+>>>>> +		if (!br_promisc_port(p)) {
+>>>>> +			err = dev_mc_add(p->dev, addr);
+>>>>> +			if (err)
+>>>>> +				goto undo;
+>>>>> +		}
+>>>>> +	}
+>>>>> +
+>>>>> +	return;
+>>>>> +undo:
+>>>>> +	list_for_each_entry_continue_reverse(p, &br->port_list, list) {
+>>>>> +		if (!br_promisc_port(p))
+>>>>> +			dev_mc_del(p->dev, addr);
+>>>>> +	}
+>>>>> +}
+>>>>> +
+>>>>>  /* When a static FDB entry is deleted, the HW address from that entry is
+>>>>>   * also removed from the bridge private HW address list and updates all
+>>>>>   * the ports with needed information.
+>>>>> @@ -192,13 +215,27 @@ static void fdb_del_hw_addr(struct net_bridge *br, const unsigned char *addr)
+>>>>>  	}
+>>>>>  }
+>>>>>  
+>>>>> +static void fdb_del_hw_maddr(struct net_bridge *br, const unsigned char *addr)
+>>>>> +{
+>>>>> +	struct net_bridge_port *p;
+>>>>> +
+>>>>> +	ASSERT_RTNL();
+>>>>> +
+>>>>> +	list_for_each_entry(p, &br->port_list, list) {
+>>>>> +		if (!br_promisc_port(p))
+>>>>> +			dev_mc_del(p->dev, addr);
+>>>>> +	}
+>>>>> +}
+>>>>> +
+>>>>>  static void fdb_delete(struct net_bridge *br, struct net_bridge_fdb_entry *f,
+>>>>>  		       bool swdev_notify)
+>>>>>  {
+>>>>>  	trace_fdb_delete(br, f);
+>>>>>  
+>>>>> -	if (f->is_static)
+>>>>> +	if (f->is_static) {
+>>>>>  		fdb_del_hw_addr(br, f->key.addr.addr);
+>>>>> +		fdb_del_hw_maddr(br, f->key.addr.addr);
+>>>>
+>>>> Walking over all ports again for each static delete is a no-go.
+>>>>
+>>>>> +	}
+>>>>>  
+>>>>>  	hlist_del_init_rcu(&f->fdb_node);
+>>>>>  	rhashtable_remove_fast(&br->fdb_hash_tbl, &f->rhnode,
+>>>>> @@ -843,13 +880,19 @@ static int fdb_add_entry(struct net_bridge *br, struct net_bridge_port *source,
+>>>>>  			fdb->is_local = 1;
+>>>>>  			if (!fdb->is_static) {
+>>>>>  				fdb->is_static = 1;
+>>>>> -				fdb_add_hw_addr(br, addr);
+>>>>> +				if (flags & NLM_F_APPEND && !source)
+>>>>> +					fdb_add_hw_maddr(br, addr);
+>>>>> +				else
+>>>>> +					fdb_add_hw_addr(br, addr);
+>>>>>  			}
+>>>>>  		} else if (state & NUD_NOARP) {
+>>>>>  			fdb->is_local = 0;
+>>>>>  			if (!fdb->is_static) {
+>>>>>  				fdb->is_static = 1;
+>>>>> -				fdb_add_hw_addr(br, addr);
+>>>>> +				if (flags & NLM_F_APPEND && !source)
+>>>>> +					fdb_add_hw_maddr(br, addr);
+>>>>> +				else
+>>>>> +					fdb_add_hw_addr(br, addr);
+>>>>>  			}
+>>>>>  		} else {
+>>>>>  			fdb->is_local = 0;
+>>>>>
+>>>>
+>>>
+>>
 > 
-> So, at this point, the pages should already be marked reserved, no? Or
-> are the struct pages for the vmemmap never initialized?
-> 
-> What zone do these vmemmap pages have? They are not assigned to any zone
-> and will never be :/
 
-This patch is only a preparation, the real "fun" is in patch#4.
-
-Vmemmap pages initialization occurs in mhp_mark_vmemmap_pages, called from
-__add_pages() (patch#4).
-In there we a) mark the page as vmemmap and b) initialize the fields we need to
-track some medata (sections, pages and head).
-
-In __init_single_page(), when onlining, the rest of the fields will be set up
-properly (zone, refcount, etc).
-
-Chunk from patch#4:
-
-static void __meminit __init_single_page(struct page *page, unsigned long pfn,
-                                unsigned long zone, int nid)
-{
-        if (PageVmemmap(page))
-                /*
-                 * Vmemmap pages need to preserve their state.
-                 */
-                goto preserve_state;
-
-        mm_zero_struct_page(page);
-        page_mapcount_reset(page);
-        INIT_LIST_HEAD(&page->lru);
-preserve_state:
-        init_page_count(page);
-        set_page_links(page, zone, nid, pfn);
-        page_cpupid_reset_last(page);
-        page_kasan_tag_reset(page);
-
-So, vmemmap pages will fall within the same zone as the range we are adding,
-that does not change.
-
-> > +}
-> > +
-> > +static __always_inline void ClearPageVmemmap(struct page *page)
-> > +{
-> > +	__ClearPageVmemmap(page);
-> > +	__ClearPageReserved(page);
-> 
-> You sure you want to clear the reserved flag here? Is this function
-> really needed?
-> 
-> (when you add memory, you can mark all relevant pages as vmemmap pages,
-> which is valid until removing the memory)
-> 
-> Let's draw a picture so I am not confused
-> 
-> [ ------ added memory ------ ]
-> [ vmemmap]
-> 
-> The first page of the added memory is a vmemmap page AND contains its
-> own vmemmap, right?
-
-Not only the first page.
-Depending on how large is the chunk you are adding, the number of vmemmap
-pages will vary, because we need to cover the memmaps for the range.
-
-e.g:
-
- - 128MB (1 section) = 512 vmemmap pages at the beginning of the range
- - 256MB (2 section) = 1024 vmemmap pages at the beginning of the range
- ...
-
-> When adding memory, you would initialize set all struct pages of the
-> vmemmap (residing on itself) and set them to SetPageVmemmap().
-> 
-> When removing memory, there is nothing to do, all struct pages are
-> dropped. So why do we need the ClearPageVmemmap() ?
-
-Well, it is not really needed as we only call ClearPageVmemmap when we are
-actually removing the memory with vmemmap_free()->...
-So one could argue that since the memory is going away, there is no need
-to clear anything in there.
-
-I just made it for consistency purposes.
-
-Can drop it if feeling strong here.
-
--- 
-Oscar Salvador
-SUSE L3
