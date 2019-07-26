@@ -2,130 +2,106 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D55C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B72C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98BF4229F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF46229F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:25:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dbYOmz3U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbfGZJZj (ORCPT
+        id S1726283AbfGZJZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:25:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:40132 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbfGZJZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:25:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0630344;
-        Fri, 26 Jul 2019 02:25:38 -0700 (PDT)
-Received: from [192.168.0.21] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B4C23F71A;
-        Fri, 26 Jul 2019 02:25:37 -0700 (PDT)
-Subject: Re: [Regression] Missing device nodes for ETR, ETF and STM after
- CONFIG_UEVENT_HELPER=n
-To:     gregkh@linuxfoundation.org, saiprakash.ranjan@codeaurora.org
-Cc:     geert+renesas@glider.be, mathieu.poirier@linaro.org,
-        leo.yan@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <cfe09a46-462f-633a-37c2-52f8bfc0ffb2@codeaurora.org>
- <20190726070429.GA15714@kroah.com>
- <165028a7-ff12-dd28-cc4c-57a3961dbb40@codeaurora.org>
- <20190726084127.GA28470@kroah.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <f72f2fa1-7b1b-d7de-c9b4-cd574400d8e5@arm.com>
-Date:   Fri, 26 Jul 2019 10:28:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Fri, 26 Jul 2019 05:25:54 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36755 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfGZJZy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:25:54 -0400
+Received: by mail-lj1-f195.google.com with SMTP id i21so50834972ljj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 02:25:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9+PIbmOU2L0JKXtCkLpSiyF+YIeyaYLwnS78i5Iju9M=;
+        b=dbYOmz3UopyNMm7b+ZL7OYeHZdKMjC8uKvQEM6zd4xeZieU1Gi9gvjgH3EC1AIvYE7
+         duuZwTh1H+R8KFptKI/jmo5gs6vbyo1Hn4Yvszu+PAhMscpBeKE0NUDIEylJzsG9RQXx
+         O2eO72Dl+2cezfYqquobSJ95toySzW4VpudQ7IDc/a/BCdxaZULQMFGSNR1MEkaqRfzu
+         yw4myOKYtau9cDEFTvOv9lQXp+tPo3R7FgKpCKwXTLMufDI4BbufB6HK0z6U+rlKB8h6
+         Txn8SJkVcvNbYm8TbvLQK9gHymzUcOxdcaMUAG9qs1HWphbaCs1bXctY+Umltlf2xL9w
+         VbSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9+PIbmOU2L0JKXtCkLpSiyF+YIeyaYLwnS78i5Iju9M=;
+        b=lLn8rcYYTn1B+/uNiI4dtnEWPyJO52wsQMmjWavrnqDnlKM/ynx3zt6AjVaBA7wSQ0
+         YBi8INIUU+hV1u+b2wciayic7NJmuVtMTztvi6qAYX7TljZpO3zOarz9nBaLknlPWSYX
+         nAutxoP1PLOrs297CBJS4yEkAINk3ciRWOZR1aG7iajejJYV02yCTrAF/bMiDSS5yXR8
+         amCdFxTFhMD022ISvQ5HK0gG9OyAq9UMbo5aqCJFdFJIpvXC3oVKH+mOOvl5cMJDBWLh
+         z3RsI96TMMVxQovL3uz0prAa6P00TcU8QEWiff01jICvmAyPl6VCUqqg1bTs5rPI460l
+         zjaQ==
+X-Gm-Message-State: APjAAAWB6k6zAlmqUCUYLbEZzHSW/ZZTtxgdzskKUxYfscgbzIBXTZQY
+        BbCkJqVhlaa4Q8b2zrHyPIXSag==
+X-Google-Smtp-Source: APXvYqx3uN2nE7n6qS05F8mg8lPbGXuEEWpcKrx2U8qn9xYeIoCbLmf2xLHai/CRWcn88ThrbBoiNw==
+X-Received: by 2002:a2e:a16c:: with SMTP id u12mr46776497ljl.59.1564133151828;
+        Fri, 26 Jul 2019 02:25:51 -0700 (PDT)
+Received: from localhost (c-243c70d5.07-21-73746f28.bbcust.telenor.se. [213.112.60.36])
+        by smtp.gmail.com with ESMTPSA id m17sm9919308lji.16.2019.07.26.02.25.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 26 Jul 2019 02:25:51 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     bmt@zurich.ibm.com, dledford@redhat.com, jgg@ziepe.ca
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH] rdma: siw: remove unused variable
+Date:   Fri, 26 Jul 2019 11:25:40 +0200
+Message-Id: <20190726092540.22467-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190726084127.GA28470@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The variable 'p' si no longer used and the compiler rightly complains
+that it should be removed.
 
+../drivers/infiniband/sw/siw/siw_mem.c: In function ‘siw_free_plist’:
+../drivers/infiniband/sw/siw/siw_mem.c:66:16: warning: unused variable
+ ‘p’ [-Wunused-variable]
+  struct page **p = chunk->plist;
+                ^
 
-On 07/26/2019 09:41 AM, Greg Kroah-Hartman wrote:
-> On Fri, Jul 26, 2019 at 01:50:27PM +0530, Sai Prakash Ranjan wrote:
->> On 7/26/2019 12:34 PM, Greg Kroah-Hartman wrote:
->>> On Fri, Jul 26, 2019 at 11:49:19AM +0530, Sai Prakash Ranjan wrote:
->>>> Hi,
->>>>
->>>> When trying to test my coresight patches, I found that etr,etf and stm
->>>> device nodes are missing from /dev.
->>>
->>> I have no idea what those device nodes are.
->>>
->>>> Bisection gives this as the bad commit.
->>>>
->>>> 1be01d4a57142ded23bdb9e0c8d9369e693b26cc is the first bad commit
->>>> commit 1be01d4a57142ded23bdb9e0c8d9369e693b26cc
->>>> Author: Geert Uytterhoeven <geert+renesas@glider.be>
->>>> Date:   Thu Mar 14 12:13:50 2019 +0100
->>>>
->>>>       driver: base: Disable CONFIG_UEVENT_HELPER by default
->>>>
->>>>       Since commit 7934779a69f1184f ("Driver-Core: disable /sbin/hotplug by
->>>>       default"), the help text for the /sbin/hotplug fork-bomb says
->>>>       "This should not be used today [...] creates a high system load, or
->>>>       [...] out-of-memory situations during bootup".  The rationale for this
->>>>       was that no recent mainstream system used this anymore (in 2010!).
->>>>
->>>>       A few years later, the complete uevent helper support was made optional
->>>>       in commit 86d56134f1b67d0c ("kobject: Make support for uevent_helper
->>>>       optional.").  However, if was still left enabled by default, to support
->>>>       ancient userland.
->>>>
->>>>       Time passed by, and nothing should use this anymore, so it can be
->>>>       disabled by default.
->>>>
->>>>       Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>>       Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>>
->>>>    drivers/base/Kconfig | 1 -
->>>>    1 file changed, 1 deletion(-)
->>>>
->>>>
->>>> Any idea on this?
->>>
->>> That means that who ever created those device nodes is relying on udev
->>> to do this, and is not doing the correct thing within the kernel and
->>> using devtmpfs.
->>>
->>> Any pointers to where in the kernel those devices are trying to be
->>> created?
->>>
->>
->> Somewhere in drivers/hwtracing/coresight/* probably. I am not sure,
->> Mathieu/Suzuki would be able to point you to the exact code.
->>
->> Also just to add on some more details, I am using *initramfs*
+Rework to remove unused variable.
 
-> 
-> Are you using devtmpfs for your /dev/ mount?
+Fixes: 8288d030447f ("mm/gup: add make_dirty arg to put_user_pages_dirty_lock()")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+---
+ drivers/infiniband/sw/siw/siw_mem.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-I think that should solve the issue ^^
+diff --git a/drivers/infiniband/sw/siw/siw_mem.c b/drivers/infiniband/sw/siw/siw_mem.c
+index 358d440efa11..ab83a9cec562 100644
+--- a/drivers/infiniband/sw/siw/siw_mem.c
++++ b/drivers/infiniband/sw/siw/siw_mem.c
+@@ -63,8 +63,6 @@ struct siw_mem *siw_mem_id2obj(struct siw_device *sdev, int stag_index)
+ static void siw_free_plist(struct siw_page_chunk *chunk, int num_pages,
+ 			   bool dirty)
+ {
+-	struct page **p = chunk->plist;
+-
+ 	put_user_pages_dirty_lock(chunk->plist, num_pages, dirty);
+ }
+ 
+-- 
+2.20.1
 
-> 
-> If you enable this option, what does:
-> 	ls -l /dev/etr
-> 	ls -l /dev/etf
-> 	ls -l /dev/stm
-> result in?
-> 
-> What are these device nodes for?  Are they symlinks?  Real devices that
-> show up in /sys/dev/char/ as a real value?  Or something else?
-
-Greg, those are registered as miscellaneous devices to export the trace 
-collected (for etfs and etrs) in sysfs mode and for user-space access to
-allow STM tracing. So they are real devices.
-
-
-Suzuki
