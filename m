@@ -6,20 +6,20 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E565CC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D67CC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6FDD218EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7B23218EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 16:20:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MKYVoWRV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aRUSKrqG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbfGZQUg (ORCPT
+        id S1728655AbfGZQUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 12:20:36 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:57060 "EHLO
+        Fri, 26 Jul 2019 12:20:38 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:57068 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728553AbfGZQUc (ORCPT
+        with ESMTP id S1728602AbfGZQUc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jul 2019 12:20:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -28,27 +28,27 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Vg95r2KBamuGSEOXqgQn9SlssmM0thVs3rKhlq+wsdU=; b=MKYVoWRV/vqExsEpYFK6nvvc6f
-        cQVGTtkrfs9xNuAkc9j4hOUWA3U72MdTp9mYSkKa9VcFQmzJ+NAI81bvr4oIDzLn+1TIv5zxD1RLi
-        oZiWpK5cyhFH+/zIME8mxWjS9KaJ9Dtzk44cQuxErtgFnCeJHXlwerFqY6TWrc3wcLrTNG4hZK8IO
-        rSKiaqxyuu2IPt/SV9DjgHIZBryhgq+TLc+4Xa726waryfNhAm/hiSDz+PwWtWRU+miIZ33UJEQgm
-        +OuilqbXA2xG+CoH9hg10QJtHky7F4QPmm/8htt6KZIQ9/bRSmku5LYVeUrdIDiAikRiLHVjCaZa0
-        L+vp0dMA==;
+        bh=UrJfcZgXofwgL1dif08mG2dJOnGZUTf3aYEtHTl9aJ4=; b=aRUSKrqG/QdAEOpCrN11a9Mgkf
+        P3EYu4ymg991EiupLAt7zd/6h0OEgJEdjxTFX/fF/l0XWDO3yB0aXFIf5VcmAQUbjJKaa+HPhOJdo
+        TvSL2bXTG//qCAvdFTgTTM+YgezOKgYJDcPqi+io7xfkpp4ykmy9dBoLcKr4tMK7YcTZWJZ+U5qPR
+        okJBWhtVLy0hnCWnFqFyLUAUbTR9iwE/VDgyDUCnkvdZ8zoUrB0ZPrApmFaY4ST3q5z2CwSMjrAt5
+        1WwhGQKhB2/kYHAARUQtgtKiMUD6QmjoVjhLyV5ZHm/Fa/V35rVwCw9HVALQkdyacfXvBVlym2IQE
+        dd4IFCmw==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hr2wy-00066S-3C; Fri, 26 Jul 2019 16:20:08 +0000
+        id 1hr2wy-00066R-3M; Fri, 26 Jul 2019 16:20:08 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 4C4DE20229750; Fri, 26 Jul 2019 18:20:05 +0200 (CEST)
-Message-Id: <20190726161357.579899041@infradead.org>
+        id 3FDB32022974A; Fri, 26 Jul 2019 18:20:05 +0200 (CEST)
+Message-Id: <20190726161357.397880775@infradead.org>
 User-Agent: quilt/0.65
-Date:   Fri, 26 Jul 2019 16:54:13 +0200
+Date:   Fri, 26 Jul 2019 16:54:10 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     mingo@kernel.org, juri.lelli@redhat.com
 Cc:     linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
         luca.abeni@santannapisa.it, bristot@redhat.com,
         balsini@android.com, dvyukov@google.com, tglx@linutronix.de,
         vpillai@digitalocean.com, rostedt@goodmis.org, peterz@infradead.org
-Subject: [RFC][PATCH 04/13] sched/{rt,deadline}: Fix set_next_task vs pick_next_task
+Subject: [RFC][PATCH 01/13] sched/deadline: Impose global limits on sched_attr::sched_period
 References: <20190726145409.947503076@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -57,124 +57,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because pick_next_task() implies set_curr_task() and some of the
-details haven't matter too much, some of what _should_ be in
-set_curr_task() ended up in pick_next_task, correct this.
 
-This prepares the way for a pick_next_task() variant that does not
-affect the current state; allowing remote picking.
-
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Luca Abeni <luca.abeni@santannapisa.it>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/sched/deadline.c |   23 ++++++++++++-----------
- kernel/sched/rt.c       |   27 ++++++++++++++-------------
- 2 files changed, 26 insertions(+), 24 deletions(-)
+ include/linux/sched/sysctl.h |    3 +++
+ kernel/sched/deadline.c      |   23 +++++++++++++++++++++--
+ kernel/sysctl.c              |   14 ++++++++++++++
+ 3 files changed, 38 insertions(+), 2 deletions(-)
 
+--- a/include/linux/sched/sysctl.h
++++ b/include/linux/sched/sysctl.h
+@@ -56,6 +56,9 @@ int sched_proc_update_handler(struct ctl
+ extern unsigned int sysctl_sched_rt_period;
+ extern int sysctl_sched_rt_runtime;
+ 
++extern unsigned int sysctl_sched_dl_period_max;
++extern unsigned int sysctl_sched_dl_period_min;
++
+ #ifdef CONFIG_UCLAMP_TASK
+ extern unsigned int sysctl_sched_uclamp_util_min;
+ extern unsigned int sysctl_sched_uclamp_util_max;
 --- a/kernel/sched/deadline.c
 +++ b/kernel/sched/deadline.c
-@@ -1694,12 +1694,21 @@ static void start_hrtick_dl(struct rq *r
+@@ -2597,6 +2597,14 @@ void __getparam_dl(struct task_struct *p
  }
- #endif
  
--static inline void set_next_task(struct rq *rq, struct task_struct *p)
-+static void set_next_task_dl(struct rq *rq, struct task_struct *p)
+ /*
++ * Default limits for DL period; on the top end we guard against small util
++ * tasks still getting rediculous long effective runtimes, on the bottom end we
++ * guard against timer DoS.
++ */
++unsigned int sysctl_sched_dl_period_max = 1 << 22; /* ~4 seconds */
++unsigned int sysctl_sched_dl_period_min = 100;     /* 100 us */
++
++/*
+  * This function validates the new parameters of a -deadline task.
+  * We ask for the deadline not being zero, and greater or equal
+  * than the runtime, as well as the period of being zero or
+@@ -2608,6 +2616,8 @@ void __getparam_dl(struct task_struct *p
+  */
+ bool __checkparam_dl(const struct sched_attr *attr)
  {
- 	p->se.exec_start = rq_clock_task(rq);
- 
- 	/* You can't push away the running task */
- 	dequeue_pushable_dl_task(rq, p);
++	u64 period, max, min;
 +
-+	if (hrtick_enabled(rq))
-+		start_hrtick_dl(rq, p);
+ 	/* special dl tasks don't actually use any parameter */
+ 	if (attr->sched_flags & SCHED_FLAG_SUGOV)
+ 		return true;
+@@ -2631,12 +2641,21 @@ bool __checkparam_dl(const struct sched_
+ 	    attr->sched_period & (1ULL << 63))
+ 		return false;
+ 
++	period = attr->sched_period;
++	if (!period)
++		period = attr->sched_deadline;
 +
-+	if (rq->curr->sched_class != &dl_sched_class)
-+		update_dl_rq_load_avg(rq_clock_pelt(rq), rq, 0);
+ 	/* runtime <= deadline <= period (if period != 0) */
+-	if ((attr->sched_period != 0 &&
+-	     attr->sched_period < attr->sched_deadline) ||
++	if (period < attr->sched_deadline ||
+ 	    attr->sched_deadline < attr->sched_runtime)
+ 		return false;
+ 
++	max = (u64)READ_ONCE(sysctl_sched_dl_period_max) * NSEC_PER_USEC;
++	min = (u64)READ_ONCE(sysctl_sched_dl_period_min) * NSEC_PER_USEC;
 +
-+	if (rq->curr != p)
-+		deadline_queue_push_tasks(rq);
- }
- 
- static struct sched_dl_entity *pick_next_dl_entity(struct rq *rq,
-@@ -1758,15 +1767,7 @@ pick_next_task_dl(struct rq *rq, struct
- 
- 	p = dl_task_of(dl_se);
- 
--	set_next_task(rq, p);
--
--	if (hrtick_enabled(rq))
--		start_hrtick_dl(rq, p);
--
--	deadline_queue_push_tasks(rq);
--
--	if (rq->curr->sched_class != &dl_sched_class)
--		update_dl_rq_load_avg(rq_clock_pelt(rq), rq, 0);
-+	set_next_task_dl(rq, p);
- 
- 	return p;
- }
-@@ -1813,7 +1814,7 @@ static void task_fork_dl(struct task_str
- 
- static void set_curr_task_dl(struct rq *rq)
- {
--	set_next_task(rq, rq->curr);
-+	set_next_task_dl(rq, rq->curr);
- }
- 
- #ifdef CONFIG_SMP
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -1498,12 +1498,23 @@ static void check_preempt_curr_rt(struct
- #endif
- }
- 
--static inline void set_next_task(struct rq *rq, struct task_struct *p)
-+static inline void set_next_task_rt(struct rq *rq, struct task_struct *p)
- {
- 	p->se.exec_start = rq_clock_task(rq);
- 
- 	/* The running task is never eligible for pushing */
- 	dequeue_pushable_task(rq, p);
++	if (period < min || period > max)
++		return false;
 +
-+	/*
-+	 * If prev task was rt, put_prev_task() has already updated the
-+	 * utilization. We only care of the case where we start to schedule a
-+	 * rt task
-+	 */
-+	if (rq->curr->sched_class != &rt_sched_class)
-+		update_rt_rq_load_avg(rq_clock_pelt(rq), rq, 0);
-+
-+	if (rq->curr != p)
-+		rt_queue_push_tasks(rq);
+ 	return true;
  }
  
- static struct sched_rt_entity *pick_next_rt_entity(struct rq *rq,
-@@ -1577,17 +1588,7 @@ pick_next_task_rt(struct rq *rq, struct
- 
- 	p = _pick_next_task_rt(rq);
- 
--	set_next_task(rq, p);
--
--	rt_queue_push_tasks(rq);
--
--	/*
--	 * If prev task was rt, put_prev_task() has already updated the
--	 * utilization. We only care of the case where we start to schedule a
--	 * rt task
--	 */
--	if (rq->curr->sched_class != &rt_sched_class)
--		update_rt_rq_load_avg(rq_clock_pelt(rq), rq, 0);
-+	set_next_task_rt(rq, p);
- 
- 	return p;
- }
-@@ -2356,7 +2357,7 @@ static void task_tick_rt(struct rq *rq,
- 
- static void set_curr_task_rt(struct rq *rq)
- {
--	set_next_task(rq, rq->curr);
-+	set_next_task_rt(rq, rq->curr);
- }
- 
- static unsigned int get_rr_interval_rt(struct rq *rq, struct task_struct *task)
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -443,6 +443,20 @@ static struct ctl_table kern_table[] = {
+ 		.proc_handler	= sched_rt_handler,
+ 	},
+ 	{
++		.procname	= "sched_deadline_period_max_us",
++		.data		= &sysctl_sched_dl_period_max,
++		.maxlen		= sizeof(unsigned int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++	},
++	{
++		.procname	= "sched_deadline_period_min_us",
++		.data		= &sysctl_sched_dl_period_min,
++		.maxlen		= sizeof(unsigned int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++	},
++	{
+ 		.procname	= "sched_rr_timeslice_ms",
+ 		.data		= &sysctl_sched_rr_timeslice,
+ 		.maxlen		= sizeof(int),
 
 
