@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE266C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC289C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2948216C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F17F216C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:28:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S+2C7W+3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cyWwp9fJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfGZL2K (ORCPT
+        id S1727067AbfGZL2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 07:28:10 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46786 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfGZL2J (ORCPT
+        Fri, 26 Jul 2019 07:28:15 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40550 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfGZL2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 07:28:09 -0400
-Received: by mail-lf1-f66.google.com with SMTP id z15so32570268lfh.13
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 04:28:07 -0700 (PDT)
+        Fri, 26 Jul 2019 07:28:14 -0400
+Received: by mail-lf1-f67.google.com with SMTP id b17so36866130lff.7
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 04:28:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=RBXqC7DkQwKqkOuJceKqqWGtbn5TCwbm7RbUyvhZTFE=;
-        b=S+2C7W+37ohe6bGgtuXYTdXJGM8T5ohSQlHPAzmsrvk398LEdPoWhPV/m/nzghQI5v
-         W/ynOWka+ROdXjq3wZx0SU5bXSkI8xsvR7m9JeSogoFZ9okwuGEnqPEjlGjROjHjGIva
-         mB1VipwLDzpthrV0Oe/nYMqcKcnKgfaK0ocaFXs9wuRQrGEiGE8p5MAwmLKboL370EQ/
-         7HsqDSPXh0uLWTzNzKXAhZdPAy50RxUyeN8iSN7WJUVHNXAAbGEFRYbwtye13r4H0RN6
-         d1O6oWzPXvPJVyEhSHBHvBtoWervTtRey3wpMXYA9PJrRYUAwaiQ/LmzqdeBN4YwXTPw
-         dL3w==
+        bh=z9BcHX1v0OYZtD+fOK5bR3iP5Bzz548SH0Qfuyk3u+M=;
+        b=cyWwp9fJP19UoMGz9ozXhDRzbbe71Ox1BNxqfqJHcs+M2C7zqmX99TGYs/etpPyptI
+         ky7wdp9/Qddn/czFwkgjlUz1gwSELt2+LGXRhe+pdvLqYxXC06fCbOldfaPm6hpWdP77
+         ZZQku0IkEG2Z/1DNOXZS4wpuT6hHQsHDRgIzWccW28SZ+XVK+9njzTCM+3vv/tkswX1e
+         Ci/jzIwZt6kclF/FxcjlYH6SYv59ApVqKvlTl1ILvaCM6qYPtUgZIpIAc2zMrVSOhJrZ
+         R4s8hnHgjUZNMD2NT8+TCnx6u58Uzm/QdaSw1OHjF+PURt8z76b7If9U0mXHxFsxAzQe
+         mP2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=RBXqC7DkQwKqkOuJceKqqWGtbn5TCwbm7RbUyvhZTFE=;
-        b=VIQCyeJej6PkwI9x2jiPm50f00fUm9yCGaCuoJOWuRaVrsuE5CUhoJhaJXXTv1ukP2
-         J6vVJ2sSFSBYIyQ4Csgvf1kNWE6vyY3anSvbjnSBhoIUC1xfUUyBXia1z8Yh1fZhsw57
-         XpIW2mIDB8ixu5tAi/EZMXgW7HGdkGe48C6GHBGgLb+38IWx+mXNdT1R+vtZHqDG2jfI
-         fCcNUVU2idPI8f2KrosE/Sln6oX1XnzrnX3Pi/Ea+NHyplOOJbPtMSqA3AizjQnWqJbW
-         nktvOyFFDMO2HoYZMNK4+U1t2dz6PVSKKheid53A3wGy8Pt0m/WCCNPcQfxUPOS9W7aP
-         45SA==
-X-Gm-Message-State: APjAAAXZzr7WXvf9wXWoNnAv3HYQmYveg+CyzDWGah5Ts9oBXXKp2qZB
-        HyqRbLgOJZxVKcukK2gVHq1zmaEtbBRVKQ==
-X-Google-Smtp-Source: APXvYqylnBrvToUHEFBagkx2prc/Tv4T9RQ3PARODD6GUeEx7QMqJ1gF8b+lZNvDISocpsu3GK6MPA==
-X-Received: by 2002:ac2:48a5:: with SMTP id u5mr45521185lfg.62.1564140487096;
-        Fri, 26 Jul 2019 04:28:07 -0700 (PDT)
+        bh=z9BcHX1v0OYZtD+fOK5bR3iP5Bzz548SH0Qfuyk3u+M=;
+        b=LicAtoHQroOjwSH3SXP0QWXbxhT7ISSagk9FjLqq2Sa5WMlaNoV6Ml+IecHPGSEDEL
+         LgfJlTDhIDJ6acEfR0RqvVrVMB0Sb0pQYzSTXG4QAmdqR7Wp/dnmiGXjf2azKmWWdtog
+         S0mFLRMbeaAxAxHxqSIGsKgT+MJLBIHEaDiRYhv5gPL2TecgcfBPun7/5NylIdxExZSO
+         /xr2y7VdH13O7L/M3QR5MJbkOQWWe4BWq/cPqjQo5Ad749oDXscN7p8eWYEFgzm7aL/q
+         FHTMJkJWAq7Y0tdF5IRntZC0uyTSYSG5zrVd+vUf0s9944PxrufN/Z3w67UjPlMmwvtJ
+         JQwg==
+X-Gm-Message-State: APjAAAUrsF0oKaLQKgf4nz9NhzCfRxU/5OaxHANBaurMPKk86CxvRVwb
+        pEdGWfEgO7FDjZfg+F5XlBb7ygzyPLK8SA==
+X-Google-Smtp-Source: APXvYqxB8OuCSnAveM3yLRJ0PfblnXOWtOWvNxXLe9Ac4zMOsHOMqT4GraqxuwItrMX1jGyDWSK9Hw==
+X-Received: by 2002:ac2:5337:: with SMTP id f23mr44970761lfh.15.1564140491963;
+        Fri, 26 Jul 2019 04:28:11 -0700 (PDT)
 Received: from localhost (c-243c70d5.07-21-73746f28.bbcust.telenor.se. [213.112.60.36])
-        by smtp.gmail.com with ESMTPSA id z25sm8306560lfi.51.2019.07.26.04.28.06
+        by smtp.gmail.com with ESMTPSA id k124sm8319427lfd.60.2019.07.26.04.28.11
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 04:28:06 -0700 (PDT)
+        Fri, 26 Jul 2019 04:28:11 -0700 (PDT)
 From:   Anders Roxell <anders.roxell@linaro.org>
 To:     airlied@linux.ie, daniel@ffwll.ch, wens@csie.org
 Cc:     dri-devel@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH 1/2] drm: sun4i: sun6i_mipi_dsi: Mark expected switch fall-through
-Date:   Fri, 26 Jul 2019 13:28:02 +0200
-Message-Id: <20190726112802.19563-1-anders.roxell@linaro.org>
+Subject: [PATCH 2/2] drm: sun4i: tcon: Mark expected switch fall-through
+Date:   Fri, 26 Jul 2019 13:28:07 +0200
+Message-Id: <20190726112807.19615-1-anders.roxell@linaro.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -76,40 +76,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 When fall-through warnings was enabled by default the following warning
 was starting to show up:
 
-../drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c: In function
-‘sun6i_dsi_transfer’:../drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:992:6: warning:
- this statement may fall through [-Wimplicit-fallthrough=]
-   if (msg->rx_len == 1) {
-      ^
-../drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:997:2: note: here
-  default:
-  ^~~~~~~
+../drivers/gpu/drm/sun4i/sun4i_tcon.c: In function ‘sun4i_tcon0_mode_set_dithering’:
+../drivers/gpu/drm/sun4i/sun4i_tcon.c:316:7: warning: this statement may fall
+ through [-Wimplicit-fallthrough=]
+   val |= SUN4I_TCON0_FRM_CTL_MODE_B;
+../drivers/gpu/drm/sun4i/sun4i_tcon.c:317:2: note: here
+  case MEDIA_BUS_FMT_RGB666_1X18:
+  ^~~~
 
-Rework so that the compiler doesn't warn about fall-through. Change
-the if-statement so that we can move out 'break;' one level.
+Rework so that the compiler doesn't warn about fall-through.
 
 Fixes: d93512ef0f0e ("Makefile: Globally enable fall-through warning")
 Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 472f73985deb..40ed21e527f9 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -992,8 +992,10 @@ static ssize_t sun6i_dsi_transfer(struct mipi_dsi_host *host,
- 	case MIPI_DSI_DCS_READ:
- 		if (msg->rx_len == 1) {
- 			ret = sun6i_dsi_dcs_read(dsi, msg);
--			break;
-+		} else {
-+			ret = -EINVAL;
- 		}
-+		break;
- 
- 	default:
- 		ret = -EINVAL;
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 690aeb822704..04c721d0d3b9 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -316,6 +316,7 @@ static void sun4i_tcon0_mode_set_dithering(struct sun4i_tcon *tcon,
+ 		/* R and B components are only 5 bits deep */
+ 		val |= SUN4I_TCON0_FRM_CTL_MODE_R;
+ 		val |= SUN4I_TCON0_FRM_CTL_MODE_B;
++		/* Fall through */
+ 	case MEDIA_BUS_FMT_RGB666_1X18:
+ 	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG:
+ 		/* Fall through: enable dithering */
 -- 
 2.20.1
 
