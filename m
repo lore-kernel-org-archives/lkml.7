@@ -2,73 +2,186 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBA8C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DEEC76194
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70EB2229F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC9B22C7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 00:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564099551;
+	bh=ivU+Nk6TC3cNZvfii511FAGTl7zmUHp39Fzg2bYfiZA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jqKQQBLTTJB5mVEN5BctO0kh8lxIkUTNH0T5ahc7uFslTQ+p0lVcvOWprEvRVu5gz
+	 4jGteEa7mgyV5Sh6tsqUhdQYP+R+YgEv2WH8WJmw8hK4YUqbm9qJBk24Na2y5YV1dU
+	 A9kp0tDsupex5PejEpdHxEqkRPtKlq/OqOkh8SIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfGZAAl (ORCPT
+        id S1726997AbfGZAFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 20:00:41 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:57606 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbfGZAAl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 20:00:41 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqney-0004fd-VN; Fri, 26 Jul 2019 00:00:33 +0000
-Date:   Fri, 26 Jul 2019 01:00:32 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Cyril Hrubis <chrubis@suse.cz>,
-        kernel test robot <rong.a.chen@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>, ltp@lists.linux.it
-Subject: Re: [LTP] 56cbb429d9: ltp.fs_fill.fail
-Message-ID: <20190726000032.GK1131@ZenIV.linux.org.uk>
-References: <20190725110944.GA22106@shao2-debian>
- <20190725132617.GA23135@rei.lan>
- <CAHk-=wg+yRjY_AUrjbgrN59OeGAWMF_q=-Dqf2cYtVzoY01j7Q@mail.gmail.com>
- <20190725180428.GH1131@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725180428.GH1131@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        Thu, 25 Jul 2019 20:05:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726910AbfGZAFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 20:05:50 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D555229F9;
+        Fri, 26 Jul 2019 00:05:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564099548;
+        bh=ivU+Nk6TC3cNZvfii511FAGTl7zmUHp39Fzg2bYfiZA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=p6kbI70FMfgTxXFJgRVShi5NbBfi+cvshWuJOFbw9ZX9vSBNoCraf+HR3yuja0sPf
+         up4aZ+bLi6Ewqt8pvll/XnShfDC0H4lmA4NWoFZG9lXmCRGaLnZJd/WU5sLbxIKv5s
+         6oCC+w8bS9W9p060MQxWJg+ss7wrmpzBoDXCMH+Y=
+Date:   Thu, 25 Jul 2019 17:05:47 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 1/9] lib/sort.c: implement sort() variant taking context
+ argument
+Message-Id: <20190725170547.a8a357dd76cc586f475b782d@linux-foundation.org>
+In-Reply-To: <20190619121540.29320-2-boris.brezillon@collabora.com>
+References: <20190619121540.29320-1-boris.brezillon@collabora.com>
+        <20190619121540.29320-2-boris.brezillon@collabora.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 07:04:28PM +0100, Al Viro wrote:
-> On Thu, Jul 25, 2019 at 09:32:13AM -0700, Linus Torvalds wrote:
-> > On Thu, Jul 25, 2019 at 6:26 AM Cyril Hrubis <chrubis@suse.cz> wrote:
-> > >
-> > > This looks like mkfs.vfat got EBUSY after the loop device was
-> > > succesfully umounted.
-> > 
-> > Hmm. Smells like the RCU-delaying got triggered again.
-> > 
-> > We have that "synchronize_rcu_expedited()" in namespace_unlock(),
-> > which is so that everything should be done by the time we return to
-> > user space.
-> > 
-> > Al, maybe that RCU synchronization should be after the mntput()s?
+On Wed, 19 Jun 2019 14:15:32 +0200 Boris Brezillon <boris.brezillon@collabora.com> wrote:
+
+> From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 > 
-> There are several interesting issues in there, but synchronize_rcu()
-> should be between zeroing ->mnt_ns and dropping the final refs.
-> I'm digging through that crap right now; at least one bug is dealt
-> with by #fixes, but there's more, unfortunately.
+> Our list_sort() utility has always supported a context argument that
+> is passed through to the comparison routine. Now there's a use case
+> for the similar thing for sort().
+> 
+> This implements sort_r by simply extending the existing sort function
+> in the obvious way. To avoid code duplication, we want to implement
+> sort() in terms of sort_r(). The naive way to do that is
+> 
+> static int cmp_wrapper(const void *a, const void *b, const void *ctx)
+> {
+>   int (*real_cmp)(const void*, const void*) = ctx;
+>   return real_cmp(a, b);
+> }
+> 
+> sort(..., cmp) { sort_r(..., cmp_wrapper, cmp) }
+> 
+> but this would do two indirect calls for each comparison. Instead, do
+> as is done for the default swap functions - that only adds a cost of a
+> single easily predicted branch to each comparison call.
+> 
+> Aside from introducing support for the context argument, this also
+> serves as preparation for patches that will eliminate the indirect
+> comparison calls in common cases.
 
-No, it's not synchronize_rcu().  It's a bug dealt with in vfs.git #fixes,
-triggering the struct mount leak in mount_subtree(), which is used
-by btrfs.  Immediately prior to vfat in their list...
+Acked-by: Andrew Morton <akpm@linux-foundation.org>
 
-(oh, and AFAICS "more" in the above had been a mismerge in -next, so
-it might really be all there is to it)
+> --- a/lib/sort.c
+> +++ b/lib/sort.c
+> @@ -144,6 +144,18 @@ static void do_swap(void *a, void *b, size_t size, swap_func_t swap_func)
+>  		swap_func(a, b, (int)size);
+>  }
+>  
+> +typedef int (*cmp_func_t)(const void *, const void *);
+> +typedef int (*cmp_r_func_t)(const void *, const void *, const void *);
+> +#define _CMP_WRAPPER ((cmp_r_func_t)0L)
 
-Folks, see if vfs.git #fixes solves that one.
+Although I can't say I'm a fan of _CMP_WRAPPER.  I don't understand
+what the name means.  Why not simply open-code NULL in the two sites?
+
+> +static int do_cmp(const void *a, const void *b,
+> +		  cmp_r_func_t cmp, const void *priv)
+> +{
+> +	if (cmp == _CMP_WRAPPER)
+> +		return ((cmp_func_t)(priv))(a, b);
+> +	return cmp(a, b, priv);
+> +}
+> +
+>  /**
+>   * parent - given the offset of the child, find the offset of the parent.
+>   * @i: the offset of the heap element whose parent is sought.  Non-zero.
+> @@ -171,12 +183,13 @@ static size_t parent(size_t i, unsigned int lsbit, size_t size)
+>  }
+>  
+>  /**
+> - * sort - sort an array of elements
+> + * sort_r - sort an array of elements
+>   * @base: pointer to data to sort
+>   * @num: number of elements
+>   * @size: size of each element
+>   * @cmp_func: pointer to comparison function
+>   * @swap_func: pointer to swap function or NULL
+> + * @priv: third argument passed to comparison function
+
+Passing priv==NULLis part of the interface and should be documented?
+
+>   *
+>   * This function does a heapsort on the given array.  You may provide
+>   * a swap_func function if you need to do something more than a memory
+> @@ -188,9 +201,10 @@ static size_t parent(size_t i, unsigned int lsbit, size_t size)
+>   * O(n*n) worst-case behavior and extra memory requirements that make
+>   * it less suitable for kernel use.
+>   */
+> -void sort(void *base, size_t num, size_t size,
+> -	  int (*cmp_func)(const void *, const void *),
+> -	  void (*swap_func)(void *, void *, int size))
+> +void sort_r(void *base, size_t num, size_t size,
+> +	    int (*cmp_func)(const void *, const void *, const void *),
+> +	    void (*swap_func)(void *, void *, int size),
+> +	    const void *priv)
+>  {
+>  	/* pre-scale counters for performance */
+>  	size_t n = num * size, a = (num/2) * size;
+> @@ -238,12 +252,12 @@ void sort(void *base, size_t num, size_t size,
+>  		 * average, 3/4 worst-case.)
+>  		 */
+>  		for (b = a; c = 2*b + size, (d = c + size) < n;)
+> -			b = cmp_func(base + c, base + d) >= 0 ? c : d;
+> +			b = do_cmp(base + c, base + d, cmp_func, priv) >= 0 ? c : d;
+>  		if (d == n)	/* Special case last leaf with no sibling */
+>  			b = c;
+>  
+>  		/* Now backtrack from "b" to the correct location for "a" */
+> -		while (b != a && cmp_func(base + a, base + b) >= 0)
+> +		while (b != a && do_cmp(base + a, base + b, cmp_func, priv) >= 0)
+>  			b = parent(b, lsbit, size);
+>  		c = b;			/* Where "a" belongs */
+>  		while (b != a) {	/* Shift it into place */
+> @@ -252,4 +266,12 @@ void sort(void *base, size_t num, size_t size,
+>  		}
+>  	}
+>  }
+> +EXPORT_SYMBOL(sort_r);
+> +
+> +void sort(void *base, size_t num, size_t size,
+> +	  int (*cmp_func)(const void *, const void *),
+> +	  void (*swap_func)(void *, void *, int size))
+> +{
+> +	return sort_r(base, num, size, _CMP_WRAPPER, swap_func, cmp_func);
+> +}
+>  EXPORT_SYMBOL(sort);
+
