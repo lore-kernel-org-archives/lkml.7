@@ -2,104 +2,123 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7417C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8BCC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C2B2238C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C59121871
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfGZMwQ (ORCPT
+        id S1726784AbfGZMxD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:52:16 -0400
-Received: from relay.sw.ru ([185.231.240.75]:56286 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726562AbfGZMwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:52:15 -0400
-Received: from [172.16.25.12]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1hqzhc-0007Xf-H3; Fri, 26 Jul 2019 15:52:04 +0300
-Subject: Re: [PATCH v3] kasan: add memory corruption identification for
- software tag-based mode
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>
-References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
- <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
- <1560447999.15814.15.camel@mtksdccf07> <1560479520.15814.34.camel@mtksdccf07>
- <1560744017.15814.49.camel@mtksdccf07>
- <CACT4Y+Y3uS59rXf92ByQuFK_G4v0H8NNnCY1tCbr4V+PaZF3ag@mail.gmail.com>
- <1560774735.15814.54.camel@mtksdccf07> <1561974995.18866.1.camel@mtksdccf07>
- <CACT4Y+aMXTBE0uVkeZz+MuPx3X1nESSBncgkScWvAkciAxP1RA@mail.gmail.com>
- <ebc99ee1-716b-0b18-66ab-4e93de02ce50@virtuozzo.com>
- <1562640832.9077.32.camel@mtksdccf07>
- <d9fd1d5b-9516-b9b9-0670-a1885e79f278@virtuozzo.com>
- <1562839579.5846.12.camel@mtksdccf07>
- <37897fb7-88c1-859a-dfcc-0a5e89a642e0@virtuozzo.com>
- <1563160001.4793.4.camel@mtksdccf07>
- <9ab1871a-2605-ab34-3fd3-4b44a0e17ab7@virtuozzo.com>
- <1563789162.31223.3.camel@mtksdccf07>
- <e62da62a-2a63-3a1c-faeb-9c5561a5170c@virtuozzo.com>
- <1564144097.515.3.camel@mtksdccf07>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <71df2bd5-7bc8-2c82-ee31-3f68c3b6296d@virtuozzo.com>
-Date:   Fri, 26 Jul 2019 15:52:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <1564144097.515.3.camel@mtksdccf07>
-Content-Type: text/plain; charset=utf-8
+        Fri, 26 Jul 2019 08:53:03 -0400
+Received: from mail-oln040092254033.outbound.protection.outlook.com ([40.92.254.33]:24800
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726279AbfGZMxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 08:53:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WXH9LSmdFTwi3Y5kR38S6+35eXdeZOD3mJy83yMqvRMmuRdPQxAhGYmShgV1RlXQMHS0C5p71xz6UHK/QcdCk7d0zr8K9wdsl375tle5nY7v4LEW65YBydTVci15y6dBskXf3s643aoVRzpTT0Z2UxCTk7eoIdRNgQC9Vn3Siucp6HwQFa5lcR9awEXSCplZUD2lbaO7yAoKKg4iYqr+1YFGZU199vwy77M1scFnQ1XWx6K2uLCWdrSp8ZnU3reY7MzbprG4gkO/OEmuGRzCa6Yb4ERgYiukZQ8E021+QYChuNpmmRCpRkxn/8m2WtnbIFuaEcVYIhHVCnBUYR+59A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kwyScT6p0CPb0Lyp5mnwzfwCHpMqnb5rRR/KS+tAkTY=;
+ b=lDRaFgqojnxqnSDSqv2mty9fSf5m/PeIqeoNobvuu6l6BF/Cb74P9EtTMOVf7fn+cqnP0BbThMiMQVmtVCRxp2GqhyZcQI84Sc/mSs0HiTkxxEGT5Iz23b/JYVirT+aEDPgXI5Q83G+4O/JcQJsImDXdXXG7JDt+tpt03GxNCd1NnsDbhw1kD+xkpXwrSaKJwpplpV2LEelEMKvxaOtfn/DryDdKeWOf1OGI1P9jCLoOqC21bt4kfcu4JS22aFUqL1dP8MU4nqf/okd0HgbxYWoiw9M24hRB6QDd9osq8ACL65z3SBUC2tPHE/D+5rTzNrWaoUo1szdxEvheR56mZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+Received: from PU1APC01FT060.eop-APC01.prod.protection.outlook.com
+ (10.152.252.54) by PU1APC01HT058.eop-APC01.prod.protection.outlook.com
+ (10.152.253.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2115.10; Fri, 26 Jul
+ 2019 12:52:58 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.59) by
+ PU1APC01FT060.mail.protection.outlook.com (10.152.253.44) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2115.10 via Frontend Transport; Fri, 26 Jul 2019 12:52:58 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::1cba:d572:7a30:ff0d]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::1cba:d572:7a30:ff0d%3]) with mapi id 15.20.2094.013; Fri, 26 Jul 2019
+ 12:52:58 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: [PATCH v8 0/6] Patch series to support Thunderbolt without any BIOS
+ support
+Thread-Topic: [PATCH v8 0/6] Patch series to support Thunderbolt without any
+ BIOS support
+Thread-Index: AQHVQ7EMFjpbQeqsQESrK2KNnG8LAg==
+Date:   Fri, 26 Jul 2019 12:52:58 +0000
+Message-ID: <SL2P216MB01873757CFAE0E4B02F1BBE080C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SY2PR01CA0002.ausprd01.prod.outlook.com
+ (2603:10c6:1:14::14) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:100:22::19)
+x-incomingtopheadermarker: OriginalChecksum:C1103906F62BFE2486639208E6571013AB303418B97FB837F76E5947D2EB556D;UpperCasedChecksum:17B2CDE6500E139C833C8900ECB5A1A411954DE05E9FC4BC8D9C4DD236F9301B;SizeAsReceived:7693;Count:47
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [7Gsd+AuGlqD4wp1UvmI1+NiP77oqon8QLFMaDDmSK7iVDZw8xW3+K7kqGPU6wq/Z3rFkb2LLS24=]
+x-microsoft-original-message-id: <20190726125240.GA2601@nicholas-usb>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 47
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:PU1APC01HT058;
+x-ms-traffictypediagnostic: PU1APC01HT058:
+x-microsoft-antispam-message-info: ELFtnrRCgenmnq7ObU+3V0fNzXhnwbWuuW78dOGFOKnUwfN70kXGFLe3SX9udOgU6tSci9LPY5rGsYLroHi3oMkpUIQlAioM9ypy1zo1dB5wjpMPOAU4hO6V191TymcIIAiB47FhiXmYA3S0g7ns3dUE84gh0aMTYDQOmGhVki5sMpUFK/19w+066bBnIVum
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <EE73F2F33D98374CB83F39BE5C4B7289@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60e03b37-567e-41bc-6f01-08d711c82f2c
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2019 12:52:58.3365
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Patch series rebased to 5.3-rc1.
 
+If possible, please have a quick read over while I am away (2019-07-27
+to mid 2019-08-04), so I can fix any mistakes or make simple changes to
+get problems out of the way for a more thorough examination later.
 
-On 7/26/19 3:28 PM, Walter Wu wrote:
-> On Fri, 2019-07-26 at 15:00 +0300, Andrey Ryabinin wrote:
->>
->
->>>
->>>
->>> I remember that there are already the lists which you concern. Maybe we
->>> can try to solve those problems one by one.
->>>
->>> 1. deadlock issue? cause by kmalloc() after kfree()?
->>
->> smp_call_on_cpu()
-> 
->>> 2. decrease allocation fail, to modify GFP_NOWAIT flag to GFP_KERNEL?
->>
->> No, this is not gonna work. Ideally we shouldn't have any allocations there.
->> It's not reliable and it hurts performance.
->>
-> I dont know this meaning, we need create a qobject and put into
-> quarantine, so may need to call kmem_cache_alloc(), would you agree this
-> action?
-> 
+Thanks!
 
-How is this any different from what you have now?
+Kind regards,
+Nicholas
+
+Nicholas Johnson (6):
+  PCI: Consider alignment of hot-added bridges when distributing
+    available resources
+  PCI: In extend_bridge_window() change available to new_size
+  PCI: Change extend_bridge_window() to set resource size directly
+  PCI: Allow extend_bridge_window() to shrink resource if necessary
+  PCI: Add hp_mmio_size and hp_mmio_pref_size parameters
+  PCI: Fix bug resulting in double hpmemsize being assigned to MMIO
+    window
+
+ .../admin-guide/kernel-parameters.txt         |   9 +-
+ drivers/pci/pci.c                             |  17 +-
+ drivers/pci/setup-bus.c                       | 233 +++++++++---------
+ include/linux/pci.h                           |   3 +-
+ 4 files changed, 143 insertions(+), 119 deletions(-)
+
+-- 
+2.22.0
+
