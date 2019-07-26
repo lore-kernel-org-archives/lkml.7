@@ -4,59 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6162DC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2CEC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF0520644
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C0D20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155220;
-	bh=r1qiAxPt+tZ03MiEHd1YbYkNFllzkFsiZZFTlFzNE6A=;
+	s=default; t=1564155224;
+	bh=taBCINhjsSyrUQtsJcV9YDjvgYO9fe4mXAzHX0ZQLMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I5p+gAKgqU0lZFNf82lvAWh6Xc/hYdWKWqvhmUfWuKLBz29Emmi4jA3WJDGQQZUrn
-	 OL1JPblT4u4epdE4tJicwoAjt7UN47yNQ05+m9WT1CP4R9+eRqhrczcJQTeGeJE0hn
-	 xn6YGgn0wMVoy/tOxz4s0GJK3cIRCE2MtPhd5/GM=
+	b=oL9yhN25ZcA6hAsj38ZNZTgLtAvC7zgKaK4OSPeUV2x2d8Xlqg0xMrpFWxqXl/CvG
+	 EPD/qWNqlAkBMbk4/yghLTeqGWVUPVf3Q1+PjdbOncQkwFOQacUMszPQl6GKJ5oWHL
+	 SUTNtZ9d4oRMU72396/yMvsc9FDdWB5Chpi8k3Ao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389682AbfGZPdi (ORCPT
+        id S2389701AbfGZPdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:33:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49022 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:33:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389293AbfGZPdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:33:35 -0400
+        id S2388496AbfGZPdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:33:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C777C22CBF;
-        Fri, 26 Jul 2019 15:33:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57AC4205F4;
+        Fri, 26 Jul 2019 15:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155214;
-        bh=r1qiAxPt+tZ03MiEHd1YbYkNFllzkFsiZZFTlFzNE6A=;
+        s=default; t=1564155219;
+        bh=taBCINhjsSyrUQtsJcV9YDjvgYO9fe4mXAzHX0ZQLMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q1bHDh9IZIdgwNKYZp8rrnjkt1Y3dn4kFQY4CJ7bZIp9mlZ/A59SiUNeHWHcQxBqI
-         0x3ykEYRXSGZUlpU0+YYq4jcR8b+Pf7WS/0e9lwO+IUqed+OzZpAv/TvFjHlc9IUpH
-         pSF0LdhaMPz2BRr4dNNC36c/qmoFJjUC/d5uTOiM=
+        b=RNu72dgald7bRfV//Ky4FZDG/Oxh3IwvksLUSitIxUBUjoK+xopgxiJAVZR6Zo9db
+         diJrtTkYfvuEFWP691u/XQbaVr1z2Reidh5lsc8KUB6yw1ku/Y1V1cMHuvzEZI1hXv
+         gE4CN9SJhjrsykwqRY9JOld40mrKC/wZ5dqza7hA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a24c397a29ad22d86c98@syzkaller.appspotmail.com,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 41/50] perf/core: Fix race between close() and fork()
-Date:   Fri, 26 Jul 2019 17:25:16 +0200
-Message-Id: <20190726152304.900827574@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>, stable@kernel.org
+Subject: [PATCH 4.19 43/50] ext4: enforce the immutable flag on open files
+Date:   Fri, 26 Jul 2019 17:25:18 +0200
+Message-Id: <20190726152305.162768329@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -69,183 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit 1cf8dfe8a661f0462925df943140e9f6d1ea5233 upstream.
+commit 02b016ca7f99229ae6227e7b2fc950c4e140d74a upstream.
 
-Syzcaller reported the following Use-after-Free bug:
+According to the chattr man page, "a file with the 'i' attribute
+cannot be modified..."  Historically, this was only enforced when the
+file was opened, per the rest of the description, "... and the file
+can not be opened in write mode".
 
-	close()						clone()
+There is general agreement that we should standardize all file systems
+to prevent modifications even for files that were opened at the time
+the immutable flag is set.  Eventually, a change to enforce this at
+the VFS layer should be landing in mainline.  Until then, enforce this
+at the ext4 level to prevent xfstests generic/553 from failing.
 
-							  copy_process()
-							    perf_event_init_task()
-							      perf_event_init_context()
-							        mutex_lock(parent_ctx->mutex)
-								inherit_task_group()
-								  inherit_group()
-								    inherit_event()
-								      mutex_lock(event->child_mutex)
-								      // expose event on child list
-								      list_add_tail()
-								      mutex_unlock(event->child_mutex)
-							        mutex_unlock(parent_ctx->mutex)
-
-							    ...
-							    goto bad_fork_*
-
-							  bad_fork_cleanup_perf:
-							    perf_event_free_task()
-
-	  perf_release()
-	    perf_event_release_kernel()
-	      list_for_each_entry()
-		mutex_lock(ctx->mutex)
-		mutex_lock(event->child_mutex)
-		// event is from the failing inherit
-		// on the other CPU
-		perf_remove_from_context()
-		list_move()
-		mutex_unlock(event->child_mutex)
-		mutex_unlock(ctx->mutex)
-
-							      mutex_lock(ctx->mutex)
-							      list_for_each_entry_safe()
-							        // event already stolen
-							      mutex_unlock(ctx->mutex)
-
-							    delayed_free_task()
-							      free_task()
-
-	     list_for_each_entry_safe()
-	       list_del()
-	       free_event()
-	         _free_event()
-		   // and so event->hw.target
-		   // is the already freed failed clone()
-		   if (event->hw.target)
-		     put_task_struct(event->hw.target)
-		       // WHOOPSIE, already quite dead
-
-Which puts the lie to the the comment on perf_event_free_task():
-'unexposed, unused context' not so much.
-
-Which is a 'fun' confluence of fail; copy_process() doing an
-unconditional free_task() and not respecting refcounts, and perf having
-creative locking. In particular:
-
-  82d94856fa22 ("perf/core: Fix lock inversion between perf,trace,cpuhp")
-
-seems to have overlooked this 'fun' parade.
-
-Solve it by using the fact that detached events still have a reference
-count on their (previous) context. With this perf_event_free_task()
-can detect when events have escaped and wait for their destruction.
-
-Debugged-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reported-by: syzbot+a24c397a29ad22d86c98@syzkaller.appspotmail.com
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Cc: <stable@vger.kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Fixes: 82d94856fa22 ("perf/core: Fix lock inversion between perf,trace,cpuhp")
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/events/core.c |   49 +++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 41 insertions(+), 8 deletions(-)
+ fs/ext4/file.c  |    4 ++++
+ fs/ext4/inode.c |   11 +++++++++++
+ 2 files changed, 15 insertions(+)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4452,12 +4452,20 @@ static void _free_event(struct perf_even
- 	if (event->destroy)
- 		event->destroy(event);
- 
--	if (event->ctx)
--		put_ctx(event->ctx);
--
-+	/*
-+	 * Must be after ->destroy(), due to uprobe_perf_close() using
-+	 * hw.target.
-+	 */
- 	if (event->hw.target)
- 		put_task_struct(event->hw.target);
- 
-+	/*
-+	 * perf_event_free_task() relies on put_ctx() being 'last', in particular
-+	 * all task references must be cleaned up.
-+	 */
-+	if (event->ctx)
-+		put_ctx(event->ctx);
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -165,6 +165,10 @@ static ssize_t ext4_write_checks(struct
+ 	ret = generic_write_checks(iocb, from);
+ 	if (ret <= 0)
+ 		return ret;
 +
- 	exclusive_event_destroy(event);
- 	module_put(event->pmu->module);
- 
-@@ -4637,8 +4645,17 @@ again:
- 	mutex_unlock(&event->child_mutex);
- 
- 	list_for_each_entry_safe(child, tmp, &free_list, child_list) {
-+		void *var = &child->ctx->refcount;
++	if (unlikely(IS_IMMUTABLE(inode)))
++		return -EPERM;
 +
- 		list_del(&child->child_list);
- 		free_event(child);
+ 	/*
+ 	 * If we have encountered a bitmap-format file, the size limit
+ 	 * is smaller than s_maxbytes, which is for extent-mapped files.
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5491,6 +5491,14 @@ int ext4_setattr(struct dentry *dentry,
+ 	if (unlikely(ext4_forced_shutdown(EXT4_SB(inode->i_sb))))
+ 		return -EIO;
+ 
++	if (unlikely(IS_IMMUTABLE(inode)))
++		return -EPERM;
 +
-+		/*
-+		 * Wake any perf_event_free_task() waiting for this event to be
-+		 * freed.
-+		 */
-+		smp_mb(); /* pairs with wait_var_event() */
-+		wake_up_var(var);
- 	}
- 
- no_ctx:
-@@ -11220,11 +11237,11 @@ static void perf_free_event(struct perf_
- }
- 
- /*
-- * Free an unexposed, unused context as created by inheritance by
-- * perf_event_init_task below, used by fork() in case of fail.
-+ * Free a context as created by inheritance by perf_event_init_task() below,
-+ * used by fork() in case of fail.
-  *
-- * Not all locks are strictly required, but take them anyway to be nice and
-- * help out with the lockdep assertions.
-+ * Even though the task has never lived, the context and events have been
-+ * exposed through the child_list, so we must take care tearing it all down.
-  */
- void perf_event_free_task(struct task_struct *task)
- {
-@@ -11254,7 +11271,23 @@ void perf_event_free_task(struct task_st
- 			perf_free_event(event, ctx);
- 
- 		mutex_unlock(&ctx->mutex);
--		put_ctx(ctx);
++	if (unlikely(IS_APPEND(inode) &&
++		     (ia_valid & (ATTR_MODE | ATTR_UID |
++				  ATTR_GID | ATTR_TIMES_SET))))
++		return -EPERM;
 +
-+		/*
-+		 * perf_event_release_kernel() could've stolen some of our
-+		 * child events and still have them on its free_list. In that
-+		 * case we must wait for these events to have been freed (in
-+		 * particular all their references to this task must've been
-+		 * dropped).
-+		 *
-+		 * Without this copy_process() will unconditionally free this
-+		 * task (irrespective of its reference count) and
-+		 * _free_event()'s put_task_struct(event->hw.target) will be a
-+		 * use-after-free.
-+		 *
-+		 * Wait for all events to drop their context reference.
-+		 */
-+		wait_var_event(&ctx->refcount, atomic_read(&ctx->refcount) == 1);
-+		put_ctx(ctx); /* must be last */
- 	}
- }
+ 	error = setattr_prepare(dentry, attr);
+ 	if (error)
+ 		return error;
+@@ -6190,6 +6198,9 @@ int ext4_page_mkwrite(struct vm_fault *v
+ 	get_block_t *get_block;
+ 	int retries = 0;
+ 
++	if (unlikely(IS_IMMUTABLE(inode)))
++		return VM_FAULT_SIGBUS;
++
+ 	sb_start_pagefault(inode->i_sb);
+ 	file_update_time(vma->vm_file);
  
 
 
