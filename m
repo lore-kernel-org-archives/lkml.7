@@ -2,79 +2,137 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8757AC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A69CC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6217120449
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E830A20449
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:57:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564149469;
+	bh=g1Vj/B5j1Trd98aOkbS5Nj7l1bSCMsfMsN7CB+41oAM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0rshZOIsCILd4lVnQoOfM+k3fXy99olFZe1s0W6jU4H1OKZPKz1YfR7bQ4thzq6vm
+	 aq/JioqVcaJtvVZJAF8hZwu9aLfs5XtVg7mdg7sPtexgTROwMp5AVxAC8DurI906zg
+	 zyS6khcfbxCPKYKOyAYgzek7QVxxTi+wguSsdYd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728608AbfGZN5g (ORCPT
+        id S1728614AbfGZN5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:57:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39664 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:57:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728590AbfGZN5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:57:33 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727777AbfGZNk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:40:57 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C40C22D37;
-        Fri, 26 Jul 2019 13:57:31 +0000 (UTC)
-Date:   Fri, 26 Jul 2019 09:57:30 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        "linux-trace-users@vger.kernel.org" 
-        <linux-trace-users@vger.kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        troyengel@gmail.com, amikhak@wirelessfabric.com,
-        valentin.schneider@arm.com, Patrick McLean <chutzpah@gentoo.org>,
-        John Kacur <jkacur@redhat.com>,
-        Yordan Karadzhov <y.karadz@gmail.com>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Slavomir Kaslev <kaslevs@vmware.com>, howaboutsynergy@pm.me,
-        Bas van Dijk <v.dijk.bas@gmail.com>
-Subject: [ANNOUNCE] KernelShark 1.0
-Message-ID: <20190726095730.0674d81d@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B7FD22BEF;
+        Fri, 26 Jul 2019 13:40:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564148456;
+        bh=g1Vj/B5j1Trd98aOkbS5Nj7l1bSCMsfMsN7CB+41oAM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lqezt7JD5xlUxv5ZdFAEqftwm2Xj9qPUU8uknark3BJZrXlNfqpij8FIUVXLtHCgl
+         i6fB83xeW0fGK1hh2w474IYegZ2zhsbpYWvGHYmZnw7ch4EtKpf1VZvJqbmrFHnE2w
+         Rad7YjDkI6cWATzNdQj/mXBGsPZL5aoUjM1xFC9o=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vitaly Wool <vitalywool@gmail.com>,
+        Henry Burns <henryburns@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 5.2 50/85] mm/z3fold: don't try to use buddy slots after free
+Date:   Fri, 26 Jul 2019 09:39:00 -0400
+Message-Id: <20190726133936.11177-50-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
+References: <20190726133936.11177-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Folks,
+From: Vitaly Wool <vitalywool@gmail.com>
 
-It is finally official. We have finished and released KernelShark 1.0.
+[ Upstream commit bb9a374dfa3a2f46581455ab66cd1d24c5e3d183 ]
 
- http://www.kernelshark.org
+As reported by Henry Burns:
 
-It's a completely new rewrite in Qt from the older KernelShark that was
-written in GTK. It's faster, it's more extensible, and easier to use.
+Running z3fold stress testing with address sanitization showed zhdr->slots
+was being used after it was freed.
 
-For how to use KernelShark please read:
+  z3fold_free(z3fold_pool, handle)
+    free_handle(handle)
+      kmem_cache_free(pool->c_handle, zhdr->slots)
+    release_z3fold_page_locked_list(kref)
+      __release_z3fold_page(zhdr, true)
+        zhdr_to_pool(zhdr)
+          slots_to_pool(zhdr->slots)  *BOOM*
 
-  http://www.kernelshark.org/Documentation.html
+To fix this, add pointer to the pool back to z3fold_header and modify
+zhdr_to_pool to return zhdr->pool.
 
-I would like to thank my team that worked tirelessly on this, and
-especially Yordan Karadzhov who did the majority of the work, and even
-came up with several algorithms to speed up the handling. I will be
-transitioning maintainership off to Yordan. We will currently be
-co-maintainers, but eventually we will be splitting KernelShark out of
-the trace-cmd.git repo and into its own. At that time, Yordan will be
-the main maintainer of the project.
+Link: http://lkml.kernel.org/r/20190708134808.e89f3bfadd9f6ffd7eff9ba9@gmail.com
+Fixes: 7c2b8baa61fe  ("mm/z3fold.c: add structure for buddy handles")
+Signed-off-by: Vitaly Wool <vitalywool@gmail.com>
+Reported-by: Henry Burns <henryburns@google.com>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Cc: Jonathan Adams <jwadams@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ mm/z3fold.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Download it and try it out.
+diff --git a/mm/z3fold.c b/mm/z3fold.c
+index 985732c8b025..e1686bf6d689 100644
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -101,6 +101,7 @@ struct z3fold_buddy_slots {
+  * @refcount:		reference count for the z3fold page
+  * @work:		work_struct for page layout optimization
+  * @slots:		pointer to the structure holding buddy slots
++ * @pool:		pointer to the containing pool
+  * @cpu:		CPU which this page "belongs" to
+  * @first_chunks:	the size of the first buddy in chunks, 0 if free
+  * @middle_chunks:	the size of the middle buddy in chunks, 0 if free
+@@ -114,6 +115,7 @@ struct z3fold_header {
+ 	struct kref refcount;
+ 	struct work_struct work;
+ 	struct z3fold_buddy_slots *slots;
++	struct z3fold_pool *pool;
+ 	short cpu;
+ 	unsigned short first_chunks;
+ 	unsigned short middle_chunks;
+@@ -320,6 +322,7 @@ static struct z3fold_header *init_z3fold_page(struct page *page,
+ 	zhdr->start_middle = 0;
+ 	zhdr->cpu = -1;
+ 	zhdr->slots = slots;
++	zhdr->pool = pool;
+ 	INIT_LIST_HEAD(&zhdr->buddy);
+ 	INIT_WORK(&zhdr->work, compact_page_work);
+ 	return zhdr;
+@@ -426,7 +429,7 @@ static enum buddy handle_to_buddy(unsigned long handle)
+ 
+ static inline struct z3fold_pool *zhdr_to_pool(struct z3fold_header *zhdr)
+ {
+-	return slots_to_pool(zhdr->slots);
++	return zhdr->pool;
+ }
+ 
+ static void __release_z3fold_page(struct z3fold_header *zhdr, bool locked)
+-- 
+2.20.1
 
-Now we can finally start working on KernelShark 2.0 that's going to be
-another huge improvement!
-
-Enjoy!
-
--- Steve
