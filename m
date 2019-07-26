@@ -2,101 +2,129 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19ED9C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DB7C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E083A2238C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E152082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 01:24:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PQnzJX5x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfGZBRi convert rfc822-to-8bit (ORCPT
+        id S1726067AbfGZBYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 21:17:38 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35389 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfGZBRi (ORCPT
+        Thu, 25 Jul 2019 21:24:19 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:12796 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbfGZBYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 21:17:38 -0400
-Received: by mail-wm1-f65.google.com with SMTP id l2so46240224wmg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 18:17:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=PyCXMsSqyMhAZGXNjl/LLgJrXH5rTtTodNtGmeccrRc=;
-        b=mE/ptRKuDKOT6kHISQ9zGfhiTCs1tG5KmgQkDCXrqgkQuD/J2hKmgLJib+6qmp9SVx
-         fUdp9tWNO09DDGCZKQ/sQq2kogfLKL91QId9jyWpHvzZ96CgaAt9DLoB+oneSRWzx2kz
-         yjekMns23oZVA/HHc3W7XIsa98FjSi525HwPiE08whOtoOBtOE3WPhHpOcjhfd3EmpLG
-         wewWIx3IgLt+OcoUXv1VxdcTx9hfkeVhBoWVNO221Sl88IUR8pjxaAWG0QDIU9g+X1i5
-         K/3dNe8pOFRihk7FJk/UlsF1vnJYl0CIMmwp4oZP+HoXslk5b9S5zpvu0P4bCBMc8Bbk
-         McWg==
-X-Gm-Message-State: APjAAAUjNEmE9BmwgcxXH9+b+UgdXT4CH8yBN7zJ+gwiscihwodf5AZg
-        rVQBubg1RsqKrPDC3Wh1LjAgJw==
-X-Google-Smtp-Source: APXvYqzsdofzpzqp8j8x7PyDzrGzs0VESF9MqPeWBhm0XL8J0qguUGZ/6IXpdIYH/QxN0qJG+wNzGA==
-X-Received: by 2002:a7b:c051:: with SMTP id u17mr79945773wmc.25.1564103856177;
-        Thu, 25 Jul 2019 18:17:36 -0700 (PDT)
-Received: from MI5s-teknoraver.homenet.telecomitalia.it (host21-50-dynamic.21-87-r.retail.telecomitalia.it. [87.21.50.21])
-        by smtp.gmail.com with ESMTPSA id o7sm42991766wmc.36.2019.07.25.18.17.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jul 2019 18:17:35 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 03:17:32 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190725172205.6d5a3b5896e64f88116c0b21@linux-foundation.org>
-References: <20190711001640.13398-1-mcroce@redhat.com> <20190724200707.2ba88e3affd73de1ce64fab6@linux-foundation.org> <CAGnkfhxZUw7wUgE6FRetc52HywgwnucZpqcvg3MTUU0M8O158w@mail.gmail.com> <20190725172205.6d5a3b5896e64f88116c0b21@linux-foundation.org>
+        Thu, 25 Jul 2019 21:24:18 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d3a563e0000>; Thu, 25 Jul 2019 18:24:14 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 25 Jul 2019 18:24:17 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 25 Jul 2019 18:24:17 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 26 Jul
+ 2019 01:24:16 +0000
+Subject: Re: [PATCH 00/12] block/bio, fs: convert put_page() to
+ put_user_page*()
+To:     Bob Liu <bob.liu@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <ceph-devel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-cifs@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <samba-technical@lists.samba.org>,
+        <v9fs-developer@lists.sourceforge.net>,
+        <virtualization@lists.linux-foundation.org>
+References: <20190724042518.14363-1-jhubbard@nvidia.com>
+ <8621066c-e242-c449-eb04-4f2ce6867140@oracle.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <88864b91-516d-9774-f4ca-b45927ac4556@nvidia.com>
+Date:   Thu, 25 Jul 2019 18:24:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH v2] checkpatch.pl: warn on invalid commit id
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Joe Perches <joe@perches.com>, LKML <linux-kernel@vger.kernel.org>,
-        Andy Whitcroft <apw@canonical.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Message-ID: <5E31E2F6-1EE7-4A40-A7F5-68576C36A6AD@redhat.com>
+In-Reply-To: <8621066c-e242-c449-eb04-4f2ce6867140@oracle.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564104254; bh=QKXKINFukbwLIIsnFYM0gxF2tKYcHndEGgwougXKa7I=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=PQnzJX5xz5ikEiwrLKM8WsALivZ88h6rrpD5As08defMJIkdP+u4c4qNjj9VJ4tt7
+         nwv4lirmE3zmhFpqjjtQZ51fomZqIx7+Z5K/hIMgtkne3B/lAraavguLY6SA4HXRUi
+         W4SUZZlps8N4rFxPowCNQkldeoVK/fBECjRShYxjtzJx8yvDnyDgvLG3XjCMQgN0HE
+         j0RlPZtSamPdX7GpRyHeIVO0klar+OAGzPGoJx+oiz7wZ/GbisDHnJkR/hoyBrvfQa
+         +HuyKaWvKrWvHxopvgEQcRa8uv0hWn0N0u4M8vDDfrnuUHyPlJZxMytFt1GB3uPYBU
+         1cdZ+M2GXGeqw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On July 26, 2019 2:22:05 AM GMT+02:00, Andrew Morton <akpm@linux-foundation.org> wrote:
-> On Thu, 25 Jul 2019 11:26:04 +0200 Matteo Croce <mcroce@redhat.com>
-> wrote:
+On 7/24/19 5:41 PM, Bob Liu wrote:
+> On 7/24/19 12:25 PM, john.hubbard@gmail.com wrote:
+>> From: John Hubbard <jhubbard@nvidia.com>
+>>
+>> Hi,
+>>
+>> This is mostly Jerome's work, converting the block/bio and related areas
+>> to call put_user_page*() instead of put_page(). Because I've changed
+>> Jerome's patches, in some cases significantly, I'd like to get his
+>> feedback before we actually leave him listed as the author (he might
+>> want to disown some or all of these).
+>>
 > 
-> > On Thu, Jul 25, 2019 at 5:07 AM Andrew Morton
-> <akpm@linux-foundation.org> wrote:
-> > > What does it do if we're not operating in a git directory? For
-> example,
-> > > I work in /usr/src/25 and my git repo is in ../git26.
-> > >
-> > 
-> > If .git is not found, the check is disabled
-> 
-> We could permit user to set an environment variable to tell checkpatch
-> where the kernel git tree resides.
+> Could you add some background to the commit log for people don't have the context..
+> Why this converting? What's the main differences?
 > 
 
-Maybe GIT_DIR already does it.
+Hi Bob,
 
-> > > Also, what happens relatively often is that someone quotes a
-> linux-next
-> > > or long-term-stable hash.  If the user has those trees in the git
-> repo,
-> > > I assume they won't be informed of the inappropriate hash?
-> > >
-> > 
-> > In this case it won't warn, but this should not be a problem, as the
-> > hash doesn't change following a merge.
-> > The problem is just if the other tree gets rebased, or if the other
-> > tree gets never merged, e.g. stable/linux-*
-> 
-> linux-next patches get rebased quite often.
+1. Many of the patches have a blurb like this:
 
-I see :)
+For pages that were retained via get_user_pages*(), release those pages
+via the new put_user_page*() routines, instead of via put_page().
 
+This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+("mm: introduce put_user_page*(), placeholder versions").
+
+...and if you look at that commit, you'll find several pages of
+information in its commit description, which should address your point.
+
+2. This whole series has to be re-worked, as per the other feedback thread.
+So I'll keep your comment in mind when I post a new series.
+
+thanks,
 -- 
-Matteo Croce
-per aspera ad upstream
+John Hubbard
+NVIDIA
