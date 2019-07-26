@@ -2,171 +2,115 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BCDC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C9CC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BEDD218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4063022ADA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:08:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564146520;
+	bh=nyisBE4O2xGmPKme/Zgrvs6HBJR9RJ66g+1LT4Ivjrc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eM7yRgKIFcPEuK9UxCU9BRL+c3fupL+7tndjloCfMJhnua8C0RR+440KjsaGiyEW0
+	 2Z9mlie8+KWSjbgWsDx2cq/NrlBfZut5Tu4G4HHtetGzN7Prmt3vcYXrw2F4LLLTLs
+	 4OALP8vtFWnAUuBUNcRS65X0JMAQbscmg2j43F1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfGZNI0 (ORCPT
+        id S1726985AbfGZNIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:08:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:43220 "EHLO foss.arm.com"
+        Fri, 26 Jul 2019 09:08:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726262AbfGZNIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:08:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FEBC337;
-        Fri, 26 Jul 2019 06:08:24 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AD5C3F694;
-        Fri, 26 Jul 2019 06:08:24 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id CDEA7682072; Fri, 26 Jul 2019 14:08:22 +0100 (BST)
-Date:   Fri, 26 Jul 2019 14:08:22 +0100
-From:   Liviu Dudau <Liviu.Dudau@arm.com>
-To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH] drm/komeda: Adds internal bpp computing for arm afbc
- only format YU08 YU10
-Message-ID: <20190726130822.GO15612@e110455-lin.cambridge.arm.com>
-References: <1564127450-22601-1-git-send-email-lowry.li@arm.com>
+        id S1726262AbfGZNIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:08:39 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D119218D4;
+        Fri, 26 Jul 2019 13:08:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564146518;
+        bh=nyisBE4O2xGmPKme/Zgrvs6HBJR9RJ66g+1LT4Ivjrc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LgQXq098EtOVgHG67rjk7dt3bpXrJlPkAQoNpmFWb4NWHDIs142jU+8ycHZhU7s2L
+         Emer6MdM1EHnQbBNgkaPghRuN98oX6dv6jGsri2XZ7s7mB2pNt7uQlbnDhLM3q5IQR
+         RtmZ//o5SEKJzLsfndCe9lp0gfG61xYdVN0HpgaQ=
+Date:   Fri, 26 Jul 2019 14:08:34 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] arm: perf: Mark expected switch fall-through
+Message-ID: <20190726130834.coonga4kygk23ojx@willie-the-truck>
+References: <20190726112732.19257-1-anders.roxell@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1564127450-22601-1-git-send-email-lowry.li@arm.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190726112732.19257-1-anders.roxell@linaro.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lowry,
-
-On Fri, Jul 26, 2019 at 07:51:02AM +0000, Lowry Li (Arm Technology China) wrote:
-> The drm_format_info doesn't have any cpp or block_size (both are zero)
-> information for arm only afbc format YU08/YU10. we need to compute it
-> by ourselves.
+On Fri, Jul 26, 2019 at 01:27:32PM +0200, Anders Roxell wrote:
+> When fall-through warnings was enabled by default, d93512ef0f0e
+> ("Makefile: Globally enable fall-through warning"), we could see the
+> following warnings was starting to show up. However, this was originally
+> introduced in commit 6ee33c2712fc ("ARM: hw_breakpoint: correct and
+> simplify alignment fixup code"). Commit d968d2b801d8 ("ARM: 7497/1:
+> hw_breakpoint: allow single-byte watchpoints on all addresses") was
+> written with the intent to allow single-byte watchpoints on all
+> addresses but forgot to move 'case 1:' down below 'case 2:'.
 > 
-> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> ../arch/arm/kernel/hw_breakpoint.c: In function ‘hw_breakpoint_arch_parse’:
+> ../arch/arm/kernel/hw_breakpoint.c:609:7: warning: this statement may fall
+>  through [-Wimplicit-fallthrough=]
+>     if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
+>        ^
+> ../arch/arm/kernel/hw_breakpoint.c:611:3: note: here
+>    case 3:
+>    ^~~~
+> ../arch/arm/kernel/hw_breakpoint.c:613:7: warning: this statement may fall
+>  through [-Wimplicit-fallthrough=]
+>     if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
+>        ^
+> ../arch/arm/kernel/hw_breakpoint.c:615:3: note: here
+>    default:
+>    ^~~~~~~
+> 
+> Rework so 'case 1:' are next to 'case 3:' and also add '/* Fall through
+> */' so that the compiler doesn't warn about fall-through.
+> 
+> Cc: stable@vger.kernel.org # v3.16
+> Fixes: 6ee33c2712fc ("ARM: hw_breakpoint: correct and simplify alignment fixup code")
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 > ---
->  .../drm/arm/display/komeda/komeda_format_caps.c    | 23 ++++++++++++++++++++++
->  .../drm/arm/display/komeda/komeda_format_caps.h    |  3 +++
->  .../drm/arm/display/komeda/komeda_framebuffer.c    |  6 ++++--
->  3 files changed, 30 insertions(+), 2 deletions(-)
+>  arch/arm/kernel/hw_breakpoint.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.c b/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.c
-> index cd4d9f5..3c9e060 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.c
-> @@ -35,6 +35,29 @@
->  	return NULL;
->  }
->  
-> +u32 komeda_get_afbc_format_bpp(const struct drm_format_info *info, u64 modifier)
-> +{
-> +	u32 bpp;
-> +
-> +	WARN_ON(modifier == DRM_FORMAT_MOD_LINEAR);
+> diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
+> index af8b8e15f589..c14d506969ba 100644
+> --- a/arch/arm/kernel/hw_breakpoint.c
+> +++ b/arch/arm/kernel/hw_breakpoint.c
+> @@ -603,15 +603,17 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+>  	case 0:
+>  		/* Aligned */
+>  		break;
+> -	case 1:
+>  	case 2:
+>  		/* Allow halfword watchpoints and breakpoints. */
+>  		if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
+>  			break;
+> +		/* Fall through */
+> +	case 1:
 
-Is it not better to return the value from info->char_per_block if modifier is
-DRM_FORMAT_MOD_LINEAR? Or return 0?
+Why are you moving the 'case 1:' here? AFAICT, your patch now rejects
+byte-aligned watchpoints of length 2.
 
-> +
-> +	switch (info->format) {
-> +	case DRM_FORMAT_YUV420_8BIT:
-> +		bpp = 12;
-> +		break;
-> +	case DRM_FORMAT_YUV420_10BIT:
-> +		bpp = 15;
-> +		break;
-> +	default:
-> +		bpp = info->cpp[0] * 8;
-> +		break;
-> +	}
-> +
-> +	WARN_ON(bpp == 0);
-> +
-> +	return bpp;
-> +}
-> +
->  /* Two assumptions
->   * 1. RGB always has YTR
->   * 2. Tiled RGB always has SC
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h b/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h
-> index 3631910..32273cf 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h
-> @@ -97,6 +97,9 @@ static inline const char *komeda_get_format_name(u32 fourcc, u64 modifier)
->  komeda_get_format_caps(struct komeda_format_caps_table *table,
->  		       u32 fourcc, u64 modifier);
->  
-> +u32 komeda_get_afbc_format_bpp(const struct drm_format_info *info,
-> +			       u64 modifier);
-> +
->  u32 *komeda_get_layer_fourcc_list(struct komeda_format_caps_table *table,
->  				  u32 layer_type, u32 *n_fmts);
->  
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-> index 10bf63e..966d0c7 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-> @@ -44,7 +44,7 @@ static int komeda_fb_create_handle(struct drm_framebuffer *fb,
->  	const struct drm_format_info *info = fb->format;
->  	struct drm_gem_object *obj;
->  	u32 alignment_w = 0, alignment_h = 0, alignment_header;
-> -	u32 n_blocks = 0, min_size = 0;
-> +	u32 n_blocks = 0, min_size = 0, bpp;
->  
->  	obj = drm_gem_object_lookup(file, mode_cmd->handles[0]);
->  	if (!obj) {
-> @@ -86,10 +86,12 @@ static int komeda_fb_create_handle(struct drm_framebuffer *fb,
->  	kfb->offset_payload = ALIGN(n_blocks * AFBC_HEADER_SIZE,
->  				    alignment_header);
->  
-> +	bpp = komeda_get_afbc_format_bpp(info, fb->modifier);
->  	kfb->afbc_size = kfb->offset_payload + n_blocks *
-> -			 ALIGN(info->cpp[0] * AFBC_SUPERBLK_PIXELS,
-> +			 ALIGN(bpp * AFBC_SUPERBLK_PIXELS / 8,
->  			       AFBC_SUPERBLK_ALIGNMENT);
->  	min_size = kfb->afbc_size + fb->offsets[0];
-> +
->  	if (min_size > obj->size) {
->  		DRM_DEBUG_KMS("afbc size check failed, obj_size: 0x%lx. min_size 0x%x.\n",
->  			      obj->size, min_size);
-
-Patch doesn't apply to tip of drm-misc-next. What is this patch depending on?
-
-Best regards,
-Liviu
-
-> -- 
-> 1.9.1
-> 
-
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+Will
