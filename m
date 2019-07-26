@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA10C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9373BC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0929C22CE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C9822CE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149305;
-	bh=tMWBYOgHAYiabn1YxSYJyUimcMhUZiXrErtPGmlTdWY=;
+	s=default; t=1564149310;
+	bh=ZVMbaLsKposierDugw05RSu2Ih9slD9YWGimhb+npNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mo9349SSDLN0mKQZthnoeAZRPPKXH32I+x6IvSyLRKcQ4yNAM8rGem07nSuE5qzzG
-	 NHQ3BlvCRVlnoK3wAFbIT93ZPPG4afVxsnz/kkdr9euBx8CUNJl4o8pbjTl+E5WzOU
-	 a8o5i2FtyZIRjpFTTO761zVNlEGDddv+y8kN+DRk=
+	b=o+1O3pmbAI9ogw/6cqcQy+tMfJJHeH5nSPK7+F+MH6Cotpm0msy3l+YS7UQ1jkgIi
+	 bq9lTW4UyKL1J2FOYf5x63YQTGS/7F+PwYpXsziBpHPV4H4/BGSTnp+3n9qdx27dec
+	 kuOxWh4MWoEAYMYBGqoENNInuwfWlXXeBItedVR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388015AbfGZNml (ORCPT
+        id S2387984AbfGZNmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:42:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49884 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:42:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387978AbfGZNmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:42:35 -0400
+        id S2387943AbfGZNm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:42:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DD0322CD3;
-        Fri, 26 Jul 2019 13:42:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E0E322BF5;
+        Fri, 26 Jul 2019 13:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148554;
-        bh=tMWBYOgHAYiabn1YxSYJyUimcMhUZiXrErtPGmlTdWY=;
+        s=default; t=1564148546;
+        bh=ZVMbaLsKposierDugw05RSu2Ih9slD9YWGimhb+npNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ijS9I7GxLxzVsCGekPClyOCKZZXtwAhx4cvlMhSg+kqi648OSdXQY6yATosBbYZ/R
-         k3Im4T9IETJhVu6hQlDTJageuRX146M1h3PYg98pTTNrMMzfLCG1Ll9PpIGf5YswIo
-         UTBsUjhq6m9Y/V+F29SGLQmMr4k/OkdC7G7TnXt0=
+        b=KMECLQnuKeSjGxBnq6IjShGjK4mIVI6TF5GfnknxnAz/n6yxbB0Fq6i9BrXuLD64d
+         D4TvnM5D/SwEuDwvVFWkqh+ruj3EMIn7j6FPTml7B9hLkQBOBpsCvP2pn5D7qk7iEF
+         aQr+gTK+NvkND6FwtnCOrjR1rcCP9nbzzyWGWZQ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 13/47] fs/adfs: super: fix use-after-free bug
-Date:   Fri, 26 Jul 2019 09:41:36 -0400
-Message-Id: <20190726134210.12156-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 09/47] firmware/psci: psci_checker: Park kthreads before stopping them
+Date:   Fri, 26 Jul 2019 09:41:32 -0400
+Message-Id: <20190726134210.12156-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
 References: <20190726134210.12156-1-sashal@kernel.org>
@@ -59,45 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-[ Upstream commit 5808b14a1f52554de612fee85ef517199855e310 ]
+[ Upstream commit 92e074acf6f7694e96204265eb18ac113f546e80 ]
 
-Fix a use-after-free bug during filesystem initialisation, where we
-access the disc record (which is stored in a buffer) after we have
-released the buffer.
+Since commit 85f1abe0019f ("kthread, sched/wait: Fix kthread_parkme()
+completion issue"), kthreads that are bound to a CPU must be parked
+before being stopped. At the moment the PSCI checker calls
+kthread_stop() directly on the suspend kthread, which triggers the
+following warning:
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+[    6.068288] WARNING: CPU: 1 PID: 1 at kernel/kthread.c:398 __kthread_bind_mask+0x20/0x78
+               ...
+[    6.190151] Call trace:
+[    6.192566]  __kthread_bind_mask+0x20/0x78
+[    6.196615]  kthread_unpark+0x74/0x80
+[    6.200235]  kthread_stop+0x44/0x1d8
+[    6.203769]  psci_checker+0x3bc/0x484
+[    6.207389]  do_one_initcall+0x48/0x260
+[    6.211180]  kernel_init_freeable+0x2c8/0x368
+[    6.215488]  kernel_init+0x10/0x100
+[    6.218935]  ret_from_fork+0x10/0x1c
+[    6.222467] ---[ end trace e05e22863d043cd3 ]---
+
+kthread_unpark() tries to bind the thread to its CPU and aborts with a
+WARN() if the thread wasn't in TASK_PARKED state. Park the kthreads
+before stopping them.
+
+Fixes: 85f1abe0019f ("kthread, sched/wait: Fix kthread_parkme() completion issue")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/adfs/super.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/firmware/psci_checker.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/fs/adfs/super.c b/fs/adfs/super.c
-index 7e099a7a4eb1..4dc15b263489 100644
---- a/fs/adfs/super.c
-+++ b/fs/adfs/super.c
-@@ -369,6 +369,7 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
- 	struct buffer_head *bh;
- 	struct object_info root_obj;
- 	unsigned char *b_data;
-+	unsigned int blocksize;
- 	struct adfs_sb_info *asb;
- 	struct inode *root;
- 	int ret = -EINVAL;
-@@ -420,8 +421,10 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
- 		goto error_free_bh;
+diff --git a/drivers/firmware/psci_checker.c b/drivers/firmware/psci_checker.c
+index 346943657962..cbd53cb1b2d4 100644
+--- a/drivers/firmware/psci_checker.c
++++ b/drivers/firmware/psci_checker.c
+@@ -366,16 +366,16 @@ static int suspend_test_thread(void *arg)
+ 	for (;;) {
+ 		/* Needs to be set first to avoid missing a wakeup. */
+ 		set_current_state(TASK_INTERRUPTIBLE);
+-		if (kthread_should_stop()) {
+-			__set_current_state(TASK_RUNNING);
++		if (kthread_should_park())
+ 			break;
+-		}
+ 		schedule();
  	}
  
-+	blocksize = 1 << dr->log2secsize;
- 	brelse(bh);
--	if (sb_set_blocksize(sb, 1 << dr->log2secsize)) {
+ 	pr_info("CPU %d suspend test results: success %d, shallow states %d, errors %d\n",
+ 		cpu, nb_suspend, nb_shallow_sleep, nb_err);
+ 
++	kthread_parkme();
 +
-+	if (sb_set_blocksize(sb, blocksize)) {
- 		bh = sb_bread(sb, ADFS_DISCRECORD / sb->s_blocksize);
- 		if (!bh) {
- 			adfs_error(sb, "couldn't read superblock on "
+ 	return nb_err;
+ }
+ 
+@@ -440,8 +440,10 @@ static int suspend_tests(void)
+ 
+ 
+ 	/* Stop and destroy all threads, get return status. */
+-	for (i = 0; i < nb_threads; ++i)
++	for (i = 0; i < nb_threads; ++i) {
++		err += kthread_park(threads[i]);
+ 		err += kthread_stop(threads[i]);
++	}
+  out:
+ 	cpuidle_resume_and_unlock();
+ 	kfree(threads);
 -- 
 2.20.1
 
