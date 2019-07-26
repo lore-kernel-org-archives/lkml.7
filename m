@@ -2,386 +2,96 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 311D2C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4118DC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2EBA218B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF5B21734
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:52:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MPo66DQn";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FzKftfZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726023AbfGZGqz (ORCPT
+        id S1726203AbfGZGw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 02:46:55 -0400
-Received: from mga03.intel.com ([134.134.136.65]:26339 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725878AbfGZGqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 02:46:55 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jul 2019 23:46:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,309,1559545200"; 
-   d="scan'208";a="369956988"
-Received: from gliakhov-mobl2.ger.corp.intel.com (HELO ubuntu) ([10.249.35.244])
-  by fmsmga006.fm.intel.com with ESMTP; 25 Jul 2019 23:46:49 -0700
-Date:   Fri, 26 Jul 2019 00:15:55 +0200
-From:   Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [RFC PATCH 01/40] soundwire: add debugfs support
-Message-ID: <20190725221554.GA16003@ubuntu>
-References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
- <20190725234032.21152-2-pierre-louis.bossart@linux.intel.com>
+        Fri, 26 Jul 2019 02:52:26 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49106 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbfGZGw0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 02:52:26 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7130A6053D; Fri, 26 Jul 2019 06:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564123945;
+        bh=45rlvmxAk80l2YGJDp8L9VwoMC5Accf2bkvFWQ7rH2Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MPo66DQnePBb9HPCqbRq0xL4Hn6M9xqdBGRDDvyWgBC3WS2/QnsH8hUIVhkhH/OOC
+         +jhmf4PvUCLKq94Yfd6lZWE0NvcrpaIaa6nafL1Q7UhRUt4F/AgZLiKDdO9kv8XQ66
+         c5PEF33x5QVXyeU+aehhWKn6Cxa3rP+UTUu+sCpk=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id AFF9B606FC;
+        Fri, 26 Jul 2019 06:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564123944;
+        bh=45rlvmxAk80l2YGJDp8L9VwoMC5Accf2bkvFWQ7rH2Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FzKftfZ8E7sWY3QOPlc74YzWQYB/HV00IrG1WdFtk55IbVpwfHa3kMc3edl3ScdVa
+         XjoO4Qkc7Ykg+3smYnlk4kIMirrrcl+GY5OS92CM1BJyCFTfyT1JZAMvcdvtA9guRZ
+         W5KeMVsiOXisNNjDsgKiid1w4I6UNuD5z5m7qVSY=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725234032.21152-2-pierre-louis.bossart@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 26 Jul 2019 12:22:24 +0530
+From:   Govind Singh <govinds@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 0/3] ath10k: Clean up regulator and clock handling
+In-Reply-To: <20190725174755.23432-1-bjorn.andersson@linaro.org>
+References: <20190725174755.23432-1-bjorn.andersson@linaro.org>
+Message-ID: <196fa4aa63fd5135aead736396fe3f8c@codeaurora.org>
+X-Sender: govinds@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pierre,
-
-A couple of nitpicks:
-
-On Thu, Jul 25, 2019 at 06:39:53PM -0500, Pierre-Louis Bossart wrote:
-> Add base debugfs mechanism for SoundWire bus by creating soundwire
-> root and master-N and slave-x hierarchy.
+On 2019-07-25 23:17, Bjorn Andersson wrote:
+> The first patch in this series removes the regulator_set_voltage() of a 
+> fixed
+> voltate, as fixed regulator constraints should be specified on a board 
+> level
+> and on certain boards - such as the Lenovo Yoga C630 - the voltage 
+> specified
+> for the 3.3V regulator is outside the given range.
 > 
-> Also add SDW Slave SCP, DP0 and DP-N register debug file.
+> The following two patches cleans up regulator and clock usage by using 
+> the bulk
+> API provided by the two frameworks.
 > 
-> Registers not implemented will print as "XX"
+> Bjorn Andersson (3):
+>   ath10k: snoc: skip regulator operations
+>   ath10k: Use standard regulator bulk API in snoc
+>   ath10k: Use standard bulk clock API in snoc
 > 
-> Credits: this patch is based on an earlier internal contribution by
-> Vinod Koul, Sanyog Kale, Shreyas Nc and Hardik Shah. The main change
-> is the use of scnprintf to avoid known issues with snprintf.
-> 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->  drivers/soundwire/Makefile    |   4 +-
->  drivers/soundwire/bus.c       |   6 ++
->  drivers/soundwire/bus.h       |  24 ++++++
->  drivers/soundwire/bus_type.c  |   3 +
->  drivers/soundwire/debugfs.c   | 156 ++++++++++++++++++++++++++++++++++
->  drivers/soundwire/slave.c     |   1 +
->  include/linux/soundwire/sdw.h |   4 +
->  7 files changed, 197 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/soundwire/debugfs.c
+>  drivers/net/wireless/ath/ath10k/snoc.c | 324 ++++---------------------
+>  drivers/net/wireless/ath/ath10k/snoc.h |  26 +-
+>  2 files changed, 48 insertions(+), 302 deletions(-)
 
-[snip]
+Tested on 845 MTP and QCS404 platform with normal sanity and driver 
+recover cases for proxy votes.
 
-> diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
-> index 3048ca153f22..06ac4adb0074 100644
-> --- a/drivers/soundwire/bus.h
-> +++ b/drivers/soundwire/bus.h
-> @@ -18,6 +18,30 @@ static inline int sdw_acpi_find_slaves(struct sdw_bus *bus)
->  void sdw_extract_slave_id(struct sdw_bus *bus,
->  			  u64 addr, struct sdw_slave_id *id);
->  
-> +#ifdef CONFIG_DEBUG_FS
-> +struct dentry *sdw_bus_debugfs_init(struct sdw_bus *bus);
-> +void sdw_bus_debugfs_exit(struct dentry *d);
-> +struct dentry *sdw_slave_debugfs_init(struct sdw_slave *slave);
-> +void sdw_slave_debugfs_exit(struct dentry *d);
-> +void sdw_debugfs_init(void);
-> +void sdw_debugfs_exit(void);
-> +#else
-> +struct dentry *sdw_bus_debugfs_init(struct sdw_bus *bus)
-> +{ return NULL; }
+Tested-by: Govind Singh <govinds@codeaurora.org>
+Reviewed-by: Govind Singh <govinds@codeaurora.org>
 
-static?
-
-> +
-> +void sdw_bus_debugfs_exit(struct dentry *d) {}
-> +
-> +struct dentry *sdw_slave_debugfs_init(struct sdw_slave *slave)
-> +{ return NULL; }
-> +
-> +void sdw_slave_debugfs_exit(struct dentry *d) {}
-> +
-> +void sdw_debugfs_init(void) {}
-> +
-> +void sdw_debugfs_exit(void) {}
-
-Same for all the above. You could also declare them inline, but I really hope
-the compiler will be smart enough to do that itself.
-
-> +
-> +#endif
-> +
->  enum {
->  	SDW_MSG_FLAG_READ = 0,
->  	SDW_MSG_FLAG_WRITE,
-> diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
-> index 2655602f0cfb..4a465f55039f 100644
-> --- a/drivers/soundwire/bus_type.c
-> +++ b/drivers/soundwire/bus_type.c
-> @@ -6,6 +6,7 @@
->  #include <linux/pm_domain.h>
->  #include <linux/soundwire/sdw.h>
->  #include <linux/soundwire/sdw_type.h>
-> +#include "bus.h"
->  
->  /**
->   * sdw_get_device_id - find the matching SoundWire device id
-> @@ -177,11 +178,13 @@ EXPORT_SYMBOL_GPL(sdw_unregister_driver);
->  
->  static int __init sdw_bus_init(void)
->  {
-> +	sdw_debugfs_init();
->  	return bus_register(&sdw_bus_type);
->  }
->  
->  static void __exit sdw_bus_exit(void)
->  {
-> +	sdw_debugfs_exit();
->  	bus_unregister(&sdw_bus_type);
->  }
->  
-> diff --git a/drivers/soundwire/debugfs.c b/drivers/soundwire/debugfs.c
-> new file mode 100644
-> index 000000000000..8d86e100516e
-> --- /dev/null
-> +++ b/drivers/soundwire/debugfs.c
-> @@ -0,0 +1,156 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> +// Copyright(c) 2017-19 Intel Corporation.
-> +
-> +#include <linux/device.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/slab.h>
-> +#include <linux/soundwire/sdw.h>
-> +#include <linux/soundwire/sdw_registers.h>
-> +#include "bus.h"
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +struct dentry *sdw_debugfs_root;
-> +#endif
-> +
-> +struct dentry *sdw_bus_debugfs_init(struct sdw_bus *bus)
-> +{
-> +	struct dentry *d;
-
-I would remove the above
-
-> +	char name[16];
-> +
-> +	if (!sdw_debugfs_root)
-> +		return NULL;
-> +
-> +	/* create the debugfs master-N */
-> +	snprintf(name, sizeof(name), "master-%d", bus->link_id);
-> +	d = debugfs_create_dir(name, sdw_debugfs_root);
-> +
-> +	return d;
-
-And just do
-
-+	return debugfs_create_dir(name, sdw_debugfs_root);
-
-> +}
-> +
-> +void sdw_bus_debugfs_exit(struct dentry *d)
-> +{
-> +	debugfs_remove_recursive(d);
-> +}
-> +
-> +#define RD_BUF (3 * PAGE_SIZE)
-> +
-> +static ssize_t sdw_sprintf(struct sdw_slave *slave,
-> +			   char *buf, size_t pos, unsigned int reg)
-> +{
-> +	int value;
-> +
-> +	value = sdw_read(slave, reg);
-
-I personally would join the two lines above, but that's just a personal
-preference.
-
-> +
-> +	if (value < 0)
-> +		return scnprintf(buf + pos, RD_BUF - pos, "%3x\tXX\n", reg);
-> +	else
-
-I think it's advised to not use an else in such cases.
-
-Thanks
-Guennadi
-
-> +		return scnprintf(buf + pos, RD_BUF - pos,
-> +				"%3x\t%2x\n", reg, value);
-> +}
-> +
-> +static ssize_t sdw_slave_reg_read(struct file *file, char __user *user_buf,
-> +				  size_t count, loff_t *ppos)
-> +{
-> +	struct sdw_slave *slave = file->private_data;
-> +	unsigned int reg;
-> +	char *buf;
-> +	ssize_t ret;
-> +	int i, j;
-> +
-> +	buf = kzalloc(RD_BUF, GFP_KERNEL);
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-> +	ret = scnprintf(buf, RD_BUF, "Register  Value\n");
-> +	ret += scnprintf(buf + ret, RD_BUF - ret, "\nDP0\n");
-> +
-> +	for (i = 0; i < 6; i++)
-> +		ret += sdw_sprintf(slave, buf, ret, i);
-> +
-> +	ret += scnprintf(buf + ret, RD_BUF - ret, "Bank0\n");
-> +	ret += sdw_sprintf(slave, buf, ret, SDW_DP0_CHANNELEN);
-> +	for (i = SDW_DP0_SAMPLECTRL1; i <= SDW_DP0_LANECTRL; i++)
-> +		ret += sdw_sprintf(slave, buf, ret, i);
-> +
-> +	ret += scnprintf(buf + ret, RD_BUF - ret, "Bank1\n");
-> +	ret += sdw_sprintf(slave, buf, ret,
-> +			SDW_DP0_CHANNELEN + SDW_BANK1_OFFSET);
-> +	for (i = SDW_DP0_SAMPLECTRL1 + SDW_BANK1_OFFSET;
-> +			i <= SDW_DP0_LANECTRL + SDW_BANK1_OFFSET; i++)
-> +		ret += sdw_sprintf(slave, buf, ret, i);
-> +
-> +	ret += scnprintf(buf + ret, RD_BUF - ret, "\nSCP\n");
-> +	for (i = SDW_SCP_INT1; i <= SDW_SCP_BANKDELAY; i++)
-> +		ret += sdw_sprintf(slave, buf, ret, i);
-> +	for (i = SDW_SCP_DEVID_0; i <= SDW_SCP_DEVID_5; i++)
-> +		ret += sdw_sprintf(slave, buf, ret, i);
-> +
-> +	ret += scnprintf(buf + ret, RD_BUF - ret, "Bank0\n");
-> +	ret += sdw_sprintf(slave, buf, ret, SDW_SCP_FRAMECTRL_B0);
-> +	ret += sdw_sprintf(slave, buf, ret, SDW_SCP_NEXTFRAME_B0);
-> +
-> +	ret += scnprintf(buf + ret, RD_BUF - ret, "Bank1\n");
-> +	ret += sdw_sprintf(slave, buf, ret, SDW_SCP_FRAMECTRL_B1);
-> +	ret += sdw_sprintf(slave, buf, ret, SDW_SCP_NEXTFRAME_B1);
-> +
-> +	for (i = 1; i < 14; i++) {
-> +		ret += scnprintf(buf + ret, RD_BUF - ret, "\nDP%d\n", i);
-> +		reg = SDW_DPN_INT(i);
-> +		for (j = 0; j < 6; j++)
-> +			ret += sdw_sprintf(slave, buf, ret, reg + j);
-> +
-> +		ret += scnprintf(buf + ret, RD_BUF - ret, "Bank0\n");
-> +		reg = SDW_DPN_CHANNELEN_B0(i);
-> +		for (j = 0; j < 9; j++)
-> +			ret += sdw_sprintf(slave, buf, ret, reg + j);
-> +
-> +		ret += scnprintf(buf + ret, RD_BUF - ret, "Bank1\n");
-> +		reg = SDW_DPN_CHANNELEN_B1(i);
-> +		for (j = 0; j < 9; j++)
-> +			ret += sdw_sprintf(slave, buf, ret, reg + j);
-> +	}
-> +
-> +	ret = simple_read_from_buffer(user_buf, count, ppos, buf, ret);
-> +	kfree(buf);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct file_operations sdw_slave_reg_fops = {
-> +	.open = simple_open,
-> +	.read = sdw_slave_reg_read,
-> +	.llseek = default_llseek,
-> +};
-> +
-> +struct dentry *sdw_slave_debugfs_init(struct sdw_slave *slave)
-> +{
-> +	struct dentry *master;
-> +	struct dentry *d;
-> +	char name[32];
-> +
-> +	master = slave->bus->debugfs;
-> +
-> +	/* create the debugfs slave-name */
-> +	snprintf(name, sizeof(name), "%s", dev_name(&slave->dev));
-> +	d = debugfs_create_dir(name, master);
-> +
-> +	debugfs_create_file("registers", 0400, d, slave, &sdw_slave_reg_fops);
-> +
-> +	return d;
-> +}
-> +
-> +void sdw_slave_debugfs_exit(struct dentry *d)
-> +{
-> +	debugfs_remove_recursive(d);
-> +}
-> +
-> +void sdw_debugfs_init(void)
-> +{
-> +	sdw_debugfs_root = debugfs_create_dir("soundwire", NULL);
-> +}
-> +
-> +void sdw_debugfs_exit(void)
-> +{
-> +	debugfs_remove_recursive(sdw_debugfs_root);
-> +}
-> diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
-> index f39a5815e25d..34d8bb995f45 100644
-> --- a/drivers/soundwire/slave.c
-> +++ b/drivers/soundwire/slave.c
-> @@ -56,6 +56,7 @@ static int sdw_slave_add(struct sdw_bus *bus,
->  		mutex_unlock(&bus->bus_lock);
->  		put_device(&slave->dev);
->  	}
-> +	slave->debugfs = sdw_slave_debugfs_init(slave);
->  
->  	return ret;
->  }
-> diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-> index 3b231472464a..a49028e9d666 100644
-> --- a/include/linux/soundwire/sdw.h
-> +++ b/include/linux/soundwire/sdw.h
-> @@ -544,6 +544,7 @@ struct sdw_slave_ops {
->   * @bus: Bus handle
->   * @ops: Slave callback ops
->   * @prop: Slave properties
-> + * @debugfs: Slave debugfs
->   * @node: node for bus list
->   * @port_ready: Port ready completion flag for each Slave port
->   * @dev_num: Device Number assigned by Bus
-> @@ -555,6 +556,7 @@ struct sdw_slave {
->  	struct sdw_bus *bus;
->  	const struct sdw_slave_ops *ops;
->  	struct sdw_slave_prop prop;
-> +	struct dentry *debugfs;
->  	struct list_head node;
->  	struct completion *port_ready;
->  	u16 dev_num;
-> @@ -731,6 +733,7 @@ struct sdw_master_ops {
->   * @m_rt_list: List of Master instance of all stream(s) running on Bus. This
->   * is used to compute and program bus bandwidth, clock, frame shape,
->   * transport and port parameters
-> + * @debugfs: Bus debugfs
->   * @defer_msg: Defer message
->   * @clk_stop_timeout: Clock stop timeout computed
->   * @bank_switch_timeout: Bank switch timeout computed
-> @@ -750,6 +753,7 @@ struct sdw_bus {
->  	struct sdw_bus_params params;
->  	struct sdw_master_prop prop;
->  	struct list_head m_rt_list;
-> +	struct dentry *debugfs;
->  	struct sdw_defer defer_msg;
->  	unsigned int clk_stop_timeout;
->  	u32 bank_switch_timeout;
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+BR,
+Govind
