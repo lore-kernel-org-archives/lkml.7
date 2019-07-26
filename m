@@ -2,96 +2,115 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F92C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D60C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D76121994
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:00:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564138819;
-	bh=i7Jv+hmXcDo23S/41bZqkwblKmiu8ujCGUBjwwXkgyg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A1JYz58BX+ailrsjue3MME341GM1O5qln46oLhlSNfj+Zy6UrQqa4iAjuFIrTrr1J
-	 ZpcNlksWNDYvNgPsz/fAeiV2N/6g5Iyxxp7QKP51LqcIIcnde4C3MoVzVXX83aWgE+
-	 3J+YRPb2RmfZ727Ub8GNRGMXAYOyhMyM5kExKD3s=
+	by mail.kernel.org (Postfix) with ESMTP id ACB9222BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:00:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="Abl1Av9X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfGZLAR (ORCPT
+        id S1726797AbfGZLAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 07:00:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57148 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfGZLAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 07:00:16 -0400
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4697D22BE8;
-        Fri, 26 Jul 2019 11:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564138815;
-        bh=i7Jv+hmXcDo23S/41bZqkwblKmiu8ujCGUBjwwXkgyg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=D4IEBPKR/Lciqf1UMucQfUMvmavvkwQlRphFXnvYqpNlvPccVIHEhplBGZL1h4Yhb
-         OBnN3Yc8QiRRucyn8zerHxgil/jPSPB9celT1zwCovCbmMMUCJkFCJn+lYUIWL+/4W
-         hBClJ4NC7naV5LjVZgA0POAvxBFj8jkrlx7jyXSc=
-Received: by mail-lf1-f42.google.com with SMTP id c9so36746018lfh.4;
-        Fri, 26 Jul 2019 04:00:15 -0700 (PDT)
-X-Gm-Message-State: APjAAAXXwpxFjDLqYgyhQmyaHR1MCzXd8EGkjBttJ1TvGJY/Ctx2qEYa
-        TrKiSS2ZKn13k1tIhfsFUbxtvofFUHOFFEjN/eQ=
-X-Google-Smtp-Source: APXvYqxiPnbM3nCACHxnT20KdTP4mvzTb2t9ta89yEo/4pk1w14sOxpUlAKxoYBFtMwLQbX8e1ZPaZeidwzTdl6YbF4=
-X-Received: by 2002:a19:48c5:: with SMTP id v188mr43199380lfa.69.1564138813527;
- Fri, 26 Jul 2019 04:00:13 -0700 (PDT)
+        Fri, 26 Jul 2019 07:00:39 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:51340 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfGZLAi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 07:00:38 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 0FABA5C02B3;
+        Fri, 26 Jul 2019 13:00:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1564138837;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EYDHF2viGAO7INulhQjnGn1wMlyhHlC54xWBdg+6oIw=;
+        b=Abl1Av9XYNIGg7/KWzSis/iAAeoLSkkVbDapmS9iSmxuO/x9+keLZx4mhaq96DkqPNeAE1
+        Lg0y2TsF9fLpyY4ZCna4GxpQulihTPQ61oUSrDCCx06gBltqE5dOSXM04sqDOCi6Ses1+u
+        MeuI7kqT2SLCl26GU59MynKLg9ZyZuM=
 MIME-Version: 1.0
-References: <CGME20190726081505eucas1p146c14eed320c57050aa968b7c97b227b@eucas1p1.samsung.com>
- <20190726081453.9456-1-m.szyprowski@samsung.com> <20190726081453.9456-3-m.szyprowski@samsung.com>
-In-Reply-To: <20190726081453.9456-3-m.szyprowski@samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 26 Jul 2019 13:00:02 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPddpDso=Zjktwm0ofLe20o_FHD4REtuR5dEG64ttVwLEg@mail.gmail.com>
-Message-ID: <CAJKOXPddpDso=Zjktwm0ofLe20o_FHD4REtuR5dEG64ttVwLEg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] usb: exynos: add support for getting PHYs from the
- standard dt array
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-usb@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 26 Jul 2019 13:00:37 +0200
+From:   Stefan Agner <stefan@agner.ch>
+To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Cc:     Robert Chiras <robert.chiras@nxp.com>, Marek Vasut <marex@denx.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] drm/mxsfb: Read bus flags from bridge if present
+In-Reply-To: <9390060f65f94722cb13101d4835d9048037f7a0.1564134488.git.agx@sigxcpu.org>
+References: <cover.1564134488.git.agx@sigxcpu.org>
+ <9390060f65f94722cb13101d4835d9048037f7a0.1564134488.git.agx@sigxcpu.org>
+Message-ID: <cdf94095134f91656752d4872fea9d3c@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 at 10:15, Marek Szyprowski <m.szyprowski@samsung.com> w=
-rote:
->
-> Add the code for getting generic PHYs from standard device tree array
-> from the main controller device node. This is a first step in resolving
-> the conflict between Exynos EHCI/OHCI sub-nodes and generic USB device
-> bindings. Later the sub-nodes currently used for assigning PHYs to root
-> ports of the controller will be removed making a place for the generic
-> USB device bindings nodes.
->
-> Suggested-by: M=C3=A5ns Rullg=C3=A5rd <mans@mansr.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+On 2019-07-26 11:49, Guido Günther wrote:
+> The bridge might have special requirmentes on the input bus. This
+> is e.g. used by the imx-nwl bridge.
+> 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+
+Looks good to me.
+
+Reviewed-by: Stefan Agner <stefan@agner.ch>
+
+
+That is similar to what I sent for the imx DRM driver:
+
+https://lkml.org/lkml/2018/9/12/913
+
+I probably should follow up on that patchset.
+
+--
+Stefan
+
 > ---
->  drivers/usb/host/ehci-exynos.c | 23 +++++++++++++++++++----
->  drivers/usb/host/ohci-exynos.c | 23 +++++++++++++++++++----
->  2 files changed, 38 insertions(+), 8 deletions(-)
-
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Best regards,
-Krzysztof
+>  drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> index e84bac3a541d..3b8eb3ac13b6 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> @@ -215,7 +215,7 @@ static void mxsfb_crtc_mode_set_nofb(struct
+> mxsfb_drm_private *mxsfb)
+>  {
+>  	struct drm_device *drm = mxsfb->pipe.crtc.dev;
+>  	struct drm_display_mode *m = &mxsfb->pipe.crtc.state->adjusted_mode;
+> -	const u32 bus_flags = mxsfb->connector->display_info.bus_flags;
+> +	u32 bus_flags = mxsfb->connector->display_info.bus_flags;
+>  	u32 vdctrl0, vsync_pulse_len, hsync_pulse_len;
+>  	int err;
+>  
+> @@ -239,6 +239,9 @@ static void mxsfb_crtc_mode_set_nofb(struct
+> mxsfb_drm_private *mxsfb)
+>  
+>  	clk_set_rate(mxsfb->clk, m->crtc_clock * 1000);
+>  
+> +	if (mxsfb->bridge && mxsfb->bridge->timings)
+> +		bus_flags = mxsfb->bridge->timings->input_bus_flags;
+> +
+>  	DRM_DEV_DEBUG_DRIVER(drm->dev, "Pixel clock: %dkHz (actual: %dkHz)\n",
+>  			     m->crtc_clock,
+>  			     (int)(clk_get_rate(mxsfb->clk) / 1000));
