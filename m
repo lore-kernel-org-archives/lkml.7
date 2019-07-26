@@ -2,98 +2,165 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E6DC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EBBC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA6662171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E678A2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 10:02:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T48SKlXo"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NZUkO9UT";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZWCyGesV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbfGZKBT (ORCPT
+        id S1726130AbfGZKC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 06:01:19 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43262 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfGZKBT (ORCPT
+        Fri, 26 Jul 2019 06:02:27 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49810 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfGZKC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 06:01:19 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y17so26339439ljk.10
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 03:01:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ulNW18rlea00T4v4mX0XiyIJoM8J8QRrrh1waQS7iQg=;
-        b=T48SKlXoPZS+Jtcvyo43u8l9a3NdUpuXfKaLqrLvaU6MVPQUIPnHk8ifvkq/L613Ck
-         kVbpp3vSLdgMZ/HiSlrZyh7SyvGd4Vrk1m7od62jEEkSvLC4kOkrtIwCZsXOwv9PmyEV
-         vtud/HmBRJPqQ2QLODuaaxzbD4pbixtF7g1JCBFLtwbi8+vV/D8jh1E7QVqrh9iF0g7Z
-         mMUj/nRel538JHLA/il+Xpz9JyJzQ34Ky+W8EZoXWi4vmu6HKpeEuLfsy1UHEqHN0Es/
-         CPYo9AaQA/X4gff59JLKqVugvmOhCFtKAGJydV9rdhViWR1sOWIFuljQtrKVln9LPHSs
-         38wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ulNW18rlea00T4v4mX0XiyIJoM8J8QRrrh1waQS7iQg=;
-        b=K/xMNhWrQyzgqzzhU+vhyNrzfbvKOMKp7vz1B3VL1547Wjwr3cI8ZByJ8vuhldfcCn
-         57DXvYzYxYW/Kc+UGbWlKlo3bLjDlzAsFSfj7coCGzTD0kTBIGw5crYf9YJ8PjlvtZX9
-         5q4ZMx0vBnWq0CL/Zr2j08ubP1DvXm5E8+wGnzjDbIGzcFyZGzj6THP4w1oeY/266mFD
-         hkZAdXeTlT79a6MYTJK5Caypv0AcX+Rs4baz1fXioD4pt7/J1xucMUtn4u0DatBHIeWn
-         sXab4EByaPmd+e8jahS+FdOSM2VowOku/J2KaOQbyOSh1zen7oIcO13OYG1QZsHBdqok
-         ECPw==
-X-Gm-Message-State: APjAAAWq3m8MO1k0B+YI/wvclBOwecyWEwJ9AsCw3vDUa8oN5aHJOabr
-        vZ+LLQ67RzQ1Usp6SuyWfFjMHaAbItagqcQ+ld+8yg==
-X-Google-Smtp-Source: APXvYqwTEkWNPqspU/F1fvkItB0YhjSFLk/j8xBD0+1KJrE/DmTd3ZHthiHV+l00jf0MevZgfEmycRbcnEBgfeYUNPc=
-X-Received: by 2002:a05:651c:92:: with SMTP id 18mr40612881ljq.35.1564135276954;
- Fri, 26 Jul 2019 03:01:16 -0700 (PDT)
+        Fri, 26 Jul 2019 06:02:26 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5344A60312; Fri, 26 Jul 2019 10:02:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564135345;
+        bh=fEFNHwkFl9vCjGK1sf+w6PRPaH7HubwByv6t9BuXJCY=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=NZUkO9UTIT1ix06ckF83U41h4pXMA/SxbM5dcVO5OMOMTF+c3GZ5GIXcNh6gpMa+G
+         GcTo15xFDjMSbhYhdFEWvr07DpVax+A+HCqTpD1qWcLu3ZwlaMxeiRdMHLH41WQS8Z
+         6SoTU8Bb1KL4UkRJKRotrl1mHCbuUYrzkFG43MDg=
+Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 181FA60312;
+        Fri, 26 Jul 2019 10:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564135344;
+        bh=fEFNHwkFl9vCjGK1sf+w6PRPaH7HubwByv6t9BuXJCY=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=ZWCyGesVJ4vCT67xkldBwP3sesU5xGDWwqEObFhpjBDR+90WhvQXtUrcFWge3Gopu
+         5MeN4xE+9hpNzv3QTUtGiWJEAO95k5d2dtnvRK4Vla75HxUqg7UDlS3miYulvdtp/j
+         ciEPfdWJJCLmIWN3NY0elBtCvcJKd92BIujfv3r8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 181FA60312
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+Subject: Re: [Regression] Missing device nodes for ETR, ETF and STM after
+ CONFIG_UEVENT_HELPER=n
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        gregkh@linuxfoundation.org
+Cc:     geert+renesas@glider.be, mathieu.poirier@linaro.org,
+        leo.yan@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <cfe09a46-462f-633a-37c2-52f8bfc0ffb2@codeaurora.org>
+ <20190726070429.GA15714@kroah.com>
+ <165028a7-ff12-dd28-cc4c-57a3961dbb40@codeaurora.org>
+ <20190726084127.GA28470@kroah.com>
+ <f72f2fa1-7b1b-d7de-c9b4-cd574400d8e5@arm.com>
+ <23fa6b3a-3f86-01f1-1b69-f3d4696ce3e2@codeaurora.org>
+Message-ID: <f24f96d8-2fbc-cf6c-59eb-b4636c55a0b6@codeaurora.org>
+Date:   Fri, 26 Jul 2019 15:32:20 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190611154751.10923-1-anders.roxell@linaro.org> <alpine.DEB.2.21.1906231314030.32342@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1906231314030.32342@nanos.tec.linutronix.de>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Fri, 26 Jul 2019 12:01:05 +0200
-Message-ID: <CADYN=9JyjfQv6nh=kj5uOPXEWGxTycUPsuE=Vjyct-8=pYmVqA@mail.gmail.com>
-Subject: Re: [PATCH v2] seqlock: mark raw_read_seqcount and
- read_seqcount_retry as __always_inline
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <23fa6b3a-3f86-01f1-1b69-f3d4696ce3e2@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 23 Jun 2019 at 13:16, Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Tue, 11 Jun 2019, Anders Roxell wrote:
->
-> > With the function graph tracer, each traced function calls sched_clock()
-> > to take a timestamp. As sched_clock() uses
-> > raw_read_seqcount()/read_seqcount_retry(), we must ensure that these
-> > do not in turn trigger the graph tracer.
-> > Both functions is marked as inline. However, if CONFIG_OPTIMIZE_INLINING
-> > is set that may make the two functions tracable which they shouldn't.
-> >
-> > Rework so that functions raw_read_seqcount and read_seqcount_retry are
-> > marked with __always_inline so they will be inlined even if
-> > CONFIG_OPTIMIZE_INLINING is turned on.
->
-> Why just those two? The same issue can happen in other places with other
-> clocks which can be utilized by the tracer.
->
-> Aside of your particular issue, there is no reason why any of those
-> functions should ever trigger a graph.
+On 7/26/2019 3:28 PM, Sai Prakash Ranjan wrote:
+> Hi Suzuki,
+> 
+> On 7/26/2019 2:58 PM, Suzuki K Poulose wrote:
+>>
+>>
+>> On 07/26/2019 09:41 AM, Greg Kroah-Hartman wrote:
+>>> On Fri, Jul 26, 2019 at 01:50:27PM +0530, Sai Prakash Ranjan wrote:
+>>>> On 7/26/2019 12:34 PM, Greg Kroah-Hartman wrote:
+>>>>> On Fri, Jul 26, 2019 at 11:49:19AM +0530, Sai Prakash Ranjan wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> When trying to test my coresight patches, I found that etr,etf and 
+>>>>>> stm
+>>>>>> device nodes are missing from /dev.
+>>>>>
+>>>>> I have no idea what those device nodes are.
+>>>>>
+>>>>>> Bisection gives this as the bad commit.
+>>>>>>
+>>>>>> 1be01d4a57142ded23bdb9e0c8d9369e693b26cc is the first bad commit
+>>>>>> commit 1be01d4a57142ded23bdb9e0c8d9369e693b26cc
+>>>>>> Author: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>>>> Date:   Thu Mar 14 12:13:50 2019 +0100
+>>>>>>
+>>>>>>       driver: base: Disable CONFIG_UEVENT_HELPER by default
+>>>>>>
+>>>>>>       Since commit 7934779a69f1184f ("Driver-Core: disable 
+>>>>>> /sbin/hotplug by
+>>>>>>       default"), the help text for the /sbin/hotplug fork-bomb says
+>>>>>>       "This should not be used today [...] creates a high system 
+>>>>>> load, or
+>>>>>>       [...] out-of-memory situations during bootup".  The 
+>>>>>> rationale for this
+>>>>>>       was that no recent mainstream system used this anymore (in 
+>>>>>> 2010!).
+>>>>>>
+>>>>>>       A few years later, the complete uevent helper support was 
+>>>>>> made optional
+>>>>>>       in commit 86d56134f1b67d0c ("kobject: Make support for 
+>>>>>> uevent_helper
+>>>>>>       optional.").  However, if was still left enabled by default, 
+>>>>>> to support
+>>>>>>       ancient userland.
+>>>>>>
+>>>>>>       Time passed by, and nothing should use this anymore, so it 
+>>>>>> can be
+>>>>>>       disabled by default.
+>>>>>>
+>>>>>>       Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>>>>       Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>>>>
+>>>>>>    drivers/base/Kconfig | 1 -
+>>>>>>    1 file changed, 1 deletion(-)
+>>>>>>
+>>>>>>
+>>>>>> Any idea on this?
+>>>>>
+>>>>> That means that who ever created those device nodes is relying on udev
+>>>>> to do this, and is not doing the correct thing within the kernel and
+>>>>> using devtmpfs.
+>>>>>
+>>>>> Any pointers to where in the kernel those devices are trying to be
+>>>>> created?
+>>>>>
+>>>>
+>>>> Somewhere in drivers/hwtracing/coresight/* probably. I am not sure,
+>>>> Mathieu/Suzuki would be able to point you to the exact code.
+>>>>
+>>>> Also just to add on some more details, I am using *initramfs*
+>>
+>>>
+>>> Are you using devtmpfs for your /dev/ mount?
+>>
+>> I think that should solve the issue ^^
+>>
+> 
+> Yes mounting /dev using devtmpfs does solve the issue. But is this 
+> different behaviour OK?
 
+Sorry ignore the different behaviour thing. I misunderstood.
 
-Yes you are correct. I'll update the patch with __always_inline to all functions
-in that file.
+-Sai
 
-Cheers,
-Anders
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
