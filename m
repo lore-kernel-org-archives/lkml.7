@@ -4,59 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33313C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B32C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9EE2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D5DD22CBF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148484;
-	bh=ptKtaveQ3yKe3/5Pc3//7p3ISJd2LGyZwvCXaM6HbKE=;
+	s=default; t=1564148493;
+	bh=EViIJ1oWhzZ/htUzcUU52hfv65H+01cBXtcv34ICDz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DpGuf6PSdYidYjdqU5Qd79oFIa8gbPop0rZCO/4rMU2AQ2yge10xHf02QjsEpO5da
-	 vBOLukJe2Jl0ZRbzZXl/dAOGAGjnwWxfHPvkwz9eGHycturLl/U9rSVAy8eQHlJ5Yt
-	 c7Hy3s0ZIAZ84dzvrwLBF/3aJIiPuc/sYYs3VsfE=
+	b=gufe218XyQOKMewR/R+4CG3RtEUlQti6oZ41/4IcaBxRW61EFf07uRUsXBaPtd0vk
+	 7dNn4WmdjLoD6YdpHEOu7EBVTxIlCGFK01W1yelewfIKFIPEenEcYnblr1m7MBrcFi
+	 tC1+wC/m3PTrviTjj2CgN7Soobo2ziTbLuL1V4fM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfGZNlX (ORCPT
+        id S1726953AbfGZNlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:41:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47684 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:41:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387646AbfGZNlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:41:19 -0400
+        id S2387684AbfGZNla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:41:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 089D42238C;
-        Fri, 26 Jul 2019 13:41:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBAD122BF5;
+        Fri, 26 Jul 2019 13:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148478;
-        bh=ptKtaveQ3yKe3/5Pc3//7p3ISJd2LGyZwvCXaM6HbKE=;
+        s=default; t=1564148489;
+        bh=EViIJ1oWhzZ/htUzcUU52hfv65H+01cBXtcv34ICDz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zwC4t6O+PZ9OnS+AAwEXSUlDhoUZK6U+s7nWQ/xN65cC3HnFMS7sZtY0lOeW42w0g
-         vSSn0t93SfOkP8+Z+P3IDgt3gll2UgVXKbB0YP24+mSF7GXM5HYa6y1Tks/hIIpMoR
-         ZssEwse12d7Vl3lMBdtkUNmPbB0e5cFD4ssqVvKU=
+        b=KEIFywjtuW5xpsy+Gt5YSzwp7g9rEdTAF56DL9+rlZxAwt9bF3ihcAoJv/AJP5zOV
+         ynJvrrt1q1j+f1hCQ/Y2TMFunG1cNOHrEteCLJ75voUHnjTeGE+mrmasBCt7H62BDS
+         AO2z6EvG1FX6K74BgrBU3BM5McfHn02rpqJc0TBU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhouyang Jia <jiazhouyang09@gmail.com>,
-        Jan Harkes <jaharkes@cs.cmu.edu>,
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andreas Christoforou <andreaschristofo@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
         Arnd Bergmann <arnd@arndb.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        David Howells <dhowells@redhat.com>,
-        Fabian Frederick <fabf@skynet.be>,
-        Mikko Rapeli <mikko.rapeli@iki.fi>,
-        Sam Protsenko <semen.protsenko@linaro.org>,
-        Yann Droneaud <ydroneaud@opteya.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, codalist@coda.cs.cmu.edu
-Subject: [PATCH AUTOSEL 5.2 60/85] coda: add error handling for fget
-Date:   Fri, 26 Jul 2019 09:39:10 -0400
-Message-Id: <20190726133936.11177-60-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 65/85] ipc/mqueue.c: only perform resource calculation if user valid
+Date:   Fri, 26 Jul 2019 09:39:15 -0400
+Message-Id: <20190726133936.11177-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -69,50 +66,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhouyang Jia <jiazhouyang09@gmail.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 02551c23bcd85f0c68a8259c7b953d49d44f86af ]
+[ Upstream commit a318f12ed8843cfac53198390c74a565c632f417 ]
 
-When fget fails, the lack of error-handling code may cause unexpected
-results.
+Andreas Christoforou reported:
 
-This patch adds error-handling code after calling fget.
+  UBSAN: Undefined behaviour in ipc/mqueue.c:414:49 signed integer overflow:
+  9 * 2305843009213693951 cannot be represented in type 'long int'
+  ...
+  Call Trace:
+    mqueue_evict_inode+0x8e7/0xa10 ipc/mqueue.c:414
+    evict+0x472/0x8c0 fs/inode.c:558
+    iput_final fs/inode.c:1547 [inline]
+    iput+0x51d/0x8c0 fs/inode.c:1573
+    mqueue_get_inode+0x8eb/0x1070 ipc/mqueue.c:320
+    mqueue_create_attr+0x198/0x440 ipc/mqueue.c:459
+    vfs_mkobj+0x39e/0x580 fs/namei.c:2892
+    prepare_open ipc/mqueue.c:731 [inline]
+    do_mq_open+0x6da/0x8e0 ipc/mqueue.c:771
 
-Link: http://lkml.kernel.org/r/2514ec03df9c33b86e56748513267a80dd8004d9.1558117389.git.jaharkes@cs.cmu.edu
-Signed-off-by: Zhouyang Jia <jiazhouyang09@gmail.com>
-Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
+Which could be triggered by:
+
+        struct mq_attr attr = {
+                .mq_flags = 0,
+                .mq_maxmsg = 9,
+                .mq_msgsize = 0x1fffffffffffffff,
+                .mq_curmsgs = 0,
+        };
+
+        if (mq_open("/testing", 0x40, 3, &attr) == (mqd_t) -1)
+                perror("mq_open");
+
+mqueue_get_inode() was correctly rejecting the giant mq_msgsize, and
+preparing to return -EINVAL.  During the cleanup, it calls
+mqueue_evict_inode() which performed resource usage tracking math for
+updating "user", before checking if there was a valid "user" at all
+(which would indicate that the calculations would be sane).  Instead,
+delay this check to after seeing a valid "user".
+
+The overflow was real, but the results went unused, so while the flaw is
+harmless, it's noisy for kernel fuzzers, so just fix it by moving the
+calculation under the non-NULL "user" where it actually gets used.
+
+Link: http://lkml.kernel.org/r/201906072207.ECB65450@keescook
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reported-by: Andreas Christoforou <andreaschristofo@gmail.com>
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Colin Ian King <colin.king@canonical.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Fabian Frederick <fabf@skynet.be>
-Cc: Mikko Rapeli <mikko.rapeli@iki.fi>
-Cc: Sam Protsenko <semen.protsenko@linaro.org>
-Cc: Yann Droneaud <ydroneaud@opteya.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Manfred Spraul <manfred@colorfullife.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/coda/psdev.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ ipc/mqueue.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/fs/coda/psdev.c b/fs/coda/psdev.c
-index 0ceef32e6fae..241f7e04ad04 100644
---- a/fs/coda/psdev.c
-+++ b/fs/coda/psdev.c
-@@ -182,8 +182,11 @@ static ssize_t coda_psdev_write(struct file *file, const char __user *buf,
- 	if (req->uc_opcode == CODA_OPEN_BY_FD) {
- 		struct coda_open_by_fd_out *outp =
- 			(struct coda_open_by_fd_out *)req->uc_data;
--		if (!outp->oh.result)
-+		if (!outp->oh.result) {
- 			outp->fh = fget(outp->fd);
-+			if (!outp->fh)
-+				return -EBADF;
-+		}
+diff --git a/ipc/mqueue.c b/ipc/mqueue.c
+index 216cad1ff0d0..65c351564ad0 100644
+--- a/ipc/mqueue.c
++++ b/ipc/mqueue.c
+@@ -438,7 +438,6 @@ static void mqueue_evict_inode(struct inode *inode)
+ {
+ 	struct mqueue_inode_info *info;
+ 	struct user_struct *user;
+-	unsigned long mq_bytes, mq_treesize;
+ 	struct ipc_namespace *ipc_ns;
+ 	struct msg_msg *msg, *nmsg;
+ 	LIST_HEAD(tmp_msg);
+@@ -461,16 +460,18 @@ static void mqueue_evict_inode(struct inode *inode)
+ 		free_msg(msg);
  	}
  
-         wake_up(&req->uc_sleep);
+-	/* Total amount of bytes accounted for the mqueue */
+-	mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
+-		min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
+-		sizeof(struct posix_msg_tree_node);
+-
+-	mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
+-				  info->attr.mq_msgsize);
+-
+ 	user = info->user;
+ 	if (user) {
++		unsigned long mq_bytes, mq_treesize;
++
++		/* Total amount of bytes accounted for the mqueue */
++		mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
++			min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
++			sizeof(struct posix_msg_tree_node);
++
++		mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
++					  info->attr.mq_msgsize);
++
+ 		spin_lock(&mq_lock);
+ 		user->mq_bytes -= mq_bytes;
+ 		/*
 -- 
 2.20.1
 
