@@ -6,43 +6,43 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4E0C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B696C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DEF120838
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E06D20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:41:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388050AbfGZSlK (ORCPT
+        id S2388033AbfGZSlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 14:41:10 -0400
-Received: from mailoutvs11.siol.net ([185.57.226.202]:54841 "EHLO
+        Fri, 26 Jul 2019 14:41:08 -0400
+Received: from mailoutvs56.siol.net ([185.57.226.247]:54804 "EHLO
         mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387995AbfGZSlG (ORCPT
+        with ESMTP id S2387834AbfGZSlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 14:41:06 -0400
+        Fri, 26 Jul 2019 14:41:05 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 05C45523030;
-        Fri, 26 Jul 2019 20:41:04 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTP id A2A8A523033;
+        Fri, 26 Jul 2019 20:41:01 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
 Received: from mail.siol.net ([127.0.0.1])
         by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 0tGEoaOW68jl; Fri, 26 Jul 2019 20:41:03 +0200 (CEST)
+        with ESMTP id ymv40tVszZwP; Fri, 26 Jul 2019 20:41:01 +0200 (CEST)
 Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id B4E8752303E;
-        Fri, 26 Jul 2019 20:41:03 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTPS id 61A51523030;
+        Fri, 26 Jul 2019 20:41:01 +0200 (CEST)
 Received: from localhost.localdomain (cpe-194-152-11-237.cable.triera.net [194.152.11.237])
         (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 69BE452303B;
-        Fri, 26 Jul 2019 20:41:01 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTPSA id 13799523033;
+        Fri, 26 Jul 2019 20:40:59 +0200 (CEST)
 From:   Jernej Skrabec <jernej.skrabec@siol.net>
 To:     thierry.reding@gmail.com, mripard@kernel.org, wens@csie.org
 Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
         linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com
-Subject: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
-Date:   Fri, 26 Jul 2019 20:40:43 +0200
-Message-Id: <20190726184045.14669-5-jernej.skrabec@siol.net>
+Subject: [PATCH 3/6] pwm: sun4i: Add a quirk for bus clock
+Date:   Fri, 26 Jul 2019 20:40:42 +0200
+Message-Id: <20190726184045.14669-4-jernej.skrabec@siol.net>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726184045.14669-1-jernej.skrabec@siol.net>
 References: <20190726184045.14669-1-jernej.skrabec@siol.net>
@@ -53,48 +53,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that sun4i PWM driver supports deasserting reset line and enabling
-bus clock, support for H6 PWM can be added.
+H6 PWM core needs bus clock to be enabled in order to work.
 
-Note that while H6 PWM has two channels, only first one is wired to
-output pin. Second channel is used as a clock source to companion AC200
-chip which is bundled into same package.
+Add a quirk for it.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- drivers/pwm/pwm-sun4i.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/pwm/pwm-sun4i.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 7d3ac3f2dc3f..9e0eca79ff88 100644
+index 1b7be8fbde86..7d3ac3f2dc3f 100644
 --- a/drivers/pwm/pwm-sun4i.c
 +++ b/drivers/pwm/pwm-sun4i.c
-@@ -331,6 +331,13 @@ static const struct sun4i_pwm_data sun4i_pwm_single_=
-bypass =3D {
- 	.npwm =3D 1,
+@@ -72,6 +72,7 @@ static const u32 prescaler_table[] =3D {
  };
 =20
-+static const struct sun4i_pwm_data sun50i_pwm_dual_bypass_clk_rst =3D {
-+	.has_bus_clock =3D true,
-+	.has_prescaler_bypass =3D true,
-+	.has_reset =3D true,
-+	.npwm =3D 2,
-+};
+ struct sun4i_pwm_data {
++	bool has_bus_clock;
+ 	bool has_prescaler_bypass;
+ 	bool has_reset;
+ 	unsigned int npwm;
+@@ -79,6 +80,7 @@ struct sun4i_pwm_data {
+=20
+ struct sun4i_pwm_chip {
+ 	struct pwm_chip chip;
++	struct clk *bus_clk;
+ 	struct clk *clk;
+ 	struct reset_control *rst;
+ 	void __iomem *base;
+@@ -382,6 +384,16 @@ static int sun4i_pwm_probe(struct platform_device *p=
+dev)
+ 		reset_control_deassert(pwm->rst);
+ 	}
+=20
++	if (pwm->data->has_bus_clock) {
++		pwm->bus_clk =3D devm_clk_get(&pdev->dev, "bus");
++		if (IS_ERR(pwm->bus_clk)) {
++			ret =3D PTR_ERR(pwm->bus_clk);
++			goto err_bus;
++		}
 +
- static const struct of_device_id sun4i_pwm_dt_ids[] =3D {
- 	{
- 		.compatible =3D "allwinner,sun4i-a10-pwm",
-@@ -347,6 +354,9 @@ static const struct of_device_id sun4i_pwm_dt_ids[] =3D=
- {
- 	}, {
- 		.compatible =3D "allwinner,sun8i-h3-pwm",
- 		.data =3D &sun4i_pwm_single_bypass,
-+	}, {
-+		.compatible =3D "allwinner,sun50i-h6-pwm",
-+		.data =3D &sun50i_pwm_dual_bypass_clk_rst,
- 	}, {
- 		/* sentinel */
- 	},
++		clk_prepare_enable(pwm->bus_clk);
++	}
++
+ 	pwm->chip.dev =3D &pdev->dev;
+ 	pwm->chip.ops =3D &sun4i_pwm_ops;
+ 	pwm->chip.base =3D -1;
+@@ -402,6 +414,8 @@ static int sun4i_pwm_probe(struct platform_device *pd=
+ev)
+ 	return 0;
+=20
+ err_pwm_add:
++	clk_disable_unprepare(pwm->bus_clk);
++err_bus:
+ 	reset_control_assert(pwm->rst);
+=20
+ 	return ret;
+@@ -416,6 +430,7 @@ static int sun4i_pwm_remove(struct platform_device *p=
+dev)
+ 	if (ret)
+ 		return ret;
+=20
++	clk_disable_unprepare(pwm->bus_clk);
+ 	reset_control_assert(pwm->rst);
+=20
+ 	return 0;
 --=20
 2.22.0
 
