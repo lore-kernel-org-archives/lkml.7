@@ -2,38 +2,40 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40329C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E008C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F43E2238C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B51A22C7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbfGZD1H (ORCPT
+        id S1726191AbfGZD1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 23:27:07 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2761 "EHLO huawei.com"
+        Thu, 25 Jul 2019 23:27:06 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2759 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726086AbfGZD1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725899AbfGZD1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jul 2019 23:27:06 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D66A6B923C7304F05653;
+        by Forcepoint Email with ESMTP id D1A9CF058C8C6CB9552E;
         Fri, 26 Jul 2019 11:27:04 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 26 Jul 2019 11:26:57 +0800
+ 14.3.439.0; Fri, 26 Jul 2019 11:26:58 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 00/11] net: hns3: some code optimizations & bugfixes & features
-Date:   Fri, 26 Jul 2019 11:24:51 +0800
-Message-ID: <1564111502-15504-1-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 03/11] net: hns3: remove upgrade reset level when reset fail
+Date:   Fri, 26 Jul 2019 11:24:54 +0800
+Message-ID: <1564111502-15504-4-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1564111502-15504-1-git-send-email-tanhuazhong@huawei.com>
+References: <1564111502-15504-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.212.132]
@@ -43,71 +45,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch-set includes code optimizations, bugfixes and features for
-the HNS3 ethernet controller driver.
+Currently, hclge_reset_err_handle() will assert a global reset
+when the failing count is smaller than MAX_RESET_FAIL_CNT, which
+will affect other running functions.
 
-[patch 1/11] checks reset status before setting channel.
+So this patch removes this upgrading, and uses re-scheduling reset
+task to do it.
 
-[patch 2/11] adds a NULL pointer checking.
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Reviewed-by: Yunsheng Lin <linyunsheng@huawei.com>
+---
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 28 +++++++---------------
+ 1 file changed, 8 insertions(+), 20 deletions(-)
 
-[patch 3/11] removes reset level upgrading when current reset fails.
-
-[patch 4/11] fixes a bug related to IRQ vector number initialization.
-
-[patch 5/11] fixes a GFP flags errors when holding spin_lock.
-
-[patch 6/11] modifies firmware version format.
-
-[patch 7/11] adds some print information which is off by default.
-
-[patch 8/11 - 9/11] adds two code optimizations about interrupt handler
-and work task.
-
-[patch 10/11] adds support for using order 1 pages with a 4K buffer.
-
-[patch 11/11] modifies messages prints with dev_info() instead of
-pr_info().
-
-Change log:
-V1->V2: fixes comments from Saeed Mahameed and
-	removes previous [patch 11/11] which needs further discussion,
-	adds a new patch [11/11] suggested by Saeed Mahameed.
-
-Guangbin Huang (1):
-  net: hns3: add a check for get_reset_level
-
-Huazhong Tan (2):
-  net: hns3: remove upgrade reset level when reset fail
-  net: hns3: use dev_info() instead of pr_info()
-
-Jian Shen (1):
-  net: hns3: add reset checking before set channels
-
-Yonglong Liu (2):
-  net: hns3: fix mis-counting IRQ vector numbers issue
-  net: hns3: adds debug messages to identify eth down cause
-
-Yufeng Mo (2):
-  net: hns3: change GFP flag during lock period
-  net: hns3: modify firmware version display format
-
-Yunsheng Lin (3):
-  net: hns3: make hclge_service use delayed workqueue
-  net: hns3: add interrupt affinity support for misc interrupt
-  net: hns3: Add support for using order 1 pages with a 4K buffer
-
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   9 ++
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    |  39 +++++-
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    |  15 ++-
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  41 +++++-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c |  10 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c |  14 +++
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 137 ++++++++++++---------
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |   7 +-
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c   |  10 +-
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |  15 ++-
- 10 files changed, 223 insertions(+), 74 deletions(-)
-
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 3fde5471..3c64d70 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -3305,7 +3305,7 @@ static int hclge_reset_prepare_wait(struct hclge_dev *hdev)
+ 	return ret;
+ }
+ 
+-static bool hclge_reset_err_handle(struct hclge_dev *hdev, bool is_timeout)
++static bool hclge_reset_err_handle(struct hclge_dev *hdev)
+ {
+ #define MAX_RESET_FAIL_CNT 5
+ 
+@@ -3322,20 +3322,11 @@ static bool hclge_reset_err_handle(struct hclge_dev *hdev, bool is_timeout)
+ 		return false;
+ 	} else if (hdev->reset_fail_cnt < MAX_RESET_FAIL_CNT) {
+ 		hdev->reset_fail_cnt++;
+-		if (is_timeout) {
+-			set_bit(hdev->reset_type, &hdev->reset_pending);
+-			dev_info(&hdev->pdev->dev,
+-				 "re-schedule to wait for hw reset done\n");
+-			return true;
+-		}
+-
+-		dev_info(&hdev->pdev->dev, "Upgrade reset level\n");
+-		hclge_clear_reset_cause(hdev);
+-		set_bit(HNAE3_GLOBAL_RESET, &hdev->default_reset_request);
+-		mod_timer(&hdev->reset_timer,
+-			  jiffies + HCLGE_RESET_INTERVAL);
+-
+-		return false;
++		set_bit(hdev->reset_type, &hdev->reset_pending);
++		dev_info(&hdev->pdev->dev,
++			 "re-schedule reset task(%d)\n",
++			 hdev->reset_fail_cnt);
++		return true;
+ 	}
+ 
+ 	hclge_clear_reset_cause(hdev);
+@@ -3382,7 +3373,6 @@ static int hclge_reset_stack(struct hclge_dev *hdev)
+ static void hclge_reset(struct hclge_dev *hdev)
+ {
+ 	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(hdev->pdev);
+-	bool is_timeout = false;
+ 	int ret;
+ 
+ 	/* Initialize ae_dev reset status as well, in case enet layer wants to
+@@ -3410,10 +3400,8 @@ static void hclge_reset(struct hclge_dev *hdev)
+ 	if (ret)
+ 		goto err_reset;
+ 
+-	if (hclge_reset_wait(hdev)) {
+-		is_timeout = true;
++	if (hclge_reset_wait(hdev))
+ 		goto err_reset;
+-	}
+ 
+ 	hdev->rst_stats.hw_reset_done_cnt++;
+ 
+@@ -3465,7 +3453,7 @@ static void hclge_reset(struct hclge_dev *hdev)
+ err_reset_lock:
+ 	rtnl_unlock();
+ err_reset:
+-	if (hclge_reset_err_handle(hdev, is_timeout))
++	if (hclge_reset_err_handle(hdev))
+ 		hclge_reset_task_schedule(hdev);
+ }
+ 
 -- 
 2.7.4
 
