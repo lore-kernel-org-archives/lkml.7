@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF87C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE4FC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053FE22CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CC2520449
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149495;
-	bh=KUv6mWvMSFQNA76Oz4rKb7K3b927nL2D1ipU8GAI5XQ=;
+	s=default; t=1564149505;
+	bh=2MXhqljQf7IMFqHmhVvDjqDPhscxIYuwMTCiLHA670Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mAozRvlXMBveRXT+5rIXu/sGtccm1C4If43pXR+36OZKP0wWND34o5WeVWqrTvW7O
-	 P8C3m58Jz+3oz2Cza6/MoBWQxCf0DLDTGkL1XkRPojmA5cOwhR5TAyMzqOvoaPFSIi
-	 gCSC7sOCpZuu1HVr2yyGju8vvyoSqjsZFSGy75v0=
+	b=Cb0CdshHb1KanDqwlX1utYdXP8Zl31aDqQAWdRySSUqy2MSJP5/SQcOiI2718BYK9
+	 wNOCq2U+b4J9zErt+t2i1jKCHe9895PlWT1FxzDB3Io32Ucl1v0k41uuOqC1IiYN87
+	 +dNWcnFuCO89yTOFQ1cUEtrFio3KyaHNxEJudlbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbfGZN6O (ORCPT
+        id S2387578AbfGZN6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:58:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47066 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:58:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbfGZNkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:40:51 -0400
+        id S2387561AbfGZNko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:40:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AAA722BE8;
-        Fri, 26 Jul 2019 13:40:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95BF222BEF;
+        Fri, 26 Jul 2019 13:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148450;
-        bh=KUv6mWvMSFQNA76Oz4rKb7K3b927nL2D1ipU8GAI5XQ=;
+        s=default; t=1564148443;
+        bh=2MXhqljQf7IMFqHmhVvDjqDPhscxIYuwMTCiLHA670Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S/SPEYJuEbEZx6RNYzA8OTv0jHDxZ9n2EP5XIt62Gz3cjP75iv/miu/1ttg9bWKCX
-         NGitYih94FYnPSpGOFYtQcejQTVTSR9Cmi6rVmOzyMoOf9epc2vjYo+Cn/YW5+pAVT
-         plPhHwR56mprUqJ16GdmjMOJDEqbt5TtT98L3mQM=
+        b=SSkyK/iocW2pj3MgCUwWeqbjYK6lvSnK1ToWFB8TaueyASCdnjwz/RemsLMC+2Jve
+         eCw3fSuCAuEaqJWCwLbmvUoa1Hly9yH+8D5AlRdnr/ttfAdiJnTpHYnrIidVuZyag4
+         YJZwghLA7ghrUstR2ek3LTx1zzGFC0b5+UGY9Dms=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liran Alon <liran.alon@oracle.com>,
-        Maxime Villard <max@m00nbsd.net>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 46/85] KVM: nVMX: Ignore segment base for VMX memory operand when segment not FS or GS
-Date:   Fri, 26 Jul 2019 09:38:56 -0400
-Message-Id: <20190726133936.11177-46-sashal@kernel.org>
+Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 41/85] cifs: fix crash in cifs_dfs_do_automount
+Date:   Fri, 26 Jul 2019 09:38:51 -0400
+Message-Id: <20190726133936.11177-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -61,47 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liran Alon <liran.alon@oracle.com>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-[ Upstream commit 6694e48012826351036fd10fc506ca880023e25f ]
+[ Upstream commit ce465bf94b70f03136171a62b607864f00093b19 ]
 
-As reported by Maxime at
-https://bugzilla.kernel.org/show_bug.cgi?id=204175:
+RHBZ: 1649907
 
-In vmx/nested.c::get_vmx_mem_address(), when the guest runs in long mode,
-the base address of the memory operand is computed with a simple:
-    *ret = s.base + off;
+Fix a crash that happens while attempting to mount a DFS referral from the same server on the root of a filesystem.
 
-This is incorrect, the base applies only to FS and GS, not to the others.
-Because of that, if the guest uses a VMX instruction based on DS and has
-a DS.base that is non-zero, KVM wrongfully adds the base to the
-resulting address.
-
-Reported-by: Maxime Villard <max@m00nbsd.net>
-Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
-Signed-off-by: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx/nested.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/cifs/connect.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 46af3a5e9209..aa949ab7850c 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4068,7 +4068,10 @@ int get_vmx_mem_address(struct kvm_vcpu *vcpu, unsigned long exit_qualification,
- 		 * mode, e.g. a 32-bit address size can yield a 64-bit virtual
- 		 * address when using FS/GS with a non-zero base.
- 		 */
--		*ret = s.base + off;
-+		if (seg_reg == VCPU_SREG_FS || seg_reg == VCPU_SREG_GS)
-+			*ret = s.base + off;
-+		else
-+			*ret = off;
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 0872188ce3c6..e508613f09ff 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -4459,11 +4459,13 @@ cifs_are_all_path_components_accessible(struct TCP_Server_Info *server,
+ 					unsigned int xid,
+ 					struct cifs_tcon *tcon,
+ 					struct cifs_sb_info *cifs_sb,
+-					char *full_path)
++					char *full_path,
++					int added_treename)
+ {
+ 	int rc;
+ 	char *s;
+ 	char sep, tmp;
++	int skip = added_treename ? 1 : 0;
  
- 		/* Long mode: #GP(0)/#SS(0) if the memory address is in a
- 		 * non-canonical form. This is the only check on the memory
+ 	sep = CIFS_DIR_SEP(cifs_sb);
+ 	s = full_path;
+@@ -4478,7 +4480,14 @@ cifs_are_all_path_components_accessible(struct TCP_Server_Info *server,
+ 		/* next separator */
+ 		while (*s && *s != sep)
+ 			s++;
+-
++		/*
++		 * if the treename is added, we then have to skip the first
++		 * part within the separators
++		 */
++		if (skip) {
++			skip = 0;
++			continue;
++		}
+ 		/*
+ 		 * temporarily null-terminate the path at the end of
+ 		 * the current component
+@@ -4526,8 +4535,7 @@ static int is_path_remote(struct cifs_sb_info *cifs_sb, struct smb_vol *vol,
+ 
+ 	if (rc != -EREMOTE) {
+ 		rc = cifs_are_all_path_components_accessible(server, xid, tcon,
+-							     cifs_sb,
+-							     full_path);
++			cifs_sb, full_path, tcon->Flags & SMB_SHARE_IS_IN_DFS);
+ 		if (rc != 0) {
+ 			cifs_dbg(VFS, "cannot query dirs between root and final path, "
+ 				 "enabling CIFS_MOUNT_USE_PREFIX_PATH\n");
 -- 
 2.20.1
 
