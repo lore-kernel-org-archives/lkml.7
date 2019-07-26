@@ -2,109 +2,96 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E68C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 05:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C19DC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 05:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA4A122BEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 05:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ACED22C7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 05:49:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="nJtUPr2d";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="koCsYE2C"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ncsrw2og"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfGZFlQ (ORCPT
+        id S1725981AbfGZFtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 01:41:16 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:51205 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726308AbfGZFk2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 01:40:28 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9076F2230E;
-        Fri, 26 Jul 2019 01:40:27 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 26 Jul 2019 01:40:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=oSDr1xjwZ4K40
-        /MK5vRNInuje81HUcQkw7+j8FhaZBE=; b=nJtUPr2doNBzYfahf8HEQokqeiFLZ
-        sxeJD+ChRqORwbEUNp2ySw0VWf/IW4BFBtsj8LF7E3xy4azYDmrqEwWTZH/XylqU
-        6ExCjwaOdxoR3x5V4+xW3lmboHwDfLRv+x+GyBXHroFn0Udupku4/8PfZRK0iaHz
-        OIcbJP9v7oK1XMLmyVNtjxQeNc7Ylq1LLSkvpSxQ5qNsP479LkzvmllqT15OEDkD
-        +Hg8b66dHkUxawRoVBDxRxIY1BWsUkQkRDjvHyabgigeKgOVonW7Q+zXkdi9mbJA
-        x95QvYoh5Py91eRV/KGM27DzbGB+BM5eywVuw2cPqt1HWL9YXApa5Q1Rw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=oSDr1xjwZ4K40/MK5vRNInuje81HUcQkw7+j8FhaZBE=; b=koCsYE2C
-        IS3NbTVKd205d2oxynUGvnCbRE+BzZ2S7gSFgGE6pLPpu6TzObSirDmZEgFHTlDR
-        Uh+7CeQ5dj3l0NEey+0jbDWFa5Us0IB5tqWsAaouibGTulb13XenSoZdSY0ENxdG
-        SJgY6aAGAxGPg2Wg2VbtQ/UuiqxehM9wMMvTZKuGSxrzbyMU89kwu4afLR4vrbMC
-        asYL1onjFlM1edk1I5Bhq3Ee8ets+iiy+BH0d5P1qzn/2uF3nM+PeWa7GoAdJY54
-        482QIu1fFfKbbUFwsJJLkCzFNAfKkWOjLmzu4VFclD9928yPTJC53xqlIV8qvRQd
-        41p5QBA2htFYlA==
-X-ME-Sender: <xms:S5I6XfUrr0Gmg07ph10mXzZUDMAXM-CP0EE6xar9s5fY7_Ih7B_OPA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrkeefgdeljecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
-    ertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghj
-    rdhiugdrrghuqeenucfkphepvddtvddrkedurddukedrfedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgep
-    he
-X-ME-Proxy: <xmx:S5I6XZH_kNpc_dcrOsnGt_JkI8VMWZuPEGTGxWgr8QMOA0ju1li6wA>
-    <xmx:S5I6XbfTGuLD2lfstgbNJUp4younmbw9PgMHVsYDcU7ExFBZDAdWnA>
-    <xmx:S5I6XaLoUkJX4Ziz1S267mH719wEXmgMNya4XB8HMZLcfhL1m3wdUw>
-    <xmx:S5I6XV7hUmOJCV17GTVRUg4FwAceJNDlkG5Farmrh2b3GjXrkTOHvA>
-Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9D6F8380076;
-        Fri, 26 Jul 2019 01:40:24 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-aspeed@lists.ozlabs.org
-Cc:     Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org,
-        mark.rutland@arm.com, joel@jms.id.au, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 07/17] ARM: dts: witherspoon: Cleanup gpio-keys-polled properties
-Date:   Fri, 26 Jul 2019 15:09:49 +0930
-Message-Id: <20190726053959.2003-8-andrew@aj.id.au>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726053959.2003-1-andrew@aj.id.au>
-References: <20190726053959.2003-1-andrew@aj.id.au>
+        Fri, 26 Jul 2019 01:49:36 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:48479 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725781AbfGZFtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 01:49:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45vyp371pVz9s4Y;
+        Fri, 26 Jul 2019 15:49:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564120172;
+        bh=ctSMwARS1PqMRvmez8r6GVeBL1+AKxRRl4x7F2Eg+zA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ncsrw2og3I/PSv/ypTSfueuwbuyB0haMWpEMaCp4qnbLvY1k42nLro+nYEknP+tHT
+         3bLy7kUbgPah+kNVeTBsyId7OXCOAnmT12qw8w9VSniM4e2ny0YlMsXUYpFYTBWq0m
+         IGZuajm8tKQPGWNY5GdkKfRNzwGcZ27qNZfUW39nirU0OJUz9xNDvWikb2SmRA61mx
+         0ygz3bwEkP3s2i/kHS4KyngLOGHWafq7f+FMgTgRs58kAbyFTtgMoTbOmr5lW/tUXE
+         J/KmukC4FDhFx/MxVqjYSnQrhyzetGYqyFKUk5O/mszoY47dqiiM0Z0Q/ZO6z/iIkf
+         +9ALSjV5e9eIw==
+Date:   Fri, 26 Jul 2019 15:49:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the tip tree
+Message-ID: <20190726154931.1d2fa8d5@canb.auug.org.au>
+In-Reply-To: <20190726044909.ubf4rhzmsgjd3xgk@treble>
+References: <20190726130327.1f707cb3@canb.auug.org.au>
+        <20190726044909.ubf4rhzmsgjd3xgk@treble>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/MqXIVcadHNhZYb87e7oTTiw";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dtbs_check gave the following warning:
+--Sig_/MqXIVcadHNhZYb87e7oTTiw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-    Warning (avoid_unnecessary_addr_size): /gpio-keys-polled: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+Hi Josh,
 
-Cc: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts | 2 --
- 1 file changed, 2 deletions(-)
+On Thu, 25 Jul 2019 23:49:09 -0500 Josh Poimboeuf <jpoimboe@redhat.com> wro=
+te:
+>
+> This will be fixed by:
+>=20
+>   https://lkml.kernel.org/r/51a4155c5bc2ca847a9cbe85c1c11918bb193141.1564=
+086017.git.jpoimboe@redhat.com
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
-index 08facb2120b2..06319c6771ca 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
-@@ -77,8 +77,6 @@
- 
- 	gpio-keys-polled {
- 		compatible = "gpio-keys-polled";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		poll-interval = <1000>;
- 
- 		fan0-presence {
--- 
-2.20.1
+Thanks
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/MqXIVcadHNhZYb87e7oTTiw
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl06lGsACgkQAVBC80lX
+0GxPPAf+IgPFJ1HZy8aqJdpQcBMH2lyLZKe2fhl7igFGuMVUV8XAa6qbatboguN8
+t0cJVzmYQNAXTz3zZiEyersanUCyhqJJsQn6v4R5vTwJXKa5e0p9z1F459WUjtOV
+mBESoOJsRK3GU/QieyqPvunbzbMEnjVHjlFuPPIGNP0Nh/pUfpcYkm+D3mRkwVeV
+x3f7Ml4L8zHKJ39biww7r5FM7m1nNKpVLT19f/mHHNiHRLeTaTBe8jH4p1GzW8/g
+4pO0YjdyqCG7UIKBmnDEuEmZYmYdVeXthuxE4ZP698nXOLAZSz2fyV6sw6TXSSuG
+TF81P0kmfvRhNJmtMiniaffJv1X0hQ==
+=awb3
+-----END PGP SIGNATURE-----
+
+--Sig_/MqXIVcadHNhZYb87e7oTTiw--
