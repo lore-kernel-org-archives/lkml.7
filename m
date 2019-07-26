@@ -2,130 +2,307 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F56C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AECC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7889B216C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:41:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="gF9HjbvM"
+	by mail.kernel.org (Postfix) with ESMTP id 7B92A229F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:41:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfGZJlg (ORCPT
+        id S1726462AbfGZJlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:41:36 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:35790 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbfGZJlg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:41:36 -0400
-Received: by mail-vs1-f66.google.com with SMTP id u124so35691810vsu.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 02:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zQAETFiPc0aFNIxeDXyiIDZA2xGxTwhcJMiDlxf4BIg=;
-        b=gF9HjbvMjl5SVhv7yb2XcM5f/0R83Nt0MPGcMkb3JbW0PVLg8hJ1aDN8/yxAzHRJe8
-         h9bXjl+UIP7KZVZAq1hlOgwASM6/xlIuz5VAvWQ9gqSBIcvHOSWWHldRinLfZcpxh5Rr
-         VrSzo56C0bQjWOrBiGcfS6/jjvR+Xnuj4oVSbD6ay+tKRmwQUR9Zq63KTw704nCRuR3M
-         UpFbHnUlHD8pWZl/Wa2KTRmcV6gw6k48UOvAfQhYPVD3wnFnjv7obhES0C5gXSDvYFjU
-         DQh0biEXrF3tyOZ+TJv1zPmIv/gUnZ5njhjYC/kyqTZEJp9caVQKRvrG7Vxf9uhQEWPk
-         fzbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zQAETFiPc0aFNIxeDXyiIDZA2xGxTwhcJMiDlxf4BIg=;
-        b=aplUfGEmiha52RfASU2J67aqyhj0RzmjzgP2a4J5bShEzlKj0CEJkbp1Jrc00IYzEl
-         bsQyKt0kzJSQOSBvaFIfDzgoU4Nh4wyxflH8cxJweL+PJmEFbI48QBOY0JKafDzOeEA2
-         WI3dCcK1iK5qGBdi23Q4IEnVpX4fkEKxm4HiMLH1HTVCenxKxzfQdHWRr18G35uro+En
-         ua/URuf2KCF6QC6W1W3K/BxjmigvPPypYtInojfW2WfTA0RTyj9XlU0WJMDoeBO+D4Mp
-         VmTVzmsVdn74IrJ0y0DhpsXxXk7Mf9wMTTMy7IRzur8wOQwsaj89YOK43mt7szm0ECg7
-         0wKQ==
-X-Gm-Message-State: APjAAAUHja/lwnN4GdOeEhO6k3/UhM/oQngk9XMba8AU7acb8IUGHSGt
-        Xx1VjlBb7wO9QF1Sae8O5W9eKnTV3KGmT3SJjvNRYQ==
-X-Google-Smtp-Source: APXvYqxvp/2LfFvQ/EjoQDSHcBttZZk1A87AFf9gl9KRUa+fnZYFT1MDihIpFExEm6iD5Y9Rq6s1yOnrhkOaXjfB/uI=
-X-Received: by 2002:a67:d990:: with SMTP id u16mr59869159vsj.95.1564134094915;
- Fri, 26 Jul 2019 02:41:34 -0700 (PDT)
+        Fri, 26 Jul 2019 05:41:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58336 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726173AbfGZJlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:41:49 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1974D3092656;
+        Fri, 26 Jul 2019 09:41:49 +0000 (UTC)
+Received: from [10.36.116.244] (ovpn-116-244.ams2.redhat.com [10.36.116.244])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F161B5DA97;
+        Fri, 26 Jul 2019 09:41:46 +0000 (UTC)
+Subject: Re: [PATCH v3 2/5] mm: Introduce a new Vmemmap page-type
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
+        pasha.tatashin@soleen.com, mhocko@suse.com,
+        anshuman.khandual@arm.com, Jonathan.Cameron@huawei.com,
+        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20190725160207.19579-1-osalvador@suse.de>
+ <20190725160207.19579-3-osalvador@suse.de>
+ <7e8746ac-6a66-d73c-9f2a-4fc53c7e4c04@redhat.com>
+ <20190726092548.GA26268@linux>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <dbd19aea-fe18-ec42-7932-f03109cb399e@redhat.com>
+Date:   Fri, 26 Jul 2019 11:41:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190725080925.6575-1-jian-hong@endlessm.com> <06d713fff7434dfb9ccab32c2e2112e2@AcuMS.aculab.com>
- <CAPpJ_ecAAw=1X=7+MOw-VVH0ZKBr6rcRub6JnEqgNbZ6Hxt=ag@mail.gmail.com> <c2cdffd30923459e8773379fc2927e1d@AcuMS.aculab.com>
-In-Reply-To: <c2cdffd30923459e8773379fc2927e1d@AcuMS.aculab.com>
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Fri, 26 Jul 2019 17:40:58 +0800
-Message-ID: <CAPpJ_eey7+KCMFj2YVQD8ziWR_xf-==k9MYb49-32Z5E6vTdHA@mail.gmail.com>
-Subject: Re: [PATCH] rtw88: pci: Use general byte arrays as the elements of RX ring
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux@endlessm.com" <linux@endlessm.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190726092548.GA26268@linux>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 26 Jul 2019 09:41:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Laight <David.Laight@aculab.com> =E6=96=BC 2019=E5=B9=B47=E6=9C=8826=
-=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=885:23=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> From: Jian-Hong Pan
-> > Sent: 26 July 2019 07:18
-> ...
-> > > While allocating all 512 buffers in one block (just over 4MB)
-> > > is probably not a good idea, you may need to allocated (and dma map)
-> > > then in groups.
-> >
-> > Thanks for reviewing.  But got questions here to double confirm the ide=
-a.
-> > According to original code, it allocates 512 skbs for RX ring and dma
-> > mapping one by one.  So, the new code allocates memory buffer 512
-> > times to get 512 buffer arrays.  Will the 512 buffers arrays be in one
-> > block?  Do you mean aggregate the buffers as a scatterlist and use
-> > dma_map_sg?
->
-> If you malloc a buffer of size (8192+32) the allocator will either
-> round it up to a whole number of (often 4k) pages or to a power of
-> 2 of pages - so either 12k of 16k.
-> I think the Linux allocator does the latter.
-> Some of the allocators also 'steal' a bit from the front of the buffer
-> for 'red tape'.
->
-> OTOH malloc the space 15 buffers and the allocator will round the
-> 15*(8192 + 32) up to 32*4k - and you waste under 8k across all the
-> buffers.
->
-> You then dma_map the large buffer and split into the actual rx buffers.
-> Repeat until you've filled the entire ring.
-> The only complication is remembering the base address (and size) for
-> the dma_unmap and free.
-> Although there is plenty of padding to extend the buffer structure
-> significantly without using more memory.
-> Allocate in 15's and you (probably) have 512 bytes per buffer.
-> Allocate in 31's and you have 256 bytes.
->
-> The problem is that larger allocates are more likely to fail
-> (especially if the system has been running for some time).
-> So you almost certainly want to be able to fall back to smaller
-> allocates even though they use more memory.
->
-> I also wonder if you actually need 512 8k rx buffers to cover
-> interrupt latency?
-> I've not done any measurements for 20 years!
+On 26.07.19 11:25, Oscar Salvador wrote:
+> On Fri, Jul 26, 2019 at 10:48:54AM +0200, David Hildenbrand wrote:
+>>> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+>>> ---
+>>>  include/linux/mm.h         | 17 +++++++++++++++++
+>>>  include/linux/mm_types.h   |  5 +++++
+>>>  include/linux/page-flags.h | 19 +++++++++++++++++++
+>>>  3 files changed, 41 insertions(+)
+>>>
+>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>>> index 45f0ab0ed4f7..432175f8f8d2 100644
+>>> --- a/include/linux/mm.h
+>>> +++ b/include/linux/mm.h
+>>> @@ -2904,6 +2904,23 @@ static inline bool debug_guardpage_enabled(void) { return false; }
+>>>  static inline bool page_is_guard(struct page *page) { return false; }
+>>>  #endif /* CONFIG_DEBUG_PAGEALLOC */
+>>>  
+>>> +static __always_inline struct page *vmemmap_head(struct page *page)
+>>> +{
+>>> +	return (struct page *)page->vmemmap_head;
+>>> +}
+>>> +
+>>> +static __always_inline unsigned long vmemmap_nr_sections(struct page *page)
+>>> +{
+>>> +	struct page *head = vmemmap_head(page);
+>>> +	return head->vmemmap_sections;
+>>> +}
+>>> +
+>>> +static __always_inline unsigned long vmemmap_nr_pages(struct page *page)
+>>> +{
+>>> +	struct page *head = vmemmap_head(page);
+>>> +	return head->vmemmap_pages - (page - head);
+>>> +}
+>>> +
+>>>  #if MAX_NUMNODES > 1
+>>>  void __init setup_nr_node_ids(void);
+>>>  #else
+>>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+>>> index 6a7a1083b6fb..51dd227f2a6b 100644
+>>> --- a/include/linux/mm_types.h
+>>> +++ b/include/linux/mm_types.h
+>>> @@ -170,6 +170,11 @@ struct page {
+>>>  			 * pmem backed DAX files are mapped.
+>>>  			 */
+>>>  		};
+>>> +		struct {        /* Vmemmap pages */
+>>> +			unsigned long vmemmap_head;
+>>> +			unsigned long vmemmap_sections; /* Number of sections */
+>>> +			unsigned long vmemmap_pages;    /* Number of pages */
+>>> +		};
+>>>  
+>>>  		/** @rcu_head: You can use this to free a page by RCU. */
+>>>  		struct rcu_head rcu_head;
+>>> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+>>> index f91cb8898ff0..75f302a532f9 100644
+>>> --- a/include/linux/page-flags.h
+>>> +++ b/include/linux/page-flags.h
+>>> @@ -708,6 +708,7 @@ PAGEFLAG_FALSE(DoubleMap)
+>>>  #define PG_kmemcg	0x00000200
+>>>  #define PG_table	0x00000400
+>>>  #define PG_guard	0x00000800
+>>> +#define PG_vmemmap     0x00001000
+>>>  
+>>>  #define PageType(page, flag)						\
+>>>  	((page->page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
+>>> @@ -764,6 +765,24 @@ PAGE_TYPE_OPS(Table, table)
+>>>   */
+>>>  PAGE_TYPE_OPS(Guard, guard)
+>>>  
+>>> +/*
+>>> + * Vmemmap pages refers to those pages that are used to create the memmap
+>>> + * array, and reside within the same memory range that was hotppluged, so
+>>> + * they are self-hosted. (see include/linux/memory_hotplug.h)
+>>> + */
+>>> +PAGE_TYPE_OPS(Vmemmap, vmemmap)
+>>> +static __always_inline void SetPageVmemmap(struct page *page)
+>>> +{
+>>> +	__SetPageVmemmap(page);
+>>> +	__SetPageReserved(page);
+>>
+>> So, the issue with some vmemmap pages is that the "struct pages" reside
+>> on the memory they manage. (it is nice, but complicated - e.g. when
+>> onlining/offlining)
+> 
+> Hi David,
+> 
+> Not really.
+> Vemmap pages are just skipped when onling/offlining handling.
+> We do not need them to a) send to the buddy and b) migrate them over.
+> A look at patch#4 will probably help, as the crux of the matter is there.
 
-Thanks for the explanation.
-I am not sure the combination of 512 8k RX buffers.  Maybe Realtek
-folks can give us some idea.
-Tony Chuang any comment?
+Right, but you have to hinder onlining code from trying to reinitialize
+the vmemmap - when you try to online the first memory block. Will dive
+into the details (patch #4) next (maybe not today, but early next week) :)
 
-Jian-Hong Pan
+> 
+>>
+>> I would expect that you properly initialize the struct pages for the
+>> vmemmap pages (now it gets confusing :) ) when adding memory. The other
+>> struct pages are initialized when onlining/offlining.
+>>
+>> So, at this point, the pages should already be marked reserved, no? Or
+>> are the struct pages for the vmemmap never initialized?
+>>
+>> What zone do these vmemmap pages have? They are not assigned to any zone
+>> and will never be :/
+> 
+> This patch is only a preparation, the real "fun" is in patch#4.
+> 
+> Vmemmap pages initialization occurs in mhp_mark_vmemmap_pages, called from
+> __add_pages() (patch#4).
+> In there we a) mark the page as vmemmap and b) initialize the fields we need to
+> track some medata (sections, pages and head).
+> 
+> In __init_single_page(), when onlining, the rest of the fields will be set up
+> properly (zone, refcount, etc).
+> 
+> Chunk from patch#4:
+> 
+> static void __meminit __init_single_page(struct page *page, unsigned long pfn,
+>                                 unsigned long zone, int nid)
+> {
+>         if (PageVmemmap(page))
+>                 /*
+>                  * Vmemmap pages need to preserve their state.
+>                  */
+>                 goto preserve_state;
+
+Can you be sure there are no false positives? (if I remember correctly,
+this memory might be completely uninitialized - I might be wrong)
+
+> 
+>         mm_zero_struct_page(page);
+>         page_mapcount_reset(page);
+>         INIT_LIST_HEAD(&page->lru);
+> preserve_state:
+>         init_page_count(page);
+>         set_page_links(page, zone, nid, pfn);
+>         page_cpupid_reset_last(page);
+>         page_kasan_tag_reset(page);
+> 
+> So, vmemmap pages will fall within the same zone as the range we are adding,
+> that does not change.
+
+I wonder if that is the right thing to do, hmmmm, because they are
+effectively not part of that zone (not online)
+
+Will have a look at the details :)
+
+> 
+>>> +}
+>>> +
+>>> +static __always_inline void ClearPageVmemmap(struct page *page)
+>>> +{
+>>> +	__ClearPageVmemmap(page);
+>>> +	__ClearPageReserved(page);
+>>
+>> You sure you want to clear the reserved flag here? Is this function
+>> really needed?
+>>
+>> (when you add memory, you can mark all relevant pages as vmemmap pages,
+>> which is valid until removing the memory)
+>>
+>> Let's draw a picture so I am not confused
+>>
+>> [ ------ added memory ------ ]
+>> [ vmemmap]
+>>
+>> The first page of the added memory is a vmemmap page AND contains its
+>> own vmemmap, right?
+> 
+> Not only the first page.
+> Depending on how large is the chunk you are adding, the number of vmemmap
+> pages will vary, because we need to cover the memmaps for the range.
+> 
+> e.g:
+> 
+>  - 128MB (1 section) = 512 vmemmap pages at the beginning of the range
+>  - 256MB (2 section) = 1024 vmemmap pages at the beginning of the range
+>  ...
+> 
+
+Right.
+
+>> When adding memory, you would initialize set all struct pages of the
+>> vmemmap (residing on itself) and set them to SetPageVmemmap().
+>>
+>> When removing memory, there is nothing to do, all struct pages are
+>> dropped. So why do we need the ClearPageVmemmap() ?
+> 
+> Well, it is not really needed as we only call ClearPageVmemmap when we are
+> actually removing the memory with vmemmap_free()->...
+> So one could argue that since the memory is going away, there is no need
+> to clear anything in there.
+> 
+> I just made it for consistency purposes.
+> 
+> Can drop it if feeling strong here.
+
+Not strong, was just wondering why that is needed at all in the big
+picture :)
+
+-- 
+
+Thanks,
+
+David / dhildenb
