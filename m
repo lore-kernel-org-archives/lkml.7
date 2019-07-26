@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9373BC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72502C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C9822CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47FEC22CE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149310;
-	bh=ZVMbaLsKposierDugw05RSu2Ih9slD9YWGimhb+npNY=;
+	s=default; t=1564149311;
+	bh=iSt6GWVmi+fpAvXm1Wkw4oTple+1SFW8tj+x+5LwXHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o+1O3pmbAI9ogw/6cqcQy+tMfJJHeH5nSPK7+F+MH6Cotpm0msy3l+YS7UQ1jkgIi
-	 bq9lTW4UyKL1J2FOYf5x63YQTGS/7F+PwYpXsziBpHPV4H4/BGSTnp+3n9qdx27dec
-	 kuOxWh4MWoEAYMYBGqoENNInuwfWlXXeBItedVR4=
+	b=QXJWBYFNvCBStuU+HXXXZ5LLe015/0nbDkv7xNgPmwirYSluR+nYLvr1r3v+QqxlA
+	 Nt0UtRc9eiBWQ8Kmw/ED+TY/Zny7OdDSfuMWlxiOd8rymAel4rFAHOuU4p7O3g9uI3
+	 yUdc2FfU/uInoe+w4nnzUNBjiChDOj174cwa6H7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387984AbfGZNmh (ORCPT
+        id S1728374AbfGZNzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:42:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49714 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:55:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387943AbfGZNm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:42:28 -0400
+        id S2387943AbfGZNmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:42:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E0E322BF5;
-        Fri, 26 Jul 2019 13:42:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4C9C22BF5;
+        Fri, 26 Jul 2019 13:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148546;
-        bh=ZVMbaLsKposierDugw05RSu2Ih9slD9YWGimhb+npNY=;
+        s=default; t=1564148557;
+        bh=iSt6GWVmi+fpAvXm1Wkw4oTple+1SFW8tj+x+5LwXHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KMECLQnuKeSjGxBnq6IjShGjK4mIVI6TF5GfnknxnAz/n6yxbB0Fq6i9BrXuLD64d
-         D4TvnM5D/SwEuDwvVFWkqh+ruj3EMIn7j6FPTml7B9hLkQBOBpsCvP2pn5D7qk7iEF
-         aQr+gTK+NvkND6FwtnCOrjR1rcCP9nbzzyWGWZQ8=
+        b=i3L0s97J20I/YEt5psc4nrtUlohLFtODH0xfGvfi/i/+YDD+uIh2S/L5NtVdQIm7m
+         /5AO15lALJBLLwN53AFd5gEH7DGiCt+eHUqeyPL3gTZ8v+CqWyEYgRFuSVW2keDbrA
+         +xGy2IO3B6BewzSuX1rjEWFupqjJF9khQqF/7VFQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 09/47] firmware/psci: psci_checker: Park kthreads before stopping them
-Date:   Fri, 26 Jul 2019 09:41:32 -0400
-Message-Id: <20190726134210.12156-9-sashal@kernel.org>
+Cc:     Chunyan Zhang <zhang.chunyan@linaro.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 14/47] clk: sprd: Add check for return value of sprd_clk_regmap_init()
+Date:   Fri, 26 Jul 2019 09:41:37 -0400
+Message-Id: <20190726134210.12156-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
 References: <20190726134210.12156-1-sashal@kernel.org>
@@ -61,79 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+From: Chunyan Zhang <zhang.chunyan@linaro.org>
 
-[ Upstream commit 92e074acf6f7694e96204265eb18ac113f546e80 ]
+[ Upstream commit c974c48deeb969c5e4250e4f06af91edd84b1f10 ]
 
-Since commit 85f1abe0019f ("kthread, sched/wait: Fix kthread_parkme()
-completion issue"), kthreads that are bound to a CPU must be parked
-before being stopped. At the moment the PSCI checker calls
-kthread_stop() directly on the suspend kthread, which triggers the
-following warning:
+sprd_clk_regmap_init() doesn't always return success, adding check
+for its return value should make the code more strong.
 
-[    6.068288] WARNING: CPU: 1 PID: 1 at kernel/kthread.c:398 __kthread_bind_mask+0x20/0x78
-               ...
-[    6.190151] Call trace:
-[    6.192566]  __kthread_bind_mask+0x20/0x78
-[    6.196615]  kthread_unpark+0x74/0x80
-[    6.200235]  kthread_stop+0x44/0x1d8
-[    6.203769]  psci_checker+0x3bc/0x484
-[    6.207389]  do_one_initcall+0x48/0x260
-[    6.211180]  kernel_init_freeable+0x2c8/0x368
-[    6.215488]  kernel_init+0x10/0x100
-[    6.218935]  ret_from_fork+0x10/0x1c
-[    6.222467] ---[ end trace e05e22863d043cd3 ]---
-
-kthread_unpark() tries to bind the thread to its CPU and aborts with a
-WARN() if the thread wasn't in TASK_PARKED state. Park the kthreads
-before stopping them.
-
-Fixes: 85f1abe0019f ("kthread, sched/wait: Fix kthread_parkme() completion issue")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
+[sboyd@kernel.org: Add a missing int ret]
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/psci_checker.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/clk/sprd/sc9860-clk.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/psci_checker.c b/drivers/firmware/psci_checker.c
-index 346943657962..cbd53cb1b2d4 100644
---- a/drivers/firmware/psci_checker.c
-+++ b/drivers/firmware/psci_checker.c
-@@ -366,16 +366,16 @@ static int suspend_test_thread(void *arg)
- 	for (;;) {
- 		/* Needs to be set first to avoid missing a wakeup. */
- 		set_current_state(TASK_INTERRUPTIBLE);
--		if (kthread_should_stop()) {
--			__set_current_state(TASK_RUNNING);
-+		if (kthread_should_park())
- 			break;
--		}
- 		schedule();
+diff --git a/drivers/clk/sprd/sc9860-clk.c b/drivers/clk/sprd/sc9860-clk.c
+index 9980ab55271b..f76305b4bc8d 100644
+--- a/drivers/clk/sprd/sc9860-clk.c
++++ b/drivers/clk/sprd/sc9860-clk.c
+@@ -2023,6 +2023,7 @@ static int sc9860_clk_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *match;
+ 	const struct sprd_clk_desc *desc;
++	int ret;
+ 
+ 	match = of_match_node(sprd_sc9860_clk_ids, pdev->dev.of_node);
+ 	if (!match) {
+@@ -2031,7 +2032,9 @@ static int sc9860_clk_probe(struct platform_device *pdev)
  	}
  
- 	pr_info("CPU %d suspend test results: success %d, shallow states %d, errors %d\n",
- 		cpu, nb_suspend, nb_shallow_sleep, nb_err);
+ 	desc = match->data;
+-	sprd_clk_regmap_init(pdev, desc);
++	ret = sprd_clk_regmap_init(pdev, desc);
++	if (ret)
++		return ret;
  
-+	kthread_parkme();
-+
- 	return nb_err;
+ 	return sprd_clk_probe(&pdev->dev, desc->hw_clks);
  }
- 
-@@ -440,8 +440,10 @@ static int suspend_tests(void)
- 
- 
- 	/* Stop and destroy all threads, get return status. */
--	for (i = 0; i < nb_threads; ++i)
-+	for (i = 0; i < nb_threads; ++i) {
-+		err += kthread_park(threads[i]);
- 		err += kthread_stop(threads[i]);
-+	}
-  out:
- 	cpuidle_resume_and_unlock();
- 	kfree(threads);
 -- 
 2.20.1
 
