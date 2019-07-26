@@ -2,147 +2,512 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D3EC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A754C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD7722BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F032238C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:54:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HP04bG7U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfGZMy3 convert rfc822-to-8bit (ORCPT
+        id S1727297AbfGZMyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:54:29 -0400
-Received: from mail-oln040092254100.outbound.protection.outlook.com ([40.92.254.100]:59136
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726804AbfGZMy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:54:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k7rpyAvbUY6HZ/ble0l0sDWGOh+XbTGPxfaF31szbEMUWyTlPZcUd6NXqUvpJ+7fkVaX+TDOzv33TtMvRCK2sG4AOTggvGr0K2rmmvBg+53rbu4mKCeFjOvfDvkbNfjPPeuagJ94adbzo375NIv50uFopVl6H3Nk4rqSKpyOgRCK1FaR/0Cf87LG3dCjvakEGQDWwk3gNvIim3CcHkCGa/5BGYRfCa+4KHl/xTP6Z8aZXzH7E7YhnEMdTVO1t4PbDtQ7CpYVi1bTqGzQI/KcxulMVa0qWAWCnzXUlx9GWQzaqFNzjVhGXVhdVuojG6dVbaBTCkHnZM2GuJV/JRWBGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nb8NHon9nvDd2puV86OMdckpekc7biBEMMzhLK9uAAI=;
- b=AJzkH0KcgUxp5Lzg8oapTHKotLlW96qHhEa08MiuUzAXlXxsRzDg9rMgUxME6QbhguT3MXHpjRiCFO8AxBsZ3bWkOmBT61I/wPqbgbWH04pTre5Z6IBxIL85cZwYIImjtBfAUGmG63yQ1MWsE0QVeXXa7P4srEwtVlpmFkzDQJk4prMbTmSsK0SNAttuW5bFmOeCf1dlGwBRIaafZn4HiNk32Md3B4wFEj1sdNMR9Sbc+efhykryQb2MZIReae3sr+16w1Njgd+kHSHmlXEX31uRx97W3I6d08O3vu4/1c8Ck4ISvrbhgkQvNzo4F9Kg+1odSV7ub5Ib1IAyMR9kOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-Received: from PU1APC01FT060.eop-APC01.prod.protection.outlook.com
- (10.152.252.58) by PU1APC01HT018.eop-APC01.prod.protection.outlook.com
- (10.152.253.116) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2115.10; Fri, 26 Jul
- 2019 12:54:22 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.59) by
- PU1APC01FT060.mail.protection.outlook.com (10.152.253.44) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2115.10 via Frontend Transport; Fri, 26 Jul 2019 12:54:22 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::1cba:d572:7a30:ff0d]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::1cba:d572:7a30:ff0d%3]) with mapi id 15.20.2094.013; Fri, 26 Jul 2019
- 12:54:22 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: [PATCH v8 4/6] PCI: Allow extend_bridge_window() to shrink resource
- if necessary
-Thread-Topic: [PATCH v8 4/6] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Thread-Index: AQHVQ7E/8A75PE+Y1kKWz/bvvpr38w==
-Date:   Fri, 26 Jul 2019 12:54:22 +0000
-Message-ID: <SL2P216MB01879766498AA7746C2E5FB780C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYBPR01CA0050.ausprd01.prod.outlook.com
- (2603:10c6:10:2::14) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:22::19)
-x-incomingtopheadermarker: OriginalChecksum:0BF98D2F95199AD5492D3530791F1F12C8D7A5C8CD5528E1E14ADDBAF722F4BA;UpperCasedChecksum:5CA961ECC6B4819F0035BA4E8A4A569D3347730C49A3CDEDD5D74ECAB91A8D3A;SizeAsReceived:7714;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [8Gi7AKNiet3h60lg1J+Zfiqxtk73OmA1CTctgZ3oaltEHytb2z2gbvxKyiqRUBrB7nPWUloD9CM=]
-x-microsoft-original-message-id: <20190726125406.GA2708@nicholas-usb>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:PU1APC01HT018;
-x-ms-traffictypediagnostic: PU1APC01HT018:
-x-microsoft-antispam-message-info: Oydt2lQ/E9Zs08wiZMGk1+1WzarW8KmozjEwvt16JM7Zrl2n5K4adFRcjjE+FED6m7kTR28pjyzjsEknts3N4/mfz0HYi1rAfFX0qjuOUacQ1/5DZ7px+hshs/sjCxDhBahex/4Cl6Yk4PWE9ZzcBm6jYel8A4l8V+wAK4ADPTdwaFFVAjRbPnsBqqaIYuD+
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7CF825148A086C4A9ABF3A4DBE9745AC@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Fri, 26 Jul 2019 08:54:35 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38172 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727224AbfGZMyc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 08:54:32 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g17so54346462wrr.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 05:54:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=zM09sw2mge+SQJ/dkUCgGryrhGvD/50/pwMZAHGvtdE=;
+        b=HP04bG7UUn/40T8KeRZpcMYv0bVm/9wExt2hbTo7ft2WDYx1LIV1oi1nM77t7flwKG
+         OIXyF2pOt66IX7pAna70XlXHjoWOWZc1aON2H7Vn+7JaHgKb5mDjAvIvDBCuh32Uh27e
+         aBZIkQEXhSyDWRsY4rJODFtHY6uR+7LuFHdF4OBId6uu9ya2jgPG21j2DmFPOsBuBP2R
+         sYQKfjj3cY2eEg1tkmcfTOOXTAZaB/tFSL8Mem6mdLDJrByVODcYJuA/GTPfr4nSMHLb
+         LN1S2lC0G/9CXlaXc1tR9YgmQhgPiQAU0d3D9gJrfzKLr16kWeQ4tVAMESwsYVBc4l4O
+         fFJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=zM09sw2mge+SQJ/dkUCgGryrhGvD/50/pwMZAHGvtdE=;
+        b=qJ+qU8cr19Cxnd+wIk98+nCRHNGGo634qGLuD5uSgYrEmP1UOtljHoF4RkuLIbnUEO
+         zGAhWnzQAkXGyo7DRtIH88t5S25RdDsIGJcpf4P+9+8PjxkICqzzJIauVvtdlwJwyEu/
+         YEbKEYG0L7rzbvuOGcxHOL8xoNJqer/Jv9LPhpBni7rueBv1gI6sFPka4PyPjX2PeAtc
+         UWt4x02d00Isq6v0u28xEiE177JaflC4IL3ou24LJcf/MtpavizZuk9/7rtOd37nKg8/
+         YECOOidFWZqfxkyP5m3cusaaQ3ntVU3rf5tTXOGUu9xyy/gc60+EN3ewZ6A/sUUWtyHb
+         hR9A==
+X-Gm-Message-State: APjAAAWppHoQ82l87h+nvyQSPsg8r41pLOi6p6lMe1DhzrZtWW0688z3
+        YB0MbUG48ksD99nKe28rRh/5Og==
+X-Google-Smtp-Source: APXvYqyLQwQihi2zuCw1a4dIGsqBppyZjq70RkBd4dJPH1h1Qb4gYh91igcpNqGd3ffnC7Jp9bBcQQ==
+X-Received: by 2002:a05:6000:1186:: with SMTP id g6mr91773053wrx.17.1564145667866;
+        Fri, 26 Jul 2019 05:54:27 -0700 (PDT)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id n14sm96819304wra.75.2019.07.26.05.54.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jul 2019 05:54:27 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 14:54:24 +0200
+From:   LABBE Corentin <clabbe@baylibre.com>
+To:     baylibre-upstreaming@groups.io
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: crypto: Add DT bindings documentation
+ for amlogic-crypto
+Message-ID: <20190726125424.GA20366@Red>
+References: <1564083776-20540-1-git-send-email-clabbe@baylibre.com>
+ <1564083776-20540-2-git-send-email-clabbe@baylibre.com>
+ <CAL_JsqLbYwRpNWHGkYbomWLMpum_DXW4OjNNRrwTRM=w86dONw@mail.gmail.com>
+ <15B4F061F360B2F0.8182@groups.io>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c71fd0a-2d7f-4eee-71b4-08d711c86170
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2019 12:54:22.4573
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT018
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <15B4F061F360B2F0.8182@groups.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove checks for resource size in extend_bridge_window(). This is
-necessary to allow the pci_bus_distribute_available_resources() to
-function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
-allocate resources. Because the kernel parameter sets the size of all
-hotplug bridges to be the same, there are problems when nested hotplug
-bridges are encountered. Fitting a downstream hotplug bridge with size X
-and normal bridges with size Y into parent hotplug bridge with size X is
-impossible, and hence the downstream hotplug bridge needs to shrink to
-fit into its parent.
+On Fri, Jul 26, 2019 at 01:07:47PM +0200, Corentin Labbe via Groups.Io wrote:
+> On Thu, Jul 25, 2019 at 04:55:30PM -0600, Rob Herring wrote:
+> > On Thu, Jul 25, 2019 at 1:43 PM Corentin Labbe <clabbe@baylibre.com> wrote:
+> > >
+> > > This patch adds documentation for Device-Tree bindings for the
+> > > Amlogic GXL cryptographic offloader driver.
+> > >
+> > > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> > > ---
+> > >  .../bindings/crypto/amlogic-gxl-crypto.yaml   | 45 +++++++++++++++++++
+> > 
+> > Follow the compatible string for the filename: amlogic,gxl-crypto.yaml
+> > 
+> > >  1 file changed, 45 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml b/Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+> > > new file mode 100644
+> > > index 000000000000..41265e57c00b
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+> > > @@ -0,0 +1,45 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > 
+> > Dual (GPL-2.0 OR BSD-2-Clause) is preferred for new bindings. Not a
+> > requirement though.
+> > 
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/crypto/amlogic-gxl-crypto.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Amlogic GXL Cryptographic Offloader
+> > > +
+> > > +maintainers:
+> > > +  - Corentin Labbe <clabbe@baylibre.com>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    oneOf:
+> > 
+> > Don't need 'oneOf' when there is only 1.
+> > 
+> > > +      - const: amlogic,gxl-crypto
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 1
+> > > +
+> > > +  clock-names:
+> > > +    const: blkmv
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - interrupts
+> > > +  - clocks
+> > > +  - clock-names
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    crypto: crypto@c883e000 {
+> > > +        compatible = "amlogic,gxl-crypto";
+> > > +        reg = <0x0 0xc883e000 0x0 0x36>;
+> > 
+> > This should throw errors because the default size on examples are 1
+> > cell. But validating the examples with the schema only just landed in
+> > 5.3-rc1.
+> > 
+> > > +        interrupts = <GIC_SPI 188 IRQ_TYPE_EDGE_RISING>,
+> > > +            <GIC_SPI 189 IRQ_TYPE_EDGE_RISING>;
+> > 
+> > This doesn't match the schema.
+> > 
+> > > +        clocks = <&clkc CLKID_BLKMV>;
+> > > +        clock-names = "blkmv";
+> > > +    };
+> > > --
+> > > 2.21.0
+> > >
+> 
+> Hello
+> 
+> I will fix all your remarks.
+> I have tried to valide them but fail to do it:
+> make ARCH=arm64 CROSS_COMPILE=aarch64-unknown-linux-gnu- KBUILD_OUTPUT=~/crossbuild/next/arm64/default/defconfig/ dt_binding_check
+> make[1] : on entre dans le répertoire « /usr/src/crossbuild/next/arm64/default/defconfig »
+> arch/arm64/Makefile:56: CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built
+>   GEN     Makefile
+> scripts/kconfig/conf  --syncconfig Kconfig
+> arch/arm64/Makefile:56: CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/atmel-at91.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/axxia.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/axxia.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/amlogic.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/amlogic.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/renesas.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/renesas.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/sirf.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/sirf.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/spear.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/spear.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/qcom.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/qcom.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/pmu.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/pmu.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/digicolor.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/digicolor.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/sunxi.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/sunxi.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/zte.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/zte.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/cpus.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/cpus.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/rda.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/rda.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/psci.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/psci.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/calxeda.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/calxeda.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/ti/nspire.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/ti/nspire.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/fsl.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/fsl.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/xilinx.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/xilinx.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/altera.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/altera.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/rockchip.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/rockchip.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/mediatek.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/mediatek.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/vt8500.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/vt8500.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/al,alpine.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/al,alpine.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/l2c2x0.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/l2c2x0.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/moxart.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/moxart.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/sti.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/sti.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/primecell.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/primecell.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/bitmain.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/bitmain.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/stm32/stm32.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/tegra.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/tegra.yaml
+> /linux-next/Documentation/devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yaml
+> /linux-next/Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml
+> /linux-next/Documentation/devicetree/bindings/clock/milbeaut-clock.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/clock/milbeaut-clock.yaml
+> /linux-next/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml
+> /linux-next/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml
+> /linux-next/Documentation/devicetree/bindings/clock/fixed-factor-clock.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/clock/fixed-factor-clock.yaml
+> /linux-next/Documentation/devicetree/bindings/clock/fixed-clock.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/clock/fixed-clock.yaml
+> /linux-next/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> /linux-next/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
+> /linux-next/Documentation/devicetree/bindings/display/simple-framebuffer.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+> /linux-next/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/pda,91-00156-a0.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/pda,91-00156-a0.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/lvds.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/lvds.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/panel-common.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr-01b.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr-01b.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.yaml
+> /linux-next/Documentation/devicetree/bindings/example-schema.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/example-schema.yaml
+> /linux-next/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
+> /linux-next/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml
+> /linux-next/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml
+> /linux-next/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
+> /linux-next/Documentation/devicetree/bindings/i2c/i2c-gpio.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/i2c/i2c-gpio.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/light/tsl2583.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/light/tsl2583.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/light/isl29018.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/light/isl29018.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/light/tsl2772.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/light/tsl2772.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
+> /linux-next/Documentation/devicetree/bindings/input/gpio-vibrator.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+> /linux-next/Documentation/devicetree/bindings/input/allwinner,sun4i-a10-lradc-keys.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/input/allwinner,sun4i-a10-lradc-keys.yaml
+> /linux-next/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
+> /linux-next/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
+> /linux-next/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
+> /linux-next/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+> /linux-next/Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml
+> /linux-next/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
+> /linux-next/Documentation/devicetree/bindings/mmc/mmc-controller.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> /linux-next/Documentation/devicetree/bindings/mtd/nand-controller.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> /linux-next/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
+> /linux-next/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+> /linux-next/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+> /linux-next/Documentation/devicetree/bindings/net/snps,dwmac.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> /linux-next/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
+> /linux-next/Documentation/devicetree/bindings/net/ethernet-phy.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> /linux-next/Documentation/devicetree/bindings/net/mdio.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/mdio.yaml
+> /linux-next/Documentation/devicetree/bindings/net/ethernet-controller.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> /linux-next/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml
+> /linux-next/Documentation/devicetree/bindings/nvmem/nvmem.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/nvmem/nvmem.yaml
+> /linux-next/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+> /linux-next/Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml
+> /linux-next/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
+> /linux-next/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+> /linux-next/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
+> /linux-next/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+> /linux-next/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> /linux-next/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml
+> /linux-next/Documentation/devicetree/bindings/regulator/max8660.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/regulator/max8660.yaml
+> /linux-next/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+> /linux-next/Documentation/devicetree/bindings/regulator/regulator.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/regulator/regulator.yaml
+> /linux-next/Documentation/devicetree/bindings/riscv/cpus.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/riscv/cpus.yaml
+> /linux-next/Documentation/devicetree/bindings/riscv/sifive.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/riscv/sifive.yaml
+> /linux-next/Documentation/devicetree/bindings/rtc/rtc.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/rtc/rtc.yaml
+> /linux-next/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
+> /linux-next/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
+> /linux-next/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml
+> /linux-next/Documentation/devicetree/bindings/serial/pl011.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/serial/pl011.yaml
+> /linux-next/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
+> /linux-next/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
+> /linux-next/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
+> /linux-next/Documentation/devicetree/bindings/spi/spi-pl022.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/spi/spi-pl022.yaml
+> /linux-next/Documentation/devicetree/bindings/spi/spi-controller.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> /linux-next/Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml
+> /linux-next/Documentation/devicetree/bindings/spi/spi-gpio.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/spi/spi-gpio.yaml
+> /linux-next/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml
+> /linux-next/Documentation/devicetree/bindings/timer/arm,arch_timer.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/timer/arm,arch_timer.yaml
+> /linux-next/Documentation/devicetree/bindings/timer/arm,global_timer.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/timer/arm,global_timer.yaml
+> /linux-next/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
+> /linux-next/Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml
+> /linux-next/Documentation/devicetree/bindings/trivial-devices.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/trivial-devices.yaml
+> /linux-next/Documentation/devicetree/bindings/usb/generic-ohci.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/usb/generic-ohci.yaml
+> /linux-next/Documentation/devicetree/bindings/usb/usb-hcd.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/usb/usb-hcd.yaml
+> /linux-next/Documentation/devicetree/bindings/usb/generic-ehci.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/usb/generic-ehci.yaml
+> /linux-next/Documentation/devicetree/bindings/vendor-prefixes.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> /usr/lib64/python3.6/site-packages/dtschema/schemas/serial.yaml: ignoring, error parsing file
+> Traceback (most recent call last):
+>   File "/usr/lib64/python3.6/site-packages/jsonschema/validators.py", line 739, in resolve_from_url
+>     document = self.store[url]
+>   File "/usr/lib64/python3.6/site-packages/jsonschema/_utils.py", line 23, in __getitem__
+>     return self.store[self.normalize(uri)]
+> KeyError: 'http://devicetree.org/meta-schemas/base.yaml'
+> 
+> During handling of the above exception, another exception occurred:
+> 
+> Traceback (most recent call last):
+>   File "/usr/lib64/python3.6/site-packages/jsonschema/validators.py", line 742, in resolve_from_url
+>     document = self.resolve_remote(url)
+>   File "/usr/lib64/python3.6/site-packages/jsonschema/validators.py", line 821, in resolve_remote
+>     result = self.handlers[scheme](uri)
+>   File "/usr/lib64/python3.6/site-packages/dtschema/lib.py", line 523, in http_handler
+>     return load_schema(uri.replace(schema_base_url, ''))
+>   File "/usr/lib64/python3.6/site-packages/dtschema/lib.py", line 102, in load_schema
+>     return yaml.load(f.read())
+>   File "/usr/lib64/python3.6/site-packages/ruamel/yaml/main.py", line 266, in load
+>     return constructor.get_single_data()
+>   File "/usr/lib64/python3.6/site-packages/ruamel/yaml/constructor.py", line 102, in get_single_data
+>     node = self.composer.get_single_node()
+>   File "_ruamel_yaml.pyx", line 703, in _ruamel_yaml.CParser.get_single_node (ext/_ruamel_yaml.c:9583)
+>   File "_ruamel_yaml.pyx", line 904, in _ruamel_yaml.CParser._parse_next_event (ext/_ruamel_yaml.c:12818)
+> ruamel.yaml.parser.ParserError: found incompatible YAML document
+>   in "<unicode string>", line 4, column 1
+> 
+> During handling of the above exception, another exception occurred:
+> 
+> Traceback (most recent call last):
+>   File "/usr/lib/python-exec/python3.6/dt-mk-schema", line 32, in <module>
+>     schemas = dtschema.process_schemas(args.schemas, core_schema=(not args.useronly))
+>   File "/usr/lib64/python3.6/site-packages/dtschema/lib.py", line 487, in process_schemas
+>     sch = process_schema(os.path.abspath(filename))
+>   File "/usr/lib64/python3.6/site-packages/dtschema/lib.py", line 428, in process_schema
+>     DTValidator.check_schema(schema)
+>   File "/usr/lib64/python3.6/site-packages/dtschema/lib.py", line 572, in check_schema
+>     meta_schema = cls.resolver.resolve_from_url(schema['$schema'])
+>   File "/usr/lib64/python3.6/site-packages/jsonschema/validators.py", line 744, in resolve_from_url
+>     raise exceptions.RefResolutionError(exc)
+> jsonschema.exceptions.RefResolutionError: found incompatible YAML document
+>   in "<unicode string>", line 4, column 1
+> make[2]: *** [/linux-next/Documentation/devicetree/bindings/Makefile:31: Documentation/devicetree/bindings/processed-schema.yaml] Error 1
+> make[1]: *** [/linux-next/Makefile:1278: dt_binding_check] Error 2
+> make[1] : on quitte le répertoire « /usr/src/crossbuild/next/arm64/default/defconfig »
+> make: *** [Makefile:179: sub-make] Error 2
+> 
+> Do you know what happens ?
+> 
 
-Add check for if bridge is extended or shrunken and adjust pci_dbg to
-reflect this.
+Just found the problem
 
-Reset the resource if its new size is zero (if we have run out of a
-bridge window resource). If it is set to zero size and left, it can
-cause significant problems when it comes to enabling devices.
+Sorry for the noise.
 
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
----
- drivers/pci/setup-bus.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index a072781ab..7e1dc892a 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1823,13 +1823,19 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
- 	if (res->parent)
- 		return;
- 
--	if (resource_size(res) >= new_size)
--		return;
--
--	add_size = new_size - resource_size(res);
--	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
-+	if (new_size > resource_size(res)) {
-+		add_size = new_size - resource_size(res);
-+		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
-+			&add_size);
-+	} else if (new_size < resource_size(res)) {
-+		add_size = resource_size(res) - new_size;
-+		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
-+			&add_size);
-+	}
- 	res->end = res->start + new_size - 1;
- 	remove_from_list(add_list, res);
-+	if (!new_size)
-+		reset_resource(res);
- }
- 
- static void pci_bus_distribute_available_resources(struct pci_bus *bus,
--- 
-2.22.0
-
+Regards
