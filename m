@@ -6,147 +6,215 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895FBC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7762DC76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67AD021852
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5056722CB9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 07:21:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfGZHUi (ORCPT
+        id S1726349AbfGZHVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 03:20:38 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3171 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726287AbfGZHUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 03:20:38 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 93A3A94F2B2BF5405892;
-        Fri, 26 Jul 2019 15:20:34 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.203) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Fri, 26 Jul 2019
- 15:20:28 +0800
-Subject: Re: [RFC PATCH 00/10] implement KASLR for powerpc/fsl_booke/32
-To:     Kees Cook <keescook@chromium.org>
-CC:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <kernel-hardening@lists.openwall.com>,
-        <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>
-References: <20190717080621.40424-1-yanaijie@huawei.com>
- <e6ad41bc-5d5a-cf3f-b308-e1863b4fef99@huawei.com>
- <201907251252.0C58037@keescook>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <877d818d-b3ec-1cea-d024-4ad6aea7af60@huawei.com>
-Date:   Fri, 26 Jul 2019 15:20:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Fri, 26 Jul 2019 03:21:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47766 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbfGZHVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 03:21:02 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8121DA70E;
+        Fri, 26 Jul 2019 07:21:01 +0000 (UTC)
+Received: from [10.36.116.244] (ovpn-116-244.ams2.redhat.com [10.36.116.244])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B6A3D5DE80;
+        Fri, 26 Jul 2019 07:20:59 +0000 (UTC)
+Subject: Re: [PATCH v1] ACPI / scan: Acquire device_hotplug_lock in
+ acpi_scan_init()
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>
+References: <20190724143017.12841-1-david@redhat.com>
+ <20190725125636.GA3582@dhcp22.suse.cz>
+ <6dc566c2-faf6-565d-4ef1-2ac3a366bc76@redhat.com>
+ <20190725135747.GB3582@dhcp22.suse.cz>
+ <447b74ca-f7c7-0835-fd50-a9f7191fe47c@redhat.com>
+ <20190725191943.GA6142@dhcp22.suse.cz>
+ <e31882cf-3290-ea36-77d6-637eaf66fe77@redhat.com>
+ <CAJZ5v0h+MjC3gFm1Kf3eBg2Rs12368j6S_i5_Gc24yWx+Z3xBA@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <8e891e0c-9024-b5ad-0f44-bccd4e87c60e@redhat.com>
+Date:   Fri, 26 Jul 2019 09:20:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <201907251252.0C58037@keescook>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <CAJZ5v0h+MjC3gFm1Kf3eBg2Rs12368j6S_i5_Gc24yWx+Z3xBA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.203]
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 26 Jul 2019 07:21:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/7/26 3:58, Kees Cook wrote:
-> On Thu, Jul 25, 2019 at 03:16:28PM +0800, Jason Yan wrote:
->> Hi all, any comments?
-> 
-> I'm a fan of it, but I don't know ppc internals well enough to sanely
-> review the code. :) Some comments below on design...
-> 
-
-Hi Kees, Thanks for your comments.
-
+On 25.07.19 23:23, Rafael J. Wysocki wrote:
+> On Thu, Jul 25, 2019 at 10:49 PM David Hildenbrand <david@redhat.com> wrote:
 >>
+>> On 25.07.19 21:19, Michal Hocko wrote:
+>>> On Thu 25-07-19 16:35:07, David Hildenbrand wrote:
+>>>> On 25.07.19 15:57, Michal Hocko wrote:
+>>>>> On Thu 25-07-19 15:05:02, David Hildenbrand wrote:
+>>>>>> On 25.07.19 14:56, Michal Hocko wrote:
+>>>>>>> On Wed 24-07-19 16:30:17, David Hildenbrand wrote:
+>>>>>>>> We end up calling __add_memory() without the device hotplug lock held.
+>>>>>>>> (I used a local patch to assert in __add_memory() that the
+>>>>>>>>  device_hotplug_lock is held - I might upstream that as well soon)
+>>>>>>>>
+>>>>>>>> [   26.771684]        create_memory_block_devices+0xa4/0x140
+>>>>>>>> [   26.772952]        add_memory_resource+0xde/0x200
+>>>>>>>> [   26.773987]        __add_memory+0x6e/0xa0
+>>>>>>>> [   26.775161]        acpi_memory_device_add+0x149/0x2b0
+>>>>>>>> [   26.776263]        acpi_bus_attach+0xf1/0x1f0
+>>>>>>>> [   26.777247]        acpi_bus_attach+0x66/0x1f0
+>>>>>>>> [   26.778268]        acpi_bus_attach+0x66/0x1f0
+>>>>>>>> [   26.779073]        acpi_bus_attach+0x66/0x1f0
+>>>>>>>> [   26.780143]        acpi_bus_scan+0x3e/0x90
+>>>>>>>> [   26.780844]        acpi_scan_init+0x109/0x257
+>>>>>>>> [   26.781638]        acpi_init+0x2ab/0x30d
+>>>>>>>> [   26.782248]        do_one_initcall+0x58/0x2cf
+>>>>>>>> [   26.783181]        kernel_init_freeable+0x1bd/0x247
+>>>>>>>> [   26.784345]        kernel_init+0x5/0xf1
+>>>>>>>> [   26.785314]        ret_from_fork+0x3a/0x50
+>>>>>>>>
+>>>>>>>> So perform the locking just like in acpi_device_hotplug().
+>>>>>>>
+>>>>>>> While playing with the device_hotplug_lock, can we actually document
+>>>>>>> what it is protecting please? I have a bad feeling that we are adding
+>>>>>>> this lock just because some other code path does rather than with a good
+>>>>>>> idea why it is needed. This patch just confirms that. What exactly does
+>>>>>>> the lock protect from here in an early boot stage.
+>>>>>>
+>>>>>> We have plenty of documentation already
+>>>>>>
+>>>>>> mm/memory_hotplug.c
+>>>>>>
+>>>>>> git grep -C5 device_hotplug mm/memory_hotplug.c
+>>>>>>
+>>>>>> Also see
+>>>>>>
+>>>>>> Documentation/core-api/memory-hotplug.rst
+>>>>>
+>>>>> OK, fair enough. I was more pointing to a documentation right there
+>>>>> where the lock is declared because that is the place where people
+>>>>> usually check for documentation. The core-api documentation looks quite
+>>>>> nice. And based on that doc it seems that this patch is actually not
+>>>>> needed because neither the online/offline or cpu hotplug should be
+>>>>> possible that early unless I am missing something.
+>>>>
+>>>> I really prefer to stick to locking rules as outlined on the
+>>>> interfaces if it doesn't hurt. Why it is not needed is not clear.
+>>>>
+>>>>>
+>>>>>> Regarding the early stage: primarily lockdep as I mentioned.
+>>>>>
+>>>>> Could you add a lockdep splat that would be fixed by this patch to the
+>>>>> changelog for reference?
+>>>>>
+>>>>
+>>>> I have one where I enforce what's documented (but that's of course not
+>>>> upstream and therefore not "real" yet)
+>>>
+>>> Then I suppose to not add locking for something that is not a problem.
+>>> Really, think about it. People will look at this code and follow the
+>>> lead without really knowing why the locking is needed.
+>>> device_hotplug_lock has its purpose and if the code in question doesn't
+>>> need synchronization for the documented scenarios then the locking
+>>> simply shouldn't be there. Adding the lock just because of a
+>>> non-existing, and IMHO dubious, lockdep splats is just wrong.
+>>>
+>>> We need to rationalize the locking here, not to add more hacks.
 >>
->> On 2019/7/17 16:06, Jason Yan wrote:
->>> This series implements KASLR for powerpc/fsl_booke/32, as a security
->>> feature that deters exploit attempts relying on knowledge of the location
->>> of kernel internals.
->>>
->>> Since CONFIG_RELOCATABLE has already supported, what we need to do is
->>> map or copy kernel to a proper place and relocate. Freescale Book-E
->>> parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
->>> entries are not suitable to map the kernel directly in a randomized
->>> region, so we chose to copy the kernel to a proper place and restart to
->>> relocate.
->>>
->>> Entropy is derived from the banner and timer base, which will change every
->>> build and boot. This not so much safe so additionally the bootloader may
->>> pass entropy via the /chosen/kaslr-seed node in device tree.
+>> No, sorry. The real hack is calling a function that is *documented* to
+>> be called under lock without it. That is an optimization for a special
+>> case. That is the black magic in the code.
+>>
+>> The only alternative I see to this patch is adding a comment like
+>>
+>> /*
+>>  * We end up calling __add_memory() without the device_hotplug_lock
+>>  * held. This is fine as we cannot race with other hotplug activities
+>>  * and userspace trying to online memory blocks.
+>>  */
+>>
+>> Personally, I don't think that's any better than just grabbing the lock
+>> as we are told to. (honestly, I don't see how optimizing away the lock
+>> here is of *any* help to optimize our overall memory hotplug locking)
+>>
+>> @Rafael, what's your take? lock or comment?
 > 
-> Good: adding kaslr-seed is a good step here. Are there any x86-like
-> RDRAND or RDTSC to use? (Or maybe timer base here is similar to x86
-> RDTSC here?)
-> 
+> Well, I have ACKed your patch already. :-)
 
-Yes, time base is similar to RDTSC here.
+It's never to late to un-ACK if you changed your mind :)
 
->>>
->>> We will use the first 512M of the low memory to randomize the kernel
->>> image. The memory will be split in 64M zones. We will use the lower 8
->>> bit of the entropy to decide the index of the 64M zone. Then we chose a
->>> 16K aligned offset inside the 64M zone to put the kernel in.
 > 
-> Does this 16K granularity have any page table performance impact? My
-> understanding was that x86 needed to have 2M granularity due to its page
-> table layouts.
+> That said, adding a comment stating that the lock is acquired mostly
+> for consistency wouldn't hurt.
 > 
 
-The fsl booke TLB1 covers the whole low memeory. AFAIK, there is no page 
-table performance impact. But if anyone knows there is any regressions, 
-please let me know.
+I can certainly do that. Thanks!
 
-> Why the 64M zones instead of just 16K granularity across the entire low
-> 512M?
-> 
+-- 
 
-The boot code only maps one 64M zone at early start. If the kernel 
-crosses two 64M zones, we need to map two 64M zones. Keep the kernel in 
-one 64M saves a lot of complex codes.
+Thanks,
 
->>>
->>>       KERNELBASE
->>>
->>>           |-->   64M   <--|
->>>           |               |
->>>           +---------------+    +----------------+---------------+
->>>           |               |....|    |kernel|    |               |
->>>           +---------------+    +----------------+---------------+
->>>           |                         |
->>>           |----->   offset    <-----|
->>>
->>>                                 kimage_vaddr
->>>
->>> We also check if we will overlap with some areas like the dtb area, the
->>> initrd area or the crashkernel area. If we cannot find a proper area,
->>> kaslr will be disabled and boot from the original kernel.
->>>
->>> Jason Yan (10):
->>>     powerpc: unify definition of M_IF_NEEDED
->>>     powerpc: move memstart_addr and kernstart_addr to init-common.c
->>>     powerpc: introduce kimage_vaddr to store the kernel base
->>>     powerpc/fsl_booke/32: introduce create_tlb_entry() helper
->>>     powerpc/fsl_booke/32: introduce reloc_kernel_entry() helper
->>>     powerpc/fsl_booke/32: implement KASLR infrastructure
->>>     powerpc/fsl_booke/32: randomize the kernel image offset
->>>     powerpc/fsl_booke/kaslr: clear the original kernel if randomized
->>>     powerpc/fsl_booke/kaslr: support nokaslr cmdline parameter
->>>     powerpc/fsl_booke/kaslr: dump out kernel offset information on panic
-> 
-> Is there anything planned for other fixed-location things, like x86's
-> CONFIG_RANDOMIZE_MEMORY?
-> 
-
-Yes, if this feature can be accepted, I will start to work with 
-powerpc64 KASLR and other things like CONFIG_RANDOMIZE_MEMORY.
-
+David / dhildenb
