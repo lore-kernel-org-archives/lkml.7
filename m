@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2C8C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C42C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC51D205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C751218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155342;
-	bh=sSpOQg3DGB+OdznWUnm//oWTucUswY7vQ6TMsiW/ux4=;
+	s=default; t=1564155355;
+	bh=tSVWg1DSYi9KLhNv0YP86PflMVJv6FCOZXxFqgjruzk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rjxzasheWiR/laelKn91IAi4FCYqWNVVCWWET8EyejRMN/rCfaC+1ma3TVSU6aT/P
-	 4rPRGaXkrm62KfHaP1LdB0xDrn2hZ7WTb9TRSTAn/dNeqKL81L/FMb07QE35BVJh0E
-	 J+raPuyB0NwEr+5eP27lwR7yj7H5gRQ1oZ7eZ97w=
+	b=ofrX8MHfj6Je1CgnRNmLaHenGDuZy1helLIoQ/NvNllPjwY6InODMg19qH8g9Af6n
+	 QA/cOx8XfCcETp60UkzEfMfgZHMuOkfGofe9eRhWjbt0EgRfiUnW3dyzoEPyWNsMqF
+	 Ro/s8ECYNJkSTNn5ufphgN9cODt4sMnDrxZ/daDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389502AbfGZPfl (ORCPT
+        id S2389530AbfGZPfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:35:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47612 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:35:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389467AbfGZPc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:32:26 -0400
+        id S2389417AbfGZPcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:32:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A56B122BF5;
-        Fri, 26 Jul 2019 15:32:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49E682054F;
+        Fri, 26 Jul 2019 15:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155145;
-        bh=sSpOQg3DGB+OdznWUnm//oWTucUswY7vQ6TMsiW/ux4=;
+        s=default; t=1564155132;
+        bh=tSVWg1DSYi9KLhNv0YP86PflMVJv6FCOZXxFqgjruzk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lL4LR6USvezZv+QnO4MG4+u+iVFvjYM88v2g4ZCb0M+oMssKrD895J7NnoJDD8/Ug
-         ouXBTBO0RyLu7HNrJPM6c/0vH1UIEQ5VLuEZo59+ljQ2lWwXR+yfAWfxojJRQlzLqG
-         DYK+JiM8PbMOclABK7mVz8HAmT7ARJtn/7p3CIPA=
+        b=ifKRHjC1Fy7g+GeQ5pyTwOPANvPDHwj9CzMflFyxbv4yDSuYWlmgkC1Q2/QxbBWEc
+         X5IQwxfa0O9fGYcDPnosfNAx1rvDXgOkOUY5gAn4YnUtMIwGv4tfHkQJNOMtn6/VV6
+         kd0HimZkbHFkabIVnm6YtauVHHlzSCrRO8Ut47XM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c1a380d42b190ad1e559@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Neil Horman <nhorman@redhat.com>,
+        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
+        Jose Abreu <joabreu@synopsys.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 18/50] sctp: fix error handling on stream scheduler initialization
-Date:   Fri, 26 Jul 2019 17:24:53 +0200
-Message-Id: <20190726152302.447932256@linuxfoundation.org>
+Subject: [PATCH 4.19 14/50] net: stmmac: Re-work the queue selection for TSO packets
+Date:   Fri, 26 Jul 2019 17:24:49 +0200
+Message-Id: <20190726152302.030703659@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -63,60 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 4d1415811e492d9a8238f8a92dd0d51612c788e9 ]
+[ Upstream commit 4993e5b37e8bcb55ac90f76eb6d2432647273747 ]
 
-It allocates the extended area for outbound streams only on sendmsg
-calls, if they are not yet allocated.  When using the priority
-stream scheduler, this initialization may imply into a subsequent
-allocation, which may fail.  In this case, it was aborting the stream
-scheduler initialization but leaving the ->ext pointer (allocated) in
-there, thus in a partially initialized state.  On a subsequent call to
-sendmsg, it would notice the ->ext pointer in there, and trip on
-uninitialized stuff when trying to schedule the data chunk.
+Ben Hutchings says:
+	"This is the wrong place to change the queue mapping.
+	stmmac_xmit() is called with a specific TX queue locked,
+	and accessing a different TX queue results in a data race
+	for all of that queue's state.
 
-The fix is undo the ->ext initialization if the stream scheduler
-initialization fails and avoid the partially initialized state.
+	I think this commit should be reverted upstream and in all
+	stable branches.  Instead, the driver should implement the
+	ndo_select_queue operation and override the queue mapping there."
 
-Although syzkaller bisected this to commit 4ff40b86262b ("sctp: set
-chunk transport correctly when it's a new asoc"), this bug was actually
-introduced on the commit I marked below.
-
-Reported-by: syzbot+c1a380d42b190ad1e559@syzkaller.appspotmail.com
-Fixes: 5bbbbe32a431 ("sctp: introduce stream scheduler foundations")
-Tested-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Acked-by: Neil Horman <nhorman@redhat.com>
+Fixes: c5acdbee22a1 ("net: stmmac: Send TSO packets always from Queue 0")
+Suggested-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/stream.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |   29 ++++++++++++++--------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
---- a/net/sctp/stream.c
-+++ b/net/sctp/stream.c
-@@ -253,13 +253,20 @@ out:
- int sctp_stream_init_ext(struct sctp_stream *stream, __u16 sid)
- {
- 	struct sctp_stream_out_ext *soute;
-+	int ret;
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3036,17 +3036,8 @@ static netdev_tx_t stmmac_xmit(struct sk
  
- 	soute = kzalloc(sizeof(*soute), GFP_KERNEL);
- 	if (!soute)
- 		return -ENOMEM;
- 	SCTP_SO(stream, sid)->ext = soute;
+ 	/* Manage oversized TCP frames for GMAC4 device */
+ 	if (skb_is_gso(skb) && priv->tso) {
+-		if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6)) {
+-			/*
+-			 * There is no way to determine the number of TSO
+-			 * capable Queues. Let's use always the Queue 0
+-			 * because if TSO is supported then at least this
+-			 * one will be capable.
+-			 */
+-			skb_set_queue_mapping(skb, 0);
+-
++		if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6))
+ 			return stmmac_tso_xmit(skb, dev);
+-		}
+ 	}
  
--	return sctp_sched_init_sid(stream, sid, GFP_KERNEL);
-+	ret = sctp_sched_init_sid(stream, sid, GFP_KERNEL);
-+	if (ret) {
-+		kfree(SCTP_SO(stream, sid)->ext);
-+		SCTP_SO(stream, sid)->ext = NULL;
-+	}
-+
-+	return ret;
+ 	if (unlikely(stmmac_tx_avail(priv, queue) < nfrags + 1)) {
+@@ -3855,6 +3846,23 @@ static int stmmac_setup_tc(struct net_de
+ 	}
  }
  
- void sctp_stream_free(struct sctp_stream *stream)
++static u16 stmmac_select_queue(struct net_device *dev, struct sk_buff *skb,
++			       struct net_device *sb_dev,
++			       select_queue_fallback_t fallback)
++{
++	if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6)) {
++		/*
++		 * There is no way to determine the number of TSO
++		 * capable Queues. Let's use always the Queue 0
++		 * because if TSO is supported then at least this
++		 * one will be capable.
++		 */
++		return 0;
++	}
++
++	return fallback(dev, skb, NULL) % dev->real_num_tx_queues;
++}
++
+ static int stmmac_set_mac_address(struct net_device *ndev, void *addr)
+ {
+ 	struct stmmac_priv *priv = netdev_priv(ndev);
+@@ -4097,6 +4105,7 @@ static const struct net_device_ops stmma
+ 	.ndo_tx_timeout = stmmac_tx_timeout,
+ 	.ndo_do_ioctl = stmmac_ioctl,
+ 	.ndo_setup_tc = stmmac_setup_tc,
++	.ndo_select_queue = stmmac_select_queue,
+ #ifdef CONFIG_NET_POLL_CONTROLLER
+ 	.ndo_poll_controller = stmmac_poll_controller,
+ #endif
 
 
