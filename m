@@ -2,29 +2,30 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDDDC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F982C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1658E22CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53C9F22CE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbfGZNvy (ORCPT
+        id S2388777AbfGZNwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:51:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:44430 "EHLO foss.arm.com"
+        Fri, 26 Jul 2019 09:52:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:44550 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728233AbfGZNvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:51:49 -0400
+        id S2388680AbfGZNwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:52:02 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B7C4152D;
-        Fri, 26 Jul 2019 06:51:48 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06B9F152D;
+        Fri, 26 Jul 2019 06:52:02 -0700 (PDT)
 Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 333DD3F694;
-        Fri, 26 Jul 2019 06:51:47 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8C9303F694;
+        Fri, 26 Jul 2019 06:52:00 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Sudeep Holla <sudeep.holla@arm.com>, Peng Fan <peng.fan@nxp.com>,
@@ -33,10 +34,11 @@ Cc:     Sudeep Holla <sudeep.holla@arm.com>, Peng Fan <peng.fan@nxp.com>,
         Jim Quinlan <james.quinlan@broadcom.com>,
         Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
         Gaku Inami <gaku.inami.xh@renesas.com>,
-        Etienne Carriere <etienne.carriere@linaro.org>
-Subject: [PATCH v2 01/10] firmware: arm_scmi: Reorder some functions to avoid forward declarations
-Date:   Fri, 26 Jul 2019 14:51:29 +0100
-Message-Id: <20190726135138.9858-2-sudeep.holla@arm.com>
+        Etienne Carriere <etienne.carriere@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH v2 10/10] firmware: arm_scmi: Use asynchronous CLOCK_RATE_SET when possible
+Date:   Fri, 26 Jul 2019 14:51:38 +0100
+Message-Id: <20190726135138.9858-11-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190726135138.9858-1-sudeep.holla@arm.com>
 References: <20190726135138.9858-1-sudeep.holla@arm.com>
@@ -45,237 +47,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Re-shuffling few functions to keep definitions and their usages close.
-This is also needed to avoid too many unnecessary forward declarations
-while adding new features(delayed response and notifications).
+CLOCK_PROTOCOL_ATTRIBUTES provides attributes to indicate the maximum
+number of pending asynchronous clock rate changes supported by the
+platform. If it's non-zero, then we should be able to use asynchronous
+clock rate set for any clocks until the maximum limit is reached.
 
-Keeping this separate to avoid mixing up of these trivial change that
-doesn't affect functionality into the ones that does.
+Tracking the current count of pending asynchronous clock set rate
+requests, we can decide if the incoming/new request for clock set rate
+can be handled asynchronously or not until the maximum limit is
+reached.
 
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-clk@vger.kernel.org
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_scmi/driver.c | 180 ++++++++++++++---------------
- 1 file changed, 90 insertions(+), 90 deletions(-)
+ drivers/firmware/arm_scmi/clock.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 765573756987..0bd2af0a008f 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -197,44 +197,6 @@ static void scmi_fetch_response(struct scmi_xfer *xfer,
- 	memcpy_fromio(xfer->rx.buf, mem->msg_payload + 4, xfer->rx.len);
- }
+diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
+index dd215bd11a58..4a32ae1822a3 100644
+--- a/drivers/firmware/arm_scmi/clock.c
++++ b/drivers/firmware/arm_scmi/clock.c
+@@ -56,7 +56,7 @@ struct scmi_msg_resp_clock_describe_rates {
+ struct scmi_clock_set_rate {
+ 	__le32 flags;
+ #define CLOCK_SET_ASYNC		BIT(0)
+-#define CLOCK_SET_DELAYED	BIT(1)
++#define CLOCK_SET_IGNORE_RESP	BIT(1)
+ #define CLOCK_SET_ROUND_UP	BIT(2)
+ #define CLOCK_SET_ROUND_AUTO	BIT(3)
+ 	__le32 id;
+@@ -67,6 +67,7 @@ struct scmi_clock_set_rate {
+ struct clock_info {
+ 	int num_clocks;
+ 	int max_async_req;
++	atomic_t cur_async_req;
+ 	struct scmi_clock_info *clk;
+ };
  
--/**
-- * scmi_rx_callback() - mailbox client callback for receive messages
-- *
-- * @cl: client pointer
-- * @m: mailbox message
-- *
-- * Processes one received message to appropriate transfer information and
-- * signals completion of the transfer.
-- *
-- * NOTE: This function will be invoked in IRQ context, hence should be
-- * as optimal as possible.
-- */
--static void scmi_rx_callback(struct mbox_client *cl, void *m)
--{
--	u16 xfer_id;
--	struct scmi_xfer *xfer;
--	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
--	struct device *dev = cinfo->dev;
--	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
--	struct scmi_xfers_info *minfo = &info->minfo;
--	struct scmi_shared_mem __iomem *mem = cinfo->payload;
--
--	xfer_id = MSG_XTRACT_TOKEN(ioread32(&mem->msg_header));
--
--	/* Are we even expecting this? */
--	if (!test_bit(xfer_id, minfo->xfer_alloc_table)) {
--		dev_err(dev, "message for %d is not expected!\n", xfer_id);
--		return;
--	}
--
--	xfer = &minfo->xfer_block[xfer_id];
--
--	scmi_dump_header_dbg(dev, &xfer->hdr);
--
--	scmi_fetch_response(xfer, mem);
--	complete(&xfer->done);
--}
--
- /**
-  * pack_scmi_header() - packs and returns 32-bit header
-  *
-@@ -349,6 +311,44 @@ void scmi_xfer_put(const struct scmi_handle *handle, struct scmi_xfer *xfer)
- 	spin_unlock_irqrestore(&minfo->xfer_lock, flags);
- }
- 
-+/**
-+ * scmi_rx_callback() - mailbox client callback for receive messages
-+ *
-+ * @cl: client pointer
-+ * @m: mailbox message
-+ *
-+ * Processes one received message to appropriate transfer information and
-+ * signals completion of the transfer.
-+ *
-+ * NOTE: This function will be invoked in IRQ context, hence should be
-+ * as optimal as possible.
-+ */
-+static void scmi_rx_callback(struct mbox_client *cl, void *m)
-+{
-+	u16 xfer_id;
-+	struct scmi_xfer *xfer;
-+	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
-+	struct device *dev = cinfo->dev;
-+	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
-+	struct scmi_xfers_info *minfo = &info->minfo;
-+	struct scmi_shared_mem __iomem *mem = cinfo->payload;
-+
-+	xfer_id = MSG_XTRACT_TOKEN(ioread32(&mem->msg_header));
-+
-+	/* Are we even expecting this? */
-+	if (!test_bit(xfer_id, minfo->xfer_alloc_table)) {
-+		dev_err(dev, "message for %d is not expected!\n", xfer_id);
-+		return;
-+	}
-+
-+	xfer = &minfo->xfer_block[xfer_id];
-+
-+	scmi_dump_header_dbg(dev, &xfer->hdr);
-+
-+	scmi_fetch_response(xfer, mem);
-+	complete(&xfer->done);
-+}
-+
- static bool
- scmi_xfer_poll_done(const struct scmi_chan_info *cinfo, struct scmi_xfer *xfer)
+@@ -221,21 +222,33 @@ static int scmi_clock_rate_set(const struct scmi_handle *handle, u32 clk_id,
+ 			       u64 rate)
  {
-@@ -599,20 +599,6 @@ int scmi_handle_put(const struct scmi_handle *handle)
- 	return 0;
- }
+ 	int ret;
++	u32 flags = 0;
+ 	struct scmi_xfer *t;
+ 	struct scmi_clock_set_rate *cfg;
++	struct clock_info *ci = handle->clk_priv;
  
--static const struct scmi_desc scmi_generic_desc = {
--	.max_rx_timeout_ms = 30,	/* We may increase this if required */
--	.max_msg = 20,		/* Limited by MBOX_TX_QUEUE_LEN */
--	.max_msg_size = 128,
--};
--
--/* Each compatible listed below must have descriptor associated with it */
--static const struct of_device_id scmi_of_match[] = {
--	{ .compatible = "arm,scmi", .data = &scmi_generic_desc },
--	{ /* Sentinel */ },
--};
--
--MODULE_DEVICE_TABLE(of, scmi_of_match);
--
- static int scmi_xfer_info_init(struct scmi_info *sinfo)
- {
- 	int i;
-@@ -659,44 +645,6 @@ static int scmi_mailbox_check(struct device_node *np)
- 	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells", 0, NULL);
- }
+ 	ret = scmi_xfer_get_init(handle, CLOCK_RATE_SET, SCMI_PROTOCOL_CLOCK,
+ 				 sizeof(*cfg), 0, &t);
+ 	if (ret)
+ 		return ret;
  
--static int scmi_mbox_free_channel(int id, void *p, void *data)
--{
--	struct scmi_chan_info *cinfo = p;
--	struct idr *idr = data;
--
--	if (!IS_ERR_OR_NULL(cinfo->chan)) {
--		mbox_free_channel(cinfo->chan);
--		cinfo->chan = NULL;
--	}
--
--	idr_remove(idr, id);
--
--	return 0;
--}
--
--static int scmi_remove(struct platform_device *pdev)
--{
--	int ret = 0;
--	struct scmi_info *info = platform_get_drvdata(pdev);
--	struct idr *idr = &info->tx_idr;
--
--	mutex_lock(&scmi_list_mutex);
--	if (info->users)
--		ret = -EBUSY;
--	else
--		list_del(&info->node);
--	mutex_unlock(&scmi_list_mutex);
--
--	if (ret)
--		return ret;
--
--	/* Safe to free channels since no more users */
--	ret = idr_for_each(idr, scmi_mbox_free_channel, idr);
--	idr_destroy(&info->tx_idr);
--
--	return ret;
--}
--
- static inline int
- scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev, int prot_id)
- {
-@@ -856,6 +804,58 @@ static int scmi_probe(struct platform_device *pdev)
- 	return 0;
- }
++	if (ci->max_async_req &&
++	    atomic_inc_return(&ci->cur_async_req) < ci->max_async_req)
++		flags |= CLOCK_SET_ASYNC;
++
+ 	cfg = t->tx.buf;
+-	cfg->flags = cpu_to_le32(0);
++	cfg->flags = cpu_to_le32(flags);
+ 	cfg->id = cpu_to_le32(clk_id);
+ 	cfg->value_low = cpu_to_le32(rate & 0xffffffff);
+ 	cfg->value_high = cpu_to_le32(rate >> 32);
  
-+static int scmi_mbox_free_channel(int id, void *p, void *data)
-+{
-+	struct scmi_chan_info *cinfo = p;
-+	struct idr *idr = data;
-+
-+	if (!IS_ERR_OR_NULL(cinfo->chan)) {
-+		mbox_free_channel(cinfo->chan);
-+		cinfo->chan = NULL;
-+	}
-+
-+	idr_remove(idr, id);
-+
-+	return 0;
-+}
-+
-+static int scmi_remove(struct platform_device *pdev)
-+{
-+	int ret = 0;
-+	struct scmi_info *info = platform_get_drvdata(pdev);
-+	struct idr *idr = &info->tx_idr;
-+
-+	mutex_lock(&scmi_list_mutex);
-+	if (info->users)
-+		ret = -EBUSY;
+-	ret = scmi_do_xfer(handle, t);
++	if (flags & CLOCK_SET_ASYNC)
++		ret = scmi_do_xfer_with_response(handle, t);
 +	else
-+		list_del(&info->node);
-+	mutex_unlock(&scmi_list_mutex);
++		ret = scmi_do_xfer(handle, t);
 +
-+	if (ret)
-+		return ret;
-+
-+	/* Safe to free channels since no more users */
-+	ret = idr_for_each(idr, scmi_mbox_free_channel, idr);
-+	idr_destroy(&info->tx_idr);
-+
-+	return ret;
-+}
-+
-+static const struct scmi_desc scmi_generic_desc = {
-+	.max_rx_timeout_ms = 30,	/* We may increase this if required */
-+	.max_msg = 20,		/* Limited by MBOX_TX_QUEUE_LEN */
-+	.max_msg_size = 128,
-+};
-+
-+/* Each compatible listed below must have descriptor associated with it */
-+static const struct of_device_id scmi_of_match[] = {
-+	{ .compatible = "arm,scmi", .data = &scmi_generic_desc },
-+	{ /* Sentinel */ },
-+};
-+
-+MODULE_DEVICE_TABLE(of, scmi_of_match);
-+
- static struct platform_driver scmi_driver = {
- 	.driver = {
- 		   .name = "arm-scmi",
++	if (ci->max_async_req)
++		atomic_dec(&ci->cur_async_req);
+ 
+ 	scmi_xfer_put(handle, t);
+ 	return ret;
 -- 
 2.17.1
 
