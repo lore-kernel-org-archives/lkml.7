@@ -2,66 +2,87 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFF6C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F46DC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871C122BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C1D722C7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 22:20:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="o0ksJZo1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfGZWTb (ORCPT
+        id S1728633AbfGZWUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 18:19:31 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37461 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728550AbfGZWTa (ORCPT
+        Fri, 26 Jul 2019 18:20:52 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:3258 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbfGZWUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 18:19:30 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n9so30760736wrr.4
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 15:19:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YCzn2d3M/bK6nxASHNYCTBtvF1uCCsPTj9a0ROwZiV8=;
-        b=B+++3lWaTiWztafNNnqsNvAbcdWYIRjBnloXyDRvHYeHwGIXVmEj19g8sCKySOkKsR
-         WuhiYi3hxU9jc8QYhjcbzFr61dodgRNBjVuCSCkVxnUM5PzSyKshxTuzHx92DSz227NL
-         hx2tuEWlObp/LI0aJdW5W48fm3ADobwOalN7h64FrWTrtHOtANw6ZOQrHAjiQCicm9kL
-         1SV3t6+IrZ2ZA7f7jiIqPZR+jocWTMbb4h1bEo1BbS8jlZAOe7P2joUzgN/qOy3i3UWU
-         4zO3494LIVDR5poHVRIFp78rPbq6yL8zUGLafmaeWzbRQGgOlxZqbD/0IpE8q/bs+3z8
-         6o9g==
-X-Gm-Message-State: APjAAAUOFr6r4JSN4D92XIuoGwdNqlCpnnjxHQAGPRJ9bCLXDxDdhuNC
-        mXfjIJLOokJZCzNA6FYVGUjhdLQda20=
-X-Google-Smtp-Source: APXvYqyRRPKjQm+AekBeMu3q9YUsqv008iQETXfKvvUxhOEE27ABBNIeCAqBKvTheZhMUo1s0PuG/g==
-X-Received: by 2002:a05:6000:187:: with SMTP id p7mr96507148wrx.189.1564179568428;
-        Fri, 26 Jul 2019 15:19:28 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9036:7130:d6ec:a346? ([2001:b07:6468:f312:9036:7130:d6ec:a346])
-        by smtp.gmail.com with ESMTPSA id i18sm72932769wrp.91.2019.07.26.15.19.27
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 15:19:27 -0700 (PDT)
-Subject: Re: [PATCH 2/3] Documentation: kvm: Convert cpuid.txt to .rst
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org, rkrcmar@redhat.com,
-        kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1562448500.git.lnowakow@eng.ucsd.edu>
- <e8cd24f40cdd23ed116679f4c3cfcf8849879bb4.1562448500.git.lnowakow@eng.ucsd.edu>
- <20190708140022.5fa9d01f@lwn.net> <20190708201510.GA13296@luke-XPS-13>
- <20190708142032.4fbd175e@lwn.net>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <5a18d0c0-8bfa-c936-11e5-8238a89b5b5f@redhat.com>
-Date:   Sat, 27 Jul 2019 00:19:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 26 Jul 2019 18:20:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1564179652; x=1595715652;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=2Pp7soz5T65+2MFGSxtLJF8/y1h3Zy8XLJbl/hXcT98=;
+  b=o0ksJZo1sM6luBzgCLZAfElThu65wZwN8YDmCfu8f3STdFI2WhMnvZm5
+   MHihwJHAzktZhg/zw2TQQWmib0k15XHcTn/h8PLcRrzjbdgTTRakchZO/
+   fiuuBVsbHfAGoUem1YJFV/46pq2Ota64XPE0JrPx1cs5raE8i7uAOFbqh
+   H6Rxt2YBROEKL5twAI9/hVdwsYOX60Z1OaP8bcDu5xKGskL0kV6EQ+/JZ
+   z8OFklzqZKxN78bEo6/kdEG30jPQPZKh4ttf79hu7faPu92Zp7rid7CC3
+   ziU8GFzLTRFoawvKlPEY71idUvnPXR6C480kiJYTMcokuKOSXY1r5cEnH
+   g==;
+IronPort-SDR: HLP3a60RI6UP05q2IlxNOgWElva8c0VkfRegoCaNRJMekx0X+YngvFsGmfjeOi8Vx0zkdxXQqW
+ FM0JjFZ9LWqyophf/8LiH+WDkQzHMkDPZhECmkhdxBBec51Sl51n9jEy5eEZAaZoDUfqdzI9+u
+ 48srHOXizI7Q/5sXnA5rZ+zM7QuswJeDOJXrAyOF1uLNHNurdvUfKKjre6nks3+QmCiYJ4dfHX
+ rz6NLiZsUxkgEfsizM+t8w3RgQSVqL5ffe8kneH6B0Lz2FM8BpzhjnMvLwM75TJfjp2E0EpBg5
+ PUw=
+X-IronPort-AV: E=Sophos;i="5.64,312,1559491200"; 
+   d="scan'208";a="115280748"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 27 Jul 2019 06:20:52 +0800
+IronPort-SDR: 0vsAFPFKckuK6EENiuX1YZ9bRL1GwUYij56pPsYA/Q8LsRkVQUMqeW6taj0Oqi+3zeNUwunsDQ
+ YeoIV/pO/aOnUes1i+ybWMkPLnVccmVRVt7clzB988iuKiwaIkZhzx7P7vFCP1h7Jr/VzT0Lsd
+ XPpr4ROqa42g5DHO3aOVtE40ZAymRZls9Q6qIwywMuq+VYVbEcvdJZ+uRf7MVGXnY3s26KNGiL
+ rc0rLoCWe2P5tkTlwpWMdZnCdH2vhHisdpMc8PtWGYaWkoE4R1MqN396BBx9Y/5RAcXv632t23
+ zyZS1aGL1wapxJKjTb9k3kre
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP; 26 Jul 2019 15:19:00 -0700
+IronPort-SDR: DTvqt9Mfx3sEEJcaEIx2FzJIgmQZ2mIv8hWErAdPzRFMdP8MEQzAeRV/QyvsCeRPRd2OXjP7h1
+ R5ZcVL7wgYNM/8gkkzOacIbRzpp/FRBnOST3Ily25tSBf7loEKaXkgRK7T23DqAwMooO0TxvoO
+ xrb6+4c0kBv5ZzD9Uv4ZSosSoW8ld/+z3IlmYo2nc57WLNikT60H/TKXaM/9x701mObj1g1bgA
+ nNwGP5ZN4ut/H4GcPqBuphfvr2IjI2GJsS9+xBio/aHuG804X+YShuM6HmLZALhiSQgEklZGG2
+ yw0=
+Received: from unknown (HELO [10.225.104.231]) ([10.225.104.231])
+  by uls-op-cesaip01.wdc.com with ESMTP; 26 Jul 2019 15:20:51 -0700
+Subject: Re: [PATCH 3/4] RISC-V: Support case insensitive ISA string parsing.
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alan Kao <alankao@andestech.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Allison Randal <allison@lohutok.net>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20190726194638.8068-1-atish.patra@wdc.com>
+ <20190726194638.8068-3-atish.patra@wdc.com>
+ <alpine.DEB.2.21.9999.1907261346560.26670@viisi.sifive.com>
+From:   Atish Patra <atish.patra@wdc.com>
+Message-ID: <a8a6be2c-2dcb-fe58-2c32-e3baa357819c@wdc.com>
+Date:   Fri, 26 Jul 2019 15:20:47 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190708142032.4fbd175e@lwn.net>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <alpine.DEB.2.21.9999.1907261346560.26670@viisi.sifive.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,24 +90,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/19 22:20, Jonathan Corbet wrote:
->>>> +:Author: Glauber Costa <glommer@redhat.com>, Red Hat Inc, 2010  
->>> I rather suspect that email address doesn't work these days.
->>>   
->> No I guess it wont :). We would still keep this correct? 
-> There's nothing good that will come from keeping a broken email address
-> there.  You could either:
+On 7/26/19 1:47 PM, Paul Walmsley wrote:
+> On Fri, 26 Jul 2019, Atish Patra wrote:
 > 
->  - Just take the address out, or
+>> As per riscv specification, ISA naming strings are
+>> case insensitive. However, currently only lower case
+>> strings are parsed during cpu procfs.
+>>
+>> Support parsing of upper case letters as well.
+>>
+>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> 
+> Is there a use case that's driving this, or 
 
-I agree with this, there have been more authors since 2010.
+Currently, we use all lower case isa string in kvmtool. But somebody can 
+have uppercase letters in future as spec allows it.
 
-Regarding the license, it was my understanding that if somebody wants
-anything but GPL-2.0 they should put it in the file when they create it.
- That's because even if Glauber had a different idea of what license to
-use, other contributors to the file couldn't know.
 
-Paolo
+can we just say, "use
+> lowercase letters" and leave it at that?
+> 
 
->  - Track Glauber down and get a newer address; you could ask him about the
->    licensing while you're at it :)
+In that case, it will not comply with RISC-V spec. Is that okay ?
+
+> 
+> - Paul
+> 
+
+
+-- 
+Regards,
+Atish
