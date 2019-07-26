@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A08DC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A22FC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 051C922BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5533218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155014;
-	bh=FAbVGOf/4NqrHRC4j4DAffgINtihHAgReaZlF9DfIQU=;
+	s=default; t=1564155017;
+	bh=68b9tyJ/KEnKnueCpYzHNa+diWF1/PGhoVHcbhTV4WI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QeaWqlkM03TIBxvCuppMdcw5EOD7l/OChVZnfugpQMYWvD7rgtyX74lPxP7xltGD2
-	 PlynVqtg4M3gs3dKa90QQFfhdhfCqWc4GOUo6EFMcXWj4UxTDyBBKnyrFzirq4SE/h
-	 fImI0Lc3qprFKQgwj201sEEEvMN6TPXmMbch9I0I=
+	b=a957F+zf4YzH1q7UkJ1xIspzlZ/EahOqYsTylrVlo7Q00oN6XnJRKGF4hPVeqFo8B
+	 qtAMOWZAy+lFDhvWZlI4aVGX3kS1k7vIpRWUapU2DoSkUJl7QB/K/pOxq/LYzV6i7i
+	 o7HeDf90mrDP4mPGfkojql2BTNBbiM8lOb1dQdSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389034AbfGZPaM (ORCPT
+        id S2389045AbfGZPaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:30:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45032 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:30:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388976AbfGZPaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:30:09 -0400
+        id S2389027AbfGZPaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:30:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83CB922CBD;
-        Fri, 26 Jul 2019 15:30:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07CD2205F4;
+        Fri, 26 Jul 2019 15:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155009;
-        bh=FAbVGOf/4NqrHRC4j4DAffgINtihHAgReaZlF9DfIQU=;
+        s=default; t=1564155011;
+        bh=68b9tyJ/KEnKnueCpYzHNa+diWF1/PGhoVHcbhTV4WI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G8sITXrfofE2+jaxRfDBf1APKkO3fIQFSQh7oZV27ReuP4uuvzi/KLBjOc0MaaKvU
-         JjVFDVnwRbIZxRuHKciNMKCh4znejdA3m704E1/uhx2efD5LqdbUwM5frvTWLmvNOe
-         HjW2FKSllGqYh1A3nimRPVHGyY1cRb6qDn5Bextg=
+        b=Ck4qF5ZiwWWk9im8gXviTD+ceN+1Hubq/ozYxq4FB91iifAdFjmpDXkBlFftziQvp
+         VMBYOfgore/A9mPqgwNyWMV8BNG+pHl0TURcGtVCVKhzUzgBqqQK3tKyFK1ZH4baJT
+         Uho/rIurG4oDVWLw/7aN2IdNpXVf6nNYBNj/tBhI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d6636a36d3c34bd88938@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
         Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 34/62] netrom: fix a memory leak in nr_rx_frame()
-Date:   Fri, 26 Jul 2019 17:24:46 +0200
-Message-Id: <20190726152305.465612703@linuxfoundation.org>
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+622bdabb128acc33427d@syzkaller.appspotmail.com,
+        syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com,
+        syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com,
+        syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com
+Subject: [PATCH 5.1 35/62] netrom: hold sock when setting skb->destructor
+Date:   Fri, 26 Jul 2019 17:24:47 +0200
+Message-Id: <20190726152305.619535986@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -63,38 +66,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit c8c8218ec5af5d2598381883acbefbf604e56b5e ]
+[ Upstream commit 4638faac032756f7eab5524be7be56bee77e426b ]
 
-When the skb is associated with a new sock, just assigning
-it to skb->sk is not sufficient, we have to set its destructor
-to free the sock properly too.
+sock_efree() releases the sock refcnt, if we don't hold this refcnt
+when setting skb->destructor to it, the refcnt would not be balanced.
+This leads to several bug reports from syzbot.
 
-Reported-by: syzbot+d6636a36d3c34bd88938@syzkaller.appspotmail.com
+I have checked other users of sock_efree(), all of them hold the
+sock refcnt.
+
+Fixes: c8c8218ec5af ("netrom: fix a memory leak in nr_rx_frame()")
+Reported-and-tested-by: <syzbot+622bdabb128acc33427d@syzkaller.appspotmail.com>
+Reported-and-tested-by: <syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com>
+Reported-and-tested-by: <syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com>
+Reported-and-tested-by: <syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
 Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netrom/af_netrom.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/netrom/af_netrom.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 --- a/net/netrom/af_netrom.c
 +++ b/net/netrom/af_netrom.c
-@@ -872,7 +872,7 @@ int nr_rx_frame(struct sk_buff *skb, str
- 	unsigned short frametype, flags, window, timeout;
- 	int ret;
+@@ -970,6 +970,7 @@ int nr_rx_frame(struct sk_buff *skb, str
  
--	skb->sk = NULL;		/* Initially we don't know who it's for */
-+	skb_orphan(skb);
- 
- 	/*
- 	 *	skb->data points to the netrom frame start
-@@ -971,6 +971,7 @@ int nr_rx_frame(struct sk_buff *skb, str
  	window = skb->data[20];
  
++	sock_hold(make);
  	skb->sk             = make;
-+	skb->destructor     = sock_efree;
+ 	skb->destructor     = sock_efree;
  	make->sk_state	    = TCP_ESTABLISHED;
- 
- 	/* Fill in his circuit details */
 
 
