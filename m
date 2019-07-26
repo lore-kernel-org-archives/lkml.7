@@ -2,151 +2,209 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B43BC76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F81C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0EC3206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC11229F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 09:38:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfGZJhL (ORCPT
+        id S1726303AbfGZJiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 05:37:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55654 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfGZJhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 05:37:11 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3F0B030C133A;
-        Fri, 26 Jul 2019 09:37:10 +0000 (UTC)
-Received: from [10.36.116.244] (ovpn-116-244.ams2.redhat.com [10.36.116.244])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2703E600C4;
-        Fri, 26 Jul 2019 09:37:07 +0000 (UTC)
-Subject: Re: [PATCH v3 1/5] mm,memory_hotplug: Introduce MHP_MEMMAP_ON_MEMORY
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        pasha.tatashin@soleen.com, mhocko@suse.com,
-        anshuman.khandual@arm.com, Jonathan.Cameron@huawei.com,
-        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20190725160207.19579-1-osalvador@suse.de>
- <20190725160207.19579-2-osalvador@suse.de>
- <8b60e40a-1e8a-1f7c-a31d-ad2e511decd5@redhat.com>
- <20190726092959.GB26268@linux>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <bcb326c5-7a68-86de-ca92-1d41cfcb9bfd@redhat.com>
-Date:   Fri, 26 Jul 2019 11:37:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 26 Jul 2019 05:38:08 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:33534 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfGZJiH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 05:38:07 -0400
+Received: by mail-io1-f72.google.com with SMTP id 132so58103646iou.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 02:38:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=j2PpSjwLnO2eIe3uBjpnMCjddJMfh5EpcYJWBvbsYKo=;
+        b=rWqy7ZodgAU1pNlfyoP4e4PrYRFG+UcTTO4OeseNNHaFXFwvhv3LcuczCxOlCqWkoH
+         j3rubKI8JwdodYK/2hKhwfCoOdkCINDEUgjXZZ7NGJbv/R5B8mCRsh99qhH+9WUxv3WD
+         ipLJ8rMPEvRkhgL57rY6kAsPtOLlHR/qvdjezgcAH+sj86u19us2xc1UR1WsPz2MjJfR
+         DxWUMjpWGK6cUMvWa/YCH9BzwBdsxzZ9O15xHc6b7gmfMFYQXR+Zzzx4SpQqI8QdKGne
+         kX+YrbpZa92qWxxtWhxSSttnoZ7RE97GiDu2oP6cMkdXLfLOv6X82nMijrxOKkoc3xKN
+         qRzg==
+X-Gm-Message-State: APjAAAVyUya8DuZrs6k85uqAafVQdDHvdT+Xu6fnZQDi/ARbeSjtnhdJ
+        w0qFIWRwIRuBqzx/uxalhP19za2/JAVjfLvMqjB9qvi8rfyJ
+X-Google-Smtp-Source: APXvYqx/f2gWDhwCONRj6jdiiIlMyabLv+3dxZoCyfbLX3KK64QU0+v3iKTWk3YEBBBdvasEay5lAUn8HZobIxyfkuXBjHnS0hI4
 MIME-Version: 1.0
-In-Reply-To: <20190726092959.GB26268@linux>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 26 Jul 2019 09:37:10 +0000 (UTC)
+X-Received: by 2002:a05:6638:281:: with SMTP id c1mr94958147jaq.43.1564133886487;
+ Fri, 26 Jul 2019 02:38:06 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 02:38:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000af7322058e924cde@google.com>
+Subject: INFO: rcu detected stall in ipv6_rcv (2)
+From:   syzbot <syzbot+34f3e3f781b524b5127a@syzkaller.appspotmail.com>
+To:     andrew@lunn.ch, arvid.brodin@alten.se, aviadye@mellanox.com,
+        borisp@mellanox.com, daniel@iogearbox.net, davejwatson@fb.com,
+        davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        huangfq.daxian@gmail.com, john.fastabend@gmail.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>
->>>
->>> or
->>> 	add_memory(0x1000, size_memory_block * 3);
->>>
->>> 	[memblock #0 ]
->>>         [0 - 1533 pfns    ] - vmemmap for section#{0-2}
->>>         [1534 - 98304 pfns] - normal memory
->>>
->>> When using larger memory blocks (1GB or 2GB), the principle is the same.
->>>
->>> Of course, per whole-range granularity is nicer when it comes to have a large
->>> contigous area, while per memory-block granularity allows us to have flexibility
->>> when removing the memory.
->>
->> E.g., in my virtio-mem I am currently adding all memory blocks
->> separately either way (to guranatee that remove_memory() works cleanly -
->> see __release_memory_resource()), and to control the amount of
->> not-offlined memory blocks (e.g., to make user space is actually
->> onlining them). As it's just a prototype, this might change of course in
->> the future.
-> 
-> What is virtio-mem for? Did it that raised from a need?
-> Is it something you could try this patch on?
+Hello,
 
-virtio-mem is a paravirtualized way of hotplugging/removing to/from a
-guest. (similar to, but different to e.g., the hv-balloon). It
-adds/removes memory to/from the system. In the long term, it will try to
-also act similar-but different to a balloon - but that will require more
-work. In the first shot, it's all about adding/removing memory in the
-smaller granularity possible.
+syzbot found the following crash on:
 
-The old prototype was
+HEAD commit:    13bf6d6a Add linux-next specific files for 20190725
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=16c5cd94600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8ae987d803395886
+dashboard link: https://syzkaller.appspot.com/bug?extid=34f3e3f781b524b5127a
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15e55df4600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=142f7768600000
 
-https://lwn.net/Articles/755423/
+The bug was bisected to:
 
-Since then, a lot changed. Some more updated information is at
+commit ccf355e52a3265624b7acadd693c849d599e9b9f
+Author: Fuqian Huang <huangfq.daxian@gmail.com>
+Date:   Mon Jul 8 12:34:17 2019 +0000
 
-https://events.linuxfoundation.org/wp-content/uploads/2017/12/virtio-mem-Paravirtualized-Memory-David-Hildenbrand-Red-Hat-1.pdf
+     net: phy: Make use of linkmode_mod_bit helper
 
-There is also a recording of the presentation on youtube.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12285f58600000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=11285f58600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16285f58600000
 
-The current prototype is unfortunately not in a state yet that allows me
-to test with this patch set - my Master's thesis consumed most of my
-energy during the last year. I just started hacking on it again.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+34f3e3f781b524b5127a@syzkaller.appspotmail.com
+Fixes: ccf355e52a32 ("net: phy: Make use of linkmode_mod_bit helper")
 
--- 
+TCP: request_sock_TCPv6: Possible SYN flooding on port 20002. Sending  
+cookies.  Check SNMP counters.
+rcu: INFO: rcu_preempt self-detected stall on CPU
+rcu: 	1-....: (1 GPs behind) idle=c0a/1/0x4000000000000002  
+softirq=11627/11628 fqs=5250
+	(t=10500 jiffies g=10477 q=33)
+NMI backtrace for cpu 1
+CPU: 1 PID: 10160 Comm: syz-executor291 Not tainted 5.3.0-rc1-next-20190725  
+#52
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+  rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree_stall.h:254
+  print_cpu_stall kernel/rcu/tree_stall.h:455 [inline]
+  check_cpu_stall kernel/rcu/tree_stall.h:529 [inline]
+  rcu_pending kernel/rcu/tree.c:2736 [inline]
+  rcu_sched_clock_irq.cold+0x4dd/0xc13 kernel/rcu/tree.c:2183
+  update_process_times+0x32/0x80 kernel/time/timer.c:1639
+  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:167
+  tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1296
+  __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
+  __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1451
+  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
+  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1068 [inline]
+  smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1093
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:828
+RIP: 0010:cpu_relax arch/x86/include/asm/processor.h:656 [inline]
+RIP: 0010:virt_spin_lock arch/x86/include/asm/qspinlock.h:84 [inline]
+RIP: 0010:native_queued_spin_lock_slowpath+0x132/0x9f0  
+kernel/locking/qspinlock.c:325
+Code: 00 00 00 48 8b 45 d0 65 48 33 04 25 28 00 00 00 0f 85 37 07 00 00 48  
+81 c4 98 00 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 f3 90 <e9> 73 ff ff ff  
+8b 45 98 4c 8d 65 d8 3d 00 01 00 00 0f 84 e5 00 00
+RSP: 0018:ffff8880ae909210 EFLAGS: 00000202 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000000 RBX: ffff88809338ad08 RCX: ffffffff81599777
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff88809338ad08
+RBP: ffff8880ae9092d0 R08: 1ffff110126715a1 R09: ffffed10126715a2
+R10: ffffed10126715a1 R11: ffff88809338ad0b R12: 0000000000000001
+R13: 0000000000000003 R14: ffffed10126715a1 R15: 0000000000000001
+  pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:642 [inline]
+  queued_spin_lock_slowpath arch/x86/include/asm/qspinlock.h:50 [inline]
+  queued_spin_lock include/asm-generic/qspinlock.h:81 [inline]
+  do_raw_spin_lock+0x20e/0x2e0 kernel/locking/spinlock_debug.c:113
+  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:136 [inline]
+  _raw_spin_lock_bh+0x3b/0x50 kernel/locking/spinlock.c:175
+  spin_lock_bh include/linux/spinlock.h:343 [inline]
+  release_sock+0x20/0x1c0 net/core/sock.c:2932
+  wait_on_pending_writer+0x20f/0x420 net/tls/tls_main.c:91
+  tls_sk_proto_cleanup+0x2c5/0x3e0 net/tls/tls_main.c:295
+  tls_sk_proto_unhash+0x90/0x3f0 net/tls/tls_main.c:330
+  tcp_set_state+0x5b9/0x7d0 net/ipv4/tcp.c:2235
+  tcp_done+0xe2/0x320 net/ipv4/tcp.c:3824
+  tcp_reset+0x132/0x500 net/ipv4/tcp_input.c:4080
+  tcp_validate_incoming+0xa2d/0x1660 net/ipv4/tcp_input.c:5440
+  tcp_rcv_established+0x6b5/0x1e70 net/ipv4/tcp_input.c:5648
+  tcp_v6_do_rcv+0x41e/0x12c0 net/ipv6/tcp_ipv6.c:1356
+  tcp_v6_rcv+0x31f1/0x3500 net/ipv6/tcp_ipv6.c:1588
+  ip6_protocol_deliver_rcu+0x2fe/0x1660 net/ipv6/ip6_input.c:397
+  ip6_input_finish+0x84/0x170 net/ipv6/ip6_input.c:438
+  NF_HOOK include/linux/netfilter.h:305 [inline]
+  NF_HOOK include/linux/netfilter.h:299 [inline]
+  ip6_input+0xe4/0x3f0 net/ipv6/ip6_input.c:447
+  dst_input include/net/dst.h:442 [inline]
+  ip6_rcv_finish+0x1de/0x2f0 net/ipv6/ip6_input.c:76
+  NF_HOOK include/linux/netfilter.h:305 [inline]
+  NF_HOOK include/linux/netfilter.h:299 [inline]
+  ipv6_rcv+0x10e/0x420 net/ipv6/ip6_input.c:272
+  __netif_receive_skb_one_core+0x113/0x1a0 net/core/dev.c:4999
+  __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5113
+  process_backlog+0x206/0x750 net/core/dev.c:5924
+  napi_poll net/core/dev.c:6347 [inline]
+  net_rx_action+0x508/0x10c0 net/core/dev.c:6413
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
+  do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1080
+  </IRQ>
+  do_softirq.part.0+0x11a/0x170 kernel/softirq.c:337
+  do_softirq kernel/softirq.c:329 [inline]
+  __local_bh_enable_ip+0x211/0x270 kernel/softirq.c:189
+  local_bh_enable include/linux/bottom_half.h:32 [inline]
+  inet_csk_listen_stop+0x1e0/0x850 net/ipv4/inet_connection_sock.c:993
+  tcp_close+0xd5b/0x10e0 net/ipv4/tcp.c:2338
+  inet_release+0xed/0x200 net/ipv4/af_inet.c:427
+  inet6_release+0x53/0x80 net/ipv6/af_inet6.c:470
+  __sock_release+0xce/0x280 net/socket.c:590
+  sock_close+0x1e/0x30 net/socket.c:1268
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x406571
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 24 1a 00 00 c3 48  
+83 ec 08 e8 6a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
+89 c2 e8 b3 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffc1a1a5e00 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000406571
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
+RBP: 00000000006dcc20 R08: 0000000000000140 R09: 0000000000000140
+R10: 00007ffc1a1a5e30 R11: 0000000000000293 R12: 00007ffc1a1a5e60
+R13: 00000000006dcc2c R14: 000000000000002d R15: 0000000000000007
 
-Thanks,
 
-David / dhildenb
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
