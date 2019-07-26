@@ -2,84 +2,120 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7174C41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866DBC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7C8C20651
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B02F218D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:51:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387531AbfGZOvV (ORCPT
+        id S2387585AbfGZOve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:51:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:45788 "EHLO foss.arm.com"
+        Fri, 26 Jul 2019 10:51:34 -0400
+Received: from mga03.intel.com ([134.134.136.65]:53591 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727172AbfGZOvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 10:51:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6476D337;
-        Fri, 26 Jul 2019 07:51:18 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E782E3F71F;
-        Fri, 26 Jul 2019 07:51:16 -0700 (PDT)
-Subject: Re: [PATCH v9 8/8] EDAC: armada_xp: Add support for more SoCs
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     bp@alien8.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux@armlinux.org.uk, patches@armlinux.org.uk, mchehab@kernel.org,
-        jlu@pengutronix.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
- <20190712034904.5747-9-chris.packham@alliedtelesis.co.nz>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <128016c1-380f-70c4-3a89-2d3b0edf9f88@arm.com>
-Date:   Fri, 26 Jul 2019 15:51:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S2387532AbfGZOvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 10:51:33 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 07:51:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,311,1559545200"; 
+   d="scan'208";a="370101454"
+Received: from gliakhov-mobl2.ger.corp.intel.com (HELO ubuntu) ([10.249.35.244])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Jul 2019 07:51:30 -0700
+Date:   Fri, 26 Jul 2019 16:51:29 +0200
+From:   Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 23/40] soundwire: stream: fix disable
+ sequence
+Message-ID: <20190726145129.GI16003@ubuntu>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-24-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190712034904.5747-9-chris.packham@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725234032.21152-24-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
+Unrelated to this specific patch, but I looked at _sdw_disable_stream()
+and I see this there (again, maybe my version is outdated already):
 
-On 12/07/2019 04:49, Chris Packham wrote:
-> The Armada 38x and other integrated SoCs use a reduced pin count so the
-> width of the SDRAM interface is smaller than the Armada XP SoCs. This
-> means that the definition of "full" and "half" width is reduced from
-> 64/32 to 32/16.
+	struct sdw_master_runtime *m_rt = NULL;
+	struct sdw_bus *bus = NULL;
 
-> diff --git a/drivers/edac/armada_xp_edac.c b/drivers/edac/armada_xp_edac.c
-> index 3759a4fbbdee..7f227bdcbc84 100644
-> --- a/drivers/edac/armada_xp_edac.c
-> +++ b/drivers/edac/armada_xp_edac.c
-> @@ -332,6 +332,11 @@ static int axp_mc_probe(struct platform_device *pdev)
+where both those initialisations are redundant. Moreover:
+
+On Thu, Jul 25, 2019 at 06:40:15PM -0500, Pierre-Louis Bossart wrote:
+> When we disable the stream and then call hw_free, two bank switches
+> will be handled and as a result we re-enable the stream on hw_free.
+> 
+> Make sure the stream is disabled on both banks.
+> 
+> TODO: we need to completely revisit all this and make sure we have a
+> mirroring mechanism between current and alternate banks.
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/stream.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+> index 53f5e790fcd7..75b9ad1fb1a6 100644
+> --- a/drivers/soundwire/stream.c
+> +++ b/drivers/soundwire/stream.c
+> @@ -1637,7 +1637,24 @@ static int _sdw_disable_stream(struct sdw_stream_runtime *stream)
+>  		}
+>  	}
 >  
->  	axp_mc_read_config(mci);
+> -	return do_bank_switch(stream);
+> +	ret = do_bank_switch(stream);
+> +	if (ret < 0) {
+> +		dev_err(bus->dev, "Bank switch failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* make sure alternate bank (previous current) is also disabled */
+> +	list_for_each_entry(m_rt, &stream->master_list, stream_node) {
+> +		bus = m_rt->bus;
+
+"bus" is only used below, so at least take that line under "if (ret < 0)"
+or even just do "dev_err(m_rt->bus->dev,...)" everywhere in this function
+and remove the variable altogether...
+
+Thanks
+Guennadi
+
+> +		/* Disable port(s) */
+> +		ret = sdw_enable_disable_ports(m_rt, false);
+> +		if (ret < 0) {
+> +			dev_err(bus->dev, "Disable port(s) failed: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+>  }
 >  
-> +	/* These SoCs have a reduced width bus */
-> +	if (of_machine_is_compatible("marvell,armada380") ||
-> +	    of_machine_is_compatible("marvell,armadaxp-98dx3236"))
-> +		drvdata->width /= 2;
-
-So the hardware's SDRAM_CONFIG_BUS_WIDTH value is wrong? Yuck.
-
-Is it too late for the DTs on these two systems to provide a DT version of the 'bus_width'
-to override the hardware's mis-advertised value?
-
-This way you don't need to grow this list.
-
-Acked-by: James Morse <james.morse@arm.com>
-
-
-Thanks,
-
-James
+>  /**
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
