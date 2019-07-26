@@ -2,118 +2,98 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A73C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644ABC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32AA22CE5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A06322CE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564148826;
-	bh=IKqPvwO/J1gl0Te7r7i+nqmrap3Pg4zpB7nnpfushCM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pin8Dy7jqExY4EYzQY7hb9o3SWnWDQXIzAIuI59eMd4pHiXwRTn3itNZkIsRWMkvd
-	 w64+hLRbZaAYk7qOarjecb5+02jNiQ4RBnOLZEAD/fvTcN3HFd2FuoWEPiRuFOltLs
-	 cZgIryuyf51hjdwO8e4qyGEOA2GhKkGcoiXn6K/8=
+	s=default; t=1564148832;
+	bh=wWDVrhVDq129hupS9yDE02XQBwqYn+UohqnvI+uxemA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GihqD6SdEoxMtmj+lATXgedPdQuG016AnN0yvyRpCiLqtLUaCah+3qNqcA9HtjUTe
+	 r8Ksa25m9P6hkUExHytNczLaLz0yQ2RVcba59ZFbK/jhwlAUj9xyfZsiCP8nuOe44K
+	 pfU2va8qjC7nPxIfY71RF37pnMc5yl8q2qlsTPPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388733AbfGZNrE (ORCPT
+        id S2388737AbfGZNrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:47:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55504 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:47:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:44158 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727301AbfGZNqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:46:07 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7091D22CD8;
-        Fri, 26 Jul 2019 13:46:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148766;
-        bh=IKqPvwO/J1gl0Te7r7i+nqmrap3Pg4zpB7nnpfushCM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CDclx+L6pi74KKVLZjdXUjdq75APytQjtckNTSXYsFypU1r1xAJ7wh0MBcie6Zfjn
-         2giEYzLEsxO+qgNQN4yg7hBLm8RLw/kFGD/7DeM7WvL09PB5lARUQgVYRERQmglPMn
-         rty72j99r08bUScR8tZzrk0y85T5vZIcOrHYJdrA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Denis Efremov <efremov@ispras.ru>, Willy Tarreau <w@1wt.eu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 21/23] floppy: fix div-by-zero in setup_format_params
-Date:   Fri, 26 Jul 2019 09:45:20 -0400
-Message-Id: <20190726134522.13308-21-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726134522.13308-1-sashal@kernel.org>
-References: <20190726134522.13308-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S2388109AbfGZNrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:47:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30DCE152D;
+        Fri, 26 Jul 2019 06:47:08 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 362503F694;
+        Fri, 26 Jul 2019 06:47:07 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 14:47:05 +0100
+Message-ID: <861rycoqli.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: Re: [PATCH] irqchip: madera: Fixup SPDX headers
+In-Reply-To: <20190625154717.28640-1-ckeepax@opensource.cirrus.com>
+References: <20190625154717.28640-1-ckeepax@opensource.cirrus.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@ispras.ru>
+On Tue, 25 Jun 2019 16:47:17 +0100,
+Charles Keepax <ckeepax@opensource.cirrus.com> wrote:
+> 
+> GPL-2.0-only is the preferred way of expressing v2 of the GPL, update
+> the code to use this.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  drivers/irqchip/irq-madera.c       | 2 +-
+>  include/linux/irqchip/irq-madera.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-madera.c b/drivers/irqchip/irq-madera.c
+> index 8b81271c823c6..6b0457876941d 100644
+> --- a/drivers/irqchip/irq-madera.c
+> +++ b/drivers/irqchip/irq-madera.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +// SPDX-License-Identifier: GPL-2.0-only
+>  /*
+>   * Interrupt support for Cirrus Logic Madera codecs
+>   *
+> diff --git a/include/linux/irqchip/irq-madera.h b/include/linux/irqchip/irq-madera.h
+> index 1160fa3769ae6..3a46cadd38654 100644
+> --- a/include/linux/irqchip/irq-madera.h
+> +++ b/include/linux/irqchip/irq-madera.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+>  /*
+>   * Interrupt support for Cirrus Logic Madera codecs
+>   *
+> -- 
+> 2.11.0
+> 
 
-[ Upstream commit f3554aeb991214cbfafd17d55e2bfddb50282e32 ]
+I'm not sure this changes anything. LICENSES/preferred/GPL-2.0 doesn't
+seem to distinguish the two tags.
 
-This fixes a divide by zero error in the setup_format_params function of
-the floppy driver.
+Thomas, what do you think?
 
-Two consecutive ioctls can trigger the bug: The first one should set the
-drive geometry with such .sect and .rate values for the F_SECT_PER_TRACK
-to become zero.  Next, the floppy format operation should be called.
+	M.
 
-A floppy disk is not required to be inserted.  An unprivileged user
-could trigger the bug if the device is accessible.
-
-The patch checks F_SECT_PER_TRACK for a non-zero value in the
-set_geometry function.  The proper check should involve a reasonable
-upper limit for the .sect and .rate fields, but it could change the
-UAPI.
-
-The patch also checks F_SECT_PER_TRACK in the setup_format_params, and
-cancels the formatting operation in case of zero.
-
-The bug was found by syzkaller.
-
-Signed-off-by: Denis Efremov <efremov@ispras.ru>
-Tested-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/block/floppy.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 2daa5b84abbc..42ae1d2d8243 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -2113,6 +2113,9 @@ static void setup_format_params(int track)
- 	raw_cmd->kernel_data = floppy_track_buffer;
- 	raw_cmd->length = 4 * F_SECT_PER_TRACK;
- 
-+	if (!F_SECT_PER_TRACK)
-+		return;
-+
- 	/* allow for about 30ms for data transport per track */
- 	head_shift = (F_SECT_PER_TRACK + 5) / 6;
- 
-@@ -3235,6 +3238,8 @@ static int set_geometry(unsigned int cmd, struct floppy_struct *g,
- 	/* sanity checking for parameters. */
- 	if (g->sect <= 0 ||
- 	    g->head <= 0 ||
-+	    /* check for zero in F_SECT_PER_TRACK */
-+	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
- 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
- 	    /* check if reserved bits are set */
- 	    (g->stretch & ~(FD_STRETCH | FD_SWAPSIDES | FD_SECTBASEMASK)) != 0)
 -- 
-2.20.1
-
+Jazz is not dead, it just smells funny.
