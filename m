@@ -2,121 +2,92 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A065AC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA62C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 761B822CE9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:51:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149105;
-	bh=HSCfUKztUyx1dQXphz4lyuty68J8wkhEGnvJNS3JVGw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BLWZxw7SKOv5Dt8pfdaBoez5dK65HUQBHRLPt1/x56ruSzXXVOStSIGWHQXnKco/T
-	 JJJMH8bcyV13Cdp73D+NX7AETe0Cyxz4fZBQTlAEtIe6wtXHGSUjbEnibFrd+wd9ji
-	 2ZarZJ/7Abb2rUk8K68J6dXRKbnoeVkNBFYBnZms=
+	by mail.kernel.org (Postfix) with ESMTP id 99FA122CE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:51:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbfGZNvo (ORCPT
+        id S1728272AbfGZNvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:51:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51756 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:51:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:44412 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727328AbfGZNnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:43:50 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8143C22CD3;
-        Fri, 26 Jul 2019 13:43:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148629;
-        bh=HSCfUKztUyx1dQXphz4lyuty68J8wkhEGnvJNS3JVGw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HlxfCBG4rsbPRTzqEpzZZfP49h9gCfM2W1xoERCjPELQ5z//EuHpyxPfdd1TpZzR0
-         0dCNL09cQTp2Fv9u+tBsW4vqmKLCdpCuLwl82O033FvJLRWBMY0nmhVG3KfJPbE16S
-         AhhxuKthPKnzZzXxvrWs4qu8C6fFQUl/NFr8qsZY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 12/37] cifs: Fix a race condition with cifs_echo_request
-Date:   Fri, 26 Jul 2019 09:43:07 -0400
-Message-Id: <20190726134332.12626-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726134332.12626-1-sashal@kernel.org>
-References: <20190726134332.12626-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S1727869AbfGZNvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:51:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F353A337;
+        Fri, 26 Jul 2019 06:51:46 -0700 (PDT)
+Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B9A383F694;
+        Fri, 26 Jul 2019 06:51:45 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, Peng Fan <peng.fan@nxp.com>,
+        linux-kernel@vger.kernel.org,
+        Bo Zhang <bozhang.zhang@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
+        Gaku Inami <gaku.inami.xh@renesas.com>,
+        Etienne Carriere <etienne.carriere@linaro.org>
+Subject: [PATCH v2 00/10] firmware: arm_scmi: Add support for Rx channels, async commands and delayed response
+Date:   Fri, 26 Jul 2019 14:51:28 +0100
+Message-Id: <20190726135138.9858-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+Hi,
 
-[ Upstream commit f2caf901c1b7ce65f9e6aef4217e3241039db768 ]
+This patch series adds SCMI infrastructure/core support for recieve(Rx)
+channels, asynchronous commands and delayed response. It adds async
+command support for clock rate setting and sensor reading based on the
+attributes read from the firmware.
 
-There is a race condition with how we send (or supress and don't send)
-smb echos that will cause the client to incorrectly think the
-server is unresponsive and thus needs to be reconnected.
+The code is rebased on the cleanup series[1] and is available @[2]
 
-Summary of the race condition:
- 1) Daisy chaining scheduling creates a gap.
- 2) If traffic comes unfortunate shortly after
-    the last echo, the planned echo is suppressed.
- 3) Due to the gap, the next echo transmission is delayed
-    until after the timeout, which is set hard to twice
-    the echo interval.
+--
+Regards,
+Sudeep
 
-This is fixed by changing the timeouts from 2 to three times the echo interval.
+[1] https://lore.kernel.org/lkml/20190726134531.8928-1-sudeep.holla@arm.com
+[2] git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git scmi_updates
 
-Detailed description of the bug: https://lutz.donnerhacke.de/eng/Blog/Groundhog-Day-with-SMB-remount
+v1->v2:
+	- Fixed error messages to indicate Tx/Rx correctly
+	- Dropped receive buffer support as notifications are not yet added
+	- Simplied atomic_inc/dec for async request count and fixed the
+	  commit message
+	- Fixed fetching sensor value i.e. *pval + 1 to *(pval + 1) in
+	  scmi_sensor_reading_get
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/cifs/connect.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Sudeep Holla (10):
+  firmware: arm_scmi: Reorder some functions to avoid forward declarations
+  firmware: arm_scmi: Segregate tx channel handling and prepare to add rx
+  firmware: arm_scmi: Add receive channel support for notifications
+  firmware: arm_scmi: Separate out tx buffer handling and prepare to add rx
+  firmware: arm_scmi: Add mechanism to unpack message headers
+  firmware: arm_scmi: Add support for asynchronous commands and delayed response
+  firmware: arm_scmi: Drop async flag in sensor_ops->reading_get
+  firmware: arm_scmi: Add asynchronous sensor read if it supports
+  firmware: arm_scmi: Drop config flag in clk_ops->rate_set
+  firmware: arm_scmi: Use asynchronous CLOCK_RATE_SET when possible
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 33cd844579ae..57c62ff4e8d6 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -554,10 +554,10 @@ static bool
- server_unresponsive(struct TCP_Server_Info *server)
- {
- 	/*
--	 * We need to wait 2 echo intervals to make sure we handle such
-+	 * We need to wait 3 echo intervals to make sure we handle such
- 	 * situations right:
- 	 * 1s  client sends a normal SMB request
--	 * 2s  client gets a response
-+	 * 3s  client gets a response
- 	 * 30s echo workqueue job pops, and decides we got a response recently
- 	 *     and don't need to send another
- 	 * ...
-@@ -566,9 +566,9 @@ server_unresponsive(struct TCP_Server_Info *server)
- 	 */
- 	if ((server->tcpStatus == CifsGood ||
- 	    server->tcpStatus == CifsNeedNegotiate) &&
--	    time_after(jiffies, server->lstrp + 2 * server->echo_interval)) {
-+	    time_after(jiffies, server->lstrp + 3 * server->echo_interval)) {
- 		cifs_dbg(VFS, "Server %s has not responded in %lu seconds. Reconnecting...\n",
--			 server->hostname, (2 * server->echo_interval) / HZ);
-+			 server->hostname, (3 * server->echo_interval) / HZ);
- 		cifs_reconnect(server);
- 		wake_up(&server->response_q);
- 		return true;
--- 
-2.20.1
+ drivers/clk/clk-scmi.c              |   2 +-
+ drivers/firmware/arm_scmi/clock.c   |  21 +-
+ drivers/firmware/arm_scmi/common.h  |   6 +-
+ drivers/firmware/arm_scmi/driver.c  | 342 ++++++++++++++++++----------
+ drivers/firmware/arm_scmi/sensors.c |  32 ++-
+ drivers/hwmon/scmi-hwmon.c          |   2 +-
+ include/linux/scmi_protocol.h       |   6 +-
+ 7 files changed, 271 insertions(+), 140 deletions(-)
+
+--
+2.17.1
 
