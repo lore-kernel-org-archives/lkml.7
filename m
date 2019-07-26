@@ -2,106 +2,169 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92B6C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B90CFC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C050E218DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A055218DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="BcbB9dYE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZrwXgOys"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfGZIwo (ORCPT
+        id S1726490AbfGZIx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 04:52:44 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46823 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfGZIwn (ORCPT
+        Fri, 26 Jul 2019 04:53:58 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40612 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfGZIx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 04:52:43 -0400
-Received: by mail-io1-f67.google.com with SMTP id i10so103176163iol.13
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 01:52:43 -0700 (PDT)
+        Fri, 26 Jul 2019 04:53:58 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w10so24461300pgj.7
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 01:53:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ivu7mmuUCBtRCJ9+296IctrbfYNXAVCIQ5a8QkkFxDo=;
-        b=BcbB9dYEb6fL2ssaGCJwDjSepgxhHuOJBsItX3hrLsfKUFk5WZgW0heTRA+zC+/9ki
-         epLl9ANmgYHGtkc3Uqix9qGThZR50Myd2iSEOnydNe8nrEbh5evDIlUXXLW6hWf+6EwY
-         X0n577EY+VzxpMbP8Wy6TqPvogcrYcyOEn6Us=
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kn51c4iVY6vEKLBAUEgNeUWaRLfBi8NFzSwtDO3qJPo=;
+        b=ZrwXgOysV4Nm38G/Jd5hjo4ESfSee36UHEVzuju2NmMPD0fUC94XqOIjPS/vdAra91
+         GePNmRjhbOHDSzgaRjaMUMHG2ycRlVIjQlvGTHCJ6xkeIKiWZn0uDU1XyD51GtXPWUIZ
+         1aTRStwb5PMDv7h+ojMqDKzg/9hv/j4m2tbSs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ivu7mmuUCBtRCJ9+296IctrbfYNXAVCIQ5a8QkkFxDo=;
-        b=Di7on5p4u3dL1azFlPG0dBjAkmuMHN73CFU7ppjMT9Bl6ylGboChegFOixXQ4/vSsp
-         l06bNKX2OltojT2/S8h8CfQ/vip4KSMMdgodd21TOg+ew8OJAuym5yTwhOpBh0I3FJHU
-         FZiFqgBirp0/P0rNyIh5H60aNQa7immPUt4mmtr6dFPwVRQbzBAXHaJb/2a5cP4B5m1a
-         R1nXf6E4J3h5xvJaYPA4opjlZ7HepS+JSMUz1DTxa1D3iIJKGKNmH/xyIxgJOhtBoorM
-         RSP9Oxmnvrfw7fl7XHpnCw/VA6Pj4Tj0mVyjK6F7ktHPevIoE24PTD78vIwFCYsdHVBP
-         P5yw==
-X-Gm-Message-State: APjAAAX255PiSdQ6uK39VSrw3cB5ZRjCtg/p4H2BtH8gQwxT6ZoNSv1X
-        e7s4xnthTVX65b6KlG+aEVNfsHlh33/J8VfTnBU=
-X-Google-Smtp-Source: APXvYqwi441df8XodqoYa2JUoE1MGP2LwR3hrCQfE9nZyRGKSRipZoxCCSSAFMCVBaT7g2c2hNnccWtVKrkKS61oXVQ=
-X-Received: by 2002:a02:ce52:: with SMTP id y18mr92451652jar.78.1564131162681;
- Fri, 26 Jul 2019 01:52:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kn51c4iVY6vEKLBAUEgNeUWaRLfBi8NFzSwtDO3qJPo=;
+        b=Om9LoST4Cb0bPF9MN+dj+gZqTXd9z7VOgUF9Czh9nKmygE8qI+7cuWyNuCXChcARAQ
+         3aRBkA0hIoSIkQKoz4Q/c/704M9YpsM1L4JsYD9h8c2Da0qfKw7noXCsfj838MpG6yRS
+         C2ZmXEEXOUdKsrwMTGT25bUOHhlCwz7rMh+BQkcbxTLar/rl+8mPvsIAsfnMbom1BQzH
+         OnR6U6o+ttcwdaa6KsTyFV04a4SItsG05gcvDC/jWENfzAreR2nFRp/9n6ztJ3cGQmu3
+         qt4p6kK3OVxPHow6C1rHajtGFgz33lP7MuVW65xO1IM/0zXknzRjxhjKejDHYiNEniXp
+         bGiA==
+X-Gm-Message-State: APjAAAXa7QUvXHKK2rVRzFsVYxWKIBkEkf1rZ6dXx4Z417AjSIYWNirV
+        0QiIor8wBp4ha92RBEYReUpwFw==
+X-Google-Smtp-Source: APXvYqwEl1k8U3GLoPPwct03h2YHbh18gkXJVzJDcKZV2mmsK3QGn7e5o8uX6/Q7RDC9oULrHaYOvA==
+X-Received: by 2002:a63:c03:: with SMTP id b3mr26309020pgl.23.1564131237150;
+        Fri, 26 Jul 2019 01:53:57 -0700 (PDT)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
+        by smtp.gmail.com with ESMTPSA id p15sm49438737pjf.27.2019.07.26.01.53.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 26 Jul 2019 01:53:56 -0700 (PDT)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Qii Wang <qii.wang@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jun Gao <jun.gao@mediatek.com>,
+        Alexandru M Stan <amstan@chromium.org>,
+        linux-i2c@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] i2c: mediatek: disable zero-length transfers for mt8183
+Date:   Fri, 26 Jul 2019 16:53:06 +0800
+Message-Id: <20190726085305.163306-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <ae19f8ddc770135572323dd431d0efbe3e419582.camel@linux.ibm.com>
-In-Reply-To: <ae19f8ddc770135572323dd431d0efbe3e419582.camel@linux.ibm.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Fri, 26 Jul 2019 10:52:31 +0200
-Message-ID: <CAJfpegsLKY=M6PSBZjgpKkZTxUYBn+H44BxG2HVLsAVzTzyy_Q@mail.gmail.com>
-Subject: Re: Question about vmsplice + SPLICE_F_GIFT
-To:     Leonardo Bras <leonardo@linux.ibm.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 10:33 PM Leonardo Bras <leonardo@linux.ibm.com> wrote:
->
-> Hello everybody,
->
-> I am not sure if this is the right place to be asking this. If is not,
-> I apologize for the inconvenience. Also, please tell me where is a
-> better way to as these questions.
->
-> I am trying to create a basic C code to test vmsplice + SPLICE_F_GIFT
-> for moving memory pages between two processes without copying.
->
-> I have followed the man pages and several recipes across the web, but I
-> could not reproduce it yet.
->
-> Basically, I am doing:
-> Sending process:
-> - malloc + memcpy for generating pages to transfer
-> - vmsplice with SPLICE_F_GIFT sending over named pipe (in a loop)
-> Receiving process:
-> - Create mmaped file to receive the pages
-> - splice with SPLICE_F_MOVE receiving from named pipe (in a loop)
+When doing i2cdetect quick write mode, we would get transfer
+error ENOMEM, and i2cdetect shows there's no device at the address.
+Quoting from mt8183 datasheet, the number of transfers to be
+transferred in one transaction should be set to bigger than 1,
+so we should forbid zero-length transfer and update functionality.
 
-As the splice(2) man page says SPLICE_F_MOVE is currently a no-op.
+Incorrect return:
+localhost ~ # i2cdetect -q -y 0
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- --
 
-> I have seen the SPLICE_F_MOVE being used on steal ops from the
-> 'pipebuffer', but I couldn't find a way to call it from splice.
->
-> Questions:
-> It does what I think it does? (reassign memory pages from a process to
-> another)
+After this patch:
+localhost ~ #  i2cdetect -q -y 0
+Error: Can't use SMBus Quick Write command on this bus
 
-> If so, does page gifting still works?
-> If so, is there a basic recipe to test it's workings?
+localhost ~ #  i2cdetect -y 0
+Warning: Can't use SMBus Quick Write command, will skip some addresses
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:
+10:
+20:
+30: -- -- -- -- -- -- -- --
+40:
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60:
+70:
 
-What is the end goal?
+Reported-by: Alexandru M Stan <amstan@chromium.org>
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+---
+Previous patch and discussion:
+http://patchwork.ozlabs.org/patch/1042684/
+---
+ drivers/i2c/busses/i2c-mt65xx.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-It is easy to transfer pages using shared memory (see shm_open(3) and
-related API), so why mess with splice?
+diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+index 252edb433fdf..2842ca4b8c3b 100644
+--- a/drivers/i2c/busses/i2c-mt65xx.c
++++ b/drivers/i2c/busses/i2c-mt65xx.c
+@@ -234,6 +234,10 @@ static const struct i2c_adapter_quirks mt7622_i2c_quirks = {
+ 	.max_num_msgs = 255,
+ };
+ 
++static const struct i2c_adapter_quirks mt8183_i2c_quirks = {
++	.flags = I2C_AQ_NO_ZERO_LEN,
++};
++
+ static const struct mtk_i2c_compatible mt2712_compat = {
+ 	.regs = mt_i2c_regs_v1,
+ 	.pmic_i2c = 0,
+@@ -298,6 +302,7 @@ static const struct mtk_i2c_compatible mt8173_compat = {
+ };
+ 
+ static const struct mtk_i2c_compatible mt8183_compat = {
++	.quirks = &mt8183_i2c_quirks,
+ 	.regs = mt_i2c_regs_v2,
+ 	.pmic_i2c = 0,
+ 	.dcm = 0,
+@@ -870,7 +875,11 @@ static irqreturn_t mtk_i2c_irq(int irqno, void *dev_id)
+ 
+ static u32 mtk_i2c_functionality(struct i2c_adapter *adap)
+ {
+-	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
++	if (adap->quirks->flags & I2C_AQ_NO_ZERO_LEN)
++		return I2C_FUNC_I2C |
++			(I2C_FUNC_SMBUS_EMUL & ~I2C_FUNC_SMBUS_QUICK);
++	else
++		return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
+ }
+ 
+ static const struct i2c_algorithm mtk_i2c_algorithm = {
+@@ -933,8 +942,8 @@ static int mtk_i2c_probe(struct platform_device *pdev)
+ 	i2c->dev = &pdev->dev;
+ 	i2c->adap.dev.parent = &pdev->dev;
+ 	i2c->adap.owner = THIS_MODULE;
+-	i2c->adap.algo = &mtk_i2c_algorithm;
+ 	i2c->adap.quirks = i2c->dev_comp->quirks;
++	i2c->adap.algo = &mtk_i2c_algorithm;
+ 	i2c->adap.timeout = 2 * HZ;
+ 	i2c->adap.retries = 1;
+ 
+-- 
+2.20.1
 
-Thanks,
-Miklos
