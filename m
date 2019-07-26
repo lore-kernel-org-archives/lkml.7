@@ -2,167 +2,97 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB8DC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F79C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4827C20651
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B76C20651
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 14:48:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YCEqhidp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cGExvzI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbfGZOrs (ORCPT
+        id S2387572AbfGZOsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 10:47:48 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34002 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727356AbfGZOro (ORCPT
+        Fri, 26 Jul 2019 10:48:33 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:55536 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727290AbfGZOsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 10:47:44 -0400
-Received: by mail-lj1-f194.google.com with SMTP id p17so51749440ljg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 07:47:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5FLu7SYsQGkhRAu3ziZplqyPW4KuE5O3p5VPy+nIMaE=;
-        b=YCEqhidp/YkiSPlxWVANpwREp75p+9CtP4BS4FtrFFzSxsaBqiaAlpq3O0QOrKswBS
-         h1itd1c7U1nYwJ1qMFwUTYSpXY9LsKotoSL5Tw3O/jEB9I9pfCnNgfs+O87PpyPJEVfW
-         8sH+Q6T2WqrcTTqH4iIVLiYQQQhcOOkJyNlTCkbfeUx6/jErZEdCXoMDE9VUqWHN9K4R
-         Ws7FzpuLLx0Y6cYF5jIj7OHGDhNDIQqJbbOwbNnePzfp2ZS31NvfqLzfPcPxog2UTRJ3
-         afPfYsdF8qzFnH3cAGWtv5Ek5eIeOeb/vxEXfbaVHUkV0XkEsN9loWfV9/VyBk97045O
-         q27w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5FLu7SYsQGkhRAu3ziZplqyPW4KuE5O3p5VPy+nIMaE=;
-        b=GDazEzWvUTGuobMvW0ZshNx/Y8Fm1lUcbzUYzYQw7eZrc807j8iENqsIARIasndzWO
-         30FR9MCDhG5NT9wS7tXA6XpGrI35KUWV23RNAxHnTmRR4+oiYy5MYiDbb822JTWEIcmo
-         0dETC8JTpg8vshr/oXn9+/x1953S0vhg4WAa78qJc3rm8U51k7NoRZcwpv/bhnOIU227
-         MtBEP8N8qeW3V0YUkkaYsHIF+W0ekWt/nIwjdJg8BnReImJ0siIvw71kMnLSJldISc4Z
-         5qwww76LSWOPFcDWJsGDmMQ3BcZp+03R1ZHTHdL5CmY/3uao87IsDgBtVHGzCABNJ2Hw
-         As4Q==
-X-Gm-Message-State: APjAAAXxBEKMw/amOCoe+d2fa8EEjMB9FoNw12w3xPApyy+YdNAbpFZ9
-        wg85y4XMpr+VHl/vlp7Iuy0PSvr5gH9MFZwU0trRx9bQ
-X-Google-Smtp-Source: APXvYqxFS+YHu14553p50GIBdMN/V01Hezc0jgcD9VdGPJaalyubtryKrgCq5Uq53zmFxBsg7WG5MDpC1buC7oUCFrU=
-X-Received: by 2002:a05:651c:20d:: with SMTP id y13mr48029532ljn.204.1564152461486;
- Fri, 26 Jul 2019 07:47:41 -0700 (PDT)
+        Fri, 26 Jul 2019 10:48:33 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6QEmVe6050747;
+        Fri, 26 Jul 2019 14:48:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : from : subject :
+ message-id : date : mime-version : content-type :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=8kymT+5xJD+jtkrophmWlIqXssgA2k9y/HisZZkpHfo=;
+ b=cGExvzI9m33gfQUgTZYOgA9tU4MuVGPCoSfaudQIU2RzPLfPQKU9C62joZT+NWPBVw+q
+ KvioCjviiRDeroiliz9SPkQrq7TawGYTdcqSM9wU7FgMvGF7t1SbAmSDlVqO7O0NeM++
+ rZYrsw8eLaz7r3vNxdY7ZFCmviIz4oZSc+srHEvh3lDfOQJmjGoV2hm5pSKCih2KQbnH
+ XKnCK6G6vZn1yrS+Sr+ETsKEYVDINdzDKRzLaZhgz+uiuEKjmHiflD93I0NA8zA2LNr9
+ /EmcpF54XkJ4IVpO1XvbV3lPtdBsDquiHQSvKqq7Xnz+jMgIYf/92EQWH7siM+yAvZDl jw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2tx61can03-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Jul 2019 14:48:31 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6QElWAn091793;
+        Fri, 26 Jul 2019 14:48:31 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2tx60yyndu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Jul 2019 14:48:31 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6QEmUad010286;
+        Fri, 26 Jul 2019 14:48:30 GMT
+Received: from [10.152.34.53] (/10.152.34.53)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 26 Jul 2019 07:48:30 -0700
+To:     linux-kernel@vger.kernel.org
+From:   George Kennedy <george.kennedy@oracle.com>
+Subject: LPC 2019 distros microconference proposal: "Distros and Syzkaller -
+ Why bother?"
+Organization: Oracle Corporation
+Message-ID: <1ada9248-6406-1afb-2b37-a25a1c3d6e03@oracle.com>
+Date:   Fri, 26 Jul 2019 10:48:28 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1563523105-24673-1-git-send-email-vincent.guittot@linaro.org>
- <1563523105-24673-4-git-send-email-vincent.guittot@linaro.org>
- <d55f906e-6e91-9f49-5c2c-7ec2e6bd68b0@arm.com> <CAKfTPtD2hDxnHSaa5C_Jrtabb_ogJSgkLE=5UPyystKZqUmzWA@mail.gmail.com>
- <4d3a67f5-c9c4-6397-7405-6f0efbd49d5c@arm.com> <CAKfTPtBE5fzycHk33rf7Bky-tYSeCXaKd9oGR5cgaghzbL2TvA@mail.gmail.com>
- <aff49e6a-b4d3-baae-9124-3d5bb5abdbfe@arm.com>
-In-Reply-To: <aff49e6a-b4d3-baae-9124-3d5bb5abdbfe@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 26 Jul 2019 16:47:30 +0200
-Message-ID: <CAKfTPtBTH10k56s-sU3TX+vL6Xas-QArLW-CBz7ZeqU0BNzMQA@mail.gmail.com>
-Subject: Re: [PATCH 3/5] sched/fair: rework load_balance
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Phil Auld <pauld@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9330 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=779
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907260182
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9330 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=845 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907260182
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 at 16:01, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
-> On 26/07/2019 13:30, Vincent Guittot wrote:
-> >> We can avoid this entirely by going straight for an active balance when
-> >> we are balancing misfit tasks (which we really should be doing TBH).
-> >
-> > but your misfit task might not be the running one anymore when
-> > load_balance effectively happens
-> >
->
-> We could add a check in the active balance bits to make sure the current
-> task is still a misfit task (albeit not necessarily the one we wanted to
-> migrate, since we can't really differentiate them).
->
-> Misfit migration shouldn't go through detach_tasks() - if the misfit task
-> is still the running task, we want to go for active balance anyway, and if
-> it's not the running task anymore then we should try to detect it and give
-> up - there's not much else we can do. From a rq's perspective, a task can
-> only ever be misfit if it's currently running.
->
-> The current code can totally active balance the wrong task if the load
-> balancer saw a misfit task in update_sd_lb_stats() but it moved away in the
-> meantime, so making misfit balancing skip detach_tasks() would be a straight
-> improvement IMO: we can still get some active balance collaterals, but at
-> least we don't wrongfully detach a non-running task that happened to have
-> the right load shape.
->
-> >>
-> >> If we *really* want to be surgical about misfit migration, we could track
-> >> the task itself via a pointer to its task_struct, but IIRC Morten
-> >
-> > I thought about this but task can have already die at that time and
-> > the pointer is no more relevant.
-> > Or we should parse the list of task still attached to the cpu and
-> > compare them with the saved pointer but then it's not scalable and
-> > will consume a lot of time
-> >
-> >> purposely avoided this due to all the fun synchronization issues that
-> >> come with it.
-> >>
-> >> With that out of the way, I still believe we should maximize the migrated
-> >> load when dealing with several misfit tasks - there's not much else you can
-> >> look at anyway to make a decision.
-> >
-> > But you can easily select a task that is not misfit so what is the best/worst ?
-> > select a fully wrong task or at least one of the real misfit tasks
-> >
->
-> Utilization can't help you select a "best" misfit task amongst several
-> since the utilization of misfit tasks is by definition meaningless.
->
-> I do agree that looking at utilization when detaching the task prevents
-> picking a non-misfit task, but those are two different issues:
->
-> 1) Among several rqs/groups with misfit tasks, pick the busiest one
->    (this is where I'm arguing we should use load)
-> 2) When detaching a task, make sure it's a misfit task (this is where
->    you're arguing we should use utilization).
->
-> > I'm fine to go back and use load instead of util but it's not robust IMO.
-> >
->
-> [...]
-> >> What if there is spare capacity but no idle CPUs? In scenarios like this
-> >> we should balance utilization. We could wait for a newidle balance to
-> >
-> > why should we balance anything ? all tasks have already enough running time.
-> > It's better to wait for a cpu to become idle instead of trying to
-> > predict which one will be idle first and migrate task uselessly
-> > because other tasks can easily wakeup in the meantime
-> >
->
-> I probably need to play with this and create some synthetic use cases.
->
-> What I had in mind is something like 2 CPUs, CPU0 running a 20% task and
-> CPU1 running 6 10% tasks.
->
-> If CPU0 runs the load balancer, balancing utilization would mean pulling
-> 2 tasks from CPU1 to reach the domain-average of 40%. The good side of this
-> is that we could save ourselves from running some newidle balances, but
-> I'll admit that's all quite "finger in the air".
+I have proposed "Distros and Syzkaller - Why bother?" for the LPC 2019 
+distros microconference.
 
-Don't forget that scheduler also selects a cpu when task wakeup and
-should cope with such situation
+I am curious as to how other distros are using Syzkaller and if there 
+are ways for us to collaborate.
 
->
-> >> happen, but it'd be a shame to repeatedly do this when we could
-> >> preemptively balance utilization.
-> >>
+I am curious how Syzkaller fits into the distro's development cycle, 
+release cycle and if it is part
+of the distro's Continuous Integration (CI) process?
+
+Any insights would be appreciated.
+
+Thank you,
+George Kennedy
+
