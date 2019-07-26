@@ -2,111 +2,96 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DC2C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F92C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22D2821994
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:00:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6gTe21N"
+	by mail.kernel.org (Postfix) with ESMTP id 1D76121994
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564138819;
+	bh=i7Jv+hmXcDo23S/41bZqkwblKmiu8ujCGUBjwwXkgyg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=A1JYz58BX+ailrsjue3MME341GM1O5qln46oLhlSNfj+Zy6UrQqa4iAjuFIrTrr1J
+	 ZpcNlksWNDYvNgPsz/fAeiV2N/6g5Iyxxp7QKP51LqcIIcnde4C3MoVzVXX83aWgE+
+	 3J+YRPb2RmfZ727Ub8GNRGMXAYOyhMyM5kExKD3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfGZLAF (ORCPT
+        id S1726787AbfGZLAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 07:00:05 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42844 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfGZLAE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 07:00:04 -0400
-Received: by mail-pl1-f196.google.com with SMTP id ay6so24673271plb.9;
-        Fri, 26 Jul 2019 04:00:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=GZk1YBh8K1nF7b/BG0aJDKLlYWK7vgDFFQWFrUTZFzA=;
-        b=c6gTe21NfZlHeMmzBg1Z75RsvgsPNWl9dWqZyeki1vTtEStPyxBnNCiGiMBiDP0xWu
-         KjxYYQyZujbishNMkirEBOjr/FJ5NObejW3xu/FLWt72aMHSXN38DE0AK7Nj3ywn0sc2
-         M7QupNSZVxzNUTBnTqKgXWZwfPGyFqHqCW++ZTZ+IuayQ3byxx7dzA8MnDFrlBSNGVpx
-         ICtTcxqWNXy/0k9pv7mJXiTB7mYuqtlEQTplUuJTiCYjB831EiXxGrucawDOa3KiA6fB
-         pyEEQYPipeh3XJ7JCFuJepY8vv9Ru8Tq2Bq08Ana1vSiy8lVwTzyguTF1zpk2NH5Rwkn
-         V6oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GZk1YBh8K1nF7b/BG0aJDKLlYWK7vgDFFQWFrUTZFzA=;
-        b=Z1VhsZC04UPeOzYPb+DUCBDOazcpFDbjDWC2+qVIF69ZqO/ojhtZaK52HHQT0Dk411
-         uRXdYtzNgKS9Ko3eQHYjNC1OPy3GCvn8yW2h3u6Xhq3yQD729k1bUnxTWND/9spHgKhU
-         M9DuhkvZ296Q3wQlhhgVNhwWgqu0TOAnv/iNHdRp4D3PlQuSdRkMsELh96wpl3AXHzac
-         XNHi0AcBNgXU/FUT04IKCl5NBtDTplWGLn9FHTKqdXdLMVMsbq18vZ/kgIlte+AArBB+
-         cOhTExHyMOjsRV6Em9idxiDQ308v6BRAmO4x9X4UP3irqU3tw3S58AsmEUXV5WOOMNT3
-         kSag==
-X-Gm-Message-State: APjAAAUOtrB7lu6Bn9qcINpR3tKpL0+Cop7xju5+vJY+JPPcgH1afuLH
-        N//e/7xRLcyp1Nbyqfqqsj0=
-X-Google-Smtp-Source: APXvYqztCs7PmCw0xLyCRDhnZ13GR6eat7Pm3QNuFtZtK9/gtnOOCYbuMTEOukIOh01EGkwcc9cl/g==
-X-Received: by 2002:a17:902:9a85:: with SMTP id w5mr95803057plp.221.1564138803975;
-        Fri, 26 Jul 2019 04:00:03 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id t10sm51967367pjr.13.2019.07.26.04.00.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 04:00:03 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH] dmaengine: pl330: use the same attributes when freeing pl330->mcode_cpu
-Date:   Fri, 26 Jul 2019 18:59:47 +0800
-Message-Id: <20190726105947.25342-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 26 Jul 2019 07:00:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57148 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbfGZLAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 07:00:16 -0400
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4697D22BE8;
+        Fri, 26 Jul 2019 11:00:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564138815;
+        bh=i7Jv+hmXcDo23S/41bZqkwblKmiu8ujCGUBjwwXkgyg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=D4IEBPKR/Lciqf1UMucQfUMvmavvkwQlRphFXnvYqpNlvPccVIHEhplBGZL1h4Yhb
+         OBnN3Yc8QiRRucyn8zerHxgil/jPSPB9celT1zwCovCbmMMUCJkFCJn+lYUIWL+/4W
+         hBClJ4NC7naV5LjVZgA0POAvxBFj8jkrlx7jyXSc=
+Received: by mail-lf1-f42.google.com with SMTP id c9so36746018lfh.4;
+        Fri, 26 Jul 2019 04:00:15 -0700 (PDT)
+X-Gm-Message-State: APjAAAXXwpxFjDLqYgyhQmyaHR1MCzXd8EGkjBttJ1TvGJY/Ctx2qEYa
+        TrKiSS2ZKn13k1tIhfsFUbxtvofFUHOFFEjN/eQ=
+X-Google-Smtp-Source: APXvYqxiPnbM3nCACHxnT20KdTP4mvzTb2t9ta89yEo/4pk1w14sOxpUlAKxoYBFtMwLQbX8e1ZPaZeidwzTdl6YbF4=
+X-Received: by 2002:a19:48c5:: with SMTP id v188mr43199380lfa.69.1564138813527;
+ Fri, 26 Jul 2019 04:00:13 -0700 (PDT)
+MIME-Version: 1.0
+References: <CGME20190726081505eucas1p146c14eed320c57050aa968b7c97b227b@eucas1p1.samsung.com>
+ <20190726081453.9456-1-m.szyprowski@samsung.com> <20190726081453.9456-3-m.szyprowski@samsung.com>
+In-Reply-To: <20190726081453.9456-3-m.szyprowski@samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 26 Jul 2019 13:00:02 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPddpDso=Zjktwm0ofLe20o_FHD4REtuR5dEG64ttVwLEg@mail.gmail.com>
+Message-ID: <CAJKOXPddpDso=Zjktwm0ofLe20o_FHD4REtuR5dEG64ttVwLEg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] usb: exynos: add support for getting PHYs from the
+ standard dt array
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-usb@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In function dmac_alloc_resources(), pl330->mcode_cpu is allocated using
-dma_alloc_attrs() but freed with dma_free_coherent().
-Use the correct dma_free_attrs() function to free pl330->mcode_cpu.
+On Fri, 26 Jul 2019 at 10:15, Marek Szyprowski <m.szyprowski@samsung.com> w=
+rote:
+>
+> Add the code for getting generic PHYs from standard device tree array
+> from the main controller device node. This is a first step in resolving
+> the conflict between Exynos EHCI/OHCI sub-nodes and generic USB device
+> bindings. Later the sub-nodes currently used for assigning PHYs to root
+> ports of the controller will be removed making a place for the generic
+> USB device bindings nodes.
+>
+> Suggested-by: M=C3=A5ns Rullg=C3=A5rd <mans@mansr.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  drivers/usb/host/ehci-exynos.c | 23 +++++++++++++++++++----
+>  drivers/usb/host/ohci-exynos.c | 23 +++++++++++++++++++----
+>  2 files changed, 38 insertions(+), 8 deletions(-)
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
- drivers/dma/pl330.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 1163af2ba4a3..6cce9ef61b29 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -1922,9 +1922,10 @@ static int dmac_alloc_resources(struct pl330_dmac *pl330)
- 	if (ret) {
- 		dev_err(pl330->ddma.dev, "%s:%d Can't to create channels for DMAC!\n",
- 			__func__, __LINE__);
--		dma_free_coherent(pl330->ddma.dev,
-+		dma_free_attrs(pl330->ddma.dev,
- 				chans * pl330->mcbufsz,
--				pl330->mcode_cpu, pl330->mcode_bus);
-+				pl330->mcode_cpu, pl330->mcode_bus,
-+				DMA_ATTR_PRIVILEGED);
- 		return ret;
- 	}
- 
-@@ -2003,9 +2004,9 @@ static void pl330_del(struct pl330_dmac *pl330)
- 	/* Free DMAC resources */
- 	dmac_free_threads(pl330);
- 
--	dma_free_coherent(pl330->ddma.dev,
-+	dma_free_attrs(pl330->ddma.dev,
- 		pl330->pcfg.num_chan * pl330->mcbufsz, pl330->mcode_cpu,
--		pl330->mcode_bus);
-+		pl330->mcode_bus, DMA_ATTR_PRIVILEGED);
- }
- 
- /* forward declaration */
--- 
-2.11.0
-
+Best regards,
+Krzysztof
