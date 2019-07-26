@@ -2,194 +2,233 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716CAC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAD8C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2951D21994
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:05:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="O58DCo6G"
+	by mail.kernel.org (Postfix) with ESMTP id 75D6121994
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 11:06:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfGZLFU (ORCPT
+        id S1726816AbfGZLGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 07:05:20 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46067 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfGZLFT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 07:05:19 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f9so53957008wre.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 04:05:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0aZgBfd2LjEg8oChGrxbHcMK3BcpqzePLziZP6z8Hvs=;
-        b=O58DCo6GLQwFgzb4D3v5Im4nW+eUrJyCZCicx9PO8liOLG5aT3wh4gjNsypIVzba1Q
-         9EOeVyd/6OiMDapj2C1EKPVfo53xAw6O7DkDWwgvbZcZyWOp4djdFLJSIxXxp4o+OrAS
-         mVxaRaAv8qyaZOb4UoteXiISp0gcLZzkFyrB8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0aZgBfd2LjEg8oChGrxbHcMK3BcpqzePLziZP6z8Hvs=;
-        b=WZJQfzQ0Wkb4c9Cz212jz7VHz97iFuH1Ft5J8OJG1/cT8cAubqkS9gmbSCoo3Jsu/v
-         4Gkgsghx9g/3N6Il9gvMtqOPo0SxcteMLGZyH1a1/hmv3OzEamwdflNcdJWsZVOt1zih
-         9w1i4IcMqRDmbmcvcxKrJHDrtA/iuDSZsp3ujAsjlJTQLgKXybzQxHQ77wi1Fk3aQH8Q
-         mT9HOgahbjYzQUyCIgPhfmDDVBoXmFTN421GzBMFQ5+g+Hogbv5VgWSrAieqSOgwejL9
-         66ZV/SiVgfs0H5cZUDD5yYLzW+lBcowacd8D/99e88R7rW7dfyLHPfCVXVMvoB+d75rz
-         Thqw==
-X-Gm-Message-State: APjAAAVhXyeAcglaLPad/4a1bo6r0btEfe5kq8VC7Tmp6+6SftGF6t1Z
-        /rG3H9xdR5xM1hMwWbeZu94rww==
-X-Google-Smtp-Source: APXvYqzrm1AHD4PvDzyKZ1iEbjkCxUx0KkVvGNwNktXxm4Qjms4A6OgnzHQtVKXP6Oa+QcPHfudKpg==
-X-Received: by 2002:adf:fe09:: with SMTP id n9mr106020057wrr.41.1564139116664;
-        Fri, 26 Jul 2019 04:05:16 -0700 (PDT)
-Received: from [192.168.0.107] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id q18sm62425469wrw.36.2019.07.26.04.05.15
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 04:05:16 -0700 (PDT)
-Subject: Re: [PATCH 1/2] ipmr: Make cache queue length configurable
-To:     Brodie Greenfield <brodie.greenfield@alliedtelesis.co.nz>,
-        davem@davemloft.net, stephen@networkplumber.org,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, chris.packham@alliedtelesis.co.nz,
-        luuk.paulussen@alliedtelesis.co.nz
-References: <20190725204230.12229-1-brodie.greenfield@alliedtelesis.co.nz>
- <20190725204230.12229-2-brodie.greenfield@alliedtelesis.co.nz>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <e5606cf7-6848-1109-6cbe-63d94868ed65@cumulusnetworks.com>
-Date:   Fri, 26 Jul 2019 14:05:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 26 Jul 2019 07:06:00 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:33680 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726000AbfGZLF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 07:05:59 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id A4CA4FB03;
+        Fri, 26 Jul 2019 13:05:56 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 27ddROgQVqy3; Fri, 26 Jul 2019 13:05:55 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id CF03E46AA1; Fri, 26 Jul 2019 13:05:54 +0200 (CEST)
+Date:   Fri, 26 Jul 2019 13:05:54 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [PATCH 2/3] dt-bindings: display/bridge: Add binding for IMX NWL
+ mipi dsi host controller
+Message-ID: <20190726110554.GA9359@bogon.m.sigxcpu.org>
+References: <cover.1563983037.git.agx@sigxcpu.org>
+ <70a5c6617936a4a095e7608b96e3f9fae5ddfbb1.1563983037.git.agx@sigxcpu.org>
+ <20190726092315.GA9754@ravnborg.org>
 MIME-Version: 1.0
-In-Reply-To: <20190725204230.12229-2-brodie.greenfield@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190726092315.GA9754@ravnborg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/07/2019 23:42, Brodie Greenfield wrote:
-> We want to be able to keep more spaces available in our queue for
-> processing incoming multicast traffic (adding (S,G) entries) - this lets
-> us learn more groups faster, rather than dropping them at this stage.
+Hi Sam,
+thanks for your comments!
+
+On Fri, Jul 26, 2019 at 11:23:15AM +0200, Sam Ravnborg wrote:
+> Hi Guido.
 > 
-> Signed-off-by: Brodie Greenfield <brodie.greenfield@alliedtelesis.co.nz>
-> ---
->  Documentation/networking/ip-sysctl.txt | 8 ++++++++
->  include/net/netns/ipv4.h               | 1 +
->  net/ipv4/af_inet.c                     | 1 +
->  net/ipv4/ipmr.c                        | 4 +++-
->  net/ipv4/sysctl_net_ipv4.c             | 7 +++++++
->  5 files changed, 20 insertions(+), 1 deletion(-)
+> A few comments follows.
 > 
-> diff --git a/Documentation/networking/ip-sysctl.txt b/Documentation/networking/ip-sysctl.txt
-> index acdfb5d2bcaa..02f77e932adf 100644
-> --- a/Documentation/networking/ip-sysctl.txt
-> +++ b/Documentation/networking/ip-sysctl.txt
-> @@ -887,6 +887,14 @@ ip_local_reserved_ports - list of comma separated ranges
->  
->  	Default: Empty
->  
-> +ip_mr_cache_queue_length - INTEGER
-> +	Limit the number of multicast packets we can have in the queue to be
-> +	resolved.
-> +	Bear in mind that when an unresolved multicast packet is received,
-> +	there is an O(n) traversal of the queue. This should be considered
-> +	if increasing.
-> +	Default: 10
-> +
-
-Hi,
-You've said it yourself - it has linear traversal time, but doesn't this patch allow any netns on the
-system to increase its limit to any value, thus possibly affecting others ?
-Though the socket limit will kick in at some point. I think that's where David
-was going with his suggestion back in 2018:
-https://www.spinics.net/lists/netdev/msg514543.html
-
-If we add this sysctl now, we'll be stuck with it. I'd prefer David's suggestion
-so we can rely only on the receive queue queue limit which is already configurable. 
-We still need to be careful with the defaults though, the NOCACHE entry is 128 bytes
-and with the skb overhead currently on my setup we end up at about 277 entries default limit.
-
-Cheers,
- Nik
-
->  ip_unprivileged_port_start - INTEGER
->  	This is a per-namespace sysctl.  It defines the first
->  	unprivileged port in the network namespace.  Privileged ports
-> diff --git a/include/net/netns/ipv4.h b/include/net/netns/ipv4.h
-> index 104a6669e344..3411d3f18d51 100644
-> --- a/include/net/netns/ipv4.h
-> +++ b/include/net/netns/ipv4.h
-> @@ -187,6 +187,7 @@ struct netns_ipv4 {
->  	int sysctl_igmp_max_msf;
->  	int sysctl_igmp_llm_reports;
->  	int sysctl_igmp_qrv;
-> +	unsigned int sysctl_ip_mr_cache_queue_length;
->  
->  	struct ping_group_range ping_group_range;
->  
-> diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
-> index 0dfb72c46671..8e25538bdb1e 100644
-> --- a/net/ipv4/af_inet.c
-> +++ b/net/ipv4/af_inet.c
-> @@ -1827,6 +1827,7 @@ static __net_init int inet_init_net(struct net *net)
->  	net->ipv4.sysctl_igmp_llm_reports = 1;
->  	net->ipv4.sysctl_igmp_qrv = 2;
->  
-> +	net->ipv4.sysctl_ip_mr_cache_queue_length = 10;
->  	return 0;
->  }
->  
-> diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
-> index ddbf8c9a1abb..c6a6c3e453a9 100644
-> --- a/net/ipv4/ipmr.c
-> +++ b/net/ipv4/ipmr.c
-> @@ -1127,6 +1127,7 @@ static int ipmr_cache_unresolved(struct mr_table *mrt, vifi_t vifi,
->  				 struct sk_buff *skb, struct net_device *dev)
->  {
->  	const struct iphdr *iph = ip_hdr(skb);
-> +	struct net *net = dev_net(dev);
->  	struct mfc_cache *c;
->  	bool found = false;
->  	int err;
-> @@ -1142,7 +1143,8 @@ static int ipmr_cache_unresolved(struct mr_table *mrt, vifi_t vifi,
->  
->  	if (!found) {
->  		/* Create a new entry if allowable */
-> -		if (atomic_read(&mrt->cache_resolve_queue_len) >= 10 ||
-> +		if (atomic_read(&mrt->cache_resolve_queue_len) >=
-> +		    net->ipv4.sysctl_ip_mr_cache_queue_length ||
->  		    (c = ipmr_cache_alloc_unres()) == NULL) {
->  			spin_unlock_bh(&mfc_unres_lock);
->  
-> diff --git a/net/ipv4/sysctl_net_ipv4.c b/net/ipv4/sysctl_net_ipv4.c
-> index ba0fc4b18465..78ae86e8c6cb 100644
-> --- a/net/ipv4/sysctl_net_ipv4.c
-> +++ b/net/ipv4/sysctl_net_ipv4.c
-> @@ -784,6 +784,13 @@ static struct ctl_table ipv4_net_table[] = {
->  		.proc_handler	= proc_dointvec
->  	},
->  #ifdef CONFIG_IP_MULTICAST
-> +	{
-> +		.procname	= "ip_mr_cache_queue_length",
-> +		.data		= &init_net.ipv4.sysctl_ip_mr_cache_queue_length,
-> +		.maxlen		= sizeof(int),
-> +		.mode		= 0644,
-> +		.proc_handler	= proc_dointvec
-> +	},
->  	{
->  		.procname	= "igmp_qrv",
->  		.data		= &init_net.ipv4.sysctl_igmp_qrv,
+> 	Sam
 > 
+> On Wed, Jul 24, 2019 at 05:52:25PM +0200, Guido Günther wrote:
+> > The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
+> > 
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > ---
+> >  .../bindings/display/bridge/imx-nwl-dsi.txt   | 89 +++++++++++++++++++
+> 
+> New binding. Any chance we can get this in yaml format?
+> This is the way forward and we have to convert the file anyway.
+> 
+> None of the other bridges use yaml format, but someone has to be the
+> first.
 
+I'm fine with converting this (i also forgot to squash a missing unit
+name and a typo fix in the bindings, will add this for v2).
+
+> 
+> >  1 file changed, 89 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt b/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
+> > new file mode 100644
+> > index 000000000000..288fdb726d5a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
+> > @@ -0,0 +1,89 @@
+> > +Northwest Logic MIPI-DSI on imx SoCs
+> > +=====================================
+> > +
+> > +NWL MIPI-DSI host controller found on i.MX8 platforms. This is a
+> > +dsi bridge for the for the NWL MIPI-DSI host.
+> 
+> To my best understanding a bridge is something that converts from one
+> format to another format.
+> Something that in the drm world are connected to an encoder.
+> 
+> I do not know the HW here - but from this very brif description this
+> sounds more like a display controller and not a bridge?
+
+mxsfb can drive LCD displays directly and - on newer SoCs like the i.MX8
+- also feed the nwl dsi host controller. So having that as a bridge is
+hopefully the right thing to do.
+
+In order for that to work on the hardware i tested on, we'd need:
+
+- at least the first patch from
+  https://patchwork.freedesktop.org/series/62822/ for bridge support
+- https://patchwork.freedesktop.org/series/64300/ to get the bus flags
+- https://patchwork.freedesktop.org/series/64292/ to be able to use
+  panel_bridge in this driver
+
+I only had a reference to the first point above in the cover letter.
+I'll add the other ones for v2 now that these are sent out. I'll also
+address your comments in other parts of this series.
+
+Cheers and thanks for having look!
+ -- Guido
+
+> 
+> 
+> > +
+> > +Required properties:
+> > +- compatible: 		"fsl,<chip>-nwl-dsi"
+> > +	The following strings are expected:
+> > +			"fsl,imx8mq-nwl-dsi"
+> > +- reg: 			the register range of the MIPI-DSI controller
+> > +- interrupts: 		the interrupt number for this module
+> > +- clock, clock-names: 	phandles to the MIPI-DSI clocks
+> > +	The following clocks are expected on all platforms:
+> > +		"core"    - DSI core clock
+> > +		"tx_esc"  - TX_ESC clock (used in escape mode)
+> > +		"rx_esc"  - RX_ESC clock (used in escape mode)
+> > +		"phy_ref" - PHY_REF clock. Clock is managed by the phy. Only
+> > +                            used to read the clock rate.
+> > +- assigned-clocks:	phandles to clocks that require initial configuration
+> > +- assigned-clock-rates:	rates of the clocks that require initial configuration
+> > +	The following clocks need to have an initial configuration:
+> > +	"tx_esc" (20 MHz) and "rx_esc" (80 Mhz).
+> > +- phys: 		phandle to the phy module representing the DPHY
+> > +			inside the MIPI-DSI IP block
+> > +- phy-names: 		should be "dphy"
+> > +
+> > +Optional properties:
+> > +- power-domains 	phandle to the power domain
+> > +- src			phandle to the system reset controller (required on
+> > +			i.MX8MQ)
+> Name is not very descriptive.
+> Other bindings seems to use "resets" here?
+> 
+> > +- mux-sel		phandle to the MUX register set (required on i.MX8MQ)
+> > +- assigned-clock-parents phandles to parent clocks that needs to be assigned as
+> > +			parents to clocks defined in assigned-clocks
+> > +
+> > +Example:
+> > +	mipi_dsi: mipi_dsi@30a00000 {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		compatible = "fsl,imx8mq-nwl-dsi";
+> > +		reg = <0x30A00000 0x300>;
+> > +		clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
+> > +			 <&clk IMX8MQ_CLK_DSI_AHB>,
+> > +			 <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
+> > +			 <&clk IMX8MQ_CLK_DSI_PHY_REF>;
+> > +		clock-names = "core", "rx_esc", "tx_esc", "phy_ref";
+> > +		assigned-clocks = <&clk IMX8MQ_CLK_DSI_AHB>,
+> > +				  <&clk IMX8MQ_CLK_DSI_CORE>,
+> > +				  <&clk IMX8MQ_CLK_DSI_IPG_DIV>;
+> > +		assigned-clock-parents = <&clk IMX8MQ_SYS1_PLL_80M>,
+> > +					 <&clk IMX8MQ_SYS1_PLL_266M>;
+> > +		assigned-clock-rates = <80000000>,
+> > +				       <266000000>,
+> > +				       <20000000>;
+> > +		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> > +		power-domains = <&pgc_mipi>;
+> > +		src = <&src>;
+> > +		mux-sel = <&iomuxc_gpr>;
+> > +		phys = <&dphy>;
+> > +		phy-names = "dphy";
+> > +		status = "okay";
+> I recall status should not be included in examples.
+> 
+> > +
+> > +		panel@0 {
+> > +			compatible = "...";
+> > +			port {
+> > +			     panel_in: endpoint {
+> > +				       remote-endpoint = <&mipi_dsi_out>;
+> > +			     };
+> > +			};
+> > +		};
+> > +
+> > +		ports {
+> > +		      #address-cells = <1>;
+> > +		      #size-cells = <0>;
+> > +
+> > +		      port@0 {
+> > +			     reg = <0>;
+> > +			     mipi_dsi_in: endpoint {
+> > +					  remote-endpoint = <&dcss_disp0_mipi_dsi>;
+> > +			     };
+> > +		      };
+> > +		      port@1 {
+> > +			     reg = <1>;
+> > +			     mipi_dsi_out: endpoint {
+> > +					   remote-endpoint = <&panel_in>;
+> > +			     };
+> > +		      };
+> > +		};
+> > +	};
+> > -- 
+> > 2.20.1
+> > 
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
