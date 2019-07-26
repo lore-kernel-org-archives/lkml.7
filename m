@@ -4,87 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEF2C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41674C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C841229F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1723E2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 08:37:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfGZIhd (ORCPT
+        id S1726605AbfGZIh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 04:37:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:39620 "EHLO foss.arm.com"
+        Fri, 26 Jul 2019 04:37:56 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:37776 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfGZIhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 04:37:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2EF41344;
-        Fri, 26 Jul 2019 01:37:32 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2774F3F71A;
-        Fri, 26 Jul 2019 01:37:31 -0700 (PDT)
-Subject: Re: [PATCH 4/5] sched/deadline: Cleanup on_dl_rq() handling
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>
-Cc:     Luca Abeni <luca.abeni@santannapisa.it>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Qais Yousef <Qais.Yousef@arm.com>, linux-kernel@vger.kernel.org
-References: <20190726082756.5525-1-dietmar.eggemann@arm.com>
- <20190726082756.5525-5-dietmar.eggemann@arm.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <0f460dba-4677-00de-59a2-5cd31ffe6e4b@arm.com>
-Date:   Fri, 26 Jul 2019 09:37:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726463AbfGZIhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 04:37:55 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ADF472009B1;
+        Fri, 26 Jul 2019 10:37:53 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A04642002AD;
+        Fri, 26 Jul 2019 10:37:53 +0200 (CEST)
+Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 822B1205E8;
+        Fri, 26 Jul 2019 10:37:53 +0200 (CEST)
+Date:   Fri, 26 Jul 2019 11:37:52 +0300
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Anson.Huang@nxp.com
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        aisheng.dong@nxp.com, l.stach@pengutronix.de, ping.bai@nxp.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH] clk: imx: Remove unused function statement
+Message-ID: <20190726083752.qjhzbqvsuyzcqtcg@fsr-ub1664-175>
+References: <20190724062435.28074-1-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190726082756.5525-5-dietmar.eggemann@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724062435.28074-1-Anson.Huang@nxp.com>
+User-Agent: NeoMutt/20180622
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/07/2019 09:27, Dietmar Eggemann wrote:
-> Remove BUG_ON() in __enqueue_dl_entity() since there is already one in
-> enqueue_dl_entity().
+On 19-07-24 14:24:35, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
 > 
-> Move the check that the dl_se is not on the dl_rq from
-> __dequeue_dl_entity() to dequeue_dl_entity() to align with the enqueue
-> side and use the on_dl_rq() helper function.
+> imx_register_uart_clocks_hws() function is NOT implemented
+> at all, remove it.
 > 
-> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> ---
->  kernel/sched/deadline.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> index 1fa005f79307..a9cb52ceb761 100644
-> --- a/kernel/sched/deadline.c
-> +++ b/kernel/sched/deadline.c
-> @@ -1407,8 +1407,6 @@ static void __enqueue_dl_entity(struct sched_dl_entity *dl_se)
->  	struct sched_dl_entity *entry;
->  	int leftmost = 1;
->  
-> -	BUG_ON(!RB_EMPTY_NODE(&dl_se->rb_node));
-> -
->  	while (*link) {
->  		parent = *link;
->  		entry = rb_entry(parent, struct sched_dl_entity, rb_node);
-> @@ -1430,9 +1428,6 @@ static void __dequeue_dl_entity(struct sched_dl_entity *dl_se)
->  {
->  	struct dl_rq *dl_rq = dl_rq_of_se(dl_se);
->  
-> -	if (RB_EMPTY_NODE(&dl_se->rb_node))
-> -		return;
-> -
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Any idea why a similar error leads to a BUG_ON() in the enqueue path but
-only a silent return on the dequeue path? I would expect the handling to be
-almost identical.
- 
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+
+> ---
+>  drivers/clk/imx/clk.h | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+> index 9995f2a..f7a389a 100644
+> --- a/drivers/clk/imx/clk.h
+> +++ b/drivers/clk/imx/clk.h
+> @@ -10,7 +10,6 @@ extern spinlock_t imx_ccm_lock;
+>  void imx_check_clocks(struct clk *clks[], unsigned int count);
+>  void imx_check_clk_hws(struct clk_hw *clks[], unsigned int count);
+>  void imx_register_uart_clocks(struct clk ** const clks[]);
+> -void imx_register_uart_clocks_hws(struct clk_hw ** const hws[]);
+>  void imx_mmdc_mask_handshake(void __iomem *ccm_base, unsigned int chn);
+>  void imx_unregister_clocks(struct clk *clks[], unsigned int count);
+>  
+> -- 
+> 2.7.4
+> 
