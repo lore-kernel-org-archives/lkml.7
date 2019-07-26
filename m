@@ -2,74 +2,133 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E6BC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626D4C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD5722C7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 405B122BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 20:57:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbfGZU4x (ORCPT
+        id S1728142AbfGZU52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 16:56:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42442 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 16:57:28 -0400
+Received: from mga14.intel.com ([192.55.52.115]:25820 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726184AbfGZU4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 16:56:52 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45C5A22BE8;
-        Fri, 26 Jul 2019 20:56:51 +0000 (UTC)
-Date:   Fri, 26 Jul 2019 16:56:49 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: Re: [patch 10/12] hrtimer: Determine hard/soft expiry mode for
- hrtimer sleepers on RT
-Message-ID: <20190726165649.0bf73f73@gandalf.local.home>
-In-Reply-To: <alpine.DEB.2.21.1907262249210.1791@nanos.tec.linutronix.de>
-References: <20190726183048.982726647@linutronix.de>
-        <20190726185753.645792403@linutronix.de>
-        <20190726164428.40a4e4b4@gandalf.local.home>
-        <alpine.DEB.2.21.1907262249210.1791@nanos.tec.linutronix.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726184AbfGZU51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 16:57:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 13:57:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,312,1559545200"; 
+   d="scan'208";a="189741824"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Jul 2019 13:57:27 -0700
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id 4E79E580107;
+        Fri, 26 Jul 2019 13:57:27 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v5 8/9] PCI/DPC: Add support for DPC recovery on NON_FATAL
+ errors
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Busch, Keith" <keith.busch@intel.com>
+References: <cover.1563912591.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <211d4bf8f856c6aa5454751e25ab5c90970960ff.1563912591.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190725165037.GA7055@localhost.localdomain>
+From:   sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <0a3ccc81-971b-65ff-f754-9fbb1cd4eb40@linux.intel.com>
+Date:   Fri, 26 Jul 2019 13:54:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190725165037.GA7055@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 22:52:18 +0200 (CEST)
-Thomas Gleixner <tglx@linutronix.de> wrote:
-> > Have we marked all timer handlers that have normal spin_locks as
-> > HRTIMER_MODE_SOFT? Otherwise, can't we switch one to hard below and
-> > having their handler grab a spin_lock/mutex in hard interrupt context
-> > in RT?  
-> 
-> See patch 09/12. We move all timers into soft mode which are not marked
-> MODE_HARD.
-> 
 
+On 7/25/19 9:50 AM, Keith Busch wrote:
+> On Tue, Jul 23, 2019 at 01:21:50PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> Currently, in native mode, DPC driver is configured to trigger DPC only
+>> for FATAL errors and hence it only supports port recovery for FATAL
+>> errors. But with Error Disconnect Recover (EDR) support, DPC
+>> configuration is done by firmware, and hence we should expect DPC
+>> triggered for both FATAL/NON-FATAL errors. So add support for DPC
+>> recovery with NON-FATAL errors.
+>>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> ---
+>>   drivers/pci/pcie/dpc.c | 11 ++++++++---
+>>   1 file changed, 8 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+>> index 6e350149d793..5d328812aea9 100644
+>> --- a/drivers/pci/pcie/dpc.c
+>> +++ b/drivers/pci/pcie/dpc.c
+>> @@ -267,15 +267,20 @@ static void dpc_process_error(struct dpc_dev *dpc)
+>>   	/* show RP PIO error detail information */
+>>   	if (dpc->rp_extensions && reason == 3 && ext_reason == 0)
+>>   		dpc_process_rp_pio_error(dpc);
+>> -	else if (reason == 0 &&
+>> +	else if (reason <= 2 &&
+>>   		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
+>>   		 aer_get_device_error_info(pdev, &info)) {
+>>   		aer_print_error(pdev, &info);
+>>   		pci_cleanup_aer_uncorrect_error_status(pdev);
+>> -		pci_aer_clear_fatal_status(pdev);
+>> +		if (reason != 1)
+>> +			pci_aer_clear_fatal_status(pdev);
+> I'm not quite sure I understand the above. If the reason is 1 or 2,
+> then the DSP received an error message from something downstream. In
+> otherwords, the port was notified an error occured somewhere, but it
+> was not the device that detected that error, so we should not expect
+> aer_print_error on that device to show anything useful. Right?
 
-> > >  	sl->timer.function = hrtimer_wakeup;  
-> 
-> It's the wakeup function and nothing is supposed to override that.
+My intention here was to just clear the AER registers. EDR spec expects 
+OS to clear AER registers during DPC event (irrespective of DPC trigger 
+reason). Consider a case where DPC is triggered due to ERR_FATAL 
+message, but at the same time the port has some correctable errors 
+logged. So before handling DPC, we need to clear the AER registers. 
+Since there is no AER driver to handle AER registers in EDR mode, we 
+need to clear AER registers in the same code path. But I got your point 
+about there is nothing to report/print if the reason != 0. I think the 
+correct way to clear all AER registers is to use 
+pci_cleanup_aer_error_status_regs(). I will fix this and send a new 
+patch set.
 
-Ah, that makes sense. Not the actual handler then.
-
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
+>
+>>   	}
+>>   
+>> -	/* We configure DPC so it only triggers on ERR_FATAL */
+>> +	/*
+>> +	 * Irrespective of whether the DPC event is triggered by
+>> +	 * ERR_FATAL or ERR_NONFATAL, since the link is already down,
+>> +	 * use the FATAL error recovery path for both cases.
+>> +	 */
+>>   	pcie_do_recovery(pdev, pci_channel_io_frozen, PCIE_PORT_SERVICE_DPC);
+>>   }
+>>   
+>> -- 
+>> 2.21.0
+>>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
