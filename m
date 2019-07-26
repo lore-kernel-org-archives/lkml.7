@@ -2,121 +2,114 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AFFC76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C977C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60E0A218DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F95218DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:19:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="WmFtrFSw"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GLd+HRYD";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="X2x19VCL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfGZGTF (ORCPT
+        id S1726327AbfGZGT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 02:19:05 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:38783 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbfGZGTF (ORCPT
+        Fri, 26 Jul 2019 02:19:29 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56438 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfGZGT2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 02:19:05 -0400
-Received: by mail-vs1-f68.google.com with SMTP id k9so35350047vso.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 23:19:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Bl7fI4eVZWffKAOz4zhIOA0eJ2D0U0DNka5Gld+y0is=;
-        b=WmFtrFSw/R5Cz8UuWt8tiEoXLxFQ6BCS/F4MD7pwFOpPfJiwxzoJexVjGGjwbsbDM2
-         8kGywwqi+EOUNqcAN2+vSIAEsSl/yhZDMdDmQonSWX1pUYtAwsGuFx3miJ2JcVGBs7na
-         bOUfRzSLSYvBUWvbRSdvjTY1ct55yl0Iqn5yJ5tjdfz6zPsgOdAnc8TuJC4Fxt7PuTiq
-         6AM60l/Fdw/kt2HG/LbYjxx1ftu9FTGK4yV8DVY1xA3Da9zgQcDfENwhQDx1YstruteQ
-         q/r7kniw5cWXc/F3AtJTiR2+eVsb/myAm9vO7XDIP/hpQUaUdZ+mg1Nva++4iPrL65v/
-         E2tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Bl7fI4eVZWffKAOz4zhIOA0eJ2D0U0DNka5Gld+y0is=;
-        b=TjEpzpjA26y2Fs0XJNMpTm9qtgAoiZ2/ZxWVERFIXldtjdNt0DOHo5uSS4LMO711fR
-         U8GSQxCzX70rsOLd9dEP3Vr3dcOx0TxZWmj/pRRHRWCTEpNdgRXmthC2YoE0mmeNTTwV
-         9JmBr9YebcZwI43khT72vvspHx3PYPgYqc+Kqd76EwSwZhxhflp5vxQDy25pJFVBtp0g
-         ubjEkjiNLZPUGqhFtRzJkfER84wI05FDc0pLW18OtqoIS/LeAUPbUFb7hEnuaBvGuQau
-         j7g3cjgXn2C066Ej9t1wkl9+Nq+Wdd/2JlmmocurVmUryFZPbd+eDmUZCwjJAKJjAjSN
-         z5gA==
-X-Gm-Message-State: APjAAAXvTyvBnc8YmTEtSXbk/BUWbSFqnvJXbMeWp6bZEj+nabIHpjhN
-        sfF3M8uEQiVBAHfS/+cxbBd19mKsDQLOEaQSVAP94A==
-X-Google-Smtp-Source: APXvYqy5de4RdPtgj97TOfRHiUta7VD2dn3FWaYfsVQWQZRVK/s1bYmGEqsu1oqBvlo5cD2KF02tErIDgh9uivkIFbI=
-X-Received: by 2002:a67:eb19:: with SMTP id a25mr58320351vso.109.1564121943796;
- Thu, 25 Jul 2019 23:19:03 -0700 (PDT)
+        Fri, 26 Jul 2019 02:19:28 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id F1AA360312; Fri, 26 Jul 2019 06:19:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564121967;
+        bh=tuIggQu6dJ8EB1vu2q34aTSvJWiTR8Y13JpxH0xY+wo=;
+        h=To:From:Subject:Date:From;
+        b=GLd+HRYDHP2wOvvCi3x5CMnCrbkekNVca/1Uy6EFC1nCpkic07IIESw3d6+OpkGiV
+         YrSi7hXbtLvf/pdv6MER8/MhmWn7PENFg7DOzs0AhGAZQAPavApYcPD6HV1+mJtrje
+         QKcfgbBUywp2EX35TCKd4CvSQLBHQcUE0qBqJx5k=
+Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8042660312;
+        Fri, 26 Jul 2019 06:19:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564121965;
+        bh=tuIggQu6dJ8EB1vu2q34aTSvJWiTR8Y13JpxH0xY+wo=;
+        h=To:From:Subject:Date:From;
+        b=X2x19VCLEvSnVju/55PiYdcmUN1JnwmeqJKkA/dPQldYNU0NOKs2iRXnVAiZBtuK8
+         Qu/tG1PUc1KjCA+tagInUh/4FeAmNhjQwGUEKQNYmeLxdcaNgGX7nZOG8ZPOrBXfcU
+         Rhl88eP28xhYgHGCrITkH09US2tE50OZOOipQn48=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8042660312
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [Regression] Missing device nodes for ETR, ETF and STM after
+ CONFIG_UEVENT_HELPER=n
+Message-ID: <cfe09a46-462f-633a-37c2-52f8bfc0ffb2@codeaurora.org>
+Date:   Fri, 26 Jul 2019 11:49:19 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190725080925.6575-1-jian-hong@endlessm.com> <06d713fff7434dfb9ccab32c2e2112e2@AcuMS.aculab.com>
-In-Reply-To: <06d713fff7434dfb9ccab32c2e2112e2@AcuMS.aculab.com>
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Fri, 26 Jul 2019 14:18:26 +0800
-Message-ID: <CAPpJ_ecAAw=1X=7+MOw-VVH0ZKBr6rcRub6JnEqgNbZ6Hxt=ag@mail.gmail.com>
-Subject: Re: [PATCH] rtw88: pci: Use general byte arrays as the elements of RX ring
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux@endlessm.com" <linux@endlessm.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Laight <David.Laight@aculab.com> =E6=96=BC 2019=E5=B9=B47=E6=9C=8825=
-=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=885:21=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> From: Jian-Hong Pan
-> > Sent: 25 July 2019 09:09
-> > Each skb as the element in RX ring was expected with sized buffer 8216
-> > (RTK_PCI_RX_BUF_SIZE) bytes. However, the skb buffer's true size is
-> > 16640 bytes for alignment after allocated, x86_64 for example. And, the
-> > difference will be enlarged 512 times (RTK_MAX_RX_DESC_NUM).
-> > To prevent that much wasted memory, this patch follows David's
-> > suggestion [1] and uses general buffer arrays, instead of skbs as the
-> > elements in RX ring.
-> ...
-> >       for (i =3D 0; i < len; i++) {
-> > -             skb =3D dev_alloc_skb(buf_sz);
-> > -             if (!skb) {
-> > +             buf =3D devm_kzalloc(rtwdev->dev, buf_sz, GFP_ATOMIC);
->
-> You should do this allocation somewhere than can sleep.
-> So you don't need GFP_ATOMIC, making the allocate (and dma map)
-> much less likely to fail.
-> If they do fail using a smaller ring might be better than failing
-> completely.
+Hi,
 
-Ok, I can tweak and try it.
+When trying to test my coresight patches, I found that etr,etf and stm 
+device nodes are missing from /dev.
 
-> I suspect that buf_sz gets rounded up somewhat.
-> Also you almost certainly want 'buf' to be cache-line aligned.
-> I don't think devm_kzalloc() guarantees that at all.
+Bisection gives this as the bad commit.
 
-Sure
+1be01d4a57142ded23bdb9e0c8d9369e693b26cc is the first bad commit
+commit 1be01d4a57142ded23bdb9e0c8d9369e693b26cc
+Author: Geert Uytterhoeven <geert+renesas@glider.be>
+Date:   Thu Mar 14 12:13:50 2019 +0100
 
-> While allocating all 512 buffers in one block (just over 4MB)
-> is probably not a good idea, you may need to allocated (and dma map)
-> then in groups.
+     driver: base: Disable CONFIG_UEVENT_HELPER by default
 
-Thanks for reviewing.  But got questions here to double confirm the idea.
-According to original code, it allocates 512 skbs for RX ring and dma
-mapping one by one.  So, the new code allocates memory buffer 512
-times to get 512 buffer arrays.  Will the 512 buffers arrays be in one
-block?  Do you mean aggregate the buffers as a scatterlist and use
-dma_map_sg?
+     Since commit 7934779a69f1184f ("Driver-Core: disable /sbin/hotplug by
+     default"), the help text for the /sbin/hotplug fork-bomb says
+     "This should not be used today [...] creates a high system load, or
+     [...] out-of-memory situations during bootup".  The rationale for this
+     was that no recent mainstream system used this anymore (in 2010!).
 
-Thank you,
-Jain-Hong Pan
+     A few years later, the complete uevent helper support was made optional
+     in commit 86d56134f1b67d0c ("kobject: Make support for uevent_helper
+     optional.").  However, if was still left enabled by default, to support
+     ancient userland.
+
+     Time passed by, and nothing should use this anymore, so it can be
+     disabled by default.
+
+     Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+  drivers/base/Kconfig | 1 -
+  1 file changed, 1 deletion(-)
+
+
+Any idea on this?
+
+-Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
