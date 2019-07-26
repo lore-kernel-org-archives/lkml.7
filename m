@@ -2,84 +2,197 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AC5C76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F96EC76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23D2F218B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA96E22C7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 02:34:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564108486;
+	bh=lCentzQ5rfeDSTjkSxMGs9Ll504hags9ebLGatlnALU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=RVMqsTxxcULY8tF1zx58CyejltkW6fbMFwPqpBLb+HsGrxXIR79Cp9AMv3WSaluBS
+	 D8lUJdBSG383PvXYRjFzjzhwTF6ovetN0qETU+f6gOZdOJ5OYXCJ6VvDiuMQ7kKxDY
+	 9Vf76YCogfomfGBcMm+uF+I4U10fY1iRk6EfSYzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbfGZCeC (ORCPT
+        id S1726247AbfGZCep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 22:34:02 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:45334 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfGZCeB (ORCPT
+        Thu, 25 Jul 2019 22:34:45 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37013 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfGZCep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 22:34:01 -0400
-Received: by mail-io1-f71.google.com with SMTP id e20so56709721ioe.12
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 19:34:01 -0700 (PDT)
+        Thu, 25 Jul 2019 22:34:45 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 19so23710082pfa.4;
+        Thu, 25 Jul 2019 19:34:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4G7DtW9gdm4AoaNq28OMZRUktGi6LZH7+wyJUNGLnhg=;
+        b=nlAqPvMgNWCHpJ1bDHJ7MhKtm+m+3BAF3t0YZTixnpvQM4m0mm2G4GaaXGrxG1fhJo
+         ikN/GrPfDA+yIE9YNjJsqHVw5n5OjjHjls/Ax8ch7Gjnfxtetfn01ccDlDpQor57qeb2
+         fbxTrbv9o7vYDghmxcaFkWzOcGMzifUx+5UfaCF4bxpmp5uI3ICz0jete2wwG3VJp+z1
+         mHC6YJb+hc9sE010xBOW25uhf1X+phenIZSkVE2nLYKUDMaHayOGXbBUNUO2GDo+1DQV
+         0LiBwQ1ORa3kaZeQ50nQqjjTALu+j1pKb5Sy0r0u3EpIJ0n61uVvoPu1ELm9KqiZizFP
+         icrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=7CpkHsdwXfZwBwrO6vlf0OIv7joJOo5Z6wYVwguiJ04=;
-        b=bQv2HJx89A89xz8QrVs1D185XdtpwjShpdnRMfjovNwuMDmxwcOFG5PmAc+adkIv3Z
-         6ODXI4fYZgRZUD07LlZgG6HooJTkGeEWc4pw2td/YN4M8qcNYkZL5Ozph61hIGYTY54/
-         dNYPoxBZNnNyWTOQdqLfCML96vWZOXkUOI68c8iUG7/AUBA3/UMUnsdyhsF68wFjoqgm
-         C4FyOl6CuMe0i4oY1z6hrPbueXjGkU+nMvgektiYVcZ+PtgDgYi9YP2HhB58OmqYQ3tt
-         jCRzYxtxa6tYFBZonguhOzN8AvdtgWqYyj8aJvx7tcmWM2HCo4sTkPLmXx+kPTn8ayU/
-         A83Q==
-X-Gm-Message-State: APjAAAUwG/yvJXTp6DXPkrbZg12G1VYxEduk/D0xP/U89IFZsdYWMk58
-        KpEJk38Xu17H5yjT3Lg4A6QtSrfbN/wW+Ga2Ysq9SiyS/1Xf
-X-Google-Smtp-Source: APXvYqwFoHU762iKdsVHVX6yTlu7QfEbGsNdjn/z0ANksU56Shk8WreV3mmUqSXqtLdMgVlprsuuj4lm54a3cf1C9DCqoj4pnlX3
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=4G7DtW9gdm4AoaNq28OMZRUktGi6LZH7+wyJUNGLnhg=;
+        b=J1Cj6ROEeJbzvSeHXDa/SfAWiH4+MogYxmIwCXe0Lcs2wLHabt9gilTwZacS0Ztv1l
+         uxrJvh0LlgiD58sMNBY+/27vBCXv+ki4+fHqdCnHTYesqXKVBxCHfyqH1YhTMMHF9Pzw
+         hE90KWsbCR4yxaIa7JZzRuhXpWnR1sS3/3RT5JEEJK2oLqgy5oOs8xhpWaaayzJJv7iZ
+         WIFXHQtvlgVuMt7m6g1Iog0vNLV37LX05sIi2haB7BjWQoOcK6VREtFbFrZ31KwWxgKA
+         964ccHPaSAW2lu2c87bWYqhbBZyWBgPhFmwm4l9Oz8DPz0eGiaaRw/Z5WGFO7hV1NCk8
+         /wDg==
+X-Gm-Message-State: APjAAAU9betricfQT7U9UuMpKGsvZHmbGG/T3iz6DAddYryEsUa8ZlGP
+        2MLeRT86TLrSHa1KT/W7fGo/VCZg
+X-Google-Smtp-Source: APXvYqyNGxGCHwWEmHeAjFZ0BziOJEqidU+PkPd+8ebMpdP2PvbzoqRqXgEsxbwBOG8R6RMLr6yRjg==
+X-Received: by 2002:a65:6552:: with SMTP id a18mr79948447pgw.208.1564108484371;
+        Thu, 25 Jul 2019 19:34:44 -0700 (PDT)
+Received: from bbox-2.seo.corp.google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id l31sm88958450pgm.63.2019.07.25.19.34.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 19:34:43 -0700 (PDT)
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH v7 0/5] Introduce MADV_COLD and MADV_PAGEOUT
+Date:   Fri, 26 Jul 2019 11:34:30 +0900
+Message-Id: <20190726023435.214162-1-minchan@kernel.org>
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 MIME-Version: 1.0
-X-Received: by 2002:a02:b90e:: with SMTP id v14mr56641596jan.122.1564108441113;
- Thu, 25 Jul 2019 19:34:01 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 19:34:01 -0700
-In-Reply-To: <000000000000b68e04058e6a3421@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000005dbbc058e8c608d@google.com>
-Subject: Re: memory leak in dma_buf_ioctl
-From:   syzbot <syzbot+b2098bc44728a4efb3e9@syzkaller.appspotmail.com>
-To:     bsingharora@gmail.com, coreteam@netfilter.org, davem@davemloft.net,
-        dri-devel@lists.freedesktop.org, duwe@suse.de, dvyukov@google.com,
-        kaber@trash.net, kadlec@blackhole.kfki.hu,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, mingo@redhat.com, mpe@ellerman.id.au,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, rostedt@goodmis.org, sumit.semwal@linaro.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+This patch is part of previous series:
+https://lore.kernel.org/lkml/20190531064313.193437-1-minchan@kernel.org/
+Originally, it was created for external madvise hinting feature.
 
-commit 04cf31a759ef575f750a63777cee95500e410994
-Author: Michael Ellerman <mpe@ellerman.id.au>
-Date:   Thu Mar 24 11:04:01 2016 +0000
+https://lkml.org/lkml/2019/5/31/463
+Michal wanted to separte the discussion from external hinting interface
+so this patchset includes only first part of my entire patchset
 
-     ftrace: Make ftrace_location_range() global
+  - introduce MADV_COLD and MADV_PAGEOUT hint to madvise.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=154293f4600000
-start commit:   abdfd52a Merge tag 'armsoc-defconfig' of git://git.kernel...
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=174293f4600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=134293f4600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d31de3d88059b7fa
-dashboard link: https://syzkaller.appspot.com/bug?extid=b2098bc44728a4efb3e9
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12526e58600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=161784f0600000
+However, I keep entire description for others for easier understanding
+why this kinds of hint was born.
 
-Reported-by: syzbot+b2098bc44728a4efb3e9@syzkaller.appspotmail.com
-Fixes: 04cf31a759ef ("ftrace: Make ftrace_location_range() global")
+Thanks.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+This patchset is against on mmotm-mmotm-2019-07-24-21-39.
+
+Below is description of previous entire patchset.
+
+================= &< =====================
+
+- Background
+
+The Android terminology used for forking a new process and starting an app
+from scratch is a cold start, while resuming an existing app is a hot start.
+While we continually try to improve the performance of cold starts, hot
+starts will always be significantly less power hungry as well as faster so
+we are trying to make hot start more likely than cold start.
+
+To increase hot start, Android userspace manages the order that apps should
+be killed in a process called ActivityManagerService. ActivityManagerService
+tracks every Android app or service that the user could be interacting with
+at any time and translates that into a ranked list for lmkd(low memory
+killer daemon). They are likely to be killed by lmkd if the system has to
+reclaim memory. In that sense they are similar to entries in any other cache.
+Those apps are kept alive for opportunistic performance improvements but
+those performance improvements will vary based on the memory requirements of
+individual workloads.
+
+- Problem
+
+Naturally, cached apps were dominant consumers of memory on the system.
+However, they were not significant consumers of swap even though they are
+good candidate for swap. Under investigation, swapping out only begins
+once the low zone watermark is hit and kswapd wakes up, but the overall
+allocation rate in the system might trip lmkd thresholds and cause a cached
+process to be killed(we measured performance swapping out vs. zapping the
+memory by killing a process. Unsurprisingly, zapping is 10x times faster
+even though we use zram which is much faster than real storage) so kill
+from lmkd will often satisfy the high zone watermark, resulting in very
+few pages actually being moved to swap.
+
+- Approach
+
+The approach we chose was to use a new interface to allow userspace to
+proactively reclaim entire processes by leveraging platform information.
+This allowed us to bypass the inaccuracy of the kernel’s LRUs for pages
+that are known to be cold from userspace and to avoid races with lmkd
+by reclaiming apps as soon as they entered the cached state. Additionally,
+it could provide many chances for platform to use much information to
+optimize memory efficiency.
+
+To achieve the goal, the patchset introduce two new options for madvise.
+One is MADV_COLD which will deactivate activated pages and the other is
+MADV_PAGEOUT which will reclaim private pages instantly. These new options
+complement MADV_DONTNEED and MADV_FREE by adding non-destructive ways to
+gain some free memory space. MADV_PAGEOUT is similar to MADV_DONTNEED in a way
+that it hints the kernel that memory region is not currently needed and
+should be reclaimed immediately; MADV_COLD is similar to MADV_FREE in a way
+that it hints the kernel that memory region is not currently needed and
+should be reclaimed when memory pressure rises.
+
+* v6 - http://lore.kernel.org/lkml/20190723062539.198697-1-minchan@kernel.org
+* v5 - http://lore.kernel.org/lkml/20190714233401.36909-1-minchan@kernel.org
+* v4 - http://lore.kernel.org/lkml/20190711012528.176050-1-minchan@kernel.org
+* v3 - http://lore.kernel.org/lkml/20190627115405.255259-1-minchan@kernel.org
+* v2 - http://lore.kernel.org/lkml/20190610111252.239156-1-minchan@kernel.org
+* v1 - http://lore.kernel.org/lkml/20190603053655.127730-1-minchan@kernel.org
+
+Minchan Kim (5):
+  mm: introduce MADV_COLD
+  mm: change PAGEREF_RECLAIM_CLEAN with PAGE_REFRECLAIM
+  mm: account nr_isolated_xxx in [isolate|putback]_lru_page
+  mm: introduce MADV_PAGEOUT
+  mm: factor out common parts between MADV_COLD and MADV_PAGEOUT
+
+ arch/alpha/include/uapi/asm/mman.h     |   3 +
+ arch/mips/include/uapi/asm/mman.h      |   3 +
+ arch/parisc/include/uapi/asm/mman.h    |   3 +
+ arch/xtensa/include/uapi/asm/mman.h    |   3 +
+ include/linux/swap.h                   |   2 +
+ include/uapi/asm-generic/mman-common.h |   3 +
+ mm/compaction.c                        |   2 -
+ mm/gup.c                               |   7 +-
+ mm/internal.h                          |   2 +-
+ mm/khugepaged.c                        |   3 -
+ mm/madvise.c                           | 274 ++++++++++++++++++++++++-
+ mm/memory-failure.c                    |   3 -
+ mm/memory_hotplug.c                    |   4 -
+ mm/mempolicy.c                         |   3 -
+ mm/migrate.c                           |  37 +---
+ mm/oom_kill.c                          |   2 +-
+ mm/swap.c                              |  42 ++++
+ mm/vmscan.c                            |  83 +++++++-
+ 18 files changed, 416 insertions(+), 63 deletions(-)
+
+-- 
+2.22.0.709.g102302147b-goog
+
