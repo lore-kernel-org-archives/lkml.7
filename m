@@ -2,161 +2,86 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C293BC76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190EAC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA5320838
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:40:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r2LYzePY"
+	by mail.kernel.org (Postfix) with ESMTP id E0CE422BEF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 18:40:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387783AbfGZSkB (ORCPT
+        id S2387845AbfGZSk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 14:40:01 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40876 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387434AbfGZSkB (ORCPT
+        Fri, 26 Jul 2019 14:40:58 -0400
+Received: from mailoutvs25.siol.net ([185.57.226.216]:54746 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387434AbfGZSk5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 14:40:01 -0400
-Received: by mail-pf1-f195.google.com with SMTP id p184so24905194pfp.7;
-        Fri, 26 Jul 2019 11:40:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bY4xnD9VEBuMVQmfTHfPZt8vwC6Vj5uTPYAbzW3F/j4=;
-        b=r2LYzePY0p1lz7qwyh9m7J8u6+UVqedhCQ7BKobVOg1zauDSAKbok5ceFZRuNp2VFf
-         lX/4BDr8lMTXFrfSeA0Op5MpsCZYnTg97r/E85vHuBuuKbkvll4YhTyjAU5YtmA0YfYi
-         3KN/k8jdDTyKs4BWRUh+VTETT++7zIU/khvMxnp8IjNmpTSFZDwCi7cQAqeyCTdCiegT
-         f4oor9KFs6N9V0FWfGlOcVzy0OlGKexfdAmTY8oCDgKlKh+cvcZFhvCJj6/CUG9BLPLb
-         nW6VTyq9P/MBwWVndBBdFnXhACkGNtbgaoLicUBHDJrL9AjJjHbTdq0du8q5IIgzqVUa
-         MJXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bY4xnD9VEBuMVQmfTHfPZt8vwC6Vj5uTPYAbzW3F/j4=;
-        b=sVIkUmNTzPdwwd6L/YGQm/fmdc3DV9vaWQx44tOISw352lMJVwHkd0igkwXBoeKbHq
-         DgtUCz20X6il+u1yChY5Bexfvhydtc+CPN8ee9TeO/aZlhBd0wmPPcVkSz1f71g/AQno
-         WYco9rpsUxBIhSjVXIL2ZHhLjSwUbjRKYYxzKoLXdSamBgcG+107XtIJbRyWKWhYantv
-         teBddUPH/j9czeo+d6hC4wuv3oBpDZPkmC88zabQ4gvYkf4q6aRWoqk2f8IiRPPAB/Jf
-         3MGrU3n6jhbYahr1Ka0sZKCES1gWMRIzD36Fks0rSqImu/oz4H88WSQPv9LstQ/Gn+Yv
-         0cQw==
-X-Gm-Message-State: APjAAAVEcb98W1HGpjlRTH6KtsRysmnN6D0xL7kWwjonzs0BYGm6j0Hl
-        ZqVJr4h+Mb6lxSvPvww7Z0c=
-X-Google-Smtp-Source: APXvYqwAa7f6KrCivJT9i9iP+Ljnbnzh9F83yxbeML6KsVRnVjPFn3zX0egbZMn28CCYbk40FWxZ9w==
-X-Received: by 2002:a62:1b0c:: with SMTP id b12mr23337721pfb.17.1564166400088;
-        Fri, 26 Jul 2019 11:40:00 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::2:2eeb])
-        by smtp.gmail.com with ESMTPSA id u7sm47886990pgr.94.2019.07.26.11.39.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 11:39:59 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 11:39:56 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Network Development <netdev@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>, kernel-team@android.com
-Subject: Re: [PATCH RFC 0/4] Add support to directly attach BPF program to
- ftrace
-Message-ID: <20190726183954.oxzhkrwt4uhgl4gl@ast-mbp.dhcp.thefacebook.com>
-References: <20190716213050.GA161922@google.com>
- <20190716222650.tk2coihjtsxszarf@ast-mbp.dhcp.thefacebook.com>
- <20190716224150.GC172157@google.com>
- <20190716235500.GA199237@google.com>
- <20190717012406.lugqemvubixfdd6v@ast-mbp.dhcp.thefacebook.com>
- <20190717130119.GA138030@google.com>
- <CAADnVQJY_=yeY0C3k1ZKpRFu5oNbB4zhQf5tQnLr=Mi8i6cgeQ@mail.gmail.com>
- <20190718025143.GB153617@google.com>
- <20190723221108.gamojemj5lorol7k@ast-mbp>
- <20190724135714.GA9945@google.com>
+        Fri, 26 Jul 2019 14:40:57 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 3F180522DEC;
+        Fri, 26 Jul 2019 20:40:54 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id haV3ghgp1HtG; Fri, 26 Jul 2019 20:40:54 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id E644D523034;
+        Fri, 26 Jul 2019 20:40:53 +0200 (CEST)
+Received: from localhost.localdomain (cpe-194-152-11-237.cable.triera.net [194.152.11.237])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Postfix) with ESMTPSA id 313BA522DEC;
+        Fri, 26 Jul 2019 20:40:52 +0200 (CEST)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     thierry.reding@gmail.com, mripard@kernel.org, wens@csie.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: [PATCH 0/6] pwm: sun4i: Add support for Allwinner H6
+Date:   Fri, 26 Jul 2019 20:40:39 +0200
+Message-Id: <20190726184045.14669-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724135714.GA9945@google.com>
-User-Agent: NeoMutt/20180223
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 09:57:14AM -0400, Joel Fernandes wrote:
-> On Tue, Jul 23, 2019 at 03:11:10PM -0700, Alexei Starovoitov wrote:
-> > > > > > I think allowing one tracepoint and disallowing another is pointless
-> > > > > > from security point of view. Tracing bpf program can do bpf_probe_read
-> > > > > > of anything.
-> > > > >
-> > > > > I think the assumption here is the user controls the program instructions at
-> > > > > runtime, but that's not the case. The BPF program we are loading is not
-> > > > > dynamically generated, it is built at build time and it is loaded from a
-> > > > > secure verified partition, so even though it can do bpf_probe_read, it is
-> > > > > still not something that the user can change.
-> > > > 
-> > > > so you're saying that by having a set of signed bpf programs which
-> > > > instructions are known to be non-malicious and allowed set of tracepoints
-> > > > to attach via selinux whitelist, such setup will be safe?
-> > > > Have you considered how mix and match will behave?
-> > > 
-> > > Do you mean the effect of mixing tracepoints and programs? I have not
-> > > considered this. I am Ok with further enforcing of this (only certain
-> > > tracepoints can be attached to certain programs) if needed. What do
-> > > you think? We could have a new bpf(2) syscall attribute specify which
-> > > tracepoint is expected, or similar.
-> > > 
-> > > I wanted to walk you through our 2 usecases we are working on:
-> > 
-> > thanks for sharing the use case details. Appreciate it.
-> 
-> No problem and thanks for your thoughts.
-> 
-> > > 1. timeinstate: By hooking 2 programs onto sched_switch and cpu_frequency
-> > > tracepoints, we are able to collect CPU power per-UID (specific app). Connor
-> > > O'Brien is working on that.
-> > > 
-> > > 2. inode to file path mapping: By hooking onto VFS tracepoints we are adding to
-> > > the android kernels, we can collect data when the kernel resolves a file path
-> > > to a inode/device number. A BPF map stores the inode/dev number (key) and the
-> > > path (value). We have usecases where we need a high speed lookup of this
-> > > without having to scan all the files in the filesystem.
-> > 
-> > Can you share the link to vfs tracepoints you're adding?
-> > Sounds like you're not going to attempt to upstream them knowing
-> > Al's stance towards them?
-> > May be there is a way we can do the feature you need, but w/o tracepoints?
-> 
-> Yes, given Al's stance I understand the patch is not upstreamable. The patch
-> is here:
-> For tracepoint:
-> https://android.googlesource.com/kernel/common/+/27d3bfe20558d279041af403a887e7bdbdcc6f24%5E%21/
+Allwinner H6 SoC has PWM core which is basically the same as that found
+in A20, it's just depends on additional bus clock and reset line.
 
-this is way more than tracepoint.
+This series adds support for it and extends PWM driver functionality in
+a way that it's now possible to bypass whole core and output PWM source
+clock directly as a PWM signal. This functionality is needed by AC200
+chip, which is bundled in same physical package as H6 SoC, to serve as a
+clock source of 24 MHz. AC200 clock input pin is bonded internally to
+the second PWM channel.
 
-> For bpf program:
-> https://android.googlesource.com/platform/system/bpfprogs/+/908f6cd718fab0de7a944f84628c56f292efeb17%5E%21/
+I would be grateful if anyone can test this patch series for any kind of
+regression on other SoCs.
 
-what is unsafe_bpf_map_update_elem() in there?
-The verifier comment sounds odd.
-Could you describe the issue you see with the verifier?
+Please take a look.
 
-> I intended to submit the tracepoint only for the Android kernels, however if
-> there is an upstream solution to this then that's even better since upstream can
-> benefit. Were you thinking of a BPF helper function to get this data?
+Best regards,
+Jernej
 
-I think the best way to evaluate the patches is whether they are upstreamable or not.
-If they're not (like this case), it means that there is something wrong with their design
-and if android decides to go with such approach it will only create serious issues long term.
-Starting with the whole idea of dev+inode -> filepath cache.
-dev+inode is not a unique identifier of the file.
-In some filesystems two different files may have the same ino integer value.
-Have you looked at 'struct file_handle' ? and name_to_handle_at ?
-I think fhandle is the only way to get unique identifier of the file.
-Could you please share more details why android needs this cache of dev+ino->path?
-I guess something uses ino to find paths?
-Sort of faster version of 'find -inum' ?
+Jernej Skrabec (6):
+  dt-bindings: pwm: allwinner: Add H6 PWM description
+  pwm: sun4i: Add a quirk for reset line
+  pwm: sun4i: Add a quirk for bus clock
+  pwm: sun4i: Add support for H6 PWM
+  pwm: sun4i: Add support to output source clock directly
+  arm64: dts: allwinner: h6: Add PWM node
+
+ .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 36 +++++++-
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 10 +++
+ drivers/pwm/pwm-sun4i.c                       | 83 ++++++++++++++++++-
+ 3 files changed, 125 insertions(+), 4 deletions(-)
+
+--=20
+2.22.0
 
