@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1706CC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E72AC7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBA59218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3814522BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564154809;
-	bh=eBinwqcJdtssqV8okGdFjjiIvIlF+S1X3v/D2boZEqc=;
+	s=default; t=1564154813;
+	bh=Ro0FAT0BGVOKoWB4ogETXCph+w+v7zxDCGjgX25mSfg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rNJeKr8lTO7Y2b7ddXZ6uuP0NGqo04PDyfrUfIzE0dOOp0QKNMKPN4xuNsBEyOh7D
-	 +06k3/aDZMjZeFOKQUUa/ByjktwSM0liouvY8+USbHFrxyIMAwDiDP7rFxBeOvt9+u
-	 gIYutlj26fZk4JcJFry8CpqqpPHm0vW/fh7j8rHI=
+	b=gSqmcDHTLSvus9P6nTCxlHGIWsObHa3xzt3CizfjqXTuT42vh09l6MeBZ/QD4hoc/
+	 Bm4ZvZAxWlQZbOuCQiSYH3MJKKbN/FYQN95aJQ/ZpS9+gEFGUboIOBRsIEYmFoxgU/
+	 r0K6RovJ6O/Q1hItU3E7rllFifFXo2ub3pIhAqzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388083AbfGZP0s (ORCPT
+        id S2388103AbfGZP0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:26:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40830 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:26:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387976AbfGZP0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:26:46 -0400
+        id S2388041AbfGZP0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:26:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F9DE218D4;
-        Fri, 26 Jul 2019 15:26:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9401F205F4;
+        Fri, 26 Jul 2019 15:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564154805;
-        bh=eBinwqcJdtssqV8okGdFjjiIvIlF+S1X3v/D2boZEqc=;
+        s=default; t=1564154802;
+        bh=Ro0FAT0BGVOKoWB4ogETXCph+w+v7zxDCGjgX25mSfg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HBBCPDNPIeP2nXOeZ46NzJYp0TMhVOdGWbQbHiTbOY1y/PREPfvQhK3j+xtEXpVc5
-         cie+Tck6NcLxRbi4UjSIrhvU3SUG62fJueFwQ9cCJMiUV34JUTEBCGpUOpyGMj1jEl
-         oLNO9lwYusoFi2fFxP5IrIp1rObL+0I+c9QyLzaI=
+        b=z/xSK/NWl3POynyaqjbBWzlFjzIU1BVDeVKFtOXrUTsBczy5o6d9Leu11vEc+Zc94
+         2Q37HKngM1BE6lEQbRzHzQGLkARPrI1kGkgV3R3YOBUQ5nS6TnyqNr42H/SbKbLh1e
+         LSI9xoMgh3YIaTAoRjdBzltKxy/RgVf2DyEGiuY4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 31/66] net: bridge: stp: dont cache eth dest pointer before skb pull
-Date:   Fri, 26 Jul 2019 17:24:30 +0200
-Message-Id: <20190726152305.217987566@linuxfoundation.org>
+Subject: [PATCH 5.2 30/66] net: bridge: dont cache ether dest pointer on input
+Date:   Fri, 26 Jul 2019 17:24:29 +0200
+Message-Id: <20190726152305.085650315@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
 References: <20190726152301.936055394@linuxfoundation.org>
@@ -62,36 +62,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-[ Upstream commit 2446a68ae6a8cee6d480e2f5b52f5007c7c41312 ]
+[ Upstream commit 3d26eb8ad1e9b906433903ce05f775cf038e747f ]
 
-Don't cache eth dest pointer before calling pskb_may_pull.
+We would cache ether dst pointer on input in br_handle_frame_finish but
+after the neigh suppress code that could lead to a stale pointer since
+both ipv4 and ipv6 suppress code do pskb_may_pull. This means we have to
+always reload it after the suppress code so there's no point in having
+it cached just retrieve it directly.
 
-Fixes: cf0f02d04a83 ("[BRIDGE]: use llc for receiving STP packets")
+Fixes: 057658cb33fbf ("bridge: suppress arp pkts on BR_NEIGH_SUPPRESS ports")
+Fixes: ed842faeb2bd ("bridge: suppress nd pkts on BR_NEIGH_SUPPRESS ports")
 Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_stp_bpdu.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/bridge/br_input.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/net/bridge/br_stp_bpdu.c
-+++ b/net/bridge/br_stp_bpdu.c
-@@ -143,7 +143,6 @@ void br_send_tcn_bpdu(struct net_bridge_
- void br_stp_rcv(const struct stp_proto *proto, struct sk_buff *skb,
- 		struct net_device *dev)
- {
--	const unsigned char *dest = eth_hdr(skb)->h_dest;
- 	struct net_bridge_port *p;
+--- a/net/bridge/br_input.c
++++ b/net/bridge/br_input.c
+@@ -74,7 +74,6 @@ int br_handle_frame_finish(struct net *n
+ 	struct net_bridge_fdb_entry *dst = NULL;
+ 	struct net_bridge_mdb_entry *mdst;
+ 	bool local_rcv, mcast_hit = false;
+-	const unsigned char *dest;
  	struct net_bridge *br;
- 	const unsigned char *buf;
-@@ -172,7 +171,7 @@ void br_stp_rcv(const struct stp_proto *
- 	if (p->state == BR_STATE_DISABLED)
- 		goto out;
+ 	u16 vid = 0;
  
--	if (!ether_addr_equal(dest, br->group_addr))
-+	if (!ether_addr_equal(eth_hdr(skb)->h_dest, br->group_addr))
- 		goto out;
+@@ -92,10 +91,9 @@ int br_handle_frame_finish(struct net *n
+ 		br_fdb_update(br, p, eth_hdr(skb)->h_source, vid, false);
  
- 	if (p->flags & BR_BPDU_GUARD) {
+ 	local_rcv = !!(br->dev->flags & IFF_PROMISC);
+-	dest = eth_hdr(skb)->h_dest;
+-	if (is_multicast_ether_addr(dest)) {
++	if (is_multicast_ether_addr(eth_hdr(skb)->h_dest)) {
+ 		/* by definition the broadcast is also a multicast address */
+-		if (is_broadcast_ether_addr(dest)) {
++		if (is_broadcast_ether_addr(eth_hdr(skb)->h_dest)) {
+ 			pkt_type = BR_PKT_BROADCAST;
+ 			local_rcv = true;
+ 		} else {
+@@ -145,7 +143,7 @@ int br_handle_frame_finish(struct net *n
+ 		}
+ 		break;
+ 	case BR_PKT_UNICAST:
+-		dst = br_fdb_find_rcu(br, dest, vid);
++		dst = br_fdb_find_rcu(br, eth_hdr(skb)->h_dest, vid);
+ 	default:
+ 		break;
+ 	}
 
 
