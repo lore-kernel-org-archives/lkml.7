@@ -2,96 +2,80 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09337C7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C761C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCC5922BEF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:11:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564143094;
-	bh=s9B5Bn0sq7OrH/Ur+r/evxxA7wBBdyuURHmd/GNzHX0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OoTI9F5ninmGw9kkAzrzSATwRgkubFRrhyhCZHkkvB5t7koluUfMepqakZmEda0Wr
-	 5f9NtLxBRODUj3dc77hiKmO0Snq2UvgLTufA2+8mZMjX0KAXmF7ug5X5kKk9cTvDSs
-	 /at366Mjaom6HyFDQfQIgE1zETlwtCkL1E0fsMdw=
+	by mail.kernel.org (Postfix) with ESMTP id DBBC220823
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 12:12:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfGZMLd (ORCPT
+        id S1726951AbfGZMML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 08:11:33 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34614 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfGZMLd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 08:11:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=zWH1HzHWTTOCtqXLaOsKtptgTOZvy4cv9Binkani0EE=; b=TgjB94n9T+uXyDkpjPi5iTBNa
-        4ZY9Y271kuxB9ysKglxBsjkJikVOnVF6sMjSf0Bdq1LxaRHuPW5kU/03Jor9jrqpTdvVfTq40nPBp
-        btAbtT+2Sr56dwTGhb6+8MIVTlK/AhxPGiY9J5YH3OFR7QvrEieMPu6k8xcbzmNDsvazA=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hqz4J-0001ZR-Qi; Fri, 26 Jul 2019 12:11:27 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 4A2DD2742B63; Fri, 26 Jul 2019 13:11:27 +0100 (BST)
-Date:   Fri, 26 Jul 2019 13:11:27 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the sound-asoc tree
-Message-ID: <20190726121127.GB55803@sirena.org.uk>
-References: <20190726072752.2acb2149@canb.auug.org.au>
- <14710d5e-7dfd-84e0-2ea1-712863c4e455@ti.com>
+        Fri, 26 Jul 2019 08:12:11 -0400
+Received: from mga02.intel.com ([134.134.136.20]:30299 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbfGZMML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 08:12:11 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 05:12:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,310,1559545200"; 
+   d="scan'208";a="322024243"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga004.jf.intel.com with ESMTP; 26 Jul 2019 05:12:08 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hqz4x-0001ao-Fj; Fri, 26 Jul 2019 15:12:07 +0300
+Date:   Fri, 26 Jul 2019 15:12:07 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     Ramakrishna Pallala <ramakrishna.pallala@intel.com>
+Subject: Re: [PATCH v1 1/2] extcon: axp288: Add missed error check
+Message-ID: <20190726121207.GU9224@smile.fi.intel.com>
+References: <CGME20190725203413epcas5p115dbc8d8119e17e39c38e5fb847d3ac5@epcas5p1.samsung.com>
+ <20190725203405.65523-1-andriy.shevchenko@linux.intel.com>
+ <bf2b9870-8504-17da-50b8-b1414b7d9b39@samsung.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="IrhDeMKUP4DT/M7F"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <14710d5e-7dfd-84e0-2ea1-712863c4e455@ti.com>
-X-Cookie: Think sideways!
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bf2b9870-8504-17da-50b8-b1414b7d9b39@samsung.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 26, 2019 at 10:15:30AM +0900, Chanwoo Choi wrote:
+> On 19. 7. 26. 오전 5:34, Andy Shevchenko wrote:
+> > It seems from the very beginning the error check has been missed
+> > in axp288_extcon_log_rsi(). Add it here.
 
---IrhDeMKUP4DT/M7F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> >  	ret = regmap_read(info->regmap, AXP288_PS_BOOT_REASON_REG, &val);
+> > +	if (ret < 0)
+> > +		return;
+> 
+> It need to print error log because axp288_extcon_log_rsi() has the void'
+> return type if there is no any error log, it is not possible to check
+> the error status.
 
-On Fri, Jul 26, 2019 at 09:04:37AM +0300, Peter Ujfalusi wrote:
+Makes sense.
+Will add in v2.
 
-> Mark: can you either drop the patch and I'll send a new one with fixed
-> SHA1 or can you fix the commit message in place?
+P.S. You answered privately, I had returned Cc list back.
 
-Both of which involve rebasing :(  Against my better judgement I
-rebased.
+-- 
+With Best Regards,
+Andy Shevchenko
 
---IrhDeMKUP4DT/M7F
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl067e4ACgkQJNaLcl1U
-h9BzQgf8Dz9ldhvbs+BNcizQURg8b60KSK5yLwlP+ngImwdkmtpaOTWHkDYspieN
-ygjAUzrkFTagoj77lCJTrHjDcKMOI4eIy7RWtGlc6nyEKNBSHbBD16lUv5anljY8
-Ok7ab49RLEy20Ti9l90GhAqbZzYQ+UOhGerSi1bkqQA8uiHjBIi7BcrsFi85msr7
-mxVCurAhhFnAQRXLOyvTMB0bWgX1lbUNAvMW3TM6qJdtZukC0GSoMCEpyae1nvCV
-RoDjvmBGH04qIq5GxYbzMXNiebmiB+3kcUkmnOnRqylyh7IMpayn1coQEtH4Eka2
-I8TecNXYaICzr6U0F8Nu4/QH30cqFQ==
-=2nhj
------END PGP SIGNATURE-----
-
---IrhDeMKUP4DT/M7F--
