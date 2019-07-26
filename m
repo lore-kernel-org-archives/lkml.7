@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BAFC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AF3C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0C8422CB9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A338205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155271;
-	bh=68b9tyJ/KEnKnueCpYzHNa+diWF1/PGhoVHcbhTV4WI=;
+	s=default; t=1564155277;
+	bh=7BNzZxlrTKjVpAqf9d18OP1Ht1NrXfM85+VLCB7SrY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a7kKk3CePVb6oMEWDz/c8lnU8BGLOJoxcGkqkuLrBrGiUDsKslNJBujmxQ0QkjMry
-	 EdNNQof1+FgFh/91r6ZYenTKAw3pj9a/5VwgI99rI/9/Fj8Jt1T0jr7EEjLKhbBjL/
-	 LG+m3mUsingo3N6mz99vIkq/fvDObMPAPlXU7Y1g=
+	b=OjETikIVMn8jgoI2sObHgNupQcI1NlyrsbU9T8xxMpJBbrGhMyY7ogkRvY5ap3jqG
+	 GAMeKawlqJl3Eu4HMQuta7QrKJn+lFGiUJ8uKY/c8wU/Zn/pMfcOVsZ+YmQoWb0ssr
+	 W46WgcsCSQCrXPqtuIDq6XWP4hWPlWNE3b3UYLPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389845AbfGZPe3 (ORCPT
+        id S2389851AbfGZPeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:34:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50156 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:34:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389414AbfGZPe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:34:26 -0400
+        id S2389188AbfGZPeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:34:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD00B218D4;
-        Fri, 26 Jul 2019 15:34:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2973020644;
+        Fri, 26 Jul 2019 15:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155265;
-        bh=68b9tyJ/KEnKnueCpYzHNa+diWF1/PGhoVHcbhTV4WI=;
+        s=default; t=1564155262;
+        bh=7BNzZxlrTKjVpAqf9d18OP1Ht1NrXfM85+VLCB7SrY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N4hq2Pkzg0IERO5/NiWfMfD5pnkhGBjVIqaU2ez7XIFXLTmfzRhze51LN/ctJ9CHX
-         U1ZE+A6hpQG5Bw47kpLvfzgsC6vldgW4lGZ/99n1sykhpNdOy/nvJM5DwR1fNiko5+
-         wcX7pHtNO9Gb+gUAVwYdspRCyGJVZIaDtQbDDNw4=
+        b=g7g9yBw989pdx+/vqRdebxTKllQVhcj0EZTHEmygxC/cTL/CXk6CdepW2X2jFYpvP
+         VBgB0LEx/uLmLcjBxVT4iWtJh7kyruImTlx5q8iSCSGCa2RrICSo4nKK2gZsHadciO
+         9CW7EuAgIe2WqQpqpbfGC1UT9zs9vV9js6KkoYyU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+622bdabb128acc33427d@syzkaller.appspotmail.com,
-        syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com,
-        syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com,
-        syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 28/50] netrom: hold sock when setting skb->destructor
-Date:   Fri, 26 Jul 2019 17:25:03 +0200
-Message-Id: <20190726152303.521488942@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Subject: [PATCH 4.19 37/50] dma-buf: Discard old fence_excl on retrying get_fences_rcu for realloc
+Date:   Fri, 26 Jul 2019 17:25:12 +0200
+Message-Id: <20190726152304.472814201@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
 References: <20190726152300.760439618@linuxfoundation.org>
@@ -64,39 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 4638faac032756f7eab5524be7be56bee77e426b ]
+commit f5b07b04e5f090a85d1e96938520f2b2b58e4a8e upstream.
 
-sock_efree() releases the sock refcnt, if we don't hold this refcnt
-when setting skb->destructor to it, the refcnt would not be balanced.
-This leads to several bug reports from syzbot.
+If we have to drop the seqcount & rcu lock to perform a krealloc, we
+have to restart the loop. In doing so, be careful not to lose track of
+the already acquired exclusive fence.
 
-I have checked other users of sock_efree(), all of them hold the
-sock refcnt.
-
-Fixes: c8c8218ec5af ("netrom: fix a memory leak in nr_rx_frame()")
-Reported-and-tested-by: <syzbot+622bdabb128acc33427d@syzkaller.appspotmail.com>
-Reported-and-tested-by: <syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com>
-Reported-and-tested-by: <syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com>
-Reported-and-tested-by: <syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: fedf54132d24 ("dma-buf: Restart reservation_object_get_fences_rcu() after writes")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: stable@vger.kernel.org #v4.10
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190604125323.21396-1-chris@chris-wilson.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/netrom/af_netrom.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/net/netrom/af_netrom.c
-+++ b/net/netrom/af_netrom.c
-@@ -970,6 +970,7 @@ int nr_rx_frame(struct sk_buff *skb, str
- 
- 	window = skb->data[20];
- 
-+	sock_hold(make);
- 	skb->sk             = make;
- 	skb->destructor     = sock_efree;
- 	make->sk_state	    = TCP_ESTABLISHED;
+---
+ drivers/dma-buf/reservation.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/drivers/dma-buf/reservation.c
++++ b/drivers/dma-buf/reservation.c
+@@ -416,6 +416,10 @@ int reservation_object_get_fences_rcu(st
+ 					   GFP_NOWAIT | __GFP_NOWARN);
+ 			if (!nshared) {
+ 				rcu_read_unlock();
++
++				dma_fence_put(fence_excl);
++				fence_excl = NULL;
++
+ 				nshared = krealloc(shared, sz, GFP_KERNEL);
+ 				if (nshared) {
+ 					shared = nshared;
 
 
