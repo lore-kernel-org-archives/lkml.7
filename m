@@ -2,151 +2,142 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032ABC76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D3FC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7DA522BE8
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B6DF22BE8
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 21:14:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J0efhXeS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i7QorXX0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbfGZVKa (ORCPT
+        id S1728287AbfGZVOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 17:10:30 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39396 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbfGZVKa (ORCPT
+        Fri, 26 Jul 2019 17:14:20 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35810 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfGZVOT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 17:10:30 -0400
-Received: by mail-io1-f67.google.com with SMTP id f4so107644775ioh.6
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 14:10:29 -0700 (PDT)
+        Fri, 26 Jul 2019 17:14:19 -0400
+Received: by mail-qk1-f196.google.com with SMTP id r21so40157307qke.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 14:14:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CnFsEo54QQCUj7cKXF+4BGmh5A92hzW17n6M7jlYUc0=;
-        b=J0efhXeSqIUk7WkBdOyv4VzzdnTeBgFVPjWAZe5wML9pAmd1SbqhR4oq66HWtOqUJU
-         2712cWU2K32JLLUedtqpPz+8xMM2Wa+pMNGDyxeOs8f35KCXzq5SXBgjpc+JFQyskZVp
-         A2y98FWuywv+ypUeMd0Dk5/2FbSSTdv/vkv2PxAB1Dp/djLa6qRapUKsRhQhbNVJGMUx
-         HTgThLjpxOdu+6GthZrTfiIUagwZ0b/SKUru19GOCcdaAK/nLgXfJFZbzq92JvIXidX5
-         RJj4OpOG5GuTmNCqpQ9h0UkJGotM2gtIPpBiX88lkuV03qQ98felCFHcPBBA2Nm+gi1Z
-         59zw==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qa7ViVywxiIxJWPtWZmtGq8BibVAw9i9Rh7bvc7CIgk=;
+        b=i7QorXX0pZFv0rWKoJdA023bJXBN0Iq7ESi3l6XgW0Jz4Hzt8DROQ8o2/0H39uXToR
+         Fv+oLBiIVvbwOi4dg/Z103X0Q7lnlxbFM+vn2SmqNeaAhj+nIet4G42OK15BW26juGGj
+         0bmNI+tfgqRPK6PdLRgqPWvF+75253zYwx4Rmq95fvxt2BDWumoNKyHD5vLvY4+DqeHu
+         pKTjmKCwD7z+aMaVAY5fukUC8NEJkrunt9ZQqX7vPnTHL99Mbd/a5pQ2SURicCyBrNZh
+         s3r0H+/eHsCpIBpsPcqnUdpQi77+T3z9pdm0i55Wrn0V3WzNms6h+7Rg2E90pR2l6tC/
+         fnuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CnFsEo54QQCUj7cKXF+4BGmh5A92hzW17n6M7jlYUc0=;
-        b=Uff+5qBI+24vUu1+IbJPZ2Y8oO/DwDw8KkyFkGSFUlZCnWWWJTLqGyh4TPLeh5Wy4T
-         752v5RXwak1G77dZwmyFXzJFpMq4xukpSomgoTf2p6h5tS8UX8W50ysa5mbWwKfVQQIv
-         CvNm0F8QmWtgr+uTZL4p+BM82FgUWCK7VwOwxSvBDllZivB75ov5RsYrDMtJHxWrgJDS
-         GRedJWOy0clqVLIAn00O086c7T95Qeh5HlbgPVBShsQ2Hwg4FceIAj9XDxwTbvIVbaej
-         wm3Kjz6GFiPVIVOgIhdup0rtY45nJSgD3mYafa4Tujps0SaBP9My38BNgebiDyPX6T93
-         nXGw==
-X-Gm-Message-State: APjAAAU8wxnW0+Aey1QDZSQB3cMey1XZvohkec0W4JG4/WB8/Fpyy288
-        eu2tnDhKuNZO35vdMs+OdU6Bw8MJYQbY9HLWE5I=
-X-Google-Smtp-Source: APXvYqwCY2wDc1hmXYnJZNoj6DLIuQys/RphK6WMSWlX/M3S6waa0t3YkBmQ3MMP1SIV4lt841KTJFqYoFyiTmFdjjA=
-X-Received: by 2002:a05:6602:2256:: with SMTP id o22mr3863805ioo.95.1564175429170;
- Fri, 26 Jul 2019 14:10:29 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qa7ViVywxiIxJWPtWZmtGq8BibVAw9i9Rh7bvc7CIgk=;
+        b=MSWQ6ot1HTYjQjHMBPGs9BTvs8L7j2Ehlpz22UPALVTpNL/alZhuSfQZwxI5ZI74YP
+         ftFFWo5YKFy6GSsW2eLQg/Bf6QcD+453cSQAhGpUeNBxsxW6PFrOTLASKtZmZQNN5mON
+         3aYhQqBqn5wUiMSsRbM7SYOadJn33rUnxsdM5NHZhJEnTM3trW/fuAvw0HZJ3847SsfA
+         3iqhdhpahptJzpL/z+XbAcGzgdr5gVMoNoDat0lB+vGzMmoNsGIUu8axYdMUdSy9XzOC
+         IOmrQeTC/UNzdXES3hx6Doggvaufd/3hMNeoPiqszO/RYhuR1+qwAGeywaTqXvDmN6kc
+         IF6w==
+X-Gm-Message-State: APjAAAW9SnaYlwJE4B1gq/9GO65bYSPscoRu0ELkxKR+w1VbptS/V4Sc
+        W2qKNyGifT6dx6kc1MBTW58=
+X-Google-Smtp-Source: APXvYqxSLDgjRaqUfzEMaULb9lZjRMr5M3MK+NEJzKWZadssVNY0ISp4BzlqH5uMziHjAUDHtmR+SQ==
+X-Received: by 2002:a05:620a:15d3:: with SMTP id o19mr65040066qkm.213.1564175658807;
+        Fri, 26 Jul 2019 14:14:18 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id r40sm33390843qtk.2.2019.07.26.14.14.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 26 Jul 2019 14:14:18 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D83B640340; Fri, 26 Jul 2019 18:14:15 -0300 (-03)
+Date:   Fri, 26 Jul 2019 18:14:15 -0300
+To:     Vince Weaver <vincent.weaver@maine.edu>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: perf: perf report stuck in an infinite loop
+Message-ID: <20190726211415.GE24867@kernel.org>
+References: <alpine.DEB.2.21.1907261640590.27043@macbook-air>
 MIME-Version: 1.0
-References: <20190726210137.23395-1-willy@infradead.org>
-In-Reply-To: <20190726210137.23395-1-willy@infradead.org>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Fri, 26 Jul 2019 14:10:18 -0700
-Message-ID: <CAKgT0UcMND12oZ1869howDjcbvRj+KwabaMuRk8bmLZPWbJWcg@mail.gmail.com>
-Subject: Re: [PATCH] mm: Make kvfree safe to call
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Henriques <lhenriques@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Carlos Maiolino <cmaiolino@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1907261640590.27043@macbook-air>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 2:01 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
->
-> Since vfree() can sleep, calling kvfree() from contexts where sleeping
-> is not permitted (eg holding a spinlock) is a bit of a lottery whether
-> it'll work.  Introduce kvfree_safe() for situations where we know we can
-> sleep, but make kvfree() safe by default.
->
-> Reported-by: Jeff Layton <jlayton@kernel.org>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Luis Henriques <lhenriques@suse.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Carlos Maiolino <cmaiolino@redhat.com>
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Em Fri, Jul 26, 2019 at 04:46:51PM -0400, Vince Weaver escreveu:
+> 
+> Currently the perf_data_fuzzer causes perf report to get stuck in an 
+> infinite loop.
+> 
+> >From what I can tell, the issue happens in reader__process_events()
+> when an event is mapped using mmap(), but when it goes to process the
+> event finds out the internal event header has the size (invalidly) set to 
+> something much larger than the mmap buffer size.  This means 
+> fetch_mmaped_event() fails, which gotos remap: which tries again with
+> the exact same mmap size, and this will loop forever.
+> 
+> I haven't been able to puzzle out how to fix this, but maybe you have a 
+> better feel for what's going on here.
 
-So you say you are adding kvfree_safe() in the patch description, but
-it looks like you are introducing kvfree_fast() below. Did something
-change and the patch description wasn't updated, or is this just the
-wrong description for this patch?
+Perhaps the patch below?
 
-> ---
->  mm/util.c | 26 ++++++++++++++++++++++++--
->  1 file changed, 24 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/util.c b/mm/util.c
-> index bab284d69c8c..992f0332dced 100644
-> --- a/mm/util.c
-> +++ b/mm/util.c
-> @@ -470,6 +470,28 @@ void *kvmalloc_node(size_t size, gfp_t flags, int node)
->  }
->  EXPORT_SYMBOL(kvmalloc_node);
->
-> +/**
-> + * kvfree_fast() - Free memory.
-> + * @addr: Pointer to allocated memory.
-> + *
-> + * kvfree_fast frees memory allocated by any of vmalloc(), kmalloc() or
-> + * kvmalloc().  It is slightly more efficient to use kfree() or vfree() if
-> + * you are certain that you know which one to use.
-> + *
-> + * Context: Either preemptible task context or not-NMI interrupt.  Must not
-> + * hold a spinlock as it can sleep.
-> + */
-> +void kvfree_fast(const void *addr)
-> +{
-> +       might_sleep();
-> +
-> +       if (is_vmalloc_addr(addr))
-> +               vfree(addr);
-> +       else
-> +               kfree(addr);
-> +}
-> +EXPORT_SYMBOL(kvfree_fast);
-> +
->  /**
->   * kvfree() - Free memory.
->   * @addr: Pointer to allocated memory.
-> @@ -478,12 +500,12 @@ EXPORT_SYMBOL(kvmalloc_node);
->   * It is slightly more efficient to use kfree() or vfree() if you are certain
->   * that you know which one to use.
->   *
-> - * Context: Either preemptible task context or not-NMI interrupt.
-> + * Context: Any context except NMI.
->   */
->  void kvfree(const void *addr)
->  {
->         if (is_vmalloc_addr(addr))
-> -               vfree(addr);
-> +               vfree_atomic(addr);
->         else
->                 kfree(addr);
->  }
-> --
-> 2.20.1
->
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 37efa1f43d8b..f670c028f84b 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <errno.h>
+ #include <inttypes.h>
++#include <linux/err.h>
+ #include <linux/kernel.h>
+ #include <linux/zalloc.h>
+ #include <traceevent/event-parse.h>
+@@ -1954,7 +1955,7 @@ fetch_mmaped_event(struct perf_session *session,
+ 		/* We're not fetching the event so swap back again */
+ 		if (session->header.needs_swap)
+ 			perf_event_header__bswap(&event->header);
+-		return NULL;
++		return ERR_PTR(-EINVAL);
+ 	}
+ 
+ 	return event;
+@@ -1972,6 +1973,9 @@ static int __perf_session__process_decomp_events(struct perf_session *session)
+ 	while (decomp->head < decomp->size && !session_done()) {
+ 		union perf_event *event = fetch_mmaped_event(session, decomp->head, decomp->size, decomp->data);
+ 
++		if (IS_ERR(event))
++			return PTR_ERR(event);
++
+ 		if (!event)
+ 			break;
+ 
+@@ -2071,6 +2075,9 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+ 
+ more:
+ 	event = fetch_mmaped_event(session, head, mmap_size, buf);
++	if (IS_ERR(event))
++		return PTR_ERR(event);
++
+ 	if (!event) {
+ 		if (mmaps[map_idx]) {
+ 			munmap(mmaps[map_idx], mmap_size);
