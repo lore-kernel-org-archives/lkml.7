@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7317EC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 094E3C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A89B22DD6
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C705422CE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 13:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564149565;
-	bh=15y9Qj8BGPk/nbfuEw1gdMaRm0D8+zt9Ip0goD7o98U=;
+	s=default; t=1564149574;
+	bh=lT53jVn0x4o2nj7YOhRR5yqWqMQqPXBWboEqcOgNnb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GK1rWd87HavGxg60iFNsYGaTV8RzBQKwdwhIrhqwVJwEEW1vGAoGmhZaGB2+hE5Tg
-	 mRdJb0MpMVYjSJB1TaWYEIimlYcrXJUSlmh2VzcbszYo+2VTNz2G6Ks1toFwHXD0q4
-	 Bhp3z9rrbhTuoAWopxxqWibaxTzbH5PUuYgnALWo=
+	b=ajR04guXYCdfAt8S2XFmBbrVvqPFfazQ4vlMeR4GpDqJSJJzNwJX7Mn21njrYOCEx
+	 t8sUJG8wbwdFYLOltgqYDAaanROQLWJQWk7RgcaHbVkIjNmgxLZKL/lFRptUvkNT5g
+	 HyNAS6/EmUHpU7/gtmRS9gT0S3NYugY4LncUqXc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388016AbfGZN7X (ORCPT
+        id S2388058AbfGZN7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 09:59:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46654 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 09:59:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727715AbfGZNkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:40:32 -0400
+        id S2387423AbfGZNk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:40:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48A092238C;
-        Fri, 26 Jul 2019 13:40:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93BAE22BE8;
+        Fri, 26 Jul 2019 13:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148432;
-        bh=15y9Qj8BGPk/nbfuEw1gdMaRm0D8+zt9Ip0goD7o98U=;
+        s=default; t=1564148426;
+        bh=lT53jVn0x4o2nj7YOhRR5yqWqMQqPXBWboEqcOgNnb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k5OH2/zkspBvrwBEmlLI/6jikOscXG1HhQBn0CxRhf5tH1ycg1Fx9vOIgFOKO5Gez
-         fms0DSbYFKpX8buXZ1uX6+SZVR8gT11kFXe5Ldyayk9cEbZJiTbTmD0wQhxeAPXJNt
-         My6nkJpWgi00rmdq3uNkPF2vCcEhFslSkCSUu0Bw=
+        b=jg3B5WedHTAKoUQ0ScBeOq56eeLdYN3AhVQtnI2eAeE6NChXxYK6vv4Nk6awA3+U+
+         0rf+zCsjkK3s4+SUDvEurDyB08uyfnoiIekWhr0H/S01jb5i3OfBu7DY3l5txVy1KU
+         jSKUIBjrhTxIpByxAaDMp4AFss3/+WuY1T5YdF6I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Yan, Zheng" <zyan@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 34/85] ceph: fix dir_lease_is_valid()
-Date:   Fri, 26 Jul 2019 09:38:44 -0400
-Message-Id: <20190726133936.11177-34-sashal@kernel.org>
+Cc:     Clement Leger <cleger@kalray.eu>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-remoteproc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 29/85] remoteproc: copy parent dma_pfn_offset for vdev
+Date:   Fri, 26 Jul 2019 09:38:39 -0400
+Message-Id: <20190726133936.11177-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
@@ -59,62 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Yan, Zheng" <zyan@redhat.com>
+From: Clement Leger <cleger@kalray.eu>
 
-[ Upstream commit feab6ac25dbfe3ab96299cb741925dc8d2da0caf ]
+[ Upstream commit 72f64cabc4bd6985c7355f5547bd3637c82762ac ]
 
-It should call __ceph_dentry_dir_lease_touch() under dentry->d_lock.
-Besides, ceph_dentry(dentry) can be NULL when called by LOOKUP_RCU
-d_revalidate()
+When preparing the subdevice for the vdev, also copy dma_pfn_offset
+since this is used for sub device dma allocations. Without that, there
+is incoherency between the parent dma settings and the childs one,
+potentially leading to dma_alloc_coherent failure (due to phys_to_dma
+using dma_pfn_offset for translation).
 
-Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool")
+Signed-off-by: Clement Leger <cleger@kalray.eu>
+Acked-by: Loic Pallardy <loic.pallardy@st.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/dir.c | 26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+ drivers/remoteproc/remoteproc_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ceph/dir.c b/fs/ceph/dir.c
-index 0637149fb9f9..1271024a3797 100644
---- a/fs/ceph/dir.c
-+++ b/fs/ceph/dir.c
-@@ -1512,18 +1512,26 @@ static int __dir_lease_try_check(const struct dentry *dentry)
- static int dir_lease_is_valid(struct inode *dir, struct dentry *dentry)
- {
- 	struct ceph_inode_info *ci = ceph_inode(dir);
--	struct ceph_dentry_info *di = ceph_dentry(dentry);
--	int valid = 0;
-+	int valid;
-+	int shared_gen;
- 
- 	spin_lock(&ci->i_ceph_lock);
--	if (atomic_read(&ci->i_shared_gen) == di->lease_shared_gen)
--		valid = __ceph_caps_issued_mask(ci, CEPH_CAP_FILE_SHARED, 1);
-+	valid = __ceph_caps_issued_mask(ci, CEPH_CAP_FILE_SHARED, 1);
-+	shared_gen = atomic_read(&ci->i_shared_gen);
- 	spin_unlock(&ci->i_ceph_lock);
--	if (valid)
--		__ceph_dentry_dir_lease_touch(di);
--	dout("dir_lease_is_valid dir %p v%u dentry %p v%u = %d\n",
--	     dir, (unsigned)atomic_read(&ci->i_shared_gen),
--	     dentry, (unsigned)di->lease_shared_gen, valid);
-+	if (valid) {
-+		struct ceph_dentry_info *di;
-+		spin_lock(&dentry->d_lock);
-+		di = ceph_dentry(dentry);
-+		if (dir == d_inode(dentry->d_parent) &&
-+		    di && di->lease_shared_gen == shared_gen)
-+			__ceph_dentry_dir_lease_touch(di);
-+		else
-+			valid = 0;
-+		spin_unlock(&dentry->d_lock);
-+	}
-+	dout("dir_lease_is_valid dir %p v%u dentry %p = %d\n",
-+	     dir, (unsigned)atomic_read(&ci->i_shared_gen), dentry, valid);
- 	return valid;
- }
- 
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 8b5363223eaa..5031c6806908 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -512,6 +512,7 @@ static int rproc_handle_vdev(struct rproc *rproc, struct fw_rsc_vdev *rsc,
+ 	/* Initialise vdev subdevice */
+ 	snprintf(name, sizeof(name), "vdev%dbuffer", rvdev->index);
+ 	rvdev->dev.parent = rproc->dev.parent;
++	rvdev->dev.dma_pfn_offset = rproc->dev.parent->dma_pfn_offset;
+ 	rvdev->dev.release = rproc_rvdev_release;
+ 	dev_set_name(&rvdev->dev, "%s#%s", dev_name(rvdev->dev.parent), name);
+ 	dev_set_drvdata(&rvdev->dev, rvdev);
 -- 
 2.20.1
 
