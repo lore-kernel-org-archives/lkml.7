@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A19CC7618B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F23C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D6422CB9
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB72922CB9
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 15:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564155074;
-	bh=dxCqp4q5abbg4/vin1VX25ttmDOWXEktO/++kYm7cDU=;
+	s=default; t=1564155077;
+	bh=bkKa09Bt3oXV8Y6UPtyVRlX3kevz220qWhxojHD+jwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TxgbCUU4RuY98uA5kqbpvj2v3rgc7gpryW4Afga0mfunJoL0aflANl5a1pw5kyIT4
-	 kBP5X4yWciSN2CcbNElpfrS/9jefYsALlr/acCxjiWDcc1/AziyAbhmJ32DKsUH58v
-	 nQ9OyeZ2ZEFd9L8SbA4+62QMlOEABTdS1pdwOrwU=
+	b=UF+PJ5z5uuzcM52jUHtlGnAw9bJjTRNRLw4p88y6coWKbGd9+/8gvIX7YxhG2P79e
+	 63naUF93CgJWcTH+9h+OeNKnNMuANmEXKhnEiG7Gi9yhH4oWVvqlAz7angok6pRbbF
+	 ObqgdaiklHNu3Xqyq1tDoUc96Y/mOIO2Usnx1vTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389237AbfGZPbM (ORCPT
+        id S2389248AbfGZPbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 11:31:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46096 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 11:31:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389222AbfGZPbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 11:31:09 -0400
+        id S2389239AbfGZPbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 11:31:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 905E922C7E;
-        Fri, 26 Jul 2019 15:31:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA2B322BF5;
+        Fri, 26 Jul 2019 15:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564155069;
-        bh=dxCqp4q5abbg4/vin1VX25ttmDOWXEktO/++kYm7cDU=;
+        s=default; t=1564155073;
+        bh=bkKa09Bt3oXV8Y6UPtyVRlX3kevz220qWhxojHD+jwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oYmK9TLlec3qr191hE05lRPYUiQRvbTVXEAPK1iVWR81FU0NS65wYabzdq9uWM0rx
-         5lMwLIwv+wdGvq1/K/JiRV/TaMicT+WvMjHH0E1jpuKcZIGkXLqwV1/GtOxSw3gp2M
-         EgRmrItwLDouAwlfIwrfuZq+xHRS4e0RLm9lBwuU=
+        b=n3sOkzUAhhkdso1/Os02fsmHzCTZcrqCCT0dufEoTXkLDcau1rkzblsuGuTIUvA+w
+         XdlnZWHuxHgANkmXUP6XYUxsFoU3Ica+nkP2mXIYyhGblfWTRgg5xY9apnNTyakI2H
+         YYPreE+hCsmTgv799z4PMjn6XzImc7p5SjTdmKkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+c1a380d42b190ad1e559@syzkaller.appspotmail.com,
+        syzbot+079bf326b38072f849d9@syzkaller.appspotmail.com,
         Xin Long <lucien.xin@gmail.com>,
         Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Neil Horman <nhorman@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 20/62] sctp: fix error handling on stream scheduler initialization
-Date:   Fri, 26 Jul 2019 17:24:32 +0200
-Message-Id: <20190726152303.823668436@linuxfoundation.org>
+Subject: [PATCH 5.1 21/62] sctp: not bind the socket in sctp_connect
+Date:   Fri, 26 Jul 2019 17:24:33 +0200
+Message-Id: <20190726152303.922789380@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 References: <20190726152301.720139286@linuxfoundation.org>
@@ -63,60 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 4d1415811e492d9a8238f8a92dd0d51612c788e9 ]
+[ Upstream commit 9b6c08878e23adb7cc84bdca94d8a944b03f099e ]
 
-It allocates the extended area for outbound streams only on sendmsg
-calls, if they are not yet allocated.  When using the priority
-stream scheduler, this initialization may imply into a subsequent
-allocation, which may fail.  In this case, it was aborting the stream
-scheduler initialization but leaving the ->ext pointer (allocated) in
-there, thus in a partially initialized state.  On a subsequent call to
-sendmsg, it would notice the ->ext pointer in there, and trip on
-uninitialized stuff when trying to schedule the data chunk.
+Now when sctp_connect() is called with a wrong sa_family, it binds
+to a port but doesn't set bp->port, then sctp_get_af_specific will
+return NULL and sctp_connect() returns -EINVAL.
 
-The fix is undo the ->ext initialization if the stream scheduler
-initialization fails and avoid the partially initialized state.
+Then if sctp_bind() is called to bind to another port, the last
+port it has bound will leak due to bp->port is NULL by then.
 
-Although syzkaller bisected this to commit 4ff40b86262b ("sctp: set
-chunk transport correctly when it's a new asoc"), this bug was actually
-introduced on the commit I marked below.
+sctp_connect() doesn't need to bind ports, as later __sctp_connect
+will do it if bp->port is NULL. So remove it from sctp_connect().
+While at it, remove the unnecessary sockaddr.sa_family len check
+as it's already done in sctp_inet_connect.
 
-Reported-by: syzbot+c1a380d42b190ad1e559@syzkaller.appspotmail.com
-Fixes: 5bbbbe32a431 ("sctp: introduce stream scheduler foundations")
-Tested-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Acked-by: Neil Horman <nhorman@redhat.com>
+Fixes: 644fbdeacf1d ("sctp: fix the issue that flags are ignored when using kernel_connect")
+Reported-by: syzbot+079bf326b38072f849d9@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/stream.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ net/sctp/socket.c |   24 +++---------------------
+ 1 file changed, 3 insertions(+), 21 deletions(-)
 
---- a/net/sctp/stream.c
-+++ b/net/sctp/stream.c
-@@ -168,13 +168,20 @@ out:
- int sctp_stream_init_ext(struct sctp_stream *stream, __u16 sid)
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -4828,35 +4828,17 @@ out_nounlock:
+ static int sctp_connect(struct sock *sk, struct sockaddr *addr,
+ 			int addr_len, int flags)
  {
- 	struct sctp_stream_out_ext *soute;
-+	int ret;
+-	struct inet_sock *inet = inet_sk(sk);
+ 	struct sctp_af *af;
+-	int err = 0;
++	int err = -EINVAL;
  
- 	soute = kzalloc(sizeof(*soute), GFP_KERNEL);
- 	if (!soute)
- 		return -ENOMEM;
- 	SCTP_SO(stream, sid)->ext = soute;
+ 	lock_sock(sk);
+-
+ 	pr_debug("%s: sk:%p, sockaddr:%p, addr_len:%d\n", __func__, sk,
+ 		 addr, addr_len);
  
--	return sctp_sched_init_sid(stream, sid, GFP_KERNEL);
-+	ret = sctp_sched_init_sid(stream, sid, GFP_KERNEL);
-+	if (ret) {
-+		kfree(SCTP_SO(stream, sid)->ext);
-+		SCTP_SO(stream, sid)->ext = NULL;
-+	}
-+
-+	return ret;
- }
+-	/* We may need to bind the socket. */
+-	if (!inet->inet_num) {
+-		if (sk->sk_prot->get_port(sk, 0)) {
+-			release_sock(sk);
+-			return -EAGAIN;
+-		}
+-		inet->inet_sport = htons(inet->inet_num);
+-	}
+-
+ 	/* Validate addr_len before calling common connect/connectx routine. */
+-	af = addr_len < offsetofend(struct sockaddr, sa_family) ? NULL :
+-		sctp_get_af_specific(addr->sa_family);
+-	if (!af || addr_len < af->sockaddr_len) {
+-		err = -EINVAL;
+-	} else {
+-		/* Pass correct addr len to common routine (so it knows there
+-		 * is only one address being passed.
+-		 */
++	af = sctp_get_af_specific(addr->sa_family);
++	if (af && addr_len >= af->sockaddr_len)
+ 		err = __sctp_connect(sk, addr, af->sockaddr_len, flags, NULL);
+-	}
  
- void sctp_stream_free(struct sctp_stream *stream)
+ 	release_sock(sk);
+ 	return err;
 
 
