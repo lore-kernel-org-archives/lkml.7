@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B863FC76190
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3D5C76190
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3DC2238C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A55B02238C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 03:27:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfGZD1U (ORCPT
+        id S1726516AbfGZD1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 23:27:20 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3169 "EHLO huawei.com"
+        Thu, 25 Jul 2019 23:27:15 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3168 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726441AbfGZD1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 23:27:16 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1BEE8C55359557F0E3CA;
-        Fri, 26 Jul 2019 11:27:10 +0800 (CST)
+        id S1726402AbfGZD1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 23:27:12 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 00499DF0BCE0F7A98DA0;
+        Fri, 26 Jul 2019 11:27:09 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 26 Jul 2019 11:26:59 +0800
+ 14.3.439.0; Fri, 26 Jul 2019 11:27:00 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Yonglong Liu <liuyonglong@huawei.com>,
+        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
         Peng Li <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 07/11] net: hns3: adds debug messages to identify eth down cause
-Date:   Fri, 26 Jul 2019 11:24:58 +0800
-Message-ID: <1564111502-15504-8-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 09/11] net: hns3: add interrupt affinity support for misc interrupt
+Date:   Fri, 26 Jul 2019 11:25:00 +0800
+Message-ID: <1564111502-15504-10-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564111502-15504-1-git-send-email-tanhuazhong@huawei.com>
 References: <1564111502-15504-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,218 +47,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-Some times just see the eth interface have been down/up via
-dmesg, but can not know why the eth down. So adds some debug
-messages to identify the cause for this.
+The misc interrupt is used to schedule the reset and mailbox
+subtask, and a 1 sec timer is used to schedule the service
+subtask, which does periodic work.
 
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+This patch sets the above three subtask's affinity using the
+misc interrupt' affinity.
+
+Also this patch setups a affinity notify for misc interrupt to
+allow user to change the above three subtask's affinity.
+
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 24 ++++++++++++++++++++
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 26 ++++++++++++++++++++++
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c | 14 ++++++++++++
- 3 files changed, 64 insertions(+)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 53 ++++++++++++++++++++--
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  4 ++
+ 2 files changed, 53 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 4d58c53..2e30cfa 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -459,6 +459,10 @@ static int hns3_nic_net_open(struct net_device *netdev)
- 		h->ae_algo->ops->set_timer_task(priv->ae_handle, true);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index e804a19..3e43dff 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -1270,6 +1270,12 @@ static int hclge_configure(struct hclge_dev *hdev)
  
- 	hns3_config_xps(priv);
+ 	hclge_init_kdump_kernel_config(hdev);
+ 
++	/* Set the init affinity based on pci func number */
++	i = cpumask_weight(cpumask_of_node(dev_to_node(&hdev->pdev->dev)));
++	i = i ? PCI_FUNC(hdev->pdev->devfn) % i : 0;
++	cpumask_set_cpu(cpumask_local_spread(i, dev_to_node(&hdev->pdev->dev)),
++			&hdev->affinity_mask);
 +
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev, "net open\n");
-+
- 	return 0;
+ 	return ret;
  }
  
-@@ -519,6 +523,9 @@ static int hns3_nic_net_stop(struct net_device *netdev)
- 	if (test_and_set_bit(HNS3_NIC_STATE_DOWN, &priv->state))
- 		return 0;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev, "net stop\n");
-+
- 	if (h->ae_algo->ops->set_timer_task)
- 		h->ae_algo->ops->set_timer_task(priv->ae_handle, false);
- 
-@@ -1550,6 +1557,9 @@ static int hns3_setup_tc(struct net_device *netdev, void *type_data)
- 	h = hns3_get_handle(netdev);
- 	kinfo = &h->kinfo;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev, "setup tc: num_tc=%d\n", tc);
-+
- 	return (kinfo->dcb_ops && kinfo->dcb_ops->setup_tc) ?
- 		kinfo->dcb_ops->setup_tc(h, tc, prio_tc) : -EOPNOTSUPP;
- }
-@@ -1593,6 +1603,11 @@ static int hns3_ndo_set_vf_vlan(struct net_device *netdev, int vf, u16 vlan,
- 	struct hnae3_handle *h = hns3_get_handle(netdev);
- 	int ret = -EIO;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev,
-+			    "set vf vlan: vf=%d, vlan=%d, qos=%d, vlan_proto=%d\n",
-+			    vf, vlan, qos, vlan_proto);
-+
- 	if (h->ae_algo->ops->set_vf_vlan_filter)
- 		ret = h->ae_algo->ops->set_vf_vlan_filter(h, vf, vlan,
- 							  qos, vlan_proto);
-@@ -1611,6 +1626,10 @@ static int hns3_nic_change_mtu(struct net_device *netdev, int new_mtu)
- 	if (!h->ae_algo->ops->set_mtu)
- 		return -EOPNOTSUPP;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev, "change mtu from %d to %d\n",
-+			    netdev->mtu, new_mtu);
-+
- 	ret = h->ae_algo->ops->set_mtu(h, new_mtu);
- 	if (ret)
- 		netdev_err(netdev, "failed to change MTU in hardware %d\n",
-@@ -4395,6 +4414,11 @@ int hns3_set_channels(struct net_device *netdev,
- 	if (kinfo->rss_size == new_tqp_num)
- 		return 0;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev,
-+			    "set channels: tqp_num=%d, rxfh=%d\n",
-+			    new_tqp_num, rxfh_configured);
-+
- 	ret = hns3_reset_notify(h, HNAE3_DOWN_CLIENT);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index e71c92b..08334d7 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -311,6 +311,9 @@ static void hns3_self_test(struct net_device *ndev,
- 	if (eth_test->flags != ETH_TEST_FL_OFFLINE)
- 		return;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(ndev, "self test start\n");
-+
- 	st_param[HNAE3_LOOP_APP][0] = HNAE3_LOOP_APP;
- 	st_param[HNAE3_LOOP_APP][1] =
- 			h->flags & HNAE3_SUPPORT_APP_LOOPBACK;
-@@ -374,6 +377,9 @@ static void hns3_self_test(struct net_device *ndev,
- 
- 	if (if_running)
- 		ndev->netdev_ops->ndo_open(ndev);
-+
-+	if (netif_msg_drv(h))
-+		netdev_info(ndev, "self test end\n");
- }
- 
- static int hns3_get_sset_count(struct net_device *netdev, int stringset)
-@@ -604,6 +610,11 @@ static int hns3_set_pauseparam(struct net_device *netdev,
+@@ -2501,14 +2507,16 @@ static void hclge_mbx_task_schedule(struct hclge_dev *hdev)
  {
- 	struct hnae3_handle *h = hns3_get_handle(netdev);
+ 	if (!test_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state) &&
+ 	    !test_and_set_bit(HCLGE_STATE_MBX_SERVICE_SCHED, &hdev->state))
+-		schedule_work(&hdev->mbx_service_task);
++		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
++			      &hdev->mbx_service_task);
+ }
  
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev,
-+			    "set pauseparam: autoneg=%d, rx:%d, tx:%d\n",
-+			    param->autoneg, param->rx_pause, param->tx_pause);
-+
- 	if (h->ae_algo->ops->set_pauseparam)
- 		return h->ae_algo->ops->set_pauseparam(h, param->autoneg,
- 						       param->rx_pause,
-@@ -743,6 +754,13 @@ static int hns3_set_link_ksettings(struct net_device *netdev,
- 	if (cmd->base.speed == SPEED_1000 && cmd->base.duplex == DUPLEX_HALF)
- 		return -EINVAL;
+ static void hclge_reset_task_schedule(struct hclge_dev *hdev)
+ {
+ 	if (!test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
+ 	    !test_and_set_bit(HCLGE_STATE_RST_SERVICE_SCHED, &hdev->state))
+-		schedule_work(&hdev->rst_service_task);
++		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
++			      &hdev->rst_service_task);
+ }
  
-+	if (netif_msg_drv(handle))
-+		netdev_info(netdev,
-+			    "set link(%s): autoneg=%d, speed=%d, duplex=%d\n",
-+			    netdev->phydev ? "phy" : "mac",
-+			    cmd->base.autoneg, cmd->base.speed,
-+			    cmd->base.duplex);
-+
- 	/* Only support ksettings_set for netdev with phy attached for now */
- 	if (netdev->phydev)
- 		return phy_ethtool_ksettings_set(netdev->phydev, cmd);
-@@ -984,6 +1002,10 @@ static int hns3_nway_reset(struct net_device *netdev)
- 		return -EINVAL;
+ static void hclge_task_schedule(struct hclge_dev *hdev)
+@@ -2518,8 +2526,9 @@ static void hclge_task_schedule(struct hclge_dev *hdev)
+ 	    !test_and_set_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state)) {
+ 		hdev->hw_stats.stats_timer++;
+ 		hdev->fd_arfs_expire_timer++;
+-		mod_delayed_work(system_wq, &hdev->service_task,
+-				 round_jiffies_relative(HZ));
++		mod_delayed_work_on(cpumask_first(&hdev->affinity_mask),
++				    system_wq, &hdev->service_task,
++				    round_jiffies_relative(HZ));
  	}
- 
-+	if (netif_msg_drv(handle))
-+		netdev_info(netdev, "nway reset (using %s)\n",
-+			    phy ? "phy" : "mac");
-+
- 	if (phy)
- 		return genphy_restart_aneg(phy);
- 
-@@ -1308,6 +1330,10 @@ static int hns3_set_fecparam(struct net_device *netdev,
- 	if (!ops->set_fec)
- 		return -EOPNOTSUPP;
- 	fec_mode = eth_to_loc_fec(fec->fec);
-+
-+	if (netif_msg_drv(handle))
-+		netdev_info(netdev, "set fecparam: mode=%d\n", fec_mode);
-+
- 	return ops->set_fec(handle, fec_mode);
  }
  
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
-index bac4ce1..07471ba 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
-@@ -201,6 +201,7 @@ static int hclge_client_setup_tc(struct hclge_dev *hdev)
- static int hclge_ieee_setets(struct hnae3_handle *h, struct ieee_ets *ets)
- {
- 	struct hclge_vport *vport = hclge_get_vport(h);
-+	struct net_device *netdev = h->kinfo.netdev;
- 	struct hclge_dev *hdev = vport->back;
- 	bool map_changed = false;
- 	u8 num_tc = 0;
-@@ -215,6 +216,9 @@ static int hclge_ieee_setets(struct hnae3_handle *h, struct ieee_ets *ets)
- 		return ret;
+@@ -2905,6 +2914,36 @@ static void hclge_get_misc_vector(struct hclge_dev *hdev)
+ 	hdev->num_msi_used += 1;
+ }
  
- 	if (map_changed) {
-+		if (netif_msg_drv(h))
-+			netdev_info(netdev, "set ets\n");
++static void hclge_irq_affinity_notify(struct irq_affinity_notify *notify,
++				      const cpumask_t *mask)
++{
++	struct hclge_dev *hdev = container_of(notify, struct hclge_dev,
++					      affinity_notify);
 +
- 		ret = hclge_notify_client(hdev, HNAE3_DOWN_CLIENT);
- 		if (ret)
- 			return ret;
-@@ -300,6 +304,7 @@ static int hclge_ieee_getpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
- static int hclge_ieee_setpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
- {
- 	struct hclge_vport *vport = hclge_get_vport(h);
-+	struct net_device *netdev = h->kinfo.netdev;
- 	struct hclge_dev *hdev = vport->back;
- 	u8 i, j, pfc_map, *prio_tc;
- 
-@@ -325,6 +330,11 @@ static int hclge_ieee_setpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
- 	hdev->tm_info.hw_pfc_map = pfc_map;
- 	hdev->tm_info.pfc_en = pfc->pfc_en;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev,
-+			    "set pfc: pfc_en=%d, pfc_map=%d, num_tc=%d\n",
-+			    pfc->pfc_en, pfc_map, hdev->tm_info.num_tc);
++	cpumask_copy(&hdev->affinity_mask, mask);
++}
 +
- 	hclge_tm_pfc_info_update(hdev);
- 
- 	return hclge_pause_setup_hw(hdev, false);
-@@ -345,8 +355,12 @@ static u8 hclge_getdcbx(struct hnae3_handle *h)
- static u8 hclge_setdcbx(struct hnae3_handle *h, u8 mode)
- {
- 	struct hclge_vport *vport = hclge_get_vport(h);
-+	struct net_device *netdev = h->kinfo.netdev;
- 	struct hclge_dev *hdev = vport->back;
- 
-+	if (netif_msg_drv(h))
-+		netdev_info(netdev, "set dcbx: mode=%d\n", mode);
++static void hclge_irq_affinity_release(struct kref *ref)
++{
++}
 +
- 	/* No support for LLD_MANAGED modes or CEE */
- 	if ((mode & DCB_CAP_DCBX_LLD_MANAGED) ||
- 	    (mode & DCB_CAP_DCBX_VER_CEE) ||
++static void hclge_misc_affinity_setup(struct hclge_dev *hdev)
++{
++	irq_set_affinity_hint(hdev->misc_vector.vector_irq,
++			      &hdev->affinity_mask);
++
++	hdev->affinity_notify.notify = hclge_irq_affinity_notify;
++	hdev->affinity_notify.release = hclge_irq_affinity_release;
++	irq_set_affinity_notifier(hdev->misc_vector.vector_irq,
++				  &hdev->affinity_notify);
++}
++
++static void hclge_misc_affinity_teardown(struct hclge_dev *hdev)
++{
++	irq_set_affinity_notifier(hdev->misc_vector.vector_irq, NULL);
++	irq_set_affinity_hint(hdev->misc_vector.vector_irq, NULL);
++}
++
+ static int hclge_misc_irq_init(struct hclge_dev *hdev)
+ {
+ 	int ret;
+@@ -8796,6 +8835,11 @@ static int hclge_init_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 	INIT_WORK(&hdev->rst_service_task, hclge_reset_service_task);
+ 	INIT_WORK(&hdev->mbx_service_task, hclge_mailbox_service_task);
+ 
++	/* Setup affinity after service timer setup because add_timer_on
++	 * is called in affinity notify.
++	 */
++	hclge_misc_affinity_setup(hdev);
++
+ 	hclge_clear_all_event_cause(hdev);
+ 	hclge_clear_resetting_state(hdev);
+ 
+@@ -8957,6 +9001,7 @@ static void hclge_uninit_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 	struct hclge_dev *hdev = ae_dev->priv;
+ 	struct hclge_mac *mac = &hdev->hw.mac;
+ 
++	hclge_misc_affinity_teardown(hdev);
+ 	hclge_state_uninit(hdev);
+ 
+ 	if (mac->phydev)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index dde8f22..688e425 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -863,6 +863,10 @@ struct hclge_dev {
+ 
+ 	DECLARE_KFIFO(mac_tnl_log, struct hclge_mac_tnl_stats,
+ 		      HCLGE_MAC_TNL_LOG_SIZE);
++
++	/* affinity mask and notify for misc interrupt */
++	cpumask_t affinity_mask;
++	struct irq_affinity_notify affinity_notify;
+ };
+ 
+ /* VPort level vlan tag configuration for TX direction */
 -- 
 2.7.4
 
