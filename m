@@ -2,121 +2,164 @@ Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FC9C76191
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 217D1C7618B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0B0218DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC09F216F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 06:36:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CK0Nm/cZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbfGZGdi convert rfc822-to-8bit (ORCPT
+        id S1726184AbfGZGgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 02:33:38 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:33807 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbfGZGdh (ORCPT
+        Fri, 26 Jul 2019 02:36:25 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43154 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbfGZGgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 02:33:37 -0400
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x6Q6XF0g009534
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 26 Jul 2019 15:33:15 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x6Q6XFnI026172;
-        Fri, 26 Jul 2019 15:33:15 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x6Q6TpBq025337;
-        Fri, 26 Jul 2019 15:33:15 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.152] [10.38.151.152]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-7142931; Fri, 26 Jul 2019 15:25:51 +0900
-Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
- BPXC24GP.gisp.nec.co.jp ([10.38.151.152]) with mapi id 14.03.0439.000; Fri,
- 26 Jul 2019 15:25:50 +0900
-From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 2/2] /proc/kpageflags: do not use uninitialized struct
- pages
-Thread-Topic: [PATCH 2/2] /proc/kpageflags: do not use uninitialized struct
- pages
-Thread-Index: AQHVQpEKFGt+j6P+NkKoSe72QQuzoKbac7OAgAFmX4A=
-Date:   Fri, 26 Jul 2019 06:25:49 +0000
-Message-ID: <40b3078e-fb8b-87ef-5c4e-6321956cc940@vx.jp.nec.com>
-References: <20190725023100.31141-1-t-fukasawa@vx.jp.nec.com>
- <20190725023100.31141-3-t-fukasawa@vx.jp.nec.com>
- <20190725090341.GC13855@dhcp22.suse.cz>
-In-Reply-To: <20190725090341.GC13855@dhcp22.suse.cz>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.135]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <565C14CFB150684B823E03D090635792@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Fri, 26 Jul 2019 02:36:25 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f25so24257145pgv.10;
+        Thu, 25 Jul 2019 23:36:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lcoZXPtSp/wxUMfqgXW1h46tt/pEtTdf5lES+lIfNjY=;
+        b=CK0Nm/cZObATd0FvruGpXbkqddbfohXc5OoFbB4a+oHeEUQf7juuQ+msMl39QnHZ7W
+         IHmNmG+VB8gRMpbPwE61ddXB7281kThCT634qOpy/k9qjN6d49mArw6VDNOq1o/GNMTB
+         0NqV53Xmv5ynNxq8ZVTWP7b8gYkIiF7frpCum2J/F1/XxSTelOWY3/HrHHxJ7INqt79I
+         8yK8PscMm8sJM8VKgGmbC9ja5HQKv3jBK4PVHBHfvvrFX/eArO1O+RSa6zxrfn3J7e9k
+         9jEpgYdXcmwCivkgx+1ctEaL0iXpAb+KTGyJYGdWYqlYSc7IudaD9Brz6+iDJmYMEGAz
+         LHgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lcoZXPtSp/wxUMfqgXW1h46tt/pEtTdf5lES+lIfNjY=;
+        b=mi7MlR0lwVhXKIZK5dO4f3L2/Tf8dGluugb35NX/HxaV0BZHA/TOwdhh68mOl0kmW8
+         U8GDRniWPNbCvbqveyLkiYBAd+Nrkjh+zot/Nt6SFEF7flrj2DgWL2F/Ynnmnq+JKXy2
+         4N2Dryz4PYn0mxnrPc1LOpOBcQUCrwYducz4gclSr+oRNAFuTGT8U7Wq6OZbS2ieszIq
+         qU2US4PZMwOne9skG/TayEUZ8p/m+v5YaAQs3zuZ24nu16+h8W1BMg0L7L2rmrAGKTZ7
+         4mv6LKSXSjANl8v7FP1dhSGMVXMD3tjLo5I6M3Q/Z5+4Q1rJXTQGonOQ7jkZ2v2ZDNR/
+         TDBA==
+X-Gm-Message-State: APjAAAXvsPCUU1iC17cNf5DEm0vHiUo7CbbaoITuAW3uGH4me9e7VY+R
+        80OGLfupB7vdjBqpOxAuse/IFlEruic=
+X-Google-Smtp-Source: APXvYqxb30LCQgKeMMbebeKOBvFZaq0vERTv1eMXIV3uhiMSimV1h9tVvT46HRwLRpoP2k21iZowVA==
+X-Received: by 2002:a63:e5a:: with SMTP id 26mr86665156pgo.3.1564122984708;
+        Thu, 25 Jul 2019 23:36:24 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id v126sm12446278pgb.23.2019.07.25.23.36.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Jul 2019 23:36:23 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] iio: mxc4005: Use device-managed APIs
+Date:   Fri, 26 Jul 2019 14:36:16 +0800
+Message-Id: <20190726063616.11045-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use device-managed APIs to simplify the code.
+The remove function is redundant now and can
+be deleted.
 
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/iio/accel/mxc4005.c | 35 +++++++----------------------------
+ 1 file changed, 7 insertions(+), 28 deletions(-)
 
-On 2019/07/25 18:03, Michal Hocko wrote:
-> On Thu 25-07-19 02:31:18, Toshiki Fukasawa wrote:
->> A kernel panic was observed during reading /proc/kpageflags for
->> first few pfns allocated by pmem namespace:
->>
->> BUG: unable to handle page fault for address: fffffffffffffffe
->> [  114.495280] #PF: supervisor read access in kernel mode
->> [  114.495738] #PF: error_code(0x0000) - not-present page
->> [  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
->> [  114.496713] Oops: 0000 [#1] SMP PTI
->> [  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1 #1
->> [  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
->> [  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
->> [  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
->> [  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
->> [  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
->> [  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
->> [  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
->> [  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
->> [  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
->> [  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
->> [  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
->> [  114.506401] Call Trace:
->> [  114.506660]  kpageflags_read+0xb1/0x130
->> [  114.507051]  proc_reg_read+0x39/0x60
->> [  114.507387]  vfs_read+0x8a/0x140
->> [  114.507686]  ksys_pread64+0x61/0xa0
->> [  114.508021]  do_syscall_64+0x5f/0x1a0
->> [  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->> [  114.508844] RIP: 0033:0x7f0266ba426b
->>
->> The reason for the panic is that stable_page_flags() which parses
->> the page flags uses uninitialized struct pages reserved by the
->> ZONE_DEVICE driver.
-> 
-> Why pmem hasn't initialized struct pages? 
+diff --git a/drivers/iio/accel/mxc4005.c b/drivers/iio/accel/mxc4005.c
+index 637e6e676061..d8b999023ef2 100644
+--- a/drivers/iio/accel/mxc4005.c
++++ b/drivers/iio/accel/mxc4005.c
+@@ -424,7 +424,7 @@ static int mxc4005_probe(struct i2c_client *client,
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 	indio_dev->info = &mxc4005_info;
+ 
+-	ret = iio_triggered_buffer_setup(indio_dev,
++	ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev,
+ 					 iio_pollfunc_store_time,
+ 					 mxc4005_trigger_handler,
+ 					 NULL);
+@@ -452,7 +452,7 @@ static int mxc4005_probe(struct i2c_client *client,
+ 		if (ret) {
+ 			dev_err(&client->dev,
+ 				"failed to init threaded irq\n");
+-			goto err_buffer_cleanup;
++			return ret;
+ 		}
+ 
+ 		data->dready_trig->dev.parent = &client->dev;
+@@ -460,43 +460,23 @@ static int mxc4005_probe(struct i2c_client *client,
+ 		iio_trigger_set_drvdata(data->dready_trig, indio_dev);
+ 		indio_dev->trig = data->dready_trig;
+ 		iio_trigger_get(indio_dev->trig);
+-		ret = iio_trigger_register(data->dready_trig);
++		ret = devm_iio_trigger_register(&client->dev,
++						data->dready_trig);
+ 		if (ret) {
+ 			dev_err(&client->dev,
+ 				"failed to register trigger\n");
+-			goto err_trigger_unregister;
++			return ret;
+ 		}
+ 	}
+ 
+-	ret = iio_device_register(indio_dev);
++	ret = devm_iio_device_register(&client->dev, indio_dev);
+ 	if (ret < 0) {
+ 		dev_err(&client->dev,
+ 			"unable to register iio device %d\n", ret);
+-		goto err_buffer_cleanup;
++		return ret;
+ 	}
+ 
+ 	return 0;
+-
+-err_trigger_unregister:
+-	iio_trigger_unregister(data->dready_trig);
+-err_buffer_cleanup:
+-	iio_triggered_buffer_cleanup(indio_dev);
+-
+-	return ret;
+-}
+-
+-static int mxc4005_remove(struct i2c_client *client)
+-{
+-	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+-	struct mxc4005_data *data = iio_priv(indio_dev);
+-
+-	iio_device_unregister(indio_dev);
+-
+-	iio_triggered_buffer_cleanup(indio_dev);
+-	if (data->dready_trig)
+-		iio_trigger_unregister(data->dready_trig);
+-
+-	return 0;
+ }
+ 
+ static const struct acpi_device_id mxc4005_acpi_match[] = {
+@@ -517,7 +497,6 @@ static struct i2c_driver mxc4005_driver = {
+ 		.acpi_match_table = ACPI_PTR(mxc4005_acpi_match),
+ 	},
+ 	.probe		= mxc4005_probe,
+-	.remove		= mxc4005_remove,
+ 	.id_table	= mxc4005_id,
+ };
+ 
+-- 
+2.20.1
 
-We proposed to initialize in previous approach but that wasn't merged.
-(See https://marc.info/?l=linux-mm&m=152964792500739&w=2)
-
-> Isn't that a bug that should be addressed rather than paper over it like this?
-
-I'm not sure. What do you think, Dan?
-
-Best regards,
-Toshiki Fukasawa
