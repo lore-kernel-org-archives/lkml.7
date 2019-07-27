@@ -2,146 +2,193 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F80C7618F
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B8AC7618F
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7892D208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4301520644
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:23:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ma9O5fXb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BqZLobxi";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="e9dtuAZ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfG0CUc (ORCPT
+        id S1728040AbfG0CXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 22:20:32 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36296 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfG0CUb (ORCPT
+        Fri, 26 Jul 2019 22:23:48 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:52706 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfG0CXq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 22:20:31 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l21so25573078pgm.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 19:20:31 -0700 (PDT)
+        Fri, 26 Jul 2019 22:23:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1564194284; x=1595730284;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=tf/2egYxx3sAP5LJbqmrXQoRpnllkQeClWzU/lungLA=;
+  b=BqZLobxiTt8qVPwsmL5dZafNKQtXZIsCrRt1um8xMOG8+e4T4AB0+EUF
+   jlNwz2R5o2Nsxen2xJrCh0DivGif49x4vrFhQT1CrkSE7jnmjCfmmCWsj
+   4+uXLR9ffuakvSo3m9cSXV5ex0zyYxytZmOa31yI4eInutBuPaH9ZbtCy
+   8msmonG0lLLUQjSuU5POcwLm1knijtqjZTKNZbDXRWfm+C4OZdazyqRHs
+   wZ8no5ruvTDwpfa7NZ5F9lmucazVbhlGv5vitS9hlgpUP54coZVE6KF3a
+   GN/AFCAIH+v7oZE32HyST11peUV3FBCfRSaNqOK5PyRVr5fZcGKlzYaab
+   Q==;
+IronPort-SDR: IG08Feq1nlzISLcH+DY7KIqznRC10cnOfp7xJ5+1NzElQ6WeI0u5+zztkf4/Wjro7cCcktu7W7
+ 2dY9EvGknmnV1s+3EcA3s6p7U2b/D3IwOJGso1Q0qDx2jSnT7SyxEWo2BiQgQubZwhsH75zBt7
+ 6wo7er8h9QtEvW4w0+Izv1WoqswkY8ayKUVQacdCJrd0Jr1/N/xrJRScNy3tvssy5kTfzdoFUm
+ JlSYe6kNj0oC+9mu9ncu/kPM7ikChzKTzAE3yfyye83XPe3dv1lp6PGijFJPnUJDzp6pUI00nW
+ iUM=
+X-IronPort-AV: E=Sophos;i="5.64,313,1559491200"; 
+   d="scan'208";a="214401934"
+Received: from mail-co1nam04lp2053.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.53])
+  by ob1.hgst.iphmx.com with ESMTP; 27 Jul 2019 10:24:40 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CSLYNaB9AZazVIGmtWU6Q2jhuPR+/l3OxbtYyCxkStQCu/xZsOjglebDAYhE5+q3IVj8Cz2b/Av76wFTysjPtmp/JVkHQDmGnTsLLe9XLn32lEOkVx6FhUPeeaWVawI0/wJnYZoIq/JZnsmmJJ40c1ArCpb3Bj+y2yboy/GHa/GsYa0pp+s6plq6p8v2z2LQal0OfsoVZ+mpeBMK05+LjqnPda35aqbRJqSXPjeCSn39PVB/p+jaq0/+K9HdGwvAfZnLPMA1ASnu/k4Pg8EyuL+3kgDxysKbGfipg3SB6LVNj9QwRYk6ZF5GSxqnnAeDej+mwLyTcR/Eh7M7VHJj5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tf/2egYxx3sAP5LJbqmrXQoRpnllkQeClWzU/lungLA=;
+ b=HdJieajhprGYF/Wel+K0UdpxRBrtgicoAW1MwbT09/dU9NoQWGG/exOL2SFip/0orA6HEWLxYZmealdxFrR8fXh455oTjoGa0QDjBRkpkUsKaj6B3XXDjEaIlbu/2AFQgihSVwIXNnFOR/jqX1Me5jh/Y+9lDtqY6ijWvnCzj7LlamWsprGwOGiShCZdIkZaukDhy5FaVNHyiayzyofnkOimMDMj+DaH3ecakFkX2wZh+oVovZE8G7XBJl4KCSbs2g0Qdow2EscQ0qXsgYvd8SNivWyn9Z9tbdf6mFlkomRihrGcYg2mxa/DUowGFhp4+A/m5YVnyla97/PrOSQGqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=wdc.com;dmarc=pass action=none header.from=wdc.com;dkim=pass
+ header.d=wdc.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZrwaYoCn3Oa5vy8oyC7jdypM5mKZRDl93hGh4wsUvE4=;
-        b=ma9O5fXbogmpqPpeHxMnnBuHH1xMjChxOfOggB81iBysbQqqcA9LnoCgOu+6EVAl78
-         HwKwRq0MRR9FQmyN8Kf9rIUFd6zTbWd1w3XpxQvT3XmWZAky5mOGvgluapxHy4nHpshd
-         qnNz+7hhBrzQJ9d4If82qYEkI/wH882jptC9yCw3MKmI08E2uFOL4P3INJgXFR/o++Qt
-         lf4b8oq9cA/HZRz4WzoR0ZGPmpmRGcMASL0mHbhahXz6wkTg6FNm336ontQGrmSx3Fyb
-         epEXxvxU8QbBdnF3Wy549YS3jIBnx8h1haFwA8TACMf08clBgQT7Eg09uJ/NK2caV1iP
-         loXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZrwaYoCn3Oa5vy8oyC7jdypM5mKZRDl93hGh4wsUvE4=;
-        b=SEojSeSkuSJWUOG8wDOqvlrQZssJZQVeRiywLeDbFK7JzRZVC/NQ/ywEomCCrymKkl
-         U6/hoI8bpf4Xi5s5AyfJSp6/ZpxYlvKJoyjaTyz2l/G9QpWl4gqEJgENfz3zLntsvA/1
-         W1Z+ZrsQ7KWnxTl6Dgzgm2aaX0tl1ZSGVQ8GWaYEZK+l5DOQoO0/3ZHRTFIzU4Tukj0t
-         VTuY8jUeNgh0s0I8xFQ6t+ebngAZgjFnjFEyRAVq0Ry10r6R9xAkwAeY0yzAUtHonBbX
-         aRKAAo2x8Jc9AfyUvh+nEf+5o/cmYKJBauQHaOlUOHNI8bh/QR9EQL3F3bssh9O2pRGF
-         MOaQ==
-X-Gm-Message-State: APjAAAWFwSQq4Pm6i0OONqaLY3AdCVA8/GdeTsK5OTtCKpd7DeIDOpdR
-        r/AVqksPRRQEwc9/zQDjHyWnUA==
-X-Google-Smtp-Source: APXvYqx8RNwdivO6m7Phuwygi/omqcBRfWbF405BsbhWrUAoshgA6onLniab8rqb9hrX6bJvtqfYhw==
-X-Received: by 2002:a63:f401:: with SMTP id g1mr96877140pgi.314.1564194030656;
-        Fri, 26 Jul 2019 19:20:30 -0700 (PDT)
-Received: from google.com ([2620:15c:2cd:202:668d:6035:b425:3a3a])
-        by smtp.gmail.com with ESMTPSA id n7sm63335884pff.59.2019.07.26.19.20.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Jul 2019 19:20:29 -0700 (PDT)
-Date:   Fri, 26 Jul 2019 19:20:27 -0700
-From:   Michel Lespinasse <walken@google.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/3] augmented rbtree: add new
- RB_DECLARE_CALLBACKS_MAX macro
-Message-ID: <20190727022027.GA86863@google.com>
-References: <20190703040156.56953-1-walken@google.com>
- <20190703040156.56953-3-walken@google.com>
- <CANN689FXgK13wDYNh1zKxdipeTuALG4eKvKpsdZqKFJ-rvtGiQ@mail.gmail.com>
- <20190726184419.37adea1e227fc793c32427be@linux-foundation.org>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tf/2egYxx3sAP5LJbqmrXQoRpnllkQeClWzU/lungLA=;
+ b=e9dtuAZ45Fjkd4U42J/6ElreWJOcwAx6p9eCgvM3TNgITZdzXRsObKJ+5r1QCEWbE7qWy2O9b+hYRZJNckSpA4A235Jo4u5m4ptfDdgr+ncljzVxsW8LtdEP2lJt1/isWKZbIlKCvw+qvDpt4YeevZXTDuBymJQxHKRgpc0HUbM=
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
+ MN2PR04MB5741.namprd04.prod.outlook.com (20.179.21.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.17; Sat, 27 Jul 2019 02:23:43 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::a815:e61a:b4aa:60c8]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::a815:e61a:b4aa:60c8%7]) with mapi id 15.20.2094.013; Sat, 27 Jul 2019
+ 02:23:43 +0000
+From:   Anup Patel <Anup.Patel@wdc.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Atish Patra <Atish.Patra@wdc.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alan Kao <alankao@andestech.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Allison Randal <allison@lohutok.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: RE: [PATCH 3/4] RISC-V: Support case insensitive ISA string parsing.
+Thread-Topic: [PATCH 3/4] RISC-V: Support case insensitive ISA string parsing.
+Thread-Index: AQHVQ+reRtipAV+pTkKW6PXuUKYNbKbdXtyAgAAaDYCAABM8AIAAMB9A
+Date:   Sat, 27 Jul 2019 02:23:42 +0000
+Message-ID: <MN2PR04MB6061790AFE4E0AAA838678028DC30@MN2PR04MB6061.namprd04.prod.outlook.com>
+References: <20190726194638.8068-1-atish.patra@wdc.com>
+ <20190726194638.8068-3-atish.patra@wdc.com>
+ <alpine.DEB.2.21.9999.1907261346560.26670@viisi.sifive.com>
+ <a8a6be2c-2dcb-fe58-2c32-e3baa357819c@wdc.com>
+ <alpine.DEB.2.21.9999.1907261625220.26670@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1907261625220.26670@viisi.sifive.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+x-originating-ip: [106.51.23.101]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f897e0ed-eee7-4aa4-cad9-08d7123971ee
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB5741;
+x-ms-traffictypediagnostic: MN2PR04MB5741:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MN2PR04MB5741DC0194F59E732B908DED8DC30@MN2PR04MB5741.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 01110342A5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(39860400002)(376002)(366004)(346002)(189003)(199004)(13464003)(51444003)(33656002)(74316002)(110136005)(14454004)(6636002)(54906003)(3846002)(2906002)(99286004)(71200400001)(68736007)(71190400001)(8676002)(7736002)(316002)(78486014)(66066001)(256004)(6116002)(446003)(11346002)(476003)(6506007)(7696005)(53546011)(966005)(55236004)(76116006)(76176011)(55016002)(102836004)(486006)(26005)(66476007)(66946007)(6436002)(64756008)(6246003)(4326008)(66446008)(7416002)(66556008)(9456002)(229853002)(5660300002)(52536014)(53936002)(6306002)(81166006)(86362001)(478600001)(81156014)(8936002)(25786009)(186003)(305945005)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5741;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: j1mcSrXBNZmyyybHdHfyrfw2+XRtJCtBLtiqhInTu4zeziVzoSo5ajIiqEJ54tJji69eXMjTRtmPzUBBcDcjl92zNLIMtP+zN0zdgKRUlGd7SQ/1VpqrQgCFSSxzmlrUBo1/Xfft+Bd4hDlmyGlnr7DLZjhRWSFOg4MJUHw83Obn86WD00dCMN4K9zpSsdA/DezbEuXV6Y6lHnmXXn5/C0Gf73t9LvByWQEv9QLwa7Qc7AW5QC6SPQ4ZuKjN9BoIuque8v+MP2KA/KrIjzrGD4yNpagdqD1Sw2MHcqyBMnlPH0Heeeqkdl7x8aW/T8mZUk4UeFexlEvXjVOtMtFEcSXZ/lbWTYf0QgXWoOi307UsANxFqhppAfHE7SKskq37xFHtLyVoceng4oEjjOd54ekqM6oOGMOrU/gwWUahQ9Y=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190726184419.37adea1e227fc793c32427be@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f897e0ed-eee7-4aa4-cad9-08d7123971ee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jul 2019 02:23:42.7456
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Anup.Patel@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5741
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 06:44:19PM -0700, Andrew Morton wrote:
-> On Mon, 8 Jul 2019 05:24:09 -0700 Michel Lespinasse <walken@google.com> wrote:
-> 
-> > Syncing up with v5.2, I see that there is a new use for augmented
-> > rbtrees in mm/vmalloc.c which does not compile after applying my
-> > patchset.
-> > 
-> > It's an easy fix though:
-> 
-> It still doesn't build.
-> 
-> lib/rbtree_test.c: In function check_augmented:
-> lib/rbtree_test.c:225:35: error: implicit declaration of function augment_recompute [-Werror=implicit-function-declaration]
->    WARN_ON_ONCE(node->augmented != augment_recompute(node));
 
-grumpf, sorry about that. I thought I had rbtree_test enabled in my
-build, but turned out I only had interval_tree_test :/
 
-I would suggest the following fix, which reintroduces the code to compute
-node->augmented as was previously done in augment_recompute():
+> -----Original Message-----
+> From: Paul Walmsley <paul.walmsley@sifive.com>
+> Sent: Saturday, July 27, 2019 5:00 AM
+> To: Atish Patra <Atish.Patra@wdc.com>
+> Cc: linux-kernel@vger.kernel.org; Alan Kao <alankao@andestech.com>;
+> Albert Ou <aou@eecs.berkeley.edu>; Allison Randal <allison@lohutok.net>;
+> Anup Patel <Anup.Patel@wdc.com>; Daniel Lezcano
+> <daniel.lezcano@linaro.org>; Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org>; Johan Hovold <johan@kernel.org>; linux-
+> riscv@lists.infradead.org; Palmer Dabbelt <palmer@sifive.com>; Thomas
+> Gleixner <tglx@linutronix.de>
+> Subject: Re: [PATCH 3/4] RISC-V: Support case insensitive ISA string pars=
+ing.
+>=20
+> On Fri, 26 Jul 2019, Atish Patra wrote:
+>=20
+> > On 7/26/19 1:47 PM, Paul Walmsley wrote:
+> > > On Fri, 26 Jul 2019, Atish Patra wrote:
+> > >
+> > > > As per riscv specification, ISA naming strings are case
+> > > > insensitive. However, currently only lower case strings are parsed
+> > > > during cpu procfs.
+> > > >
+> > > > Support parsing of upper case letters as well.
+> > > >
+> > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > >
+> > > Is there a use case that's driving this, or
+> >
+> > Currently, we use all lower case isa string in kvmtool. But somebody
+> > can have uppercase letters in future as spec allows it.
+> >
+> >
+> > can we just say, "use
+> > > lowercase letters" and leave it at that?
+> > >
+> >
+> > In that case, it will not comply with RISC-V spec. Is that okay ?
+>=20
+> I think that section of the specification is mostly concerned with someon=
+e
+> trying to define "f" as a different extension than "F", or something like=
+ that.
+> I'm not sure that it imposes any constraint that software must accept bot=
+h
+> upper and lower case ISA strings.
+>=20
+> What gives me pause here is that this winds up impacting DT schema
+> validation:
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
+ocu
+> mentation/devicetree/bindings/riscv/cpus.yaml#n41
 
------------ 8< ----------------
+If 'f' and 'F' mean same extension as-per RISC-V spec then software should =
+also
+interpret it that way hence this patch.
 
-After introducing RB_DECLARE_CALLBACKS_MAX, we do not need the
-augment_recompute function to recompute node->augmented during
-rbtree rebalancing callbacks. However, this function was also
-used in check_augmented() to verify that node->augmented was
-correctly set, so we need to reintroduce the code for that check.
-
-Signed-off-by: Michel Lespinasse <walken@google.com>
----
- lib/rbtree_test.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/lib/rbtree_test.c b/lib/rbtree_test.c
-index 1939419ba869..41ae3c7570d3 100644
---- a/lib/rbtree_test.c
-+++ b/lib/rbtree_test.c
-@@ -222,7 +222,20 @@ static void check_augmented(int nr_nodes)
- 	check(nr_nodes);
- 	for (rb = rb_first(&root.rb_root); rb; rb = rb_next(rb)) {
- 		struct test_node *node = rb_entry(rb, struct test_node, rb);
--		WARN_ON_ONCE(node->augmented != augment_recompute(node));
-+		u32 subtree, max = node->val;
-+		if (node->rb.rb_left) {
-+			subtree = rb_entry(node->rb.rb_left, struct test_node,
-+					   rb)->augmented;
-+			if (max < subtree)
-+				max = subtree;
-+		}
-+		if (node->rb.rb_right) {
-+			subtree = rb_entry(node->rb.rb_right, struct test_node,
-+					   rb)->augmented;
-+			if (max < subtree)
-+				max = subtree;
-+		}
-+		WARN_ON_ONCE(node->augmented != max);
- 	}
- }
- 
--- 
-Michel "Walken" Lespinasse
-A program is never fully debugged until the last user dies.
+Regards,
+Anup
