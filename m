@@ -2,102 +2,137 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8015C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BADC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAED2084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24D62084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:04:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vThsmw0t"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="rnyuQCCX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbfG0MBa (ORCPT
+        id S2387507AbfG0MEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 08:01:30 -0400
-Received: from mail-wm1-f44.google.com ([209.85.128.44]:34146 "EHLO
-        mail-wm1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfG0MBa (ORCPT
+        Sat, 27 Jul 2019 08:04:38 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33345 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728080AbfG0MEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 08:01:30 -0400
-Received: by mail-wm1-f44.google.com with SMTP id w9so39712669wmd.1;
-        Sat, 27 Jul 2019 05:01:29 -0700 (PDT)
+        Sat, 27 Jul 2019 08:04:38 -0400
+Received: by mail-wm1-f68.google.com with SMTP id h19so39724666wme.0;
+        Sat, 27 Jul 2019 05:04:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BzHuFvoRywu7/+3CAPgMLJskj79GTte0iQAInAuEBk0=;
-        b=vThsmw0tCLmat2Ys+CS8+iW9Pl+gCfZN9vcLNKCMh1M2a09MXxCJLMCNusqwvinfws
-         fjCCgTlCwXXb7rZ2zWXqG4NTL9XU6u32UUV9NdriXxnf9ufiEMAaI3/qtPXr8bYVLGCA
-         5l6pfdqm6EAvAe7hb0m492058r5IodmT92lFamS7G5Crx+yc+C+eEwnIyAOYjrCdECac
-         b4JVPTjR1nbEPOk+tueytg7MY2ac5bymNr1NWziA2OrE5Jnh/DSUKt434C0O4jNUCY+i
-         dnScdNjeqHx6m737R/RnudEoRALrNS1zxH9rVR4eZ2/cPHdNTX93AYMJlu5xJVhvmG2o
-         7LOQ==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+2ayQhRcXrW4zQh0HGDZU8kSLd3lPT+xKspP1b4Lmso=;
+        b=rnyuQCCXpdYfEWUv9YP9fIAAxOK1VzvW7Cz7LslVnAQGUTMKU8k6wir1+ptHOGdlPB
+         nOGaKVunQ8jVgomgT71RUdY2GIBi5/q+V8/BR8wbHQZG9y8LjyFVbu3viMxU30Yi0gzK
+         JxWZxyMkChJ8b/zRfEXZM/RMVKXjMFe3zsaV/8VNDcxLwCpWbicPsYTfAWSo3S2IZigI
+         6fksCY0JKVJE4lkMx+N/vz0j52Pc2G/dTEmiksUv19/kt3bWgw9qFgulYeVxI/LwM6cX
+         2brOdPZG+b/5KO6Z0cB6zBOx3cZ7gQJNTSICm06KPZS6Uvf0g3VKaLfRfVkufsz2e5Gm
+         B/6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BzHuFvoRywu7/+3CAPgMLJskj79GTte0iQAInAuEBk0=;
-        b=pCKCdLw3RdfPJ+Hmf8scpIOCyfmuXRxAPJrOlgsqwyDyZhJtxJMrlpBtVlz6JbsmAv
-         1EZu55zMt6+pa/oA1EbcomGcxVPUR7tptjOgIfwOQHYrm0ijAFjKJahatsoRItnQ6ZK1
-         Sm1toTls2LieAJfuRjuxvLIWfmUrS+VoXkFwfVHQQxNp/QFW1pi6mbxSShqBHGRG7sku
-         M2bmQZ/pnA1qxhUpuxwGF0zWqr+kAbIfsA3FGldTbQ3b76ZoHARrnv21sEL28oVcTtFq
-         aazqJhkb9eje25zJk8T0PDxbOmdNLuFaBfMwV6dJUyQetP7FigrTo8IjC79PpUnWuW7D
-         KzfQ==
-X-Gm-Message-State: APjAAAXAHm9iZJidRBvZv55aCG3ivZLbHQvSjfUcjikHtmK4c9V1wca+
-        QdLNLZt8EkmIgKoNP4AltAs=
-X-Google-Smtp-Source: APXvYqwHn40PeIiZpTilHxYc5IpQAFqaPj5T57XFsRE5QMVgKup6IdGlkPTXI5DRRjhWA6EyqfFb7Q==
-X-Received: by 2002:a1c:c14b:: with SMTP id r72mr74522683wmf.166.1564228888420;
-        Sat, 27 Jul 2019 05:01:28 -0700 (PDT)
-Received: from [192.168.2.202] (p5487B5D1.dip0.t-ipconnect.de. [84.135.181.209])
-        by smtp.gmail.com with ESMTPSA id j10sm94313757wrd.26.2019.07.27.05.01.27
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Jul 2019 05:01:27 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] Input: soc_button_array - Add support for newer
- surface devices
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-References: <20190720150511.95076-1-luzmaximilian@gmail.com>
- <20190720150511.95076-3-luzmaximilian@gmail.com>
- <20190727091443.GC795@penguin>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <fb53b082-4d83-83a6-1ae6-b9fae9dc750f@gmail.com>
-Date:   Sat, 27 Jul 2019 14:01:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        bh=+2ayQhRcXrW4zQh0HGDZU8kSLd3lPT+xKspP1b4Lmso=;
+        b=SqUZ6EPGFrb9j0f5b5yGzbrBqN7Hqhk0vnTUYzy/pZb18bXH095PvZxbu7TSx4f4O1
+         J41OPBRRFRPTmcyLKQXoWpRz9mEf8X3MLilFEkgP0XKNWJq+hZtKq/poGCo4c+5YyHhp
+         HbpLW0PaUD51/fFAm4puZ9BDC8fZ1lKUqMS1um2lQH+mKpdTHaiSf2R6IxWs8fwhLJCh
+         thONBEvjdJtGd4aSCIA/2e/k75BRsJmSH8k42yzrnDA52JsVJNxUpqVauKcXdnshB9fh
+         gGBbV2wxMQzXAH33Q/PDwTdda/gt82X1colRRXBsX849ldRWEn6PXlyyNDvyVKBtS/tt
+         DKPQ==
+X-Gm-Message-State: APjAAAWdkTpCx8eqwMtV2XRBkJ5dvsULqrrdUm+tn4jUE92VaNiBe3sX
+        tnd6i41S403S4KquwlaWQIN11SpO
+X-Google-Smtp-Source: APXvYqyTRFRe1ZYfpSKCINjaAEfcdzp8OBiFUU60V70zq4z7LfjnMTthzBJQ/K6XMucmzlTkX6/ZVg==
+X-Received: by 2002:a7b:c04f:: with SMTP id u15mr1548562wmc.106.1564229075362;
+        Sat, 27 Jul 2019 05:04:35 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133C65C00B418D0F4A25A19EC.dip0.t-ipconnect.de. [2003:f1:33c6:5c00:b418:d0f4:a25a:19ec])
+        by smtp.googlemail.com with ESMTPSA id r5sm58596219wmh.35.2019.07.27.05.04.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 27 Jul 2019 05:04:34 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        john@phrozen.org, kishon@ti.com, paul.burton@mips.com,
+        ralf@linux-mips.org
+Cc:     robh+dt@kernel.org, linux-kernel@vger.kernel.org, hauke@hauke-m.de,
+        mark.rutland@arm.com, ms@dev.tdt.de,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 0/4] Lantiq VRX200/ARX300 PCIe PHY driver
+Date:   Sat, 27 Jul 2019 14:04:11 +0200
+Message-Id: <20190727120415.15859-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20190727091443.GC795@penguin>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/19 11:14 AM, Dmitry Torokhov wrote:
-> On Sat, Jul 20, 2019 at 05:05:11PM +0200, Maximilian Luz wrote:
->> -
->> -	error = gpiod_count(dev, NULL);
->> -	if (error < 0) {
->> -		dev_dbg(dev, "no GPIO attached, ignoring...\n");
->> -		return -ENODEV;
-> 
-> I do not think we need to move this into individual "check" functions.
-> It is needed in all cases so we should keep it here.
-> 
-> How about version below?
+Various Lantiq (now Intel) SoCs contain one or more PCIe controllers
+and PHYs.
+This adds a driver for the PCIe PHYs found on the Lantiq VRX200 and
+ARX300 SoCs. GRX390 should also be supported as far as I can tell,
+but I don't have any of these devices to further verify that.
 
-Makes sense, looks good to me!
+I have tested this PCIe PHY driver with the out-of-tree PCIe controller
+driver in OpenWrt: [0]
 
-Maximilian
+dependencies for this series:
+none
+
+patches 1-3 should go through the PHY tree
+patch 4 should go through the mips tree
+
+I am aware that this series is too late for the v5.3 development cycle.
+Getting review comments is still appreciated so this can be queued early
+in the v5.4 development cycle.
+
+
+Changes since v2 at [2]:
+- added Rob's Reviewed-by to the dt-bindings patch (thank you!)
+
+Changes since v1 at [1]:
+- many thanks to Rob for giving me many hints regarding the .yaml bindings!
+- update the .yaml binding license to (GPL-2.0-only OR BSD-2-Clause)
+- changed the property lantiq,rcu to type phandle
+- add the optional big-endian and little-endian boolean properties
+- use numeric values for the clock phandles in the example to make the
+  dt_binding_check build happy
+- replaced two mdelay(1); with usleep_range(1000, 2000); in patch #2
+  (spotted and reported by Hauke off-list)
+
+
+[0] https://github.com/xdarklight/openwrt/commits/lantiq-mainline-pcie-phy-20190702
+[1] https://patchwork.kernel.org/cover/11028797/
+[2] https://patchwork.kernel.org/cover/11031421/
+
+
+Martin Blumenstingl (4):
+  dt-bindings: phy: add binding for the Lantiq VRX200 and ARX300 PCIe
+    PHYs
+  phy: lantiq: vrx200-pcie: add a driver for the Lantiq VRX200 PCIe PHY
+  phy: enable compile-testing for the Lantiq PHY drivers
+  MIPS: lantiq: update the clock alias' for the mainline PCIe PHY driver
+
+ .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  |  95 ++++
+ arch/mips/lantiq/xway/sysctrl.c               |  16 +-
+ drivers/phy/Makefile                          |   2 +-
+ drivers/phy/lantiq/Kconfig                    |  11 +
+ drivers/phy/lantiq/Makefile                   |   1 +
+ drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c   | 494 ++++++++++++++++++
+ .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  |  11 +
+ 7 files changed, 621 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+ create mode 100644 drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
+ create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
+
+-- 
+2.22.0
+
