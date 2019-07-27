@@ -2,63 +2,137 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C62C7618F
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 01:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458AAC76191
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 01:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 269DF22BF5
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 01:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C7422BF5
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 01:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbfG0Baj (ORCPT
+        id S1728585AbfG0Bdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 21:30:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727195AbfG0Bai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 21:30:38 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 646B222BF5;
-        Sat, 27 Jul 2019 01:30:37 +0000 (UTC)
-Date:   Fri, 26 Jul 2019 21:30:36 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [patch 0/8] core, x86: Preparatory steps for RT
-Message-ID: <20190726213036.2889a17d@oasis.local.home>
-In-Reply-To: <20190726211936.226129163@linutronix.de>
-References: <20190726211936.226129163@linutronix.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 26 Jul 2019 21:33:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50698 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbfG0Bdw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 21:33:52 -0400
+Received: from [5.158.153.52] (helo=lx-training.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1hrBal-0005il-DE; Sat, 27 Jul 2019 03:33:47 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>
+Subject: [RFC PATCH v3 0/2] printk: new ringbuffer implementation
+Date:   Sat, 27 Jul 2019 03:33:31 +0200
+Message-Id: <20190727013333.11260-1-john.ogness@linutronix.de>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 23:19:36 +0200
-Thomas Gleixner <tglx@linutronix.de> wrote:
+Hello,
 
-> CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by
-> CONFIG_PREEMPT_RT. Both PREEMPT and PREEMPT_RT require the same
-> functionality which today depends on CONFIG_PREEMPT.
-> 
-> The following series adjusts the core and x86 code to use
-> CONFIG_PREEMPTION where appropriate and extends the x86 dumpstack
-> implementation to display PREEMPT_RT instead of PREEMPT on a RT
-> enabled kernel.
->
+This is a follow-up RFC on the work to re-implement much of
+the core of printk. The threads for the previous RFC versions
+are here: v1[0], v2[1].
 
-Hmm, I'm looking at v5.3-rc1 and I don't see a CONFIG_PREEMPTION
-defined. And the first patch doesn't define it. Did I miss a patch
-series that adds it?
+As was planned[2], this is only the first piece: a new
+lockless ringbuffer.
 
--- Steve
+Changes from v2:
+
+- Moved all code into kernel/printk/. Let's keep it private
+  for now.
+
+- Split the ringbuffer into 3 components:
+
+  * a data ringbuffer (dataring) to manage the raw data and
+    data descriptors
+
+  * a numbered list (numlist) to manage committed entries and
+    their sequence numbers
+
+  * the printk_ringbuffer, which is the high-level structure
+    providing the reader/writer API and glue for the other
+    structures
+
+  Splitting the components apart helped to document their
+  roles and their related memory barriers (and will hopefully
+  also simplify the review process).
+
+- Renamed most functions, structures, and variables based on
+  v2 feedback.
+
+- Rewrote and reformatted nearly all comments (particularly
+  the memory barrier comments) based on v2 feedback.
+
+- Addressed implementation issues with v2:
+
+  * invalid data blocks potentially becoming valid because of
+    overflows
+
+  * weak associations between data blocks and descriptors
+
+  * excessive freeing of data blocks due to unavailable
+    descriptors
+
+- Improved error handling and data integrity checks in the test
+  module.
+
+For the memory barrier work I wrote a litmus test for nearly
+every memory barrier. I did not include these in the series.
+Should I? If yes, where should they be placed?
+
+I would like to point out that Petr Mladek posted a
+proof-of-concept[3] alternate implementation. I wanted to base my
+v3 on his work, but ran into too many problems getting it to
+run acceptably. I will address those issues in that thread. This
+is why my v3 is based directly on my v2.
+
+John Ogness
+
+[0] https://lkml.kernel.org/r/20190212143003.48446-1-john.ogness@linutronix.de
+[1] https://lkml.kernel.org/r/20190607162349.18199-1-john.ogness@linutronix.de
+[2] https://lkml.kernel.org/r/87y35hn6ih.fsf@linutronix.de
+[3] https://lkml.kernel.org/r/20190704103321.10022-1-pmladek@suse.com
+
+John Ogness (2):
+  printk-rb: add a new printk ringbuffer implementation
+  printk-rb: add test module
+
+ kernel/printk/Makefile     |   5 +
+ kernel/printk/dataring.c   | 761 ++++++++++++++++++++++++++++++++++++++++++
+ kernel/printk/dataring.h   |  95 ++++++
+ kernel/printk/numlist.c    | 375 +++++++++++++++++++++
+ kernel/printk/numlist.h    |  72 ++++
+ kernel/printk/ringbuffer.c | 800 +++++++++++++++++++++++++++++++++++++++++++++
+ kernel/printk/ringbuffer.h | 288 ++++++++++++++++
+ kernel/printk/test_prb.c   | 256 +++++++++++++++
+ 8 files changed, 2652 insertions(+)
+ create mode 100644 kernel/printk/dataring.c
+ create mode 100644 kernel/printk/dataring.h
+ create mode 100644 kernel/printk/numlist.c
+ create mode 100644 kernel/printk/numlist.h
+ create mode 100644 kernel/printk/ringbuffer.c
+ create mode 100644 kernel/printk/ringbuffer.h
+ create mode 100644 kernel/printk/test_prb.c
+
+-- 
+2.11.0
+
