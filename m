@@ -2,127 +2,102 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD1FC7618F
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEBBC7618F
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F93208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973DB204EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:28:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbfG0CXv (ORCPT
+        id S1727572AbfG0C2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 22:23:51 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:50082 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728033AbfG0CXt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 22:23:49 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hrCN7-0003zA-HP; Sat, 27 Jul 2019 02:23:45 +0000
-Date:   Sat, 27 Jul 2019 03:23:45 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: Regression in 5.3 for some FS_USERNS_MOUNT (aka
- user-namespace-mountable) filesystems
-Message-ID: <20190727022345.GN1131@ZenIV.linux.org.uk>
-References: <20190726115956.ifj5j4apn3tmwk64@brauner.io>
- <CAHk-=wgK254RkZg9oAv+Wt4V9zqYJMm3msTofvTUfA9dJw6piQ@mail.gmail.com>
- <20190726232220.GM1131@ZenIV.linux.org.uk>
+        Fri, 26 Jul 2019 22:28:15 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:41650 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726757AbfG0C2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 22:28:14 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id E80CA11412AE0515F340;
+        Sat, 27 Jul 2019 10:28:12 +0800 (CST)
+Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 27 Jul 2019 10:28:12 +0800
+Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
+ (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Sat, 27
+ Jul 2019 10:28:12 +0800
+Subject: Re: [PATCH V2 net-next 07/11] net: hns3: adds debug messages to
+ identify eth down cause
+To:     Joe Perches <joe@perches.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "tanhuazhong@huawei.com" <tanhuazhong@huawei.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "lipeng321@huawei.com" <lipeng321@huawei.com>,
+        "yisen.zhuang@huawei.com" <yisen.zhuang@huawei.com>,
+        "salil.mehta@huawei.com" <salil.mehta@huawei.com>,
+        "linuxarm@huawei.com" <linuxarm@huawei.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1564111502-15504-1-git-send-email-tanhuazhong@huawei.com>
+ <1564111502-15504-8-git-send-email-tanhuazhong@huawei.com>
+ <a32ca755bfd69046cf89aeacbf67fd16313de768.camel@mellanox.com>
+ <05602c954c689ffcd796e9468c52bca6fa4efe3f.camel@perches.com>
+From:   liuyonglong <liuyonglong@huawei.com>
+Message-ID: <f517dc69-6356-98fe-fb7a-0427728814bb@huawei.com>
+Date:   Sat, 27 Jul 2019 10:28:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190726232220.GM1131@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <05602c954c689ffcd796e9468c52bca6fa4efe3f.camel@perches.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.37.248]
+X-ClientProxiedBy: dggeme713-chm.china.huawei.com (10.1.199.109) To
+ dggeme760-chm.china.huawei.com (10.3.19.106)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 12:22:20AM +0100, Al Viro wrote:
-> On Fri, Jul 26, 2019 at 03:47:02PM -0700, Linus Torvalds wrote:
+
+
+On 2019/7/27 6:18, Joe Perches wrote:
+> On Fri, 2019-07-26 at 22:00 +0000, Saeed Mahameed wrote:
+>> On Fri, 2019-07-26 at 11:24 +0800, Huazhong Tan wrote:
+>>> From: Yonglong Liu <liuyonglong@huawei.com>
+>>>
+>>> Some times just see the eth interface have been down/up via
+>>> dmesg, but can not know why the eth down. So adds some debug
+>>> messages to identify the cause for this.
+> []
+>>> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+>> []
+>>> @@ -459,6 +459,10 @@ static int hns3_nic_net_open(struct net_device
+>>> *netdev)
+>>>  		h->ae_algo->ops->set_timer_task(priv->ae_handle, true);
+>>>  
+>>>  	hns3_config_xps(priv);
+>>> +
+>>> +	if (netif_msg_drv(h))
+>>> +		netdev_info(netdev, "net open\n");
+>>> +
+>>
+>> to make sure this is only intended for debug, and to avoid repetition.
+>> #define hns3_dbg(__dev, format, args...)			\
+>> ({								\
+>> 	if (netif_msg_drv(h))					\
+>> 		netdev_info(h->netdev, format, ##args);         \
+>> })
 > 
-> > Of course, then later on, commit 20284ab7427f ("switch mount_capable()
-> > to fs_context") drops that argument entirely, and hardcodes the
-> > decision to look at fc->global.
-> > 
-> > But that fc->global decision wasn't there originally, and is incorrect
-> > since it breaks existing users.
-> > 
-> > What gets much more confusing about this is that the two different
-> > users then moved around. The sget_userns() case got moved to
-> > legacy_get_tree(), and then joined together in vfs_get_tree(), and
-> > then split and moved out to do_new_mount() and vfs_fsconfig_locked().
-> > 
-> > And that "joined together into vfs_get_tree()" must be wrong, because
-> > the two cases used two different namespace rules. The sget_userns()
-> > case *did* have that "global" flag check, while the sget_fc() did not.
-> > 
-> > Messy. Al?
+> 	netif_dbg(h, drv, h->netdev, "net open\n")
 > 
-> Digging through that mess...  It's my fuckup, and we obviously need to
-> restore the old behaviour, but I really hope to manage that with
-> checks _not_ in superblock allocator ;-/
 
-It shouldn't have looked at fc->global for those checks.  In any cases.
-sget_fc() should indeed have been passing fc->user_ns, not userns.
-And as for sget_userns(), by the time of 20284ab7427f
-its checks had been moved to legacy_get_tree().  In form of
-	if (!mount_capable(fc->fs_type, fc->user_ns))
-as it bloody well ought to.
-
-So the first mistake (wrong argument passed to mount_capable() by sget_fc()
-in 0ce0cf12fc4c) has been completed by 20284ab7427f - that conversion was,
-actually, an equivalent transformation (callers of legacy_get_tree() never
-have fc->global set, so it's all the same).  However, the bug introduced in
-the earlier commit was now spelled out in mount_capable() itself.
-
-IOW, the minimal fix should be as below.  In principle, I'm not against
-Eric's "add a method instead of setting FS_USERNS_MOUNT", but note that
-in *all* cases the instances of his method end up being equivalent to
-	return ns_capable(fc->user_ns, CAP_SYS_ADMIN) ? 0 : -EPERM;
-
-Anyway, AFAICS the regression fix should be simply this:
-
-Unbreak mount_capable()
-
-In "consolidate the capability checks in sget_{fc,userns}())" the
-wrong argument had been passed to mount_capable() by sget_fc().
-That mistake had been further obscured later, when switching
-mount_capable() to fs_context has moved the calculation of
-bogus argument from sget_fc() to mount_capable() itself.  It
-should've been fc->user_ns all along.
-
-Screwed-up-by: Al Viro <viro@zeniv.linux.org.uk>
-Reported-by: Christian Brauner <christian@brauner.io>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
-diff --git a/fs/super.c b/fs/super.c
-index 113c58f19425..5960578a4076 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -478,13 +478,10 @@ EXPORT_SYMBOL(generic_shutdown_super);
- 
- bool mount_capable(struct fs_context *fc)
- {
--	struct user_namespace *user_ns = fc->global ? &init_user_ns
--						    : fc->user_ns;
--
- 	if (!(fc->fs_type->fs_flags & FS_USERNS_MOUNT))
- 		return capable(CAP_SYS_ADMIN);
- 	else
--		return ns_capable(user_ns, CAP_SYS_ADMIN);
-+		return ns_capable(fc->user_ns, CAP_SYS_ADMIN);
- }
- 
- /**
+Hi, Saeed && Joe:
+For our cases, maybe netif_info() can be use for HNS3 drivers?
+netif_dbg need to open dynamic debug options additional.
 
