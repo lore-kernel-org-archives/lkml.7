@@ -2,105 +2,130 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A49C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8160EC76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 449F22075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3211E2075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:17:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="q9ca4+Yt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388161AbfG0TOC (ORCPT
+        id S2388075AbfG0TRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 15:14:02 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33915 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387935AbfG0TOC (ORCPT
+        Sat, 27 Jul 2019 15:17:54 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:43894 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387841AbfG0TRy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 15:14:02 -0400
-Received: by mail-pl1-f194.google.com with SMTP id i2so25989607plt.1;
-        Sat, 27 Jul 2019 12:14:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wO5ryPqtMtkawzhdPDfKYcjrd6FW04MNlIFZ1YLmrlI=;
-        b=UVP5btvahUA/GdII08qTMaMAjzPXvsAX6hfDuv++5VHim+hgjAfFC/kuCu6dWsHCRN
-         tvzsY6a8CAcShz0QTtli1LYw4Te2hxraX6Wd2DPZ9w/MmmHLOQQwNZR8NaoXSLfA0vls
-         Oep4okBlQ30gFd+6sTA6a9WNL4DzSIYsUPygrEeT50z+g/IwOfPC4ab3+nvef77yu6dl
-         +8QGpsGm2LUegCtgcKWGTVSX90Frc37g/FXV39f0jpnk5iRGgiJnAGBwj0q5V4/PVaiL
-         gM+zbVIbGkfRd1Pyp9BjP99E2nLYYgKHQwvrxu5UNR+IW21qLF6NQKI5AwCYGBENDEBd
-         d86Q==
-X-Gm-Message-State: APjAAAX8ydACxuyTO6lVsTIWBbgC+Sg2F0qyIjR8HFEczvyIMSV59itn
-        SeryRiaSZy+YrqVprfGxa6n1uDfk
-X-Google-Smtp-Source: APXvYqwMEDE5KNRpmNVOGEdu4325iycA+No3DJf1kPKr4eJVPmmX03UbMaGnwY9zU6dl8UPNdGjAnQ==
-X-Received: by 2002:a17:902:61:: with SMTP id 88mr97772568pla.50.1564254841568;
-        Sat, 27 Jul 2019 12:14:01 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id n185sm36562727pga.16.2019.07.27.12.13.56
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Jul 2019 12:14:00 -0700 (PDT)
-Subject: Re: [RFC PATCH] modpost: check for static EXPORT_SYMBOL* functions
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190714152817.24693-1-efremov@linux.com>
- <CAK7LNATg1m_pzsZqGDUOUZHzv6jn2K0My8vFWbOVdUSTMQ05Ug@mail.gmail.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <5232680b-5303-3d63-db51-de65eea76e3a@linux.com>
-Date:   Sat, 27 Jul 2019 22:13:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 27 Jul 2019 15:17:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1564255072; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=K8lbvtW0OZ0d0LuxNkQz4JumZZZ/lfQdM+i8FRtHIK4=;
+        b=q9ca4+YtpHjxY3ato2Zz1wcttBjUS9OOfqtT0H5IQFeKgGe3o82ILmz2dAnR4wKuMejbrY
+        2A45CsJZvDxZp6mY+HRdagjapKJ/VHeHKUMJX+Xb3zGLQnTQll/s/KbPBuDPDFNlsfVjvQ
+        yl4yzHUcu5Z5djD8P/OIy5MCmkuBKLE=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Cc:     linux-kernel@vger.kernel.org, od@zcrc.me,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/4] irqchip: ingenic: Drop redundant irq_suspend / irq_resume functions
+Date:   Sat, 27 Jul 2019 15:17:38 -0400
+Message-Id: <20190727191741.30317-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNATg1m_pzsZqGDUOUZHzv6jn2K0My8vFWbOVdUSTMQ05Ug@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+The same behaviour can be obtained by using the IRQCHIP_MASK_ON_SUSPEND
+flag on the IRQ chip.
 
-> Could you drop the solved ones from the list?
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/irqchip/irq-ingenic.c   | 24 +-----------------------
+ include/linux/irqchip/ingenic.h | 14 --------------
+ 2 files changed, 1 insertion(+), 37 deletions(-)
+ delete mode 100644 include/linux/irqchip/ingenic.h
 
-Yes, of course. Do you want me to remove all symbols fixed with patches 
-or only those are in-tree now?
+diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
+index f126255b3260..06fa810e89bb 100644
+--- a/drivers/irqchip/irq-ingenic.c
++++ b/drivers/irqchip/irq-ingenic.c
+@@ -10,7 +10,6 @@
+ #include <linux/interrupt.h>
+ #include <linux/ioport.h>
+ #include <linux/irqchip.h>
+-#include <linux/irqchip/ingenic.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
+ #include <linux/timex.h>
+@@ -50,26 +49,6 @@ static irqreturn_t intc_cascade(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static void intc_irq_set_mask(struct irq_chip_generic *gc, uint32_t mask)
+-{
+-	struct irq_chip_regs *regs = &gc->chip_types->regs;
+-
+-	writel(mask, gc->reg_base + regs->enable);
+-	writel(~mask, gc->reg_base + regs->disable);
+-}
+-
+-void ingenic_intc_irq_suspend(struct irq_data *data)
+-{
+-	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+-	intc_irq_set_mask(gc, gc->wake_active);
+-}
+-
+-void ingenic_intc_irq_resume(struct irq_data *data)
+-{
+-	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+-	intc_irq_set_mask(gc, gc->mask_cache);
+-}
+-
+ static struct irqaction intc_cascade_action = {
+ 	.handler = intc_cascade,
+ 	.name = "SoC intc cascade interrupt",
+@@ -127,8 +106,7 @@ static int __init ingenic_intc_of_init(struct device_node *node,
+ 		ct->chip.irq_mask = irq_gc_mask_disable_reg;
+ 		ct->chip.irq_mask_ack = irq_gc_mask_disable_reg;
+ 		ct->chip.irq_set_wake = irq_gc_set_wake;
+-		ct->chip.irq_suspend = ingenic_intc_irq_suspend;
+-		ct->chip.irq_resume = ingenic_intc_irq_resume;
++		ct->chip.flags = IRQCHIP_MASK_ON_SUSPEND;
+ 
+ 		irq_setup_generic_chip(gc, IRQ_MSK(32), 0, 0,
+ 				       IRQ_NOPROBE | IRQ_LEVEL);
+diff --git a/include/linux/irqchip/ingenic.h b/include/linux/irqchip/ingenic.h
+deleted file mode 100644
+index 146558853ad4..000000000000
+--- a/include/linux/irqchip/ingenic.h
++++ /dev/null
+@@ -1,14 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-or-later */
+-/*
+- *  Copyright (C) 2010, Lars-Peter Clausen <lars@metafoo.de>
+- */
+-
+-#ifndef __LINUX_IRQCHIP_INGENIC_H__
+-#define __LINUX_IRQCHIP_INGENIC_H__
+-
+-#include <linux/irq.h>
+-
+-extern void ingenic_intc_irq_suspend(struct irq_data *data);
+-extern void ingenic_intc_irq_resume(struct irq_data *data);
+-
+-#endif
+-- 
+2.21.0.593.g511ec345e18
 
-Should it be like this:
-  1. "torture_onoff_cleanup" [kernel/torture]
-     "torture_shuffle_cleanup" [kernel/torture]
-     Patch: https://lkml.org/lkml/2019/7/4/411 (accepted)
-  2. "LZ4HC_setExternalDict" [lib/lz4/lz4hc_compress]
-     Patch: https://lkml.org/lkml/2019/7/8/842
-  3. "drm_client_close" [drivers/gpu/drm/drm]
-     Patch: https://lkml.org/lkml/2019/7/3/758 (accepted)
-  4. "ahci_em_messages" [drivers/ata/libahci]
-     Patch: https://lkml.org/lkml/2019/7/10/550 (reviewed)
-  5. "ftrace_set_clr_event" [vmlinux]
-     Patch: https://lkml.org/lkml/2019/7/4/609 (reviewed)
-  6. "rmi_2d_sensor_set_input_params" [drivers/input/rmi4/rmi_core]
-     Patch: https://lkml.org/lkml/2019/7/8/999 (accepted)
-  10. "empty_zero_page" [vmlinux]
-  11. "phys_base" [vmlinux]
-  12. "hypercall_page" [vmlinux]
-
-Or like this:
-  1. "empty_zero_page" [vmlinux]
-  2. "phys_base" [vmlinux]
-  3. "hypercall_page" [vmlinux]
-
-Well, I could remove this list at all. It seems like the following list 
-with existing commits is enough to show the problem of static exported 
-functions.
-
-I will resend the patch shortly after.
-
-Regards,
-Denis
