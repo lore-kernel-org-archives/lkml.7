@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77E7C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F51C7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF022087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E199216F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:11:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbfG0PLA (ORCPT
+        id S2387921AbfG0PLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 11:11:00 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3187 "EHLO huawei.com"
+        Sat, 27 Jul 2019 11:11:06 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2791 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387872AbfG0PKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 11:10:53 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D2EFD730AA5F14169656;
-        Sat, 27 Jul 2019 23:10:42 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
- 23:10:32 +0800
+        id S1729205AbfG0PLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 11:11:02 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9C3CC716FCA8B09EEB9D;
+        Sat, 27 Jul 2019 23:10:58 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
+ 23:10:47 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
         <tiwai@suse.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -52,9 +52,9 @@ CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-tegra@vger.kernel.org>, <linux-xtensa@linux-xtensa.org>,
         <gregkh@linuxfoundation.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 23/34] ASoC: psc-ac97: use devm_platform_ioremap_resource() to simplify code
-Date:   Sat, 27 Jul 2019 23:07:27 +0800
-Message-ID: <20190727150738.54764-24-yuehaibing@huawei.com>
+Subject: [PATCH -next 28/34] ASoC: meson: axg-spdifin: use devm_platform_ioremap_resource() to simplify code
+Date:   Sat, 27 Jul 2019 23:07:32 +0800
+Message-ID: <20190727150738.54764-29-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190727150738.54764-1-yuehaibing@huawei.com>
 References: <20190727150738.54764-1-yuehaibing@huawei.com>
@@ -73,31 +73,30 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- sound/soc/au1x/psc-ac97.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ sound/soc/meson/axg-spdifin.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/soc/au1x/psc-ac97.c b/sound/soc/au1x/psc-ac97.c
-index 21e5f6a..08bc04e 100644
---- a/sound/soc/au1x/psc-ac97.c
-+++ b/sound/soc/au1x/psc-ac97.c
-@@ -363,7 +363,7 @@ static const struct snd_soc_component_driver au1xpsc_ac97_component = {
- static int au1xpsc_ac97_drvprobe(struct platform_device *pdev)
- {
+diff --git a/sound/soc/meson/axg-spdifin.c b/sound/soc/meson/axg-spdifin.c
+index 01b2035..d0d09f9 100644
+--- a/sound/soc/meson/axg-spdifin.c
++++ b/sound/soc/meson/axg-spdifin.c
+@@ -453,7 +453,6 @@ static int axg_spdifin_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct axg_spdifin *priv;
+ 	struct snd_soc_dai_driver *dai_drv;
+-	struct resource *res;
+ 	void __iomem *regs;
  	int ret;
--	struct resource *iores, *dmares;
-+	struct resource *dmares;
- 	unsigned long sel;
- 	struct au1xpsc_audio_data *wd;
  
-@@ -374,8 +374,7 @@ static int au1xpsc_ac97_drvprobe(struct platform_device *pdev)
+@@ -468,8 +467,7 @@ static int axg_spdifin_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
  
- 	mutex_init(&wd->lock);
- 
--	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	wd->mmio = devm_ioremap_resource(&pdev->dev, iores);
-+	wd->mmio = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(wd->mmio))
- 		return PTR_ERR(wd->mmio);
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	regs = devm_ioremap_resource(dev, res);
++	regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(regs))
+ 		return PTR_ERR(regs);
  
 -- 
 2.7.4
