@@ -2,109 +2,106 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D83F4C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 18:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27200C76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 18:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE2E2087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 18:26:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jM5kJK/Q"
+	by mail.kernel.org (Postfix) with ESMTP id 02C7B2075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 18:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388088AbfG0S0k (ORCPT
+        id S2388126AbfG0S0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 14:26:40 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38633 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388044AbfG0S0j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 14:26:39 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f5so17433895pgu.5;
-        Sat, 27 Jul 2019 11:26:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0/WFTXFh8VdFeha4sOv1sy8hRLL0ZORE8CbLTzAFxDU=;
-        b=jM5kJK/QG896IzPX8gLWoIbGB1GZb4bGfTFin1fzKFOk4db0gRJwIe1CP5hvXFVGgz
-         JN+iZkM/AstYm00x0Y6l2ey4CN3v1VD285jZ4leXt6IiT+54qApHgq0UaSffo3Fr6Gz6
-         WJ5VsVEtmhv4fRe0LgiHx1nnTBlEc95P5H7XMG3fqA/R2o5STmfP8sqe2IoZiRuIz0fr
-         xOpIJ3YzycIftBxYSto+u5ZFyZ2bdTrxcS2IDiQpzazSGzSgeizQgG4r2h/RJkVW4r2w
-         Hf4B6p2vV6cmdAfMIKIKkGG2bL1bn2HxJu2mvyGVyjOwIG6WnB3l9uj3AMjXM5mQ5sEu
-         6asQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0/WFTXFh8VdFeha4sOv1sy8hRLL0ZORE8CbLTzAFxDU=;
-        b=KgDVUPJSNFKi6G5iDa8NQ8+k8IU0DsVFdGY0C6iH+zGVqKHiJ2h/ul/MqK8uAYSJjR
-         rRwowqvc0qF+odhjA698jfowplrJqPh0nORoqVA6IVNLH78GpfA/Nju9/v6SYx/bgyaR
-         Za1NotlA8WMJ5klPNBfyLK5zIws7dAOOfuwubnuFajHg2q//ux9NUZkZQi1aZcg2aKui
-         jNhfchBOT2XL+8DYEh9gGrNzpbZpOXlCq7lYRv5qwTFdFW1lYCYTkpodPjok/9QlamZp
-         DAYBuRaogANFasmFoG0NUo5F8EdFqtfod0cuzJxXS1NW7nHzell4eQw9nHJrOLSROVSo
-         ujGw==
-X-Gm-Message-State: APjAAAUR/lodS6KUmMyGkPEiKhhRCGZil1zDl6JooHlsTzil4TbB1WVd
-        OzE9V2r74umsxRTYkuSXX5oo8HctNE4=
-X-Google-Smtp-Source: APXvYqzW8q1PgFJz1qu0su24N6Jk/O2UxB7FTG/76lB0tPQi6e1h2r2jUUkLDfIuu7O6sMS1A/wkfw==
-X-Received: by 2002:a63:d741:: with SMTP id w1mr22068419pgi.155.1564251998108;
-        Sat, 27 Jul 2019 11:26:38 -0700 (PDT)
-Received: from localhost.localdomain ([123.213.206.190])
-        by smtp.gmail.com with ESMTPSA id w4sm75161780pfn.144.2019.07.27.11.26.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 27 Jul 2019 11:26:37 -0700 (PDT)
-From:   Minwoo Im <minwoo.im.dev@gmail.com>
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Klaus Birkelund <klaus@birkelund.eu>,
-        Minwoo Im <minwoo.im.dev@gmail.com>,
-        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
-        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@javigon.com>
-Subject: [PATCH 2/2] lightnvm: print error when target is not found
-Date:   Sun, 28 Jul 2019 03:26:26 +0900
-Message-Id: <20190727182626.27991-3-minwoo.im.dev@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190727182626.27991-1-minwoo.im.dev@gmail.com>
-References: <20190727182626.27991-1-minwoo.im.dev@gmail.com>
+        Sat, 27 Jul 2019 14:26:44 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:38766 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388091AbfG0S0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 14:26:42 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 442EEFB03;
+        Sat, 27 Jul 2019 20:26:38 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id vRGa6_JKtNHm; Sat, 27 Jul 2019 20:26:37 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id DDD4B46B22; Sat, 27 Jul 2019 20:26:36 +0200 (CEST)
+Date:   Sat, 27 Jul 2019 20:26:36 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+Cc:     Anson Huang <Anson.Huang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Carlo Caione <ccaione@baylibre.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>, linux-clk@vger.kernel.org,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        daniel.lezcano@linaro.org, dl-linux-imx <Linux-imx@nxp.com>,
+        rui.zhang@intel.com, Michael Turquette <mturquette@baylibre.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-pm@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        edubezval@gmail.com, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+ IMX8MQ_CLK_TMU_ROOT
+Message-ID: <20190727182636.GA7170@bogon.m.sigxcpu.org>
+References: <20190705045612.27665-1-Anson.Huang@nxp.com>
+ <20190705045612.27665-5-Anson.Huang@nxp.com>
+ <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If userspace requests target to be removed, nvm_remove_tgt() will
-iterate the nvm_devices to find out the given target, but if not
-found, then it should print out the error.
+Hi Daniel,
+On Sat, Jul 27, 2019 at 01:26:50AM +0300, Daniel Baluta wrote:
+> Hi all,
+> 
+> latest linux-next hangs at boot.
+> 
+> commit fde50b96be821ac9673a7e00847cc4605bd88f34 (HEAD -> master, tag:
+> next-20190726, origin/master, origin/HEAD)
+> Author: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date:   Fri Jul 26 15:18:02 2019 +1000
+> 
+>     Add linux-next specific files for 20190726
+> 
+>     Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> 
+> 
+> I know this is crazy but reverting commit:
+> 
+> commit 431bdd1df48ee2896ea9980d9153e3aeaf0c81ef (refs/bisect/bad)
+> Author: Anson Huang <Anson.Huang@nxp.com>
+> Date:   Fri Jul 5 12:56:11 2019 +0800
+> 
+>     clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT
+> 
+>     IMX8MQ_CLK_TMU_ROOT is ONLY used for thermal module, the driver
+>     should manage this clock, so no need to have CLK_IS_CRITICAL flag
+>     set.
+> 
+> 
+> 
+> makes the boot work again.
 
-Cc: Matias Bjørling <mb@lightnvm.io>
-Cc: Javier González <javier@javigon.com>
-Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
----
- drivers/lightnvm/core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+I noticed a boot hang yesterday on next-20190726 when loading the
+qoriq_thermal which I worked around by blacklisting it. The
+fsl,imx8mq-tmu node specifies a clock (IMX8MQ_CLK_TMU_ROOT) but does not
+seem to enable, shouldn't it do so?
 
-diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
-index 4c7b48f72e80..4c89a2420a51 100644
---- a/drivers/lightnvm/core.c
-+++ b/drivers/lightnvm/core.c
-@@ -494,8 +494,11 @@ static int nvm_remove_tgt(struct nvm_ioctl_remove *remove)
- 	}
- 	up_read(&nvm_lock);
- 
--	if (!t)
-+	if (!t) {
-+		pr_err("failed to remove target %s not found\n",
-+				remove->tgtname);
- 		return 1;
-+	}
- 
- 	__nvm_remove_target(t, true);
- 	kref_put(&dev->ref, nvm_free);
--- 
-2.17.1
-
+Cheers,
+ -- Guido
