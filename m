@@ -2,191 +2,115 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1542C41514
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFC0C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7C82087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E65092075C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:47:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XJc/Z0Ea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387551AbfG0MhQ (ORCPT
+        id S1728905AbfG0MrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 08:37:16 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:56986 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfG0MhP (ORCPT
+        Sat, 27 Jul 2019 08:47:04 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36028 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfG0MrE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 08:37:15 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hrLwf-00082Q-M3; Sat, 27 Jul 2019 12:37:05 +0000
-Date:   Sat, 27 Jul 2019 13:37:05 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: Regression in 5.3 for some FS_USERNS_MOUNT (aka
- user-namespace-mountable) filesystems
-Message-ID: <20190727123705.GP1131@ZenIV.linux.org.uk>
-References: <20190726115956.ifj5j4apn3tmwk64@brauner.io>
- <CAHk-=wgK254RkZg9oAv+Wt4V9zqYJMm3msTofvTUfA9dJw6piQ@mail.gmail.com>
- <20190726232220.GM1131@ZenIV.linux.org.uk>
- <878sskqp7p.fsf@xmission.com>
- <20190727022826.GO1131@ZenIV.linux.org.uk>
- <87h877pvv1.fsf@xmission.com>
+        Sat, 27 Jul 2019 08:47:04 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r7so25783407pfl.3
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 05:47:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=vCgH18Sx+HG3PjjMYsyJR+T5KOZZ1lCW+dOldljDzvU=;
+        b=XJc/Z0EaEU4mkmhHwZ/sDYw7Vun3wx5kEA6+/KUnOX5FT9/bJyQQBGulBfHXI8kosg
+         TLWKOD5Y0oYcoGvxX1v42XNkBbDqmDQ/4jqera5P5HKX928NIztp1ZGtwDEIl3ASg1js
+         2BzR/1pDU/t59iX0oozRc0aTAv03WSNsewRwk5mpo0241UvBPKBxu+aW9nHBtFKLP0me
+         pz+JXZa3xKSqNqLimzJDN8AcYBToC6KngjJsVb1QQfiVhbN7RgS/4QveJmSymeX5+eds
+         q0Iad3lexazmGkmtNuQkIwtHO+4XBzPxCuDRZWTd8N6OtQFGLIr6QwF5+p0urMicmwuY
+         cpOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=vCgH18Sx+HG3PjjMYsyJR+T5KOZZ1lCW+dOldljDzvU=;
+        b=QD5JUTQDSIIotEbVt/9K5XqOPn3gyBRFkVIo9scjuMVPD4h9VuPJFC4lQNg9tTw6zP
+         Hj1+Sz7x5kAYNHP8Qnx2J7agUv2ya1GbV7O+GLFCGrxc8Ouz5bOPDGZZbWmDOybCCb3W
+         qAfGyksTnYfl95nl7rjaoPkFQY/KotZkGNMQYW7hBP/dlo0srKRLPOIqtfFKLcUsWrip
+         p8ncQ8kFkcemnFQSKTuhOPhudxGmP9uMhcKPj7ZX/DL3jX4Z1L18DU5cce4ZesI8fEte
+         Uj1Bzh89czzQ/e8C/fwWZ9MNaCH2S+hJMBD7R0SkFXMshSm92S62dDiuWZVpsD3dcNMj
+         di/w==
+X-Gm-Message-State: APjAAAWEaulbrBoRHIblufEaHNHB/ei79erVlipz1dDWEv1VmFX3YOFc
+        kKVT3ILCI7JpxfFNQOtRZO4=
+X-Google-Smtp-Source: APXvYqy3/fig2ne1YkWYjVCjGBDdGWAGaCWbJi1DUQ/9F0vceF170kOGOvn52SdQy4awnJixaNN0kA==
+X-Received: by 2002:a65:46cf:: with SMTP id n15mr1881375pgr.267.1564231623635;
+        Sat, 27 Jul 2019 05:47:03 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id e189sm34311617pgc.15.2019.07.27.05.47.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 27 Jul 2019 05:47:03 -0700 (PDT)
+Date:   Sat, 27 Jul 2019 18:16:58 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Jeeeun Evans <jeeeunevans@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: os_dep: Remove unused defines
+Message-ID: <20190727124658.GA7829@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87h877pvv1.fsf@xmission.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 06:20:18AM -0500, Eric W. Biederman wrote:
+Remove below unused defines RTW_CH_MAX_2G_CHANNEL rtw_a_rates
+RTW_A_RATES_NUM RTW_5G_CHANNELS_NUM
 
-> > In principle I like killing FS_USERNS_MOUNT flag, but when a method
-> > is always either NULL or exact same function...
-> 
-> Either you are being dramatic or you read the patch much too quickly.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-Or you've done the same to my reply.  I'm not saying that in the
-posted form the instances are the same; I'm saying that they are
-all equivalent to exact same code - ns_capable(fc->user_ns, CAP_SYS_ADMIN),
-that is.
-
-> userns_mount_permission covers the common case of FS_USERNS_MOUNT.
-> Then there are the cases where you need to know how the filesystem is
-> going to map current into the filesystem that will be mounted.  Those
-> are: proc_mount_permission, sysfs_mount_permission,
-> mqueue_mount_permission, cgroup_mount_permission,
-
-+static int proc_mount_permission(void)
-+{
-+       struct pid_namespace *ns = task_active_pid_ns(current);
-+       return ns_capable(ns->user_ns, CAP_SYS_ADMIN) ? 0 : -EPERM;
-+}
-
-compare with
-        ctx->pid_ns = get_pid_ns(task_active_pid_ns(current));
-        put_user_ns(fc->user_ns);
-        fc->user_ns = get_user_ns(ctx->pid_ns->user_ns);
-in proc_init_fs_context().  Notice anything?  With those 'orrible
-API changes proc_mount_permissions() and userns_mount_permission()
-can actually become identical.  Because the default case is
-to leave fc->user_ns set to current_user_ns().
-
-cgroup case:
-+static int cgroup_mount_permission(void)
-+{
-+       struct cgroup_namespace *ns = current->nsproxy->cgroup_ns;
-+       return ns_capable(ns->user_ns, CAP_SYS_ADMIN) ? 0 : -EPERM;
-+}
-
-with
-        ctx->ns = current->nsproxy->cgroup_ns;
-...
-        put_user_ns(fc->user_ns);
-        fc->user_ns = get_user_ns(ctx->ns->user_ns);
-in cgroup_init_fs_context().  IOW, again your instances fold together.
-
-mqueue:
-        ctx->ipc_ns = get_ipc_ns(current->nsproxy->ipc_ns);
-        put_user_ns(fc->user_ns);
-        fc->user_ns = get_user_ns(ctx->ipc_ns->user_ns);
-in mqueue_init_fs_context() and
-+static int mqueue_mount_permission(void)
-+{
-+       struct ipc_namespace *ns = current->nsproxy->ipc_ns;
-+       return ns_capable(ns->user_ns, CAP_SYS_ADMIN) ? 0 : -EPERM;
-+}
-
-Same situation.
-
-+static int sysfs_mount_permission(void)
-+{
-+       struct net *net = current->nsproxy->net_ns;
-+       return ns_capable(net->user_ns, CAP_SYS_ADMIN) ? 0 : -EPERM;
-+}
-
-with
-        kfc->ns_tag = netns = kobj_ns_grab_current(KOBJ_NS_TYPE_NET);
-...
-        if (netns) {
-                put_user_ns(fc->user_ns);
-                fc->user_ns = get_user_ns(netns->user_ns);
-        }
-Now, _that_ is interesting.  Here the variants diverge - in case
-USER_NS && !NET_NS fc->user_ns is left at current_user_ns().
-
-That, BTW, is the only case where the old checks are left in:
-        if (!(fc->sb_flags & SB_KERNMOUNT)) {
-                if (!kobj_ns_current_may_mount(KOBJ_NS_TYPE_NET))
-                        return -EPERM;
-        }
-in sysfs_init_fs_context() papers over that case and I'd love to
-get rid of that irregularity.  Which, AFAICS, can be done by
-unconditional
-	put_user_ns(fc->user_ns);
-	fc->user_ns = get_user_ns(current->nsproxy->net_ns->user_ns);
-whatever the .config we have.  On NET_NS ones it'll be identical
-to ->user_ns of what kobj_ns_grab_current(KOBJ_NS_TYPE_NET) returns,
-on !NET_NS it'll get mount_capable() do the right thing without
-that wart with init_fs_context() doing that extra check.
-
-> So yes I agree the function of interest is always capable in some form,
-> we just need the filesystem specific logic to check to see if we will
-> have capable over the filesystem that will be mounted.
-> 
-> I don't doubt that the new mount api has added a few new complexities.
-
-So far it looks like *in this particular case* complexities would be
-reduced - with one exception all your ->permission() instances become
-identical.
-
-Moreover, even in that case we still get the right overall behaviour
-with the same instance...
-
-So do you have any specific objections to behaviour in vfs.git #fixes
-and/or to adding
-
-diff --git a/fs/sysfs/mount.c b/fs/sysfs/mount.c
-index db81cfbab9d6..c5b3c7d4d360 100644
---- a/fs/sysfs/mount.c
-+++ b/fs/sysfs/mount.c
-@@ -57,11 +57,6 @@ static int sysfs_init_fs_context(struct fs_context *fc)
- 	struct kernfs_fs_context *kfc;
- 	struct net *netns;
+diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
+index 9bc6856..30165ca 100644
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
+@@ -19,8 +19,6 @@
+ #define RTW_MAX_REMAIN_ON_CHANNEL_DURATION 5000 /* ms */
+ #define RTW_MAX_NUM_PMKIDS 4
  
--	if (!(fc->sb_flags & SB_KERNMOUNT)) {
--		if (!kobj_ns_current_may_mount(KOBJ_NS_TYPE_NET))
--			return -EPERM;
--	}
+-#define RTW_CH_MAX_2G_CHANNEL               14      /* Max channel in 2G band */
 -
- 	kfc = kzalloc(sizeof(struct kernfs_fs_context), GFP_KERNEL);
- 	if (!kfc)
- 		return -ENOMEM;
-@@ -71,10 +66,8 @@ static int sysfs_init_fs_context(struct fs_context *fc)
- 	kfc->magic = SYSFS_MAGIC;
- 	fc->fs_private = kfc;
- 	fc->ops = &sysfs_fs_context_ops;
--	if (netns) {
--		put_user_ns(fc->user_ns);
--		fc->user_ns = get_user_ns(netns->user_ns);
--	}
-+	put_user_ns(fc->user_ns);
-+	fc->user_ns = get_user_ns(current->nsproxy->net_ns->user_ns);
- 	fc->global = true;
- 	return 0;
- }
+ static const u32 rtw_cipher_suites[] = {
+ 	WLAN_CIPHER_SUITE_WEP40,
+ 	WLAN_CIPHER_SUITE_WEP104,
+@@ -73,13 +71,10 @@ static struct ieee80211_rate rtw_rates[] = {
+ 	RATETAB_ENT(540, 0x800, 0),
+ };
+ 
+-#define rtw_a_rates		(rtw_rates + 4)
+-#define RTW_A_RATES_NUM	8
+ #define rtw_g_rates		(rtw_rates + 0)
+ #define RTW_G_RATES_NUM	12
+ 
+ #define RTW_2G_CHANNELS_NUM 14
+-#define RTW_5G_CHANNELS_NUM 37
+ 
+ static struct ieee80211_channel rtw_2ghz_channels[] = {
+ 	CHAN2G(1, 2412, 0),
+-- 
+2.7.4
 
-on top of that?  The last one shouldn't change the behaviour, but it
-certainly looks like a nice wartectomy; not #fixes material, though.
