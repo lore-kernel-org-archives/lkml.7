@@ -4,29 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B78C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA793C7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B52F20840
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE4B20869
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:53:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbfG0Fw6 (ORCPT
+        id S1728760AbfG0FxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 01:52:58 -0400
+        Sat, 27 Jul 2019 01:53:07 -0400
 Received: from mga02.intel.com ([134.134.136.20]:40956 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728438AbfG0FwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 01:52:22 -0400
+        id S1728379AbfG0FwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 01:52:21 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 22:52:16 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,313,1559545200"; 
-   d="scan'208";a="254568639"
+   d="scan'208";a="254568632"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
   by orsmga001.jf.intel.com with ESMTP; 26 Jul 2019 22:52:16 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -40,9 +39,9 @@ To:     Paolo Bonzini <pbonzini@redhat.com>,
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
         Andy Lutomirski <luto@amacapital.net>
-Subject: [RFC PATCH 20/21] x86/sgx: Export sgx_set_attribute() for use by KVM
-Date:   Fri, 26 Jul 2019 22:52:13 -0700
-Message-Id: <20190727055214.9282-21-sean.j.christopherson@intel.com>
+Subject: [RFC PATCH 18/21] KVM: x86: Invoke kvm_x86_ops->cpuid_update() after kvm_update_cpuid()
+Date:   Fri, 26 Jul 2019 22:52:11 -0700
+Message-Id: <20190727055214.9282-19-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190727055214.9282-1-sean.j.christopherson@intel.com>
 References: <20190727055214.9282-1-sean.j.christopherson@intel.com>
@@ -53,68 +52,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To prevent userspace from circumventing access to the PROVISIONKEY by
-running an enclave in a VM, KVM will deny access to the PROVISIONKEY
-unless userspace proves to KVM that it is allowed to access the key.
-Export sgx_set_attribute() so that it may be used by KVM to verify an
-SGX attribute file.
+VMX's virtualization of SGX adds a lovely dependency on the guest's
+supported xcr0, which is calculated in kvm_update_cpuid().  VMX must
+toggled its interception of SGX instructions based on the supported
+xcr0, i.e. kvm_x86_ops->cpuid_update() is certainly the correct
+location for the dependent code.
+
+kvm_update_cpuid() was originally added by commit 2acf923e38fb ("KVM:
+VMX: Enable XSAVE/XRSTOR for guest").  There is no indication that its
+placement after kvm_x86_ops->cpuid_update() was anything more than a
+"new function at the end" decision.
+
+Inspection of the current code reveals no dependency on kvm_x86_ops's
+cpuid_update() in kvm_update_cpuid() or any of its helpers.
+
+  - SVM's sole update is to conditionally clear X86_FEATURE_X2APIC.
+    X86_FEATURE_X2APIC is only consumed by kvm_apic_set_state(), which
+    is already called immediately prior to kvm_x86_ops->cpuid_update().
+
+  - VMX updates only nested VMX MSRs, allowed FEATURE_CONTROL bits,
+    and VMCS fields, e.g. secondary execution controls, none of which
+    should bleed back into kvm_update_cpuid() barring an egregious
+    dependency bug somewhere else.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/sgx.h             | 2 ++
- arch/x86/kernel/cpu/sgx/driver/ioctl.c | 1 +
- arch/x86/kernel/cpu/sgx/main.c         | 1 +
- arch/x86/kernel/cpu/sgx/sgx.h          | 1 -
- 4 files changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/kvm/cpuid.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
-index f0f0176b8e2f..65c9417d3a80 100644
---- a/arch/x86/include/asm/sgx.h
-+++ b/arch/x86/include/asm/sgx.h
-@@ -6,6 +6,8 @@
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 70e488951f25..4c235af5318c 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -222,8 +222,9 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
+ 	vcpu->arch.cpuid_nent = cpuid->nent;
+ 	cpuid_fix_nx_cap(vcpu);
+ 	kvm_apic_set_version(vcpu);
+-	kvm_x86_ops->cpuid_update(vcpu);
+ 	r = kvm_update_cpuid(vcpu);
++	if (!r)
++		kvm_x86_ops->cpuid_update(vcpu);
  
- struct sgx_pageinfo;
- 
-+int sgx_set_attribute(u64 *allowed_attributes, unsigned int attribute_fd);
-+
- #if IS_ENABLED(CONFIG_KVM_INTEL)
- int sgx_ecreate(struct sgx_pageinfo *pageinfo, void __user *secs, int *trapnr);
- int sgx_einit(void __user *sigstruct, void __user *token,
-diff --git a/arch/x86/kernel/cpu/sgx/driver/ioctl.c b/arch/x86/kernel/cpu/sgx/driver/ioctl.c
-index a1cb5f772363..1b7a05cd9d02 100644
---- a/arch/x86/kernel/cpu/sgx/driver/ioctl.c
-+++ b/arch/x86/kernel/cpu/sgx/driver/ioctl.c
-@@ -2,6 +2,7 @@
- // Copyright(c) 2016-19 Intel Corporation.
- 
- #include <asm/mman.h>
-+#include <asm/sgx.h>
- #include <linux/mman.h>
- #include <linux/delay.h>
- #include <linux/file.h>
-diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
-index 542427c6ae9c..68e5c704378a 100644
---- a/arch/x86/kernel/cpu/sgx/main.c
-+++ b/arch/x86/kernel/cpu/sgx/main.c
-@@ -336,6 +336,7 @@ int sgx_set_attribute(u64 *allowed_attributes, unsigned int attribute_fd)
- 	*allowed_attributes |= SGX_ATTR_PROVISIONKEY;
- 	return 0;
+ out:
+ 	vfree(cpuid_entries);
+@@ -245,8 +246,9 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+ 		goto out;
+ 	vcpu->arch.cpuid_nent = cpuid->nent;
+ 	kvm_apic_set_version(vcpu);
+-	kvm_x86_ops->cpuid_update(vcpu);
+ 	r = kvm_update_cpuid(vcpu);
++	if (!r)
++		kvm_x86_ops->cpuid_update(vcpu);
+ out:
+ 	return r;
  }
-+EXPORT_SYMBOL_GPL(sgx_set_attribute);
- 
- static void sgx_dev_release(struct device *dev)
- {
-diff --git a/arch/x86/kernel/cpu/sgx/sgx.h b/arch/x86/kernel/cpu/sgx/sgx.h
-index 3f3311024bd0..fab12cc0e7c5 100644
---- a/arch/x86/kernel/cpu/sgx/sgx.h
-+++ b/arch/x86/kernel/cpu/sgx/sgx.h
-@@ -96,6 +96,5 @@ void sgx_update_lepubkeyhash_msrs(u64 *lepubkeyhash, bool enforce);
- __init int sgx_dev_init(const char *name, struct device *dev,
- 			struct cdev *cdev, const struct file_operations *fops,
- 			int minor);
--int sgx_set_attribute(u64 *allowed_attributes, unsigned int attribute_fd);
- 
- #endif /* _X86_SGX_H */
 -- 
 2.22.0
 
