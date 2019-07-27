@@ -2,105 +2,141 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D515C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926C9C7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 048E12082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E5BD2085A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:37:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTmYM1hA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t9FogJPy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387543AbfG0M0x (ORCPT
+        id S1728880AbfG0Mgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 08:26:53 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44882 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728666AbfG0M0x (ORCPT
+        Sat, 27 Jul 2019 08:36:42 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34959 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfG0Mgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 08:26:53 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i18so26013447pgl.11;
-        Sat, 27 Jul 2019 05:26:53 -0700 (PDT)
+        Sat, 27 Jul 2019 08:36:42 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w24so25755521plp.2
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 05:36:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZLbr+/N0UmJ/GLrZO46NMnnhsZmq5MgztPMhV/uqWqo=;
-        b=dTmYM1hAc2nBjU3MEqnGM2SxSTmR0iY5EIzZkTRJqZe0iCnDfoR4QVIAO9RRieD1IS
-         CoLBh0NQ6YlHgub37tr0HfrdSJpEc8GuA4tT5OAWTFvhvQGrSQKA56ZkJDkvrvOnx1bp
-         N9zOAsufz7zF8IfmURm0ZeFdRPqNGFmOG6/RmYaN1tUaosDkBXfsN9j3oxl5TvheufyV
-         IUPefVg6n34qWbkPlYYrn7NDYZEtSfqttmhFWQGklzzXHh/cNWudNV6eDYo5JdMPpYir
-         Cu+bmb6WLMTg1rQmvoqEfdF9bqvbSYbD4cE6ttlxjV5irc4gwEeP2Cui6/6t7oBjNlva
-         bzUQ==
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=BcNT+MFCkxdPKPzetxscvcsG7DH/SGCqmRYrqRRIav8=;
+        b=t9FogJPyaEYktz+rgn930epLshe+hxaW1YbRK3b7otL2/m53rWbC7Mfrz1R/8BEemu
+         PfHYVYDlNHh8X1rgH47s7tNIxECURl0fPvD746WU8S7y9NNB/EMMIlYn89sGU0G92CUv
+         VKDI5M/s6SZntF3LPSEmvgg0JvrGby6PFFYq3x3B1lB6JjNPf8pFdpW3n6ZDs5sxGJZw
+         d2oEPd37Hb2rgoJWJurflOIxaFOYALZg81RBt3c71LnNywXMCPwoRWMhkQshy6zMng9/
+         ThQclJMiOd79DmFc4thzcYW6SSOrvHXxZi11iP6XEoC1IYE092za6Gej0lK/MWvTHtSS
+         EVsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZLbr+/N0UmJ/GLrZO46NMnnhsZmq5MgztPMhV/uqWqo=;
-        b=SacQMQ9pLUJIc4/OllOqOY06ZX5CXSy2SWaxEfhfMA0EM3ujDjAXmHqEje1ELtfjoZ
-         LmuTKw71EeHwDRx/fOlADp8L7lwiOF0EFjkPjGBJGxAdPklDpTc3j1r3l13p7pZRQXBU
-         OD07+6GT6psa23m3FsEOvSrleltul7huvBzFogqdzeGfGfR2WD7yn27IOEuHORSbhnpL
-         3EjCT6LHWxgx1GP3TTuCgloPkSRBTcR6aVmOh/i62ve2bu/fA7WnI91VN0USm3YFM4Eu
-         7TUoMmmozK9XxcRcAMTf5zyOgGfqmVIiLbVRxxsdXxEHpmgOmCavUz6x8Rpb68dsbNwi
-         PjIA==
-X-Gm-Message-State: APjAAAWbbDZyCvU9IsuBVmyBO4hDOrptr56Gfkl8BtfaGu2JjQjIlNSo
-        i4/4g8/4dGoe9Bsu/KjrEPl8dbZNeABaipasmm8=
-X-Google-Smtp-Source: APXvYqxPB5dVV9tFEHC321JcL22pSpM+OBrkQL+ENpCdnQiZpfjfNFDkvGXGkXbkfY/BZgCF+mSdviVLyOxaV/QllfI=
-X-Received: by 2002:a63:6eca:: with SMTP id j193mr20517551pgc.74.1564230412476;
- Sat, 27 Jul 2019 05:26:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=BcNT+MFCkxdPKPzetxscvcsG7DH/SGCqmRYrqRRIav8=;
+        b=Gdy33dkZV75lgP8fo+87DVcwY+fLIGwFqArU2RwMr5DYDxO5eKe+CIiuOXRDCdiJ3e
+         iNQT8kiNnOgbSGHjd3G6eAboO2Z9Cj2l/K6FxU3XLqVrOopur2Afn6+Edx1Zo3iQko30
+         2t1iP60LhcKb0Iqv8unLlmMN05yElbPlOTJWtAJWfLhu3GQ8dgrP1PhMKEeU8wCjw/I0
+         ZzooLp8Fb4XpxyZ639NKwl8uc0IkW/BLNxJ35fYjjuLdXP9mgxMpex8A/0t4tVtYZYwj
+         WXcOZUK2hbQChi9qVAHLjM+I1xqdBDYy97lCFVnOQTvo0UpzP5AaLCVvsLzpuyjIcqPc
+         3O/w==
+X-Gm-Message-State: APjAAAXo8htW2xcdAzR5gJuqbUKjLW29qs3q+F87ZXsnbto9P37xnitr
+        vnGifo2gJ1x0Ehe5db0bpXQ=
+X-Google-Smtp-Source: APXvYqyy2ApCW47XDeDmB6DunhoI/d98KYyUxu1caSkKE93oDf+RvAIeTJDyNX18mJKLmClqoRZ0mg==
+X-Received: by 2002:a17:902:4124:: with SMTP id e33mr94564573pld.6.1564231001740;
+        Sat, 27 Jul 2019 05:36:41 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id s185sm82919285pgs.67.2019.07.27.05.36.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 27 Jul 2019 05:36:40 -0700 (PDT)
+Date:   Sat, 27 Jul 2019 18:06:35 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Himadri Pandya <himadri18.07@gmail.com>,
+        Josenivaldo Benito Jr <jrbenito@benito.qsl.br>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Shobhit Kukreti <shobhitkukreti@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        hdegoede@redhat.com
+Subject: [PATCH] staging: rtl8723bs: hal: Remove function argument padapter
+Message-ID: <20190727123635.GA6797@hari-Inspiron-1545>
 MIME-Version: 1.0
-References: <20190720150511.95076-1-luzmaximilian@gmail.com>
- <20190720150511.95076-2-luzmaximilian@gmail.com> <CAHp75Ve+3c-TFeN3Dh-DB75Rjft8mY2DA8vNkrFyp7JK-ZOjDA@mail.gmail.com>
- <20190727091541.GD795@penguin>
-In-Reply-To: <20190727091541.GD795@penguin>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 27 Jul 2019 15:26:41 +0300
-Message-ID: <CAHp75VdsL+-bhAUcxLKFKLZedN3gFD3jxnhELD1RtKGSHdagjw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] platform/x86: surfacepro3_button: Fix device check
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 12:15 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Thu, Jul 25, 2019 at 08:57:53PM +0300, Andy Shevchenko wrote:
-> > On Sat, Jul 20, 2019 at 6:05 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
-> > >
-> > > Do not use the surfacepro3_button driver on newer Microsoft Surface
-> > > models, only use it on the Surface Pro 3 and 4. Newer models (5th, 6th
-> > > and possibly future generations) use the same device as the Surface Pro
-> > > 4 to represent their volume and power buttons (MSHW0040), but their
-> > > actual implementation is significantly different. This patch ensures
-> > > that the surfacepro3_button driver is only used on the Pro 3 and 4
-> > > models, allowing a different driver to bind on other models.
-> > >
-> >
-> > Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> >
-> > assuming it will go thru Input subsystem.
->
-> I can take it, but I do not think it is dependent on the other change
-> and thus can go through platform tree as well.
+Remove function argument "padapter" in rtl8723bs_init_recv_priv function
+as its not being used.
 
-Pkease, take it. I do not expect any changes to the driver this cycle.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c | 4 ++--
+ drivers/staging/rtl8723bs/include/recv_osdep.h | 2 +-
+ drivers/staging/rtl8723bs/os_dep/recv_linux.c  | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
+index e23b39a..022f8fd 100644
+--- a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
++++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
+@@ -479,7 +479,7 @@ s32 rtl8723bs_init_recv_priv(struct adapter *padapter)
+ 		precvpriv->free_recv_buf_queue_cnt = 0;
+ 		for (i = 0; i < n ; i++) {
+ 			list_del_init(&precvbuf->list);
+-			rtw_os_recvbuf_resource_free(padapter, precvbuf);
++			rtw_os_recvbuf_resource_free(precvbuf);
+ 			precvbuf++;
+ 		}
+ 		precvpriv->precv_buf = NULL;
+@@ -519,7 +519,7 @@ void rtl8723bs_free_recv_priv(struct adapter *padapter)
+ 		precvpriv->free_recv_buf_queue_cnt = 0;
+ 		for (i = 0; i < n ; i++) {
+ 			list_del_init(&precvbuf->list);
+-			rtw_os_recvbuf_resource_free(padapter, precvbuf);
++			rtw_os_recvbuf_resource_free(precvbuf);
+ 			precvbuf++;
+ 		}
+ 		precvpriv->precv_buf = NULL;
+diff --git a/drivers/staging/rtl8723bs/include/recv_osdep.h b/drivers/staging/rtl8723bs/include/recv_osdep.h
+index 1056f61..00b0e2b 100644
+--- a/drivers/staging/rtl8723bs/include/recv_osdep.h
++++ b/drivers/staging/rtl8723bs/include/recv_osdep.h
+@@ -29,7 +29,7 @@ void rtw_os_recv_resource_free(struct recv_priv *precvpriv);
+ void rtw_os_free_recvframe(union recv_frame *precvframe);
+ 
+ 
+-void rtw_os_recvbuf_resource_free(struct adapter *padapter, struct recv_buf *precvbuf);
++void rtw_os_recvbuf_resource_free(struct recv_buf *precvbuf);
+ 
+ _pkt *rtw_os_alloc_msdu_pkt(union recv_frame *prframe, u16 nSubframe_Length, u8 *pdata);
+ void rtw_os_recv_indicate_pkt(struct adapter *padapter, _pkt *pkt, struct rx_pkt_attrib *pattrib);
+diff --git a/drivers/staging/rtl8723bs/os_dep/recv_linux.c b/drivers/staging/rtl8723bs/os_dep/recv_linux.c
+index 643cacc..a5070fb 100644
+--- a/drivers/staging/rtl8723bs/os_dep/recv_linux.c
++++ b/drivers/staging/rtl8723bs/os_dep/recv_linux.c
+@@ -43,7 +43,7 @@ void rtw_os_recv_resource_free(struct recv_priv *precvpriv)
+ }
+ 
+ /* free os related resource in struct recv_buf */
+-void rtw_os_recvbuf_resource_free(struct adapter *padapter, struct recv_buf *precvbuf)
++void rtw_os_recvbuf_resource_free(struct recv_buf *precvbuf)
+ {
+ 	if (precvbuf->pskb) {
+ 		dev_kfree_skb_any(precvbuf->pskb);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
+
