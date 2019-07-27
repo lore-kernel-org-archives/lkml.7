@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4188DC76191
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85B8C76190
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E552086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7F72086D
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564194811;
-	bh=nG/DP4zu0+bBCKaJ08jsk7eT0QH5jK3U1xszKcdFgFc=;
+	s=default; t=1564194850;
+	bh=Um0usSSLM63JQcnST9s+IEYpgMxGKqaNvQsyIWsDKgM=;
 	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=LluL1fNFZC94v2WHRgAO8/bXqrU13cZAOdXuizmh1zhHmfMnJwx+ZWeyTjhpOTpUX
-	 +yy2N5JK2AztVEyFE2yr4V+RE8JzhXo1UWt8tJhY+Vd/uktgUzKszCsKtYMJVcbLFL
-	 z+gnRKPmgpz2yfekseQ6vYRIetxYM+AWzeFwFdNA=
+	b=sWQd0/E2AAn8P+nzeANnlb1L7oZLHsq95gbyb/Heb3KOHL7E/tm4Lv2S5s93nwgSB
+	 Lhl3QxDjMlNY/g341ZU9cmojBHV9JEtVHPkXQHYJCizGyOLZ9622vMEgCTVEFei5T2
+	 fp001/NZPaVmz9uKbVAo4hAdCMrlKPSfgVZfusZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbfG0Cd3 (ORCPT
+        id S1727947AbfG0CeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 22:33:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57042 "EHLO mail.kernel.org"
+        Fri, 26 Jul 2019 22:34:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726766AbfG0Cd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 22:33:29 -0400
+        id S1726766AbfG0CeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 22:34:08 -0400
 Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 437142084D;
-        Sat, 27 Jul 2019 02:33:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 614902084D;
+        Sat, 27 Jul 2019 02:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564194808;
-        bh=nG/DP4zu0+bBCKaJ08jsk7eT0QH5jK3U1xszKcdFgFc=;
+        s=default; t=1564194847;
+        bh=Um0usSSLM63JQcnST9s+IEYpgMxGKqaNvQsyIWsDKgM=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=nFZcfZNNGk1+yNVcRbfBjZyzh4gTdMpPOAsSRpVREAH2JUugvJJNjl72M86s9jyhi
-         xKXh+6a1yMVzBz+35Lf+fkM2kFrrDbEyllTbI9RornOA/n8G6/XD4pdg4PyBPHp6fa
-         lD7qawx4cwrZylHaRNnN+qHISn7Wt45ED+XsOhXE=
-Subject: Re: [PATCH 5.2 00/66] 5.2.4-stable review
+        b=hOi+eAwc5KJO+yFOh+roBuXeMe1BVtbnKwhXG84prp3MZVdnQZoXrvDVidouiNwnP
+         mc2g0Crt+KM/0bL+TPajNeyoI8PBDLOv4azfDxo2e7fSvKkFcYZToHeUH2k8K9dJgT
+         WeA0U1M++di1Ej6AHNynvVcZKn5Kuc/yUnZn3p90=
+Subject: Re: [PATCH 5.1 00/62] 5.1.21-stable review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
 Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
         linux@roeck-us.net, patches@kernelci.org,
         ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
         stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190726152301.936055394@linuxfoundation.org>
+References: <20190726152301.720139286@linuxfoundation.org>
 From:   shuah <shuah@kernel.org>
-Message-ID: <2cd55ec5-ea26-2d47-1aa2-276662329e59@kernel.org>
-Date:   Fri, 26 Jul 2019 20:33:27 -0600
+Message-ID: <0a852b29-e12e-50e5-0756-8c65333b3a05@kernel.org>
+Date:   Fri, 26 Jul 2019 20:34:06 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
+In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -62,9 +62,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/26/19 9:23 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.4 release.
-> There are 66 patches in this series, all will be posted as a response
+On 7/26/19 9:24 AM, Greg Kroah-Hartman wrote:
+> Note, this will be the LAST 5.1.y kernel release.  Everyone should move
+> to the 5.2.y series at this point in time.
+> 
+> This is the start of the stable review cycle for the 5.1.21 release.
+> There are 62 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 > 
@@ -72,9 +75,9 @@ On 7/26/19 9:23 AM, Greg Kroah-Hartman wrote:
 > Anything received after that time might be too late.
 > 
 > The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.4-rc1.gz
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.21-rc1.gz
 > or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
 > and the diffstat can be found below.
 > 
 > thanks,
@@ -82,7 +85,7 @@ On 7/26/19 9:23 AM, Greg Kroah-Hartman wrote:
 > greg k-h
 > 
 
-Compiled and booted on my test system. No dmesg regressions,
+Compiled and booted on my test system. No dmesg regressions.
 
 thanks,
 -- Shuah
