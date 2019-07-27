@@ -8,65 +8,69 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFC0C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A91C7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E65092075C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424852075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:53:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XJc/Z0Ea"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sochV/fV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbfG0MrE (ORCPT
+        id S2387559AbfG0MxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 08:47:04 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36028 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfG0MrE (ORCPT
+        Sat, 27 Jul 2019 08:53:07 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45811 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728824AbfG0MxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 08:47:04 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r7so25783407pfl.3
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 05:47:03 -0700 (PDT)
+        Sat, 27 Jul 2019 08:53:06 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y8so25776527plr.12
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 05:53:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=vCgH18Sx+HG3PjjMYsyJR+T5KOZZ1lCW+dOldljDzvU=;
-        b=XJc/Z0EaEU4mkmhHwZ/sDYw7Vun3wx5kEA6+/KUnOX5FT9/bJyQQBGulBfHXI8kosg
-         TLWKOD5Y0oYcoGvxX1v42XNkBbDqmDQ/4jqera5P5HKX928NIztp1ZGtwDEIl3ASg1js
-         2BzR/1pDU/t59iX0oozRc0aTAv03WSNsewRwk5mpo0241UvBPKBxu+aW9nHBtFKLP0me
-         pz+JXZa3xKSqNqLimzJDN8AcYBToC6KngjJsVb1QQfiVhbN7RgS/4QveJmSymeX5+eds
-         q0Iad3lexazmGkmtNuQkIwtHO+4XBzPxCuDRZWTd8N6OtQFGLIr6QwF5+p0urMicmwuY
-         cpOw==
+        bh=ld7+Uj630f5ZM6LOdOr+O6vUN4++4Q00HLFfndySjNc=;
+        b=sochV/fVlWbh9AkilsVBjLDAbUAqRX1oVoo0Z9KD2mypUzJDaRgfrNf5QHF2eGaq6k
+         V3FeXj/mV3cUk4cZ6HTyZ4e/TIcTBT09I4WzIKSnG852F/TtALSbD5yk/M8tRrn+Wfbd
+         qjeMzuanWNerEUu3X9/fpUu/FCkhOwZg9yA+p06PrrFQc983pyTTOWsCX2hqZ0jtTDxV
+         Cmjn5qa6zhTrbIfIAxKnPnUWccJqAqehokVk+vksdXe3L4dRP9BntmjjJAI5AsGeLfZE
+         ANA4hKv58PgY72K+X9Fkzw19omCC+FtXYYLKAfDEOH7xe2n7vGNWQff9dU7piTsUru5h
+         Q+yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=vCgH18Sx+HG3PjjMYsyJR+T5KOZZ1lCW+dOldljDzvU=;
-        b=QD5JUTQDSIIotEbVt/9K5XqOPn3gyBRFkVIo9scjuMVPD4h9VuPJFC4lQNg9tTw6zP
-         Hj1+Sz7x5kAYNHP8Qnx2J7agUv2ya1GbV7O+GLFCGrxc8Ouz5bOPDGZZbWmDOybCCb3W
-         qAfGyksTnYfl95nl7rjaoPkFQY/KotZkGNMQYW7hBP/dlo0srKRLPOIqtfFKLcUsWrip
-         p8ncQ8kFkcemnFQSKTuhOPhudxGmP9uMhcKPj7ZX/DL3jX4Z1L18DU5cce4ZesI8fEte
-         Uj1Bzh89czzQ/e8C/fwWZ9MNaCH2S+hJMBD7R0SkFXMshSm92S62dDiuWZVpsD3dcNMj
-         di/w==
-X-Gm-Message-State: APjAAAWEaulbrBoRHIblufEaHNHB/ei79erVlipz1dDWEv1VmFX3YOFc
-        kKVT3ILCI7JpxfFNQOtRZO4=
-X-Google-Smtp-Source: APXvYqy3/fig2ne1YkWYjVCjGBDdGWAGaCWbJi1DUQ/9F0vceF170kOGOvn52SdQy4awnJixaNN0kA==
-X-Received: by 2002:a65:46cf:: with SMTP id n15mr1881375pgr.267.1564231623635;
-        Sat, 27 Jul 2019 05:47:03 -0700 (PDT)
+        bh=ld7+Uj630f5ZM6LOdOr+O6vUN4++4Q00HLFfndySjNc=;
+        b=I9ekzT9evEmm5qKpH/Fo+v7JfsktlxTNRqlpXLKY7Y3uCpZBZDypMk+mV+5Dqdg2mf
+         KqC5XlEYR5OYaO6f9R5F/fNuWIhmT8b6Hg2cS+ae1x5NY/2lxnawakH3MOECxsv59fF3
+         usN401xbFeNl7zc12RkF7ksY7xVGczUJ+U19BR7pt6NBfdgtinzYEQGFjTCPLV9AOAAO
+         FQUuVrC2UCfcbZUbi1kVef2aWqByY/19CtLjvVI58ZFPf/eVsweFwzlynVaOpDDf26ID
+         yJY3vEHdHuUGpdfHAHPY21nT2NMHAQjujQS/EcY9pAQ3JS9YcMRuRi7pneKNaTDuKgW2
+         6Ymg==
+X-Gm-Message-State: APjAAAUqttRWs5LAP8ATbXI0OI8obI56UAzZBY2SGKxYiD6eTNwc5KuG
+        KaQf6hA7YYsh1g+HSbDaQbE=
+X-Google-Smtp-Source: APXvYqyeW/wa8fc9UwVhHiUkdKfJrle/DifqN6rBC96OG59gwBM4VPYRkXRHxoWoq3/fCqI4FTNx7Q==
+X-Received: by 2002:a17:902:ff10:: with SMTP id f16mr6731069plj.141.1564231986201;
+        Sat, 27 Jul 2019 05:53:06 -0700 (PDT)
 Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id e189sm34311617pgc.15.2019.07.27.05.47.00
+        by smtp.gmail.com with ESMTPSA id y23sm58091408pfo.106.2019.07.27.05.53.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Jul 2019 05:47:03 -0700 (PDT)
-Date:   Sat, 27 Jul 2019 18:16:58 +0530
+        Sat, 27 Jul 2019 05:53:05 -0700 (PDT)
+Date:   Sat, 27 Jul 2019 18:23:00 +0530
 From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Emanuel Bennici <benniciemanuel78@gmail.com>,
+        Shobhit Kukreti <shobhitkukreti@gmail.com>,
         Puranjay Mohan <puranjay12@gmail.com>,
-        Jeeeun Evans <jeeeunevans@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: os_dep: Remove unused defines
-Message-ID: <20190727124658.GA7829@hari-Inspiron-1545>
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        hdegoede@redhat.com, Larry.Finger@lwfinger.net
+Subject: [PATCH] staging: rtl8723bs: os_dep: Remove unused defines related to
+ combo scan
+Message-ID: <20190727125300.GA8629@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -76,41 +80,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove below unused defines RTW_CH_MAX_2G_CHANNEL rtw_a_rates
-RTW_A_RATES_NUM RTW_5G_CHANNELS_NUM
+Remove below defines WEXT_CSCAN_AMOUNT WEXT_CSCAN_BUF_LEN
+WEXT_CSCAN_NPROBE_SECTION
 
 Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
- drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-index 9bc6856..30165ca 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-@@ -19,8 +19,6 @@
- #define RTW_MAX_REMAIN_ON_CHANNEL_DURATION 5000 /* ms */
- #define RTW_MAX_NUM_PMKIDS 4
+diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+index 99e6b10..73b412e 100644
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+@@ -21,13 +21,10 @@
+ #define RATE_COUNT 4
  
--#define RTW_CH_MAX_2G_CHANNEL               14      /* Max channel in 2G band */
--
- static const u32 rtw_cipher_suites[] = {
- 	WLAN_CIPHER_SUITE_WEP40,
- 	WLAN_CIPHER_SUITE_WEP104,
-@@ -73,13 +71,10 @@ static struct ieee80211_rate rtw_rates[] = {
- 	RATETAB_ENT(540, 0x800, 0),
- };
- 
--#define rtw_a_rates		(rtw_rates + 4)
--#define RTW_A_RATES_NUM	8
- #define rtw_g_rates		(rtw_rates + 0)
- #define RTW_G_RATES_NUM	12
- 
- #define RTW_2G_CHANNELS_NUM 14
--#define RTW_5G_CHANNELS_NUM 37
- 
- static struct ieee80211_channel rtw_2ghz_channels[] = {
- 	CHAN2G(1, 2412, 0),
+ /*  combo scan */
+-#define WEXT_CSCAN_AMOUNT 9
+-#define WEXT_CSCAN_BUF_LEN		360
+ #define WEXT_CSCAN_HEADER		"CSCAN S\x01\x00\x00S\x00"
+ #define WEXT_CSCAN_HEADER_SIZE		12
+ #define WEXT_CSCAN_SSID_SECTION		'S'
+ #define WEXT_CSCAN_CHANNEL_SECTION	'C'
+-#define WEXT_CSCAN_NPROBE_SECTION	'N'
+ #define WEXT_CSCAN_ACTV_DWELL_SECTION	'A'
+ #define WEXT_CSCAN_PASV_DWELL_SECTION	'P'
+ #define WEXT_CSCAN_HOME_DWELL_SECTION	'H'
 -- 
 2.7.4
 
