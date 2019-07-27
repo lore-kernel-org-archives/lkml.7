@@ -4,38 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2656DC7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 004C7C7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04F6920828
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D53FC20828
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387405AbfG0Fsa (ORCPT
+        id S2387432AbfG0Fsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 01:48:30 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38796 "EHLO huawei.com"
+        Sat, 27 Jul 2019 01:48:33 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2783 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728174AbfG0FsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 01:48:20 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DBBFCD05516A5833556B;
-        Sat, 27 Jul 2019 13:48:18 +0800 (CST)
+        id S1728184AbfG0FsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 01:48:21 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 062D8CED9C6169735ACD;
+        Sat, 27 Jul 2019 13:48:19 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 27 Jul 2019 13:48:09 +0800
+ 14.3.439.0; Sat, 27 Jul 2019 13:48:08 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <saeedm@mellanox.com>,
-        Yufeng Mo <moyufeng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V3 net-next 05/10] net: hns3: modify firmware version display format
-Date:   Sat, 27 Jul 2019 13:46:07 +0800
-Message-ID: <1564206372-42467-6-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V3 net-next 03/10] net: hns3: remove upgrade reset level when reset fail
+Date:   Sat, 27 Jul 2019 13:46:05 +0800
+Message-ID: <1564206372-42467-4-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564206372-42467-1-git-send-email-tanhuazhong@huawei.com>
 References: <1564206372-42467-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,116 +47,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufeng Mo <moyufeng@huawei.com>
+Currently, hclge_reset_err_handle() will assert a global reset
+when the failing count is smaller than MAX_RESET_FAIL_CNT, which
+will affect other running functions.
 
-This patch modifies firmware version display format in
-hclge(vf)_cmd_init() and hns3_get_drvinfo(). Also, adds
-some optimizations for firmware version display format.
+So this patch removes this upgrading, and uses re-scheduling reset
+task to do it.
 
-Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Reviewed-by: Yunsheng Lin <linyunsheng@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hnae3.h              |  9 +++++++++
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c       | 15 +++++++++++++--
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c   | 10 +++++++++-
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 10 +++++++++-
- 4 files changed, 40 insertions(+), 4 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 28 +++++++---------------
+ 1 file changed, 8 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index 48c7b70..a4624db 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -179,6 +179,15 @@ struct hnae3_vector_info {
- #define HNAE3_RING_GL_RX 0
- #define HNAE3_RING_GL_TX 1
- 
-+#define HNAE3_FW_VERSION_BYTE3_SHIFT	24
-+#define HNAE3_FW_VERSION_BYTE3_MASK	GENMASK(31, 24)
-+#define HNAE3_FW_VERSION_BYTE2_SHIFT	16
-+#define HNAE3_FW_VERSION_BYTE2_MASK	GENMASK(23, 16)
-+#define HNAE3_FW_VERSION_BYTE1_SHIFT	8
-+#define HNAE3_FW_VERSION_BYTE1_MASK	GENMASK(15, 8)
-+#define HNAE3_FW_VERSION_BYTE0_SHIFT	0
-+#define HNAE3_FW_VERSION_BYTE0_MASK	GENMASK(7, 0)
-+
- struct hnae3_ring_chain_node {
- 	struct hnae3_ring_chain_node *next;
- 	u32 tqp_index;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index 5bff98a..e71c92b 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -527,6 +527,7 @@ static void hns3_get_drvinfo(struct net_device *netdev,
- {
- 	struct hns3_nic_priv *priv = netdev_priv(netdev);
- 	struct hnae3_handle *h = priv->ae_handle;
-+	u32 fw_version;
- 
- 	if (!h->ae_algo->ops->get_fw_version) {
- 		netdev_err(netdev, "could not get fw version!\n");
-@@ -545,8 +546,18 @@ static void hns3_get_drvinfo(struct net_device *netdev,
- 		sizeof(drvinfo->bus_info));
- 	drvinfo->bus_info[ETHTOOL_BUSINFO_LEN - 1] = '\0';
- 
--	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version), "0x%08x",
--		 priv->ae_handle->ae_algo->ops->get_fw_version(h));
-+	fw_version = priv->ae_handle->ae_algo->ops->get_fw_version(h);
-+
-+	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version),
-+		 "%lu.%lu.%lu.%lu",
-+		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE3_MASK,
-+				 HNAE3_FW_VERSION_BYTE3_SHIFT),
-+		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE2_MASK,
-+				 HNAE3_FW_VERSION_BYTE2_SHIFT),
-+		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE1_MASK,
-+				 HNAE3_FW_VERSION_BYTE1_SHIFT),
-+		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE0_MASK,
-+				 HNAE3_FW_VERSION_BYTE0_SHIFT));
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 3fde5471..3c64d70 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -3305,7 +3305,7 @@ static int hclge_reset_prepare_wait(struct hclge_dev *hdev)
+ 	return ret;
  }
  
- static u32 hns3_get_link(struct net_device *netdev)
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-index 22f6acd..d9858f2 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-@@ -419,7 +419,15 @@ int hclge_cmd_init(struct hclge_dev *hdev)
+-static bool hclge_reset_err_handle(struct hclge_dev *hdev, bool is_timeout)
++static bool hclge_reset_err_handle(struct hclge_dev *hdev)
+ {
+ #define MAX_RESET_FAIL_CNT 5
+ 
+@@ -3322,20 +3322,11 @@ static bool hclge_reset_err_handle(struct hclge_dev *hdev, bool is_timeout)
+ 		return false;
+ 	} else if (hdev->reset_fail_cnt < MAX_RESET_FAIL_CNT) {
+ 		hdev->reset_fail_cnt++;
+-		if (is_timeout) {
+-			set_bit(hdev->reset_type, &hdev->reset_pending);
+-			dev_info(&hdev->pdev->dev,
+-				 "re-schedule to wait for hw reset done\n");
+-			return true;
+-		}
+-
+-		dev_info(&hdev->pdev->dev, "Upgrade reset level\n");
+-		hclge_clear_reset_cause(hdev);
+-		set_bit(HNAE3_GLOBAL_RESET, &hdev->default_reset_request);
+-		mod_timer(&hdev->reset_timer,
+-			  jiffies + HCLGE_RESET_INTERVAL);
+-
+-		return false;
++		set_bit(hdev->reset_type, &hdev->reset_pending);
++		dev_info(&hdev->pdev->dev,
++			 "re-schedule reset task(%d)\n",
++			 hdev->reset_fail_cnt);
++		return true;
  	}
- 	hdev->fw_version = version;
  
--	dev_info(&hdev->pdev->dev, "The firmware version is %08x\n", version);
-+	dev_info(&hdev->pdev->dev, "The firmware version is %lu.%lu.%lu.%lu\n",
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE3_MASK,
-+				 HNAE3_FW_VERSION_BYTE3_SHIFT),
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE2_MASK,
-+				 HNAE3_FW_VERSION_BYTE2_SHIFT),
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE1_MASK,
-+				 HNAE3_FW_VERSION_BYTE1_SHIFT),
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE0_MASK,
-+				 HNAE3_FW_VERSION_BYTE0_SHIFT));
+ 	hclge_clear_reset_cause(hdev);
+@@ -3382,7 +3373,6 @@ static int hclge_reset_stack(struct hclge_dev *hdev)
+ static void hclge_reset(struct hclge_dev *hdev)
+ {
+ 	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(hdev->pdev);
+-	bool is_timeout = false;
+ 	int ret;
  
- 	return 0;
+ 	/* Initialize ae_dev reset status as well, in case enet layer wants to
+@@ -3410,10 +3400,8 @@ static void hclge_reset(struct hclge_dev *hdev)
+ 	if (ret)
+ 		goto err_reset;
  
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-index 652b796..8f21eb3 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-@@ -405,7 +405,15 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
- 	}
- 	hdev->fw_version = version;
+-	if (hclge_reset_wait(hdev)) {
+-		is_timeout = true;
++	if (hclge_reset_wait(hdev))
+ 		goto err_reset;
+-	}
  
--	dev_info(&hdev->pdev->dev, "The firmware version is %08x\n", version);
-+	dev_info(&hdev->pdev->dev, "The firmware version is %lu.%lu.%lu.%lu\n",
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE3_MASK,
-+				 HNAE3_FW_VERSION_BYTE3_SHIFT),
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE2_MASK,
-+				 HNAE3_FW_VERSION_BYTE2_SHIFT),
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE1_MASK,
-+				 HNAE3_FW_VERSION_BYTE1_SHIFT),
-+		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE0_MASK,
-+				 HNAE3_FW_VERSION_BYTE0_SHIFT));
+ 	hdev->rst_stats.hw_reset_done_cnt++;
  
- 	return 0;
+@@ -3465,7 +3453,7 @@ static void hclge_reset(struct hclge_dev *hdev)
+ err_reset_lock:
+ 	rtnl_unlock();
+ err_reset:
+-	if (hclge_reset_err_handle(hdev, is_timeout))
++	if (hclge_reset_err_handle(hdev))
+ 		hclge_reset_task_schedule(hdev);
+ }
  
 -- 
 2.7.4
