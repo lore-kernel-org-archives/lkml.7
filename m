@@ -2,163 +2,149 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC3CC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 18:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB633C76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 18:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB65208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 18:48:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564253294;
-	bh=iq1qYcN5ft+ngSPr5xmJXKhplcC7Tw4xClAiGLoEGzo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DBEc2SL5HGj6vZ0qzxD2DRsMROp5Z6d5ug/kSkrZFq/wOGak5yX5GoGljGPCtrr8o
-	 +S1xzmfkEQD5W3B/8TKtCiL4b3aaIEtZAd0hiPTZtQxkr6TvIwFgKvlGbyhUzRXHQb
-	 nfHuEhhBJHnpiXjAt5bdHS4rd3izJjTQ54MqJRYI=
+	by mail.kernel.org (Postfix) with ESMTP id AAB3D2087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 18:53:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ix+I4uDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388116AbfG0SsN (ORCPT
+        id S2388141AbfG0Sxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 14:48:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55172 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387841AbfG0SsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 14:48:12 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74B6D206E0;
-        Sat, 27 Jul 2019 18:48:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564253291;
-        bh=iq1qYcN5ft+ngSPr5xmJXKhplcC7Tw4xClAiGLoEGzo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NQpSd8tu13qGxACuiCOrTviVGnN1T4m7tJOUd9k7TZK+b+MZInrD7pTp3nE8F/TaY
-         Rp3w5lV28mEhORkcmWWbdOiQH1ozpeamfjHhhModSJrC80ckVeNF5CCzJvwb8odBeC
-         /jpwjPVC8ku3cGdDNthQbtzyPDQt2/7TTnzH11PM=
-Date:   Sat, 27 Jul 2019 19:48:05 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <broonie@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>
-Subject: Re: [PATCH 1/3][V4] iio: imu: adis: Add support for SPI transfer
- cs_change_delay
-Message-ID: <20190727194805.455f9159@archlinux>
-In-Reply-To: <20190723073641.27801-2-alexandru.ardelean@analog.com>
-References: <20190723073641.27801-1-alexandru.ardelean@analog.com>
-        <20190723073641.27801-2-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 27 Jul 2019 14:53:46 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37160 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387794AbfG0Sxp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 14:53:45 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 19so26020583pfa.4;
+        Sat, 27 Jul 2019 11:53:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=y3DnasAilMtI3RHpffbNTgKJ99rymltM1iusWTe3er4=;
+        b=Ix+I4uDUS+gstrellW1g3Ojk4+fwQ2/s3x9Iu03wCV2yR0JJ5oQDgFZOeqTuyGDrny
+         EuiEnHsq8/vKBvSOmZFZNYgbsAj5t3Df70F9XY+1FyTQXCxi9ko9ktlCVNJql+pyiEfK
+         aGaWBAkqEyp8t1mfUMmMnoBoATOQ3qzoWSC6i+oraTxhAFL/BbqkIlDwiNRb4+F/rWp7
+         /h4UK1pDWIa5HGI8yq51vQx1QV3PaHRUKNEwoRC6WaCOJxuTkBsQt1Gq6yYarZJsJ5we
+         J8aiugN7hfvWBo9+a+LDXnyNur2GOzWOBj4QLKPe7ohqfhzvEWYm1k+bB/JQFtGXtA3r
+         4xTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=y3DnasAilMtI3RHpffbNTgKJ99rymltM1iusWTe3er4=;
+        b=E9tvL7LgYtG28qoqvFbpi+tlr9+FIHGpbeuZx9xZw9oASIFO9Le4Y7MyHUIbwiGcrb
+         v4I/tJkbUMC7hkEHIwuewnMInsnG3N3/xVduBOyUegFldr3JG+hR7nGs+tuYNa8fy/GY
+         57fLt2nE6DryiULMlgdRcVVT75qRf9MSrwJz7XRh8tnpTB0OS76++gO0IGXr2b6bA+Fg
+         TTonE4kNbDIB/WPziWxUa40DxBSA4GMnWJZ86a76h77ohyDtBDzG4/jDdbdMpcwmA+1u
+         mgaVPP8GYUCsiIaJqtZs/3IjZJDZCgW7fwAaryS6t6AOiLrKRBqXJCT/xZ0xAbK9a7cH
+         rs2w==
+X-Gm-Message-State: APjAAAWpjskDbYXKLo/DvALdB7l12IyuhwMnnM7FJKg7QFm/BOIrK20i
+        miqxCelbrJdQ2HucjnoG1Von/3dVJN8=
+X-Google-Smtp-Source: APXvYqxYevqHhJ6dt1EzQWwOWP8c4KB8DdOUpnfAfnIMcQ6mqofCdtY7VyEV2Cy2pdWlVImmnMp1CQ==
+X-Received: by 2002:a62:2f06:: with SMTP id v6mr28749668pfv.195.1564253624486;
+        Sat, 27 Jul 2019 11:53:44 -0700 (PDT)
+Received: from localhost.localdomain ([123.213.206.190])
+        by smtp.gmail.com with ESMTPSA id j10sm22023163pfn.188.2019.07.27.11.53.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 27 Jul 2019 11:53:43 -0700 (PDT)
+From:   Minwoo Im <minwoo.im.dev@gmail.com>
+To:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Euihyeok Kwon <eh81.kwon@samsung.com>,
+        Sarah Cho <sohyeon.jo@samsung.com>,
+        Sanggwan Lee <sanggwan.lee@samsung.com>,
+        Gyeongmin Nam <gm.nam@samsung.com>,
+        Sungjun Park <sj1228.park@samsung.com>,
+        Minwoo Im <minwoo.im@samsung.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        MPT-FusionLinux.pdl@broadcom.com,
+        Minwoo Im <minwoo.im.dev@gmail.com>
+Subject: [RESEND PATCH] mpt3sas: support target smid for [abort|query] task
+Date:   Sun, 28 Jul 2019 03:53:37 +0900
+Message-Id: <20190727185337.19299-1-minwoo.im.dev@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jul 2019 10:36:38 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+From: Minwoo Im <minwoo.im@samsung.com>
 
-> The ADIS16460 requires a higher delay before the next transfer. Since the
-> SPI framework supports configuring the delay before the next transfer, this
-> driver will become the first user of it.
-> 
-> The support for this functionality in ADIS16460 requires an addition to the
-> ADIS lib to support the `cs_change_delay` functionality from the SPI
-> subsystem.
-> 
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+From: Minwoo Im <minwoo.im@samsung.com>
 
-Thanks,
+We can request task management IOCTL command(MPI2_FUNCTION_SCSI_TASK_MGMT)
+to /dev/mpt3ctl.  If the given task_type is either abort task or query
+task, it may need a field named "Initiator Port Transfer Tag to Manage"
+in the IU.
 
-Jonathan
+Current code does not support to check target IPTT tag from the
+tm_request.  This patch introduces to check TaskMID given from the
+userspace as a target tag.  We have a rule of relationship between
+(struct request *req->tag) and smid in mpt3sas_base.c:
 
-> ---
->  drivers/iio/imu/adis.c       | 12 ++++++++++++
->  include/linux/iio/imu/adis.h |  2 ++
->  2 files changed, 14 insertions(+)
-> 
-> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
-> index 30281e91dbf9..1631c255deab 100644
-> --- a/drivers/iio/imu/adis.c
-> +++ b/drivers/iio/imu/adis.c
-> @@ -39,18 +39,24 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_delay = adis->data->cs_change_delay,
-> +			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
->  		}, {
->  			.tx_buf = adis->tx + 2,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_delay = adis->data->cs_change_delay,
-> +			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
->  		}, {
->  			.tx_buf = adis->tx + 4,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_delay = adis->data->cs_change_delay,
-> +			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
->  		}, {
->  			.tx_buf = adis->tx + 6,
->  			.bits_per_word = 8,
-> @@ -133,12 +139,16 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_delay = adis->data->cs_change_delay,
-> +			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
->  		}, {
->  			.tx_buf = adis->tx + 2,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->read_delay,
-> +			.cs_change_delay = adis->data->cs_change_delay,
-> +			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
->  		}, {
->  			.tx_buf = adis->tx + 4,
->  			.rx_buf = adis->rx,
-> @@ -146,6 +156,8 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->read_delay,
-> +			.cs_change_delay = adis->data->cs_change_delay,
-> +			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
->  		}, {
->  			.rx_buf = adis->rx + 2,
->  			.bits_per_word = 8,
-> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-> index 3428d06b2f44..4c53815bb729 100644
-> --- a/include/linux/iio/imu/adis.h
-> +++ b/include/linux/iio/imu/adis.h
-> @@ -26,6 +26,7 @@ struct adis_burst;
->   * struct adis_data - ADIS chip variant specific data
->   * @read_delay: SPI delay for read operations in us
->   * @write_delay: SPI delay for write operations in us
-> + * @cs_change_delay: SPI delay between CS changes in us
->   * @glob_cmd_reg: Register address of the GLOB_CMD register
->   * @msc_ctrl_reg: Register address of the MSC_CTRL register
->   * @diag_stat_reg: Register address of the DIAG_STAT register
-> @@ -35,6 +36,7 @@ struct adis_burst;
->  struct adis_data {
->  	unsigned int read_delay;
->  	unsigned int write_delay;
-> +	unsigned int cs_change_delay;
->  
->  	unsigned int glob_cmd_reg;
->  	unsigned int msc_ctrl_reg;
+3318 u16
+3319 mpt3sas_base_get_smid_scsiio(struct MPT3SAS_ADAPTER *ioc, u8 cb_idx,
+3320         struct scsi_cmnd *scmd)
+3321 {
+3322         struct scsiio_tracker *request = scsi_cmd_priv(scmd);
+3323         unsigned int tag = scmd->request->tag;
+3324         u16 smid;
+3325
+3326         smid = tag + 1;
+
+So if we want to abort a request tagged #X, then we can pass (X + 1) to
+this IOCTL handler.  Otherwise, user space just can pass 0 TaskMID to
+abort the first outstanding smid which is legacy behaviour.
+
+Cc: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Cc: Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
+Cc: Sathya Prakash <sathya.prakash@broadcom.com>
+Cc: James E.J. Bottomley <jejb@linux.ibm.com>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: MPT-FusionLinux.pdl@broadcom.com
+Signed-off-by: Minwoo Im <minwoo.im@samsung.com>
+Acked-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
+---
+ drivers/scsi/mpt3sas/mpt3sas_ctl.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+index d4ecfbbe738c..a26c5516ea3e 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+@@ -596,8 +596,16 @@ _ctl_set_task_mid(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command *karg,
+ 		if (priv_data->sas_target->handle != handle)
+ 			continue;
+ 		st = scsi_cmd_priv(scmd);
+-		tm_request->TaskMID = cpu_to_le16(st->smid);
+-		found = 1;
++
++		/*
++		 * If the given TaskMID from the user space is zero, then the
++		 * first outstanding smid will be picked up.  Otherwise,
++		 * targeted smid will be the one.
++		 */
++		if (!tm_request->TaskMID || tm_request->TaskMID == st->smid) {
++			tm_request->TaskMID = cpu_to_le16(st->smid);
++			found = 1;
++		}
+ 	}
+ 
+ 	if (!found) {
+-- 
+2.17.1
 
