@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44B8C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B00C76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9192147A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A04BD208E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564257433;
-	bh=CGf2yeOtB5OppLv91IleKJBexkBJqF5tbvujn6zHJ6k=;
+	s=default; t=1564257498;
+	bh=WHB1WWnPPiAlyljf4N8cT7LMn9j/5w6GRw1Hj8gOLpM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Xvb9zqt6xxBhzP399/WUQbyX/uEX6pr4/GoXIZ3CkXtCHddMAUVDrMAxiz4uyFVNU
-	 KPmJdRkoksLxEhisOXAJisu8Fpt03rkjZQccwpJoFXAyxIHd1aIQckUBboFnQTmOhj
-	 GOD/KFgtde8Mt1lYREEO6P0q5FcpdQpIGLXEvzhc=
+	b=wMEGOl52kApDomMfFxCACljo/G+0qH8192PfzwUdsuSrjx1CwtTg9ic/aCUFZ8ej3
+	 qG1HX6VkpZHUbWPON7YEVArDOrsmVjjUSjKXrwpc1LD7cmyys6Vd/wylV+aLK92PXz
+	 83mT/PravoHbbWBVQ9k9Hm848jxloJ58GsBo23Rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388203AbfG0T4q (ORCPT
+        id S2388232AbfG0T6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 15:56:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
+        Sat, 27 Jul 2019 15:58:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388004AbfG0T4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 15:56:46 -0400
+        id S2387841AbfG0T6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 15:58:16 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C66272083B;
-        Sat, 27 Jul 2019 19:56:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 231D9208C0;
+        Sat, 27 Jul 2019 19:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564257405;
-        bh=CGf2yeOtB5OppLv91IleKJBexkBJqF5tbvujn6zHJ6k=;
+        s=default; t=1564257495;
+        bh=WHB1WWnPPiAlyljf4N8cT7LMn9j/5w6GRw1Hj8gOLpM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aOv8MxEtvpMMK6M9IOLoVkGdCrLbYDJA0n3cbtmC0v8JNWULBbXiv5DWOGzJuU5UM
-         9C49qcxQyXzqd7k5IDK9sDkmDLAshGyJ/DWTtNhOZ3xrD6PM5NFFMB+yZHJ6lCijt2
-         azLW6f4v6MSYAcDPgyM48NZ8lNyLNrxbbgp/RWr4=
-Date:   Sat, 27 Jul 2019 20:56:40 +0100
+        b=QZiz/rdxGOVw9FTVXee4yi8sZkyT02EdKrTAPRYxb9lnLV7CdY92nMMWGJYnJj1kf
+         NYI9Amq8PPPhH1DDBGCqPx4hPFO6q8cDnfmDn2lLstzvS4SjAq5zkioBSJwfcOC/Sv
+         MP5K8tf/+GcL3xT15ZIdJ96JDdQi5A+l/IX4f/tw=
+Date:   Sat, 27 Jul 2019 20:58:11 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Kevin Tsai <ktsai@capellamicro.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
+Cc:     linux-i2c@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] iio: light: cm36651: convert to
+Subject: Re: [PATCH 2/3] iio: light: veml6070: convert to
  i2c_new_dummy_device
-Message-ID: <20190727205640.2686db5f@archlinux>
-In-Reply-To: <20190722172613.3890-2-wsa+renesas@sang-engineering.com>
+Message-ID: <20190727205811.7beba748@archlinux>
+In-Reply-To: <20190722172613.3890-3-wsa+renesas@sang-engineering.com>
 References: <20190722172613.3890-1-wsa+renesas@sang-engineering.com>
-        <20190722172613.3890-2-wsa+renesas@sang-engineering.com>
+        <20190722172613.3890-3-wsa+renesas@sang-engineering.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -62,65 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019 19:26:11 +0200
+On Mon, 22 Jul 2019 19:26:12 +0200
 Wolfram Sang <wsa+renesas@sang-engineering.com> wrote:
 
 > Move from i2c_new_dummy() to i2c_new_dummy_device(), so we now get an
 > ERRPTR which we use in error handling.
 > 
 > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-Hi,
-
-Hmm. I've been rather busy recently so the IIO tree is based before this
-got introduced.
-
-Meh, it's early in the cycle so I'm just going to rebase and hope it
-doesn't cause anyone too much pain.  I suspect the number of people
-tracking my togreg branch is very small to 0.
-
-Applied to a rebase version of the togreg branch of iio.git and
-pushed out as testing for the autobuilders to poke at it.
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to do something random with it.
 
 Thanks,
 
 Jonathan
 
-
 > ---
 > 
 > Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
 > 
->  drivers/iio/light/cm36651.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  drivers/iio/light/veml6070.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/iio/light/cm36651.c b/drivers/iio/light/cm36651.c
-> index 7702c2bcbcfa..1019d625adb1 100644
-> --- a/drivers/iio/light/cm36651.c
-> +++ b/drivers/iio/light/cm36651.c
-> @@ -646,18 +646,18 @@ static int cm36651_probe(struct i2c_client *client,
->  	i2c_set_clientdata(client, indio_dev);
+> diff --git a/drivers/iio/light/veml6070.c b/drivers/iio/light/veml6070.c
+> index a3138e1b5803..0be553ad5989 100644
+> --- a/drivers/iio/light/veml6070.c
+> +++ b/drivers/iio/light/veml6070.c
+> @@ -158,10 +158,10 @@ static int veml6070_probe(struct i2c_client *client,
+>  	indio_dev->name = VEML6070_DRV_NAME;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
 >  
->  	cm36651->client = client;
-> -	cm36651->ps_client = i2c_new_dummy(client->adapter,
-> +	cm36651->ps_client = i2c_new_dummy_device(client->adapter,
->  						     CM36651_I2C_ADDR_PS);
-> -	if (!cm36651->ps_client) {
-> +	if (IS_ERR(cm36651->ps_client)) {
->  		dev_err(&client->dev, "%s: new i2c device failed\n", __func__);
-> -		ret = -ENODEV;
-> +		ret = PTR_ERR(cm36651->ps_client);
->  		goto error_disable_reg;
+> -	data->client2 = i2c_new_dummy(client->adapter, VEML6070_ADDR_DATA_LSB);
+> -	if (!data->client2) {
+> +	data->client2 = i2c_new_dummy_device(client->adapter, VEML6070_ADDR_DATA_LSB);
+> +	if (IS_ERR(data->client2)) {
+>  		dev_err(&client->dev, "i2c device for second chip address failed\n");
+> -		return -ENODEV;
+> +		return PTR_ERR(data->client2);
 >  	}
 >  
-> -	cm36651->ara_client = i2c_new_dummy(client->adapter, CM36651_ARA);
-> -	if (!cm36651->ara_client) {
-> +	cm36651->ara_client = i2c_new_dummy_device(client->adapter, CM36651_ARA);
-> +	if (IS_ERR(cm36651->ara_client)) {
->  		dev_err(&client->dev, "%s: new i2c device failed\n", __func__);
-> -		ret = -ENODEV;
-> +		ret = PTR_ERR(cm36651->ara_client);
->  		goto error_i2c_unregister_ps;
->  	}
->  
+>  	data->config = VEML6070_IT_10 | VEML6070_COMMAND_RSRVD |
 
