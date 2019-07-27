@@ -2,124 +2,125 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2303AC76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44B8C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB50208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:56:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ua7JqKg+"
+	by mail.kernel.org (Postfix) with ESMTP id 9D9192147A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:57:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564257433;
+	bh=CGf2yeOtB5OppLv91IleKJBexkBJqF5tbvujn6zHJ6k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Xvb9zqt6xxBhzP399/WUQbyX/uEX6pr4/GoXIZ3CkXtCHddMAUVDrMAxiz4uyFVNU
+	 KPmJdRkoksLxEhisOXAJisu8Fpt03rkjZQccwpJoFXAyxIHd1aIQckUBboFnQTmOhj
+	 GOD/KFgtde8Mt1lYREEO6P0q5FcpdQpIGLXEvzhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388173AbfG0TzZ (ORCPT
+        id S2388203AbfG0T4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 15:55:25 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41527 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387841AbfG0TzZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 15:55:25 -0400
-Received: by mail-lj1-f196.google.com with SMTP id d24so54656141ljg.8
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 12:55:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2bUx8yvuKqDXHL8O5vZ38a4jABCZKfUuj9Gna9bLoUg=;
-        b=Ua7JqKg+yCL9sTAFGeMu6bnW2e2ALKennFe+K1RfOjrxHrWS9nVNOFUslb01ixzQtj
-         MmLuVnJZFlEGBCYYgV0KhcF0T26gz7qDCM0I/79ITDu40TXi/PwitJlZFHDFA8vdhG9Z
-         Dfbj0l9UKvKagRGSqNdRFp1DIx1C7Rg+SaIaOuptH2x/d4L7r+P41BGhuvd1dFKk4r8g
-         3Kut8MSbu4UVt7I73RT5CEs5K7Zb00j+14NP9rscE0zFajom7OYHNIP+07WigT4RCDlM
-         jha5EM3gQdeT0F/y3jqFgL5VCQdsv0jj2AxsWss9eC7khxzjIci7Kv8vSNGguAqTxV+W
-         21Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2bUx8yvuKqDXHL8O5vZ38a4jABCZKfUuj9Gna9bLoUg=;
-        b=miQtHlCrbTNr3hwtvlml1o8f+ppAiK6L7Yh0kEmjcMmlz/YZ8xMIXCB0sHT6rVWw3A
-         QK7p3RxbNk6WoZ3RtsFSHhx1Kf9NRazTIUPivkerKrQZIyQFI8FQkC+Ec76eUjpoaiWC
-         45N1iH9+1pufj6DUqXIU9uYYuWX9D8ve3Z6dd3ivlPcAw2sqRBwFNCVv3GoqrpPQcYNe
-         JTKR4Atz83gktrSgXbxOdFF4QG4mGvkG5G5+iJcZR+6b3Y6OQrKuCmqAItO43DeJRZcz
-         jp0wFE782FClB5ajrcaoy725R/nj1/wYDx6csmFXgMWihawitSP1NpgE3yM9S6Jgw801
-         LNEQ==
-X-Gm-Message-State: APjAAAWnUwxirAYv/zCmaqXC0INdEg2KsCRsmSmGbkWBLBNHrvp7tRun
-        Qr6j9+oVuYbxusFk7+PnivA=
-X-Google-Smtp-Source: APXvYqwx2qsu2HLrnZYeF+n0M7M/8+KLDQIV9DzQNLZUJXbU7bwpsakL5U6zyph2Jsxp8c8H/2ukMw==
-X-Received: by 2002:a2e:9c9a:: with SMTP id x26mr1856283lji.47.1564257323486;
-        Sat, 27 Jul 2019 12:55:23 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-186-115.NA.cust.bahnhof.se. [158.174.186.115])
-        by smtp.gmail.com with ESMTPSA id e26sm9550684lfc.68.2019.07.27.12.55.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 27 Jul 2019 12:55:22 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     joe@perches.com
-Cc:     johannes@sipsolutions.net, linux-kernel@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: Re: [PATCH 00/12] treewide: Fix GENMASK misuses
-Date:   Sat, 27 Jul 2019 21:54:55 +0200
-Message-Id: <20190727195455.1558-1-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <c94a0a50c41c7530354b4a662ee945212424c8c7.camel@perches.com>
-References: <c94a0a50c41c7530354b4a662ee945212424c8c7.camel@perches.com>
+        Sat, 27 Jul 2019 15:56:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388004AbfG0T4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 15:56:46 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C66272083B;
+        Sat, 27 Jul 2019 19:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564257405;
+        bh=CGf2yeOtB5OppLv91IleKJBexkBJqF5tbvujn6zHJ6k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aOv8MxEtvpMMK6M9IOLoVkGdCrLbYDJA0n3cbtmC0v8JNWULBbXiv5DWOGzJuU5UM
+         9C49qcxQyXzqd7k5IDK9sDkmDLAshGyJ/DWTtNhOZ3xrD6PM5NFFMB+yZHJ6lCijt2
+         azLW6f4v6MSYAcDPgyM48NZ8lNyLNrxbbgp/RWr4=
+Date:   Sat, 27 Jul 2019 20:56:40 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, Kevin Tsai <ktsai@capellamicro.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] iio: light: cm36651: convert to
+ i2c_new_dummy_device
+Message-ID: <20190727205640.2686db5f@archlinux>
+In-Reply-To: <20190722172613.3890-2-wsa+renesas@sang-engineering.com>
+References: <20190722172613.3890-1-wsa+renesas@sang-engineering.com>
+        <20190722172613.3890-2-wsa+renesas@sang-engineering.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trimming CC-list.
+On Mon, 22 Jul 2019 19:26:11 +0200
+Wolfram Sang <wsa+renesas@sang-engineering.com> wrote:
 
-> It'd can't be done as it's used in declarations
-> and included in asm files and it uses the UL()
-> macro.
+> Move from i2c_new_dummy() to i2c_new_dummy_device(), so we now get an
+> ERRPTR which we use in error handling.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Can the BUILD_BUG_ON_ZERO() macro be used instead? It works in
-declarations. I don't know if it works in asm-files, but the below
-changes builds an x86-64 allyesconfig without problems (after the rest
-of this series have been applied.
+Hi,
 
-/Rikard
+Hmm. I've been rather busy recently so the IIO tree is based before this
+got introduced.
 
----
- include/linux/bits.h | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Meh, it's early in the cycle so I'm just going to rebase and hope it
+doesn't cause anyone too much pain.  I suspect the number of people
+tracking my togreg branch is very small to 0.
 
-diff --git a/include/linux/bits.h b/include/linux/bits.h
-index 669d69441a62..52e747d27f87 100644
---- a/include/linux/bits.h
-+++ b/include/linux/bits.h
-@@ -2,6 +2,7 @@
- #ifndef __LINUX_BITS_H
- #define __LINUX_BITS_H
- 
-+#include <linux/build_bug.h>
- #include <linux/const.h>
- #include <asm/bitsperlong.h>
- 
-@@ -19,11 +20,15 @@
-  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-  */
- #define GENMASK(h, l) \
-+	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-+		__is_constexpr(h) && __is_constexpr(l), (l) > (h), 0)) + \
- 	(((~UL(0)) - (UL(1) << (l)) + 1) & \
--	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-+	 (~UL(0) >> (BITS_PER_LONG - 1 - (h)))))
- 
- #define GENMASK_ULL(h, l) \
-+	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-+		__is_constexpr(h) && __is_constexpr(l), (l) > (h), 0)) + \
- 	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
--	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
-+	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h)))))
- 
- #endif	/* __LINUX_BITS_H */
--- 
-2.22.0
+Applied to a rebase version of the togreg branch of iio.git and
+pushed out as testing for the autobuilders to poke at it.
+
+Thanks,
+
+Jonathan
+
+
+> ---
+> 
+> Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
+> 
+>  drivers/iio/light/cm36651.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/iio/light/cm36651.c b/drivers/iio/light/cm36651.c
+> index 7702c2bcbcfa..1019d625adb1 100644
+> --- a/drivers/iio/light/cm36651.c
+> +++ b/drivers/iio/light/cm36651.c
+> @@ -646,18 +646,18 @@ static int cm36651_probe(struct i2c_client *client,
+>  	i2c_set_clientdata(client, indio_dev);
+>  
+>  	cm36651->client = client;
+> -	cm36651->ps_client = i2c_new_dummy(client->adapter,
+> +	cm36651->ps_client = i2c_new_dummy_device(client->adapter,
+>  						     CM36651_I2C_ADDR_PS);
+> -	if (!cm36651->ps_client) {
+> +	if (IS_ERR(cm36651->ps_client)) {
+>  		dev_err(&client->dev, "%s: new i2c device failed\n", __func__);
+> -		ret = -ENODEV;
+> +		ret = PTR_ERR(cm36651->ps_client);
+>  		goto error_disable_reg;
+>  	}
+>  
+> -	cm36651->ara_client = i2c_new_dummy(client->adapter, CM36651_ARA);
+> -	if (!cm36651->ara_client) {
+> +	cm36651->ara_client = i2c_new_dummy_device(client->adapter, CM36651_ARA);
+> +	if (IS_ERR(cm36651->ara_client)) {
+>  		dev_err(&client->dev, "%s: new i2c device failed\n", __func__);
+> -		ret = -ENODEV;
+> +		ret = PTR_ERR(cm36651->ara_client);
+>  		goto error_i2c_unregister_ps;
+>  	}
+>  
 
