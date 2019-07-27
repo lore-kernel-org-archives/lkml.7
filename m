@@ -2,116 +2,88 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3570C7618F
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4188DC76191
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 851EE20644
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09E552086D
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564194579;
-	bh=+XbhQePs8JPC8XpWg0i6qNGvKaFbftIw1I10QPS4q78=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=V+6AymyW2xHK3Y2I3vXaHnn1syks7vPXhFqUe8lOdBzLlNveUgTygS1BIn1Z5on1I
-	 XPGjdKjDdIGxy6vXB4znwFZZnN1hqd15No+FpGU7FqUqA5MICEO5FL6iXtwzFtrFS+
-	 04ZaNufpZjkH3kFLk6axEwFFGSzY4Ykio3TENEJE=
+	s=default; t=1564194811;
+	bh=nG/DP4zu0+bBCKaJ08jsk7eT0QH5jK3U1xszKcdFgFc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=LluL1fNFZC94v2WHRgAO8/bXqrU13cZAOdXuizmh1zhHmfMnJwx+ZWeyTjhpOTpUX
+	 +yy2N5JK2AztVEyFE2yr4V+RE8JzhXo1UWt8tJhY+Vd/uktgUzKszCsKtYMJVcbLFL
+	 z+gnRKPmgpz2yfekseQ6vYRIetxYM+AWzeFwFdNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbfG0C3i (ORCPT
+        id S1727589AbfG0Cd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 22:29:38 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44681 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfG0C3i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 22:29:38 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r15so21368466lfm.11
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 19:29:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rRuVoGQyiTr9OUVJXnZ+mSEFCM9DeRijbw8KeVVr9qA=;
-        b=CqthdUK3I5f1pgMbLDofd4KnjLcPFrqkN9aDucnvupiA1OVhLJf7fiU9qJpf7ye2GT
-         RbW1RNJFPP/itRtlczIUYEZnt/BZbeyMOTY+mA9Q3Br/G3SfnGCP4iMUnQIBll/n1pik
-         D/0MwAQdtPTxdxt/k0w3VOygmGrY+l6w3VCNg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rRuVoGQyiTr9OUVJXnZ+mSEFCM9DeRijbw8KeVVr9qA=;
-        b=Ju7rZ3VDEo6HehQmkrEHXhPYn3eFu8IOciYLvTkHIObYYm4wNEDqvAqbyeOaNsJoc6
-         a+AcQo+v83Ka40MhXYHm3WVqvOdpOf1bJUdQLfXHUzurhag9PyN22889t47/5p42+cYK
-         wCKAfWZFQoiHu9fdxBF/znpWp1Sxdt91bVXR/f0+OMMJS9U/8sbDHrPhQRo8hv0JB2xZ
-         iOu3PzHxzn0Ta1dWtI7nqGlEviGhWn2P/9cray+JYSM0ZqaG7rDHyeZn/sVujtHqqcCq
-         czPyvPYJOOhXtEx6iJ1joMeYafGBROMMcRaFE9zK7jwaHRroS6310Q2Spe9JqDT+JvTR
-         n9TA==
-X-Gm-Message-State: APjAAAWnarljLgFTmSZx3nOnv6masLLtZxtVdL50avsJLkxtRkxd21Ju
-        M3myM7GyvhJTS7vcOh1L05kvffzJg98=
-X-Google-Smtp-Source: APXvYqx9Xu5U31JIx+tJJIsGIkU1+uFd08Aq0uIKlqIaWMtd+RGvga+aE+7g61UHNzDgQPq9ZeSV7g==
-X-Received: by 2002:ac2:596c:: with SMTP id h12mr11865829lfp.101.1564194575099;
-        Fri, 26 Jul 2019 19:29:35 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id d7sm8868590lfa.86.2019.07.26.19.29.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 19:29:33 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id z15so34076869lfh.13
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 19:29:32 -0700 (PDT)
-X-Received: by 2002:ac2:4839:: with SMTP id 25mr46122226lft.79.1564194572710;
- Fri, 26 Jul 2019 19:29:32 -0700 (PDT)
+        Fri, 26 Jul 2019 22:33:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726766AbfG0Cd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 22:33:29 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 437142084D;
+        Sat, 27 Jul 2019 02:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564194808;
+        bh=nG/DP4zu0+bBCKaJ08jsk7eT0QH5jK3U1xszKcdFgFc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=nFZcfZNNGk1+yNVcRbfBjZyzh4gTdMpPOAsSRpVREAH2JUugvJJNjl72M86s9jyhi
+         xKXh+6a1yMVzBz+35Lf+fkM2kFrrDbEyllTbI9RornOA/n8G6/XD4pdg4PyBPHp6fa
+         lD7qawx4cwrZylHaRNnN+qHISn7Wt45ED+XsOhXE=
+Subject: Re: [PATCH 5.2 00/66] 5.2.4-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190726152301.936055394@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <2cd55ec5-ea26-2d47-1aa2-276662329e59@kernel.org>
+Date:   Fri, 26 Jul 2019 20:33:27 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <000000000000edcb3c058e6143d5@google.com> <00000000000083ffc4058e9dddf0@google.com>
-In-Reply-To: <00000000000083ffc4058e9dddf0@google.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 26 Jul 2019 19:29:16 -0700
-X-Gmail-Original-Message-ID: <CAHk-=why-PdP_HNbskRADMp1bnj+FwUDYpUZSYoNLNHMRPtoVA@mail.gmail.com>
-Message-ID: <CAHk-=why-PdP_HNbskRADMp1bnj+FwUDYpUZSYoNLNHMRPtoVA@mail.gmail.com>
-Subject: Re: memory leak in kobject_set_name_vargs (2)
-To:     syzbot <syzbot+ad8ca40ecd77896d51e2@syzkaller.appspotmail.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        David Miller <davem@davemloft.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>, kuznet@ms2.inr.ac.ru,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, luciano.coelho@intel.com,
-        Netdev <netdev@vger.kernel.org>, steffen.klassert@secunet.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 4:26 PM syzbot
-<syzbot+ad8ca40ecd77896d51e2@syzkaller.appspotmail.com> wrote:
->
-> syzbot has bisected this bug to:
->
-> commit 0e034f5c4bc408c943f9c4a06244415d75d7108c
-> Author: Linus Torvalds <torvalds@linux-foundation.org>
-> Date:   Wed May 18 18:51:25 2016 +0000
->
->      iwlwifi: fix mis-merge that breaks the driver
+On 7/26/19 9:23 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.2.4 release.
+> There are 66 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun 28 Jul 2019 03:21:13 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.4-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-While this bisection looks more likely than the other syzbot entry
-that bisected to a version change, I don't think it is correct eitger.
+Compiled and booted on my test system. No dmesg regressions,
 
-The bisection ended up doing a lot of "git bisect skip" because of the
+thanks,
+-- Shuah
 
-    undefined reference to `nf_nat_icmp_reply_translation'
-
-issue. Also, the memory leak doesn't seem to be entirely reliable:
-when the bisect does 10 runs to verify that some test kernel is bad,
-there are a couple of cases where only one or two of the ten run
-failed.
-
-Which makes me wonder if one or two of the "everything OK" runs were
-actually buggy, but just happened to have all ten pass...
-
-               Linus
