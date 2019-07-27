@@ -8,64 +8,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82994C76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5D9C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F322083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7032075C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:34:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="KeD8rklk"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="QHT+vr7U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388154AbfG0TV5 (ORCPT
+        id S2388099AbfG0Tef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 15:21:57 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54680 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387841AbfG0TV5 (ORCPT
+        Sat, 27 Jul 2019 15:34:35 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41983 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387841AbfG0Tef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 15:21:57 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p74so50515350wme.4;
-        Sat, 27 Jul 2019 12:21:55 -0700 (PDT)
+        Sat, 27 Jul 2019 15:34:35 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c2so54483157wrm.8
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 12:34:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=hyCMqJ+djgLIJwfAojIwyPh/X7V6VrUbmzh9dzFGvRk=;
-        b=KeD8rklkvJ07qbonyHkVcFLm5trOxt/Yee63IJFNjuX4015xbXSzXntmaTW9aTImNp
-         oxTVmm5xSmXNVbNAfrkPp/VZAXkjM4u28ujlUHDrkhN6SFHf4Ng3cgumWYB413NUB1w8
-         w+3lFm1IIB1qmSR3ddBEyzWZ5eGLZEmUlt8Z2nZm8RnPftx8W0Hj2NoBFSSNL6bnabZ+
-         tRCtzXGiyYZpdBAwei9QqExKmbxAEpA0bponZxkmCU87Crd5nR/qmTrnGP9AiKcHUm9u
-         i/7QJHnYUuthCTji0lgypHmuUnY/75CQaKghqbwmCixPlBumwxkUnpRukBV1ElABFEPI
-         IbMA==
+        bh=CwPC0uC2vhnnQFt6dtjfct0lT1hDdrq7y6oBUVdLJKw=;
+        b=QHT+vr7UctQsq5De/q5TWMQcuzSpL9ljxuV/hNLT+ItJwKXkM5g0LOvOUd02ezmEgN
+         I9oEh9513WE73nzCZyW2keHtEuqZpwwDcSya5rATKTtZS58nE2Qe7BZLO6CzOpQGeoMO
+         t63VYywAg5wGh+gDQPQixN/ocPo44KmMqJ7gyBLUeZIkhBUXCOAcfweN9A9U2uyNKkjt
+         j2MGWuCFgqB2fu9j+oN2xm0rTzmMou7027hLuHn/CDTIiL777gOwV9l2CxAm78GnV6L4
+         sW4AlzaBnvgMuiJoSEAkZxefKDwMqv1nMl1oJ8HGWMjelXlyk0MGOZOr2umlEIcQUbY5
+         adrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=hyCMqJ+djgLIJwfAojIwyPh/X7V6VrUbmzh9dzFGvRk=;
-        b=eQlbDkwqNnNLYbz80csx+ZxOPqIAvawCnPHjdJsCGSif+rzd8uoWzx72TxwcwOCKGj
-         4nv4FEHuE/eXACMaPtpiTKxbt1cEyi99XWBg8Kv+qRZpLrQ1llx3kZFo1052j1+iVrUr
-         /3K/hpw5/kdyxkKKSg7l0ciyHmf3dmyRtBg3tvsKIr9+oxPXH6qc+g64iC5hUP4b1DRY
-         OzmxSXyUl8iDhze93Ixhrfkk9FmxRiEfEe/e15HIQ9dXqM19bPaw+00XAsazN74o23+0
-         RxMbi1sJN/e5+fvjXyBXB068ti1G/s9BkiiUlQrr6A6L6y1wvDDANNLKCzt0Q8twzmiR
-         6tGA==
-X-Gm-Message-State: APjAAAV9W3Xf9JNVhdi6qQu+48KB6odhA7fbTxAkY8MVhFGN7B+dxAK8
-        JgKEhuFO6p9gLRj9H+7ADqvXBrcl
-X-Google-Smtp-Source: APXvYqycHw5s2j9png7x0EIKV/GvqCO1yWsvU/74NThd+ynVk8oiaeULI52GZ8XNSc4h/2Wj5R34WQ==
-X-Received: by 2002:a1c:63c4:: with SMTP id x187mr86098580wmb.4.1564255314634;
-        Sat, 27 Jul 2019 12:21:54 -0700 (PDT)
+        bh=CwPC0uC2vhnnQFt6dtjfct0lT1hDdrq7y6oBUVdLJKw=;
+        b=CfZ3VV2qKCHaEO4wiEXqXpC/RY0951HdsQPSNZzBvtcb62+BmkuKW+MeEhpCRmGRKU
+         bkXjIY42CaIt/OMyLSv4upM95Vm38vT5NpLvwucZg18D/NDngghK302PGZSYLvkC7hO7
+         TintopBs5QGjkiXNShKopDHKDiqEd8iwRzD+LtWzzK1h/zmKKHzLFwHBQSUGpOmHw/DF
+         nduNFlzKr1sFVY21cgeqMdn6M0GXuum7XnNyTytHkne4VoOPgXTxt0h0/vxe2vK2LQdl
+         c68lU+zxn3WU4OXhqLjfoHuxb3ui13OraRnpqCqIAAIdrvLFQwlYy7E2GWJ233cfx5Pi
+         +pHw==
+X-Gm-Message-State: APjAAAWl1jdOKZGSTBi+COIZOzmHzprb+FHAb+MDC/3kcojnAH3PCAva
+        sJXWCqt6IgpgIjRI4lGg0rs=
+X-Google-Smtp-Source: APXvYqwtcykN6reCHIDCRtC2TmW13zB5ZF0C7B4/4u2+Ho0Ih/KuuXH6Lj6HdkYgFIebULYKFdTG9Q==
+X-Received: by 2002:a5d:668e:: with SMTP id l14mr52098236wru.156.1564256073191;
+        Sat, 27 Jul 2019 12:34:33 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133C65C00B418D0F4A25A19EC.dip0.t-ipconnect.de. [2003:f1:33c6:5c00:b418:d0f4:a25a:19ec])
-        by smtp.googlemail.com with ESMTPSA id v15sm55542326wrt.25.2019.07.27.12.21.53
+        by smtp.googlemail.com with ESMTPSA id n3sm50301258wrt.31.2019.07.27.12.34.32
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 27 Jul 2019 12:21:54 -0700 (PDT)
+        Sat, 27 Jul 2019 12:34:32 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, davem@davemloft.net, netdev@vger.kernel.org
+To:     linux-amlogic@lists.infradead.org, srinivas.kandagatla@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH] net: stmmac: manage errors returned by of_get_mac_address()
-Date:   Sat, 27 Jul 2019 21:21:37 +0200
-Message-Id: <20190727192137.27881-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2] nvmem: meson-mx-efuse: allow reading data smaller than word_size
+Date:   Sat, 27 Jul 2019 21:34:14 +0200
+Message-Id: <20190727193414.11371-1-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -74,42 +72,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit d01f449c008a ("of_net: add NVMEM support to of_get_mac_address")
-added support for reading the MAC address from an nvmem-cell. This
-required changing the logic to return an error pointer upon failure.
+Some Amlogic boards store the Ethernet MAC address inside the eFuse. The
+Ethernet MAC address uses 6 bytes. The existing logic in
+meson_mx_efuse_read() would write beyond the end of the data buffer when
+trying to read data with a size that is not aligned to word_size (4
+bytes on Meson8, Meson8b and Meson8m2).
 
-If stmmac is loaded before the nvmem provider driver then
-of_get_mac_address() return an error pointer with -EPROBE_DEFER.
+Calculate the remaining data to copy inside meson_mx_efuse_read() so
+reading 6 bytes doesn't write beyond the end of the data buffer.
 
-Propagate this error so the stmmac driver will be probed again after the
-nvmem provider driver is loaded.
-Default to a random generated MAC address in case of any other error,
-instead of using the error pointer as MAC address.
-
-Fixes: d01f449c008a ("of_net: add NVMEM support to of_get_mac_address")
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Changes since v1:
+- switch from min() to min_t() to get rid of a compiler warning
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index 73fc2524372e..154daf4d1072 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -370,6 +370,13 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
- 		return ERR_PTR(-ENOMEM);
+
+ drivers/nvmem/meson-mx-efuse.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/nvmem/meson-mx-efuse.c b/drivers/nvmem/meson-mx-efuse.c
+index 2976aef87c82..e8fc0baa09e7 100644
+--- a/drivers/nvmem/meson-mx-efuse.c
++++ b/drivers/nvmem/meson-mx-efuse.c
+@@ -155,7 +155,8 @@ static int meson_mx_efuse_read(void *context, unsigned int offset,
+ 		if (err)
+ 			break;
  
- 	*mac = of_get_mac_address(np);
-+	if (IS_ERR(*mac)) {
-+		if (PTR_ERR(*mac) == -EPROBE_DEFER)
-+			return ERR_CAST(*mac);
-+
-+		*mac = NULL;
-+	}
-+
- 	plat->interface = of_get_phy_mode(np);
+-		memcpy(buf + i, &tmp, efuse->config.word_size);
++		memcpy(buf + i, &tmp,
++		       min_t(size_t, bytes - i, efuse->config.word_size));
+ 	}
  
- 	/* Some wrapper drivers still rely on phy_node. Let's save it while
+ 	meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
 -- 
 2.22.0
 
