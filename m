@@ -2,83 +2,92 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B84B4C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 14:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3362C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 14:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98E5E2086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 14:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564237692;
-	bh=bYISLdJ+F7qw2nctD3/WBahrNFRy0w70PfyOPJ7kIy8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wtTRyuoyK7aLO1z6sXX11KuVh/uG/LZkfgJVEdXnrgCpGDso3OX2TWzzX461LPFOG
-	 gnUYoIMLfzgb5yjcPByRKRCAFGthGu0+QcZLcn8GjldfbzaTdOGt9rHK7b+bk3Ha6P
-	 wW0NDmiuCCZsvF+i/HrVNOL/x58OvEd6SOIEhFD0=
+	by mail.kernel.org (Postfix) with ESMTP id 8CEB22084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 14:28:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbfG0O2L (ORCPT
+        id S2387754AbfG0O2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 10:28:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726370AbfG0O2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 10:28:10 -0400
-Received: from localhost.localdomain (unknown [194.230.155.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBDBC2084C;
-        Sat, 27 Jul 2019 14:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564237689;
-        bh=bYISLdJ+F7qw2nctD3/WBahrNFRy0w70PfyOPJ7kIy8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zi02F05HUej5+7FkK/HByH0RM+B3tXPISFtSAD6Y8J/ZiKzVC5RFYNR0uLuAacgMB
-         5fDnwcjtZQD4B/NdA0Tp2T7ZQWUVtqW9OrhQBNQNQktfyFykpEDLztksIPPiP5tp8y
-         XAD64mtDOd/J2/SUE6t6B1/axxrZeXCsHK1Gxo2o=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/2] ARM: dts: rockchip: Add missing unit address to memory node on rk3288-veyron
-Date:   Sat, 27 Jul 2019 16:27:36 +0200
-Message-Id: <20190727142736.23188-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190727142736.23188-1-krzk@kernel.org>
-References: <20190727142736.23188-1-krzk@kernel.org>
+        Sat, 27 Jul 2019 10:28:45 -0400
+Received: from mailoutvs2.siol.net ([185.57.226.193]:46289 "EHLO mail.siol.net"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387692AbfG0O2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 10:28:44 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id D8E7A5217B1;
+        Sat, 27 Jul 2019 16:28:39 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 4KP6mDNuYTc3; Sat, 27 Jul 2019 16:28:39 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 878815217B3;
+        Sat, 27 Jul 2019 16:28:39 +0200 (CEST)
+Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Zimbra) with ESMTPA id 048075217B1;
+        Sat, 27 Jul 2019 16:28:39 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     thierry.reding@gmail.com, wens@csie.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 5/6] pwm: sun4i: Add support to output source clock directly
+Date:   Sat, 27 Jul 2019 16:28:38 +0200
+Message-ID: <4063694.66Ui2fGJfo@jernej-laptop>
+In-Reply-To: <20190727105008.he35sixfvoyl2lm7@flea.home>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net> <20190726184045.14669-6-jernej.skrabec@siol.net> <20190727105008.he35sixfvoyl2lm7@flea.home>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix DTC warning:
+Dne sobota, 27. julij 2019 ob 12:50:08 CEST je Maxime Ripard napisal(a):
+> On Fri, Jul 26, 2019 at 08:40:44PM +0200, Jernej Skrabec wrote:
+> > PWM core has an option to bypass whole logic and output unchanged source
+> > clock as PWM output. This is achieved by enabling bypass bit.
+> > 
+> > Note that when bypass is enabled, no other setting has any meaning, not
+> > even enable bit.
+> > 
+> > This mode of operation is needed to achieve high enough frequency to
+> > serve as clock source for AC200 chip, which is integrated into same
+> > package as H6 SoC.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> 
+> It doesn't seem to be available on the A10 (at least) though. The A13
+> seem to have it, so you should probably check that, and make that
+> conditional to the compatible if not available on all of them.
 
-    arch/arm/boot/dts/rk3288-veyron.dtsi:21.9-24.4:
-    Warning (unit_address_vs_reg): /memory: node has a reg or ranges property, but no unit name
+Ok, can you suggest the name for the quirk? "has_bypass" is suspiciously 
+similar to "has_prescaler_bypass".
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/rk3288-veyron.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Also, how to name these sun4i_pwm_data structures? Now that there are (will 
+be) three new quirks, name of the structure would be just too long, like 
+"sun50i_pwm_dual_prescaler_bypass_clk_rst_bypass". 
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 8fc8eac699bf..02243ff46a65 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -18,7 +18,7 @@
- 	 * The default coreboot on veyron devices ignores memory@0 nodes
- 	 * and would instead create another memory node.
- 	 */
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x0 0x0 0x0 0x80000000>;
- 	};
--- 
-2.17.1
+Best regards,
+Jernej
+
+> 
+> Maxime
+> 
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
+
+
 
