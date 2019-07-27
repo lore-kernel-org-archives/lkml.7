@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20617C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A66C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05A40208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C54208E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387821AbfG0PKR (ORCPT
+        id S1728969AbfG0PKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 11:10:17 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3182 "EHLO huawei.com"
+        Sat, 27 Jul 2019 11:10:22 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41058 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726370AbfG0PKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 11:10:11 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5847837D049430CC0E55;
-        Sat, 27 Jul 2019 23:10:02 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
- 23:09:55 +0800
+        id S2387802AbfG0PKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 11:10:16 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 90554614924E688445FD;
+        Sat, 27 Jul 2019 23:10:13 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
+ 23:10:07 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
         <tiwai@suse.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -52,9 +52,9 @@ CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-tegra@vger.kernel.org>, <linux-xtensa@linux-xtensa.org>,
         <gregkh@linuxfoundation.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 11/34] ASoC: mxs-saif: use devm_platform_ioremap_resource() to simplify code
-Date:   Sat, 27 Jul 2019 23:07:15 +0800
-Message-ID: <20190727150738.54764-12-yuehaibing@huawei.com>
+Subject: [PATCH -next 15/34] ASoC: stm32: sai: use devm_platform_ioremap_resource() to simplify code
+Date:   Sat, 27 Jul 2019 23:07:19 +0800
+Message-ID: <20190727150738.54764-16-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190727150738.54764-1-yuehaibing@huawei.com>
 References: <20190727150738.54764-1-yuehaibing@huawei.com>
@@ -73,31 +73,30 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- sound/soc/mxs/mxs-saif.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ sound/soc/stm/stm32_sai.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/soc/mxs/mxs-saif.c b/sound/soc/mxs/mxs-saif.c
-index 269b6d6..a2c7942 100644
---- a/sound/soc/mxs/mxs-saif.c
-+++ b/sound/soc/mxs/mxs-saif.c
-@@ -732,7 +732,6 @@ static int mxs_saif_mclk_init(struct platform_device *pdev)
- static int mxs_saif_probe(struct platform_device *pdev)
+diff --git a/sound/soc/stm/stm32_sai.c b/sound/soc/stm/stm32_sai.c
+index 63f68e6..1ac5103c 100644
+--- a/sound/soc/stm/stm32_sai.c
++++ b/sound/soc/stm/stm32_sai.c
+@@ -152,7 +152,6 @@ static int stm32_sai_probe(struct platform_device *pdev)
  {
- 	struct device_node *np = pdev->dev.of_node;
--	struct resource *iores;
- 	struct mxs_saif *saif;
- 	int irq, ret = 0;
- 	struct device_node *master;
-@@ -786,9 +785,7 @@ static int mxs_saif_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+ 	struct stm32_sai_data *sai;
+ 	struct reset_control *rst;
+-	struct resource *res;
+ 	const struct of_device_id *of_id;
+ 	u32 val;
+ 	int ret;
+@@ -161,8 +160,7 @@ static int stm32_sai_probe(struct platform_device *pdev)
+ 	if (!sai)
+ 		return -ENOMEM;
  
--	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--
--	saif->base = devm_ioremap_resource(&pdev->dev, iores);
-+	saif->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(saif->base))
- 		return PTR_ERR(saif->base);
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	sai->base = devm_ioremap_resource(&pdev->dev, res);
++	sai->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(sai->base))
+ 		return PTR_ERR(sai->base);
  
 -- 
 2.7.4
