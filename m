@@ -2,103 +2,190 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19008C76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 04:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10255C76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 04:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32EE217D9
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 04:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564201198;
-	bh=DAXocKaUs1I+EIldbB+MJ8xtiUKnU9+bzAcB5Dh3rFs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gsrfuqqH9wf8p3bZjO6dDZnjslmgRbh6GGaV/b+wpfu8mk6/cjKA1guoHLfc4pqqH
-	 ly880H29ReCY1geSmckojkFPJ2t6S0qwo7R4QTevlB8rPxuJ4cMz+HtRRM8MoQKmg3
-	 rmhLK6lhodXA/FERpfXuYTo+YHeMbeD7B/sRMWM4=
+	by mail.kernel.org (Postfix) with ESMTP id CDDEA20679
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 04:34:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="MIwZu6Hk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbfG0ETz (ORCPT
+        id S1726171AbfG0Eeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 00:19:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbfG0ETy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 00:19:54 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BFC621655;
-        Sat, 27 Jul 2019 04:19:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564201193;
-        bh=DAXocKaUs1I+EIldbB+MJ8xtiUKnU9+bzAcB5Dh3rFs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Si3rLHGubhl6iymuccm1NkdFsEQBIOxwwChTh+VOxQjeEKLMD6KXlbpcwWzqXN0Jb
-         9/HjDN/WTfFyz4nf1qtrVFiYo5lWmnrKQMVK3fdu+ow+4wQ1uVPX8QznIHqd2yxR55
-         MdxNZsUXRhNLapWll898oFUQKk9o388JXNzK5uvI=
-Date:   Fri, 26 Jul 2019 21:19:52 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Chris Down <chris@chrisdown.name>
-Subject: Re: mmotm 2019-07-24-21-39 uploaded (mm/memcontrol)
-Message-Id: <20190726211952.757a63db5271d516faa7eaac@linux-foundation.org>
-In-Reply-To: <20190727034205.GA10843@archlinux-threadripper>
-References: <20190725044010.4tE0dhrji%akpm@linux-foundation.org>
-        <4831a203-8853-27d7-1996-280d34ea824f@infradead.org>
-        <20190725163959.3d759a7f37ba40bb7f75244e@linux-foundation.org>
-        <20190727034205.GA10843@archlinux-threadripper>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 27 Jul 2019 00:34:44 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37334 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbfG0Een (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 00:34:43 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so31241313wrr.4
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 21:34:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=/rCL5mzeUkeM+esQbDrZ/uK0LlKhDHPTally9O0PdPo=;
+        b=MIwZu6HkbKMoR0xKaJpX9YrkRinY+iC2t6YMFDgESrtDT5Dd08fuXZDkboEB+8RJ9p
+         U6+l9NIZPwyJClgafp5iLNBWMWAFbK3I0bpNYtyYMv/dywtCNcT3Dm1HLRi9v/a/nMx/
+         twt62JJV+eM8/qqbrAyx0mHhr+WC4JEGIaVMKq3vkeswdCVjIf2SwOYEihtKRe9MwpAy
+         j5YQhotLLI8T0Rz6b03boYJmy1khJvhM5ACx+Doa1MjrJ7F7Q8GiHxm0orUTEcMGnBoc
+         HeEGk8A7dn8Cxqisz8iSYmZiZYuzRo5pZMtX4iHFSKiuKBtM3cBvXNurmFXZuIb0DeEp
+         GXlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=/rCL5mzeUkeM+esQbDrZ/uK0LlKhDHPTally9O0PdPo=;
+        b=F5yX3H8mKutYPBaKF1/q+WXLxHIU5sj8IR1Rz6yILCEcW2CY1TXLGfv2I/6ns4PUj2
+         wTgwUVKS9eSKWs9vMEq0fjfxdnGwG34F4f5oHkn+jQxPRQbFmdgeVcznbEaM82NGG3F4
+         7o6NvJZ59DQ6wJ3eyVdmKYMb/Kjyuxn2nzTalmjT9PCpETAqLbgmezzwTLikw+Nft9ZA
+         56Vs6VdLC19gF7umA+HEM9cU5TZtzlYWl/v3b/Am8NnY4oPE4UPrH8hkgzlPSXD6T726
+         dmIbFYB0qjbPFFKtq9lAmQG/PyRV+epBGult67WxHydcLotYWLs+pXpSVUqnMCL6CYSq
+         J4qw==
+X-Gm-Message-State: APjAAAVmxfxvNh23eXn5A1XbSxu6BsKWVibne4CdwAm9s9lYI/LtAOrP
+        PSqOnfHNeJZXXl1k+WTiz3M=
+X-Google-Smtp-Source: APXvYqwA6Vjq76w63dQRjztvowWX9+oOyFlXtqd2BisuVQlaTXBbQZrlRLKAniKesJdukpZIC80MUA==
+X-Received: by 2002:a5d:470e:: with SMTP id y14mr80412216wrq.308.1564202082047;
+        Fri, 26 Jul 2019 21:34:42 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id s15sm35394855wrw.21.2019.07.26.21.34.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jul 2019 21:34:41 -0700 (PDT)
+Message-ID: <5d3bd461.1c69fb81.33e47.079b@mx.google.com>
+Date:   Fri, 26 Jul 2019 21:34:41 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Kernel: v5.1.20-63-gf878628d8f1e
+X-Kernelci-Branch: linux-5.1.y
+X-Kernelci-Report-Type: boot
+In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
+References: <20190726152301.720139286@linuxfoundation.org>
+Subject: Re: [PATCH 5.1 00/62] 5.1.21-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 20:42:05 -0700 Nathan Chancellor <natechancellor@gmail.com> wrote:
+stable-rc/linux-5.1.y boot: 127 boots: 2 failed, 81 passed with 44 offline =
+(v5.1.20-63-gf878628d8f1e)
 
-> > @@ -2414,8 +2414,9 @@ void mem_cgroup_handle_over_high(void)
-> >  	 */
-> >  	clamped_high = max(high, 1UL);
-> >  
-> > -	overage = ((u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT)
-> > -		/ clamped_high;
-> > +	overage = (u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT;
-> > +	do_div(overage, clamped_high);
-> > +
-> >  	penalty_jiffies = ((u64)overage * overage * HZ)
-> >  		>> (MEMCG_DELAY_PRECISION_SHIFT + MEMCG_DELAY_SCALING_SHIFT);
-> >  
-> > _
-> > 
-> 
-> This causes a build error on arm:
-> 
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-5.1.y/kernel/v5.1.20-63-gf878628d8f1e/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.1.y=
+/kernel/v5.1.20-63-gf878628d8f1e/
 
-Ah.
+Tree: stable-rc
+Branch: linux-5.1.y
+Git Describe: v5.1.20-63-gf878628d8f1e
+Git Commit: f878628d8f1efc883e9bd6f9f81173194b4a01dd
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 74 unique boards, 27 SoC families, 17 builds out of 209
 
-It's rather unclear why that u64 cast is there anyway.  We're dealing
-with ulongs all over this code.  The below will suffice.
+Boot Failures Detected:
 
-Chris, please take a look?
+arm64:
+    defconfig:
+        gcc-8:
+            meson-g12a-x96-max: 1 failed lab
 
---- a/mm/memcontrol.c~mm-throttle-allocators-when-failing-reclaim-over-memoryhigh-fix-fix-fix
-+++ a/mm/memcontrol.c
-@@ -2415,7 +2415,7 @@ void mem_cgroup_handle_over_high(void)
- 	clamped_high = max(high, 1UL);
- 
- 	overage = (u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT;
--	do_div(overage, clamped_high);
-+	overage /= clamped_high;
- 
- 	penalty_jiffies = ((u64)overage * overage * HZ)
- 		>> (MEMCG_DELAY_PRECISION_SHIFT + MEMCG_DELAY_SCALING_SHIFT);
-_
+arm:
+    multi_v7_defconfig:
+        gcc-8:
+            bcm4708-smartrg-sr400ac: 1 failed lab
 
+Offline Platforms:
+
+arm64:
+
+    defconfig:
+        gcc-8
+            meson-axg-s400: 1 offline lab
+            meson-g12a-u200: 1 offline lab
+            meson-g12a-x96-max: 1 offline lab
+            meson-gxbb-odroidc2: 1 offline lab
+            meson-gxl-s905d-p230: 1 offline lab
+            meson-gxl-s905x-libretech-cc: 1 offline lab
+            meson-gxl-s905x-nexbox-a95x: 1 offline lab
+            meson-gxl-s905x-p212: 1 offline lab
+            meson-gxm-nexbox-a1: 1 offline lab
+            rk3399-firefly: 1 offline lab
+            sun50i-a64-pine64-plus: 1 offline lab
+
+mips:
+
+    pistachio_defconfig:
+        gcc-8
+            pistachio_marduk: 1 offline lab
+
+arm:
+
+    exynos_defconfig:
+        gcc-8
+            exynos5250-arndale: 1 offline lab
+            exynos5420-arndale-octa: 1 offline lab
+            exynos5800-peach-pi: 1 offline lab
+
+    multi_v7_defconfig:
+        gcc-8
+            bcm72521-bcm97252sffe: 1 offline lab
+            bcm7445-bcm97445c: 1 offline lab
+            exynos5250-arndale: 1 offline lab
+            exynos5420-arndale-octa: 1 offline lab
+            exynos5800-peach-pi: 1 offline lab
+            imx6dl-wandboard_dual: 1 offline lab
+            imx6dl-wandboard_solo: 1 offline lab
+            imx6q-wandboard: 1 offline lab
+            imx7s-warp: 1 offline lab
+            meson8b-odroidc1: 1 offline lab
+            omap3-beagle: 1 offline lab
+            omap4-panda: 1 offline lab
+            qcom-apq8064-ifc6410: 1 offline lab
+            stih410-b2120: 1 offline lab
+            sun4i-a10-cubieboard: 1 offline lab
+            sun7i-a20-bananapi: 1 offline lab
+            vf610-colibri-eval-v3: 1 offline lab
+
+    omap2plus_defconfig:
+        gcc-8
+            omap3-beagle: 1 offline lab
+            omap4-panda: 1 offline lab
+
+    qcom_defconfig:
+        gcc-8
+            qcom-apq8064-ifc6410: 1 offline lab
+
+    davinci_all_defconfig:
+        gcc-8
+            da850-evm: 1 offline lab
+            dm365evm,legacy: 1 offline lab
+
+    imx_v6_v7_defconfig:
+        gcc-8
+            imx6dl-wandboard_dual: 1 offline lab
+            imx6dl-wandboard_solo: 1 offline lab
+            imx6q-wandboard: 1 offline lab
+            imx7s-warp: 1 offline lab
+            vf610-colibri-eval-v3: 1 offline lab
+
+    sunxi_defconfig:
+        gcc-8
+            sun4i-a10-cubieboard: 1 offline lab
+            sun7i-a20-bananapi: 1 offline lab
+
+---
+For more info write to <info@kernelci.org>
