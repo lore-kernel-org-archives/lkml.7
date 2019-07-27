@@ -2,137 +2,84 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 458AAC76191
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26043C7618F
 	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 01:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22C7422BF5
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 01:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E7A22BF5
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 01:34:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfG0Bdw (ORCPT
+        id S1728542AbfG0Bde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 21:33:52 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50698 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbfG0Bdw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 21:33:52 -0400
-Received: from [5.158.153.52] (helo=lx-training.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1hrBal-0005il-DE; Sat, 27 Jul 2019 03:33:47 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>
-Subject: [RFC PATCH v3 0/2] printk: new ringbuffer implementation
-Date:   Sat, 27 Jul 2019 03:33:31 +0200
-Message-Id: <20190727013333.11260-1-john.ogness@linutronix.de>
-X-Mailer: git-send-email 2.11.0
+        Fri, 26 Jul 2019 21:33:34 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37524 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726571AbfG0Bdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 21:33:33 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 20E38F91DBEA4105D4E7;
+        Sat, 27 Jul 2019 09:33:31 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
+ 09:33:29 +0800
+Subject: Re: [PATCH v2 -next] staging: vc04_services: fix
+ used-but-set-variable warning
+To:     Stefan Wahren <wahrenst@gmx.net>, <eric@anholt.net>,
+        <gregkh@linuxfoundation.org>, <inf.braun@fau.de>,
+        <nishkadg.linux@gmail.com>
+References: <20190725142716.49276-1-yuehaibing@huawei.com>
+ <20190726092621.27972-1-yuehaibing@huawei.com>
+ <229b2d16-9623-6005-2e1b-4d1f239643a2@gmx.net>
+CC:     <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <25f56fd6-17b7-a8aa-6a51-97677eb8785f@huawei.com>
+Date:   Sat, 27 Jul 2019 09:33:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <229b2d16-9623-6005-2e1b-4d1f239643a2@gmx.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-This is a follow-up RFC on the work to re-implement much of
-the core of printk. The threads for the previous RFC versions
-are here: v1[0], v2[1].
+On 2019/7/26 23:57, Stefan Wahren wrote:
+> Hi Yue,
+> 
+> Am 26.07.19 um 11:26 schrieb YueHaibing:
+>> Fix gcc used-but-set-variable warning:
+> 
+> just a nit. It is call "unused-but-set-variable"
 
-As was planned[2], this is only the first piece: a new
-lockless ringbuffer.
+Oh, yes, thanks!
 
-Changes from v2:
-
-- Moved all code into kernel/printk/. Let's keep it private
-  for now.
-
-- Split the ringbuffer into 3 components:
-
-  * a data ringbuffer (dataring) to manage the raw data and
-    data descriptors
-
-  * a numbered list (numlist) to manage committed entries and
-    their sequence numbers
-
-  * the printk_ringbuffer, which is the high-level structure
-    providing the reader/writer API and glue for the other
-    structures
-
-  Splitting the components apart helped to document their
-  roles and their related memory barriers (and will hopefully
-  also simplify the review process).
-
-- Renamed most functions, structures, and variables based on
-  v2 feedback.
-
-- Rewrote and reformatted nearly all comments (particularly
-  the memory barrier comments) based on v2 feedback.
-
-- Addressed implementation issues with v2:
-
-  * invalid data blocks potentially becoming valid because of
-    overflows
-
-  * weak associations between data blocks and descriptors
-
-  * excessive freeing of data blocks due to unavailable
-    descriptors
-
-- Improved error handling and data integrity checks in the test
-  module.
-
-For the memory barrier work I wrote a litmus test for nearly
-every memory barrier. I did not include these in the series.
-Should I? If yes, where should they be placed?
-
-I would like to point out that Petr Mladek posted a
-proof-of-concept[3] alternate implementation. I wanted to base my
-v3 on his work, but ran into too many problems getting it to
-run acceptably. I will address those issues in that thread. This
-is why my v3 is based directly on my v2.
-
-John Ogness
-
-[0] https://lkml.kernel.org/r/20190212143003.48446-1-john.ogness@linutronix.de
-[1] https://lkml.kernel.org/r/20190607162349.18199-1-john.ogness@linutronix.de
-[2] https://lkml.kernel.org/r/87y35hn6ih.fsf@linutronix.de
-[3] https://lkml.kernel.org/r/20190704103321.10022-1-pmladek@suse.com
-
-John Ogness (2):
-  printk-rb: add a new printk ringbuffer implementation
-  printk-rb: add test module
-
- kernel/printk/Makefile     |   5 +
- kernel/printk/dataring.c   | 761 ++++++++++++++++++++++++++++++++++++++++++
- kernel/printk/dataring.h   |  95 ++++++
- kernel/printk/numlist.c    | 375 +++++++++++++++++++++
- kernel/printk/numlist.h    |  72 ++++
- kernel/printk/ringbuffer.c | 800 +++++++++++++++++++++++++++++++++++++++++++++
- kernel/printk/ringbuffer.h | 288 ++++++++++++++++
- kernel/printk/test_prb.c   | 256 +++++++++++++++
- 8 files changed, 2652 insertions(+)
- create mode 100644 kernel/printk/dataring.c
- create mode 100644 kernel/printk/dataring.h
- create mode 100644 kernel/printk/numlist.c
- create mode 100644 kernel/printk/numlist.h
- create mode 100644 kernel/printk/ringbuffer.c
- create mode 100644 kernel/printk/ringbuffer.h
- create mode 100644 kernel/printk/test_prb.c
-
--- 
-2.11.0
+> 
+> Acked-by: Stefan Wahren <wahrenst@gmx.net>
+> 
+>>
+>> drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c: In function vchiq_release_internal:
+>> drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c:2827:16: warning:
+>>  variable local_entity_uc set but not used [-Wunused-but-set-variable]
+>> drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c:2827:6: warning:
+>>  variable local_uc set but not used [-Wunused-but-set-variable]
+>>
+>> Remove the unused variables 'local_entity_uc' and 'local_uc'
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+> 
+> .
+> 
 
