@@ -4,62 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65CFC7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C852DC7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 875552085A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A95F72084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564235268;
-	bh=KRXC9oCHi83exKq/ds8/LJTiS0VCynJGNxGjAL+U2vM=;
+	s=default; t=1564235493;
+	bh=Cyk2T9XTi2a0TzR7BWvMq7y8yRWPttyjSBEcdgvNqIc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=r1AxPjkoljYyLfXww6yqjJRQzvZRw7KTee8G29SLeka1HTIaYi4CXL+87VFnCZZ9U
-	 YvTLEy1VNcUz8sGyLdmhrnUMA7dfi0oEszVR8fTh4NLs2Uhrpp88N1pIRue2zx4nPw
-	 onqyXxCNR/pKeAMmuwqeicHIdqFFXTVMRG4Ilrrg=
+	b=LDnlGGNVLG3ijcqezRQQMT96PDZaSs+1GB9BNphS9u42GA5bR0DJZk5PIwaazadfD
+	 5K9VQwyPte5THpadzKbVYVEBvmC3Y/rq4oyK3TJCb3sREtRV7B9RM99PHLJN96EZpV
+	 5MBqdxrXJuOGKcA+6z/HhvaZcoyHHYN4hCkYB3m0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387754AbfG0Nrr (ORCPT
+        id S2387713AbfG0Nvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 09:47:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54050 "EHLO mail.kernel.org"
+        Sat, 27 Jul 2019 09:51:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387576AbfG0Nrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 09:47:46 -0400
+        id S2387603AbfG0Nvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 09:51:31 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C12DF2084C;
-        Sat, 27 Jul 2019 13:47:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A867C2084C;
+        Sat, 27 Jul 2019 13:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564235265;
-        bh=KRXC9oCHi83exKq/ds8/LJTiS0VCynJGNxGjAL+U2vM=;
+        s=default; t=1564235490;
+        bh=Cyk2T9XTi2a0TzR7BWvMq7y8yRWPttyjSBEcdgvNqIc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=maYeT5lXSLwXWuZjkW4yuhX4UdvER0UdQHXIeisgC7pdvO2cNq505+DcW/X8o8IcT
-         SITDqZ4pRidtzkcjgf7tVLLYR9BaV/g35+V0EtiQQ0u1L8/6Pc/7yFr22pFCUFYiEa
-         osPb3hnkRTs6N/8YTf18KRTg5gaS0WKkmapRxMGM=
-Date:   Sat, 27 Jul 2019 14:47:39 +0100
+        b=FY2TlvGQVDo3WAhahIdOTHDFf7JbrxKqz3fUw2cHrQk4AJmzEFcPrbn5LBFnEgq0b
+         GrZzIPgE8parlrNpGHWwAo36ZnrnC7UOJHAuGP8q/XZBCFh4jkomKQppdy0V0KA4fB
+         4JMGNF9JZ30C48Njt2VG1hgxvVtCcF7+NvdXyAn0=
+Date:   Sat, 27 Jul 2019 14:51:26 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Matheus Tavares Bernardino <matheus.bernardino@usp.br>
-Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "kartik.koolks@gmail.com" <kartik.koolks@gmail.com>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH] staging:iio:adc:ad7280a: add of_match_table entry
-Message-ID: <20190727144739.4461b5a3@archlinux>
-In-Reply-To: <CAHd-oW5sOry2g_tQbgQ9-dp1esVStmS+UF-TTYoB2mWmzR10jQ@mail.gmail.com>
-References: <20190725200817.31277-1-kartik.koolks@gmail.com>
-        <0e273486f1c4fb6249896225837cdf2da0fd2415.camel@analog.com>
-        <CAHd-oW5sOry2g_tQbgQ9-dp1esVStmS+UF-TTYoB2mWmzR10jQ@mail.gmail.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matt Ranostay <matt.ranostay@konsulko.com>
+Subject: Re: [PATCH] iio: maxim_thermocouple: Use device-managed APIs
+Message-ID: <20190727145126.07ea374d@archlinux>
+In-Reply-To: <20190726104950.19171-1-hslester96@gmail.com>
+References: <20190726104950.19171-1-hslester96@gmail.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -69,77 +57,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 14:59:16 -0300
-Matheus Tavares Bernardino <matheus.bernardino@usp.br> wrote:
+On Fri, 26 Jul 2019 18:49:50 +0800
+Chuhong Yuan <hslester96@gmail.com> wrote:
 
-> On Fri, Jul 26, 2019 at 2:30 AM Ardelean, Alexandru
-> <alexandru.Ardelean@analog.com> wrote:
-> >
-> > On Fri, 2019-07-26 at 01:38 +0530, Kartik Kulkarni wrote:  
-> > > Add the of_device_id struct and the respective
-> > > of_match_device entry to complete device tree support.
-> > >  
-> >
-> > This would be a [V2] I suppose.
-> >
-> > This change also does the rename of the driver name in a single go.
-> > Since it's a trivial change, it's fine from my side.  
+> Use device-managed APIs to simplify the code.
+> The remove functions are redundant now and can
+> be deleted.
 > 
-> I think there was a small confusion when we sent the patches. Sorry
-> for that. Originally, Kartik made the rename in its own patch. Would
-> it be better if we resend the two patches separately?
-I would prefer that. They are two separate changes, and the driver
-name one may be a little unexpected so let's make sure it's obvious.
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
++CC Matt as I think this is one of his.
 
-There is also the question on whether we should tidy up all the
-prefixing to make it clear that this is an ad7280a throughout.
+I modified slightly and applied to the togreg branch of iio.git.
 
-Perhaps that's too painful though and we should leave it like this
-for now.
+See inline for the change.
 
 Thanks,
 
 Jonathan
 
 
+
+> ---
+>  drivers/iio/temperature/maxim_thermocouple.c | 23 ++++----------------
+>  1 file changed, 4 insertions(+), 19 deletions(-)
 > 
-> Thanks,
-> Matheus
-> 
-> > Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> >
-> >  
-> > > Signed-off-by: Kartik Kulkarni <kartik.koolks@gmail.com>
-> > > Reviewed-by: Matheus Tavares <matheus.bernardino@usp.br>
-> > > ---
-> > >  drivers/staging/iio/adc/ad7280a.c | 9 ++++++++-
-> > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/staging/iio/adc/ad7280a.c b/drivers/staging/iio/adc/ad7280a.c
-> > > index 19a5f244dcae..ded0ba093a28 100644
-> > > --- a/drivers/staging/iio/adc/ad7280a.c
-> > > +++ b/drivers/staging/iio/adc/ad7280a.c
-> > > @@ -1027,9 +1027,16 @@ static const struct spi_device_id ad7280_id[] = {
-> > >  };
-> > >  MODULE_DEVICE_TABLE(spi, ad7280_id);
-> > >
-> > > +static const struct of_device_id ad7280_of_match[] = {
-> > > +     { .compatible = "adi,ad7280a", },
-> > > +     { }
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, ad7280_of_match);
-> > > +
-> > >  static struct spi_driver ad7280_driver = {
-> > >       .driver = {
-> > > -             .name   = "ad7280",
-> > > +             .name   = "ad7280a",
-> > > +             .of_match_table = ad7280_of_match,
-> > >       },
-> > >       .probe          = ad7280_probe,
-> > >       .id_table       = ad7280_id,  
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "Kernel USP" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-usp+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/kernel-usp/0e273486f1c4fb6249896225837cdf2da0fd2415.camel%40analog.com.  
+> diff --git a/drivers/iio/temperature/maxim_thermocouple.c b/drivers/iio/temperature/maxim_thermocouple.c
+> index c613a64c017f..314b6e11e386 100644
+> --- a/drivers/iio/temperature/maxim_thermocouple.c
+> +++ b/drivers/iio/temperature/maxim_thermocouple.c
+> @@ -230,29 +230,15 @@ static int maxim_thermocouple_probe(struct spi_device *spi)
+>  	data->spi = spi;
+>  	data->chip = chip;
+>  
+> -	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+> +	ret = devm_iio_triggered_buffer_setup(&spi->dev,
+> +				indio_dev, NULL,
+>  				maxim_thermocouple_trigger_handler, NULL);
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = iio_device_register(indio_dev);
+> +	ret = devm_iio_device_register(&spi->dev, indio_dev);
+>  	if (ret)
+> -		goto error_unreg_buffer;
+> -
+> -	return 0;
+> -
+> -error_unreg_buffer:
+> -	iio_triggered_buffer_cleanup(indio_dev);
+> -
+> -	return ret;
+> -}
+> -
+> -static int maxim_thermocouple_remove(struct spi_device *spi)
+> -{
+> -	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+> -
+> -	iio_device_unregister(indio_dev);
+> -	iio_triggered_buffer_cleanup(indio_dev);
+> +		return ret;
+
+Slight tweak. I'll do it whilst applying.
+can just 
+	return devm_iio_device_register(...) as same effect.
+
+>  
+>  	return 0;
+>  }
+> @@ -277,7 +263,6 @@ static struct spi_driver maxim_thermocouple_driver = {
+>  		.of_match_table = maxim_thermocouple_of_match,
+>  	},
+>  	.probe		= maxim_thermocouple_probe,
+> -	.remove		= maxim_thermocouple_remove,
+>  	.id_table	= maxim_thermocouple_id,
+>  };
+>  module_spi_driver(maxim_thermocouple_driver);
 
