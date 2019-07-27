@@ -2,96 +2,152 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB3CC76190
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014FAC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E23532086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:07:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBqa2Tyh"
+	by mail.kernel.org (Postfix) with ESMTP id E03032086D
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387885AbfG0QHw (ORCPT
+        id S2387794AbfG0QRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 12:07:52 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42496 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387419AbfG0QHw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 12:07:52 -0400
-Received: by mail-pl1-f193.google.com with SMTP id ay6so25906581plb.9;
-        Sat, 27 Jul 2019 09:07:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TdhMyA0f7GkaYro7VFqzIpVNCMN/yq8RzRd3YAwWKNc=;
-        b=HBqa2TyhEsp1seVChsHeDkI4AxsQWX54WK7RVVHuTTP3Y7mibfnmHKWyw+M1U0unno
-         ynmk+tYzQmF9+pJac6L0Kp7xOgCA5lQS5PEqhHIDc0Ezd0id9U275y4fk/Z8hisRqhDR
-         d67YKh1QWhF6rFecBBlb9CcPjEkUneB+q9rRwnGkc8Y59QaDBh6tEyEWxNyepG6klsXh
-         nsuRpTu8f+UYDLn8Icnm+YrpPmM5TM+M0lvCDwdHodJh728Vxmgw7nQR7WM4DYjN1Qez
-         lWcEvh9kKboxAPGOGFXNyHBGOSTCkc6cg/tsCXfgB7gXxcowtCcE1bJfeixI3loFDTCn
-         1y1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TdhMyA0f7GkaYro7VFqzIpVNCMN/yq8RzRd3YAwWKNc=;
-        b=pOTdKaghVBKcOor1TMud7kZjlPGyk+H/ve35+yKwvyytApafsZfErazf1MzEs5iKxL
-         OcEiOZyo9q1s1fgDaO8xH50HQhMJmxXJZyVFj3dDTYtGU8WkSvNlupJcQYWHLlmDKtFA
-         ksr7zY26kkKTQnecIbY2/jK2Ki0S0aCLbnZl5ojizCaVUyUmseSrRfGL+et4PET6jCaF
-         FTVIXz+aMMkRxRYHlTAqq9DtEuRRMxiWX6E4hR+0ZxM66gEW0YpQir6lBHgFqvBrQyNr
-         4D+DJAx7Sur8j4jcE/A6dp8BJFHqfLlk+ZpfhSX0V4n4usEvpXhIRoZuajyOWVtpcvDX
-         Rkmg==
-X-Gm-Message-State: APjAAAXzuxkRM5aXcbtUcn0Q273zo9qWT4HwYwQe0w8L9Odkrtg4Oc1U
-        ZorkFqBnnv/MzVY7xdDFfrPAHsGY
-X-Google-Smtp-Source: APXvYqwZANIe3JXnpGimCQLlzGMzKQ3z09SjzzceNMeDay/ka4AXStj8I32eViy/jGE6L4NPs8rs0g==
-X-Received: by 2002:a17:902:f46:: with SMTP id 64mr102720487ply.235.1564243671475;
-        Sat, 27 Jul 2019 09:07:51 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q24sm50546239pjp.14.2019.07.27.09.07.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Jul 2019 09:07:51 -0700 (PDT)
-Subject: Re: [PATCH 5.2 00/66] 5.2.4-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20190726152301.936055394@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <9e69ade0-419d-a024-8b5e-988cbd69d4b4@roeck-us.net>
-Date:   Sat, 27 Jul 2019 09:07:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 27 Jul 2019 12:17:40 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:59426 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728856AbfG0QRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 12:17:40 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 67F36200E48;
+        Sat, 27 Jul 2019 18:17:37 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 57CF2200E46;
+        Sat, 27 Jul 2019 18:17:37 +0200 (CEST)
+Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 2D76220612;
+        Sat, 27 Jul 2019 18:17:37 +0200 (CEST)
+Date:   Sat, 27 Jul 2019 19:17:36 +0300
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+Cc:     Anson Huang <anson.huang@nxp.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Carlo Caione <ccaione@baylibre.com>,
+        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+ IMX8MQ_CLK_TMU_ROOT
+Message-ID: <20190727161736.4dkfqgwftre67v56@fsr-ub1664-175>
+References: <20190705045612.27665-1-Anson.Huang@nxp.com>
+ <20190705045612.27665-5-Anson.Huang@nxp.com>
+ <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
+ <DB3PR0402MB3916233A56CF5DF778115716F5C30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAEnQRZCrZybzcy__u4p_Eq4zSVc2ESyfKLk5sPf1JYba1JSOiA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEnQRZCrZybzcy__u4p_Eq4zSVc2ESyfKLk5sPf1JYba1JSOiA@mail.gmail.com>
+User-Agent: NeoMutt/20180622
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/26/19 8:23 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.4 release.
-> There are 66 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 19-07-27 09:33:10, Daniel Baluta wrote:
+> On Sat, Jul 27, 2019 at 9:19 AM Anson Huang <anson.huang@nxp.com> wrote:
+> >
+> > Hi, Daniel
+> >
+> > > Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+> > > IMX8MQ_CLK_TMU_ROOT
+> > >
+> > > Hi all,
+> > >
+> > > latest linux-next hangs at boot.
+> > >
+> > > commit fde50b96be821ac9673a7e00847cc4605bd88f34 (HEAD -> master, tag:
+> > > next-20190726, origin/master, origin/HEAD)
+> > > Author: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > Date:   Fri Jul 26 15:18:02 2019 +1000
+> > >
+> > >     Add linux-next specific files for 20190726
+> > >
+> > >     Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > >
+> > >
+> > > I know this is crazy but reverting commit:
+> > >
+> > > commit 431bdd1df48ee2896ea9980d9153e3aeaf0c81ef (refs/bisect/bad)
+> > > Author: Anson Huang <Anson.Huang@nxp.com>
+> > > Date:   Fri Jul 5 12:56:11 2019 +0800
+> > >
+> > >     clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT
+> > >
+> > >     IMX8MQ_CLK_TMU_ROOT is ONLY used for thermal module, the driver
+> > >     should manage this clock, so no need to have CLK_IS_CRITICAL flag
+> > >     set.
+> > >
+> > >
+> > >
+> > > makes the boot work again.
+> > >
+> > > Any idea?
+> >
+> > I just found if disabling SDMA1, then kernel can boot up, it does NOT make sense
+> > TMU clock is related to SDMA1, I will check with design and get back to you soon.
+> >
 > 
-> Responses should be made by Sun 28 Jul 2019 03:21:13 PM UTC.
-> Anything received after that time might be too late.
+> Hi Anson,
+> 
+> Applying Abel's patch:
+> 
+> commit 8816c47db6a82f55bb4d64f62fd9dd3af680f0e4 (HEAD -> master)
+> Author: Abel Vesa <abel.vesa@nxp.com>
+> Date:   Tue Jun 25 12:01:56 2019 +0300
+> 
+>     clk: imx8mq: Mark AHB clock as critical
+> 
+>     Keep the AHB clock always on since there is no driver to control it and
+>     all the other clocks that use it as parent rely on it being always enabled.
+> 
+> 
+> 
+> The kernel boots up again.
+> 
+> It make some sense. I don't understand though why having
+> IMX8MQ_CLK_TMU_ROOT as critical also "unhangs" the kernel.
 > 
 
-Build results:
-	total: 159 pass: 159 fail: 0
-Qemu test results:
-	total: 364 pass: 364 fail: 0
+OK, so this is how it works.
 
-Guenter
+By removing the critical flag from TMU, the AHB doesn't stay always on.
+With my patch the AHB is marked as critical and therefore stays on.
+
+The sdma1_clk has as parent the ipg_root which in turn has as parent the
+ahb clock. And I think what happens is some read from the sdma registers hangs
+because, for whatever reason, enabling the sdma1_clk doesn't propagate to enable
+the ahb clock. I might be wrong though.
+
+> thanks,
+> Daniel.
