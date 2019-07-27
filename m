@@ -2,128 +2,123 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BF4C7618F
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 00:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D913C76191
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 00:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 394A922BF5
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 00:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520BE22CBB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 00:40:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="seLQcuWQ"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="MKMoN9Wz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbfG0Aiz (ORCPT
+        id S1728467AbfG0Akf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 20:38:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36706 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfG0Aiy (ORCPT
+        Fri, 26 Jul 2019 20:40:35 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:34688 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726115AbfG0Ake (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 20:38:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vX3HX++H8FmKlfKaZ9xE3OKPlAYHgui3BNbzlA6WfOg=; b=seLQcuWQ9l+ahJ/jJ2TW3xmNh
-        8Fd8u4bC+a2yPgf1X9h7DGdfz5aKukAwbQ56fEWeWFKaQX5/debmR9XWEoLpFFpNDpl9+sH0joFjQ
-        JnacKLuSYm1Sg7A6gpvQYt6mK/aPakD1pHE/JlEp1zNtGDotoemVv3jHEX+NsYwmUKwth+cAUcTf3
-        zOs8gNyo88rzJacIINOX4ZKDI+WyAEVwm+mE+5JRGRmjU+CFfSfTMl+mHFMzQp7Cw8+FreQcZz8AX
-        4S4B6nECv/VkG2VAjx9OuCPO6Us+aG7MLIWXfT2aeTf2Ml+k9vwu7UR2hZB3A6zcEmoT5g0jDFkDp
-        TUiPBSwDQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hrAjb-0007V1-Ak; Sat, 27 Jul 2019 00:38:51 +0000
-Date:   Fri, 26 Jul 2019 17:38:51 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Henriques <lhenriques@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Carlos Maiolino <cmaiolino@redhat.com>
-Subject: Re: [PATCH] mm: Make kvfree safe to call
-Message-ID: <20190727003851.GJ30641@bombadil.infradead.org>
-References: <20190726210137.23395-1-willy@infradead.org>
- <CAKgT0UcMND12oZ1869howDjcbvRj+KwabaMuRk8bmLZPWbJWcg@mail.gmail.com>
- <e4b0d323ed0bc159d863945251cf3f4c4064526c.camel@kernel.org>
+        Fri, 26 Jul 2019 20:40:34 -0400
+Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6R0eI43030754;
+        Fri, 26 Jul 2019 20:40:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=ep8q1zgBemRtJXbAXKWjrrPyXJWLfHJA16v15yzVht8=;
+ b=MKMoN9Wz6MW3pPHgL5ealXXJplJ018JvfehVAZwtohhIndhADFQXJB1LNNyr7+DkQeNE
+ R8z5dNIDA6/sh0n2ZijPfXgZRmCxFSbnrWpE0gBhKmvEG6JK+GENiOKO5wCuPmwLHj6J
+ 39xagzsfY8796ZqleB8N+8wiNhg7ERf10u6ogwgOx0KOBE4SYbMIz3gjAHDNwRiii8Q0
+ L9cUQqflsnIq5o8sVBC1EEJwz8xtq7Hz75KLyrBD+KeH3I01n7PpZ65QGgosv77H5NAo
+ sY/CVF4NdapBU6BDGUMiuiepQN8oCbW/zDrSi6OzACLHcQlYL42lJUCNM4QdpI1xEO+S MQ== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0a-00154904.pphosted.com with ESMTP id 2u08d4gsnr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Jul 2019 20:40:33 -0400
+Received: from pps.filterd (m0090351.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6R0XF1O016851;
+        Fri, 26 Jul 2019 20:34:43 -0400
+Received: from ausxipps310.us.dell.com (AUSXIPPS310.us.dell.com [143.166.148.211])
+        by mx0b-00154901.pphosted.com with ESMTP id 2u081navjy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Jul 2019 20:34:42 -0400
+X-LoopCount0: from 10.166.132.134
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="401000745"
+From:   <Austin.Bolen@dell.com>
+To:     <sathyanarayanan.kuppuswamy@linux.intel.com>, <kbusch@kernel.org>
+CC:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <ashok.raj@intel.com>,
+        <keith.busch@intel.com>, <Austin.Bolen@dell.com>,
+        <Huong.Nguyen@dell.com>
+Subject: Re: [PATCH v6 0/9] Add Error Disconnect Recover (EDR) support
+Thread-Topic: [PATCH v6 0/9] Add Error Disconnect Recover (EDR) support
+Thread-Index: AQHVRAqUeMPp4LVQZEOz/0HmhsAqJA==
+Date:   Sat, 27 Jul 2019 00:34:40 +0000
+Message-ID: <79eefd85ecc140cfb2811901089c6c47@AUSX13MPC107.AMER.DELL.COM>
+References: <cover.1564177080.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190726215311.GA8720@localhost.localdomain>
+ <683fffda-7116-a67b-02ab-503c0efc6853@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.18.86]
+Content-Type: text/plain; charset="windows-1256"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e4b0d323ed0bc159d863945251cf3f4c4064526c.camel@kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-27_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=896 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907270005
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907270007
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 05:25:03PM -0400, Jeff Layton wrote:
-> On Fri, 2019-07-26 at 14:10 -0700, Alexander Duyck wrote:
-> > On Fri, Jul 26, 2019 at 2:01 PM Matthew Wilcox <willy@infradead.org> wrote:
-> > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > > 
-> > > Since vfree() can sleep, calling kvfree() from contexts where sleeping
-> > > is not permitted (eg holding a spinlock) is a bit of a lottery whether
-> > > it'll work.  Introduce kvfree_safe() for situations where we know we can
-> > > sleep, but make kvfree() safe by default.
-> > > 
-> > > Reported-by: Jeff Layton <jlayton@kernel.org>
-> > > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> > > Cc: Luis Henriques <lhenriques@suse.com>
-> > > Cc: Christoph Hellwig <hch@lst.de>
-> > > Cc: Carlos Maiolino <cmaiolino@redhat.com>
-> > > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> > 
-> > So you say you are adding kvfree_safe() in the patch description, but
-> > it looks like you are introducing kvfree_fast() below. Did something
-> > change and the patch description wasn't updated, or is this just the
-> > wrong description for this patch?
-
-Oops, bad description.  Thanks, I'll fix it for v2.
-
-> > > +/**
-> > > + * kvfree_fast() - Free memory.
-> > > + * @addr: Pointer to allocated memory.
-> > > + *
-> > > + * kvfree_fast frees memory allocated by any of vmalloc(), kmalloc() or
-> > > + * kvmalloc().  It is slightly more efficient to use kfree() or vfree() if
-> > > + * you are certain that you know which one to use.
-> > > + *
-> > > + * Context: Either preemptible task context or not-NMI interrupt.  Must not
-> > > + * hold a spinlock as it can sleep.
-> > > + */
-> > > +void kvfree_fast(const void *addr)
-> > > +{
-> > > +       might_sleep();
-> > > +
-> 
->     might_sleep_if(!in_interrupt());
-> 
-> That's what vfree does anyway, so we might as well exempt the case where
-> you are.
-
-True, but if we are in interrupt, then we may as well call kvfree() since
-it'll do the same thing, and this way the rules are clearer.
-
-> > > +       if (is_vmalloc_addr(addr))
-> > > +               vfree(addr);
-> > > +       else
-> > > +               kfree(addr);
-> > > +}
-> > > +EXPORT_SYMBOL(kvfree_fast);
-> > > +
-> 
-> That said -- is this really useful?
-> 
-> The only way to know that this is safe is to know what sort of
-> allocation it is, and in that case you can just call kfree or vfree as
-> appropriate.
-
-It's safe if you know you're not holding any spinlocks, for example ...
-
+On 7/26/2019 6:33 PM, sathyanarayanan kuppuswamy wrote:=0A=
+> +Austin , Huong=0A=
+>=0A=
+> On 7/26/19 2:53 PM, Keith Busch wrote:=0A=
+>> On Fri, Jul 26, 2019 at 02:43:10PM -0700, sathyanarayanan.kuppuswamy@lin=
+ux.intel.com wrote:=0A=
+>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.inte=
+l.com>=0A=
+>>>=0A=
+>>> This patchset adds support for following features:=0A=
+>>>=0A=
+>>> 1. Error Disconnect Recover (EDR) support.=0A=
+>>> 2. _OSC based negotiation support for DPC.=0A=
+>>>=0A=
+>>> You can find EDR spec in the following link.=0A=
+>>>=0A=
+>>> https://members.pcisig.com/wg/PCI-SIG/document/12614=0A=
+>> Thank you for sticking with this. I've reviewed the series and I think=
+=0A=
+>> this looks good for the next merge window.=0A=
+>>=0A=
+>> Acked-by: Keith Busch <keith.busch@intel.com>=0A=
+=0A=
+Tested on a DPC-enabled PCIe switch (Broadcom PEX9733) in a Dell=0A=
+PowerEdge R740xd.  Injected fatal and non-fatal errors on an NVMe=0A=
+endpoint below the switch and on the switch downstream port itself and=0A=
+verified errors were contained and then recovered at the PCIe level.=0A=
+=0A=
+Tested-by: Austin Bolen <Austin.Bolen@dell.com=FD>=0A=
+=0A=
+>>=0A=
+=0A=
