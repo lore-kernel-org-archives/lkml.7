@@ -2,73 +2,103 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECB5C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 21:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B55C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 21:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8CAE208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 21:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86329208E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 21:23:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564262583;
+	bh=eh8OvF0VESRy2rOeDGmzPK+Ei3PaxUgCOoCB/2LnIxM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HCHIxpj0cDUcMY4Xbm0YuiCpUcvd7ucPvQiEYpjjSRFBFNSQ3rKE+tQhjKGcWqB83
+	 ZF3eCz0E2041QWMWv4HqEW7ByERyMHTI3L51WpaLjIVw/AP4jD+7RYonjGQmt3zX1v
+	 fGB9uHn9QV5Ft4EetvYBX9B37kKZ+ICnNgs2RPkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfG0VSO (ORCPT
+        id S1726787AbfG0VXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 17:18:14 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:40292 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbfG0VSO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 17:18:14 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4E1BE1534E491;
-        Sat, 27 Jul 2019 14:18:13 -0700 (PDT)
-Date:   Sat, 27 Jul 2019 14:18:12 -0700 (PDT)
-Message-Id: <20190727.141812.424056483851039132.davem@davemloft.net>
-To:     natechancellor@gmail.com
-Cc:     iyappan@os.amperecomputing.com, keyur@os.amperecomputing.com,
-        quan@os.amperecomputing.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, skunberg.kelsey@gmail.com
-Subject: Re: [PATCH] drivers: net: xgene: Move status variable declaration
- into CONFIG_ACPI block
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190726162037.37308-1-natechancellor@gmail.com>
-References: <20190726162037.37308-1-natechancellor@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Sat, 27 Jul 2019 17:23:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726404AbfG0VXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 17:23:02 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EDD420657;
+        Sat, 27 Jul 2019 21:22:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564262581;
+        bh=eh8OvF0VESRy2rOeDGmzPK+Ei3PaxUgCOoCB/2LnIxM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JSBd0EbAGBpSAAf+P0AQahA5ItTPm4Fsv2n8PmUg67G93Tbocml+GuPHHlxa3CUvS
+         1M8t7jXVKxW0aFUpP8r9PeQBvfj90rglE264D7IpWXewvSdiDEIQit2lzNmbwIfwLR
+         qLxbP6d1j1vVW4qcV4sqOMKIyl2vOESb8EGNGKGg=
+Date:   Sat, 27 Jul 2019 22:22:56 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andreas Klinger <ak@it-klinger.de>, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: iio: avia-hx711: Fix avdd-supply typo
+ in example
+Message-ID: <20190727222256.2d451e82@archlinux>
+In-Reply-To: <20190716203324.12198-1-robh@kernel.org>
+References: <20190716203324.12198-1-robh@kernel.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 27 Jul 2019 14:18:13 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
-Date: Fri, 26 Jul 2019 09:20:37 -0700
+On Tue, 16 Jul 2019 14:33:23 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-> When CONFIG_ACPI is unset (arm allyesconfig), status is unused.
+> Now that examples are validated against the DT schema, a typo in
+> avia-hx711 example generates a warning:
 > 
-> drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c:383:14: warning:
-> unused variable 'status' [-Wunused-variable]
->         acpi_status status;
->                     ^
-> drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c:440:14: warning:
-> unused variable 'status' [-Wunused-variable]
->         acpi_status status;
->                     ^
-> drivers/net/ethernet/apm/xgene/xgene_enet_hw.c:697:14: warning: unused
-> variable 'status' [-Wunused-variable]
->         acpi_status status;
->                     ^
+> Documentation/devicetree/bindings/iio/adc/avia-hx711.example.dt.yaml: weight: 'avdd-supply' is a required property
 > 
-> Move the declaration into the CONFIG_ACPI block so that there are no
-> compiler warnings.
+> Fix the typo.
 > 
-> Fixes: 570d785ba46b ("drivers: net: xgene: Remove acpi_has_method() calls")
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> Fixes: 5150ec3fe125 ("avia-hx711.yaml: transform DT binding to YAML")
+> Cc: Andreas Klinger <ak@it-klinger.de>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: linux-iio@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Jonathan,
+> 
+> I have some other fixes I'm sending to Linus and can take these 2 if 
+> that's easier.
+> 
+> Rob
 
-Applied.
+Thanks for dealing with these, I missed this thread entirely in my email
+whilst travelling / playing catch up.
+
+Jonathan
+> 
+>  Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
+> index 8a4100ceeaf2..d76ece97c76c 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
+> @@ -61,6 +61,6 @@ examples:
+>          compatible = "avia,hx711";
+>          sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
+>          dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
+> -        avdd-suppy = <&avdd>;
+> +        avdd-supply = <&avdd>;
+>          clock-frequency = <100000>;
+>      };
+
