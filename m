@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31337C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B32DC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 172D12084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2268B2084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:11:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729220AbfG0PLD (ORCPT
+        id S1729224AbfG0PLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 11:11:03 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42418 "EHLO huawei.com"
+        Sat, 27 Jul 2019 11:11:40 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2790 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729104AbfG0PKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 11:10:55 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EA5B79BD1557C1582B5B;
-        Sat, 27 Jul 2019 23:10:52 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
- 23:10:45 +0800
+        id S2387802AbfG0PKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 11:10:48 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A5D4DC60B1121CA152E4;
+        Sat, 27 Jul 2019 23:10:45 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
+ 23:10:38 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
         <tiwai@suse.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -52,9 +52,9 @@ CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-tegra@vger.kernel.org>, <linux-xtensa@linux-xtensa.org>,
         <gregkh@linuxfoundation.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 27/34] ASoC: meson: axg-pdm: use devm_platform_ioremap_resource() to simplify code
-Date:   Sat, 27 Jul 2019 23:07:31 +0800
-Message-ID: <20190727150738.54764-28-yuehaibing@huawei.com>
+Subject: [PATCH -next 25/34] ASoC: meson: g12a-tohdmitx: use devm_platform_ioremap_resource() to simplify code
+Date:   Sat, 27 Jul 2019 23:07:29 +0800
+Message-ID: <20190727150738.54764-26-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190727150738.54764-1-yuehaibing@huawei.com>
 References: <20190727150738.54764-1-yuehaibing@huawei.com>
@@ -73,24 +73,20 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- sound/soc/meson/axg-pdm.c | 4 +---
+ sound/soc/meson/g12a-tohdmitx.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/soc/meson/axg-pdm.c b/sound/soc/meson/axg-pdm.c
-index 9d56844..bfd37d4 100644
---- a/sound/soc/meson/axg-pdm.c
-+++ b/sound/soc/meson/axg-pdm.c
-@@ -585,7 +585,6 @@ static int axg_pdm_probe(struct platform_device *pdev)
+diff --git a/sound/soc/meson/g12a-tohdmitx.c b/sound/soc/meson/g12a-tohdmitx.c
+index 707ccb1..6ae0c4f 100644
+--- a/sound/soc/meson/g12a-tohdmitx.c
++++ b/sound/soc/meson/g12a-tohdmitx.c
+@@ -378,12 +378,10 @@ MODULE_DEVICE_TABLE(of, g12a_tohdmitx_of_match);
+ static int g12a_tohdmitx_probe(struct platform_device *pdev)
  {
  	struct device *dev = &pdev->dev;
- 	struct axg_pdm *priv;
 -	struct resource *res;
  	void __iomem *regs;
- 	int ret;
- 
-@@ -600,8 +599,7 @@ static int axg_pdm_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
+ 	struct regmap *map;
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 -	regs = devm_ioremap_resource(dev, res);
