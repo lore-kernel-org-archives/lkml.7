@@ -2,110 +2,96 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA3CC7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CA8C76190
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC40208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6408C2085A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:07:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XAneFrV8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlOOlPvl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387955AbfG0QAU (ORCPT
+        id S2387804AbfG0QHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 12:00:20 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36485 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387673AbfG0QAU (ORCPT
+        Sat, 27 Jul 2019 12:07:03 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42373 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387419AbfG0QHC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 12:00:20 -0400
-Received: by mail-pl1-f195.google.com with SMTP id k8so25879672plt.3
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 09:00:20 -0700 (PDT)
+        Sat, 27 Jul 2019 12:07:02 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t132so26157274pgb.9;
+        Sat, 27 Jul 2019 09:07:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=jdn1GTUAHwy8oZ2R+rRzEBL/BpQMokE5xKY5/H3jvbU=;
-        b=XAneFrV8UQujKwVGL+MLKyAMbE+ZZlhJpMWmxSRGOyaXo9A3uVibsoMV9m+AlghyA+
-         I44l0N+iZwJrhzSYi4dzdci+aimiFFXBMw7Ynx70wJCNqwq6CVCDpU5Auo6TahgOTM+e
-         KLMDEcJr8zNM7rkDXPECySLghCL0lbzEltFQ/cSzVKr+NaH+Oy44ab6B6IpI0gEZpCfJ
-         dRevQhS4cw1SvUzPq8iA4wLTWnGxtsrfAyhGdoRFoNK70gyMWB2YW/23XWG1BANHjHtW
-         Ymu56zZe+bzn/lcywE1fTxYvsg5zWRQBXsntavhZt+N5o+DSPu8ZyKFex3l70pf/oKGS
-         6+Fw==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LOnewBrzp5ahtUkNIX7+SrRMyqJOCHhoToqapU8rDFE=;
+        b=UlOOlPvlou6SqaLRBCGkzboT/WFCmi766ZFa9AAAEFduvHTUHeYi0+pEwoMDzDSbnb
+         N1+xGKFRLbEGOc9U/wiMzW8saqLWN0wJPApkJ+GpleTh8LyhPfO/rqeN01TuEsMnjake
+         H0vj+oxH94yvI1jTe9yQLKqaVhcErwtcp/WnWqnC9IzZQjrz7Xw3vJJ6MfOmxmPto2ml
+         dUwNczjiK5Y9hOcrU3Vx0GEubF5Bt9fwEove8XQYXc2jac7nltHa2vwIX078FaJngRnc
+         quE1/dbYKN5FZfXvuhRDrHIOoADqZ1yyfxv1To+yeFlOiQLjWrXjX6foqBmvLxHYTyJM
+         eTGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=jdn1GTUAHwy8oZ2R+rRzEBL/BpQMokE5xKY5/H3jvbU=;
-        b=MNDsfLa5k5y/keOjdtPqC0Y4TirKsVCmI4KAhoRTI7osPmJmHHCgpks6fn5cMCF+aY
-         o02mcAA7ByEVwEftef2SaOW50duAtiCEqBtkqvOw/4WLu/DDzEJbv0VABTyW6xzwH8i2
-         oz0SnNhNxaQmTKJHx6UKe7iRNWUi5CEsF8VusJJPVmW09xgrPOWzCxlezpMYMEBVqHlS
-         +bSuE1FTuB0XhvpInfgPyhRECx7UZKEXcASbdzakoHeODAzQknpYdUKGHqGEbs9u0uXM
-         4GlkyfwHGTeSjN8p4yDcklP1gbBvOi3nA//B0Ds1W2e9uyli+G/cqwxkYCnuga6YTOxU
-         2pTg==
-X-Gm-Message-State: APjAAAWBIo8HGUMHDM8snPI6aYwv2onJaNwWC5FwHBQueDxDzZpFNfdo
-        cxwM6OOYXCzTRZSVzbHlENo=
-X-Google-Smtp-Source: APXvYqzQoO8HnqlzS6r/5MbslhpK7CQ7r3K37MFdR1WeqlojeaHvOypY1nbj1SfyDSUILiI0vxxMuQ==
-X-Received: by 2002:a17:902:d81:: with SMTP id 1mr105945760plv.323.1564243219722;
-        Sat, 27 Jul 2019 09:00:19 -0700 (PDT)
-Received: from localhost.localdomain ([240f:34:212d:1:d1fb:8d6c:15fe:b4a])
-        by smtp.gmail.com with ESMTPSA id c98sm54964994pje.1.2019.07.27.09.00.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 27 Jul 2019 09:00:19 -0700 (PDT)
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Minwoo Im <minwoo.im.dev@gmail.com>,
-        Kenneth Heitke <kenneth.heitke@intel.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Subject: [PATCH 2/2] devcoredump: fix typo in comment
-Date:   Sun, 28 Jul 2019 00:59:06 +0900
-Message-Id: <1564243146-5681-3-git-send-email-akinobu.mita@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564243146-5681-1-git-send-email-akinobu.mita@gmail.com>
-References: <1564243146-5681-1-git-send-email-akinobu.mita@gmail.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LOnewBrzp5ahtUkNIX7+SrRMyqJOCHhoToqapU8rDFE=;
+        b=eJVj+uXnSdfU3cRYQWgQmotGr27kUlr+gotg1GFPZEQDjYXfcTSKB4uGv9/7/C72dQ
+         4oAmCy3VihbhMVkf/Qr99TrovCcqZs/ljtNVPevTR3FAdUCgupnaGY8LGHcgUfhtb0fA
+         opF+RueI8Q5ovA6q6vu05WuWitGNYCf56gxSDLML6FrmFPF029v6lnfZ0jaTxUPbpzlP
+         0O32Ji1jjxNjcrIVGJ+2w4mKMY3shsuBz5N3J+tR0asQtEwMhkI3aMJzA5ZMHakobGj2
+         Hq8QJ9ZDYS0CFDggomm5a8ToE9RxSFgg2vsGp8UTTiE3rV5eV8pfIpUaf7K4xWb8dh30
+         GNXQ==
+X-Gm-Message-State: APjAAAUkw7lF3+H7BeQ9aOddy7yFqGRIUftdOMBW56qopR4GAjGrm5wK
+        9NLPlivesSpQ/EQHkB80UQippBBi
+X-Google-Smtp-Source: APXvYqyc5pHvcIE6HIz7YXyHa4VdKLVhUs/QoV5ohQlRRGP9I+RUVyXNzI5wpdte6NGegWUQDqiQ2Q==
+X-Received: by 2002:aa7:8e18:: with SMTP id c24mr28175557pfr.24.1564243621837;
+        Sat, 27 Jul 2019 09:07:01 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v63sm58385430pfv.174.2019.07.27.09.07.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 27 Jul 2019 09:07:00 -0700 (PDT)
+Subject: Re: [PATCH 4.19 00/50] 4.19.62-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20190726152300.760439618@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <c2e14350-c5d5-b304-8652-7289b6c61714@roeck-us.net>
+Date:   Sat, 27 Jul 2019 09:06:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-s/dev_coredumpmsg/dev_coredumpsg/
+On 7/26/19 8:24 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.62 release.
+> There are 50 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun 28 Jul 2019 03:21:13 PM UTC.
+> Anything received after that time might be too late.
+> 
 
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Jens Axboe <axboe@fb.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: Minwoo Im <minwoo.im.dev@gmail.com>
-Cc: Kenneth Heitke <kenneth.heitke@intel.com>
-Cc: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
- drivers/base/devcoredump.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Build results:
+	total: 156 pass: 156 fail: 0
+Qemu test results:
+	total: 364 pass: 364 fail: 0
 
-diff --git a/drivers/base/devcoredump.c b/drivers/base/devcoredump.c
-index 3c960a6..e42d0b5 100644
---- a/drivers/base/devcoredump.c
-+++ b/drivers/base/devcoredump.c
-@@ -314,7 +314,7 @@ void dev_coredumpm(struct device *dev, struct module *owner,
- EXPORT_SYMBOL_GPL(dev_coredumpm);
- 
- /**
-- * dev_coredumpmsg - create device coredump that uses scatterlist as data
-+ * dev_coredumpsg - create device coredump that uses scatterlist as data
-  * parameter
-  * @dev: the struct device for the crashed device
-  * @table: the dump data
--- 
-2.7.4
-
+Guenter
