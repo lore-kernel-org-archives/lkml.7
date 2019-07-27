@@ -2,104 +2,103 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEB2C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 10:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F592C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 10:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0D492085A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 10:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D8412070D
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 10:32:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D08JMQPX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbfG0K3n (ORCPT
+        id S1727506AbfG0Kci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 06:29:43 -0400
-Received: from cmccmta1.chinamobile.com ([221.176.66.79]:2582 "EHLO
-        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbfG0K3m (ORCPT
+        Sat, 27 Jul 2019 06:32:38 -0400
+Received: from mail-wr1-f41.google.com ([209.85.221.41]:42034 "EHLO
+        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfG0Kch (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 06:29:42 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.7]) by rmmx-syy-dmz-app03-12003 (RichMail) with SMTP id 2ee35d3c255ec16-4f2f5; Sat, 27 Jul 2019 18:20:14 +0800 (CST)
-X-RM-TRANSID: 2ee35d3c255ec16-4f2f5
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.novalocal (unknown[112.25.65.41])
-        by rmsmtp-syy-appsvr04-12004 (RichMail) with SMTP id 2ee45d3c255db6c-ef1e5;
-        Sat, 27 Jul 2019 18:20:14 +0800 (CST)
-X-RM-TRANSID: 2ee45d3c255db6c-ef1e5
-From:   Yaowei Bai <baiyaowei@cmss.chinamobile.com>
-To:     colyli@suse.de, kent.overstreet@gmail.com
-Cc:     linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
-        baiyaowei@cmss.chinamobile.com
-Subject: [PATCH 1/3] bcache: drop obsolete comments
-Date:   Sat, 27 Jul 2019 18:19:57 +0800
-Message-Id: <1564222799-10603-1-git-send-email-baiyaowei@cmss.chinamobile.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sat, 27 Jul 2019 06:32:37 -0400
+Received: by mail-wr1-f41.google.com with SMTP id x1so6957299wrr.9;
+        Sat, 27 Jul 2019 03:32:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=I9urIWyfzBTbYOSOMidgQgAJ5dRa4kNEamHc41n0CB4=;
+        b=D08JMQPXt/3RUaObdc1X8+6L+8vSHaCR0ke9D5Igdcmo2wCHOuHCjKSABfQxGKCtPK
+         VyewGU96h6ATR5UuRnwvfs8CoohZp6jICPXFYJcZX4mamjDCEQ6ddXxRG2DxLXjr6sk5
+         LFhgiZ+QpqXPlHpoQZgzoNZzn3JMW3j5WHAsZtpxHxoJnAD+Urp/TdnsCFZEJ+Jw8yJ0
+         YJy0GF7gru7J6XYUF6GG0xZPG2QygHpD39iL1fro1xS0TYS7O3XmUCrvStdQR8PIbpV3
+         ccM8m/h9iMmFt/NdKkjaE9+EynxLTTl5bB3hHCR6qwbQKEDW6kpo3ZMUCRWGoWtdfEPh
+         Td8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=I9urIWyfzBTbYOSOMidgQgAJ5dRa4kNEamHc41n0CB4=;
+        b=mnTQmNTcnjb5dA1rAf+eQM89L26tEbfDigso9mQ1mrSgVUGHebl4HIsGk4K0JgxK2L
+         DHxTuqRi0OVzE1fS6qQccb/Rmifp0/GLyEvqLgWLo8r7hlZTYngLI2J617G5tk5yG7Ds
+         XpZlvTrVmkOFA91qVJp0v4M5fV/wcS6F2cFn6e9NDds9UWXlhc8WfKNRq2BZyBfOkqWD
+         fRkEQduUFHzYWaLhAt+kQQgct4sz1cAVBZT/3U/2PtSexBlpV7VYqQTLaes3hNMvks+l
+         np7TNYFd5iLKq5zhc83BN6g5Pb8vIupTXK243Jlr3RwGemnPiPI8I46uCUt93YKgNpA7
+         DPUg==
+X-Gm-Message-State: APjAAAXSeTLYTB20C21VcP43mnLgLySp8eUtaAt/dN6qTypIkwA9hARj
+        qR1tlfxJQHdp1RUx7+s7Kf+R2cTo
+X-Google-Smtp-Source: APXvYqxDNZmdyAMjswJgvBjZzalaaqC1Szyson1mZJ5ZiQmYZ7RuwdNLSUctMM+/yVdLnjQ2UXoR1w==
+X-Received: by 2002:adf:f6cb:: with SMTP id y11mr21486105wrp.245.1564223554872;
+        Sat, 27 Jul 2019 03:32:34 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f43:4200:c0a4:381:9a20:d2e8? (p200300EA8F434200C0A403819A20D2E8.dip0.t-ipconnect.de. [2003:ea:8f43:4200:c0a4:381:9a20:d2e8])
+        by smtp.googlemail.com with ESMTPSA id j33sm112993820wre.42.2019.07.27.03.32.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 27 Jul 2019 03:32:34 -0700 (PDT)
+Subject: Re: [REGRESSION] 5.3-rc1: r8169: remove 1000/Half from supported
+ modes
+To:     Bernhard Held <berny156@gmx.de>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>
+References: <a291af45-310c-8b60-ae7e-392e73e3bad1@gmx.de>
+ <0a48ecd7-7134-222d-833d-c1f65e055c02@gmail.com>
+ <9af99856-2e5d-0e3a-34d3-0582da869919@gmx.de>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <603ca390-eeb2-d50b-c2e6-9e22d92c535b@gmail.com>
+Date:   Sat, 27 Jul 2019 12:27:22 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <9af99856-2e5d-0e3a-34d3-0582da869919@gmx.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unused list was killed by commit 2531d9ee61fa ("bcache: Kill unused freelist")
-but left these comments, let's drop them.
+On 26.07.2019 22:45, Bernhard Held wrote:
+> On 26.07.19 at 22:24, Heiner Kallweit wrote:
+>> On 26.07.2019 22:16, Bernhard Held wrote:
+>>> Hi Heiner,
+>>>
+>>> with commit a6851c613fd7 "r8169: remove 1000/Half from supported modes" my RTL8111B GB-link stops working. It thinks that it established a link, however nothing is actually transmitted. Setting the mode with `mii-tool -F 100baseTx-HD` establishes a successful connection.
+>>>
+>> Can you provide standard ethtool output w/ and w/o this patch? Also a full dmesg output
+>> with the patch would be helpful.
+>> Is "100baseTx-HD" a typo and you mean GBit? And any special reason why you set half duplex?
+>>
+> 
+> The requested files are attached.
+> 
+Looks all normal. So it seems to be a HW issue with the integrated PHY (RTL8211B).
+This PHY version is used also e.g. in RTL8168d. So better revert the original change.
 
-This patch doesn't introduce functional change.
-
-Signed-off-by: Yaowei Bai <baiyaowei@cmss.chinamobile.com>
----
- drivers/md/bcache/alloc.c | 13 +++----------
- drivers/md/bcache/super.c |  3 ---
- 2 files changed, 3 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
-index 6f77682..c22c260 100644
---- a/drivers/md/bcache/alloc.c
-+++ b/drivers/md/bcache/alloc.c
-@@ -33,13 +33,6 @@
-  * If we've got discards enabled, that happens when a bucket moves from the
-  * free_inc list to the free list.
-  *
-- * There is another freelist, because sometimes we have buckets that we know
-- * have nothing pointing into them - these we can reuse without waiting for
-- * priorities to be rewritten. These come from freed btree nodes and buckets
-- * that garbage collection discovered no longer had valid keys pointing into
-- * them (because they were overwritten). That's the unused list - buckets on the
-- * unused list move to the free list, optionally being discarded in the process.
-- *
-  * It's also important to ensure that gens don't wrap around - with respect to
-  * either the oldest gen in the btree or the gen on disk. This is quite
-  * difficult to do in practice, but we explicitly guard against it anyways - if
-@@ -323,9 +316,9 @@ static int bch_allocator_thread(void *arg)
- 
- 	while (1) {
- 		/*
--		 * First, we pull buckets off of the unused and free_inc lists,
--		 * possibly issue discards to them, then we add the bucket to
--		 * the free list:
-+		 * First, we pull buckets off of the free_inc list, possibly
-+		 * issue discards to them, then we add the bucket to the free
-+		 * list:
- 		 */
- 		while (1) {
- 			long bucket;
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 26e374f..eba38aa 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -544,9 +544,6 @@ void bch_prio_write(struct cache *ca)
- 	atomic_long_add(ca->sb.bucket_size * prio_buckets(ca),
- 			&ca->meta_sectors_written);
- 
--	//pr_debug("free %zu, free_inc %zu, unused %zu", fifo_used(&ca->free),
--	//	 fifo_used(&ca->free_inc), fifo_used(&ca->unused));
--
- 	for (i = prio_buckets(ca) - 1; i >= 0; --i) {
- 		long bucket;
- 		struct prio_set *p = ca->disk_buckets;
--- 
-1.8.3.1
-
-
-
+> mii-tool doesn't offer GBit settings. I used HD only while playing around, both FD and HD are working.
+> 
+> Hope it helps!
+> Bernhard
+Heiner
