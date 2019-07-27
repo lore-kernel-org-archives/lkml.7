@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD29AC7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CEBC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7AF5214AE
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF292084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:09:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbfG0PJf (ORCPT
+        id S1729005AbfG0PJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 11:09:35 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40170 "EHLO huawei.com"
+        Sat, 27 Jul 2019 11:09:40 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41778 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728960AbfG0PJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 11:09:35 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 572EAD5BC1E1BDC04C91;
-        Sat, 27 Jul 2019 23:09:31 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
- 23:09:24 +0800
+        id S1728989AbfG0PJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 11:09:39 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E7C9A8FF1557039E441C;
+        Sat, 27 Jul 2019 23:09:36 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
+ 23:09:30 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
         <tiwai@suse.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -52,9 +52,9 @@ CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-tegra@vger.kernel.org>, <linux-xtensa@linux-xtensa.org>,
         <gregkh@linuxfoundation.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 01/34] ASoC: tegra20_das: use devm_platform_ioremap_resource() to simplify code
-Date:   Sat, 27 Jul 2019 23:07:05 +0800
-Message-ID: <20190727150738.54764-2-yuehaibing@huawei.com>
+Subject: [PATCH -next 03/34] ASoC: rockchip: use devm_platform_ioremap_resource() to simplify code
+Date:   Sat, 27 Jul 2019 23:07:07 +0800
+Message-ID: <20190727150738.54764-4-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190727150738.54764-1-yuehaibing@huawei.com>
 References: <20190727150738.54764-1-yuehaibing@huawei.com>
@@ -73,31 +73,31 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- sound/soc/tegra/tegra20_das.c | 4 +---
+ sound/soc/codecs/rk3328_codec.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/soc/tegra/tegra20_das.c b/sound/soc/tegra/tegra20_das.c
-index 10f9c3b..1070b27 100644
---- a/sound/soc/tegra/tegra20_das.c
-+++ b/sound/soc/tegra/tegra20_das.c
-@@ -120,7 +120,6 @@ static const struct regmap_config tegra20_das_regmap_config = {
- 
- static int tegra20_das_probe(struct platform_device *pdev)
+diff --git a/sound/soc/codecs/rk3328_codec.c b/sound/soc/codecs/rk3328_codec.c
+index 24f8f86..287c962 100644
+--- a/sound/soc/codecs/rk3328_codec.c
++++ b/sound/soc/codecs/rk3328_codec.c
+@@ -432,7 +432,6 @@ static int rk3328_platform_probe(struct platform_device *pdev)
  {
+ 	struct device_node *rk3328_np = pdev->dev.of_node;
+ 	struct rk3328_codec_priv *rk3328;
 -	struct resource *res;
- 	void __iomem *regs;
+ 	struct regmap *grf;
+ 	void __iomem *base;
  	int ret = 0;
- 
-@@ -134,8 +133,7 @@ static int tegra20_das_probe(struct platform_device *pdev)
+@@ -482,8 +481,7 @@ static int rk3328_platform_probe(struct platform_device *pdev)
+ 		return ret;
  	}
- 	das->dev = &pdev->dev;
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	regs = devm_ioremap_resource(&pdev->dev, res);
-+	regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(regs)) {
- 		ret = PTR_ERR(regs);
- 		goto err;
+-	base = devm_ioremap_resource(&pdev->dev, res);
++	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
 -- 
 2.7.4
 
