@@ -2,244 +2,170 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E44EAC7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E3CC76194
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C10A720840
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0979A20840
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbfG0FyF (ORCPT
+        id S1728516AbfG0FzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 01:54:05 -0400
-Received: from mga02.intel.com ([134.134.136.20]:40956 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfG0FwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 01:52:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 22:52:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,313,1559545200"; 
-   d="scan'208";a="254568584"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga001.jf.intel.com with ESMTP; 26 Jul 2019 22:52:15 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: [RFC PATCH 02/21] x86/sgx: Move bus registration and device init to common code
-Date:   Fri, 26 Jul 2019 22:51:55 -0700
-Message-Id: <20190727055214.9282-3-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190727055214.9282-1-sean.j.christopherson@intel.com>
-References: <20190727055214.9282-1-sean.j.christopherson@intel.com>
+        Sat, 27 Jul 2019 01:55:12 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3181 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726197AbfG0FzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 01:55:11 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 90ECAACDCD1F5D8835B8;
+        Sat, 27 Jul 2019 13:55:09 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.14) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
+ 13:55:06 +0800
+Subject: Re: [RFC PATCH 0/3] md: export internal stats through debugfs
+To:     Bob Liu <bob.liu@oracle.com>, <linux-raid@vger.kernel.org>,
+        <songliubraving@fb.com>
+CC:     <neilb@suse.com>, <linux-block@vger.kernel.org>,
+        <snitzer@redhat.com>, <agk@redhat.com>, <dm-devel@redhat.com>,
+        <linux-kernel@vger.kernel.org>
+References: <20190702132918.114818-1-houtao1@huawei.com>
+ <1ebcf2e8-f3ce-7417-4060-b9264a5a4e51@oracle.com>
+From:   Hou Tao <houtao1@huawei.com>
+Message-ID: <9e74accf-14c6-91f7-55ca-6bdabe0fb878@huawei.com>
+Date:   Sat, 27 Jul 2019 13:55:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.8.0
 MIME-Version: 1.0
+In-Reply-To: <1ebcf2e8-f3ce-7417-4060-b9264a5a4e51@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.31.14]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the SGX bus registration and initialization into common code in
-preparation for adding a virtual EPC device, which will reside outside
-of the native SGX userspace driver.
+Hi,
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kernel/cpu/sgx/driver/main.c | 48 +------------------------
- arch/x86/kernel/cpu/sgx/main.c        | 50 ++++++++++++++++++++++++++-
- arch/x86/kernel/cpu/sgx/sgx.h         |  4 +++
- 3 files changed, 54 insertions(+), 48 deletions(-)
+On 2019/7/23 7:30, Bob Liu wrote:
+> On 7/2/19 9:29 PM, Hou Tao wrote:
+>> Hi,
+>>
+>> There are so many io counters, stats and flags in md, so I think
+>> export these info to userspace will be helpful for online-debugging,
+> 
+> For online-debugging, I'd suggest you have a try eBPF which can be very helpful.
+> 
 
-diff --git a/arch/x86/kernel/cpu/sgx/driver/main.c b/arch/x86/kernel/cpu/sgx/driver/main.c
-index a2506a49c95a..d62bdc7ed4d9 100644
---- a/arch/x86/kernel/cpu/sgx/driver/main.c
-+++ b/arch/x86/kernel/cpu/sgx/driver/main.c
-@@ -158,42 +158,10 @@ const struct file_operations sgx_provision_fops = {
- 	.owner			= THIS_MODULE,
- };
- 
--static struct bus_type sgx_bus_type = {
--	.name	= "sgx",
--};
--
- static struct device sgx_encl_dev;
- static struct cdev sgx_encl_cdev;
- static struct device sgx_provision_dev;
- static struct cdev sgx_provision_cdev;
--static dev_t sgx_devt;
--
--static void sgx_dev_release(struct device *dev)
--{
--}
--
--static __init int sgx_dev_init(const char *name, struct device *dev,
--			       struct cdev *cdev,
--			       const struct file_operations *fops, int minor)
--{
--	int ret;
--
--	device_initialize(dev);
--
--	dev->bus = &sgx_bus_type;
--	dev->devt = MKDEV(MAJOR(sgx_devt), minor);
--	dev->release = sgx_dev_release;
--
--	ret = dev_set_name(dev, name);
--	if (ret) {
--		put_device(dev);
--		return ret;
--	}
--
--	cdev_init(cdev, fops);
--	cdev->owner = THIS_MODULE;
--	return 0;
--}
- 
- int __init sgx_drv_init(void)
- {
-@@ -207,14 +175,6 @@ int __init sgx_drv_init(void)
- 		return -ENODEV;
- 	}
- 
--	ret = bus_register(&sgx_bus_type);
--	if (ret)
--		return ret;
--
--	ret = alloc_chrdev_region(&sgx_devt, 0, SGX_MAX_NR_DEVICES, "sgx");
--	if (ret < 0)
--		goto err_bus;
--
- 	cpuid_count(SGX_CPUID, 0, &eax, &ebx, &ecx, &edx);
- 	sgx_misc_reserved_mask = ~ebx | SGX_MISC_RESERVED_MASK;
- 	sgx_encl_size_max_64 = 1ULL << ((edx >> 8) & 0xFF);
-@@ -240,7 +200,7 @@ int __init sgx_drv_init(void)
- 	ret = sgx_dev_init("sgx/enclave", &sgx_encl_dev, &sgx_encl_cdev,
- 			   &sgx_encl_fops, SGX_ENCL_DEV_MINOR);
- 	if (ret)
--		goto err_chrdev_region;
-+		return ret;
- 
- 	ret = sgx_dev_init("sgx/provision", &sgx_provision_dev,
- 			   &sgx_provision_cdev, &sgx_provision_fops,
-@@ -277,11 +237,5 @@ int __init sgx_drv_init(void)
- err_encl_dev:
- 	put_device(&sgx_encl_dev);
- 
--err_chrdev_region:
--	unregister_chrdev_region(sgx_devt, SGX_MAX_NR_DEVICES);
--
--err_bus:
--	bus_unregister(&sgx_bus_type);
--
- 	return ret;
- }
-diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
-index f790a03571c5..edbd465083c7 100644
---- a/arch/x86/kernel/cpu/sgx/main.c
-+++ b/arch/x86/kernel/cpu/sgx/main.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
- // Copyright(c) 2016-17 Intel Corporation.
- 
-+#include <linux/cdev.h>
- #include <linux/freezer.h>
- #include <linux/highmem.h>
- #include <linux/kthread.h>
-@@ -329,6 +330,39 @@ static __init int sgx_page_cache_init(void)
- 	return 0;
- }
- 
-+static struct bus_type sgx_bus_type = {
-+	.name	= "sgx",
-+};
-+static dev_t sgx_devt;
-+
-+static void sgx_dev_release(struct device *dev)
-+{
-+
-+}
-+
-+__init int sgx_dev_init(const char *name, struct device *dev,
-+			struct cdev *cdev, const struct file_operations *fops,
-+			int minor)
-+{
-+	int ret;
-+
-+	device_initialize(dev);
-+
-+	dev->bus = &sgx_bus_type;
-+	dev->devt = MKDEV(MAJOR(sgx_devt), minor);
-+	dev->release = sgx_dev_release;
-+
-+	ret = dev_set_name(dev, name);
-+	if (ret) {
-+		put_device(dev);
-+		return ret;
-+	}
-+
-+	cdev_init(cdev, fops);
-+	cdev->owner = THIS_MODULE;
-+	return 0;
-+}
-+
- static __init int sgx_init(void)
- {
- 	int ret;
-@@ -344,12 +378,26 @@ static __init int sgx_init(void)
- 	if (ret)
- 		goto err_page_cache;
- 
--	ret = sgx_drv_init();
-+	ret = bus_register(&sgx_bus_type);
- 	if (ret)
- 		goto err_kthread;
- 
-+	ret = alloc_chrdev_region(&sgx_devt, 0, SGX_MAX_NR_DEVICES, "sgx");
-+	if (ret < 0)
-+		goto err_bus;
-+
-+	ret = sgx_drv_init();
-+	if (ret)
-+		goto err_chrdev_region;
-+
- 	return 0;
- 
-+err_chrdev_region:
-+	unregister_chrdev_region(sgx_devt, SGX_MAX_NR_DEVICES);
-+
-+err_bus:
-+	bus_unregister(&sgx_bus_type);
-+
- err_kthread:
- 	kthread_stop(ksgxswapd_tsk);
- 
-diff --git a/arch/x86/kernel/cpu/sgx/sgx.h b/arch/x86/kernel/cpu/sgx/sgx.h
-index 4e2c3ce94f63..85b3674e1d43 100644
---- a/arch/x86/kernel/cpu/sgx/sgx.h
-+++ b/arch/x86/kernel/cpu/sgx/sgx.h
-@@ -93,4 +93,8 @@ int sgx_einit(struct sgx_sigstruct *sigstruct, struct sgx_einittoken *token,
- #define SGX_PROV_DEV_MINOR	1
- #define SGX_MAX_NR_DEVICES	2
- 
-+__init int sgx_dev_init(const char *name, struct device *dev,
-+			struct cdev *cdev, const struct file_operations *fops,
-+			int minor);
-+
- #endif /* _X86_SGX_H */
--- 
-2.22.0
+Thanks for your suggestion. Using an eBPF program to read these internal status
+from a host which is fully under your control is a good choice, but when
+the dependencies of an eBPF program (e.g., the minor version of the kernel
+and the kernel configuration which will influence the struct layout) is
+out-of-your-control, it's not a good choice.
+
+Thanks,
+Tao
+
+> -Bob
+> 
+>> especially when the vmlinux file and the crash utility are not
+>> available. And these info can also be utilized during code
+>> understanding.
+>>
+>> MD has already exported some stats through sysfs files under
+>> /sys/block/mdX/md, but using sysfs file to export more internal
+>> stats are not a good choice, because we need to create a single
+>> sysfs file for each internal stat according to the use convention
+>> of sysfs and there are too many internal stats. Further, the
+>> newly-created sysfs files would become APIs for userspace tools,
+>> but that is not we wanted, because these files are related with
+>> internal stats and internal stats may change from time to time.
+>>
+>> And I think debugfs is a better choice. Because we can show multiple
+>> related stats in a debugfs file, and the debugfs file will never be
+>> used as an userspace API.
+>>
+>> Two debugfs files are created to expose these internal stats:
+>> * iostat: io counters and io related stats (e.g., mddev->active_io,
+>> 	r1conf->nr_pending, or r1confi->retry_list)
+>> * stat: normal stats/flags (e.g., mddev->recovery, conf->array_frozen)
+>>
+>> Because internal stats are spreaded all over md-core and md-personality,
+>> so both md-core and md-personality will create these two debugfs files
+>> under different debugfs directory.
+>>
+>> Patch 1 factors out the debugfs files creation routine for md-core and
+>> md-personality, patch 2 creates two debugfs files: iostat & stat under
+>> /sys/kernel/debug/block/mdX for md-core, and patch 3 creates two debugfs
+>> files: iostat & stat under /sys/kernel/debug/block/mdX/raid1 for md-raid1.
+>>
+>> The following lines show the hierarchy and the content of these debugfs
+>> files for a RAID1 device:
+>>
+>> $ pwd
+>> /sys/kernel/debug/block/md0
+>> $ tree
+>> .
+>> ├── iostat
+>> ├── raid1
+>> │   ├── iostat
+>> │   └── stat
+>> └── stat
+>>
+>> $ cat iostat
+>> active_io 0
+>> sb_wait 0 pending_writes 0
+>> recovery_active 0
+>> bitmap pending_writes 0
+>>
+>> $ cat stat
+>> flags 0x20
+>> sb_flags 0x0
+>> recovery 0x0
+>>
+>> $ cat raid1/iostat
+>> retry_list active 0
+>> bio_end_io_list active 0
+>> pending_bio_list active 0 cnt 0
+>> sync_pending 0
+>> nr_pending 0
+>> nr_waiting 0
+>> nr_queued 0
+>> barrier 0
+>>
+>> $ cat raid1/stat
+>> array_frozen 0
+>>
+>> I'm not sure whether the division of internal stats is appropriate and
+>> whether the internal stats in debugfs files are sufficient, so questions
+>> and comments are weclome.
+>>
+>> Regards,
+>> Tao
+>>
+>> Hou Tao (3):
+>>   md-debugfs: add md_debugfs_create_files()
+>>   md: export inflight io counters and internal stats in debugfs
+>>   raid1: export inflight io counters and internal stats in debugfs
+>>
+>>  drivers/md/Makefile     |  2 +-
+>>  drivers/md/md-debugfs.c | 35 ++++++++++++++++++
+>>  drivers/md/md-debugfs.h | 16 +++++++++
+>>  drivers/md/md.c         | 65 ++++++++++++++++++++++++++++++++++
+>>  drivers/md/md.h         |  1 +
+>>  drivers/md/raid1.c      | 78 +++++++++++++++++++++++++++++++++++++++++
+>>  drivers/md/raid1.h      |  1 +
+>>  7 files changed, 197 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/md/md-debugfs.c
+>>  create mode 100644 drivers/md/md-debugfs.h
+>>
+> 
+> 
+> .
+> 
 
