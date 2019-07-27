@@ -2,117 +2,89 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5CDC7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95913C7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD5A720840
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659E12147A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbfG0F5K (ORCPT
+        id S1728940AbfG0F5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 01:57:10 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48676 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728536AbfG0F5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 01:57:09 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D2016E93E39642FB5EE3;
-        Sat, 27 Jul 2019 13:57:06 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
- 13:57:04 +0800
-From:   Hou Tao <houtao1@huawei.com>
-To:     <songliubraving@fb.com>, <linux-raid@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH] raid1: factor out a common routine to handle the completion of sync write
-Date:   Sat, 27 Jul 2019 14:02:58 +0800
-Message-ID: <20190727060258.63036-1-houtao1@huawei.com>
-X-Mailer: git-send-email 2.22.0
+        Sat, 27 Jul 2019 01:57:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43910 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728305AbfG0F4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 01:56:48 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AA1DD883D7;
+        Sat, 27 Jul 2019 05:56:48 +0000 (UTC)
+Received: from t460p.redhat.com (ovpn-116-73.phx2.redhat.com [10.3.116.73])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B76FF19C71;
+        Sat, 27 Jul 2019 05:56:47 +0000 (UTC)
+From:   Scott Wood <swood@redhat.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Scott Wood <swood@redhat.com>
+Subject: [PATCH RT 4/8] sched: migrate disable: Protect cpus_ptr with lock
+Date:   Sat, 27 Jul 2019 00:56:34 -0500
+Message-Id: <20190727055638.20443-5-swood@redhat.com>
+In-Reply-To: <20190727055638.20443-1-swood@redhat.com>
+References: <20190727055638.20443-1-swood@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Sat, 27 Jul 2019 05:56:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's just code clean-up.
+Various places assume that cpus_ptr is protected by rq/pi locks,
+so don't change it before grabbing those locks.
 
-Signed-off-by: Hou Tao <houtao1@huawei.com>
+Signed-off-by: Scott Wood <swood@redhat.com>
 ---
- drivers/md/raid1.c | 39 ++++++++++++++++++---------------------
- 1 file changed, 18 insertions(+), 21 deletions(-)
+ kernel/sched/core.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 1755d2233e4d..d73ed94764c1 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1904,6 +1904,22 @@ static void abort_sync_write(struct mddev *mddev, struct r1bio *r1_bio)
- 	} while (sectors_to_go > 0);
- }
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 99a3cfccf4d3..38a9a9df5638 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7283,9 +7283,8 @@ void dump_cpu_task(int cpu)
+ 	struct rq *rq;
+ 	struct rq_flags rf;
  
-+static void put_sync_write_buf(struct r1bio *r1_bio, int uptodate)
-+{
-+	if (atomic_dec_and_test(&r1_bio->remaining)) {
-+		struct mddev *mddev = r1_bio->mddev;
-+		int s = r1_bio->sectors;
-+
-+		if (test_bit(R1BIO_MadeGood, &r1_bio->state) ||
-+		    test_bit(R1BIO_WriteError, &r1_bio->state))
-+			reschedule_retry(r1_bio);
-+		else {
-+			put_buf(r1_bio);
-+			md_done_sync(mddev, s, uptodate);
-+		}
-+	}
-+}
-+
- static void end_sync_write(struct bio *bio)
- {
- 	int uptodate = !bio->bi_status;
-@@ -1930,16 +1946,7 @@ static void end_sync_write(struct bio *bio)
- 		)
- 		set_bit(R1BIO_MadeGood, &r1_bio->state);
+-	p->cpus_ptr = cpumask_of(smp_processor_id());
+-
+ 	rq = task_rq_lock(p, &rf);
++	p->cpus_ptr = cpumask_of(smp_processor_id());
+ 	update_nr_migratory(p, -1);
+ 	p->nr_cpus_allowed = 1;
+ 	task_rq_unlock(rq, p, &rf);
+@@ -7297,9 +7296,8 @@ void dump_cpu_task(int cpu)
+ 	struct rq *rq;
+ 	struct rq_flags rf;
  
--	if (atomic_dec_and_test(&r1_bio->remaining)) {
--		int s = r1_bio->sectors;
--		if (test_bit(R1BIO_MadeGood, &r1_bio->state) ||
--		    test_bit(R1BIO_WriteError, &r1_bio->state))
--			reschedule_retry(r1_bio);
--		else {
--			put_buf(r1_bio);
--			md_done_sync(mddev, s, uptodate);
--		}
--	}
-+	put_sync_write_buf(r1_bio, uptodate);
- }
- 
- static int r1_sync_page_io(struct md_rdev *rdev, sector_t sector,
-@@ -2222,17 +2229,7 @@ static void sync_request_write(struct mddev *mddev, struct r1bio *r1_bio)
- 		generic_make_request(wbio);
- 	}
- 
--	if (atomic_dec_and_test(&r1_bio->remaining)) {
--		/* if we're here, all write(s) have completed, so clean up */
--		int s = r1_bio->sectors;
--		if (test_bit(R1BIO_MadeGood, &r1_bio->state) ||
--		    test_bit(R1BIO_WriteError, &r1_bio->state))
--			reschedule_retry(r1_bio);
--		else {
--			put_buf(r1_bio);
--			md_done_sync(mddev, s, 1);
--		}
--	}
-+	put_sync_write_buf(r1_bio, 1);
- }
- 
- /*
+-	p->cpus_ptr = &p->cpus_mask;
+-
+ 	rq = task_rq_lock(p, &rf);
++	p->cpus_ptr = &p->cpus_mask;
+ 	p->nr_cpus_allowed = cpumask_weight(&p->cpus_mask);
+ 	update_nr_migratory(p, 1);
+ 	task_rq_unlock(rq, p, &rf);
 -- 
-2.22.0
+1.8.3.1
 
