@@ -2,180 +2,300 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 672ADC76190
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD81C76194
 	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 235402080C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 920DB2080C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:23:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BjdgUQoX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f1g6vtX5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbfG0JHs (ORCPT
+        id S1728682AbfG0JOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 05:07:48 -0400
-Received: from mout.gmx.net ([212.227.17.21]:44459 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727885AbfG0JHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 05:07:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1564218459;
-        bh=o7ISfIU1cXUGnsk4tV15nK08a1/U8Pj6Gl0RvOlMkEY=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=BjdgUQoXYnPfj1nW8YRc4vFb/WbImTjorao+/gbJd404hnVBOybPr2FipdpOdNOq3
-         pL8gP+yXG74DoP9GQhuuyMjKDByfeUIMSTEVTe5vbIXJg4e5lft7PQaPQX6AASVL8J
-         orEE26bGJrH8znkjuBwnpChS6Z+c2qOrc85tx8m0=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [0.0.0.0] ([54.250.245.166]) by mail.gmx.com (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MirjY-1iL7BH0H5Q-00erur; Sat, 27
- Jul 2019 11:07:39 +0200
-Subject: Re: [PATCH] fs: btrfs: Add an assertion to warn incorrct case in
- insert_inline_extent()
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>, clm@fb.com,
-        josef@toxicpanda.com, dsterba@suse.cz
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190727085113.11530-1-baijiaju1990@gmail.com>
-From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
- mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAVQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWCnQUJCWYC
- bgAKCRDCPZHzoSX+qAR8B/94VAsSNygx1C6dhb1u1Wp1Jr/lfO7QIOK/nf1PF0VpYjTQ2au8
- ihf/RApTna31sVjBx3jzlmpy+lDoPdXwbI3Czx1PwDbdhAAjdRbvBmwM6cUWyqD+zjVm4RTG
- rFTPi3E7828YJ71Vpda2qghOYdnC45xCcjmHh8FwReLzsV2A6FtXsvd87bq6Iw2axOHVUax2
- FGSbardMsHrya1dC2jF2R6n0uxaIc1bWGweYsq0LXvLcvjWH+zDgzYCUB0cfb+6Ib/ipSCYp
- 3i8BevMsTs62MOBmKz7til6Zdz0kkqDdSNOq8LgWGLOwUTqBh71+lqN2XBpTDu1eLZaNbxSI
- ilaVuQENBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAGJATwEGAEIACYWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWBrwIbDAUJA8JnAAAK
- CRDCPZHzoSX+qA3xB/4zS8zYh3Cbm3FllKz7+RKBw/ETBibFSKedQkbJzRlZhBc+XRwF61mi
- f0SXSdqKMbM1a98fEg8H5kV6GTo62BzvynVrf/FyT+zWbIVEuuZttMk2gWLIvbmWNyrQnzPl
- mnjK4AEvZGIt1pk+3+N/CMEfAZH5Aqnp0PaoytRZ/1vtMXNgMxlfNnb96giC3KMR6U0E+siA
- 4V7biIoyNoaN33t8m5FwEwd2FQDG9dAXWhG13zcm9gnk63BN3wyCQR+X5+jsfBaS4dvNzvQv
- h8Uq/YGjCoV1ofKYh3WKMY8avjq25nlrhzD/Nto9jHp8niwr21K//pXVA81R2qaXqGbql+zo
-Message-ID: <de8c1056-8b6b-42e2-561a-954f77b7ef6b@gmx.com>
-Date:   Sat, 27 Jul 2019 17:07:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 27 Jul 2019 05:14:51 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42729 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727885AbfG0JOv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 05:14:51 -0400
+Received: by mail-lj1-f195.google.com with SMTP id t28so53750765lje.9;
+        Sat, 27 Jul 2019 02:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YsdxTGInOL88hVI7lggfmpXZ5E2H33ZS5QyrN6XyTxk=;
+        b=f1g6vtX5G3tPbjjgqck1uzakKXM0DYCkYNhCe7TCO9gtRurDO0TPyDCXhta4cN9cMW
+         SQoXi8/yWXTJxWZwQJoVPB4+1CUas/gbidkVGB1FZefmA8ohK4PSKMm1djL5fKO+stBm
+         0ZMFVwf6VKgWkZ7HET4wb4SMMKkoWjauI+hDuhSLL4V3aD7LE4ifWNCRPLfVzvebIAeU
+         LrgqHyiQ6lX+6sMOwbR/MmK0Z4z8+gFHGsKyRtnI5MeMix5kZqU3dqj9QT277hP6Jnvv
+         5YdiEBIUXhf9eyYYnSjWVizp/LLPhxH+Ykr5VFAsKW3oi5UjxJXqkE+63W8jLTiVlhLe
+         QXMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YsdxTGInOL88hVI7lggfmpXZ5E2H33ZS5QyrN6XyTxk=;
+        b=iZ/Y80bnw0xzu7tf6HRF3Pzg31OHojn+a9FuVqllcrer13h5PYdWZIMJe5SkBHMBDH
+         MSWrkyRZS19ZOwhRpXL/1bABWBR7BgUmRQkBxohCwdCzttJLzj6aQNYAVqIEoifg/0w5
+         oi1WznMtfY56z5YhTtzdCxQDCn+cJds3VZHNqq/y+a/qnrAy0kGL7xF17aNdSqmCWyB2
+         1JDV6eMbFdz/0au9/DJyGoMKKpowD6gpCy3tiu+aAAlW8oshZLQxXUZLcSQntTYU9YaZ
+         wvJHmNEwVK9fXb2kWT9PWI/IMuMdB9xdCVq89YX0y7+ds2Kv/y2BntnQCh0GNebWL2u/
+         fLew==
+X-Gm-Message-State: APjAAAUymFLajbXIqc3c3428+VWWyf+x1amEz+UmCa/Z4CW43Ls8+rDp
+        Iy+IdgrJ8gV+hZKw1T5NBtw=
+X-Google-Smtp-Source: APXvYqyX7fv+q40GdTlbmv2YWa4mxZP02JXqJxVZR+n4Mq8nZZLsR7vRghN+jbGlolj+scOaLBbrNA==
+X-Received: by 2002:a2e:b4d4:: with SMTP id r20mr26951428ljm.5.1564218887211;
+        Sat, 27 Jul 2019 02:14:47 -0700 (PDT)
+Received: from localhost ([188.170.223.67])
+        by smtp.gmail.com with ESMTPSA id b9sm10830965ljj.92.2019.07.27.02.14.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 27 Jul 2019 02:14:45 -0700 (PDT)
+Date:   Sat, 27 Jul 2019 12:14:43 +0300
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH v3 2/2] Input: soc_button_array - Add support for newer
+ surface devices
+Message-ID: <20190727091443.GC795@penguin>
+References: <20190720150511.95076-1-luzmaximilian@gmail.com>
+ <20190720150511.95076-3-luzmaximilian@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190727085113.11530-1-baijiaju1990@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="ZM7glqX7MdarI7SC83bS7vrAtYhlcyAMi"
-X-Provags-ID: V03:K1:0dFkT4ixDfeAOX2DsXrwgZTqQWzOlMfna9agCdXWttpLgqwmco8
- eR3fW25esuzx23JJoCcQ+9C9ZsHxXRkfvGJT3f8jn4Q3BzvgBDu6bJ6L6703yqxEtXSUqGn
- eFCk91hZCjSGJRfFl53I4NJFGxYfbKVS8qt9akIoUxCQl65dJf2MphkWPVyYcZ00XsfaK4J
- C4VyeV9pPsxc5WuIfDqrQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:L3U+MkvE+W4=:EcTsapfPzFMKJac/GJr1+R
- gl0CwUKu3vIYYiQwuMyZWeAnI3CP1dKoRbRjlKewZj+Qfzz9H+9PdpCXo3bFrHGnCH6nqWvsn
- oC3FK3ooHWa0amiWEvy4GkNKFqGI1YpFAYobmwzT8kv7Q+D5wxgW+7Mw17DoStBC/9Q9SWhRv
- R9ccZnVdiBsgfpOE/gex8TZk78WQtSCP7bBRoXcA3HXUhvDJS7JBo9DQvhBrY6zfefciGQffn
- fyR0up0xjmgMHkGosgEmdCR0EoR4Mk4LeiGaB+7Aa7SYS2UEGgqwT3HZN/wbhmjwD3CEYygEW
- 7g5FIHcf8JCPbyYNEbZAUUid2PiApsc/CyfgBbNA0k2df7aRXj1CdFCDCwS3jfJkQpsOIp/HH
- BWNNnh0gPgtWWxcQ2MZAhhXRzLz8Dnvhx2Mx7IQITVto05+DTL21hXPTW+pgaMDSO+P/UgsBy
- xucfE1vr0Kof6U+y5zaLZgufsdsJD1kc1wcxcj8O/rOC1AlDTiQt4sVYqV8SD5hlqxzySSWkm
- vDDtiKmvi6TZhqm/nqim0moNWToafRlPvox/JP0wFDgx7FDva7LeX48MNXraXk2dKL0Bin9Z1
- 8P/ZpZMalOIFjtkLehsV+hNeknCcFwEOXXjvvvbPA1w0cjbwsIPjBsiUge6IfgZy9dyhMmRLt
- AMbm6GPWnu03mplPB6894RyFydwRqhUUSRjujpe9steNcj1NLaOYSSCXWq/UfySS9/jIBuYlk
- HSyFdPRfe2TZlwbXLdjpWqeaRFOS1dFL8QLlYYYC8RtAOC6gMAJ3JU5MWINVpKe/Wn5CqR3Ia
- HbQ9kT77zmOuLE7T5lkO1aPz1kRp629gaaap1sxApBwy8UThB1hLjDuPwoLgWUSCKyVg7yxxy
- X/DJlcTDNmf+CEA6giwOEnY2Egk4ivoER0HRsM0dtSk6eotEKBQsQoR+siYeRnd+65o9f2D/v
- +LgQSxOGUrbEyKO0H9nPj/VPOf/EpKvV8cquIthfr1krUhhgoJuxptLlDq8Cl0/cnRVCZoU0x
- F+ZjElzXmBrjW9Bfej/8qIbBAHzKiMd4arlo9XPp+7rV5N82i5YVYxv8g/1OAsEJZbCXcqW7J
- TsjTlVQ4buLaCs=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190720150511.95076-3-luzmaximilian@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---ZM7glqX7MdarI7SC83bS7vrAtYhlcyAMi
-Content-Type: multipart/mixed; boundary="De0IqULClqaQYiATmO7AVtITJlCdwA1lI";
- protected-headers="v1"
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
-To: Jia-Ju Bai <baijiaju1990@gmail.com>, clm@fb.com, josef@toxicpanda.com,
- dsterba@suse.cz
-Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <de8c1056-8b6b-42e2-561a-954f77b7ef6b@gmx.com>
-Subject: Re: [PATCH] fs: btrfs: Add an assertion to warn incorrct case in
- insert_inline_extent()
-References: <20190727085113.11530-1-baijiaju1990@gmail.com>
-In-Reply-To: <20190727085113.11530-1-baijiaju1990@gmail.com>
+Hi Maximilian,
 
---De0IqULClqaQYiATmO7AVtITJlCdwA1lI
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+On Sat, Jul 20, 2019 at 05:05:11PM +0200, Maximilian Luz wrote:
+> -
+> -	error = gpiod_count(dev, NULL);
+> -	if (error < 0) {
+> -		dev_dbg(dev, "no GPIO attached, ignoring...\n");
+> -		return -ENODEV;
 
+I do not think we need to move this into individual "check" functions.
+It is needed in all cases so we should keep it here.
 
+How about version below?
 
-On 2019/7/27 =E4=B8=8B=E5=8D=884:51, Jia-Ju Bai wrote:
-> In insert_inline_extent(), the case that compressed_size > 0=20
-> and compressed_pages =3D NULL cannot occur, otherwise a null-pointer
-> dereference may occur on line 215:
->      cpage =3D compressed_pages[i];
->=20
-> To warn this incorrect case, an assertion is added.
-> Thank Qu Wenruo and David Sterba for good advice.
->=20
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Input: soc_button_array - add support for newer surface devices
 
-Reviewed-by: Qu Wenruo <wqu@suse.com>
+From: Maximilian Luz <luzmaximilian@gmail.com>
 
-Thanks,
-Qu
+Power and volume button support for 5th and 6th generation Microsoft
+Surface devices via soc_button_array.
 
-> ---
->  fs/btrfs/inode.c | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-> index 1af069a9a0c7..21d6e2dcc25f 100644
-> --- a/fs/btrfs/inode.c
-> +++ b/fs/btrfs/inode.c
-> @@ -178,6 +178,9 @@ static int insert_inline_extent(struct btrfs_trans_=
-handle *trans,
->  	size_t cur_size =3D size;
->  	unsigned long offset;
-> =20
-> +	ASSERT((compressed_size > 0 && compressed_pages) ||
-> +			(compressed_size =3D=3D 0 && !compressed_pages))
-> +
->  	if (compressed_size && compressed_pages)
->  		cur_size =3D compressed_size;
-> =20
->=20
+Note that these devices use the same MSHW0040 device as on the Surface
+Pro 4, however the implementation is different (GPIOs vs. ACPI
+notifications). Thus some checking is required to ensure we only load
+this driver on the correct devices.
 
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/input/misc/Kconfig            |    6 +-
+ drivers/input/misc/soc_button_array.c |  105 +++++++++++++++++++++++++++++----
+ 2 files changed, 96 insertions(+), 15 deletions(-)
 
---De0IqULClqaQYiATmO7AVtITJlCdwA1lI--
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index d07c1eb15aa6..7d9ae394e597 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -813,10 +813,10 @@ config INPUT_IDEAPAD_SLIDEBAR
+ 
+ config INPUT_SOC_BUTTON_ARRAY
+ 	tristate "Windows-compatible SoC Button Array"
+-	depends on KEYBOARD_GPIO
++	depends on KEYBOARD_GPIO && ACPI
+ 	help
+-	  Say Y here if you have a SoC-based tablet that originally
+-	  runs Windows 8.
++	  Say Y here if you have a SoC-based tablet that originally runs
++	  Windows 8 or a Microsoft Surface Book 2, Pro 5, Laptop 1 or later.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called soc_button_array.
+diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
+index 5e59f8e57f8e..6f0133fe1546 100644
+--- a/drivers/input/misc/soc_button_array.c
++++ b/drivers/input/misc/soc_button_array.c
+@@ -25,6 +25,11 @@ struct soc_button_info {
+ 	bool wakeup;
+ };
+ 
++struct soc_device_data {
++	const struct soc_button_info *button_info;
++	int (*check)(struct device *dev);
++};
++
+ /*
+  * Some of the buttons like volume up/down are auto repeat, while others
+  * are not. To support both, we register two platform devices, and put
+@@ -87,8 +92,13 @@ soc_button_device_create(struct platform_device *pdev,
+ 			continue;
+ 
+ 		gpio = soc_button_lookup_gpio(&pdev->dev, info->acpi_index);
+-		if (!gpio_is_valid(gpio))
++		if (gpio < 0 && gpio != -ENOENT) {
++			error = gpio;
++			goto err_free_mem;
++		} else if (!gpio_is_valid(gpio)) {
++			/* Skip GPIO if not present */
+ 			continue;
++		}
+ 
+ 		gpio_keys[n_buttons].type = info->event_type;
+ 		gpio_keys[n_buttons].code = info->event_code;
+@@ -309,23 +319,26 @@ static int soc_button_remove(struct platform_device *pdev)
+ static int soc_button_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	const struct acpi_device_id *id;
+-	struct soc_button_info *button_info;
++	const struct soc_device_data *device_data;
++	const struct soc_button_info *button_info;
+ 	struct soc_button_data *priv;
+ 	struct platform_device *pd;
+ 	int i;
+ 	int error;
+ 
+-	id = acpi_match_device(dev->driver->acpi_match_table, dev);
+-	if (!id)
+-		return -ENODEV;
++	device_data = acpi_device_get_match_data(dev);
++	if (device_data && device_data->check) {
++		error = device_data->check(dev);
++		if (error)
++			return error;
++	}
+ 
+-	if (!id->driver_data) {
++	if (device_data && device_data->button_info) {
++		button_info = device_data->button_info;
++	} else {
+ 		button_info = soc_button_get_button_info(dev);
+ 		if (IS_ERR(button_info))
+ 			return PTR_ERR(button_info);
+-	} else {
+-		button_info = (struct soc_button_info *)id->driver_data;
+ 	}
+ 
+ 	error = gpiod_count(dev, NULL);
+@@ -357,7 +370,7 @@ static int soc_button_probe(struct platform_device *pdev)
+ 	if (!priv->children[0] && !priv->children[1])
+ 		return -ENODEV;
+ 
+-	if (!id->driver_data)
++	if (!device_data || !device_data->button_info)
+ 		devm_kfree(dev, button_info);
+ 
+ 	return 0;
+@@ -368,7 +381,7 @@ static int soc_button_probe(struct platform_device *pdev)
+  * is defined in section 2.8.7.2 of "Windows ACPI Design Guide for SoC
+  * Platforms"
+  */
+-static struct soc_button_info soc_button_PNP0C40[] = {
++static const struct soc_button_info soc_button_PNP0C40[] = {
+ 	{ "power", 0, EV_KEY, KEY_POWER, false, true },
+ 	{ "home", 1, EV_KEY, KEY_LEFTMETA, false, true },
+ 	{ "volume_up", 2, EV_KEY, KEY_VOLUMEUP, true, false },
+@@ -377,9 +390,77 @@ static struct soc_button_info soc_button_PNP0C40[] = {
+ 	{ }
+ };
+ 
++static const struct soc_device_data soc_device_PNP0C40 = {
++	.button_info = soc_button_PNP0C40,
++};
++
++/*
++ * Special device check for Surface Book 2 and Surface Pro (2017).
++ * Both, the Surface Pro 4 (surfacepro3_button.c) and the above mentioned
++ * devices use MSHW0040 for power and volume buttons, however the way they
++ * have to be addressed differs. Make sure that we only load this drivers
++ * for the correct devices by checking the OEM Platform Revision provided by
++ * the _DSM method.
++ */
++#define MSHW0040_DSM_REVISION		0x01
++#define MSHW0040_DSM_GET_OMPR		0x02	// get OEM Platform Revision
++static const guid_t MSHW0040_DSM_UUID =
++	GUID_INIT(0x6fd05c69, 0xcde3, 0x49f4, 0x95, 0xed, 0xab, 0x16, 0x65,
++		  0x49, 0x80, 0x35);
++
++static int soc_device_check_MSHW0040(struct device *dev)
++{
++	acpi_handle handle = ACPI_HANDLE(dev);
++	union acpi_object *result;
++	u64 oem_platform_rev = 0;	// valid revisions are nonzero
++
++	// get OEM platform revision
++	result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
++					 MSHW0040_DSM_REVISION,
++					 MSHW0040_DSM_GET_OMPR, NULL,
++					 ACPI_TYPE_INTEGER);
++
++	if (result) {
++		oem_platform_rev = result->integer.value;
++		ACPI_FREE(result);
++	}
++
++	/*
++	 * If the revision is zero here, the _DSM evaluation has failed. This
++	 * indicates that we have a Pro 4 or Book 1 and this driver should not
++	 * be used.
++	 */
++	if (oem_platform_rev == 0)
++		return -ENODEV;
++
++	dev_dbg(dev, "OEM Platform Revision %llu\n", oem_platform_rev);
++
++	return 0;
++}
++
++/*
++ * Button infos for Microsoft Surface Book 2 and Surface Pro (2017).
++ * Obtained from DSDT/testing.
++ */
++static const struct soc_button_info soc_button_MSHW0040[] = {
++	{ "power", 0, EV_KEY, KEY_POWER, false, true },
++	{ "volume_up", 2, EV_KEY, KEY_VOLUMEUP, true, false },
++	{ "volume_down", 4, EV_KEY, KEY_VOLUMEDOWN, true, false },
++	{ }
++};
++
++static const struct soc_device_data soc_device_MSHW0040 = {
++	.button_info = soc_button_MSHW0040,
++	.check = soc_device_check_MSHW0040,
++};
++
+ static const struct acpi_device_id soc_button_acpi_match[] = {
+-	{ "PNP0C40", (unsigned long)soc_button_PNP0C40 },
++	{ "PNP0C40", (unsigned long)&soc_device_PNP0C40 },
+ 	{ "ACPI0011", 0 },
++
++	/* Microsoft Surface Devices (5th and 6th generation) */
++	{ "MSHW0040", (unsigned long)&soc_device_MSHW0040 },
++
+ 	{ }
+ };
+ 
 
---ZM7glqX7MdarI7SC83bS7vrAtYhlcyAMi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEELd9y5aWlW6idqkLhwj2R86El/qgFAl08FFMACgkQwj2R86El
-/qhxOggAkE+CQ/VVAHAjNdvtaChxrAZs7xEx1CZKFW6XPociGQmS9bTOWudBsuF/
-2QZWQP60OyToln3J+X/UEYNoOdZLygAF7a51Oc+K2Kpw+qXTtt/Wde8Ji7otktPC
-l0GFi4yb5UJ9iOnLPDjUwk6xfKLKvKNXhXbjXdD05izh7VvKzNYXyjX3CC1TVe5W
-K4HFIr1sIMeG4ja9uiRoi6+Ovzj9zOEmFQ1z0maWdD8evdZybpsutOcHyBJJkKTA
-HuyCG96U2r5cp4euwqqMDQccGKDo+AX/2A3Q5tBZ7L140V4Yxnda2By+2ACCu55f
-fm8bBm5anFKYigLDKCv3D3fkwv0p0A==
-=D/27
------END PGP SIGNATURE-----
-
---ZM7glqX7MdarI7SC83bS7vrAtYhlcyAMi--
+-- 
+Dmitry
