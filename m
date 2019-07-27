@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D00C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1FDC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E492084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2565B208C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbfG0PKY (ORCPT
+        id S1729102AbfG0PK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 11:10:24 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3183 "EHLO huawei.com"
+        Sat, 27 Jul 2019 11:10:28 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41476 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729043AbfG0PKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 11:10:10 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 91B6CD5F3BF66402C1F9;
-        Sat, 27 Jul 2019 23:10:08 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
- 23:10:01 +0800
+        id S1729069AbfG0PKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 11:10:24 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A46AD9911FF182FFAE54;
+        Sat, 27 Jul 2019 23:10:19 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
+ 23:10:13 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
         <tiwai@suse.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -52,9 +52,9 @@ CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-tegra@vger.kernel.org>, <linux-xtensa@linux-xtensa.org>,
         <gregkh@linuxfoundation.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 13/34] ASoC: kirkwood-i2s: use devm_platform_ioremap_resource() to simplify code
-Date:   Sat, 27 Jul 2019 23:07:17 +0800
-Message-ID: <20190727150738.54764-14-yuehaibing@huawei.com>
+Subject: [PATCH -next 17/34] ASoC: codecs: jz4725b: use devm_platform_ioremap_resource() to simplify code
+Date:   Sat, 27 Jul 2019 23:07:21 +0800
+Message-ID: <20190727150738.54764-18-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190727150738.54764-1-yuehaibing@huawei.com>
 References: <20190727150738.54764-1-yuehaibing@huawei.com>
@@ -73,30 +73,29 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- sound/soc/kirkwood/kirkwood-i2s.c | 4 +---
+ sound/soc/codecs/jz4725b.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
-index 3446a113..5076ec4 100644
---- a/sound/soc/kirkwood/kirkwood-i2s.c
-+++ b/sound/soc/kirkwood/kirkwood-i2s.c
-@@ -523,7 +523,6 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
- 	struct kirkwood_asoc_platform_data *data = pdev->dev.platform_data;
- 	struct snd_soc_dai_driver *soc_dai = kirkwood_i2s_dai;
- 	struct kirkwood_dma_data *priv;
+diff --git a/sound/soc/codecs/jz4725b.c b/sound/soc/codecs/jz4725b.c
+index 766354c..2567a5d 100644
+--- a/sound/soc/codecs/jz4725b.c
++++ b/sound/soc/codecs/jz4725b.c
+@@ -545,15 +545,13 @@ static int jz4725b_codec_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct jz_icdc *icdc;
 -	struct resource *mem;
- 	struct device_node *np = pdev->dev.of_node;
- 	int err;
+ 	int ret;
  
-@@ -533,8 +532,7 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
- 
- 	dev_set_drvdata(&pdev->dev, priv);
+ 	icdc = devm_kzalloc(dev, sizeof(*icdc), GFP_KERNEL);
+ 	if (!icdc)
+ 		return -ENOMEM;
  
 -	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->io = devm_ioremap_resource(&pdev->dev, mem);
-+	priv->io = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->io))
- 		return PTR_ERR(priv->io);
+-	icdc->base = devm_ioremap_resource(dev, mem);
++	icdc->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(icdc->base))
+ 		return PTR_ERR(icdc->base);
  
 -- 
 2.7.4
