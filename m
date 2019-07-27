@@ -2,190 +2,132 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10255C76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 04:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26043C76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 04:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDDEA20679
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 04:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F057320828
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 04:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="MIwZu6Hk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rCdaI5ow"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbfG0Eeo (ORCPT
+        id S1727002AbfG0Egf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 00:34:44 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37334 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfG0Een (ORCPT
+        Sat, 27 Jul 2019 00:36:35 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39319 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfG0Egf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 00:34:43 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n9so31241313wrr.4
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 21:34:42 -0700 (PDT)
+        Sat, 27 Jul 2019 00:36:35 -0400
+Received: by mail-wr1-f67.google.com with SMTP id x4so3172522wrt.6;
+        Fri, 26 Jul 2019 21:36:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=/rCL5mzeUkeM+esQbDrZ/uK0LlKhDHPTally9O0PdPo=;
-        b=MIwZu6HkbKMoR0xKaJpX9YrkRinY+iC2t6YMFDgESrtDT5Dd08fuXZDkboEB+8RJ9p
-         U6+l9NIZPwyJClgafp5iLNBWMWAFbK3I0bpNYtyYMv/dywtCNcT3Dm1HLRi9v/a/nMx/
-         twt62JJV+eM8/qqbrAyx0mHhr+WC4JEGIaVMKq3vkeswdCVjIf2SwOYEihtKRe9MwpAy
-         j5YQhotLLI8T0Rz6b03boYJmy1khJvhM5ACx+Doa1MjrJ7F7Q8GiHxm0orUTEcMGnBoc
-         HeEGk8A7dn8Cxqisz8iSYmZiZYuzRo5pZMtX4iHFSKiuKBtM3cBvXNurmFXZuIb0DeEp
-         GXlg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fgu+GGVg1EZygpoH3s9DclHYrB/yjZrN74J1ygtmHDM=;
+        b=rCdaI5ow4Gypn3RIkjHZYS/h7C40k7HDxGmk4PNXBdQyErnWDTj5cewNyXnH9m9Ibc
+         KWgiqyGFfnJyAJxcfuXfIGHiSY4GAexpXh+1OhSaIo227T1Iu7jqhJRpueo4l3EfKiXX
+         SoDKLDixvK8YmE9NPbZiTmSWtQvBcuc5m5pxS6/JCxZo5dP8SHEbyHjxlsiHnAbbeSCq
+         DbjXiK7OAS2UkXQVMBvKp+5HZpL6ObcsyxE+0js4AzVPtRbP6meDeazRmXiuyRJEEIcB
+         5ZQMwgtb0aFPAWSTUxMcMXHOC8RuOYyRhkNoblpDTMiEEbg//yDXpffEZQkU/SJ0BgI0
+         lJeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=/rCL5mzeUkeM+esQbDrZ/uK0LlKhDHPTally9O0PdPo=;
-        b=F5yX3H8mKutYPBaKF1/q+WXLxHIU5sj8IR1Rz6yILCEcW2CY1TXLGfv2I/6ns4PUj2
-         wTgwUVKS9eSKWs9vMEq0fjfxdnGwG34F4f5oHkn+jQxPRQbFmdgeVcznbEaM82NGG3F4
-         7o6NvJZ59DQ6wJ3eyVdmKYMb/Kjyuxn2nzTalmjT9PCpETAqLbgmezzwTLikw+Nft9ZA
-         56Vs6VdLC19gF7umA+HEM9cU5TZtzlYWl/v3b/Am8NnY4oPE4UPrH8hkgzlPSXD6T726
-         dmIbFYB0qjbPFFKtq9lAmQG/PyRV+epBGult67WxHydcLotYWLs+pXpSVUqnMCL6CYSq
-         J4qw==
-X-Gm-Message-State: APjAAAVmxfxvNh23eXn5A1XbSxu6BsKWVibne4CdwAm9s9lYI/LtAOrP
-        PSqOnfHNeJZXXl1k+WTiz3M=
-X-Google-Smtp-Source: APXvYqwA6Vjq76w63dQRjztvowWX9+oOyFlXtqd2BisuVQlaTXBbQZrlRLKAniKesJdukpZIC80MUA==
-X-Received: by 2002:a5d:470e:: with SMTP id y14mr80412216wrq.308.1564202082047;
-        Fri, 26 Jul 2019 21:34:42 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id s15sm35394855wrw.21.2019.07.26.21.34.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 21:34:41 -0700 (PDT)
-Message-ID: <5d3bd461.1c69fb81.33e47.079b@mx.google.com>
-Date:   Fri, 26 Jul 2019 21:34:41 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fgu+GGVg1EZygpoH3s9DclHYrB/yjZrN74J1ygtmHDM=;
+        b=Q+Te0bzZ6Swz5DGb322R1+7H4KYEFL1QSs863E/cHmyKdDObQQsrPSiMiXpVRd4UaF
+         2U6xBEHzjY1oXbNcDcOrPdLvbe6JrjsdgJwRIXjR/VKGt3lErOqLsNQUXiIqLWSwyBgp
+         zJdQzrOr9KrXNFZ7cf1rvr+HT3jda3fRChYD881QsO7jbixiy3Fx36wFFeeWNXKRNLrc
+         POi8o0XeCx6dsZGGU4GJGvNmUch7vg69oRgSZ/EZGhWdOM+MD9yaq+5vQWUiheHe33zA
+         pnSsQjnrtwM5C+MHjS0MqjHZLAASqecFWYBWLlVG94v907v3CHmCfGKcpUFZ3K7XE56Y
+         EC7A==
+X-Gm-Message-State: APjAAAW8Jn7tDlj0AWKH1I5OWtS95a/GBq30X7rq2BpGrLA6NPRGo/wr
+        IC0X4e+znUQmZMFmfui05ZjGTQ93hMw=
+X-Google-Smtp-Source: APXvYqzccEi33UZ//inmdDXND5H+3IHNcEku4M74cRWUS5+7SqqAECOVxFTsB3ZmO3bcUki1fk+CJg==
+X-Received: by 2002:adf:de8e:: with SMTP id w14mr3818862wrl.79.1564202193019;
+        Fri, 26 Jul 2019 21:36:33 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id j33sm110096204wre.42.2019.07.26.21.36.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 26 Jul 2019 21:36:32 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 21:36:31 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Chris Down <chris@chrisdown.name>
+Subject: Re: mmotm 2019-07-24-21-39 uploaded (mm/memcontrol)
+Message-ID: <20190727043631.GA125522@archlinux-threadripper>
+References: <20190725044010.4tE0dhrji%akpm@linux-foundation.org>
+ <4831a203-8853-27d7-1996-280d34ea824f@infradead.org>
+ <20190725163959.3d759a7f37ba40bb7f75244e@linux-foundation.org>
+ <20190727034205.GA10843@archlinux-threadripper>
+ <20190726211952.757a63db5271d516faa7eaac@linux-foundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Kernel: v5.1.20-63-gf878628d8f1e
-X-Kernelci-Branch: linux-5.1.y
-X-Kernelci-Report-Type: boot
-In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
-References: <20190726152301.720139286@linuxfoundation.org>
-Subject: Re: [PATCH 5.1 00/62] 5.1.21-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190726211952.757a63db5271d516faa7eaac@linux-foundation.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-5.1.y boot: 127 boots: 2 failed, 81 passed with 44 offline =
-(v5.1.20-63-gf878628d8f1e)
+On Fri, Jul 26, 2019 at 09:19:52PM -0700, Andrew Morton wrote:
+> On Fri, 26 Jul 2019 20:42:05 -0700 Nathan Chancellor <natechancellor@gmail.com> wrote:
+> 
+> > > @@ -2414,8 +2414,9 @@ void mem_cgroup_handle_over_high(void)
+> > >  	 */
+> > >  	clamped_high = max(high, 1UL);
+> > >  
+> > > -	overage = ((u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT)
+> > > -		/ clamped_high;
+> > > +	overage = (u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT;
+> > > +	do_div(overage, clamped_high);
+> > > +
+> > >  	penalty_jiffies = ((u64)overage * overage * HZ)
+> > >  		>> (MEMCG_DELAY_PRECISION_SHIFT + MEMCG_DELAY_SCALING_SHIFT);
+> > >  
+> > > _
+> > > 
+> > 
+> > This causes a build error on arm:
+> > 
+> 
+> Ah.
+> 
+> It's rather unclear why that u64 cast is there anyway.  We're dealing
+> with ulongs all over this code.  The below will suffice.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--5.1.y/kernel/v5.1.20-63-gf878628d8f1e/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.1.y=
-/kernel/v5.1.20-63-gf878628d8f1e/
+I was thinking the same thing.
 
-Tree: stable-rc
-Branch: linux-5.1.y
-Git Describe: v5.1.20-63-gf878628d8f1e
-Git Commit: f878628d8f1efc883e9bd6f9f81173194b4a01dd
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 74 unique boards, 27 SoC families, 17 builds out of 209
+> Chris, please take a look?
+> 
+> --- a/mm/memcontrol.c~mm-throttle-allocators-when-failing-reclaim-over-memoryhigh-fix-fix-fix
+> +++ a/mm/memcontrol.c
+> @@ -2415,7 +2415,7 @@ void mem_cgroup_handle_over_high(void)
+>  	clamped_high = max(high, 1UL);
+>  
+>  	overage = (u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT;
+> -	do_div(overage, clamped_high);
+> +	overage /= clamped_high;
+>  
+>  	penalty_jiffies = ((u64)overage * overage * HZ)
+>  		>> (MEMCG_DELAY_PRECISION_SHIFT + MEMCG_DELAY_SCALING_SHIFT);
+> _
+> 
 
-Boot Failures Detected:
+I assume this will get folded in with the original patch but for
+completeness (multi_v7_defconfig + CONFIG_MEMCG):
 
-arm64:
-    defconfig:
-        gcc-8:
-            meson-g12a-x96-max: 1 failed lab
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
 
-arm:
-    multi_v7_defconfig:
-        gcc-8:
-            bcm4708-smartrg-sr400ac: 1 failed lab
-
-Offline Platforms:
-
-arm64:
-
-    defconfig:
-        gcc-8
-            meson-axg-s400: 1 offline lab
-            meson-g12a-u200: 1 offline lab
-            meson-g12a-x96-max: 1 offline lab
-            meson-gxbb-odroidc2: 1 offline lab
-            meson-gxl-s905d-p230: 1 offline lab
-            meson-gxl-s905x-libretech-cc: 1 offline lab
-            meson-gxl-s905x-nexbox-a95x: 1 offline lab
-            meson-gxl-s905x-p212: 1 offline lab
-            meson-gxm-nexbox-a1: 1 offline lab
-            rk3399-firefly: 1 offline lab
-            sun50i-a64-pine64-plus: 1 offline lab
-
-mips:
-
-    pistachio_defconfig:
-        gcc-8
-            pistachio_marduk: 1 offline lab
-
-arm:
-
-    exynos_defconfig:
-        gcc-8
-            exynos5250-arndale: 1 offline lab
-            exynos5420-arndale-octa: 1 offline lab
-            exynos5800-peach-pi: 1 offline lab
-
-    multi_v7_defconfig:
-        gcc-8
-            bcm72521-bcm97252sffe: 1 offline lab
-            bcm7445-bcm97445c: 1 offline lab
-            exynos5250-arndale: 1 offline lab
-            exynos5420-arndale-octa: 1 offline lab
-            exynos5800-peach-pi: 1 offline lab
-            imx6dl-wandboard_dual: 1 offline lab
-            imx6dl-wandboard_solo: 1 offline lab
-            imx6q-wandboard: 1 offline lab
-            imx7s-warp: 1 offline lab
-            meson8b-odroidc1: 1 offline lab
-            omap3-beagle: 1 offline lab
-            omap4-panda: 1 offline lab
-            qcom-apq8064-ifc6410: 1 offline lab
-            stih410-b2120: 1 offline lab
-            sun4i-a10-cubieboard: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-            vf610-colibri-eval-v3: 1 offline lab
-
-    omap2plus_defconfig:
-        gcc-8
-            omap3-beagle: 1 offline lab
-            omap4-panda: 1 offline lab
-
-    qcom_defconfig:
-        gcc-8
-            qcom-apq8064-ifc6410: 1 offline lab
-
-    davinci_all_defconfig:
-        gcc-8
-            da850-evm: 1 offline lab
-            dm365evm,legacy: 1 offline lab
-
-    imx_v6_v7_defconfig:
-        gcc-8
-            imx6dl-wandboard_dual: 1 offline lab
-            imx6dl-wandboard_solo: 1 offline lab
-            imx6q-wandboard: 1 offline lab
-            imx7s-warp: 1 offline lab
-            vf610-colibri-eval-v3: 1 offline lab
-
-    sunxi_defconfig:
-        gcc-8
-            sun4i-a10-cubieboard: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-
----
-For more info write to <info@kernelci.org>
+Thanks for the quick fix!
