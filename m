@@ -2,134 +2,111 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DE2C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 11:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A27C7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 11:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615842082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 11:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516A020840
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 11:51:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="fCjKeF9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbfG0LkH (ORCPT
+        id S1728797AbfG0LsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 07:40:07 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:51578 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728860AbfG0LkG (ORCPT
+        Sat, 27 Jul 2019 07:48:14 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42403 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfG0LsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 07:40:06 -0400
-Received: by mail-io1-f71.google.com with SMTP id c5so61362098iom.18
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 04:40:06 -0700 (PDT)
+        Sat, 27 Jul 2019 07:48:14 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h18so55240595qtm.9
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 04:48:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=3QcusByxnBLEAwsrMGgC+4eQjoFDrnykdiClscYz6rg=;
+        b=fCjKeF9+kIWLJsh5NY0adar+npSdusjEbiBOdDLkMLWFNgXvxvOcUbvLse7dGRcQag
+         BME+G1RBmmri5esgH8la40Lxb8Z+wUKfryfwU3nPESK9lRIOME80o1IfprMlShFGeOaL
+         lM/pAY5AJscBJ3DIIVbal01jAxMmkMP53HyXZgjnxJ9o64Z68JGdb9Dny4Irx93KiVPt
+         bY73e8cBLldad9kzE8Z0Px7tw2RH7iOzKRoJ9HzECeV+L+bvN50WC4dHabCB0eFo+Vwr
+         mUQsG/tYvDHrGz0LBfoo3S0FsEB0jrzDw7fQ/OO2SkW38PW4brFUDekWsYuwRMTDMPQW
+         bCmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=4hE5MFlcvCrluUJqG4iGcm5nKHlJDnOlC6mpPTKYzN8=;
-        b=EmEX0LyDRIup6LHdHCWFzcyXKqVkra+mmPDtYvT9TebL0UJTxCdvdtX6rpowF3DsGs
-         bizwjCqbbUv7w9wjdRQwL7HC9hKFcikCH3iWGizfeYRkBVE7gbCEWOiZZ91d/WxHUQ5/
-         O32GsL0FOSSK6ImI3HA1Mr4C5evrFv+yXzJjuAOHfE3Y/U69OrIaDS+Jnu6brbtofbQp
-         EBE/hrswsGAWqXm0HCQ3eGD9VuNectKiZd87rZH+gkPDvqDadgPj4E4+2AQW3LV0XUK3
-         5/A9LCOeIslMOLplw3QD5UDs21MRQAZfI8ptTK2aLLCTDEYlPIG87QgfI1/FDsNavTS7
-         uEIw==
-X-Gm-Message-State: APjAAAVU6AOWpYNo1hULe6FK5SWDpOE80P7gDy+r8LRxXhZE+Mcqj0ug
-        5qasKTjFCmL9aj3sf6iBa7sb6RNytjvJjTejER4XgpGRllfz
-X-Google-Smtp-Source: APXvYqzROQXiyDS5c/uLW2dsKoaCgTkYKi/WKjtywPIJN4f1/0PgmEZsC292WWXMeFNK8gSs9jBIlV1Cv7tMp2g6pnNdNGvmyGVm
-MIME-Version: 1.0
-X-Received: by 2002:a05:6638:691:: with SMTP id i17mr102984038jab.70.1564227605925;
- Sat, 27 Jul 2019 04:40:05 -0700 (PDT)
-Date:   Sat, 27 Jul 2019 04:40:05 -0700
-In-Reply-To: <0000000000002b4896058e7abf78@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cc977f058ea81e82@google.com>
-Subject: Re: general protection fault in tls_trim_both_msgs
-From:   syzbot <syzbot+0e0fedcad708d12d3032@syzkaller.appspotmail.com>
-To:     ast@kernel.org, aviadye@mellanox.com, borisp@mellanox.com,
-        bpf@vger.kernel.org, daniel@iogearbox.net, davejwatson@fb.com,
-        davem@davemloft.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=3QcusByxnBLEAwsrMGgC+4eQjoFDrnykdiClscYz6rg=;
+        b=YReAxmirOmd3PaEIeL30GKDkm2QaLGUKjFVFQW1b10Kxu64vLCFVbk3UXqwvorgVBe
+         QVwGQQx0UOv4u7Cq2aYEJ1WAaOGNPD1Z59iob1qBnBwT2hsKdliVWKTSCQ+fBSi7DVRG
+         2pafqoFwRXxJdj/ykMalhH6kvHCmWqMIu/ykzaPiWhOBcNV9TVUGAj6VEifdazTkn2rw
+         5KzPGR5wZKF/dndIwTSPL8G2PAkAc7MioegIiDwAE6Avg6oVJGvo6rboF8tqYNmVkAkH
+         Ucn7M6xzOdBzOsRIkqZ6Kj0l85xTmuPnm+AHqJFuERzFDlrbOUtwTOqzi/RTR/3j9XV+
+         IPbw==
+X-Gm-Message-State: APjAAAU2XuiX+YaSOArS1IUmwltAukw/b9I1PBt2a36Q8Za7kjKfwfSD
+        ayciKj8IBkECLGd7NB+6r1WZaw==
+X-Google-Smtp-Source: APXvYqwhYpOWEJA6y7KtdbabIBqP6vNi7PHVTa6ERXqKtsvLJNqqB0E1lHclFWVXE5cfyitHXd0R0A==
+X-Received: by 2002:aed:21f5:: with SMTP id m50mr70103521qtc.66.1564228092972;
+        Sat, 27 Jul 2019 04:48:12 -0700 (PDT)
+Received: from qians-mbp.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q32sm23811313qtd.79.2019.07.27.04.48.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 27 Jul 2019 04:48:12 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] Revert "kmemleak: allow to coexist with fault injection"
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20190727101352.GA14316@arrakis.emea.arm.com>
+Date:   Sat, 27 Jul 2019 07:48:09 -0400
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, mhocko@suse.com,
+        Dmitry Vyukov <dvyukov@google.com>, rientjes@google.com,
+        willy@infradead.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <00205B2E-36E0-4169-997B-B9A522482CD1@lca.pw>
+References: <1563299431-111710-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1563301410.4610.8.camel@lca.pw>
+ <20190727101352.GA14316@arrakis.emea.arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
 
-HEAD commit:    fde50b96 Add linux-next specific files for 20190726
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=142826cc600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4b58274564b354c1
-dashboard link: https://syzkaller.appspot.com/bug?extid=0e0fedcad708d12d3032
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14779d64600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1587c842600000
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+0e0fedcad708d12d3032@syzkaller.appspotmail.com
+> On Jul 27, 2019, at 6:13 AM, Catalin Marinas <catalin.marinas@arm.com> =
+wrote:
+>=20
+> On Tue, Jul 16, 2019 at 02:23:30PM -0400, Qian Cai wrote:
+>> As mentioned in anther thread, the situation for kmemleak under =
+memory pressure
+>> has already been unhealthy. I don't feel comfortable to make it even =
+worse by
+>> reverting this commit alone. This could potentially make kmemleak =
+kill itself
+>> easier and miss some more real memory leak later.
+>>=20
+>> To make it really a short-term solution before the reverting, I think =
+someone
+>> needs to follow up with the mempool solution with tunable pool size =
+mentioned
+>> in,
+>>=20
+>> =
+https://lore.kernel.org/linux-mm/20190328145917.GC10283@arrakis.emea.arm.c=
+om/
+>=20
+> Before my little bit of spare time disappears, let's add the tunable =
+to
+> the mempool size so that I can repost the patch. Are you ok with a
+> kernel cmdline parameter or you'd rather change it at runtime? The
+> latter implies a minor extension to mempool to allow it to refill on
+> demand. I'd personally go for the former.
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 10205 Comm: syz-executor265 Not tainted 5.3.0-rc1-next-20190726  
-#53
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:tls_trim_both_msgs+0x54/0x130 net/tls/tls_sw.c:268
-Code: 48 c1 ea 03 80 3c 02 00 0f 85 e3 00 00 00 4d 8b b5 b0 06 00 00 48 b8  
-00 00 00 00 00 fc ff df 49 8d 7e 28 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 b3 00 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b
-RSP: 0018:ffff88809037fac0 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffff8880a8c0eec0 RCX: ffffffff862f4eef
-RDX: 0000000000000005 RSI: ffffffff862e9016 RDI: 0000000000000028
-RBP: ffff88809037fae0 R08: ffff8880944a8040 R09: ffffed10125e7d51
-R10: ffffed10125e7d50 R11: ffff888092f3ea83 R12: 0000000000000000
-R13: ffff8880a9560c80 R14: 0000000000000000 R15: 00000000ffffffe0
-FS:  000055555717a880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fc5f44109c0 CR3: 000000008b1cc000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  tls_sw_sendmsg+0xe38/0x17b0 net/tls/tls_sw.c:1057
-  inet6_sendmsg+0x9e/0xe0 net/ipv6/af_inet6.c:576
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:657
-  __sys_sendto+0x262/0x380 net/socket.c:1952
-  __do_sys_sendto net/socket.c:1964 [inline]
-  __se_sys_sendto net/socket.c:1960 [inline]
-  __x64_sys_sendto+0xe1/0x1a0 net/socket.c:1960
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441339
-Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffef90e4908 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441339
-RDX: ffffffffffffffc1 RSI: 00000000200005c0 RDI: 0000000000000003
-RBP: 00000000006cb018 R08: 0000000000000000 R09: 1201000000003618
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402160
-R13: 00000000004021f0 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 94e33101f438b014 ]---
-RIP: 0010:tls_trim_both_msgs+0x54/0x130 net/tls/tls_sw.c:268
-Code: 48 c1 ea 03 80 3c 02 00 0f 85 e3 00 00 00 4d 8b b5 b0 06 00 00 48 b8  
-00 00 00 00 00 fc ff df 49 8d 7e 28 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 b3 00 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b
-RSP: 0018:ffff88809037fac0 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffff8880a8c0eec0 RCX: ffffffff862f4eef
-RDX: 0000000000000005 RSI: ffffffff862e9016 RDI: 0000000000000028
-RBP: ffff88809037fae0 R08: ffff8880944a8040 R09: ffffed10125e7d51
-R10: ffffed10125e7d50 R11: ffff888092f3ea83 R12: 0000000000000000
-R13: ffff8880a9560c80 R14: 0000000000000000 R15: 00000000ffffffe0
-FS:  000055555717a880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fc5f44109c0 CR3: 000000008b1cc000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
+Agreed. The cmdline is good enough.=
