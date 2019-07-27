@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3E7C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF82C76194
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 294392075C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1AD12075C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbfG0FtG (ORCPT
+        id S2387598AbfG0FtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 01:49:06 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38754 "EHLO huawei.com"
+        Sat, 27 Jul 2019 01:49:04 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:38776 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728168AbfG0FsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 01:48:20 -0400
+        id S1728176AbfG0FsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 01:48:21 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D1517427E6F07D586C43;
+        by Forcepoint Email with ESMTP id D65CD9395BB51C92D319;
         Sat, 27 Jul 2019 13:48:18 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 27 Jul 2019 13:48:10 +0800
+ 14.3.439.0; Sat, 27 Jul 2019 13:48:09 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -32,9 +33,9 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linuxarm@huawei.com>, <saeedm@mellanox.com>,
         Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V3 net-next 09/10] net: hns3: Add support for using order 1 pages with a 4K buffer
-Date:   Sat, 27 Jul 2019 13:46:11 +0800
-Message-ID: <1564206372-42467-10-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V3 net-next 07/10] net: hns3: make hclge_service use delayed workqueue
+Date:   Sat, 27 Jul 2019 13:46:09 +0800
+Message-ID: <1564206372-42467-8-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564206372-42467-1-git-send-email-tanhuazhong@huawei.com>
 References: <1564206372-42467-1-git-send-email-tanhuazhong@huawei.com>
@@ -49,102 +50,144 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yunsheng Lin <linyunsheng@huawei.com>
 
-Hardware supports 0.5K, 1K, 2K, 4K RX buffer size, the
-RX buffer can not be reused because the hns3_page_order
-return 0 when page size and RX buffer size are both 4096.
+Use delayed work instead of using timers to trigger the
+hclge_serive.
 
-So this patch changes the hns3_page_order to return 1 when
-RX buffer is greater than half of the page size and page size
-is less the 8192, and dev_alloc_pages has already been used
-to allocate the compound page for RX buffer.
-
-This patch also changes hnae3_* to hns3_* for page order
-and RX buffer size calculation because they are used in
-hns3 module.
+Simplify the code with one less middle function and in order
+to support misc irq affinity.
 
 Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Reviewed-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 10 +++++-----
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h | 15 ++++++++++++---
- 2 files changed, 17 insertions(+), 8 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 52 +++++++++-------------
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  3 +-
+ 2 files changed, 21 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 973c57b..59a6076 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2081,7 +2081,7 @@ static void hns3_set_default_feature(struct net_device *netdev)
- static int hns3_alloc_buffer(struct hns3_enet_ring *ring,
- 			     struct hns3_desc_cb *cb)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 14199c4..13c9697 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -2513,8 +2513,12 @@ static void hclge_task_schedule(struct hclge_dev *hdev)
  {
--	unsigned int order = hnae3_page_order(ring);
-+	unsigned int order = hns3_page_order(ring);
- 	struct page *p;
+ 	if (!test_bit(HCLGE_STATE_DOWN, &hdev->state) &&
+ 	    !test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
+-	    !test_and_set_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state))
+-		(void)schedule_work(&hdev->service_task);
++	    !test_and_set_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state)) {
++		hdev->hw_stats.stats_timer++;
++		hdev->fd_arfs_expire_timer++;
++		mod_delayed_work(system_wq, &hdev->service_task,
++				 round_jiffies_relative(HZ));
++	}
+ }
  
- 	p = dev_alloc_pages(order);
-@@ -2092,7 +2092,7 @@ static int hns3_alloc_buffer(struct hns3_enet_ring *ring,
- 	cb->page_offset = 0;
- 	cb->reuse_flag = 0;
- 	cb->buf  = page_address(p);
--	cb->length = hnae3_page_size(ring);
-+	cb->length = hns3_page_size(ring);
- 	cb->type = DESC_TYPE_PAGE;
+ static int hclge_get_mac_link_status(struct hclge_dev *hdev)
+@@ -2729,25 +2733,6 @@ static int hclge_get_status(struct hnae3_handle *handle)
+ 	return hdev->hw.mac.link;
+ }
  
- 	return 0;
-@@ -2395,7 +2395,7 @@ static void hns3_nic_reuse_page(struct sk_buff *skb, int i,
+-static void hclge_service_timer(struct timer_list *t)
+-{
+-	struct hclge_dev *hdev = from_timer(hdev, t, service_timer);
+-
+-	mod_timer(&hdev->service_timer, jiffies + HZ);
+-	hdev->hw_stats.stats_timer++;
+-	hdev->fd_arfs_expire_timer++;
+-	hclge_task_schedule(hdev);
+-}
+-
+-static void hclge_service_complete(struct hclge_dev *hdev)
+-{
+-	WARN_ON(!test_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state));
+-
+-	/* Flush memory before next watchdog */
+-	smp_mb__before_atomic();
+-	clear_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state);
+-}
+-
+ static u32 hclge_check_event_cause(struct hclge_dev *hdev, u32 *clearval)
  {
- 	struct hns3_desc *desc = &ring->desc[ring->next_to_clean];
- 	int size = le16_to_cpu(desc->rx.size);
--	u32 truesize = hnae3_buf_size(ring);
-+	u32 truesize = hns3_buf_size(ring);
- 
- 	skb_add_rx_frag(skb, i, desc_cb->priv, desc_cb->page_offset + pull_len,
- 			size - pull_len, truesize);
-@@ -2410,7 +2410,7 @@ static void hns3_nic_reuse_page(struct sk_buff *skb, int i,
- 	/* Move offset up to the next cache line */
- 	desc_cb->page_offset += truesize;
- 
--	if (desc_cb->page_offset + truesize <= hnae3_page_size(ring)) {
-+	if (desc_cb->page_offset + truesize <= hns3_page_size(ring)) {
- 		desc_cb->reuse_flag = 1;
- 		/* Bump ref count on page before it is given */
- 		get_page(desc_cb->priv);
-@@ -2692,7 +2692,7 @@ static int hns3_add_frag(struct hns3_enet_ring *ring, struct hns3_desc *desc,
- 		}
- 
- 		if (ring->tail_skb) {
--			head_skb->truesize += hnae3_buf_size(ring);
-+			head_skb->truesize += hns3_buf_size(ring);
- 			head_skb->data_len += le16_to_cpu(desc->rx.size);
- 			head_skb->len += le16_to_cpu(desc->rx.size);
- 			skb = ring->tail_skb;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-index 848b866..1a17856 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-@@ -608,9 +608,18 @@ static inline bool hns3_nic_resetting(struct net_device *netdev)
- 
- #define tx_ring_data(priv, idx) ((priv)->ring_data[idx])
- 
--#define hnae3_buf_size(_ring) ((_ring)->buf_size)
--#define hnae3_page_order(_ring) (get_order(hnae3_buf_size(_ring)))
--#define hnae3_page_size(_ring) (PAGE_SIZE << (u32)hnae3_page_order(_ring))
-+#define hns3_buf_size(_ring) ((_ring)->buf_size)
+ 	u32 rst_src_reg, cmdq_src_reg, msix_src_reg;
+@@ -3594,7 +3579,9 @@ static void hclge_update_vport_alive(struct hclge_dev *hdev)
+ static void hclge_service_task(struct work_struct *work)
+ {
+ 	struct hclge_dev *hdev =
+-		container_of(work, struct hclge_dev, service_task);
++		container_of(work, struct hclge_dev, service_task.work);
 +
-+static inline unsigned int hns3_page_order(struct hns3_enet_ring *ring)
-+{
-+#if (PAGE_SIZE < 8192)
-+	if (ring->buf_size > (PAGE_SIZE / 2))
-+		return 1;
-+#endif
-+	return 0;
-+}
-+
-+#define hns3_page_size(_ring) (PAGE_SIZE << hns3_page_order(_ring))
++	clear_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state);
  
- /* iterator for handling rings in ring group */
- #define hns3_for_each_ring(pos, head) \
+ 	if (hdev->hw_stats.stats_timer >= HCLGE_STATS_TIMER_INTERVAL) {
+ 		hclge_update_stats_for_all(hdev);
+@@ -3609,7 +3596,8 @@ static void hclge_service_task(struct work_struct *work)
+ 		hclge_rfs_filter_expire(hdev);
+ 		hdev->fd_arfs_expire_timer = 0;
+ 	}
+-	hclge_service_complete(hdev);
++
++	hclge_task_schedule(hdev);
+ }
+ 
+ struct hclge_vport *hclge_get_vport(struct hnae3_handle *handle)
+@@ -6148,10 +6136,13 @@ static void hclge_set_timer_task(struct hnae3_handle *handle, bool enable)
+ 	struct hclge_dev *hdev = vport->back;
+ 
+ 	if (enable) {
+-		mod_timer(&hdev->service_timer, jiffies + HZ);
++		hclge_task_schedule(hdev);
+ 	} else {
+-		del_timer_sync(&hdev->service_timer);
+-		cancel_work_sync(&hdev->service_task);
++		/* Set the DOWN flag here to disable the service to be
++		 * scheduled again
++		 */
++		set_bit(HCLGE_STATE_DOWN, &hdev->state);
++		cancel_delayed_work_sync(&hdev->service_task);
+ 		clear_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state);
+ 	}
+ }
+@@ -8590,12 +8581,10 @@ static void hclge_state_uninit(struct hclge_dev *hdev)
+ 	set_bit(HCLGE_STATE_DOWN, &hdev->state);
+ 	set_bit(HCLGE_STATE_REMOVING, &hdev->state);
+ 
+-	if (hdev->service_timer.function)
+-		del_timer_sync(&hdev->service_timer);
+ 	if (hdev->reset_timer.function)
+ 		del_timer_sync(&hdev->reset_timer);
+-	if (hdev->service_task.func)
+-		cancel_work_sync(&hdev->service_task);
++	if (hdev->service_task.work.func)
++		cancel_delayed_work_sync(&hdev->service_task);
+ 	if (hdev->rst_service_task.func)
+ 		cancel_work_sync(&hdev->rst_service_task);
+ 	if (hdev->mbx_service_task.func)
+@@ -8800,9 +8789,8 @@ static int hclge_init_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 
+ 	hclge_dcb_ops_set(hdev);
+ 
+-	timer_setup(&hdev->service_timer, hclge_service_timer, 0);
+ 	timer_setup(&hdev->reset_timer, hclge_reset_timer, 0);
+-	INIT_WORK(&hdev->service_task, hclge_service_task);
++	INIT_DELAYED_WORK(&hdev->service_task, hclge_service_task);
+ 	INIT_WORK(&hdev->rst_service_task, hclge_reset_service_task);
+ 	INIT_WORK(&hdev->mbx_service_task, hclge_mailbox_service_task);
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 6a12285..dde8f22 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -806,9 +806,8 @@ struct hclge_dev {
+ 	u16 adminq_work_limit; /* Num of admin receive queue desc to process */
+ 	unsigned long service_timer_period;
+ 	unsigned long service_timer_previous;
+-	struct timer_list service_timer;
+ 	struct timer_list reset_timer;
+-	struct work_struct service_task;
++	struct delayed_work service_task;
+ 	struct work_struct rst_service_task;
+ 	struct work_struct mbx_service_task;
+ 
 -- 
 2.7.4
 
