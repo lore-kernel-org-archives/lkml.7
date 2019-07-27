@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA87CC761A8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC7AC76190
 	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA6C2070B
+	by mail.kernel.org (Postfix) with ESMTP id 53CE92070B
 	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:13:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="EQ90Eqq2"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bOyXsaOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387527AbfG0MNU (ORCPT
+        id S1728912AbfG0MNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 08:13:20 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52199 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfG0MNG (ORCPT
+        Sat, 27 Jul 2019 08:13:09 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:56314 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728874AbfG0MNI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 08:13:06 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 207so50058334wma.1
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 05:13:05 -0700 (PDT)
+        Sat, 27 Jul 2019 08:13:08 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a15so50041046wmj.5
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 05:13:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zjlCoClPn+D5FtsYbuSMIRYDvq5CiGUidcCupd7dJ90=;
-        b=EQ90Eqq29nsB2bd9Ao/E9BDvc34M6m2OUORIMOGkQInOkxt8F+vZTze3ALhPN5U//z
-         5qZBaZBl0IU8hJ2gVN9KoZUdQAJyXmclk/HW3+ofk3eSJ2D6fBbtiaHaSWVdCZ4Qi/Av
-         l4RpXo7W6Sbnp0CXOPaTF5oB5lopksyqVTJRzoBhzMmyZURS2Nh2VIzThcxLAXao3rmr
-         O3VCe4SngwbQ/Fu0F6YnPW+zpQ5iy2Pci0LOX5czlku5Bst/8Wx94aPop6LCYzYr6p2P
-         dDVieoEWxHr+pTdw7DHK1YdGBtL2d/KywrovVKbCvqk/Xa1cuZAe4Rj1o8YXoSGjPDcf
-         y2SQ==
+        bh=M5VJ77HzSYMyOnNSU34/RgfTpL1VyZ0UT5tc7uiCpts=;
+        b=bOyXsaODj+oGFDXnUUVuZUhUfBLQL2o2uw0ObAXJqabol6/LNMKy8PQiUMWDezAeCm
+         nKDX37UApFaq3ykUpHVBNKpdBHdVxNdepU+1Kz+PAc9IyUonr7WqJ/WjaPFFp9cjZFfr
+         yiF2qlYqsHcSyPsCYJFFGLl2QmtMnP7PDb7yoSq/RBvOAlyrcAvHOvgIaq7eUwXnz/lr
+         FlTlDq/5INFPHfh1mo0p+hBWYKge9eD8+6TuZ4CoCQALMq3GbE6/gkzAIyfucXPeanSn
+         tQk6BFgv1mrjIAdChmyHzQTLqH/Hzs5e1spOAfENPe1+UCYPF318Ee3AagW4taHmsnWr
+         18xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zjlCoClPn+D5FtsYbuSMIRYDvq5CiGUidcCupd7dJ90=;
-        b=hGFQh/mfXqRANPEmAVUELCr5EHJ67G4WSidTVQaz0jeLr85al3xik2u4fI7X5dG5FK
-         G+sr2gWqLbeFg8hmZQDyXJdb7Gcv+nknKYuUl1QiKcGY8joQtagbJASkIEbLit6qT7Zl
-         7PhJZyYcJBa+gT9M3cIxXibWFLtyFA8DPSiT+HYqxo5FqW/vWGCO/RGaPQyrP3NkXB87
-         9xz3LrDOKygXu9FsC++GfSDDMTK0h/bgp5UReOJuQt9UXalkMoshXZUzVGjz21jPxRaR
-         Jq/lpkPmaAQNPNkyQcjIhYHjzbyf8Hh0a2EZS7h+QsQ1qafYTabltZ6ZXaZUHbnKNmPH
-         S0hw==
-X-Gm-Message-State: APjAAAUqX3FhEEFHQupJkbo+ZbOzErVXZjkM3iCLUErPVvifautRZ3Tj
-        wCnp200xazEPCrzeIFsgn5Q=
-X-Google-Smtp-Source: APXvYqy+qq3YOx5KKzeDY893qKSGWhvt8/1aA0TqVr6FY9sy46M3iJUKGQzpmPYsEiqOHSu6EZKLJw==
-X-Received: by 2002:a1c:acc8:: with SMTP id v191mr92720425wme.177.1564229585104;
-        Sat, 27 Jul 2019 05:13:05 -0700 (PDT)
+        bh=M5VJ77HzSYMyOnNSU34/RgfTpL1VyZ0UT5tc7uiCpts=;
+        b=o2o4jkOyzc/h3o6IZA+RmdcDmp5/mTaoh76hO4PfxDIxP0mTx44gJ0EH+E+5TNFEpJ
+         /mt6kwMK8jF280X4qmLUn9mDVMFLHARt1vPBvWkODZ8x2Pq9ro4lmNhMLuwkroKxL1nJ
+         aqaBRXp8t33BPRC1ro0DtciKqkoGoSH0ckODNcpf1rv4egGJ3PZfRWCNkm6+sBTh9U9l
+         O3ntXaxYvDwloAeXpQR/3Chz00CIub/LcRNaSyk86Mcy8r89wp391P08sZFa/4knvybv
+         1zwnTic7hgxVpjPRL/4d9h3dU4zgsThgN8IvDtS/q3+isvUp7y/Mp7ws3h2DlVfEHJbv
+         6gCA==
+X-Gm-Message-State: APjAAAUdsYvxLjqY8uyRqzStREw+DjXJpuxM20vKXNMJVHHnSJx3gCdF
+        VTxfUtMSkMU9nLpQyqp9Ljo=
+X-Google-Smtp-Source: APXvYqxbZtZTQGMBIkUPVU7HbCAa3FLI7lq62O0oi2gTvqH7vtlDPfKNmRXpqxz193SKwUhMWl7l/g==
+X-Received: by 2002:a1c:544d:: with SMTP id p13mr93863021wmi.78.1564229586042;
+        Sat, 27 Jul 2019 05:13:06 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133C65C00B418D0F4A25A19EC.dip0.t-ipconnect.de. [2003:f1:33c6:5c00:b418:d0f4:a25a:19ec])
-        by smtp.googlemail.com with ESMTPSA id o26sm111786569wro.53.2019.07.27.05.13.04
+        by smtp.googlemail.com with ESMTPSA id o26sm111786569wro.53.2019.07.27.05.13.05
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 27 Jul 2019 05:13:04 -0700 (PDT)
+        Sat, 27 Jul 2019 05:13:05 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 2/4] ARM: dts: meson8b: ec100: add the VDDEE regulator
-Date:   Sat, 27 Jul 2019 14:12:55 +0200
-Message-Id: <20190727121257.18017-3-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 3/4] ARM: dts: meson8b: odroidc1: add the VDDEE regulator
+Date:   Sat, 27 Jul 2019 14:12:56 +0200
+Message-Id: <20190727121257.18017-4-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190727121257.18017-1-martin.blumenstingl@googlemail.com>
 References: <20190727121257.18017-1-martin.blumenstingl@googlemail.com>
@@ -82,43 +82,39 @@ Add the VDDEE PWM regulator and make it the supply of the Mali GPU.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm/boot/dts/meson8b-ec100.dts | 31 ++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/meson8b-odroidc1.dts | 27 +++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/meson8b-ec100.dts b/arch/arm/boot/dts/meson8b-ec100.dts
-index 96d239d8334e..bed1dfef1985 100644
---- a/arch/arm/boot/dts/meson8b-ec100.dts
-+++ b/arch/arm/boot/dts/meson8b-ec100.dts
-@@ -219,6 +219,27 @@
- 		 */
- 		vin-supply = <&vcc_3v3>;
+diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+index 86c4614e0a38..90f66dc45115 100644
+--- a/arch/arm/boot/dts/meson8b-odroidc1.dts
++++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+@@ -154,6 +154,23 @@
+ 		vin-supply = <&p5v0>;
  	};
-+
+ 
 +	vddee: regulator-vddee {
-+		/*
-+		 * Silergy SY8089AAC-GP 2A continuous, 3A peak, 1MHz
-+		 * Synchronous Step Down Regulator. Also called VDDAO
-+		 * in a part of the schematics.
-+		 */
++		/* Monolithic Power Systems MP2161 */
 +		compatible = "pwm-regulator";
 +
 +		regulator-name = "VDDEE";
 +		regulator-min-microvolt = <860000>;
 +		regulator-max-microvolt = <1140000>;
 +
-+		vin-supply = <&vcc_5v>;
++		vin-supply = <&p5v0>;
 +
-+		pwms = <&pwm_cd 1 1148 0>;
-+		pwm-dutycycle-range = <100 0>;
++		pwms = <&pwm_cd 1 12218 0>;
++		pwm-dutycycle-range = <91 0>;
 +
 +		regulator-boot-on;
 +		regulator-always-on;
 +	};
- };
- 
- &cpu0 {
-@@ -269,6 +290,10 @@
- 	};
++
+ 	vdd_rtc: regulator-vdd-rtc {
+ 		/*
+ 		 * Torex Semiconductor XC6215 configured for a fixed output of
+@@ -276,6 +293,10 @@
+ 	pinctrl-names = "default";
  };
  
 +&mali {
@@ -128,7 +124,7 @@ index 96d239d8334e..bed1dfef1985 100644
  &saradc {
  	status = "okay";
  	vref-supply = <&vcc_1v8>;
-@@ -350,10 +375,10 @@
+@@ -308,10 +329,10 @@
  
  &pwm_cd {
  	status = "okay";
