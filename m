@@ -2,142 +2,113 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC7AC76190
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF38C7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53CE92070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 166482070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:17:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bOyXsaOD"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cG6Q289S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbfG0MNJ (ORCPT
+        id S1728903AbfG0MRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 08:13:09 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:56314 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728874AbfG0MNI (ORCPT
+        Sat, 27 Jul 2019 08:17:51 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41339 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728797AbfG0MRu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 08:13:08 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a15so50041046wmj.5
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 05:13:06 -0700 (PDT)
+        Sat, 27 Jul 2019 08:17:50 -0400
+Received: by mail-oi1-f193.google.com with SMTP id g7so42149640oia.8;
+        Sat, 27 Jul 2019 05:17:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=M5VJ77HzSYMyOnNSU34/RgfTpL1VyZ0UT5tc7uiCpts=;
-        b=bOyXsaODj+oGFDXnUUVuZUhUfBLQL2o2uw0ObAXJqabol6/LNMKy8PQiUMWDezAeCm
-         nKDX37UApFaq3ykUpHVBNKpdBHdVxNdepU+1Kz+PAc9IyUonr7WqJ/WjaPFFp9cjZFfr
-         yiF2qlYqsHcSyPsCYJFFGLl2QmtMnP7PDb7yoSq/RBvOAlyrcAvHOvgIaq7eUwXnz/lr
-         FlTlDq/5INFPHfh1mo0p+hBWYKge9eD8+6TuZ4CoCQALMq3GbE6/gkzAIyfucXPeanSn
-         tQk6BFgv1mrjIAdChmyHzQTLqH/Hzs5e1spOAfENPe1+UCYPF318Ee3AagW4taHmsnWr
-         18xw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CNhzHRz2iYbGXTP3IdkSPFEl3dlcBhQ0pu5ysWhbMII=;
+        b=cG6Q289SNMExyqzT4BzCmFr+agW8QLE1G4qTS2lsKXwVxXNT3vnliR9NUCiJkWb4xa
+         vv0mIgP2g9+350JqUUFYxCyArFuss1h1e6tua1+bGGeJIhxODu3Ca8AYeU1w9FP/v8iI
+         MhZRHQjeTZU9ZhOSTQHw5+MavL3KVbpg3gYGy75V492PRmtmOQP1h0HsWUIrqQYsJEE6
+         VGA92fXomnLb+NbLAV1HnkMtcWqbTipnp/jgiQRN2/fkFoHYEBEpHZX99vlLQQe95XU+
+         zY7eAKlSeOxuKctyhesPANP5vpf2YzPuKkrEdLbrHf10PIAjG8cms8yoMCAMLto5iGBG
+         3UHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=M5VJ77HzSYMyOnNSU34/RgfTpL1VyZ0UT5tc7uiCpts=;
-        b=o2o4jkOyzc/h3o6IZA+RmdcDmp5/mTaoh76hO4PfxDIxP0mTx44gJ0EH+E+5TNFEpJ
-         /mt6kwMK8jF280X4qmLUn9mDVMFLHARt1vPBvWkODZ8x2Pq9ro4lmNhMLuwkroKxL1nJ
-         aqaBRXp8t33BPRC1ro0DtciKqkoGoSH0ckODNcpf1rv4egGJ3PZfRWCNkm6+sBTh9U9l
-         O3ntXaxYvDwloAeXpQR/3Chz00CIub/LcRNaSyk86Mcy8r89wp391P08sZFa/4knvybv
-         1zwnTic7hgxVpjPRL/4d9h3dU4zgsThgN8IvDtS/q3+isvUp7y/Mp7ws3h2DlVfEHJbv
-         6gCA==
-X-Gm-Message-State: APjAAAUdsYvxLjqY8uyRqzStREw+DjXJpuxM20vKXNMJVHHnSJx3gCdF
-        VTxfUtMSkMU9nLpQyqp9Ljo=
-X-Google-Smtp-Source: APXvYqxbZtZTQGMBIkUPVU7HbCAa3FLI7lq62O0oi2gTvqH7vtlDPfKNmRXpqxz193SKwUhMWl7l/g==
-X-Received: by 2002:a1c:544d:: with SMTP id p13mr93863021wmi.78.1564229586042;
-        Sat, 27 Jul 2019 05:13:06 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133C65C00B418D0F4A25A19EC.dip0.t-ipconnect.de. [2003:f1:33c6:5c00:b418:d0f4:a25a:19ec])
-        by smtp.googlemail.com with ESMTPSA id o26sm111786569wro.53.2019.07.27.05.13.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 27 Jul 2019 05:13:05 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 3/4] ARM: dts: meson8b: odroidc1: add the VDDEE regulator
-Date:   Sat, 27 Jul 2019 14:12:56 +0200
-Message-Id: <20190727121257.18017-4-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190727121257.18017-1-martin.blumenstingl@googlemail.com>
-References: <20190727121257.18017-1-martin.blumenstingl@googlemail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CNhzHRz2iYbGXTP3IdkSPFEl3dlcBhQ0pu5ysWhbMII=;
+        b=XurtJnElZr6EQ9oVtfq357hi7cGXNm6F+PzYj8QczJ1AGjHrFfWO/SV9DwdBrw/NPY
+         vXHH6MMj0j/2ZX0hvN6xtjK8T+M/utgWJSFES5RDs4Mz9mnisOi59zhreO6N6Fwq7uar
+         k6GVWyP/WuumGDYZXw7svprGUHoC6qM38Z3BN+Pjqdj6X0VLKoTMGfHAklwHbw6VA2Ws
+         mkY++fhUvF7sggK+819SwOg1DpPBXgHMLchsQkNvVovsQJLBPdjrAQJAYxE+kL6r43lD
+         rKTl3/gD+0Pv2artgkmxloXI56kSdfUmrDHBS7E48V/bXwwMXDG7sUB7F8E46LCNjPuS
+         NG1A==
+X-Gm-Message-State: APjAAAUlx8qCb+pO9jOKChq0Nsggo1kML90SXEXEFdWMIoaiNpvYT1i/
+        fl840f6lfLmhp/IL4gKVu8uojdfkIVqorTYOQV7Xow==
+X-Google-Smtp-Source: APXvYqwYmHppUXdfjPmHAHr52sRX654Hjj0LrUImUSO2z34wUj15h3dYIjxdcEN6XIljQQh4wx43Te/Ly0JritXHa9A=
+X-Received: by 2002:aca:4ad2:: with SMTP id x201mr48673019oia.129.1564229869688;
+ Sat, 27 Jul 2019 05:17:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1564083776-20540-1-git-send-email-clabbe@baylibre.com> <1564083776-20540-3-git-send-email-clabbe@baylibre.com>
+In-Reply-To: <1564083776-20540-3-git-send-email-clabbe@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sat, 27 Jul 2019 14:17:38 +0200
+Message-ID: <CAFBinCD7pgUaBJgeGHTOu-uZRA9a6K2kxPsu+huKe23wcnKPoA@mail.gmail.com>
+Subject: Re: [PATCH 2/4] crypto: amlogic: Add crypto accelerator for amlogic GXL
+To:     Corentin Labbe <clabbe@baylibre.com>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        khilman@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, baylibre-upstreaming@groups.io,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VDDEE regulator is basically a copy of the VCCK regulator. VDDEE
-supplies for example the Mali GPU and is controlled by PWM_D instead of
-PWM_C.
+Hi Corentin,
 
-Add the VDDEE PWM regulator and make it the supply of the Mali GPU.
+it's great to see you working on this :)
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm/boot/dts/meson8b-odroidc1.dts | 27 +++++++++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
+On Thu, Jul 25, 2019 at 9:45 PM Corentin Labbe <clabbe@baylibre.com> wrote:
+>
+> This patch adds support for the amlogic GXL cryptographic offloader present
+> on GXL SoCs.
+>
+> This driver supports AES cipher in CBC/ECB mode.
+>
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> ---
+>  drivers/crypto/Kconfig                  |   2 +
+>  drivers/crypto/Makefile                 |   1 +
+>  drivers/crypto/amlogic/Kconfig          |  24 ++
+>  drivers/crypto/amlogic/Makefile         |   2 +
+>  drivers/crypto/amlogic/amlogic-cipher.c | 358 ++++++++++++++++++++++++
+>  drivers/crypto/amlogic/amlogic-core.c   | 326 +++++++++++++++++++++
+>  drivers/crypto/amlogic/amlogic.h        | 172 ++++++++++++
+>  7 files changed, 885 insertions(+)
+>  create mode 100644 drivers/crypto/amlogic/Kconfig
+>  create mode 100644 drivers/crypto/amlogic/Makefile
+>  create mode 100644 drivers/crypto/amlogic/amlogic-cipher.c
+>  create mode 100644 drivers/crypto/amlogic/amlogic-core.c
+>  create mode 100644 drivers/crypto/amlogic/amlogic.h
+there are two different crypto IPs on Amlogic SoCs:
+- GXL and newer use the "BLKMV" crypto IP
+- GXBB, Meson8/Meson8b/Meson8m2 (and probably older SoCs) use the
+"NDMA" crypto IP
 
-diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-index 86c4614e0a38..90f66dc45115 100644
---- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-+++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-@@ -154,6 +154,23 @@
- 		vin-supply = <&p5v0>;
- 	};
- 
-+	vddee: regulator-vddee {
-+		/* Monolithic Power Systems MP2161 */
-+		compatible = "pwm-regulator";
-+
-+		regulator-name = "VDDEE";
-+		regulator-min-microvolt = <860000>;
-+		regulator-max-microvolt = <1140000>;
-+
-+		vin-supply = <&p5v0>;
-+
-+		pwms = <&pwm_cd 1 12218 0>;
-+		pwm-dutycycle-range = <91 0>;
-+
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
- 	vdd_rtc: regulator-vdd-rtc {
- 		/*
- 		 * Torex Semiconductor XC6215 configured for a fixed output of
-@@ -276,6 +293,10 @@
- 	pinctrl-names = "default";
- };
- 
-+&mali {
-+	mali-supply = <&vddee>;
-+};
-+
- &saradc {
- 	status = "okay";
- 	vref-supply = <&vcc_1v8>;
-@@ -308,10 +329,10 @@
- 
- &pwm_cd {
- 	status = "okay";
--	pinctrl-0 = <&pwm_c1_pins>;
-+	pinctrl-0 = <&pwm_c1_pins>, <&pwm_d_pins>;
- 	pinctrl-names = "default";
--	clocks = <&clkc CLKID_XTAL>;
--	clock-names = "clkin0";
-+	clocks = <&clkc CLKID_XTAL>, <&clkc CLKID_XTAL>;
-+	clock-names = "clkin0", "clkin1";
- };
- 
- &rtc {
--- 
-2.22.0
+personally I think it makes sense to either have the IP name (blkmv)
+or SoC name (GXL) in the file or directory names as well as being
+consistent with that in the Kconfig option names
 
+(I have no experience with the crypto framework so I cannot comment on
+the driver implementation itself)
+
+
+Martin
