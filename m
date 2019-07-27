@@ -2,109 +2,106 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BE7C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AF4C7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF64A2085A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:30:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YBfh5b4c"
+	by mail.kernel.org (Postfix) with ESMTP id 48B6920840
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:36:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbfG0Jae (ORCPT
+        id S1728749AbfG0JgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 05:30:34 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39595 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727885AbfG0Jad (ORCPT
+        Sat, 27 Jul 2019 05:36:21 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:48163 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727885AbfG0JgU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 05:30:33 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u17so25888776pgi.6;
-        Sat, 27 Jul 2019 02:30:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=z5sjwqVGCxUQk+QSQ9chKyttBvfdYpP7hwc20jtvK+s=;
-        b=YBfh5b4c27FdX9goY2NwNFVVkc7/LBvWciAxEdHe5TqJ91KWXuQkW6IJ2tt38Y0Afb
-         rGT7GA1eMt6XSzc1Cmf5PvyD+4rnLQb6XwnjbYIQZGP38tGqhzv5qpbjsewYqSvvySbr
-         Qwf0FqLvl4UvYL+7OK4cRrmMlfG4EImnLM4DRiHYjqoFuqUSlIx8kUahVK2I7NCz5B7S
-         VuFvu5Jfbm/nHvLr+7bY1QHFEt39tYg3emOfOFg+mTwT+4rvTzaG9rrVHo6HupPuB3fg
-         vTXUe9CBC1QJpG7YsInSTHkbffOGS7hUZkLW2m7AO7N9ZdbCZQtwA45PsjwFa6xSshNV
-         JaDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=z5sjwqVGCxUQk+QSQ9chKyttBvfdYpP7hwc20jtvK+s=;
-        b=tLvNVIvb9FWTZwsDgmeKLFpIZ3+JMo+OPcCBB9FLHb4jLkAMAPCFg/U8IK2qOTITqi
-         2vs0QnUwQPQbvguzYmyrTfQVxcQ45TT2U6/q6a+seveXKWoHvaSPYMSBaQgf0qNjRF5H
-         vo4D9rKyksw8qGW+vCq3rA4YZTeCFaqq6nXidx/xxsiigbiNOjz7n6kgz1IsnNO2WTWX
-         2rbfyQ/qHGvfPhfJAiv9MLVHxwZOD9u0OmEdviZf1jRecRvsh6FkeLR5Ud1kbWlQsFTK
-         +pQv+skmfW5vX8VC638CezT1++m7dlr+CnOXvcN2Z5BGsvIAiiUPvXTN9EMJA+Wdxb+K
-         rRWg==
-X-Gm-Message-State: APjAAAU9WkSdYya1KMvFHzRqHZYBOiHjhRA0cWRvDS/qE0N2daZgcBnW
-        kXVwwFchQGl+Qvp8csIM8jE=
-X-Google-Smtp-Source: APXvYqy7WYLMlwSTVgB+dPwq8qrugVlz8KAywUvi0p/+dVAWFow6ZnujVnwVJPvmTOtHll1h9oSvtA==
-X-Received: by 2002:aa7:8804:: with SMTP id c4mr26416099pfo.65.1564219833191;
-        Sat, 27 Jul 2019 02:30:33 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id i137sm53435357pgc.4.2019.07.27.02.30.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Jul 2019 02:30:32 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     vkoul@kernel.org, dan.j.williams@intel.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] dma: mv_xor: Fix a possible null-pointer dereference in mv_xor_prep_dma_xor()
-Date:   Sat, 27 Jul 2019 17:30:27 +0800
-Message-Id: <20190727093027.11781-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Sat, 27 Jul 2019 05:36:20 -0400
+Received: from xps13 ([83.160.161.190])
+        by smtp-cloud9.xs4all.net with ESMTPSA
+        id rJ7YhQoAMAffArJ7chatBJ; Sat, 27 Jul 2019 11:36:18 +0200
+Message-ID: <fcb8a79e4dab34511e4d7b379afff4736a8aa401.camel@tiscali.nl>
+Subject: Re: [PATCH] isdn/gigaset: check endpoint null in gigaset_probe
+From:   Paul Bolle <pebolle@tiscali.nl>
+To:     Phong Tran <tranmanphong@gmail.com>, isdn@linux-pingi.de,
+        gregkh@linuxfoundation.org
+Cc:     gigaset307x-common@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzbot+35b1c403a14f5c89eba7@syzkaller.appspotmail.com
+Date:   Sat, 27 Jul 2019 11:36:08 +0200
+In-Reply-To: <24cd0b70-45e6-ea98-fc8f-b25fbf6e817f@gmail.com>
+References: <20190726133528.11063-1-tranmanphong@gmail.com>
+         <1876196a0e7fc665f0f50d5e9c0e2641f713e089.camel@tiscali.nl>
+         <24cd0b70-45e6-ea98-fc8f-b25fbf6e817f@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfAE4QiX/kIkiNTf4R1QNPlw9skCGmNOdLN44/srRWjC4q2vYh0+a4uiqDbjBFlLlDoRf2FFT805YllaVQQfDn+7dHskDAv1OLsvfmDNDv4PcjUP13bwr
+ rLN5daNrS8FpMa+3yz39hclzuvWSe11KbFo95QMST6KoAEga/l4/8A4hxmszyE7Sw8eKquqUPa37jozTylwsT6HzjlGNOoIr/TsTMUviYRlBHdHfshA6ZMSc
+ 7qQBDB/eS/7COLTm02O1zu9LAna9kIVfa8Mr24m2tyRvwapApf4htVsoF8ieRHCf3Z/5Pt9qWhka60fqnRoiaxqr4ojYM4ytC0JcjPXjRLfNulI65L3Db1d9
+ 8bBCPYkJ3V9EB0kgbOMW/ONVJe7pG3MShukYsQ6AnKp0I7gOOOWnHs13jtOcLSTwa78Lq8U8UWwsw6WEFqtdIN11g5xBS/uRyc6Z2VQQ7Bl2WyA3yz5NiMdB
+ 998b/5uhZ0tsNpoL51NuRN9yY0apzmm1b/ZmTA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In mv_xor_prep_dma_xor(), there is an if statement on line 577 to check
-whether sw_desc is NULL:
-    if (sw_desc)
+Hi Phong,
 
-When sw_desc is NULL, it is used on line 594:
-    dev_dbg(..., sw_desc, &sw_desc->async_tx);
+Phong Tran schreef op za 27-07-2019 om 08:56 [+0700]:
+> On 7/26/19 9:22 PM, Paul Bolle wrote:
+> > Phong Tran schreef op vr 26-07-2019 om 20:35 [+0700]:
+> > > diff --git a/drivers/isdn/gigaset/usb-gigaset.c b/drivers/isdn/gigaset/usb-gigaset.c
+> > > index 1b9b43659bdf..2e011f3db59e 100644
+> > > --- a/drivers/isdn/gigaset/usb-gigaset.c
+> > > +++ b/drivers/isdn/gigaset/usb-gigaset.c
+> > > @@ -703,6 +703,10 @@ static int gigaset_probe(struct usb_interface *interface,
+> > >   	usb_set_intfdata(interface, cs);
+> > >   
+> > >   	endpoint = &hostif->endpoint[0].desc;
+> > > +        if (!endpoint) {
+> > > +		dev_err(cs->dev, "Couldn't get control endpoint\n");
+> > > +		return -ENODEV;
+> > > +	}
+> > 
+> > When can this happen? Is this one of those bugs that one can only trigger with
+> > a specially crafted (evil) usb device?
+> > 
+> 
+> Yes, in my understanding, this only happens with random test of syzbot.
 
-Thus, a possible null-pointer dereference may occur.
+Looking at this again, I note the code is taking the address of a struct
+usb_endpoint_descriptor that's stored somewhere in memory. That address can't
+be NULL, can it?
 
-To fix this bug, sw_desc is checked before being used.
+So I haven't even looked at the fuzzer's report here, but I don't see how this
+patch could help. It only adds dead code. Am I missing something and should I
+drink even more coffee this Saturday morning?
 
-This bug is found by a static analysis tool STCheck written by us.
+> > >   	buffer_size = le16_to_cpu(endpoint->wMaxPacketSize);
+> > >   	ucs->bulk_out_size = buffer_size;
+> > > @@ -722,6 +726,11 @@ static int gigaset_probe(struct usb_interface *interface,
+> > > 
+> > Please note that I'm very close to getting cut off from the ISDN network, so
+> > the chances of being able to testi this on a live system are getting small.
+> > 
+> 
+> This bug can be invalid now. Do you agree?
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/dma/mv_xor.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+It's just that your patch arrived while I was busy doing my last ever test of
+the gigaset driver. So please don't expect me to put much time in this report
+(see 
+https://lwn.net/ml/linux-kernel/20190726220541.28783-1-pebolle%40tiscali.nl/
+).
 
-diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
-index 0ac8e7b34e12..08c0b2a9eb32 100644
---- a/drivers/dma/mv_xor.c
-+++ b/drivers/dma/mv_xor.c
-@@ -589,9 +589,11 @@ mv_xor_prep_dma_xor(struct dma_chan *chan, dma_addr_t dest, dma_addr_t *src,
- 		}
- 	}
- 
--	dev_dbg(mv_chan_to_devp(mv_chan),
--		"%s sw_desc %p async_tx %p \n",
--		__func__, sw_desc, &sw_desc->async_tx);
-+	if (sw_desc) {
-+		dev_dbg(mv_chan_to_devp(mv_chan),
-+			"%s sw_desc %p async_tx %p \n",
-+			__func__, sw_desc, &sw_desc->async_tx);
-+	}
- 	return sw_desc ? &sw_desc->async_tx : NULL;
- }
- 
--- 
-2.17.0
+Thanks,
+
+
+Paul Bolle
 
