@@ -6,36 +6,39 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16706C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D267AC7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE992084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC4B82084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387719AbfG0Nqq (ORCPT
+        id S2387743AbfG0NrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 09:46:46 -0400
-Received: from mail01.asahi-net.or.jp ([202.224.55.13]:50737 "EHLO
-        mail01.asahi-net.or.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387576AbfG0Nqq (ORCPT
+        Sat, 27 Jul 2019 09:47:13 -0400
+Received: from mail02.asahi-net.or.jp ([202.224.55.14]:45295 "EHLO
+        mail02.asahi-net.or.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387576AbfG0NrN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 09:46:46 -0400
+        Sat, 27 Jul 2019 09:47:13 -0400
 Received: from h61-195-96-97.vps.ablenet.jp (h61-195-96-97.ablenetvps.ne.jp [61.195.96.97])
         (Authenticated sender: PQ4Y-STU)
-        by mail01.asahi-net.or.jp (Postfix) with ESMTPA id 1DB3E12BE70;
-        Sat, 27 Jul 2019 22:46:44 +0900 (JST)
+        by mail02.asahi-net.or.jp (Postfix) with ESMTPA id F0BA04AC2F;
+        Sat, 27 Jul 2019 22:47:10 +0900 (JST)
 Received: from yo-satoh-debian.ysato.ml (ZM005235.ppp.dion.ne.jp [222.8.5.235])
-        by h61-195-96-97.vps.ablenet.jp (Postfix) with ESMTPSA id 59868240085;
-        Sat, 27 Jul 2019 22:46:44 +0900 (JST)
-Date:   Sat, 27 Jul 2019 22:46:43 +0900
-Message-ID: <87pnlvpp30.wl-ysato@users.sourceforge.jp>
+        by h61-195-96-97.vps.ablenet.jp (Postfix) with ESMTPSA id 8B54D240085;
+        Sat, 27 Jul 2019 22:47:10 +0900 (JST)
+Date:   Sat, 27 Jul 2019 22:47:10 +0900
+Message-ID: <87o91fpp29.wl-ysato@users.sourceforge.jp>
 From:   Yoshinori Sato <ysato@users.sourceforge.jp>
 To:     Masahiro Yamada <yamada.masahiro@socionext.com>
 Cc:     Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sh: use __builtin_constant_p() directly instead of IS_IMMEDIATE()
-In-Reply-To: <20190723074943.17093-1-yamada.masahiro@socionext.com>
-References: <20190723074943.17093-1-yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] sh: remove unneeded uapi asm-generic wrappers
+In-Reply-To: <20190723113036.14576-1-yamada.masahiro@socionext.com>
+References: <20190723113036.14576-1-yamada.masahiro@socionext.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL/10.8 EasyPG/1.0.0 Emacs/25.1
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -46,53 +49,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jul 2019 16:49:43 +0900,
+On Tue, 23 Jul 2019 20:30:36 +0900,
 Masahiro Yamada wrote:
 > 
-> __builtin_constant_p(nr) is used everywhere now. It does not make
-> much sense to define IS_IMMEDIATE() as its alias.
+> These are listed in include/uapi/asm-generic/Kbuild, so Kbuild will
+> automatically generate them.
 > 
 > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
 > 
->  arch/sh/include/asm/bitops-op32.h | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
+>  arch/sh/include/uapi/asm/setup.h | 2 --
+>  arch/sh/include/uapi/asm/types.h | 2 --
+>  2 files changed, 4 deletions(-)
+>  delete mode 100644 arch/sh/include/uapi/asm/setup.h
+>  delete mode 100644 arch/sh/include/uapi/asm/types.h
 > 
-> diff --git a/arch/sh/include/asm/bitops-op32.h b/arch/sh/include/asm/bitops-op32.h
-> index 466880362ad1..cfe5465acce7 100644
-> --- a/arch/sh/include/asm/bitops-op32.h
-> +++ b/arch/sh/include/asm/bitops-op32.h
-> @@ -16,11 +16,9 @@
->  #define BYTE_OFFSET(nr)		((nr) % BITS_PER_BYTE)
->  #endif
->  
-> -#define IS_IMMEDIATE(nr)	(__builtin_constant_p(nr))
-> -
->  static inline void __set_bit(int nr, volatile unsigned long *addr)
->  {
-> -	if (IS_IMMEDIATE(nr)) {
-> +	if (__builtin_constant_p(nr)) {
->  		__asm__ __volatile__ (
->  			"bset.b %1, @(%O2,%0)		! __set_bit\n\t"
->  			: "+r" (addr)
-> @@ -37,7 +35,7 @@ static inline void __set_bit(int nr, volatile unsigned long *addr)
->  
->  static inline void __clear_bit(int nr, volatile unsigned long *addr)
->  {
-> -	if (IS_IMMEDIATE(nr)) {
-> +	if (__builtin_constant_p(nr)) {
->  		__asm__ __volatile__ (
->  			"bclr.b %1, @(%O2,%0)		! __clear_bit\n\t"
->  			: "+r" (addr)
-> @@ -64,7 +62,7 @@ static inline void __clear_bit(int nr, volatile unsigned long *addr)
->   */
->  static inline void __change_bit(int nr, volatile unsigned long *addr)
->  {
-> -	if (IS_IMMEDIATE(nr)) {
-> +	if (__builtin_constant_p(nr)) {
->  		__asm__ __volatile__ (
->  			"bxor.b %1, @(%O2,%0)		! __change_bit\n\t"
->  			: "+r" (addr)
+> diff --git a/arch/sh/include/uapi/asm/setup.h b/arch/sh/include/uapi/asm/setup.h
+> deleted file mode 100644
+> index 4bd19f80f9b0..000000000000
+> --- a/arch/sh/include/uapi/asm/setup.h
+> +++ /dev/null
+> @@ -1,2 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> -#include <asm-generic/setup.h>
+> diff --git a/arch/sh/include/uapi/asm/types.h b/arch/sh/include/uapi/asm/types.h
+> deleted file mode 100644
+> index 68100e108ea6..000000000000
+> --- a/arch/sh/include/uapi/asm/types.h
+> +++ /dev/null
+> @@ -1,2 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> -#include <asm-generic/types.h>
 > -- 
 > 2.17.1
 > 
