@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B912DC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16706C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A35420449
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE992084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387707AbfG0NqV (ORCPT
+        id S2387719AbfG0Nqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 09:46:21 -0400
-Received: from mail01.asahi-net.or.jp ([202.224.55.13]:50700 "EHLO
+        Sat, 27 Jul 2019 09:46:46 -0400
+Received: from mail01.asahi-net.or.jp ([202.224.55.13]:50737 "EHLO
         mail01.asahi-net.or.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387578AbfG0NqU (ORCPT
+        with ESMTP id S2387576AbfG0Nqq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 09:46:20 -0400
+        Sat, 27 Jul 2019 09:46:46 -0400
 Received: from h61-195-96-97.vps.ablenet.jp (h61-195-96-97.ablenetvps.ne.jp [61.195.96.97])
         (Authenticated sender: PQ4Y-STU)
-        by mail01.asahi-net.or.jp (Postfix) with ESMTPA id 682D412BA1E;
-        Sat, 27 Jul 2019 22:46:18 +0900 (JST)
+        by mail01.asahi-net.or.jp (Postfix) with ESMTPA id 1DB3E12BE70;
+        Sat, 27 Jul 2019 22:46:44 +0900 (JST)
 Received: from yo-satoh-debian.ysato.ml (ZM005235.ppp.dion.ne.jp [222.8.5.235])
-        by h61-195-96-97.vps.ablenet.jp (Postfix) with ESMTPSA id D0121240085;
-        Sat, 27 Jul 2019 22:46:17 +0900 (JST)
-Date:   Sat, 27 Jul 2019 22:46:16 +0900
-Message-ID: <87r26bpp3r.wl-ysato@users.sourceforge.jp>
+        by h61-195-96-97.vps.ablenet.jp (Postfix) with ESMTPSA id 59868240085;
+        Sat, 27 Jul 2019 22:46:44 +0900 (JST)
+Date:   Sat, 27 Jul 2019 22:46:43 +0900
+Message-ID: <87pnlvpp30.wl-ysato@users.sourceforge.jp>
 From:   Yoshinori Sato <ysato@users.sourceforge.jp>
 To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     uclinux-h8-devel@lists.sourceforge.jp,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] h8300: move definition of  __kernel_size_t etc. to posix_types.h
-In-Reply-To: <20190723102106.11375-1-yamada.masahiro@socionext.com>
-References: <20190723102106.11375-1-yamada.masahiro@socionext.com>
+Cc:     Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sh: use __builtin_constant_p() directly instead of IS_IMMEDIATE()
+In-Reply-To: <20190723074943.17093-1-yamada.masahiro@socionext.com>
+References: <20190723074943.17093-1-yamada.masahiro@socionext.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL/10.8 EasyPG/1.0.0 Emacs/25.1
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -46,69 +46,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jul 2019 19:21:06 +0900,
+On Tue, 23 Jul 2019 16:49:43 +0900,
 Masahiro Yamada wrote:
 > 
-> These types should be defined in posix_types.h, not in bitsperlong.h .
-> 
-> With these defines moved, h8300-specific bitsperlong.h is no longer
-> needed since Kbuild will automatically create a wrapper of
-> include/uapi/asm-generic/bitsperlong.h
+> __builtin_constant_p(nr) is used everywhere now. It does not make
+> much sense to define IS_IMMEDIATE() as its alias.
 > 
 > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
 > 
->  arch/h8300/include/uapi/asm/bitsperlong.h | 15 ---------------
->  arch/h8300/include/uapi/asm/posix_types.h | 13 +++++++++++++
->  2 files changed, 13 insertions(+), 15 deletions(-)
->  delete mode 100644 arch/h8300/include/uapi/asm/bitsperlong.h
->  create mode 100644 arch/h8300/include/uapi/asm/posix_types.h
+>  arch/sh/include/asm/bitops-op32.h | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
 > 
-> diff --git a/arch/h8300/include/uapi/asm/bitsperlong.h b/arch/h8300/include/uapi/asm/bitsperlong.h
-> deleted file mode 100644
-> index a33e358f1c1b..000000000000
-> --- a/arch/h8300/include/uapi/asm/bitsperlong.h
-> +++ /dev/null
-> @@ -1,15 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> -#ifndef _UAPI__ASM_H8300_BITS_PER_LONG
-> -#define _UAPI__ASM_H8300_BITS_PER_LONG
+> diff --git a/arch/sh/include/asm/bitops-op32.h b/arch/sh/include/asm/bitops-op32.h
+> index 466880362ad1..cfe5465acce7 100644
+> --- a/arch/sh/include/asm/bitops-op32.h
+> +++ b/arch/sh/include/asm/bitops-op32.h
+> @@ -16,11 +16,9 @@
+>  #define BYTE_OFFSET(nr)		((nr) % BITS_PER_BYTE)
+>  #endif
+>  
+> -#define IS_IMMEDIATE(nr)	(__builtin_constant_p(nr))
 > -
-> -#include <asm-generic/bitsperlong.h>
-> -
-> -#if !defined(__ASSEMBLY__)
-> -/* h8300-unknown-linux required long */
-> -#define __kernel_size_t __kernel_size_t
-> -typedef unsigned long	__kernel_size_t;
-> -typedef long		__kernel_ssize_t;
-> -typedef long		__kernel_ptrdiff_t;
-> -#endif
-> -
-> -#endif /* _UAPI__ASM_H8300_BITS_PER_LONG */
-> diff --git a/arch/h8300/include/uapi/asm/posix_types.h b/arch/h8300/include/uapi/asm/posix_types.h
-> new file mode 100644
-> index 000000000000..3efc9dd59476
-> --- /dev/null
-> +++ b/arch/h8300/include/uapi/asm/posix_types.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
-> +#ifndef _UAPI_ASM_POSIX_TYPES_H
-> +#define _UAPI_ASM_POSIX_TYPES_H
-> +
-> +/* h8300-unknown-linux required long */
-> +#define __kernel_size_t __kernel_size_t
-> +typedef unsigned long	__kernel_size_t;
-> +typedef long		__kernel_ssize_t;
-> +typedef long		__kernel_ptrdiff_t;
-> +
-> +#include <asm-generic/posix_types.h>
-> +
-> +#endif /* _UAPI_ASM_POSIX_TYPES_H */
+>  static inline void __set_bit(int nr, volatile unsigned long *addr)
+>  {
+> -	if (IS_IMMEDIATE(nr)) {
+> +	if (__builtin_constant_p(nr)) {
+>  		__asm__ __volatile__ (
+>  			"bset.b %1, @(%O2,%0)		! __set_bit\n\t"
+>  			: "+r" (addr)
+> @@ -37,7 +35,7 @@ static inline void __set_bit(int nr, volatile unsigned long *addr)
+>  
+>  static inline void __clear_bit(int nr, volatile unsigned long *addr)
+>  {
+> -	if (IS_IMMEDIATE(nr)) {
+> +	if (__builtin_constant_p(nr)) {
+>  		__asm__ __volatile__ (
+>  			"bclr.b %1, @(%O2,%0)		! __clear_bit\n\t"
+>  			: "+r" (addr)
+> @@ -64,7 +62,7 @@ static inline void __clear_bit(int nr, volatile unsigned long *addr)
+>   */
+>  static inline void __change_bit(int nr, volatile unsigned long *addr)
+>  {
+> -	if (IS_IMMEDIATE(nr)) {
+> +	if (__builtin_constant_p(nr)) {
+>  		__asm__ __volatile__ (
+>  			"bxor.b %1, @(%O2,%0)		! __change_bit\n\t"
+>  			: "+r" (addr)
 > -- 
 > 2.17.1
 > 
 
-Applied h8300-next.
+Applied sh-next.
 Thanks.
 
 -- 
