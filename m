@@ -2,276 +2,122 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 333F5C76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 22:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF79C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 22:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8AF2147A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 22:16:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564265810;
-	bh=QimxdqQCdQ7fVUROv7RLUc4aY9G5ZVwucFUgcKObSD0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RW0D10y+hJW/V5I8VhptAIq1gvEASOBOJOCvDAIwTmDer3iXcjFwuZuVvUsdAoKOb
-	 4Kd7iuSo9lLwvMKpRb0ielljeyaqub3P4TSK2GI69+LRexyycWp4DlwjMEiCShebNZ
-	 5eZj8V6R2KEyYGWmkQhYqURUKHUmyONKeXxWE7Do=
+	by mail.kernel.org (Postfix) with ESMTP id D83112147A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 22:25:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Q4rMJQtc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387457AbfG0WQt (ORCPT
+        id S2387480AbfG0WZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 18:16:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725265AbfG0WQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 18:16:48 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D2D6206DD;
-        Sat, 27 Jul 2019 22:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564265807;
-        bh=QimxdqQCdQ7fVUROv7RLUc4aY9G5ZVwucFUgcKObSD0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Yb+XCCjjIQWYdzhtUVRiD6ZX2Iw4YWNij742FkISIv3UPxjZVu34K40BOcF6YUkr7
-         fY3006Ahe7BV3sHtH+LPAd7Eg0bDHYNGbxWcDewnBHIbJhrzJZ3YHBBz7S09ttc1Uc
-         3LUSX1Bo3KXg2Mpm4vRBkK78UJBx3fr95pEoTECw=
-Date:   Sat, 27 Jul 2019 23:16:37 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
-Cc:     kernel@collabora.com, Nick Vaccaro <nvaccaro@chromium.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/1] iio: common: cros_ec_sensors: Expose
- cros_ec_sensors frequency range via iio sysfs
-Message-ID: <20190727231112.3dde6723@archlinux>
-In-Reply-To: <36eda13de50426c1b5e46a201e17122f9d899f1a.1563268064.git.fabien.lahoudere@collabora.com>
-References: <cover.1563268064.git.fabien.lahoudere@collabora.com>
-        <36eda13de50426c1b5e46a201e17122f9d899f1a.1563268064.git.fabien.lahoudere@collabora.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 27 Jul 2019 18:25:21 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51471 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725265AbfG0WZV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 18:25:21 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 207so50733127wma.1
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 15:25:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pt2DS+bSnWFp1N1RLTwE7bapb13KvM6fGjZ/XnqtFGA=;
+        b=Q4rMJQtc2YDhP2Z5DDMbLiVzwH/c/RRzXPjT4W7XQMY7+LABrEKoMQlq5UbuH/8O9/
+         NR0zPuQHgQFh1glKSDl8KQzJm7+QVh8DzWnhUEPIRugxX8ILk6SnVrBZ2L07u9eMLMaf
+         9iJY3JVU55esX4h92K1Xg63G+26b9enZIXP8hF07/GsDpASa0YiVx1Dzmuaxt7FwP9In
+         JAMDOhCBkntus9al2YVSRKw4WAjQdh5clBG5xkz7sPhH1oicHzFDKLynctMKUQJewNWA
+         ZQCjdCl/6uA3sX56HuyVNSymQEuY1QYP0CN4z8DV8xWlUaI59QUUD1kdkKxabJbDjSvW
+         FyIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pt2DS+bSnWFp1N1RLTwE7bapb13KvM6fGjZ/XnqtFGA=;
+        b=Vgg+bMBORPWYG3yAi+cBAUp39fMWJK3XtoirN8mY6SEL2dCpeHrYK8y15S0tXAb+4E
+         1pavu5JbO3G1/GYXttRhmtLoL3MLgl7QBa/6k/qUwOu1tVGj0Nay0LHX/1QP4MX7Iz82
+         KXDOHmtVS5xOrcSQ3219S+Exel697f3Po7HwVIBFI6rQKd6fPHUo2NF1D/36eopdwJwj
+         8J2Sx1btZ0chNTEr5PzX1JVvByVGtxpEOhjNB6lL7KjPF9LQm1eQWFNI30yT/v79fVGg
+         SCYtkqcqVusvbqyloj0gRmZoxh6HKLGpJlpE5jlb1xK/VoaEp5o+r3f2IfUMpOOPle79
+         eO8A==
+X-Gm-Message-State: APjAAAWphHHTwKpcmG6jlQlZE125eGFMkpzJrC/8pGQYlU6Fk9Uzptj4
+        dNjBpoMdUjS/hN713es9xUoFmyTCI18=
+X-Google-Smtp-Source: APXvYqxmBf+TeChmnc8Uf4bHS6cpS/XAllW9J91hKoLsQSZkNVqtKkatb1J5RWEw53mHQiWaS8MqXw==
+X-Received: by 2002:a1c:a909:: with SMTP id s9mr90365270wme.20.1564266318504;
+        Sat, 27 Jul 2019 15:25:18 -0700 (PDT)
+Received: from localhost.localdomain ([213.220.153.21])
+        by smtp.gmail.com with ESMTPSA id g8sm54978721wmf.17.2019.07.27.15.25.16
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 27 Jul 2019 15:25:17 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     linux-kernel@vger.kernel.org, oleg@redhat.com,
+        torvalds@linux-foundation.org
+Cc:     arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
+        joel@joelfernandes.org, tglx@linutronix.de, tj@kernel.org,
+        dhowells@redhat.com, jannh@google.com, luto@kernel.org,
+        akpm@linux-foundation.org, cyphar@cyphar.com,
+        viro@zeniv.linux.org.uk, kernel-team@android.com,
+        Christian Brauner <christian@brauner.io>
+Subject: [PATCH v3 0/2] pidfd: waiting on processes through pidfds
+Date:   Sun, 28 Jul 2019 00:22:28 +0200
+Message-Id: <20190727222229.6516-1-christian@brauner.io>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jul 2019 11:11:06 +0200
-Fabien Lahoudere <fabien.lahoudere@collabora.com> wrote:
+Hey everyone,
 
-> Embedded controller return minimum and maximum frequencies, unfortunately
-> we have no way to know the step for all available frequencies.
-> Even if not complete, we can return a list of known values using the
-> standard read_avail callback (IIO_CHAN_INFO_SAMP_FREQ) to provide them to
-> userland.
-> 
-> Now cros_ec_* sensors provides frequencies values in sysfs like this:
-> "0 min max". 0 is always true to disable the sensor.
-> 
-> Default frequencies are provided for earlier protocol.
-> 
-> Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
-> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+/* v3 */
+This adds the ability to wait on processes using pidfds. This is one of
+the few missing pieces to make it possible to manage processes using
+only pidfds.
 
-I applied a version Enric had rebased. Hopefully it matches this!
-Was easier than repeating his conflict resolution.
+Now major changes have occured since v2. The only thing that was changed
+has been to move the translation of a pidfd into a struct pid to a
+dedicated helper that also does a get_pid() on it to keep the exit code
+identical for all switch cases.
+I've also added a test to verify that we correctly fail when an invalid
+file descriptor is passed.
 
-thanks,
+The core patch for waitid is pleasantly small. The largest change is
+caused by adding proper tests for waitid(P_PIDFD).
 
-Jonathan
+/* v2 */
+Link: https://lore.kernel.org/lkml/20190727085201.11743-1-christian@brauner.io
 
-> ---
->  .../common/cros_ec_sensors/cros_ec_sensors.c  |  3 +
->  .../cros_ec_sensors/cros_ec_sensors_core.c    | 65 +++++++++++++++++++
->  drivers/iio/light/cros_ec_light_prox.c        |  3 +
->  .../linux/iio/common/cros_ec_sensors_core.h   | 21 ++++++
->  4 files changed, 92 insertions(+)
-> 
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-> index 17af4e0fd5f8..dbca02688c4f 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-> @@ -175,6 +175,7 @@ static int cros_ec_sensors_write(struct iio_dev *indio_dev,
->  static const struct iio_info ec_sensors_info = {
->  	.read_raw = &cros_ec_sensors_read,
->  	.write_raw = &cros_ec_sensors_write,
-> +	.read_avail = &cros_ec_sensors_core_read_avail,
->  };
->  
->  static int cros_ec_sensors_probe(struct platform_device *pdev)
-> @@ -211,6 +212,8 @@ static int cros_ec_sensors_probe(struct platform_device *pdev)
->  			BIT(IIO_CHAN_INFO_SCALE) |
->  			BIT(IIO_CHAN_INFO_FREQUENCY) |
->  			BIT(IIO_CHAN_INFO_SAMP_FREQ);
-> +		channel->info_mask_shared_by_all_available =
-> +			BIT(IIO_CHAN_INFO_SAMP_FREQ);
->  		channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
->  		channel->scan_type.storagebits = CROS_EC_SENSOR_BITS;
->  		channel->scan_index = i;
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> index 81111af8a167..805652250960 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> @@ -50,6 +50,37 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
->  	return ret;
->  }
->  
-> +static void get_default_min_max_freq(enum motionsensor_type type,
-> +				     u32 *min_freq,
-> +				     u32 *max_freq)
-> +{
-> +	switch (type) {
-> +	case MOTIONSENSE_TYPE_ACCEL:
-> +	case MOTIONSENSE_TYPE_GYRO:
-> +		*min_freq = 12500;
-> +		*max_freq = 100000;
-> +		break;
-> +	case MOTIONSENSE_TYPE_MAG:
-> +		*min_freq = 5000;
-> +		*max_freq = 25000;
-> +		break;
-> +	case MOTIONSENSE_TYPE_PROX:
-> +	case MOTIONSENSE_TYPE_LIGHT:
-> +		*min_freq = 100;
-> +		*max_freq = 50000;
-> +		break;
-> +	case MOTIONSENSE_TYPE_BARO:
-> +		*min_freq = 250;
-> +		*max_freq = 20000;
-> +		break;
-> +	case MOTIONSENSE_TYPE_ACTIVITY:
-> +	default:
-> +		*min_freq = 0;
-> +		*max_freq = 0;
-> +		break;
-> +	}
-> +}
-> +
->  int cros_ec_sensors_core_init(struct platform_device *pdev,
->  			      struct iio_dev *indio_dev,
->  			      bool physical_device)
-> @@ -100,6 +131,19 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  		}
->  		state->type = state->resp->info.type;
->  		state->loc = state->resp->info.location;
-> +
-> +		/* 0 is a correct value used to stop the device */
-> +		state->frequencies[0] = 0;
-> +		if (state->msg->version < 3) {
-> +			get_default_min_max_freq(state->resp->info.type,
-> +						 &state->frequencies[1],
-> +						 &state->frequencies[2]);
-> +		} else {
-> +			state->frequencies[1] =
-> +			    state->resp->info_3.min_frequency;
-> +			state->frequencies[2] =
-> +			    state->resp->info_3.max_frequency;
-> +		}
->  	}
->  
->  	return 0;
-> @@ -461,6 +505,27 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
->  }
->  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_read);
->  
-> +int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
-> +				    struct iio_chan_spec const *chan,
-> +				    const int **vals,
-> +				    int *type,
-> +				    int *length,
-> +				    long mask)
-> +{
-> +	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		*length = ARRAY_SIZE(state->frequencies);
-> +		*vals = (const int *)&state->frequencies;
-> +		*type = IIO_VAL_INT;
-> +		return IIO_AVAIL_LIST;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +EXPORT_SYMBOL_GPL(cros_ec_sensors_core_read_avail);
-> +
->  int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
->  			       struct iio_chan_spec const *chan,
->  			       int val, int val2, long mask)
-> diff --git a/drivers/iio/light/cros_ec_light_prox.c b/drivers/iio/light/cros_ec_light_prox.c
-> index 308ee6ff2e22..b9838bf25248 100644
-> --- a/drivers/iio/light/cros_ec_light_prox.c
-> +++ b/drivers/iio/light/cros_ec_light_prox.c
-> @@ -164,6 +164,7 @@ static int cros_ec_light_prox_write(struct iio_dev *indio_dev,
->  static const struct iio_info cros_ec_light_prox_info = {
->  	.read_raw = &cros_ec_light_prox_read,
->  	.write_raw = &cros_ec_light_prox_write,
-> +	.read_avail = &cros_ec_sensors_core_read_avail,
->  };
->  
->  static int cros_ec_light_prox_probe(struct platform_device *pdev)
-> @@ -198,6 +199,8 @@ static int cros_ec_light_prox_probe(struct platform_device *pdev)
->  	channel->info_mask_shared_by_all =
->  		BIT(IIO_CHAN_INFO_SAMP_FREQ) |
->  		BIT(IIO_CHAN_INFO_FREQUENCY);
-> +	channel->info_mask_shared_by_all_available =
-> +		BIT(IIO_CHAN_INFO_SAMP_FREQ);
->  	channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
->  	channel->scan_type.storagebits = CROS_EC_SENSOR_BITS;
->  	channel->scan_type.shift = 0;
-> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
-> index 0c636b9fe8d7..a9623111f7c9 100644
-> --- a/include/linux/iio/common/cros_ec_sensors_core.h
-> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
-> @@ -70,6 +70,9 @@ struct cros_ec_sensors_core_state {
->  				    unsigned long scan_mask, s16 *data);
->  
->  	int curr_sampl_freq;
-> +
-> +	/* Table of known available frequencies : 0, Min and Max in mHz */
-> +	int frequencies[3];
->  };
->  
->  /**
-> @@ -150,6 +153,24 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
->  			      struct iio_chan_spec const *chan,
->  			      int *val, int *val2, long mask);
->  
-> +/**
-> + * cros_ec_sensors_core_read_avail() - get available values
-> + * @indio_dev:		pointer to state information for device
-> + * @chan:	channel specification structure table
-> + * @vals:	list of available values
-> + * @type:	type of data returned
-> + * @length:	number of data returned in the array
-> + * @mask:	specifies which values to be requested
-> + *
-> + * Return:	an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST
-> + */
-> +int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
-> +				    struct iio_chan_spec const *chan,
-> +				    const int **vals,
-> +				    int *type,
-> +				    int *length,
-> +				    long mask);
-> +
->  /**
->   * cros_ec_sensors_core_write() - function to write a value to the sensor
->   * @st:		pointer to state information for device
+/* v1 */
+Link: https://lore.kernel.org/lkml/20190726093934.13557-1-christian@brauner.io
+
+/* v0 */
+Link: https://lore.kernel.org/lkml/20190724144651.28272-1-christian@brauner.io
+
+Christian
+
+Christian Brauner (2):
+  pidfd: add P_PIDFD to waitid()
+  pidfd: add pidfd_wait tests
+
+ include/linux/pid.h                        |   4 +
+ include/uapi/linux/wait.h                  |   1 +
+ kernel/exit.c                              |  33 ++-
+ kernel/fork.c                              |   8 +
+ kernel/signal.c                            |   7 +-
+ tools/testing/selftests/pidfd/pidfd.h      |  25 ++
+ tools/testing/selftests/pidfd/pidfd_test.c |  14 --
+ tools/testing/selftests/pidfd/pidfd_wait.c | 258 +++++++++++++++++++++
+ 8 files changed, 331 insertions(+), 19 deletions(-)
+ create mode 100644 tools/testing/selftests/pidfd/pidfd_wait.c
+
+-- 
+2.22.0
 
