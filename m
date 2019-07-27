@@ -2,114 +2,273 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D78C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C53C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47183208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:25:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t5kSA4pk"
+	by mail.kernel.org (Postfix) with ESMTP id DD2C7208C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:27:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564248438;
+	bh=TgHbtdhceCuB6Z5ciNGix1YdP05JeK/vtR5Z63isVLo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=UNuXdncMJEaAZHPBwihZg9eC1w0Zg7Z4Ru936xM2nIicoPKzTibIK6ohF879BBHDj
+	 2JjdndvId7DNt5DBw1l8OGC7UGMIrlVurcjG3a1+iubP/dXYdASW3ym3jXLSZBQ/7l
+	 T9f1jp2+zmrShr3CnzpQ8+YejwcybUX3QPfganZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387870AbfG0RZQ (ORCPT
+        id S2387950AbfG0R1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 13:25:16 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42939 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387665AbfG0RZP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 13:25:15 -0400
-Received: by mail-ot1-f67.google.com with SMTP id l15so58486421otn.9
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 10:25:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GnqU0JRhrXBsiEdVfrpxRYhB+jhyBUboMzh3dp1tPvc=;
-        b=t5kSA4pkhco77TShAAaMPIl1DAEIo8hLSMUCCmpXXj9Z8l3AEbxPPtTPHlV27fOVCe
-         +QJQV64yQyneiJ4QqJPMJz3diUQwGaL4/cpogzyHUCg0Sw1VfPAdf7kqhvMlLEZveam+
-         7DsthIZxv3KZwo3AhW5msgxhNpyk+tXDIzqCHi2JE2v400wzBomRYOUxc+EhGPpTrFLM
-         hPMyRRpACoOCg/4w0nvsFNxcp9eX0nTVgXYoCqc0bj25txMqcBi0X59HZZ4tV5F26AZY
-         1NDtFdARA+3mlYVIDc5P1pBt/GoLferKZo6H5ZRD+8DssJMi5hiMQP7iV4cWC6Z0GW7e
-         2JAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GnqU0JRhrXBsiEdVfrpxRYhB+jhyBUboMzh3dp1tPvc=;
-        b=WbtlVzRalnjgkoWQO06d4qwyS9oEidaD+BccU+XjrSY9Tisd6xGKmmo+CYNEUxA47w
-         cy0evQ5gv/tEknsFqLQCLmYLofkzy2CYEs8kaFEs7IzW6CoD3USh1OkSdqKbpsaVLx6b
-         lXGOjWmfQ5uPTf3Rw71SkyKh0FYgzf4nVyL7cV7WHZKvBBSHY+AWyGfL3t9LAaC40Daw
-         j9anRsKnnW/0ZOKArN4qCt9pJqRdZa9QQVHwj5q3hpJwT4y+7rbDAF3nbWjkNB4Atqs7
-         4k95g4pxmiR6KZQKJk0cuBOnSGQuVLoWpHf8EK7zLZ77IDRlwI4fpP51yzt8GABTjuIl
-         eIZA==
-X-Gm-Message-State: APjAAAWc6pIsXh7ud9V7LojM9z4LvUPg3IpSRMApomXl0AWoFVb3ri+U
-        sgmQfNZ3gvg/Umn1ibdHQO1gqpf8oyjqJi8oNbg=
-X-Google-Smtp-Source: APXvYqzgh59g+ACIfiw2qGNQLkF6F1GlClI1XRgmH1D5Yjm7nb8sSCqgU3QzmV3GAkGYA4zf8O3vnAkHF2nB2QLUeKs=
-X-Received: by 2002:a9d:460d:: with SMTP id y13mr53509367ote.368.1564248314917;
- Sat, 27 Jul 2019 10:25:14 -0700 (PDT)
+        Sat, 27 Jul 2019 13:27:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387665AbfG0R1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 13:27:16 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A0092083B;
+        Sat, 27 Jul 2019 17:27:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564248435;
+        bh=TgHbtdhceCuB6Z5ciNGix1YdP05JeK/vtR5Z63isVLo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UpHUMlNRce5rXGhikWfLBpsNdcA/Ub+11QzYDBBseNNpcTmA3puzd6QvA+2JQq0lB
+         DxQOvy2FnEHdEVoD0uwnrx+r3NDmMwarVNntzw8MB1JyEvpe5mP/BWS/TDbQfNHXE2
+         GSaH9XTZOBNT38XOLttLVeWRBWNmDReikaG3xk1w=
+Date:   Sat, 27 Jul 2019 18:27:09 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        freeman.liu@unisoc.com, vincent.guittot@linaro.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: sc27xx: Change to polling mode to read data
+Message-ID: <20190727182709.037fc595@archlinux>
+In-Reply-To: <1870ea18729f93fb36694affaf7e9443733dd988.1564035575.git.baolin.wang@linaro.org>
+References: <1870ea18729f93fb36694affaf7e9443733dd988.1564035575.git.baolin.wang@linaro.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190725184253.21160-1-lpf.vector@gmail.com> <1564080768.11067.22.camel@lca.pw>
- <CAD7_sbEXQt0oHuD01BXdW2_=G4h8U8ogHVt0N1Yez2ajFJkShw@mail.gmail.com> <20190726071219.GC6142@dhcp22.suse.cz>
-In-Reply-To: <20190726071219.GC6142@dhcp22.suse.cz>
-From:   Pengfei Li <lpf.vector@gmail.com>
-Date:   Sun, 28 Jul 2019 01:25:02 +0800
-Message-ID: <CAD7_sbF7JMbxBF1ZRQKxW-U9S-tEOhneumjGXT3YADEfYCGKYw@mail.gmail.com>
-Subject: Re: [PATCH 00/10] make "order" unsigned int
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>, vbabka@suse.cz,
-        aryabinin@virtuozzo.com, osalvador@suse.de, rostedt@goodmis.org,
-        mingo@redhat.com, pavel.tatashin@microsoft.com, rppt@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 3:12 PM Michal Hocko <mhocko@kernel.org> wrote:
->
+On Thu, 25 Jul 2019 14:33:50 +0800
+Baolin Wang <baolin.wang@linaro.org> wrote:
 
-Thank you for your comments.
+> From: Freeman Liu <freeman.liu@unisoc.com>
+> 
+> On Spreadtrum platform, the headphone will read one ADC channel multiple
+> times to identify the headphone type, and the headphone identification is
+> sensitive of the ADC reading time. And we found it will take longer time
+> to reading ADC data by using interrupt mode comparing with the polling
+> mode, thus we should change to polling mode to improve the efficiency
+> of reading data, which can identify the headphone type successfully.
+> 
+> Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 
-> On Fri 26-07-19 07:48:36, Pengfei Li wrote:
-> [...]
-> > For the benefit, "order" may be negative, which is confusing and weird.
->
-> order = -1 has a special meaning.
->
+Hi,
 
-Yes. But I mean -1 can be replaced by any number greater than
-MAX_ORDER - 1 and there is no reason to be negative.
+My concerns with this sort of approach is that we may be sacrificing power
+efficiency for some usecases to support one demanding one.
 
-> > There is no good reason not to do this since it can be avoided.
->
-> "This is good because we can do it" doesn't really sound like a
-> convincing argument to me. I would understand if this reduced a
-> generated code, made an overall code readability much better or
-> something along those lines. Also we only use MAX_ORDER range of values
-> so I could argue that a smaller data type (e.g. short) should be
-> sufficient for this data type.
->
+The maximum sleep time is 1 second (I think) which is probably too long
+to poll a register for in general.
 
-I resend an email to interpret the meaning of my commit, and I would be
-very grateful if you post some comments on this.
+Is there some way we can bound that time and perhaps switch between
+interrupt and polling modes depending on how long we expect to wait?
 
-> Please note that _any_ change, alebit seemingly small, can introduce a
-> subtle bug. Also each patch requires a man power to review so you have
-> to understand that "just because we can" is not a strong motivation for
-> people to spend their time on such a patch.
+Thanks,
 
-Sincerely thank you, I will keep these in mind.
+Jonathan
 
-> --
-> Michal Hocko
-> SUSE Labs
+> ---
+>  drivers/iio/adc/sc27xx_adc.c |   81 ++++++++++++++----------------------------
+>  1 file changed, 27 insertions(+), 54 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/sc27xx_adc.c b/drivers/iio/adc/sc27xx_adc.c
+> index f7f7a189..ea864290 100644
+> --- a/drivers/iio/adc/sc27xx_adc.c
+> +++ b/drivers/iio/adc/sc27xx_adc.c
+> @@ -3,7 +3,6 @@
+>  
+>  #include <linux/hwspinlock.h>
+>  #include <linux/iio/iio.h>
+> -#include <linux/interrupt.h>
+>  #include <linux/module.h>
+>  #include <linux/nvmem-consumer.h>
+>  #include <linux/of.h>
+> @@ -46,14 +45,18 @@
+>  /* Bits definitions for SC27XX_ADC_INT_CLR registers */
+>  #define SC27XX_ADC_IRQ_CLR		BIT(0)
+>  
+> +/* Bits definitions for SC27XX_ADC_INT_RAW registers */
+> +#define SC27XX_ADC_IRQ_RAW		BIT(0)
+> +
+>  /* Mask definition for SC27XX_ADC_DATA register */
+>  #define SC27XX_ADC_DATA_MASK		GENMASK(11, 0)
+>  
+>  /* Timeout (ms) for the trylock of hardware spinlocks */
+>  #define SC27XX_ADC_HWLOCK_TIMEOUT	5000
+>  
+> -/* Timeout (ms) for ADC data conversion according to ADC datasheet */
+> -#define SC27XX_ADC_RDY_TIMEOUT		100
+> +/* Timeout (us) for ADC data conversion according to ADC datasheet */
+> +#define SC27XX_ADC_RDY_TIMEOUT		1000000
 
---
-Pengfei
+This is 10 x the value I think...
+
+> +#define SC27XX_ADC_POLL_RAW_STATUS	500
+>  
+>  /* Maximum ADC channel number */
+>  #define SC27XX_ADC_CHANNEL_MAX		32
+> @@ -72,10 +75,8 @@ struct sc27xx_adc_data {
+>  	 * subsystems which will access the unique ADC controller.
+>  	 */
+>  	struct hwspinlock *hwlock;
+> -	struct completion completion;
+>  	int channel_scale[SC27XX_ADC_CHANNEL_MAX];
+>  	u32 base;
+> -	int value;
+>  	int irq;
+>  };
+>  
+> @@ -188,9 +189,7 @@ static int sc27xx_adc_read(struct sc27xx_adc_data *data, int channel,
+>  			   int scale, int *val)
+>  {
+>  	int ret;
+> -	u32 tmp;
+> -
+> -	reinit_completion(&data->completion);
+> +	u32 tmp, value, status;
+>  
+>  	ret = hwspin_lock_timeout_raw(data->hwlock, SC27XX_ADC_HWLOCK_TIMEOUT);
+>  	if (ret) {
+> @@ -203,6 +202,11 @@ static int sc27xx_adc_read(struct sc27xx_adc_data *data, int channel,
+>  	if (ret)
+>  		goto unlock_adc;
+>  
+> +	ret = regmap_update_bits(data->regmap, data->base + SC27XX_ADC_INT_CLR,
+> +				 SC27XX_ADC_IRQ_CLR, SC27XX_ADC_IRQ_CLR);
+> +	if (ret)
+> +		goto disable_adc;
+> +
+>  	/* Configure the channel id and scale */
+>  	tmp = (scale << SC27XX_ADC_SCALE_SHIFT) & SC27XX_ADC_SCALE_MASK;
+>  	tmp |= channel & SC27XX_ADC_CHN_ID_MASK;
+> @@ -226,15 +230,22 @@ static int sc27xx_adc_read(struct sc27xx_adc_data *data, int channel,
+>  	if (ret)
+>  		goto disable_adc;
+>  
+> -	ret = wait_for_completion_timeout(&data->completion,
+> -				msecs_to_jiffies(SC27XX_ADC_RDY_TIMEOUT));
+> -	if (!ret) {
+> -		dev_err(data->dev, "read ADC data timeout\n");
+> -		ret = -ETIMEDOUT;
+> -	} else {
+> -		ret = 0;
+> +	ret = regmap_read_poll_timeout(data->regmap,
+> +				       data->base + SC27XX_ADC_INT_RAW,
+> +				       status, (status & SC27XX_ADC_IRQ_RAW),
+> +				       SC27XX_ADC_POLL_RAW_STATUS,
+> +				       SC27XX_ADC_RDY_TIMEOUT);
+> +	if (ret) {
+> +		dev_err(data->dev, "read adc timeout, status = 0x%x\n", status);
+> +		goto disable_adc;
+>  	}
+>  
+> +	ret = regmap_read(data->regmap, data->base + SC27XX_ADC_DATA, &value);
+> +	if (ret)
+> +		goto disable_adc;
+> +
+> +	value &= SC27XX_ADC_DATA_MASK;
+> +
+>  disable_adc:
+>  	regmap_update_bits(data->regmap, data->base + SC27XX_ADC_CTL,
+>  			   SC27XX_ADC_EN, 0);
+> @@ -242,32 +253,11 @@ static int sc27xx_adc_read(struct sc27xx_adc_data *data, int channel,
+>  	hwspin_unlock_raw(data->hwlock);
+>  
+>  	if (!ret)
+> -		*val = data->value;
+> +		*val = value;
+>  
+>  	return ret;
+>  }
+>  
+> -static irqreturn_t sc27xx_adc_isr(int irq, void *dev_id)
+> -{
+> -	struct sc27xx_adc_data *data = dev_id;
+> -	int ret;
+> -
+> -	ret = regmap_update_bits(data->regmap, data->base + SC27XX_ADC_INT_CLR,
+> -				 SC27XX_ADC_IRQ_CLR, SC27XX_ADC_IRQ_CLR);
+> -	if (ret)
+> -		return IRQ_RETVAL(ret);
+> -
+> -	ret = regmap_read(data->regmap, data->base + SC27XX_ADC_DATA,
+> -			  &data->value);
+> -	if (ret)
+> -		return IRQ_RETVAL(ret);
+> -
+> -	data->value &= SC27XX_ADC_DATA_MASK;
+> -	complete(&data->completion);
+> -
+> -	return IRQ_HANDLED;
+> -}
+> -
+>  static void sc27xx_adc_volt_ratio(struct sc27xx_adc_data *data,
+>  				  int channel, int scale,
+>  				  u32 *div_numerator, u32 *div_denominator)
+> @@ -454,11 +444,6 @@ static int sc27xx_adc_enable(struct sc27xx_adc_data *data)
+>  	if (ret)
+>  		goto disable_adc;
+>  
+> -	ret = regmap_update_bits(data->regmap, data->base + SC27XX_ADC_INT_EN,
+> -				 SC27XX_ADC_IRQ_EN, SC27XX_ADC_IRQ_EN);
+> -	if (ret)
+> -		goto disable_clk;
+> -
+>  	/* ADC channel scales' calibration from nvmem device */
+>  	ret = sc27xx_adc_scale_calibration(data, true);
+>  	if (ret)
+> @@ -484,9 +469,6 @@ static void sc27xx_adc_disable(void *_data)
+>  {
+>  	struct sc27xx_adc_data *data = _data;
+>  
+> -	regmap_update_bits(data->regmap, data->base + SC27XX_ADC_INT_EN,
+> -			   SC27XX_ADC_IRQ_EN, 0);
+> -
+>  	/* Disable ADC work clock and controller clock */
+>  	regmap_update_bits(data->regmap, SC27XX_ARM_CLK_EN,
+>  			   SC27XX_CLK_ADC_EN | SC27XX_CLK_ADC_CLK_EN, 0);
+> @@ -553,7 +535,6 @@ static int sc27xx_adc_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	init_completion(&sc27xx_data->completion);
+>  	sc27xx_data->dev = &pdev->dev;
+>  
+>  	ret = sc27xx_adc_enable(sc27xx_data);
+> @@ -569,14 +550,6 @@ static int sc27xx_adc_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	ret = devm_request_threaded_irq(&pdev->dev, sc27xx_data->irq, NULL,
+> -					sc27xx_adc_isr, IRQF_ONESHOT,
+> -					pdev->name, sc27xx_data);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "failed to request ADC irq\n");
+> -		return ret;
+> -	}
+> -
+>  	indio_dev->dev.parent = &pdev->dev;
+>  	indio_dev->name = dev_name(&pdev->dev);
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+
