@@ -2,107 +2,143 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA8AC761A9
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5658C761AB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C230F2080C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:23:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oiP3UjYg"
+	by mail.kernel.org (Postfix) with ESMTP id 81DA02080C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387419AbfG0JPr (ORCPT
+        id S1728666AbfG0JTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 05:15:47 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35384 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727885AbfG0JPr (ORCPT
+        Sat, 27 Jul 2019 05:19:06 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39062 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728264AbfG0JTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 05:15:47 -0400
-Received: by mail-lf1-f65.google.com with SMTP id p197so38696216lfa.2;
-        Sat, 27 Jul 2019 02:15:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+rUh3TcvJcuRsnzvwE5sXn7tIbCR4ba1afiJ99NGPaY=;
-        b=oiP3UjYgO1P2U+PjmgZUjykl2BKytWCnatxa8AHUh6jF8MlShM+UXOVLh6OWmx1SFN
-         oN3ZG0dvIzyNRMIjlrZHjD088wW1UVX5NTGypkoVqEskEKvdKhRwzIfNUUz0fI1UOFdT
-         /Hg47LinJBMcI7I0VpOwV3usCOMN3XKANDbrLwNR7ky2KfGJbJronnHBwzHuJ4qsbNkt
-         4e7LqpblcFmAezY1Kbac/y3NMZ2CKNe/mK/Wol79P3b2TprlK0KClo6GLB84ximdhx3z
-         llog4PyY1cc+94nKGNYBM3UlsKtxRGoeXbCO/AhTrnYaXgJmmsV4spli0weWk0hwU9Yp
-         Fpig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+rUh3TcvJcuRsnzvwE5sXn7tIbCR4ba1afiJ99NGPaY=;
-        b=HggB8hgAyF1GeENvMKam5sGS7GsUt868n3UnBPnzkrZ/6ysf/O4cSJqcJzbyVvWAMX
-         ayPTSnueQklC/V4s0+BsE7NeBEenp1D6VOwzq9Cmew27RM968/2tV9qQ4CYvCMpV/qKz
-         o5XQAxs4y7wrQkZ+m1dda4YLjnJLAhtIhC43FqaBaHyddKa/+oAvCnOD4bu4djZ2eRVq
-         G/sujRAj7oOfauLm3fvY3yX4gKVRW9SMCWnb3L8g3MQqfp0JKl96hwHRv2EanYwUc7Vo
-         DfmuHrbnkqGfr1+5j8nDok1LysuaARZpMSXlJrI0jzfYjd7F51Tfg0VkmYTV/uq7jMUv
-         FlJA==
-X-Gm-Message-State: APjAAAXSopwDoIu5o+PK4UFwn/wvEtreUUEQ7gaAwUyECPi4h6ZZ3bt6
-        LGjLUwOvo8yWQHKVJZe1YSg=
-X-Google-Smtp-Source: APXvYqxO2L8VoYDuvDuoMWh5O4GmsOA7NxLj/ZFVzL9neLCIvQFirqVxNYKNF2tzz20l4iRS5F85EQ==
-X-Received: by 2002:ac2:50cd:: with SMTP id h13mr23502535lfm.36.1564218944436;
-        Sat, 27 Jul 2019 02:15:44 -0700 (PDT)
-Received: from localhost ([188.170.223.67])
-        by smtp.gmail.com with ESMTPSA id d16sm10853347ljc.96.2019.07.27.02.15.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 27 Jul 2019 02:15:43 -0700 (PDT)
-Date:   Sat, 27 Jul 2019 12:15:41 +0300
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH v3 1/2] platform/x86: surfacepro3_button: Fix device check
-Message-ID: <20190727091541.GD795@penguin>
-References: <20190720150511.95076-1-luzmaximilian@gmail.com>
- <20190720150511.95076-2-luzmaximilian@gmail.com>
- <CAHp75Ve+3c-TFeN3Dh-DB75Rjft8mY2DA8vNkrFyp7JK-ZOjDA@mail.gmail.com>
+        Sat, 27 Jul 2019 05:19:05 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6A01527DC68;
+        Sat, 27 Jul 2019 10:19:03 +0100 (BST)
+Date:   Sat, 27 Jul 2019 11:18:59 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Qii Wang <qii.wang@mediatek.com>
+Cc:     Rob Herring <robh@kernel.org>, <bbrezillon@kernel.org>,
+        <matthias.bgg@gmail.com>, <mark.rutland@arm.com>,
+        <linux-i3c@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
+        <liguo.zhang@mediatek.com>, <xinping.qian@mediatek.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: i3c: Document MediaTek I3C master
+ bindings
+Message-ID: <20190727111859.315994c3@collabora.com>
+In-Reply-To: <1564190613.24702.11.camel@mhfsdcap03>
+References: <1562677762-24067-1-git-send-email-qii.wang@mediatek.com>
+        <1562677762-24067-2-git-send-email-qii.wang@mediatek.com>
+        <20190724202119.GA26566@bogus>
+        <1564190613.24702.11.camel@mhfsdcap03>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Ve+3c-TFeN3Dh-DB75Rjft8mY2DA8vNkrFyp7JK-ZOjDA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 08:57:53PM +0300, Andy Shevchenko wrote:
-> On Sat, Jul 20, 2019 at 6:05 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
-> >
-> > Do not use the surfacepro3_button driver on newer Microsoft Surface
-> > models, only use it on the Surface Pro 3 and 4. Newer models (5th, 6th
-> > and possibly future generations) use the same device as the Surface Pro
-> > 4 to represent their volume and power buttons (MSHW0040), but their
-> > actual implementation is significantly different. This patch ensures
-> > that the surfacepro3_button driver is only used on the Pro 3 and 4
-> > models, allowing a different driver to bind on other models.
-> >
+On Sat, 27 Jul 2019 09:23:33 +0800
+Qii Wang <qii.wang@mediatek.com> wrote:
+
+> On Wed, 2019-07-24 at 14:21 -0600, Rob Herring wrote:
+> > On Tue, Jul 09, 2019 at 09:09:21PM +0800, Qii Wang wrote:  
+> > > Document MediaTek I3C master DT bindings.
+> > > 
+> > > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> > > ---
+> > >  .../devicetree/bindings/i3c/mtk,i3c-master.txt     |   48 ++++++++++++++++++++
+> > >  1 file changed, 48 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> > > new file mode 100644
+> > > index 0000000..d32eda6
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> > > @@ -0,0 +1,48 @@
+> > > +Bindings for MediaTek I3C master block
+> > > +=====================================
+> > > +
+> > > +Required properties:
+> > > +--------------------
+> > > +- compatible: shall be "mediatek,i3c-master"  
+> > 
+> > Needs to be SoC specific.
+> >   
 > 
-> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> We hope that the SOCs will use the same driver and try to avoid big
+> changes. If there are inevitable changes in the future, then we will
+> modify the compatible to be SoC specific. cdns,i3c-master.txt is not SoC
+> specific either.
+
+The cadence case is a bit different I think. When the driver was
+developed there was no SoC integrating this IP. I guess Mediatek knows
+already which SoC(s) will embed the I3C master block.
+
 > 
-> assuming it will go thru Input subsystem.
+> > > +- reg: physical base address of the controller and apdma base, length of
+> > > +  memory mapped region.
+> > > +- reg-names: shall be "main" for master controller and "dma" for apdma.
+> > > +- interrupts: the interrupt line connected to this I3C master.
+> > > +- clocks: shall reference the i3c and apdma clocks.
+> > > +- clock-names: shall include "main" and "dma".
+> > > +
+> > > +Mandatory properties defined by the generic binding (see
+> > > +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> > > +
+> > > +- #address-cells: shall be set to 3
+> > > +- #size-cells: shall be set to 0
+> > > +
+> > > +Optional properties defined by the generic binding (see
+> > > +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> > > +
+> > > +- i2c-scl-hz
+> > > +- i3c-scl-hz
+> > > +
+> > > +I3C device connected on the bus follow the generic description (see
+> > > +Documentation/devicetree/bindings/i3c/i3c.txt for more details).
+> > > +
+> > > +Example:
+> > > +
+> > > +	i3c0: i3c@1100d000 {
+> > > +		compatible = "mediatek,i3c-master";
+> > > +		reg = <0x1100d000 0x1000>,
+> > > +		      <0x11000300 0x80>;
+> > > +		reg-names = "main", "dma";
+> > > +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
+> > > +		clocks = <&infracfg CLK_INFRA_I3C0>,
+> > > +			 <&infracfg CLK_INFRA_AP_DMA>;
+> > > +		clock-names = "main", "dma";
+> > > +		#address-cells = <3>;
+> > > +		#size-cells = <0>;
+> > > +		i2c-scl-hz = <100000>;
+> > > +
+> > > +		nunchuk: nunchuk@52 {
+> > > +			compatible = "nintendo,nunchuk";
+> > > +			reg = <0x52 0x0 0x10>;
+> > > +		};
+> > > +	};
+> > > -- 
+> > > 1.7.9.5
+> > >   
+> 
+> 
 
-I can take it, but I do not think it is dependent on the other change
-and thus can go through platform tree as well.
-
-Thanks.
-
--- 
-Dmitry
