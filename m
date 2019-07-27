@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6F0C7618F
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE56C7618F
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5404720828
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E502E20828
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:14:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="lXzOfCi0"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="zBoL95lC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbfG0CO0 (ORCPT
+        id S1727791AbfG0COZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 22:14:26 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44309 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727630AbfG0COZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Jul 2019 22:14:25 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p17so56132676wrf.11
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38301 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727624AbfG0COY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 22:14:24 -0400
+Received: by mail-wr1-f67.google.com with SMTP id g17so56165042wrr.5
         for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 19:14:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
          :references:subject:to:from:cc;
-        bh=ywTssN1OaLJLOAgn1zE68C9sTfGOc1ktG4PsTxTsZPs=;
-        b=lXzOfCi0u3mN4TS9wa2D0/nH0DPx6Aa2UxIhNZ3NClO6JbIOwsyj3VRqMnuM7SUu5S
-         WL9gXwZy/xsr7GahuFrMqdn0u3Hk/rgB4syfWcboWhpoH508BmfTxOVSKgdi7U74fxsV
-         8t9iUKgL6Z7yaR9r+e9pZkXU0SP3FZ87ZqZ3TElhxr8DBA/l+aH7k3MDnqrb2m7CcabI
-         gIyThnFkIWelV/xXAQOSYRQjJuhw2st8wnpCSnRceaVDnkYf+9ubA9Com94k4E6OkP22
-         hk32gUcBEd+OrlV5fIgXylLRLZOMp+/Al3aSZdSCAPM1/ZNlhjqLi0e0aebo1c8VFhio
-         b6uQ==
+        bh=u+EbFX8sFMH8pWi0TV6CAS/I0F4j3WfAGkd0Fx8VVEw=;
+        b=zBoL95lCC+VPdvja/4U3V2lbyo+rh1+Ywr6tM8ToiBqfYr50a1L3W0Wmcm8Yf0LJHW
+         4BTe5kOSQ8ejvEvR0HRYlApjrwck4XBXt4nZ4VDlbDDoWWIY1MiZA460du9N8iHS/B9Y
+         QFzMye2hhlZ/ak0bZ5zb9VnE78TMQZC7WAdxBvV0cdsncpazOsUsxLh1P/ck6fCafYVO
+         ZQZNQibz9TH2gfp5FOyiyyIrVozR6V6I58YIyLEHHCqrV396M216kBuHf9faWYEuVVfJ
+         Z5pY0MxO0tsijOoLrKlg4lr+NdDbcDNvbp6jlSCgwvviX9yC4Zz0+qCqOdQi0TGCYVvl
+         dfOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=ywTssN1OaLJLOAgn1zE68C9sTfGOc1ktG4PsTxTsZPs=;
-        b=CuU3n2dJGm3de8+MnA6gMwXgzsdnsYPGo/1xXSu1ovfdCE9VyktHh0IsZCGBAc8PDK
-         NVg0PM1CR2LUt0Pl/oaaXcg6J0Nm4jyX6r3Bgh8sfsrVtZCnae5CNjtNJWQfTDhadQAM
-         JgKNDxS3kmIGly+ELcdAspsRQdpHfPlvlzlL9kB+wwNRkOAmqhXEZTiEZzTxV7QGtkDx
-         mvi5jQNacnvWN+Lo97Z3KEB0UB6N9CAPA0pyEw15Fa7K59DF3JGnrEUQihx9/li/3sW0
-         RfUO51MHSdnDMGj5P9pNMDlDW13R9gvqqxq9iTvURGMV10RihuhrmBuT3Xq/J6Hyh4Yv
-         7GJw==
-X-Gm-Message-State: APjAAAWOqvuIEhEGLQU8yjH+w1XGaHGw0kjTvR9DEbNZfflhMdePEluc
-        v1+sl/qTo+D9xQQ/FF6NTJw=
-X-Google-Smtp-Source: APXvYqxuN2FulUnMBRL2t02jka9myeFHxk+NWkBFgvJeEHhWXyKC4SjiPBIqRRej8shcyOfkGQhqyQ==
-X-Received: by 2002:adf:f1d1:: with SMTP id z17mr32743388wro.190.1564193663311;
-        Fri, 26 Jul 2019 19:14:23 -0700 (PDT)
+        bh=u+EbFX8sFMH8pWi0TV6CAS/I0F4j3WfAGkd0Fx8VVEw=;
+        b=ssFPOs307cr1PnzLVD0dE2aCoyPx/FfrqP6lt+jdGIM4rdoHzNJBinEt0L4Z4hJDPE
+         RlqPszqjNj8RhVWpB5UjVPByw8zcVry6MP4rUHamD98/EOq7s+tNzzQOU/K9eegUEve8
+         mF+DuhREBUO2BYIvtbXNFFL3ZlYPNQlwSceOGuAARx8Eq+eA7afwn6V+XchivHNkHrmM
+         q5YFotFg+e+CaP6W0HPGVNtX+YYsBfDAWJ+pSahKJOD0u8VtA1Bvs4UfEsPeliFqXoYn
+         LF+SpCgk1nBctwpXHRp12lgwmVAMQ2qI2TFURysvYKGCrHAvFodXpm+y5RtVSTrdkMx3
+         C8eA==
+X-Gm-Message-State: APjAAAW12ol4a9LavoHN8RNs9oAqJZA4vV7db+2TuROLIgLe7kvvgETK
+        w2iqNJT/sIZQulT18RxOAcs=
+X-Google-Smtp-Source: APXvYqyaqxBdIkPi7LwPrV8eaLuJGxamLn3RtSnWkdi79t72OjyC4pvuq/SwA80ws8UqaVjoL9fs3w==
+X-Received: by 2002:adf:f1d1:: with SMTP id z17mr32743341wro.190.1564193662879;
+        Fri, 26 Jul 2019 19:14:22 -0700 (PDT)
 Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id i6sm47716070wrv.47.2019.07.26.19.14.22
+        by smtp.gmail.com with ESMTPSA id s15sm35146778wrw.21.2019.07.26.19.14.22
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Fri, 26 Jul 2019 19:14:22 -0700 (PDT)
-Message-ID: <5d3bb37e.1c69fb81.18a4f.4a5c@mx.google.com>
+Message-ID: <5d3bb37e.1c69fb81.33e47.f6a6@mx.google.com>
 Date:   Fri, 26 Jul 2019 19:14:22 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-Kernelci-Tree: stable-rc
-X-Kernelci-Kernel: v4.19.61-51-g213a5f3ac1f5
-X-Kernelci-Branch: linux-4.19.y
+X-Kernelci-Kernel: v5.2.3-67-gd61e440a1852
+X-Kernelci-Branch: linux-5.2.y
 X-Kernelci-Report-Type: boot
-In-Reply-To: <20190726152300.760439618@linuxfoundation.org>
-References: <20190726152300.760439618@linuxfoundation.org>
-Subject: Re: [PATCH 4.19 00/50] 4.19.62-stable review
+In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
+References: <20190726152301.936055394@linuxfoundation.org>
+Subject: Re: [PATCH 5.2 00/66] 5.2.4-stable review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
 From:   "kernelci.org bot" <bot@kernelci.org>
@@ -81,36 +81,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.19.y boot: 118 boots: 1 failed, 77 passed with 40 offline=
- (v4.19.61-51-g213a5f3ac1f5)
+stable-rc/linux-5.2.y boot: 129 boots: 1 failed, 83 passed with 45 offline =
+(v5.2.3-67-gd61e440a1852)
 
 Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.19.y/kernel/v4.19.61-51-g213a5f3ac1f5/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
-y/kernel/v4.19.61-51-g213a5f3ac1f5/
+-5.2.y/kernel/v5.2.3-67-gd61e440a1852/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.2.y=
+/kernel/v5.2.3-67-gd61e440a1852/
 
 Tree: stable-rc
-Branch: linux-4.19.y
-Git Describe: v4.19.61-51-g213a5f3ac1f5
-Git Commit: 213a5f3ac1f5e2af0e25fd4b26497590ec290be0
+Branch: linux-5.2.y
+Git Describe: v5.2.3-67-gd61e440a1852
+Git Commit: d61e440a1852a64d8a2d0d358b9582b19157e039
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
 e-rc.git
-Tested: 68 unique boards, 27 SoC families, 17 builds out of 206
+Tested: 76 unique boards, 28 SoC families, 17 builds out of 209
 
 Boot Failure Detected:
 
-arc:
-    hsdk_defconfig:
+arm:
+    omap2plus_defconfig:
         gcc-8:
-            hsdk: 1 failed lab
+            omap4-panda: 1 failed lab
 
 Offline Platforms:
+
+riscv:
+
+    defconfig:
+        gcc-8
+            sifive_fu540: 1 offline lab
 
 arm64:
 
     defconfig:
         gcc-8
             meson-axg-s400: 1 offline lab
+            meson-g12a-u200: 1 offline lab
+            meson-g12a-x96-max: 1 offline lab
             meson-gxbb-odroidc2: 1 offline lab
             meson-gxl-s905d-p230: 1 offline lab
             meson-gxl-s905x-libretech-cc: 1 offline lab
@@ -136,6 +144,8 @@ arm:
 
     multi_v7_defconfig:
         gcc-8
+            bcm72521-bcm97252sffe: 1 offline lab
+            bcm7445-bcm97445c: 1 offline lab
             exynos5250-arndale: 1 offline lab
             exynos5420-arndale-octa: 1 offline lab
             exynos5800-peach-pi: 1 offline lab
