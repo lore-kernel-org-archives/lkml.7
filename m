@@ -4,28 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04147C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46901C76190
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE96521721
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28C0621721
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbfG0FwS (ORCPT
+        id S1728486AbfG0FwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 01:52:18 -0400
+        Sat, 27 Jul 2019 01:52:23 -0400
 Received: from mga02.intel.com ([134.134.136.20]:40956 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbfG0FwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 01:52:16 -0400
+        id S1728220AbfG0FwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 01:52:19 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 22:52:15 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,313,1559545200"; 
-   d="scan'208";a="254568586"
+   d="scan'208";a="254568595"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
   by orsmga001.jf.intel.com with ESMTP; 26 Jul 2019 22:52:15 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -39,9 +40,9 @@ To:     Paolo Bonzini <pbonzini@redhat.com>,
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
         Andy Lutomirski <luto@amacapital.net>
-Subject: [RFC PATCH 03/21] x86/sgx: Move provisioning device to common code
-Date:   Fri, 26 Jul 2019 22:51:56 -0700
-Message-Id: <20190727055214.9282-4-sean.j.christopherson@intel.com>
+Subject: [RFC PATCH 06/21] KVM: x86: Add SGX sub-features leaf to reverse CPUID table
+Date:   Fri, 26 Jul 2019 22:51:59 -0700
+Message-Id: <20190727055214.9282-7-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190727055214.9282-1-sean.j.christopherson@intel.com>
 References: <20190727055214.9282-1-sean.j.christopherson@intel.com>
@@ -52,196 +53,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the provisioning device to common code in preparation for adding
-support for SGX virtualization.  The provisioning device will need to be
-instantiated if the native SGX driver *or* the virtual EPC "driver" is
-loaded.
+CPUID_12_EAX is an Intel-defined feature bits leaf dedicated for SGX
+that enumerates the SGX instruction sets that are supported by the
+CPU, e.g. SGX1, SGX2, etc...
+
+Since Linux only cares about two bits at this time (SGX1 and SGX2), the
+SGX bits were relocated to to Linux-defined word 8, i.e. CPUID_LNX_3,
+instead of adding a dedicated SGX word so as to conserve space.  But,
+to make KVM's life simple, the bit numbers of the SGX features were
+intentionally kept the same between the Intel-defined leaf and the
+Linux-defined leaf.
+
+Add build-time assertions to ensure X86_FEATURE_SGX{1,2} are at the
+expected locations, and that KVM isn't trying to do a reverse CPUID
+lookup on a non-SGX bit in CPUID_LNX_3.
+
+Relocate bit() to cpuid.h where it belongs (it's NOT a generic bit
+function) and add a beefy comment explaining what the hell it's doing.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kernel/cpu/sgx/driver/ioctl.c | 18 ++---------
- arch/x86/kernel/cpu/sgx/driver/main.c  | 24 +-------------
- arch/x86/kernel/cpu/sgx/main.c         | 44 +++++++++++++++++++++++++-
- arch/x86/kernel/cpu/sgx/sgx.h          |  1 +
- 4 files changed, 47 insertions(+), 40 deletions(-)
+ arch/x86/kvm/cpuid.h   | 20 ++++++++++++++++++++
+ arch/x86/kvm/emulate.c |  1 +
+ arch/x86/kvm/x86.h     |  5 -----
+ 3 files changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/sgx/driver/ioctl.c b/arch/x86/kernel/cpu/sgx/driver/ioctl.c
-index 89b3fb81c15b..b7aa06920d10 100644
---- a/arch/x86/kernel/cpu/sgx/driver/ioctl.c
-+++ b/arch/x86/kernel/cpu/sgx/driver/ioctl.c
-@@ -794,26 +794,12 @@ static long sgx_ioc_enclave_set_attribute(struct file *filep, void __user *arg)
- {
- 	struct sgx_encl *encl = filep->private_data;
- 	struct sgx_enclave_set_attribute params;
--	struct file *attribute_file;
--	int ret;
+diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+index d78a61408243..aed49d639c3b 100644
+--- a/arch/x86/kvm/cpuid.h
++++ b/arch/x86/kvm/cpuid.h
+@@ -53,6 +53,7 @@ static const struct cpuid_reg reverse_cpuid[] = {
+ 	[CPUID_7_ECX]         = {         7, 0, CPUID_ECX},
+ 	[CPUID_8000_0007_EBX] = {0x80000007, 0, CPUID_EBX},
+ 	[CPUID_7_EDX]         = {         7, 0, CPUID_EDX},
++	[CPUID_LNX_3]         = {      0x12, 0, CPUID_EAX},
+ };
  
- 	if (copy_from_user(&params, arg, sizeof(params)))
- 		return -EFAULT;
+ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
+@@ -61,6 +62,7 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
  
--	attribute_file = fget(params.attribute_fd);
--	if (!attribute_file)
--		return -EINVAL;
--
--	if (attribute_file->f_op != &sgx_provision_fops) {
--		ret = -EINVAL;
--		goto out;
--	}
--
--	encl->allowed_attributes |= SGX_ATTR_PROVISIONKEY;
--
--out:
--	fput(attribute_file);
--	return ret;
-+	return sgx_set_attribute(&encl->allowed_attributes,
-+				 params.attribute_fd);
+ 	BUILD_BUG_ON(x86_leaf >= ARRAY_SIZE(reverse_cpuid));
+ 	BUILD_BUG_ON(reverse_cpuid[x86_leaf].function == 0);
++	BUILD_BUG_ON(x86_leaf == CPUID_LNX_3 && (x86_feature & 31) > 1);
+ 
+ 	return reverse_cpuid[x86_leaf];
+ }
+@@ -89,6 +91,24 @@ static __always_inline int *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsi
+ 	}
  }
  
- long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
-diff --git a/arch/x86/kernel/cpu/sgx/driver/main.c b/arch/x86/kernel/cpu/sgx/driver/main.c
-index d62bdc7ed4d9..1e107dd0d909 100644
---- a/arch/x86/kernel/cpu/sgx/driver/main.c
-+++ b/arch/x86/kernel/cpu/sgx/driver/main.c
-@@ -154,14 +154,8 @@ static const struct file_operations sgx_encl_fops = {
- 	.get_unmapped_area	= sgx_get_unmapped_area,
- };
- 
--const struct file_operations sgx_provision_fops = {
--	.owner			= THIS_MODULE,
--};
--
- static struct device sgx_encl_dev;
- static struct cdev sgx_encl_cdev;
--static struct device sgx_provision_dev;
--static struct cdev sgx_provision_cdev;
- 
- int __init sgx_drv_init(void)
- {
-@@ -202,38 +196,22 @@ int __init sgx_drv_init(void)
- 	if (ret)
- 		return ret;
- 
--	ret = sgx_dev_init("sgx/provision", &sgx_provision_dev,
--			   &sgx_provision_cdev, &sgx_provision_fops,
--			   SGX_PROV_DEV_MINOR);
--	if (ret)
--		goto err_encl_dev;
--
- 	sgx_encl_wq = alloc_workqueue("sgx-encl-wq",
- 				      WQ_UNBOUND | WQ_FREEZABLE, 1);
- 	if (!sgx_encl_wq) {
- 		ret = -ENOMEM;
--		goto err_provision_dev;
-+		goto err_encl_dev;
- 	}
- 
- 	ret = cdev_device_add(&sgx_encl_cdev, &sgx_encl_dev);
- 	if (ret)
- 		goto err_encl_wq;
- 
--	ret = cdev_device_add(&sgx_provision_cdev, &sgx_provision_dev);
--	if (ret)
--		goto err_encl_cdev;
--
- 	return 0;
- 
--err_encl_cdev:
--	cdev_device_del(&sgx_encl_cdev, &sgx_encl_dev);
--
- err_encl_wq:
- 	destroy_workqueue(sgx_encl_wq);
- 
--err_provision_dev:
--	put_device(&sgx_provision_dev);
--
- err_encl_dev:
- 	put_device(&sgx_encl_dev);
- 
-diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
-index edbd465083c7..9f4473597620 100644
---- a/arch/x86/kernel/cpu/sgx/main.c
-+++ b/arch/x86/kernel/cpu/sgx/main.c
-@@ -2,6 +2,7 @@
- // Copyright(c) 2016-17 Intel Corporation.
- 
- #include <linux/cdev.h>
-+#include <linux/file.h>
- #include <linux/freezer.h>
- #include <linux/highmem.h>
- #include <linux/kthread.h>
-@@ -335,6 +336,31 @@ static struct bus_type sgx_bus_type = {
- };
- static dev_t sgx_devt;
- 
-+const struct file_operations sgx_provision_fops = {
-+	.owner			= THIS_MODULE,
-+};
-+
-+static struct device sgx_provision_dev;
-+static struct cdev sgx_provision_cdev;
-+
-+int sgx_set_attribute(u64 *allowed_attributes, unsigned int attribute_fd)
++/*
++ * Retrieve the bit from an X86_FEATURE_* definition using a simple AND to
++ * isolate the bit number from the feature definition.  Note that this works
++ * only for features that are NOT scattered, i.e. the X86_FEATURE_* bit number
++ * must match the hardware-defined CPUID bit number.  The only exception to
++ * this rule is the SGX sub-features leaf, which is scattered but only in the
++ * sense that its bits are relocated from hardware-defined leaf 0x12.0.EAX to
++ * Linux defined word 8, but its bit numbers are maintained (KVM asserts this
++ * expectation at build time).
++ */
++static __always_inline u32 bit(unsigned x86_feature)
 +{
-+	struct file *attribute_file;
++	BUILD_BUG_ON((X86_FEATURE_SGX1 & 31) != 0);
++	BUILD_BUG_ON((X86_FEATURE_SGX2 & 31) != 1);
 +
-+	attribute_file = fget(attribute_fd);
-+	if (!attribute_file)
-+		return -EINVAL;
-+
-+	if (attribute_file->f_op != &sgx_provision_fops) {
-+		fput(attribute_file);
-+		return -EINVAL;
-+	}
-+	fput(attribute_file);
-+
-+	*allowed_attributes |= SGX_ATTR_PROVISIONKEY;
-+	return 0;
++	return 1 << (x86_feature & 31);
 +}
 +
- static void sgx_dev_release(struct device *dev)
+ static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu, unsigned x86_feature)
  {
+ 	int *reg;
+diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+index 4a387a235424..6ffe23febcd7 100644
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -29,6 +29,7 @@
+ #include "tss.h"
+ #include "mmu.h"
+ #include "pmu.h"
++#include "cpuid.h"
  
-@@ -386,12 +412,28 @@ static __init int sgx_init(void)
- 	if (ret < 0)
- 		goto err_bus;
+ /*
+  * Operand types
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index a470ff0868c5..1e0c7b17effa 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -139,11 +139,6 @@ static inline int is_paging(struct kvm_vcpu *vcpu)
+ 	return likely(kvm_read_cr0_bits(vcpu, X86_CR0_PG));
+ }
  
--	ret = sgx_drv_init();
-+	ret = sgx_dev_init("sgx/provision", &sgx_provision_dev,
-+			   &sgx_provision_cdev, &sgx_provision_fops,
-+			   SGX_PROV_DEV_MINOR);
- 	if (ret)
- 		goto err_chrdev_region;
- 
-+	ret = cdev_device_add(&sgx_provision_cdev, &sgx_provision_dev);
-+	if (ret)
-+		goto err_provision_dev;
-+
-+	ret = sgx_drv_init();
-+	if (ret)
-+		goto err_provision_cdev;
-+
- 	return 0;
- 
-+err_provision_cdev:
-+	cdev_device_del(&sgx_provision_cdev, &sgx_provision_dev);
-+
-+err_provision_dev:
-+	put_device(&sgx_provision_dev);
-+
- err_chrdev_region:
- 	unregister_chrdev_region(sgx_devt, SGX_MAX_NR_DEVICES);
- 
-diff --git a/arch/x86/kernel/cpu/sgx/sgx.h b/arch/x86/kernel/cpu/sgx/sgx.h
-index 85b3674e1d43..a0af8849c7c3 100644
---- a/arch/x86/kernel/cpu/sgx/sgx.h
-+++ b/arch/x86/kernel/cpu/sgx/sgx.h
-@@ -96,5 +96,6 @@ int sgx_einit(struct sgx_sigstruct *sigstruct, struct sgx_einittoken *token,
- __init int sgx_dev_init(const char *name, struct device *dev,
- 			struct cdev *cdev, const struct file_operations *fops,
- 			int minor);
-+int sgx_set_attribute(u64 *allowed_attributes, unsigned int attribute_fd);
- 
- #endif /* _X86_SGX_H */
+-static inline u32 bit(int bitno)
+-{
+-	return 1 << (bitno & 31);
+-}
+-
+ static inline u8 vcpu_virt_addr_bits(struct kvm_vcpu *vcpu)
+ {
+ 	return kvm_read_cr4_bits(vcpu, X86_CR4_LA57) ? 57 : 48;
 -- 
 2.22.0
 
