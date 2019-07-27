@@ -2,185 +2,232 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD4FC7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4672CC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C07B32085A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:55:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564232120;
-	bh=R8j8ADCFoZR7I/CD7r7SndCPBenADbxlIY4Hq47QeWw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uRNujI36cPzZz2zgb0eWYs5VolwSVsc0sPy/nudufFMZ5+7eu2RdUsbS+jiv5E7Aa
-	 67LOdypeiCyOVdoRYY141+56+H0b/JD3aIv7zRXxra6rQe1rBEW79H9rq8qgHrdJQt
-	 UCxpBNWK4Mzyr9V+WXMVXWXkOh092xL28ygRa5mQ=
+	by mail.kernel.org (Postfix) with ESMTP id 196592075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:56:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="gMdEmexy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387598AbfG0MzT (ORCPT
+        id S2387622AbfG0M4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 08:55:19 -0400
-Received: from mail-ot1-f48.google.com ([209.85.210.48]:36120 "EHLO
-        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728431AbfG0MzT (ORCPT
+        Sat, 27 Jul 2019 08:56:19 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:59895 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728431AbfG0M4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 08:55:19 -0400
-Received: by mail-ot1-f48.google.com with SMTP id r6so58068477oti.3;
-        Sat, 27 Jul 2019 05:55:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mYB+RjZcYLykoUihvv7WfT1+n77aCY+3wlgKPlvm/4U=;
-        b=uClwzkIszIFQRkpjsjt2XbY2wNaLx1mYdvIRyBRK5BzE30eK8yZ+m6oS6+UoydfFP6
-         H5Cd1jgtirUhLqJU07AKVrrXhGt0UDz6PGoMzoa6NBmYEmN0To1+wUQCuehqLiUpIdZ+
-         2Iw4/Iw5NrnPi+/VbflSZa9nqWGaNjym6DXlcuLcP9iBnol2eLAbluBTeChF59+7bnZw
-         WxsJn6eZF/HoKePN41fHg47ABu75y/e5AFgarjQZS+1UMNQxXwiFowcCPpcfPa89UHRM
-         GccdWljEd7w9TZUYXsK99m8mmj3zq77vfqOMgYfeqJcDsENuKAWaRo5v/W1P1atoCKBZ
-         2ipQ==
-X-Gm-Message-State: APjAAAWX1gnnJ5Q2L1ZQWPHkMrQ1btMgNCOhI53nITPb89OWH0IszJ7B
-        rlkrIrlO29Sd7T1ELN86lViHgbf9bD+8+wJAQQM=
-X-Google-Smtp-Source: APXvYqyeCupN68o5IDANCONQioST/jWzm+ZCSqIdammMjKTD8zYEU4lf98oZYMw1Wj54n2rFP2reNc+PRrSsy2fUGXc=
-X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr68774265otp.189.1564232117536;
- Sat, 27 Jul 2019 05:55:17 -0700 (PDT)
+        Sat, 27 Jul 2019 08:56:19 -0400
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x6RCuDT9031886;
+        Sat, 27 Jul 2019 21:56:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x6RCuDT9031886
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564232174;
+        bh=LYB+t8/vXlz0aLAX4qjVJHpwmJ24unr4+2mSEPZaTSw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gMdEmexyVYvbynDDDge8gLdOB1naoBBksoRbGOLN7uyQe+maN7kDPGDwAmYTr1r9e
+         ygH/BNN3Ipa5Sk7UukaCy20pCehVN+pv9FpjQuxBtLXrQs+qV5n+y5fMHP2vfgXd60
+         frx+uaBUaBcH10mbcCnbdWYfxHyA+2zmPX9T52Ondkv1YJlMcao+R22xbs2z9s7qtr
+         2LTQo5SW5FjfxI8jgSf2gMx2z/CuEolF9q050DW0lfEHDcJgWzESIw0cNvjyR2x/VV
+         DP0Bo6Dp1t2vGs2JD2UxghF3KKy8iRmU62s8G+xpog/KwDS449uuJLxY54QGIPnxQH
+         C77IXdNTBTbrg==
+X-Nifty-SrcIP: [209.85.217.45]
+Received: by mail-vs1-f45.google.com with SMTP id v129so37884023vsb.11;
+        Sat, 27 Jul 2019 05:56:14 -0700 (PDT)
+X-Gm-Message-State: APjAAAWU/WJVwTstloQKTJOf/bISKQjy7aAcNFwfP+OTuIoBYIOLu7XF
+        4VDjDSNGpDGoM88tu2gEihhiKKJKKCsus5EPp0Y=
+X-Google-Smtp-Source: APXvYqwMPzaIpE4eYwM6iyfEk+EqiyKQPytYVkN6AdySekRM853AtA134sDUIPNJ6WsgIvQb2Nxu0wwVhNCaaD5Osb8=
+X-Received: by 2002:a67:f495:: with SMTP id o21mr62398441vsn.54.1564232173404;
+ Sat, 27 Jul 2019 05:56:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <2332799.izEFUvJP67@kreacher> <2428826.VBuqOhikiK@kreacher>
- <20190725195258.GA7307@localhost.localdomain> <15043168.halW6uqc8m@kreacher> <D33632F4-E119-4833-816C-79084DA03DE4@canonical.com>
-In-Reply-To: <D33632F4-E119-4833-816C-79084DA03DE4@canonical.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sat, 27 Jul 2019 14:55:05 +0200
-Message-ID: <CAJZ5v0imsVS-eDB+Lmd5qzAfmb0UpJ5AwV_Vf+v8D21KAtqTOg@mail.gmail.com>
-Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Keith Busch <kbusch@kernel.org>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190714152817.24693-1-efremov@linux.com>
+In-Reply-To: <20190714152817.24693-1-efremov@linux.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 27 Jul 2019 21:55:37 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATg1m_pzsZqGDUOUZHzv6jn2K0My8vFWbOVdUSTMQ05Ug@mail.gmail.com>
+Message-ID: <CAK7LNATg1m_pzsZqGDUOUZHzv6jn2K0My8vFWbOVdUSTMQ05Ug@mail.gmail.com>
+Subject: Re: [RFC PATCH] modpost: check for static EXPORT_SYMBOL* functions
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 4:03 PM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
+Hi.
+
+Thanks, this patch is very nice.
+
+
+On Mon, Jul 15, 2019 at 12:28 AM Denis Efremov <efremov@linux.com> wrote:
 >
-> at 04:02, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> This patch adds a check to warn about static EXPORT_SYMBOL* functions
+> during the modpost. In most of the cases, a static symbol marked for
+> exporting is an odd combination that should be fixed either by deleting
+> the exporting mark or by removing the static attribute and adding the
+> appropriate declaration to headers.
 >
-> > On Thursday, July 25, 2019 9:52:59 PM CEST Keith Busch wrote:
-> >> On Thu, Jul 25, 2019 at 09:48:57PM +0200, Rafael J. Wysocki wrote:
-> >>> NVME Identify Controller:
-> >>> vid     : 0x1c5c
-> >>> ssvid   : 0x1c5c
-> >>> sn      : MS92N171312902J0N
-> >>> mn      : PC401 NVMe SK hynix 256GB
-> >>> fr      : 80007E00
-> >>> rab     : 2
-> >>> ieee    : ace42e
-> >>> cmic    : 0
-> >>> mdts    : 5
-> >>> cntlid  : 1
-> >>> ver     : 10200
-> >>> rtd3r   : 7a120
-> >>> rtd3e   : 1e8480
-> >>> oaes    : 0x200
-> >>> ctratt  : 0
-> >>> oacs    : 0x17
-> >>> acl     : 7
-> >>> aerl    : 3
-> >>> frmw    : 0x14
-> >>> lpa     : 0x2
-> >>> elpe    : 255
-> >>> npss    : 4
-> >>> avscc   : 0x1
-> >>> apsta   : 0x1
-> >>> wctemp  : 352
-> >>> cctemp  : 354
-> >>> mtfa    : 0
-> >>> hmpre   : 0
-> >>> hmmin   : 0
-> >>> tnvmcap : 0
-> >>> unvmcap : 0
-> >>> rpmbs   : 0
-> >>> edstt   : 10
-> >>> dsto    : 0
-> >>> fwug    : 0
-> >>> kas     : 0
-> >>> hctma   : 0
-> >>> mntmt   : 0
-> >>> mxtmt   : 0
-> >>> sanicap : 0
-> >>> hmminds : 0
-> >>> hmmaxd  : 0
-> >>> nsetidmax : 0
-> >>> anatt   : 0
-> >>> anacap  : 0
-> >>> anagrpmax : 0
-> >>> nanagrpid : 0
-> >>> sqes    : 0x66
-> >>> cqes    : 0x44
-> >>> maxcmd  : 0
-> >>> nn      : 1
-> >>> oncs    : 0x1f
-> >>> fuses   : 0x1
-> >>> fna     : 0
-> >>> vwc     : 0x1
-> >>> awun    : 7
-> >>> awupf   : 7
-> >>> nvscc   : 1
-> >>> acwu    : 7
-> >>> sgls    : 0
-> >>> mnan    : 0
-> >>> subnqn  :
-> >>> ioccsz  : 0
-> >>> iorcsz  : 0
-> >>> icdoff  : 0
-> >>> ctrattr : 0
-> >>> msdbd   : 0
-> >>> ps    0 : mp:6.00W operational enlat:5 exlat:5 rrt:0 rrl:0
-> >>>           rwt:0 rwl:0 idle_power:- active_power:-
-> >>> ps    1 : mp:3.80W operational enlat:30 exlat:30 rrt:1 rrl:1
-> >>>           rwt:1 rwl:1 idle_power:- active_power:-
-> >>> ps    2 : mp:2.40W operational enlat:100 exlat:100 rrt:2 rrl:2
-> >>>           rwt:2 rwl:2 idle_power:- active_power:-
-> >>> ps    3 : mp:0.0700W non-operational enlat:1000 exlat:1000 rrt:3 rrl:3
-> >>>           rwt:3 rwl:3 idle_power:- active_power:-
-> >>> ps    4 : mp:0.0070W non-operational enlat:1000 exlat:5000 rrt:3 rrl:3
-> >>>           rwt:3 rwl:3 idle_power:- active_power:-
-> >>
-> >> Hm, nothing stands out as something we can use to determine if we should
-> >> skip the nvme specific settings or allow D3. I've no other ideas at the
-> >> moment for what we may check.
-> >
-> > Well, do ASPM settings matter here?
+> If this check will be considered useful, I will resend the patch with
+> review fixes.
 >
-> Seems like it's a regression in the firmware.
+> Currently, this check emits the warnings on the following symbols, most
+> of which are accepted to be fixed:
+> 1. "sas_wait_eh" [drivers/scsi/libsas/libsas]
+>    Patch: https://lkml.org/lkml/2019/7/8/970 (accepted)
+> 2. "torture_onoff_cleanup" [kernel/torture]
+>    "torture_shuffle_cleanup" [kernel/torture]
+>    Patch: https://lkml.org/lkml/2019/7/4/411 (accepted)
+> 3. "LZ4HC_setExternalDict" [lib/lz4/lz4hc_compress]
+>    Patch: https://lkml.org/lkml/2019/7/8/842
+> 4. "drm_client_close" [drivers/gpu/drm/drm]
+>    Patch: https://lkml.org/lkml/2019/7/3/758 (accepted)
+> 5. "gve_probe" [drivers/net/ethernet/google/gve/gve]
+>    Patch: https://lkml.org/lkml/2019/7/14/65
+> 6. "i2c_new_client_device" [vmlinux]
+>    "i2c_new_dummy_device" [vmlinux]
+>    Patch: https://lkml.org/lkml/2019/7/7/226 (fixed in a different patch)
+> 7. "ahci_em_messages" [drivers/ata/libahci]
+>    Patch: https://lkml.org/lkml/2019/7/10/550 (reviwed)
+> 8. "ftrace_set_clr_event" [vmlinux]
+>    Patch: https://lkml.org/lkml/2019/7/4/609 (reviwed)
+> 9. "rmi_2d_sensor_set_input_params" [drivers/input/rmi4/rmi_core]
+>    Patch: https://lkml.org/lkml/2019/7/8/999
+> 10. "empty_zero_page" [vmlinux]
+> 11. "phys_base" [vmlinux]
+> 12. "hypercall_page" [vmlinux]
+
+Could you drop the solved ones from the list?
+
+I still see the following at least, but I will apply this patch anyway.
+
+WARNING: "phys_base" [vmlinux] is a static EXPORT_SYMBOL symbol
+WARNING: "drm_client_close" [vmlinux] is a static EXPORT_SYMBOL symbol
+WARNING: "ahci_em_messages" [vmlinux] is a static EXPORT_SYMBOL_GPL symbol
+WARNING: "ftrace_set_clr_event" [vmlinux] is a static EXPORT_SYMBOL_GPL symbol
+WARNING: "empty_zero_page" [vmlinux] is a static EXPORT_SYMBOL symbol
+
+
+The code looks good to me.
+I commented on some minor style issues.
+
+
+> Similar commits:
+> 1. 54638c6eaf44 ("net: phy: make exported variables non-static")
+> 2. 98ef2046f28b ("mm: remove the exporting of totalram_pages")
+> 3. 73df167c819e ("s390/zcrypt: remove the exporting of ap_query_configuration")
+> 4. a57caf8c527f ("sunrpc/cache: remove the exporting of cache_seq_next")
+> 5. e4e4730698c9 ("crypto: skcipher - remove the exporting of skcipher_walk_next")
 >
-> The issue happens in version 80007E00 but not version 80006E00.
-
-So you mean the NVMe firmware, to be entirely precise.
-
-> I am not sure how to downgrade it under Linux though.
-
-Me neither.
-
-> The firmware changelog [1] is very interesting:
-> - Improves the performance of the solid-state drive (SSD) by distributing
-> power into the SSD efficiently according to the power state of the system.
+> Build time impact, allmodconfig, Dell XPS 15 9570 (measurements 3x):
+> $ make mrproper; make allmodconfig; time make -j12; \
+>   git checkout HEAD~1; \
+>   make mrproper; make allmodconfig; time make -j12
+> 1.
+>    (with patch) 17635,94s user 1895,54s system 1085% cpu 29:59,22 total
+>    (w/o  patch) 17275,42s user 1803,87s system 1112% cpu 28:35,66 total
+> 2.
+>    (with patch) 17369,51s user 1763,28s system 1111% cpu 28:41,47 total
+>    (w/o  patch) 16880,50s user 1670,93s system 1113% cpu 27:46,56 total
+> 3.
+>    (with patch) 17937,88s user 1842,53s system 1109% cpu 29:42,26 total
+>    (w/o  patch) 17267,55s user 1725,09s system 1111% cpu 28:28,17 total
 >
-> [1]
-> https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=mcxm8
+> Thus, the current implementation adds approx. 1 min for allmodconfig.
+> However, it's possible to do the check in a more optimal way if it will
+> be considered useful.
+>
+> Also, this kind of check could be implemented as a separate script instead.
+> Here is the implementation:
+> https://gist.github.com/evdenis/bf2322d094f0c02c0f60fe0a225848b2
+>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
 
-Huh.
 
-It looks like something else prevents the PCH on my 9380 from reaching
-the right state for S0ix, though.  I still need to find out what it
-is.
+
+> @@ -199,8 +200,9 @@ static struct symbol *alloc_symbol(const char *name, unsigned int weak,
+>
+>         memset(s, 0, sizeof(*s));
+>         strcpy(s->name, name);
+> -       s->weak = weak;
+> -       s->next = next;
+> +       s->weak      = weak;
+> +       s->next      = next;
+
+Could you drop this change?
+I do not think we need to align the '=' operator.
+
+
+> +       s->is_static = 1;
+>         return s;
+>  }
+>
+> @@ -1980,6 +1982,21 @@ static void read_symbols(const char *modname)
+>                 handle_modversions(mod, &info, sym, symname);
+>                 handle_moddevtable(mod, &info, sym, symname);
+>         }
+> +
+> +       // check for static EXPORT_SYMBOL_* functions && global vars
+> +       for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
+> +               unsigned char bind = ELF_ST_BIND(sym->st_info);
+> +               unsigned char type = ELF_ST_TYPE(sym->st_info);
+> +
+> +               if (type == STT_OBJECT || type == STT_FUNC) {
+> +                       struct symbol *s =
+> +                           find_symbol(remove_dot(info.strtab + sym->st_name));
+> +
+> +                       if (s && (bind == STB_GLOBAL || bind == STB_WEAK))
+> +                               s->is_static = 0;
+> +               }
+> +       }
+> +
+>         if (!is_vmlinux(modname) || vmlinux_section_warnings)
+>                 check_sec_ref(mod, modname, &info);
+>
+> @@ -2425,6 +2442,7 @@ int main(int argc, char **argv)
+>         char *dump_write = NULL, *files_source = NULL;
+>         int opt;
+>         int err;
+> +       size_t n;
+>         struct ext_sym_list *extsym_iter;
+>         struct ext_sym_list *extsym_start = NULL;
+>
+> @@ -2520,6 +2538,19 @@ int main(int argc, char **argv)
+>         if (sec_mismatch_count && sec_mismatch_fatal)
+>                 fatal("modpost: Section mismatches detected.\n"
+>                       "Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.\n");
+> +       for (n = 0; n < SYMBOL_HASH_SIZE ; n++) {
+> +               struct symbol *s = symbolhash[n];
+> +
+> +               while (s) {
+> +                       if (s->is_static)
+> +                               warn("\"%s\" [%s] is a static %s symbol\n",
+> +                                       s->name, s->module->name,
+> +                                               export_str(s->export));
+
+Could you follow the checkpatch.pl suggestion?
+
+CHECK: Alignment should match open parenthesis
+#2550: FILE: scripts/mod/modpost.c:2550:
+    + warn("\"%s\" [%s] is a static %s symbol\n",
+    + s->name, s->module->name,
+
+
+(This file already has tons of checkpatch warnings,
+but I want to try my best to not add new ones.)
+
+
+Thanks.
+
+-- 
+Best Regards
+Masahiro Yamada
