@@ -2,113 +2,95 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C18C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF2DC7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCC22086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BBB42086D
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:03:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="gdQJKM3L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oidl+P9c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387834AbfG0Q5h (ORCPT
+        id S2387866AbfG0RDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 12:57:37 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35627 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387665AbfG0Q5h (ORCPT
+        Sat, 27 Jul 2019 13:03:44 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42951 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387665AbfG0RDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 12:57:37 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w24so25900201plp.2
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 09:57:36 -0700 (PDT)
+        Sat, 27 Jul 2019 13:03:43 -0400
+Received: by mail-ed1-f65.google.com with SMTP id v15so55837769eds.9;
+        Sat, 27 Jul 2019 10:03:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CSiTEs4GnvQUthZXAEw0M0m3Gr1AaMhHdaiJba5YFEQ=;
-        b=gdQJKM3LtB1pYFZIldqGVPKVqPJ0g9e7coADlJlyLx0D1YI6BPBgwX4/nESQpdzhDS
-         RDuFhvZT1tRJrTT/h+F3+pqeppKWDkkSiWyq6Fi4XYraB85kwz+4edHSCD1Eq6I0gGQm
-         +jPjJ60wLdc+YR9hdeLGQcvOqAp4L8PZD+eKQ29XIAP+RkcBfyCkxRoSyHAamb3k88QK
-         g1iHHyVlca6CQK9SRWHpTsLtXEopSB3d2+zXvpTuxTWU+EGFLhxjUn2gJ2Vr3XJWs+Q3
-         p00BIEdfUup642WBu/dAiV7fUTb26XC+wRctswvapjTXhBALHz2Lj6+bzRM9kJ2MFqIX
-         wF1w==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0zfKxQlCcoPzfowpj4/wvzCrpm2d6GvaH4/w09yAZS4=;
+        b=oidl+P9cmGPFYfK7Ys9tlta4zBX6KOObpf2TOgeOZOWRuzLo0+Gp7JrjSjLYCpr1J9
+         NF4TRkHkVHQ+x9liq24F1FmiIk2xmvTFec0gRMkeliCySQkvIhN5eQK9s6jw3vKniWSZ
+         7LB5zzzHzotDn5U3jizomrgHiJozDeKrTEP6ItloIf+v1SoWm0qxSh4GYtVQNKfuxa2d
+         mpE6cjGysWodo2grh0ojoKFVXVSXv8yMtCmFOVKlxKHdQiFfrYmKpnUxxt83WuO0Uvlt
+         BbcAYgo/xtLwIHMt1LRPb+RGWuCOGfAHXJ8d2dz2pwSLcukK/fkw8bJGM4cuhXdpiJJ9
+         Mtlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CSiTEs4GnvQUthZXAEw0M0m3Gr1AaMhHdaiJba5YFEQ=;
-        b=N0SxqSZamogDy+GlmINUCm1wowDkGb3IBqDzD6Jy6A/U2dKEdNVSf8l/jWA8p3A2FB
-         rl3gCjmmdUQqFV/Z728RPVHF35JeMUV2DzzAQNeMTBAGw2koPziKcpZezd6SRfnTbN/4
-         EEzWERspHmLu/2rFM4grkhmAJZfStNdrR2MpRCMGkrbTsPNUeb8KMoeJnib577d3sRfW
-         RTVoJumT3qMxbHR/SHNMeJsTvO6FKQTJqbe8PchISJJj8nDJi4ns2k/hoP+yAU1FggzJ
-         THX6T1eTa9+qXLzqSe52Yt2pSmIe1fxWC0pkpG6fk6ho+3QytEBDaxskSd0YCR/MOXSy
-         nCfg==
-X-Gm-Message-State: APjAAAWanavJsp9UQ9BZXfS9LmMPXfIul86Vx7Ar/maqk7aOp+wIw9rB
-        1k2m1I4qIfusNOhaqkdtxug=
-X-Google-Smtp-Source: APXvYqxt3y1uXvPN4NlxBkzbEVyYtwFJ5bY/z9lHGeUmITYZrhcM0WbtYKdSOnhpwa0280GLiXnvLA==
-X-Received: by 2002:a17:902:2a69:: with SMTP id i96mr100874121plb.108.1564246656467;
-        Sat, 27 Jul 2019 09:57:36 -0700 (PDT)
-Received: from localhost.localdomain (p2517222-ipngn21701marunouchi.tokyo.ocn.ne.jp. [118.7.246.222])
-        by smtp.gmail.com with ESMTPSA id 10sm62412034pfb.30.2019.07.27.09.57.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 27 Jul 2019 09:57:35 -0700 (PDT)
-From:   Eiichi Tsukata <devel@etsukata.com>
-To:     tglx@linutronix.de, luto@kernel.org, mingo@redhat.com,
-        peterz@infradead.org, linux-kernel@vger.kernel.org
-Cc:     Eiichi Tsukata <devel@etsukata.com>
-Subject: [PATCH] sched/core: Remove the unused schedule_user() function
-Date:   Sun, 28 Jul 2019 01:55:13 +0900
-Message-Id: <20190727165513.25636-1-devel@etsukata.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0zfKxQlCcoPzfowpj4/wvzCrpm2d6GvaH4/w09yAZS4=;
+        b=Q+EHWFL8SI6xZYbOrCSJeEuzicT9X3MfOG7eZfiP4WHqTjDbvz+JpsvelsmQC1Vy6M
+         nHwGXSBORw6oS3aUBQZWMRabQ+BV2X3kifS41DPpqUe7rYgW5Y0LkHSMHtrhboCamkgh
+         2TOuYaQVpLnajs92E12ylUYT0fxMLoJXRfvLnnzTw5C7JqfHTYXYf+zQ/ETD1XCeVvz/
+         gegm1WALlDCZI+phbrMveLWjKAfHc266ysNEfCIf0XhWnt2Z3usGKkL65+R/yFqguT4h
+         NQ72JmbEafUtnmRT55CLZKEneIdoGdLLrOVmQb0MU8T9Qz9+ffill5WkdxqYZuzedm+M
+         yuYg==
+X-Gm-Message-State: APjAAAUVBz5Ono3mMM5QPKjsLqu3R6llHBd/9QCueFkT9kL3j+j0sdGT
+        K+78AV0AyRKgVhDyPmvh09WsLUb/NxE0xoGb3Q==
+X-Google-Smtp-Source: APXvYqz78gHcRAxUTdXUMhht6YvbAA2kQzG2b8eVwIaQTz1353u2jb6YqZF5oeJ4JVliA1DZfVOlAYicwb3a9bRgxnQ=
+X-Received: by 2002:a17:906:3507:: with SMTP id r7mr44806203eja.45.1564247021704;
+ Sat, 27 Jul 2019 10:03:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190725204230.12229-1-brodie.greenfield@alliedtelesis.co.nz>
+ <20190725204230.12229-2-brodie.greenfield@alliedtelesis.co.nz>
+ <e5606cf7-6848-1109-6cbe-63d94868ed65@cumulusnetworks.com> <6e8c51a0-cd34-e14a-7661-6fa5945f278b@cumulusnetworks.com>
+In-Reply-To: <6e8c51a0-cd34-e14a-7661-6fa5945f278b@cumulusnetworks.com>
+From:   Stephen Suryaputra <ssuryaextr@gmail.com>
+Date:   Sat, 27 Jul 2019 13:03:31 -0400
+Message-ID: <CAHapkUhEVGFRH=-R+obSUMh6rSVxZmEC9GQSnvUkvuj6dwVxjA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ipmr: Make cache queue length configurable
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Cc:     Brodie Greenfield <brodie.greenfield@alliedtelesis.co.nz>,
+        David Miller <davem@davemloft.net>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        chris.packham@alliedtelesis.co.nz,
+        luuk.paulussen@alliedtelesis.co.nz
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 02bc7768fe44 ("x86/asm/entry/64: Migrate error and IRQ exit
-work to C and remove old assembly code"), it's no longer used.
+On Fri, Jul 26, 2019 at 7:18 AM Nikolay Aleksandrov
+<nikolay@cumulusnetworks.com> wrote:
 
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
----
- kernel/sched/core.c | 19 -------------------
- 1 file changed, 19 deletions(-)
+> > You've said it yourself - it has linear traversal time, but doesn't this patch allow any netns on the
+> > system to increase its limit to any value, thus possibly affecting others ?
+> > Though the socket limit will kick in at some point. I think that's where David
+> > was going with his suggestion back in 2018:
+> > https://www.spinics.net/lists/netdev/msg514543.html
+> >
+> > If we add this sysctl now, we'll be stuck with it. I'd prefer David's suggestion
+> > so we can rely only on the receive queue queue limit which is already configurable.
+> > We still need to be careful with the defaults though, the NOCACHE entry is 128 bytes
+> > and with the skb overhead currently on my setup we end up at about 277 entries default limit.
+>
+> I mean that people might be surprised if they increased that limit by default, that's the
+> only problem I'm not sure how to handle. Maybe we need some hard limit anyway.
+> Have you done any tests what value works for your setup ?
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2b037f195473..0079bebe0086 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3973,25 +3973,6 @@ void __sched schedule_idle(void)
- 	} while (need_resched());
- }
- 
--#ifdef CONFIG_CONTEXT_TRACKING
--asmlinkage __visible void __sched schedule_user(void)
--{
--	/*
--	 * If we come here after a random call to set_need_resched(),
--	 * or we have been woken up remotely but the IPI has not yet arrived,
--	 * we haven't yet exited the RCU idle mode. Do it here manually until
--	 * we find a better solution.
--	 *
--	 * NB: There are buggy callers of this function.  Ideally we
--	 * should warn if prev_state != CONTEXT_USER, but that will trigger
--	 * too frequently to make sense yet.
--	 */
--	enum ctx_state prev_state = exception_enter();
--	schedule();
--	exception_exit(prev_state);
--}
--#endif
--
- /**
-  * schedule_preempt_disabled - called with preemption disabled
-  *
--- 
-2.21.0
-
+FYI: for ours, it is 2048.
