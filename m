@@ -6,64 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BD7C76190
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64B6C433FF
 	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8694A2087C
+	by mail.kernel.org (Postfix) with ESMTP id B2867208C0
 	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1564245320;
-	bh=uhULmTb0NqEXonl23BHXNBYi1WNxz0CdZNkYi0nQreM=;
+	bh=RPfCAxdyCyZeq9vRoYR0W1zQ5eAzh1TLpM3NSBsFlVg=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=I/KLkuBNlHSeS0tQL6i30MO7UAycmGZNpZ7Ek9BTdh1N2+QI0itD9tH/N7fRDzIgL
-	 lohgV7Fshu8BYEqsUtcQU4Cxw1jIpgYsoKtktB3nD+9kOthzW13/LFYMMMAZZJeSQZ
-	 6sL5/oEBacYZN6xvrdNZsKoebWvOqxpHCdDKyPcU=
+	b=ALlWxPO8QJDK+g+gVnhqG1txOqcsPq6OZL2t3ItWLr1ge7uSgip2c9/GoRPZvOb/0
+	 WnVuuwWvW4ydN02BvQsoNkrHXzXwrdfkMZdGQ3CFog4gSihx3n7pgqaTYClKhLH7q+
+	 A9v7d2FeEmrHPhY1A6tJ2FZyeToZsZJcdT9WbTqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387748AbfG0QfT (ORCPT
+        id S2387830AbfG0QfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 27 Jul 2019 12:35:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55134 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:55158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728975AbfG0QfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 12:35:18 -0400
-Subject: Re: [GIT PULL] Devicetree fixes for 5.3-rc, take 2
+        id S1728995AbfG0QfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 12:35:19 -0400
+Subject: Re: [GIT PULL] s390 updates for 5.3-rc2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564245317;
-        bh=uhULmTb0NqEXonl23BHXNBYi1WNxz0CdZNkYi0nQreM=;
+        s=default; t=1564245318;
+        bh=RPfCAxdyCyZeq9vRoYR0W1zQ5eAzh1TLpM3NSBsFlVg=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=o8H391UrTqOvkJxugeBUF5VfLMkYo2+4NGV29nd945IzvpccKIIYcYydLqn2s+ZZI
-         ytcatw+ezNTeJOvdvyY2caElmlRwxgM3Yc+QGSdRZTHLGzASd4PlWrjpJY8grEOoIF
-         mxSwU0ZSBVXg3o+sUZok298YvTn1HkzA5B1x92Ug=
+        b=McyoIdXRHjHf1Xfd3hAbU3+qnwqp6weLcI4+NzV2JhVUsEVY1GYlg4XOBaCQWjn7N
+         +IlHZMoroeQeOI0Y4x4Vdt0P8nu2JzHYlJxtZeDvYht5hsHQroa8RdaLRf7awpHfQ3
+         o7X5iVgJjTI+iAWW0tDYxCFqfQJMjQG/nCupg6Z4=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAL_JsqJLB4q6wqTOX0oXAGQF4wuZ0irNT8nmpFEmuUKjvv38BQ@mail.gmail.com>
-References: <CAL_JsqJLB4q6wqTOX0oXAGQF4wuZ0irNT8nmpFEmuUKjvv38BQ@mail.gmail.com>
+In-Reply-To: <20190727094517.GA9501@osiris>
+References: <20190727094517.GA9501@osiris>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAL_JsqJLB4q6wqTOX0oXAGQF4wuZ0irNT8nmpFEmuUKjvv38BQ@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
- tags/devicetree-fixes-for-5.3-2
-X-PR-Tracked-Commit-Id: e1ff7390f58e609aa113a2452a953f669abce6cc
+X-PR-Tracked-Message-Id: <20190727094517.GA9501@osiris>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.3-3
+X-PR-Tracked-Commit-Id: 98abe0227827f45cddb21875b2ffa9aeca3848b3
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5efbd93708df56e0fb92b4398960a5bb1ab62f02
-Message-Id: <156424531777.2399.5990197327652199705.pr-tracker-bot@kernel.org>
-Date:   Sat, 27 Jul 2019 16:35:17 +0000
-To:     Rob Herring <robherring2@gmail.com>
+X-PR-Merge-Commit-Id: 43e317c1bbdfe1d4d6d19d28f925f400898d41b9
+Message-Id: <156424531889.2399.16706313874729112396.pr-tracker-bot@kernel.org>
+Date:   Sat, 27 Jul 2019 16:35:18 +0000
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 26 Jul 2019 18:03:50 -0600:
+The pull request you sent on Sat, 27 Jul 2019 11:45:17 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.3-2
+> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.3-3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5efbd93708df56e0fb92b4398960a5bb1ab62f02
+https://git.kernel.org/torvalds/c/43e317c1bbdfe1d4d6d19d28f925f400898d41b9
 
 Thank you!
 
