@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B360FC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACDEC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2052087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81EF4208E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387797AbfG0PKE (ORCPT
+        id S2387783AbfG0PKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 11:10:04 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2787 "EHLO huawei.com"
+        Sat, 27 Jul 2019 11:10:02 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42976 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726370AbfG0PKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728989AbfG0PKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Jul 2019 11:10:00 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id EB0D1A561A98382AC3E5;
-        Sat, 27 Jul 2019 23:09:57 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
- 23:09:49 +0800
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CE09D95BEE9DDD86176B;
+        Sat, 27 Jul 2019 23:09:56 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
+ 23:09:46 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
         <tiwai@suse.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -52,9 +52,9 @@ CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-tegra@vger.kernel.org>, <linux-xtensa@linux-xtensa.org>,
         <gregkh@linuxfoundation.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 09/34] ASoC: bcm2835-i2s: use devm_platform_ioremap_resource() to simplify code
-Date:   Sat, 27 Jul 2019 23:07:13 +0800
-Message-ID: <20190727150738.54764-10-yuehaibing@huawei.com>
+Subject: [PATCH -next 08/34] ASoC: fsl_audmix: use devm_platform_ioremap_resource() to simplify code
+Date:   Sat, 27 Jul 2019 23:07:12 +0800
+Message-ID: <20190727150738.54764-9-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190727150738.54764-1-yuehaibing@huawei.com>
 References: <20190727150738.54764-1-yuehaibing@huawei.com>
@@ -73,30 +73,30 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- sound/soc/bcm/bcm2835-i2s.c | 4 +---
+ sound/soc/fsl/fsl_audmix.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/soc/bcm/bcm2835-i2s.c b/sound/soc/bcm/bcm2835-i2s.c
-index 5ef80f3..e6a12e2 100644
---- a/sound/soc/bcm/bcm2835-i2s.c
-+++ b/sound/soc/bcm/bcm2835-i2s.c
-@@ -828,7 +828,6 @@ static int bcm2835_i2s_probe(struct platform_device *pdev)
+diff --git a/sound/soc/fsl/fsl_audmix.c b/sound/soc/fsl/fsl_audmix.c
+index 3897a54..c7e4e97 100644
+--- a/sound/soc/fsl/fsl_audmix.c
++++ b/sound/soc/fsl/fsl_audmix.c
+@@ -458,7 +458,6 @@ static int fsl_audmix_probe(struct platform_device *pdev)
  {
- 	struct bcm2835_i2s_dev *dev;
- 	int ret;
--	struct resource *mem;
- 	void __iomem *base;
- 	const __be32 *addr;
- 	dma_addr_t dma_base;
-@@ -848,8 +847,7 @@ static int bcm2835_i2s_probe(struct platform_device *pdev)
- 	}
+ 	struct device *dev = &pdev->dev;
+ 	struct fsl_audmix *priv;
+-	struct resource *res;
+ 	const char *mdrv;
+ 	const struct of_device_id *of_id;
+ 	void __iomem *regs;
+@@ -475,8 +474,7 @@ static int fsl_audmix_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
- 	/* Request ioarea */
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	base = devm_ioremap_resource(&pdev->dev, mem);
-+	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
+ 	/* Get the addresses */
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	regs = devm_ioremap_resource(dev, res);
++	regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(regs))
+ 		return PTR_ERR(regs);
  
 -- 
 2.7.4
