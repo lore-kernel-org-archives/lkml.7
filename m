@@ -6,84 +6,92 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B621C41514
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF05BC76194
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04F1C2166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9663A2080C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:10:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="U/Jngwsa"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RbIMxa4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbfG0FHs (ORCPT
+        id S1727758AbfG0FKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 01:07:48 -0400
-Received: from ozlabs.org ([203.11.71.1]:43053 "EHLO ozlabs.org"
+        Sat, 27 Jul 2019 01:10:37 -0400
+Received: from ozlabs.org ([203.11.71.1]:56663 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbfG0FHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 01:07:47 -0400
+        id S1725818AbfG0FKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 01:10:37 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45wYqN0Df9z9s8m;
-        Sat, 27 Jul 2019 15:07:43 +1000 (AEST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45wYtf25ZYz9s3l;
+        Sat, 27 Jul 2019 15:10:34 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564204064;
-        bh=9VKOPpnCFNPvhE4WbCH3Jd3UIbwkeUe5Udt6mTVfzQA=;
+        s=201702; t=1564204234;
+        bh=7sAqKIZuDSrrgjnGY2T3rvyNbaN1Ey5S0LLp3GBtKY4=;
         h=Date:From:To:Cc:Subject:From;
-        b=U/JngwsaMcSUk+pVEdrV1ZabkstSszx7BdFKOumorvjeO7QIDgE1V6HTbACt7Qzpi
-         KW1VWHri8P3GNTJYyNMmrO7o2/h9+JtGYccnrV1gSf0wz5nIPZYbaJuvlmQBOE6CEB
-         scL8spAIPkeUPz54Op2wUkU9d3oSj5x0+J3aJIqAcuR2Nrf64iPt36VfOrT9GA+MqJ
-         UjwmfRlV6FIc+ZJRkTijMxI7IMS4+rHBxIAoZkaX7YK4Qmpr9HP2o/dwVHNmTkUUOw
-         dFU3GKopotF1bf7GniAmX+Bvql6CznK9OB8Hn0xmqq+iIBc6OlCSYwRrNcR/s1Eixx
-         NmcfrYD0NstSw==
-Date:   Sat, 27 Jul 2019 15:07:38 +1000
+        b=RbIMxa4UuQNXTca4iOvN2+Pqm3E6bjL0/a7FsmS+SV9YhTShE6810dv72G778S9N9
+         bVTrgtCiRuFUF3M3jwjrr00fCnYNLAnzeeKCXhdqgcBOJtZBJqMPhJ8nrHnDUrPyZ4
+         b2cu+nGJA7EqgoKjZ/mOEX5PnF59dqQ2KnuO2VEQGoMqF8kwmhBUkK98BSisul94nk
+         lvtsZsNHEkiAs1oS8Uiy0L2sCqb2YXGBD1UFe1TFevEHqAsUPJdzdLAk6YjXA/zscr
+         anjnuKXj2nROzgbShbqD/SNRK+vwagHFHhml/4wNPJZNYyOhfRAzuD7cpSgaC0vMnZ
+         tNqaEYi9KzEsQ==
+Date:   Sat, 27 Jul 2019 15:10:32 +1000
 From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
+To:     Greg KH <greg@kroah.com>
 Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Hook, Gary" <Gary.Hook@amd.com>
-Subject: linux-next: Signed-off-by missing for commit in the crypto tree
-Message-ID: <20190727150738.3640330a@canb.auug.org.au>
+        Ruslan Bilovol <ruslan.bilovol@gmail.com>
+Subject: linux-next: Fixes tag needs some work in the usb tree
+Message-ID: <20190727151032.4eaf3032@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3xuTo3MPgvbTu/7bDhsMuiR";
+Content-Type: multipart/signed; boundary="Sig_/_Sfn20AuKRKioi7H1EK8W.C";
  protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/3xuTo3MPgvbTu/7bDhsMuiR
+--Sig_/_Sfn20AuKRKioi7H1EK8W.C
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
 Hi all,
 
-Commit
+In commit
 
-  53a5d5192803 ("crypto: ccp - Log an error message when ccp-crypto fails t=
-o load")
+  6269e4c76eac ("usb: host: xhci-hub: fix extra endianness conversion")
 
-is missing a Signed-off-by from its author.
+Fixes tag
+
+  Fixes: 395f540 "xhci: support new USB 3.1 hub request to get extended por=
+t status"
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
 
 --=20
 Cheers,
 Stephen Rothwell
 
---Sig_/3xuTo3MPgvbTu/7bDhsMuiR
+--Sig_/_Sfn20AuKRKioi7H1EK8W.C
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl073BoACgkQAVBC80lX
-0GxGewf/ad86dxEWUFE63NAJ28+iTnoxJkqp6Yc4Gg97n03HSMgqL4Cq/5KEkkq/
-kwo7WE5ND6KZX3llmDZ5iKOx9LaO2XlYiWusCrpjhRIV16gyBshl4tJVnJFcDPNy
-Ve5ma/lbGlrktND25/ORtaZh2Z/hxJVCh9yudXpYif7sGKN4a3MEbfg18LcdGlUS
-oO7Ry2aqxZKkSDFfO8V1DdE1dn8hcCRKlVfRIjg7veQ0G9Y4NF78CbOgYgywwQ2Z
-69d1wf8km1H4+ivrKj3kBDgadUa9Nzw82ySIpJI+VI/4scOyk127hY3isgiYE60O
-5gEPU7is3YXib3Zap598UjTEot+tww==
-=nznr
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl073MgACgkQAVBC80lX
+0GyZEgf/T+BVbseNdzp0mokl9ve96XSAQDzj1j4NKY5PC9eCYbErmlG+I12z+QX+
+CssgOL39BeLPdHcZZSFpDeYfn4qoFpGE1GoNQMi4VK6n15myTjOvWTe1pWoYGkcd
+K19s4sRl1hj1Z0Wke8pZfkS0H3ovkgvWi74Hruumu7zeIPjIjDt2sWY4+caiMALR
+AibcFkLJ+Wla8ro9mim4lk8Gj1klLEegqmC7OpL7W53WXCqB0L0yy6MRDIp0M1F0
+YC+aJ/yE/LGL0/DW4LirZnIfiVmqyBOUf4i32uGZaRPTZuSbbKdUm+pLCjwX5H7a
+hLUT0GFwbhUzVyjLIrHi6e1whh/pNA==
+=vBwa
 -----END PGP SIGNATURE-----
 
---Sig_/3xuTo3MPgvbTu/7bDhsMuiR--
+--Sig_/_Sfn20AuKRKioi7H1EK8W.C--
