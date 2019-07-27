@@ -2,92 +2,205 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B7DC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 18:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709DBC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 18:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04C972083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 18:09:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564250971;
-	bh=UOffHRCjj9ElQhQERuuixgmFz2W1MpAZLsqqORG9pio=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0anP6rn+BouzobM/GkHxRaXrPeW6608rUfhf2j3qRqN5/aQSqJyQMZm98BoCW4IBz
-	 p0/GGNPAMAi86P8xj6f6AjbH/Xv1THwK/iroMTquP7iTLMjnIgY3s16hwYvTHR+pjs
-	 +GmIyMR1xJPZhvu40U7zpvWI6P4sGIRpslBFxUss=
+	by mail.kernel.org (Postfix) with ESMTP id 440D020840
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 18:14:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQXwig4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388004AbfG0SJS (ORCPT
+        id S2388030AbfG0SNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 14:09:18 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43840 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387935AbfG0SJS (ORCPT
+        Sat, 27 Jul 2019 14:13:54 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41928 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387841AbfG0SNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 14:09:18 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y17so29947707ljk.10
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 11:09:16 -0700 (PDT)
+        Sat, 27 Jul 2019 14:13:54 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x15so15897873pgg.8;
+        Sat, 27 Jul 2019 11:13:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S62s5rdsynYnqf1QhYZV3IIXT1WCgILS3kAJrNadYnw=;
-        b=iMMrmeLTqTg8y3b1n8d+6Pj031iRNlztZCs/ZBC8A1feno5QZUZ+4IjNBWJWh3e6iN
-         BAHDuoZC4gcRW3J6EC/R7+ttvngMKgi21/ubD8AjZpDFous3abUQ2sJty+gLAPh2WNLP
-         HdDhCKajGZTrqRxwTA8uf1iyYeoGq27O/aQcw=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KudokdeWksX2KTcgdc0MeUt0GwdNoB2VgHFoQuVls38=;
+        b=nQXwig4zQmD99sf+XxuEWKrlfQJgS8/wh6mMH2+5UUBNS6CXjacRHKfVqylA5w4QW/
+         5hgL0TeH5DskP0E/Fh1hm+4HBBbmSJ54zH1ZfPRFEH3ztEqEmTAw9+F+8+RSMNDn7vQY
+         CI+77tLwAgyRris7xXvSqe2sla0j/1ZI3oxSeDZOEuDKnhlw1WBdDR4U/pLspA2kBeSk
+         BOYSFwIplp4w5DEIcswuiE8iO6cIlRgXaY4bgmA2VK7ZZnRIIC2s5tJRQUF2ErGj2Pr9
+         GNrslYJA3Vass1btcwgsOUlHQgZud91qzKm4c5VTNOsbpIoAfIYe2Eszzv3RoQ4PcQAw
+         FZzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S62s5rdsynYnqf1QhYZV3IIXT1WCgILS3kAJrNadYnw=;
-        b=NSD7Yohu8d+3rSzGVRcUC/Ca//3nfQ2SGwZSJOCQLnmdJ55rCYdDXVbQThbgEHF0x4
-         A0YQEoA3xIThPTtc5kOuerv/Jj5l/1yPxq16T4XTMl5B8iPr1Io1eO79BiSCZRPVryTk
-         IUdlDC+enb7VJYWGw5CZwbgC1FYyUW1BHoFalzLW+/JcWzsllfo7Agr3aav+AT0gzigW
-         eqe4hL+xIWZfmk//YM/X4gc+JitP3cLV4dCoud6WeFy0T/gWbvFDo9pr4xheiTU98Clz
-         bNuiC653kjmL+ZYW6/OBdR2PXJCjN6aSme7huQ82Pb4L1B5BDWrstJxi7TyUBGYG+soW
-         kQVg==
-X-Gm-Message-State: APjAAAUYtiafcqUOz4bvrY65fZ6sPmcMaIi6esfPb0Wm4vWKFDKX+vP9
-        oPQ8myKqo7Lq5aG2+BE+75DDlV7skwk=
-X-Google-Smtp-Source: APXvYqyRWFvyBThAlXTns/UwYvx+uzancqYGHfLNqd4HDgBmjSXufWKVApeHTYF954xDk/XUjc/OOA==
-X-Received: by 2002:a2e:2411:: with SMTP id k17mr14650907ljk.136.1564250955431;
-        Sat, 27 Jul 2019 11:09:15 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id 27sm11212275ljw.97.2019.07.27.11.09.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Jul 2019 11:09:14 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id c19so39236171lfm.10
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 11:09:14 -0700 (PDT)
-X-Received: by 2002:ac2:5c42:: with SMTP id s2mr36947244lfp.61.1564250953929;
- Sat, 27 Jul 2019 11:09:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KudokdeWksX2KTcgdc0MeUt0GwdNoB2VgHFoQuVls38=;
+        b=SEa1vuUwthJQ8ES68eC0DIOqAH8+XiFScedDmaP+9KCBkminvTl1TR1zAK+su28Px+
+         2c+5JzUPmtnivGDpIWaXxePEYPm7eJjqd3RJMh46DvJITgRV88Agoo38f+LFgYUEH89u
+         RnvfBafv3/HUww/sa8EvUnRqppRBEBrjI2NED/+eoUqffVi/KnhrAiqjsGg5WfCpp3kR
+         GFsa9GrYrnGL3PjgLEl5nRnq03t7+B94dDkfruFv82dYoOYv2gpGUC6NdPR1ocVC+JaP
+         yLaM8JAIcPWPkTkLABxjLfK6aNFNSSGKNbUuq9yOhSIbWUJlpipTfOFo2MrSqfJe7jua
+         vX+g==
+X-Gm-Message-State: APjAAAX/DMnJMXfrDW8n8HW1nRitBkie/C5JFgSxdbUXmfpjfNoZUKBe
+        qBOpCESrsEXqxCSVmlWTJJA=
+X-Google-Smtp-Source: APXvYqwkBIpp207fOU6iSHRK0JGP62kGoN/F1p5es87bhqdyGLZQVW0zGQm9qC4H0+n6p7Gz+wPb2A==
+X-Received: by 2002:a63:20d:: with SMTP id 13mr86219735pgc.253.1564251232713;
+        Sat, 27 Jul 2019 11:13:52 -0700 (PDT)
+Received: from icarus ([2001:268:c145:e06d:4405:959a:d2f8:aa9a])
+        by smtp.gmail.com with ESMTPSA id 195sm96201191pfu.75.2019.07.27.11.13.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 27 Jul 2019 11:13:51 -0700 (PDT)
+Date:   Sun, 28 Jul 2019 03:13:33 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Cc:     Patrick Havelange <patrick.havelange@essensium.com>,
+        Chuhong Yuan <hslester96@gmail.com>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] counter/ftm-quaddec: Use device-managed registration
+ API
+Message-ID: <20190727181333.GA2820@icarus>
+References: <20190726022836.7182-1-hslester96@gmail.com>
+ <CAKKE0ZG9hKqOnPHCfmW8Mpe2tdcdpdv4Njvx7XNuw6ykJf3P0w@mail.gmail.com>
+ <20190727143133.26a36f70@archlinux>
 MIME-Version: 1.0
-References: <20190726025521.GA1824@embeddedor>
-In-Reply-To: <20190726025521.GA1824@embeddedor>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 27 Jul 2019 11:08:58 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whw2Pdh-gAObS2wt4pF6Pgus9aHNS2WaVBkgYGsmaZyJw@mail.gmail.com>
-Message-ID: <CAHk-=whw2Pdh-gAObS2wt4pF6Pgus9aHNS2WaVBkgYGsmaZyJw@mail.gmail.com>
-Subject: Re: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc2
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190727143133.26a36f70@archlinux>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 7:55 PM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
-> Here is a new pull-request that includes a fix for those warnings you
-> were seeing with the dcn20_dccg driver.
+On Sat, Jul 27, 2019 at 02:31:33PM +0100, Jonathan Cameron wrote:
+> On Fri, 26 Jul 2019 14:51:30 +0200
+> Patrick Havelange <patrick.havelange@essensium.com> wrote:
+> 
+> > Hello,
+> > 
+> > On Fri, Jul 26, 2019 at 4:28 AM Chuhong Yuan <hslester96@gmail.com> wrote:
+> > >
+> > > Make use of devm_counter_register.
+> > > Then we can remove redundant unregistration API
+> > > usage to make code simpler.
+> > >
+> > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> > > ---
+> > > Changes in v2:
+> > >   - Use devm_add_action_or_reset to keep
+> > >     resource release order.  
+> > 
+> > This is better now indeed.
+> > 
+> > However it seems there is an issue with the mail/patch format, I'm
+> > unable to apply it with git am, and if you look at
+> > https://lore.kernel.org/patchwork/patch/1105782/ the diff section is
+> > missing the beginning of the patch. I don't know why, but I think it
+> > should be looked into.
+> > 
+> > Otherwise, it's fine by me.
+> Hi Patrick,
+> 
+> A formal, Acked-by or Reviewed-by definitely preferred if you are happy
+> to give one.
+> 
+> This looks fine to me as well. William, if you are happy with the resend
+> of this, then let me know if you want me to queue it up.
+> 
+> Thanks,
+> 
+> Jonathan
 
-Ok, I have tried re-pulling and if it passes my build tests cleanly
-I'll push the result out.
+I'm all right with these changes too. Feel free to queue up the resend
+version in your tree when you are ready.
 
-                  Linus
+William Breathitt Gray
+
+> 
+> > 
+> > Regards,
+> > 
+> > Patrick Havelange
+> > 
+> > 
+> > >   - _remove() function is redundant now,
+> > >     delete it.
+> > >
+> > >  drivers/counter/ftm-quaddec.c | 31 +++++++++++--------------------
+> > >  1 file changed, 11 insertions(+), 20 deletions(-)
+> > >
+> > > diff --git a/drivers/counter/ftm-quaddec.c b/drivers/counter/ftm-quaddec.c
+> > > index 68a9b7393457..76c70a6c3593 100644
+> > > --- a/drivers/counter/ftm-quaddec.c
+> > > +++ b/drivers/counter/ftm-quaddec.c
+> > > @@ -100,16 +100,17 @@ static void ftm_quaddec_init(struct ftm_quaddec *ftm)
+> > >         ftm_set_write_protection(ftm);
+> > >  }
+> > >
+> > > -static void ftm_quaddec_disable(struct ftm_quaddec *ftm)
+> > > +static void ftm_quaddec_disable(void *ftm)
+> > >  {
+> > > -       ftm_clear_write_protection(ftm);
+> > > -       ftm_write(ftm, FTM_MODE, 0);
+> > > -       ftm_write(ftm, FTM_QDCTRL, 0);
+> > > +       struct ftm_quaddec *ftm_qua = ftm;
+> > >
+> > > +       ftm_clear_write_protection(ftm_qua);
+> > > +       ftm_write(ftm_qua, FTM_MODE, 0);
+> > > +       ftm_write(ftm_qua, FTM_QDCTRL, 0);
+> > >         /*
+> > >          * This is enough to disable the counter. No clock has been
+> > >          * selected by writing to FTM_SC in init()
+> > >          */
+> > > -       ftm_set_write_protection(ftm);
+> > > +       ftm_set_write_protection(ftm_qua);
+> > >  }
+> > >
+> > >  static int ftm_quaddec_get_prescaler(struct counter_device *counter,
+> > > @@ -316,22 +317,13 @@ static int ftm_quaddec_probe(struct platform_device *pdev)
+> > >         mutex_init(&ftm->ftm_quaddec_mutex);
+> > >
+> > >         ftm_quaddec_init(ftm);
+> > > -
+> > > -       ret = counter_register(&ftm->counter);
+> > > +       ret = devm_add_action_or_reset(&pdev->dev, ftm_quaddec_disable, ftm);
+> > >         if (ret)
+> > > -               ftm_quaddec_disable(ftm);
+> > > -
+> > > -       return ret;
+> > > -}
+> > > -
+> > > -static int ftm_quaddec_remove(struct platform_device *pdev)
+> > > -{
+> > > -       struct ftm_quaddec *ftm = platform_get_drvdata(pdev);
+> > > -
+> > > -       counter_unregister(&ftm->counter);
+> > > -
+> > > -       ftm_quaddec_disable(ftm);
+> > > +               return ret;
+> > >
+> > > +       ret = devm_counter_register(&pdev->dev, &ftm->counter);
+> > > +       if (ret)
+> > > +               return ret;
+> > >         return 0;
+> > >  }
+> > >
+> > > @@ -346,7 +338,6 @@ static struct platform_driver ftm_quaddec_driver = {
+> > >                 .of_match_table = ftm_quaddec_match,
+> > >         },
+> > >         .probe = ftm_quaddec_probe,
+> > > -       .remove = ftm_quaddec_remove,
+> > >  };
+> > >
+> > >  module_platform_driver(ftm_quaddec_driver);
+> > > --
+> > > 2.20.1
+> > >  
+> 
