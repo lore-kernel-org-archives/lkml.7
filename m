@@ -2,170 +2,81 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E3CC76194
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686DDC7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0979A20840
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4477220840
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:56:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbfG0FzM (ORCPT
+        id S1728293AbfG0F4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 01:55:12 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3181 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726197AbfG0FzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 01:55:11 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 90ECAACDCD1F5D8835B8;
-        Sat, 27 Jul 2019 13:55:09 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.14) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
- 13:55:06 +0800
-Subject: Re: [RFC PATCH 0/3] md: export internal stats through debugfs
-To:     Bob Liu <bob.liu@oracle.com>, <linux-raid@vger.kernel.org>,
-        <songliubraving@fb.com>
-CC:     <neilb@suse.com>, <linux-block@vger.kernel.org>,
-        <snitzer@redhat.com>, <agk@redhat.com>, <dm-devel@redhat.com>,
-        <linux-kernel@vger.kernel.org>
-References: <20190702132918.114818-1-houtao1@huawei.com>
- <1ebcf2e8-f3ce-7417-4060-b9264a5a4e51@oracle.com>
-From:   Hou Tao <houtao1@huawei.com>
-Message-ID: <9e74accf-14c6-91f7-55ca-6bdabe0fb878@huawei.com>
-Date:   Sat, 27 Jul 2019 13:55:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        Sat, 27 Jul 2019 01:56:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49180 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727246AbfG0F4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 01:56:44 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6150836899;
+        Sat, 27 Jul 2019 05:56:44 +0000 (UTC)
+Received: from t460p.redhat.com (ovpn-116-73.phx2.redhat.com [10.3.116.73])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8AA6819C71;
+        Sat, 27 Jul 2019 05:56:38 +0000 (UTC)
+From:   Scott Wood <swood@redhat.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: [RT PATCH 0/8] migrate disable fixes and performance
+Date:   Sat, 27 Jul 2019 00:56:30 -0500
+Message-Id: <20190727055638.20443-1-swood@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1ebcf2e8-f3ce-7417-4060-b9264a5a4e51@oracle.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.31.14]
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Sat, 27 Jul 2019 05:56:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+With these patches, a kernel build on a 104-cpu machine took around 75%
+less wall time and 85% less system time.  Note that there is a difference
+in v5.2-rt compared to v5.0-rt.  The performance with these patches is
+similar in both cases, but without these patches v5.2-rt is substantially
+slower.  In v5.0-rt with a previous version of these patches, lazy
+migrate disable reduced kernel build time by around 15-20% wall and
+70-75% system.
 
-On 2019/7/23 7:30, Bob Liu wrote:
-> On 7/2/19 9:29 PM, Hou Tao wrote:
->> Hi,
->>
->> There are so many io counters, stats and flags in md, so I think
->> export these info to userspace will be helpful for online-debugging,
-> 
-> For online-debugging, I'd suggest you have a try eBPF which can be very helpful.
-> 
+Scott Wood (8):
+  sched: migrate_enable: Use sleeping_lock to indicate involuntary sleep
+  sched: __set_cpus_allowed_ptr: Check cpus_mask, not cpus_ptr
+  sched: Remove dead __migrate_disabled() check
+  sched: migrate disable: Protect cpus_ptr with lock
+  sched/deadline: Reclaim cpuset bandwidth in .migrate_task_rq()
+  sched: migrate_enable: Set state to TASK_RUNNING
+  sched: migrate_enable: Use select_fallback_rq()
+  sched: Lazy migrate_disable processing
 
-Thanks for your suggestion. Using an eBPF program to read these internal status
-from a host which is fully under your control is a good choice, but when
-the dependencies of an eBPF program (e.g., the minor version of the kernel
-and the kernel configuration which will influence the struct layout) is
-out-of-your-control, it's not a good choice.
+ include/linux/cpu.h      |   4 -
+ include/linux/sched.h    |  15 ++--
+ init/init_task.c         |   4 +
+ kernel/cpu.c             |  97 ++++++++---------------
+ kernel/rcu/tree_plugin.h |   2 +-
+ kernel/sched/core.c      | 200 +++++++++++++++++++----------------------------
+ kernel/sched/deadline.c  |  67 ++++++++--------
+ kernel/sched/sched.h     |   4 +
+ lib/smp_processor_id.c   |   3 +
+ 9 files changed, 166 insertions(+), 230 deletions(-)
 
-Thanks,
-Tao
-
-> -Bob
-> 
->> especially when the vmlinux file and the crash utility are not
->> available. And these info can also be utilized during code
->> understanding.
->>
->> MD has already exported some stats through sysfs files under
->> /sys/block/mdX/md, but using sysfs file to export more internal
->> stats are not a good choice, because we need to create a single
->> sysfs file for each internal stat according to the use convention
->> of sysfs and there are too many internal stats. Further, the
->> newly-created sysfs files would become APIs for userspace tools,
->> but that is not we wanted, because these files are related with
->> internal stats and internal stats may change from time to time.
->>
->> And I think debugfs is a better choice. Because we can show multiple
->> related stats in a debugfs file, and the debugfs file will never be
->> used as an userspace API.
->>
->> Two debugfs files are created to expose these internal stats:
->> * iostat: io counters and io related stats (e.g., mddev->active_io,
->> 	r1conf->nr_pending, or r1confi->retry_list)
->> * stat: normal stats/flags (e.g., mddev->recovery, conf->array_frozen)
->>
->> Because internal stats are spreaded all over md-core and md-personality,
->> so both md-core and md-personality will create these two debugfs files
->> under different debugfs directory.
->>
->> Patch 1 factors out the debugfs files creation routine for md-core and
->> md-personality, patch 2 creates two debugfs files: iostat & stat under
->> /sys/kernel/debug/block/mdX for md-core, and patch 3 creates two debugfs
->> files: iostat & stat under /sys/kernel/debug/block/mdX/raid1 for md-raid1.
->>
->> The following lines show the hierarchy and the content of these debugfs
->> files for a RAID1 device:
->>
->> $ pwd
->> /sys/kernel/debug/block/md0
->> $ tree
->> .
->> ├── iostat
->> ├── raid1
->> │   ├── iostat
->> │   └── stat
->> └── stat
->>
->> $ cat iostat
->> active_io 0
->> sb_wait 0 pending_writes 0
->> recovery_active 0
->> bitmap pending_writes 0
->>
->> $ cat stat
->> flags 0x20
->> sb_flags 0x0
->> recovery 0x0
->>
->> $ cat raid1/iostat
->> retry_list active 0
->> bio_end_io_list active 0
->> pending_bio_list active 0 cnt 0
->> sync_pending 0
->> nr_pending 0
->> nr_waiting 0
->> nr_queued 0
->> barrier 0
->>
->> $ cat raid1/stat
->> array_frozen 0
->>
->> I'm not sure whether the division of internal stats is appropriate and
->> whether the internal stats in debugfs files are sufficient, so questions
->> and comments are weclome.
->>
->> Regards,
->> Tao
->>
->> Hou Tao (3):
->>   md-debugfs: add md_debugfs_create_files()
->>   md: export inflight io counters and internal stats in debugfs
->>   raid1: export inflight io counters and internal stats in debugfs
->>
->>  drivers/md/Makefile     |  2 +-
->>  drivers/md/md-debugfs.c | 35 ++++++++++++++++++
->>  drivers/md/md-debugfs.h | 16 +++++++++
->>  drivers/md/md.c         | 65 ++++++++++++++++++++++++++++++++++
->>  drivers/md/md.h         |  1 +
->>  drivers/md/raid1.c      | 78 +++++++++++++++++++++++++++++++++++++++++
->>  drivers/md/raid1.h      |  1 +
->>  7 files changed, 197 insertions(+), 1 deletion(-)
->>  create mode 100644 drivers/md/md-debugfs.c
->>  create mode 100644 drivers/md/md-debugfs.h
->>
-> 
-> 
-> .
-> 
+-- 
+1.8.3.1
 
