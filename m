@@ -2,175 +2,151 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF16C76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656B8C76194
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E8420840
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:39:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VGgXuS1Y"
+	by mail.kernel.org (Postfix) with ESMTP id 4692620869
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:47:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727643AbfG0FfS (ORCPT
+        id S1727758AbfG0FrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 01:35:18 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43957 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfG0FfR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 01:35:17 -0400
-Received: by mail-lf1-f67.google.com with SMTP id c19so38522171lfm.10
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 22:35:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PzolGi6g/TcuDu8SL3iyFaFmwaFjqKwFAI80D9n/s1Q=;
-        b=VGgXuS1Y9NES4hVTBbGA4O4397PVfo+SH0nSYNBaZA3UekU18/WJZh4K4ONF1sF86q
-         30NqvPEha+oMSIPWg0Dw3GLgYq7uk870F5ZPMzfJsc6QATcb/OSb6IqqNWsfv7+uw72N
-         ecQVde47OY0UBdCOa2sIfEDdYR+TT7+xyq7xByJpkizW0I+4dKZMgOxwv/61zQYOPW8G
-         g6ws2uYOHjGwkCRjqSrB2G5nICZG0SIGRZfzHjcu+hqpPD6HH5NHBcsDCyLlz3RZMNQi
-         ZOHwQVItlba9czw5zGI+aIVETOCjNq9WBhYVNGJbH8Kz4xGYyBH2wTalou8N2UhFwpue
-         wfrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PzolGi6g/TcuDu8SL3iyFaFmwaFjqKwFAI80D9n/s1Q=;
-        b=iC8pcgYzCwelCQ0hFCrIY6y9zV8EQqW/BseC5NqKF9g8sRtrrOJDxG5goRWtZET/02
-         ZouAPj98pQNYBIi++pLIwuiyfXRVznNaaWmqTZM/catYlaurQxFM7Q4jRkXeKlsuCB4D
-         RrKi31z4LIh2CvA/fiRxtwWK/gsqt/oExFVHSaAIodg1K1cZiw5sOhun40B00AgaBdLi
-         f653Atf5xX125gDCJGU305qOmUh6z0WdibpMo3uqqeQuQxtZbAb3kxzOIzMOgwOGos1n
-         gHEwABE2qeHp8vJJpR8vXe1eGHmlOfAZfY36u5gx7RtI0IHdhOlc01S9sGXlR9g67O2C
-         s6ZA==
-X-Gm-Message-State: APjAAAUxPHn3dVdcBQyc9S7k4UMecZgXfqPXFZgcquiQx8nXz+cKwjro
-        IDkcwwc3x4kUOYcBTS6XtN/T98E0xjtIIeoofoIdUg==
-X-Google-Smtp-Source: APXvYqwnC3I49Q9Qpb94zyDJQeM8/85gk5segHmTrCFRL7t2meMzjC83QZLqr4w5cTUZGnFRlBqjwetertyfeCKYqO8=
-X-Received: by 2002:ac2:546a:: with SMTP id e10mr47166003lfn.75.1564205715628;
- Fri, 26 Jul 2019 22:35:15 -0700 (PDT)
+        Sat, 27 Jul 2019 01:47:25 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:38002 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726010AbfG0FrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 01:47:24 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B11BDA591B15D1329791;
+        Sat, 27 Jul 2019 13:47:21 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.14) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
+ 13:47:20 +0800
+Subject: Re: [RFC PATCH 0/3] md: export internal stats through debugfs
+To:     Song Liu <liu.song.a23@gmail.com>
+CC:     linux-raid <linux-raid@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>, NeilBrown <neilb@suse.com>,
+        <linux-block@vger.kernel.org>, <snitzer@redhat.com>,
+        <agk@redhat.com>, <dm-devel@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190702132918.114818-1-houtao1@huawei.com>
+ <CAPhsuW6yH7np1=+e5Rgutp3m1VA0TPvtANeX=0ZdpJaRKEvBkQ@mail.gmail.com>
+From:   Hou Tao <houtao1@huawei.com>
+Message-ID: <b047c187-e4a6-a82a-3177-3da7fef2f6b8@huawei.com>
+Date:   Sat, 27 Jul 2019 13:47:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.8.0
 MIME-Version: 1.0
-References: <20190726152301.936055394@linuxfoundation.org>
-In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 27 Jul 2019 11:05:04 +0530
-Message-ID: <CA+G9fYs8BSxWnE2csOg93jNNFhqMFLavWh8FO3cpBuxy-U3QSg@mail.gmail.com>
-Subject: Re: [PATCH 5.2 00/66] 5.2.4-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAPhsuW6yH7np1=+e5Rgutp3m1VA0TPvtANeX=0ZdpJaRKEvBkQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.31.14]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 at 20:55, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.2.4 release.
-> There are 66 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sun 28 Jul 2019 03:21:13 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.2.4-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.2.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi,
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+On 2019/7/23 5:31, Song Liu wrote:
+> On Tue, Jul 2, 2019 at 6:25 AM Hou Tao <houtao1@huawei.com> wrote:
+>>
+>> Hi,
+>>
+>> There are so many io counters, stats and flags in md, so I think
+>> export these info to userspace will be helpful for online-debugging,
+>> especially when the vmlinux file and the crash utility are not
+>> available. And these info can also be utilized during code
+>> understanding.
+>>
+>> MD has already exported some stats through sysfs files under
+>> /sys/block/mdX/md, but using sysfs file to export more internal
+>> stats are not a good choice, because we need to create a single
+>> sysfs file for each internal stat according to the use convention
+>> of sysfs and there are too many internal stats. Further, the
+>> newly-created sysfs files would become APIs for userspace tools,
+>> but that is not we wanted, because these files are related with
+>> internal stats and internal stats may change from time to time.
+>>
+>> And I think debugfs is a better choice. Because we can show multiple
+>> related stats in a debugfs file, and the debugfs file will never be
+>> used as an userspace API.
+>>
+>> Two debugfs files are created to expose these internal stats:
+>> * iostat: io counters and io related stats (e.g., mddev->active_io,
+>>         r1conf->nr_pending, or r1confi->retry_list)
+>> * stat: normal stats/flags (e.g., mddev->recovery, conf->array_frozen)
+>>
+>> Because internal stats are spreaded all over md-core and md-personality,
+>> so both md-core and md-personality will create these two debugfs files
+>> under different debugfs directory.
+>>
+>> Patch 1 factors out the debugfs files creation routine for md-core and
+>> md-personality, patch 2 creates two debugfs files: iostat & stat under
+>> /sys/kernel/debug/block/mdX for md-core, and patch 3 creates two debugfs
+>> files: iostat & stat under /sys/kernel/debug/block/mdX/raid1 for md-raid1.
+>>
+>> The following lines show the hierarchy and the content of these debugfs
+>> files for a RAID1 device:
+>>
+>> $ pwd
+>> /sys/kernel/debug/block/md0
+>> $ tree
+>> .
+>> ├── iostat
+>> ├── raid1
+>> │   ├── iostat
+>> │   └── stat
+>> └── stat
+>>
+>> $ cat iostat
+>> active_io 0
+>> sb_wait 0 pending_writes 0
+>> recovery_active 0
+>> bitmap pending_writes 0
+>>
+>> $ cat stat
+>> flags 0x20
+>> sb_flags 0x0
+>> recovery 0x0
+>>
+>> $ cat raid1/iostat
+>> retry_list active 0
+>> bio_end_io_list active 0
+>> pending_bio_list active 0 cnt 0
+>> sync_pending 0
+>> nr_pending 0
+>> nr_waiting 0
+>> nr_queued 0
+>> barrier 0
+> 
+> Hi,
+> 
+> Sorry for the late reply.
+> 
+> I think these information are really debug information that we should not
+> show in /sys. Once we expose them in /sys, we need to support them
+> because some use space may start searching data from them.
+So debugfs is used to place these debug information instead of sysfs.
 
-Summary
-------------------------------------------------------------------------
+It's OK for user-space tools to search data from these files as long as these
+tools don't expect these information to be stable. And the most possible user
+of these files would be test programs, and if some user-space tools may truly
+expect some stable information from the debugfs file, maybe we should move
+these information from debugfs to sysfs file.
 
-kernel: 5.2.4-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.2.y
-git commit: d61e440a1852a64d8a2d0d358b9582b19157e039
-git describe: v5.2.3-67-gd61e440a1852
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.2-oe/bui=
-ld/v5.2.3-67-gd61e440a1852
+Regards,
+Tao
 
-No regressions (compared to build v5.2.3)
+> 
+> Thanks,
+> Song
+> 
+> .
+> 
 
-No fixes (compared to build v5.2.3)
-
-Ran 22512 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* kvm-unit-tests
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
