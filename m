@@ -1,149 +1,274 @@
-Return-Path: <SRS0=vtn1=VX=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA9AC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B56C76190
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 00:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B12822BF5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jul 2019 23:52:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j54lOfLS"
+	by mail.kernel.org (Postfix) with ESMTP id F22C422BF5
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 00:00:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728438AbfGZXwl (ORCPT
+        id S1727572AbfG0AAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 19:52:41 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52756 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfGZXwl (ORCPT
+        Fri, 26 Jul 2019 20:00:11 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:15713 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726102AbfG0AAK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 19:52:41 -0400
-Received: by mail-wm1-f65.google.com with SMTP id s3so49236989wms.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 16:52:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ynP0RWGfXHb+Ugg6ER1XzuO5G0OYOiJ2jK1uvno/35E=;
-        b=j54lOfLSrM52zu4Z1Omwfucejndrp+XFm/dAFcG2sWu4iuRIcyL+ZJL7nkx1FKzF6a
-         EvYOAtkSsh2ojOCL3fs3jAEh9BSVwIFsilDab6dgr6sLUFaBshp0vhLLfSj8GUCWEkq5
-         /yQb2YY9ZB3tZ13lHJzvd68aAHlY8BhQM5dg0En4cHGyvgWgPLVnpL/dsMc7kA0sk9pn
-         9Xpni0yfoHPtb3di8nHFUrBDk1WisQcYOraB7Ez8ttFVYb1xworuzio38MIF8woinNp/
-         a1hAE2r9QFh5m8wdlOddvsfRMxSJye40F4Cv+pbfVP2Prw5KR4NMZad/5C+9519Qh0PZ
-         hksw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ynP0RWGfXHb+Ugg6ER1XzuO5G0OYOiJ2jK1uvno/35E=;
-        b=iTW/JRJiHd8wMWxinM44jciErXMrLWpyo9jQ6ihEJ9O0Nxek7oKEJH5oJHQKix/Jao
-         ra4yOYv2vkJzxgAxYqwW5tQZ2Di6G0iwAZwsXJIUGcPyOk5lIYcnD0ie9nENf80L5UzI
-         MQdVmzdGM2M0AF+cGCnww/slhGXzBpGZ+dG7gFU92T0PUtcoR+INys9AvcIlbg7RoF2a
-         gE4am1SVSN6xKSTV5wYOg5f+lSMAZaPlbYyW92o4B++Ngiia10zar7x68R2Fd7186W5i
-         1A2AAF/9hnv2HZIhoHfA9RcepvK7oa55uQR359KRSxXb333QTEa4UNKfHcSG8atkwSUA
-         ly1g==
-X-Gm-Message-State: APjAAAWt1gV1cEZZAq+H2tKJ1EeoMPrszAGcBrXmecTDsGYjeEOiF28e
-        GMs8yQnzgf9unzIJ0Ycj+iNcCZV1Irs5L1cRY9iiQA==
-X-Google-Smtp-Source: APXvYqyagTff9ERbnr2ahjA+g53G/zQgaiKCoy/EuBCDcXm7bY0F0tc/29M9lpt+ezF4FTVcXZ/6AJrbRI05oJfzQGg=
-X-Received: by 2002:a05:600c:2056:: with SMTP id p22mr14459424wmg.155.1564185158472;
- Fri, 26 Jul 2019 16:52:38 -0700 (PDT)
+        Fri, 26 Jul 2019 20:00:10 -0400
+X-UUID: 2aef6c0802374436a368eb5fb208030d-20190727
+X-UUID: 2aef6c0802374436a368eb5fb208030d-20190727
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 407416634; Sat, 27 Jul 2019 08:00:03 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 27 Jul 2019 08:00:03 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 27 Jul 2019 08:00:03 +0800
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+CC:     <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Miles Chen <miles.chen@mediatek.com>
+Subject: [PATCH v3] mm: memcontrol: fix use after free in mem_cgroup_iter()
+Date:   Sat, 27 Jul 2019 08:00:02 +0800
+Message-ID: <20190727000002.17844-1-miles.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <20190724234500.253358-1-nums@google.com> <20190724234500.253358-4-nums@google.com>
- <20190726193227.GH20482@kernel.org>
-In-Reply-To: <20190726193227.GH20482@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 26 Jul 2019 16:52:26 -0700
-Message-ID: <CAP-5=fUfiG=HiBjcvOWwrBRarSTcc1fPWdWoxmWTdcwAF8e-mQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] Fix sched-messaging.c use of uninitialized value errors
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>, mbd@fb.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 12:32 PM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Wed, Jul 24, 2019 at 04:45:00PM -0700, Numfor Mbiziwo-Tiapo escreveu:
-> > Our local MSAN (Memory Sanitizer) build of perf throws use of
-> > uninitialized value warnings in "tools/perf/bench/sched-messaging.c"
-> > when running perf bench.
-> >
-> > The first warning comes from the "ready" function where the "dummy" char
-> > is declared and then passed into "write" without being initialized.
-> > Initializing "dummy" to any character silences the warning.
-> >
-> > The second warning comes from the "sender" function where a "write" call
-> > is made to write the contents from the "data" char array when it has not
-> > yet been initialized. Calling memset on "data" silences the warning.
->
-> So, this is just to silence MSAN, as it doesn't matter what is sent,
-> whatever values are in those variables is ok, as it will not be used,
-> right?
+This patch is sent to report an use after free in mem_cgroup_iter()
+after merging commit: be2657752e9e "mm: memcg: fix use after free in
+mem_cgroup_iter()".
 
-That's right.
+I work with android kernel tree (4.9 & 4.14), and the commit:
+be2657752e9e "mm: memcg: fix use after free in mem_cgroup_iter()" has
+been merged to the trees. However, I can still observe use after free
+issues addressed in the commit be2657752e9e.
+(on low-end devices, a few times this month)
 
-Thanks,
-Ian Rogers
+backtrace:
+	css_tryget <- crash here
+	mem_cgroup_iter
+	shrink_node
+	shrink_zones
+	do_try_to_free_pages
+	try_to_free_pages
+	__perform_reclaim
+	__alloc_pages_direct_reclaim
+	__alloc_pages_slowpath
+	__alloc_pages_nodemask
 
-> - Arnaldo
->
-> > To reproduce this warning, build perf by running:
-> > make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
-> >  -fsanitize-memory-track-origins"
-> >
-> > (Additionally, llvm might have to be installed and clang might have to
-> > be specified as the compiler - export CC=/usr/bin/clang)
-> >
-> > then running: tools/perf/perf bench sched all
-> >
-> > Please see the cover letter for why false positive warnings may be
-> > generated.
-> >
-> > Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-> > ---
-> >  tools/perf/bench/sched-messaging.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/bench/sched-messaging.c b/tools/perf/bench/sched-messaging.c
-> > index f9d7641ae833..d22d7b7b591d 100644
-> > --- a/tools/perf/bench/sched-messaging.c
-> > +++ b/tools/perf/bench/sched-messaging.c
-> > @@ -69,7 +69,7 @@ static void fdpair(int fds[2])
-> >  /* Block until we're ready to go */
-> >  static void ready(int ready_out, int wakefd)
-> >  {
-> > -     char dummy;
-> > +     char dummy = 'N';
-> >       struct pollfd pollfd = { .fd = wakefd, .events = POLLIN };
-> >
-> >       /* Tell them we're ready. */
-> > @@ -87,6 +87,7 @@ static void *sender(struct sender_context *ctx)
-> >       char data[DATASIZE];
-> >       unsigned int i, j;
-> >
-> > +     memset(data, 'N', DATASIZE);
-> >       ready(ctx->ready_out, ctx->wakefd);
-> >
-> >       /* Now pump to every receiver. */
-> > --
-> > 2.22.0.657.g960e92d24f-goog
->
-> --
->
-> - Arnaldo
+To debug, I poisoned mem_cgroup before freeing it:
+
+static void __mem_cgroup_free(struct mem_cgroup *memcg)
+	for_each_node(node)
+	free_mem_cgroup_per_node_info(memcg, node);
+	free_percpu(memcg->stat);
++       /* poison memcg before freeing it */
++       memset(memcg, 0x78, sizeof(struct mem_cgroup));
+	kfree(memcg);
+}
+
+The coredump shows the position=0xdbbc2a00 is freed.
+
+(gdb) p/x ((struct mem_cgroup_per_node *)0xe5009e00)->iter[8]
+$13 = {position = 0xdbbc2a00, generation = 0x2efd}
+
+0xdbbc2a00:     0xdbbc2e00      0x00000000      0xdbbc2800      0x00000100
+0xdbbc2a10:     0x00000200      0x78787878      0x00026218      0x00000000
+0xdbbc2a20:     0xdcad6000      0x00000001      0x78787800      0x00000000
+0xdbbc2a30:     0x78780000      0x00000000      0x0068fb84      0x78787878
+0xdbbc2a40:     0x78787878      0x78787878      0x78787878      0xe3fa5cc0
+0xdbbc2a50:     0x78787878      0x78787878      0x00000000      0x00000000
+0xdbbc2a60:     0x00000000      0x00000000      0x00000000      0x00000000
+0xdbbc2a70:     0x00000000      0x00000000      0x00000000      0x00000000
+0xdbbc2a80:     0x00000000      0x00000000      0x00000000      0x00000000
+0xdbbc2a90:     0x00000001      0x00000000      0x00000000      0x00100000
+0xdbbc2aa0:     0x00000001      0xdbbc2ac8      0x00000000      0x00000000
+0xdbbc2ab0:     0x00000000      0x00000000      0x00000000      0x00000000
+0xdbbc2ac0:     0x00000000      0x00000000      0xe5b02618      0x00001000
+0xdbbc2ad0:     0x00000000      0x78787878      0x78787878      0x78787878
+0xdbbc2ae0:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2af0:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b00:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b10:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b20:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b30:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b40:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b50:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b60:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b70:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b80:     0x78787878      0x78787878      0x00000000      0x78787878
+0xdbbc2b90:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2ba0:     0x78787878      0x78787878      0x78787878      0x78787878
+
+In the reclaim path, try_to_free_pages() does not setup
+sc.target_mem_cgroup and sc is passed to do_try_to_free_pages(), ...,
+shrink_node().
+
+In mem_cgroup_iter(), root is set to root_mem_cgroup because
+sc->target_mem_cgroup is NULL.
+It is possible to assign a memcg to root_mem_cgroup.nodeinfo.iter in
+mem_cgroup_iter().
+
+	try_to_free_pages
+		struct scan_control sc = {...}, target_mem_cgroup is 0x0;
+	do_try_to_free_pages
+	shrink_zones
+	shrink_node
+		 mem_cgroup *root = sc->target_mem_cgroup;
+		 memcg = mem_cgroup_iter(root, NULL, &reclaim);
+	mem_cgroup_iter()
+		if (!root)
+			root = root_mem_cgroup;
+		...
+
+		css = css_next_descendant_pre(css, &root->css);
+		memcg = mem_cgroup_from_css(css);
+		cmpxchg(&iter->position, pos, memcg);
+
+My device uses memcg non-hierarchical mode.
+When we release a memcg: invalidate_reclaim_iterators() reaches only
+dead_memcg and its parents. If non-hierarchical mode is used,
+invalidate_reclaim_iterators() never reaches root_mem_cgroup.
+
+static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
+{
+	struct mem_cgroup *memcg = dead_memcg;
+
+	for (; memcg; memcg = parent_mem_cgroup(memcg)
+	...
+}
+
+So the use after free scenario looks like:
+
+CPU1						CPU2
+
+try_to_free_pages
+do_try_to_free_pages
+shrink_zones
+shrink_node
+mem_cgroup_iter()
+    if (!root)
+    	root = root_mem_cgroup;
+    ...
+    css = css_next_descendant_pre(css, &root->css);
+    memcg = mem_cgroup_from_css(css);
+    cmpxchg(&iter->position, pos, memcg);
+
+					invalidate_reclaim_iterators(memcg);
+					...
+					__mem_cgroup_free()
+						kfree(memcg);
+
+try_to_free_pages
+do_try_to_free_pages
+shrink_zones
+shrink_node
+mem_cgroup_iter()
+    if (!root)
+    	root = root_mem_cgroup;
+    ...
+    mz = mem_cgroup_nodeinfo(root, reclaim->pgdat->node_id);
+    iter = &mz->iter[reclaim->priority];
+    pos = READ_ONCE(iter->position);
+    css_tryget(&pos->css) <- use after free
+
+To avoid this, we should also invalidate root_mem_cgroup.nodeinfo.iter in
+invalidate_reclaim_iterators().
+
+Change since v1:
+Add a comment to explain why we need to handle root_mem_cgroup separately.
+Rename invalid_root to invalidate_root.
+
+Change since v2:
+add fix tag
+
+Fixes: 5ac8fb31ad2e ("mm: memcontrol: convert reclaim iterator to simple css refcounting")
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+---
+ mm/memcontrol.c | 38 ++++++++++++++++++++++++++++----------
+ 1 file changed, 28 insertions(+), 10 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index cdbb7a84cb6e..7d079e862646 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1130,26 +1130,44 @@ void mem_cgroup_iter_break(struct mem_cgroup *root,
+ 		css_put(&prev->css);
+ }
+ 
+-static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
++static void __invalidate_reclaim_iterators(struct mem_cgroup *from,
++					struct mem_cgroup *dead_memcg)
+ {
+-	struct mem_cgroup *memcg = dead_memcg;
+ 	struct mem_cgroup_reclaim_iter *iter;
+ 	struct mem_cgroup_per_node *mz;
+ 	int nid;
+ 	int i;
+ 
+-	for (; memcg; memcg = parent_mem_cgroup(memcg)) {
+-		for_each_node(nid) {
+-			mz = mem_cgroup_nodeinfo(memcg, nid);
+-			for (i = 0; i <= DEF_PRIORITY; i++) {
+-				iter = &mz->iter[i];
+-				cmpxchg(&iter->position,
+-					dead_memcg, NULL);
+-			}
++	for_each_node(nid) {
++		mz = mem_cgroup_nodeinfo(from, nid);
++		for (i = 0; i <= DEF_PRIORITY; i++) {
++			iter = &mz->iter[i];
++			cmpxchg(&iter->position,
++				dead_memcg, NULL);
+ 		}
+ 	}
+ }
+ 
++/*
++ * When cgruop1 non-hierarchy mode is used, parent_mem_cgroup() does
++ * not walk all the way up to the cgroup root (root_mem_cgroup). So
++ * we have to handle dead_memcg from cgroup root separately.
++ */
++static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
++{
++	struct mem_cgroup *memcg = dead_memcg;
++	int invalidate_root = 0;
++
++	for (; memcg; memcg = parent_mem_cgroup(memcg)) {
++		__invalidate_reclaim_iterators(memcg, dead_memcg);
++		if (memcg == root_mem_cgroup)
++			invalidate_root = 1;
++	}
++
++	if (!invalidate_root)
++		__invalidate_reclaim_iterators(root_mem_cgroup, dead_memcg);
++}
++
+ /**
+  * mem_cgroup_scan_tasks - iterate over tasks of a memory cgroup hierarchy
+  * @memcg: hierarchy root
+-- 
+2.18.0
+
