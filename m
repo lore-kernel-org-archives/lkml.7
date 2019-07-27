@@ -2,118 +2,102 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF391C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 11:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8015C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC612083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 11:57:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564228675;
-	bh=Qt1Rf8kXzBIqNTkx2KISu/ts1iMKogFu67lTKS8akwI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zp+X4+sov6OMYJpo0qjggHZHGBiRBnD/EZYfKcUYhq5hazpskMoQsWlNl90OxQFdC
-	 +1nHE2dhhRQQTnLC3GBFMbyCZhV8fzlFZWFWUo8SgPfRJzIG0mF4oJaLxSBMjzSxux
-	 tOiteKCwp+KzVM+nug6/bN9Rwv5JZ0ima/FFYZpE=
+	by mail.kernel.org (Postfix) with ESMTP id 7FAED2084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:01:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vThsmw0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbfG0L5z (ORCPT
+        id S1728868AbfG0MBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 07:57:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbfG0L5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 07:57:54 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3D5A2077C;
-        Sat, 27 Jul 2019 11:57:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564228673;
-        bh=Qt1Rf8kXzBIqNTkx2KISu/ts1iMKogFu67lTKS8akwI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=v/HEhMy0bQOo4vFVcF94DEwwyVIWHx7+pCMkhVSsEY3OVeC7TUfFW103L3KbvqJcq
-         VH7Za++mrEkiLmJgYnQmayvu3G2mS8ZXy5dlfL/mFHkeyodeVaG989Xpg1V39kKTNS
-         guPhMWIvdhu0M9ba8dA+QI6Yij3H8KPpAqd+Zdv0=
-Date:   Sat, 27 Jul 2019 12:57:49 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Brian Masney <masneyb@onstation.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: tsl2772: Use device-managed API
-Message-ID: <20190727125749.63297c28@archlinux>
-In-Reply-To: <20190726123058.22915-1-hslester96@gmail.com>
-References: <20190726123058.22915-1-hslester96@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 27 Jul 2019 08:01:30 -0400
+Received: from mail-wm1-f44.google.com ([209.85.128.44]:34146 "EHLO
+        mail-wm1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfG0MBa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 08:01:30 -0400
+Received: by mail-wm1-f44.google.com with SMTP id w9so39712669wmd.1;
+        Sat, 27 Jul 2019 05:01:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BzHuFvoRywu7/+3CAPgMLJskj79GTte0iQAInAuEBk0=;
+        b=vThsmw0tCLmat2Ys+CS8+iW9Pl+gCfZN9vcLNKCMh1M2a09MXxCJLMCNusqwvinfws
+         fjCCgTlCwXXb7rZ2zWXqG4NTL9XU6u32UUV9NdriXxnf9ufiEMAaI3/qtPXr8bYVLGCA
+         5l6pfdqm6EAvAe7hb0m492058r5IodmT92lFamS7G5Crx+yc+C+eEwnIyAOYjrCdECac
+         b4JVPTjR1nbEPOk+tueytg7MY2ac5bymNr1NWziA2OrE5Jnh/DSUKt434C0O4jNUCY+i
+         dnScdNjeqHx6m737R/RnudEoRALrNS1zxH9rVR4eZ2/cPHdNTX93AYMJlu5xJVhvmG2o
+         7LOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BzHuFvoRywu7/+3CAPgMLJskj79GTte0iQAInAuEBk0=;
+        b=pCKCdLw3RdfPJ+Hmf8scpIOCyfmuXRxAPJrOlgsqwyDyZhJtxJMrlpBtVlz6JbsmAv
+         1EZu55zMt6+pa/oA1EbcomGcxVPUR7tptjOgIfwOQHYrm0ijAFjKJahatsoRItnQ6ZK1
+         Sm1toTls2LieAJfuRjuxvLIWfmUrS+VoXkFwfVHQQxNp/QFW1pi6mbxSShqBHGRG7sku
+         M2bmQZ/pnA1qxhUpuxwGF0zWqr+kAbIfsA3FGldTbQ3b76ZoHARrnv21sEL28oVcTtFq
+         aazqJhkb9eje25zJk8T0PDxbOmdNLuFaBfMwV6dJUyQetP7FigrTo8IjC79PpUnWuW7D
+         KzfQ==
+X-Gm-Message-State: APjAAAXAHm9iZJidRBvZv55aCG3ivZLbHQvSjfUcjikHtmK4c9V1wca+
+        QdLNLZt8EkmIgKoNP4AltAs=
+X-Google-Smtp-Source: APXvYqwHn40PeIiZpTilHxYc5IpQAFqaPj5T57XFsRE5QMVgKup6IdGlkPTXI5DRRjhWA6EyqfFb7Q==
+X-Received: by 2002:a1c:c14b:: with SMTP id r72mr74522683wmf.166.1564228888420;
+        Sat, 27 Jul 2019 05:01:28 -0700 (PDT)
+Received: from [192.168.2.202] (p5487B5D1.dip0.t-ipconnect.de. [84.135.181.209])
+        by smtp.gmail.com with ESMTPSA id j10sm94313757wrd.26.2019.07.27.05.01.27
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sat, 27 Jul 2019 05:01:27 -0700 (PDT)
+Subject: Re: [PATCH v3 2/2] Input: soc_button_array - Add support for newer
+ surface devices
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+References: <20190720150511.95076-1-luzmaximilian@gmail.com>
+ <20190720150511.95076-3-luzmaximilian@gmail.com>
+ <20190727091443.GC795@penguin>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <fb53b082-4d83-83a6-1ae6-b9fae9dc750f@gmail.com>
+Date:   Sat, 27 Jul 2019 14:01:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190727091443.GC795@penguin>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 20:30:58 +0800
-Chuhong Yuan <hslester96@gmail.com> wrote:
-
-> Use devm_iio_device_register to simplify
-> the code.
+On 7/27/19 11:14 AM, Dmitry Torokhov wrote:
+> On Sat, Jul 20, 2019 at 05:05:11PM +0200, Maximilian Luz wrote:
+>> -
+>> -	error = gpiod_count(dev, NULL);
+>> -	if (error < 0) {
+>> -		dev_dbg(dev, "no GPIO attached, ignoring...\n");
+>> -		return -ENODEV;
 > 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-
-Please try to pick up on likely reviewers in your cc list.  In this case
-Brian did a lot of work cleaning these drivers up so I've added him.
-Not everyone keeps up with the linux-iio list for some reason ;)
-
-Immediate thought was that you had broken the ordering but turns out
-it is already buggy.
-
-As things stand, we remove the userspace interfaces (iio_device_unregister)
-after turning off the power.   This is obviously a bad idea and also
-form a purely "obviously correct" stand point, we aren't doing the reverse
-of probe.
-
-So, I 'think' the right option is to reorder remove so that the power left
-on until after the iio_device_unregister call. At that point, we can't
-use devm_iio_device_register as we'll have the same incorrect ordering
-we currently have.
-
-Brian, you looked at this driver most recently.  Thoughts?
-
-Thanks,
-
-Jonathan
-
-
-
-> ---
->  drivers/iio/light/tsl2772.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> I do not think we need to move this into individual "check" functions.
+> It is needed in all cases so we should keep it here.
 > 
-> diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
-> index 83cece921843..aa5891d105e8 100644
-> --- a/drivers/iio/light/tsl2772.c
-> +++ b/drivers/iio/light/tsl2772.c
-> @@ -1877,7 +1877,7 @@ static int tsl2772_probe(struct i2c_client *clientp,
->  	if (ret < 0)
->  		return ret;
->  
-> -	ret = iio_device_register(indio_dev);
-> +	ret = devm_iio_device_register(&clientp->dev, indio_dev);
->  	if (ret) {
->  		tsl2772_chip_off(indio_dev);
->  		dev_err(&clientp->dev,
-> @@ -1928,8 +1928,6 @@ static int tsl2772_remove(struct i2c_client *client)
->  
->  	tsl2772_chip_off(indio_dev);
->  
-> -	iio_device_unregister(indio_dev);
-> -
->  	return 0;
->  }
->  
+> How about version below?
 
+Makes sense, looks good to me!
+
+Maximilian
