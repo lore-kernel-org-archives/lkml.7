@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2FEC76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF16C76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 698F2206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E8420840
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:39:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yr5W0JlC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VGgXuS1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727246AbfG0Fef (ORCPT
+        id S1727643AbfG0FfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 01:34:35 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34012 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfG0Fef (ORCPT
+        Sat, 27 Jul 2019 01:35:18 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43957 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfG0FfR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 01:34:35 -0400
-Received: by mail-lf1-f65.google.com with SMTP id b29so31278187lfq.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 22:34:34 -0700 (PDT)
+        Sat, 27 Jul 2019 01:35:17 -0400
+Received: by mail-lf1-f67.google.com with SMTP id c19so38522171lfm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 22:35:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=8ZlpG1RycHrLNXBWwG+B73zSqptir9sCoAeiMtSDrbk=;
-        b=Yr5W0JlC2BM8vS38natdzRIcaHrKp4/emzfzTrUHTk2HdW2fmfOzVV7pp4aSGSdNTL
-         A6wZbTDts/SYMsS0JGWtWxFz0Zqx/XRa4aaJIwaBfh7NcoOASAP9CytjrSRSp44haEG2
-         V7VQSeyRheA3QHPY3LTjfr39ecMnO3Lg/xmeC74jfEiqWnBJMs+McW6NmBWSIH80Rn1s
-         ToOSij5UMEmDpUA2c0m2QW7qm5b+umoFI2umDvZb3P/BbiEWCHdF1F2BVHKOXoO6uRMK
-         4mEX6svrzp5rmY6wh5iWLp8/PR11wxn9DZSmLh/JMNcoIMlQz8G+XYQPJqzZter3x6vg
-         AT8g==
+        bh=PzolGi6g/TcuDu8SL3iyFaFmwaFjqKwFAI80D9n/s1Q=;
+        b=VGgXuS1Y9NES4hVTBbGA4O4397PVfo+SH0nSYNBaZA3UekU18/WJZh4K4ONF1sF86q
+         30NqvPEha+oMSIPWg0Dw3GLgYq7uk870F5ZPMzfJsc6QATcb/OSb6IqqNWsfv7+uw72N
+         ecQVde47OY0UBdCOa2sIfEDdYR+TT7+xyq7xByJpkizW0I+4dKZMgOxwv/61zQYOPW8G
+         g6ws2uYOHjGwkCRjqSrB2G5nICZG0SIGRZfzHjcu+hqpPD6HH5NHBcsDCyLlz3RZMNQi
+         ZOHwQVItlba9czw5zGI+aIVETOCjNq9WBhYVNGJbH8Kz4xGYyBH2wTalou8N2UhFwpue
+         wfrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8ZlpG1RycHrLNXBWwG+B73zSqptir9sCoAeiMtSDrbk=;
-        b=al5reHWHZNRN2DCDI8t//KEeTlUSfpG2wbLcKoKc8YKPhS0BSwbtRE00gEx+cDxuYx
-         llEpnzTPVVeOnBB3Zu+krvy7JEETBiFnonHzm3P5VSs+S8io/WnP1FLPBAIFy/2upeUr
-         T4wC3ryAJ1Ylml6WvDMchfDgx7x5+EnEGzyWSizQzn0SkVeSOmZx4L0P3gnhninx5+jX
-         iIpiLaUxzTtoZxvU0/VcKzTfy7f49Z/njRH4rfxHKLtGcEaA0cutUgxvnsliXko5Ay7J
-         pgfV8903C/gYO+Z8ZSh1rIGKO+DjAI/nk+aiM9zO2baXPB5ds5P7dqjZb1pJZRQ553B9
-         6IHg==
-X-Gm-Message-State: APjAAAXeoOS7QirunMpSce87z2IY/GrO97pSZ2fitKCrvDIw/Z5DBzLJ
-        u1mBWzFNgp/m/CPIapIC9mTzCaGPuvhSll976rxisQ==
-X-Google-Smtp-Source: APXvYqx1P8IViFSbKD/fdJc59AokS+vmW8EkSn2rrw8Z41xTZfMiH2r33+Iv/EuTdsKpcngFU/DaQj/TEZMZLHNLUgo=
-X-Received: by 2002:ac2:482d:: with SMTP id 13mr34652695lft.132.1564205673316;
- Fri, 26 Jul 2019 22:34:33 -0700 (PDT)
+        bh=PzolGi6g/TcuDu8SL3iyFaFmwaFjqKwFAI80D9n/s1Q=;
+        b=iC8pcgYzCwelCQ0hFCrIY6y9zV8EQqW/BseC5NqKF9g8sRtrrOJDxG5goRWtZET/02
+         ZouAPj98pQNYBIi++pLIwuiyfXRVznNaaWmqTZM/catYlaurQxFM7Q4jRkXeKlsuCB4D
+         RrKi31z4LIh2CvA/fiRxtwWK/gsqt/oExFVHSaAIodg1K1cZiw5sOhun40B00AgaBdLi
+         f653Atf5xX125gDCJGU305qOmUh6z0WdibpMo3uqqeQuQxtZbAb3kxzOIzMOgwOGos1n
+         gHEwABE2qeHp8vJJpR8vXe1eGHmlOfAZfY36u5gx7RtI0IHdhOlc01S9sGXlR9g67O2C
+         s6ZA==
+X-Gm-Message-State: APjAAAUxPHn3dVdcBQyc9S7k4UMecZgXfqPXFZgcquiQx8nXz+cKwjro
+        IDkcwwc3x4kUOYcBTS6XtN/T98E0xjtIIeoofoIdUg==
+X-Google-Smtp-Source: APXvYqwnC3I49Q9Qpb94zyDJQeM8/85gk5segHmTrCFRL7t2meMzjC83QZLqr4w5cTUZGnFRlBqjwetertyfeCKYqO8=
+X-Received: by 2002:ac2:546a:: with SMTP id e10mr47166003lfn.75.1564205715628;
+ Fri, 26 Jul 2019 22:35:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190726152301.720139286@linuxfoundation.org>
-In-Reply-To: <20190726152301.720139286@linuxfoundation.org>
+References: <20190726152301.936055394@linuxfoundation.org>
+In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
 From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 27 Jul 2019 11:04:22 +0530
-Message-ID: <CA+G9fYvO38S6mS8LuK6pWJbQGnE76ynXBWvEF-8WoYODT=zPHA@mail.gmail.com>
-Subject: Re: [PATCH 5.1 00/62] 5.1.21-stable review
+Date:   Sat, 27 Jul 2019 11:05:04 +0530
+Message-ID: <CA+G9fYs8BSxWnE2csOg93jNNFhqMFLavWh8FO3cpBuxy-U3QSg@mail.gmail.com>
+Subject: Re: [PATCH 5.2 00/66] 5.2.4-stable review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     open list <linux-kernel@vger.kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
@@ -75,14 +75,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 at 20:59, Greg Kroah-Hartman
+On Fri, 26 Jul 2019 at 20:55, Greg Kroah-Hartman
 <gregkh@linuxfoundation.org> wrote:
 >
-> Note, this will be the LAST 5.1.y kernel release.  Everyone should move
-> to the 5.2.y series at this point in time.
->
-> This is the start of the stable review cycle for the 5.1.21 release.
-> There are 62 patches in this series, all will be posted as a response
+> This is the start of the stable review cycle for the 5.2.4 release.
+> There are 66 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 >
@@ -91,10 +88,10 @@ On Fri, 26 Jul 2019 at 20:59, Greg Kroah-Hartman
 >
 > The whole patch series can be found in one patch at:
 >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.1.21-rc1.gz
+5.2.4-rc1.gz
 > or in the git tree and branch at:
 >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.1.y
+-rc.git linux-5.2.y
 > and the diffstat can be found below.
 >
 > thanks,
@@ -107,20 +104,20 @@ No regressions on arm64, arm, x86_64, and i386.
 Summary
 ------------------------------------------------------------------------
 
-kernel: 5.1.21-rc1
+kernel: 5.2.4-rc1
 git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
 le-rc.git
-git branch: linux-5.1.y
-git commit: f878628d8f1efc883e9bd6f9f81173194b4a01dd
-git describe: v5.1.20-63-gf878628d8f1e
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.1-oe/bui=
-ld/v5.1.20-63-gf878628d8f1e
+git branch: linux-5.2.y
+git commit: d61e440a1852a64d8a2d0d358b9582b19157e039
+git describe: v5.2.3-67-gd61e440a1852
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.2-oe/bui=
+ld/v5.2.3-67-gd61e440a1852
 
-No regressions (compared to build v5.1.20)
+No regressions (compared to build v5.2.3)
 
-No fixes (compared to build v5.1.20)
+No fixes (compared to build v5.2.3)
 
-Ran 21561 total tests in the following environments and test suites.
+Ran 22512 total tests in the following environments and test suites.
 
 Environments
 --------------
@@ -150,7 +147,6 @@ Test Suites
 * ltp-dio-tests
 * ltp-fcntl-locktests-tests
 * ltp-filecaps-tests
-* ltp-fs-tests
 * ltp-fs_bind-tests
 * ltp-fs_perms_simple-tests
 * ltp-fsx-tests
@@ -169,10 +165,11 @@ Test Suites
 * perf
 * spectre-meltdown-checker-test
 * v4l2-compliance
+* ltp-fs-tests
 * ltp-open-posix-tests
-* kvm-unit-tests
 * kselftest-vsyscall-mode-native
 * kselftest-vsyscall-mode-none
+* kvm-unit-tests
 
 --=20
 Linaro LKFT
