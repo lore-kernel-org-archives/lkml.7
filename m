@@ -2,141 +2,127 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E29C76190
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 06:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EE1C76190
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 06:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A8220840
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 06:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB7F2075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 06:31:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZoSlHlFe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGHQ4E1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbfG0GTR (ORCPT
+        id S2387419AbfG0GbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 02:19:17 -0400
-Received: from mail-eopbgr70053.outbound.protection.outlook.com ([40.107.7.53]:35298
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725905AbfG0GTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 02:19:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EASu/aFQ/yhpiH8W8C2W5y63U3BK0TN5WDbsdO0rZpblyyKOeeuyToM3IhdwleIsexhNMVCVGUFPTLzGwyfJUGGfydmg0+Fy55BaBi6XYX2+HdildE8Brn+HPf/S/y8HQvh75qs7PezNpFTyvSZguMo/SlNK4Co9S5zVOnoE1zWs4EreVODB/7IjdbyM/SEaZoyNJJ0DiW6h4i5bsVoIXxNMKaDpD1auuFoBjDjKw5YDX9Jvt8OvRt4Mk0OS5ULgCcbbfd1DazcLpqPbT7pZM8OXm8HG4i5Sx5FpdqLyTvWwSL1H8e6JWTC/W9tdx388cibnmQiWSuKk8Po9pZznEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZenlU5Mgg3iJLhndZGd7G00H4J/8pKUEeuI/1r0xT5E=;
- b=dDIxS42Xuco4YlPYh+cerUvDx5SeJgz4dGM2wTwzzuiw/mvV3CzhTUTDKem87ag5n6JudX1Dk/iXECg/F04rrpePbB5zUCtzmBcIIm3bGg0GoHrjAMt179J2fjhMQcK8dKvHNE5Qju3GSlFgCf5jLE3UmfB3JzcPx2cc1bkjzHHFVO/Ca44T5dlXqR+W2RWxVeuwELyq2gdhF/8Z1kMytvgAhbK2YT+0SRelB7PwlnTZWUbFVC6UxSADzxFCKuphFD/U3iYrgSOk0oZTyohPyDqe2R2ElZPH7b6lksLmw3D7zuZhLs7laFpmocpj950z3de3u9LFUachREdl+Y2EaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZenlU5Mgg3iJLhndZGd7G00H4J/8pKUEeuI/1r0xT5E=;
- b=ZoSlHlFeMjkVWkfXZHK3Y+xf+ABDFMDm+mkpIAttSXyh23ZwM+PhghdOSOwFOitoh3kY7U4kCkXAKyDcrMWEyjZ7oKyx9TUxL59lXsdKBNDopEhudnGpi6m+D3dO37ctqijEgayZse673mkO5LXjqWixlUWUtRqTkUAPVbm9pjs=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3899.eurprd04.prod.outlook.com (52.134.71.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.10; Sat, 27 Jul 2019 06:19:07 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::7cdf:bddc:212c:f77e]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::7cdf:bddc:212c:f77e%4]) with mapi id 15.20.2094.017; Sat, 27 Jul 2019
- 06:19:07 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-CC:     "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "edubezval@gmail.com" <edubezval@gmail.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Carlo Caione <ccaione@baylibre.com>,
-        =?utf-8?B?R3VpZG8gR8O8bnRoZXI=?= <agx@sigxcpu.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
- IMX8MQ_CLK_TMU_ROOT
-Thread-Topic: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
- IMX8MQ_CLK_TMU_ROOT
-Thread-Index: AQHVMu9Qagn4ZAj9sUKncGzfKuws0abdnJEAgAB74HA=
-Date:   Sat, 27 Jul 2019 06:19:07 +0000
-Message-ID: <DB3PR0402MB3916233A56CF5DF778115716F5C30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190705045612.27665-1-Anson.Huang@nxp.com>
- <20190705045612.27665-5-Anson.Huang@nxp.com>
- <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
-In-Reply-To: <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c0947a3a-e0ae-4909-b22b-08d7125a54f7
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3899;
-x-ms-traffictypediagnostic: DB3PR0402MB3899:
-x-microsoft-antispam-prvs: <DB3PR0402MB3899FC94EFEE7FE9B3695BD6F5C30@DB3PR0402MB3899.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:195;
-x-forefront-prvs: 01110342A5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(396003)(376002)(39860400002)(366004)(53754006)(189003)(199004)(76116006)(33656002)(478600001)(64756008)(66556008)(66946007)(53936002)(8676002)(81156014)(81166006)(9686003)(55016002)(66476007)(66446008)(3846002)(25786009)(4326008)(6246003)(316002)(186003)(26005)(229853002)(102836004)(11346002)(486006)(476003)(8936002)(44832011)(6916009)(86362001)(446003)(54906003)(6116002)(14454004)(6506007)(2906002)(6436002)(7416002)(5660300002)(74316002)(71200400001)(76176011)(68736007)(7736002)(66066001)(256004)(305945005)(99286004)(52536014)(71190400001)(7696005)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3899;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: p+9LiqLAK1OSsmN8pPuQRmWorlVr1ZnBEli46a9MViy98Q5nPDirqQgDKRSA3teryeEuQG2sktGVPMuUYEfLEXapAyBq9ffOu0N21fYs9uczVxc8xDogoo3XpQcCP9bl/s1rdd3IdKW25AeB4YrAAkLwHcnHFQwiAjdIicCPwnfXd4nqfD4pTxC2YUv4XLnfmaXnMREsZqF5ohAO8xME3lm+46XnXWQzmVQ7qkFlcciESEhMwmFkQXUg2hZtGEY8WOQFOjWwOCkDFSgi/UeQCeeCekP9Qjejxl2ORYabAWz6ZAAZesOc0htzLchQI9Xr99vNR22+TweGt1I8WPa+X4KZQVM1b5YUZic+KcqoKZCeUrHyAnaBnVLWI/v2zn2weuKQcLWkuP1WmYIWIhsQM0yBokZGrkx+Idb7XHoIqa8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 27 Jul 2019 02:31:11 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34304 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfG0GbK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 02:31:10 -0400
+Received: by mail-wr1-f65.google.com with SMTP id 31so56522654wrm.1;
+        Fri, 26 Jul 2019 23:31:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HKeMdrdWBgdGTKyoRuJP3d49YclQQWgce18ijijgk9I=;
+        b=AGHQ4E1M37EE6M5F7RtEuQX4fkGB62kY4xRAU4L+AEosvTGG1SlsCDHK/o1yzkzkDs
+         dIXgIfZkTv5prHK3S04NTfBitoJAJxa2qMEF2hXgq7kcHz/Ph+bnLSuGJ6xuuopOZFDw
+         6uuBk4Vxg8Cczbs0i0DHfpYyQXXpLe4C83J19nZ5t8hJ3C13Z9IFgCOGRHXtYUaxunpD
+         C8pDK25kbahOed4KZT9hdXJ35VWXDaf3pe7uE3M8lH2RhTE0NiZMb0IfzfwLPyFq8KYa
+         1Ow0QA9gE6SIWSxWWNN1mLHBF71kHuLo1XlD8aJmTl7YQoevnv6ebF+Y0TT/XY22mpXB
+         uPiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HKeMdrdWBgdGTKyoRuJP3d49YclQQWgce18ijijgk9I=;
+        b=SZOynE7dBSmJShozwmpz3FlZYfvyo39kfYJDWY5U0Qh2ZiBBVA3Zr6XwglXFcquoSV
+         8iF8VYGea3PfURjlQpHB8hdI5Sqk7IB8eh9T67YzK/uUyNvhDFKVKmilxkyVKs9KrF6a
+         7zOTXUgeQx4Les/+XPNpW04GpWRI8gnyLNLl2vkMvGMshArKhrlAtxWPA3CRabXSU9Aq
+         gU1jETVnv4X0BLlVVMJwjs1HsHocdkr90V9osAX4vX3/1ke5Efda6lKSDx6WsUenZrQw
+         vycHmfLDcpYW/8IZl1vifvFQjyghk2PsD2SuUXlAgCnkv6TeDbqJ2Z5XEC2b0KRIta1Q
+         Ho4Q==
+X-Gm-Message-State: APjAAAWXnsfNYir6P/lURbALO4OX2vLWcPlBs+nGezKcRE5Y05EDcIlu
+        UdThDapV+yshvvOD/BO6aDjC2srJHW0ekeDypRw=
+X-Google-Smtp-Source: APXvYqzdgecswj3pdUxE5wMpc0iYUFA3hEfoHHf/1a5LOh9kiFNqb77jfKSfAfUuh+1oWpfs5nRNP7Da4/Vx0J4QRJc=
+X-Received: by 2002:adf:f450:: with SMTP id f16mr74204830wrp.335.1564209068259;
+ Fri, 26 Jul 2019 23:31:08 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0947a3a-e0ae-4909-b22b-08d7125a54f7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jul 2019 06:19:07.6381
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3899
+References: <1561453316-11481-1-git-send-email-abel.vesa@nxp.com>
+ <20190625223223.3B8EC2053B@mail.kernel.org> <20190705085218.lvvqnqx6nfph2era@fsr-ub1664-175>
+ <20190722212537.41C9121900@mail.kernel.org>
+In-Reply-To: <20190722212537.41C9121900@mail.kernel.org>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Sat, 27 Jul 2019 09:30:57 +0300
+Message-ID: <CAEnQRZAFdvSzh-pDJ-rsyaEJw83ymSVW0CC2+QZyWwAPeTOyBw@mail.gmail.com>
+Subject: Re: [PATCH] clk: imx8mq: Mark AHB clock as critical
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Abel Vesa <abel.vesa@nxp.com>, Anson Huang <anson.huang@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERhbmllbA0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggNS82XSBjbGs6IGlteDhtcTogUmVt
-b3ZlIENMS19JU19DUklUSUNBTCBmbGFnIGZvcg0KPiBJTVg4TVFfQ0xLX1RNVV9ST09UDQo+IA0K
-PiBIaSBhbGwsDQo+IA0KPiBsYXRlc3QgbGludXgtbmV4dCBoYW5ncyBhdCBib290Lg0KPiANCj4g
-Y29tbWl0IGZkZTUwYjk2YmU4MjFhYzk2NzNhN2UwMDg0N2NjNDYwNWJkODhmMzQgKEhFQUQgLT4g
-bWFzdGVyLCB0YWc6DQo+IG5leHQtMjAxOTA3MjYsIG9yaWdpbi9tYXN0ZXIsIG9yaWdpbi9IRUFE
-KQ0KPiBBdXRob3I6IFN0ZXBoZW4gUm90aHdlbGwgPHNmckBjYW5iLmF1dWcub3JnLmF1Pg0KPiBE
-YXRlOiAgIEZyaSBKdWwgMjYgMTU6MTg6MDIgMjAxOSArMTAwMA0KPiANCj4gICAgIEFkZCBsaW51
-eC1uZXh0IHNwZWNpZmljIGZpbGVzIGZvciAyMDE5MDcyNg0KPiANCj4gICAgIFNpZ25lZC1vZmYt
-Ynk6IFN0ZXBoZW4gUm90aHdlbGwgPHNmckBjYW5iLmF1dWcub3JnLmF1Pg0KPiANCj4gDQo+IEkg
-a25vdyB0aGlzIGlzIGNyYXp5IGJ1dCByZXZlcnRpbmcgY29tbWl0Og0KPiANCj4gY29tbWl0IDQz
-MWJkZDFkZjQ4ZWUyODk2ZWE5OTgwZDkxNTNlM2FlYWYwYzgxZWYgKHJlZnMvYmlzZWN0L2JhZCkN
-Cj4gQXV0aG9yOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gRGF0ZTogICBG
-cmkgSnVsIDUgMTI6NTY6MTEgMjAxOSArMDgwMA0KPiANCj4gICAgIGNsazogaW14OG1xOiBSZW1v
-dmUgQ0xLX0lTX0NSSVRJQ0FMIGZsYWcgZm9yIElNWDhNUV9DTEtfVE1VX1JPT1QNCj4gDQo+ICAg
-ICBJTVg4TVFfQ0xLX1RNVV9ST09UIGlzIE9OTFkgdXNlZCBmb3IgdGhlcm1hbCBtb2R1bGUsIHRo
-ZSBkcml2ZXINCj4gICAgIHNob3VsZCBtYW5hZ2UgdGhpcyBjbG9jaywgc28gbm8gbmVlZCB0byBo
-YXZlIENMS19JU19DUklUSUNBTCBmbGFnDQo+ICAgICBzZXQuDQo+IA0KPiANCj4gDQo+IG1ha2Vz
-IHRoZSBib290IHdvcmsgYWdhaW4uDQo+IA0KPiBBbnkgaWRlYT8NCg0KSSBqdXN0IGZvdW5kIGlm
-IGRpc2FibGluZyBTRE1BMSwgdGhlbiBrZXJuZWwgY2FuIGJvb3QgdXAsIGl0IGRvZXMgTk9UIG1h
-a2Ugc2Vuc2UNClRNVSBjbG9jayBpcyByZWxhdGVkIHRvIFNETUExLCBJIHdpbGwgY2hlY2sgd2l0
-aCBkZXNpZ24gYW5kIGdldCBiYWNrIHRvIHlvdSBzb29uLg0KDQpBbnNvbg0KDQo=
+On Tue, Jul 23, 2019 at 6:17 AM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Abel Vesa (2019-07-05 01:52:19)
+> > On 19-06-25 15:32:22, Stephen Boyd wrote:
+> > > Quoting Abel Vesa (2019-06-25 02:01:56)
+> > > > Keep the AHB clock always on since there is no driver to control it and
+> > > > all the other clocks that use it as parent rely on it being always enabled.
+> > > >
+> > > > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> > > > ---
+> > > >  drivers/clk/imx/clk-imx8mq.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+> > > > index 5fbc2a7..b48268b 100644
+> > > > --- a/drivers/clk/imx/clk-imx8mq.c
+> > > > +++ b/drivers/clk/imx/clk-imx8mq.c
+> > > > @@ -398,7 +398,7 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
+> > > >         clks[IMX8MQ_CLK_NOC_APB] = imx8m_clk_composite_critical("noc_apb", imx8mq_noc_apb_sels, base + 0x8d80);
+> > > >
+> > > >         /* AHB */
+> > > > -       clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite("ahb", imx8mq_ahb_sels, base + 0x9000);
+> > > > +       clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite_critical("ahb", imx8mq_ahb_sels, base + 0x9000);
+> > >
+> > > Please add a comment into the code why it's critical.
+> >
+> > Comment explaining why the AHB bus clock is critical ?
+> > Isn't that self-explanatory ?
+>
+> Nope, it isn't self-explanatory, because nothing on this line says "bus"
+> and it could be that someone reading this code isn't well versed in the
+> concepts of ARM world AHB to connect the two.
+
+Agree with Stephen. Commit message should try to give as much details
+as possible
+also maybe educate the readers who might not have that much knowledge.
+
+Abel, I understand that for someone who works daily with this part of the kernel
+this change might look trivial.
+
+Also, without this patch linux-next hangs on imx8mq.
+
+With the explanation added you can add my:
+
+Tested-by: Daniel Baluta <daniel.baluta@nxp.com>
+
+thanks,
+Daniel.
