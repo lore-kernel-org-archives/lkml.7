@@ -2,35 +2,35 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A15C761A8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF33C76186
 	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 23:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 595E5208E4
+	by mail.kernel.org (Postfix) with ESMTP id 19B05208E4
 	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 23:30:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388088AbfG0Xam (ORCPT
+        id S2387841AbfG0Xal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 19:30:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51229 "EHLO
+        Sat, 27 Jul 2019 19:30:41 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51226 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfG0Xak (ORCPT
+        with ESMTP id S1726518AbfG0Xak (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Jul 2019 19:30:40 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hrW96-0002M7-TR; Sun, 28 Jul 2019 01:30:37 +0200
+        id 1hrW96-0002Lz-8O; Sun, 28 Jul 2019 01:30:36 +0200
 Date:   Sat, 27 Jul 2019 23:26:14 -0000
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] sched/urgent for 5.3-rc2 
+Subject: [GIT pull] perf/urgent for 5.3-rc2 
 References: <156426997427.6953.14728916479410000420.tglx@nanos.tec.linutronix.de>
-Message-ID: <156426997428.6953.5838322278411587557.tglx@nanos.tec.linutronix.de>
+Message-ID: <156426997428.6953.2280314984853805596.tglx@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -38,473 +38,446 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest sched-urgent-for-linus git tree from:
+please pull the latest perf-urgent-for-linus git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-for-linus
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-for-linus
 
-up to:  cb361d8cdef6: sched/fair: Use RCU accessors consistently for ->numa_group
+up to:  289a2d22b5b6: perf/x86/intel: Mark expected switch fall-throughs
 
-Two fixes for the fair scheduling class:
+A pile of perf related fixes:
 
- - Prevent freeing memory which is accessible by concurrent readers
+ Kernel:
+   - Fix SLOTS PEBS event constraints for Icelake CPUs
+   
+   - Add the missing mask bit to allow counting hardware generated
+     prefetches on L3 for Icelake CPUs
 
- - Make the RCU annotations for numa groups consistent
+   - Make the test for hypervisor platforms more accurate (as far as possible)
+
+   - Handle PMUs correctly which override event->cpu
+
+   - Yet another missing fallthrough annotation
+
+ Tools:
+    perf.data:
+       - Fix loading of compressed data split across adjacent records
+       - Fix buffer size setting for processing CPU topology perf.data header.
+    
+    perf stat:
+       - Fix segfault for event group in repeat mode
+        - Always separate "stalled cycles per insn" line, it was being appended to
+         the "instructions" line.
+
+    perf script:
+      - Fix --max-blocks man page description.
+      - Improve man page description of metrics.
+      - Fix off by one in brstackinsn IPC computation.
+    
+    perf probe:
+      - Avoid calling freeing routine multiple times for same pointer.
+    
+    perf build:
+      - Do not use -Wshadow on gcc < 4.8, avoiding too strict warnings
+        treated as errors, breaking the build.
 
 Thanks,
 
 	tglx
 
 ------------------>
-Jann Horn (2):
-      sched/fair: Don't free p->numa_faults with concurrent readers
-      sched/fair: Use RCU accessors consistently for ->numa_group
+Alexey Budankov (1):
+      perf session: Fix loading of compressed data split across adjacent records
+
+Andi Kleen (3):
+      perf script: Fix --max-blocks man page description
+      perf script: Improve man page description of metrics
+      perf script: Fix off by one in brstackinsn IPC computation
+
+Arnaldo Carvalho de Melo (3):
+      perf probe: Set pev->nargs to zero after freeing pev->args entries
+      perf probe: Avoid calling freeing routine multiple times for same pointer
+      perf build: Do not use -Wshadow on gcc < 4.8
+
+Cong Wang (1):
+      perf stat: Always separate stalled cycles per insn
+
+Gustavo A. R. Silva (1):
+      perf/x86/intel: Mark expected switch fall-throughs
+
+Jiri Olsa (2):
+      perf tools: Fix proper buffer size for feature processing
+      perf stat: Fix segfault for event group in repeat mode
+
+Kan Liang (1):
+      perf/x86/intel: Fix SLOTS PEBS event constraint
+
+Leonard Crestez (1):
+      perf/core: Fix creating kernel counters for PMUs that override event->cpu
+
+Yunying Sun (1):
+      perf/x86/intel: Fix invalid Bit 13 for Icelake MSR_OFFCORE_RSP_x register
+
+Zhenzhong Duan (1):
+      perf/x86: Apply more accurate check on hypervisor platform
 
 
- fs/exec.c                            |   2 +-
- include/linux/sched.h                |  10 ++-
- include/linux/sched/numa_balancing.h |   4 +-
- kernel/fork.c                        |   2 +-
- kernel/sched/fair.c                  | 144 ++++++++++++++++++++++++-----------
- 5 files changed, 114 insertions(+), 48 deletions(-)
+ arch/x86/events/intel/core.c             |  9 +++++----
+ arch/x86/events/intel/ds.c               |  2 +-
+ kernel/events/core.c                     |  2 +-
+ tools/perf/Documentation/perf-script.txt |  8 ++++----
+ tools/perf/builtin-probe.c               | 10 ++++++++++
+ tools/perf/builtin-script.c              |  2 +-
+ tools/perf/builtin-stat.c                |  9 ++++++++-
+ tools/perf/util/evsel.c                  |  2 ++
+ tools/perf/util/header.c                 |  2 +-
+ tools/perf/util/probe-event.c            |  1 +
+ tools/perf/util/session.c                | 22 ++++++++++++++--------
+ tools/perf/util/session.h                |  1 +
+ tools/perf/util/stat-shadow.c            |  3 ++-
+ tools/perf/util/zstd.c                   |  4 ++--
+ tools/scripts/Makefile.include           |  9 ++++++++-
+ 15 files changed, 61 insertions(+), 25 deletions(-)
 
-diff --git a/fs/exec.c b/fs/exec.c
-index c71cbfe6826a..f7f6a140856a 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1828,7 +1828,7 @@ static int __do_execve_file(int fd, struct filename *filename,
- 	membarrier_execve(current);
- 	rseq_execve(current);
- 	acct_update_integrals(current);
--	task_numa_free(current);
-+	task_numa_free(current, false);
- 	free_bprm(bprm);
- 	kfree(pathbuf);
- 	if (filename)
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 8dc1811487f5..9f51932bd543 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1092,7 +1092,15 @@ struct task_struct {
- 	u64				last_sum_exec_runtime;
- 	struct callback_head		numa_work;
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 9e911a96972b..648260b5f367 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -20,7 +20,6 @@
+ #include <asm/intel-family.h>
+ #include <asm/apic.h>
+ #include <asm/cpu_device_id.h>
+-#include <asm/hypervisor.h>
  
--	struct numa_group		*numa_group;
-+	/*
-+	 * This pointer is only modified for current in syscall and
-+	 * pagefault context (and for tasks being destroyed), so it can be read
-+	 * from any of the following contexts:
-+	 *  - RCU read-side critical section
-+	 *  - current->numa_group from everywhere
-+	 *  - task's runqueue locked, task not running
-+	 */
-+	struct numa_group __rcu		*numa_group;
+ #include "../perf_event.h"
  
- 	/*
- 	 * numa_faults is an array split into four regions:
-diff --git a/include/linux/sched/numa_balancing.h b/include/linux/sched/numa_balancing.h
-index e7dd04a84ba8..3988762efe15 100644
---- a/include/linux/sched/numa_balancing.h
-+++ b/include/linux/sched/numa_balancing.h
-@@ -19,7 +19,7 @@
- extern void task_numa_fault(int last_node, int node, int pages, int flags);
- extern pid_t task_numa_group_id(struct task_struct *p);
- extern void set_numabalancing_state(bool enabled);
--extern void task_numa_free(struct task_struct *p);
-+extern void task_numa_free(struct task_struct *p, bool final);
- extern bool should_numa_migrate_memory(struct task_struct *p, struct page *page,
- 					int src_nid, int dst_cpu);
- #else
-@@ -34,7 +34,7 @@ static inline pid_t task_numa_group_id(struct task_struct *p)
- static inline void set_numabalancing_state(bool enabled)
- {
- }
--static inline void task_numa_free(struct task_struct *p)
-+static inline void task_numa_free(struct task_struct *p, bool final)
- {
- }
- static inline bool should_numa_migrate_memory(struct task_struct *p,
-diff --git a/kernel/fork.c b/kernel/fork.c
-index d8ae0f1b4148..2852d0e76ea3 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -726,7 +726,7 @@ void __put_task_struct(struct task_struct *tsk)
- 	WARN_ON(tsk == current);
- 
- 	cgroup_free(tsk);
--	task_numa_free(tsk);
-+	task_numa_free(tsk, true);
- 	security_task_free(tsk);
- 	exit_creds(tsk);
- 	delayacct_tsk_free(tsk);
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 036be95a87e9..bc9cfeaac8bd 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1086,6 +1086,21 @@ struct numa_group {
- 	unsigned long faults[0];
+@@ -263,8 +262,8 @@ static struct event_constraint intel_icl_event_constraints[] = {
  };
  
-+/*
-+ * For functions that can be called in multiple contexts that permit reading
-+ * ->numa_group (see struct task_struct for locking rules).
-+ */
-+static struct numa_group *deref_task_numa_group(struct task_struct *p)
-+{
-+	return rcu_dereference_check(p->numa_group, p == current ||
-+		(lockdep_is_held(&task_rq(p)->lock) && !READ_ONCE(p->on_cpu)));
-+}
-+
-+static struct numa_group *deref_curr_numa_group(struct task_struct *p)
-+{
-+	return rcu_dereference_protected(p->numa_group, p == current);
-+}
-+
- static inline unsigned long group_faults_priv(struct numa_group *ng);
- static inline unsigned long group_faults_shared(struct numa_group *ng);
- 
-@@ -1129,10 +1144,12 @@ static unsigned int task_scan_start(struct task_struct *p)
- {
- 	unsigned long smin = task_scan_min(p);
- 	unsigned long period = smin;
-+	struct numa_group *ng;
- 
- 	/* Scale the maximum scan period with the amount of shared memory. */
--	if (p->numa_group) {
--		struct numa_group *ng = p->numa_group;
-+	rcu_read_lock();
-+	ng = rcu_dereference(p->numa_group);
-+	if (ng) {
- 		unsigned long shared = group_faults_shared(ng);
- 		unsigned long private = group_faults_priv(ng);
- 
-@@ -1140,6 +1157,7 @@ static unsigned int task_scan_start(struct task_struct *p)
- 		period *= shared + 1;
- 		period /= private + shared + 1;
- 	}
-+	rcu_read_unlock();
- 
- 	return max(smin, period);
- }
-@@ -1148,13 +1166,14 @@ static unsigned int task_scan_max(struct task_struct *p)
- {
- 	unsigned long smin = task_scan_min(p);
- 	unsigned long smax;
-+	struct numa_group *ng;
- 
- 	/* Watch for min being lower than max due to floor calculations */
- 	smax = sysctl_numa_balancing_scan_period_max / task_nr_scan_windows(p);
- 
- 	/* Scale the maximum scan period with the amount of shared memory. */
--	if (p->numa_group) {
--		struct numa_group *ng = p->numa_group;
-+	ng = deref_curr_numa_group(p);
-+	if (ng) {
- 		unsigned long shared = group_faults_shared(ng);
- 		unsigned long private = group_faults_priv(ng);
- 		unsigned long period = smax;
-@@ -1186,7 +1205,7 @@ void init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
- 	p->numa_scan_period		= sysctl_numa_balancing_scan_delay;
- 	p->numa_work.next		= &p->numa_work;
- 	p->numa_faults			= NULL;
--	p->numa_group			= NULL;
-+	RCU_INIT_POINTER(p->numa_group, NULL);
- 	p->last_task_numa_placement	= 0;
- 	p->last_sum_exec_runtime	= 0;
- 
-@@ -1233,7 +1252,16 @@ static void account_numa_dequeue(struct rq *rq, struct task_struct *p)
- 
- pid_t task_numa_group_id(struct task_struct *p)
- {
--	return p->numa_group ? p->numa_group->gid : 0;
-+	struct numa_group *ng;
-+	pid_t gid = 0;
-+
-+	rcu_read_lock();
-+	ng = rcu_dereference(p->numa_group);
-+	if (ng)
-+		gid = ng->gid;
-+	rcu_read_unlock();
-+
-+	return gid;
- }
- 
- /*
-@@ -1258,11 +1286,13 @@ static inline unsigned long task_faults(struct task_struct *p, int nid)
- 
- static inline unsigned long group_faults(struct task_struct *p, int nid)
- {
--	if (!p->numa_group)
-+	struct numa_group *ng = deref_task_numa_group(p);
-+
-+	if (!ng)
- 		return 0;
- 
--	return p->numa_group->faults[task_faults_idx(NUMA_MEM, nid, 0)] +
--		p->numa_group->faults[task_faults_idx(NUMA_MEM, nid, 1)];
-+	return ng->faults[task_faults_idx(NUMA_MEM, nid, 0)] +
-+		ng->faults[task_faults_idx(NUMA_MEM, nid, 1)];
- }
- 
- static inline unsigned long group_faults_cpu(struct numa_group *group, int nid)
-@@ -1400,12 +1430,13 @@ static inline unsigned long task_weight(struct task_struct *p, int nid,
- static inline unsigned long group_weight(struct task_struct *p, int nid,
- 					 int dist)
- {
-+	struct numa_group *ng = deref_task_numa_group(p);
- 	unsigned long faults, total_faults;
- 
--	if (!p->numa_group)
-+	if (!ng)
- 		return 0;
- 
--	total_faults = p->numa_group->total_faults;
-+	total_faults = ng->total_faults;
- 
- 	if (!total_faults)
- 		return 0;
-@@ -1419,7 +1450,7 @@ static inline unsigned long group_weight(struct task_struct *p, int nid,
- bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
- 				int src_nid, int dst_cpu)
- {
--	struct numa_group *ng = p->numa_group;
-+	struct numa_group *ng = deref_curr_numa_group(p);
- 	int dst_nid = cpu_to_node(dst_cpu);
- 	int last_cpupid, this_cpupid;
- 
-@@ -1600,13 +1631,14 @@ static bool load_too_imbalanced(long src_load, long dst_load,
- static void task_numa_compare(struct task_numa_env *env,
- 			      long taskimp, long groupimp, bool maymove)
- {
-+	struct numa_group *cur_ng, *p_ng = deref_curr_numa_group(env->p);
- 	struct rq *dst_rq = cpu_rq(env->dst_cpu);
-+	long imp = p_ng ? groupimp : taskimp;
- 	struct task_struct *cur;
- 	long src_load, dst_load;
--	long load;
--	long imp = env->p->numa_group ? groupimp : taskimp;
--	long moveimp = imp;
- 	int dist = env->dist;
-+	long moveimp = imp;
-+	long load;
- 
- 	if (READ_ONCE(dst_rq->numa_migrate_on))
- 		return;
-@@ -1645,21 +1677,22 @@ static void task_numa_compare(struct task_numa_env *env,
- 	 * If dst and source tasks are in the same NUMA group, or not
- 	 * in any group then look only at task weights.
+ static struct extra_reg intel_icl_extra_regs[] __read_mostly = {
+-	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x3fffff9fffull, RSP_0),
+-	INTEL_UEVENT_EXTRA_REG(0x01bb, MSR_OFFCORE_RSP_1, 0x3fffff9fffull, RSP_1),
++	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x3fffffbfffull, RSP_0),
++	INTEL_UEVENT_EXTRA_REG(0x01bb, MSR_OFFCORE_RSP_1, 0x3fffffbfffull, RSP_1),
+ 	INTEL_UEVENT_PEBS_LDLAT_EXTRA_REG(0x01cd),
+ 	INTEL_UEVENT_EXTRA_REG(0x01c6, MSR_PEBS_FRONTEND, 0x7fff17, FE),
+ 	EVENT_EXTRA_END
+@@ -4053,7 +4052,7 @@ static bool check_msr(unsigned long msr, u64 mask)
+ 	 * Disable the check for real HW, so we don't
+ 	 * mess with potentionaly enabled registers:
  	 */
--	if (cur->numa_group == env->p->numa_group) {
-+	cur_ng = rcu_dereference(cur->numa_group);
-+	if (cur_ng == p_ng) {
- 		imp = taskimp + task_weight(cur, env->src_nid, dist) -
- 		      task_weight(cur, env->dst_nid, dist);
- 		/*
- 		 * Add some hysteresis to prevent swapping the
- 		 * tasks within a group over tiny differences.
- 		 */
--		if (cur->numa_group)
-+		if (cur_ng)
- 			imp -= imp / 16;
- 	} else {
- 		/*
- 		 * Compare the group weights. If a task is all by itself
- 		 * (not part of a group), use the task weight instead.
- 		 */
--		if (cur->numa_group && env->p->numa_group)
-+		if (cur_ng && p_ng)
- 			imp += group_weight(cur, env->src_nid, dist) -
- 			       group_weight(cur, env->dst_nid, dist);
- 		else
-@@ -1757,11 +1790,12 @@ static int task_numa_migrate(struct task_struct *p)
- 		.best_imp = 0,
- 		.best_cpu = -1,
- 	};
-+	unsigned long taskweight, groupweight;
- 	struct sched_domain *sd;
-+	long taskimp, groupimp;
-+	struct numa_group *ng;
- 	struct rq *best_rq;
--	unsigned long taskweight, groupweight;
- 	int nid, ret, dist;
--	long taskimp, groupimp;
+-	if (hypervisor_is_type(X86_HYPER_NATIVE))
++	if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
+ 		return true;
  
  	/*
- 	 * Pick the lowest SD_NUMA domain, as that would have the smallest
-@@ -1807,7 +1841,8 @@ static int task_numa_migrate(struct task_struct *p)
- 	 *   multiple NUMA nodes; in order to better consolidate the group,
- 	 *   we need to check other locations.
- 	 */
--	if (env.best_cpu == -1 || (p->numa_group && p->numa_group->active_nodes > 1)) {
-+	ng = deref_curr_numa_group(p);
-+	if (env.best_cpu == -1 || (ng && ng->active_nodes > 1)) {
- 		for_each_online_node(nid) {
- 			if (nid == env.src_nid || nid == p->numa_preferred_nid)
- 				continue;
-@@ -1840,7 +1875,7 @@ static int task_numa_migrate(struct task_struct *p)
- 	 * A task that migrated to a second choice node will be better off
- 	 * trying for a better one later. Do not set the preferred node here.
- 	 */
--	if (p->numa_group) {
-+	if (ng) {
- 		if (env.best_cpu == -1)
- 			nid = env.src_nid;
- 		else
-@@ -2135,6 +2170,7 @@ static void task_numa_placement(struct task_struct *p)
- 	unsigned long total_faults;
- 	u64 runtime, period;
- 	spinlock_t *group_lock = NULL;
-+	struct numa_group *ng;
+@@ -4955,6 +4954,7 @@ __init int intel_pmu_init(void)
  
- 	/*
- 	 * The p->mm->numa_scan_seq field gets updated without
-@@ -2152,8 +2188,9 @@ static void task_numa_placement(struct task_struct *p)
- 	runtime = numa_get_avg_runtime(p, &period);
+ 	case INTEL_FAM6_SKYLAKE_X:
+ 		pmem = true;
++		/* fall through */
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:
+ 	case INTEL_FAM6_SKYLAKE_DESKTOP:
+ 	case INTEL_FAM6_KABYLAKE_MOBILE:
+@@ -5004,6 +5004,7 @@ __init int intel_pmu_init(void)
+ 	case INTEL_FAM6_ICELAKE_X:
+ 	case INTEL_FAM6_ICELAKE_XEON_D:
+ 		pmem = true;
++		/* fall through */
+ 	case INTEL_FAM6_ICELAKE_MOBILE:
+ 	case INTEL_FAM6_ICELAKE_DESKTOP:
+ 		x86_pmu.late_ack = true;
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 2c8db2c19328..f1269e804e9b 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -851,7 +851,7 @@ struct event_constraint intel_skl_pebs_event_constraints[] = {
  
- 	/* If the task is part of a group prevent parallel updates to group stats */
--	if (p->numa_group) {
--		group_lock = &p->numa_group->lock;
-+	ng = deref_curr_numa_group(p);
-+	if (ng) {
-+		group_lock = &ng->lock;
- 		spin_lock_irq(group_lock);
+ struct event_constraint intel_icl_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1c0, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
+-	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x400000000ULL),	/* SLOTS */
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),	/* SLOTS */
+ 
+ 	INTEL_PLD_CONSTRAINT(0x1cd, 0xff),			/* MEM_TRANS_RETIRED.LOAD_LATENCY */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x1d0, 0xf),	/* MEM_INST_RETIRED.LOAD */
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 026a14541a38..0463c1151bae 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11274,7 +11274,7 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
+ 		goto err_unlock;
  	}
  
-@@ -2194,7 +2231,7 @@ static void task_numa_placement(struct task_struct *p)
- 			p->numa_faults[cpu_idx] += f_diff;
- 			faults += p->numa_faults[mem_idx];
- 			p->total_numa_faults += diff;
--			if (p->numa_group) {
-+			if (ng) {
- 				/*
- 				 * safe because we can only change our own group
- 				 *
-@@ -2202,14 +2239,14 @@ static void task_numa_placement(struct task_struct *p)
- 				 * nid and priv in a specific region because it
- 				 * is at the beginning of the numa_faults array.
- 				 */
--				p->numa_group->faults[mem_idx] += diff;
--				p->numa_group->faults_cpu[mem_idx] += f_diff;
--				p->numa_group->total_faults += diff;
--				group_faults += p->numa_group->faults[mem_idx];
-+				ng->faults[mem_idx] += diff;
-+				ng->faults_cpu[mem_idx] += f_diff;
-+				ng->total_faults += diff;
-+				group_faults += ng->faults[mem_idx];
- 			}
+-	perf_install_in_context(ctx, event, cpu);
++	perf_install_in_context(ctx, event, event->cpu);
+ 	perf_unpin_context(ctx);
+ 	mutex_unlock(&ctx->mutex);
+ 
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index d4e2e18a5881..caaab28f8400 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -228,11 +228,11 @@ OPTIONS
+ 
+ 	With the metric option perf script can compute metrics for
+ 	sampling periods, similar to perf stat. This requires
+-	specifying a group with multiple metrics with the :S option
++	specifying a group with multiple events defining metrics with the :S option
+ 	for perf record. perf will sample on the first event, and
+-	compute metrics for all the events in the group. Please note
++	print computed metrics for all the events in the group. Please note
+ 	that the metric computed is averaged over the whole sampling
+-	period, not just for the sample point.
++	period (since the last sample), not just for the sample point.
+ 
+ 	For sample events it's possible to display misc field with -F +misc option,
+ 	following letters are displayed for each bit:
+@@ -384,7 +384,7 @@ include::itrace.txt[]
+ 	perf script --time 0%-10%,30%-40%
+ 
+ --max-blocks::
+-	Set the maximum number of program blocks to print with brstackasm for
++	Set the maximum number of program blocks to print with brstackinsn for
+ 	each sample.
+ 
+ --reltime::
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 6418782951a4..3d0ffd41fb55 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -698,6 +698,16 @@ __cmd_probe(int argc, const char **argv)
+ 
+ 		ret = perf_add_probe_events(params.events, params.nevents);
+ 		if (ret < 0) {
++
++			/*
++			 * When perf_add_probe_events() fails it calls
++			 * cleanup_perf_probe_events(pevs, npevs), i.e.
++			 * cleanup_perf_probe_events(params.events, params.nevents), which
++			 * will call clear_perf_probe_event(), so set nevents to zero
++			 * to avoid cleanup_params() to call clear_perf_probe_event() again
++			 * on the same pevs.
++			 */
++			params.nevents = 0;
+ 			pr_err_with_code("  Error: Failed to add events.", ret);
+ 			return ret;
+ 		}
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 8f24865596af..0140ddb8dd0b 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1059,7 +1059,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 
+ 			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
+ 			if (ip == end) {
+-				printed += ip__fprintf_jump(ip, &br->entries[i], &x, buffer + off, len - off, insn, fp,
++				printed += ip__fprintf_jump(ip, &br->entries[i], &x, buffer + off, len - off, ++insn, fp,
+ 							    &total_cycles);
+ 				if (PRINT_FIELD(SRCCODE))
+ 					printed += print_srccode(thread, x.cpumode, ip);
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index b55a534b4de0..352cf39d7c2f 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -607,7 +607,13 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 	 * group leaders.
+ 	 */
+ 	read_counters(&(struct timespec) { .tv_nsec = t1-t0 });
+-	perf_evlist__close(evsel_list);
++
++	/*
++	 * We need to keep evsel_list alive, because it's processed
++	 * later the evsel_list will be closed after.
++	 */
++	if (!STAT_RECORD)
++		perf_evlist__close(evsel_list);
+ 
+ 	return WEXITSTATUS(status);
+ }
+@@ -1997,6 +2003,7 @@ int cmd_stat(int argc, const char **argv)
+ 			perf_session__write_header(perf_stat.session, evsel_list, fd, true);
  		}
  
--		if (!p->numa_group) {
-+		if (!ng) {
- 			if (faults > max_faults) {
- 				max_faults = faults;
- 				max_nid = nid;
-@@ -2220,8 +2257,8 @@ static void task_numa_placement(struct task_struct *p)
- 		}
++		perf_evlist__close(evsel_list);
+ 		perf_session__delete(perf_stat.session);
  	}
  
--	if (p->numa_group) {
--		numa_group_count_active_nodes(p->numa_group);
-+	if (ng) {
-+		numa_group_count_active_nodes(ng);
- 		spin_unlock_irq(group_lock);
- 		max_nid = preferred_group_nid(p, max_nid);
- 	}
-@@ -2255,7 +2292,7 @@ static void task_numa_group(struct task_struct *p, int cpupid, int flags,
- 	int cpu = cpupid_to_cpu(cpupid);
- 	int i;
- 
--	if (unlikely(!p->numa_group)) {
-+	if (unlikely(!deref_curr_numa_group(p))) {
- 		unsigned int size = sizeof(struct numa_group) +
- 				    4*nr_node_ids*sizeof(unsigned long);
- 
-@@ -2291,7 +2328,7 @@ static void task_numa_group(struct task_struct *p, int cpupid, int flags,
- 	if (!grp)
- 		goto no_join;
- 
--	my_grp = p->numa_group;
-+	my_grp = deref_curr_numa_group(p);
- 	if (grp == my_grp)
- 		goto no_join;
- 
-@@ -2353,13 +2390,24 @@ static void task_numa_group(struct task_struct *p, int cpupid, int flags,
- 	return;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index ebb46da4dfe5..52459dd5ad0c 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1291,6 +1291,7 @@ static void perf_evsel__free_id(struct perf_evsel *evsel)
+ 	xyarray__delete(evsel->sample_id);
+ 	evsel->sample_id = NULL;
+ 	zfree(&evsel->id);
++	evsel->ids = 0;
  }
  
--void task_numa_free(struct task_struct *p)
-+/*
-+ * Get rid of NUMA staticstics associated with a task (either current or dead).
-+ * If @final is set, the task is dead and has reached refcount zero, so we can
-+ * safely free all relevant data structures. Otherwise, there might be
-+ * concurrent reads from places like load balancing and procfs, and we should
-+ * reset the data back to default state without freeing ->numa_faults.
-+ */
-+void task_numa_free(struct task_struct *p, bool final)
- {
--	struct numa_group *grp = p->numa_group;
--	void *numa_faults = p->numa_faults;
-+	/* safe: p either is current or is being freed by current */
-+	struct numa_group *grp = rcu_dereference_raw(p->numa_group);
-+	unsigned long *numa_faults = p->numa_faults;
- 	unsigned long flags;
- 	int i;
+ static void perf_evsel__free_config_terms(struct perf_evsel *evsel)
+@@ -2077,6 +2078,7 @@ void perf_evsel__close(struct perf_evsel *evsel)
  
-+	if (!numa_faults)
-+		return;
-+
- 	if (grp) {
- 		spin_lock_irqsave(&grp->lock, flags);
- 		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
-@@ -2372,8 +2420,14 @@ void task_numa_free(struct task_struct *p)
- 		put_numa_group(grp);
+ 	perf_evsel__close_fd(evsel);
+ 	perf_evsel__free_fd(evsel);
++	perf_evsel__free_id(evsel);
+ }
+ 
+ int perf_evsel__open_per_cpu(struct perf_evsel *evsel,
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index c24db7f4909c..20111f8da5cb 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3747,7 +3747,7 @@ int perf_event__process_feature(struct perf_session *session,
+ 		return 0;
+ 
+ 	ff.buf  = (void *)fe->data;
+-	ff.size = event->header.size - sizeof(event->header);
++	ff.size = event->header.size - sizeof(*fe);
+ 	ff.ph = &session->header;
+ 
+ 	if (feat_ops[feat].process(&ff, NULL))
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index cd1eb73cfe83..8394d48f8b32 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -2230,6 +2230,7 @@ void clear_perf_probe_event(struct perf_probe_event *pev)
+ 			field = next;
+ 		}
  	}
++	pev->nargs = 0;
+ 	zfree(&pev->args);
+ }
  
--	p->numa_faults = NULL;
--	kfree(numa_faults);
-+	if (final) {
-+		p->numa_faults = NULL;
-+		kfree(numa_faults);
-+	} else {
-+		p->total_numa_faults = 0;
-+		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
-+			numa_faults[i] = 0;
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index d0fd6c614e68..37efa1f43d8b 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -36,10 +36,16 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+ 	void *src;
+ 	size_t decomp_size, src_size;
+ 	u64 decomp_last_rem = 0;
+-	size_t decomp_len = session->header.env.comp_mmap_len;
++	size_t mmap_len, decomp_len = session->header.env.comp_mmap_len;
+ 	struct decomp *decomp, *decomp_last = session->decomp_last;
+ 
+-	decomp = mmap(NULL, sizeof(struct decomp) + decomp_len, PROT_READ|PROT_WRITE,
++	if (decomp_last) {
++		decomp_last_rem = decomp_last->size - decomp_last->head;
++		decomp_len += decomp_last_rem;
 +	}
- }
- 
- /*
-@@ -2426,7 +2480,7 @@ void task_numa_fault(int last_cpupid, int mem_node, int pages, int flags)
- 	 * actively using should be counted as local. This allows the
- 	 * scan rate to slow down when a workload has settled down.
- 	 */
--	ng = p->numa_group;
-+	ng = deref_curr_numa_group(p);
- 	if (!priv && !local && ng && ng->active_nodes > 1 &&
- 				numa_is_active_node(cpu_node, ng) &&
- 				numa_is_active_node(mem_node, ng))
-@@ -10444,18 +10498,22 @@ void show_numa_stats(struct task_struct *p, struct seq_file *m)
- {
- 	int node;
- 	unsigned long tsf = 0, tpf = 0, gsf = 0, gpf = 0;
-+	struct numa_group *ng;
- 
-+	rcu_read_lock();
-+	ng = rcu_dereference(p->numa_group);
- 	for_each_online_node(node) {
- 		if (p->numa_faults) {
- 			tsf = p->numa_faults[task_faults_idx(NUMA_MEM, node, 0)];
- 			tpf = p->numa_faults[task_faults_idx(NUMA_MEM, node, 1)];
- 		}
--		if (p->numa_group) {
--			gsf = p->numa_group->faults[task_faults_idx(NUMA_MEM, node, 0)],
--			gpf = p->numa_group->faults[task_faults_idx(NUMA_MEM, node, 1)];
-+		if (ng) {
-+			gsf = ng->faults[task_faults_idx(NUMA_MEM, node, 0)],
-+			gpf = ng->faults[task_faults_idx(NUMA_MEM, node, 1)];
- 		}
- 		print_numa_stats(m, node, tsf, tpf, gsf, gpf);
++
++	mmap_len = sizeof(struct decomp) + decomp_len;
++	decomp = mmap(NULL, mmap_len, PROT_READ|PROT_WRITE,
+ 		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
+ 	if (decomp == MAP_FAILED) {
+ 		pr_err("Couldn't allocate memory for decompression\n");
+@@ -47,10 +53,10 @@ static int perf_session__process_compressed_event(struct perf_session *session,
  	}
-+	rcu_read_unlock();
+ 
+ 	decomp->file_pos = file_offset;
++	decomp->mmap_len = mmap_len;
+ 	decomp->head = 0;
+ 
+-	if (decomp_last) {
+-		decomp_last_rem = decomp_last->size - decomp_last->head;
++	if (decomp_last_rem) {
+ 		memcpy(decomp->data, &(decomp_last->data[decomp_last->head]), decomp_last_rem);
+ 		decomp->size = decomp_last_rem;
+ 	}
+@@ -61,7 +67,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+ 	decomp_size = zstd_decompress_stream(&(session->zstd_data), src, src_size,
+ 				&(decomp->data[decomp_last_rem]), decomp_len - decomp_last_rem);
+ 	if (!decomp_size) {
+-		munmap(decomp, sizeof(struct decomp) + decomp_len);
++		munmap(decomp, mmap_len);
+ 		pr_err("Couldn't decompress data\n");
+ 		return -1;
+ 	}
+@@ -255,15 +261,15 @@ static void perf_session__delete_threads(struct perf_session *session)
+ static void perf_session__release_decomp_events(struct perf_session *session)
+ {
+ 	struct decomp *next, *decomp;
+-	size_t decomp_len;
++	size_t mmap_len;
+ 	next = session->decomp;
+-	decomp_len = session->header.env.comp_mmap_len;
+ 	do {
+ 		decomp = next;
+ 		if (decomp == NULL)
+ 			break;
+ 		next = decomp->next;
+-		munmap(decomp, decomp_len + sizeof(struct decomp));
++		mmap_len = decomp->mmap_len;
++		munmap(decomp, mmap_len);
+ 	} while (1);
  }
- #endif /* CONFIG_NUMA_BALANCING */
- #endif /* CONFIG_SCHED_DEBUG */
+ 
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index dd8920b745bc..863dbad87849 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -46,6 +46,7 @@ struct perf_session {
+ struct decomp {
+ 	struct decomp *next;
+ 	u64 file_pos;
++	size_t mmap_len;
+ 	u64 head;
+ 	size_t size;
+ 	char data[];
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 656065af4971..accb1bf1cfd8 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -819,7 +819,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 					"stalled cycles per insn",
+ 					ratio);
+ 		} else if (have_frontend_stalled) {
+-			print_metric(config, ctxp, NULL, NULL,
++			out->new_line(config, ctxp);
++			print_metric(config, ctxp, NULL, "%7.2f ",
+ 				     "stalled cycles per insn", 0);
+ 		}
+ 	} else if (perf_evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES)) {
+diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+index 23bdb9884576..d2202392ffdb 100644
+--- a/tools/perf/util/zstd.c
++++ b/tools/perf/util/zstd.c
+@@ -99,8 +99,8 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
+ 	while (input.pos < input.size) {
+ 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
+ 		if (ZSTD_isError(ret)) {
+-			pr_err("failed to decompress (B): %ld -> %ld : %s\n",
+-			       src_size, output.size, ZSTD_getErrorName(ret));
++			pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
++			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
+ 			break;
+ 		}
+ 		output.dst  = dst + output.pos;
+diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
+index 495066bafbe3..ded7a950dc40 100644
+--- a/tools/scripts/Makefile.include
++++ b/tools/scripts/Makefile.include
+@@ -32,7 +32,6 @@ EXTRA_WARNINGS += -Wno-system-headers
+ EXTRA_WARNINGS += -Wold-style-definition
+ EXTRA_WARNINGS += -Wpacked
+ EXTRA_WARNINGS += -Wredundant-decls
+-EXTRA_WARNINGS += -Wshadow
+ EXTRA_WARNINGS += -Wstrict-prototypes
+ EXTRA_WARNINGS += -Wswitch-default
+ EXTRA_WARNINGS += -Wswitch-enum
+@@ -69,8 +68,16 @@ endif
+ # will do for now and keep the above -Wstrict-aliasing=3 in place
+ # in newer systems.
+ # Needed for the __raw_cmpxchg in tools/arch/x86/include/asm/cmpxchg.h
++#
++# See https://lkml.org/lkml/2006/11/28/253 and https://gcc.gnu.org/gcc-4.8/changes.html,
++# that takes into account Linus's comments (search for Wshadow) for the reasoning about
++# -Wshadow not being interesting before gcc 4.8.
++
+ ifneq ($(filter 3.%,$(MAKE_VERSION)),)  # make-3
+ EXTRA_WARNINGS += -fno-strict-aliasing
++EXTRA_WARNINGS += -Wno-shadow
++else
++EXTRA_WARNINGS += -Wshadow
+ endif
+ 
+ ifneq ($(findstring $(MAKEFLAGS), w),w)
 
