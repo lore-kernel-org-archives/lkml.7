@@ -2,134 +2,125 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B84C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 14:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB821C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 14:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC54F2086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 14:01:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564236068;
-	bh=FSQSrO+2OwW4fijGmMlDa81a0rfWwjuQHjY9U+gpkrw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Tu58mKzWGOy4HXuNEdTiq7RjEqfuTfRo9gx/rDbpJOpknojmlNFtLTBX/7h1pIjb4
-	 X6QCjcUaDYRC5IXnOZdsDCXucqTJ4jUXdasiCCPrukQ5Uc5f/1d6/mJNx/oRr2kJ1G
-	 HU5F2oqjkckW62YqBAqQFYK2AwnYZTwV+XsRmlEs=
+	by mail.kernel.org (Postfix) with ESMTP id 89AA02075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 14:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387700AbfG0OBI (ORCPT
+        id S2387716AbfG0OMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 10:01:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387576AbfG0OBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 10:01:07 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CA3120840;
-        Sat, 27 Jul 2019 14:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564236066;
-        bh=FSQSrO+2OwW4fijGmMlDa81a0rfWwjuQHjY9U+gpkrw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PjR7grEfGHOQFtuaNbz5IhNwZ5v/m+2PD7bg9i04Qhls6KRovzoTPO7oljMWSpXs6
-         TBOczKpYe2CL11a1hqLvL2sqnSaKNLMMOYBrKiP136O6NFzFJxWwVnfaSSupW1IH0/
-         sOwS2KI4W2VVqYY+OKtXZ0kSdf7snrc/eOzXwPlM=
-Date:   Sat, 27 Jul 2019 15:01:01 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "hslester96@gmail.com" <hslester96@gmail.com>,
-        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH] staging: iio: ad2s1210: Use device-managed API
-Message-ID: <20190727150101.43bb4314@archlinux>
-In-Reply-To: <b7c56658547a972b4e4a2b075b2319192f89c803.camel@analog.com>
-References: <20190726110742.20445-1-hslester96@gmail.com>
-        <b7c56658547a972b4e4a2b075b2319192f89c803.camel@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 27 Jul 2019 10:12:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47676 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727589AbfG0OMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 10:12:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 312B4ACC4;
+        Sat, 27 Jul 2019 14:12:19 +0000 (UTC)
+Subject: Re: [PATCH 1/3] bcache: drop obsolete comments
+To:     Yaowei Bai <baiyaowei@cmss.chinamobile.com>
+Cc:     kent.overstreet@gmail.com, linux-bcache@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1564222799-10603-1-git-send-email-baiyaowei@cmss.chinamobile.com>
+From:   Coly Li <colyli@suse.de>
+Openpgp: preference=signencrypt
+Organization: SUSE Labs
+Message-ID: <e7645bf9-cfe1-107f-b212-7aaf6ea1f2e2@suse.de>
+Date:   Sat, 27 Jul 2019 22:12:11 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1564222799-10603-1-git-send-email-baiyaowei@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 12:36:08 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
-
-> On Fri, 2019-07-26 at 19:07 +0800, Chuhong Yuan wrote:
-> > [External]
-> > 
-> > Use device-managed API to simplify the code.
-> > The remove function is redundant now and can
-> > be deleted.  
+On 2019/7/27 6:19 下午, Yaowei Bai wrote:
+> Unused list was killed by commit 2531d9ee61fa ("bcache: Kill unused freelist")
+> but left these comments, let's drop them.
 > 
-> Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-The end of this probe function is rather odd and probably needs sorting
-out as I imagine that needs to happen before the device is exposed to
-userspace.
-
-Nothing to do with this patch though which is great.
-
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
+> This patch doesn't introduce functional change.
 > 
-> > 
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > ---
-> >  drivers/staging/iio/resolver/ad2s1210.c | 12 +-----------
-> >  1 file changed, 1 insertion(+), 11 deletions(-)
-> > 
-> > diff --git a/drivers/staging/iio/resolver/ad2s1210.c b/drivers/staging/iio/resolver/ad2s1210.c
-> > index 0c1bd108c386..4b25a3a314ed 100644
-> > --- a/drivers/staging/iio/resolver/ad2s1210.c
-> > +++ b/drivers/staging/iio/resolver/ad2s1210.c
-> > @@ -671,7 +671,7 @@ static int ad2s1210_probe(struct spi_device *spi)
-> >  	indio_dev->num_channels = ARRAY_SIZE(ad2s1210_channels);
-> >  	indio_dev->name = spi_get_device_id(spi)->name;
-> >  
-> > -	ret = iio_device_register(indio_dev);
-> > +	ret = devm_iio_device_register(&spi->dev, indio_dev);
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > @@ -683,15 +683,6 @@ static int ad2s1210_probe(struct spi_device *spi)
-> >  	return 0;
-> >  }
-> >  
-> > -static int ad2s1210_remove(struct spi_device *spi)
-> > -{
-> > -	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-> > -
-> > -	iio_device_unregister(indio_dev);
-> > -
-> > -	return 0;
-> > -}
-> > -
-> >  static const struct of_device_id ad2s1210_of_match[] = {
-> >  	{ .compatible = "adi,ad2s1210", },
-> >  	{ }
-> > @@ -710,7 +701,6 @@ static struct spi_driver ad2s1210_driver = {
-> >  		.of_match_table = of_match_ptr(ad2s1210_of_match),
-> >  	},
-> >  	.probe = ad2s1210_probe,
-> > -	.remove = ad2s1210_remove,
-> >  	.id_table = ad2s1210_id,
-> >  };
-> >  module_spi_driver(ad2s1210_driver);  
+> Signed-off-by: Yaowei Bai <baiyaowei@cmss.chinamobile.com>
 
+Hi Yaowei,
+
+
+> ---
+>  drivers/md/bcache/alloc.c | 13 +++----------
+>  drivers/md/bcache/super.c |  3 ---
+>  2 files changed, 3 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+> index 6f77682..c22c260 100644
+> --- a/drivers/md/bcache/alloc.c
+> +++ b/drivers/md/bcache/alloc.c
+> @@ -33,13 +33,6 @@
+>   * If we've got discards enabled, that happens when a bucket moves from the
+>   * free_inc list to the free list.
+>   *
+> - * There is another freelist, because sometimes we have buckets that we know
+> - * have nothing pointing into them - these we can reuse without waiting for
+> - * priorities to be rewritten. These come from freed btree nodes and buckets
+> - * that garbage collection discovered no longer had valid keys pointing into
+> - * them (because they were overwritten). That's the unused list - buckets on the
+> - * unused list move to the free list, optionally being discarded in the process.
+> - *
+It seems the above comments can still be applied to free_inc list (if
+s/freelist/free_inc list), am I right ?
+
+>   * It's also important to ensure that gens don't wrap around - with respect to
+>   * either the oldest gen in the btree or the gen on disk. This is quite
+>   * difficult to do in practice, but we explicitly guard against it anyways - if
+> @@ -323,9 +316,9 @@ static int bch_allocator_thread(void *arg)
+>  
+>  	while (1) {
+>  		/*
+> -		 * First, we pull buckets off of the unused and free_inc lists,
+> -		 * possibly issue discards to them, then we add the bucket to
+> -		 * the free list:
+> +		 * First, we pull buckets off of the free_inc list, possibly
+> +		 * issue discards to them, then we add the bucket to the free
+> +		 * list:
+>  		 */
+
+I am OK with this.
+
+>  		while (1) {
+>  			long bucket;
+> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+> index 26e374f..eba38aa 100644
+> --- a/drivers/md/bcache/super.c
+> +++ b/drivers/md/bcache/super.c
+> @@ -544,9 +544,6 @@ void bch_prio_write(struct cache *ca)
+>  	atomic_long_add(ca->sb.bucket_size * prio_buckets(ca),
+>  			&ca->meta_sectors_written);
+>  
+> -	//pr_debug("free %zu, free_inc %zu, unused %zu", fifo_used(&ca->free),
+> -	//	 fifo_used(&ca->free_inc), fifo_used(&ca->unused));
+> -
+
+There is no freelist in the above code, I suggest to not include the
+above change into this patch.
+
+
+>  	for (i = prio_buckets(ca) - 1; i >= 0; --i) {
+>  		long bucket;
+>  		struct prio_set *p = ca->disk_buckets;
+> 
+
+Thanks.
+
+-- 
+
+Coly Li
