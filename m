@@ -2,109 +2,142 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8855AC7618F
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 565BFC7618F
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 516F821655
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:52:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="OgIJGFb5"
+	by mail.kernel.org (Postfix) with ESMTP id 272752086D
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbfG0Cv7 (ORCPT
+        id S1727820AbfG0C4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 22:51:59 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:53250 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbfG0Cv7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 22:51:59 -0400
-Received: from pendragon.ideasonboard.com (om126200118163.15.openmobile.ne.jp [126.200.118.163])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 711622E7;
-        Sat, 27 Jul 2019 04:51:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1564195917;
-        bh=let5ORoniAHJEKYglIYJqD/D6mDARxa9CO3R2asqtA0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OgIJGFb5yr5PqP1+iroljmI1MG7Oaw1kCFt95u00pFPp0q8CGOmpzKOxwh+8QQhSk
-         mw653DnnjwSqKr5dPcw+XdU0jlRm+faXrkvB31s1+6VpaeOKQsi/U/L1hPLEB4WZPv
-         uRKGVNDXCmRwRYIjc7lgIL4IQeMfeI7ChPb/ngwo=
-Date:   Sat, 27 Jul 2019 05:51:51 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>, linux-fbdev@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        dri-devel@lists.freedesktop.org,
-        Russell King <linux@armlinux.org.uk>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] video: of: display_timing: Add of_node_put() in
- of_get_display_timing()
-Message-ID: <20190727025151.GE4902@pendragon.ideasonboard.com>
-References: <20190722182439.44844-1-dianders@chromium.org>
- <20190722182439.44844-2-dianders@chromium.org>
+        Fri, 26 Jul 2019 22:56:13 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2782 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726415AbfG0C4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Jul 2019 22:56:13 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 64AC312BCB15B6E8DB67;
+        Sat, 27 Jul 2019 10:56:10 +0800 (CST)
+Received: from [127.0.0.1] (10.184.12.158) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
+ 10:55:59 +0800
+Subject: Re: [PATCH] KVM: arm64: Update kvm_arm_exception_class and
+ esr_class_str for new EC
+To:     James Morse <james.morse@arm.com>, <marc.zyngier@arm.com>
+CC:     <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <julien.thierry@arm.com>,
+        <suzuki.poulose@arm.com>, <mark.rutland@arm.com>,
+        <linux-kernel@vger.kernel.org>, <amit.kachhap@arm.com>,
+        <Dave.Martin@arm.com>, <wanghaibin.wang@huawei.com>
+References: <1562992854-972-1-git-send-email-yuzenghui@huawei.com>
+ <e009aceb-9d23-1a58-8186-4883ab98bd45@arm.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <3e3029b5-74b2-693f-b4ab-5876baee3414@huawei.com>
+Date:   Sat, 27 Jul 2019 10:54:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
+ Thunderbird/64.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190722182439.44844-2-dianders@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e009aceb-9d23-1a58-8186-4883ab98bd45@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Douglas,
+Hi,
 
-Thank you for the patch.
+I noticed Marc had applied this patch in his kvmarm tree, with the
+updated commit message.  Thanks Marc :)
 
-On Mon, Jul 22, 2019 at 11:24:36AM -0700, Douglas Anderson wrote:
-> From code inspection it can be seen that of_get_display_timing() is
-> lacking an of_node_put().  Add it.
+On 2019/7/25 20:48, James Morse wrote:
+> Hi,
 > 
-> Fixes: ffa3fd21de8a ("videomode: implement public of_get_display_timing()")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
+> On 13/07/2019 05:40, Zenghui Yu wrote:
+>> We've added two ESR exception classes for new ARM hardware extensions:
+>> ESR_ELx_EC_PAC and ESR_ELx_EC_SVE.
+>>
+>> This patch updates "kvm_arm_exception_class" for these two EC, which the
 > 
->  drivers/video/of_display_timing.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>> new EC will be parsed in kvm_exit trace events (for guest's usage of
 > 
-> diff --git a/drivers/video/of_display_timing.c b/drivers/video/of_display_timing.c
-> index f5c1c469c0af..5eedae0799f0 100644
-> --- a/drivers/video/of_display_timing.c
-> +++ b/drivers/video/of_display_timing.c
-> @@ -119,6 +119,7 @@ int of_get_display_timing(const struct device_node *np, const char *name,
->  		struct display_timing *dt)
->  {
->  	struct device_node *timing_np;
-> +	int ret;
->  
->  	if (!np)
->  		return -EINVAL;
-> @@ -129,7 +130,11 @@ int of_get_display_timing(const struct device_node *np, const char *name,
->  		return -ENOENT;
->  	}
->  
-> -	return of_parse_display_timing(timing_np, dt);
-> +	ret = of_parse_display_timing(timing_np, dt);
-> +
-> +	of_node_put(timing_np);
-> +
-> +	return ret;
->  }
->  EXPORT_SYMBOL_GPL(of_get_display_timing);
->  
+> new EC will be visible to user-space via kvm_exit() trace events... ?
+> 
+> 
+>> Pointer Authentication and Scalable Vector Extension).  The same updates
+>> to "esr_class_str" for ESR_ELx_EC_PAC, by which we can get more accurate
+>> debug info.
+> 
+> Its accurate either way round. This stops the trace-point print from printing the EC in
+> hex, instead giving it a name, like we do for all the others.
 
--- 
-Regards,
+So this should be "readable".
 
-Laurent Pinchart
+>>   Trivial changes, update them in one go.
+> 
+> (I don't think this bit needs to go in the git-log!)
+> 
+> 
+>> diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
+>> index a8b205e..ddf9d76 100644
+>> --- a/arch/arm64/include/asm/kvm_arm.h
+>> +++ b/arch/arm64/include/asm/kvm_arm.h
+>> @@ -316,9 +316,10 @@
+>>   
+>>   #define kvm_arm_exception_class \
+>>   	ECN(UNKNOWN), ECN(WFx), ECN(CP15_32), ECN(CP15_64), ECN(CP14_MR), \
+>> -	ECN(CP14_LS), ECN(FP_ASIMD), ECN(CP10_ID), ECN(CP14_64), ECN(SVC64), \
+>> -	ECN(HVC64), ECN(SMC64), ECN(SYS64), ECN(IMP_DEF), ECN(IABT_LOW), \
+>> -	ECN(IABT_CUR), ECN(PC_ALIGN), ECN(DABT_LOW), ECN(DABT_CUR), \
+>> +	ECN(CP14_LS), ECN(FP_ASIMD), ECN(CP10_ID), ECN(PAC), ECN(CP14_64), \
+>> +	ECN(SVC64), ECN(HVC64), ECN(SMC64), ECN(SYS64), ECN(SVE), \
+>> +	ECN(IMP_DEF), ECN(IABT_LOW), ECN(IABT_CUR), \
+>> +	ECN(PC_ALIGN), ECN(DABT_LOW), ECN(DABT_CUR), \
+>>   	ECN(SP_ALIGN), ECN(FP_EXC32), ECN(FP_EXC64), ECN(SERROR), \
+>>   	ECN(BREAKPT_LOW), ECN(BREAKPT_CUR), ECN(SOFTSTP_LOW), \
+>>   	ECN(SOFTSTP_CUR), ECN(WATCHPT_LOW), ECN(WATCHPT_CUR), \
+> 
+> Do we need to add:
+> ESR_ELx_EC_ILL
+> ESR_ELx_EC_HVC32
+> ESR_ELx_EC_SMC32
+
+I think they're needed.  But these three EC are not included into
+kvm_arm_exception_class at the time it was introduced, I don't know
+the reason.
+
+> (I don't see how any of the _CUR entries could ever happen as these EC originally come
+> from ESR_EL2, but they're harmless)
+
+(I agree with you.)
+
+>> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+>> index 8c03456..969e156 100644
+>> --- a/arch/arm64/kernel/traps.c
+>> +++ b/arch/arm64/kernel/traps.c
+>> @@ -734,6 +734,7 @@ asmlinkage void __exception do_sysinstr(unsigned int esr, struct pt_regs *regs)
+>>   	[ESR_ELx_EC_CP14_LS]		= "CP14 LDC/STC",
+>>   	[ESR_ELx_EC_FP_ASIMD]		= "ASIMD",
+>>   	[ESR_ELx_EC_CP10_ID]		= "CP10 MRC/VMRS",
+>> +	[ESR_ELx_EC_PAC]		= "PAC",
+>>   	[ESR_ELx_EC_CP14_64]		= "CP14 MCRR/MRRC",
+>>   	[ESR_ELx_EC_ILL]		= "PSTATE.IL",
+>>   	[ESR_ELx_EC_SVC32]		= "SVC (AArch32)",
+> 
+> 
+> Reviewed-by: James Morse <james.morse@arm.com>
+
+Thanks for your reviewing!
+
+
+Zenghui
+
+
