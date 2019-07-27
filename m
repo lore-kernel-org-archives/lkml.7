@@ -2,262 +2,144 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 003E2C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C34C7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD64E2087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564247303;
-	bh=+5rybbzMCfeUCU9zj0JwT7+RbQ9TvG9+x6KA+ybGIT0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YXfIjinvOlX1I2EtE5fFxPqLjujBToswxRmOB6UsHRYuI0dmmsP9pcfgdc0gaD/is
-	 hJReRsX4QhC2i3U21dOZ7Lhh4Bh4b4Z2Z0+jdPZRu54+cWX6T9SkmQvfKQFCdrU644
-	 TSSOcPPFebmYvLWuUUeSGhUclb3r2aX16MCjuldY=
+	by mail.kernel.org (Postfix) with ESMTP id 373C420693
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:11:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387853AbfG0RIW (ORCPT
+        id S2387870AbfG0RLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 13:08:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33214 "EHLO mail.kernel.org"
+        Sat, 27 Jul 2019 13:11:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32960 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387665AbfG0RIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 13:08:22 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2387665AbfG0RLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 13:11:38 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 976892084C;
-        Sat, 27 Jul 2019 17:08:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564247300;
-        bh=+5rybbzMCfeUCU9zj0JwT7+RbQ9TvG9+x6KA+ybGIT0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=C0cvKrxK5hKi33q686/t9d2x8yrKhta7fUwU1RlVrrpZWtrxqr32xShPIrrlHqmxF
-         E6XEvwEJeZXkkAWmy2DqW6NYX4v3qZb8WqBoDzo/DGDGs+4E9OFiOGOObSHZZFur6T
-         qKF0As8cEfRnvT1z5ewUzr9qwyTP1JWGjOEAXwdM=
-Date:   Sat, 27 Jul 2019 18:08:15 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Kevin Tsai <ktsai@capellamicro.com>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: light: Use device-managed APIs
-Message-ID: <20190727180815.0c3e655e@archlinux>
-In-Reply-To: <20190726090829.16979-1-hslester96@gmail.com>
-References: <20190726090829.16979-1-hslester96@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mx1.redhat.com (Postfix) with ESMTPS id 1918236899;
+        Sat, 27 Jul 2019 17:11:38 +0000 (UTC)
+Received: from llong.com (ovpn-120-96.rdu2.redhat.com [10.10.120.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EBFDB1001B07;
+        Sat, 27 Jul 2019 17:11:34 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Phil Auld <pauld@redhat.com>, Waiman Long <longman@redhat.com>
+Subject: [PATCH v2] sched/core: Don't use dying mm as active_mm of kthreads
+Date:   Sat, 27 Jul 2019 13:10:47 -0400
+Message-Id: <20190727171047.31610-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Sat, 27 Jul 2019 17:11:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 17:08:29 +0800
-Chuhong Yuan <hslester96@gmail.com> wrote:
+It was found that a dying mm_struct where the owning task has exited
+can stay on as active_mm of kernel threads as long as no other user
+tasks run on those CPUs that use it as active_mm. This prolongs the
+life time of dying mm holding up memory and other resources like swap
+space that cannot be freed.
 
-> Use device-managed APIs to simplify the code.
-> The remove functions are redundant now and can
-> be deleted.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Hi,
+Fix that by forcing the kernel threads to use init_mm as the active_mm
+if the previous active_mm is dying.
 
-This should have been split along the lines of the drivers as these
-have different authors and hence could be merged at different times.
-Not to mention the nature of the changes isn't exactly the same
-between the two.
+The determination of a dying mm is based on the absence of an owning
+task. The selection of the owning task only happens with the CONFIG_MEMCG
+option. Without that, there is no simple way to determine the life span
+of a given mm. So it falls back to the old behavior.
 
-I might have taken the cm3323 one with a small tweak as below if they
-had been separate.
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ include/linux/mm_types.h | 15 +++++++++++++++
+ kernel/sched/core.c      | 13 +++++++++++--
+ mm/init-mm.c             |  4 ++++
+ 3 files changed, 30 insertions(+), 2 deletions(-)
 
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/light/cm3323.c | 31 ++++++++++-----------------
->  drivers/iio/light/si1145.c | 44 ++++++++++++++------------------------
->  2 files changed, 27 insertions(+), 48 deletions(-)
-> 
-> diff --git a/drivers/iio/light/cm3323.c b/drivers/iio/light/cm3323.c
-> index 50f3438c2b49..fd352c0a4507 100644
-> --- a/drivers/iio/light/cm3323.c
-> +++ b/drivers/iio/light/cm3323.c
-> @@ -101,15 +101,16 @@ static int cm3323_init(struct iio_dev *indio_dev)
->  	return 0;
->  }
->  
-> -static void cm3323_disable(struct iio_dev *indio_dev)
-> +static void cm3323_disable(void *data)
->  {
->  	int ret;
-> -	struct cm3323_data *data = iio_priv(indio_dev);
-> +	struct iio_dev *indio_dev = data;
-> +	struct cm3323_data *cm_data = iio_priv(indio_dev);
->  
-> -	ret = i2c_smbus_write_word_data(data->client, CM3323_CMD_CONF,
-> +	ret = i2c_smbus_write_word_data(cm_data->client, CM3323_CMD_CONF,
->  					CM3323_CONF_SD_BIT);
->  	if (ret < 0)
-> -		dev_err(&data->client->dev, "Error writing reg_conf\n");
-> +		dev_err(&cm_data->client->dev, "Error writing reg_conf\n");
->  }
->  
->  static int cm3323_set_it_bits(struct cm3323_data *data, int val, int val2)
-> @@ -243,25 +244,16 @@ static int cm3323_probe(struct i2c_client *client,
->  		return ret;
->  	}
->  
-> -	ret = iio_device_register(indio_dev);
-> +	ret = devm_add_action_or_reset(&client->dev, cm3323_disable, indio_dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = devm_iio_device_register(&client->dev, indio_dev);
->  	if (ret < 0) {
->  		dev_err(&client->dev, "failed to register iio dev\n");
-> -		goto err_init;
-> +		return ret;
-
-I'd drop the failed to register message and just
-return devm_iio_device_register(...);
-
-Most of the likely paths that can cause that to fail report errors anyway
-in the core code.
-
->  	}
->  
-> -	return 0;
-> -err_init:
-> -	cm3323_disable(indio_dev);
-> -	return ret;
-> -}
-> -
-> -static int cm3323_remove(struct i2c_client *client)
-> -{
-> -	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> -
-> -	iio_device_unregister(indio_dev);
-> -	cm3323_disable(indio_dev);
-> -
->  	return 0;
->  }
->  
-> @@ -276,7 +268,6 @@ static struct i2c_driver cm3323_driver = {
->  		.name = CM3323_DRV_NAME,
->  	},
->  	.probe		= cm3323_probe,
-> -	.remove		= cm3323_remove,
->  	.id_table	= cm3323_id,
->  };
->  
-> diff --git a/drivers/iio/light/si1145.c b/drivers/iio/light/si1145.c
-> index 6579d2418814..61867552b27c 100644
-> --- a/drivers/iio/light/si1145.c
-> +++ b/drivers/iio/light/si1145.c
-> @@ -1271,13 +1271,14 @@ static int si1145_probe_trigger(struct iio_dev *indio_dev)
->  	return 0;
->  }
->  
-> -static void si1145_remove_trigger(struct iio_dev *indio_dev)
-> +static void si1145_remove_trigger(void *data)
->  {
-> -	struct si1145_data *data = iio_priv(indio_dev);
-> +	struct iio_dev *indio_dev = data;
-> +	struct si1145_data *si_data = iio_priv(indio_dev);
->  
-> -	if (data->trig) {
-> -		iio_trigger_unregister(data->trig);
-> -		data->trig = NULL;
-> +	if (si_data->trig) {
-> +		iio_trigger_unregister(si_data->trig);
-
-This doesn't look right.  Why not use the devm trigger
-registration directly?
-
-> +		si_data->trig = NULL;
-
-I find it unlikely that we actually need to set this to
-NULL, but please check closely in the driver.
-The obvious path would be that the interrupt fired
-after the trigger was unregistered (shouldn't be possible
-unless something odd is going on), however there is no
-obviously signs of this being checked there.
-
-
->  	}
->  }
->  
-> @@ -1332,7 +1333,8 @@ static int si1145_probe(struct i2c_client *client,
->  	if (ret < 0)
->  		return ret;
->  
-> -	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-> +	ret = devm_iio_triggered_buffer_setup(&client->dev,
-> +		indio_dev, NULL,
->  		si1145_trigger_handler, &si1145_buffer_setup_ops);
->  	if (ret < 0)
->  		return ret;
-> @@ -1340,23 +1342,21 @@ static int si1145_probe(struct i2c_client *client,
->  	if (client->irq) {
->  		ret = si1145_probe_trigger(indio_dev);
->  		if (ret < 0)
-> -			goto error_free_buffer;
-> +			return ret;
-> +
-> +		ret = devm_add_action_or_reset(&client->dev,
-> +					si1145_remove_trigger, indio_dev);
-> +		if (ret < 0)
-> +			return ret;
-> +
->  	} else {
->  		dev_info(&client->dev, "no irq, using polling\n");
->  	}
->  
-> -	ret = iio_device_register(indio_dev);
-> +	ret = devm_iio_device_register(&client->dev, indio_dev);
->  	if (ret < 0)
-> -		goto error_free_trigger;
-> +		return ret;
->  
->  	return 0;
-> -
-> -error_free_trigger:
-> -	si1145_remove_trigger(indio_dev);
-> -error_free_buffer:
-> -	iio_triggered_buffer_cleanup(indio_dev);
-> -
-> -	return ret;
->  }
->  
->  static const struct i2c_device_id si1145_ids[] = {
-> @@ -1371,23 +1371,11 @@ static const struct i2c_device_id si1145_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, si1145_ids);
->  
-> -static int si1145_remove(struct i2c_client *client)
-> -{
-> -	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> -
-> -	iio_device_unregister(indio_dev);
-> -	si1145_remove_trigger(indio_dev);
-> -	iio_triggered_buffer_cleanup(indio_dev);
-> -
-> -	return 0;
-> -}
-> -
->  static struct i2c_driver si1145_driver = {
->  	.driver = {
->  		.name   = "si1145",
->  	},
->  	.probe  = si1145_probe,
-> -	.remove = si1145_remove,
->  	.id_table = si1145_ids,
->  };
->  
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 3a37a89eb7a7..32712e78763c 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -623,6 +623,21 @@ static inline bool mm_tlb_flush_nested(struct mm_struct *mm)
+ 	return atomic_read(&mm->tlb_flush_pending) > 1;
+ }
+ 
++#ifdef CONFIG_MEMCG
++/*
++ * A mm is considered dying if there is no owning task.
++ */
++static inline bool mm_dying(struct mm_struct *mm)
++{
++	return !mm->owner;
++}
++#else
++static inline bool mm_dying(struct mm_struct *mm)
++{
++	return false;
++}
++#endif
++
+ struct vm_fault;
+ 
+ /**
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 2b037f195473..923a63262dfd 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3233,13 +3233,22 @@ context_switch(struct rq *rq, struct task_struct *prev,
+ 	 * Both of these contain the full memory barrier required by
+ 	 * membarrier after storing to rq->curr, before returning to
+ 	 * user-space.
++	 *
++	 * If mm is NULL and oldmm is dying (!owner), we switch to
++	 * init_mm instead to make sure that oldmm can be freed ASAP.
+ 	 */
+-	if (!mm) {
++	if (!mm && !mm_dying(oldmm)) {
+ 		next->active_mm = oldmm;
+ 		mmgrab(oldmm);
+ 		enter_lazy_tlb(oldmm, next);
+-	} else
++	} else {
++		if (!mm) {
++			mm = &init_mm;
++			next->active_mm = mm;
++			mmgrab(mm);
++		}
+ 		switch_mm_irqs_off(oldmm, mm, next);
++	}
+ 
+ 	if (!prev->mm) {
+ 		prev->active_mm = NULL;
+diff --git a/mm/init-mm.c b/mm/init-mm.c
+index a787a319211e..69090a11249c 100644
+--- a/mm/init-mm.c
++++ b/mm/init-mm.c
+@@ -5,6 +5,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/list.h>
+ #include <linux/cpumask.h>
++#include <linux/sched/task.h>
+ 
+ #include <linux/atomic.h>
+ #include <linux/user_namespace.h>
+@@ -36,5 +37,8 @@ struct mm_struct init_mm = {
+ 	.mmlist		= LIST_HEAD_INIT(init_mm.mmlist),
+ 	.user_ns	= &init_user_ns,
+ 	.cpu_bitmap	= { [BITS_TO_LONGS(NR_CPUS)] = 0},
++#ifdef CONFIG_MEMCG
++	.owner		= &init_task,
++#endif
+ 	INIT_MM_CONTEXT(init_mm)
+ };
+-- 
+2.18.1
 
