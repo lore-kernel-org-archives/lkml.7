@@ -2,350 +2,92 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C065C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B7DC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 18:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6688C214C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:53:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ZNEnudvf"
+	by mail.kernel.org (Postfix) with ESMTP id 04C972083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 18:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564250971;
+	bh=UOffHRCjj9ElQhQERuuixgmFz2W1MpAZLsqqORG9pio=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0anP6rn+BouzobM/GkHxRaXrPeW6608rUfhf2j3qRqN5/aQSqJyQMZm98BoCW4IBz
+	 p0/GGNPAMAi86P8xj6f6AjbH/Xv1THwK/iroMTquP7iTLMjnIgY3s16hwYvTHR+pjs
+	 +GmIyMR1xJPZhvu40U7zpvWI6P4sGIRpslBFxUss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388097AbfG0Rxi (ORCPT
+        id S2388004AbfG0SJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 13:53:38 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45458 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388029AbfG0Rxe (ORCPT
+        Sat, 27 Jul 2019 14:09:18 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43840 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387935AbfG0SJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 13:53:34 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f9so57517447wre.12;
-        Sat, 27 Jul 2019 10:53:32 -0700 (PDT)
+        Sat, 27 Jul 2019 14:09:18 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y17so29947707ljk.10
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 11:09:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CRlop1wU8KMMk0r/xtmfvg16U47t30s28w83OzXPNSw=;
-        b=ZNEnudvfnRjmhOQDMc1PMX0Qn4WgpsI27At7hdn8HAVndclPhQEE2OvLznJaAA39mU
-         C8gmqF5aSbvML1zGYFOxKahNe/mmIjEoHaZda79tPJUXVKaAkYSD/lkHZvoOvyXl92Ms
-         wPnrG7DqHlJ6E4Hi64lYOWO61z8bkcT02QGmkGnyFSue4UNWgxJRxEAcS9qFplBOl3U3
-         o5Yn/6E+ZKlfFU3ztXbu66/8i9obGF+HQ+agWeVtGhVX7TNkA83oKGE49+zvCsApgbGt
-         m4vWw5UEewQ0snZIaRF/atDtLTX5zue4ELasJFIzfF7bT7v3uxCGfUzmS3FKc9NptnPK
-         hLPQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S62s5rdsynYnqf1QhYZV3IIXT1WCgILS3kAJrNadYnw=;
+        b=iMMrmeLTqTg8y3b1n8d+6Pj031iRNlztZCs/ZBC8A1feno5QZUZ+4IjNBWJWh3e6iN
+         BAHDuoZC4gcRW3J6EC/R7+ttvngMKgi21/ubD8AjZpDFous3abUQ2sJty+gLAPh2WNLP
+         HdDhCKajGZTrqRxwTA8uf1iyYeoGq27O/aQcw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CRlop1wU8KMMk0r/xtmfvg16U47t30s28w83OzXPNSw=;
-        b=KeEZZw1fy+u4raAcy+fUcZTJOIJyCeJ/RlTTzne0wfkjbDq92Dea32856ACnRKDato
-         vZyXUj5FXqBpauSuv9qGQJFQ6EmK0g9Nq6QCxeP5fTptKoWElh/KrlC4femi9ogGPn1y
-         gTA2pwanzEqaNqCx+4byqKyZuTf7BMdX2uyYvuoLLPvHubKuwoyDAmJ4aZ8k300CvPsg
-         KQMaBVq2zvFFF0W5lCEuAToOAdJ7nVgFXGNHJaAE10Bq3Ak0gO7i3uSwSVMXK3Yt2QWu
-         MFm+bnwfFcgAEXC6JITdLyUAtzwMXg4TJsDmUvGVO35z8wVJBEvtJseO3fsmKcHY/pTL
-         BdxQ==
-X-Gm-Message-State: APjAAAWrLVTxOAIRWZwnk+xEkKzp2CSId630ClC0X71rnzf1V+TSkQ7G
-        KYxwMJxzxzQagoJEN+OZZT8=
-X-Google-Smtp-Source: APXvYqwSc5zVrWwNVZLpbzirResSdWnsvv6+hAQEgq1zNODDClNRd7URKOZP+mvr6vdI+1uomjqXbw==
-X-Received: by 2002:a05:6000:112:: with SMTP id o18mr28607631wrx.153.1564250011432;
-        Sat, 27 Jul 2019 10:53:31 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133C65C00B418D0F4A25A19EC.dip0.t-ipconnect.de. [2003:f1:33c6:5c00:b418:d0f4:a25a:19ec])
-        by smtp.googlemail.com with ESMTPSA id t1sm67705423wra.74.2019.07.27.10.53.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 27 Jul 2019 10:53:30 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org,
-        robh+dt@kernel.org, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        john@phrozen.org, hauke@hauke-m.de,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 3/5] MIPS: lantiq: add an irq_domain and irq_chip for EBU
-Date:   Sat, 27 Jul 2019 19:53:13 +0200
-Message-Id: <20190727175315.28834-4-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190727175315.28834-1-martin.blumenstingl@googlemail.com>
-References: <20190727175315.28834-1-martin.blumenstingl@googlemail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S62s5rdsynYnqf1QhYZV3IIXT1WCgILS3kAJrNadYnw=;
+        b=NSD7Yohu8d+3rSzGVRcUC/Ca//3nfQ2SGwZSJOCQLnmdJ55rCYdDXVbQThbgEHF0x4
+         A0YQEoA3xIThPTtc5kOuerv/Jj5l/1yPxq16T4XTMl5B8iPr1Io1eO79BiSCZRPVryTk
+         IUdlDC+enb7VJYWGw5CZwbgC1FYyUW1BHoFalzLW+/JcWzsllfo7Agr3aav+AT0gzigW
+         eqe4hL+xIWZfmk//YM/X4gc+JitP3cLV4dCoud6WeFy0T/gWbvFDo9pr4xheiTU98Clz
+         bNuiC653kjmL+ZYW6/OBdR2PXJCjN6aSme7huQ82Pb4L1B5BDWrstJxi7TyUBGYG+soW
+         kQVg==
+X-Gm-Message-State: APjAAAUYtiafcqUOz4bvrY65fZ6sPmcMaIi6esfPb0Wm4vWKFDKX+vP9
+        oPQ8myKqo7Lq5aG2+BE+75DDlV7skwk=
+X-Google-Smtp-Source: APXvYqyRWFvyBThAlXTns/UwYvx+uzancqYGHfLNqd4HDgBmjSXufWKVApeHTYF954xDk/XUjc/OOA==
+X-Received: by 2002:a2e:2411:: with SMTP id k17mr14650907ljk.136.1564250955431;
+        Sat, 27 Jul 2019 11:09:15 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id 27sm11212275ljw.97.2019.07.27.11.09.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sat, 27 Jul 2019 11:09:14 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id c19so39236171lfm.10
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 11:09:14 -0700 (PDT)
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr36947244lfp.61.1564250953929;
+ Sat, 27 Jul 2019 11:09:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190726025521.GA1824@embeddedor>
+In-Reply-To: <20190726025521.GA1824@embeddedor>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 27 Jul 2019 11:08:58 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whw2Pdh-gAObS2wt4pF6Pgus9aHNS2WaVBkgYGsmaZyJw@mail.gmail.com>
+Message-ID: <CAHk-=whw2Pdh-gAObS2wt4pF6Pgus9aHNS2WaVBkgYGsmaZyJw@mail.gmail.com>
+Subject: Re: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc2
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PCI_INTA on Lantiq SoCs is a chained interrupt:
-EBU configures the interrupt type, has a registers to enable/disable
-and ACK the interrupt. This is chained with the ICU interrupt where the
-parent interrupt of the EBU IRQ has to be ACK'ed.
+On Thu, Jul 25, 2019 at 7:55 PM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+> Here is a new pull-request that includes a fix for those warnings you
+> were seeing with the dcn20_dccg driver.
 
-Move all EBU interrupt logic into ebu.c and expose it using an
-irq_domain and irq_chip.
-Drop the hardcoded EBU interrupt configuration from pci-lantiq.c as this
-can now be expressed in device tree by passing the EBU interrupt line to
-PCI_INTA (using for example "... &ebu0 0 IRQ_TYPE_LEVEL_LOW").
-Also drop the EBU interrupt masking from irq.c because that's now
-managed by EBU's own irq_ack callback.
+Ok, I have tried re-pulling and if it passes my build tests cleanly
+I'll push the result out.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- .../include/asm/mach-lantiq/xway/lantiq_soc.h |   3 -
- arch/mips/lantiq/ebu.c                        | 149 ++++++++++++++++++
- arch/mips/lantiq/irq.c                        |  11 --
- arch/mips/pci/pci-lantiq.c                    |   4 -
- 4 files changed, 149 insertions(+), 18 deletions(-)
-
-diff --git a/arch/mips/include/asm/mach-lantiq/xway/lantiq_soc.h b/arch/mips/include/asm/mach-lantiq/xway/lantiq_soc.h
-index 02a64ad6c0cc..5555deb02397 100644
---- a/arch/mips/include/asm/mach-lantiq/xway/lantiq_soc.h
-+++ b/arch/mips/include/asm/mach-lantiq/xway/lantiq_soc.h
-@@ -79,9 +79,6 @@ extern __iomem void *ltq_cgu_membase;
- #define LTQ_EARLY_ASC		KSEG1ADDR(LTQ_ASC1_BASE_ADDR)
- 
- /* EBU - external bus unit */
--#define LTQ_EBU_PCC_CON		0x0090
--#define LTQ_EBU_PCC_IEN		0x00A4
--#define LTQ_EBU_PCC_ISTAT	0x00A0
- #define LTQ_EBU_BUSCON1		0x0064
- #define LTQ_EBU_ADDRSEL1	0x0024
- 
-diff --git a/arch/mips/lantiq/ebu.c b/arch/mips/lantiq/ebu.c
-index b2e84cf83f91..12951eb3c88f 100644
---- a/arch/mips/lantiq/ebu.c
-+++ b/arch/mips/lantiq/ebu.c
-@@ -7,7 +7,11 @@
- #include <linux/bits.h>
- #include <linux/export.h>
- #include <linux/ioport.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
- #include <linux/of.h>
-+#include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/of_address.h>
- 
-@@ -15,6 +19,19 @@
- 
- #define LTQ_EBU_BUSCON0				0x0060
- #define LTQ_EBU_BUSCON_WRDIS			BIT(31)
-+#define LTQ_EBU_PCC_CON				0x0090
-+#define LTQ_EBU_PCC_CON_PCCARD_ON		BIT(0)
-+#define LTQ_EBU_PCC_CON_IREQ_RISING_EDGE        0x2
-+#define LTQ_EBU_PCC_CON_IREQ_FALLING_EDGE       0x4
-+#define LTQ_EBU_PCC_CON_IREQ_BOTH_EDGE          0x6
-+#define LTQ_EBU_PCC_CON_IREQ_DIS                0x8
-+#define LTQ_EBU_PCC_CON_IREQ_HIGH_LEVEL_DETECT  0xa
-+#define LTQ_EBU_PCC_CON_IREQ_LOW_LEVEL_DETECT	0xc
-+#define LTQ_EBU_PCC_CON_IREQ_MASK		0xe
-+#define LTQ_EBU_PCC_ISTAT			0x00a0
-+#define LTQ_EBU_PCC_ISTAT_PCI			BIT(4)
-+#define LTQ_EBU_PCC_IEN				0x00a4
-+#define LTQ_EBU_PCC_IEN_PCI_EN			BIT(4)
- 
- void __iomem *ltq_ebu_membase;
- 
-@@ -52,6 +69,131 @@ static const struct of_device_id of_ebu_ids[] __initconst = {
- 	{ /* sentinel */ },
- };
- 
-+static void ltq_ebu_ack_irq(struct irq_data *d)
-+{
-+	ltq_ebu_w32(ltq_ebu_r32(LTQ_EBU_PCC_ISTAT) | LTQ_EBU_PCC_ISTAT_PCI,
-+		    LTQ_EBU_PCC_ISTAT);
-+}
-+
-+static void ltq_ebu_mask_irq(struct irq_data *d)
-+{
-+	ltq_ebu_w32(ltq_ebu_r32(LTQ_EBU_PCC_IEN) & ~LTQ_EBU_PCC_IEN_PCI_EN,
-+		    LTQ_EBU_PCC_IEN);
-+}
-+
-+static void ltq_ebu_unmask_irq(struct irq_data *d)
-+{
-+	ltq_ebu_w32(ltq_ebu_r32(LTQ_EBU_PCC_IEN) | LTQ_EBU_PCC_IEN_PCI_EN,
-+		    LTQ_EBU_PCC_IEN);
-+}
-+
-+static int ltq_ebu_set_irq_type(struct irq_data *d, unsigned int flow_type)
-+{
-+	u32 val = ltq_ebu_r32(LTQ_EBU_PCC_CON);
-+
-+	val &= ~LTQ_EBU_PCC_CON_IREQ_MASK;
-+
-+	switch (flow_type & IRQ_TYPE_SENSE_MASK) {
-+	case IRQ_TYPE_NONE:
-+		val |= LTQ_EBU_PCC_CON_IREQ_DIS;
-+		break;
-+
-+	case IRQ_TYPE_EDGE_RISING:
-+		val |= LTQ_EBU_PCC_CON_IREQ_RISING_EDGE;
-+		break;
-+
-+	case IRQ_TYPE_EDGE_FALLING:
-+		val |= LTQ_EBU_PCC_CON_IREQ_FALLING_EDGE;
-+		break;
-+
-+	case IRQ_TYPE_EDGE_BOTH:
-+		val |= LTQ_EBU_PCC_CON_IREQ_BOTH_EDGE;
-+		break;
-+
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		val |= LTQ_EBU_PCC_CON_IREQ_HIGH_LEVEL_DETECT;
-+		break;
-+
-+	case IRQ_TYPE_LEVEL_LOW:
-+		val |= LTQ_EBU_PCC_CON_IREQ_LOW_LEVEL_DETECT;
-+		break;
-+
-+	default:
-+		pr_err("Invalid trigger mode %x for IRQ %d\n", flow_type,
-+		       d->irq);
-+		return -EINVAL;
-+	}
-+
-+	ltq_ebu_w32(val, LTQ_EBU_PCC_CON);
-+
-+	return 0;
-+}
-+
-+static void ltq_ebu_irq_handler(struct irq_desc *desc)
-+{
-+	struct irq_domain *domain = irq_desc_get_handler_data(desc);
-+	struct irq_chip *irqchip = irq_desc_get_chip(desc);
-+
-+	chained_irq_enter(irqchip, desc);
-+
-+	generic_handle_irq(irq_find_mapping(domain, 0));
-+
-+	chained_irq_exit(irqchip, desc);
-+}
-+
-+static struct irq_chip ltq_ebu_irq_chip = {
-+	.name = "EBU",
-+	.irq_ack = ltq_ebu_ack_irq,
-+	.irq_mask = ltq_ebu_mask_irq,
-+	.irq_unmask = ltq_ebu_unmask_irq,
-+	.irq_set_type = ltq_ebu_set_irq_type,
-+};
-+
-+static int ltq_ebu_irq_map(struct irq_domain *domain, unsigned int irq,
-+			   irq_hw_number_t hwirq)
-+{
-+	irq_set_chip_and_handler(irq, &ltq_ebu_irq_chip, handle_edge_irq);
-+	irq_set_chip_data(irq, domain->host_data);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops ltq_ebu_irqdomain_ops = {
-+	.map = ltq_ebu_irq_map,
-+	.xlate = irq_domain_xlate_twocell,
-+};
-+
-+static int ltq_ebu_add_irqchip(struct device_node *np)
-+{
-+	struct irq_domain *parent_domain, *domain;
-+	int irq;
-+
-+	parent_domain = irq_find_host(of_irq_find_parent(np));
-+	if (!parent_domain) {
-+		pr_err("%pOF: No interrupt-parent found\n", np);
-+		return -EINVAL;
-+	}
-+
-+	domain = irq_domain_add_linear(np, 1, &ltq_ebu_irqdomain_ops, NULL);
-+	if (!domain) {
-+		pr_err("%pOF: Could not register EBU IRQ domain\n", np);
-+		return -ENOMEM;
-+	}
-+
-+	irq = irq_of_parse_and_map(np, 0);
-+	if (!irq) {
-+		pr_err("%pOF: Failed to map interrupt\n", np);
-+		irq_domain_remove(domain);
-+		return -EINVAL;
-+	}
-+
-+	irq_create_mapping(domain, 0);
-+
-+	irq_set_chained_handler_and_data(irq, ltq_ebu_irq_handler, domain);
-+
-+	return 0;
-+}
-+
- static int __init ltq_ebu_setup(void)
- {
- 	const struct ltq_ebu_data *ebu_data;
-@@ -59,6 +201,7 @@ static int __init ltq_ebu_setup(void)
- 	struct resource res_ebu;
- 	struct device_node *np;
- 	u32 val;
-+	int ret;
- 
- 	np = of_find_matching_node_and_match(NULL, of_ebu_ids, &match);
- 	if (!np)
-@@ -83,6 +226,12 @@ static int __init ltq_ebu_setup(void)
- 		ltq_ebu_w32(val, LTQ_EBU_BUSCON0);
- 	}
- 
-+	if (of_property_read_bool(np, "interrupt-controller")) {
-+		ret = ltq_ebu_add_irqchip(np);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/arch/mips/lantiq/irq.c b/arch/mips/lantiq/irq.c
-index 115b417dfb8e..cb9ab51fa748 100644
---- a/arch/mips/lantiq/irq.c
-+++ b/arch/mips/lantiq/irq.c
-@@ -40,12 +40,6 @@
- /* the performance counter */
- #define LTQ_PERF_IRQ		(INT_NUM_IM4_IRL0 + 31)
- 
--/*
-- * irqs generated by devices attached to the EBU need to be acked in
-- * a special manner
-- */
--#define LTQ_ICU_EBU_IRQ		22
--
- #define ltq_icu_w32(vpe, m, x, y)	\
- 	ltq_w32((x), ltq_icu_membase[vpe] + m*LTQ_ICU_IM_SIZE + (y))
- 
-@@ -300,11 +294,6 @@ static void ltq_hw_irq_handler(struct irq_desc *desc)
- 	irq = __fls(irq);
- 	hwirq = irq + MIPS_CPU_IRQ_CASCADE + (INT_NUM_IM_OFFSET * module);
- 	generic_handle_irq(irq_linear_revmap(ltq_domain, hwirq));
--
--	/* if this is a EBU irq, we need to ack it or get a deadlock */
--	if ((irq == LTQ_ICU_EBU_IRQ) && (module == 0) && LTQ_EBU_PCC_ISTAT)
--		ltq_ebu_w32(ltq_ebu_r32(LTQ_EBU_PCC_ISTAT) | 0x10,
--			LTQ_EBU_PCC_ISTAT);
- }
- 
- static int icu_map(struct irq_domain *d, unsigned int irq, irq_hw_number_t hw)
-diff --git a/arch/mips/pci/pci-lantiq.c b/arch/mips/pci/pci-lantiq.c
-index 1ca42f482130..a3f6ab94ee2c 100644
---- a/arch/mips/pci/pci-lantiq.c
-+++ b/arch/mips/pci/pci-lantiq.c
-@@ -190,10 +190,6 @@ static int ltq_pci_startup(struct platform_device *pdev)
- 	ltq_pci_w32(ltq_pci_r32(PCI_CR_PCI_MOD) | (1 << 24), PCI_CR_PCI_MOD);
- 	wmb();
- 
--	/* setup irq line */
--	ltq_ebu_w32(ltq_ebu_r32(LTQ_EBU_PCC_CON) | 0xc, LTQ_EBU_PCC_CON);
--	ltq_ebu_w32(ltq_ebu_r32(LTQ_EBU_PCC_IEN) | 0x10, LTQ_EBU_PCC_IEN);
--
- 	/* toggle reset pin */
- 	if (gpio_is_valid(reset_gpio)) {
- 		__gpio_set_value(reset_gpio, 0);
--- 
-2.22.0
-
+                  Linus
