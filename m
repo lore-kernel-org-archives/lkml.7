@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4413C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3EBC7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B39220869
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF8A820869
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbfG0Fw0 (ORCPT
+        id S1728639AbfG0Fwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 01:52:26 -0400
-Received: from mga02.intel.com ([134.134.136.20]:40958 "EHLO mga02.intel.com"
+        Sat, 27 Jul 2019 01:52:30 -0400
+Received: from mga02.intel.com ([134.134.136.20]:40960 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbfG0FwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 01:52:19 -0400
+        id S1728342AbfG0FwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 01:52:21 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 22:52:15 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 22:52:16 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,313,1559545200"; 
-   d="scan'208";a="254568592"
+   d="scan'208";a="254568620"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
   by orsmga001.jf.intel.com with ESMTP; 26 Jul 2019 22:52:15 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -40,9 +40,9 @@ To:     Paolo Bonzini <pbonzini@redhat.com>,
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
         Andy Lutomirski <luto@amacapital.net>
-Subject: [RFC PATCH 05/21] x86/sgx: Expose SGX architectural definitions to the kernel
-Date:   Fri, 26 Jul 2019 22:51:58 -0700
-Message-Id: <20190727055214.9282-6-sean.j.christopherson@intel.com>
+Subject: [RFC PATCH 14/21] x86/sgx: Add helpers to expose ECREATE and EINIT to KVM
+Date:   Fri, 26 Jul 2019 22:52:07 -0700
+Message-Id: <20190727055214.9282-15-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190727055214.9282-1-sean.j.christopherson@intel.com>
 References: <20190727055214.9282-1-sean.j.christopherson@intel.com>
@@ -53,107 +53,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KVM will use many of the architectural constants and structs to
-virtualize SGX.
+Provide wrappers around __ecreate() and __einit() to export their
+functionality for use by KVM without having to export a large amount of
+SGX boilerplate code.  Intermediate helpers also shelter KVM from the
+ugliness of overloading the ENCLS return value to encode multiple error
+formats in a single int.
+
+KVM will use the helpers to trap-and-execute ECREATE and EINIT as part
+its SGX virtualization.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/{kernel/cpu/sgx/arch.h => include/asm/sgx_arch.h} | 0
- arch/x86/kernel/cpu/sgx/driver/driver.h                    | 2 +-
- arch/x86/kernel/cpu/sgx/encl.c                             | 2 +-
- arch/x86/kernel/cpu/sgx/encls.h                            | 2 +-
- arch/x86/kernel/cpu/sgx/main.c                             | 2 +-
- arch/x86/kernel/cpu/sgx/sgx.h                              | 3 +--
- tools/testing/selftests/x86/sgx/defines.h                  | 2 +-
- 7 files changed, 6 insertions(+), 7 deletions(-)
- rename arch/x86/{kernel/cpu/sgx/arch.h => include/asm/sgx_arch.h} (100%)
+ arch/x86/Kconfig               |  3 ++
+ arch/x86/include/asm/sgx.h     | 15 ++++++++++
+ arch/x86/kernel/cpu/sgx/virt.c | 55 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 73 insertions(+)
+ create mode 100644 arch/x86/include/asm/sgx.h
 
-diff --git a/arch/x86/kernel/cpu/sgx/arch.h b/arch/x86/include/asm/sgx_arch.h
-similarity index 100%
-rename from arch/x86/kernel/cpu/sgx/arch.h
-rename to arch/x86/include/asm/sgx_arch.h
-diff --git a/arch/x86/kernel/cpu/sgx/driver/driver.h b/arch/x86/kernel/cpu/sgx/driver/driver.h
-index 6ce18c766a5a..4dc133f3c186 100644
---- a/arch/x86/kernel/cpu/sgx/driver/driver.h
-+++ b/arch/x86/kernel/cpu/sgx/driver/driver.h
-@@ -10,7 +10,7 @@
- #include <linux/sched.h>
- #include <linux/workqueue.h>
- #include <uapi/asm/sgx.h>
--#include "../arch.h"
-+#include <asm/sgx_arch.h>
- #include "../encl.h"
- #include "../encls.h"
- #include "../sgx.h"
-diff --git a/arch/x86/kernel/cpu/sgx/encl.c b/arch/x86/kernel/cpu/sgx/encl.c
-index 836c55d4352d..8549fd95f02d 100644
---- a/arch/x86/kernel/cpu/sgx/encl.c
-+++ b/arch/x86/kernel/cpu/sgx/encl.c
-@@ -7,7 +7,7 @@
- #include <linux/shmem_fs.h>
- #include <linux/suspend.h>
- #include <linux/sched/mm.h>
--#include "arch.h"
-+#include <asm/sgx_arch.h>
- #include "encl.h"
- #include "encls.h"
- #include "sgx.h"
-diff --git a/arch/x86/kernel/cpu/sgx/encls.h b/arch/x86/kernel/cpu/sgx/encls.h
-index aea3b9d09936..1b49c7419767 100644
---- a/arch/x86/kernel/cpu/sgx/encls.h
-+++ b/arch/x86/kernel/cpu/sgx/encls.h
-@@ -8,7 +8,7 @@
- #include <linux/rwsem.h>
- #include <linux/types.h>
- #include <asm/asm.h>
--#include "arch.h"
-+#include <asm/sgx_arch.h>
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index c1bdb9f85928..8bbc6a30588d 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1969,6 +1969,9 @@ config INTEL_SGX_VIRTUALIZATION
+ 	  "raw" EPC for the purpose of exposing EPC to a KVM guest, i.e. a
+ 	  virtual machine, via a device node (/dev/sgx/virt_epc by default).
  
- /**
-  * ENCLS_FAULT_FLAG - flag signifying an ENCLS return code is a trapnr
-diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
-index ead827371139..532dd90e09e1 100644
---- a/arch/x86/kernel/cpu/sgx/main.c
-+++ b/arch/x86/kernel/cpu/sgx/main.c
-@@ -10,8 +10,8 @@
- #include <linux/ratelimit.h>
- #include <linux/sched/signal.h>
- #include <linux/slab.h>
-+#include <asm/sgx_arch.h>
- #include "driver/driver.h"
--#include "arch.h"
- #include "encls.h"
- #include "sgx.h"
- #include "virt.h"
-diff --git a/arch/x86/kernel/cpu/sgx/sgx.h b/arch/x86/kernel/cpu/sgx/sgx.h
-index 16cdb935aaa7..748b1633d770 100644
---- a/arch/x86/kernel/cpu/sgx/sgx.h
-+++ b/arch/x86/kernel/cpu/sgx/sgx.h
-@@ -8,10 +8,9 @@
- #include <linux/rwsem.h>
- #include <linux/types.h>
- #include <asm/asm.h>
-+#include <asm/sgx_arch.h>
- #include <uapi/asm/sgx_errno.h>
++	  SGX virtualization also adds helpers that are used by KVM to trap
++	  and execute certain ENCLS instructions on behalf of a KVM guest.
++
+ 	  If unsure, say N.
  
--#include "arch.h"
--
- struct sgx_epc_page {
- 	unsigned long desc;
- 	struct sgx_encl_page *owner;
-diff --git a/tools/testing/selftests/x86/sgx/defines.h b/tools/testing/selftests/x86/sgx/defines.h
-index 3ff73a9d9b93..ebc4c6cf57c4 100644
---- a/tools/testing/selftests/x86/sgx/defines.h
-+++ b/tools/testing/selftests/x86/sgx/defines.h
-@@ -33,7 +33,7 @@ typedef uint64_t u64;
- 	(((~0ULL) - (1ULL << (l)) + 1) & \
- 	 (~0ULL >> (BITS_PER_LONG_LONG - 1 - (h))))
+ config EFI
+diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
+new file mode 100644
+index 000000000000..f0f0176b8e2f
+--- /dev/null
++++ b/arch/x86/include/asm/sgx.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_SGX_H
++#define _ASM_X86_SGX_H
++
++#include <linux/types.h>
++
++struct sgx_pageinfo;
++
++#if IS_ENABLED(CONFIG_KVM_INTEL)
++int sgx_ecreate(struct sgx_pageinfo *pageinfo, void __user *secs, int *trapnr);
++int sgx_einit(void __user *sigstruct, void __user *token,
++	      void __user *secs, u64 *lepubkeyhash, int *trapnr);
++#endif
++
++#endif /* _ASM_X86_SGX_H */
+diff --git a/arch/x86/kernel/cpu/sgx/virt.c b/arch/x86/kernel/cpu/sgx/virt.c
+index 79ee5917a4fc..9e5bf4450bf7 100644
+--- a/arch/x86/kernel/cpu/sgx/virt.c
++++ b/arch/x86/kernel/cpu/sgx/virt.c
+@@ -251,3 +251,58 @@ int __init sgx_virt_epc_init(void)
  
--#include "../../../../../arch/x86/kernel/cpu/sgx/arch.h"
-+#include "../../../../../arch/x86/include/asm/sgx_arch.h"
- #include "../../../../../arch/x86/include/uapi/asm/sgx.h"
- 
- #endif /* TYPES_H */
+ 	return ret;
+ }
++
++#if IS_ENABLED(CONFIG_KVM_INTEL)
++int sgx_ecreate(struct sgx_pageinfo *pageinfo, void __user *secs, int *trapnr)
++{
++	int ret;
++
++	__uaccess_begin();
++	ret = __ecreate(pageinfo, (void *)secs);
++	__uaccess_end();
++
++	if (encls_faulted(ret)) {
++		*trapnr = ENCLS_TRAPNR(ret);
++		return -EFAULT;
++	}
++	return ret;
++}
++EXPORT_SYMBOL_GPL(sgx_ecreate);
++
++static int __sgx_einit(void __user *sigstruct, void __user *token,
++		       void __user *secs)
++{
++	int ret;
++
++	__uaccess_begin();
++	ret =  __einit((void *)sigstruct, (void *)token, (void *)secs);
++	__uaccess_end();
++	return ret;
++}
++
++int sgx_einit(void __user *sigstruct, void __user *token,
++	      void __user *secs, u64 *lepubkeyhash, int *trapnr)
++{
++	int ret;
++
++	if (!boot_cpu_has(X86_FEATURE_SGX_LC)) {
++		ret = __sgx_einit(sigstruct, token, secs);
++	} else {
++		preempt_disable();
++		sgx_update_lepubkeyhash_msrs(lepubkeyhash, false);
++		ret = __sgx_einit(sigstruct, token, secs);
++		if (ret == SGX_INVALID_EINITTOKEN) {
++			sgx_update_lepubkeyhash_msrs(lepubkeyhash, true);
++			ret = __sgx_einit(sigstruct, token, secs);
++		}
++		preempt_enable();
++	}
++
++	if (encls_faulted(ret)) {
++		*trapnr = ENCLS_TRAPNR(ret);
++		return -EFAULT;
++	}
++	return ret;
++}
++EXPORT_SYMBOL_GPL(sgx_einit);
++#endif
 -- 
 2.22.0
 
