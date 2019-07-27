@@ -2,145 +2,183 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52209C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFC8C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 494522085A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564220806;
-	bh=BGA5k1Ua4iwHHhg8twY7qUz0ZWvcvVd41aByooCam/0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Ij3FMZygGXSwX67K7TbZ+uI62kbJ7CDPVVwCSUccKm9+3S+qyBUXlBuOXq5delDVW
-	 bv34OKenGyo7Zmc/Yx7aZ/scZNrJ32w9OFaI/XDyHIX7xnWa08JLImYlXW1+dv7RKO
-	 CZJty8+QxE5crEgmQpG3FWA/SZspZBBQ0Uf6rJJw=
+	by mail.kernel.org (Postfix) with ESMTP id DF93A2084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387585AbfG0Jqp (ORCPT
+        id S1728724AbfG0J5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 05:46:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727885AbfG0Jqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 05:46:44 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEFA920651;
-        Sat, 27 Jul 2019 09:46:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564220803;
-        bh=BGA5k1Ua4iwHHhg8twY7qUz0ZWvcvVd41aByooCam/0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uH9AV7Df2pI/ygeVXHowKTMVg2DpJEMnlWIEUEfGs+21KOYNM66akXmo5GMb8iXND
-         yq1UOTs+aKBGP44cHeayzCHHeYmOCcSRuGkXi9/VlpTVvVFTC/UgQxbz78ynXDU3Mx
-         Sp4q6jngGNUyHg3/sKc3btiQjZLgTRK+uWWv/HV8=
-Date:   Sat, 27 Jul 2019 18:46:38 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Numfor Mbiziwo-Tiapo <nums@google.com>, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, songliubraving@fb.com,
-        mbd@fb.com, linux-kernel@vger.kernel.org, irogers@google.com,
-        eranian@google.com
-Subject: Re: [PATCH 3/3] Fix insn.c misaligned address error
-Message-Id: <20190727184638.3263eb76c3cbde95f9896210@kernel.org>
-In-Reply-To: <20190726193806.GB24867@kernel.org>
-References: <20190724184512.162887-1-nums@google.com>
-        <20190724184512.162887-4-nums@google.com>
-        <20190726193806.GB24867@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 27 Jul 2019 05:57:38 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:44623 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727885AbfG0J5i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 05:57:38 -0400
+X-Originating-IP: 176.158.46.5
+Received: from aptenodytes (static-176-158-46-5.ftth.abo.bbox.fr [176.158.46.5])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id BC06740004;
+        Sat, 27 Jul 2019 09:57:29 +0000 (UTC)
+Date:   Sat, 27 Jul 2019 11:57:29 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v7 0/4] HEVC/H.265 stateless support for V4L2 and Cedrus
+Message-ID: <20190727095729.GD16618@aptenodytes>
+References: <20190725185602.22522-1-paul.kocialkowski@bootlin.com>
+ <7fa38a2c-8e16-5e88-d073-1d04e9feaa84@xs4all.nl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <7fa38a2c-8e16-5e88-d073-1d04e9feaa84@xs4all.nl>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 16:38:06 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Hi Hans,
 
-> Em Wed, Jul 24, 2019 at 11:45:12AM -0700, Numfor Mbiziwo-Tiapo escreveu:
-> > The ubsan (undefined behavior sanitizer) version of perf throws an
-> > error on the 'x86 instruction decoder - new instructions' function
-> > of perf test.
+On Fri 26 Jul 19, 10:33, Hans Verkuil wrote:
+> On 7/25/19 8:55 PM, Paul Kocialkowski wrote:
+> > HEVC/H.265 stateless support for V4L2 and Cedrus
 > > 
-> > To reproduce this run:
-> > make -C tools/perf USE_CLANG=1 EXTRA_CFLAGS="-fsanitize=undefined"
+> > This is early support for HEVC/H.265 stateless decoding in V4L2,
+> > including both definitions and driver support for the Cedrus VPU
+> > driver, which concerns Allwinner devices.
 > > 
-> > then run: tools/perf/perf test 62 -v
+> > A specific pixel format is introduced for the HEVC slice format and
+> > controls are provided to pass the bitstream metadata to the decoder.
+> > Some bitstream extensions are intentionally not supported at this point.
 > > 
-> > The error occurs in the __get_next macro (line 34) where an int is
-> > read from a potentially unaligned address. Using memcpy instead of
-> > assignment from an unaligned pointer.
-> 
-> Since this came from the kernel, don't we have to fix it there as well?
-> Masami, Adrian?
-
-I guess we don't need it, since x86 can access "unaligned address" and
-x86 insn decoder in kernel runs only on x86. I'm not sure about perf's
-that part. Maybe if we run it on other arch as cross-arch application,
-it may cause unaligned pointer issue.
-
-Thank you,
-
-> 
-> [acme@quaco perf]$ find . -name insn.c
-> ./arch/x86/lib/insn.c
-> ./arch/arm/kernel/insn.c
-> ./arch/arm64/kernel/insn.c
-> ./tools/objtool/arch/x86/lib/insn.c
-> ./tools/perf/util/intel-pt-decoder/insn.c
-> [acme@quaco perf]$ diff -u ./tools/perf/util/intel-pt-decoder/insn.c ./arch/x86/lib/insn.c
-> --- ./tools/perf/util/intel-pt-decoder/insn.c	2019-07-06 16:59:05.734265998 -0300
-> +++ ./arch/x86/lib/insn.c	2019-07-06 16:59:01.369202998 -0300
-> @@ -10,8 +10,8 @@
->  #else
->  #include <string.h>
->  #endif
-> -#include "inat.h"
-> -#include "insn.h"
-> +#include <asm/inat.h>
-> +#include <asm/insn.h>
-> 
->  /* Verify next sizeof(t) bytes can be on the same instruction */
->  #define validate_next(t, insn, n)	\
-> [acme@quaco perf]$
-> 
-> 
-> - Arnaldo
->  
-> > Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-> > ---
-> >  tools/perf/util/intel-pt-decoder/insn.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > Since this is the first proposal for stateless HEVC/H.265 support in
+> > V4L2, reviews and comments about the controls definitions are
+> > particularly welcome.
 > > 
-> > diff --git a/tools/perf/util/intel-pt-decoder/insn.c b/tools/perf/util/intel-pt-decoder/insn.c
-> > index ca983e2bea8b..de1944c60aa9 100644
-> > --- a/tools/perf/util/intel-pt-decoder/insn.c
-> > +++ b/tools/perf/util/intel-pt-decoder/insn.c
-> > @@ -31,7 +31,8 @@
-> >  	((insn)->next_byte + sizeof(t) + n <= (insn)->end_kaddr)
-> >  
-> >  #define __get_next(t, insn)	\
-> > -	({ t r = *(t*)insn->next_byte; insn->next_byte += sizeof(t); r; })
-> > +	({ t r; memcpy(&r, insn->next_byte, sizeof(t)); \
-> > +		insn->next_byte += sizeof(t); r; })
-> >  
-> >  #define __peek_nbyte_next(t, insn, n)	\
-> >  	({ t r = *(t*)((insn)->next_byte + n); r; })
-> > -- 
-> > 2.22.0.657.g960e92d24f-goog
+> > On the Cedrus side, the H.265 implementation covers frame pictures
+> > with both uni-directional and bi-direction prediction modes (P/B
+> > slices). Field pictures (interleaved), scaling lists and 10-bit output
+> > are not supported at this point.
+> > 
+> > Changes since v6:
+> > * Rebased on latest media tree from Hans;
 > 
-> -- 
-> 
-> - Arnaldo
+> Which tree is that? Or are you just referring our media_tree master
+> branch? (which isn't 'my' tree :-) )
 
+I'm usually rebasing on the tree you use to send PRs to Mauro, at:
+https://git.linuxtv.org/hverkuil/media_tree.git/
+
+which is usually the best up-to-date stateless codec support tree :)
+
+Cheers,
+
+Paul
+
+> Regards,
+> 
+> 	Hans
+> 
+> > * Reordered some fields to avoid holes and multi-padding;
+> > * Updated the documentation.
+> > 
+> > Changes since v5:
+> > * Rebased atop latest next media tree;
+> > * Moved to flags instead of u8 fields;
+> > * Added padding to ensure 64-bit alignment
+> >   (tested with GDB on 32 and 64-bit architectures);
+> > * Reworked cedrus H.265 driver support a bit for flags;
+> > * Split off codec-specific control validation and init;
+> > * Added HEVC controls fields cleanup at std_validate to allow reliable
+> >   control comparison with memcmp;
+> > * Fixed various misc reported mistakes.
+> > 
+> > Changes since v4:
+> > * Rebased atop latest H.254 series.
+> > 
+> > Changes since v3:
+> > * Updated commit messages;
+> > * Updated CID base to avoid conflicts;
+> > * Used cpu_to_le32 for packed le32 data;
+> > * Fixed misc minor issues in the drive code;
+> > * Made it clear in the docs that the API will evolve;
+> > * Made the pixfmt private and split commits about it.
+> > 
+> > Changes since v2:
+> > * Moved headers to non-public API;
+> > * Added H265 capability for A64 and H5;
+> > * Moved docs to ext-ctrls-codec.rst;
+> > * Mentionned sections of the spec in the docs;
+> > * Added padding to control structures for 32-bit alignment;
+> > * Made write function use void/size in bytes;
+> > * Reduced the number of arguments to helpers when possible;
+> > * Removed PHYS_OFFSET since we already set PFN_OFFSET;
+> > * Added comments where suggested;
+> > * Moved to timestamp for references instead of index;
+> > * Fixed some style issues reported by checkpatch.
+> > 
+> > Changes since v1:
+> > * Added a H.265 capability to whitelist relevant platforms;
+> > * Switched over to tags instead of buffer indices in the DPB
+> > * Declared variable in their reduced scope as suggested;
+> > * Added the H.265/HEVC spec to the biblio;
+> > * Used in-doc references to the spec and the required APIs;
+> > * Removed debugging leftovers.
+> > 
+> > Cheers!
+> > 
+> > Paul Kocialkowski (4):
+> >   media: v4l2-ctrl: Add a comment on why we zero out compound controls
+> >     fields
+> >   media: v4l: Add definitions for the HEVC slice controls
+> >   media: pixfmt: Document the HEVC slice pixel format
+> >   media: cedrus: Add HEVC/H.265 decoding support
+> > 
+> >  Documentation/media/uapi/v4l/biblio.rst       |   9 +
+> >  .../media/uapi/v4l/ext-ctrls-codec.rst        | 486 +++++++++++++-
+> >  .../media/uapi/v4l/pixfmt-compressed.rst      |  21 +
+> >  .../media/uapi/v4l/vidioc-queryctrl.rst       |  18 +
+> >  .../media/videodev2.h.rst.exceptions          |   3 +
+> >  drivers/media/v4l2-core/v4l2-ctrls.c          |  93 +++
+> >  drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
+> >  drivers/staging/media/sunxi/cedrus/Makefile   |   2 +-
+> >  drivers/staging/media/sunxi/cedrus/cedrus.c   |  31 +-
+> >  drivers/staging/media/sunxi/cedrus/cedrus.h   |  18 +
+> >  .../staging/media/sunxi/cedrus/cedrus_dec.c   |   9 +
+> >  .../staging/media/sunxi/cedrus/cedrus_h265.c  | 616 ++++++++++++++++++
+> >  .../staging/media/sunxi/cedrus/cedrus_hw.c    |   4 +
+> >  .../staging/media/sunxi/cedrus/cedrus_regs.h  | 271 ++++++++
+> >  .../staging/media/sunxi/cedrus/cedrus_video.c |  10 +
+> >  include/media/hevc-ctrls.h                    | 198 ++++++
+> >  include/media/v4l2-ctrls.h                    |   7 +
+> >  17 files changed, 1789 insertions(+), 8 deletions(-)
+> >  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+> >  create mode 100644 include/media/hevc-ctrls.h
+> > 
+> 
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
