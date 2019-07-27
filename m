@@ -2,113 +2,105 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF38C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D515C7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 166482070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 048E12082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 12:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cG6Q289S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTmYM1hA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbfG0MRv (ORCPT
+        id S2387543AbfG0M0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 08:17:51 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41339 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728797AbfG0MRu (ORCPT
+        Sat, 27 Jul 2019 08:26:53 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44882 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728666AbfG0M0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 08:17:50 -0400
-Received: by mail-oi1-f193.google.com with SMTP id g7so42149640oia.8;
-        Sat, 27 Jul 2019 05:17:50 -0700 (PDT)
+        Sat, 27 Jul 2019 08:26:53 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i18so26013447pgl.11;
+        Sat, 27 Jul 2019 05:26:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CNhzHRz2iYbGXTP3IdkSPFEl3dlcBhQ0pu5ysWhbMII=;
-        b=cG6Q289SNMExyqzT4BzCmFr+agW8QLE1G4qTS2lsKXwVxXNT3vnliR9NUCiJkWb4xa
-         vv0mIgP2g9+350JqUUFYxCyArFuss1h1e6tua1+bGGeJIhxODu3Ca8AYeU1w9FP/v8iI
-         MhZRHQjeTZU9ZhOSTQHw5+MavL3KVbpg3gYGy75V492PRmtmOQP1h0HsWUIrqQYsJEE6
-         VGA92fXomnLb+NbLAV1HnkMtcWqbTipnp/jgiQRN2/fkFoHYEBEpHZX99vlLQQe95XU+
-         zY7eAKlSeOxuKctyhesPANP5vpf2YzPuKkrEdLbrHf10PIAjG8cms8yoMCAMLto5iGBG
-         3UHg==
+        bh=ZLbr+/N0UmJ/GLrZO46NMnnhsZmq5MgztPMhV/uqWqo=;
+        b=dTmYM1hAc2nBjU3MEqnGM2SxSTmR0iY5EIzZkTRJqZe0iCnDfoR4QVIAO9RRieD1IS
+         CoLBh0NQ6YlHgub37tr0HfrdSJpEc8GuA4tT5OAWTFvhvQGrSQKA56ZkJDkvrvOnx1bp
+         N9zOAsufz7zF8IfmURm0ZeFdRPqNGFmOG6/RmYaN1tUaosDkBXfsN9j3oxl5TvheufyV
+         IUPefVg6n34qWbkPlYYrn7NDYZEtSfqttmhFWQGklzzXHh/cNWudNV6eDYo5JdMPpYir
+         Cu+bmb6WLMTg1rQmvoqEfdF9bqvbSYbD4cE6ttlxjV5irc4gwEeP2Cui6/6t7oBjNlva
+         bzUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CNhzHRz2iYbGXTP3IdkSPFEl3dlcBhQ0pu5ysWhbMII=;
-        b=XurtJnElZr6EQ9oVtfq357hi7cGXNm6F+PzYj8QczJ1AGjHrFfWO/SV9DwdBrw/NPY
-         vXHH6MMj0j/2ZX0hvN6xtjK8T+M/utgWJSFES5RDs4Mz9mnisOi59zhreO6N6Fwq7uar
-         k6GVWyP/WuumGDYZXw7svprGUHoC6qM38Z3BN+Pjqdj6X0VLKoTMGfHAklwHbw6VA2Ws
-         mkY++fhUvF7sggK+819SwOg1DpPBXgHMLchsQkNvVovsQJLBPdjrAQJAYxE+kL6r43lD
-         rKTl3/gD+0Pv2artgkmxloXI56kSdfUmrDHBS7E48V/bXwwMXDG7sUB7F8E46LCNjPuS
-         NG1A==
-X-Gm-Message-State: APjAAAUlx8qCb+pO9jOKChq0Nsggo1kML90SXEXEFdWMIoaiNpvYT1i/
-        fl840f6lfLmhp/IL4gKVu8uojdfkIVqorTYOQV7Xow==
-X-Google-Smtp-Source: APXvYqwYmHppUXdfjPmHAHr52sRX654Hjj0LrUImUSO2z34wUj15h3dYIjxdcEN6XIljQQh4wx43Te/Ly0JritXHa9A=
-X-Received: by 2002:aca:4ad2:: with SMTP id x201mr48673019oia.129.1564229869688;
- Sat, 27 Jul 2019 05:17:49 -0700 (PDT)
+        bh=ZLbr+/N0UmJ/GLrZO46NMnnhsZmq5MgztPMhV/uqWqo=;
+        b=SacQMQ9pLUJIc4/OllOqOY06ZX5CXSy2SWaxEfhfMA0EM3ujDjAXmHqEje1ELtfjoZ
+         LmuTKw71EeHwDRx/fOlADp8L7lwiOF0EFjkPjGBJGxAdPklDpTc3j1r3l13p7pZRQXBU
+         OD07+6GT6psa23m3FsEOvSrleltul7huvBzFogqdzeGfGfR2WD7yn27IOEuHORSbhnpL
+         3EjCT6LHWxgx1GP3TTuCgloPkSRBTcR6aVmOh/i62ve2bu/fA7WnI91VN0USm3YFM4Eu
+         7TUoMmmozK9XxcRcAMTf5zyOgGfqmVIiLbVRxxsdXxEHpmgOmCavUz6x8Rpb68dsbNwi
+         PjIA==
+X-Gm-Message-State: APjAAAWbbDZyCvU9IsuBVmyBO4hDOrptr56Gfkl8BtfaGu2JjQjIlNSo
+        i4/4g8/4dGoe9Bsu/KjrEPl8dbZNeABaipasmm8=
+X-Google-Smtp-Source: APXvYqxPB5dVV9tFEHC321JcL22pSpM+OBrkQL+ENpCdnQiZpfjfNFDkvGXGkXbkfY/BZgCF+mSdviVLyOxaV/QllfI=
+X-Received: by 2002:a63:6eca:: with SMTP id j193mr20517551pgc.74.1564230412476;
+ Sat, 27 Jul 2019 05:26:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <1564083776-20540-1-git-send-email-clabbe@baylibre.com> <1564083776-20540-3-git-send-email-clabbe@baylibre.com>
-In-Reply-To: <1564083776-20540-3-git-send-email-clabbe@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sat, 27 Jul 2019 14:17:38 +0200
-Message-ID: <CAFBinCD7pgUaBJgeGHTOu-uZRA9a6K2kxPsu+huKe23wcnKPoA@mail.gmail.com>
-Subject: Re: [PATCH 2/4] crypto: amlogic: Add crypto accelerator for amlogic GXL
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        khilman@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, baylibre-upstreaming@groups.io,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
+References: <20190720150511.95076-1-luzmaximilian@gmail.com>
+ <20190720150511.95076-2-luzmaximilian@gmail.com> <CAHp75Ve+3c-TFeN3Dh-DB75Rjft8mY2DA8vNkrFyp7JK-ZOjDA@mail.gmail.com>
+ <20190727091541.GD795@penguin>
+In-Reply-To: <20190727091541.GD795@penguin>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 27 Jul 2019 15:26:41 +0300
+Message-ID: <CAHp75VdsL+-bhAUcxLKFKLZedN3gFD3jxnhELD1RtKGSHdagjw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] platform/x86: surfacepro3_button: Fix device check
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Corentin,
-
-it's great to see you working on this :)
-
-On Thu, Jul 25, 2019 at 9:45 PM Corentin Labbe <clabbe@baylibre.com> wrote:
+On Sat, Jul 27, 2019 at 12:15 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 >
-> This patch adds support for the amlogic GXL cryptographic offloader present
-> on GXL SoCs.
+> On Thu, Jul 25, 2019 at 08:57:53PM +0300, Andy Shevchenko wrote:
+> > On Sat, Jul 20, 2019 at 6:05 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+> > >
+> > > Do not use the surfacepro3_button driver on newer Microsoft Surface
+> > > models, only use it on the Surface Pro 3 and 4. Newer models (5th, 6th
+> > > and possibly future generations) use the same device as the Surface Pro
+> > > 4 to represent their volume and power buttons (MSHW0040), but their
+> > > actual implementation is significantly different. This patch ensures
+> > > that the surfacepro3_button driver is only used on the Pro 3 and 4
+> > > models, allowing a different driver to bind on other models.
+> > >
+> >
+> > Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> >
+> > assuming it will go thru Input subsystem.
 >
-> This driver supports AES cipher in CBC/ECB mode.
->
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> ---
->  drivers/crypto/Kconfig                  |   2 +
->  drivers/crypto/Makefile                 |   1 +
->  drivers/crypto/amlogic/Kconfig          |  24 ++
->  drivers/crypto/amlogic/Makefile         |   2 +
->  drivers/crypto/amlogic/amlogic-cipher.c | 358 ++++++++++++++++++++++++
->  drivers/crypto/amlogic/amlogic-core.c   | 326 +++++++++++++++++++++
->  drivers/crypto/amlogic/amlogic.h        | 172 ++++++++++++
->  7 files changed, 885 insertions(+)
->  create mode 100644 drivers/crypto/amlogic/Kconfig
->  create mode 100644 drivers/crypto/amlogic/Makefile
->  create mode 100644 drivers/crypto/amlogic/amlogic-cipher.c
->  create mode 100644 drivers/crypto/amlogic/amlogic-core.c
->  create mode 100644 drivers/crypto/amlogic/amlogic.h
-there are two different crypto IPs on Amlogic SoCs:
-- GXL and newer use the "BLKMV" crypto IP
-- GXBB, Meson8/Meson8b/Meson8m2 (and probably older SoCs) use the
-"NDMA" crypto IP
+> I can take it, but I do not think it is dependent on the other change
+> and thus can go through platform tree as well.
 
-personally I think it makes sense to either have the IP name (blkmv)
-or SoC name (GXL) in the file or directory names as well as being
-consistent with that in the Kconfig option names
+Pkease, take it. I do not expect any changes to the driver this cycle.
 
-(I have no experience with the crypto framework so I cannot comment on
-the driver implementation itself)
-
-
-Martin
+-- 
+With Best Regards,
+Andy Shevchenko
