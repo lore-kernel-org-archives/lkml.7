@@ -2,145 +2,111 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 796BEC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7348BC76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5942086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 319E32086D
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:42:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="JZAoIjzV"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="KqStexPZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388163AbfG0Tib (ORCPT
+        id S2388181AbfG0TmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 15:38:31 -0400
-Received: from gateway34.websitewelcome.com ([192.185.148.212]:27597 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387841AbfG0Tia (ORCPT
+        Sat, 27 Jul 2019 15:42:21 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54828 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387890AbfG0TmV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 15:38:30 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id 122A013FAB
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 14:38:29 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id rSWThXrZ12qH7rSWThabCt; Sat, 27 Jul 2019 14:38:29 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=GVf5VLxKnLvpzVnJ7LmIRbu97S4Pxy36sYuZZBZFo+8=; b=JZAoIjzVFgnX1aULunY1fS3Y2t
-        ACrEzlWeca492SNWQmJODErr6QTZF5Nkb0kMKHx6YAedbTJBMsvf1xisqSsFTle7y4l6ebJ4a70W4
-        X1LpRfcvUtXIW1LoCmZl3pFdkKTBF9QdznbrGk8qDFwnYMtgqz3gplHQkcpZdW9SbgFmxprlhwIQU
-        vCS1jFSzVAijsB4uUPJMzgvZUD37N1zhdbZMWvweeCJi4EYG5MSDomSdimavuxRL0xU7Lp2FoS9ZW
-        PZKl0ApJIg0e07x7g0+WDnhKvuvfQ8yjOR97ysmzny1vUBYaK9rbnEm6Ok+ZBcMSoMTngwSk83yUX
-        E8rVpQ3w==;
-Received: from [201.162.240.64] (port=27666 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hrSWS-000572-CS; Sat, 27 Jul 2019 14:38:28 -0500
-Subject: Re: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc2
+        Sat, 27 Jul 2019 15:42:21 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p74so50535002wme.4
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 12:42:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RSN/mhoh31wRp3jEuzxki3I6BJGkTgEs7NdlZMu4zVg=;
+        b=KqStexPZJJ3/iqTKtWc8M9us5pj4+8mw+Rde81iFF1DpU46bpIuzLIdyFzZi0OHSeU
+         G51Had6XkheksEsyb6bZznVtU+JS65TFph/7s8T39urSrVT7UqyegbuVFs2jOcYbQayh
+         CHpe9MTS8LcD3ktZodYIurlgaLH7bjpu8gQlHKP0yP8o5azdPIc1z+4Lc7rX3gtjSf/Q
+         1DjkgRBpZVEPoykVWpJJcX5Ng3rG0ODouA9ZiTqftiqNcOB/GYD0wCuJE1roTXewiojU
+         CPwESkmz0qPBnOpNPIqsofg9geWiLxIwmw+pdmWCkMaVHXRsTSB9rTiELnGvYhltHES+
+         n4DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RSN/mhoh31wRp3jEuzxki3I6BJGkTgEs7NdlZMu4zVg=;
+        b=QgATHVd5K5ZvIeHxMt4+bh2pyDuu2Iz/IZ462fHf7ZyLXLvmkRMZYYGcVUbCwZvOIP
+         EXTjVj+5BWHlmeXqTIqoYJyL5nXWiads7iuFAYAF+z1gGoc3AT4eeu/7Ob59rSuNqgb+
+         5synoMvSffuX5dSq8o8lefrqGUUk3YMxeYkq7lYDHTEJv6WW21H5zdTtzqjywP3+y2r5
+         LpARzNRvIXXzwAglsUxbYTvH9aDPb1uTqtAHPxGnr8FLfcmj3Df17AdyWIG3F37sRpv8
+         V+EU/35+/nzV8AnU6MX0bP5Q7YLxtALqrXOaerK/98NmropxvNVDZIZLyDNrWJ3STX27
+         6z4w==
+X-Gm-Message-State: APjAAAWkAA30tUCh3kXYnp9auGGrb7RIdVvkGh1toAkvcP1wJbqBwOou
+        T/cmzNFPh9jSOSpUuWzDVZQ=
+X-Google-Smtp-Source: APXvYqwFlDCMjphiT4N5vkY15TtOQFwee1uUINRpiQAhjpb7EiBMzHLsob5pwzop5OzRSMrFRgz7bw==
+X-Received: by 2002:a1c:f90f:: with SMTP id x15mr13907303wmh.69.1564256539073;
+        Sat, 27 Jul 2019 12:42:19 -0700 (PDT)
+Received: from brauner.io ([213.220.153.21])
+        by smtp.gmail.com with ESMTPSA id 4sm130694074wro.78.2019.07.27.12.42.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 27 Jul 2019 12:42:18 -0700 (PDT)
+Date:   Sat, 27 Jul 2019 21:42:17 +0200
+From:   Christian Brauner <christian@brauner.io>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-References: <20190726025521.GA1824@embeddedor>
- <CAHk-=whw2Pdh-gAObS2wt4pF6Pgus9aHNS2WaVBkgYGsmaZyJw@mail.gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <d324cb7d-9991-e913-8254-48cab2066f76@embeddedor.com>
-Date:   Sat, 27 Jul 2019 14:38:26 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tejun Heo <tj@kernel.org>, David Howells <dhowells@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v2 1/2] pidfd: add P_PIDFD to waitid()
+Message-ID: <20190727194217.izpetvy5fz4dqj7q@brauner.io>
+References: <20190727085201.11743-1-christian@brauner.io>
+ <20190727085201.11743-2-christian@brauner.io>
+ <CAHk-=whrh5+aHmgqP9YhZ-yzCtUWT8fPi08ZSJdxusx7aHXOQQ@mail.gmail.com>
+ <CAHk-=wgtGyQTLLb7m=jkMY5hOcj+TsOKSoeoJC7Jc1_h_XL+tw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=whw2Pdh-gAObS2wt4pF6Pgus9aHNS2WaVBkgYGsmaZyJw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.240.64
-X-Source-L: No
-X-Exim-ID: 1hrSWS-000572-CS
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [201.162.240.64]:27666
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgtGyQTLLb7m=jkMY5hOcj+TsOKSoeoJC7Jc1_h_XL+tw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/27/19 1:08 PM, Linus Torvalds wrote:
-
+On Sat, Jul 27, 2019 at 09:41:25AM -0700, Linus Torvalds wrote:
+> On Sat, Jul 27, 2019 at 9:28 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > Something like
+> >
+> >   struct pid *fd_to_pid(unsigned int fd)
+> >   {
+> >         struct fd f;
+> >         struct pid *pid;
+> ...
 > 
-> Ok, I have tried re-pulling and if it passes my build tests cleanly
-> I'll push the result out.
+> I forgot to put my usual disclaimer about TOTALLY UNTESTED GARBAGE in
+> that email. I want to make that part clear: that code snippet was
+> meant as a rough guide of direction, not as a "this works".
 > 
+> Hopefully that was clear.
 
-Awesome. :)
+Yeah. I don't take code someone else has written without verifying or
+testing into my own code. And I hope people do the same with mine. :)
 
-Thanks!
---
-Gustavo
+Christian
