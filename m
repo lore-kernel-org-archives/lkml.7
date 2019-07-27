@@ -2,254 +2,197 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9FCC7618F
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 03:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B613C76190
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 03:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20EDA217D9
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 03:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 547782084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 03:42:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nsQ65Ko1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfLhz37N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbfG0DVg (ORCPT
+        id S1727539AbfG0DmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 23:21:36 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45356 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbfG0DVf (ORCPT
+        Fri, 26 Jul 2019 23:42:12 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51442 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfG0DmL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 23:21:35 -0400
-Received: by mail-pg1-f195.google.com with SMTP id o13so25601730pgp.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jul 2019 20:21:35 -0700 (PDT)
+        Fri, 26 Jul 2019 23:42:11 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 207so49474197wma.1;
+        Fri, 26 Jul 2019 20:42:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=qdYopa8yacP8k3G7bShYLnBRz0nWK8PU35rQCw1ZN1U=;
-        b=nsQ65Ko1z5pzcCks5lqtmh6ul2FpWxtYovxWQau5L16ZcX1lv8mP+0BBd/aRPiHkAN
-         g7exeNQE5zRnvFLjl8K2Z/ctY9jHbKKyBTnShPFN0/kccJi0vx1kObSwnS3mvOv960vi
-         IEY3NwTrYHMSa/UdidNcYNWVMOLXdXVm9561Pj3UomW5fqptdjGwcMVm0bVL+zQsZtHr
-         Gsl998I75up31k+Fm3DlKOOMMo+q0sw8Ppe2u8mKG7+NRSDvRUCzdHjlc7ORFiboDvwe
-         jCMKu7vtfH712BTGbv9t7lD4sT8p6i1/gjRyzUFev7fd33H0pq9WYW3UbvmNVGfz/PXd
-         bUqg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GtjXx6dhxxQEndICY3GDSb8+k6lA9ea3LjN2zJWwnzw=;
+        b=RfLhz37NwYURMNZm6MESuI2ly21oa335WCxlaJEWrFHbYc0IObYHRC+zVUlPL3Te85
+         c1Hec55I65/nKVnJNmvqzHheAx41L9N4EVL7ZTXNQznol0E/Aw9fZOKKExDayHF04Dji
+         P19z9PbxvvtV+PbOdAbDGowNLfw9z2J6anvsTegXymz5Mxi/uWLl/EMKjHW5uiDNUvF3
+         Ug7n/NjwI16zia0RqdsoecdXvCe35FIRz7jNha1WBs52ICEF4kwLkaOKIPB/L7AZWbrj
+         pJ2BEnRpmi9lh5FTaZvytr/nWVe3eiG2urR4oExRAfdalkkyByfZ+8VaVS+2mvGGsr2U
+         NcIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qdYopa8yacP8k3G7bShYLnBRz0nWK8PU35rQCw1ZN1U=;
-        b=XIvphwoeED0RuicpGKtEe1+WyITd+NEZJg7dbUrMZyvlJtfh3NJi8cccuxAVX2sJd5
-         nk5Dsn4SpKPq5SxW2gR/3DVj7WUCYQ7F+eZmn2KxdE38jGY/5NULMcd+uuHMbKFe9RIS
-         uGk+l8Jybnk8F7zMucin8dwvxEu1ALGNUPAcCB48ZPPEiJ4hOrRdLP8Th1uXQnAuZILQ
-         7Y+vcxDGqmksAmaHNGJHs+pyRI/qvwGGp22CUSg3cA7uu0oyJR+lrSgR+N1tejMxW+hg
-         5ykIR40QTbEDd5uup6UV9ms+xohfarMzN9UqKquEjafuz3KmRVTwsFl55Liq/cCKtyBL
-         WclQ==
-X-Gm-Message-State: APjAAAXgZapRsoC+UhhjDZqXntwG/By0dbXe13YRJ5o1zW0dshA3NVW0
-        pOr9CiMENfCdyT9mKT67WYAd8RxrUgU=
-X-Google-Smtp-Source: APXvYqzl+AiJCet1QIj0gHRy0lsfILO65tC8BHEjApS/9NVSPIPN9YvqLiq2CfgBfXks+3U4hgjzfQ==
-X-Received: by 2002:a62:5252:: with SMTP id g79mr25145264pfb.18.1564197694522;
-        Fri, 26 Jul 2019 20:21:34 -0700 (PDT)
-Received: from ubuntu.localdomain ([104.238.150.158])
-        by smtp.gmail.com with ESMTPSA id b190sm44632040pga.37.2019.07.26.20.21.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 20:21:33 -0700 (PDT)
-From:   Muchun Song <smuchun@gmail.com>
-To:     gregkh@linuxfoundation.org, rafael@kernel.org, mojha@codeaurora.org
-Cc:     benh@kernel.crashing.org, prsood@codeaurora.org,
-        gkohli@codeaurora.org, songmuchun@bytedance.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7] driver core: Fix use-after-free and double free on glue directory
-Date:   Sat, 27 Jul 2019 11:21:22 +0800
-Message-Id: <20190727032122.24639-1-smuchun@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GtjXx6dhxxQEndICY3GDSb8+k6lA9ea3LjN2zJWwnzw=;
+        b=ajr50UJJtCZEZaL+s2Ur1Zby0rEsZw7i7KvxrkN48Nhnuc16CAF8pqGlIg+MirHdPT
+         pGU8ThZYBJgUZgJphyCpqILW/DyRDCc9SnTHPnAvTUs3RmI1q23K1RphgMPdIqjAZkRj
+         T+RPppO9NDEsUelrAvJw9R2urfFimn0cCPwnF2rzCiMiltUiSJ3HkrTRGqrpq7jTDXA+
+         /UjRR2jpWsXeyMRn8su08B8NzrwBshITGasgFnHvrVRowQoZaW/CZuAFpe1+tfU3uwVJ
+         RXL8oWJ2z5OBr9DkXb8+jWbDhA2X2/WxQyQ4+3B0oNYsmZZp2Hamc9kxrtgvbtP1IJ4q
+         mwTg==
+X-Gm-Message-State: APjAAAWPq51dYtYgPjJ6VTbC+dMYmiLdb4tZNZQYwMbL1hq5wn6zGXqS
+        OAgmdqjRzJnvA9ye20lNQQ4=
+X-Google-Smtp-Source: APXvYqyz/Ub40MgewoA7607MxEBAulrgRZL1AzmGhSYaA5fhJQR+19oIcFOVwCyv2W9hcVfJuEBa/g==
+X-Received: by 2002:a1c:6a11:: with SMTP id f17mr81602635wmc.110.1564198927977;
+        Fri, 26 Jul 2019 20:42:07 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id a6sm40904454wmj.15.2019.07.26.20.42.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 26 Jul 2019 20:42:07 -0700 (PDT)
+Date:   Fri, 26 Jul 2019 20:42:05 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Chris Down <chris@chrisdown.name>
+Subject: Re: mmotm 2019-07-24-21-39 uploaded (mm/memcontrol)
+Message-ID: <20190727034205.GA10843@archlinux-threadripper>
+References: <20190725044010.4tE0dhrji%akpm@linux-foundation.org>
+ <4831a203-8853-27d7-1996-280d34ea824f@infradead.org>
+ <20190725163959.3d759a7f37ba40bb7f75244e@linux-foundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725163959.3d759a7f37ba40bb7f75244e@linux-foundation.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a race condition between removing glue directory and adding a new
-device under the glue dir. It can be reproduced in following test:
+On Thu, Jul 25, 2019 at 04:39:59PM -0700, Andrew Morton wrote:
+> On Thu, 25 Jul 2019 15:02:59 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
+> 
+> > On 7/24/19 9:40 PM, akpm@linux-foundation.org wrote:
+> > > The mm-of-the-moment snapshot 2019-07-24-21-39 has been uploaded to
+> > > 
+> > >    http://www.ozlabs.org/~akpm/mmotm/
+> > > 
+> > > mmotm-readme.txt says
+> > > 
+> > > README for mm-of-the-moment:
+> > > 
+> > > http://www.ozlabs.org/~akpm/mmotm/
+> > > 
+> > > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > > more than once a week.
+> > > 
+> > > You will need quilt to apply these patches to the latest Linus release (5.x
+> > > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> > > http://ozlabs.org/~akpm/mmotm/series
+> > > 
+> > 
+> > on i386:
+> > 
+> > ld: mm/memcontrol.o: in function `mem_cgroup_handle_over_high':
+> > memcontrol.c:(.text+0x6235): undefined reference to `__udivdi3'
+> 
+> Thanks.  This?
+> 
+> --- a/mm/memcontrol.c~mm-throttle-allocators-when-failing-reclaim-over-memoryhigh-fix-fix
+> +++ a/mm/memcontrol.c
+> @@ -2414,8 +2414,9 @@ void mem_cgroup_handle_over_high(void)
+>  	 */
+>  	clamped_high = max(high, 1UL);
+>  
+> -	overage = ((u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT)
+> -		/ clamped_high;
+> +	overage = (u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT;
+> +	do_div(overage, clamped_high);
+> +
+>  	penalty_jiffies = ((u64)overage * overage * HZ)
+>  		>> (MEMCG_DELAY_PRECISION_SHIFT + MEMCG_DELAY_SCALING_SHIFT);
+>  
+> _
+> 
 
-CPU1:                                         CPU2:
+This causes a build error on arm:
 
-device_add()
-  get_device_parent()
-    class_dir_create_and_add()
-      kobject_add_internal()
-        create_dir()    // create glue_dir
 
-                                              device_add()
-                                                get_device_parent()
-                                                  kobject_get() // get glue_dir
+In file included from ../arch/arm/include/asm/div64.h:127,
+                 from ../include/linux/kernel.h:18,
+                 from ../include/linux/page_counter.h:6,
+                 from ../mm/memcontrol.c:25:
+../mm/memcontrol.c: In function 'mem_cgroup_handle_over_high':
+../include/asm-generic/div64.h:222:28: warning: comparison of distinct pointer types lacks a cast
+  222 |  (void)(((typeof((n)) *)0) == ((uint64_t *)0)); \
+      |                            ^~
+../mm/memcontrol.c:2423:2: note: in expansion of macro 'do_div'
+ 2423 |  do_div(overage, clamped_high);
+      |  ^~~~~~
+In file included from ../arch/arm/include/asm/atomic.h:11,
+                 from ../include/linux/atomic.h:7,
+                 from ../include/linux/page_counter.h:5,
+                 from ../mm/memcontrol.c:25:
+../include/asm-generic/div64.h:235:25: warning: right shift count >= width of type [-Wshift-count-overflow]
+  235 |  } else if (likely(((n) >> 32) == 0)) {  \
+      |                         ^~
+../include/linux/compiler.h:77:40: note: in definition of macro 'likely'
+   77 | # define likely(x) __builtin_expect(!!(x), 1)
+      |                                        ^
+../mm/memcontrol.c:2423:2: note: in expansion of macro 'do_div'
+ 2423 |  do_div(overage, clamped_high);
+      |  ^~~~~~
+In file included from ../arch/arm/include/asm/div64.h:127,
+                 from ../include/linux/kernel.h:18,
+                 from ../include/linux/page_counter.h:6,
+                 from ../mm/memcontrol.c:25:
+../include/asm-generic/div64.h:239:22: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Werror=incompatible-pointer-types]
+  239 |   __rem = __div64_32(&(n), __base); \
+      |                      ^~~~
+      |                      |
+      |                      long unsigned int *
+../mm/memcontrol.c:2423:2: note: in expansion of macro 'do_div'
+ 2423 |  do_div(overage, clamped_high);
+      |  ^~~~~~
+In file included from ../include/linux/kernel.h:18,
+                 from ../include/linux/page_counter.h:6,
+                 from ../mm/memcontrol.c:25:
+../arch/arm/include/asm/div64.h:33:45: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'long unsigned int *'
+   33 | static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
+      |                                   ~~~~~~~~~~^
+cc1: some warnings being treated as errors
+make[3]: *** [../scripts/Makefile.build:274: mm/memcontrol.o] Error 1
+make[2]: *** [../Makefile:1768: mm/memcontrol.o] Error 2
+make[1]: *** [/home/nathan/cbl/linux-next/Makefile:330: __build_one_by_one] Error 2
+make: *** [Makefile:179: sub-make] Error 2
 
-device_del()
-  cleanup_glue_dir()
-    kobject_del(glue_dir)
 
-                                                kobject_add()
-                                                  kobject_add_internal()
-                                                    create_dir() // in glue_dir
-                                                      sysfs_create_dir_ns()
-                                                        kernfs_create_dir_ns(sd)
+I fixed it up like so but no idea if that is the ideal function to use.
 
-      sysfs_remove_dir() // glue_dir->sd=NULL
-      sysfs_put()        // free glue_dir->sd
 
-                                                          // sd is freed
-                                                          kernfs_new_node(sd)
-                                                            kernfs_get(glue_dir)
-                                                            kernfs_add_one()
-                                                            kernfs_put()
-
-Before CPU1 remove last child device under glue dir, if CPU2 add a new
-device under glue dir, the glue_dir kobject reference count will be
-increase to 2 via kobject_get() in get_device_parent(). And CPU2 has
-been called kernfs_create_dir_ns(), but not call kernfs_new_node().
-Meanwhile, CPU1 call sysfs_remove_dir() and sysfs_put(). This result in
-glue_dir->sd is freed and it's reference count will be 0. Then CPU2 call
-kernfs_get(glue_dir) will trigger a warning in kernfs_get() and increase
-it's reference count to 1. Because glue_dir->sd is freed by CPU1, the next
-call kernfs_add_one() by CPU2 will fail(This is also use-after-free)
-and call kernfs_put() to decrease reference count. Because the reference
-count is decremented to 0, it will also call kmem_cache_free() to free
-the glue_dir->sd again. This will result in double free.
-
-In order to avoid this happening, we also should make sure that kernfs_node
-for glue_dir is released in CPU1 only when refcount for glue_dir kobj is
-1 to fix this race.
-
-The following calltrace is captured in kernel 4.14 with the following patch
-applied:
-
-commit 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
-
---------------------------------------------------------------------------
-[    3.633703] WARNING: CPU: 4 PID: 513 at .../fs/kernfs/dir.c:494
-                Here is WARN_ON(!atomic_read(&kn->count) in kernfs_get().
-....
-[    3.633986] Call trace:
-[    3.633991]  kernfs_create_dir_ns+0xa8/0xb0
-[    3.633994]  sysfs_create_dir_ns+0x54/0xe8
-[    3.634001]  kobject_add_internal+0x22c/0x3f0
-[    3.634005]  kobject_add+0xe4/0x118
-[    3.634011]  device_add+0x200/0x870
-[    3.634017]  _request_firmware+0x958/0xc38
-[    3.634020]  request_firmware_into_buf+0x4c/0x70
-....
-[    3.634064] kernel BUG at .../mm/slub.c:294!
-                Here is BUG_ON(object == fp) in set_freepointer().
-....
-[    3.634346] Call trace:
-[    3.634351]  kmem_cache_free+0x504/0x6b8
-[    3.634355]  kernfs_put+0x14c/0x1d8
-[    3.634359]  kernfs_create_dir_ns+0x88/0xb0
-[    3.634362]  sysfs_create_dir_ns+0x54/0xe8
-[    3.634366]  kobject_add_internal+0x22c/0x3f0
-[    3.634370]  kobject_add+0xe4/0x118
-[    3.634374]  device_add+0x200/0x870
-[    3.634378]  _request_firmware+0x958/0xc38
-[    3.634381]  request_firmware_into_buf+0x4c/0x70
---------------------------------------------------------------------------
-
-Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
-
-Signed-off-by: Muchun Song <smuchun@gmail.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
----
-
-Change in v7:
-       1. Update commit message.
-Change in v6:
-       1. Remove hardcoding "1 "
-Change in v5:
-       1. Revert to the v1 fix.
-       2. Add some comment to explain why we need do this in
-          cleanup_glue_dir().
-Change in v4:
-       1. Add some kerneldoc comment.
-       2. Remove unlock_if_glue_dir().
-       3. Rename get_device_parent_locked_if_glue_dir() to
-          get_device_parent_locked.
-       4. Update commit message.
-Change in v3:
-       Add change log.
-Change in v2:
-       Fix device_move() also.
-
- drivers/base/core.c | 53 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 52 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 4aeaa0c92bda..edc55160c5f0 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -1820,12 +1820,63 @@ static inline struct kobject *get_glue_dir(struct device *dev)
-  */
- static void cleanup_glue_dir(struct device *dev, struct kobject *glue_dir)
- {
-+	unsigned int ref;
-+
- 	/* see if we live in a "glue" directory */
- 	if (!live_in_glue_dir(glue_dir, dev))
- 		return;
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 5c7b9facb0eb..04b621f1cb6b 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2419,8 +2419,8 @@ void mem_cgroup_handle_over_high(void)
+ 	 */
+ 	clamped_high = max(high, 1UL);
  
- 	mutex_lock(&gdp_mutex);
--	if (!kobject_has_children(glue_dir))
-+	/**
-+	 * There is a race condition between removing glue directory
-+	 * and adding a new device under the glue directory.
-+	 *
-+	 * CPU1:                                         CPU2:
-+	 *
-+	 * device_add()
-+	 *   get_device_parent()
-+	 *     class_dir_create_and_add()
-+	 *       kobject_add_internal()
-+	 *         create_dir()    // create glue_dir
-+	 *
-+	 *                                               device_add()
-+	 *                                                 get_device_parent()
-+	 *                                                   kobject_get() // get glue_dir
-+	 *
-+	 * device_del()
-+	 *   cleanup_glue_dir()
-+	 *     kobject_del(glue_dir)
-+	 *
-+	 *                                               kobject_add()
-+	 *                                                 kobject_add_internal()
-+	 *                                                   create_dir() // in glue_dir
-+	 *                                                     sysfs_create_dir_ns()
-+	 *                                                       kernfs_create_dir_ns(sd)
-+	 *
-+	 *       sysfs_remove_dir() // glue_dir->sd=NULL
-+	 *       sysfs_put()        // free glue_dir->sd
-+	 *
-+	 *                                                         // sd is freed
-+	 *                                                         kernfs_new_node(sd)
-+	 *                                                           kernfs_get(glue_dir)
-+	 *                                                           kernfs_add_one()
-+	 *                                                           kernfs_put()
-+	 *
-+	 * Before CPU1 remove last child device under glue dir, if CPU2 add
-+	 * a new device under glue dir, the glue_dir kobject reference count
-+	 * will be increase to 2 in kobject_get(k). And CPU2 has been called
-+	 * kernfs_create_dir_ns(). Meanwhile, CPU1 call sysfs_remove_dir()
-+	 * and sysfs_put(). This result in glue_dir->sd is freed.
-+	 *
-+	 * Then the CPU2 will see a stale "empty" but still potentially used
-+	 * glue dir around in kernfs_new_node().
-+	 *
-+	 * In order to avoid this happening, we also should make sure that
-+	 * kernfs_node for glue_dir is released in CPU1 only when refcount
-+	 * for glue_dir kobj is 1.
-+	 */
-+	ref = kref_read(&glue_dir->kref);
-+	if (!kobject_has_children(glue_dir) && !--ref)
- 		kobject_del(glue_dir);
- 	kobject_put(glue_dir);
- 	mutex_unlock(&gdp_mutex);
--- 
-2.17.1
-
+-	overage = (u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT;
+-	do_div(overage, clamped_high);
++	overage = div64_u64((u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT,
++			    clamped_high);
+ 
+ 	penalty_jiffies = ((u64)overage * overage * HZ)
+ 		>> (MEMCG_DELAY_PRECISION_SHIFT + MEMCG_DELAY_SCALING_SHIFT);
