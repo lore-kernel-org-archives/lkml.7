@@ -7,69 +7,70 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DDDC7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0051EC7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A82782084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC53F2083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 16:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564245327;
-	bh=tHF1NxjPMpWpMZzvHerZQqtIsaHKqxqsNpzcrXIgAKc=;
+	s=default; t=1564245708;
+	bh=JSudOvumhUOsEh/n8w/ZGVBNNp2i0LBYPXVdZt5UtFs=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=c/pFNYC9eVbnpXvNBNeczTqpy4848OggvsBxSYK7UappogJKLMZecE3qt8noXuU2g
-	 WrebnTuAppnmO6z6McA3UGk66Tz1/nZ8+VicAqNc5/LBu41uETt21kKSi5sSxvQHew
-	 C/C6DxRwVaaz0FCeXre9ZTVjqIziZRSx66oKctlk=
+	b=gk+sObIdnCGRrHgLBYOAbZn/fdEwqI5Zd5sbaBkNGqAuePdP0969LkBA4UJXvfr1K
+	 c+P8UsNwutHU87SeLeSFu4KkhRbFm15L78nFnYO7xZ3U+/2k8zFXNJgc2xU4JWd9E+
+	 /j2ePLuDufkr7dHaxSToHNesZE9v6a38r7HpRCo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387880AbfG0Qf0 (ORCPT
+        id S1729000AbfG0Qlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 12:35:26 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37873 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728856AbfG0QfT (ORCPT
+        Sat, 27 Jul 2019 12:41:47 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41269 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728856AbfG0Qlr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 12:35:19 -0400
-Received: by mail-lj1-f193.google.com with SMTP id z28so126937ljn.4
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 09:35:18 -0700 (PDT)
+        Sat, 27 Jul 2019 12:41:47 -0400
+Received: by mail-lj1-f195.google.com with SMTP id d24so54380357ljg.8
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 09:41:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SMt3Dip69HxsJytg4yVDJuHJalu5ybWoDVCuTko6OO4=;
-        b=MJy3/ok5XyvWk6FJ4PplvzCbdcjfBIZF7gqdtNFDi1l2KLQms1yg8a7ubS4VlAHghm
-         D82xRbcnUsbnTpdNRZOfJCtPBnQRdKjbfsWmPIAbuQOo94y8QSXmA56K1Wq/UT1daQ76
-         PplvjHeA4gcbYSESZq21nUXUjjmdRe1JiBYvM=
+        bh=URzo6r2h2/jBzyZ/IbgB9BNeTix2jmweMWplmeW7miE=;
+        b=fUv1YrBBaXDgQir2L0b+1MYDz2FMOyGCVVhV3BqLC7Ynrf0k01/vDoIA/nLEk9UeCn
+         ycwRuXTvxvUZ1/CLFddwJCNil6D/+omHdt2hn979QSKWvEKEbHFsr+k6yfvf6glxKqoC
+         rWRXDRFy+5wsQTx9spjJ3c8Bvxfb+4qXzE1Ao=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SMt3Dip69HxsJytg4yVDJuHJalu5ybWoDVCuTko6OO4=;
-        b=D5b5jFFiQcfYR9qYJzqfsCD/ex1wnTZn225Jnu9PSAtnJy8HPGkWYfQmZ6s9kQRg05
-         cAeqk7fq1iIK948PcdARqdoZxRJ5xK0QbJHNFpJScrIojYEiWV0Lyawoku11SsGZ6MuA
-         JYJ6NXzloxqBCfiskX7DOpg3ADyqMtK6o/1FQDM9kxZ5Dov8fxzAjIaTAgtVQnTEpTuy
-         5WKzHc12QMb6KIXR7Kpc/xEeqXKnLiQMTzntKvjVHAI1PRh4f4x25Jc+ZKqP7JulvEOh
-         sTM9KWBJljS9Quk2xVQKJu5nWQ9d7EaKBySAPW4MIk7stNrRUbx2Ofu5rBDKlY4OCM9b
-         g69A==
-X-Gm-Message-State: APjAAAWZ36X0WO18zjZpk0pfQgab7dFige4fyqHhKsg1oITxG7NBzk1N
-        w42KBE+cgX9zk1q++7DzqeZeRfr26lk=
-X-Google-Smtp-Source: APXvYqyajN26pS+ca/WL/b/pk/Y1RqKJOc87Ewzu3SP+iTaof95E+TJT7McauzBJq8mCiCJnW6rBVg==
-X-Received: by 2002:a2e:5b0f:: with SMTP id p15mr51173440ljb.82.1564245316981;
-        Sat, 27 Jul 2019 09:35:16 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id j14sm11218296ljc.67.2019.07.27.09.35.16
+        bh=URzo6r2h2/jBzyZ/IbgB9BNeTix2jmweMWplmeW7miE=;
+        b=IJRx0wZ4+fZvx864dvW531r7A4okHDjvdzmshmsRM+iE15KA3tiQoZ6gvzGVyA6jE/
+         em6CKjPzC6H/ZR2U80f9sNNT/uC3lC5vgnBukGbssfza2uXS1y8auKLOWTBhLWKsHXA0
+         D04F6HD8GZXJ9AYpInOSz5wUhPiyJGalmJKLj4JUl1jfA5q/s5jaa/ir/uwGZbR510wF
+         1RrwvC1scx05aNHgE5PPm4ahjh2ltgSv04RqDm5rAdTKYuKAEGbHurMyOjwmxDuLBeDK
+         BCGvSeNZS40kHLD61jNcRO6afctX6iju+WWZhGWf18s+IbgGU/pyx5GCB2uqGwAbsXYW
+         nGEw==
+X-Gm-Message-State: APjAAAUv1lsXTbyuXl2DPSROTdWj/DjCtS6o6zcExFVQw/RnwWsJrFSs
+        QgjZDmutgUQg1d89UHBEi8zIXVzVxgY=
+X-Google-Smtp-Source: APXvYqyUjGDYVgzJXIoUhmR/5UKA9po8NfgNO2fRQhITjR6spE2d8frf5CbQAgub5jBvHkMjRGyMPw==
+X-Received: by 2002:a2e:9950:: with SMTP id r16mr35766982ljj.173.1564245704372;
+        Sat, 27 Jul 2019 09:41:44 -0700 (PDT)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id m4sm11202697ljc.56.2019.07.27.09.41.41
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Jul 2019 09:35:16 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id m8so20780147lji.7
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 09:35:16 -0700 (PDT)
-X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr31325995ljm.180.1564244935984;
- Sat, 27 Jul 2019 09:28:55 -0700 (PDT)
+        Sat, 27 Jul 2019 09:41:42 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id c9so39109500lfh.4
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 09:41:41 -0700 (PDT)
+X-Received: by 2002:ac2:44c5:: with SMTP id d5mr48540131lfm.134.1564245701693;
+ Sat, 27 Jul 2019 09:41:41 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190727085201.11743-1-christian@brauner.io> <20190727085201.11743-2-christian@brauner.io>
-In-Reply-To: <20190727085201.11743-2-christian@brauner.io>
+ <CAHk-=whrh5+aHmgqP9YhZ-yzCtUWT8fPi08ZSJdxusx7aHXOQQ@mail.gmail.com>
+In-Reply-To: <CAHk-=whrh5+aHmgqP9YhZ-yzCtUWT8fPi08ZSJdxusx7aHXOQQ@mail.gmail.com>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 27 Jul 2019 09:28:40 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whrh5+aHmgqP9YhZ-yzCtUWT8fPi08ZSJdxusx7aHXOQQ@mail.gmail.com>
-Message-ID: <CAHk-=whrh5+aHmgqP9YhZ-yzCtUWT8fPi08ZSJdxusx7aHXOQQ@mail.gmail.com>
+Date:   Sat, 27 Jul 2019 09:41:25 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgtGyQTLLb7m=jkMY5hOcj+TsOKSoeoJC7Jc1_h_XL+tw@mail.gmail.com>
+Message-ID: <CAHk-=wgtGyQTLLb7m=jkMY5hOcj+TsOKSoeoJC7Jc1_h_XL+tw@mail.gmail.com>
 Subject: Re: [PATCH v2 1/2] pidfd: add P_PIDFD to waitid()
 To:     Christian Brauner <christian@brauner.io>
 Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
@@ -91,94 +92,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry to keep pestering about the patch series, but with the addition
-of P_PIDFD, I react once again..
-
-On Sat, Jul 27, 2019 at 1:53 AM Christian Brauner <christian@brauner.io> wrote:
+On Sat, Jul 27, 2019 at 9:28 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -1555,6 +1555,7 @@ static long do_wait(struct wait_opts *wo)
->  static long kernel_waitid(int which, pid_t upid, struct waitid_info *infop,
->                           int options, struct rusage *ru)
->  {
-> +       struct fd f;
+> Something like
+>
+>   struct pid *fd_to_pid(unsigned int fd)
+>   {
+>         struct fd f;
+>         struct pid *pid;
+...
 
-Please don't do 'struct fd' at this level. That results in this ugly code later:
+I forgot to put my usual disclaimer about TOTALLY UNTESTED GARBAGE in
+that email. I want to make that part clear: that code snippet was
+meant as a rough guide of direction, not as a "this works".
 
-> -       put_pid(pid);
-> +       if (which == P_PIDFD)
-> +               fdput(f);
-> +       else
-> +               put_pid(pid);
+Hopefully that was clear.
 
-which just looks nasty.
+Also note again that one of the reasons I would prefer that
+"fd_to_pid()" interface is that you _can_ do it cleverly with RCU
+lookup, but that requires a lot of care.
 
-Instead, do all the 'file descriptor to pid' games here:
+In particular, I think all of our _existing_
+"proc_pid(file_inode(file))" users are done while you actually hold a
+reference to "struct file *", so they don't have to worry about races
+with another thread doing the final ->release(). So the "clever" thing
+is possible, but might need a _lot_ of care to make sure the 'struct
+pid *' associated with the file still exists.
 
-> +       case P_PIDFD:
-> +               type = PIDTYPE_PID;
-> +               if (upid < 0)
-> +                       return -EINVAL;
-> +
-> +               f = fdget(upid);
-> +               if (!f.file)
-> +                       return -EBADF;
-> +
-> +               pid = pidfd_pid(f.file);
-> +               if (IS_ERR(pid)) {
-> +                       fdput(f);
-> +                       return PTR_ERR(pid);
-> +               }
->                 break;
+The example code sequence was not doing the clever thing, obviously.
+So it was untested _and_ simple-stupid. But it has the interface that
+I'd prefer.
 
-and make thus just do something like
-
-        pid = get_pid_from_fd(upid);
-        if (IS_ERR(pid))
-                return PTR_ERR(pid);
-
-and now do that "fd to pid" in that helper function, and get the
-reference to 'struct pid *' there instead.
-
-Which you can actually do efficiently and lightly without even getting
-a ref to the 'struct file'. Something like
-
-  struct pid *fd_to_pid(unsigned int fd)
-  {
-        struct fd f;
-        struct pid *pid;
-
-        f = fdget(fd);
-        if (!f.file)
-                return ERR_PTR(-EBADF);
-        pid = pidfd_pid(f.file);
-        if (!IS_ERR(pid))
-                get_pid(pid);
-        fdput(f);
-        return pid;
-  }
-
-is the stupid and straightforward thing, but if you want to be
-*clever* you can actually avoid getting a reference to the 'struct
-file *" entirely, and do the fd->pid lookup under rcu_read_lock()
-instead. It's slightly more complex, but it avoids the fdget/fdput
-reference count games entirely.
-
-And then all that kernel_waitid() ever worries about is "struct pid
-*", and the ending goes back to just that simple
-
-        put_pid(pid);
-        return ret;
-
-instead.
-
-This was kind of my point of doing all the "find_get_pid()" games in
-the "switch()" statement - the different cases have different ways to
-look up what the "struct pid *" pointer should be, but they should all
-just look up a pid pointer, and then nothing else needs to care about
-'type' any more. See?
-
-Hmm?
-
-                Linus
+              Linus
