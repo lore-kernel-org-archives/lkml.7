@@ -2,109 +2,96 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD316C76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF3CC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A53C7208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:47:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="VLfAIH5S"
+	by mail.kernel.org (Postfix) with ESMTP id 8CC572064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 19:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388287AbfG0TrP (ORCPT
+        id S2388203AbfG0Tsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 15:47:15 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37984 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388155AbfG0TrK (ORCPT
+        Sat, 27 Jul 2019 15:48:42 -0400
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:45078 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387841AbfG0Tsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 15:47:10 -0400
-Received: by mail-wm1-f67.google.com with SMTP id s15so28881676wmj.3
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 12:47:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=u4zxzrsUGYajoD9B2Tdkb88ZiEEyjMTr1V8RPdE+1UY=;
-        b=VLfAIH5SbHDQJcWnj5H522i2JcJ07BE+Zogzg/hd67JVrtQ/SMrYJZcfbNkZ2UQn11
-         990VWKwTTuOrjBF318IiUVbLdDT5wu/CkI5NegXtPCqDvW7C5ZZPwIZp3QI7b0cixVNL
-         1DJOL0s3HhdLycXuchIAIxwKy9Izek+IjPMrTFqle86YmZuBFaj8QkzS5hMjnUeZRX4x
-         Wzupss3SpHykXFCouwWrO6cOydH6MlRZ6HfnuB+FI8xYP/q0yoNexz5Iny0FwGoNXvs9
-         JLq5FFJHF0wXXz+QrWFGPfQltGm0HB6Ch7+5CvNbG7OXR+TrctVdnqJuzi226oAfXu/g
-         8JDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=u4zxzrsUGYajoD9B2Tdkb88ZiEEyjMTr1V8RPdE+1UY=;
-        b=VE/6txcdpg6Zq2EwVrmNYiFMjk/s15v88YEfRvYGjDT8/mywr6+6PiOpp1J32n/X9o
-         WzvJrm8/InrzWqWK1MUO5nHkzrI2wiFdcdiD2LAXyBxTkxGzqE0E6zE0dXKpuQ9BOiG+
-         SlyuTIqzmD6bVo3depKsT9AY2tEgYMMl9oBLL/wgczhBwa+CHRezcoQ9DsciIi2etij2
-         YajZRyeQ93ZTPIkQyBd30I+jCTMQjmxNMyuqPFbn7FK1cdCxMdNGq4BST3SfabmSblZH
-         wA8pheFATxy+c6SRyF2cQZbfsFpAnkTTtUIF2H9Mksovt9YGHP6iw3+sMPKCkJ/nypVS
-         JbVA==
-X-Gm-Message-State: APjAAAWtmhGkn5EpTfop0LVgGuyKunamvM2m9giHojiP8lKkexpzCmpO
-        lm6L/0yN13Ek8TnoHwGuOZY=
-X-Google-Smtp-Source: APXvYqykfdQYXHJvMHLdBsllsqHbIXy+FoSsDdN0ix235Vwv3c8pZV4WMrJhL5yfUaEeSHpjmVRfvQ==
-X-Received: by 2002:a1c:b706:: with SMTP id h6mr88410051wmf.119.1564256828803;
-        Sat, 27 Jul 2019 12:47:08 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133C65C00B418D0F4A25A19EC.dip0.t-ipconnect.de. [2003:f1:33c6:5c00:b418:d0f4:a25a:19ec])
-        by smtp.googlemail.com with ESMTPSA id c4sm44651726wrt.86.2019.07.27.12.47.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 27 Jul 2019 12:47:08 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux.amoon@gmail.com, ottuzzi@gmail.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/2] ARM: dts: meson8b: add the nvmem cell with the board's MAC address
-Date:   Sat, 27 Jul 2019 21:46:46 +0200
-Message-Id: <20190727194647.15355-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190727194647.15355-1-martin.blumenstingl@googlemail.com>
-References: <20190727194647.15355-1-martin.blumenstingl@googlemail.com>
+        Sat, 27 Jul 2019 15:48:42 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 69FA69E774D;
+        Sat, 27 Jul 2019 20:48:39 +0100 (BST)
+Date:   Sat, 27 Jul 2019 20:48:36 +0100
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     David Lechner <david@lechnology.com>
+Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: counter: new bindings for TI eQEP
+Message-ID: <20190727204836.1514265d@archlinux>
+In-Reply-To: <20190722154538.5314-2-david@lechnology.com>
+References: <20190722154538.5314-1-david@lechnology.com>
+        <20190722154538.5314-2-david@lechnology.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Amlogic's BSP kernel defines that all boards with a MAC address stored
-in the eFuse have it at offset 0x1b4. It is up to the board to
-decide whether to use this MAC address or not:
-- Odroid-C1 uses the MAC address from the eFuse
-- EC-100 seems to read the MAC address from eMMC
+On Mon, 22 Jul 2019 10:45:35 -0500
+David Lechner <david@lechnology.com> wrote:
 
-Add the nvmem cell which describes the Ethernet MAC address. Don't
-assign it to the Ethernet controller, because depending on the board the
-actual MAC address may be read from somewhere else.
+> This documents device tree binding for the Texas Instruments Enhanced
+> Quadrature Encoder Pulse (eQEP) Module found in various TI SoCs.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm/boot/dts/meson8b.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+Up to William given it is a counter binding, (unless Rob overrules)
+but new bindings are generally preferred as yaml.
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 30fca9bb4bbe..c7de58b71d08 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -402,6 +402,10 @@
- 	clocks = <&clkc CLKID_EFUSE>;
- 	clock-names = "core";
- 
-+	ethernet_mac_address: mac@1b4 {
-+		reg = <0x1b4 0x6>;
-+	};
-+
- 	temperature_calib: calib@1f4 {
- 		/* only the upper two bytes are relevant */
- 		reg = <0x1f4 0x4>;
--- 
-2.22.0
+Content looks fine to me.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  .../devicetree/bindings/counter/ti-eqep.txt    | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/counter/ti-eqep.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/counter/ti-eqep.txt b/Documentation/devicetree/bindings/counter/ti-eqep.txt
+> new file mode 100644
+> index 000000000000..fbcebc2c2cc2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/counter/ti-eqep.txt
+> @@ -0,0 +1,18 @@
+> +Texas Instruments Enhanced Quadrature Encoder Pulse (eQEP) Module
+> +
+> +Required properties:
+> +- compatible:		Must be "ti,am3352-eqep".
+> +- reg:			Physical base address and size of the registers map.
+> +- clocks:		Handle to the PWM's functional clock.
+> +- clock-names:		Must be "fck".
+> +- interrupts:		Handle to the eQEP event interrupt
+> +
+> +Example:
+> +
+> +	eqep0: eqep@180 {
+> +		compatible = "ti,am3352-eqep";
+> +		reg = <0x180 0x80>;
+> +		clocks = <&l4ls_gclk>;
+> +		clock-names = "fck";
+> +		interrupts = <79>;
+> +	};
 
