@@ -2,248 +2,845 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A5FC7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 246C6C7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD88C20651
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1EE20869
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:45:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387443AbfG0JpL (ORCPT
+        id S2387615AbfG0Jp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 05:45:11 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:48927 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387559AbfG0JpH (ORCPT
+        Sat, 27 Jul 2019 05:45:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8886 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387599AbfG0Jp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 05:45:07 -0400
-Received: by mail-io1-f70.google.com with SMTP id z19so61614335ioi.15
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 02:45:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=luBN04vpZCAYMYbcybEbmYPb1CaylNbTpfkzCWh390w=;
-        b=gCAMjd88SMM+CLETyu+vfCH+7p5I2Zl0+nPTc2sV9BfsoS6ZCIkjmyG7ZkJ0hPQw+C
-         4ZAKu67Ayj9oJDI79R2A9KS+Ng3WKQuE5G1lBDb2CdZNDYW86ZBF2Tu6EB9RV48TsaFr
-         SB+DUrVY2oqLkXuYW2G6lf+iZCSfI1w1gnJ5bSX43dozrXem7ko1hovPNpswKFcX2kVv
-         hTR5EUCCGrEKhp4oHPTzvCA9hlxt2ODIdZxqSf6+KoYLwLUeQHBXvgBEiWHobK6NFuXe
-         /UDZ4v8e4AJBlW/jhI8hqDIxJVGGXpCitSxkYYl3Rzt3zPZEoYTptir5GCcZTRTyUC8A
-         uXDg==
-X-Gm-Message-State: APjAAAXMcYtfG1zj8rVbiYUnqsK155wWCOa7Phmc1t9tSgOM5b1Ev3zz
-        VsjWT9xfU+teZwYcFqfgzcjKOCEP+GHZoF8u7mHLpeWPhpPI
-X-Google-Smtp-Source: APXvYqz4ehsgc865aC+XQs2++Kg2WO0162sF+rtYamiLT5s6DQD8l9vqRIpXxzFpEM1eP5BL2WoBHhJZQS0/4oWEM4Fr72xoq9bx
+        Sat, 27 Jul 2019 05:45:29 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6R9hF8f043777
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 05:45:25 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u0hwrkq2f-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 05:45:25 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Sat, 27 Jul 2019 10:45:23 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 27 Jul 2019 10:45:20 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6R9jJ4d38470018
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 27 Jul 2019 09:45:19 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 24ED552051;
+        Sat, 27 Jul 2019 09:45:19 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.134])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id DFA815204F;
+        Sat, 27 Jul 2019 09:45:18 +0000 (GMT)
+Date:   Sat, 27 Jul 2019 11:45:17 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [GIT PULL] s390 updates for 5.3-rc2
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9749:: with SMTP id c9mr27338140ioo.258.1564220706320;
- Sat, 27 Jul 2019 02:45:06 -0700 (PDT)
-Date:   Sat, 27 Jul 2019 02:45:06 -0700
-In-Reply-To: <0000000000007a5aad057e7748c9@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008cfb9f058ea6834d@google.com>
-Subject: Re: KASAN: use-after-free Read in lock_sock_nested
-From:   syzbot <syzbot+500c69d1e21d970e461b@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-hams@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+x-cbid: 19072709-0016-0000-0000-00000296AF7A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19072709-0017-0000-0000-000032F4B2C2
+Message-Id: <20190727094517.GA9501@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-27_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907270122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+Hello Linus,
 
-HEAD commit:    3ea54d9b Merge tag 'docs-5.3-1' of git://git.lwn.net/linux
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16a66564600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=195ab3ca46c2e324
-dashboard link: https://syzkaller.appspot.com/bug?extid=500c69d1e21d970e461b
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=145318b4600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14ac7b78600000
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
-Bisection is inconclusive: the bug happens on the oldest tested release.
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11c610a7200000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=13c610a7200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15c610a7200000
+are available in the git repository at:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+500c69d1e21d970e461b@syzkaller.appspotmail.com
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.3-3
 
-==================================================================
-BUG: KASAN: use-after-free in debug_spin_lock_before  
-kernel/locking/spinlock_debug.c:83 [inline]
-BUG: KASAN: use-after-free in do_raw_spin_lock+0x295/0x3a0  
-kernel/locking/spinlock_debug.c:112
-Read of size 4 at addr ffff88809f0acf0c by task syz-executor847/10804
+for you to fetch changes up to 98abe0227827f45cddb21875b2ffa9aeca3848b3:
 
-CPU: 0 PID: 10804 Comm: syz-executor847 Not tainted 5.3.0-rc1+ #51
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
-  print_address_description+0x75/0x5b0 mm/kasan/report.c:351
-  __kasan_report+0x14b/0x1c0 mm/kasan/report.c:482
-  kasan_report+0x26/0x50 mm/kasan/common.c:612
-  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
-  debug_spin_lock_before kernel/locking/spinlock_debug.c:83 [inline]
-  do_raw_spin_lock+0x295/0x3a0 kernel/locking/spinlock_debug.c:112
-  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:136 [inline]
-  _raw_spin_lock_bh+0x40/0x50 kernel/locking/spinlock.c:175
-  spin_lock_bh include/linux/spinlock.h:343 [inline]
-  lock_sock_nested+0x45/0x120 net/core/sock.c:2917
-  lock_sock include/net/sock.h:1522 [inline]
-  nr_getname+0x5b/0x220 net/netrom/af_netrom.c:838
-  __sys_accept4+0x63a/0x9a0 net/socket.c:1759
-  __do_sys_accept4 net/socket.c:1789 [inline]
-  __se_sys_accept4 net/socket.c:1786 [inline]
-  __x64_sys_accept4+0x9a/0xb0 net/socket.c:1786
-  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4480e9
-Code: e8 ac e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 4b 06 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f43bf6ced88 EFLAGS: 00000246 ORIG_RAX: 0000000000000120
-RAX: ffffffffffffffda RBX: 00000000006ddc38 RCX: 00000000004480e9
-RDX: 0000000000000000 RSI: 0000000020000b00 RDI: 0000000000000004
-RBP: 00000000006ddc30 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006ddc3c
-R13: 00007ffd18de174f R14: 00007f43bf6cf9c0 R15: 00000000006ddc3c
+  MAINTAINERS: vfio-ccw: Remove myself as the maintainer (2019-07-26 13:36:26 +0200)
 
-Allocated by task 0:
-  save_stack mm/kasan/common.c:69 [inline]
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:487
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:501
-  __do_kmalloc mm/slab.c:3655 [inline]
-  __kmalloc+0x254/0x340 mm/slab.c:3664
-  kmalloc include/linux/slab.h:557 [inline]
-  sk_prot_alloc+0xb0/0x290 net/core/sock.c:1603
-  sk_alloc+0x38/0x950 net/core/sock.c:1657
-  nr_make_new net/netrom/af_netrom.c:476 [inline]
-  nr_rx_frame+0xabc/0x1e40 net/netrom/af_netrom.c:959
-  nr_loopback_timer+0x6a/0x140 net/netrom/nr_loopback.c:59
-  call_timer_fn+0xec/0x200 kernel/time/timer.c:1322
-  expire_timers kernel/time/timer.c:1366 [inline]
-  __run_timers+0x7cd/0x9c0 kernel/time/timer.c:1685
-  run_timer_softirq+0x4a/0x90 kernel/time/timer.c:1698
-  __do_softirq+0x333/0x7c4 arch/x86/include/asm/paravirt.h:778
+----------------------------------------------------------------
+s390 updates for 5.3-rc2
 
-Freed by task 10804:
-  save_stack mm/kasan/common.c:69 [inline]
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x12a/0x1e0 mm/kasan/common.c:449
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:457
-  __cache_free mm/slab.c:3425 [inline]
-  kfree+0x115/0x200 mm/slab.c:3756
-  sk_prot_free net/core/sock.c:1640 [inline]
-  __sk_destruct+0x567/0x660 net/core/sock.c:1726
-  sk_destruct net/core/sock.c:1734 [inline]
-  __sk_free+0x317/0x3e0 net/core/sock.c:1745
-  sk_free net/core/sock.c:1756 [inline]
-  sock_put include/net/sock.h:1725 [inline]
-  sock_efree+0x60/0x80 net/core/sock.c:2042
-  skb_release_head_state+0x100/0x220 net/core/skbuff.c:652
-  skb_release_all net/core/skbuff.c:663 [inline]
-  __kfree_skb+0x25/0x170 net/core/skbuff.c:679
-  kfree_skb+0x6f/0xb0 net/core/skbuff.c:697
-  nr_accept+0x4ef/0x650 net/netrom/af_netrom.c:819
-  __sys_accept4+0x5bc/0x9a0 net/socket.c:1754
-  __do_sys_accept4 net/socket.c:1789 [inline]
-  __se_sys_accept4 net/socket.c:1786 [inline]
-  __x64_sys_accept4+0x9a/0xb0 net/socket.c:1786
-  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+ - Add ABI to kernel image file which allows e.g. the file utility to figure
+   out the kernel version.
 
-The buggy address belongs to the object at ffff88809f0ace80
-  which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 140 bytes inside of
-  2048-byte region [ffff88809f0ace80, ffff88809f0ad680)
-The buggy address belongs to the page:
-page:ffffea00027c2b00 refcount:1 mapcount:0 mapping:ffff8880aa400e00  
-index:0x0 compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea0002704708 ffffea0002695508 ffff8880aa400e00
-raw: 0000000000000000 ffff88809f0ac600 0000000100000003 0000000000000000
-page dumped because: kasan: bad access detected
+ - Wire up clone3 system call.
 
-Memory state around the buggy address:
-  ffff88809f0ace00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff88809f0ace80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff88809f0acf00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                       ^
-  ffff88809f0acf80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88809f0ad000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-------------[ cut here ]------------
-ODEBUG: activate not available (active state 0) object type: timer_list  
-hint: nr_t1timer_expiry+0x0/0x400 net/netrom/nr_timer.c:46
-WARNING: CPU: 0 PID: 10804 at lib/debugobjects.c:484 debug_print_object  
-lib/debugobjects.c:481 [inline]
-WARNING: CPU: 0 PID: 10804 at lib/debugobjects.c:484  
-debug_object_activate+0x33d/0x6f0 lib/debugobjects.c:680
-Modules linked in:
-CPU: 0 PID: 10804 Comm: syz-executor847 Tainted: G    B              
-5.3.0-rc1+ #51
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:debug_print_object lib/debugobjects.c:481 [inline]
-RIP: 0010:debug_object_activate+0x33d/0x6f0 lib/debugobjects.c:680
-Code: f7 e8 f7 01 4a fe 4d 8b 06 48 c7 c7 ca 56 88 88 48 c7 c6 f0 2d a1 88  
-48 c7 c2 e3 69 81 88 31 c9 49 89 d9 31 c0 e8 63 6d e0 fd <0f> 0b 48 ba 00  
-00 00 00 00 fc ff df ff 05 65 92 95 05 49 83 c6 20
-RSP: 0018:ffff88809633faa8 EFLAGS: 00010046
-RAX: a65408733c6cb800 RBX: ffffffff86dc84e0 RCX: ffff8880a8b08440
-RDX: 0000000000000000 RSI: 0000000080000001 RDI: 0000000000000000
-RBP: ffff88809633faf0 R08: ffffffff816063f4 R09: ffffed1015d440c2
-R10: ffffed1015d440c2 R11: 0000000000000000 R12: ffff8880a10bfd70
-R13: 1ffff11014217fae R14: ffffffff88cd9fc0 R15: ffff88809f0ad358
-FS:  00007f43bf6cf700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000008c7b1000 CR4: 00000000001406f0
-Call Trace:
-  debug_timer_activate kernel/time/timer.c:710 [inline]
-  __mod_timer+0x960/0x16e0 kernel/time/timer.c:1035
-  mod_timer+0x1f/0x30 kernel/time/timer.c:1096
-  sk_reset_timer+0x22/0x50 net/core/sock.c:2821
-  nr_start_t1timer+0x78/0x90 net/netrom/nr_timer.c:52
-  nr_release+0x238/0x390 net/netrom/af_netrom.c:537
-  __sock_release net/socket.c:590 [inline]
-  sock_close+0xe1/0x260 net/socket.c:1268
-  __fput+0x2e4/0x740 fs/file_table.c:280
-  ____fput+0x15/0x20 fs/file_table.c:313
-  task_work_run+0x17e/0x1b0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop arch/x86/entry/common.c:163 [inline]
-  prepare_exit_to_usermode+0x459/0x580 arch/x86/entry/common.c:194
-  syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:274
-  do_syscall_64+0x126/0x140 arch/x86/entry/common.c:299
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4480e9
-Code: e8 ac e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 4b 06 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f43bf6ced88 EFLAGS: 00000246 ORIG_RAX: 0000000000000120
-RAX: fffffffffffffff2 RBX: 00000000006ddc38 RCX: 00000000004480e9
-RDX: 0000000000000000 RSI: 0000000020000b00 RDI: 0000000000000004
-RBP: 00000000006ddc30 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006ddc3c
-R13: 00007ffd18de174f R14: 00007f43bf6cf9c0 R15: 00000000006ddc3c
-irq event stamp: 0
-hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-hardirqs last disabled at (0): [<ffffffff81484c09>]  
-copy_process+0x1589/0x5bc0 kernel/fork.c:1960
-softirqs last  enabled at (0): [<ffffffff81484c7f>]  
-copy_process+0x15ff/0x5bc0 kernel/fork.c:1963
-softirqs last disabled at (0): [<0000000000000000>] 0x0
----[ end trace 41aab9a9be4009d5 ]---
+ - Add support for kasan bitops instrumentation.
+
+ - uapi header cleanup: use __u{16,32,64} instead of uint{16,32,64}_t.
+
+ - Provide proper ARCH_ZONE_DMA_BITS so the s390 DMA zone is correctly defined
+   with 2 GB instead of the default value of 1 MB.
+
+ - Farhan Ali leaves the group of vfio-ccw maintainers.
+
+ - Various small vfio-ccw fixes.
+
+ - Add missing locking for airq_areas array in virtio code.
+
+ - Minor qdio improvements.
+
+----------------------------------------------------------------
+Christophe JAILLET (1):
+      s390/hypfs: fix a typo in the name of a function
+
+Cornelia Huck (1):
+      Documentation: fix vfio-ccw doc
+
+Farhan Ali (6):
+      vfio-ccw: Fix misleading comment when setting orb.cmd.c64
+      vfio-ccw: Fix memory leak and don't call cp_free in cp_init
+      vfio-ccw: Set pa_nr to 0 if memory allocation fails for pa_iova_pfn
+      vfio-ccw: Don't call cp_free if we are processing a channel program
+      vfio-ccw: Update documentation for csch/hsch
+      MAINTAINERS: vfio-ccw: Remove myself as the maintainer
+
+Halil Pasic (2):
+      s390/dma: provide proper ARCH_ZONE_DMA_BITS value
+      virtio/s390: fix race on airq_areas[]
+
+Heiko Carstens (2):
+      Merge tag 'vfio-ccw-20190717-2' of https://git.kernel.org/.../kvms390/vfio-ccw into fixes
+      kbuild: enable arch/s390/include/uapi/asm/zcrypt.h for uapi header test
+
+Julian Wiedmann (2):
+      s390/qdio: add sanity checks to the fast-requeue path
+      s390/qdio: restrict QAOB usage to IQD unicast queues
+
+Masahiro Yamada (1):
+      s390: use __u{16,32,64} instead of uint{16,32,64}_t in uapi header
+
+Vasily Gorbik (5):
+      s390: enable detection of kernel version from bzImage
+      s390: wire up clone3 system call
+      s390/bitops: make test functions return bool
+      s390/kasan: add bitops instrumentation
+      s390/mm: use shared variables for sysctl range check
+
+ Documentation/s390/vfio-ccw.rst       | 31 +++++++++++++--
+ MAINTAINERS                           |  1 -
+ arch/s390/boot/Makefile               |  2 +-
+ arch/s390/boot/boot.h                 |  1 +
+ arch/s390/boot/head.S                 |  1 +
+ arch/s390/boot/version.c              |  7 ++++
+ arch/s390/hypfs/hypfs_vm.c            |  4 +-
+ arch/s390/include/asm/bitops.h        | 73 +++++++++++++++++++----------------
+ arch/s390/include/asm/page.h          |  2 +
+ arch/s390/include/asm/setup.h         |  4 +-
+ arch/s390/include/asm/unistd.h        |  1 +
+ arch/s390/include/uapi/asm/zcrypt.h   | 35 +++++++++--------
+ arch/s390/kernel/syscalls/syscall.tbl |  2 +-
+ arch/s390/mm/pgalloc.c                |  6 +--
+ drivers/s390/cio/qdio_main.c          | 24 ++++++------
+ drivers/s390/cio/vfio_ccw_cp.c        | 28 ++++++++------
+ drivers/s390/cio/vfio_ccw_drv.c       |  2 +-
+ drivers/s390/virtio/virtio_ccw.c      |  4 ++
+ usr/include/Makefile                  |  4 --
+ 19 files changed, 140 insertions(+), 92 deletions(-)
+ create mode 100644 arch/s390/boot/version.c
+
+diff --git a/Documentation/s390/vfio-ccw.rst b/Documentation/s390/vfio-ccw.rst
+index 1e210c6..fca9c4f 100644
+--- a/Documentation/s390/vfio-ccw.rst
++++ b/Documentation/s390/vfio-ccw.rst
+@@ -180,6 +180,13 @@ The process of how these work together.
+    add it to an iommu_group and a vfio_group. Then we could pass through
+    the mdev to a guest.
+ 
++
++VFIO-CCW Regions
++----------------
++
++The vfio-ccw driver exposes MMIO regions to accept requests from and return
++results to userspace.
++
+ vfio-ccw I/O region
+ -------------------
+ 
+@@ -205,6 +212,25 @@ irb_area stores the I/O result.
+ 
+ ret_code stores a return code for each access of the region.
+ 
++This region is always available.
++
++vfio-ccw cmd region
++-------------------
++
++The vfio-ccw cmd region is used to accept asynchronous instructions
++from userspace::
++
++  #define VFIO_CCW_ASYNC_CMD_HSCH (1 << 0)
++  #define VFIO_CCW_ASYNC_CMD_CSCH (1 << 1)
++  struct ccw_cmd_region {
++         __u32 command;
++         __u32 ret_code;
++  } __packed;
++
++This region is exposed via region type VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD.
++
++Currently, CLEAR SUBCHANNEL and HALT SUBCHANNEL use this region.
++
+ vfio-ccw operation details
+ --------------------------
+ 
+@@ -306,9 +332,8 @@ Together with the corresponding work in QEMU, we can bring the passed
+ through DASD/ECKD device online in a guest now and use it as a block
+ device.
+ 
+-While the current code allows the guest to start channel programs via
+-START SUBCHANNEL, support for HALT SUBCHANNEL or CLEAR SUBCHANNEL is
+-not yet implemented.
++The current code allows the guest to start channel programs via
++START SUBCHANNEL, and to issue HALT SUBCHANNEL and CLEAR SUBCHANNEL.
+ 
+ vfio-ccw supports classic (command mode) channel I/O only. Transport
+ mode (HPF) is not supported.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 783569e..82d9e1b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13947,7 +13947,6 @@ F:	drivers/pci/hotplug/s390_pci_hpc.c
+ 
+ S390 VFIO-CCW DRIVER
+ M:	Cornelia Huck <cohuck@redhat.com>
+-M:	Farhan Ali <alifm@linux.ibm.com>
+ M:	Eric Farman <farman@linux.ibm.com>
+ R:	Halil Pasic <pasic@linux.ibm.com>
+ L:	linux-s390@vger.kernel.org
+diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
+index 7cba96e..4cf0bdd 100644
+--- a/arch/s390/boot/Makefile
++++ b/arch/s390/boot/Makefile
+@@ -36,7 +36,7 @@ CFLAGS_sclp_early_core.o += -I$(srctree)/drivers/s390/char
+ 
+ obj-y	:= head.o als.o startup.o mem_detect.o ipl_parm.o ipl_report.o
+ obj-y	+= string.o ebcdic.o sclp_early_core.o mem.o ipl_vmparm.o cmdline.o
+-obj-y	+= ctype.o text_dma.o
++obj-y	+= version.o ctype.o text_dma.o
+ obj-$(CONFIG_PROTECTED_VIRTUALIZATION_GUEST)	+= uv.o
+ obj-$(CONFIG_RELOCATABLE)	+= machine_kexec_reloc.o
+ obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
+diff --git a/arch/s390/boot/boot.h b/arch/s390/boot/boot.h
+index ad57c22..082905d 100644
+--- a/arch/s390/boot/boot.h
++++ b/arch/s390/boot/boot.h
+@@ -12,6 +12,7 @@ void print_missing_facilities(void);
+ unsigned long get_random_base(unsigned long safe_addr);
+ 
+ extern int kaslr_enabled;
++extern const char kernel_version[];
+ 
+ unsigned long read_ipl_report(unsigned long safe_offset);
+ 
+diff --git a/arch/s390/boot/head.S b/arch/s390/boot/head.S
+index 028aab0..2087bed 100644
+--- a/arch/s390/boot/head.S
++++ b/arch/s390/boot/head.S
+@@ -361,6 +361,7 @@ ENTRY(startup_kdump)
+ 	.quad	0			# INITRD_SIZE
+ 	.quad	0			# OLDMEM_BASE
+ 	.quad	0			# OLDMEM_SIZE
++	.quad	kernel_version		# points to kernel version string
+ 
+ 	.org	COMMAND_LINE
+ 	.byte	"root=/dev/ram0 ro"
+diff --git a/arch/s390/boot/version.c b/arch/s390/boot/version.c
+new file mode 100644
+index 0000000..d32e58bd
+--- /dev/null
++++ b/arch/s390/boot/version.c
+@@ -0,0 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <generated/utsrelease.h>
++#include <generated/compile.h>
++#include "boot.h"
++
++const char kernel_version[] = UTS_RELEASE
++	" (" LINUX_COMPILE_BY "@" LINUX_COMPILE_HOST ") " UTS_VERSION;
+diff --git a/arch/s390/hypfs/hypfs_vm.c b/arch/s390/hypfs/hypfs_vm.c
+index 42f2375..e1fcc03 100644
+--- a/arch/s390/hypfs/hypfs_vm.c
++++ b/arch/s390/hypfs/hypfs_vm.c
+@@ -118,7 +118,7 @@ do { \
+ 		return PTR_ERR(rc); \
+ } while(0)
+ 
+-static int hpyfs_vm_create_guest(struct dentry *systems_dir,
++static int hypfs_vm_create_guest(struct dentry *systems_dir,
+ 				 struct diag2fc_data *data)
+ {
+ 	char guest_name[NAME_LEN + 1] = {};
+@@ -219,7 +219,7 @@ int hypfs_vm_create_files(struct dentry *root)
+ 	}
+ 
+ 	for (i = 0; i < count; i++) {
+-		rc = hpyfs_vm_create_guest(dir, &(data[i]));
++		rc = hypfs_vm_create_guest(dir, &(data[i]));
+ 		if (rc)
+ 			goto failed;
+ 	}
+diff --git a/arch/s390/include/asm/bitops.h b/arch/s390/include/asm/bitops.h
+index 9900d655..b8833ac 100644
+--- a/arch/s390/include/asm/bitops.h
++++ b/arch/s390/include/asm/bitops.h
+@@ -35,6 +35,7 @@
+ 
+ #include <linux/typecheck.h>
+ #include <linux/compiler.h>
++#include <linux/types.h>
+ #include <asm/atomic_ops.h>
+ #include <asm/barrier.h>
+ 
+@@ -55,7 +56,7 @@ __bitops_byte(unsigned long nr, volatile unsigned long *ptr)
+ 	return ((unsigned char *)ptr) + ((nr ^ (BITS_PER_LONG - 8)) >> 3);
+ }
+ 
+-static inline void set_bit(unsigned long nr, volatile unsigned long *ptr)
++static inline void arch_set_bit(unsigned long nr, volatile unsigned long *ptr)
+ {
+ 	unsigned long *addr = __bitops_word(nr, ptr);
+ 	unsigned long mask;
+@@ -76,7 +77,7 @@ static inline void set_bit(unsigned long nr, volatile unsigned long *ptr)
+ 	__atomic64_or(mask, (long *)addr);
+ }
+ 
+-static inline void clear_bit(unsigned long nr, volatile unsigned long *ptr)
++static inline void arch_clear_bit(unsigned long nr, volatile unsigned long *ptr)
+ {
+ 	unsigned long *addr = __bitops_word(nr, ptr);
+ 	unsigned long mask;
+@@ -97,7 +98,8 @@ static inline void clear_bit(unsigned long nr, volatile unsigned long *ptr)
+ 	__atomic64_and(mask, (long *)addr);
+ }
+ 
+-static inline void change_bit(unsigned long nr, volatile unsigned long *ptr)
++static inline void arch_change_bit(unsigned long nr,
++				   volatile unsigned long *ptr)
+ {
+ 	unsigned long *addr = __bitops_word(nr, ptr);
+ 	unsigned long mask;
+@@ -118,8 +120,8 @@ static inline void change_bit(unsigned long nr, volatile unsigned long *ptr)
+ 	__atomic64_xor(mask, (long *)addr);
+ }
+ 
+-static inline int
+-test_and_set_bit(unsigned long nr, volatile unsigned long *ptr)
++static inline bool arch_test_and_set_bit(unsigned long nr,
++					 volatile unsigned long *ptr)
+ {
+ 	unsigned long *addr = __bitops_word(nr, ptr);
+ 	unsigned long old, mask;
+@@ -129,8 +131,8 @@ test_and_set_bit(unsigned long nr, volatile unsigned long *ptr)
+ 	return (old & mask) != 0;
+ }
+ 
+-static inline int
+-test_and_clear_bit(unsigned long nr, volatile unsigned long *ptr)
++static inline bool arch_test_and_clear_bit(unsigned long nr,
++					   volatile unsigned long *ptr)
+ {
+ 	unsigned long *addr = __bitops_word(nr, ptr);
+ 	unsigned long old, mask;
+@@ -140,8 +142,8 @@ test_and_clear_bit(unsigned long nr, volatile unsigned long *ptr)
+ 	return (old & ~mask) != 0;
+ }
+ 
+-static inline int
+-test_and_change_bit(unsigned long nr, volatile unsigned long *ptr)
++static inline bool arch_test_and_change_bit(unsigned long nr,
++					    volatile unsigned long *ptr)
+ {
+ 	unsigned long *addr = __bitops_word(nr, ptr);
+ 	unsigned long old, mask;
+@@ -151,30 +153,31 @@ test_and_change_bit(unsigned long nr, volatile unsigned long *ptr)
+ 	return (old & mask) != 0;
+ }
+ 
+-static inline void __set_bit(unsigned long nr, volatile unsigned long *ptr)
++static inline void arch___set_bit(unsigned long nr, volatile unsigned long *ptr)
+ {
+ 	unsigned char *addr = __bitops_byte(nr, ptr);
+ 
+ 	*addr |= 1 << (nr & 7);
+ }
+ 
+-static inline void 
+-__clear_bit(unsigned long nr, volatile unsigned long *ptr)
++static inline void arch___clear_bit(unsigned long nr,
++				    volatile unsigned long *ptr)
+ {
+ 	unsigned char *addr = __bitops_byte(nr, ptr);
+ 
+ 	*addr &= ~(1 << (nr & 7));
+ }
+ 
+-static inline void __change_bit(unsigned long nr, volatile unsigned long *ptr)
++static inline void arch___change_bit(unsigned long nr,
++				     volatile unsigned long *ptr)
+ {
+ 	unsigned char *addr = __bitops_byte(nr, ptr);
+ 
+ 	*addr ^= 1 << (nr & 7);
+ }
+ 
+-static inline int
+-__test_and_set_bit(unsigned long nr, volatile unsigned long *ptr)
++static inline bool arch___test_and_set_bit(unsigned long nr,
++					   volatile unsigned long *ptr)
+ {
+ 	unsigned char *addr = __bitops_byte(nr, ptr);
+ 	unsigned char ch;
+@@ -184,8 +187,8 @@ __test_and_set_bit(unsigned long nr, volatile unsigned long *ptr)
+ 	return (ch >> (nr & 7)) & 1;
+ }
+ 
+-static inline int
+-__test_and_clear_bit(unsigned long nr, volatile unsigned long *ptr)
++static inline bool arch___test_and_clear_bit(unsigned long nr,
++					     volatile unsigned long *ptr)
+ {
+ 	unsigned char *addr = __bitops_byte(nr, ptr);
+ 	unsigned char ch;
+@@ -195,8 +198,8 @@ __test_and_clear_bit(unsigned long nr, volatile unsigned long *ptr)
+ 	return (ch >> (nr & 7)) & 1;
+ }
+ 
+-static inline int
+-__test_and_change_bit(unsigned long nr, volatile unsigned long *ptr)
++static inline bool arch___test_and_change_bit(unsigned long nr,
++					      volatile unsigned long *ptr)
+ {
+ 	unsigned char *addr = __bitops_byte(nr, ptr);
+ 	unsigned char ch;
+@@ -206,7 +209,8 @@ __test_and_change_bit(unsigned long nr, volatile unsigned long *ptr)
+ 	return (ch >> (nr & 7)) & 1;
+ }
+ 
+-static inline int test_bit(unsigned long nr, const volatile unsigned long *ptr)
++static inline bool arch_test_bit(unsigned long nr,
++				 const volatile unsigned long *ptr)
+ {
+ 	const volatile unsigned char *addr;
+ 
+@@ -215,28 +219,30 @@ static inline int test_bit(unsigned long nr, const volatile unsigned long *ptr)
+ 	return (*addr >> (nr & 7)) & 1;
+ }
+ 
+-static inline int test_and_set_bit_lock(unsigned long nr,
+-					volatile unsigned long *ptr)
++static inline bool arch_test_and_set_bit_lock(unsigned long nr,
++					      volatile unsigned long *ptr)
+ {
+-	if (test_bit(nr, ptr))
++	if (arch_test_bit(nr, ptr))
+ 		return 1;
+-	return test_and_set_bit(nr, ptr);
++	return arch_test_and_set_bit(nr, ptr);
+ }
+ 
+-static inline void clear_bit_unlock(unsigned long nr,
+-				    volatile unsigned long *ptr)
++static inline void arch_clear_bit_unlock(unsigned long nr,
++					 volatile unsigned long *ptr)
+ {
+ 	smp_mb__before_atomic();
+-	clear_bit(nr, ptr);
++	arch_clear_bit(nr, ptr);
+ }
+ 
+-static inline void __clear_bit_unlock(unsigned long nr,
+-				      volatile unsigned long *ptr)
++static inline void arch___clear_bit_unlock(unsigned long nr,
++					   volatile unsigned long *ptr)
+ {
+ 	smp_mb();
+-	__clear_bit(nr, ptr);
++	arch___clear_bit(nr, ptr);
+ }
+ 
++#include <asm-generic/bitops-instrumented.h>
++
+ /*
+  * Functions which use MSB0 bit numbering.
+  * The bits are numbered:
+@@ -261,7 +267,8 @@ static inline void clear_bit_inv(unsigned long nr, volatile unsigned long *ptr)
+ 	return clear_bit(nr ^ (BITS_PER_LONG - 1), ptr);
+ }
+ 
+-static inline int test_and_clear_bit_inv(unsigned long nr, volatile unsigned long *ptr)
++static inline bool test_and_clear_bit_inv(unsigned long nr,
++					  volatile unsigned long *ptr)
+ {
+ 	return test_and_clear_bit(nr ^ (BITS_PER_LONG - 1), ptr);
+ }
+@@ -276,8 +283,8 @@ static inline void __clear_bit_inv(unsigned long nr, volatile unsigned long *ptr
+ 	return __clear_bit(nr ^ (BITS_PER_LONG - 1), ptr);
+ }
+ 
+-static inline int test_bit_inv(unsigned long nr,
+-			       const volatile unsigned long *ptr)
++static inline bool test_bit_inv(unsigned long nr,
++				const volatile unsigned long *ptr)
+ {
+ 	return test_bit(nr ^ (BITS_PER_LONG - 1), ptr);
+ }
+diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
+index a4d3809..823578c 100644
+--- a/arch/s390/include/asm/page.h
++++ b/arch/s390/include/asm/page.h
+@@ -177,6 +177,8 @@ static inline int devmem_is_allowed(unsigned long pfn)
+ #define VM_DATA_DEFAULT_FLAGS	(VM_READ | VM_WRITE | \
+ 				 VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
+ 
++#define ARCH_ZONE_DMA_BITS	31
++
+ #include <asm-generic/memory_model.h>
+ #include <asm-generic/getorder.h>
+ 
+diff --git a/arch/s390/include/asm/setup.h b/arch/s390/include/asm/setup.h
+index 82deb8f..c5cfff7 100644
+--- a/arch/s390/include/asm/setup.h
++++ b/arch/s390/include/asm/setup.h
+@@ -54,6 +54,7 @@
+ #define INITRD_SIZE_OFFSET	0x10410
+ #define OLDMEM_BASE_OFFSET	0x10418
+ #define OLDMEM_SIZE_OFFSET	0x10420
++#define KERNEL_VERSION_OFFSET	0x10428
+ #define COMMAND_LINE_OFFSET	0x10480
+ 
+ #ifndef __ASSEMBLY__
+@@ -74,7 +75,8 @@ struct parmarea {
+ 	unsigned long initrd_size;			/* 0x10410 */
+ 	unsigned long oldmem_base;			/* 0x10418 */
+ 	unsigned long oldmem_size;			/* 0x10420 */
+-	char pad1[0x10480 - 0x10428];			/* 0x10428 - 0x10480 */
++	unsigned long kernel_version;			/* 0x10428 */
++	char pad1[0x10480 - 0x10430];			/* 0x10430 - 0x10480 */
+ 	char command_line[ARCH_COMMAND_LINE_SIZE];	/* 0x10480 */
+ };
+ 
+diff --git a/arch/s390/include/asm/unistd.h b/arch/s390/include/asm/unistd.h
+index b675568..9e9f75e 100644
+--- a/arch/s390/include/asm/unistd.h
++++ b/arch/s390/include/asm/unistd.h
+@@ -34,5 +34,6 @@
+ #define __ARCH_WANT_SYS_FORK
+ #define __ARCH_WANT_SYS_VFORK
+ #define __ARCH_WANT_SYS_CLONE
++#define __ARCH_WANT_SYS_CLONE3
+ 
+ #endif /* _ASM_S390_UNISTD_H_ */
+diff --git a/arch/s390/include/uapi/asm/zcrypt.h b/arch/s390/include/uapi/asm/zcrypt.h
+index 494c34c..8c5755f 100644
+--- a/arch/s390/include/uapi/asm/zcrypt.h
++++ b/arch/s390/include/uapi/asm/zcrypt.h
+@@ -20,6 +20,7 @@
+ 
+ #include <linux/ioctl.h>
+ #include <linux/compiler.h>
++#include <linux/types.h>
+ 
+ /* Name of the zcrypt device driver. */
+ #define ZCRYPT_NAME "zcrypt"
+@@ -160,17 +161,17 @@ struct ica_xcRB {
+  * @payload_len:	Payload length
+  */
+ struct ep11_cprb {
+-	uint16_t	cprb_len;
++	__u16		cprb_len;
+ 	unsigned char	cprb_ver_id;
+ 	unsigned char	pad_000[2];
+ 	unsigned char	flags;
+ 	unsigned char	func_id[2];
+-	uint32_t	source_id;
+-	uint32_t	target_id;
+-	uint32_t	ret_code;
+-	uint32_t	reserved1;
+-	uint32_t	reserved2;
+-	uint32_t	payload_len;
++	__u32		source_id;
++	__u32		target_id;
++	__u32		ret_code;
++	__u32		reserved1;
++	__u32		reserved2;
++	__u32		payload_len;
+ } __attribute__((packed));
+ 
+ /**
+@@ -179,8 +180,8 @@ struct ep11_cprb {
+  * @dom_id:	Usage domain id
+  */
+ struct ep11_target_dev {
+-	uint16_t ap_id;
+-	uint16_t dom_id;
++	__u16 ap_id;
++	__u16 dom_id;
+ };
+ 
+ /**
+@@ -195,14 +196,14 @@ struct ep11_target_dev {
+  * @resp:		Addr to response block
+  */
+ struct ep11_urb {
+-	uint16_t		targets_num;
+-	uint64_t		targets;
+-	uint64_t		weight;
+-	uint64_t		req_no;
+-	uint64_t		req_len;
+-	uint64_t		req;
+-	uint64_t		resp_len;
+-	uint64_t		resp;
++	__u16		targets_num;
++	__u64		targets;
++	__u64		weight;
++	__u64		req_no;
++	__u64		req_len;
++	__u64		req;
++	__u64		resp_len;
++	__u64		resp;
+ } __attribute__((packed));
+ 
+ /**
+diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
+index a90d3e9..3054e9c0 100644
+--- a/arch/s390/kernel/syscalls/syscall.tbl
++++ b/arch/s390/kernel/syscalls/syscall.tbl
+@@ -437,4 +437,4 @@
+ 432  common	fsmount			sys_fsmount			sys_fsmount
+ 433  common	fspick			sys_fspick			sys_fspick
+ 434  common	pidfd_open		sys_pidfd_open			sys_pidfd_open
+-# 435 reserved for clone3
++435  common	clone3			sys_clone3			sys_clone3
+diff --git a/arch/s390/mm/pgalloc.c b/arch/s390/mm/pgalloc.c
+index 99e0621..54fcdf6 100644
+--- a/arch/s390/mm/pgalloc.c
++++ b/arch/s390/mm/pgalloc.c
+@@ -17,8 +17,6 @@
+ 
+ #ifdef CONFIG_PGSTE
+ 
+-static int page_table_allocate_pgste_min = 0;
+-static int page_table_allocate_pgste_max = 1;
+ int page_table_allocate_pgste = 0;
+ EXPORT_SYMBOL(page_table_allocate_pgste);
+ 
+@@ -29,8 +27,8 @@ static struct ctl_table page_table_sysctl[] = {
+ 		.maxlen		= sizeof(int),
+ 		.mode		= S_IRUGO | S_IWUSR,
+ 		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= &page_table_allocate_pgste_min,
+-		.extra2		= &page_table_allocate_pgste_max,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
+ 	},
+ 	{ }
+ };
+diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
+index 730c4e6..4142c85 100644
+--- a/drivers/s390/cio/qdio_main.c
++++ b/drivers/s390/cio/qdio_main.c
+@@ -319,9 +319,7 @@ static int qdio_siga_output(struct qdio_q *q, unsigned int *busy_bit,
+ 	int retries = 0, cc;
+ 	unsigned long laob = 0;
+ 
+-	WARN_ON_ONCE(aob && ((queue_type(q) != QDIO_IQDIO_QFMT) ||
+-			     !q->u.out.use_cq));
+-	if (q->u.out.use_cq && aob != 0) {
++	if (aob) {
+ 		fc = QDIO_SIGA_WRITEQ;
+ 		laob = aob;
+ 	}
+@@ -621,9 +619,6 @@ static inline unsigned long qdio_aob_for_buffer(struct qdio_output_q *q,
+ {
+ 	unsigned long phys_aob = 0;
+ 
+-	if (!q->use_cq)
+-		return 0;
+-
+ 	if (!q->aobs[bufnr]) {
+ 		struct qaob *aob = qdio_allocate_aob();
+ 		q->aobs[bufnr] = aob;
+@@ -1308,6 +1303,8 @@ static void qdio_detect_hsicq(struct qdio_irq *irq_ptr)
+ 
+ 	for_each_output_queue(irq_ptr, q, i) {
+ 		if (use_cq) {
++			if (multicast_outbound(q))
++				continue;
+ 			if (qdio_enable_async_operation(&q->u.out) < 0) {
+ 				use_cq = 0;
+ 				continue;
+@@ -1553,18 +1550,19 @@ static int handle_outbound(struct qdio_q *q, unsigned int callflags,
+ 		/* One SIGA-W per buffer required for unicast HSI */
+ 		WARN_ON_ONCE(count > 1 && !multicast_outbound(q));
+ 
+-		phys_aob = qdio_aob_for_buffer(&q->u.out, bufnr);
++		if (q->u.out.use_cq)
++			phys_aob = qdio_aob_for_buffer(&q->u.out, bufnr);
+ 
+ 		rc = qdio_kick_outbound_q(q, phys_aob);
+ 	} else if (need_siga_sync(q)) {
+ 		rc = qdio_siga_sync_q(q);
++	} else if (count < QDIO_MAX_BUFFERS_PER_Q &&
++		   get_buf_state(q, prev_buf(bufnr), &state, 0) > 0 &&
++		   state == SLSB_CU_OUTPUT_PRIMED) {
++		/* The previous buffer is not processed yet, tack on. */
++		qperf_inc(q, fast_requeue);
+ 	} else {
+-		/* try to fast requeue buffers */
+-		get_buf_state(q, prev_buf(bufnr), &state, 0);
+-		if (state != SLSB_CU_OUTPUT_PRIMED)
+-			rc = qdio_kick_outbound_q(q, 0);
+-		else
+-			qperf_inc(q, fast_requeue);
++		rc = qdio_kick_outbound_q(q, 0);
+ 	}
+ 
+ 	/* in case of SIGA errors we must process the error immediately */
+diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
+index 1d4c893..3645d17 100644
+--- a/drivers/s390/cio/vfio_ccw_cp.c
++++ b/drivers/s390/cio/vfio_ccw_cp.c
+@@ -72,8 +72,10 @@ static int pfn_array_alloc(struct pfn_array *pa, u64 iova, unsigned int len)
+ 				  sizeof(*pa->pa_iova_pfn) +
+ 				  sizeof(*pa->pa_pfn),
+ 				  GFP_KERNEL);
+-	if (unlikely(!pa->pa_iova_pfn))
++	if (unlikely(!pa->pa_iova_pfn)) {
++		pa->pa_nr = 0;
+ 		return -ENOMEM;
++	}
+ 	pa->pa_pfn = pa->pa_iova_pfn + pa->pa_nr;
+ 
+ 	pa->pa_iova_pfn[0] = pa->pa_iova >> PAGE_SHIFT;
+@@ -421,7 +423,7 @@ static int ccwchain_loop_tic(struct ccwchain *chain,
+ static int ccwchain_handle_ccw(u32 cda, struct channel_program *cp)
+ {
+ 	struct ccwchain *chain;
+-	int len;
++	int len, ret;
+ 
+ 	/* Copy 2K (the most we support today) of possible CCWs */
+ 	len = copy_from_iova(cp->mdev, cp->guest_cp, cda,
+@@ -448,7 +450,12 @@ static int ccwchain_handle_ccw(u32 cda, struct channel_program *cp)
+ 	memcpy(chain->ch_ccw, cp->guest_cp, len * sizeof(struct ccw1));
+ 
+ 	/* Loop for tics on this new chain. */
+-	return ccwchain_loop_tic(chain, cp);
++	ret = ccwchain_loop_tic(chain, cp);
++
++	if (ret)
++		ccwchain_free(chain);
++
++	return ret;
+ }
+ 
+ /* Loop for TICs. */
+@@ -642,17 +649,16 @@ int cp_init(struct channel_program *cp, struct device *mdev, union orb *orb)
+ 
+ 	/* Build a ccwchain for the first CCW segment */
+ 	ret = ccwchain_handle_ccw(orb->cmd.cpa, cp);
+-	if (ret)
+-		cp_free(cp);
+-
+-	/* It is safe to force: if not set but idals used
+-	 * ccwchain_calc_length returns an error.
+-	 */
+-	cp->orb.cmd.c64 = 1;
+ 
+-	if (!ret)
++	if (!ret) {
+ 		cp->initialized = true;
+ 
++		/* It is safe to force: if it was not set but idals used
++		 * ccwchain_calc_length would have returned an error.
++		 */
++		cp->orb.cmd.c64 = 1;
++	}
++
+ 	return ret;
+ }
+ 
+diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+index 2b90a5e..9208c0e 100644
+--- a/drivers/s390/cio/vfio_ccw_drv.c
++++ b/drivers/s390/cio/vfio_ccw_drv.c
+@@ -88,7 +88,7 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
+ 		     (SCSW_ACTL_DEVACT | SCSW_ACTL_SCHACT));
+ 	if (scsw_is_solicited(&irb->scsw)) {
+ 		cp_update_scsw(&private->cp, &irb->scsw);
+-		if (is_final)
++		if (is_final && private->state == VFIO_CCW_STATE_CP_PENDING)
+ 			cp_free(&private->cp);
+ 	}
+ 	mutex_lock(&private->io_mutex);
+diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+index 1a55e59..957889a 100644
+--- a/drivers/s390/virtio/virtio_ccw.c
++++ b/drivers/s390/virtio/virtio_ccw.c
+@@ -145,6 +145,8 @@ struct airq_info {
+ 	struct airq_iv *aiv;
+ };
+ static struct airq_info *airq_areas[MAX_AIRQ_AREAS];
++static DEFINE_MUTEX(airq_areas_lock);
++
+ static u8 *summary_indicators;
+ 
+ static inline u8 *get_summary_indicator(struct airq_info *info)
+@@ -265,9 +267,11 @@ static unsigned long get_airq_indicator(struct virtqueue *vqs[], int nvqs,
+ 	unsigned long bit, flags;
+ 
+ 	for (i = 0; i < MAX_AIRQ_AREAS && !indicator_addr; i++) {
++		mutex_lock(&airq_areas_lock);
+ 		if (!airq_areas[i])
+ 			airq_areas[i] = new_airq_info(i);
+ 		info = airq_areas[i];
++		mutex_unlock(&airq_areas_lock);
+ 		if (!info)
+ 			return 0;
+ 		write_lock_irqsave(&info->lock, flags);
+diff --git a/usr/include/Makefile b/usr/include/Makefile
+index aa316d9..1fb6abe 100644
+--- a/usr/include/Makefile
++++ b/usr/include/Makefile
+@@ -101,10 +101,6 @@ ifeq ($(SRCARCH),riscv)
+ header-test- += linux/bpf_perf_event.h
+ endif
+ 
+-ifeq ($(SRCARCH),s390)
+-header-test- += asm/zcrypt.h
+-endif
+-
+ ifeq ($(SRCARCH),sparc)
+ header-test- += asm/stat.h
+ header-test- += asm/uctx.h
 
