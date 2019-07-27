@@ -2,103 +2,107 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F592C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 10:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55669C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 10:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8412070D
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 10:32:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D08JMQPX"
+	by mail.kernel.org (Postfix) with ESMTP id 42B092081B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 10:42:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564224139;
+	bh=UybUBfvBzantNilF1ZV5JV3PyFP6cC+3I7g4mp/0Vs4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gR+bqLRxzvlekyrR0fo3ceyIocWABVkemZezUj/pshZJnCkGTpO7o8MmPlL4An7st
+	 XVs+TxAADHKRIA/8NXN7wgnLxDeue0aSCxJYy2GbfNzltrrJ5gV8KjHXBuFvx5Jeyg
+	 rp1uayc8V8CmcsTSjr0+y1E+ClcYComjl+j8x/Fg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfG0Kci (ORCPT
+        id S1727330AbfG0KmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 06:32:38 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:42034 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfG0Kch (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 06:32:37 -0400
-Received: by mail-wr1-f41.google.com with SMTP id x1so6957299wrr.9;
-        Sat, 27 Jul 2019 03:32:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=I9urIWyfzBTbYOSOMidgQgAJ5dRa4kNEamHc41n0CB4=;
-        b=D08JMQPXt/3RUaObdc1X8+6L+8vSHaCR0ke9D5Igdcmo2wCHOuHCjKSABfQxGKCtPK
-         VyewGU96h6ATR5UuRnwvfs8CoohZp6jICPXFYJcZX4mamjDCEQ6ddXxRG2DxLXjr6sk5
-         LFhgiZ+QpqXPlHpoQZgzoNZzn3JMW3j5WHAsZtpxHxoJnAD+Urp/TdnsCFZEJ+Jw8yJ0
-         YJy0GF7gru7J6XYUF6GG0xZPG2QygHpD39iL1fro1xS0TYS7O3XmUCrvStdQR8PIbpV3
-         ccM8m/h9iMmFt/NdKkjaE9+EynxLTTl5bB3hHCR6qwbQKEDW6kpo3ZMUCRWGoWtdfEPh
-         Td8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=I9urIWyfzBTbYOSOMidgQgAJ5dRa4kNEamHc41n0CB4=;
-        b=mnTQmNTcnjb5dA1rAf+eQM89L26tEbfDigso9mQ1mrSgVUGHebl4HIsGk4K0JgxK2L
-         DHxTuqRi0OVzE1fS6qQccb/Rmifp0/GLyEvqLgWLo8r7hlZTYngLI2J617G5tk5yG7Ds
-         XpZlvTrVmkOFA91qVJp0v4M5fV/wcS6F2cFn6e9NDds9UWXlhc8WfKNRq2BZyBfOkqWD
-         fRkEQduUFHzYWaLhAt+kQQgct4sz1cAVBZT/3U/2PtSexBlpV7VYqQTLaes3hNMvks+l
-         np7TNYFd5iLKq5zhc83BN6g5Pb8vIupTXK243Jlr3RwGemnPiPI8I46uCUt93YKgNpA7
-         DPUg==
-X-Gm-Message-State: APjAAAXSeTLYTB20C21VcP43mnLgLySp8eUtaAt/dN6qTypIkwA9hARj
-        qR1tlfxJQHdp1RUx7+s7Kf+R2cTo
-X-Google-Smtp-Source: APXvYqxDNZmdyAMjswJgvBjZzalaaqC1Szyson1mZJ5ZiQmYZ7RuwdNLSUctMM+/yVdLnjQ2UXoR1w==
-X-Received: by 2002:adf:f6cb:: with SMTP id y11mr21486105wrp.245.1564223554872;
-        Sat, 27 Jul 2019 03:32:34 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f43:4200:c0a4:381:9a20:d2e8? (p200300EA8F434200C0A403819A20D2E8.dip0.t-ipconnect.de. [2003:ea:8f43:4200:c0a4:381:9a20:d2e8])
-        by smtp.googlemail.com with ESMTPSA id j33sm112993820wre.42.2019.07.27.03.32.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Jul 2019 03:32:34 -0700 (PDT)
-Subject: Re: [REGRESSION] 5.3-rc1: r8169: remove 1000/Half from supported
- modes
-To:     Bernhard Held <berny156@gmx.de>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>
-References: <a291af45-310c-8b60-ae7e-392e73e3bad1@gmx.de>
- <0a48ecd7-7134-222d-833d-c1f65e055c02@gmail.com>
- <9af99856-2e5d-0e3a-34d3-0582da869919@gmx.de>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <603ca390-eeb2-d50b-c2e6-9e22d92c535b@gmail.com>
-Date:   Sat, 27 Jul 2019 12:27:22 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 27 Jul 2019 06:42:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725875AbfG0KmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 06:42:13 -0400
+Received: from localhost (lfbn-1-17239-195.w86-248.abo.wanadoo.fr [86.248.61.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A75412081B;
+        Sat, 27 Jul 2019 10:42:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564224132;
+        bh=UybUBfvBzantNilF1ZV5JV3PyFP6cC+3I7g4mp/0Vs4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=00/f/PUT34J5BgZ+rLwXSfqsj5XcE78vGy7ynsIP/f4bC0MHNKmzwuEF0Y8p3N9J3
+         nBtBbQUYEp76+3k7yx5HnGEOF+2ZE3kryIwYjPEYrOlqXXs+YiygKeXy9/THIpEfuq
+         KiCEJ8Lst82KuOp9FenkqubRmon4DGdyT/0NS180=
+Date:   Sat, 27 Jul 2019 12:42:08 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     thierry.reding@gmail.com, wens@csie.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 1/6] dt-bindings: pwm: allwinner: Add H6 PWM description
+Message-ID: <20190727104208.my62iypgwjy5pkxz@flea.home>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+ <20190726184045.14669-2-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-In-Reply-To: <9af99856-2e5d-0e3a-34d3-0582da869919@gmx.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190726184045.14669-2-jernej.skrabec@siol.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.07.2019 22:45, Bernhard Held wrote:
-> On 26.07.19 at 22:24, Heiner Kallweit wrote:
->> On 26.07.2019 22:16, Bernhard Held wrote:
->>> Hi Heiner,
->>>
->>> with commit a6851c613fd7 "r8169: remove 1000/Half from supported modes" my RTL8111B GB-link stops working. It thinks that it established a link, however nothing is actually transmitted. Setting the mode with `mii-tool -F 100baseTx-HD` establishes a successful connection.
->>>
->> Can you provide standard ethtool output w/ and w/o this patch? Also a full dmesg output
->> with the patch would be helpful.
->> Is "100baseTx-HD" a typo and you mean GBit? And any special reason why you set half duplex?
->>
-> 
-> The requested files are attached.
-> 
-Looks all normal. So it seems to be a HW issue with the integrated PHY (RTL8211B).
-This PHY version is used also e.g. in RTL8168d. So better revert the original change.
+Hi,
 
-> mii-tool doesn't offer GBit settings. I used HD only while playing around, both FD and HD are working.
-> 
-> Hope it helps!
-> Bernhard
-Heiner
+On Fri, Jul 26, 2019 at 08:40:40PM +0200, Jernej Skrabec wrote:
+> H6 PWM block is basically the same as A20 PWM, except that it also has
+> bus clock and reset line which needs to be handled accordingly.
+>
+> Expand Allwinner PWM binding with H6 PWM specifics.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 36 ++++++++++++++++++-
+>  1 file changed, 35 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> index 0ac52f83a58c..deca5d81802f 100644
+> --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> @@ -30,13 +30,47 @@ properties:
+>        - items:
+>            - const: allwinner,sun50i-h5-pwm
+>            - const: allwinner,sun5i-a13-pwm
+> +      - const: allwinner,sun50i-h6-pwm
+>
+>    reg:
+>      maxItems: 1
+>
+> -  clocks:
+> +  # Even though it only applies to subschemas under the conditionals,
+> +  # not listing them here will trigger a warning because of the
+> +  # additionalsProperties set to false.
+> +  clocks: true
+> +  clock-names: true
+> +  resets:
+>      maxItems: 1
+>
+> +allOf:
+> +  - if:
+
+There's only one condition, so you don't really need the allOf.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
