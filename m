@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A66C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D00C7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C54208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E492084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:10:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbfG0PKW (ORCPT
+        id S1729089AbfG0PKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 11:10:22 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41058 "EHLO huawei.com"
+        Sat, 27 Jul 2019 11:10:24 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3183 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387802AbfG0PKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 11:10:16 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 90554614924E688445FD;
-        Sat, 27 Jul 2019 23:10:13 +0800 (CST)
+        id S1729043AbfG0PKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 11:10:10 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 91B6CD5F3BF66402C1F9;
+        Sat, 27 Jul 2019 23:10:08 +0800 (CST)
 Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
  (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
- 23:10:07 +0800
+ 23:10:01 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
         <tiwai@suse.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -52,9 +52,9 @@ CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-tegra@vger.kernel.org>, <linux-xtensa@linux-xtensa.org>,
         <gregkh@linuxfoundation.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 15/34] ASoC: stm32: sai: use devm_platform_ioremap_resource() to simplify code
-Date:   Sat, 27 Jul 2019 23:07:19 +0800
-Message-ID: <20190727150738.54764-16-yuehaibing@huawei.com>
+Subject: [PATCH -next 13/34] ASoC: kirkwood-i2s: use devm_platform_ioremap_resource() to simplify code
+Date:   Sat, 27 Jul 2019 23:07:17 +0800
+Message-ID: <20190727150738.54764-14-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190727150738.54764-1-yuehaibing@huawei.com>
 References: <20190727150738.54764-1-yuehaibing@huawei.com>
@@ -73,30 +73,30 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- sound/soc/stm/stm32_sai.c | 4 +---
+ sound/soc/kirkwood/kirkwood-i2s.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/soc/stm/stm32_sai.c b/sound/soc/stm/stm32_sai.c
-index 63f68e6..1ac5103c 100644
---- a/sound/soc/stm/stm32_sai.c
-+++ b/sound/soc/stm/stm32_sai.c
-@@ -152,7 +152,6 @@ static int stm32_sai_probe(struct platform_device *pdev)
- {
- 	struct stm32_sai_data *sai;
- 	struct reset_control *rst;
--	struct resource *res;
- 	const struct of_device_id *of_id;
- 	u32 val;
- 	int ret;
-@@ -161,8 +160,7 @@ static int stm32_sai_probe(struct platform_device *pdev)
- 	if (!sai)
- 		return -ENOMEM;
+diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
+index 3446a113..5076ec4 100644
+--- a/sound/soc/kirkwood/kirkwood-i2s.c
++++ b/sound/soc/kirkwood/kirkwood-i2s.c
+@@ -523,7 +523,6 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
+ 	struct kirkwood_asoc_platform_data *data = pdev->dev.platform_data;
+ 	struct snd_soc_dai_driver *soc_dai = kirkwood_i2s_dai;
+ 	struct kirkwood_dma_data *priv;
+-	struct resource *mem;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	int err;
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	sai->base = devm_ioremap_resource(&pdev->dev, res);
-+	sai->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(sai->base))
- 		return PTR_ERR(sai->base);
+@@ -533,8 +532,7 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
+ 
+ 	dev_set_drvdata(&pdev->dev, priv);
+ 
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->io = devm_ioremap_resource(&pdev->dev, mem);
++	priv->io = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->io))
+ 		return PTR_ERR(priv->io);
  
 -- 
 2.7.4
