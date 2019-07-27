@@ -2,101 +2,107 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BE4C41514
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA8AC761A9
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27FCB2080C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C230F2080C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 09:23:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZNxBjvy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oiP3UjYg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387505AbfG0JP4 (ORCPT
+        id S2387419AbfG0JPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 05:15:56 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33109 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387432AbfG0JP4 (ORCPT
+        Sat, 27 Jul 2019 05:15:47 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35384 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727885AbfG0JPr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 05:15:56 -0400
-Received: by mail-pf1-f193.google.com with SMTP id g2so25632820pfq.0;
-        Sat, 27 Jul 2019 02:15:55 -0700 (PDT)
+        Sat, 27 Jul 2019 05:15:47 -0400
+Received: by mail-lf1-f65.google.com with SMTP id p197so38696216lfa.2;
+        Sat, 27 Jul 2019 02:15:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Atx8xpuE0sl6vRA/wIvsHhfFZ2IVdmWCb/LsfxFrY/c=;
-        b=bZNxBjvyxvmG+0QaoLyJh1nCiE8XkjlejTpxJjKNJyk/oxDCnHM+GtMGKsZjKMZIay
-         kUv4THn/eVeeut224iqfTSoHcVIZSGdKBUwdINBQp6iutYD7UMoYADo7h7e3sTqRUxOw
-         48CGoakfAomxPG3M9yGinvKU+tJkoblwrLVC9FH8ooTWRPctTkCBBksWoOnIapU7UnW4
-         R7hv16sHQ026+CcuZSABz4KsX8N/dhIbZxn81BDvkkBgZYtSj4sXnm8hPn9jymtfdEzF
-         TZHS/aGfI9lDuGN5Sz+1RfQ9kWJlVRiuqpi7TVprf6bJRilwsrjyZVzST1cBkAsgaSiQ
-         s4fg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+rUh3TcvJcuRsnzvwE5sXn7tIbCR4ba1afiJ99NGPaY=;
+        b=oiP3UjYgO1P2U+PjmgZUjykl2BKytWCnatxa8AHUh6jF8MlShM+UXOVLh6OWmx1SFN
+         oN3ZG0dvIzyNRMIjlrZHjD088wW1UVX5NTGypkoVqEskEKvdKhRwzIfNUUz0fI1UOFdT
+         /Hg47LinJBMcI7I0VpOwV3usCOMN3XKANDbrLwNR7ky2KfGJbJronnHBwzHuJ4qsbNkt
+         4e7LqpblcFmAezY1Kbac/y3NMZ2CKNe/mK/Wol79P3b2TprlK0KClo6GLB84ximdhx3z
+         llog4PyY1cc+94nKGNYBM3UlsKtxRGoeXbCO/AhTrnYaXgJmmsV4spli0weWk0hwU9Yp
+         Fpig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Atx8xpuE0sl6vRA/wIvsHhfFZ2IVdmWCb/LsfxFrY/c=;
-        b=SOrnLqyfI8Jy10X0UWpuvmLDtBOjSI6+QsfpZDTr1TPGJqIENON0+XRfUhZgSHzoZN
-         sMuFC2zFxi5hdeAVPzGwhl/U0QtsnzmmDlnpMCuZOrIQz44biPliZMdyYmhR5dQFCvYt
-         5vJO16p4gp8lutxxZsAT5H7sOjXb6Aano3u6/gIk67ctohModGQi7WKUVWAPdessBkiQ
-         EXt9bpoPAHbAeb6Ww0Cj+lghz2Apbk7DZg4Knj+dhAOx/A6bS33/Gvs2Q0O+6Lyu9rEO
-         kE0IVM38sb4q/ERNxzX+1ja5qOrBVTxlvlrl6B19USyiXcDIYZ+p2W3381iWHBDotubG
-         qTDw==
-X-Gm-Message-State: APjAAAXS7fOpL9ReChszJ2AGXD5BHTtUqNZ5MR6haZrL1REXXsaHGGY4
-        sqGrjNZPBtFHdFIAQ4kie6E=
-X-Google-Smtp-Source: APXvYqxNLfJu4DrS4MHx5N/BZp2jBKE3m8mnG8F2gCqux/5fqVhIVgEwh6WJr9TN504eW7z8WPsEkA==
-X-Received: by 2002:a62:5214:: with SMTP id g20mr26674415pfb.187.1564218955306;
-        Sat, 27 Jul 2019 02:15:55 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id y12sm64088978pfn.187.2019.07.27.02.15.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Jul 2019 02:15:54 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     stanimir.varbanov@linaro.org, agross@kernel.org, mchehab@kernel.org
-Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] media: qcom: venus: Fix a possible null-pointer dereference in vdec_g_fmt()
-Date:   Sat, 27 Jul 2019 17:15:47 +0800
-Message-Id: <20190727091547.11674-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+rUh3TcvJcuRsnzvwE5sXn7tIbCR4ba1afiJ99NGPaY=;
+        b=HggB8hgAyF1GeENvMKam5sGS7GsUt868n3UnBPnzkrZ/6ysf/O4cSJqcJzbyVvWAMX
+         ayPTSnueQklC/V4s0+BsE7NeBEenp1D6VOwzq9Cmew27RM968/2tV9qQ4CYvCMpV/qKz
+         o5XQAxs4y7wrQkZ+m1dda4YLjnJLAhtIhC43FqaBaHyddKa/+oAvCnOD4bu4djZ2eRVq
+         G/sujRAj7oOfauLm3fvY3yX4gKVRW9SMCWnb3L8g3MQqfp0JKl96hwHRv2EanYwUc7Vo
+         DfmuHrbnkqGfr1+5j8nDok1LysuaARZpMSXlJrI0jzfYjd7F51Tfg0VkmYTV/uq7jMUv
+         FlJA==
+X-Gm-Message-State: APjAAAXSopwDoIu5o+PK4UFwn/wvEtreUUEQ7gaAwUyECPi4h6ZZ3bt6
+        LGjLUwOvo8yWQHKVJZe1YSg=
+X-Google-Smtp-Source: APXvYqxO2L8VoYDuvDuoMWh5O4GmsOA7NxLj/ZFVzL9neLCIvQFirqVxNYKNF2tzz20l4iRS5F85EQ==
+X-Received: by 2002:ac2:50cd:: with SMTP id h13mr23502535lfm.36.1564218944436;
+        Sat, 27 Jul 2019 02:15:44 -0700 (PDT)
+Received: from localhost ([188.170.223.67])
+        by smtp.gmail.com with ESMTPSA id d16sm10853347ljc.96.2019.07.27.02.15.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 27 Jul 2019 02:15:43 -0700 (PDT)
+Date:   Sat, 27 Jul 2019 12:15:41 +0300
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH v3 1/2] platform/x86: surfacepro3_button: Fix device check
+Message-ID: <20190727091541.GD795@penguin>
+References: <20190720150511.95076-1-luzmaximilian@gmail.com>
+ <20190720150511.95076-2-luzmaximilian@gmail.com>
+ <CAHp75Ve+3c-TFeN3Dh-DB75Rjft8mY2DA8vNkrFyp7JK-ZOjDA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Ve+3c-TFeN3Dh-DB75Rjft8mY2DA8vNkrFyp7JK-ZOjDA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In vdec_g_fmt(), fmt is firstly assigned NULL, and it could be never
-assigned before being used on line 223:
-    pixmp->pixelformat = fmt->pixfmt;
+On Thu, Jul 25, 2019 at 08:57:53PM +0300, Andy Shevchenko wrote:
+> On Sat, Jul 20, 2019 at 6:05 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+> >
+> > Do not use the surfacepro3_button driver on newer Microsoft Surface
+> > models, only use it on the Surface Pro 3 and 4. Newer models (5th, 6th
+> > and possibly future generations) use the same device as the Surface Pro
+> > 4 to represent their volume and power buttons (MSHW0040), but their
+> > actual implementation is significantly different. This patch ensures
+> > that the surfacepro3_button driver is only used on the Pro 3 and 4
+> > models, allowing a different driver to bind on other models.
+> >
+> 
+> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+> assuming it will go thru Input subsystem.
 
-Thus, a possible null-pointer dereference may occur.
+I can take it, but I do not think it is dependent on the other change
+and thus can go through platform tree as well.
 
-To fix this bug, fmt is checked before being used here.
+Thanks.
 
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/media/platform/qcom/venus/vdec.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index e1f998656c07..12c31551f191 100644
---- a/drivers/media/platform/qcom/venus/vdec.c
-+++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -211,7 +211,8 @@ static int vdec_g_fmt(struct file *file, void *fh, struct v4l2_format *f)
- 		inst->height = format.fmt.pix_mp.height;
- 	}
- 
--	pixmp->pixelformat = fmt->pixfmt;
-+	if (fmt)
-+		pixmp->pixelformat = fmt->pixfmt;
- 
- 	if (f->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
- 		pixmp->width = inst->width;
 -- 
-2.17.0
-
+Dmitry
