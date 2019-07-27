@@ -2,163 +2,108 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F62C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0697C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621182075C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC482075C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 13:33:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387647AbfG0Nbh (ORCPT
+        id S2387684AbfG0Nd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 09:31:37 -0400
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:42860 "EHLO
-        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387514AbfG0Nbh (ORCPT
+        Sat, 27 Jul 2019 09:33:27 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37142 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387607AbfG0Nd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 09:31:37 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 941819E6A6F;
-        Sat, 27 Jul 2019 14:31:34 +0100 (BST)
-Date:   Sat, 27 Jul 2019 14:31:33 +0100
-From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-To:     Patrick Havelange <patrick.havelange@essensium.com>
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] counter/ftm-quaddec: Use device-managed registration
- API
-Message-ID: <20190727143133.26a36f70@archlinux>
-In-Reply-To: <CAKKE0ZG9hKqOnPHCfmW8Mpe2tdcdpdv4Njvx7XNuw6ykJf3P0w@mail.gmail.com>
-References: <20190726022836.7182-1-hslester96@gmail.com>
-        <CAKKE0ZG9hKqOnPHCfmW8Mpe2tdcdpdv4Njvx7XNuw6ykJf3P0w@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 27 Jul 2019 09:33:27 -0400
+Received: by mail-ot1-f67.google.com with SMTP id s20so58112684otp.4
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 06:33:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8pKsm0Glo5GvWJ2FgAFUVIAU/XUG0KKO3Gz3Fqbr57A=;
+        b=IVBwLfASsUtSGfo1Eo51WnALde6DFG3DJaoTntK9i3KALzG1YUeKkOT2wAVwUK4F1r
+         ewbi7ZjIZe0u00hQj14EC839i4Jh6srsYpS2tpSxIpGen7SbgdATs1P0aCPvdxS6/qMJ
+         r/EngmmLO+0zzOTc/Gw3VYQh/oydwh0P3NXRcbSLsF3zggJE5JMWeO3yEYQYrIXOrjco
+         Sri1ggrDjTlEEWyfctpp27+tvzVuw0pIzfZmnr1IkbfSVd59+xZUlRJykzIyr6amdRxR
+         bkZ+YE96UOdrr3OlM4qTlBYXAxw/YqF+k2YXNULtEE26l4LDptnfg0YO1LEH0GR62fHC
+         WHGg==
+X-Gm-Message-State: APjAAAWhP2/WieKrovioOFYXtVxcGOAs+LPO6SL412porUVE8R7LB6ZH
+        4lfitJU3ADHAzlZhUFRlfYGJAlaRXbQv8r0ht74THw==
+X-Google-Smtp-Source: APXvYqyAbW1b8uSXlX1kLfH6Wz3b/HKGqixPASzcQcxCPj1SJ/ze1kYlHQlYZ5Gx2uUiwFUm8rQ2kx+E3q/bIM3MDzo=
+X-Received: by 2002:a9d:7a90:: with SMTP id l16mr22763240otn.297.1564234406426;
+ Sat, 27 Jul 2019 06:33:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190722095024.19075-1-hch@lst.de> <20190726233753.GD2166993@magnolia>
+In-Reply-To: <20190726233753.GD2166993@magnolia>
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+Date:   Sat, 27 Jul 2019 15:33:14 +0200
+Message-ID: <CAHc6FU7L52soLiRafnOiTsaMYp4X_NmjjimpMMzdaoSH_afT+A@mail.gmail.com>
+Subject: Re: lift the xfs writepage code into iomap v3
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        linux-xfs@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 14:51:30 +0200
-Patrick Havelange <patrick.havelange@essensium.com> wrote:
-
-> Hello,
-> 
-> On Fri, Jul 26, 2019 at 4:28 AM Chuhong Yuan <hslester96@gmail.com> wrote:
+On Sat, 27 Jul 2019 at 01:38, Darrick J. Wong <darrick.wong@oracle.com> wrote:
+> On Mon, Jul 23, 2019 at 11:50:12AM +0200, Christoph Hellwig wrote:
+> > Hi all,
 > >
-> > Make use of devm_counter_register.
-> > Then we can remove redundant unregistration API
-> > usage to make code simpler.
-> >
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > ---
-> > Changes in v2:
-> >   - Use devm_add_action_or_reset to keep
-> >     resource release order.  
-> 
-> This is better now indeed.
-> 
-> However it seems there is an issue with the mail/patch format, I'm
-> unable to apply it with git am, and if you look at
-> https://lore.kernel.org/patchwork/patch/1105782/ the diff section is
-> missing the beginning of the patch. I don't know why, but I think it
-> should be looked into.
-> 
-> Otherwise, it's fine by me.
-Hi Patrick,
+> > this series cleans up the xfs writepage code and then lifts it to
+> > fs/iomap.c so that it could be use by other file system.  I've been
+> > wanting to this for a while so that I could eventually convert gfs2
+> > over to it, but I never got to it.  Now Damien has a new zonefs
+> > file system for semi-raw access to zoned block devices that would
+> > like to use the iomap code instead of reinventing it, so I finally
+> > had to do the work.
+>
+> Hmm... I don't like how there are xfs changes mixed in with the iomap
+> changes, because were I to take this series as-is then I'd have to
+> commit both to adding iomap writeback code /and/ converting xfs at the
+> same time.
+>
+> I think I'd be more comfortable creating a branch to merge the changes
+> to list.h and fs/iomap/, and then gfs2/zonefs/xfs can sprout their own
+> branches from there to do whatever conversions are necessary.
+>
+> To me what that means is splitting patch 7 into 7a which does the iomap
+> changes and 7b which does the xfs changes.  To get there, I'd create a
+> iomap-writeback branch containing:
+>
+> 1 7a 8 9 10 11 12
+>
+> and then a new xfs-iomap-writeback branch containing:
+>
+> 2 4 7b
+>
+> This eliminates the need for patches 3, 5, and 6, though the cost is
+> that it's less clear from the history that we did some reorganizing of
+> the xfs writeback code and then moved it over to iomap.  OTOH, I also
+> see this as a way to lower risk because if some patch in the
+> xfs-iomap-writeback branch shakes loose a bug that doesn't affect gfs2
+> or zonedfs we don't have to hold them up.
+>
+> I'll try to restructure this series along those lines and report back
+> how it went.
 
-A formal, Acked-by or Reviewed-by definitely preferred if you are happy
-to give one.
-
-This looks fine to me as well. William, if you are happy with the resend
-of this, then let me know if you want me to queue it up.
+Keeping the infrastructure changes in separate commits would certainly
+make the patches easier to work with for me. Keeping the commits
+interleaved should be fine though: patch "iomap: zero newly allocated
+mapped blocks" depends on "xfs: set IOMAP_F_NEW more carefully", so a
+pure infrastructure branch without "xfs: set IOMAP_F_NEW more
+carefully" probably wouldn't be correct.
 
 Thanks,
-
-Jonathan
-
-> 
-> Regards,
-> 
-> Patrick Havelange
-> 
-> 
-> >   - _remove() function is redundant now,
-> >     delete it.
-> >
-> >  drivers/counter/ftm-quaddec.c | 31 +++++++++++--------------------
-> >  1 file changed, 11 insertions(+), 20 deletions(-)
-> >
-> > diff --git a/drivers/counter/ftm-quaddec.c b/drivers/counter/ftm-quaddec.c
-> > index 68a9b7393457..76c70a6c3593 100644
-> > --- a/drivers/counter/ftm-quaddec.c
-> > +++ b/drivers/counter/ftm-quaddec.c
-> > @@ -100,16 +100,17 @@ static void ftm_quaddec_init(struct ftm_quaddec *ftm)
-> >         ftm_set_write_protection(ftm);
-> >  }
-> >
-> > -static void ftm_quaddec_disable(struct ftm_quaddec *ftm)
-> > +static void ftm_quaddec_disable(void *ftm)
-> >  {
-> > -       ftm_clear_write_protection(ftm);
-> > -       ftm_write(ftm, FTM_MODE, 0);
-> > -       ftm_write(ftm, FTM_QDCTRL, 0);
-> > +       struct ftm_quaddec *ftm_qua = ftm;
-> >
-> > +       ftm_clear_write_protection(ftm_qua);
-> > +       ftm_write(ftm_qua, FTM_MODE, 0);
-> > +       ftm_write(ftm_qua, FTM_QDCTRL, 0);
-> >         /*
-> >          * This is enough to disable the counter. No clock has been
-> >          * selected by writing to FTM_SC in init()
-> >          */
-> > -       ftm_set_write_protection(ftm);
-> > +       ftm_set_write_protection(ftm_qua);
-> >  }
-> >
-> >  static int ftm_quaddec_get_prescaler(struct counter_device *counter,
-> > @@ -316,22 +317,13 @@ static int ftm_quaddec_probe(struct platform_device *pdev)
-> >         mutex_init(&ftm->ftm_quaddec_mutex);
-> >
-> >         ftm_quaddec_init(ftm);
-> > -
-> > -       ret = counter_register(&ftm->counter);
-> > +       ret = devm_add_action_or_reset(&pdev->dev, ftm_quaddec_disable, ftm);
-> >         if (ret)
-> > -               ftm_quaddec_disable(ftm);
-> > -
-> > -       return ret;
-> > -}
-> > -
-> > -static int ftm_quaddec_remove(struct platform_device *pdev)
-> > -{
-> > -       struct ftm_quaddec *ftm = platform_get_drvdata(pdev);
-> > -
-> > -       counter_unregister(&ftm->counter);
-> > -
-> > -       ftm_quaddec_disable(ftm);
-> > +               return ret;
-> >
-> > +       ret = devm_counter_register(&pdev->dev, &ftm->counter);
-> > +       if (ret)
-> > +               return ret;
-> >         return 0;
-> >  }
-> >
-> > @@ -346,7 +338,6 @@ static struct platform_driver ftm_quaddec_driver = {
-> >                 .of_match_table = ftm_quaddec_match,
-> >         },
-> >         .probe = ftm_quaddec_probe,
-> > -       .remove = ftm_quaddec_remove,
-> >  };
-> >
-> >  module_platform_driver(ftm_quaddec_driver);
-> > --
-> > 2.20.1
-> >  
-
+Andreas
