@@ -4,31 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D43C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF2EC7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD2020840
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E3BB20840
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 05:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbfG0Fw3 (ORCPT
+        id S1728655AbfG0Fwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 01:52:29 -0400
-Received: from mga02.intel.com ([134.134.136.20]:40960 "EHLO mga02.intel.com"
+        Sat, 27 Jul 2019 01:52:49 -0400
+Received: from mga02.intel.com ([134.134.136.20]:40956 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728222AbfG0FwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 01:52:19 -0400
+        id S1728467AbfG0FwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 01:52:23 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 22:52:15 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jul 2019 22:52:16 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,313,1559545200"; 
-   d="scan'208";a="254568598"
+   d="scan'208";a="254568642"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga001.jf.intel.com with ESMTP; 26 Jul 2019 22:52:15 -0700
+  by orsmga001.jf.intel.com with ESMTP; 26 Jul 2019 22:52:16 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
@@ -40,9 +39,9 @@ To:     Paolo Bonzini <pbonzini@redhat.com>,
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
         Andy Lutomirski <luto@amacapital.net>
-Subject: [RFC PATCH 07/21] KVM: x86: Add WARN_ON_ONCE(index!=0) in __do_cpuid_ent
-Date:   Fri, 26 Jul 2019 22:52:00 -0700
-Message-Id: <20190727055214.9282-8-sean.j.christopherson@intel.com>
+Subject: [RFC PATCH 21/21] KVM: x86: Add capability to grant VM access to privileged SGX attribute
+Date:   Fri, 26 Jul 2019 22:52:14 -0700
+Message-Id: <20190727055214.9282-22-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190727055214.9282-1-sean.j.christopherson@intel.com>
 References: <20190727055214.9282-1-sean.j.christopherson@intel.com>
@@ -53,98 +52,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Except for one outlier, function 7, all cases in __do_cpuid_ent and
-its children assume that the index passed in is zero.  Furthermore,
-the index is fully under KVM's control and all callers pass an index
-of zero.  In other words, a non-zero index would indicate either a
-bug in the caller or a new case that is expected to be handled.  WARN
-and return an error on a non-zero index and remove the now unreachable
-code in function 7 for handling a non-zero index.
+The SGX subsystem restricts access to a subset of enclave attributes to
+provide additional security for an uncompromised kernel, e.g. to prevent
+malware from using the PROVISIONKEY to ensure its nodes are running
+inside a geniune SGX enclave and/or to obtain a stable fingerprint.
 
+To prevent userspace from circumventing such restrictions by running an
+enclave in a VM, KVM restricts guest access to privileged attributes by
+default.  Add a capability, KVM_CAP_SGX_ATTRIBUTE, that can be used by
+userspace to grant a VM access to a priveleged attribute, with args[0]
+holding a file handle to a valid SGX attribute file corresponding to
+an attribute that is restricted by KVM (currently only PROVISIONKEY).
+
+Cc: Andy Lutomirski <luto@amacapital.net>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c | 57 ++++++++++++++++++++++----------------------
- 1 file changed, 29 insertions(+), 28 deletions(-)
+ Documentation/virtual/kvm/api.txt | 20 ++++++++++++++++++++
+ arch/x86/kvm/cpuid.c              |  2 +-
+ arch/x86/kvm/x86.c                | 22 ++++++++++++++++++++++
+ include/uapi/linux/kvm.h          |  1 +
+ 4 files changed, 44 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
+index 383b292966fa..b1c0ff4e9224 100644
+--- a/Documentation/virtual/kvm/api.txt
++++ b/Documentation/virtual/kvm/api.txt
+@@ -5013,6 +5013,26 @@ it hard or impossible to use it correctly.  The availability of
+ KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 signals that those bugs are fixed.
+ Userspace should not try to use KVM_CAP_MANUAL_DIRTY_LOG_PROTECT.
+ 
++7.19 KVM_CAP_SGX_ATTRIBUTE
++
++Architectures: x86
++Parameters: args[0] is a file handle of a SGX attribute file in securityfs
++Returns: 0 on success, -EINVAL if the file handle is invalid or if a requested
++	 attribute is not supported by KVM.
++
++The SGX subsystem restricts access to a subset of enclave attributes, e.g. the
++PROVISIONKEY, to provide additional security for an uncompromised kernel, e.g.
++to prevent malware from using the PROVISIONKEY to ensure its nodes are running
++inside a geniune SGX enclave and/or to obtain a stable system fingerprint.
++
++To prevent userspace from circumventing such restrictions by running an enclave
++in a VM, KVM prevents access to privileged attributes by default.  Userspace
++can use KVM_CAP_SGX_ATTRIBUTE to grant a VM access to a priveleged attribute.
++args[0] must hold a file handle to a valid SGX attribute file corresponding to
++an attribute that is supported/restricted by KVM (currently only PROVISIONKEY).
++
++See Documentation/x86/sgx/2.Kernel-internals.rst for more details.
++
+ 8. Other capabilities.
+ ----------------------
+ 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 4992e7c99588..70e488951f25 100644
+index 73a0326a1968..73af09edb2fa 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -410,6 +410,14 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
- 		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
- 		F(MD_CLEAR);
+@@ -439,7 +439,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
  
-+	/*
-+	 * The code below assumes index == 0, which simplifies handling leafs
-+	 * with a dynamic number of sub-leafs.  The index is fully under KVM's
-+	 * control, i.e. a non-zero value is a bug.
-+	 */
-+	if (WARN_ON_ONCE(index != 0))
-+		return -EINVAL;
+ 	/* cpuid 12.1.eax*/
+ 	const u32 kvm_cpuid_12_1_eax_sgx_features =
+-		SGX_ATTR_DEBUG | SGX_ATTR_MODE64BIT | 0 /* PROVISIONKEY */ |
++		SGX_ATTR_DEBUG | SGX_ATTR_MODE64BIT | SGX_ATTR_PROVISIONKEY |
+ 		SGX_ATTR_EINITTOKENKEY | SGX_ATTR_KSS;
+ 
+ 	/* cpuid 12.1.ebx*/
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index ec92c5534336..9144909d4a8e 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -67,6 +67,8 @@
+ #include <asm/mshyperv.h>
+ #include <asm/hypervisor.h>
+ #include <asm/intel_pt.h>
++#include <asm/sgx.h>
++#include <asm/sgx_arch.h>
+ #include <clocksource/hyperv_timer.h>
+ 
+ #define CREATE_TRACE_POINTS
+@@ -3090,6 +3092,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_GET_MSR_FEATURES:
+ 	case KVM_CAP_MSR_PLATFORM_INFO:
+ 	case KVM_CAP_EXCEPTION_PAYLOAD:
++#ifdef CONFIG_INTEL_SGX_VIRTUALIZATION
++	case KVM_CAP_SGX_ATTRIBUTE:
++#endif
+ 		r = 1;
+ 		break;
+ 	case KVM_CAP_SYNC_REGS:
+@@ -4626,6 +4631,23 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 		kvm->arch.exception_payload_enabled = cap->args[0];
+ 		r = 0;
+ 		break;
++#ifdef CONFIG_INTEL_SGX_VIRTUALIZATION
++	case KVM_CAP_SGX_ATTRIBUTE: {
++		u64 allowed_attributes = 0;
 +
- 	/* all calls to cpuid_count() should be made on the same cpu */
- 	get_cpu();
++		r = sgx_set_attribute(&allowed_attributes, cap->args[0]);
++		if (r)
++			break;
++
++		/* KVM only supports the PROVISIONKEY privileged attribute. */
++		if ((allowed_attributes & SGX_ATTR_PROVISIONKEY) &&
++		    !(allowed_attributes & ~SGX_ATTR_PROVISIONKEY))
++			kvm->arch.sgx_provisioning_allowed = true;
++		else
++			r = -EINVAL;
++		break;
++	}
++#endif
+ 	default:
+ 		r = -EINVAL;
+ 		break;
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 2fe12b40d503..b16708c2b6c9 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -993,6 +993,7 @@ struct kvm_ppc_resize_hpt {
+ #define KVM_CAP_ARM_SVE 170
+ #define KVM_CAP_ARM_PTRAUTH_ADDRESS 171
+ #define KVM_CAP_ARM_PTRAUTH_GENERIC 172
++#define KVM_CAP_SGX_ATTRIBUTE 200
  
-@@ -480,38 +488,31 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
- 		entry->ecx = 0;
- 		entry->edx = 0;
- 		break;
--	case 7: {
-+	case 7:
- 		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
- 		/* Mask ebx against host capability word 9 */
--		if (index == 0) {
--			entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
--			cpuid_mask(&entry->ebx, CPUID_7_0_EBX);
--			// TSC_ADJUST is emulated
--			entry->ebx |= F(TSC_ADJUST);
--			entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
--			f_la57 = entry->ecx & F(LA57);
--			cpuid_mask(&entry->ecx, CPUID_7_ECX);
--			/* Set LA57 based on hardware capability. */
--			entry->ecx |= f_la57;
--			entry->ecx |= f_umip;
--			/* PKU is not yet implemented for shadow paging. */
--			if (!tdp_enabled || !boot_cpu_has(X86_FEATURE_OSPKE))
--				entry->ecx &= ~F(PKU);
--			entry->edx &= kvm_cpuid_7_0_edx_x86_features;
--			cpuid_mask(&entry->edx, CPUID_7_EDX);
--			/*
--			 * We emulate ARCH_CAPABILITIES in software even
--			 * if the host doesn't support it.
--			 */
--			entry->edx |= F(ARCH_CAPABILITIES);
--		} else {
--			entry->ebx = 0;
--			entry->ecx = 0;
--			entry->edx = 0;
--		}
-+		entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
-+		cpuid_mask(&entry->ebx, CPUID_7_0_EBX);
-+		// TSC_ADJUST is emulated
-+		entry->ebx |= F(TSC_ADJUST);
-+		entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
-+		f_la57 = entry->ecx & F(LA57);
-+		cpuid_mask(&entry->ecx, CPUID_7_ECX);
-+		/* Set LA57 based on hardware capability. */
-+		entry->ecx |= f_la57;
-+		entry->ecx |= f_umip;
-+		/* PKU is not yet implemented for shadow paging. */
-+		if (!tdp_enabled || !boot_cpu_has(X86_FEATURE_OSPKE))
-+			entry->ecx &= ~F(PKU);
-+		entry->edx &= kvm_cpuid_7_0_edx_x86_features;
-+		cpuid_mask(&entry->edx, CPUID_7_EDX);
-+		/*
-+		 * We emulate ARCH_CAPABILITIES in software even
-+		 * if the host doesn't support it.
-+		 */
-+		entry->edx |= F(ARCH_CAPABILITIES);
- 		entry->eax = 0;
- 		break;
--	}
- 	case 9:
- 		break;
- 	case 0xa: { /* Architectural Performance Monitoring */
+ #ifdef KVM_CAP_IRQ_ROUTING
+ 
 -- 
 2.22.0
 
