@@ -2,273 +2,142 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B56C76190
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 00:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C23CC7618F
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 00:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F22C422BF5
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 00:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE84E22BF5
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 00:04:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lpSRNYnL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfG0AAL (ORCPT
+        id S1727719AbfG0AED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 20:00:11 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:15713 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726102AbfG0AAK (ORCPT
+        Fri, 26 Jul 2019 20:04:03 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42621 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfG0AED (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 20:00:10 -0400
-X-UUID: 2aef6c0802374436a368eb5fb208030d-20190727
-X-UUID: 2aef6c0802374436a368eb5fb208030d-20190727
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 407416634; Sat, 27 Jul 2019 08:00:03 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 27 Jul 2019 08:00:03 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 27 Jul 2019 08:00:03 +0800
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-CC:     <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>
-Subject: [PATCH v3] mm: memcontrol: fix use after free in mem_cgroup_iter()
-Date:   Sat, 27 Jul 2019 08:00:02 +0800
-Message-ID: <20190727000002.17844-1-miles.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Fri, 26 Jul 2019 20:04:03 -0400
+Received: by mail-qk1-f195.google.com with SMTP id 201so40324985qkm.9;
+        Fri, 26 Jul 2019 17:04:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=mEmoQBaRl/1lmhoeCdF1FJ9rNewOoyZM5tGW1krtLhQ=;
+        b=lpSRNYnLTr6knLzzD5T8+yNV4l2vBrfi7rdECTBpP0f8jHhB3ziOvo0o2wGL7jT2r4
+         iTBNCN2F7ZXyBDV0+gQcbfuTi01U9Rdd/ZPjDSX6FRBcVut3gLXPjVJQGy/SnNJDHtwP
+         T4mwcbP03RWplN7dWSqi07/1zcNw0G5XvRQvtosS8jn8UVvM4nsoiO8n2ijPOe+2PhAp
+         aOnyIdd4a0oZbs9x/o6jnhcWFORM99lHu5ZrmsCGj9UVCFbfqgWJjtOrObh42vBLO/qP
+         d1i2YjLKBVvjuEmpSvTRk5IhgIiB7tjMz3+bXqeNoHjnMbxrNK1DQEE4/k62IVyE6RpZ
+         jhxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=mEmoQBaRl/1lmhoeCdF1FJ9rNewOoyZM5tGW1krtLhQ=;
+        b=C21ZZ/rFhmbMuaHtX2OgrKPLF8mZnoCeqS2CqMZKe74fGNHnXg6U2VGCvwCT81qL/o
+         Fxgwku9jeIwTljQYtSJfhSnxj6bssoWLP72rVbwImydN6ay03/hPlCsCkY6menH1x4eg
+         YNPA1TGdC/nTnHpK5Mjs1sWdnlUtXJHLVNkEcela6qj5xbtJyWWDtU0eZWjZoAdEGUnQ
+         50twwcK0pfsl000u4EFC36Zzld+aBeIkKVVFpg2l8cVDYaQYxwlKBXzH7OxntWH7iZms
+         s5G7DnfeVlGEd0/G01EY9p6kucFOI5WZm+d2C6MPUj235WOyFvhPUXlETQFgbDmRPSWJ
+         LpIA==
+X-Gm-Message-State: APjAAAXYkzQ0fQ1K6Zfg2oRCfxaq1RCPNkdW8DLLSIAZPZlXuFOLHPVw
+        of6tr09qi6gp8BbB1FFv+FQhUfy3IbpJJlvpSw==
+X-Google-Smtp-Source: APXvYqz45qkkRxLjIFzWjMdTB9431UDpqGzcxQe3BhFkJ0qBwtyWxN5dc7AzrErI8ijfXBbJ8J+BInZVsK8m7Orbtqw=
+X-Received: by 2002:a37:6944:: with SMTP id e65mr59809231qkc.119.1564185841934;
+ Fri, 26 Jul 2019 17:04:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+From:   Rob Herring <robherring2@gmail.com>
+Date:   Fri, 26 Jul 2019 18:03:50 -0600
+Message-ID: <CAL_JsqJLB4q6wqTOX0oXAGQF4wuZ0irNT8nmpFEmuUKjvv38BQ@mail.gmail.com>
+Subject: [GIT PULL] Devicetree fixes for 5.3-rc, take 2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is sent to report an use after free in mem_cgroup_iter()
-after merging commit: be2657752e9e "mm: memcg: fix use after free in
-mem_cgroup_iter()".
+Hi Linus,
 
-I work with android kernel tree (4.9 & 4.14), and the commit:
-be2657752e9e "mm: memcg: fix use after free in mem_cgroup_iter()" has
-been merged to the trees. However, I can still observe use after free
-issues addressed in the commit be2657752e9e.
-(on low-end devices, a few times this month)
+Please pull some more DT fixes for 5.3. The nvmem changes would
+typically go thru Greg's tree, but they were missed in the merge
+window and I've been unable to get a response (partly because Srinivas
+is out on vacation it appears).
 
-backtrace:
-	css_tryget <- crash here
-	mem_cgroup_iter
-	shrink_node
-	shrink_zones
-	do_try_to_free_pages
-	try_to_free_pages
-	__perform_reclaim
-	__alloc_pages_direct_reclaim
-	__alloc_pages_slowpath
-	__alloc_pages_nodemask
+Rob
 
-To debug, I poisoned mem_cgroup before freeing it:
 
-static void __mem_cgroup_free(struct mem_cgroup *memcg)
-	for_each_node(node)
-	free_mem_cgroup_per_node_info(memcg, node);
-	free_percpu(memcg->stat);
-+       /* poison memcg before freeing it */
-+       memset(memcg, 0x78, sizeof(struct mem_cgroup));
-	kfree(memcg);
-}
+The following changes since commit e2297f7c3ab3b68dda2ac732b1767212019d3bdf:
 
-The coredump shows the position=0xdbbc2a00 is freed.
+  dt-bindings: pinctrl: stm32: Fix missing 'clocks' property in
+examples (2019-07-20 20:28:53 -0600)
 
-(gdb) p/x ((struct mem_cgroup_per_node *)0xe5009e00)->iter[8]
-$13 = {position = 0xdbbc2a00, generation = 0x2efd}
+are available in the Git repository at:
 
-0xdbbc2a00:     0xdbbc2e00      0x00000000      0xdbbc2800      0x00000100
-0xdbbc2a10:     0x00000200      0x78787878      0x00026218      0x00000000
-0xdbbc2a20:     0xdcad6000      0x00000001      0x78787800      0x00000000
-0xdbbc2a30:     0x78780000      0x00000000      0x0068fb84      0x78787878
-0xdbbc2a40:     0x78787878      0x78787878      0x78787878      0xe3fa5cc0
-0xdbbc2a50:     0x78787878      0x78787878      0x00000000      0x00000000
-0xdbbc2a60:     0x00000000      0x00000000      0x00000000      0x00000000
-0xdbbc2a70:     0x00000000      0x00000000      0x00000000      0x00000000
-0xdbbc2a80:     0x00000000      0x00000000      0x00000000      0x00000000
-0xdbbc2a90:     0x00000001      0x00000000      0x00000000      0x00100000
-0xdbbc2aa0:     0x00000001      0xdbbc2ac8      0x00000000      0x00000000
-0xdbbc2ab0:     0x00000000      0x00000000      0x00000000      0x00000000
-0xdbbc2ac0:     0x00000000      0x00000000      0xe5b02618      0x00001000
-0xdbbc2ad0:     0x00000000      0x78787878      0x78787878      0x78787878
-0xdbbc2ae0:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2af0:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b00:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b10:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b20:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b30:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b40:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b50:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b60:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b70:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b80:     0x78787878      0x78787878      0x00000000      0x78787878
-0xdbbc2b90:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2ba0:     0x78787878      0x78787878      0x78787878      0x78787878
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-fixes-for-5.3-2
 
-In the reclaim path, try_to_free_pages() does not setup
-sc.target_mem_cgroup and sc is passed to do_try_to_free_pages(), ...,
-shrink_node().
+for you to fetch changes up to e1ff7390f58e609aa113a2452a953f669abce6cc:
 
-In mem_cgroup_iter(), root is set to root_mem_cgroup because
-sc->target_mem_cgroup is NULL.
-It is possible to assign a memcg to root_mem_cgroup.nodeinfo.iter in
-mem_cgroup_iter().
+  dt-bindings: Fix more $id value mismatches filenames (2019-07-26
+17:41:41 -0600)
 
-	try_to_free_pages
-		struct scan_control sc = {...}, target_mem_cgroup is 0x0;
-	do_try_to_free_pages
-	shrink_zones
-	shrink_node
-		 mem_cgroup *root = sc->target_mem_cgroup;
-		 memcg = mem_cgroup_iter(root, NULL, &reclaim);
-	mem_cgroup_iter()
-		if (!root)
-			root = root_mem_cgroup;
-		...
+----------------------------------------------------------------
+Devicetree fixes for 5.3-rc:
 
-		css = css_next_descendant_pre(css, &root->css);
-		memcg = mem_cgroup_from_css(css);
-		cmpxchg(&iter->position, pos, memcg);
+- Fix mismatches in $id values and actual filenames. Now checked by
+  tools.
 
-My device uses memcg non-hierarchical mode.
-When we release a memcg: invalidate_reclaim_iterators() reaches only
-dead_memcg and its parents. If non-hierarchical mode is used,
-invalidate_reclaim_iterators() never reaches root_mem_cgroup.
+- Convert nvmem binding to DT schema
 
-static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-{
-	struct mem_cgroup *memcg = dead_memcg;
+- Fix a typo in of_property_read_bool() kerneldoc
 
-	for (; memcg; memcg = parent_mem_cgroup(memcg)
-	...
-}
+- Remove some redundant description in al-fic interrupt-controller
 
-So the use after free scenario looks like:
+----------------------------------------------------------------
+Maxime Ripard (2):
+      dt-bindings: nvmem: Add YAML schemas for the generic NVMEM bindings
+      dt-bindings: nvmem: SID: Fix the examples node names
 
-CPU1						CPU2
+Rob Herring (2):
+      dt-bindings: clk: allwinner,sun4i-a10-ccu: Correct path in $id
+      dt-bindings: Fix more $id value mismatches filenames
 
-try_to_free_pages
-do_try_to_free_pages
-shrink_zones
-shrink_node
-mem_cgroup_iter()
-    if (!root)
-    	root = root_mem_cgroup;
-    ...
-    css = css_next_descendant_pre(css, &root->css);
-    memcg = mem_cgroup_from_css(css);
-    cmpxchg(&iter->position, pos, memcg);
+Talel Shenhar (1):
+      dt-bindings: interrupt-controller: al-fic: remove redundant binding
 
-					invalidate_reclaim_iterators(memcg);
-					...
-					__mem_cgroup_free()
-						kfree(memcg);
+Thierry Reding (1):
+      of: Fix typo in kerneldoc
 
-try_to_free_pages
-do_try_to_free_pages
-shrink_zones
-shrink_node
-mem_cgroup_iter()
-    if (!root)
-    	root = root_mem_cgroup;
-    ...
-    mz = mem_cgroup_nodeinfo(root, reclaim->pgdat->node_id);
-    iter = &mz->iter[reclaim->priority];
-    pos = READ_ONCE(iter->position);
-    css_tryget(&pos->css) <- use after free
-
-To avoid this, we should also invalidate root_mem_cgroup.nodeinfo.iter in
-invalidate_reclaim_iterators().
-
-Change since v1:
-Add a comment to explain why we need to handle root_mem_cgroup separately.
-Rename invalid_root to invalidate_root.
-
-Change since v2:
-add fix tag
-
-Fixes: 5ac8fb31ad2e ("mm: memcontrol: convert reclaim iterator to simple css refcounting")
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
----
- mm/memcontrol.c | 38 ++++++++++++++++++++++++++++----------
- 1 file changed, 28 insertions(+), 10 deletions(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index cdbb7a84cb6e..7d079e862646 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1130,26 +1130,44 @@ void mem_cgroup_iter_break(struct mem_cgroup *root,
- 		css_put(&prev->css);
- }
- 
--static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-+static void __invalidate_reclaim_iterators(struct mem_cgroup *from,
-+					struct mem_cgroup *dead_memcg)
- {
--	struct mem_cgroup *memcg = dead_memcg;
- 	struct mem_cgroup_reclaim_iter *iter;
- 	struct mem_cgroup_per_node *mz;
- 	int nid;
- 	int i;
- 
--	for (; memcg; memcg = parent_mem_cgroup(memcg)) {
--		for_each_node(nid) {
--			mz = mem_cgroup_nodeinfo(memcg, nid);
--			for (i = 0; i <= DEF_PRIORITY; i++) {
--				iter = &mz->iter[i];
--				cmpxchg(&iter->position,
--					dead_memcg, NULL);
--			}
-+	for_each_node(nid) {
-+		mz = mem_cgroup_nodeinfo(from, nid);
-+		for (i = 0; i <= DEF_PRIORITY; i++) {
-+			iter = &mz->iter[i];
-+			cmpxchg(&iter->position,
-+				dead_memcg, NULL);
- 		}
- 	}
- }
- 
-+/*
-+ * When cgruop1 non-hierarchy mode is used, parent_mem_cgroup() does
-+ * not walk all the way up to the cgroup root (root_mem_cgroup). So
-+ * we have to handle dead_memcg from cgroup root separately.
-+ */
-+static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-+{
-+	struct mem_cgroup *memcg = dead_memcg;
-+	int invalidate_root = 0;
-+
-+	for (; memcg; memcg = parent_mem_cgroup(memcg)) {
-+		__invalidate_reclaim_iterators(memcg, dead_memcg);
-+		if (memcg == root_mem_cgroup)
-+			invalidate_root = 1;
-+	}
-+
-+	if (!invalidate_root)
-+		__invalidate_reclaim_iterators(root_mem_cgroup, dead_memcg);
-+}
-+
- /**
-  * mem_cgroup_scan_tasks - iterate over tasks of a memory cgroup hierarchy
-  * @memcg: hierarchy root
--- 
-2.18.0
-
+ Documentation/devicetree/bindings/arm/renesas.yaml |  2 +-
+ .../bindings/arm/socionext/milbeaut.yaml           |  2 +-
+ .../devicetree/bindings/arm/ti/ti,davinci.yaml     |  2 +-
+ .../bindings/clock/allwinner,sun4i-a10-ccu.yaml    |  2 +-
+ .../intel,ixp4xx-network-processing-engine.yaml    |  2 +-
+ .../devicetree/bindings/iio/accel/adi,adxl345.yaml |  2 +-
+ .../devicetree/bindings/iio/accel/adi,adxl372.yaml |  2 +-
+ .../interrupt-controller/amazon,al-fic.txt         | 16 ++--
+ .../intel,ixp4xx-interrupt.yaml                    |  2 +-
+ ...er.yaml => intel,ixp4xx-ahb-queue-manager.yaml} |  2 +-
+ .../bindings/net/allwinner,sun8i-a83t-emac.yaml    |  2 +-
+ .../bindings/nvmem/allwinner,sun4i-a10-sid.yaml    |  4 +-
+ .../devicetree/bindings/nvmem/nvmem-consumer.yaml  | 45 +++++++++++
+ Documentation/devicetree/bindings/nvmem/nvmem.txt  | 81 +------------------
+ Documentation/devicetree/bindings/nvmem/nvmem.yaml | 93 ++++++++++++++++++++++
+ .../phy/allwinner,sun6i-a31-mipi-dphy.yaml         |  2 +-
+ .../bindings/timer/intel,ixp4xx-timer.yaml         |  2 +-
+ include/linux/of.h                                 |  2 +-
+ 18 files changed, 161 insertions(+), 104 deletions(-)
+ rename Documentation/devicetree/bindings/misc/{intel,ixp4xx-queue-manager.yaml
+=> intel,ixp4xx-ahb-queue-manager.yaml} (95%)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml
+ create mode 100644 Documentation/devicetree/bindings/nvmem/nvmem.yaml
