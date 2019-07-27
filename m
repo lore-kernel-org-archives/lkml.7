@@ -3,106 +3,169 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7195AC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 14:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 341BAC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5969B2083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 14:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B4142087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 15:09:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbfG0Oys convert rfc822-to-8bit (ORCPT
+        id S1728953AbfG0PJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 10:54:48 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42513 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfG0Oyr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 10:54:47 -0400
-Received: by mail-ed1-f65.google.com with SMTP id v15so55674672eds.9;
-        Sat, 27 Jul 2019 07:54:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=rbC/42M5pQNTgrVBuOqW03/stnb0sjIXK4Z9mFvmX3A=;
-        b=RIa/n4tnS+k0bUsd9V0Mer+nEASCjRvuBTRrBiTzpe3sa+584Eoq5XpG4lIX9LafZw
-         IS1Vt7yBf8N+OOasjDnJOWsmnKypFi1ymbNS4NTGptXdTSbp8FSbVOxvlDngab+SVnq6
-         R/xx82f8qujLz0H6YjodSbIoiheEJQk741UWMz2H3i23vfS7+mJZvqJxMD0SJHFb/+FP
-         ySfpEfIdfzENeae3dPqIuu5uyn1gveEdDHVZapvMleHLpTw0VxYezT7TXyNwKA1hi1U1
-         +mRcgIg4817OBFtSpDZThW/t88GkhgAJzxe/WufVX7Mq8dsVHDQ6W8PmWrGgZVqJSGXs
-         TY7g==
-X-Gm-Message-State: APjAAAXxaFsPZdnsr+I7V4wJjEVgKx5QcX7ru1hRctGbyatMy4x/PHIS
-        3oWyr48hRvfbxl1P+W+a0egXw1CWlmg=
-X-Google-Smtp-Source: APXvYqzPxueSo0tS5nsoPY8gjziQrMRw5Eo68k/J6/nzzWbMpQWvPLTgKLJJ/eQNQHtEt5hPuts09A==
-X-Received: by 2002:a50:fd0c:: with SMTP id i12mr90575170eds.55.1564239285065;
-        Sat, 27 Jul 2019 07:54:45 -0700 (PDT)
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com. [209.85.221.52])
-        by smtp.gmail.com with ESMTPSA id g22sm6240782eje.84.2019.07.27.07.54.44
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Jul 2019 07:54:44 -0700 (PDT)
-Received: by mail-wr1-f52.google.com with SMTP id n9so57382599wru.0;
-        Sat, 27 Jul 2019 07:54:44 -0700 (PDT)
-X-Received: by 2002:a5d:568e:: with SMTP id f14mr27625205wrv.167.1564239284357;
- Sat, 27 Jul 2019 07:54:44 -0700 (PDT)
+        Sat, 27 Jul 2019 11:09:17 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41184 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726370AbfG0PJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 11:09:16 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 40F02F258955C599E725;
+        Sat, 27 Jul 2019 23:09:12 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Jul 2019
+ 23:09:06 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
+        <f.fainelli@gmail.com>, <rjui@broadcom.com>,
+        <sbranden@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
+        <paul@crapouillou.net>, <timur@kernel.org>,
+        <nicoleotsuka@gmail.com>, <Xiubo.Lee@gmail.com>,
+        <festevam@gmail.com>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
+        <linux-imx@nxp.com>, <matthias.bgg@gmail.com>,
+        <jbrunet@baylibre.com>, <khilman@baylibre.com>,
+        <daniel@zonque.org>, <haojian.zhuang@gmail.com>,
+        <robert.jarzmik@free.fr>, <baohua@kernel.org>,
+        <olivier.moysan@st.com>, <arnaud.pouliquen@st.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <mripard@kernel.org>, <wens@csie.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <yamada.masahiro@socionext.com>,
+        <michal.simek@xilinx.com>, <jcmvbkbc@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linuxppc-dev@lists.ozlabs.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-tegra@vger.kernel.org>, <linux-xtensa@linux-xtensa.org>,
+        <gregkh@linuxfoundation.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next 00/34] ASoC: use devm_platform_ioremap_resource() to simplify code
+Date:   Sat, 27 Jul 2019 23:07:04 +0800
+Message-ID: <20190727150738.54764-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <20190726184045.14669-6-jernej.skrabec@siol.net> <20190727105008.he35sixfvoyl2lm7@flea.home>
- <4063694.66Ui2fGJfo@jernej-laptop>
-In-Reply-To: <4063694.66Ui2fGJfo@jernej-laptop>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Sat, 27 Jul 2019 22:54:32 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65a9jF3QsEQgTim_XxXjhd9K0KwDRxtqYMqsiy2yWLeBg@mail.gmail.com>
-Message-ID: <CAGb2v65a9jF3QsEQgTim_XxXjhd9K0KwDRxtqYMqsiy2yWLeBg@mail.gmail.com>
-Subject: Re: [linux-sunxi] Re: [PATCH 5/6] pwm: sun4i: Add support to output
- source clock directly
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 10:28 PM Jernej Škrabec <jernej.skrabec@siol.net> wrote:
->
-> Dne sobota, 27. julij 2019 ob 12:50:08 CEST je Maxime Ripard napisal(a):
-> > On Fri, Jul 26, 2019 at 08:40:44PM +0200, Jernej Skrabec wrote:
-> > > PWM core has an option to bypass whole logic and output unchanged source
-> > > clock as PWM output. This is achieved by enabling bypass bit.
-> > >
-> > > Note that when bypass is enabled, no other setting has any meaning, not
-> > > even enable bit.
-> > >
-> > > This mode of operation is needed to achieve high enough frequency to
-> > > serve as clock source for AC200 chip, which is integrated into same
-> > > package as H6 SoC.
-> > >
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > It doesn't seem to be available on the A10 (at least) though. The A13
-> > seem to have it, so you should probably check that, and make that
-> > conditional to the compatible if not available on all of them.
->
-> Ok, can you suggest the name for the quirk? "has_bypass" is suspiciously
-> similar to "has_prescaler_bypass".
+devm_platform_ioremap_resource() internally have platform_get_resource()
+and devm_ioremap_resource() in it. So instead of calling them separately
+use devm_platform_ioremap_resource() directly.
 
-has_direct_mod_clk_output?
+YueHaibing (34):
+  ASoC: tegra20_das: use devm_platform_ioremap_resource() to simplify
+    code
+  ASoC: tegra: use devm_platform_ioremap_resource() to simplify code
+  ASoC: rockchip: use devm_platform_ioremap_resource() to simplify code
+  ASoC: ep93xx-i2s: use devm_platform_ioremap_resource() to simplify
+    code
+  ASoC: mt8173: use devm_platform_ioremap_resource() to simplify code
+  ASoC: mt6797: use devm_platform_ioremap_resource() to simplify code
+  ASoC: imx-audmux: use devm_platform_ioremap_resource() to simplify
+    code
+  ASoC: fsl_audmix: use devm_platform_ioremap_resource() to simplify
+    code
+  ASoC: bcm2835-i2s: use devm_platform_ioremap_resource() to simplify
+    code
+  ASoC: sirf: use devm_platform_ioremap_resource() to simplify code
+  ASoC: mxs-saif: use devm_platform_ioremap_resource() to simplify code
+  ASoC: spear: use devm_platform_ioremap_resource() to simplify code
+  ASoC: kirkwood-i2s: use devm_platform_ioremap_resource() to simplify
+    code
+  ASoC: xtfpga-i2s: use devm_platform_ioremap_resource() to simplify
+    code
+  ASoC: stm32: sai: use devm_platform_ioremap_resource() to simplify
+    code
+  ASoC: codecs: msm8916-wcd: use devm_platform_ioremap_resource() to
+    simplify code
+  ASoC: codecs: jz4725b: use devm_platform_ioremap_resource() to
+    simplify code
+  ASoC: mmp-sspa: use devm_platform_ioremap_resource() to simplify code
+  ASoC: jz4740: use devm_platform_ioremap_resource() to simplify code
+  ASoC: inno_rk3036: use devm_platform_ioremap_resource() to simplify
+    code
+  ASoC: uniphier: evea: use devm_platform_ioremap_resource() to simplify
+    code
+  ASoC: uniphier: aio-dma: use devm_platform_ioremap_resource() to
+    simplify code
+  ASoC: psc-ac97: use devm_platform_ioremap_resource() to simplify code
+  ASoC: au1x: psc-i2s: use devm_platform_ioremap_resource() to simplify
+    code
+  ASoC: meson: g12a-tohdmitx: use devm_platform_ioremap_resource() to
+    simplify code
+  ASoC: meson: axg-tdm-formatter: use devm_platform_ioremap_resource()
+    to simplify code
+  ASoC: meson: axg-pdm: use devm_platform_ioremap_resource() to simplify
+    code
+  ASoC: meson: axg-spdifin: use devm_platform_ioremap_resource() to
+    simplify code
+  ASoC: meson: axg-spdifout: use devm_platform_ioremap_resource() to
+    simplify code
+  ASoC: meson: axg-fifo: use devm_platform_ioremap_resource() to
+    simplify code
+  ASoC: xlnx: use devm_platform_ioremap_resource() to simplify code
+  ASoC: sun8i-codec-analog: use devm_platform_ioremap_resource() to
+    simplify code
+  ASoC: sunxi: sun50i-codec-analog: use devm_platform_ioremap_resource()
+    to simplify code
+  ASoC: sun8i-codec: use devm_platform_ioremap_resource() to simplify
+    code
 
-> Also, how to name these sun4i_pwm_data structures? Now that there are (will
-> be) three new quirks, name of the structure would be just too long, like
-> "sun50i_pwm_dual_prescaler_bypass_clk_rst_bypass".
+ sound/soc/au1x/psc-ac97.c                  | 5 ++---
+ sound/soc/au1x/psc-i2s.c                   | 5 ++---
+ sound/soc/bcm/bcm2835-i2s.c                | 4 +---
+ sound/soc/cirrus/ep93xx-i2s.c              | 4 +---
+ sound/soc/codecs/inno_rk3036.c             | 4 +---
+ sound/soc/codecs/jz4725b.c                 | 4 +---
+ sound/soc/codecs/jz4740.c                  | 4 +---
+ sound/soc/codecs/msm8916-wcd-digital.c     | 4 +---
+ sound/soc/codecs/rk3328_codec.c            | 4 +---
+ sound/soc/fsl/fsl_audmix.c                 | 4 +---
+ sound/soc/fsl/imx-audmux.c                 | 4 +---
+ sound/soc/kirkwood/kirkwood-i2s.c          | 4 +---
+ sound/soc/mediatek/mt6797/mt6797-afe-pcm.c | 5 +----
+ sound/soc/mediatek/mt8173/mt8173-afe-pcm.c | 4 +---
+ sound/soc/meson/axg-fifo.c                 | 4 +---
+ sound/soc/meson/axg-pdm.c                  | 4 +---
+ sound/soc/meson/axg-spdifin.c              | 4 +---
+ sound/soc/meson/axg-spdifout.c             | 4 +---
+ sound/soc/meson/axg-tdm-formatter.c        | 4 +---
+ sound/soc/meson/g12a-tohdmitx.c            | 4 +---
+ sound/soc/mxs/mxs-saif.c                   | 5 +----
+ sound/soc/pxa/mmp-sspa.c                   | 4 +---
+ sound/soc/sirf/sirf-usp.c                  | 4 +---
+ sound/soc/spear/spdif_in.c                 | 5 ++---
+ sound/soc/stm/stm32_sai.c                  | 4 +---
+ sound/soc/sunxi/sun50i-codec-analog.c      | 4 +---
+ sound/soc/sunxi/sun8i-codec-analog.c       | 4 +---
+ sound/soc/sunxi/sun8i-codec.c              | 4 +---
+ sound/soc/tegra/tegra20_das.c              | 4 +---
+ sound/soc/tegra/tegra30_i2s.c              | 4 +---
+ sound/soc/uniphier/aio-dma.c               | 4 +---
+ sound/soc/uniphier/evea.c                  | 4 +---
+ sound/soc/xilinx/xlnx_i2s.c                | 4 +---
+ sound/soc/xilinx/xlnx_spdif.c              | 3 +--
+ sound/soc/xtensa/xtfpga-i2s.c              | 4 +---
+ 35 files changed, 38 insertions(+), 106 deletions(-)
 
-Just use the SoC model. Any later ones that have the same quirks will likely
-use the same compatible string anyway.
+-- 
+2.7.4
 
-ChenYu
+
