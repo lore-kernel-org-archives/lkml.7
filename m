@@ -2,107 +2,98 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55669C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 10:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECC4C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 10:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B092081B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 10:42:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564224139;
-	bh=UybUBfvBzantNilF1ZV5JV3PyFP6cC+3I7g4mp/0Vs4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gR+bqLRxzvlekyrR0fo3ceyIocWABVkemZezUj/pshZJnCkGTpO7o8MmPlL4An7st
-	 XVs+TxAADHKRIA/8NXN7wgnLxDeue0aSCxJYy2GbfNzltrrJ5gV8KjHXBuFvx5Jeyg
-	 rp1uayc8V8CmcsTSjr0+y1E+ClcYComjl+j8x/Fg=
+	by mail.kernel.org (Postfix) with ESMTP id AA6BB2087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 10:42:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfG0KmN (ORCPT
+        id S1728186AbfG0KmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 06:42:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725875AbfG0KmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 06:42:13 -0400
-Received: from localhost (lfbn-1-17239-195.w86-248.abo.wanadoo.fr [86.248.61.195])
+        Sat, 27 Jul 2019 06:42:19 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39550 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfG0KmS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 06:42:18 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A75412081B;
-        Sat, 27 Jul 2019 10:42:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564224132;
-        bh=UybUBfvBzantNilF1ZV5JV3PyFP6cC+3I7g4mp/0Vs4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=00/f/PUT34J5BgZ+rLwXSfqsj5XcE78vGy7ynsIP/f4bC0MHNKmzwuEF0Y8p3N9J3
-         nBtBbQUYEp76+3k7yx5HnGEOF+2ZE3kryIwYjPEYrOlqXXs+YiygKeXy9/THIpEfuq
-         KiCEJ8Lst82KuOp9FenkqubRmon4DGdyT/0NS180=
-Date:   Sat, 27 Jul 2019 12:42:08 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     thierry.reding@gmail.com, wens@csie.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 1/6] dt-bindings: pwm: allwinner: Add H6 PWM description
-Message-ID: <20190727104208.my62iypgwjy5pkxz@flea.home>
-References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <20190726184045.14669-2-jernej.skrabec@siol.net>
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0EACC283CED;
+        Sat, 27 Jul 2019 11:42:16 +0100 (BST)
+Date:   Sat, 27 Jul 2019 12:42:12 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Vitor Soares <Vitor.Soares@synopsys.com>,
+        linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-kernel@vger.kernel.org, lorenzo@kernel.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        bbrezillon@kernel.org, Joao.Pinto@synopsys.com
+Subject: Re: [PATCH v6 2/2] iio: imu: st_lsm6dsx: add i3c basic support for
+ LSM6DSO and LSM6DSR
+Message-ID: <20190727124212.3da89d41@collabora.com>
+In-Reply-To: <20190721181656.236faa63@archlinux>
+References: <cover.1563542515.git.vitor.soares@synopsys.com>
+        <77c709aca8607f31f141ee7c4dc28bf89266bd23.1563542515.git.vitor.soares@synopsys.com>
+        <20190721181656.236faa63@archlinux>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190726184045.14669-2-jernej.skrabec@siol.net>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, 21 Jul 2019 18:16:56 +0100
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-On Fri, Jul 26, 2019 at 08:40:40PM +0200, Jernej Skrabec wrote:
-> H6 PWM block is basically the same as A20 PWM, except that it also has
-> bus clock and reset line which needs to be handled accordingly.
->
-> Expand Allwinner PWM binding with H6 PWM specifics.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 36 ++++++++++++++++++-
->  1 file changed, 35 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-> index 0ac52f83a58c..deca5d81802f 100644
-> --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-> @@ -30,13 +30,47 @@ properties:
->        - items:
->            - const: allwinner,sun50i-h5-pwm
->            - const: allwinner,sun5i-a13-pwm
-> +      - const: allwinner,sun50i-h6-pwm
->
->    reg:
->      maxItems: 1
->
-> -  clocks:
-> +  # Even though it only applies to subschemas under the conditionals,
-> +  # not listing them here will trigger a warning because of the
-> +  # additionalsProperties set to false.
-> +  clocks: true
-> +  clock-names: true
-> +  resets:
->      maxItems: 1
->
-> +allOf:
-> +  - if:
+> On Fri, 19 Jul 2019 15:30:55 +0200
+> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> 
+> > For today the st_lsm6dsx driver support LSM6DSO and LSM6DSR sensor only in
+> > spi and i2c mode.
+> > 
+> > The LSM6DSO and LSM6DSR are also i3c capable so let's give i3c support to
+> > them.
+> > 
+> > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> > Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>  
+> Great. I'll pick this up once Boris has that immutable branch
+> available. Give me a poke if I seem to have lost it!
 
-There's only one condition, so you don't really need the allOf.
+Here it is:
 
-Maxime
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux.git tags/i3c/export-i3c_device_match_id
+
+for you to fetch changes up to 934d24a5e1508e73c0001afb54a3916e4270428f:
+
+  i3c: move i3c_device_match_id to device.c and export it (2019-07-27 11:22:19 +0200)
+
+----------------------------------------------------------------
+Needed for the st_lsm6dsx_i3c.c driver
+
+----------------------------------------------------------------
+Vitor Soares (1):
+      i3c: move i3c_device_match_id to device.c and export it
+
+ drivers/i3c/device.c       | 53 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/i3c/master.c       | 45 ---------------------------------------------
+ include/linux/i3c/device.h |  4 ++++
+ 3 files changed, 57 insertions(+), 45 deletions(-)
+
+
