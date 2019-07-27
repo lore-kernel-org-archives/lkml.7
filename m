@@ -2,238 +2,114 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A54C7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5112C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 329422083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A392085A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 17:37:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="XHhqOFyi"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="LXeFyCNu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387960AbfG0RbB (ORCPT
+        id S2388022AbfG0RhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 13:31:01 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.38]:33778 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387665AbfG0RbB (ORCPT
+        Sat, 27 Jul 2019 13:37:20 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39971 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387856AbfG0RhT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 13:31:01 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 3CBD6400CBD00
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 12:31:00 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id rQX6hWosO2qH7rQX6hZZUC; Sat, 27 Jul 2019 12:31:00 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=zTMCyoGbSC014cU50kL2oE1FLmpMXZhSvTZVZ5+pLUk=; b=XHhqOFyiFr9JJw/td89la0Dc6I
-        FpMpAIc896N/Ok8gQjBCYJPKyeaQwPc3jizGSfR67M5h9/JvnKolp0C55SUwHvPDk596RhnyJoY/4
-        o2zJyTpR4A0MvbVoaE8+NKqIwODzYhZn0shLQfyv1l4jkeE7FEzszYS2abcYLkiDG1FFbor5sW7sG
-        IhDlUJ6/RaGbJuU8GeZoVCjkdrT9KCbs35zyYAGlNToKm5kc+7vgSlrXPmPtroh6vySKwO3LqqAGT
-        WC5Tp3NAhVixZQ2XoDr45zH4h10bR+4tZsTi+gEe03zKXg1OJrjNzeITSn7q3Xr4wxl3joUc4CTPm
-        vzffscGQ==;
-Received: from [201.162.240.64] (port=14779 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hrQX5-003Xxr-QW; Sat, 27 Jul 2019 12:30:59 -0500
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-kernel@vger.kernel.org
-References: <20190726025521.GA1824@embeddedor>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc2
-Message-ID: <86348a8d-2dce-35c7-51b8-34b230e68258@embeddedor.com>
-Date:   Sat, 27 Jul 2019 12:30:57 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 27 Jul 2019 13:37:19 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w196so21168274oie.7
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 10:37:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N0VcUvigVHWGBC8li8r0Gqa12uFZQAgt8PU9s9KJNdc=;
+        b=LXeFyCNucSi/3hlEQmsO8pgXTKJEehdGTDO2HP62g1xnKMPFsJpKbQriXEyIt6tdi/
+         Mfbh/6W3uNzXDwb7scHYKkqCVB5H/PJXQMFbtvjTDIuFrWmsRDkdaQGStv4g6Vv9EFfG
+         Zy7TRUUXOqPrGOzBVdFAp9dsH/qkXJ77dr9+ry9qQ8vVymwgrGIgWg+32/tJC2NfRiw4
+         tSIHSsG1KqVci4cTK8gWpseFKbNfG2T0tr2u3skn6guKv37sXtso8Ruo6xHHEGP/sXjf
+         mFGrm1OELKEPJ5OxwABazHH6gIOe2riDehBf7dElcXAWDP9Le2iROCyzuZtEuE5XEp4g
+         jKxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N0VcUvigVHWGBC8li8r0Gqa12uFZQAgt8PU9s9KJNdc=;
+        b=dfpKnTdB1VrCRHXupf2n/AA2uz94uY0nUAdqkf2Pi7497hgRAbnQZlPk8gCBl42XlC
+         7lLZpsXJivzCaTuljGPX7y1MOU8R3cILSNlHLDudoaAef9kF/O4FSa77dZyo7n+BHJLP
+         N3pnR5zb2W0y4yDoAYqeTa77Nm26bG7KiEoxi3Ebj2Mx61okAaYa4QAcyOIyr5+Is/JI
+         Vm88PudKOzq52/UlhSA1DZFZsj9bOY+xjIQe7nCCep7obPlXGs2kdI5pqxJD/JeRoLS7
+         zeo0vyD6yjAVOtos53k1/+RvrKSBrQZf5QaUIILhqzq8gcr/9Xjc7SqBoGiVXbC01FsN
+         HWhA==
+X-Gm-Message-State: APjAAAUYUn6DnVTPQf3/aLHodLdQzouabUTfxxtM1PVVFM8ac7j/BmO2
+        /GooAfi5Wo93s4KTaldjn5Rtwrgt2FlTPdzsKt8=
+X-Google-Smtp-Source: APXvYqyNv7y/6X5zyIAn36VOoLWNDm86uV9fDmdmYUdjNzjtOTCzl/wZuq/8yw7vkhA84DzOKgfS6F5ol7vhovv0Ogs=
+X-Received: by 2002:aca:af55:: with SMTP id y82mr47866890oie.172.1564249038760;
+ Sat, 27 Jul 2019 10:37:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190726025521.GA1824@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.240.64
-X-Source-L: No
-X-Exim-ID: 1hrQX5-003Xxr-QW
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [201.162.240.64]:14779
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190727011040.89582-1-swboyd@chromium.org> <CAJZ5v0hroRuGQ5N42Z8=yFVXiJPdid3wJrHoKqr2BZVx=sfnBQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hroRuGQ5N42Z8=yFVXiJPdid3wJrHoKqr2BZVx=sfnBQ@mail.gmail.com>
+From:   Tri Vo <trong@android.com>
+Date:   Sat, 27 Jul 2019 10:37:07 -0700
+Message-ID: <CANA+-vDNkSG39SLd0_B_L8gkDkfQ2uJLcuvCaRgHkU8DiBzMTw@mail.gmail.com>
+Subject: Re: [PATCH] PM / wakeup: Avoid dev_name collisions in wakeup class
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sat, Jul 27, 2019 at 6:10 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Sat, Jul 27, 2019 at 3:11 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > If a device is wakeup capable and the driver calls device_wakeup_init()
+> > on it during probe and then userspace writes 'enabled' to that device's
+> > power/wakeup file in sysfs we'll try to create the same named wakeup
+> > device in sysfs. The kernel will complain about duplicate file names.
 
-I've been building the kernel every time you merge new changes for -rc2 in
-the last couple of days, trying to catch any new warning that other people's
-code might have introduced. So far, it's been building cleanly with my
-changes on top. :)
+Thanks for reporting the issue, Stephen!
+> >
+> > sysfs: cannot create duplicate filename '/devices/virtual/wakeup/1-1.1'
+> > kobject_add_internal failed for 1-1.1 with -EEXIST, don't try to register things with the same name in the same directory.
+> >
+> > It may be advantageous to not write 'enabled' to the wakeup file (see
+> > wakeup_store()) from userspace for these devices because we allocate
+> > devices and register them and then throw them all away later on if the
+> > device driver has already initialized the wakeup attribute. The
+> > implementation currently tries to avoid taking locks here so it seems
+> > best to optimize that path in a separate patch.
+> >
+> > Let's rename the wakeup class devices as 'wakeupN' with an IDA that's
+> > simple enough to just return some sort of number. In addition, let's
+> > make the device registering the wakeup the parent and include a 'name'
+> > attribute in case userspace wants to figure out the type of wakeup it is
+> > (in the case of virtual wakeups) or the device associated with the
+> > wakeup. This makes it easier for userspace to go from /sys/class/wakeup
+> > to a place in the device hierarchy where the wakeup is generated from
+> > like an input device.
+> >
+> > Cc: Tri Vo <trong@android.com>
+> > Cc: Kalesh Singh <kaleshsingh@google.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Ravi Chandra Sadineni <ravisadineni@chromium.org>
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+>
+> I'd rather change the commit that introduced this issue which is only
+> in linux-next for now.
 
-I really hope you can merge my pull-request for -rc2.
-
-Thank you
---
-Gustavo
-
-On 7/25/19 9:55 PM, Gustavo A. R. Silva wrote:
-> Hi Linus,
-> 
-> Kees let me know about the problems you had with my previous pull-request.
-> Apologies for the inconvenience. 
-> 
-> Here is a new pull-request that includes a fix for those warnings you
-> were seeing with the dcn20_dccg driver.
-> 
-> Just for you to know, I'm building allmodconfig.
-> 
-> Please, let me know if you have any trouble and I'll address it ASAP.
-> 
-> Thanks!
-> --
-> Gustavo
-> 
-> The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
-> 
->   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wimplicit-fallthrough-5.3-rc2
-> 
-> for you to fetch changes up to a035d552a93bb9ef6048733bb9f2a0dc857ff869:
-> 
->   Makefile: Globally enable fall-through warning (2019-07-25 20:13:54 -0500)
-> 
-> ----------------------------------------------------------------
-> Wimplicit-fallthrough patches for 5.3-rc2
-> 
-> Hi Linus,
-> 
-> Please, pull the following patches that mark switch cases where we are
-> expecting to fall through. These patches are part of the ongoing efforts
-> to enable -Wimplicit-fallthrough. Most of them have been baking in linux-next
-> for a whole development cycle.
-> 
-> Also, pull the Makefile patch that globally enables the
-> -Wimplicit-fallthrough option.
-> 
-> Finally, some missing-break fixes that have been tagged for -stable:
-> 
->  - drm/amdkfd: Fix missing break in switch statement
->  - drm/amdgpu/gfx10: Fix missing break in switch statement
-> 
-> Notice that with these changes, we completely get rid of all the
-> fall-through warnings in the kernel.
-> 
-> Thanks
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> 
-> ----------------------------------------------------------------
-> Gustavo A. R. Silva (12):
->       firewire: mark expected switch fall-throughs
->       can: mark expected switch fall-throughs
->       afs: yfsclient: Mark expected switch fall-throughs
->       afs: fsclient: Mark expected switch fall-throughs
->       mtd: onenand_base: Mark expected switch fall-through
->       perf/x86/intel: Mark expected switch fall-throughs
->       drm/amdkfd: Fix missing break in switch statement
->       drm/amdgpu/gfx10: Fix missing break in switch statement
->       drm/amdkfd/kfd_mqd_manager_v10: Avoid fall-through warning
->       drm/amd/display: Mark expected switch fall-throughs
->       drm/i915: Mark expected switch fall-throughs
->       Makefile: Globally enable fall-through warning
-> 
->  Documentation/process/deprecated.rst              | 14 ++++++
->  Makefile                                          |  3 ++
->  arch/x86/events/intel/core.c                      |  2 +
->  drivers/firewire/core-device.c                    |  2 +-
->  drivers/firewire/core-iso.c                       |  2 +-
->  drivers/firewire/core-topology.c                  |  1 +
->  drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c            |  1 +
->  drivers/gpu/drm/amd/amdkfd/kfd_crat.c             |  1 +
->  drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v10.c  |  1 -
->  drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dccg.c |  5 +++
->  drivers/gpu/drm/i915/Makefile                     |  1 -
->  drivers/gpu/drm/i915/display/intel_display.c      |  2 +-
->  drivers/gpu/drm/i915/display/intel_dp.c           |  1 +
->  drivers/gpu/drm/i915/gem/i915_gem_mman.c          |  2 +-
->  drivers/gpu/drm/i915/gem/i915_gem_pages.c         |  2 +-
->  drivers/gpu/drm/i915/i915_gpu_error.c             |  1 +
->  drivers/mtd/nand/onenand/onenand_base.c           |  1 +
->  drivers/net/can/at91_can.c                        |  6 ++-
->  drivers/net/can/peak_canfd/peak_pciefd_main.c     |  2 +-
->  drivers/net/can/spi/mcp251x.c                     |  3 +-
->  drivers/net/can/usb/peak_usb/pcan_usb.c           |  2 +-
->  fs/afs/fsclient.c                                 | 51 +++++++++++++--------
->  fs/afs/yfsclient.c                                | 54 +++++++++++++++--------
->  23 files changed, 111 insertions(+), 49 deletions(-)
-> 
+Raphael, could you roll back my patch? I'll work with Stephen to fix it.
