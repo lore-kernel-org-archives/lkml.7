@@ -2,174 +2,118 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EDEC7618B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 11:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF391C7618B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 11:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09F802083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 11:54:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FL0GaRGd"
+	by mail.kernel.org (Postfix) with ESMTP id BCC612083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 11:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564228675;
+	bh=Qt1Rf8kXzBIqNTkx2KISu/ts1iMKogFu67lTKS8akwI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=zp+X4+sov6OMYJpo0qjggHZHGBiRBnD/EZYfKcUYhq5hazpskMoQsWlNl90OxQFdC
+	 +1nHE2dhhRQQTnLC3GBFMbyCZhV8fzlFZWFWUo8SgPfRJzIG0mF4oJaLxSBMjzSxux
+	 tOiteKCwp+KzVM+nug6/bN9Rwv5JZ0ima/FFYZpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbfG0LvV (ORCPT
+        id S1728865AbfG0L5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 07:51:21 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:32871 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfG0LvU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 07:51:20 -0400
-Received: by mail-pf1-f194.google.com with SMTP id g2so25743697pfq.0;
-        Sat, 27 Jul 2019 04:51:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=i8GuTXVr9WWsDy7xmOlSHK3JnLYni7YF8DESUAMuRRE=;
-        b=FL0GaRGd+ddhv6Zl4tN/3EqAoU4fTSKBmZZklZtCOspIhC4nY78wsia2ORaX5cejbi
-         p+QyY7RiSoc6Xr5xahvQZ0BTgnFvahvLx3znIvuNUOPab5tcVF7JXV8BlO+dnTk/W9L6
-         Tc38N7mNZ0ffaoT1oyHskfnEHIDcRd3GQT9ygE15GXwlpnZ2XbNhNgZbx4lZi18I0LW8
-         P3+19FSCgpH7+XEZ/OxPxWxoihlVgXwxp+L9otLTCbP+jeAcfHQu3+fhF4/jN5Gyfcld
-         MAT05Gl+FHsWw8omlgS3y0GquX8l9k3S3vI4HM9e+EacqAS2kpEdmYE7iPgnJkb4fuMu
-         wRig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=i8GuTXVr9WWsDy7xmOlSHK3JnLYni7YF8DESUAMuRRE=;
-        b=OkmF9mu66enfL4n5JO0GWUuapyrQIhA/UjI3AbMhcUQDLZ4SUrwIJv/wVhci3O4nrc
-         +cHJkaoOd3l/ddUiNnrqhJ9Lk0dayFUDDuG2EyreRJiyj0wyztF6hVnPPNyr+wUgi0eJ
-         oo/ifPhASG65x7dp3/B95tlQzMWlvu5mLKlcX5lV0jR96cyL5tr9k7OPgwwRk4vjV5bN
-         DQXNzqZD17k9K2np/yTT0PmJNYVaIxXuRm5VC1UcQiAYiKyP5PcToIZimLxx0dalSw/n
-         Ax2lhOqsWAtAc95sCp2HMzQkbOetEaTY3jA0p47x2TbY48wPY7gOYB62/3XPQdiB5jnX
-         QNUA==
-X-Gm-Message-State: APjAAAVm9LfCAHhyJW9Le5uKAx5URshpA3x+eSI0LzG4PIXVgzqJH2Cf
-        FQObXKLDfqd/D+FTnLlkrzY=
-X-Google-Smtp-Source: APXvYqzTbcrT3kuFfgzA+VCEZgArno03apGQuK6wmQ0ufm1Fe4rykeTWak7DhKFTTXP651/tvKw7Lg==
-X-Received: by 2002:a17:90a:33c4:: with SMTP id n62mr105446625pjb.28.1564228279211;
-        Sat, 27 Jul 2019 04:51:19 -0700 (PDT)
-Received: from ?IPv6:2405:205:c906:e9d:e9fc:f9a6:f2b7:2864? ([2405:205:c906:e9d:e9fc:f9a6:f2b7:2864])
-        by smtp.gmail.com with ESMTPSA id 67sm19455517pfd.177.2019.07.27.04.51.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Jul 2019 04:51:18 -0700 (PDT)
-Subject: Re: [PATCH] hv_sock: use HV_HYP_PAGE_SIZE instead of PAGE_SIZE_4K
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@01.org, mikelley@microsoft.com, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, sashal@kernel.org,
-        davem@davemloft.net, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Himadri Pandya <himadri18.07@gmail.com>
-References: <20190725051125.10605-1-himadri18.07@gmail.com>
- <201907271302.tDRkl9uU%lkp@intel.com>
-From:   Himadri Pandya <himadrispandya@gmail.com>
-Message-ID: <3f425a25-8ecc-6fbd-31d5-d26d28d56cde@gmail.com>
-Date:   Sat, 27 Jul 2019 17:20:33 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 27 Jul 2019 07:57:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbfG0L5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 07:57:54 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3D5A2077C;
+        Sat, 27 Jul 2019 11:57:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564228673;
+        bh=Qt1Rf8kXzBIqNTkx2KISu/ts1iMKogFu67lTKS8akwI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=v/HEhMy0bQOo4vFVcF94DEwwyVIWHx7+pCMkhVSsEY3OVeC7TUfFW103L3KbvqJcq
+         VH7Za++mrEkiLmJgYnQmayvu3G2mS8ZXy5dlfL/mFHkeyodeVaG989Xpg1V39kKTNS
+         guPhMWIvdhu0M9ba8dA+QI6Yij3H8KPpAqd+Zdv0=
+Date:   Sat, 27 Jul 2019 12:57:49 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Brian Masney <masneyb@onstation.org>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: tsl2772: Use device-managed API
+Message-ID: <20190727125749.63297c28@archlinux>
+In-Reply-To: <20190726123058.22915-1-hslester96@gmail.com>
+References: <20190726123058.22915-1-hslester96@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <201907271302.tDRkl9uU%lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 26 Jul 2019 20:30:58 +0800
+Chuhong Yuan <hslester96@gmail.com> wrote:
 
-On 7/27/2019 10:50 AM, kbuild test robot wrote:
-> Hi Himadri,
->
-> Thank you for the patch! Yet something to improve:
->
-> [auto build test ERROR on linus/master]
-> [cannot apply to v5.3-rc1 next-20190726]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> Use devm_iio_device_register to simplify
+> the code.
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
-This patch should be applied to linux-next git tree.
+Please try to pick up on likely reviewers in your cc list.  In this case
+Brian did a lot of work cleaning these drivers up so I've added him.
+Not everyone keeps up with the linux-iio list for some reason ;)
 
-Thank you.
+Immediate thought was that you had broken the ordering but turns out
+it is already buggy.
 
-- Himadri
+As things stand, we remove the userspace interfaces (iio_device_unregister)
+after turning off the power.   This is obviously a bad idea and also
+form a purely "obviously correct" stand point, we aren't doing the reverse
+of probe.
 
->
-> url:    https://github.com/0day-ci/linux/commits/Himadri-Pandya/hv_sock-use-HV_HYP_PAGE_SIZE-instead-of-PAGE_SIZE_4K/20190726-085229
-> config: x86_64-allyesconfig (attached as .config)
-> compiler: gcc-7 (Debian 7.4.0-10) 7.4.0
-> reproduce:
->          # save the attached .config to linux build tree
->          make ARCH=x86_64
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
->
-> All error/warnings (new ones prefixed by >>):
->
->>> net/vmw_vsock/hyperv_transport.c:58:28: error: 'HV_HYP_PAGE_SIZE' undeclared here (not in a function); did you mean 'HV_MESSAGE_SIZE'?
->      #define HVS_SEND_BUF_SIZE (HV_HYP_PAGE_SIZE - sizeof(struct vmpipe_proto_header))
->                                 ^
->>> net/vmw_vsock/hyperv_transport.c:65:10: note: in expansion of macro 'HVS_SEND_BUF_SIZE'
->       u8 data[HVS_SEND_BUF_SIZE];
->               ^~~~~~~~~~~~~~~~~
->     In file included from include/linux/list.h:9:0,
->                      from include/linux/module.h:9,
->                      from net/vmw_vsock/hyperv_transport.c:11:
->     net/vmw_vsock/hyperv_transport.c: In function 'hvs_open_connection':
->>> include/linux/kernel.h:845:2: error: first argument to '__builtin_choose_expr' not a constant
->       __builtin_choose_expr(__safe_cmp(x, y), \
->       ^
->     include/linux/kernel.h:921:27: note: in expansion of macro '__careful_cmp'
->      #define max_t(type, x, y) __careful_cmp((type)(x), (type)(y), >)
->                                ^~~~~~~~~~~~~
->>> net/vmw_vsock/hyperv_transport.c:390:12: note: in expansion of macro 'max_t'
->        sndbuf = max_t(int, sk->sk_sndbuf, RINGBUFFER_HVS_SND_SIZE);
->                 ^~~~~
->>> include/linux/kernel.h:845:2: error: first argument to '__builtin_choose_expr' not a constant
->       __builtin_choose_expr(__safe_cmp(x, y), \
->       ^
->     include/linux/kernel.h:913:27: note: in expansion of macro '__careful_cmp'
->      #define min_t(type, x, y) __careful_cmp((type)(x), (type)(y), <)
->                                ^~~~~~~~~~~~~
->>> net/vmw_vsock/hyperv_transport.c:391:12: note: in expansion of macro 'min_t'
->        sndbuf = min_t(int, sndbuf, RINGBUFFER_HVS_MAX_SIZE);
->                 ^~~~~
->>> include/linux/kernel.h:845:2: error: first argument to '__builtin_choose_expr' not a constant
->       __builtin_choose_expr(__safe_cmp(x, y), \
->       ^
->     include/linux/kernel.h:921:27: note: in expansion of macro '__careful_cmp'
->      #define max_t(type, x, y) __careful_cmp((type)(x), (type)(y), >)
->                                ^~~~~~~~~~~~~
->     net/vmw_vsock/hyperv_transport.c:393:12: note: in expansion of macro 'max_t'
->        rcvbuf = max_t(int, sk->sk_rcvbuf, RINGBUFFER_HVS_RCV_SIZE);
->                 ^~~~~
->>> include/linux/kernel.h:845:2: error: first argument to '__builtin_choose_expr' not a constant
->       __builtin_choose_expr(__safe_cmp(x, y), \
->       ^
->     include/linux/kernel.h:913:27: note: in expansion of macro '__careful_cmp'
->      #define min_t(type, x, y) __careful_cmp((type)(x), (type)(y), <)
->                                ^~~~~~~~~~~~~
->     net/vmw_vsock/hyperv_transport.c:394:12: note: in expansion of macro 'min_t'
->        rcvbuf = min_t(int, rcvbuf, RINGBUFFER_HVS_MAX_SIZE);
->                 ^~~~~
->     net/vmw_vsock/hyperv_transport.c: In function 'hvs_stream_enqueue':
->>> include/linux/kernel.h:845:2: error: first argument to '__builtin_choose_expr' not a constant
->       __builtin_choose_expr(__safe_cmp(x, y), \
->       ^
->     include/linux/kernel.h:913:27: note: in expansion of macro '__careful_cmp'
->      #define min_t(type, x, y) __careful_cmp((type)(x), (type)(y), <)
->                                ^~~~~~~~~~~~~
->     net/vmw_vsock/hyperv_transport.c:681:14: note: in expansion of macro 'min_t'
->        to_write = min_t(ssize_t, to_write, HVS_SEND_BUF_SIZE);
->                   ^~~~~
->
-> vim +58 net/vmw_vsock/hyperv_transport.c
->
+So, I 'think' the right option is to reorder remove so that the power left
+on until after the iio_device_unregister call. At that point, we can't
+use devm_iio_device_register as we'll have the same incorrect ordering
+we currently have.
+
+Brian, you looked at this driver most recently.  Thoughts?
+
+Thanks,
+
+Jonathan
+
+
+
 > ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>  drivers/iio/light/tsl2772.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
+> index 83cece921843..aa5891d105e8 100644
+> --- a/drivers/iio/light/tsl2772.c
+> +++ b/drivers/iio/light/tsl2772.c
+> @@ -1877,7 +1877,7 @@ static int tsl2772_probe(struct i2c_client *clientp,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	ret = iio_device_register(indio_dev);
+> +	ret = devm_iio_device_register(&clientp->dev, indio_dev);
+>  	if (ret) {
+>  		tsl2772_chip_off(indio_dev);
+>  		dev_err(&clientp->dev,
+> @@ -1928,8 +1928,6 @@ static int tsl2772_remove(struct i2c_client *client)
+>  
+>  	tsl2772_chip_off(indio_dev);
+>  
+> -	iio_device_unregister(indio_dev);
+> -
+>  	return 0;
+>  }
+>  
+
