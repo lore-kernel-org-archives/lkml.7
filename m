@@ -2,193 +2,127 @@ Return-Path: <SRS0=tJqY=VY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B8AC7618F
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD1FC7618F
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4301520644
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:23:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BqZLobxi";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="e9dtuAZ4"
+	by mail.kernel.org (Postfix) with ESMTP id 38F93208E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Jul 2019 02:23:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbfG0CXs (ORCPT
+        id S1728133AbfG0CXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Jul 2019 22:23:48 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:52706 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfG0CXq (ORCPT
+        Fri, 26 Jul 2019 22:23:51 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:50082 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728033AbfG0CXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Jul 2019 22:23:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1564194284; x=1595730284;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=tf/2egYxx3sAP5LJbqmrXQoRpnllkQeClWzU/lungLA=;
-  b=BqZLobxiTt8qVPwsmL5dZafNKQtXZIsCrRt1um8xMOG8+e4T4AB0+EUF
-   jlNwz2R5o2Nsxen2xJrCh0DivGif49x4vrFhQT1CrkSE7jnmjCfmmCWsj
-   4+uXLR9ffuakvSo3m9cSXV5ex0zyYxytZmOa31yI4eInutBuPaH9ZbtCy
-   8msmonG0lLLUQjSuU5POcwLm1knijtqjZTKNZbDXRWfm+C4OZdazyqRHs
-   wZ8no5ruvTDwpfa7NZ5F9lmucazVbhlGv5vitS9hlgpUP54coZVE6KF3a
-   GN/AFCAIH+v7oZE32HyST11peUV3FBCfRSaNqOK5PyRVr5fZcGKlzYaab
-   Q==;
-IronPort-SDR: IG08Feq1nlzISLcH+DY7KIqznRC10cnOfp7xJ5+1NzElQ6WeI0u5+zztkf4/Wjro7cCcktu7W7
- 2dY9EvGknmnV1s+3EcA3s6p7U2b/D3IwOJGso1Q0qDx2jSnT7SyxEWo2BiQgQubZwhsH75zBt7
- 6wo7er8h9QtEvW4w0+Izv1WoqswkY8ayKUVQacdCJrd0Jr1/N/xrJRScNy3tvssy5kTfzdoFUm
- JlSYe6kNj0oC+9mu9ncu/kPM7ikChzKTzAE3yfyye83XPe3dv1lp6PGijFJPnUJDzp6pUI00nW
- iUM=
-X-IronPort-AV: E=Sophos;i="5.64,313,1559491200"; 
-   d="scan'208";a="214401934"
-Received: from mail-co1nam04lp2053.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.53])
-  by ob1.hgst.iphmx.com with ESMTP; 27 Jul 2019 10:24:40 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CSLYNaB9AZazVIGmtWU6Q2jhuPR+/l3OxbtYyCxkStQCu/xZsOjglebDAYhE5+q3IVj8Cz2b/Av76wFTysjPtmp/JVkHQDmGnTsLLe9XLn32lEOkVx6FhUPeeaWVawI0/wJnYZoIq/JZnsmmJJ40c1ArCpb3Bj+y2yboy/GHa/GsYa0pp+s6plq6p8v2z2LQal0OfsoVZ+mpeBMK05+LjqnPda35aqbRJqSXPjeCSn39PVB/p+jaq0/+K9HdGwvAfZnLPMA1ASnu/k4Pg8EyuL+3kgDxysKbGfipg3SB6LVNj9QwRYk6ZF5GSxqnnAeDej+mwLyTcR/Eh7M7VHJj5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tf/2egYxx3sAP5LJbqmrXQoRpnllkQeClWzU/lungLA=;
- b=HdJieajhprGYF/Wel+K0UdpxRBrtgicoAW1MwbT09/dU9NoQWGG/exOL2SFip/0orA6HEWLxYZmealdxFrR8fXh455oTjoGa0QDjBRkpkUsKaj6B3XXDjEaIlbu/2AFQgihSVwIXNnFOR/jqX1Me5jh/Y+9lDtqY6ijWvnCzj7LlamWsprGwOGiShCZdIkZaukDhy5FaVNHyiayzyofnkOimMDMj+DaH3ecakFkX2wZh+oVovZE8G7XBJl4KCSbs2g0Qdow2EscQ0qXsgYvd8SNivWyn9Z9tbdf6mFlkomRihrGcYg2mxa/DUowGFhp4+A/m5YVnyla97/PrOSQGqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=wdc.com;dmarc=pass action=none header.from=wdc.com;dkim=pass
- header.d=wdc.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tf/2egYxx3sAP5LJbqmrXQoRpnllkQeClWzU/lungLA=;
- b=e9dtuAZ45Fjkd4U42J/6ElreWJOcwAx6p9eCgvM3TNgITZdzXRsObKJ+5r1QCEWbE7qWy2O9b+hYRZJNckSpA4A235Jo4u5m4ptfDdgr+ncljzVxsW8LtdEP2lJt1/isWKZbIlKCvw+qvDpt4YeevZXTDuBymJQxHKRgpc0HUbM=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB5741.namprd04.prod.outlook.com (20.179.21.93) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.17; Sat, 27 Jul 2019 02:23:43 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::a815:e61a:b4aa:60c8]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::a815:e61a:b4aa:60c8%7]) with mapi id 15.20.2094.013; Sat, 27 Jul 2019
- 02:23:43 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Atish Patra <Atish.Patra@wdc.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alan Kao <alankao@andestech.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Allison Randal <allison@lohutok.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: RE: [PATCH 3/4] RISC-V: Support case insensitive ISA string parsing.
-Thread-Topic: [PATCH 3/4] RISC-V: Support case insensitive ISA string parsing.
-Thread-Index: AQHVQ+reRtipAV+pTkKW6PXuUKYNbKbdXtyAgAAaDYCAABM8AIAAMB9A
-Date:   Sat, 27 Jul 2019 02:23:42 +0000
-Message-ID: <MN2PR04MB6061790AFE4E0AAA838678028DC30@MN2PR04MB6061.namprd04.prod.outlook.com>
-References: <20190726194638.8068-1-atish.patra@wdc.com>
- <20190726194638.8068-3-atish.patra@wdc.com>
- <alpine.DEB.2.21.9999.1907261346560.26670@viisi.sifive.com>
- <a8a6be2c-2dcb-fe58-2c32-e3baa357819c@wdc.com>
- <alpine.DEB.2.21.9999.1907261625220.26670@viisi.sifive.com>
-In-Reply-To: <alpine.DEB.2.21.9999.1907261625220.26670@viisi.sifive.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-originating-ip: [106.51.23.101]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f897e0ed-eee7-4aa4-cad9-08d7123971ee
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB5741;
-x-ms-traffictypediagnostic: MN2PR04MB5741:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MN2PR04MB5741DC0194F59E732B908DED8DC30@MN2PR04MB5741.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 01110342A5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(39860400002)(376002)(366004)(346002)(189003)(199004)(13464003)(51444003)(33656002)(74316002)(110136005)(14454004)(6636002)(54906003)(3846002)(2906002)(99286004)(71200400001)(68736007)(71190400001)(8676002)(7736002)(316002)(78486014)(66066001)(256004)(6116002)(446003)(11346002)(476003)(6506007)(7696005)(53546011)(966005)(55236004)(76116006)(76176011)(55016002)(102836004)(486006)(26005)(66476007)(66946007)(6436002)(64756008)(6246003)(4326008)(66446008)(7416002)(66556008)(9456002)(229853002)(5660300002)(52536014)(53936002)(6306002)(81166006)(86362001)(478600001)(81156014)(8936002)(25786009)(186003)(305945005)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5741;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: j1mcSrXBNZmyyybHdHfyrfw2+XRtJCtBLtiqhInTu4zeziVzoSo5ajIiqEJ54tJji69eXMjTRtmPzUBBcDcjl92zNLIMtP+zN0zdgKRUlGd7SQ/1VpqrQgCFSSxzmlrUBo1/Xfft+Bd4hDlmyGlnr7DLZjhRWSFOg4MJUHw83Obn86WD00dCMN4K9zpSsdA/DezbEuXV6Y6lHnmXXn5/C0Gf73t9LvByWQEv9QLwa7Qc7AW5QC6SPQ4ZuKjN9BoIuque8v+MP2KA/KrIjzrGD4yNpagdqD1Sw2MHcqyBMnlPH0Heeeqkdl7x8aW/T8mZUk4UeFexlEvXjVOtMtFEcSXZ/lbWTYf0QgXWoOi307UsANxFqhppAfHE7SKskq37xFHtLyVoceng4oEjjOd54ekqM6oOGMOrU/gwWUahQ9Y=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 26 Jul 2019 22:23:49 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hrCN7-0003zA-HP; Sat, 27 Jul 2019 02:23:45 +0000
+Date:   Sat, 27 Jul 2019 03:23:45 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: Regression in 5.3 for some FS_USERNS_MOUNT (aka
+ user-namespace-mountable) filesystems
+Message-ID: <20190727022345.GN1131@ZenIV.linux.org.uk>
+References: <20190726115956.ifj5j4apn3tmwk64@brauner.io>
+ <CAHk-=wgK254RkZg9oAv+Wt4V9zqYJMm3msTofvTUfA9dJw6piQ@mail.gmail.com>
+ <20190726232220.GM1131@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f897e0ed-eee7-4aa4-cad9-08d7123971ee
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jul 2019 02:23:42.7456
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Anup.Patel@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5741
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190726232220.GM1131@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jul 27, 2019 at 12:22:20AM +0100, Al Viro wrote:
+> On Fri, Jul 26, 2019 at 03:47:02PM -0700, Linus Torvalds wrote:
+> 
+> > Of course, then later on, commit 20284ab7427f ("switch mount_capable()
+> > to fs_context") drops that argument entirely, and hardcodes the
+> > decision to look at fc->global.
+> > 
+> > But that fc->global decision wasn't there originally, and is incorrect
+> > since it breaks existing users.
+> > 
+> > What gets much more confusing about this is that the two different
+> > users then moved around. The sget_userns() case got moved to
+> > legacy_get_tree(), and then joined together in vfs_get_tree(), and
+> > then split and moved out to do_new_mount() and vfs_fsconfig_locked().
+> > 
+> > And that "joined together into vfs_get_tree()" must be wrong, because
+> > the two cases used two different namespace rules. The sget_userns()
+> > case *did* have that "global" flag check, while the sget_fc() did not.
+> > 
+> > Messy. Al?
+> 
+> Digging through that mess...  It's my fuckup, and we obviously need to
+> restore the old behaviour, but I really hope to manage that with
+> checks _not_ in superblock allocator ;-/
 
+It shouldn't have looked at fc->global for those checks.  In any cases.
+sget_fc() should indeed have been passing fc->user_ns, not userns.
+And as for sget_userns(), by the time of 20284ab7427f
+its checks had been moved to legacy_get_tree().  In form of
+	if (!mount_capable(fc->fs_type, fc->user_ns))
+as it bloody well ought to.
 
-> -----Original Message-----
-> From: Paul Walmsley <paul.walmsley@sifive.com>
-> Sent: Saturday, July 27, 2019 5:00 AM
-> To: Atish Patra <Atish.Patra@wdc.com>
-> Cc: linux-kernel@vger.kernel.org; Alan Kao <alankao@andestech.com>;
-> Albert Ou <aou@eecs.berkeley.edu>; Allison Randal <allison@lohutok.net>;
-> Anup Patel <Anup.Patel@wdc.com>; Daniel Lezcano
-> <daniel.lezcano@linaro.org>; Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org>; Johan Hovold <johan@kernel.org>; linux-
-> riscv@lists.infradead.org; Palmer Dabbelt <palmer@sifive.com>; Thomas
-> Gleixner <tglx@linutronix.de>
-> Subject: Re: [PATCH 3/4] RISC-V: Support case insensitive ISA string pars=
-ing.
->=20
-> On Fri, 26 Jul 2019, Atish Patra wrote:
->=20
-> > On 7/26/19 1:47 PM, Paul Walmsley wrote:
-> > > On Fri, 26 Jul 2019, Atish Patra wrote:
-> > >
-> > > > As per riscv specification, ISA naming strings are case
-> > > > insensitive. However, currently only lower case strings are parsed
-> > > > during cpu procfs.
-> > > >
-> > > > Support parsing of upper case letters as well.
-> > > >
-> > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > >
-> > > Is there a use case that's driving this, or
-> >
-> > Currently, we use all lower case isa string in kvmtool. But somebody
-> > can have uppercase letters in future as spec allows it.
-> >
-> >
-> > can we just say, "use
-> > > lowercase letters" and leave it at that?
-> > >
-> >
-> > In that case, it will not comply with RISC-V spec. Is that okay ?
->=20
-> I think that section of the specification is mostly concerned with someon=
-e
-> trying to define "f" as a different extension than "F", or something like=
- that.
-> I'm not sure that it imposes any constraint that software must accept bot=
-h
-> upper and lower case ISA strings.
->=20
-> What gives me pause here is that this winds up impacting DT schema
-> validation:
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
-ocu
-> mentation/devicetree/bindings/riscv/cpus.yaml#n41
+So the first mistake (wrong argument passed to mount_capable() by sget_fc()
+in 0ce0cf12fc4c) has been completed by 20284ab7427f - that conversion was,
+actually, an equivalent transformation (callers of legacy_get_tree() never
+have fc->global set, so it's all the same).  However, the bug introduced in
+the earlier commit was now spelled out in mount_capable() itself.
 
-If 'f' and 'F' mean same extension as-per RISC-V spec then software should =
-also
-interpret it that way hence this patch.
+IOW, the minimal fix should be as below.  In principle, I'm not against
+Eric's "add a method instead of setting FS_USERNS_MOUNT", but note that
+in *all* cases the instances of his method end up being equivalent to
+	return ns_capable(fc->user_ns, CAP_SYS_ADMIN) ? 0 : -EPERM;
 
-Regards,
-Anup
+Anyway, AFAICS the regression fix should be simply this:
+
+Unbreak mount_capable()
+
+In "consolidate the capability checks in sget_{fc,userns}())" the
+wrong argument had been passed to mount_capable() by sget_fc().
+That mistake had been further obscured later, when switching
+mount_capable() to fs_context has moved the calculation of
+bogus argument from sget_fc() to mount_capable() itself.  It
+should've been fc->user_ns all along.
+
+Screwed-up-by: Al Viro <viro@zeniv.linux.org.uk>
+Reported-by: Christian Brauner <christian@brauner.io>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+diff --git a/fs/super.c b/fs/super.c
+index 113c58f19425..5960578a4076 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -478,13 +478,10 @@ EXPORT_SYMBOL(generic_shutdown_super);
+ 
+ bool mount_capable(struct fs_context *fc)
+ {
+-	struct user_namespace *user_ns = fc->global ? &init_user_ns
+-						    : fc->user_ns;
+-
+ 	if (!(fc->fs_type->fs_flags & FS_USERNS_MOUNT))
+ 		return capable(CAP_SYS_ADMIN);
+ 	else
+-		return ns_capable(user_ns, CAP_SYS_ADMIN);
++		return ns_capable(fc->user_ns, CAP_SYS_ADMIN);
+ }
+ 
+ /**
+
