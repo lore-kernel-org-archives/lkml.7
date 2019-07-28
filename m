@@ -2,122 +2,133 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC7DC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40CAC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27BD22077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91FD22077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:43:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="UIbI760C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbfG1XmW (ORCPT
+        id S1726320AbfG1Xno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 19:42:22 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:46711 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726171AbfG1XmW (ORCPT
+        Sun, 28 Jul 2019 19:43:44 -0400
+Received: from gateway36.websitewelcome.com ([192.185.198.13]:20861 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726229AbfG1Xno (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 19:42:22 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 568CF820831;
-        Mon, 29 Jul 2019 09:42:17 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hrsms-00005W-25; Mon, 29 Jul 2019 09:41:10 +1000
-Date:   Mon, 29 Jul 2019 09:41:10 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Christoph Hellwig <hch@infradead.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>,
-        Masato Suzuki <masato.suzuki@wdc.com>
-Subject: Re: [PATCH] ext4: Fix deadlock on page reclaim
-Message-ID: <20190728234110.GH7777@dread.disaster.area>
-References: <20190725093358.30679-1-damien.lemoal@wdc.com>
- <20190725115442.GA15733@infradead.org>
- <20190726224423.GE7777@dread.disaster.area>
- <20190726225508.GA13729@mit.edu>
- <BYAPR04MB58162929012135E47C68923AE7C30@BYAPR04MB5816.namprd04.prod.outlook.com>
+        Sun, 28 Jul 2019 19:43:44 -0400
+X-Greylist: delayed 1461 seconds by postgrey-1.27 at vger.kernel.org; Sun, 28 Jul 2019 19:43:43 EDT
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 22AE0400C34D5
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 17:43:25 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id rsRmh1Yd1dnCersRmhV4Os; Sun, 28 Jul 2019 18:19:22 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=PY6E13tVfIgBq9qTq9qmjg7C5IhkGMS1k4wt9WQOgBg=; b=UIbI760Cqp3d3ijjcmuaqmwDtN
+        kyrvcLfNZF4clUbxV+4FTx7Mak7xcRTjZsTWsnlo9CfF0ahFDUsML2mQDkCqLcJClVkNS+GWRjWbe
+        X5MdRtFHZJcebXg7ocKkwPJyJSCfTmQMHwH8sjxayXUiZbTQWRcGLMXVqEs0W24Y6IepyptAzDdC3
+        sQE8X+gLM4VseJflhpewJhF4OPJLigjqiJC1cNCmdqVKleFtgxa44iLdWvP5Q43Hkz93pJw4NTHsk
+        bDV0rPCJs84J5vPbLA4I67uK9urFp268W0EFB3m2WodxyEcb2cg5CQY30ZcsYhy7jl567pkV5H40E
+        wg0swe8Q==;
+Received: from [187.192.11.120] (port=39058 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hrsRl-003XoU-2P; Sun, 28 Jul 2019 18:19:21 -0500
+Date:   Sun, 28 Jul 2019 18:19:20 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Russell King <linux@armlinux.org.uk>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] ARM: alignment: Mark expected switch fall-throughs
+Message-ID: <20190728231920.GA22247@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BYAPR04MB58162929012135E47C68923AE7C30@BYAPR04MB5816.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
-        a=7-415B0cAAAA:8 a=wVqCKi36-eQ2n_nKcFwA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hrsRl-003XoU-2P
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:39058
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 18
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 02:59:59AM +0000, Damien Le Moal wrote:
-> On 2019/07/27 7:55, Theodore Y. Ts'o wrote:
-> > On Sat, Jul 27, 2019 at 08:44:23AM +1000, Dave Chinner wrote:
-> >>>
-> >>> This looks like something that could hit every file systems, so
-> >>> shouldn't we fix this in common code?  We could also look into
-> >>> just using memalloc_nofs_save for the page cache allocation path
-> >>> instead of the per-mapping gfp_mask.
-> >>
-> >> I think it has to be the entire IO path - any allocation from the
-> >> underlying filesystem could recurse into the top level filesystem
-> >> and then deadlock if the memory reclaim submits IO or blocks on
-> >> IO completion from the upper filesystem. That's a bloody big hammer
-> >> for something that is only necessary when there are stacked
-> >> filesystems like this....
-> > 
-> > Yeah.... that's why using memalloc_nofs_save() probably makes the most
-> > sense, and dm_zoned should use that before it calls into ext4.
-> 
-> Unfortunately, with this particular setup, that will not solve the problem.
-> dm-zoned submit BIOs to its backend drive in response to XFS activity. The
-> requests for these BIOs are passed along to the kernel tcmu HBA and end up in
-> that HBA command ring. The commands themselves are read from the ring and
-> executed by the tcmu-runner user process which executes them doing
-> pread()/pwrite() to the ext4 file. The tcmu-runner process being a different
-> context than the dm-zoned worker thread issuing the BIO,
-> memalloc_nofs_save/restore() calls in dm-zoned will have no effect.
+Mark switch cases where we are expecting to fall through.
 
-Right, I'm talking about using memalloc_nofs_save() as a huge hammer
-in the pread/pwrite() calling context, not the bio submission
-context (which is typically GFP_NOFS above submit_bio() and GFP_NOIO
-below).
+This patch fixes the following warnings:
 
-> So back to Dave's point, we may be needing the big-hammer solution in the case
-> of stacked file systems, while a non-stack setups do not necessarily need it
-> (that is for the FS to decide). But I do not see how to implement this big
-> hammer conditionally. How can a file system tell if it is at the top of the
-> stack (big hammer not needed) or lower than the top level (big hammer needed) ?
+arch/arm/mm/alignment.c: In function 'thumb2arm':
+arch/arm/mm/alignment.c:688:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   if ((tinstr & (3 << 9)) == 0x0400) {
+      ^
+arch/arm/mm/alignment.c:700:2: note: here
+  default:
+  ^~~~~~~
+arch/arm/mm/alignment.c: In function 'do_alignment_t32_to_handler':
+arch/arm/mm/alignment.c:753:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   poffset->un = (tinst2 & 0xff) << 2;
+   ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+arch/arm/mm/alignment.c:754:2: note: here
+  case 0xe940:
+  ^~~~
 
-Age old question - tracking arbitrary nesting through mount/fs/bdev
-layers is ... difficult. There is no easy way to tell.
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ arch/arm/mm/alignment.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> One simple hack would be an fcntl() or mount option to tell the FS to use
-> GFP_NOFS unconditionally, but avoiding the bug would mean making sure that the
-> applications or system setup is correct. So not so safe.
-
-Wasn't there discussion at some point in the past about an interface
-for special processes to be able to mark themselves as PF_MEMALLOC
-(some kind of prctl, I think) for things like FUSE daemons? That
-would prevent direct reclaim recursion for these userspace daemons
-that are in the kernel memory reclaim IO path. It's the same
-situation there, isn't it? How does fuse deal with this problem?
-
-Cheers,
-
-Dave,
+diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
+index 8cdb78642e93..04b36436cbc0 100644
+--- a/arch/arm/mm/alignment.c
++++ b/arch/arm/mm/alignment.c
+@@ -695,7 +695,7 @@ thumb2arm(u16 tinstr)
+ 			return subset[(L<<1) | ((tinstr & (1<<8)) >> 8)] |
+ 			    (tinstr & 255);		/* register_list */
+ 		}
+-		/* Else fall through for illegal instruction case */
++		/* Else, fall through - for illegal instruction case */
+ 
+ 	default:
+ 		return BAD_INSTR;
+@@ -751,6 +751,8 @@ do_alignment_t32_to_handler(unsigned long *pinstr, struct pt_regs *regs,
+ 	case 0xe8e0:
+ 	case 0xe9e0:
+ 		poffset->un = (tinst2 & 0xff) << 2;
++		/* Fall through */
++
+ 	case 0xe940:
+ 	case 0xe9c0:
+ 		return do_alignment_ldrdstrd;
 -- 
-Dave Chinner
-david@fromorbit.com
+2.22.0
+
