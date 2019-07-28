@@ -2,165 +2,145 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E877C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C55F8C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31B742077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9789C2075E
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:50:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="R26HwiPe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S8lPKBk7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfG1WuB (ORCPT
+        id S1726278AbfG1WuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 18:50:01 -0400
-Received: from mail-eopbgr700098.outbound.protection.outlook.com ([40.107.70.98]:50705
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726103AbfG1WuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 18:50:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oLKmNkw5ACkjsvHmCaMJQ1lRGRvUswEAHWuGeaXhjxupaaJq3Q6PUuyCPE9vGXGkJvq+1EmsQYa9YazdmieohHXZcMu/KbXCmreD9b7oG/aLJuldvpKFNdv1BWQlQWhIDFr7eaIjOH3va/ozHDVYdKUx27rZ2E+kLOpjwEt1nfijep/PflzKHaShRPx0d3BhmHgnWgc2uF4Y4cKAw6p0/xTIBEY/neUZ6JGfL9Fi3nHCEQmyZVbtz0HBHsvyo4gi+Cc5cexPrw4DTRiq/62bNia16yOfLFCd+SZ1R0nTVZ8e4JD3Af7BQaz3slRCr3avS+rc75eRoCy5NueAXWO0Sw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1t+e0kdgV/QI2HfuepYYo8ALA2TOfk9UcfFB4PXRaNo=;
- b=kXmAlJpm4IDgFWMciKZdZczpaBawUxioXFZSLt38GDQ4jD5lu70jg9o8QYI/f/HVqPTcPWf7vH0ibdhKN5FryiJkd6hj1OXSurPEmOJwgFTPKVFr3dT5GZlVh4nZHBTD+ifvHBe147K5VEDcjNX7LZqA3ODuHJk0gqP3/t7gdAye6PIaekv7u/SkT/vfGHelN/yfgqLZfgrSY42q3eTFepQkUoZr6QEOHyomf9OOTD62xohkd1oTyw8a2ubWUdzqi7qaIeaspcli4R/QtXqR9q4MdIckRZGvLBAVC7sushTIvK4LEZaGWe8oI4gnvsbieOHG7MbPBBkuRc80DVZZtg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=wavecomp.com;dmarc=pass action=none
- header.from=mips.com;dkim=pass header.d=mips.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1t+e0kdgV/QI2HfuepYYo8ALA2TOfk9UcfFB4PXRaNo=;
- b=R26HwiPeP8BQNG2RyotTltxCEtfBhBs5xSR+8GrJIOv8VafzqBgu6LAAnhi1leiK3c6wsekwlUtQJ7Txk5Uj/nO2epH9WJHj6HM0VK75OodvrCav2aVGLS/lzyx55gBlt3pW66lNwts0mf4bWXTaz9tuYAj8YIQ0I06v/A7HLoI=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1375.namprd22.prod.outlook.com (10.174.160.150) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.10; Sun, 28 Jul 2019 22:49:55 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::105a:1595:b6ef:cbdf]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::105a:1595:b6ef:cbdf%4]) with mapi id 15.20.2115.005; Sun, 28 Jul 2019
- 22:49:55 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Denis Efremov <efremov@linux.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXTERNAL][PATCH 1/5] PCI: Convert pci_resource_to_user to a weak
- function
-Thread-Topic: [EXTERNAL][PATCH 1/5] PCI: Convert pci_resource_to_user to a
- weak function
-Thread-Index: AQHVRYJLuix0vLkFjkOXtfNq2O4qQKbgooWA
-Date:   Sun, 28 Jul 2019 22:49:55 +0000
-Message-ID: <20190728224953.kezztdozc6k24ya3@pburton-laptop>
-References: <20190728202213.15550-1-efremov@linux.com>
- <20190728202213.15550-2-efremov@linux.com>
-In-Reply-To: <20190728202213.15550-2-efremov@linux.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR02CA0043.namprd02.prod.outlook.com
- (2603:10b6:a03:54::20) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [73.93.4.225]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a04180d2-8bc9-41d1-8562-08d713ade8bf
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1375;
-x-ms-traffictypediagnostic: MWHPR2201MB1375:
-x-microsoft-antispam-prvs: <MWHPR2201MB137543F7C0491F4E3EAFBFADC1C20@MWHPR2201MB1375.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:983;
-x-forefront-prvs: 01128BA907
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(366004)(346002)(376002)(136003)(39830400003)(396003)(199004)(189003)(66476007)(66556008)(71190400001)(66946007)(5660300002)(4326008)(71200400001)(76176011)(7416002)(6246003)(53936002)(256004)(6916009)(66446008)(64756008)(52116002)(99286004)(6116002)(25786009)(3846002)(66066001)(6512007)(9686003)(44832011)(305945005)(81156014)(6506007)(26005)(81166006)(316002)(478600001)(476003)(8676002)(186003)(68736007)(7736002)(229853002)(446003)(6436002)(8936002)(486006)(2906002)(33716001)(1076003)(102836004)(6486002)(54906003)(42882007)(11346002)(14454004)(386003)(58126008);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1375;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: LGoXH/hfZ2EmVxj3CUBqAL1sE0i9frxkLeyaAv11qd5O/T0Vpk5dzHcq5B69mWk9zzcZGjP8mgNYqnYgk8VqWacbSL5U1PAXFUuEUxznedrRjQwQV2vPSyfCz2/0ML4894jFWL5b9GgZoPlrjT7dZ8vyafd0q/MtN4sU7xDwnvr+Quk4JuTf2quk4QpWt+gytYlAgN9WF/xbO6KcK2SOv/ebCUzSDWbybST6lhuT065w+DYtU/sfa+9g9lrHpN+xqIVS7fcS0DGisdVV0uROM8JS2Q+vNtIMz2MBVoRQGNaWh0MilRwAmDP6FXuXef+RGu3NNUfdXp0HIPTnpe2WMds9niDVqNKpSlA+naW4VSVt+Y5txDN3lNRiB2e+jDH4pvj72xFpYjGeMDxphd52Bnfx5LUtHJxgrIr28bB8Na8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A2F7F7783DF44944999686D51424D191@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Sun, 28 Jul 2019 18:50:09 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45927 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbfG1WuI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 18:50:08 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u10so1932689lfm.12
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 15:50:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KwCF4p4VJOYW2fmasUHku9SIAZNAmSFsTVp1MLzDwBc=;
+        b=S8lPKBk7MGxLYkzW+Fm7fThFpteW8gkhIdKVXCqd61fnPmB83li1zsgzhOuUwj0wRv
+         ng/NIisIiMqFAMmzX9wIGqBtpWZmJkoaRdgWxZj6eU3hy+cVAhHdZLkl8nZbzaVYugGE
+         27H0I+11dYP8OPq/HT9D4ivhkZqWb3mjm4puUAGfDvfnqsqCxM/hJxK+JBWrKCk4o5kv
+         24kOVug9dV5ZtDZA4/aTLa5P/WWcvnQJy5r/XH0NQ1B2E+lHhJWy5N4B5OV6sPpBpFAR
+         VWKk/lFGJ92mNbXGsBAEpblLcuDBUeYosa2eSt+wgxvwJggShGhvC5aanSOY/GV7jIGk
+         GmEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KwCF4p4VJOYW2fmasUHku9SIAZNAmSFsTVp1MLzDwBc=;
+        b=tYgDyg22MlqrHcfIZy8hPifCIEOrvLOTCfBxYhfiTPgVkHtogroU7O/+G5aREs9ryu
+         I4yOazZCWGsG9YsPN2IsDrg804gPwiCSqRHS9IdvtyHgQ9SFQjqQXIRaGZMuJOeTy/+j
+         H0ztr1zEmaXSS2tlznTTufmYUCV1j+G678xyfMqw8Ne8YWuO0sXaceJ5ewqbArlPAQXf
+         hLe4YMEXpXPitxQDz10ZtkB4san4aYyNDSuORp3dwZTWfTHoywSk3Hydww2bKIi3W1bQ
+         nXtZpjlzdPANOP6RFuLaYAArgFvohxklDmAU11HD5IeI5251sUQ7sn4rNFA1AmZuNeg/
+         NxUQ==
+X-Gm-Message-State: APjAAAU+5prEBP+VyPTqzZVE6hKyD5kRsBgjXQOZGW4YqvmMyXHjtnrp
+        K6M3R1Rj7gqIs9ZPYyuNfuz8eVpPldQgErEa8OEL1A==
+X-Google-Smtp-Source: APXvYqwMmSxRLZ4pSDUT9udZ/Ee8CPLGtbgmC8jc/n4gBckLOQTH7U/l1CdNjEAxtyqR+gyfqDlEZb/M4iQp7r4wYac=
+X-Received: by 2002:a19:6a01:: with SMTP id u1mr49703565lfu.141.1564354206607;
+ Sun, 28 Jul 2019 15:50:06 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a04180d2-8bc9-41d1-8562-08d713ade8bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2019 22:49:55.3491
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1375
+References: <20190708110138.24657-1-masneyb@onstation.org> <20190708110138.24657-3-masneyb@onstation.org>
+In-Reply-To: <20190708110138.24657-3-masneyb@onstation.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 29 Jul 2019 00:49:55 +0200
+Message-ID: <CACRpkdZn-czbOOTrRs5ZgR7qTtf2A4i_L4J8_vk+kJiBuAnikg@mail.gmail.com>
+Subject: Re: [PATCH 2/4] gpio: allow customizing hierarchical IRQ chips
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>, linux-tegra@vger.kernel.org,
+        David Daney <david.daney@cavium.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Denis,
+On Mon, Jul 8, 2019 at 1:01 PM Brian Masney <masneyb@onstation.org> wrote:
 
-On Sun, Jul 28, 2019 at 11:22:09PM +0300, Denis Efremov wrote:
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 9e700d9f9f28..1a19d0151b0a 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1870,25 +1870,13 @@ static inline const char *pci_name(const struct p=
-ci_dev *pdev)
->  	return dev_name(&pdev->dev);
->  }
-> =20
-> -
->  /*
->   * Some archs don't want to expose struct resource to userland as-is
->   * in sysfs and /proc
->   */
-> -#ifdef HAVE_ARCH_PCI_RESOURCE_TO_USER
-> -void pci_resource_to_user(const struct pci_dev *dev, int bar,
-> -			  const struct resource *rsrc,
-> -			  resource_size_t *start, resource_size_t *end);
-> -#else
-> -static inline void pci_resource_to_user(const struct pci_dev *dev, int b=
-ar,
-> -		const struct resource *rsrc, resource_size_t *start,
-> -		resource_size_t *end)
-> -{
-> -	*start =3D rsrc->start;
-> -	*end =3D rsrc->end;
-> -}
-> -#endif /* HAVE_ARCH_PCI_RESOURCE_TO_USER */
-> -
-> +void __weak pci_resource_to_user(const struct pci_dev *dev, int bar,
-> +				 const struct resource *rsrc,
-> +				 resource_size_t *start, resource_size_t *end);
-> =20
->  /*
->   * The world is not perfect and supplies us with broken PCI devices.
+> Now that the GPIO core has support for hierarchical IRQ chips, let's add
+> support for three new callbacks in struct gpio_irq_chip:
+>
+> populate_parent_fwspec:
+>     This optional callback populates the struct irq_fwspec for the
+>     parent's IRQ domain. If this is not specified, then
+>     gpiochip_populate_parent_fwspec_twocell will be used. A four-cell
+>     variant named &gpiochip_populate_parent_fwspec_twocell is also
+>     available.
+>
+> child_pin_to_irq:
+>     This optional callback is used to translate the child's GPIO pin
+>     number to an IRQ number for the GPIO to_irq() callback. If this is
+>     not specified, then a default callback will be provided that
+>     returns the pin number.
+>
+> child_irq_domain_ops:
+>     The IRQ domain operations that will be used for this GPIO IRQ
+>     chip. If no operations are provided, then default callbacks will
+>     be populated to setup the IRQ hierarchy. Some drivers need to
+>     supply their own translate function.
+>
+> These will be initially used by Qualcomm's spmi-gpio and ssbi-gpio.
+>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 
-This is wrong - using __weak on the declaration in a header will cause
-the weak attribute to be applied to all implementations too (presuming
-the C files containing the implementations include the header). You then
-get whichever impleentation the linker chooses, which isn't necessarily
-the one you wanted.
+This is overall looking very appetizing!
 
-checkpatch.pl should produce an error about this - see the
-WEAK_DECLARATION error introduced in commit 619a908aa334 ("checkpatch:
-add error on use of attribute((weak)) or __weak declarations").
+I want to apply this on top of my patch and respin it
+with some of Masahiro's comments as well and then let's
+try to just apply all of this.
 
-Thanks,
-    Paul
+> Note: checkpatch doesn't like that child_irq_domain_ops is not const.
+
+Hm? I suspect some janitor will find the problem and patch it for us.
+
+> +static void gpiochip_add_default_irq_domain_ops(struct irq_domain_ops *ops)
+> +{
+> +       if (!ops->activate)
+> +               ops->activate = gpiochip_irq_domain_activate;
+> +
+> +       if (!ops->deactivate)
+> +               ops->deactivate = gpiochip_irq_domain_deactivate;
+> +
+> +       if (!ops->translate)
+> +               ops->translate = gpiochip_hierarchy_irq_domain_translate;
+> +
+> +       if (!ops->alloc)
+> +               ops->alloc = gpiochip_hierarchy_irq_domain_alloc;
+> +
+> +       if (!ops->free)
+> +               ops->free = irq_domain_free_irqs_common;
+> +}
+
+I'm fine with translate(), this seems to be what Lina needs too.
+
+But do we really need to make them all optional? activate() and
+deactivate() will require the driver to lock the irq etc which is hairy.
+
+Yours,
+Linus Walleij
