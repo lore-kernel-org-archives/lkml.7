@@ -2,104 +2,94 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F93C7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35474C7618B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A91CA20659
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D7E2085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:30:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="EOhcF1sp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bIeZYY0j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rxb3WBd0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbfG1J2w (ORCPT
+        id S1726097AbfG1Jaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 05:28:52 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:57105 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725937AbfG1J2w (ORCPT
+        Sun, 28 Jul 2019 05:30:52 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46718 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfG1Jav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 05:28:52 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 933E121650;
-        Sun, 28 Jul 2019 05:28:51 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Sun, 28 Jul 2019 05:28:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=QfkhH3vPBvUSxmLYadZ+3EETQiq
-        ZEjt4+Idx1nnqMoE=; b=EOhcF1sp/kxtx3xHxLgAgjSyRJGSX9jT2iCau/Cv4A+
-        YloDZzyR0q8zz8wnDUtwtKGKAJWGXvTh1tbJsAE9iSH8ukpXGsQfzhEXGfXKaew6
-        vJ4Daj1vD0/xwx2ibGaYnDxbjaZgI9N/8jnFeJlm8SACepKdFJMC/kBtUoQpP75a
-        xve/m8NA999+cr4XOnfzAeBvYfGJn8KhgTZxeRm+1p614cMck8rfaP1PToBAfu18
-        ONmL049dd+nRj2PSm7GVTLbOavDiOxRb/1fzTRWCs035FdRqT2/2KR4Mau0n1q2a
-        VFsUie39m8eUJmfWHMBSgTJyaYViURNnQLbFoRg8rjA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=QfkhH3
-        vPBvUSxmLYadZ+3EETQiqZEjt4+Idx1nnqMoE=; b=bIeZYY0jdhkWzPZ3jFeiry
-        UgJhuECySObNxwCDuQuBX8ese5BKTsY6YA9nhMmOG7DJtgjXC3xKZOJQX57xZZ/z
-        7um0dy67COMWlZFYSmeXVTnbLronv81CT1DacVa3aL/RUT9l2ivt0CS6zaXjnsnd
-        n6ZtlcCGU/ahmGxQw4lncZ4u2VIIYNHktqxULtTlFflSYoDLU/hZtEy1hUJgCSO1
-        OoxcyM+50cyBDrKPywTMaliVZu7sumsCq9bI76mjVHhVrtloLtYh6gNqeFupoebD
-        v4TIAFBl8qT7fKBbEi+Ppb9xnq5tkmtJPsXvVIlGjiUy2NV/PNMRbNM501vm1Kyg
-        ==
-X-ME-Sender: <xms:0mo9XRBYFcTYpzwXZWAh-Z325jTWqrIlvyDiZpO-1zGRNpqAw2Zphw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrkeelgddujecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:02o9XdFzeqyXNBRis9pGm6tShDBLifs8Oyw9ZGFFbv_OAfGSm--Ijw>
-    <xmx:02o9XVkOP0Ruz7rg1g_iw1hjSp6hYfCeq_faJsC4cBpUHtAgpoQDNQ>
-    <xmx:02o9XWru66HQzve3a0gC0uwd7zAC-OlI5tk3wH62NjFw46jyQOTX4w>
-    <xmx:02o9XWF6Sjpi3_QERq5T9OkW8KU-fku8NMn7YJQ7PcVSnqsLNPgotg>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A095A8005B;
-        Sun, 28 Jul 2019 05:28:50 -0400 (EDT)
-Date:   Sun, 28 Jul 2019 11:28:49 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ruslan Bilovol <ruslan.bilovol@gmail.com>
-Subject: Re: linux-next: Fixes tag needs some work in the usb tree
-Message-ID: <20190728092849.GB31933@kroah.com>
-References: <20190727151032.4eaf3032@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190727151032.4eaf3032@canb.auug.org.au>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Sun, 28 Jul 2019 05:30:51 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c3so3382346pfa.13;
+        Sun, 28 Jul 2019 02:30:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=5Pz4rCVD0vWLA17p+mMhsqMFpeVJDTz+U0y7lXimbeo=;
+        b=rxb3WBd0NCoKGgDCvLUZ9MwueRLsV2bBb8hisfN3xX8w6/eJB0NovX4//X771U1zp4
+         rWGBGpoZpRvwgW8Kvuwwnei8pKU0OmhGWscNi75ufVCaOwwmhVDqM9ppJElD1a0rqCTI
+         1sj+QGGHyEptASUvqtgtXOCTTDaiFLj/8RLVuiz6rq54uRY1x3+qy4rbQ4O0lRwgMuhJ
+         ab01hKUXR3t5KGydKYZHPCcQ/axBEO08aaAT5B0kIZRxJpHMofJW6xtujcD88BWe5Aqv
+         wfBUPYsd611bgcIv5HifAAHNpRNkhCg0h9NIwu1C6H7IUhmmiy4kCHBPd1079P/2uUY2
+         08Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=5Pz4rCVD0vWLA17p+mMhsqMFpeVJDTz+U0y7lXimbeo=;
+        b=qhyry8/h5Ev54DdO8MQewI1PY/lxgc5CJHww0ocoOQfHcvfn1zfCYYH3KA7LPIsfue
+         flM6n23yToVOksuUJUxFgyZY9Pi9TZNTY52h13k1TmsgVDfhuXkD8BDye/etp37rkeZf
+         glri9m8KcECF+4cJBF0xXPsCK/sSsiwC6RKsSIVWqrBtA6XNIrbYJSrUuPRl5+PL0/d2
+         h0WafzkQ0mVgpNFwMkDd6h1NBhFcZI6Z1y07hxpvbUuK2pPUlf75BHoQNrQdi2gislbm
+         XjrL1beHHOONEPfJ5ZuRpYpreiyg7Xkyi323POp9Stnj6SMsStu7KMW30cf/D9+jFkF0
+         lKjA==
+X-Gm-Message-State: APjAAAXO+5+BwALk7GDVl4mkZz20vK3dYZ8lz9zXRnw+EJTJvGGOt5gk
+        YDV2HjKDi4r5W8MnEkd8FuM=
+X-Google-Smtp-Source: APXvYqwZ2IM4/sha2sxku6bqL2fendny9Jm6t5sLo8mngCSairpU4j2k6G5G9vIgUsDB4arnpUlXXw==
+X-Received: by 2002:aa7:9254:: with SMTP id 20mr31908859pfp.212.1564306251153;
+        Sun, 28 Jul 2019 02:30:51 -0700 (PDT)
+Received: from localhost.localdomain (unknown-224-80.windriver.com. [147.11.224.80])
+        by smtp.gmail.com with ESMTPSA id s20sm66237380pfe.169.2019.07.28.02.30.50
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Sun, 28 Jul 2019 02:30:50 -0700 (PDT)
+From:   Bin Meng <bmeng.cn@gmail.com>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/2] dt-bindings: interrupt-controller: msi: Correct msi-controller@c's reg
+Date:   Sun, 28 Jul 2019 02:30:18 -0700
+Message-Id: <1564306219-17439-1-git-send-email-bmeng.cn@gmail.com>
+X-Mailer: git-send-email 1.7.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 03:10:32PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> In commit
-> 
->   6269e4c76eac ("usb: host: xhci-hub: fix extra endianness conversion")
-> 
-> Fixes tag
-> 
->   Fixes: 395f540 "xhci: support new USB 3.1 hub request to get extended port status"
-> 
-> has these problem(s):
-> 
->   - SHA1 should be at least 12 digits long
->     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
->     or later) just making sure it is not set (or set to "auto").
+The base address of msi-controller@c should be set to c.
 
-Ugh, thanks for the report, I'll try to catch these next time before
-they hit my tree.
+Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
+---
 
-greg k-h
+ Documentation/devicetree/bindings/interrupt-controller/msi.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/msi.txt b/Documentation/devicetree/bindings/interrupt-controller/msi.txt
+index c60c034..c20b51d 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/msi.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/msi.txt
+@@ -98,7 +98,7 @@ Example
+ 	};
+ 
+ 	msi_c: msi-controller@c {
+-		reg = <0xb 0xf00>;
++		reg = <0xc 0xf00>;
+ 		compatible = "vendor-b,another-controller";
+ 		msi-controller;
+ 		/* Each device has some unique ID */
+-- 
+2.7.4
+
