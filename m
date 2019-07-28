@@ -2,90 +2,102 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEB3C7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 13:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B581C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 13:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C7F21721
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 13:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72993217D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 13:42:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qSckxRVk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UQWUwAU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbfG1Nkm (ORCPT
+        id S1726180AbfG1NmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 09:40:42 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40866 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfG1Nkm (ORCPT
+        Sun, 28 Jul 2019 09:42:01 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36665 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfG1NmB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 09:40:42 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so57033023eds.7;
-        Sun, 28 Jul 2019 06:40:41 -0700 (PDT)
+        Sun, 28 Jul 2019 09:42:01 -0400
+Received: by mail-ed1-f65.google.com with SMTP id k21so57072285edq.3;
+        Sun, 28 Jul 2019 06:41:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/N4pBS+wzG7+cVkEEmHSw6pNTtAYb7dDfOSm3I7p1oM=;
-        b=qSckxRVkUtkrI3T63z01gTkOz1QXroD736U0Lu0+7KoWAl2iJMO9Qp29pATJ7/e2Bj
-         1UffHHo/J8QJaKujQ6rDOlgKsfeIbLilO2+thQShb3Yolf8+xHnAp8F/V97tKvL7BCm0
-         tnSPXAG6zoAiMaFeJaFZtlBl5++4/WQF/TkSoV9ov8aVWLjR2cM6MndqCqZCQIYlra8u
-         4kswHPvcZRUyCx7JgkawhgHr6QDMgE4NA9r9j70cR7BIgGseXfl37qxKUTk5MRgPP84U
-         4gQDgNDJun5NSKvSInJh+8IztC+VmHfT2mMdvJXewdbsH91WslW8BrlVRhyX13NYDgF7
-         OROA==
+        bh=yTBwHNHT3KHAp/UaTaH4Up3YEwsrhkbymBNCkcdraJ4=;
+        b=UQWUwAU/aLkzrRJuq7lz6WfmkRCRPcRIkelqPKRkPBmQvdcVxlDWInaTr16xiYUOTh
+         LaIL6njzffcFYPhbX3vBZ31RhD8oEUnYxYzGm6URgF9ybzNE3wjQD+Q91qr4QpoP89x/
+         7AZ+mKc/2Z03uFx+5PK5F7JsddDDwG8851Ro9yV3keN1CYuu0p24wRy19pNYk0P6i2YX
+         l/zE2saf2xRu5aXu/3I3UG3IZKFaKpY44+0qACOrLx5/D1k08/toiQG0I7wjC4ntV3n0
+         mXhsVFqhR+jOLJT3+Q5iz0xFOVDJeqJPDwbI+s2WDPn2gxr6HeePvKoF/ToqjaZSBtLa
+         M8eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/N4pBS+wzG7+cVkEEmHSw6pNTtAYb7dDfOSm3I7p1oM=;
-        b=QNsq6FHSkdQCgyann4n51B+d3kjOcEWRFRJA2jlImTAS/gNA8x6TxMhSahf2nv84QB
-         VWHkfgLqDMIT1hRTPoDp6Z3sZh+iiHrwFyZ/C5MlcVVA8sqG2sPv/ghHTQ6qf3PxaM80
-         CefBON4RuRevLcEvWl8ovoFXUM/ylLrW+B+kFvijvH91GPoPhAua4o+QofUKxqJLjrKH
-         QZOG3F+y+Z65mKivpI6vsJ/a/J+foqf8XlO5m5VnQKvOLATNIOegB0u7ic2Z2G4NCAm3
-         BLPFxGjeHOPxLdHMdqKNJlvTPo5qN1u4sRLfvPNGZ6r9Npm4x8ygYGQ9vAyQ1kGstpFR
-         4WCg==
-X-Gm-Message-State: APjAAAUeOHG5SI5lHdp/Iv4++C9OWpYNBqNtnChgrtCScCvebbEDvQlq
-        kpTci4iFMZBp/AALANSlfLqjdTVl/Nbqckrt8PRbZZc1
-X-Google-Smtp-Source: APXvYqxrdx60nP74vKeV9PJU/NlokFcEKb4pT2kFy7UFBCuBn92G77ltXyW197yRIj65YGGATN7XscVngZvnAYQGATg=
-X-Received: by 2002:a17:906:a481:: with SMTP id m1mr56063760ejz.87.1564321240719;
- Sun, 28 Jul 2019 06:40:40 -0700 (PDT)
+        bh=yTBwHNHT3KHAp/UaTaH4Up3YEwsrhkbymBNCkcdraJ4=;
+        b=mQpKveWgg9CG9uIgqGmYufZtm7gd5dMpvToTMDB/njS5o+AQl8avAoqv77VX2IXyQ/
+         9EUolbxNCuTjYxXHth0DWEnOzB6grGeStFC4rjVCjQeP904Yqk//IP+/Zi6Vjc/M1fEg
+         8y7no3BL2wm4pmm15acbGs9RYCCGXOejkGnqBznB6rSkw7oUr3IAroRHkFztLDnkstOa
+         eoXBTJgEe24OrKsvOrYe0bNhFwalOPin3UtC0I5zE4VEpPiL32HIjVmfFu1riy++mDuz
+         yrhXVlnsW8oIbzAV2zu51JgcP4Jhs2Uns0HdlnMmvY1ReT3wIjrcb1Zr/6uy7ZfTwTBe
+         DJIw==
+X-Gm-Message-State: APjAAAXARECJPmxsaKUnzlKFUKhkF+lpFChZKCI7ic/Groq+pa95NDzX
+        A50RodTeQ2UwT5nkpqcLHoFNag264bdn4xTokJo=
+X-Google-Smtp-Source: APXvYqzBKvd0Qybj93U8jK8asK800I/u667umXFP0VgBlCHZHI45yVtwQGVyY3X1SFkkAX087eMxDRfleptdKbmxNjo=
+X-Received: by 2002:a50:94e6:: with SMTP id t35mr91612893eda.137.1564321319323;
+ Sun, 28 Jul 2019 06:41:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.9999.1907251429420.32766@viisi.sifive.com>
-In-Reply-To: <alpine.DEB.2.21.9999.1907251429420.32766@viisi.sifive.com>
+References: <alpine.DEB.2.21.9999.1907251426450.32766@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1907251426450.32766@viisi.sifive.com>
 From:   Bin Meng <bmeng.cn@gmail.com>
-Date:   Sun, 28 Jul 2019 21:40:29 +0800
-Message-ID: <CAEUhbmVHjy86js51u-VP=X8h4xg19kBjKkGRu+C2T2pUwQz6Qw@mail.gmail.com>
-Subject: Re: [PATCH] riscv: dts: fu540-c000: drop "timebase-frequency"
+Date:   Sun, 28 Jul 2019 21:41:48 +0800
+Message-ID: <CAEUhbmX1vJbm9NNU-5OkSaWDRN0pK0=1D6ZLXHD45PNAqDu6gw@mail.gmail.com>
+Subject: Re: [PATCH v2] pci: Kconfig: select PCI_MSI_IRQ_DOMAIN by default on RISC-V
 To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, wesley@sifive.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 5:31 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+On Fri, Jul 26, 2019 at 5:28 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
 >
+> From: Wesley Terpstra <wesley@sifive.com>
 >
-> On FU540-based systems, the "timebase-frequency" (RTCCLK) is sourced
-> from an external crystal located on the PCB.  Thus the
-> timebase-frequency DT property should be defined by the board that
-> uses the SoC, not the SoC itself.  Drop the superfluous
-> timebase-frequency property from the SoC DT data.  (It's already
-> present in the board DT data.)
+> This is part of adding support for RISC-V systems with PCIe host
+> controllers that support message-signaled interrupts.
 >
+> Signed-off-by: Wesley Terpstra <wesley@sifive.com>
+> [paul.walmsley@sifive.com: wrote patch description; split this
+>  patch from the arch/riscv patch]
 > Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 > ---
->  arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 1 -
->  1 file changed, 1 deletion(-)
+>  drivers/pci/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 2ab92409210a..beb3408a0272 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -52,7 +52,7 @@ config PCI_MSI
+>            If you don't know what to do here, say Y.
+>
+>  config PCI_MSI_IRQ_DOMAIN
+> -       def_bool ARC || ARM || ARM64 || X86
+> +       def_bool ARC || ARM || ARM64 || X86 || RISCV
+>         depends on PCI_MSI
+>         select GENERIC_MSI_IRQ_DOMAIN
+>
+> --
 
 Reviewed-by: Bin Meng <bmeng.cn@gmail.com>
