@@ -2,103 +2,85 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA36C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5044C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC08C2077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB7C62075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:06:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nqe53c1o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbfG1XDP (ORCPT
+        id S1726252AbfG1XGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 19:03:15 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37545 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbfG1XDP (ORCPT
+        Sun, 28 Jul 2019 19:06:05 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45055 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfG1XGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 19:03:15 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so34675875wrr.4
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 16:03:13 -0700 (PDT)
+        Sun, 28 Jul 2019 19:06:05 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r15so23720372lfm.11
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 16:06:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lwz4q2+szKTu4Ft4q7DE+NRgcxDusAz+Lo48bkTTfVs=;
+        b=nqe53c1oBRmoMa5ivnh0qXiEubDFJreYPg8EhzLADL+Qil8rlxjmbc4rnNbdAuW5xI
+         wxQ+La1VKcLxJdH9oQ55nVWWEk4ozIYfHyDhEQJkQS32fX7mJFZj4iFEyaqZVbD2Gjax
+         5NPfJst7iuaAlYxYiu/ioTzM/CV6Hvai1b3FP2OUnCexJyuWLz/ddEoE5srcPRLcaHST
+         YBU3Z/YNMr6IVtJkqciglGOEdWZ8movdNpkrys/AvR5PgamTvbji5Li8Oh7iFJ1jk9uh
+         ERwjpP6Rh/TvMpg5jQRZbNSG+IokHU47CAcml4CsmXcfTE5L1HGln+jcyL+gytiZueFq
+         tt+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vHmOVMZ+hgbl6glGrYbyUU8RJ/uLOzhuRxz4ckuaKpY=;
-        b=A8jUPsoILm/+J0RiKgmFuqt2ufSHjjfl3cXOLi9bpUly/RQA3ODGaLWWcI9LWZNpOE
-         OOi7nF7RdPb/xqr1jZ6ieLL7uuTm0qw8vpvOSG62zJShghvbilulXFLlKNmRHVIiFdr3
-         WyMR1A1k5OC8A43xMaNn/OFtJos7tH6l8qOo1R2MfWUSAKNQAVFsWiH2xfRJmiol51+8
-         CcWxt21e30gjaI2izfokDjYlsI82VzsfQ/Hh76rwJQGMJiNnwGQizreKMb/4CPZomzKc
-         Abtf0FjysDA8zih6YBwIuDgnC4NsQNJkx79B0IeHoF5JjtzLbgdQXS/YK+mOZ2qv4QpY
-         GOYw==
-X-Gm-Message-State: APjAAAWIEKCp5reiik2jCFkOFhloTyk3ad9MbFgGxeBdDu8n97G3+HON
-        Rd85gTqc44rCx4hP6c+ln+Uv0Q==
-X-Google-Smtp-Source: APXvYqxmxi7OfpyaSbmUwwwfjLMUedXKpYPEq+qCCzw11VozDSYV1iAQnIiLCMRLbrHIaznWEibpiQ==
-X-Received: by 2002:a5d:4e08:: with SMTP id p8mr39699881wrt.20.1564354993194;
-        Sun, 28 Jul 2019 16:03:13 -0700 (PDT)
-Received: from mcroce-redhat.homenet.telecomitalia.it (host221-208-dynamic.27-79-r.retail.telecomitalia.it. [79.27.208.221])
-        by smtp.gmail.com with ESMTPSA id v65sm66144369wme.31.2019.07.28.16.03.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 16:03:12 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: mark expected switch fall-through
-Date:   Mon, 29 Jul 2019 01:03:10 +0200
-Message-Id: <20190728230310.5924-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lwz4q2+szKTu4Ft4q7DE+NRgcxDusAz+Lo48bkTTfVs=;
+        b=bhT3pMfYWiNHbVEQhqTg/veZ/5kP9r87M1Ls4cSx+O4XmdMkHUH0VQL83e6w/+klj1
+         JsOOkyn9BUpaZRlxjPvmpxgQ9jll/qK1kegrqFY+FWxKeCVj7UTkiDtDK5jugiqU7DjA
+         xzsCg1lNFk9IMsIYXWUPwLBTYdhYcYKUcnaOtUcH5C6psEiMj49jbrQ2u7IaLCmkZPEU
+         GSsNhJ6YQUAAgTXdQGM8YzOC45CiHTAjAp7GVg+7ceWii80DAy7e18xeLPCLeQUeb5kT
+         7odFXpjszqRGSvsqX/1lJEwHEbktBc6ajiwP7+sqI98RxHcgzJuEuBaBB5wN0feGyxbN
+         4PeQ==
+X-Gm-Message-State: APjAAAXvzNriqITLyOuaErdD1O7k78d634qQrmEr8OnLISyKkr1gyzL5
+        EjCg86C8cMHtqT7tHyuIe9IiQb6T3f6XklwZ8ED8/Q==
+X-Google-Smtp-Source: APXvYqxO1ZShAsIw0HaFz8MRuajoyCEfOeK9aViZSPPZIHqcFUGTcVHBzvKwcuq0oXYGpEIw8+BgiZr/2ww+IkqsjVs=
+X-Received: by 2002:ac2:5382:: with SMTP id g2mr48403745lfh.92.1564355163192;
+ Sun, 28 Jul 2019 16:06:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190708211123.16495-1-jcline@redhat.com>
+In-Reply-To: <20190708211123.16495-1-jcline@redhat.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 29 Jul 2019 01:05:51 +0200
+Message-ID: <CACRpkdYaHd8ZhkRSRMWXSrasaMuCk=LDU40y0NkQXpeWDHAEZA@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: gpio: fix function links in the HTML docs
+To:     Jeremy Cline <jcline@redhat.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the "fallthrough" comment just because the case keyword,
-fixes the following warning:
+On Mon, Jul 8, 2019 at 11:11 PM Jeremy Cline <jcline@redhat.com> wrote:
 
-In file included from ./include/linux/kernel.h:15,
-                 from ./include/linux/list.h:9,
-                 from ./include/linux/kobject.h:19,
-                 from ./include/linux/of.h:17,
-                 from ./include/linux/irqdomain.h:35,
-                 from ./include/linux/acpi.h:13,
-                 from arch/arm64/kernel/smp.c:9:
-arch/arm64/kernel/smp.c: In function ‘__cpu_up’:
-./include/linux/printk.h:302:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  printk(KERN_CRIT pr_fmt(fmt), ##__VA_ARGS__)
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/arm64/kernel/smp.c:156:4: note: in expansion of macro ‘pr_crit’
-    pr_crit("CPU%u: may not have shut down cleanly\n", cpu);
-    ^~~~~~~
-arch/arm64/kernel/smp.c:157:3: note: here
-   case CPU_STUCK_IN_KERNEL:
-   ^~~~
+> The shorthand [_data] and [devm_] cause the HTML documentation to not
+> link to the function documentation properly. This expands the references
+> to the complete function names with the exception of
+> devm_gpiochip_remove() which was dropped by commit 48207d7595d2 ("gpio:
+> drop devm_gpiochip_remove()").
+>
+> Signed-off-by: Jeremy Cline <jcline@redhat.com>
 
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- arch/arm64/kernel/smp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This does not apply to v5.3-rc1 can you rebase and resend?
 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index ea90d3bd9253..018a33e01b0e 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -152,8 +152,8 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
- 				pr_crit("CPU%u: died during early boot\n", cpu);
- 				break;
- 			}
--			/* Fall through */
- 			pr_crit("CPU%u: may not have shut down cleanly\n", cpu);
-+			/* Fall through */
- 		case CPU_STUCK_IN_KERNEL:
- 			pr_crit("CPU%u: is stuck in kernel\n", cpu);
- 			if (status & CPU_STUCK_REASON_52_BIT_VA)
--- 
-2.21.0
-
+Thanks!
+Linus Walleij
