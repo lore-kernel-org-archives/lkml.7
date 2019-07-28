@@ -2,160 +2,105 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09ED1C7618F
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915D4C7618F
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C221E2075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666752075E
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:25:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Epbc1QFh"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="R4BJbtEH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbfG1XWo (ORCPT
+        id S1726300AbfG1XZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 19:22:44 -0400
-Received: from gateway24.websitewelcome.com ([192.185.50.93]:44603 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726183AbfG1XWn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 19:22:43 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 380F68A2D
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 18:22:42 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id rsV0hyIKxYTGMrsV0hmTgl; Sun, 28 Jul 2019 18:22:42 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=BmW2RfoXAHRi8AOdRBXZg9reqgHBod2XI3YMj7+4uaI=; b=Epbc1QFhThpWOZMLwZuxgHekBO
-        1kEPn4X/U819iKB9MWl9+NktSUaAv6zJiAo7vkElUrWtyldYi0WnVCTYDX1W0yCYgcBursoP6oYgx
-        zRfM6njao97ObDBR7j+EPWjfbZWwp2b4qQbpRcBed8m1nhYGTkeAWAWfBKEEORS6ADlSWshKn+e1I
-        MaGJmoxaIbq8fRJy6t+E8Zu8kTVdvuAVBxNxE42oTEN9uHBz88Nqp7V/jbS50CL1E7lIDBpQeYGb1
-        RNqNsH40FR/0N442DXnNrPvPu2xw9jocTXnex/iq46qefUfvyxRFrUOGiPbbIeMUv+ui9oK/bm4eG
-        Kk1dQZJg==;
-Received: from [187.192.11.120] (port=39072 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hrsUz-003Z6H-25; Sun, 28 Jul 2019 18:22:41 -0500
-Date:   Sun, 28 Jul 2019 18:22:40 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] ARM: OMAP: dma: Mark expected switch fall-throughs
-Message-ID: <20190728232240.GA22393@embeddedor>
+        Sun, 28 Jul 2019 19:25:20 -0400
+Received: from ozlabs.org ([203.11.71.1]:35431 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbfG1XZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 19:25:20 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45xf7K0scRz9sBt;
+        Mon, 29 Jul 2019 09:25:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564356317;
+        bh=BljZEOlkc0W0NeIxt8gVxip2VkivG4oSoW6uKHxHpB4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=R4BJbtEHFuy67IeBGAx+VhvkesZV22pEDUaB1pkal9crgcXUN0Wkh4Sgt9rUSBjMO
+         6kQw1aUC60l1kOTAOXtTnq0JPq9XqVE+DJTRwJlA3KQARqmocMLgHODCR3nh2nyW9T
+         r9xKBdPcIzq1PVXVLg+aeUYhk5o9rgcpowmHCdNdBkMUWSInxYUbH5nUaY4KtbdHVe
+         t1vmF0xN14rqfQxxq3iZ/c3DXyvY3XuT7nJuE0z4JJz1b9XH4xZXPKShns4fHug2bS
+         91DBA8oEpiasr7rCKgRKNlD36NXoeoFCnF2QwjtWNLlC84x+LFmlcrrGTmo6+BpbD/
+         tXPStfIKFni3Q==
+Date:   Mon, 29 Jul 2019 09:25:10 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: linux-next: manual merge of the sh tree with Linus' tree
+Message-ID: <20190729092510.5e269cac@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hrsUz-003Z6H-25
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:39072
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 26
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: multipart/signed; boundary="Sig_/BxDyDWOKbe+Rq69Bnd_nACt";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+--Sig_/BxDyDWOKbe+Rq69Bnd_nACt
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This patch fixes the following warnings:
+Hi all,
 
-arch/arm/plat-omap/dma.c: In function 'omap_set_dma_src_burst_mode':
-arch/arm/plat-omap/dma.c:384:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if (dma_omap2plus()) {
-      ^
-arch/arm/plat-omap/dma.c:393:2: note: here
-  case OMAP_DMA_DATA_BURST_16:
-  ^~~~
-arch/arm/plat-omap/dma.c:394:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if (dma_omap2plus()) {
-      ^
-arch/arm/plat-omap/dma.c:402:2: note: here
-  default:
-  ^~~~~~~
-arch/arm/plat-omap/dma.c: In function 'omap_set_dma_dest_burst_mode':
-arch/arm/plat-omap/dma.c:473:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if (dma_omap2plus()) {
-      ^
-arch/arm/plat-omap/dma.c:481:2: note: here
-  default:
-  ^~~~~~~
+Today's linux-next merge of the sh tree got conflicts in:
 
-Notice that, in this particular case, the code comment is
-modified in accordance with what GCC is expecting to find.
+  arch/sh/include/uapi/asm/setup.h
+  arch/sh/include/uapi/asm/types.h
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- arch/arm/plat-omap/dma.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+between commit:
 
-diff --git a/arch/arm/plat-omap/dma.c b/arch/arm/plat-omap/dma.c
-index 79f43acf9acb..08c99413d02c 100644
---- a/arch/arm/plat-omap/dma.c
-+++ b/arch/arm/plat-omap/dma.c
-@@ -388,17 +388,15 @@ void omap_set_dma_src_burst_mode(int lch, enum omap_dma_burst_mode burst_mode)
- 		/*
- 		 * not supported by current hardware on OMAP1
- 		 * w |= (0x03 << 7);
--		 * fall through
- 		 */
-+		/* fall through */
- 	case OMAP_DMA_DATA_BURST_16:
- 		if (dma_omap2plus()) {
- 			burst = 0x3;
- 			break;
- 		}
--		/*
--		 * OMAP1 don't support burst 16
--		 * fall through
--		 */
-+		/* OMAP1 don't support burst 16 */
-+		/* fall through */
- 	default:
- 		BUG();
- 	}
-@@ -474,10 +472,8 @@ void omap_set_dma_dest_burst_mode(int lch, enum omap_dma_burst_mode burst_mode)
- 			burst = 0x3;
- 			break;
- 		}
--		/*
--		 * OMAP1 don't support burst 16
--		 * fall through
--		 */
-+		/* OMAP1 don't support burst 16 */
-+		/* fall through */
- 	default:
- 		printk(KERN_ERR "Invalid DMA burst mode\n");
- 		BUG();
--- 
-2.22.0
+  d9c525229521 ("treewide: add "WITH Linux-syscall-note" to SPDX tag of uap=
+i headers")
 
+from Linus' tree and commit:
+
+  cd10afbc932d ("sh: remove unneeded uapi asm-generic wrappers")
+
+from the sh tree.
+
+I fixed it up (I just removed the files) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/BxDyDWOKbe+Rq69Bnd_nACt
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0+LtYACgkQAVBC80lX
+0GwxHwf/QPHqVBNCp6xbO2JaJLqVG4mPC5TmH7R6UImXcmPDPt5mO1hryua725ZQ
+EyhIjO76IGxDQHwjOWBxx7cvtfVJZKp+y49tIT1tIyjtTbjCejiL77bI8kReXHW2
+B0e7d2uymWY9HcIJcA6sq9tmSKtB/ebf3kbcJQMLT5rWPCFiFqTCS3aH2KtOY8+6
+o0ElKBVhYgNWhK8+oyvU3vyyUBVvcwGeg88PaRvz0+lQRwXpTT8HS/yWx72WwaQ5
+Vlt0MqLGUOJiCm4KLwFvEwbJUGJ5uOTX8uhKfDAE1vzmAbd6l2a+PQQlyHhgMO+C
+VRsBNxWXtZovLPz7BvqT4C+C1jqSqQ==
+=/2NV
+-----END PGP SIGNATURE-----
+
+--Sig_/BxDyDWOKbe+Rq69Bnd_nACt--
