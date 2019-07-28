@@ -2,159 +2,79 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E12BC7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 14:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70F0C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 14:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742502075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 14:36:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PdE/BeuD"
+	by mail.kernel.org (Postfix) with ESMTP id 9AAB42064C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 14:37:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564324653;
+	bh=N9wq1E/HquH4VxKibyh0Xk1LhplvO32iq3CEBuqAVWU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XLEqu++V/HpWrFz4JhyoJ2hhrWoQ9+UwMYKKfOxpNteqmjARbSAexCBFHC01np5Wa
+	 jzE5NaYAqDzAhFt0WklBpDry+W79Tlt2wEheUjT/iCmueYCDxsxu1onXczI+Ofqo3x
+	 MZ6KCXGcimlXUS3xYpgNw/DqvJHtHEucjuCSobpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbfG1Ogo (ORCPT
+        id S1726173AbfG1Ohc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 10:36:44 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34233 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfG1Ogo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 10:36:44 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b13so26693934pfo.1;
-        Sun, 28 Jul 2019 07:36:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QZJfnNtysLiC4XTp1HgEs2uOITRSitKSTACuAECWVcc=;
-        b=PdE/BeuDhkkQ/xvsecAPIMZ4UdyFm+rsCgFHauyMVnVq846+tacytYU0OBH6qPAdQk
-         1gWb48/gzqRXMvJCzjJ9wDUYqwztDF6fqOweAabAZACnituMGk3gS4PN7ygriuO1oeGu
-         k4t+RQl3fuLfECODEoUJHk0G8s6aFAC3HYLY6LxBPPnIhEf3xqmTVfn51Apm58XqcLEd
-         zOm1uG8RN/zBdWbTWa42wYnj1e4p4ehHAfnHaVtEagLR0ByuIEWdIQAsHmjf+ff43Oyk
-         ejIUcAIuERlHq/zM0B+nOQFv97O0Ul6qBsGQFmDbBAqIX/kPSuR7my8pNKdQo5CiSohX
-         s8Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QZJfnNtysLiC4XTp1HgEs2uOITRSitKSTACuAECWVcc=;
-        b=ZWbXYzE+MPz7AwV9lEiYYPEwvRiStne8KJy2klpkeq/GdYi5DO08FiwuPGwc2WCh60
-         g4JhsV097lFCY6cL8AvLpYDSiP+jyO4d0l8S6wIztHyw3HBzw3I8awPkHw2YmMS5uP0x
-         A9tkOwVOwyhunI8hrXM0BJoD8YLGYE6CrkWRh65T8Wegz4IBOEXNAUfhjGA01Dg49LnP
-         9E1FpqI/XomPR7OkqiJbKv5XG5Pbc8/o2k93juCZJ/ZbfDXH0uTzi35vIaoPPmYPW0wn
-         JxeMJg6lXt7Z+VlAharrjUCiqNki09aOdlafGh5GKATUkw9hVTa/hzcxuDUMcBbzPEXO
-         4OqA==
-X-Gm-Message-State: APjAAAVa+stD8sx4OlU/W7gr2GoYB3H8lC0sMmRDxRW0VCJS4EdAnFwk
-        Bo2sgWHgfMwt0G93Zb1DRyQ=
-X-Google-Smtp-Source: APXvYqyDNA35DNBOOtNufPtgnsGS/a+jmEItkCvKrnOVXAwwEQleWYuTnyexXTtEWl4XmOadl+QxzA==
-X-Received: by 2002:a62:1ac8:: with SMTP id a191mr31944970pfa.164.1564324603830;
-        Sun, 28 Jul 2019 07:36:43 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id f27sm41786790pgm.60.2019.07.28.07.36.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 07:36:42 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Kevin Tsai <ktsai@capellamicro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] iio: light: cm3323: Use device-managed APIs
-Date:   Sun, 28 Jul 2019 22:36:30 +0800
-Message-Id: <20190728143630.7620-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 28 Jul 2019 10:37:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbfG1Ohc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 10:37:32 -0400
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECF20216B7
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 14:37:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564324651;
+        bh=N9wq1E/HquH4VxKibyh0Xk1LhplvO32iq3CEBuqAVWU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AoM+LRLoFy1Q/8/GCIhERvnjrv03YUKqcjItxuvI3uQFdkZOwCyEXWVykGj4h/Oy0
+         ItUDDEcgWU4K6lXW1GazAzjcBa8KtYRnz9MjO5TlttNemlLZuCsb+C2/ZyX3kxK4L0
+         tO3iQ3I0HHJStcuEDcxsCMpPvzaprYZHbjgVu6Zo=
+Received: by mail-wr1-f49.google.com with SMTP id z1so59047386wru.13
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 07:37:30 -0700 (PDT)
+X-Gm-Message-State: APjAAAWAopDQNj0Iwz8BryRmLU5ni0mL5b1eNzouD6u4QrJ9tJn4VQzz
+        HU/gdPvubsPuFmXZkdDUslSrYFOUZB5vTYOi6ue6/A==
+X-Google-Smtp-Source: APXvYqxqjJp3XvQiEZhET9n8ZMGY72nI8z8fMmxWbnzKLjgNDVeJMtZj2llThVjXB90XfqsG/ghs0AyLAPj+2Fl15sc=
+X-Received: by 2002:adf:dd0f:: with SMTP id a15mr27171962wrm.265.1564324649417;
+ Sun, 28 Jul 2019 07:37:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20190728131251.622415456@linutronix.de> <20190728131648.695579736@linutronix.de>
+In-Reply-To: <20190728131648.695579736@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 28 Jul 2019 07:37:18 -0700
+X-Gmail-Original-Message-ID: <CALCETrWvxV9NnmFpdNiAHqf4Anz-Q4wdF0hTXwFg9q3g7cEKhw@mail.gmail.com>
+Message-ID: <CALCETrWvxV9NnmFpdNiAHqf4Anz-Q4wdF0hTXwFg9q3g7cEKhw@mail.gmail.com>
+Subject: Re: [patch 2/5] lib/vdso: Move fallback invocation to the callers
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Bolle <pebolle@tiscali.nl>, Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use device-managed APIs to simplify the code.
-The remove functions are redundant now and can
-be deleted.
+On Sun, Jul 28, 2019 at 6:20 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> To allow syscall fallbacks using the legacy 32bit syscall for 32bit VDSO
+> builds, move the fallback invocation out into the callers.
+>
+> Split the common code out of __cvdso_clock_gettime/getres() and invoke the
+> syscall fallback in the 64bit and 32bit variants.
+>
+> Preparatory work for using legacy syscalls in 32bit VDSO. No functional
+> change.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Split v1 into two patches.
-  - Drop the failed to register message and just
-    return devm_iio_register.
-
- drivers/iio/light/cm3323.c | 33 +++++++++------------------------
- 1 file changed, 9 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/iio/light/cm3323.c b/drivers/iio/light/cm3323.c
-index 50f3438c2b49..0443861ba1ec 100644
---- a/drivers/iio/light/cm3323.c
-+++ b/drivers/iio/light/cm3323.c
-@@ -101,15 +101,16 @@ static int cm3323_init(struct iio_dev *indio_dev)
- 	return 0;
- }
- 
--static void cm3323_disable(struct iio_dev *indio_dev)
-+static void cm3323_disable(void *data)
- {
- 	int ret;
--	struct cm3323_data *data = iio_priv(indio_dev);
-+	struct iio_dev *indio_dev = data;
-+	struct cm3323_data *cm_data = iio_priv(indio_dev);
- 
--	ret = i2c_smbus_write_word_data(data->client, CM3323_CMD_CONF,
-+	ret = i2c_smbus_write_word_data(cm_data->client, CM3323_CMD_CONF,
- 					CM3323_CONF_SD_BIT);
- 	if (ret < 0)
--		dev_err(&data->client->dev, "Error writing reg_conf\n");
-+		dev_err(&cm_data->client->dev, "Error writing reg_conf\n");
- }
- 
- static int cm3323_set_it_bits(struct cm3323_data *data, int val, int val2)
-@@ -243,26 +244,11 @@ static int cm3323_probe(struct i2c_client *client,
- 		return ret;
- 	}
- 
--	ret = iio_device_register(indio_dev);
--	if (ret < 0) {
--		dev_err(&client->dev, "failed to register iio dev\n");
--		goto err_init;
--	}
--
--	return 0;
--err_init:
--	cm3323_disable(indio_dev);
--	return ret;
--}
--
--static int cm3323_remove(struct i2c_client *client)
--{
--	struct iio_dev *indio_dev = i2c_get_clientdata(client);
--
--	iio_device_unregister(indio_dev);
--	cm3323_disable(indio_dev);
-+	ret = devm_add_action_or_reset(&client->dev, cm3323_disable, indio_dev);
-+	if (ret < 0)
-+		return ret;
- 
--	return 0;
-+	return devm_iio_device_register(&client->dev, indio_dev);
- }
- 
- static const struct i2c_device_id cm3323_id[] = {
-@@ -276,7 +262,6 @@ static struct i2c_driver cm3323_driver = {
- 		.name = CM3323_DRV_NAME,
- 	},
- 	.probe		= cm3323_probe,
--	.remove		= cm3323_remove,
- 	.id_table	= cm3323_id,
- };
- 
--- 
-2.20.1
-
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
