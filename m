@@ -2,210 +2,152 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16BBC7618F
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5DFC76191
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F6A2085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 657F32085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:51:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="xueIpv9D"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LUBMGnGh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfG1Xpf (ORCPT
+        id S1726276AbfG1Xv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 19:45:35 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.178]:21591 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726203AbfG1Xpe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 19:45:34 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 699DF1469A4
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 18:45:33 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id rsr7hyQszYTGMrsr7hmc4N; Sun, 28 Jul 2019 18:45:33 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=c4CFd82eZIWkt0ndIbgvddHP47hbuUo2fEMnCh5onr0=; b=xueIpv9Df/eq1qm6R69u6HCRkV
-        xkQkgO7EHYSu4vvJEXRzZJYPuiEk0YKj7T/dZQs8D7OQoXBi8u9b20MWq0oSjGOXj3GuZBWVrTGb9
-        oa8urF3EqNG5V/CJPDKUtTZUi36jVQexkhs3hJhbgeub2OqVlIKX5WPt8xDOK3qTPDF4U14LbB9UG
-        vtxR7aUmORmbjj5Y2ZkE1ppODR3yIimgFGCy/PdZD4EbvL1J1yAfnn9ULGzUIfhQ1EhPNNxn57qog
-        nbeezCKml9qJRDJOIR6p5O9gC9QZwIMHiKqaem4d5Hr+tiq+wUjhZkHcVqH30zvYATPoHDmHivPH/
-        FMXRX0BQ==;
-Received: from [187.192.11.120] (port=35798 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hrsr7-003hn6-0Z; Sun, 28 Jul 2019 18:45:33 -0500
-Subject: Re: [PATCH] arm64: hw_breakpoint: mark expected switch fall-through
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190728232706.7396-1-mcroce@redhat.com>
- <763dd408-7ac0-436c-d952-1decff5c696e@embeddedor.com>
- <CAGnkfhx1r_wE9d9DLKYznhFw43bYWx5A23MnLy9X4T_bZAmjKA@mail.gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <26c1353d-ab91-c031-1ea7-ebbf837c100c@embeddedor.com>
-Date:   Sun, 28 Jul 2019 18:45:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 28 Jul 2019 19:51:27 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59525 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726183AbfG1Xv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 19:51:26 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45xfjQ2Q0wz9sBt;
+        Mon, 29 Jul 2019 09:51:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564357883;
+        bh=+Sm3w908JcE82ssAs1nSzuDW2v9mYsOQgWyC71ct+r4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LUBMGnGhZiyd6A2n9SjLJbgB1fX/qq4quPY2rR4fx4UmSVL1hnCt2zwGGwF1vmeCY
+         IIpWjYeDbHhu4LjuA2lXj32tosi0nKjOQOQYvBZk+mHFcLDWe1S+H1MCo8U8F8PnbT
+         yPPrQW5jkM8pM6Xn5d4nDh4KkpRRL1c2rViyharlscFJF47Ftytd2S1VdaU/FjgzUh
+         NRhCPjtu9+cfX/+XW8X12/JlWrmBRUZtfj+m/op4PeC1ycKzwK9u0qbsLKnJfp/4mm
+         D1OfW6lxvooS3/QAIt4AZiaq9Kensk+7vVygKTDuccbp1TGTxtdVgyY0SbcLRdsz/q
+         XhHyx1knsyguA==
+Date:   Mon, 29 Jul 2019 09:51:21 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org
+Subject: Re: mmotm 2019-07-24-21-39 uploaded (mm/memcontrol)
+Message-ID: <20190729095121.080c1a93@canb.auug.org.au>
+In-Reply-To: <20190727101608.GA1740@chrisdown.name>
+References: <20190725044010.4tE0dhrji%akpm@linux-foundation.org>
+        <4831a203-8853-27d7-1996-280d34ea824f@infradead.org>
+        <20190725163959.3d759a7f37ba40bb7f75244e@linux-foundation.org>
+        <20190727034205.GA10843@archlinux-threadripper>
+        <20190726211952.757a63db5271d516faa7eaac@linux-foundation.org>
+        <20190727101608.GA1740@chrisdown.name>
 MIME-Version: 1.0
-In-Reply-To: <CAGnkfhx1r_wE9d9DLKYznhFw43bYWx5A23MnLy9X4T_bZAmjKA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hrsr7-003hn6-0Z
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [187.192.11.120]:35798
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 40
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: multipart/signed; boundary="Sig_/zy3Q_OmUUHqfTfaZG9i6x+B";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/zy3Q_OmUUHqfTfaZG9i6x+B
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 7/28/19 6:36 PM, Matteo Croce wrote:
-> Feel free di discard the patch then.
-> What compiler are you using? I' using gcc version 8.3.0 (Ubuntu/Linaro
-> 8.3.0-6ubuntu1)
-> 
+On Sat, 27 Jul 2019 11:16:08 +0100 Chris Down <chris@chrisdown.name> wrote:
+>
+> u64 division: truly the gift that keeps on giving. Thanks Andrew for foll=
+owing=20
+> up on these.
+>=20
+> Andrew Morton writes:
+> >Ah.
+> >
+> >It's rather unclear why that u64 cast is there anyway.  We're dealing
+> >with ulongs all over this code.  The below will suffice. =20
+>=20
+> This place in particular uses u64 to make sure we don't overflow when lef=
+t=20
+> shifting, since the numbers can get pretty big (and that's somewhat neede=
+d due=20
+> to the need for high precision when calculating the penalty jiffies). It'=
+s ok=20
+> if the output after division is an unsigned long, just the intermediate s=
+teps=20
+> need to have enough precision.
+>=20
+> >Chris, please take a look?
+> >
+> >--- a/mm/memcontrol.c~mm-throttle-allocators-when-failing-reclaim-over-m=
+emoryhigh-fix-fix-fix
+> >+++ a/mm/memcontrol.c
+> >@@ -2415,7 +2415,7 @@ void mem_cgroup_handle_over_high(void)
+> > 	clamped_high =3D max(high, 1UL);
+> >
+> > 	overage =3D (u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT;
+> >-	do_div(overage, clamped_high);
+> >+	overage /=3D clamped_high; =20
+>=20
+> I think this isn't going to work because left shifting by=20
+> MEMCG_DELAY_PRECISION_SHIFT can make the number bigger than ULONG_MAX, wh=
+ich=20
+> may cause wraparound -- we need to retain the u64 until we divide.
+>=20
+> Maybe div_u64 will satisfy both ARM and i386? ie.
+>=20
+> diff --git mm/memcontrol.c mm/memcontrol.c
+> index 5c7b9facb0eb..e12a47e96154 100644
+> --- mm/memcontrol.c
+> +++ mm/memcontrol.c
+> @@ -2419,8 +2419,8 @@ void mem_cgroup_handle_over_high(void)
+>          */
+>         clamped_high =3D max(high, 1UL);
+> =20
+> -       overage =3D (u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT;
+> -       do_div(overage, clamped_high);
+> +       overage =3D div_u64((u64)(usage - high) << MEMCG_DELAY_PRECISION_=
+SHIFT,
+> +                         clamped_high);
+> =20
+>         penalty_jiffies =3D ((u64)overage * overage * HZ)
+>                 >> (MEMCG_DELAY_PRECISION_SHIFT + MEMCG_DELAY_SCALING_SHI=
+FT); =20
 
-My bad. My patch address the ones in arch/arm/kernel/hw_breakpoint.c
+I have applied this to the akpm-current tree in linux-next today.
 
-Your patch should be fine.
+--=20
+Cheers,
+Stephen Rothwell
 
---
-Gustavo
+--Sig_/zy3Q_OmUUHqfTfaZG9i6x+B
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> On Mon, Jul 29, 2019 at 1:34 AM Gustavo A. R. Silva
-> <gustavo@embeddedor.com> wrote:
->>
->> Hi Matteo,
->>
->> I sent a patch for this some minutes ago:
->>
->> https://lore.kernel.org/patchwork/patch/1106585/
->>
->> It seems there are more warnings in that file than the ones you are
->> addressing.
->>
->> Thanks
->> --
->> Gustavo
->>
->> On 7/28/19 6:27 PM, Matteo Croce wrote:
->>> Mark switch cases where we are expecting to fall through,
->>> fixes the following warning:
->>>
->>>   CC      arch/arm64/kernel/hw_breakpoint.o
->>> arch/arm64/kernel/hw_breakpoint.c: In function ‘hw_breakpoint_arch_parse’:
->>> arch/arm64/kernel/hw_breakpoint.c:540:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>>     if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
->>>        ^
->>> arch/arm64/kernel/hw_breakpoint.c:542:3: note: here
->>>    case 2:
->>>    ^~~~
->>> arch/arm64/kernel/hw_breakpoint.c:544:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>>     if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
->>>        ^
->>> arch/arm64/kernel/hw_breakpoint.c:546:3: note: here
->>>    default:
->>>    ^~~~~~~
->>>
->>> Signed-off-by: Matteo Croce <mcroce@redhat.com>
->>> ---
->>>  arch/arm64/kernel/hw_breakpoint.c | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
->>> index dceb84520948..7d846985b133 100644
->>> --- a/arch/arm64/kernel/hw_breakpoint.c
->>> +++ b/arch/arm64/kernel/hw_breakpoint.c
->>> @@ -539,10 +539,12 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
->>>                       /* Allow single byte watchpoint. */
->>>                       if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
->>>                               break;
->>> +                     /* fallthrough */
->>>               case 2:
->>>                       /* Allow halfword watchpoints and breakpoints. */
->>>                       if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
->>>                               break;
->>> +                     /* fallthrough */
->>>               default:
->>>                       return -EINVAL;
->>>               }
->>>
-> 
-> 
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0+NPkACgkQAVBC80lX
+0GwSggf/R3ZZuH5LliVhgCqbaBSFe93KVSxKonReOK3mTFha+qmnk8vOnjMxHn6E
+LnMnA3mI7jJZw/uHTSE/ccUfWIGgJ/nWKU8M2iCuVQwChcocbVaf6TTViNwSZRAy
+0hgehpDyAN/LuS8hPxNHre02xDtx4faKRkUUPLUuFC6wXycQ6UoLFoccYNQWKbuB
+Xdm5vGFxSwgNkwi/wGWZnkikoBMIOseFvqDP7SevW2NAQdST9LIoXY2t5RXTcNDh
+O6E3TpOOXH+GP00uphn+21GLF4AGZLgajZrTdv2v/pkzSfW1qI/hdfkuHb1bOCnx
+SFymgmdpe6PfoqnBr01hSGHc22TskQ==
+=DFTr
+-----END PGP SIGNATURE-----
+
+--Sig_/zy3Q_OmUUHqfTfaZG9i6x+B--
