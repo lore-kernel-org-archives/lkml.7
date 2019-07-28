@@ -2,164 +2,144 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E03C7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 14:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4152C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 14:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615192077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 14:17:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=imap.cc header.i=@imap.cc header.b="AJVS490z";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0niHThof"
+	by mail.kernel.org (Postfix) with ESMTP id A420E214C6
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 14:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbfG1ORT (ORCPT
+        id S1726139AbfG1OTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 10:17:19 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:56107 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726032AbfG1ORT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 10:17:19 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7AB0E20F51;
-        Sun, 28 Jul 2019 10:17:18 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Sun, 28 Jul 2019 10:17:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imap.cc; h=to:cc
-        :references:from:subject:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=B
-        IHCBvWO2TOkIwGGxAKlxL1z0r1aoEL8ILhAm6EA2eI=; b=AJVS490zi45UqECbF
-        35RusZdXut3281k42ZaECuROiDu9xKtuT9KYXSS0Gl7uJIwhwRXm7bbHpaH2DSPk
-        2KhCiX4cMk8SdkyxXTQV7Jh/wW43i/8dPzDncpEY+8+KMWU9zOAC0Yk512fNfLAC
-        JZ6FLzURoeWyhw98Y8R3vcvKPB+l8xUSRHge1sHnQ8D6/5Pbk3zCu+NezDa0omX/
-        81qATjeLdIFJT+gIcwj4dqf2RfcOmREWq2+m3XYW0wVMUDhrnfxZzNUqRbAV1p6Y
-        xD0coJhIv3IacolEf237Vqz925qWO92ESQDGYsDsBRCyRYSVJu9B8uFsjwvP0dld
-        30+wg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=BIHCBvWO2TOkIwGGxAKlxL1z0r1aoEL8ILhAm6EA2
-        eI=; b=0niHThofVynDR4lsWzR6hG7lpBoYkU9w5bqTsr1Z7fh7W6EOW0FdKMcK4
-        5Oz2ZcAeGufMSqUOCcbSIiJVo3TGfmm7MvX5LC/3Iyy5jAB9dl/MQm4J3qS87ejR
-        CuwnvMAd2/qCanOTTnIOPGAqRxiSTscQKvQfX9pFfCr22X9bsN7/QSchFLC1n0j+
-        22jrprvDA2Ek4zT02NU+2FdQIESc3dbaGIKxs202muFdR5w6IVgx58BW5nv4pmXC
-        eQ5HqpiSFUpQQJMAE26zRUjtOZ4CTYKAJJx/EHJNG8BGqSQ2JMek0ldHfaeAbW93
-        9p5oWC8y+V1tGVx80fnflZwEsKh0A==
-X-ME-Sender: <xms:ba49XaFAnVmUqUEwuvK-3XZPEJTYHIR3H5yC3KsX8NKIAX6GIYm_Ww>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrkeelgdejiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdejmdenucfjughrpefvfhfhuffkffgfgggjtgfgsehtkeertddtfeej
-    necuhfhrohhmpefvihhlmhgrnhcuufgthhhmihguthcuoehtihhlmhgrnhesihhmrghprd
-    gttgeqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpshhouhhrtggvfhhorhhgvgdr
-    nhgvthenucfkphepkeegrddugeejrdegjedrkeejnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehtihhlmhgrnhesihhmrghprdgttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:ba49XXoXHGQU1OafRvcomP96uw5wkbdq6KBEgGHf97-FgjjUyoLJzA>
-    <xmx:ba49XW6khFwRuAKrMNjM9LcsmxIxfwZoyubGcbzXb8-brOk1k3viJw>
-    <xmx:ba49XV52MGIzbQ0J6sGPrLLu9i-Ph6Ps51P5GdksJY-HiHT1j6MJUA>
-    <xmx:bq49XR30GY_JCM7uJbf_myONGKDB5QQ-R6ZhkCxjrcPUsqm9TieuVA>
-Received: from [192.168.59.129] (p54932f57.dip0.t-ipconnect.de [84.147.47.87])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 505F48005A;
-        Sun, 28 Jul 2019 10:17:16 -0400 (EDT)
-To:     Paul Bolle <pebolle@tiscali.nl>
-Cc:     David Miller <davem@davemloft.net>, Hansjoerg Lipp <hjlipp@web.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Karsten Keil <kkeil@linux-pingi.de>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190726220541.28783-1-pebolle@tiscali.nl>
-From:   Tilman Schmidt <tilman@imap.cc>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tilman@imap.cc;
- keydata= mQENBFOnH60BCADAjDkW8QHkuYEGOCimq/2xhB7Fe0ljGHAoy36bqZJ3mKo6vUVibl7e4QH/
- VxBxYyfM9N2EdxSf8e3g0736oamQTjpvUMcApELTq7RufCxIpjXbV/3ZAzFEf3SbBozfKYA/
- h+sFM+Yy0BF/6NWwC7UgCm2AvV6w6gwHHIQvLED1BeRkD/EH1HmgfgiqJIGlwSqkSTNsUtL6
- WZoBOTNeInj5rl431dz0gJdYs//ZDJ2z35XaljDP8x0Vx4L4Tm1AhZCTt5Qxj9I68WwJv66u
- fz+weZ3MzG7QNVn3YVMzAAD6P8z74NM1EZF6Kg2w319d3lPL9Ba02CcU8o/Jo5/MUEcDABEB
- AAG0H1RpbG1hbiBTY2htaWR0IDx0aWxtYW5AaW1hcC5jYz6JATsEEwECACUCGyMGCwkIBwMC
- BhUIAgkKCwQWAgMBAh4BAheABQJTpyKiAhkBAAoJEFPuqx0v+F+qj8sH/14MtCKDIpUSZ+jz
- 2iTbF+szyF+RxgPKch7l4+MaLvthp3y7RvPM1fRsBYkuOvnSf2x2R8bfVAbGo8Agev6RAGce
- KVcmD0VAFDrYbyeM5YveL1TfbIEPYMG4qF0mQok9mhaesDCTk4LfVmmIXqAVOpKUd3Rcw6fc
- xG4nsgclTcj8csg5BJKiLBFyk1qYsEG+2l351qrITDSjzq1Ooq7VugCtYrR4b7kH4UuPUkse
- v4aZOvddsrH57jNBiNZnN71Y7/L3N6DNg8YQir+hRpMS0cc+jhX0GOy3idUCt63t7HZTJadY
- qQy6nh3dIq94kiKFDYpMDVcFmivgLzR3kzHwDFC5AQ0EU6cfrQEIAJ67b2JDD0Y8CwEYOzta
- 3NRyL67lj6dzawteFh7/an9fHsdiuEUV0/EHvCQAiD6Gbpc+qNCAkX5l9Q4uNqyvwUouO+Tw
- lqC3lGq3dZxc0ukf1mVbmuoxL8dU76KvjaTexbBphWRY4LJHQGjdf2jZRWPqO9FejSWaD6A5
- Icx5xexf+b66Wj8EibfF+Gw5kzPs9mjZrBpseAVJ+EbNkgx2/yx9oDw25LMycr+MMb61bSfr
- 8id8gr+lDXhowgxik30bxLQtpj9UPZgRC4Y2CcyzQqotbOWciY5tpmT5tTv+ddgfQVhinsZP
- KAEK3AIYou27RkkjZ+kFTbnJ4tPKGOW8otMAEQEAAYkBHwQYAQIACQUCU6cfrQIbDAAKCRBT
- 7qsdL/hfqlinB/9PBwJIS5+ZGiYblEog2HJFAn7YutnvHxoEoLZRZ/8tfIoCsGI18+OXpull
- YbCaLvXgYCeJjKsB6cY7Ih+xmclmNQmD6hsNvWIxNLEOtWxPCxXwbhvnFKzYiQHADnyyz12k
- uJlb6pT2sdTynl6gVwJz7s9cdipTB/aRaHpiMAUYgxxh8gEpoKmqKFoSwMA0lGozvfr8X9OI
- E8sCWFTs1Gr0Iz4SOJ26vwHSDZO880G+YW9O4l08mTNPBdBoV1auNqfKNF6wW4JQ6Spm6PZm
- 26esWpBITo1IxICllLdjNI6DJf2vq8ShqAbb9S7yKClXPDSq+QLpUAKcKizg1UiBP6wS
-Subject: Re: [PATCH] gigaset: stop maintaining seperately
-Message-ID: <8ac5417d-29f7-664f-1a7f-b86ef5cbe3d3@imap.cc>
-Date:   Sun, 28 Jul 2019 16:17:17 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 28 Jul 2019 10:19:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:33064 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbfG1OTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 10:19:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3517E344;
+        Sun, 28 Jul 2019 07:19:29 -0700 (PDT)
+Received: from [10.163.1.126] (unknown [10.163.1.126])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 698B53F575;
+        Sun, 28 Jul 2019 07:19:22 -0700 (PDT)
+Subject: Re: [PATCH v9 12/21] mm: pagewalk: Allow walking without vma
+To:     Steven Price <steven.price@arm.com>, linux-mm@kvack.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190722154210.42799-1-steven.price@arm.com>
+ <20190722154210.42799-13-steven.price@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <7fc50563-7d5d-7270-5a6a-63769e9c335a@arm.com>
+Date:   Sun, 28 Jul 2019 19:50:02 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190726220541.28783-1-pebolle@tiscali.nl>
+In-Reply-To: <20190722154210.42799-13-steven.price@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks to you, Paul, for all your contributions, and specifically for
-keeping the driver maintained for four more years after I had to abandon
-it for the same reason.
 
-I had a lot of fun working on that driver and I learned a lot in the
-course. Now it's time to move on without regrets.
 
-All the best,
-Tilman
-
-Am 27.07.2019 um 00:05 schrieb Paul Bolle:
-> The Dutch consumer grade ISDN network will be shut down on September 1,
-> 2019. This means I'll be converted to some sort of VOIP shortly. At that
-> point it would be unwise to try to maintain the gigaset driver, even for
-> odd fixes as I do. So I'll stop maintaining it as a seperate driver and
-> bump support to CAPI in staging. De facto this means the driver will be
-> unmaintained, since no-one seems to be working on CAPI.
+On 07/22/2019 09:12 PM, Steven Price wrote:
+> Since 48684a65b4e3: "mm: pagewalk: fix misbehavior of walk_page_range
+> for vma(VM_PFNMAP)", page_table_walk() will report any kernel area as
+> a hole, because it lacks a vma.
 > 
-> I've lighty tested the hardware specific modules of this driver (bas-gigaset,
-> ser-gigaset, and usb-gigaset) for v5.3-rc1. The basic functionality appears to
-> be working. It's unclear whether anyone still cares. I'm aware of only one
-> person sort of using the driver a few years ago.
+> This means each arch has re-implemented page table walking when needed,
+> for example in the per-arch ptdump walker.
 > 
-> Thanks to Karsten Keil for the ISDN subsystems gigaset was using (I4L and
-> CAPI). And many thanks to Hansjoerg Lipp and Tilman Schmidt for writing and
-> upstreaming this driver.
+> Remove the requirement to have a vma except when trying to split huge
+> pages.
 > 
-> Signed-off-by: Paul Bolle <pebolle@tiscali.nl>
+> Signed-off-by: Steven Price <steven.price@arm.com>
 > ---
->  MAINTAINERS | 7 -------
->  1 file changed, 7 deletions(-)
+>  mm/pagewalk.c | 25 +++++++++++++++++--------
+>  1 file changed, 17 insertions(+), 8 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 783569e3c4b4..e99afbd13355 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6822,13 +6822,6 @@ F:	Documentation/filesystems/gfs2*.txt
->  F:	fs/gfs2/
->  F:	include/uapi/linux/gfs2_ondisk.h
+> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+> index 98373a9f88b8..1cbef99e9258 100644
+> --- a/mm/pagewalk.c
+> +++ b/mm/pagewalk.c
+> @@ -36,7 +36,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+>  	do {
+>  again:
+>  		next = pmd_addr_end(addr, end);
+> -		if (pmd_none(*pmd) || !walk->vma) {
+> +		if (pmd_none(*pmd)) {
+>  			if (walk->pte_hole)
+>  				err = walk->pte_hole(addr, next, walk);
+>  			if (err)
+> @@ -59,9 +59,14 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+>  		if (!walk->pte_entry)
+>  			continue;
 >  
-> -GIGASET ISDN DRIVERS
-> -M:	Paul Bolle <pebolle@tiscali.nl>
-> -L:	gigaset307x-common@lists.sourceforge.net
-> -W:	http://gigaset307x.sourceforge.net/
-> -S:	Odd Fixes
-> -F:	drivers/staging/isdn/gigaset/
-> -
->  GNSS SUBSYSTEM
->  M:	Johan Hovold <johan@kernel.org>
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/johan/gnss.git
-> 
+> -		split_huge_pmd(walk->vma, pmd, addr);
+> -		if (pmd_trans_unstable(pmd))
+> -			goto again;
+> +		if (walk->vma) {
+> +			split_huge_pmd(walk->vma, pmd, addr);
+
+Check for a PMD THP entry before attempting to split it ?
+
+> +			if (pmd_trans_unstable(pmd))
+> +				goto again;
+> +		} else if (pmd_leaf(*pmd)) {
+> +			continue;
+> +		}
+> +
+>  		err = walk_pte_range(pmd, addr, next, walk);
+>  		if (err)
+>  			break;
+> @@ -81,7 +86,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+>  	do {
+>   again:
+>  		next = pud_addr_end(addr, end);
+> -		if (pud_none(*pud) || !walk->vma) {
+> +		if (pud_none(*pud)) {
+>  			if (walk->pte_hole)
+>  				err = walk->pte_hole(addr, next, walk);
+>  			if (err)
+> @@ -95,9 +100,13 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+>  				break;
+>  		}
+>  
+> -		split_huge_pud(walk->vma, pud, addr);
+> -		if (pud_none(*pud))
+> -			goto again;
+> +		if (walk->vma) {
+> +			split_huge_pud(walk->vma, pud, addr);
+
+Check for a PUD THP entry before attempting to split it ?
+
+> +			if (pud_none(*pud))
+> +				goto again;
+> +		} else if (pud_leaf(*pud)) {
+> +			continue;
+> +		}
+
+This is bit cryptic. walk->vma check should be inside a helper is_user_page_table()
+or similar to make things clear. p4d_leaf() check missing in walk_p4d_range() for
+kernel page table walk ? Wondering if p?d_leaf() test should be moved earlier while
+calling p?d_entry() for kernel page table walk.
