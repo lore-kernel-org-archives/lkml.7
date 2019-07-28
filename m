@@ -2,107 +2,175 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EDFC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 10:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEC2C7618B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 10:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 474432087C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 10:08:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SBZAHqGU"
+	by mail.kernel.org (Postfix) with ESMTP id F40F32075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 10:09:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbfG1KH7 (ORCPT
+        id S1726099AbfG1KJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 06:07:59 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42349 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfG1KH6 (ORCPT
+        Sun, 28 Jul 2019 06:09:50 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54084 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfG1KJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 06:07:58 -0400
-Received: by mail-lf1-f65.google.com with SMTP id s19so39976607lfb.9
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 03:07:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0PdnB4+DVETsuhtxt6ZrOFlXGwuc4dLlLuSMGN0xrw8=;
-        b=SBZAHqGUVpiWTwyGhjgib6Ba8GdoI75a+L56oQjr43fm4qV2BFxftfLsMlqrqFn+EZ
-         5mdVWAT+B+VByU2CkAVFlJxxvpHFN2tm/Cpiyr9ulZVBOMGyg4Mud8P9Q1qJhxDA5erJ
-         ESRpyTBSFLBBgNZ8EmdPLcw7TcmuZ5dWXuz3D3WsZtikm9kKl6/8RjhBaq1cCXWLwNJC
-         0oeXcRF5K2vATaK9Ugac2PfqhBrPYXrWIHUet/CE+Vr5nKOkPJa6boOi9BLeiUzq1aHR
-         kRgfRj8FD4OEp9TxabCKtDhHabREwEel8ghVMku29geSLkfmp0y7XUSxiDDx3g46Hsz+
-         5YSg==
+        Sun, 28 Jul 2019 06:09:50 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x15so51344539wmj.3;
+        Sun, 28 Jul 2019 03:09:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0PdnB4+DVETsuhtxt6ZrOFlXGwuc4dLlLuSMGN0xrw8=;
-        b=JJb/bj1AcTIU3lPZGx0gk4aTexB4+ga9bLAnydSUobVrzFOvGvCSADe7j7aN2rbTJ+
-         BOy06VAodQ3NHxfDcxwpLaF+kx300bPD1hABnQDXE6glzdRlVyWfPnhIKu9wedUlsE8G
-         v+Ozm6AohLDmZJ3+CvpLFq6glXmLdHWqFVd/h3Lf34ntoIL78oU+Hr+lCAmZet6PdlmY
-         etuQBXS/wqtzO+f1HsvEoD4OJC3ylcvxCwB0FK7R3w71Z8TbIjiYHrM8EOaitMROXeku
-         Lt3E1HrWuLhqrcY5x5T4S3KoqTtCK7D9yOJ9xAn92CgcBVVR4I/PZNw7uXFKpiySQitQ
-         RZ9w==
-X-Gm-Message-State: APjAAAXz4UIytts5FP/82Ux4gLP2DXP8VIRq1ZFAiNYAOXSABNG4VDbT
-        /7EAwYkZ6Lfcw9y0LCVkrUlYkGQG+SrUPNlXUlCXAg==
-X-Google-Smtp-Source: APXvYqzSNjt1lYKjURaRXuVncVRWOToNmhOfLXFnEo7r8V/3u9q15MPobypEm+Fc3TnK08e+rNVdVXdF65GrsXrVICo=
-X-Received: by 2002:ac2:4891:: with SMTP id x17mr50180412lfc.60.1564308476044;
- Sun, 28 Jul 2019 03:07:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UDJukCltcBoDIamYjAzjZ4beReUXQTV1IlWv2RKZBIo=;
+        b=PHWpmSHGn0qN1rLjzViuNkJnXzq1f2nCbIiQUoEWGWWkU4iuellFtBzdMZiyWoefzg
+         4TuZzXX6Q7uaBT9smt7ECPUF7e/m6qEbq1NXHxsWyIIGqEy5XjuC6RD3Lf38uXdA+P+r
+         fg9u8iLtg4aBOwifwonfyXY28Dn/qISObjF/mCThaeKc7jZ4i286Gsia+rbIZtOlqUJX
+         BNHcTP/cgzAspT8AaENX/8bZ431ci9ubnxXXdixSbfYHkQc/c3vJFM6ZI2uqxI9Oe+lh
+         cBks8/x1ztJJLwJEu4RQuJAzoJu910wtV9VzebG4/aHGuBpzaquuCNlW8BSTZzreAl0O
+         m/IQ==
+X-Gm-Message-State: APjAAAW1JPkyjTM4SWtLfQaaU+BpihT8qSqXE9nrRNQlgLCtCF0PjaNr
+        qc9A2UNhVJa5EoX6P36/fPw=
+X-Google-Smtp-Source: APXvYqwoz6Z+wgrSR4vFsGkD7BNjOhJJW1on8ALUEDE+NyuhaIUMaLGwF3tD4pd4jlaK7QTI3b9slw==
+X-Received: by 2002:a1c:cb43:: with SMTP id b64mr92535116wmg.135.1564308587840;
+        Sun, 28 Jul 2019 03:09:47 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id y16sm124811890wrg.85.2019.07.28.03.09.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Jul 2019 03:09:46 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] modpost: check for static EXPORT_SYMBOL* functions
+Date:   Sun, 28 Jul 2019 13:09:06 +0300
+Message-Id: <20190728100906.18847-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190714152817.24693-1-efremov@linux.com>
+References: <20190714152817.24693-1-efremov@linux.com>
 MIME-Version: 1.0
-References: <cover.1550768574.git.hns@goldelico.com> <32025b2a8ccc97cc01f8115ee962529eb5990f00.1550768574.git.hns@goldelico.com>
- <CACRpkdZ5Z9VY457Fywt6X=K5XONgiPVcwbwSkwL_U+GCqZ+u5g@mail.gmail.com>
- <4C901747-1657-47AD-A9D7-10E41AFB35CB@goldelico.com> <20190728085010.36040cb2@archlinux>
-In-Reply-To: <20190728085010.36040cb2@archlinux>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 28 Jul 2019 12:07:44 +0200
-Message-ID: <CACRpkdb1-d3mzJAs2AVdz3n8vWGy-cgajiTP4k=cJSqTsbgpeQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/10] iio: document bindings for mounting matrices
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Song Qiang <songqiang1304521@gmail.com>,
-        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
-        Martin Kelly <mkelly@xevo.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Brian Masney <masneyb@onstation.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Gregor Boirie <gregor.boirie@parrot.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Samu Onkalo <samu.onkalo@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 9:50 AM Jonathan Cameron <jic23@kernel.org> wrote:
+This patch adds a check to warn about static EXPORT_SYMBOL* functions
+during the modpost. In most of the cases, a static symbol marked for
+exporting is an odd combination that should be fixed either by deleting
+the exporting mark or by removing the static attribute and adding the
+appropriate declaration to headers.
 
-> Given the comments that 'need' any response are fairly minor, I've just
-> taken the view that the perfect is the enemy of the good and applied
-> it to the togreg branch of iio.git with some really small tweaks.
+This check could help to detect the following problems:
+1. 550113d4e9f5 ("i2c: add newly exported functions to the header, too")
+2. 54638c6eaf44 ("net: phy: make exported variables non-static")
+3. 98ef2046f28b ("mm: remove the exporting of totalram_pages")
+4. 73df167c819e ("s390/zcrypt: remove the exporting of ap_query_configuration")
+5. a57caf8c527f ("sunrpc/cache: remove the exporting of cache_seq_next")
+6. e4e4730698c9 ("crypto: skcipher - remove the exporting of skcipher_walk_next")
+7. 14b4c48bb1ce ("gve: Remove the exporting of gve_probe")
+8. 9b79ee9773a8 ("scsi: libsas: remove the exporting of sas_wait_eh")
+9. ...
 
-Oh that works, too :) whoever is most annoyed will get to fix any
-remaining offenders.
+Build time impact, allmodconfig, Dell XPS 15 9570 (measurements 3x):
+$ make mrproper; make allmodconfig; time make -j12; \
+  git checkout HEAD~1; \
+  make mrproper; make allmodconfig; time make -j12
+1.
+   (with patch) 17635,94s user 1895,54s system 1085% cpu 29:59,22 total
+   (w/o  patch) 17275,42s user 1803,87s system 1112% cpu 28:35,66 total
+2.
+   (with patch) 17369,51s user 1763,28s system 1111% cpu 28:41,47 total
+   (w/o  patch) 16880,50s user 1670,93s system 1113% cpu 27:46,56 total
+3.
+   (with patch) 17937,88s user 1842,53s system 1109% cpu 29:42,26 total
+   (w/o  patch) 17267,55s user 1725,09s system 1111% cpu 28:28,17 total
 
-The quality of documentation really depends on perspective.
-This weekend I read some old UNIX System V manuals
-and this was "extremly professional" documentation at one
-point. It wasn't very good. I think we're pretty well off with what
-we have here.
+Thus, the current implementation adds approx. 1 min for allmodconfig.
 
-Yours,
-Linus Walleij
+Acked-by: Emil Velikov <emil.l.velikov@gmail.com>
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ scripts/mod/modpost.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index f277e116e0eb..85e885235c96 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -169,6 +169,7 @@ struct symbol {
+ 	unsigned int kernel:1;     /* 1 if symbol is from kernel
+ 				    *  (only for external modules) **/
+ 	unsigned int preloaded:1;  /* 1 if symbol from Module.symvers, or crc */
++	unsigned int is_static:1;  /* 1 if symbol is not global */
+ 	enum export  export;       /* Type of export */
+ 	char name[0];
+ };
+@@ -201,6 +202,7 @@ static struct symbol *alloc_symbol(const char *name, unsigned int weak,
+ 	strcpy(s->name, name);
+ 	s->weak = weak;
+ 	s->next = next;
++	s->is_static = 1;
+ 	return s;
+ }
+ 
+@@ -1980,6 +1982,22 @@ static void read_symbols(const char *modname)
+ 		handle_modversions(mod, &info, sym, symname);
+ 		handle_moddevtable(mod, &info, sym, symname);
+ 	}
++
++	// check for static EXPORT_SYMBOL_* functions && global vars
++	for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
++		unsigned char bind = ELF_ST_BIND(sym->st_info);
++		unsigned char type = ELF_ST_TYPE(sym->st_info);
++
++		if (type == STT_OBJECT || type == STT_FUNC) {
++			struct symbol *s =
++				find_symbol(remove_dot(info.strtab +
++						       sym->st_name));
++
++			if (s && (bind == STB_GLOBAL || bind == STB_WEAK))
++				s->is_static = 0;
++		}
++	}
++
+ 	if (!is_vmlinux(modname) || vmlinux_section_warnings)
+ 		check_sec_ref(mod, modname, &info);
+ 
+@@ -2425,6 +2443,7 @@ int main(int argc, char **argv)
+ 	char *dump_write = NULL, *files_source = NULL;
+ 	int opt;
+ 	int err;
++	size_t n;
+ 	struct ext_sym_list *extsym_iter;
+ 	struct ext_sym_list *extsym_start = NULL;
+ 
+@@ -2520,6 +2539,19 @@ int main(int argc, char **argv)
+ 	if (sec_mismatch_count && sec_mismatch_fatal)
+ 		fatal("modpost: Section mismatches detected.\n"
+ 		      "Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.\n");
++	for (n = 0; n < SYMBOL_HASH_SIZE; n++) {
++		struct symbol *s = symbolhash[n];
++
++		while (s) {
++			if (s->is_static)
++				warn("\"%s\" [%s] is the static %s\n",
++				     s->name, s->module->name,
++				     export_str(s->export));
++
++			s = s->next;
++		}
++	}
++
+ 	free(buf.p);
+ 
+ 	return err;
+-- 
+2.21.0
+
