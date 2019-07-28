@@ -2,170 +2,165 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1855C7618F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95CDC433FF
 	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9147A2077C
+	by mail.kernel.org (Postfix) with ESMTP id BCB162075E
 	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:34:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aEFFIjaZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfG1Xd7 (ORCPT
+        id S1726351AbfG1XeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 19:33:59 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41986 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbfG1Xd7 (ORCPT
+        Sun, 28 Jul 2019 19:34:17 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38377 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbfG1XeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 19:33:59 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x1so9891052wrr.9
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 16:33:57 -0700 (PDT)
+        Sun, 28 Jul 2019 19:34:17 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h28so40690910lfj.5
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 16:34:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eUvn9OI5nD/4S7v8ywB8lgEu/KDQowtKmV6CtOSPqUA=;
+        b=aEFFIjaZRLhrPDgULFaRicTLJcOaMeowEaKUJOOHKxsU0QeLveEc4UGQHyiCE9z748
+         LokY6dj1a7TghWqOkoJZ0mkFKXLYJN/B++Ka3tTFhWmvmB78ADuM9y9mObtiU0E4Trqz
+         yeY0A1yraFZKZIdaaAh0yHYrBWOyKpGLB5iZhDkYTZOU/kUmbgRr9tG+Bvf4lOWB324F
+         svF5yh/hqwRzyr0EgJCkUZhzkclqGfGdEZE6Jd5Tb3xOCak99/+GzYvbwS5TI3h5A998
+         sN1u/IeShA4POS42IOkF4YLja9CWZ5LFecqlS73MoehKEDHT6PnnW3TJx2g8hZYF7j2s
+         Zopg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aaEeKTG5R6Qc1GdziDtQYqZnD5RGAhr5gRU7LI7kaRU=;
-        b=aAZAKiI8Ug9vrtrnqJe6JxPmzRpXTs2Ftg673Sx8aMwn+t6fT0+faesHWjyKaN8a0r
-         HK+qVUzLCr8mnsAoBPwhB2lM5ZHdmxSl+lb8WNymHmZcHSsUAdmUVTcVRP/FLS2Gki9d
-         470ebp1WvdN/6KV/B1wRGhP5yzgWQkdoLfg0aqbPjRY/DDEDG7HePE+BVTIReYgg6kmL
-         38yN1h1rDnQJouJYIa9d9cKjfqHNDFY4J7jS/9T75zfp+vxAMDYSAoFwoJFnES88bAL6
-         RVrqeVRLt3D9h+d6D5P2vA7ddgwCTfxKLW1Rf+01Ri+6pRt+9Axl50fHooR6ClQmvVN+
-         ZzUw==
-X-Gm-Message-State: APjAAAVHG1K7Ir57XOg8HrWjzaDmJ77HPP3Iw0yJGNDKvXp/o/W+yL1o
-        omOiVowxZKYGlhnY5kFfAeTbQg==
-X-Google-Smtp-Source: APXvYqw92NTMBLPsPb4QZTGuO9U/NuPamS1jjyCN0NB7ONLDo7yL5jkx3vA9VzVTsdLSGSGyi5CJjQ==
-X-Received: by 2002:adf:d4c1:: with SMTP id w1mr44021854wrk.229.1564356836523;
-        Sun, 28 Jul 2019 16:33:56 -0700 (PDT)
-Received: from mcroce-redhat.homenet.telecomitalia.it (host221-208-dynamic.27-79-r.retail.telecomitalia.it. [79.27.208.221])
-        by smtp.gmail.com with ESMTPSA id c1sm136666630wrh.1.2019.07.28.16.33.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 16:33:55 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Cc:     Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: arm64: vgic-v3: mark expected switch fall-through
-Date:   Mon, 29 Jul 2019 01:33:47 +0200
-Message-Id: <20190728233347.7856-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eUvn9OI5nD/4S7v8ywB8lgEu/KDQowtKmV6CtOSPqUA=;
+        b=Fsdw565+CgI8gdy+YsVrc5CJRW4ZkWIuGyJXpmr1doDPUFGQMu6Qo5SEn/z3zZbP15
+         QHNXLrx89WfArpYZaL2qblBvTF3NVcoIJJcUP3YFqVr9is4e43o3qBKYxSMWYcHxm4S7
+         A4Y0Xnd25hQAGSGJlb/Q/1Db2yCnKQt7UOzGbIgRZIbyaRT4umHoA3DywZYj5RiOABFF
+         P25RZvGPvs8q7DKYs0rZrelTs9IQIm0+NzGodTihJhrfvHO1rk3naOmow0AQbSys4rOD
+         cXk77sUA+3onSw99jXuFdHCc2ltzj4y2ny9URxzmlXBqU+SmBiMMz9f0DN9mmH+Xovao
+         wM3w==
+X-Gm-Message-State: APjAAAU7iKrMyiMjnpgH59uqQFkGttaBpVUS4RD55zYikfGgR5ScIoxd
+        mGqxpiiKM/n9FX5/r85Cjdot83MHoQi9AfU3/Tsxtw==
+X-Google-Smtp-Source: APXvYqysascwZ7s8p4u+iWYY6k2d56GISla2oOhZmhWM9B7cI6Cbtauk+/chIBA1grY5/zLjWKJ3aCLJJa9z3+4C1R8=
+X-Received: by 2002:ac2:4891:: with SMTP id x17mr51451245lfc.60.1564356855227;
+ Sun, 28 Jul 2019 16:34:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1563564291-9692-1-git-send-email-hongweiz@ami.com>
+ <1563564291-9692-2-git-send-email-hongweiz@ami.com> <CACRpkdYhVoP75ZDfASW+DH5yf-a5diitiXsh7eLsJx5hsTC9sQ@mail.gmail.com>
+ <ef9d9c17-6e2d-4a4e-ac44-f8da4bb3b8eb@www.fastmail.com>
+In-Reply-To: <ef9d9c17-6e2d-4a4e-ac44-f8da4bb3b8eb@www.fastmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 29 Jul 2019 01:34:02 +0200
+Message-ID: <CACRpkdZxsF9gQj0VicVLsPKXg6rKA1mLwbywmazOf0w8PLnOfA@mail.gmail.com>
+Subject: Re: [v5 1/2] dt-bindings: gpio: aspeed: Add SGPIO support
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     Hongwei Zhang <hongweiz@ami.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Joel Stanley <joel@jms.id.au>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through,
-fixes the following warning:
+On Mon, Jul 22, 2019 at 3:42 AM Andrew Jeffery <andrew@aj.id.au> wrote:
 
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c: In function ‘__vgic_v3_save_aprs’:
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:351:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   cpu_if->vgic_ap0r[2] = __vgic_v3_read_ap0rn(2);
-   ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:352:2: note: here
-  case 6:
-  ^~~~
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:353:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   cpu_if->vgic_ap0r[1] = __vgic_v3_read_ap0rn(1);
-   ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:354:2: note: here
-  default:
-  ^~~~~~~
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:361:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   cpu_if->vgic_ap1r[2] = __vgic_v3_read_ap1rn(2);
-   ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:362:2: note: here
-  case 6:
-  ^~~~
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:363:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   cpu_if->vgic_ap1r[1] = __vgic_v3_read_ap1rn(1);
-   ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:364:2: note: here
-  default:
-  ^~~~~~~
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c: In function ‘__vgic_v3_restore_aprs’:
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:384:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   __vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[2], 2);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:385:2: note: here
-  case 6:
-  ^~~~
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:386:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   __vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[1], 1);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:387:2: note: here
-  default:
-  ^~~~~~~
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:394:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   __vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[2], 2);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:395:2: note: here
-  case 6:
-  ^~~~
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:396:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   __vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[1], 1);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:397:2: note: here
-  default:
-  ^~~~~~~
+> If the clock driver owns the control register, it also needs to know how
+> many GPIOs we want to emit on the bus. This seems like an awkward
+> configuration parameter for a clock driver.
+>
+> To avoid the weird parameter we could protect the control register
+> with a lock shared between the clock driver and the SGPIO driver. This
+> way the SGPIO driver could have the ngpios parameter, and request
+> the clock after its written the ngpios value to the control register. A
+> regmap would be useful here to avoid the resource clash and it also
+> provides the required lock.
 
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- virt/kvm/arm/hyp/vgic-v3-sr.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Nah. Too complicated.
 
-diff --git a/virt/kvm/arm/hyp/vgic-v3-sr.c b/virt/kvm/arm/hyp/vgic-v3-sr.c
-index 254c5f190a3d..622fb4d18c5c 100644
---- a/virt/kvm/arm/hyp/vgic-v3-sr.c
-+++ b/virt/kvm/arm/hyp/vgic-v3-sr.c
-@@ -349,8 +349,10 @@ void __hyp_text __vgic_v3_save_aprs(struct kvm_vcpu *vcpu)
- 	case 7:
- 		cpu_if->vgic_ap0r[3] = __vgic_v3_read_ap0rn(3);
- 		cpu_if->vgic_ap0r[2] = __vgic_v3_read_ap0rn(2);
-+		/* fallthrough */
- 	case 6:
- 		cpu_if->vgic_ap0r[1] = __vgic_v3_read_ap0rn(1);
-+		/* fallthrough */
- 	default:
- 		cpu_if->vgic_ap0r[0] = __vgic_v3_read_ap0rn(0);
- 	}
-@@ -359,8 +361,10 @@ void __hyp_text __vgic_v3_save_aprs(struct kvm_vcpu *vcpu)
- 	case 7:
- 		cpu_if->vgic_ap1r[3] = __vgic_v3_read_ap1rn(3);
- 		cpu_if->vgic_ap1r[2] = __vgic_v3_read_ap1rn(2);
-+		/* fallthrough */
- 	case 6:
- 		cpu_if->vgic_ap1r[1] = __vgic_v3_read_ap1rn(1);
-+		/* fallthrough */
- 	default:
- 		cpu_if->vgic_ap1r[0] = __vgic_v3_read_ap1rn(0);
- 	}
-@@ -382,8 +386,10 @@ void __hyp_text __vgic_v3_restore_aprs(struct kvm_vcpu *vcpu)
- 	case 7:
- 		__vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[3], 3);
- 		__vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[2], 2);
-+		/* fallthrough */
- 	case 6:
- 		__vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[1], 1);
-+		/* fallthrough */
- 	default:
- 		__vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[0], 0);
- 	}
-@@ -392,8 +398,10 @@ void __hyp_text __vgic_v3_restore_aprs(struct kvm_vcpu *vcpu)
- 	case 7:
- 		__vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[3], 3);
- 		__vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[2], 2);
-+		/* fallthrough */
- 	case 6:
- 		__vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[1], 1);
-+		/* fallthrough */
- 	default:
- 		__vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[0], 0);
- 	}
--- 
-2.21.0
+What about using the clock API locally (in the singleton driver,
+much as it is today) though, to give the right abstraction?
 
+See
+drivers/gpu/drm/pl111/pl111_display.c
+pl111_init_clock_divider() for an example of a local
+clock.
+
+> However, you're also going down the path of splitting the driver such
+> that there's one instance per bank. With this approach we need to
+> solve two problems: Accounting for the total number of GPIOs,
+
+I don't see that as a big problem since each driver instance will
+handle 8 GPIOs and don't need to know how many the
+other instances have and whether they exist or not.
+
+> and
+> only enabling the bus after the last bank has had its driver probed.
+
+That is a bigger problem and a good reason to stick with
+some complex driver like this.
+
+> The accounting might be handled by accumulating the number of
+> GPIOs in each bank in the control register itself, e.g. the driver
+> implementation does something like:
+>
+> spin_lock(...)
+> ctrl = ioread32(...)
+> ngpios = FIELD_GET(ASPEED_SGPIO_CTRL_NGPIOS, ctrl);
+> ngpios += 8;
+> ctrl &= ~ASPEED_SGPIO_CTRL_NGPIOS;
+> ctrl |= FIELD_PREP(ASPEED_SGPIO_CTRL_NGPIOS, ngpios);
+> iowrite32(ctrl, ...);
+> spin_unlock(...);
+
+But why. The gpio_chip only knows the ngpios for its own instance.
+It has no business knowing about how many gpios are on the
+other chips or not. If this is split across several instances this should
+not be accounted that is the point.
+
+> This works on cold boot of the device when the ngpios field is set to
+> zero due to reset, however will fail on subsequent warm reboots if
+> the GPIO IP block is protected from reset by the SoC's watchdog
+> configuration: the field will not be zeroed in this case, and the
+> value of the field is represented by `NR_BOOTS * NR_GPIOS`,
+> which is incorrect. To do this correctly I guess we would need some
+> other global state held in the driver implementation (zeroed when
+> the kernel is loaded), and write the incremented value to the control
+> register on each probe() invocation.
+
+This is answered about I guess.
+
+> However, that aside, we can't simply enable the bus in the clock
+> enable callback if enable is called per-bank, as it is called once on
+> the first request with further requests simply refcounted as you
+> mentioned. This is exactly the behaviour we can't tolerate with the
+> bus: it must only be enabled after the last GPIO bank is registered,
+> when we know the total number of GPIOs to emit.
+
+So the bus needs to know the total number of GPIOs or
+everything breaks, and that is the blocker for this
+divide-and-conquer approach.
+
+Why does the bus need to know the total number of GPIOs?
+
+(Maybe the answer is elsewhere in the thread...)
+
+I guess I will accept it if it is really this complex in the
+hardware.
+
+Yours,
+Linus Walleij
