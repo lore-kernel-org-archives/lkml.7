@@ -2,152 +2,121 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5DFC76191
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D91E1C7618F
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 657F32085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABAC32077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:51:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LUBMGnGh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tA1lzwPR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbfG1Xv1 (ORCPT
+        id S1726305AbfG1Xvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 19:51:27 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59525 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbfG1Xv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 19:51:26 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45xfjQ2Q0wz9sBt;
-        Mon, 29 Jul 2019 09:51:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564357883;
-        bh=+Sm3w908JcE82ssAs1nSzuDW2v9mYsOQgWyC71ct+r4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LUBMGnGhZiyd6A2n9SjLJbgB1fX/qq4quPY2rR4fx4UmSVL1hnCt2zwGGwF1vmeCY
-         IIpWjYeDbHhu4LjuA2lXj32tosi0nKjOQOQYvBZk+mHFcLDWe1S+H1MCo8U8F8PnbT
-         yPPrQW5jkM8pM6Xn5d4nDh4KkpRRL1c2rViyharlscFJF47Ftytd2S1VdaU/FjgzUh
-         NRhCPjtu9+cfX/+XW8X12/JlWrmBRUZtfj+m/op4PeC1ycKzwK9u0qbsLKnJfp/4mm
-         D1OfW6lxvooS3/QAIt4AZiaq9Kensk+7vVygKTDuccbp1TGTxtdVgyY0SbcLRdsz/q
-         XhHyx1knsyguA==
-Date:   Mon, 29 Jul 2019 09:51:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org
-Subject: Re: mmotm 2019-07-24-21-39 uploaded (mm/memcontrol)
-Message-ID: <20190729095121.080c1a93@canb.auug.org.au>
-In-Reply-To: <20190727101608.GA1740@chrisdown.name>
-References: <20190725044010.4tE0dhrji%akpm@linux-foundation.org>
-        <4831a203-8853-27d7-1996-280d34ea824f@infradead.org>
-        <20190725163959.3d759a7f37ba40bb7f75244e@linux-foundation.org>
-        <20190727034205.GA10843@archlinux-threadripper>
-        <20190726211952.757a63db5271d516faa7eaac@linux-foundation.org>
-        <20190727101608.GA1740@chrisdown.name>
+        Sun, 28 Jul 2019 19:51:42 -0400
+Received: from gateway30.websitewelcome.com ([192.185.148.2]:31769 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726183AbfG1Xvm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 19:51:42 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 3CDA52CCF
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 18:51:41 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id rsx3hQxpY4FKprsx3havwd; Sun, 28 Jul 2019 18:51:41 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=nqhItU/yVLc8ci7xr995svAr83BiyHeRNAak3CCkDaQ=; b=tA1lzwPRRIq/zQqLhnBGjmnwf2
+        kX3TNopWA2sq8OYd9i3WfvHpsZvj05B4dL2UpBW+RKBahP4Rflh3ES1PVue9zXWLpjqqvQ8WZ+JTi
+        s5B09R+JS2rrz4yqX/df503Lm/xGSaXhaaANynDagVrHQ6HzlNv/AWe0KbX4wgiYVtmTCPpUJGZXO
+        McPrY96pCJoI0uqqQFQsDkRK0bi0OsTSLdla6oBvC2ivAJyZuwj/uo+Jy8T65Q8WraaEkQNGGhilS
+        1UzNMitF1IC0A9ROofnNUzAsHCq/cbL9e1k7tmPb8gvCcq+vtZdXbQ+AEUE/jKMlUDPjm1sKVl+Yf
+        82f3gFxg==;
+Received: from [187.192.11.120] (port=39574 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hrsx1-003jvw-Tn; Sun, 28 Jul 2019 18:51:40 -0500
+Date:   Sun, 28 Jul 2019 18:51:38 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] i2c: s3c2410: Mark expected switch fall-through
+Message-ID: <20190728235138.GA23429@embeddedor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/zy3Q_OmUUHqfTfaZG9i6x+B";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hrsx1-003jvw-Tn
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:39574
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 46
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/zy3Q_OmUUHqfTfaZG9i6x+B
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Mark switch cases where we are expecting to fall through.
 
-Hi all,
+This patch fixes the following warning:
 
-On Sat, 27 Jul 2019 11:16:08 +0100 Chris Down <chris@chrisdown.name> wrote:
->
-> u64 division: truly the gift that keeps on giving. Thanks Andrew for foll=
-owing=20
-> up on these.
->=20
-> Andrew Morton writes:
-> >Ah.
-> >
-> >It's rather unclear why that u64 cast is there anyway.  We're dealing
-> >with ulongs all over this code.  The below will suffice. =20
->=20
-> This place in particular uses u64 to make sure we don't overflow when lef=
-t=20
-> shifting, since the numbers can get pretty big (and that's somewhat neede=
-d due=20
-> to the need for high precision when calculating the penalty jiffies). It'=
-s ok=20
-> if the output after division is an unsigned long, just the intermediate s=
-teps=20
-> need to have enough precision.
->=20
-> >Chris, please take a look?
-> >
-> >--- a/mm/memcontrol.c~mm-throttle-allocators-when-failing-reclaim-over-m=
-emoryhigh-fix-fix-fix
-> >+++ a/mm/memcontrol.c
-> >@@ -2415,7 +2415,7 @@ void mem_cgroup_handle_over_high(void)
-> > 	clamped_high =3D max(high, 1UL);
-> >
-> > 	overage =3D (u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT;
-> >-	do_div(overage, clamped_high);
-> >+	overage /=3D clamped_high; =20
->=20
-> I think this isn't going to work because left shifting by=20
-> MEMCG_DELAY_PRECISION_SHIFT can make the number bigger than ULONG_MAX, wh=
-ich=20
-> may cause wraparound -- we need to retain the u64 until we divide.
->=20
-> Maybe div_u64 will satisfy both ARM and i386? ie.
->=20
-> diff --git mm/memcontrol.c mm/memcontrol.c
-> index 5c7b9facb0eb..e12a47e96154 100644
-> --- mm/memcontrol.c
-> +++ mm/memcontrol.c
-> @@ -2419,8 +2419,8 @@ void mem_cgroup_handle_over_high(void)
->          */
->         clamped_high =3D max(high, 1UL);
-> =20
-> -       overage =3D (u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT;
-> -       do_div(overage, clamped_high);
-> +       overage =3D div_u64((u64)(usage - high) << MEMCG_DELAY_PRECISION_=
-SHIFT,
-> +                         clamped_high);
-> =20
->         penalty_jiffies =3D ((u64)overage * overage * HZ)
->                 >> (MEMCG_DELAY_PRECISION_SHIFT + MEMCG_DELAY_SCALING_SHI=
-FT); =20
+drivers/i2c/busses/i2c-s3c2410.c: In function 'i2c_s3c_irq_nextbyte':
+drivers/i2c/busses/i2c-s3c2410.c:431:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   if (i2c->state == STATE_READ)
+      ^
+drivers/i2c/busses/i2c-s3c2410.c:439:2: note: here
+  case STATE_WRITE:
+  ^~~~
 
-I have applied this to the akpm-current tree in linux-next today.
+Notice that, in this particular case, the code comment is
+modified in accordance with what GCC is expecting to find.
 
---=20
-Cheers,
-Stephen Rothwell
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/i2c/busses/i2c-s3c2410.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---Sig_/zy3Q_OmUUHqfTfaZG9i6x+B
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
+index d97fb857b0ea..c98ef4c4a0c9 100644
+--- a/drivers/i2c/busses/i2c-s3c2410.c
++++ b/drivers/i2c/busses/i2c-s3c2410.c
+@@ -435,6 +435,7 @@ static int i2c_s3c_irq_nextbyte(struct s3c24xx_i2c *i2c, unsigned long iicstat)
+ 		 * fall through to the write state, as we will need to
+ 		 * send a byte as well
+ 		 */
++		/* Fall through */
+ 
+ 	case STATE_WRITE:
+ 		/*
+-- 
+2.22.0
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0+NPkACgkQAVBC80lX
-0GwSggf/R3ZZuH5LliVhgCqbaBSFe93KVSxKonReOK3mTFha+qmnk8vOnjMxHn6E
-LnMnA3mI7jJZw/uHTSE/ccUfWIGgJ/nWKU8M2iCuVQwChcocbVaf6TTViNwSZRAy
-0hgehpDyAN/LuS8hPxNHre02xDtx4faKRkUUPLUuFC6wXycQ6UoLFoccYNQWKbuB
-Xdm5vGFxSwgNkwi/wGWZnkikoBMIOseFvqDP7SevW2NAQdST9LIoXY2t5RXTcNDh
-O6E3TpOOXH+GP00uphn+21GLF4AGZLgajZrTdv2v/pkzSfW1qI/hdfkuHb1bOCnx
-SFymgmdpe6PfoqnBr01hSGHc22TskQ==
-=DFTr
------END PGP SIGNATURE-----
-
---Sig_/zy3Q_OmUUHqfTfaZG9i6x+B--
