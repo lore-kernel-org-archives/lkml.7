@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73566C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 04:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD45C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 04:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA3F2064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 04:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D2582067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 04:07:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725965AbfG1EFm (ORCPT
+        id S1726089AbfG1EHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 00:05:42 -0400
-Received: from mga03.intel.com ([134.134.136.65]:60794 "EHLO mga03.intel.com"
+        Sun, 28 Jul 2019 00:07:45 -0400
+Received: from mga07.intel.com ([134.134.136.100]:62290 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfG1EFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 00:05:41 -0400
+        id S1725844AbfG1EHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 00:07:45 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jul 2019 21:05:15 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jul 2019 21:07:16 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,317,1559545200"; 
-   d="gz'50?scan'50,208,50";a="254839869"
+   d="scan'208";a="346262795"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 27 Jul 2019 21:05:12 -0700
+  by orsmga005.jf.intel.com with ESMTP; 27 Jul 2019 21:07:13 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1hraQq-000DHQ-A0; Sun, 28 Jul 2019 12:05:12 +0800
-Date:   Sun, 28 Jul 2019 12:04:54 +0800
+        id 1hraSm-000Bog-Nn; Sun, 28 Jul 2019 12:07:12 +0800
+Date:   Sun, 28 Jul 2019 12:06:14 +0800
 From:   kbuild test robot <lkp@intel.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     kbuild-all@01.org, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Phil Auld <pauld@redhat.com>, Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH] sched/core: Don't use dying mm as active_mm for kernel
- threads
-Message-ID: <201907281219.HBYCkD8G%lkp@intel.com>
-References: <20190726234541.3771-1-longman@redhat.com>
+To:     Himadri Pandya <himadrispandya@gmail.com>
+Cc:     kbuild-all@01.org, mikelley@microsoft.com, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, sashal@kernel.org,
+        davem@davemloft.net, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Himadri Pandya <himadri18.07@gmail.com>
+Subject: Re: [PATCH] hv_sock: use HV_HYP_PAGE_SIZE instead of PAGE_SIZE_4K
+Message-ID: <201907281257.gVlvGWLv%lkp@intel.com>
+References: <20190725051125.10605-1-himadri18.07@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="x56pu5fgnpdgtpxd"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190726234541.3771-1-longman@redhat.com>
+In-Reply-To: <20190725051125.10605-1-himadri18.07@gmail.com>
 X-Patchwork-Hint: ignore
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,696 +54,1036 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Himadri,
 
---x56pu5fgnpdgtpxd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you for the patch! Perhaps something to improve:
 
-Hi Waiman,
-
-Thank you for the patch! Yet something to improve:
-
-[auto build test ERROR on linus/master]
+[auto build test WARNING on linus/master]
 [cannot apply to v5.3-rc1 next-20190726]
 [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-url:    https://github.com/0day-ci/linux/commits/Waiman-Long/sched-core-Don-t-use-dying-mm-as-active_mm-for-kernel-threads/20190728-101948
-config: x86_64-randconfig-s1-07280001 (attached as .config)
-compiler: gcc-4.9 (Debian 4.9.2-10+deb8u1) 4.9.2
+url:    https://github.com/0day-ci/linux/commits/Himadri-Pandya/hv_sock-use-HV_HYP_PAGE_SIZE-instead-of-PAGE_SIZE_4K/20190726-085229
 reproduce:
-        # save the attached .config to linux build tree
-        make ARCH=x86_64 
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
 If you fix the issue, kindly add following tag
 Reported-by: kbuild test robot <lkp@intel.com>
 
-All errors (new ones prefixed by >>):
 
->> mm/init-mm.c:40:2: error: unknown field 'owner' specified in initializer
-     .owner  = &init_task,
-     ^
-   mm/init-mm.c:40:2: warning: excess elements in struct initializer
-   mm/init-mm.c:40:2: warning: (near initialization for 'init_mm')
+sparse warnings: (new ones prefixed by >>)
 
-vim +/owner +40 mm/init-mm.c
+   include/linux/sched.h:609:43: sparse: sparse: bad integer constant expression
+   include/linux/sched.h:609:73: sparse: sparse: invalid named zero-width bitfield `value'
+   include/linux/sched.h:610:43: sparse: sparse: bad integer constant expression
+   include/linux/sched.h:610:67: sparse: sparse: invalid named zero-width bitfield `bucket_id'
+   net/vmw_vsock/hyperv_transport.c:214:39: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:214:39: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+>> net/vmw_vsock/hyperv_transport.c:214:39: sparse: sparse: incompatible types for operation (-)
+>> net/vmw_vsock/hyperv_transport.c:214:39: sparse:    left side has type bad type
+>> net/vmw_vsock/hyperv_transport.c:214:39: sparse:    right side has type int
+   net/vmw_vsock/hyperv_transport.c:214:39: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+>> net/vmw_vsock/hyperv_transport.c:214:39: sparse: sparse: incompatible types for operation (-)
+>> net/vmw_vsock/hyperv_transport.c:214:39: sparse:    left side has type bad type
+>> net/vmw_vsock/hyperv_transport.c:214:39: sparse:    right side has type int
+   net/vmw_vsock/hyperv_transport.c:65:17: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+>> net/vmw_vsock/hyperv_transport.c:65:17: sparse: sparse: bad constant expression type
+   net/vmw_vsock/hyperv_transport.c:387:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:388:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:390:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+>> net/vmw_vsock/hyperv_transport.c:390:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:390:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+>> net/vmw_vsock/hyperv_transport.c:390:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:390:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+>> net/vmw_vsock/hyperv_transport.c:390:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:390:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+>> net/vmw_vsock/hyperv_transport.c:390:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:390:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+>> net/vmw_vsock/hyperv_transport.c:390:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:391:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:391:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:391:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:391:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:391:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:391:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:391:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:391:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:391:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:391:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:392:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:392:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:392:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:392:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:393:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:393:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:393:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:393:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:393:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:393:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:393:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:393:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:393:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:393:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:394:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:394:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:394:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:394:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:394:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:394:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:394:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:394:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:394:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:394:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:395:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:395:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:395:26: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:395:26: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:465:25: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:466:25: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:666:9: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:681:28: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:681:28: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:681:28: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:681:28: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:681:28: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:681:28: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:681:28: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:681:28: sparse: sparse: cast from unknown type
+   net/vmw_vsock/hyperv_transport.c:681:28: sparse: sparse: undefined identifier 'HV_HYP_PAGE_SIZE'
+   net/vmw_vsock/hyperv_transport.c:681:28: sparse: sparse: cast from unknown type
+
+vim +214 net/vmw_vsock/hyperv_transport.c
+
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   59  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   60  struct hvs_send_buf {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   61  	/* The header before the payload data */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   62  	struct vmpipe_proto_header hdr;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   63  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   64  	/* The payload */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  @65  	u8 data[HVS_SEND_BUF_SIZE];
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   66  };
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   67  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   68  #define HVS_HEADER_LEN	(sizeof(struct vmpacket_descriptor) + \
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   69  			 sizeof(struct vmpipe_proto_header))
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   70  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   71  /* See 'prev_indices' in hv_ringbuffer_read(), hv_ringbuffer_write(), and
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   72   * __hv_pkt_iter_next().
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   73   */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   74  #define VMBUS_PKT_TRAILER_SIZE	(sizeof(u64))
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   75  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   76  #define HVS_PKT_LEN(payload_len)	(HVS_HEADER_LEN + \
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   77  					 ALIGN((payload_len), 8) + \
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   78  					 VMBUS_PKT_TRAILER_SIZE)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   79  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   80  union hvs_service_id {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   81  	uuid_le	srv_id;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   82  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   83  	struct {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   84  		unsigned int svm_port;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   85  		unsigned char b[sizeof(uuid_le) - sizeof(unsigned int)];
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   86  	};
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   87  };
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   88  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   89  /* Per-socket state (accessed via vsk->trans) */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   90  struct hvsock {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   91  	struct vsock_sock *vsk;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   92  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   93  	uuid_le vm_srv_id;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   94  	uuid_le host_srv_id;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   95  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   96  	struct vmbus_channel *chan;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   97  	struct vmpacket_descriptor *recv_desc;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   98  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26   99  	/* The length of the payload not delivered to userland yet */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  100  	u32 recv_data_len;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  101  	/* The offset of the payload */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  102  	u32 recv_data_off;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  103  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  104  	/* Have we sent the zero-length packet (FIN)? */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  105  	bool fin_sent;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  106  };
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  107  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  108  /* In the VM, we support Hyper-V Sockets with AF_VSOCK, and the endpoint is
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  109   * <cid, port> (see struct sockaddr_vm). Note: cid is not really used here:
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  110   * when we write apps to connect to the host, we can only use VMADDR_CID_ANY
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  111   * or VMADDR_CID_HOST (both are equivalent) as the remote cid, and when we
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  112   * write apps to bind() & listen() in the VM, we can only use VMADDR_CID_ANY
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  113   * as the local cid.
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  114   *
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  115   * On the host, Hyper-V Sockets are supported by Winsock AF_HYPERV:
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  116   * https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/user-
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  117   * guide/make-integration-service, and the endpoint is <VmID, ServiceId> with
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  118   * the below sockaddr:
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  119   *
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  120   * struct SOCKADDR_HV
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  121   * {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  122   *    ADDRESS_FAMILY Family;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  123   *    USHORT Reserved;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  124   *    GUID VmId;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  125   *    GUID ServiceId;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  126   * };
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  127   * Note: VmID is not used by Linux VM and actually it isn't transmitted via
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  128   * VMBus, because here it's obvious the host and the VM can easily identify
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  129   * each other. Though the VmID is useful on the host, especially in the case
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  130   * of Windows container, Linux VM doesn't need it at all.
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  131   *
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  132   * To make use of the AF_VSOCK infrastructure in Linux VM, we have to limit
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  133   * the available GUID space of SOCKADDR_HV so that we can create a mapping
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  134   * between AF_VSOCK port and SOCKADDR_HV Service GUID. The rule of writing
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  135   * Hyper-V Sockets apps on the host and in Linux VM is:
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  136   *
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  137   ****************************************************************************
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  138   * The only valid Service GUIDs, from the perspectives of both the host and *
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  139   * Linux VM, that can be connected by the other end, must conform to this   *
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  140   * format: <port>-facb-11e6-bd58-64006a7986d3, and the "port" must be in    *
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  141   * this range [0, 0x7FFFFFFF].                                              *
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  142   ****************************************************************************
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  143   *
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  144   * When we write apps on the host to connect(), the GUID ServiceID is used.
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  145   * When we write apps in Linux VM to connect(), we only need to specify the
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  146   * port and the driver will form the GUID and use that to request the host.
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  147   *
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  148   * From the perspective of Linux VM:
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  149   * 1. the local ephemeral port (i.e. the local auto-bound port when we call
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  150   * connect() without explicit bind()) is generated by __vsock_bind_stream(),
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  151   * and the range is [1024, 0xFFFFFFFF).
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  152   * 2. the remote ephemeral port (i.e. the auto-generated remote port for
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  153   * a connect request initiated by the host's connect()) is generated by
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  154   * hvs_remote_addr_init() and the range is [0x80000000, 0xFFFFFFFF).
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  155   */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  156  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  157  #define MAX_LISTEN_PORT			((u32)0x7FFFFFFF)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  158  #define MAX_VM_LISTEN_PORT		MAX_LISTEN_PORT
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  159  #define MAX_HOST_LISTEN_PORT		MAX_LISTEN_PORT
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  160  #define MIN_HOST_EPHEMERAL_PORT		(MAX_HOST_LISTEN_PORT + 1)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  161  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  162  /* 00000000-facb-11e6-bd58-64006a7986d3 */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  163  static const uuid_le srv_id_template =
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  164  	UUID_LE(0x00000000, 0xfacb, 0x11e6, 0xbd, 0x58,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  165  		0x64, 0x00, 0x6a, 0x79, 0x86, 0xd3);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  166  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  167  static bool is_valid_srv_id(const uuid_le *id)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  168  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  169  	return !memcmp(&id->b[4], &srv_id_template.b[4], sizeof(uuid_le) - 4);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  170  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  171  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  172  static unsigned int get_port_by_srv_id(const uuid_le *svr_id)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  173  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  174  	return *((unsigned int *)svr_id);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  175  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  176  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  177  static void hvs_addr_init(struct sockaddr_vm *addr, const uuid_le *svr_id)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  178  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  179  	unsigned int port = get_port_by_srv_id(svr_id);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  180  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  181  	vsock_addr_init(addr, VMADDR_CID_ANY, port);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  182  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  183  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  184  static void hvs_remote_addr_init(struct sockaddr_vm *remote,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  185  				 struct sockaddr_vm *local)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  186  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  187  	static u32 host_ephemeral_port = MIN_HOST_EPHEMERAL_PORT;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  188  	struct sock *sk;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  189  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  190  	vsock_addr_init(remote, VMADDR_CID_ANY, VMADDR_PORT_ANY);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  191  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  192  	while (1) {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  193  		/* Wrap around ? */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  194  		if (host_ephemeral_port < MIN_HOST_EPHEMERAL_PORT ||
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  195  		    host_ephemeral_port == VMADDR_PORT_ANY)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  196  			host_ephemeral_port = MIN_HOST_EPHEMERAL_PORT;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  197  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  198  		remote->svm_port = host_ephemeral_port++;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  199  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  200  		sk = vsock_find_connected_socket(remote, local);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  201  		if (!sk) {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  202  			/* Found an available ephemeral port */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  203  			return;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  204  		}
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  205  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  206  		/* Release refcnt got in vsock_find_connected_socket */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  207  		sock_put(sk);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  208  	}
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  209  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  210  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  211  static void hvs_set_channel_pending_send_size(struct vmbus_channel *chan)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  212  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  213  	set_channel_pending_send_size(chan,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26 @214  				      HVS_PKT_LEN(HVS_SEND_BUF_SIZE));
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  215  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  216  	virt_mb();
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  217  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  218  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  219  static bool hvs_channel_readable(struct vmbus_channel *chan)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  220  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  221  	u32 readable = hv_get_bytes_to_read(&chan->inbound);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  222  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  223  	/* 0-size payload means FIN */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  224  	return readable >= HVS_PKT_LEN(0);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  225  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  226  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  227  static int hvs_channel_readable_payload(struct vmbus_channel *chan)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  228  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  229  	u32 readable = hv_get_bytes_to_read(&chan->inbound);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  230  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  231  	if (readable > HVS_PKT_LEN(0)) {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  232  		/* At least we have 1 byte to read. We don't need to return
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  233  		 * the exact readable bytes: see vsock_stream_recvmsg() ->
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  234  		 * vsock_stream_has_data().
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  235  		 */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  236  		return 1;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  237  	}
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  238  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  239  	if (readable == HVS_PKT_LEN(0)) {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  240  		/* 0-size payload means FIN */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  241  		return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  242  	}
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  243  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  244  	/* No payload or FIN */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  245  	return -1;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  246  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  247  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  248  static size_t hvs_channel_writable_bytes(struct vmbus_channel *chan)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  249  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  250  	u32 writeable = hv_get_bytes_to_write(&chan->outbound);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  251  	size_t ret;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  252  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  253  	/* The ringbuffer mustn't be 100% full, and we should reserve a
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  254  	 * zero-length-payload packet for the FIN: see hv_ringbuffer_write()
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  255  	 * and hvs_shutdown().
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  256  	 */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  257  	if (writeable <= HVS_PKT_LEN(1) + HVS_PKT_LEN(0))
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  258  		return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  259  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  260  	ret = writeable - HVS_PKT_LEN(1) - HVS_PKT_LEN(0);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  261  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  262  	return round_down(ret, 8);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  263  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  264  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  265  static int hvs_send_data(struct vmbus_channel *chan,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  266  			 struct hvs_send_buf *send_buf, size_t to_write)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  267  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  268  	send_buf->hdr.pkt_type = 1;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  269  	send_buf->hdr.data_size = to_write;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  270  	return vmbus_sendpacket(chan, &send_buf->hdr,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  271  				sizeof(send_buf->hdr) + to_write,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  272  				0, VM_PKT_DATA_INBAND, 0);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  273  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  274  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  275  static void hvs_channel_cb(void *ctx)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  276  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  277  	struct sock *sk = (struct sock *)ctx;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  278  	struct vsock_sock *vsk = vsock_sk(sk);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  279  	struct hvsock *hvs = vsk->trans;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  280  	struct vmbus_channel *chan = hvs->chan;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  281  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  282  	if (hvs_channel_readable(chan))
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  283  		sk->sk_data_ready(sk);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  284  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  285  	if (hv_get_bytes_to_write(&chan->outbound) > 0)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  286  		sk->sk_write_space(sk);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  287  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  288  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  289  static void hvs_do_close_lock_held(struct vsock_sock *vsk,
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  290  				   bool cancel_timeout)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  291  {
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  292  	struct sock *sk = sk_vsock(vsk);
+b4562ca7925a3be Dexuan Cui       2017-10-19  293  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  294  	sock_set_flag(sk, SOCK_DONE);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  295  	vsk->peer_shutdown = SHUTDOWN_MASK;
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  296  	if (vsock_stream_has_data(vsk) <= 0)
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  297  		sk->sk_state = TCP_CLOSING;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  298  	sk->sk_state_change(sk);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  299  	if (vsk->close_work_scheduled &&
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  300  	    (!cancel_timeout || cancel_delayed_work(&vsk->close_work))) {
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  301  		vsk->close_work_scheduled = false;
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  302  		vsock_remove_sock(vsk);
+b4562ca7925a3be Dexuan Cui       2017-10-19  303  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  304  		/* Release the reference taken while scheduling the timeout */
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  305  		sock_put(sk);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  306  	}
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  307  }
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  308  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  309  static void hvs_close_connection(struct vmbus_channel *chan)
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  310  {
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  311  	struct sock *sk = get_per_channel_state(chan);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  312  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  313  	lock_sock(sk);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  314  	hvs_do_close_lock_held(vsock_sk(sk), true);
+b4562ca7925a3be Dexuan Cui       2017-10-19  315  	release_sock(sk);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  316  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  317  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  318  static void hvs_open_connection(struct vmbus_channel *chan)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  319  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  320  	uuid_le *if_instance, *if_type;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  321  	unsigned char conn_from_host;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  322  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  323  	struct sockaddr_vm addr;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  324  	struct sock *sk, *new = NULL;
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  325  	struct vsock_sock *vnew = NULL;
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  326  	struct hvsock *hvs = NULL;
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  327  	struct hvsock *hvs_new = NULL;
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  328  	int rcvbuf;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  329  	int ret;
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  330  	int sndbuf;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  331  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  332  	if_type = &chan->offermsg.offer.if_type;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  333  	if_instance = &chan->offermsg.offer.if_instance;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  334  	conn_from_host = chan->offermsg.offer.u.pipe.user_def[0];
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  335  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  336  	/* The host or the VM should only listen on a port in
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  337  	 * [0, MAX_LISTEN_PORT]
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  338  	 */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  339  	if (!is_valid_srv_id(if_type) ||
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  340  	    get_port_by_srv_id(if_type) > MAX_LISTEN_PORT)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  341  		return;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  342  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  343  	hvs_addr_init(&addr, conn_from_host ? if_type : if_instance);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  344  	sk = vsock_find_bound_socket(&addr);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  345  	if (!sk)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  346  		return;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  347  
+b4562ca7925a3be Dexuan Cui       2017-10-19  348  	lock_sock(sk);
+3b4477d2dcf2709 Stefan Hajnoczi  2017-10-05  349  	if ((conn_from_host && sk->sk_state != TCP_LISTEN) ||
+3b4477d2dcf2709 Stefan Hajnoczi  2017-10-05  350  	    (!conn_from_host && sk->sk_state != TCP_SYN_SENT))
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  351  		goto out;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  352  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  353  	if (conn_from_host) {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  354  		if (sk->sk_ack_backlog >= sk->sk_max_ack_backlog)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  355  			goto out;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  356  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  357  		new = __vsock_create(sock_net(sk), NULL, sk, GFP_KERNEL,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  358  				     sk->sk_type, 0);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  359  		if (!new)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  360  			goto out;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  361  
+3b4477d2dcf2709 Stefan Hajnoczi  2017-10-05  362  		new->sk_state = TCP_SYN_SENT;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  363  		vnew = vsock_sk(new);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  364  		hvs_new = vnew->trans;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  365  		hvs_new->chan = chan;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  366  	} else {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  367  		hvs = vsock_sk(sk)->trans;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  368  		hvs->chan = chan;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  369  	}
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  370  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  371  	set_channel_read_mode(chan, HV_CALL_DIRECT);
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  372  
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  373  	/* Use the socket buffer sizes as hints for the VMBUS ring size. For
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  374  	 * server side sockets, 'sk' is the parent socket and thus, this will
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  375  	 * allow the child sockets to inherit the size from the parent. Keep
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  376  	 * the mins to the default value and align to page size as per VMBUS
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  377  	 * requirements.
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  378  	 * For the max, the socket core library will limit the socket buffer
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  379  	 * size that can be set by the user, but, since currently, the hv_sock
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  380  	 * VMBUS ring buffer is physically contiguous allocation, restrict it
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  381  	 * further.
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  382  	 * Older versions of hv_sock host side code cannot handle bigger VMBUS
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  383  	 * ring buffer size. Use the version number to limit the change to newer
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  384  	 * versions.
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  385  	 */
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  386  	if (vmbus_proto_version < VERSION_WIN10_V5) {
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  387  		sndbuf = RINGBUFFER_HVS_SND_SIZE;
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  388  		rcvbuf = RINGBUFFER_HVS_RCV_SIZE;
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  389  	} else {
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22 @390  		sndbuf = max_t(int, sk->sk_sndbuf, RINGBUFFER_HVS_SND_SIZE);
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  391  		sndbuf = min_t(int, sndbuf, RINGBUFFER_HVS_MAX_SIZE);
+31113cc83e30924 Himadri Pandya   2019-07-25  392  		sndbuf = ALIGN(sndbuf, HV_HYP_PAGE_SIZE);
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  393  		rcvbuf = max_t(int, sk->sk_rcvbuf, RINGBUFFER_HVS_RCV_SIZE);
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  394  		rcvbuf = min_t(int, rcvbuf, RINGBUFFER_HVS_MAX_SIZE);
+31113cc83e30924 Himadri Pandya   2019-07-25  395  		rcvbuf = ALIGN(rcvbuf, HV_HYP_PAGE_SIZE);
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  396  	}
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  397  
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  398  	ret = vmbus_open(chan, sndbuf, rcvbuf, NULL, 0, hvs_channel_cb,
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  399  			 conn_from_host ? new : sk);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  400  	if (ret != 0) {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  401  		if (conn_from_host) {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  402  			hvs_new->chan = NULL;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  403  			sock_put(new);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  404  		} else {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  405  			hvs->chan = NULL;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  406  		}
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  407  		goto out;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  408  	}
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  409  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  410  	set_per_channel_state(chan, conn_from_host ? new : sk);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  411  	vmbus_set_chn_rescind_callback(chan, hvs_close_connection);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  412  
+cb359b60416701c Sunil Muthuswamy 2019-06-17  413  	/* Set the pending send size to max packet size to always get
+cb359b60416701c Sunil Muthuswamy 2019-06-17  414  	 * notifications from the host when there is enough writable space.
+cb359b60416701c Sunil Muthuswamy 2019-06-17  415  	 * The host is optimized to send notifications only when the pending
+cb359b60416701c Sunil Muthuswamy 2019-06-17  416  	 * size boundary is crossed, and not always.
+cb359b60416701c Sunil Muthuswamy 2019-06-17  417  	 */
+cb359b60416701c Sunil Muthuswamy 2019-06-17  418  	hvs_set_channel_pending_send_size(chan);
+cb359b60416701c Sunil Muthuswamy 2019-06-17  419  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  420  	if (conn_from_host) {
+3b4477d2dcf2709 Stefan Hajnoczi  2017-10-05  421  		new->sk_state = TCP_ESTABLISHED;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  422  		sk->sk_ack_backlog++;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  423  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  424  		hvs_addr_init(&vnew->local_addr, if_type);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  425  		hvs_remote_addr_init(&vnew->remote_addr, &vnew->local_addr);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  426  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  427  		hvs_new->vm_srv_id = *if_type;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  428  		hvs_new->host_srv_id = *if_instance;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  429  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  430  		vsock_insert_connected(vnew);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  431  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  432  		vsock_enqueue_accept(sk, new);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  433  	} else {
+3b4477d2dcf2709 Stefan Hajnoczi  2017-10-05  434  		sk->sk_state = TCP_ESTABLISHED;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  435  		sk->sk_socket->state = SS_CONNECTED;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  436  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  437  		vsock_insert_connected(vsock_sk(sk));
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  438  	}
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  439  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  440  	sk->sk_state_change(sk);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  441  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  442  out:
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  443  	/* Release refcnt obtained when we called vsock_find_bound_socket() */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  444  	sock_put(sk);
+b4562ca7925a3be Dexuan Cui       2017-10-19  445  
+b4562ca7925a3be Dexuan Cui       2017-10-19  446  	release_sock(sk);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  447  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  448  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  449  static u32 hvs_get_local_cid(void)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  450  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  451  	return VMADDR_CID_ANY;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  452  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  453  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  454  static int hvs_sock_init(struct vsock_sock *vsk, struct vsock_sock *psk)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  455  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  456  	struct hvsock *hvs;
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  457  	struct sock *sk = sk_vsock(vsk);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  458  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  459  	hvs = kzalloc(sizeof(*hvs), GFP_KERNEL);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  460  	if (!hvs)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  461  		return -ENOMEM;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  462  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  463  	vsk->trans = hvs;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  464  	hvs->vsk = vsk;
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  465  	sk->sk_sndbuf = RINGBUFFER_HVS_SND_SIZE;
+ac383f58f3c98de Sunil Muthuswamy 2019-05-22  466  	sk->sk_rcvbuf = RINGBUFFER_HVS_RCV_SIZE;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  467  	return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  468  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  469  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  470  static int hvs_connect(struct vsock_sock *vsk)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  471  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  472  	union hvs_service_id vm, host;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  473  	struct hvsock *h = vsk->trans;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  474  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  475  	vm.srv_id = srv_id_template;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  476  	vm.svm_port = vsk->local_addr.svm_port;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  477  	h->vm_srv_id = vm.srv_id;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  478  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  479  	host.srv_id = srv_id_template;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  480  	host.svm_port = vsk->remote_addr.svm_port;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  481  	h->host_srv_id = host.srv_id;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  482  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  483  	return vmbus_send_tl_connect_request(&h->vm_srv_id, &h->host_srv_id);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  484  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  485  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  486  static void hvs_shutdown_lock_held(struct hvsock *hvs, int mode)
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  487  {
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  488  	struct vmpipe_proto_header hdr;
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  489  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  490  	if (hvs->fin_sent || !hvs->chan)
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  491  		return;
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  492  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  493  	/* It can't fail: see hvs_channel_writable_bytes(). */
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  494  	(void)hvs_send_data(hvs->chan, (struct hvs_send_buf *)&hdr, 0);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  495  	hvs->fin_sent = true;
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  496  }
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  497  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  498  static int hvs_shutdown(struct vsock_sock *vsk, int mode)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  499  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  500  	struct sock *sk = sk_vsock(vsk);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  501  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  502  	if (!(mode & SEND_SHUTDOWN))
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  503  		return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  504  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  505  	lock_sock(sk);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  506  	hvs_shutdown_lock_held(vsk->trans, mode);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  507  	release_sock(sk);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  508  	return 0;
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  509  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  510  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  511  static void hvs_close_timeout(struct work_struct *work)
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  512  {
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  513  	struct vsock_sock *vsk =
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  514  		container_of(work, struct vsock_sock, close_work.work);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  515  	struct sock *sk = sk_vsock(vsk);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  516  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  517  	sock_hold(sk);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  518  	lock_sock(sk);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  519  	if (!sock_flag(sk, SOCK_DONE))
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  520  		hvs_do_close_lock_held(vsk, false);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  521  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  522  	vsk->close_work_scheduled = false;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  523  	release_sock(sk);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  524  	sock_put(sk);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  525  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  526  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  527  /* Returns true, if it is safe to remove socket; false otherwise */
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  528  static bool hvs_close_lock_held(struct vsock_sock *vsk)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  529  {
+b4562ca7925a3be Dexuan Cui       2017-10-19  530  	struct sock *sk = sk_vsock(vsk);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  531  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  532  	if (!(sk->sk_state == TCP_ESTABLISHED ||
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  533  	      sk->sk_state == TCP_CLOSING))
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  534  		return true;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  535  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  536  	if ((sk->sk_shutdown & SHUTDOWN_MASK) != SHUTDOWN_MASK)
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  537  		hvs_shutdown_lock_held(vsk->trans, SHUTDOWN_MASK);
+b4562ca7925a3be Dexuan Cui       2017-10-19  538  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  539  	if (sock_flag(sk, SOCK_DONE))
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  540  		return true;
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  541  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  542  	/* This reference will be dropped by the delayed close routine */
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  543  	sock_hold(sk);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  544  	INIT_DELAYED_WORK(&vsk->close_work, hvs_close_timeout);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  545  	vsk->close_work_scheduled = true;
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  546  	schedule_delayed_work(&vsk->close_work, HVS_CLOSE_TIMEOUT);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  547  	return false;
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  548  }
+b4562ca7925a3be Dexuan Cui       2017-10-19  549  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  550  static void hvs_release(struct vsock_sock *vsk)
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  551  {
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  552  	struct sock *sk = sk_vsock(vsk);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  553  	bool remove_sock;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  554  
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  555  	lock_sock(sk);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  556  	remove_sock = hvs_close_lock_held(vsk);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  557  	release_sock(sk);
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  558  	if (remove_sock)
+a9eeb998c28d550 Sunil Muthuswamy 2019-05-15  559  		vsock_remove_sock(vsk);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  560  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  561  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  562  static void hvs_destruct(struct vsock_sock *vsk)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  563  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  564  	struct hvsock *hvs = vsk->trans;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  565  	struct vmbus_channel *chan = hvs->chan;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  566  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  567  	if (chan)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  568  		vmbus_hvsock_device_unregister(chan);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  569  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  570  	kfree(hvs);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  571  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  572  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  573  static int hvs_dgram_bind(struct vsock_sock *vsk, struct sockaddr_vm *addr)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  574  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  575  	return -EOPNOTSUPP;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  576  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  577  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  578  static int hvs_dgram_dequeue(struct vsock_sock *vsk, struct msghdr *msg,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  579  			     size_t len, int flags)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  580  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  581  	return -EOPNOTSUPP;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  582  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  583  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  584  static int hvs_dgram_enqueue(struct vsock_sock *vsk,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  585  			     struct sockaddr_vm *remote, struct msghdr *msg,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  586  			     size_t dgram_len)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  587  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  588  	return -EOPNOTSUPP;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  589  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  590  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  591  static bool hvs_dgram_allow(u32 cid, u32 port)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  592  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  593  	return false;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  594  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  595  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  596  static int hvs_update_recv_data(struct hvsock *hvs)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  597  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  598  	struct hvs_recv_buf *recv_buf;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  599  	u32 payload_len;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  600  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  601  	recv_buf = (struct hvs_recv_buf *)(hvs->recv_desc + 1);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  602  	payload_len = recv_buf->hdr.data_size;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  603  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  604  	if (payload_len > HVS_MTU_SIZE)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  605  		return -EIO;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  606  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  607  	if (payload_len == 0)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  608  		hvs->vsk->peer_shutdown |= SEND_SHUTDOWN;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  609  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  610  	hvs->recv_data_len = payload_len;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  611  	hvs->recv_data_off = 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  612  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  613  	return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  614  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  615  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  616  static ssize_t hvs_stream_dequeue(struct vsock_sock *vsk, struct msghdr *msg,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  617  				  size_t len, int flags)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  618  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  619  	struct hvsock *hvs = vsk->trans;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  620  	bool need_refill = !hvs->recv_desc;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  621  	struct hvs_recv_buf *recv_buf;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  622  	u32 to_read;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  623  	int ret;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  624  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  625  	if (flags & MSG_PEEK)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  626  		return -EOPNOTSUPP;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  627  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  628  	if (need_refill) {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  629  		hvs->recv_desc = hv_pkt_iter_first(hvs->chan);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  630  		ret = hvs_update_recv_data(hvs);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  631  		if (ret)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  632  			return ret;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  633  	}
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  634  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  635  	recv_buf = (struct hvs_recv_buf *)(hvs->recv_desc + 1);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  636  	to_read = min_t(u32, len, hvs->recv_data_len);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  637  	ret = memcpy_to_msg(msg, recv_buf->data + hvs->recv_data_off, to_read);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  638  	if (ret != 0)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  639  		return ret;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  640  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  641  	hvs->recv_data_len -= to_read;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  642  	if (hvs->recv_data_len == 0) {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  643  		hvs->recv_desc = hv_pkt_iter_next(hvs->chan, hvs->recv_desc);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  644  		if (hvs->recv_desc) {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  645  			ret = hvs_update_recv_data(hvs);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  646  			if (ret)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  647  				return ret;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  648  		}
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  649  	} else {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  650  		hvs->recv_data_off += to_read;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  651  	}
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  652  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  653  	return to_read;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  654  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  655  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  656  static ssize_t hvs_stream_enqueue(struct vsock_sock *vsk, struct msghdr *msg,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  657  				  size_t len)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  658  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  659  	struct hvsock *hvs = vsk->trans;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  660  	struct vmbus_channel *chan = hvs->chan;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  661  	struct hvs_send_buf *send_buf;
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  662  	ssize_t to_write, max_writable;
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  663  	ssize_t ret = 0;
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  664  	ssize_t bytes_written = 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  665  
+31113cc83e30924 Himadri Pandya   2019-07-25  666  	BUILD_BUG_ON(sizeof(*send_buf) != HV_HYP_PAGE_SIZE);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  667  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  668  	send_buf = kmalloc(sizeof(*send_buf), GFP_KERNEL);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  669  	if (!send_buf)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  670  		return -ENOMEM;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  671  
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  672  	/* Reader(s) could be draining data from the channel as we write.
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  673  	 * Maximize bandwidth, by iterating until the channel is found to be
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  674  	 * full.
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  675  	 */
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  676  	while (len) {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  677  		max_writable = hvs_channel_writable_bytes(chan);
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  678  		if (!max_writable)
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  679  			break;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  680  		to_write = min_t(ssize_t, len, max_writable);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  681  		to_write = min_t(ssize_t, to_write, HVS_SEND_BUF_SIZE);
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  682  		/* memcpy_from_msg is safe for loop as it advances the offsets
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  683  		 * within the message iterator.
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  684  		 */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  685  		ret = memcpy_from_msg(send_buf->data, msg, to_write);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  686  		if (ret < 0)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  687  			goto out;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  688  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  689  		ret = hvs_send_data(hvs->chan, send_buf, to_write);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  690  		if (ret < 0)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  691  			goto out;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  692  
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  693  		bytes_written += to_write;
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  694  		len -= to_write;
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  695  	}
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  696  out:
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  697  	/* If any data has been sent, return that */
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  698  	if (bytes_written)
+14a1eaa8820e8f3 Sunil Muthuswamy 2019-05-22  699  		ret = bytes_written;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  700  	kfree(send_buf);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  701  	return ret;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  702  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  703  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  704  static s64 hvs_stream_has_data(struct vsock_sock *vsk)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  705  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  706  	struct hvsock *hvs = vsk->trans;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  707  	s64 ret;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  708  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  709  	if (hvs->recv_data_len > 0)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  710  		return 1;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  711  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  712  	switch (hvs_channel_readable_payload(hvs->chan)) {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  713  	case 1:
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  714  		ret = 1;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  715  		break;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  716  	case 0:
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  717  		vsk->peer_shutdown |= SEND_SHUTDOWN;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  718  		ret = 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  719  		break;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  720  	default: /* -1 */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  721  		ret = 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  722  		break;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  723  	}
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  724  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  725  	return ret;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  726  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  727  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  728  static s64 hvs_stream_has_space(struct vsock_sock *vsk)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  729  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  730  	struct hvsock *hvs = vsk->trans;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  731  
+cb359b60416701c Sunil Muthuswamy 2019-06-17  732  	return hvs_channel_writable_bytes(hvs->chan);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  733  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  734  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  735  static u64 hvs_stream_rcvhiwat(struct vsock_sock *vsk)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  736  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  737  	return HVS_MTU_SIZE + 1;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  738  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  739  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  740  static bool hvs_stream_is_active(struct vsock_sock *vsk)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  741  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  742  	struct hvsock *hvs = vsk->trans;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  743  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  744  	return hvs->chan != NULL;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  745  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  746  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  747  static bool hvs_stream_allow(u32 cid, u32 port)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  748  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  749  	/* The host's port range [MIN_HOST_EPHEMERAL_PORT, 0xFFFFFFFF) is
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  750  	 * reserved as ephemeral ports, which are used as the host's ports
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  751  	 * when the host initiates connections.
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  752  	 *
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  753  	 * Perform this check in the guest so an immediate error is produced
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  754  	 * instead of a timeout.
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  755  	 */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  756  	if (port > MAX_HOST_LISTEN_PORT)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  757  		return false;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  758  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  759  	if (cid == VMADDR_CID_HOST)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  760  		return true;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  761  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  762  	return false;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  763  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  764  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  765  static
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  766  int hvs_notify_poll_in(struct vsock_sock *vsk, size_t target, bool *readable)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  767  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  768  	struct hvsock *hvs = vsk->trans;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  769  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  770  	*readable = hvs_channel_readable(hvs->chan);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  771  	return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  772  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  773  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  774  static
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  775  int hvs_notify_poll_out(struct vsock_sock *vsk, size_t target, bool *writable)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  776  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  777  	*writable = hvs_stream_has_space(vsk) > 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  778  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  779  	return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  780  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  781  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  782  static
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  783  int hvs_notify_recv_init(struct vsock_sock *vsk, size_t target,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  784  			 struct vsock_transport_recv_notify_data *d)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  785  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  786  	return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  787  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  788  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  789  static
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  790  int hvs_notify_recv_pre_block(struct vsock_sock *vsk, size_t target,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  791  			      struct vsock_transport_recv_notify_data *d)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  792  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  793  	return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  794  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  795  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  796  static
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  797  int hvs_notify_recv_pre_dequeue(struct vsock_sock *vsk, size_t target,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  798  				struct vsock_transport_recv_notify_data *d)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  799  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  800  	return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  801  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  802  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  803  static
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  804  int hvs_notify_recv_post_dequeue(struct vsock_sock *vsk, size_t target,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  805  				 ssize_t copied, bool data_read,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  806  				 struct vsock_transport_recv_notify_data *d)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  807  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  808  	return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  809  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  810  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  811  static
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  812  int hvs_notify_send_init(struct vsock_sock *vsk,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  813  			 struct vsock_transport_send_notify_data *d)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  814  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  815  	return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  816  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  817  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  818  static
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  819  int hvs_notify_send_pre_block(struct vsock_sock *vsk,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  820  			      struct vsock_transport_send_notify_data *d)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  821  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  822  	return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  823  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  824  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  825  static
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  826  int hvs_notify_send_pre_enqueue(struct vsock_sock *vsk,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  827  				struct vsock_transport_send_notify_data *d)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  828  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  829  	return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  830  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  831  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  832  static
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  833  int hvs_notify_send_post_enqueue(struct vsock_sock *vsk, ssize_t written,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  834  				 struct vsock_transport_send_notify_data *d)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  835  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  836  	return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  837  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  838  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  839  static void hvs_set_buffer_size(struct vsock_sock *vsk, u64 val)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  840  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  841  	/* Ignored. */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  842  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  843  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  844  static void hvs_set_min_buffer_size(struct vsock_sock *vsk, u64 val)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  845  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  846  	/* Ignored. */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  847  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  848  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  849  static void hvs_set_max_buffer_size(struct vsock_sock *vsk, u64 val)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  850  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  851  	/* Ignored. */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  852  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  853  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  854  static u64 hvs_get_buffer_size(struct vsock_sock *vsk)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  855  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  856  	return -ENOPROTOOPT;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  857  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  858  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  859  static u64 hvs_get_min_buffer_size(struct vsock_sock *vsk)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  860  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  861  	return -ENOPROTOOPT;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  862  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  863  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  864  static u64 hvs_get_max_buffer_size(struct vsock_sock *vsk)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  865  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  866  	return -ENOPROTOOPT;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  867  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  868  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  869  static struct vsock_transport hvs_transport = {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  870  	.get_local_cid            = hvs_get_local_cid,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  871  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  872  	.init                     = hvs_sock_init,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  873  	.destruct                 = hvs_destruct,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  874  	.release                  = hvs_release,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  875  	.connect                  = hvs_connect,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  876  	.shutdown                 = hvs_shutdown,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  877  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  878  	.dgram_bind               = hvs_dgram_bind,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  879  	.dgram_dequeue            = hvs_dgram_dequeue,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  880  	.dgram_enqueue            = hvs_dgram_enqueue,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  881  	.dgram_allow              = hvs_dgram_allow,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  882  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  883  	.stream_dequeue           = hvs_stream_dequeue,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  884  	.stream_enqueue           = hvs_stream_enqueue,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  885  	.stream_has_data          = hvs_stream_has_data,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  886  	.stream_has_space         = hvs_stream_has_space,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  887  	.stream_rcvhiwat          = hvs_stream_rcvhiwat,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  888  	.stream_is_active         = hvs_stream_is_active,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  889  	.stream_allow             = hvs_stream_allow,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  890  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  891  	.notify_poll_in           = hvs_notify_poll_in,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  892  	.notify_poll_out          = hvs_notify_poll_out,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  893  	.notify_recv_init         = hvs_notify_recv_init,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  894  	.notify_recv_pre_block    = hvs_notify_recv_pre_block,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  895  	.notify_recv_pre_dequeue  = hvs_notify_recv_pre_dequeue,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  896  	.notify_recv_post_dequeue = hvs_notify_recv_post_dequeue,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  897  	.notify_send_init         = hvs_notify_send_init,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  898  	.notify_send_pre_block    = hvs_notify_send_pre_block,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  899  	.notify_send_pre_enqueue  = hvs_notify_send_pre_enqueue,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  900  	.notify_send_post_enqueue = hvs_notify_send_post_enqueue,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  901  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  902  	.set_buffer_size          = hvs_set_buffer_size,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  903  	.set_min_buffer_size      = hvs_set_min_buffer_size,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  904  	.set_max_buffer_size      = hvs_set_max_buffer_size,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  905  	.get_buffer_size          = hvs_get_buffer_size,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  906  	.get_min_buffer_size      = hvs_get_min_buffer_size,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  907  	.get_max_buffer_size      = hvs_get_max_buffer_size,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  908  };
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  909  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  910  static int hvs_probe(struct hv_device *hdev,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  911  		     const struct hv_vmbus_device_id *dev_id)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  912  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  913  	struct vmbus_channel *chan = hdev->channel;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  914  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  915  	hvs_open_connection(chan);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  916  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  917  	/* Always return success to suppress the unnecessary error message
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  918  	 * in vmbus_probe(): on error the host will rescind the device in
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  919  	 * 30 seconds and we can do cleanup at that time in
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  920  	 * vmbus_onoffer_rescind().
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  921  	 */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  922  	return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  923  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  924  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  925  static int hvs_remove(struct hv_device *hdev)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  926  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  927  	struct vmbus_channel *chan = hdev->channel;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  928  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  929  	vmbus_close(chan);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  930  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  931  	return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  932  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  933  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  934  /* This isn't really used. See vmbus_match() and vmbus_probe() */
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  935  static const struct hv_vmbus_device_id id_table[] = {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  936  	{},
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  937  };
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  938  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  939  static struct hv_driver hvs_drv = {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  940  	.name		= "hv_sock",
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  941  	.hvsock		= true,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  942  	.id_table	= id_table,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  943  	.probe		= hvs_probe,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  944  	.remove		= hvs_remove,
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  945  };
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  946  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  947  static int __init hvs_init(void)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  948  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  949  	int ret;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  950  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  951  	if (vmbus_proto_version < VERSION_WIN10)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  952  		return -ENODEV;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  953  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  954  	ret = vmbus_driver_register(&hvs_drv);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  955  	if (ret != 0)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  956  		return ret;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  957  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  958  	ret = vsock_core_init(&hvs_transport);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  959  	if (ret) {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  960  		vmbus_driver_unregister(&hvs_drv);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  961  		return ret;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  962  	}
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  963  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  964  	return 0;
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  965  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  966  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  967  static void __exit hvs_exit(void)
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  968  {
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  969  	vsock_core_exit();
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  970  	vmbus_driver_unregister(&hvs_drv);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  971  }
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  972  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  973  module_init(hvs_init);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  974  module_exit(hvs_exit);
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  975  
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  976  MODULE_DESCRIPTION("Hyper-V Sockets");
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  977  MODULE_VERSION("1.0.0");
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  978  MODULE_LICENSE("GPL");
+ae0078fcf0a5eb3 Dexuan Cui       2017-08-26  979  MODULE_ALIAS_NETPROTO(PF_VSOCK);
+
+:::::: The code at line 214 was first introduced by commit
+:::::: ae0078fcf0a5eb3a8623bfb5f988262e0911fdb9 hv_sock: implements Hyper-V transport for Virtual Sockets (AF_VSOCK)
+
+:::::: TO: Dexuan Cui <decui@microsoft.com>
+:::::: CC: David S. Miller <davem@davemloft.net>
 
 ---
 0-DAY kernel test infrastructure                Open Source Technology Center
 https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
---x56pu5fgnpdgtpxd
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-9+bBwPWlBuk0kWyB3jXZ/wDrsOiI8SkCAA==
-
---x56pu5fgnpdgtpxd--
