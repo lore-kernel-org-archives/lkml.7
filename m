@@ -2,99 +2,141 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E12FFC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 00:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95781C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 00:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B65A6208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 00:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564274767;
-	bh=hsA8mSmdQowOsHRk9e/OVmaiCpd4e8KUxVDsMnzqcmM=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=sbRV24Ji0qLO4/OdMlikzl4pwM5BkVaIKLXmgrp4lwkOlbiR8gxUtd6kXSjdAhu8h
-	 gzoWPC/RLpqT1HuU9GydpgEWlNkLxPHXX1BdZORyLlfK+CF/WoWVwJdHB9iMKKPaL4
-	 wzVaTttRXODeXDI/iBClohoaRCcqOC88mbAtHqdM=
+	by mail.kernel.org (Postfix) with ESMTP id 7930D2086D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 00:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbfG1AqF (ORCPT
+        id S1729083AbfG1Aqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 20:46:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbfG1AqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 20:46:05 -0400
-Received: from [192.168.0.101] (unknown [180.111.32.87])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B06A2086D;
-        Sun, 28 Jul 2019 00:46:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564274764;
-        bh=hsA8mSmdQowOsHRk9e/OVmaiCpd4e8KUxVDsMnzqcmM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=0fpJx0lhiOeLOAsoah0WBkaoCDA5/zd4qGBunNewqDCve1P+H+ZTiVjUYEvSWi7cH
-         yqgyGp7/yrBQRuCVvN4YaEo5hPe1u371k1oVeh2rjQ3GDT0ha6jB6hQiRNQGPU8uIM
-         D8oZofcCILnWY2Zn/Wcu55XjaUbnLnVPK8JyMp8w=
-Subject: Re: [f2fs-dev] [PATCH v4 2/3] f2fs: include charset encoding
- information in the superblock
-To:     Daniel Rosenberg <drosen@google.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     linux-doc@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@android.com
-References: <20190723230529.251659-1-drosen@google.com>
- <20190723230529.251659-3-drosen@google.com>
-From:   Chao Yu <chao@kernel.org>
-Message-ID: <af60ce55-1a29-d8da-81e4-77c880f4a0d0@kernel.org>
-Date:   Sun, 28 Jul 2019 08:45:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sat, 27 Jul 2019 20:46:54 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39656 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfG1Aqy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 20:46:54 -0400
+Received: by mail-wr1-f67.google.com with SMTP id x4so4879069wrt.6
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 17:46:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KXyE9LPRaOuTKOHClToahKsRCSGxQwG4CXkWHAKu3XM=;
+        b=fr4GbTmQjEw4eJl/YduSaVXcN2Q59areRYxioXekyvaHg+KmIFQyOP4d4IXZt1jKVg
+         1d5SnRQ0+C0u7d4NCOw+h4mlEW1bhVXJDQzAjRum/4/z1ttwp69ay279rtQW4nd8tiII
+         O4kFE/c9mKfm/pIQ9whC/Vn+L3hHg7Hs2JU4hDYtSQgzWZx9Q11d4gicOGWQWPIH9Fox
+         ZNS5OVL+28ZMOmQTNQFGppr8ENDIJHda+7ZiZ+v9Vw4POPjOqx0zzixkwAkupth4TRRR
+         PZ74C8NRM6xqIV5HuJ5ZWH2NCRXzjhN6BN1JInSkQtF/MmLwkoCG+XGHN5WM9YHFSR3P
+         x2qw==
+X-Gm-Message-State: APjAAAWVgsIXjGLWCpgXNbGc4Zo//xphucQ9ko85wOYXy3AJRxtHreyD
+        JO7w+iO8l6GXH8dNEZRudwOr0A==
+X-Google-Smtp-Source: APXvYqwKQ3rjvtjRN/4Fgr2SU7y9XKuuP/USg2g9WzMgrZt+YhRI2UASj7oK9nUOFacrpfow4kxSUQ==
+X-Received: by 2002:a5d:4403:: with SMTP id z3mr28870350wrq.29.1564274811763;
+        Sat, 27 Jul 2019 17:46:51 -0700 (PDT)
+Received: from mcroce-redhat.homenet.telecomitalia.it (host221-208-dynamic.27-79-r.retail.telecomitalia.it. [79.27.208.221])
+        by smtp.gmail.com with ESMTPSA id n9sm100731131wrp.54.2019.07.27.17.46.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 27 Jul 2019 17:46:50 -0700 (PDT)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Subject: [PATCH net v2] mvpp2: refactor MTU change code
+Date:   Sun, 28 Jul 2019 02:46:45 +0200
+Message-Id: <20190728004645.4807-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190723230529.251659-3-drosen@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-7-24 7:05, Daniel Rosenberg via Linux-f2fs-devel wrote:
-> Add charset encoding to f2fs to support casefolding. It is modeled after
-> the same feature introduced in commit c83ad55eaa91 ("ext4: include charset
-> encoding information in the superblock")
-> 
-> Currently this is not compatible with encryption, similar to the current
-> ext4 imlpementation. This will change in the future.
-> 
-> From the ext4 patch:
-> """
-> The s_encoding field stores a magic number indicating the encoding
-> format and version used globally by file and directory names in the
-> filesystem.  The s_encoding_flags defines policies for using the charset
-> encoding, like how to handle invalid sequences.  The magic number is
-> mapped to the exact charset table, but the mapping is specific to ext4.
-> Since we don't have any commitment to support old encodings, the only
-> encoding I am supporting right now is utf8-12.1.0.
-> 
-> The current implementation prevents the user from enabling encoding and
-> per-directory encryption on the same filesystem at the same time.  The
-> incompatibility between these features lies in how we do efficient
-> directory searches when we cannot be sure the encryption of the user
-> provided fname will match the actual hash stored in the disk without
-> decrypting every directory entry, because of normalization cases.  My
-> quickest solution is to simply block the concurrent use of these
-> features for now, and enable it later, once we have a better solution.
-> """
-> 
-> Signed-off-by: Daniel Rosenberg <drosen@google.com>
+The MTU change code can call napi_disable() with the device already down,
+leading to a deadlock. Also, lot of code is duplicated unnecessarily.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Rework mvpp2_change_mtu() to avoid the deadlock and remove duplicated code.
 
-Thanks,
+Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+---
+ .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 41 ++++++-------------
+ 1 file changed, 13 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index b6591ea0c6d6..68fa2d563f0d 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -3700,6 +3700,7 @@ static int mvpp2_set_mac_address(struct net_device *dev, void *p)
+ static int mvpp2_change_mtu(struct net_device *dev, int mtu)
+ {
+ 	struct mvpp2_port *port = netdev_priv(dev);
++	bool running = netif_running(dev);
+ 	int err;
+ 
+ 	if (!IS_ALIGNED(MVPP2_RX_PKT_SIZE(mtu), 8)) {
+@@ -3708,40 +3709,24 @@ static int mvpp2_change_mtu(struct net_device *dev, int mtu)
+ 		mtu = ALIGN(MVPP2_RX_PKT_SIZE(mtu), 8);
+ 	}
+ 
+-	if (!netif_running(dev)) {
+-		err = mvpp2_bm_update_mtu(dev, mtu);
+-		if (!err) {
+-			port->pkt_size =  MVPP2_RX_PKT_SIZE(mtu);
+-			return 0;
+-		}
+-
+-		/* Reconfigure BM to the original MTU */
+-		err = mvpp2_bm_update_mtu(dev, dev->mtu);
+-		if (err)
+-			goto log_error;
+-	}
+-
+-	mvpp2_stop_dev(port);
++	if (running)
++		mvpp2_stop_dev(port);
+ 
+ 	err = mvpp2_bm_update_mtu(dev, mtu);
+-	if (!err) {
++	if (err) {
++		netdev_err(dev, "failed to change MTU\n");
++		/* Reconfigure BM to the original MTU */
++		mvpp2_bm_update_mtu(dev, dev->mtu);
++	} else {
+ 		port->pkt_size =  MVPP2_RX_PKT_SIZE(mtu);
+-		goto out_start;
+ 	}
+ 
+-	/* Reconfigure BM to the original MTU */
+-	err = mvpp2_bm_update_mtu(dev, dev->mtu);
+-	if (err)
+-		goto log_error;
+-
+-out_start:
+-	mvpp2_start_dev(port);
+-	mvpp2_egress_enable(port);
+-	mvpp2_ingress_enable(port);
++	if (running) {
++		mvpp2_start_dev(port);
++		mvpp2_egress_enable(port);
++		mvpp2_ingress_enable(port);
++	}
+ 
+-	return 0;
+-log_error:
+-	netdev_err(dev, "failed to change MTU\n");
+ 	return err;
+ }
+ 
+-- 
+2.21.0
+
