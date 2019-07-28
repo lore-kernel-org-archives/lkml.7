@@ -2,131 +2,91 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3927CC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0B3C7618F
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11AB92070D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A2FE2070D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:14:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mecH4Vht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbfG1XLi (ORCPT
+        id S1726248AbfG1XOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 19:11:38 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34281 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfG1XLi (ORCPT
+        Sun, 28 Jul 2019 19:14:51 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41367 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbfG1XOu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 19:11:38 -0400
-Received: by mail-wm1-f65.google.com with SMTP id w9so41748641wmd.1
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 16:11:36 -0700 (PDT)
+        Sun, 28 Jul 2019 19:14:50 -0400
+Received: by mail-lj1-f195.google.com with SMTP id d24so56685383ljg.8
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 16:14:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uqbaLb+DoYfmkQkeju/D4dfpefzvGhqE/NA7IyXYHDs=;
+        b=mecH4VhtykhjOehOVm7m8Pa5YP6LbhZHxuLFQA2XocGjWKuVwaUD5JKujEe9aVixYW
+         cawoMpzpCuo6PsH/Y5+Y7tXwV3d7SoDRDfjjcoukQScCk9CzzHAMPo1pS4yrzvyXmqyJ
+         2yMjXxSUUQvzemHru0Os3ufWRvyApCPQMYjePIqEYdIr8dqIpeHbncxd/W99X2KbFg2j
+         jbwANzOROhAvP10F0iLcxqbviHMgDbZ6aAMO7bHOLzMbrE+YgCLY6qUQqtoboNujm0Gj
+         U73hnvjkMlVYKlUDbpdLF67Z+MpbkHJo3vfCQ+e8YPRfhiYgmC3LZ5+TDpH4eiTfU3zX
+         7Iyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=42lghrV63bcshzCGKSHua5vo/hvXi8DHZoy6o0Cat9Y=;
-        b=jWB3bc6fdbo45KZCZr0TSltGlAJQ7JPwZQoojUuy+QmCyJKd1ttabKaQ/tFXOG7OlE
-         Fmee9RzlQH5WBffCd3+6RhG0tCwzXGNadXamrKGmMXzjH3vq/SoNGNPxC16koaSZl4a5
-         UbcDwang3auCTaucvmPIMvk2Rk+0gY5M7MpIDM4nk2Ffd5A3fj7hdOYG4i7tiXKX37Q+
-         1BQJU/wIpzcvgObzsWZY0Ehvx6MgTeHCIAhqfgtwkqUJhsi4E3OLYErJyT0b+cAoRocm
-         x7+2UyBOJV8S2sy1n+ndnx8P0/plX4HoX0+lQkQ3dKP1rltQ7aAw6B9qlzvOLBojSCGJ
-         CjwQ==
-X-Gm-Message-State: APjAAAWw8rqunIthvijOzRItaiAviefcZ1EGyGG6NGYwgA9yDpHPnLDb
-        PomenoVGcCl0zkjMNippSxv9ww==
-X-Google-Smtp-Source: APXvYqxPo7htNk7ZRI5iDnM8YMA9X9gv9/VMPzCI4aNrd3OhZP9OppJEggWVfYxwOlqvknmBwBcY6A==
-X-Received: by 2002:a1c:d10c:: with SMTP id i12mr96083615wmg.152.1564355496144;
-        Sun, 28 Jul 2019 16:11:36 -0700 (PDT)
-Received: from mcroce-redhat.homenet.telecomitalia.it (host221-208-dynamic.27-79-r.retail.telecomitalia.it. [79.27.208.221])
-        by smtp.gmail.com with ESMTPSA id 4sm137778934wro.78.2019.07.28.16.11.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 16:11:35 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: module: mark expected switch fall-through
-Date:   Mon, 29 Jul 2019 01:11:32 +0200
-Message-Id: <20190728231132.6367-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uqbaLb+DoYfmkQkeju/D4dfpefzvGhqE/NA7IyXYHDs=;
+        b=X3ChG2zq9nim9P/V6J0wmegXEy9O1pRvxmQJ/Vv1KZ3nnkPDQ0qo80fSPhsfaUoVWn
+         K377/SZh2KlTqJtELu1vpnjR4ER0kceLcIKeajJ4zITdJ/MOs08ck3eIGVTAdNBazFMQ
+         ZJx1wik0hIisvCQsIlfmC0lEgwLD2uHi6WoOYnoJizOVexMhHfJOZ4AbA0skM3Py/cn1
+         RreYWjVN1zWlNznJIw3LKyKjeoDWTuZTwwL2frKgSF7jh/PbK+5fJUxNnuzVl0ezdneC
+         xL4zS05zJ5MZYs00k8UN6ryDvBCk4/BaLhcUDx+IOJbEGsp9OHzoxQIUiUr5iANLUE1I
+         qMCg==
+X-Gm-Message-State: APjAAAXXNacsczUyIodBbVnchSpV9HoxyRbala/iaAXU3dwcp+P/SYE0
+        UimTrmmtknvFlGCGDLaPL0bQOvvJ50XZu7c7L39r3Q==
+X-Google-Smtp-Source: APXvYqxZn/ye7KzmbCXTelv16sXPVMTT2jnKOOv6eVhlkoDzFB17aRJoEaL7U1kzdaeMP7q7K+fcGcM99btdobKE65w=
+X-Received: by 2002:a2e:9593:: with SMTP id w19mr8822011ljh.69.1564355688739;
+ Sun, 28 Jul 2019 16:14:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190711041942.23202-1-andrew@aj.id.au>
+In-Reply-To: <20190711041942.23202-1-andrew@aj.id.au>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 29 Jul 2019 01:14:37 +0200
+Message-ID: <CACRpkdb4pEdPHbo=3+fJXe9WG8K7A2_xVMtKWCJCfEawDO5wBw@mail.gmail.com>
+Subject: Re: [PATCH 0/6] pinctrl: aspeed: Add AST2600 pinmux support
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>, ryanchen.aspeed@gmail.com,
+        johnny_huang@aspeedtech.com, linux-aspeed@lists.ozlabs.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through,
-fixes the following warning:
+On Thu, Jul 11, 2019 at 6:19 AM Andrew Jeffery <andrew@aj.id.au> wrote:
 
-arch/arm64/kernel/module.c: In function ‘apply_relocate_add’:
-arch/arm64/kernel/module.c:316:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
-    overflow_check = false;
-    ~~~~~~~~~~~~~~~^~~~~~~
-arch/arm64/kernel/module.c:317:3: note: here
-   case R_AARCH64_MOVW_UABS_G0:
-   ^~~~
-arch/arm64/kernel/module.c:322:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
-    overflow_check = false;
-    ~~~~~~~~~~~~~~~^~~~~~~
-arch/arm64/kernel/module.c:323:3: note: here
-   case R_AARCH64_MOVW_UABS_G1:
-   ^~~~
-arch/arm64/kernel/module.c:328:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
-    overflow_check = false;
-    ~~~~~~~~~~~~~~~^~~~~~~
-arch/arm64/kernel/module.c:329:3: note: here
-   case R_AARCH64_MOVW_UABS_G2:
-   ^~~~
-arch/arm64/kernel/module.c:395:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
-    overflow_check = false;
-    ~~~~~~~~~~~~~~~^~~~~~~
-arch/arm64/kernel/module.c:396:3: note: here
-   case R_AARCH64_ADR_PREL_PG_HI21:
-   ^~~~
+> This series adds pinmux support for the AST2600. Some more rework was required
+> on top of the previous cleanup series, but this rework was focussed on
+> supporting features of the AST2600 pinmux rather than fixing issues with the
+> existing infrastructure for the ASPEED drivers. Due to the dependences it's
+> based on top of pinctrl/devel, so should avoid any more SPDX issues.
+>
+> ASPEED have been testing the patches on hardware, so even for an initial pass
+> there's some confidence in the implementation.
 
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- arch/arm64/kernel/module.c | 4 ++++
- 1 file changed, 4 insertions(+)
+I'm unsure if I need to wait for the DT bindings to be fixed on this
+series?
 
-diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
-index 46e643e30708..ffd76b291af2 100644
---- a/arch/arm64/kernel/module.c
-+++ b/arch/arm64/kernel/module.c
-@@ -314,18 +314,21 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
- 		/* MOVW instruction relocations. */
- 		case R_AARCH64_MOVW_UABS_G0_NC:
- 			overflow_check = false;
-+			/* fallthrough */
- 		case R_AARCH64_MOVW_UABS_G0:
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 0,
- 					      AARCH64_INSN_IMM_MOVKZ);
- 			break;
- 		case R_AARCH64_MOVW_UABS_G1_NC:
- 			overflow_check = false;
-+			/* fallthrough */
- 		case R_AARCH64_MOVW_UABS_G1:
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 16,
- 					      AARCH64_INSN_IMM_MOVKZ);
- 			break;
- 		case R_AARCH64_MOVW_UABS_G2_NC:
- 			overflow_check = false;
-+			/* fallthrough */
- 		case R_AARCH64_MOVW_UABS_G2:
- 			ovf = reloc_insn_movw(RELOC_OP_ABS, loc, val, 32,
- 					      AARCH64_INSN_IMM_MOVKZ);
-@@ -393,6 +396,7 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
- 			break;
- 		case R_AARCH64_ADR_PREL_PG_HI21_NC:
- 			overflow_check = false;
-+			/* fallthrough */
- 		case R_AARCH64_ADR_PREL_PG_HI21:
- 			ovf = reloc_insn_adrp(me, sechdrs, loc, val);
- 			if (ovf && ovf != -ERANGE)
--- 
-2.21.0
-
+Yours,
+Linus Walleij
