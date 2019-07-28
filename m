@@ -2,216 +2,107 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395DAC7618F
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7D3C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD422070D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 909492075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:50:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbfG1UpD (ORCPT
+        id S1726216AbfG1Uuj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 16:45:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37392 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfG1UpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 16:45:02 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1C2C0308FC20;
-        Sun, 28 Jul 2019 20:45:02 +0000 (UTC)
-Received: from treble (ovpn-120-102.rdu2.redhat.com [10.10.120.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F5A6600C7;
-        Sun, 28 Jul 2019 20:44:58 +0000 (UTC)
-Date:   Sun, 28 Jul 2019 15:44:56 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jikos@kernel.org, pmladek@suse.com,
-        joe.lawrence@redhat.com, nstange@suse.de,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH] s390/livepatch: Implement reliable stack tracing for the
- consistency model
-Message-ID: <20190728204456.7bxnsbuo4o3tjxeq@treble>
-References: <20190710105918.22487-1-mbenes@suse.cz>
+        Sun, 28 Jul 2019 16:50:39 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:49728 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfG1Uui (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 16:50:38 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 1A5206063691;
+        Sun, 28 Jul 2019 22:50:36 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id kXJ_7xXHcsr5; Sun, 28 Jul 2019 22:50:35 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id C6C54608F452;
+        Sun, 28 Jul 2019 22:50:35 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id Pl5qRPmIRfAF; Sun, 28 Jul 2019 22:50:35 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 9A2CA6063691;
+        Sun, 28 Jul 2019 22:50:35 +0200 (CEST)
+Date:   Sun, 28 Jul 2019 22:50:35 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     horia geanta <horia.geanta@nxp.com>
+Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        aymen sghaier <aymen.sghaier@nxp.com>,
+        david <david@sigma-star.at>, Baolin Wang <baolin.wang@linaro.org>
+Message-ID: <1174635359.52770.1564347035533.JavaMail.zimbra@nod.at>
+In-Reply-To: <VI1PR0402MB3485A27D2D9643F70E1873A398C10@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <839258138.49105.1564003328543.JavaMail.zimbra@nod.at> <VI1PR0402MB3485A27D2D9643F70E1873A398C10@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+Subject: Re: Backlog support for CAAM?
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190710105918.22487-1-mbenes@suse.cz>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Sun, 28 Jul 2019 20:45:02 +0000 (UTC)
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
+Thread-Topic: Backlog support for CAAM?
+Thread-Index: ARBzCkuiRpn89WxIsrxtpCssT2oQQsW0dt3g
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 12:59:18PM +0200, Miroslav Benes wrote:
-> The livepatch consistency model requires reliable stack tracing
-> architecture support in order to work properly. In order to achieve
-> this, two main issues have to be solved. First, reliable and consistent
-> call chain backtracing has to be ensured. Second, the unwinder needs to
-> be able to detect stack corruptions and return errors.
+----- Ursprüngliche Mail -----
+> Right now we're evaluating two options:
+> -reworking v5 above
+> -using crypto engine (crypto/crypto_engine.c)
 > 
-> The "zSeries ELF Application Binary Interface Supplement" says:
+> Ideally crypto engine should be the way to go.
+> However we need to make sure performance degradation is negligible,
+> which unfortunately is not case.
 > 
->   "The stack pointer points to the first word of the lowest allocated
->   stack frame. If the "back chain" is implemented this word will point to
->   the previously allocated stack frame (towards higher addresses), except
->   for the first stack frame, which shall have a back chain of zero (NULL).
->   The stack shall grow downwards, in other words towards lower addresses."
+> Currently it seems that crypto engine has an issue with sending
+> multiple crypto requests from (SW) engine queue -> (HW) caam queue.
 > 
-> "back chain" is optional. GCC option -mbackchain enables it. Quoting
-> Martin Schwidefsky [1]:
+> More exactly, crypto_pump_requests() performs this check:
+>        /* Make sure we are not already running a request */
+>        if (engine->cur_req)
+>                goto out;
+> 
+> thus it's not possible to add more crypto requests to the caam queue
+> until HW finishes the work on the current crypto request and
+> calls crypto_finalize_request():
+>        if (finalize_cur_req) {
+>		[...]
+>                engine->cur_req = NULL;
 
-This reference footnote seems to be missing at the bottom of the patch
-description.
+Did you consider using a hybrid approach?
 
-> diff --git a/arch/s390/include/asm/unwind.h b/arch/s390/include/asm/unwind.h
-> index d827b5b9a32c..1cc96c54169c 100644
-> --- a/arch/s390/include/asm/unwind.h
-> +++ b/arch/s390/include/asm/unwind.h
-> @@ -45,6 +45,25 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
->  bool unwind_next_frame(struct unwind_state *state);
->  unsigned long unwind_get_return_address(struct unwind_state *state);
->  
-> +#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-> +void __unwind_start_reliable(struct unwind_state *state,
-> +			     struct task_struct *task, unsigned long sp);
-> +bool unwind_next_frame_reliable(struct unwind_state *state);
-> +
-> +static inline void unwind_start_reliable(struct unwind_state *state,
-> +					 struct task_struct *task)
-> +{
-> +	unsigned long sp;
-> +
-> +	if (task == current)
-> +		sp = current_stack_pointer();
-> +	else
-> +		sp = task->thread.ksp;
-> +
-> +	__unwind_start_reliable(state, task, sp);
-> +}
-> +#endif
-> +
+Please let me sketch my idea:
 
-(Ah, cool, I didn't realize s390 ported the x86 unwind interfaces.  We
-should look at unifying them someday.)
+- Let's have a worker thread which serves a software queue.
+- The software queue is a linked list of requests.
+- Upon job submission the driver checks whether the software queue is empty.
+- If the software queue is empty the regular submission continues.
+- Is the hardware queue full at this point, the request is put on the software
+  queue and we return EBUSY.
+- If upon job submission the software queue not empty, the new job is also put
+  on the software queue.
+- The worker thread is woken up every time a new job is put on the software
+  queue and every time CAAM processed a job.
 
-Why do you need _reliable() variants of the unwind interfaces?  Can the
-error checking be integrated into unwind_start() and unwind_next_frame()
-like they are on x86?
+That way we can keep the fast path fast. If hardware queue not full, software queue
+can be bypassed completely.
+If the software queue is used once it will become empty as soon jobs are getting
+submitted at a slower rate and the fast path will be used again.
 
-> +#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-> +void __unwind_start_reliable(struct unwind_state *state,
-> +			     struct task_struct *task, unsigned long sp)
-> +{
-> +	struct stack_info *info = &state->stack_info;
-> +	struct stack_frame *sf;
-> +	unsigned long ip;
-> +
-> +	memset(state, 0, sizeof(*state));
-> +	state->task = task;
-> +
-> +	/* Get current stack pointer and initialize stack info */
-> +	if (get_stack_info_reliable(sp, task, info) ||
-> +	    !on_stack(info, sp, sizeof(struct stack_frame))) {
-> +		/* Something is wrong with the stack pointer */
-> +		info->type = STACK_TYPE_UNKNOWN;
-> +		state->error = true;
-> +		return;
-> +	}
-> +
-> +	/* Get the instruction pointer from the stack frame */
-> +	sf = (struct stack_frame *) sp;
-> +	ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-> +
-> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> +	/* Decode any ftrace redirection */
-> +	if (ip == (unsigned long) return_to_handler)
-> +		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
-> +					   ip, NULL);
-> +#endif
+What do you think?
 
-The return_to_handler and ifdef checks aren't needed.  Those are done
-already by the call.
-
-Also it seems a bit odd that the kretprobes check isn't done in this
-function next to the ftrace check.
-
-> +
-> +	/* Update unwind state */
-> +	state->sp = sp;
-> +	state->ip = ip;
-> +}
-> +
-> +bool unwind_next_frame_reliable(struct unwind_state *state)
-> +{
-> +	struct stack_info *info = &state->stack_info;
-> +	struct stack_frame *sf;
-> +	struct pt_regs *regs;
-> +	unsigned long sp, ip;
-> +
-> +	sf = (struct stack_frame *) state->sp;
-> +	sp = READ_ONCE_NOCHECK(sf->back_chain);
-> +	/*
-> +	 * Idle tasks are special. The final back-chain points to nodat_stack.
-> +	 * See CALL_ON_STACK() in smp_start_secondary() callback used in
-> +	 * __cpu_up(). We just accept it, go to else branch and look for
-> +	 * pt_regs.
-> +	 */
-> +	if (likely(sp && !(is_idle_task(state->task) &&
-> +			   outside_of_stack(state, sp)))) {
-> +		/* Non-zero back-chain points to the previous frame */
-> +		if (unlikely(outside_of_stack(state, sp)))
-> +			goto out_err;
-> +
-> +		sf = (struct stack_frame *) sp;
-> +		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-> +	} else {
-> +		/* No back-chain, look for a pt_regs structure */
-> +		sp = state->sp + STACK_FRAME_OVERHEAD;
-> +		regs = (struct pt_regs *) sp;
-> +		if ((unsigned long)regs != info->end - sizeof(struct pt_regs))
-> +			goto out_err;
-> +		if (!(state->task->flags & (PF_KTHREAD | PF_IDLE)) &&
-> +		     !user_mode(regs))
-> +			goto out_err;
-> +
-> +		state->regs = regs;
-> +		goto out_stop;
-> +	}
-> +
-> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> +	/* Decode any ftrace redirection */
-> +	if (ip == (unsigned long) return_to_handler)
-> +		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
-> +					   ip, (void *) sp);
-> +#endif
-> +
-> +	/* Update unwind state */
-> +	state->sp = sp;
-> +	state->ip = ip;
-> +	return true;
-> +
-> +out_err:
-> +	state->error = true;
-> +out_stop:
-> +	state->stack_info.type = STACK_TYPE_UNKNOWN;
-> +	return false;
-> +}
-> +#endif
-
-For the _reliable() variants of the unwind interfaces, there's a lot of
-code duplication with the non-reliable variants.  It looks like it would
-be a lot cleaner (and easier to follow) if they were integrated.
-
-Overall it's looking good though.
-
--- 
-Josh
+Thanks,
+//richard
