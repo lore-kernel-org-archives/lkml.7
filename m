@@ -2,181 +2,146 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B870EC41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2013C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF75216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78DBA216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:45:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564411503;
+	bh=ZJaCH6/EG+GnwaN6bqP7F/RqkgpTASOAGcigZFAnIpA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Psh8KhjdGl3KUn3Kw0IB2t2w3fgxpst6YszVR+tcxVbP3CwGhcCRneZ1XJnDtvb+m
+	 od1raeR3a3l7zuQ0HN43RrM2fK6BP/bBSOjJYkyYwAs54HjIYtOPlTvHv1gcSnGRdO
+	 FNzG+ocay1kmp4AtiwmcR29FM5miI011p2LkBOoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387396AbfG2Oot (ORCPT
+        id S2387640AbfG2OpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 10:44:49 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45737 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387397AbfG2Oos (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:44:48 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x22so54978045qtp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 07:44:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=DoNqX8RWU8p5wa0hRf4mpfQk5+CoY4k3BggOB+rTukY=;
-        b=sHqzXq5PwHZtuIuw1ukIGo+fe5NMbOu4SUFXjrLVOkqDRyz+N1r2gvvQwqP2IkRv1E
-         Rvn4w9kvoTBHkfi/bl88E2hHZntCzB7jyv92IaxxswoIavDJUGmuYthQQCKOKiFjtG0/
-         iwo+qxbRfIT3aHFaiDcKAJv4L6Vg6AriQIWxP2zdrzt9Bvb5J4h0hYvTDXegE0px5XCE
-         FF/ZTbUxTQmJ58sXkkwnMLeD0GLihhx69BJLhggC92Q7+b5f2V1xa76rDhZ6cJ5EmMmY
-         vClELkDdYBVvl5u5vq+wtXJ2/znFJMieta44MMO6M5vhCA40CvApBj3rPBzrD9Ti7UEC
-         OtAQ==
-X-Gm-Message-State: APjAAAVV6Z/68d8luxI0kDlL8hBz7Ja+nuG9tRI0yXbg34C22JZZV62x
-        XcNflgvRNVS7VlSzDzBBWSGQAg==
-X-Google-Smtp-Source: APXvYqzNcK5rFMdgsRbkuArHCZVYZl892hVxXOzQtGKKSReE48444ntmi3JNc+/o/FUr3NCS9WKM/g==
-X-Received: by 2002:ac8:384c:: with SMTP id r12mr77572808qtb.153.1564411487834;
-        Mon, 29 Jul 2019 07:44:47 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id h40sm35464987qth.4.2019.07.29.07.44.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 07:44:46 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 10:44:38 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
-        keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-Subject: Re: WARNING in __mmdrop
-Message-ID: <20190729104028-mutt-send-email-mst@kernel.org>
-References: <11802a8a-ce41-f427-63d5-b6a4cf96bb3f@redhat.com>
- <20190726074644-mutt-send-email-mst@kernel.org>
- <5cc94f15-b229-a290-55f3-8295266edb2b@redhat.com>
- <20190726082837-mutt-send-email-mst@kernel.org>
- <ada10dc9-6cab-e189-5289-6f9d3ff8fed2@redhat.com>
- <aaefa93e-a0de-1c55-feb0-509c87aae1f3@redhat.com>
- <20190726094756-mutt-send-email-mst@kernel.org>
- <0792ee09-b4b7-673c-2251-e5e0ce0fbe32@redhat.com>
- <20190729045127-mutt-send-email-mst@kernel.org>
- <4d43c094-44ed-dbac-b863-48fc3d754378@redhat.com>
+        Mon, 29 Jul 2019 10:45:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727034AbfG2OpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 10:45:02 -0400
+Received: from localhost.localdomain (unknown [180.111.32.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CA22206BA;
+        Mon, 29 Jul 2019 14:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564411500;
+        bh=ZJaCH6/EG+GnwaN6bqP7F/RqkgpTASOAGcigZFAnIpA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TmvZSnG9lh5mWO+cGUplu/CmjSJvwa2qTah96YjGVYfbj9ierPPBmN9AieTmH7SRJ
+         AYCDXgiyWmdeT3MzmJ2zd5kkoAg5OHeQXQBCE5L28CUqt+mLFfjiTSsAhpkPWZF3Y7
+         f97y+zozRZJ/mGj4OJcR/r2n/uRUKi0xGdpYwuLc=
+From:   Chao Yu <chao@kernel.org>
+To:     jaegeuk@kernel.org
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v3] f2fs: introduce sb.required_features to store incompatible features
+Date:   Sun, 28 Jul 2019 23:15:26 +0800
+Message-Id: <20190728151526.11845-1-chao@kernel.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4d43c094-44ed-dbac-b863-48fc3d754378@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 10:24:43PM +0800, Jason Wang wrote:
-> 
-> On 2019/7/29 下午4:59, Michael S. Tsirkin wrote:
-> > On Mon, Jul 29, 2019 at 01:54:49PM +0800, Jason Wang wrote:
-> > > On 2019/7/26 下午9:49, Michael S. Tsirkin wrote:
-> > > > > > Ok, let me retry if necessary (but I do remember I end up with deadlocks
-> > > > > > last try).
-> > > > > Ok, I play a little with this. And it works so far. Will do more testing
-> > > > > tomorrow.
-> > > > > 
-> > > > > One reason could be I switch to use get_user_pages_fast() to
-> > > > > __get_user_pages_fast() which doesn't need mmap_sem.
-> > > > > 
-> > > > > Thanks
-> > > > OK that sounds good. If we also set a flag to make
-> > > > vhost_exceeds_weight exit, then I think it will be all good.
-> > > 
-> > > After some experiments, I came up two methods:
-> > > 
-> > > 1) switch to use vq->mutex, then we must take the vq lock during range
-> > > checking (but I don't see obvious slowdown for 16vcpus + 16queues). Setting
-> > > flags during weight check should work but it still can't address the worst
-> > > case: wait for the page to be swapped in. Is this acceptable?
-> > > 
-> > > 2) using current RCU but replace synchronize_rcu() with vhost_work_flush().
-> > > The worst case is the same as 1) but we can check range without holding any
-> > > locks.
-> > > 
-> > > Which one did you prefer?
-> > > 
-> > > Thanks
-> > I would rather we start with 1 and switch to 2 after we
-> > can show some gain.
-> > 
-> > But the worst case needs to be addressed.
-> 
-> 
-> Yes.
-> 
-> 
-> > How about sending a signal to
-> > the vhost thread?  We will need to fix up error handling (I think that
-> > at the moment it will error out in that case, handling this as EFAULT -
-> > and we don't want to drop packets if we can help it, and surely not
-> > enter any error states.  In particular it might be especially tricky if
-> > we wrote into userspace memory and are now trying to log the write.
-> > I guess we can disable the optimization if log is enabled?).
-> 
-> 
-> This may work but requires a lot of changes.
+From: Chao Yu <yuchao0@huawei.com>
 
-I agree.
+Later after this patch was merged, all new incompatible feature's
+bit should be added into sb.required_features field, and define new
+feature function with F2FS_INCOMPAT_FEATURE_FUNCS() macro.
 
-> And actually it's the price of
-> using vq mutex. 
+Then during mount, we will do sanity check with enabled features in
+image, if there are features in sb.required_features that kernel can
+not recognize, just fail the mount.
 
-Not sure what's meant here.
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+v3:
+- change commit title.
+- fix wrong macro name.
+ fs/f2fs/f2fs.h          | 15 +++++++++++++++
+ fs/f2fs/super.c         | 10 ++++++++++
+ include/linux/f2fs_fs.h |  3 ++-
+ 3 files changed, 27 insertions(+), 1 deletion(-)
 
-> Actually, the critical section should be rather small, e.g
-> just inside memory accessors.
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index a6eb828af57f..b8e17d4ddb8d 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -163,6 +163,15 @@ struct f2fs_mount_info {
+ #define F2FS_CLEAR_FEATURE(sbi, mask)					\
+ 	(sbi->raw_super->feature &= ~cpu_to_le32(mask))
+ 
++#define F2FS_INCOMPAT_FEATURES		0
++
++#define F2FS_HAS_INCOMPAT_FEATURE(sbi, mask)				\
++	((sbi->raw_super->required_features & cpu_to_le32(mask)) != 0)
++#define F2FS_SET_INCOMPAT_FEATURE(sbi, mask)				\
++	(sbi->raw_super->required_features |= cpu_to_le32(mask))
++#define F2FS_CLEAR_INCOMPAT_FEATURE(sbi, mask)				\
++	(sbi->raw_super->required_features &= ~cpu_to_le32(mask))
++
+ /*
+  * Default values for user and/or group using reserved blocks
+  */
+@@ -3585,6 +3594,12 @@ F2FS_FEATURE_FUNCS(lost_found, LOST_FOUND);
+ F2FS_FEATURE_FUNCS(sb_chksum, SB_CHKSUM);
+ F2FS_FEATURE_FUNCS(casefold, CASEFOLD);
+ 
++#define F2FS_INCOMPAT_FEATURE_FUNCS(name, flagname) \
++static inline int f2fs_sb_has_##name(struct f2fs_sb_info *sbi) \
++{ \
++	return F2FS_HAS_INCOMPAT_FEATURE(sbi, F2FS_FEATURE_##flagname); \
++}
++
+ #ifdef CONFIG_BLK_DEV_ZONED
+ static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
+ 				    block_t blkaddr)
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 5540fee0fe3f..3701dcce90e6 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -2513,6 +2513,16 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
+ 		return -EINVAL;
+ 	}
+ 
++	/* check whether current kernel supports all features on image */
++	if (le32_to_cpu(raw_super->required_features) &
++			~F2FS_INCOMPAT_FEATURES) {
++		f2fs_info(sbi, "Unsupported feature: %x: supported: %x",
++			  le32_to_cpu(raw_super->required_features) ^
++			  F2FS_INCOMPAT_FEATURES,
++			  F2FS_INCOMPAT_FEATURES);
++		return -EINVAL;
++	}
++
+ 	/* Check checksum_offset and crc in superblock */
+ 	if (__F2FS_HAS_FEATURE(raw_super, F2FS_FEATURE_SB_CHKSUM)) {
+ 		crc_offset = le32_to_cpu(raw_super->checksum_offset);
+diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
+index a2b36b2e286f..4141be3f219c 100644
+--- a/include/linux/f2fs_fs.h
++++ b/include/linux/f2fs_fs.h
+@@ -117,7 +117,8 @@ struct f2fs_super_block {
+ 	__u8 hot_ext_count;		/* # of hot file extension */
+ 	__le16	s_encoding;		/* Filename charset encoding */
+ 	__le16	s_encoding_flags;	/* Filename charset encoding flags */
+-	__u8 reserved[306];		/* valid reserved region */
++	__le32 required_features;       /* incompatible features to old kernel */
++	__u8 reserved[302];		/* valid reserved region */
+ 	__le32 crc;			/* checksum of superblock */
+ } __packed;
+ 
+-- 
+2.22.0
 
-Also true.
-
-> 
-> I wonder whether or not just do synchronize our self like:
-> 
-> static void inline vhost_inc_vq_ref(struct vhost_virtqueue *vq)
-> {
->         int ref = READ_ONCE(vq->ref);
-> 
->         WRITE_ONCE(vq->ref, ref + 1);
-> smp_rmb();
-> }
-> 
-> static void inline vhost_dec_vq_ref(struct vhost_virtqueue *vq)
-> {
->         int ref = READ_ONCE(vq->ref);
-> 
-> smp_wmb();
->         WRITE_ONCE(vq->ref, ref - 1);
-> }
-> 
-> static void inline vhost_wait_for_ref(struct vhost_virtqueue *vq)
-> {
->         while (READ_ONCE(vq->ref));
-> mb();
-> }
-
-Looks good but I'd like to think of a strategy/existing lock that let us
-block properly as opposed to spinning, that would be more friendly to
-e.g. the realtime patch.
-
-> 
-> Or using smp_load_acquire()/smp_store_release() instead?
-> 
-> Thanks
-
-These are cheaper on x86, yes.
-
-> > 
