@@ -2,95 +2,122 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F69C76190
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 07:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4738C7618B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 08:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36192214C6
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 07:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E4E72085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 08:31:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="PkPOV222"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbfG1H7E (ORCPT
+        id S1726008AbfG1Ibm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 03:59:04 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:51808 "EHLO honk.sigxcpu.org"
+        Sun, 28 Jul 2019 04:31:42 -0400
+Received: from onstation.org ([52.200.56.107]:60198 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725880AbfG1H7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 03:59:03 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 41444FB03;
-        Sun, 28 Jul 2019 09:59:00 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Wyg7IDtmtuoB; Sun, 28 Jul 2019 09:58:59 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id BF96646B51; Sun, 28 Jul 2019 09:58:58 +0200 (CEST)
-Date:   Sun, 28 Jul 2019 09:58:58 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Daniel Baluta <daniel.baluta@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        dl-linux-imx <Linux-imx@nxp.com>,
-        "rui.zhang" <rui.zhang@intel.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-pm@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
- IMX8MQ_CLK_TMU_ROOT
-Message-ID: <20190728075858.GA15144@bogon.m.sigxcpu.org>
-References: <20190705045612.27665-1-Anson.Huang@nxp.com>
- <20190705045612.27665-5-Anson.Huang@nxp.com>
- <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
- <20190727182636.GA7170@bogon.m.sigxcpu.org>
- <CAOMZO5C_g5bO-yqhoLbb6geUcmzi4necjdQ_P2tROq2vzEPOqQ@mail.gmail.com>
+        id S1725880AbfG1Ibm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 04:31:42 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 677C43E910;
+        Sun, 28 Jul 2019 08:31:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1564302701;
+        bh=AWKgQKrrvDNiwarsZqzB/zOZ+odDStBIqipGpwB/cb4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PkPOV222FnMi9TEHjWgqDBD+keBEuoPt4lf5fkQ4rAdDytDHQRD4Qjhht+mslgDu8
+         WOHjytkf4k6+W31WEqzqs9aSb51JA2FG77lVTX6l+sgz0YlLv97+RCIPxLdUyHb0fh
+         QMhTQGSReBk/tNkwXFn8hftHOwOFKn7HJtOvmOlI=
+Date:   Sun, 28 Jul 2019 04:31:41 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: tsl2772: Use device-managed API
+Message-ID: <20190728083141.GA14194@onstation.org>
+References: <20190726123058.22915-1-hslester96@gmail.com>
+ <20190727125749.63297c28@archlinux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOMZO5C_g5bO-yqhoLbb6geUcmzi4necjdQ_P2tROq2vzEPOqQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190727125749.63297c28@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabio,
-On Sat, Jul 27, 2019 at 05:17:50PM -0300, Fabio Estevam wrote:
-> Hi Guido,
+On Sat, Jul 27, 2019 at 12:57:49PM +0100, Jonathan Cameron wrote:
+> On Fri, 26 Jul 2019 20:30:58 +0800
+> Chuhong Yuan <hslester96@gmail.com> wrote:
 > 
-> On Sat, Jul 27, 2019 at 3:26 PM Guido Günther <agx@sigxcpu.org> wrote:
+> > Use devm_iio_device_register to simplify
+> > the code.
+> > 
+> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 > 
-> > I noticed a boot hang yesterday on next-20190726 when loading the
-> > qoriq_thermal which I worked around by blacklisting it. The
-> > fsl,imx8mq-tmu node specifies a clock (IMX8MQ_CLK_TMU_ROOT) but does not
-> > seem to enable, shouldn't it do so?
+> Please try to pick up on likely reviewers in your cc list.  In this case
+> Brian did a lot of work cleaning these drivers up so I've added him.
+> Not everyone keeps up with the linux-iio list for some reason ;)
 > 
-> Yes, I think you are right.
+> Immediate thought was that you had broken the ordering but turns out
+> it is already buggy.
 > 
-> I don't have access to a imx8mq board at the moment, but something
-> like below would probably help:
-> http://code.bulix.org/pd88jp-812381
+> As things stand, we remove the userspace interfaces (iio_device_unregister)
+> after turning off the power.   This is obviously a bad idea and also
+> form a purely "obviously correct" stand point, we aren't doing the reverse
+> of probe.
 > 
-> If it helps, I can send it as a formal patch.
+> So, I 'think' the right option is to reorder remove so that the power left
+> on until after the iio_device_unregister call. At that point, we can't
+> use devm_iio_device_register as we'll have the same incorrect ordering
+> we currently have.
+> 
+> Brian, you looked at this driver most recently.  Thoughts?
 
-Yes, this fixes it for me, thanks!
- -- Guido
+devm_add_action() could be used in the probe function to schedule the call
+to tsl2772_chip_off(). That would eliminate the need for
+tsl2772_remove(). See tsl2772_disable_regulators_action() for an example in
+that driver.
+
+Chuhong: Another potential cleanup to shrink the size of this driver is
+to move it over to the regulator_bulk_() API. I didn't realize that API
+existed at the time I introduced the regulator support. If you're
+interested in taking on that cleanup as well, I can test those changes
+for you if you don't have the hardware.
+
+Brian
+
+
+> > ---
+> >  drivers/iio/light/tsl2772.c | 4 +---
+> >  1 file changed, 1 insertion(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
+> > index 83cece921843..aa5891d105e8 100644
+> > --- a/drivers/iio/light/tsl2772.c
+> > +++ b/drivers/iio/light/tsl2772.c
+> > @@ -1877,7 +1877,7 @@ static int tsl2772_probe(struct i2c_client *clientp,
+> >  	if (ret < 0)
+> >  		return ret;
+> >  
+> > -	ret = iio_device_register(indio_dev);
+> > +	ret = devm_iio_device_register(&clientp->dev, indio_dev);
+> >  	if (ret) {
+> >  		tsl2772_chip_off(indio_dev);
+> >  		dev_err(&clientp->dev,
+> > @@ -1928,8 +1928,6 @@ static int tsl2772_remove(struct i2c_client *client)
+> >  
+> >  	tsl2772_chip_off(indio_dev);
+> >  
+> > -	iio_device_unregister(indio_dev);
+> > -
+> >  	return 0;
+> >  }
+> >  
