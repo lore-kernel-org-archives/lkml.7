@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F830C7618F
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1855C7618F
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E23D52077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9147A2077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbfG1X1Q (ORCPT
+        id S1726270AbfG1Xd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 19:27:16 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35622 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfG1X1Q (ORCPT
+        Sun, 28 Jul 2019 19:33:59 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41986 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfG1Xd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 19:27:16 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y4so59805734wrm.2
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 16:27:14 -0700 (PDT)
+        Sun, 28 Jul 2019 19:33:59 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x1so9891052wrr.9
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 16:33:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=CDFX7cmqBbGxd3S+PHtfPokRI/hCi8zxl2i1XDeVF5A=;
-        b=fkelgX8XdoxtvqYoZfAkpP78GBVlTDxpHl/XJ4o/w5fjEfhJM7LPQ9Q2N9KZk15hTD
-         485XTcpoecD5tBuVSZvXhyehJYJnkSaO7ANtU7G7wsaORab0IWOoB3hIQjp+snQUvbcO
-         PQEqICXCUtPsHCe5SSbNV433skUM+MbIX28tDLNLVJIyhpFk14nQFe/VGiOoj7l9jJ9o
-         rxZwYM5XAZH/UAsgEypdE4CJyOkiglv3G+6nryECF5d5xfh2D6O1wAHr1nSLKDOeEL6J
-         WxQZaq7NkHGFE/4LpsZXmbbfCaYC+aFyPkiDC2I6eHvw3EqVQqNVr6zjeSIZ+6UDuX5W
-         7jwQ==
-X-Gm-Message-State: APjAAAVUUeKXBMXnVVe4ZqIih+IF6TjRJrna1jW70riqrLvTQeU6VQRA
-        K0qClRTSoZ2qVSuif9PVA+eHaKj2k98=
-X-Google-Smtp-Source: APXvYqwbGg1c6DE/fHerM+Cvhn2kZX5UU+f9UqfzQyc2lvseyUAQVt6FWzZleWaiLpZ13cuB2B3vOg==
-X-Received: by 2002:a5d:4a49:: with SMTP id v9mr113674213wrs.44.1564356434100;
-        Sun, 28 Jul 2019 16:27:14 -0700 (PDT)
+        bh=aaEeKTG5R6Qc1GdziDtQYqZnD5RGAhr5gRU7LI7kaRU=;
+        b=aAZAKiI8Ug9vrtrnqJe6JxPmzRpXTs2Ftg673Sx8aMwn+t6fT0+faesHWjyKaN8a0r
+         HK+qVUzLCr8mnsAoBPwhB2lM5ZHdmxSl+lb8WNymHmZcHSsUAdmUVTcVRP/FLS2Gki9d
+         470ebp1WvdN/6KV/B1wRGhP5yzgWQkdoLfg0aqbPjRY/DDEDG7HePE+BVTIReYgg6kmL
+         38yN1h1rDnQJouJYIa9d9cKjfqHNDFY4J7jS/9T75zfp+vxAMDYSAoFwoJFnES88bAL6
+         RVrqeVRLt3D9h+d6D5P2vA7ddgwCTfxKLW1Rf+01Ri+6pRt+9Axl50fHooR6ClQmvVN+
+         ZzUw==
+X-Gm-Message-State: APjAAAVHG1K7Ir57XOg8HrWjzaDmJ77HPP3Iw0yJGNDKvXp/o/W+yL1o
+        omOiVowxZKYGlhnY5kFfAeTbQg==
+X-Google-Smtp-Source: APXvYqw92NTMBLPsPb4QZTGuO9U/NuPamS1jjyCN0NB7ONLDo7yL5jkx3vA9VzVTsdLSGSGyi5CJjQ==
+X-Received: by 2002:adf:d4c1:: with SMTP id w1mr44021854wrk.229.1564356836523;
+        Sun, 28 Jul 2019 16:33:56 -0700 (PDT)
 Received: from mcroce-redhat.homenet.telecomitalia.it (host221-208-dynamic.27-79-r.retail.telecomitalia.it. [79.27.208.221])
-        by smtp.gmail.com with ESMTPSA id t6sm65373267wmb.29.2019.07.28.16.27.13
+        by smtp.gmail.com with ESMTPSA id c1sm136666630wrh.1.2019.07.28.16.33.55
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 16:27:13 -0700 (PDT)
+        Sun, 28 Jul 2019 16:33:55 -0700 (PDT)
 From:   Matteo Croce <mcroce@redhat.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: hw_breakpoint: mark expected switch fall-through
-Date:   Mon, 29 Jul 2019 01:27:06 +0200
-Message-Id: <20190728232706.7396-1-mcroce@redhat.com>
+To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Cc:     Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: arm64: vgic-v3: mark expected switch fall-through
+Date:   Mon, 29 Jul 2019 01:33:47 +0200
+Message-Id: <20190728233347.7856-1-mcroce@redhat.com>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,43 +62,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Mark switch cases where we are expecting to fall through,
 fixes the following warning:
 
-  CC      arch/arm64/kernel/hw_breakpoint.o
-arch/arm64/kernel/hw_breakpoint.c: In function ‘hw_breakpoint_arch_parse’:
-arch/arm64/kernel/hw_breakpoint.c:540:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
-    if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
-       ^
-arch/arm64/kernel/hw_breakpoint.c:542:3: note: here
-   case 2:
-   ^~~~
-arch/arm64/kernel/hw_breakpoint.c:544:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
-    if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
-       ^
-arch/arm64/kernel/hw_breakpoint.c:546:3: note: here
-   default:
-   ^~~~~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c: In function ‘__vgic_v3_save_aprs’:
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:351:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   cpu_if->vgic_ap0r[2] = __vgic_v3_read_ap0rn(2);
+   ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:352:2: note: here
+  case 6:
+  ^~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:353:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   cpu_if->vgic_ap0r[1] = __vgic_v3_read_ap0rn(1);
+   ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:354:2: note: here
+  default:
+  ^~~~~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:361:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   cpu_if->vgic_ap1r[2] = __vgic_v3_read_ap1rn(2);
+   ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:362:2: note: here
+  case 6:
+  ^~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:363:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   cpu_if->vgic_ap1r[1] = __vgic_v3_read_ap1rn(1);
+   ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:364:2: note: here
+  default:
+  ^~~~~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c: In function ‘__vgic_v3_restore_aprs’:
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:384:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   __vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[2], 2);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:385:2: note: here
+  case 6:
+  ^~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:386:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   __vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[1], 1);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:387:2: note: here
+  default:
+  ^~~~~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:394:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   __vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[2], 2);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:395:2: note: here
+  case 6:
+  ^~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:396:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   __vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[1], 1);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:397:2: note: here
+  default:
+  ^~~~~~~
 
 Signed-off-by: Matteo Croce <mcroce@redhat.com>
 ---
- arch/arm64/kernel/hw_breakpoint.c | 2 ++
- 1 file changed, 2 insertions(+)
+ virt/kvm/arm/hyp/vgic-v3-sr.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index dceb84520948..7d846985b133 100644
---- a/arch/arm64/kernel/hw_breakpoint.c
-+++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -539,10 +539,12 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 			/* Allow single byte watchpoint. */
- 			if (hw->ctrl.len == ARM_BREAKPOINT_LEN_1)
- 				break;
-+			/* fallthrough */
- 		case 2:
- 			/* Allow halfword watchpoints and breakpoints. */
- 			if (hw->ctrl.len == ARM_BREAKPOINT_LEN_2)
- 				break;
-+			/* fallthrough */
- 		default:
- 			return -EINVAL;
- 		}
+diff --git a/virt/kvm/arm/hyp/vgic-v3-sr.c b/virt/kvm/arm/hyp/vgic-v3-sr.c
+index 254c5f190a3d..622fb4d18c5c 100644
+--- a/virt/kvm/arm/hyp/vgic-v3-sr.c
++++ b/virt/kvm/arm/hyp/vgic-v3-sr.c
+@@ -349,8 +349,10 @@ void __hyp_text __vgic_v3_save_aprs(struct kvm_vcpu *vcpu)
+ 	case 7:
+ 		cpu_if->vgic_ap0r[3] = __vgic_v3_read_ap0rn(3);
+ 		cpu_if->vgic_ap0r[2] = __vgic_v3_read_ap0rn(2);
++		/* fallthrough */
+ 	case 6:
+ 		cpu_if->vgic_ap0r[1] = __vgic_v3_read_ap0rn(1);
++		/* fallthrough */
+ 	default:
+ 		cpu_if->vgic_ap0r[0] = __vgic_v3_read_ap0rn(0);
+ 	}
+@@ -359,8 +361,10 @@ void __hyp_text __vgic_v3_save_aprs(struct kvm_vcpu *vcpu)
+ 	case 7:
+ 		cpu_if->vgic_ap1r[3] = __vgic_v3_read_ap1rn(3);
+ 		cpu_if->vgic_ap1r[2] = __vgic_v3_read_ap1rn(2);
++		/* fallthrough */
+ 	case 6:
+ 		cpu_if->vgic_ap1r[1] = __vgic_v3_read_ap1rn(1);
++		/* fallthrough */
+ 	default:
+ 		cpu_if->vgic_ap1r[0] = __vgic_v3_read_ap1rn(0);
+ 	}
+@@ -382,8 +386,10 @@ void __hyp_text __vgic_v3_restore_aprs(struct kvm_vcpu *vcpu)
+ 	case 7:
+ 		__vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[3], 3);
+ 		__vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[2], 2);
++		/* fallthrough */
+ 	case 6:
+ 		__vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[1], 1);
++		/* fallthrough */
+ 	default:
+ 		__vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[0], 0);
+ 	}
+@@ -392,8 +398,10 @@ void __hyp_text __vgic_v3_restore_aprs(struct kvm_vcpu *vcpu)
+ 	case 7:
+ 		__vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[3], 3);
+ 		__vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[2], 2);
++		/* fallthrough */
+ 	case 6:
+ 		__vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[1], 1);
++		/* fallthrough */
+ 	default:
+ 		__vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[0], 0);
+ 	}
 -- 
 2.21.0
 
